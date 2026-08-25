@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="马克女王" />
     <string id="TAOM_liege_rhun" text="鲁恩的洛克-坎" />
     <string id="TAOM_liege_rhun_female" text="鲁恩的洛克-坎" />
+    <string id="aom_lord_1_27_name_bn" text="乌格鲁霍尔" />
+    <string id="aom_lord_1_37_name_bn" text="多尔古菲尔" />
+    <string id="aom_lord_1_47_name_bn" text="乌尔巴" />
+    <string id="aom_lord_1_27_1_name_bn" text="努卢贝斯" />
+    <string id="aom_lord_1_27_2_name_bn" text="阿加努齐尔" />
+    <string id="aom_lord_1_27_3_name_bn" text="乌格鲁菲尔" />
+    <string id="aom_lord_1_47_1_name_bn" text="齐姆拉贝丝" />
+    <string id="aom_lord_1_47_2_name_bn" text="阿兹鲁菲尔" />
+    <string id="aom_lord_1_47_3_name_bn" text="阿布拉津" />
+    <string id="aom_lord_SE9_c1_name_bn" text="齐古尔贝尔" />
+    <string id="aom_lord_SE9_c2_name_bn" text="齐姆拉津" />
+    <string id="aom_lord_SE9_l_name_bn" text="扎加尔霍尔" />
+    <string id="aom_lord_SE9_s_name_bn" text="法拉津" />
+    <string id="TAOM_hero_1_27_bn" text="乌格鲁霍尔为索伦之口镇守黑门的城墙走道。他身负古老的黑努门诺尔血统，视麾下的奥克为工具，而非士兵。" />
+    <string id="TAOM_hero_1_27_1_bn" text="努卢贝丝是效命于黑塔的黑努门诺尔女巫。她的名字在古阿督奈克语中意为“夜之语”，是她自己选定的。" />
+    <string id="TAOM_hero_1_27_2_bn" text="阿加努齐尔率领着驰骋于黑门以西的劫掠队。他的名字意为“慕死者”，而他的母亲取此名本是作为祝福。" />
+    <string id="TAOM_hero_1_27_3_bn" text="乌格鲁菲尔与兄长的劫掠者同行，清点他们夺来的一切。她从未见过祖先曾横渡的那片大海。" />
+    <string id="TAOM_hero_1_37_bn" text="多尔古菲尔是索伦之口的女儿，尽管他早已弃却“父亲”这一名分。她统领卡拉赫安格伦的骑兵，并钻研其家族不敢宣之于口的技艺。" />
+    <string id="TAOM_hero_1_47_bn" text="乌尔巴尔掌管卡拉赫安格伦地下的锻炉，以及供养锻炉的奴隶。他的名字是其族人自努门诺尔带出而未曾更改的少数名字之一。" />
+    <string id="TAOM_hero_1_47_1_bn" text="齐姆拉贝丝在黑门代表夫家发言，且远比她的丈夫善辩。索伦之口不止一次发觉她大有用处。" />
+    <string id="TAOM_hero_1_47_2_bn" text="阿兹鲁菲尔年方十四，却已随黑门的巡逻队出行。她的名字意为“海之女”，而在世的黑努门诺尔人无一曾亲眼见过那片海。" />
+    <string id="TAOM_hero_1_47_3_bn" text="阿布拉津之名取自努门诺尔古老的“坚贞”之德。在魔多，这个词的含义已更接近于“顺从”。" />
+    <string id="TAOM_hero_SE9_l_bn" text="“剑主”扎加尔霍尔为黑塔镇守奇立斯纳吉尔。当中洲其余各地舍弃阿督奈克语时，他的家族仍保存着它；谁若用精灵语称呼他，他必加以纠正。" />
+    <string id="TAOM_hero_SE9_s_bn" text="法拉津是黑努门诺尔女巫，每当丈夫出征，奇立斯纳吉尔的实权便掌握在她手中。她的名字令人想起努门诺尔的末代君王。" />
+    <string id="TAOM_hero_SE9_c1_bn" text="齐古尔贝尔是奇立斯纳吉尔的继承人，受过黑暗法术的训练。他的名字意为“慕巫者”，那正是努门诺尔在识破索伦真面目之前对他的称呼。" />
+    <string id="TAOM_hero_SE9_c2_bn" text="齐姆拉津是剑主的次女，也是姐弟二人中更危险的一个。她继承了母亲的天赋，却毫无母亲的耐心。" />
   </strings>
 </base>

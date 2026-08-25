@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="馬克女王" />
     <string id="TAOM_liege_rhun" text="魯恩的洛克汗" />
     <string id="TAOM_liege_rhun_female" text="魯恩的洛克汗" />
+    <string id="aom_lord_1_27_name_bn" text="烏格魯霍爾" />
+    <string id="aom_lord_1_37_name_bn" text="多爾古費爾" />
+    <string id="aom_lord_1_47_name_bn" text="烏爾巴爾" />
+    <string id="aom_lord_1_27_1_name_bn" text="努魯貝絲" />
+    <string id="aom_lord_1_27_2_name_bn" text="阿加努濟爾" />
+    <string id="aom_lord_1_27_3_name_bn" text="烏格魯費爾" />
+    <string id="aom_lord_1_47_1_name_bn" text="辛拉貝絲" />
+    <string id="aom_lord_1_47_2_name_bn" text="阿茲魯菲爾" />
+    <string id="aom_lord_1_47_3_name_bn" text="阿布拉金" />
+    <string id="aom_lord_SE9_c1_name_bn" text="齊古爾貝爾" />
+    <string id="aom_lord_SE9_c2_name_bn" text="齊姆拉金" />
+    <string id="aom_lord_SE9_l_name_bn" text="薩加爾霍爾" />
+    <string id="aom_lord_SE9_s_name_bn" text="法拉金" />
+    <string id="TAOM_hero_1_27_bn" text="烏格魯霍爾為索倫之口鎮守魔門的城牆走道。他身上流著古老的黑努曼諾爾血脈，他把麾下的半獸人視為工具，而非士兵。" />
+    <string id="TAOM_hero_1_27_1_bn" text="努魯貝絲是效忠黑塔的黑努曼諾爾女巫。她的名字在古阿督奈克語中意為「夜之言」，這名字是她自己選的。" />
+    <string id="TAOM_hero_1_27_2_bn" text="阿加努齊爾率領那些馳騁於黑門以西的掠襲隊。他的名字意為「愛死者」，而他的母親當初是把它當作祝福。" />
+    <string id="TAOM_hero_1_27_3_bn" text="烏格魯菲爾隨兄長的掠襲隊出征，並記錄他們所有的擄獲。她從未見過祖先當年渡越的那片大海。" />
+    <string id="TAOM_hero_1_37_bn" text="多爾古菲爾是索倫之口的女兒，儘管他早已擱下「父親」這個名分。她統領卡拉赫安格倫的騎兵，並研習她的家族不敢出聲提起的技藝。" />
+    <string id="TAOM_hero_1_47_bn" text="烏爾巴掌管卡拉赫安格倫地底的鍛爐，以及供養這些鍛爐的奴隸。他的名字是他的族人自努曼諾爾帶出而不曾改變的少數名字之一。" />
+    <string id="TAOM_hero_1_47_1_bn" text="齊姆拉貝絲在黑門為丈夫的家族發言，而且說得比他好得多。索倫之口不止一次發現她頗為有用。" />
+    <string id="TAOM_hero_1_47_2_bn" text="阿茲魯菲爾年方十四，已隨魔門的巡騎出行。她的名字意為「海之女」，而那片海，如今在世的黑努曼諾爾人無一親眼見過。" />
+    <string id="TAOM_hero_1_47_3_bn" text="阿布拉金之名取自古努曼諾爾人所崇的「堅定」之德。在魔多，這個詞的意思已變得更接近「服從」。" />
+    <string id="TAOM_hero_SE9_l_bn" text="劍主薩加爾霍爾為黑塔守衛奇立斯納吉爾。當中土世界其餘之地都棄置阿督奈克語時，他的家族仍保存著它；若有人以精靈語稱呼他，他必加以糾正。" />
+    <string id="TAOM_hero_SE9_s_bn" text="法拉金是黑努曼諾爾女巫，每當她的丈夫出征，奇立斯納吉爾的實權便在她手中。她的名字令人想起努曼諾爾的末代君王。" />
+    <string id="TAOM_hero_SE9_c1_bn" text="齊古爾貝爾是奇立斯納吉爾的繼承人，受過黑暗技藝的訓練。他的名字意為「巫師的愛慕者」——努曼諾爾在認清索倫的真面目之前，正是如此稱呼他。" />
+    <string id="TAOM_hero_SE9_c2_bn" text="齊姆拉金是劍主的次子女，也是兩人中更危險的那一個。她承襲了母親的天賦，卻毫無母親的耐性。" />
   </strings>
 </base>

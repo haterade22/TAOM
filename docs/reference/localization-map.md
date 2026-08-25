@@ -3,7 +3,7 @@
 > Full localization component map. Extracted from CLAUDE.md 2026-07-18. Workflow: `/localize` + `docs/localization/TRANSLATOR_GUIDE.md`.
 
 
-12 supported languages (BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR) × 3 modules (TAOM, TAOM_Map, LOTRLOME_Armory) = ~10K strings per language. PL is community-hand-translated; the other 11 have AI first-draft translations (Claude Sonnet 4.5 via `tools/translate_with_claude.py`).
+12 supported languages (BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR) × 3 modules (TAOM, TAOM_Map, LOTRLOME_Armory) = ~10K strings per language. All 12 have AI first-draft translations (`tools/translate_with_claude.py`). None is hand-translated: an earlier note calling PL community-hand-translated was wrong, and it kept PL out of every translator run until 2026-08-25.
 
 | Component | Location | Notes |
 |-----------|----------|-------|

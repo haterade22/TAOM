@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="마크의 여왕" />
     <string id="TAOM_liege_rhun" text="룬의 로케칸" />
     <string id="TAOM_liege_rhun_female" text="룬의 로케칸" />
+    <string id="aom_lord_1_27_name_bn" text="우그루코르" />
+    <string id="aom_lord_1_37_name_bn" text="돌구펠" />
+    <string id="aom_lord_1_47_name_bn" text="울바르" />
+    <string id="aom_lord_1_27_1_name_bn" text="눌루베스" />
+    <string id="aom_lord_1_27_2_name_bn" text="아가누지르" />
+    <string id="aom_lord_1_27_3_name_bn" text="우그루펠" />
+    <string id="aom_lord_1_47_1_name_bn" text="짐라베스" />
+    <string id="aom_lord_1_47_2_name_bn" text="아즈루펠" />
+    <string id="aom_lord_1_47_3_name_bn" text="아브라진" />
+    <string id="aom_lord_SE9_c1_name_bn" text="지구르벨" />
+    <string id="aom_lord_SE9_c2_name_bn" text="짐라진" />
+    <string id="aom_lord_SE9_l_name_bn" text="자가르코르" />
+    <string id="aom_lord_SE9_s_name_bn" text="파라진" />
+    <string id="TAOM_hero_1_27_bn" text="우그루코르는 사우론의 입을 위해 모란논의 성벽 통로를 지킨다. 그는 옛 검은 누메노르인의 혈통이며, 자신의 지휘 아래 있는 오크들을 병사가 아니라 도구로 여긴다." />
+    <string id="TAOM_hero_1_27_1_bn" text="눌루베스는 암흑의 탑을 섬기는 검은 누메노르인 여마법사다. 그 이름은 옛 아두나이크어로 '밤의 말'을 뜻하며, 그녀가 스스로 택한 이름이다." />
+    <string id="TAOM_hero_1_27_2_bn" text="아가누지르는 검은 문 서쪽으로 나가는 약탈대를 이끈다. 그 이름은 '죽음을 사랑하는 자'를 뜻하는데, 그의 어머니는 그것을 축복으로 여겨 붙였다." />
+    <string id="TAOM_hero_1_27_3_bn" text="우그루펠은 오라비의 약탈대와 함께 말을 달리며 그들이 약탈한 모든 것을 기록한다. 그녀는 조상들이 건넜던 바다를 한 번도 본 적이 없다." />
+    <string id="TAOM_hero_1_37_bn" text="돌구펠은 사우론의 입의 딸이지만, 그는 오래전에 아버지라는 이름을 버렸다. 그녀는 카라크 앙그렌의 기병을 지휘하며, 자기 가문이 입 밖으로 내지 않는 기술을 익힌다." />
+    <string id="TAOM_hero_1_47_bn" text="울바르는 카라크 앙그렌 아래의 대장간과 그것을 돌리는 노예들을 관리한다. 그의 이름은 그의 백성이 누메노르에서 가져온 이름 중 변하지 않은 몇 안 되는 것이다." />
+    <string id="TAOM_hero_1_47_1_bn" text="짐라베스는 검은 문에서 남편 가문을 대변하며, 남편보다 훨씬 말을 잘한다. 사우론의 입은 그녀가 쓸모 있다는 것을 한두 번 이상 확인했다." />
+    <string id="TAOM_hero_1_47_2_bn" text="아즈루펠은 열네 살이지만 이미 모란논 순찰대와 함께 말을 달린다. 그 이름은 '바다의 딸'을 뜻하는데, 살아 있는 어떤 검은 누메노르인도 그 바다를 본 적이 없다." />
+    <string id="TAOM_hero_1_47_3_bn" text="아브라진은 옛 누메노르의 미덕인 굳건함에서 이름을 얻었다. 모르도르에서 그 말은 이제 복종에 훨씬 가까운 뜻이 되었다." />
+    <string id="TAOM_hero_SE9_l_bn" text="'검의 군주' 자가르코르는 암흑의 탑을 위해 키리스 나르길을 지킨다. 그의 가문은 가운데땅의 나머지가 아두나이크어를 놓아버렸을 때에도 그 말을 지켰고, 그는 자신을 요정어로 부르는 자는 누구든 바로잡는다." />
+    <string id="TAOM_hero_SE9_s_bn" text="파라진은 검은 누메노르인 여마법사이며, 남편이 출정할 때마다 키리스 나르길의 실질적인 권력자다. 그 이름은 누메노르의 마지막 왕을 떠올리게 한다." />
+    <string id="TAOM_hero_SE9_c1_bn" text="지구르벨은 키리스 나르길의 후계자이며 암흑의 기술을 익혔다. 그 이름은 '마법사를 사랑하는 자'를 뜻하는데, 누메노르는 사우론의 정체를 알기 전에 그를 그렇게 불렀다." />
+    <string id="TAOM_hero_SE9_c2_bn" text="짐라진은 검의 군주의 둘째 아이이며, 두 남매 중 더 위험한 쪽이다. 그녀는 어머니의 재능은 물려받았으나 인내심은 전혀 물려받지 못했다." />
   </strings>
 </base>

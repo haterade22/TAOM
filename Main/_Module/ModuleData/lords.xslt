@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
@@ -844,7 +844,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.1" build="0.99" key="0000F10E90FB50046958D3288B71766558599899863A9B25B8E39F6A978897400090876088487420000000000000000000000000000000000000000013C4040"/>
+                <BodyProperties version="4" age="42" weight="0.0046" build="0.8032" key="0002A80FC0001902578E77766AC361A634799A6658EAA5688655868BB64B66C400FC06030F78666400000000000000000000000000000000000000003FF49042" />
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -877,8 +877,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1540,18 +1540,17 @@
     <xsl:template match="NPCCharacter[@id='lord_1_27']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_27</xsl:attribute>
-            <xsl:attribute name="race">uruk</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_27_name}Maugrash</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_27_name_bn}Ugrukhôr</xsl:attribute>
             <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.3" key="000B6C02C0BC100679D8455AA9684859888735557C6493786867627857B2895800058893058735D900001105000030A30000001F000000000000000001686000"/>
+                <BodyProperties version="4" age="37" weight="0.0046" build="0.8032" key="0002740FC0001682254A76EBA9A37EAB347997BA4B3964748655868BB64B66C400FC06030F78666400000000000000000000000000000000000000003FF42042" />
             </face>
           <skills>
               <skill id="OneHanded" value="275" />
@@ -1584,8 +1583,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1659,7 +1658,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.6" key="000BA00B40001008A43A8AB8557888874A6A94868B767788988844778A69247900058005079777A800001105000030A30000001F000000000000000000CC0000"/>
+                <BodyProperties version="4" age="23" weight="0.0046" build="0.8032" key="0002380E40003281AA3A8B51DBB48F28899A93883962A9A018F638625568155500FC06030F27D9CB00000000000000000000000000000000000000003FF480C2" />
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -1692,8 +1691,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2032,19 +2031,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_37']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_37</xsl:attribute>
-            <xsl:attribute name="race">uruk</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_37_name}Goshank</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_37_name_bn}Dolguphel</xsl:attribute>
             <xsl:attribute name="age">21</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.239" build="0.7027" key="001BF40E40FC10076C63396B58A46C7159DA89AADD789458B79BDE777836067600AB47030A8BE39B000000000000000000000000000000000000000001581180"/>
+                <BodyProperties version="4" age="21" weight="0.0046" build="0.3356" key="0002840F00003002723628E3B74BDD6756886A42C8825A989A762D8867767C8600A506030A5BAC6800000000000000000000000000000000000000003F5C1042" />
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -2077,8 +2075,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2154,7 +2152,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3025" build="0.5377" key="0005F00CC02810048774371C48B5C916EA6489378A81A846D9926C347476669603A856350A065B26000000000000000000000000000000000000000061441002"/>
+                <BodyProperties version="4" age="20" weight="0.0046" build="0.3356" key="0002900600002015CB89B45B4598A7788846A6D7DB924354747A2878B298786B00A506030AB69B5400000000000000000000000000000000000000003F5C0082" />
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -2187,8 +2185,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2468,18 +2466,17 @@
     <xsl:template match="NPCCharacter[@id='lord_1_47']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_47</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_47_name}Ulbos</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_47_name_bn}Ulbar</xsl:attribute>
             <xsl:attribute name="age">45</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="race">orc</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011B40597BC038E94A8C26585AAA93992D5A78776779C82329B657437695D35000005A80DE9BA6200001105000030A30000001F000000000000000000000000"/>
+                <BodyProperties version="4" age="45" weight="0.0046" build="0.8032" key="0002380E400039037A769B19B5DA587BD3952795C28E8CAB8655868B3D45BA6B00FC06030F78666400000000000000000000000000000000000000003FF46042" />
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -2512,8 +2509,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4761,7 +4758,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_27_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_27_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_27_1_name}Verina</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_27_1_name_bn}Nûlubêth</xsl:attribute>
             <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -4772,7 +4769,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2" build="0.2" key="0005B8071070000A987877861A2999B848987C68EA6BB7869423371443C8EA4801377613036AB66200000000000000000000000000000000000000005A6C3003"/>
+                <BodyProperties version="4" age="37" weight="0.0046" build="0.3356" key="0002380E40003001AA3A8B51DBB48F28899A93883962A9A018F638625568155500A506030A27D9CB00000000000000000000000000000000000000003F5C40C2" />
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -4805,8 +4802,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4816,18 +4813,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_27_2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_27_2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_27_2_name}Throznak</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_27_2_name_bn}Aganuzîr</xsl:attribute>
             <xsl:attribute name="age">18</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.4" key="000B8802C0BC1005B9D8455AA96848594597AD77996A54B899D967BA74979778010008930FBA9A7900001105000030A30000001F000000000000000001683100"/>
+                <BodyProperties version="4" age="18" weight="0.0046" build="0.8032" key="0002880D000039022DC5B5A6AA987BD9B565579889B7A4B38655868BCBEC8D7700FC06030F78666400000000000000000000000000000000000000003FF41042" />
             </face>
                                                                                                             <skills>
                                                                                                                 <skill id="OneHanded" value="235" />
@@ -4860,8 +4857,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4871,18 +4868,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_27_3']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_27_3</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_27_3_name}Vasilia</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_27_3_name_bn}Ugruphel</xsl:attribute>
             <xsl:attribute name="age">18</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2" build="0.3" key="000B8802C0BC1005B9D8455AA96848594597AD77996A54B899D967BA74979778010008930FBA9A7900001105000030A30000001F000000000000000001683100"/>
+                <BodyProperties version="4" age="18" weight="0.0046" build="0.3356" key="0002380E40002002AA574556B8A39774899A93883962A9A018F638625568155500A506030A27D9CB00000000000000000000000000000000000000003F5C40C2" />
             </face>
             <skills>
                 <skill id="OneHanded" value="275" />
@@ -4915,8 +4912,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4926,18 +4923,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_47_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_47_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_47_1_name}Mina</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_47_1_name_bn}Zimrabêth</xsl:attribute>
             <xsl:attribute name="age">38</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001CD00FD114000AE46398467C698988876DB2B863D57A6D87B96C58967BE7660187761308364A49000000000000000000000000000000000000000019142003"/>
+                <BodyProperties version="4" age="28" weight="0.0046" build="0.3356" key="0002980FC00010066C868C8A52DB7ED8A2570B75A64CB46A87B8873AA888A49E00A506030A69657400000000000000000000000000000000000000003F5C2042" />
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -4970,8 +4967,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -4981,18 +4978,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_47_2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_47_2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_47_2_name}Casyrea</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_47_2_name_bn}Azruphel</xsl:attribute>
             <xsl:attribute name="age">14</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C880A111400012857DAA3C88BD254869B9BB7C7796796A6987253285773960137761303A670BD00000000000000000000000000000000000000005A741083"/>
+                <BodyProperties version="4" age="14" weight="0.0046" build="0.3356" key="0002580A4000300B56D673AAC72565DC7669B34AA98874A997625A783B1972B200A506030A48598800000000000000000000000000000000000000003F5C1102" />
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -5025,8 +5022,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5036,18 +5033,18 @@
     <xsl:template match="NPCCharacter[@id='lord_1_47_3']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_47_3</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_47_3_name}Colambea</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_47_3_name_bn}Abrazîn</xsl:attribute>
             <xsl:attribute name="age">17</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00115C0A13702007997A77A685B88487865116663789A798A6A897926887369901A776130A8B49B500000000000000000000000000000000000000001F543083"/>
+                <BodyProperties version="4" age="17" weight="0.0046" build="0.3356" key="00029C06C000000A58888868764953D5697535277667DB885693A977B47BC7B400A506030A6C586700000000000000000000000000000000000000003F5C20C2" />
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -5080,8 +5077,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20816,18 +20813,18 @@
     <xsl:template match="NPCCharacter[@id='lord_SE9_c1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_SE9_c1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_SE9_c1_name}Pagarios</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_SE9_c1_name_bn}Zigûrbêl</xsl:attribute>
             <xsl:attribute name="age">26</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B700E402C325968215CB4D9779D947BABE1EA12D7B9649975B5856DB7C355016776130655A58500000000000000000000000000000000000000002AD42042"/>
+                <BodyProperties version="4" age="26" weight="0.0046" build="0.8032" key="0002780E40001603685C3C9329356424C68B4AD33377895A6A69692453B178A800FC06030FF3D56B00000000000000000000000000000000000000003FF46042" />
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -20860,8 +20857,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20871,18 +20868,18 @@
     <xsl:template match="NPCCharacter[@id='lord_SE9_c2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_SE9_c2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_SE9_c2_name}Diasca</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_SE9_c2_name_bn}Zimrazîn</xsl:attribute>
             <xsl:attribute name="age">24</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.3" key="0000080FCEFC290B4756896A6356B7D0C06B9C989782C82458739F1C6A48C62501877613081867C80000000000000000000000000000000000000000370C2102"/>
+                <BodyProperties version="4" age="24" weight="0.0046" build="0.3356" key="0002A806C0000010CBD7CB989B8A41D5DAADA6D7DB9243548A5A4C587688468800A506030AB5D86300000000000000000000000000000000000000003F5C0042" />
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -20915,8 +20912,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20926,18 +20923,18 @@
     <xsl:template match="NPCCharacter[@id='lord_SE9_l']">
         <xsl:copy>
             <xsl:attribute name="id">lord_SE9_l</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_SE9_l_name}Grishnákh, Uruk Captain</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_SE9_l_name_bn}Zagarkhôr</xsl:attribute>
             <xsl:attribute name="age">58</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.6" key="000BDC0FCFCC038F3D38B65122600AD02FEE2A646411F7F894359F648858075D064976670485629500000000000000000000000044FC1002000000007E7C4084"/>
+                <BodyProperties version="4" age="30" weight="0.0046" build="0.8032" key="0002940E40003A434868B38BD5266AA769489CA8213C7BCB79B7967577B9294800FC06030F7A927400000000000000000000000000000000000000003FF41142" />
             </face>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <skills>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="OneHanded" value="230" />
@@ -20970,8 +20967,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20981,18 +20978,18 @@
     <xsl:template match="NPCCharacter[@id='lord_SE9_s']">
         <xsl:copy>
             <xsl:attribute name="id">lord_SE9_s</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_SE9_s_name}Jonna</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_SE9_s_name_bn}Pharazîn</xsl:attribute>
             <xsl:attribute name="age">46</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000080FD0FC100D4776686376266B93426B9C989782C82458739F1CB876963401577613051867C8000000000000000000000000000000000000000022A420C3"/>
+                <BodyProperties version="4" age="46" weight="0.0046" build="0.3356" key="0002C006C000300DBB819D7BA4AAAA86A5A83867A3769C666827A32B6C74B51700A506030ADD775B00000000000000000000000000000000000000003F5C0102" />
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -21025,8 +21022,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+            	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>

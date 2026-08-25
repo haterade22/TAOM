@@ -417,15 +417,15 @@
 
 	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}복무를 끝낸다" />
 
-	<string id="taom_enlist_leave_refused" text="You cannot take your leave here just now." />
+	<string id="taom_enlist_leave_refused" text="지금 이곳에서는 휴가를 얻을 수 없다." />
 
-	<string id="taom_enlist_arrival_title" text="The column halts" />
+	<string id="taom_enlist_arrival_title" text="행렬이 멈추다" />
 
-	<string id="taom_enlist_arrival_body" text="Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself." />
+	<string id="taom_enlist_arrival_body" text="당신의 부대가 {SETTLEMENT}에서 멈췄다. 몇 시간쯤 자유 시간을 원한다면 상사는 못 본 척해 줄 것이다." />
 
-	<string id="taom_enlist_arrival_take" text="Take your leave" />
+	<string id="taom_enlist_arrival_take" text="휴가를 얻는다" />
 
-	<string id="taom_enlist_arrival_stay" text="Stay with the company" />
+	<string id="taom_enlist_arrival_stay" text="부대와 함께 남는다" />
 
   </strings>
 

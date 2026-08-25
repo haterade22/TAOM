@@ -49,6 +49,112 @@ mordor_num_initiate (T5, level 26)
 
 Two to four equipment rosters per troop, driven by how many mesh variants that tier has.
 
+## The Two Houses (2026-08-25)
+
+The line shipped without a home. Every one of the 16 Mordor lord party templates carried the same
+13 stacks summing to 146 of 3500 max_value, exactly 4%, so Black Numenoreans were a uniform token
+sprinkle across all fifteen clans rather than anybody's army. Two clans are now the houses that
+field them, and the other thirteen were deliberately left at 4%.
+
+| Clan | House | Seat | Template BN share |
+|---|---|---|---|
+| `clan_empire_south_1` | **Dolgubeth** | `castle_ES1` The Morannon, `castle_ES2` Carach Angren | 3225 / 3500 (92%) |
+| `clan_empire_south_9` | **Wawrim** | `castle_ES6` Cirith Nargil | 3225 / 3500 (92%) |
+
+Wawrim was forced: all four of its lords already carried explicit Black Numenorean text. Dolgubeth
+took the second seat over Melkondili (`clan_empire_south_3`) because it has ten lord slots to
+Melkondili's five, it is tier 6, its owner is the Mouth of Sauron who already carried
+`taom_black_numenorean_skills`, and its two fiefs are where his own blurb says he commands the
+garrison. Melkondili is Sauron's personal clan holding Barad Dur, so converting it would have turned
+the royal clan and the capital's garrison human.
+
+### Both clan names were already Adunaic, and that is not a coincidence worth undoing
+
+`dolgu` is "dark, (evil) night" and `beth` is "expression, saying, word", so **Dolgubeth reads as
+"Dark Word"**, which is the right house name for Sauron's herald. `-im` is the Adunaic plural, as in
+*Adunaim* for the Numenoreans themselves, and **Wawrim** already carries it. Neither name needed
+changing.
+
+The reverse trap is worth recording: Melkondili looked like the strongest candidate precisely
+because its name is Numenorean, but it is a *Quenya* form, and the Black Numenoreans were the King's
+Men who rejected the Elvish tongues. The same flaw sits on `lord_1_29` "Herumarth", a Sindarin name
+on a hero the text calls a Black Numenorean. Not fixed here, since he is in clan 3.
+
+### The 13 lords were renamed from attested Adunaic elements
+
+Masculine names end `-k -r -n -d -l`, feminine end `-th -l -s -z -n`, nobles run 3 to 4 syllables,
+and compounds take the objective case by inserting `-u-` into the first element (*azra* to *azru-* in
+Azrubel). `lord_1_14` kept "Mouth of Sauron": it is a title, and his own blurb says he has forgotten
+his name.
+
+| Clan 1 | | Clan 9 | |
+|---|---|---|---|
+| `lord_1_27` Ugrukhor | shadow-lord | `lord_SE9_l` Zagarkhor | sword-lord |
+| `lord_1_27_1` Nulubeth | night-word | `lord_SE9_s` Pharazin | the golden |
+| `lord_1_27_2` Aganuzir | death-lover | `lord_SE9_c1` Zigurbel | lover of the Wizard |
+| `lord_1_27_3` Ugruphel | shadow-daughter | `lord_SE9_c2` Zimrazin | the jewelled |
+| `lord_1_37` Dolguphel | dark-daughter | | |
+| `lord_1_47` Ulbar | attested Adunaic name | | |
+| `lord_1_47_1` Zimrabeth | jewel-word | | |
+| `lord_1_47_2` Azruphel | sea-daughter | | |
+| `lord_1_47_3` Abrazin | steadfast | | |
+
+`Pharazin` (feminine) and the pre-existing Umbar lord `lord_U1_13` `Pharazon` (masculine) are a
+deliberate pair, not a collision.
+
+### Three defects fixed on the way
+
+1. **`clan_empire_south_9` had a leader from another kingdom.** `spclans.xslt` set
+   `owner="Hero.lord_1_48_3"`, but `heroes.xslt` reassigns that hero to `Faction.clan_dolguldur_1`.
+   The owner is now `Hero.lord_SE9_l`.
+2. **`lord_SE9_l` was named "Grishnakh, Uruk Captain"** while his own blurb called him a Black
+   Numenorean lord.
+3. **Eight human Black Numenoreans carried `race="uruk"` or `race="orc"`.** This doc previously
+   flagged it for Pagarios alone; it was eight records. The attribute is now absent on all of them,
+   which is index 0, human, matching the troop-line convention.
+
+The Mouth of Sauron and every converted lord also wore orc kit
+(`mordor_bat_template_medium_*`). All 14 now bind the BN lord rosters
+(`mordor_num_{bat,civ}_template_lord_{cav,inf}`) that had been authored and left unassigned, with
+the file's own comment asking for exactly this.
+
+The armour fix was then widened past the two houses to the whole line. `lord_1_29` Herumarth and
+`lord_1_39` Naktharil sit in `clan_empire_south_3` Melkondili, were already human, and already
+carried a BN skillset, but were still in orc kit. The rule applied is **human plus a BN skillset
+means BN lord armour**, which now holds for all 16 Black Numenorean lords with no exceptions.
+Their clan keeps the 4% party template: this is their personal kit, not their troops.
+
+### min_value is half the mechanic, and it is easy to miss
+
+The engine fills each stack to `min + (max - min) * r` with one uniform `r` per party
+(`FindAppropriateInitialRosterForMobileParty`). Before this change both templates gave the orc
+stacks `min_value` 1 to 2 and every BN stack `min_value` 0, so a low-`r` party spawned **entirely
+orc with zero Black Numenoreans**. The non-zero floors now sit on the BN core and the orc stacks are
+at 0. Raising the max share alone would have left the identity broken for small parties.
+
+### The two templates are deliberately not identical
+
+Dolgubeth is infantry and archer weighted for a gate garrison; Wawrim leans cavalry for a field
+house. Both still sum to exactly 3500, which is the Mordor target in
+`tools/rebalance_party_template_maxes.py`, so that tool stays a no-op (verified: `stacks changed: 0`).
+Making them identical would have reproduced the exact flaw this change was fixing.
+
+### Expect smaller armies from these two clans
+
+All 13 BN troops are `weight="2.0"` against a Mordor roster average near 1.20, and
+`TroopWeightService.ComputeSizePenalty` subtracts `weightedCount - rawCount` from the party size
+limit. A 92% BN party settles at roughly `baseLimit / 1.91` raw troops, so these lords field around
+60 to 65% of the head count of other Mordor lords, with far better troops. That is the intended
+shape. `war_spoils` upkeep is not a factor: `SpecialResourceService` gates on the player's resources
+only, so AI lords pay nothing.
+
+### New string keys, because editing in place would have shipped the old names
+
+All 26 touched strings got new `_bn`-suffixed keys rather than new English under the old ones. The
+translator only fills rows that are untranslated, so editing the English under an existing key would
+have left all 12 language files serving "Grishnakh, Uruk Captain" with no error. The new keys were
+seeded into all 12 files and currently render English pending a translator run.
+
 ## Facts a Future Session Should Not Re-derive
 
 ### Race: omit the attribute entirely

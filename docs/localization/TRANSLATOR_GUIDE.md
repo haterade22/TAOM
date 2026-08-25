@@ -1,4 +1,4 @@
-# TAOM Translation Guide
+﻿# TAOM Translation Guide
 
 This guide is for anyone translating TAOM (Tales From the Age of Men) into another language. It covers the files to edit, the format rules, how to use the AI-assisted translation pipeline, and how to test in-game.
 
@@ -426,7 +426,7 @@ Armor, weapon, shield, and crafting piece names organized by owning culture.
 
 ## Current Coverage (as of 2026-05-24)
 
-The AI pipeline has produced first-draft translations across all 11 supported languages (PL was hand-translated by a community member and is preserved):
+The AI pipeline has produced first-draft translations across all 12 supported languages. PL is included: an earlier note describing it as community-hand-translated was wrong and had excluded it from every run until 2026-08-25, when its 4,009-entry backlog was cleared.
 
 | Lang | TAOM | TAOM_Map | Armory | XSLT (Encyclopedia) |
 |------|------|----------|--------|---------------------|
@@ -441,7 +441,7 @@ The AI pipeline has produced first-draft translations across all 11 supported la
 | TR   | 94%  | 64%      | 84%    | 97%                 |
 | CNs  | 99%  | 98%      | 89%    | 100%                |
 | CNt  | 99%  | 100%     | 91%    | 99.9%               |
-| PL   | hand-translated by community | partial | partial | 0% (pending) |
+| PL   | (measured below) | (measured below) | (measured below) | (measured below) |
 
 Untranslated entries fall back to English text — the game stays valid, just shows English where translation wasn't available.
 
@@ -452,7 +452,7 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
-- **OWED (2026-08-14): `taom_feat_bcg_ps` ("Blue Craig Swarm") ships as English in all 12 languages.** The Blue Craig party-size feat was added with no API key available, so the name was seeded as English and never translated. Its description was not affected: `taom_feat_bcg_ps_desc` is verbatim-identical English to `taom_feat_gob_ps_desc`, so the goblin translation was copied into all 12. The name is deliberately ABSENT from `tools/translation_cache/*.json`, because a cache hit is consulted before the LLM tier and seeding English there would block the translation permanently. To close this, run `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` for the 11 AI languages (PL is hand-translated). Nothing fails while this is open: `LanguageFileCoverageTests` is a presence check and the row exists holding English, so the suite stays green with the string permanently untranslated.
+- **OWED (2026-08-14): `taom_feat_bcg_ps` ("Blue Craig Swarm") ships as English in all 12 languages.** The Blue Craig party-size feat was added with no API key available, so the name was seeded as English and never translated. Its description was not affected: `taom_feat_bcg_ps_desc` is verbatim-identical English to `taom_feat_gob_ps_desc`, so the goblin translation was copied into all 12. The name is deliberately ABSENT from `tools/translation_cache/*.json`, because a cache hit is consulted before the LLM tier and seeding English there would block the translation permanently. To close this, run `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` for all 12 languages. Nothing fails while this is open: `LanguageFileCoverageTests` is a presence check and the row exists holding English, so the suite stays green with the string permanently untranslated.
 
 ---
 

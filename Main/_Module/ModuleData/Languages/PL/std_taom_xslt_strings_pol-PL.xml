@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="Królowa Marchii" />
     <string id="TAOM_liege_rhun" text="Loke-Kan Rhûnu" />
     <string id="TAOM_liege_rhun_female" text="Loke-Kan Rhûnu" />
+    <string id="aom_lord_1_27_name_bn" text="Ugrukhôr" />
+    <string id="aom_lord_1_37_name_bn" text="Dolguphel" />
+    <string id="aom_lord_1_47_name_bn" text="Ulbar" />
+    <string id="aom_lord_1_27_1_name_bn" text="Nûlubêth" />
+    <string id="aom_lord_1_27_2_name_bn" text="Aganuzîr" />
+    <string id="aom_lord_1_27_3_name_bn" text="Ugruphel" />
+    <string id="aom_lord_1_47_1_name_bn" text="Zimrabêth" />
+    <string id="aom_lord_1_47_2_name_bn" text="Azruphel" />
+    <string id="aom_lord_1_47_3_name_bn" text="Abrazîn" />
+    <string id="aom_lord_SE9_c1_name_bn" text="Zigûrbêl" />
+    <string id="aom_lord_SE9_c2_name_bn" text="Zimrazîn" />
+    <string id="aom_lord_SE9_l_name_bn" text="Zagarkhôr" />
+    <string id="aom_lord_SE9_s_name_bn" text="Pharazîn" />
+    <string id="TAOM_hero_1_27_bn" text="Ugrukhôr strzeże murów Morannonu w imieniu Ust Saurona. Płynie w nim dawna krew Czarnych Númenorejczyków, a orków pod swoją komendą uważa raczej za narzędzia niż za żołnierzy." />
+    <string id="TAOM_hero_1_27_1_bn" text="Nûlubêth to czarnonúmenorejska czarodziejka w służbie Czarnej Wieży. Jej imię oznacza Nocne Słowo w dawnej mowie adûnaickiej — wybrała je sobie sama." />
+    <string id="TAOM_hero_1_27_2_bn" text="Aganuzîr dowodzi oddziałami łupieżców wyprawiającymi się na zachód od Czarnej Bramy. Jego imię znaczy Miłośnik Śmierci, a matka nadała mu je jako błogosławieństwo." />
+    <string id="TAOM_hero_1_27_3_bn" text="Ugruphel jeździ z łupieżcami swego brata i prowadzi rachubę wszystkiego, co zagarną. Nigdy nie widziała morza, które przemierzyli jej przodkowie." />
+    <string id="TAOM_hero_1_37_bn" text="Dolguphel jest córką Ust Saurona, choć on dawno już odłożył miano ojca. Dowodzi jazdą Carach Angren i studiuje sztuki, których jej ród nie nazywa głośno." />
+    <string id="TAOM_hero_1_47_bn" text="Ulbar zarządza kuźniami pod Carach Angren i niewolnikami, którzy je karmią. Jego imię jest jednym z niewielu, jakie jego lud wyniósł z Númenoru w niezmienionej postaci." />
+    <string id="TAOM_hero_1_47_1_bn" text="Zimrabêth przemawia w imieniu rodu swego męża przy Czarnej Bramie — i czyni to znacznie lepiej niż on. Usta Saurona niejeden raz uznały ją za użyteczną." />
+    <string id="TAOM_hero_1_47_2_bn" text="Azruphel ma czternaście lat i już jeździ z patrolami Morannonu. Jej imię znaczy Córa Morza — morza, którego nie widział żaden żyjący Czarny Númenorejczyk." />
+    <string id="TAOM_hero_1_47_3_bn" text="Abrazîn otrzymał imię od dawnej númenorejskiej cnoty niezłomności. W Mordorze słowo to nabrało znaczenia znacznie bliższego posłuszeństwu." />
+    <string id="TAOM_hero_SE9_l_bn" text="Zagarkhôr, Pan Miecza, dzierży Cirith Nargil w imieniu Czarnej Wieży. Jego ród zachował mowę adûnaicką, gdy reszta Śródziemia jej zaniechała, a on poprawi każdego, kto nazwie go po elficku." />
+    <string id="TAOM_hero_SE9_s_bn" text="Pharazîn to czarnonúmenorejska czarodziejka i prawdziwa władza w Cirith Nargil, ilekroć jej mąż wyrusza w pole. Jej imię przywodzi na myśl ostatniego Króla Númenoru." />
+    <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl jest dziedzicem Cirith Nargil, wyszkolonym w mrocznych sztukach. Jego imię znaczy Miłujący Czarnoksiężnika — tak Númenor nazywał Saurona, zanim poznał jego prawdziwą naturę." />
+    <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn jest drugim dzieckiem Pana Miecza i groźniejszym z tej dwójki. Odziedziczyła talenty matki, lecz nic z jej cierpliwości." />
   </strings>
 </base>

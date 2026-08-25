@@ -4,6 +4,89 @@
 
 ## 2026-08-25
 
+### fix(i18n): Polish was never hand-translated, and the belief cost it every run
+
+CLAUDE.md, the `/localize` skill, `localization-map.md`, `faction-map.md` and TRANSLATOR_GUIDE.md all
+stated that PL is hand-translated by a community member and must be preserved. It is not, and it
+never was. The claim propagated into five live documents and one tool comment, and every translator
+run since has excluded PL on the strength of it, so `--lang PL` was simply never passed.
+
+The cost is measurable: PL carries 4,009 entries that need an LLM pass, against 0 for the other
+eleven, which are fully cache-resolvable. Nothing failed and no test caught it, because
+`LanguageFileCoverageTests` is a presence check: the rows existed holding English, so the suite
+stayed green while a twelfth of the mod's localization sat permanently untranslated.
+
+All five live docs are corrected. The historical CHANGELOG and review-log mentions are left as
+history. `tools/retune_career_health.py:32` still cites the old rationale in a comment explaining a
+past one-off decision, and is left alone for the same reason.
+
+Also in this pass: the 26 new Black Numenorean string keys translated into all 12 languages, and the
+standing `--module TAOM` backlog cleared for the eleven AI languages at roughly $0.35 each.
+
+Three vanilla strings still refuse to translate, one each in CNs, KO and TR (`uc4M4bhG`, `qa4FlTWS`,
+`uiY3ds0Z`). All three carry nested conditional-gender markup such as
+`{?TARGET_HERO.GENDER}lady{?}lord{\?}` plus inline `[if:convo_grave]` tags, and the model will not
+reproduce the markup exactly, so validation rejects the result. They fall back to English. Not
+introduced here and not worth an override until someone wants those three lines in those three
+languages.
+
+PL's own 4,009-entry backlog is running and lands in a follow-up commit.
+
+### feat(mordor): Black Numenoreans get two houses instead of a sprinkle
+
+The line shipped in August without a home. All 16 Mordor lord party templates carried the same 13
+stacks at 146 of 3500 max_value, exactly 4%, so Black Numenoreans turned up in token numbers under
+every one of the fifteen clans and belonged to none of them.
+
+`clan_empire_south_1` (Dolgubeth, at the Morannon and Carach Angren) and `clan_empire_south_9`
+(Wawrim, at Cirith Nargil) now field them at 92% of template max_value. The other thirteen clans and
+the culture default are untouched at 4%. Wawrim was forced: all four of its lords already carried
+explicit Black Numenorean text. Dolgubeth beat Melkondili on ten lord slots to five, tier 6, and an
+owner (the Mouth of Sauron) who already carried the BN skillset.
+
+Both clan names turned out to be authentic Adunaic already: `dolgu` "dark, evil night" plus `beth`
+"word" reads as "Dark Word", and `-im` is the Adunaic plural as in *Adunaim*. Melkondili, which
+looked like the obvious candidate, is a *Quenya* form, and the Black Numenoreans were the King's Men
+who rejected the Elvish tongues.
+
+13 lords renamed from attested Adunaic elements (Ugrukhor, Nulubeth, Aganuzir, Ugruphel, Dolguphel,
+Ulbar, Zimrabeth, Azruphel, Abrazin, Zagarkhor, Pharazin, Zigurbel, Zimrazin), with masculine and
+feminine endings and the objective-case compounding rule observed. The Mouth of Sauron keeps his
+title, since his own blurb says he forgot his name.
+
+Three defects fixed on the way:
+
+- `clan_empire_south_9`'s owner was `Hero.lord_1_48_3`, whom `heroes.xslt` reassigns to
+  `Faction.clan_dolguldur_1`. Wawrim was led by a hero belonging to another kingdom's clan. Now
+  `Hero.lord_SE9_l`.
+- `lord_SE9_l` was named "Grishnakh, Uruk Captain" while his own blurb called him a Black Numenorean
+  lord.
+- Eight human Black Numenoreans carried `race="uruk"` or `race="orc"`. The feature doc had flagged
+  this for one of them. All eight now omit the attribute, which is index 0, human.
+
+All 14 lords also wore orc kit, including the Mouth of Sauron. They now bind the
+`mordor_num_{bat,civ}_template_lord_{cav,inf}` rosters that were authored in August and left
+unassigned, which is what that file's own comment asked for. The armour fix then widened past the
+two houses: `lord_1_29` Herumarth and `lord_1_39` Naktharil in Melkondili were already human and
+already carried a BN skillset, but were still in orc kit. All 16 Black Numenorean lords are now
+human and in BN lord armour, on the rule human plus a BN skillset means BN lord armour.
+
+`min_value` mattered as much as the max: the engine fills a stack to `min + (max - min) * r` with one
+uniform `r` per party, and the orc stacks held the only non-zero floors, so a low-`r` party spawned
+entirely orc. The floors now sit on the BN core.
+
+Expect these two clans to field roughly 60 to 65% of the head count of other Mordor lords. All 13 BN
+troops are weight 2.0 against a roster average near 1.20, and `ComputeSizePenalty` deflates the party
+size limit by the weight surplus.
+
+All 26 touched strings got new `_bn` keys rather than new English under the old ones: the translator
+only fills untranslated rows, so an in-place edit would have shipped "Grishnakh, Uruk Captain" in all
+12 languages with no error. Keys seeded into all 12 files, rendering English pending a translator run.
+
+Not-tested: in-game spawn composition, lord appearance, and the party-size interaction.
+Research: DefaultPartySizeLimitModel.GetInitialPartySizeRatioForMobileParty, MBObjectManager.CreateObjectFromXmlNode.
+Save-compat: renames and template edits are new-campaign facing; existing parties keep their rosters.
+
 ### fix(enlistment): shore leave now actually holds the settlement (#512)
 
 Field report: went into a town twice while enlisted, and it did not wait either time. The live log

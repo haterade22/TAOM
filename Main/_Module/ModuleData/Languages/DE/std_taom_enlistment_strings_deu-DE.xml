@@ -417,15 +417,15 @@
 
 	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Den Dienst als beendet ansehen" />
 
-	<string id="taom_enlist_leave_refused" text="You cannot take your leave here just now." />
+	<string id="taom_enlist_leave_refused" text="Du kannst hier im Augenblick keinen Urlaub nehmen." />
 
-	<string id="taom_enlist_arrival_title" text="The column halts" />
+	<string id="taom_enlist_arrival_title" text="Die Kolonne hält" />
 
-	<string id="taom_enlist_arrival_body" text="Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself." />
+	<string id="taom_enlist_arrival_body" text="Deine Kompanie hat in {SETTLEMENT} haltgemacht. Dein Feldwebel wird wegsehen, wenn du ein paar Stunden für dich haben willst." />
 
-	<string id="taom_enlist_arrival_take" text="Take your leave" />
+	<string id="taom_enlist_arrival_take" text="Urlaub nehmen" />
 
-	<string id="taom_enlist_arrival_stay" text="Stay with the company" />
+	<string id="taom_enlist_arrival_stay" text="Bei der Kompanie bleiben" />
 
   </strings>
 

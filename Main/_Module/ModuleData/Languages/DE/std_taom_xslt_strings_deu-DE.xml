@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="Königin der Mark" />
     <string id="TAOM_liege_rhun" text="Loke-Kan von Rhûn" />
     <string id="TAOM_liege_rhun_female" text="Loke-Kan von Rhûn" />
+    <string id="aom_lord_1_27_name_bn" text="Ugrukhôr" />
+    <string id="aom_lord_1_37_name_bn" text="Dolguphel" />
+    <string id="aom_lord_1_47_name_bn" text="Ulbar" />
+    <string id="aom_lord_1_27_1_name_bn" text="Nûlubêth" />
+    <string id="aom_lord_1_27_2_name_bn" text="Aganuzîr" />
+    <string id="aom_lord_1_27_3_name_bn" text="Ugruphel" />
+    <string id="aom_lord_1_47_1_name_bn" text="Zimrabêth" />
+    <string id="aom_lord_1_47_2_name_bn" text="Azruphel" />
+    <string id="aom_lord_1_47_3_name_bn" text="Abrazîn" />
+    <string id="aom_lord_SE9_c1_name_bn" text="Zigûrbêl" />
+    <string id="aom_lord_SE9_c2_name_bn" text="Zimrazîn" />
+    <string id="aom_lord_SE9_l_name_bn" text="Zagarkhôr" />
+    <string id="aom_lord_SE9_s_name_bn" text="Pharazîn" />
+    <string id="TAOM_hero_1_27_bn" text="Ugrukhôr hält den Wehrgang des Morannon für den Mund Saurons. Er ist von altem schwarznúmenórischem Blut und betrachtet die Orks unter seinem Befehl als Werkzeuge, nicht als Soldaten." />
+    <string id="TAOM_hero_1_27_1_bn" text="Nûlubêth ist eine schwarznúmenórische Zauberin im Dienst des Dunklen Turms. Ihr Name bedeutet Nacht-Wort in der alten adûnaischen Sprache, und sie hat ihn selbst gewählt." />
+    <string id="TAOM_hero_1_27_2_bn" text="Aganuzîr führt die Raubscharen an, die westlich des Schwarzen Tores reiten. Sein Name bedeutet Todesliebender, und seine Mutter meinte ihn als Segen." />
+    <string id="TAOM_hero_1_27_3_bn" text="Ugruphel reitet mit den Räubern ihres Bruders und führt die Liste über alles, was sie nehmen. Sie hat das Meer, das ihre Vorfahren überquerten, nie gesehen." />
+    <string id="TAOM_hero_1_37_bn" text="Dolguphel ist die Tochter des Mundes Saurons, auch wenn er den Titel des Vaters längst abgelegt hat. Sie befehligt die Reiterei von Carach Angren und studiert die Künste, die ihr Haus nicht laut benennt." />
+    <string id="TAOM_hero_1_47_bn" text="Ulbar verwaltet die Schmieden unter Carach Angren und die Sklaven, die sie speisen. Sein Name ist einer der wenigen, die sein Volk unverändert aus Númenor mitbrachte." />
+    <string id="TAOM_hero_1_47_1_bn" text="Zimrabêth spricht am Schwarzen Tor für das Haus ihres Gemahls – und spricht dabei besser als er. Der Mund Saurons hat sie mehr als einmal nützlich gefunden." />
+    <string id="TAOM_hero_1_47_2_bn" text="Azruphel ist vierzehn und reitet schon mit den Patrouillen des Morannon. Ihr Name bedeutet Meerestochter, nach einem Meer, das kein lebender Schwarznúmenórer je erblickt hat." />
+    <string id="TAOM_hero_1_47_3_bn" text="Abrazîn wurde nach der alten númenórischen Tugend der Standhaftigkeit benannt. In Mordor bedeutet das Wort inzwischen etwas, das dem Gehorsam viel näher kommt." />
+    <string id="TAOM_hero_SE9_l_bn" text="Zagarkhôr, der Schwertherr, hält Cirith Nargil für den Dunklen Turm. Sein Haus bewahrte die adûnaische Zunge, als der Rest von Mittelerde sie fahren ließ, und er berichtigt jeden, der ihn auf Elbisch benennt." />
+    <string id="TAOM_hero_SE9_s_bn" text="Pharazîn ist eine schwarznúmenórische Zauberin und die wahre Herrin von Cirith Nargil, sooft ihr Gemahl zu Felde zieht. Ihr Name erinnert an den letzten König von Númenor." />
+    <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl ist der Erbe von Cirith Nargil und in den dunklen Künsten geschult. Sein Name bedeutet Liebhaber des Zauberers – so nannte Númenor Sauron, ehe es erkannte, was er war." />
+    <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn ist das zweite Kind des Schwertherrn und die gefährlichere der beiden. Sie hat die Gaben ihrer Mutter und nichts von deren Geduld." />
   </strings>
 </base>

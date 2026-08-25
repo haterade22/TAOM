@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <strings>
 
@@ -1370,7 +1370,7 @@
 
 	<string id="aom_lord_1_26_name" text="{=aom_lord_1_26_name}Hirgon" />
 
-	<string id="aom_lord_1_27_name" text="{=aom_lord_1_27_name}Maugrash" />
+	<string id="aom_lord_1_27_name_bn" text="{=aom_lord_1_27_name_bn}Ugrukhôr" />
 
 	<string id="aom_lord_1_28_name" text="{=aom_lord_1_28_name}Nazgûl, The Betrayer" />
 
@@ -1388,7 +1388,7 @@
 
 	<string id="aom_lord_1_36_name" text="{=aom_lord_1_36_name}Ivriniel" />
 
-	<string id="aom_lord_1_37_name" text="{=aom_lord_1_37_name}Goshank" />
+	<string id="aom_lord_1_37_name_bn" text="{=aom_lord_1_37_name_bn}Dolguphel" />
 
 	<string id="aom_lord_1_38_name" text="{=aom_lord_1_38_name}Nazgûl, the Undying" />
 
@@ -1404,7 +1404,7 @@
 
 	<string id="aom_lord_1_44_name" text="{=aom_lord_1_44_name}Nemos" />
 
-	<string id="aom_lord_1_47_name" text="{=aom_lord_1_47_name}Ulbos" />
+	<string id="aom_lord_1_47_name_bn" text="{=aom_lord_1_47_name_bn}Ulbar" />
 
 	<string id="aom_lord_1_49_name" text="{=aom_lord_1_49_name}Skarnak" />
 
@@ -1488,17 +1488,17 @@
 
 	<string id="aom_lord_1_1_16_name" text="{=aom_lord_1_1_16_name}Brianna Wingdart" />
 
-	<string id="aom_lord_1_27_1_name" text="{=aom_lord_1_27_1_name}Verina" />
+	<string id="aom_lord_1_27_1_name_bn" text="{=aom_lord_1_27_1_name_bn}Nûlubêth" />
 
-	<string id="aom_lord_1_27_2_name" text="{=aom_lord_1_27_2_name}Throznak" />
+	<string id="aom_lord_1_27_2_name_bn" text="{=aom_lord_1_27_2_name_bn}Aganuzîr" />
 
-	<string id="aom_lord_1_27_3_name" text="{=aom_lord_1_27_3_name}Vasilia" />
+	<string id="aom_lord_1_27_3_name_bn" text="{=aom_lord_1_27_3_name_bn}Ugruphel" />
 
-	<string id="aom_lord_1_47_1_name" text="{=aom_lord_1_47_1_name}Mina" />
+	<string id="aom_lord_1_47_1_name_bn" text="{=aom_lord_1_47_1_name_bn}Zimrabêth" />
 
-	<string id="aom_lord_1_47_2_name" text="{=aom_lord_1_47_2_name}Casyrea" />
+	<string id="aom_lord_1_47_2_name_bn" text="{=aom_lord_1_47_2_name_bn}Azruphel" />
 
-	<string id="aom_lord_1_47_3_name" text="{=aom_lord_1_47_3_name}Colambea" />
+	<string id="aom_lord_1_47_3_name_bn" text="{=aom_lord_1_47_3_name_bn}Abrazîn" />
 
 	<string id="aom_lord_1_49_1_name" text="{=aom_lord_1_49_1_name}Tristania" />
 
@@ -2088,13 +2088,13 @@
 
 	<string id="aom_lord_SE8_c_name" text="{=aom_lord_SE8_c_name}Itaria" />
 
-	<string id="aom_lord_SE9_c1_name" text="{=aom_lord_SE9_c1_name}Pagarios" />
+	<string id="aom_lord_SE9_c1_name_bn" text="{=aom_lord_SE9_c1_name_bn}Zigûrbêl" />
 
-	<string id="aom_lord_SE9_c2_name" text="{=aom_lord_SE9_c2_name}Diasca" />
+	<string id="aom_lord_SE9_c2_name_bn" text="{=aom_lord_SE9_c2_name_bn}Zimrazîn" />
 
-	<string id="aom_lord_SE9_l_name" text="{=aom_lord_SE9_l_name}Grishnákh, Uruk Captain" />
+	<string id="aom_lord_SE9_l_name_bn" text="{=aom_lord_SE9_l_name_bn}Zagarkhôr" />
 
-	<string id="aom_lord_SE9_s_name" text="{=aom_lord_SE9_s_name}Jonna" />
+	<string id="aom_lord_SE9_s_name_bn" text="{=aom_lord_SE9_s_name_bn}Pharazîn" />
 
 	<string id="aom_lord_WE8_c_name" text="{=aom_lord_WE8_c_name}Pelendur" />
 
@@ -2322,23 +2322,23 @@
 
 	<string id="TAOM_hero_1_14" text="{=TAOM_hero_1_14}The Mouth of Sauron speaks with the Dark Lord's authority. Once a Black Numenorean, he has forgotten his own name after ages of service to evil. He commands the garrison of the Black Gate." />
 
-	<string id="TAOM_hero_1_27" text="{=TAOM_hero_1_27}Maugrash is an Orc captain who has risen through sheer brutality and cunning." />
+	<string id="TAOM_hero_1_27_bn" text="{=TAOM_hero_1_27_bn}Ugrukhôr holds the wall-walk of the Morannon for the Mouth of Sauron. He is of the old Black Numenorean blood, and he counts the Orcs under his command as tools rather than soldiers." />
 
-	<string id="TAOM_hero_1_27_1" text="{=TAOM_hero_1_27_1}Verina is a Black Numenorean sorceress in service to the Dark Tower." />
+	<string id="TAOM_hero_1_27_1_bn" text="{=TAOM_hero_1_27_1_bn}Nûlubêth is a Black Numenorean sorceress in service to the Dark Tower. Her name means Night-Word in the old Adunaic speech, and she chose it herself." />
 
-	<string id="TAOM_hero_1_27_2" text="{=TAOM_hero_1_27_2}Throznak leads raiding parties into the western lands." />
+	<string id="TAOM_hero_1_27_2_bn" text="{=TAOM_hero_1_27_2_bn}Aganuzîr leads the raiding parties that ride west of the Black Gate. His name means Death-Lover, and his mother intended it as a blessing." />
 
-	<string id="TAOM_hero_1_27_3" text="{=TAOM_hero_1_27_3}Vasilia serves the Dark Lord in the shadows." />
+	<string id="TAOM_hero_1_27_3_bn" text="{=TAOM_hero_1_27_3_bn}Ugruphel rides with her brother's raiders and keeps the tally of everything they take. She has never seen the sea her ancestors crossed." />
 
-	<string id="TAOM_hero_1_37" text="{=TAOM_hero_1_37}Goshank commands a regiment of Mordor orcs with cruel efficiency." />
+	<string id="TAOM_hero_1_37_bn" text="{=TAOM_hero_1_37_bn}Dolguphel is the daughter of the Mouth of Sauron, though he has long since put aside the title of father. She commands the horse of Carach Angren and studies the arts her house does not name aloud." />
 
-	<string id="TAOM_hero_1_47" text="{=TAOM_hero_1_47}Ulbos is an Orc taskmaster, driving slaves in the forges of Mount Doom." />
+	<string id="TAOM_hero_1_47_bn" text="{=TAOM_hero_1_47_bn}Ulbar keeps the forges beneath Carach Angren and the slaves who feed them. His is one of the few names his people carried out of Numenor unchanged." />
 
-	<string id="TAOM_hero_1_47_1" text="{=TAOM_hero_1_47_1}Mina serves the dark powers of Mordor." />
+	<string id="TAOM_hero_1_47_1_bn" text="{=TAOM_hero_1_47_1_bn}Zimrabêth speaks for her husband's house at the Black Gate, and speaks rather better than he does. The Mouth of Sauron has found her useful more than once." />
 
-	<string id="TAOM_hero_1_47_2" text="{=TAOM_hero_1_47_2}Casyrea is a servant of the Shadow." />
+	<string id="TAOM_hero_1_47_2_bn" text="{=TAOM_hero_1_47_2_bn}Azruphel is fourteen and already rides with the Morannon patrols. Her name means Sea-Daughter, for a sea no living Black Numenorean has laid eyes on." />
 
-	<string id="TAOM_hero_1_47_3" text="{=TAOM_hero_1_47_3}Colambea dwells in the darkness of Mordor." />
+	<string id="TAOM_hero_1_47_3_bn" text="{=TAOM_hero_1_47_3_bn}Abrazîn was named for the old Numenorean virtue of steadfastness. In Mordor the word has come to mean something much closer to obedience." />
 
 	<string id="TAOM_hero_1_15" text="{=TAOM_hero_1_15}The Witch-King of Angmar, Lord of the Nazgul, is Sauron's most terrible servant. He was once a great king of Men, corrupted by his Ring of Power into an undying wraith." />
 
@@ -2420,13 +2420,13 @@
 
 	<string id="TAOM_hero_SE8_c" text="{=TAOM_hero_SE8_c}An Orc bred in the pits of Mordor." />
 
-	<string id="TAOM_hero_SE9_l" text="{=TAOM_hero_SE9_l}A Black Numenorean lord who commands a fortress in Mordor." />
+	<string id="TAOM_hero_SE9_l_bn" text="{=TAOM_hero_SE9_l_bn}Zagarkhôr, the Sword-Lord, holds Cirith Nargil for the Dark Tower. His house kept the Adunaic tongue when the rest of Middle-earth let it go, and he will correct anyone who names him in Elvish." />
 
-	<string id="TAOM_hero_SE9_s" text="{=TAOM_hero_SE9_s}A Black Numenorean sorceress of dark power." />
+	<string id="TAOM_hero_SE9_s_bn" text="{=TAOM_hero_SE9_s_bn}Pharazîn is a Black Numenorean sorceress, and the real authority at Cirith Nargil whenever her husband takes the field. Her name recalls the last King of Numenor." />
 
-	<string id="TAOM_hero_SE9_c1" text="{=TAOM_hero_SE9_c1}Heir to a Black Numenorean house, trained in dark arts." />
+	<string id="TAOM_hero_SE9_c1_bn" text="{=TAOM_hero_SE9_c1_bn}Zigûrbêl is heir to Cirith Nargil and trained in the dark arts. His name means Lover of the Wizard, which is what Numenor called Sauron before it learned what he was." />
 
-	<string id="TAOM_hero_SE9_c2" text="{=TAOM_hero_SE9_c2}Second child of the Black Numenorean lord." />
+	<string id="TAOM_hero_SE9_c2_bn" text="{=TAOM_hero_SE9_c2_bn}Zimrazîn is the second child of the Sword-Lord and the more dangerous of the two. She has her mother's talents and none of her patience." />
 
 	<string id="TAOM_hero_2_1" text="{=TAOM_hero_2_1}Bard II, King of Dale, is grandson of the legendary Bard the Bowman who slew Smaug. He rules the prosperous kingdom at the foot of Erebor, allied with the Dwarves of the Lonely Mountain." />
 

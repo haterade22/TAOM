@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="Mark Kraliçesi" />
     <string id="TAOM_liege_rhun" text="Rhûn Loke-Kan'ı" />
     <string id="TAOM_liege_rhun_female" text="Rhûn Loke-Kan'ı" />
+    <string id="aom_lord_1_27_name_bn" text="Ugrukhôr" />
+    <string id="aom_lord_1_37_name_bn" text="Dolguphel" />
+    <string id="aom_lord_1_47_name_bn" text="Ulbar" />
+    <string id="aom_lord_1_27_1_name_bn" text="Nûlubêth" />
+    <string id="aom_lord_1_27_2_name_bn" text="Aganuzîr" />
+    <string id="aom_lord_1_27_3_name_bn" text="Ugruphel" />
+    <string id="aom_lord_1_47_1_name_bn" text="Zimrabêth" />
+    <string id="aom_lord_1_47_2_name_bn" text="Azruphel" />
+    <string id="aom_lord_1_47_3_name_bn" text="Abrazîn" />
+    <string id="aom_lord_SE9_c1_name_bn" text="Zigûrbêl" />
+    <string id="aom_lord_SE9_c2_name_bn" text="Zimrazîn" />
+    <string id="aom_lord_SE9_l_name_bn" text="Zagarkhôr" />
+    <string id="aom_lord_SE9_s_name_bn" text="Pharazîn" />
+    <string id="TAOM_hero_1_27_bn" text="Ugrukhôr, Sauron'un Ağzı adına Morannon'un sur yolunu elinde tutar. Eski Kara Númenor kanındandır ve emrindeki Orkları asker değil, alet olarak görür." />
+    <string id="TAOM_hero_1_27_1_bn" text="Nûlubêth, Kara Kule'nin hizmetindeki bir Kara Númenorlu büyücüdür. Adı eski Adûnaik dilinde Gece-Söz anlamına gelir ve bu adı kendisi seçmiştir." />
+    <string id="TAOM_hero_1_27_2_bn" text="Aganuzîr, Kara Kapı'nın batısına giden akın birliklerine önderlik eder. Adı Ölüm-Sever anlamına gelir; annesi bunu bir kutsama olarak vermişti." />
+    <string id="TAOM_hero_1_27_3_bn" text="Ugruphel, kardeşinin akıncılarıyla at sürer ve aldıkları her şeyin hesabını tutar. Atalarının aştığı denizi hiç görmemiştir." />
+    <string id="TAOM_hero_1_37_bn" text="Dolguphel, Sauron'un Ağzı'nın kızıdır; gerçi o, baba unvanını çoktan bir kenara bırakmıştır. Carach Angren'in süvarilerine komuta eder ve hanesinin adını yüksek sesle anmadığı sanatları öğrenir." />
+    <string id="TAOM_hero_1_47_bn" text="Ulbar, Carach Angren'in altındaki demirhaneleri ve onları besleyen köleleri yönetir. Adı, halkının Númenor'dan değişmeden getirdiği birkaç addan biridir." />
+    <string id="TAOM_hero_1_47_1_bn" text="Zimrabêth, Kara Kapı'da kocasının hanesi adına konuşur ve ondan çok daha iyi konuşur. Sauron'un Ağzı onu birden fazla kez işe yarar bulmuştur." />
+    <string id="TAOM_hero_1_47_2_bn" text="Azruphel on dört yaşında ve şimdiden Morannon devriyeleriyle at sürüyor. Adı Deniz-Kızı anlamına gelir; yaşayan hiçbir Kara Númenorlunun gözüyle görmediği bir deniz için." />
+    <string id="TAOM_hero_1_47_3_bn" text="Abrazîn'e, eski Númenor erdemi olan sarsılmazlığın adı verilmişti. Mordor'da bu sözcük artık itaate çok daha yakın bir anlam kazandı." />
+    <string id="TAOM_hero_SE9_l_bn" text="Kılıç-Efendi Zagarkhôr, Kara Kule adına Cirith Nargil'i elinde tutar. Orta Dünya'nın geri kalanı Adûnaik dilini bırakırken onun hanesi onu korudu; kendisine Elfçe bir adla seslenen herkesi düzeltir." />
+    <string id="TAOM_hero_SE9_s_bn" text="Pharazîn bir Kara Númenorlu büyücüdür ve kocası sefere çıktığında Cirith Nargil'deki gerçek otoritedir. Adı, Númenor'un son Kralını anımsatır." />
+    <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl, Cirith Nargil'in varisidir ve kara sanatlarda eğitilmiştir. Adı Büyücü-Sever anlamına gelir; Númenor, onun ne olduğunu öğrenmeden önce Sauron'a böyle derdi." />
+    <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn, Kılıç-Efendi'nin ikinci çocuğudur ve ikisinin daha tehlikeli olanıdır. Annesinin yeteneklerine sahiptir, sabrına ise hiç." />
   </strings>
 </base>

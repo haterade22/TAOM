@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Lords. Derived from LOTRAOM, TAOM's own Bannerlord 1.2.12 predecessor
      project, and not present in vanilla Bannerlord. Provenance: see
      docs/reference/provenance-register.md (LOTRAOM row) in the TAOM repository.
@@ -24542,12 +24542,12 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.mordor -->
-    <NPCCharacter id="lord_1_27_1" name="{=aom_lord_1_27_1_name}Verina" age="37" is_female="true" voice="softspoken" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
+    <NPCCharacter id="lord_1_27_1" name="{=aom_lord_1_27_1_name_bn}Nûlubêth" age="37" is_female="true" voice="softspoken" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
         <face>
             <!--face_key
 			value="000b6d22c0bc100679d8455aa9684859888735557c6493786867627857b28958000d8894038735d900001105000030a30000001f000000000000000000006000"
 			/-->
-            <BodyProperties version="4" age="25.84" weight="0.2" build="0.2" key="0005B8071070000A987877861A2999B848987C68EA6BB7869423371443C8EA4801377613036AB66200000000000000000000000000000000000000005A6C3003" />
+            <BodyProperties version="4" age="37" weight="0.0046" build="0.3356" key="0002380E40003001AA3A8B51DBB48F28899A93883962A9A018F638625568155500A506030A27D9CB00000000000000000000000000000000000000003F5C40C2" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24586,16 +24586,16 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_a" />
-            <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_27_2" name="{=aom_lord_1_27_2_name}Throznak" age="18" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+    <NPCCharacter id="lord_1_27_2" name="{=aom_lord_1_27_2_name_bn}Aganuzîr" age="18" voice="earnest" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
             <!--face_key
 			value="000b6d22c0bc100679d8455aa9684859888735557c6493786867627857b28958000d8894038735d900001105000030a30000001f000000000000000000006000"
 			/-->
-            <BodyProperties version="4" age="30.7" weight="0.4" build="0.4" key="000B8802C0BC1005B9D8455AA96848594597AD77996A54B899D967BA74979778010008930FBA9A7900001105000030A30000001F000000000000000001683100" />
+            <BodyProperties version="4" age="18" weight="0.0046" build="0.8032" key="0002880D000039022DC5B5A6AA987BD9B565579889B7A4B38655868BCBEC8D7700FC06030F78666400000000000000000000000000000000000000003FF41042" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24637,16 +24637,16 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_b" />
-            <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_27_3" name="{=aom_lord_1_27_3_name}Vasilia" is_female="true" age="18" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+    <NPCCharacter id="lord_1_27_3" name="{=aom_lord_1_27_3_name_bn}Ugruphel" is_female="true" age="18" voice="earnest" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
             <!--face_key
 			value="000b6d22c0bc100679d8455aa9684859888735557c6493786867627857b28958000d8894038735d900001105000030a30000001f000000000000000000006000"
 			/-->
-            <BodyProperties version="4" age="30.7" weight="0.2" build="0.3" key="000B8802C0BC1005B9D8455AA96848594597AD77996A54B899D967BA74979778010008930FBA9A7900001105000030A30000001F000000000000000001683100" />
+            <BodyProperties version="4" age="18" weight="0.0046" build="0.3356" key="0002380E40002002AA574556B8A39774899A93883962A9A018F638625568155500A506030A27D9CB00000000000000000000000000000000000000003F5C40C2" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24685,16 +24685,16 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_c" />
-            <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_47_1" name="{=aom_lord_1_47_1_name}Mina" age="28" is_female="true" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" default_group="Cavalry" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+    <NPCCharacter id="lord_1_47_1" name="{=aom_lord_1_47_1_name_bn}Zimrabêth" age="28" is_female="true" voice="earnest" is_hero="true" culture="Culture.mordor" default_group="Cavalry" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
         <face>
             <!--face_key
 			value="0011b52597bc038e94a8c26585aaa93992d5a78776779c82329b657437695d350005a5a40de9ba6200001105000030a30000001f000000000000000000000000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="001CD00FD114000AE46398467C698988876DB2B863D57A6D87B96C58967BE7660187761308364A49000000000000000000000000000000000000000019142003" />
+            <BodyProperties version="4" age="28" weight="0.0046" build="0.3356" key="0002980FC00010066C868C8A52DB7ED8A2570B75A64CB46A87B8873AA888A49E00A506030A69657400000000000000000000000000000000000000003F5C2042" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24733,16 +24733,16 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_d" />
-            <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_47_2" name="{=aom_lord_1_47_2_name}Casyrea" default_group="Cavalry" age="14" is_female="true" voice="softspoken" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+    <NPCCharacter id="lord_1_47_2" name="{=aom_lord_1_47_2_name_bn}Azruphel" default_group="Cavalry" age="14" is_female="true" voice="softspoken" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
             <!--face_key
 			value="0011b52597bc038e94a8c26585aaa93992d5a78776779c82329b657437695d350005a5a40de9ba6200001105000030a30000001f000000000000000000000000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="001C880A111400012857DAA3C88BD254869B9BB7C7796796A6987253285773960137761303A670BD00000000000000000000000000000000000000005A741083" />
+            <BodyProperties version="4" age="14" weight="0.0046" build="0.3356" key="0002580A4000300B56D673AAC72565DC7669B34AA98874A997625A783B1972B200A506030A48598800000000000000000000000000000000000000003F5C1102" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24781,16 +24781,16 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_e" />
-            <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_47_3" name="{=aom_lord_1_47_3_name}Colambea" default_group="Cavalry" age="17" is_female="true" voice="softspoken" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+    <NPCCharacter id="lord_1_47_3" name="{=aom_lord_1_47_3_name_bn}Abrazîn" default_group="Cavalry" age="17" is_female="true" voice="softspoken" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
             <!--face_key
 			value="0011b52597bc038e94a8c26585aaa93992d5a78776779c82329b657437695d350005a5a40de9ba6200001105000030a30000001f000000000000000000000000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="00115C0A13702007997A77A685B88487865116663789A798A6A897926887369901A776130A8B49B500000000000000000000000000000000000000001F543083" />
+            <BodyProperties version="4" age="17" weight="0.0046" build="0.3356" key="00029C06C000000A58888868764953D5697535277667DB885693A977B47BC7B400A506030A6C586700000000000000000000000000000000000000003F5C20C2" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24829,8 +24829,8 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_a" />
-            <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_1_49_1" name="{=aom_lord_1_49_1_name}Tristania" is_female="true" age="27" default_group="Cavalry" voice="ironic" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
@@ -25622,9 +25622,9 @@
             <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_l" name="{=aom_lord_SE9_l_name}Grishnákh, Uruk Captain" age="30" voice="ironic" default_group="Infantry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_SE9_l_skills">
+    <NPCCharacter id="lord_SE9_l" name="{=aom_lord_SE9_l_name_bn}Zagarkhôr" age="30" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.6" key="000BDC0FCFCC038F3D38B65122600AD02FEE2A646411F7F894359F648858075D064976670485629500000000000000000000000044FC1002000000007E7C4084" />
+            <BodyProperties version="4" age="30" weight="0.0046" build="0.8032" key="0002940E40003A434868B38BD5266AA769489CA8213C7BCB79B7967577B9294800FC06030F7A927400000000000000000000000000000000000000003FF41142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -25666,13 +25666,13 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_d" />
-            <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_s" name="{=aom_lord_SE9_s_name}Jonna" age="46" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
+    <NPCCharacter id="lord_SE9_s" name="{=aom_lord_SE9_s_name_bn}Pharazîn" age="46" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0000080FD0FC100D4776686376266B93426B9C989782C82458739F1CB876963401577613051867C8000000000000000000000000000000000000000022A420C3" />
+            <BodyProperties version="4" age="46" weight="0.0046" build="0.3356" key="0002C006C000300DBB819D7BA4AAAA86A5A83867A3769C666827A32B6C74B51700A506030ADD775B00000000000000000000000000000000000000003F5C0102" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -25711,13 +25711,13 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_e" />
-            <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_c1" name="{=aom_lord_SE9_c1_name}Pagarios" age="26" voice="earnest" default_group="Cavalry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
+    <NPCCharacter id="lord_SE9_c1" name="{=aom_lord_SE9_c1_name_bn}Zigûrbêl" age="26" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000B700E402C325968215CB4D9779D947BABE1EA12D7B9649975B5856DB7C355016776130655A58500000000000000000000000000000000000000002AD42042" />
+            <BodyProperties version="4" age="26" weight="0.0046" build="0.8032" key="0002780E40001603685C3C9329356424C68B4AD33377895A6A69692453B178A800FC06030FF3D56B00000000000000000000000000000000000000003FF46042" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -25759,13 +25759,13 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_a" />
-            <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_c2" name="{=aom_lord_SE9_c2_name}Diasca" age="24" is_female="true" voice="ironic" default_group="Infantry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
+    <NPCCharacter id="lord_SE9_c2" name="{=aom_lord_SE9_c2_name_bn}Zimrazîn" age="24" is_female="true" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
         <face>
-            <BodyProperties version="4" weight="0.4" build="0.3" key="0000080FCEFC290B4756896A6356B7D0C06B9C989782C82458739F1C6A48C62501877613081867C80000000000000000000000000000000000000000370C2102" />
+            <BodyProperties version="4" age="24" weight="0.0046" build="0.3356" key="0002A806C0000010CBD7CB989B8A41D5DAADA6D7DB9243548A5A4C587688468800A506030AB5D86300000000000000000000000000000000000000003F5C0042" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -25804,8 +25804,8 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mordor_bat_template_medium_b" />
-            <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+        	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
+        	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M10_1" name="{=aom_lord_M10_1_name}Mauhoshat" age="25" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">

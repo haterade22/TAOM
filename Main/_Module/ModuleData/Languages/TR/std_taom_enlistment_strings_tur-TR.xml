@@ -417,15 +417,15 @@
 
 	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Hizmetini sonlanmış say" />
 
-	<string id="taom_enlist_leave_refused" text="You cannot take your leave here just now." />
+	<string id="taom_enlist_leave_refused" text="Şu anda burada izin alamazsın." />
 
-	<string id="taom_enlist_arrival_title" text="The column halts" />
+	<string id="taom_enlist_arrival_title" text="Kol duruyor" />
 
-	<string id="taom_enlist_arrival_body" text="Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself." />
+	<string id="taom_enlist_arrival_body" text="Bölüğün {SETTLEMENT} önünde durdu. Birkaç saatini kendine ayırmak istersen çavuşun görmezden gelecektir." />
 
-	<string id="taom_enlist_arrival_take" text="Take your leave" />
+	<string id="taom_enlist_arrival_take" text="İzin al" />
 
-	<string id="taom_enlist_arrival_stay" text="Stay with the company" />
+	<string id="taom_enlist_arrival_stay" text="Bölükle kal" />
 
   </strings>
 

@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="Regina della Marca" />
     <string id="TAOM_liege_rhun" text="Loke-Kan di Rhûn" />
     <string id="TAOM_liege_rhun_female" text="Loke-Kan di Rhûn" />
+    <string id="aom_lord_1_27_name_bn" text="Ugrukhôr" />
+    <string id="aom_lord_1_37_name_bn" text="Dolguphel" />
+    <string id="aom_lord_1_47_name_bn" text="Ulbar" />
+    <string id="aom_lord_1_27_1_name_bn" text="Nûlubêth" />
+    <string id="aom_lord_1_27_2_name_bn" text="Aganuzîr" />
+    <string id="aom_lord_1_27_3_name_bn" text="Ugruphel" />
+    <string id="aom_lord_1_47_1_name_bn" text="Zimrabêth" />
+    <string id="aom_lord_1_47_2_name_bn" text="Azruphel" />
+    <string id="aom_lord_1_47_3_name_bn" text="Abrazîn" />
+    <string id="aom_lord_SE9_c1_name_bn" text="Zigûrbêl" />
+    <string id="aom_lord_SE9_c2_name_bn" text="Zimrazîn" />
+    <string id="aom_lord_SE9_l_name_bn" text="Zagarkhôr" />
+    <string id="aom_lord_SE9_s_name_bn" text="Pharazîn" />
+    <string id="TAOM_hero_1_27_bn" text="Ugrukhôr presidia i camminamenti del Morannon per conto della Bocca di Sauron. È di antico sangue númenóreano nero, e considera gli Orchi sotto il suo comando come strumenti più che come soldati." />
+    <string id="TAOM_hero_1_27_1_bn" text="Nûlubêth è una stregona númenóreana nera al servizio della Torre Oscura. Il suo nome significa Parola-della-Notte nell'antica lingua adûnaica, e l'ha scelto lei stessa." />
+    <string id="TAOM_hero_1_27_2_bn" text="Aganuzîr guida le bande di razziatori che cavalcano a occidente del Nero Cancello. Il suo nome significa Amante-della-Morte, e sua madre lo intendeva come una benedizione." />
+    <string id="TAOM_hero_1_27_3_bn" text="Ugruphel cavalca con i razziatori di suo fratello e tiene il conto di tutto ciò che prendono. Non ha mai visto il mare che i suoi antenati attraversarono." />
+    <string id="TAOM_hero_1_37_bn" text="Dolguphel è la figlia della Bocca di Sauron, sebbene egli abbia da tempo abbandonato il titolo di padre. Comanda la cavalleria di Carach Angren e studia le arti che la sua casa non nomina ad alta voce." />
+    <string id="TAOM_hero_1_47_bn" text="Ulbar sovrintende alle fucine sotto Carach Angren e agli schiavi che le alimentano. Il suo è uno dei pochi nomi che il suo popolo portò via da Númenor senza mutarlo." />
+    <string id="TAOM_hero_1_47_1_bn" text="Zimrabêth parla per la casa di suo marito al Nero Cancello, e parla assai meglio di lui. La Bocca di Sauron l'ha trovata utile più di una volta." />
+    <string id="TAOM_hero_1_47_2_bn" text="Azruphel ha quattordici anni e già cavalca con le pattuglie del Morannon. Il suo nome significa Figlia-del-Mare, per un mare che nessun númenóreano nero vivente ha mai visto." />
+    <string id="TAOM_hero_1_47_3_bn" text="Abrazîn fu chiamata così in onore dell'antica virtù númenóreana della fermezza. In Mordor quella parola ha finito per significare qualcosa di molto più simile all'obbedienza." />
+    <string id="TAOM_hero_SE9_l_bn" text="Zagarkhôr, il Signore della Spada, tiene Cirith Nargil per la Torre Oscura. La sua casa conservò la lingua adûnaica quando il resto della Terra di Mezzo la lasciò andare, ed egli correggerà chiunque lo chiami con un nome elfico." />
+    <string id="TAOM_hero_SE9_s_bn" text="Pharazîn è una stregona númenóreana nera, e la vera autorità a Cirith Nargil ogni volta che il marito scende in campo. Il suo nome richiama l'ultimo Re di Númenor." />
+    <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl è l'erede di Cirith Nargil ed è addestrato nelle arti oscure. Il suo nome significa Amante dello Stregone, che è come Númenor chiamava Sauron prima di scoprire cosa fosse." />
+    <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn è la seconda figlia del Signore della Spada e la più pericolosa dei due. Ha i talenti della madre e nulla della sua pazienza." />
   </strings>
 </base>

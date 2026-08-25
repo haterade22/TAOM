@@ -417,15 +417,15 @@
 
 	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}结束服役" />
 
-	<string id="taom_enlist_leave_refused" text="You cannot take your leave here just now." />
+	<string id="taom_enlist_leave_refused" text="你此刻无法在此休假。" />
 
-	<string id="taom_enlist_arrival_title" text="The column halts" />
+	<string id="taom_enlist_arrival_title" text="队列停下" />
 
-	<string id="taom_enlist_arrival_body" text="Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself." />
+	<string id="taom_enlist_arrival_body" text="你的队伍已在{SETTLEMENT}停驻。若你想抽出几个钟头独处，军士会睁一只眼闭一只眼。" />
 
-	<string id="taom_enlist_arrival_take" text="Take your leave" />
+	<string id="taom_enlist_arrival_take" text="去休假" />
 
-	<string id="taom_enlist_arrival_stay" text="Stay with the company" />
+	<string id="taom_enlist_arrival_stay" text="留在队伍中" />
 
   </strings>
 

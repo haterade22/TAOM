@@ -2451,158 +2451,158 @@
     <string id="taom_str_adjective_for_culture.bluecraig" text="trasgo" />
     <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
     <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_sl_at_war" text="At war, you cannot trade here." />
-    <string id="taom_sl_cancel" text="Cancel" />
-    <string id="taom_sl_cancelled" text="Supply orders cancelled; the goods and gold are lost." />
-    <string id="taom_sl_caravan_name" text="Supply Caravan" />
-    <string id="taom_sl_clear" text="Clear" />
-    <string id="taom_sl_confirm" text="Confirm" />
-    <string id="taom_sl_delivered" text="Your supplies have arrived." />
-    <string id="taom_sl_dispatched" text="A supply caravan has set out for your party." />
-    <string id="taom_sl_escort_companion" text="Companion" />
-    <string id="taom_sl_escort_mercs" text="Mercenaries" />
-    <string id="taom_sl_escort_none" text="None" />
-    <string id="taom_sl_fail_blockaded" text="You cannot arrange supplies while blockaded." />
-    <string id="taom_sl_fail_disabled" text="Supply lines are disabled." />
-    <string id="taom_sl_fail_gold" text="Not enough gold to place this order." />
-    <string id="taom_sl_fail_no_route" text="There is no route from that source to you right now." />
-    <string id="taom_sl_fail_source" text="No supply source selected." />
-    <string id="taom_sl_fail_spawn" text="The supply caravan could not be assembled." />
-    <string id="taom_sl_fail_stock" text="Nothing you selected is still available at the source." />
-    <string id="taom_sl_good_row" text="{NAME} - {STOCK} in stock, {PRICE} denars" />
-    <string id="taom_sl_goods" text="Goods" />
-    <string id="taom_sl_goods_header" text="Goods in stock" />
-    <string id="taom_sl_guard" text="Guard" />
-    <string id="taom_sl_lost" text="A supply caravan was lost!" />
-    <string id="taom_sl_order" text="Order Supplies" />
-    <string id="taom_sl_order_failed" text="The order could not be placed." />
-    <string id="taom_sl_rel_allied" text="Allied" />
-    <string id="taom_sl_rel_enemy" text="Enemy" />
-    <string id="taom_sl_rel_lord" text="Lord" />
+    <string id="taom_sl_at_war" text="En guerra, no puedes comerciar aquí." />
+    <string id="taom_sl_cancel" text="Cancelar" />
+    <string id="taom_sl_cancelled" text="Pedidos de suministros cancelados; los bienes y el oro se han perdido." />
+    <string id="taom_sl_caravan_name" text="Caravana de suministros" />
+    <string id="taom_sl_clear" text="Limpiar" />
+    <string id="taom_sl_confirm" text="Confirmar" />
+    <string id="taom_sl_delivered" text="Tus suministros han llegado." />
+    <string id="taom_sl_dispatched" text="Una caravana de suministros ha partido hacia tu grupo." />
+    <string id="taom_sl_escort_companion" text="Compañero" />
+    <string id="taom_sl_escort_mercs" text="Mercenarios" />
+    <string id="taom_sl_escort_none" text="Ninguno" />
+    <string id="taom_sl_fail_blockaded" text="No puedes organizar suministros mientras estás bloqueado." />
+    <string id="taom_sl_fail_disabled" text="Las líneas de suministro están desactivadas." />
+    <string id="taom_sl_fail_gold" text="No tienes suficiente oro para hacer este pedido." />
+    <string id="taom_sl_fail_no_route" text="En este momento no hay ruta desde esa fuente hasta ti." />
+    <string id="taom_sl_fail_source" text="No se ha seleccionado ninguna fuente de suministros." />
+    <string id="taom_sl_fail_spawn" text="No se pudo reunir la caravana de suministros." />
+    <string id="taom_sl_fail_stock" text="Nada de lo que seleccionaste sigue disponible en la fuente." />
+    <string id="taom_sl_good_row" text="{NAME} - {STOCK} en existencia, {PRICE} denarios" />
+    <string id="taom_sl_goods" text="Bienes" />
+    <string id="taom_sl_goods_header" text="Bienes en existencia" />
+    <string id="taom_sl_guard" text="Guardia" />
+    <string id="taom_sl_lost" text="¡Se ha perdido una caravana de suministros!" />
+    <string id="taom_sl_order" text="Pedir suministros" />
+    <string id="taom_sl_order_failed" text="No se pudo realizar el pedido." />
+    <string id="taom_sl_rel_allied" text="Aliado" />
+    <string id="taom_sl_rel_enemy" text="Enemigo" />
+    <string id="taom_sl_rel_lord" text="Señor" />
     <string id="taom_sl_rel_neutral" text="Neutral" />
-    <string id="taom_sl_rel_own" text="Own" />
-    <string id="taom_sl_screen_open_failed" text="The supply screen failed to open (see log). Returning to the map." />
-    <string id="taom_sl_screen_title" text="Supply Order" />
+    <string id="taom_sl_rel_own" text="Propio" />
+    <string id="taom_sl_screen_open_failed" text="No se pudo abrir la pantalla de suministros (consulta el registro). Regresando al mapa." />
+    <string id="taom_sl_screen_title" text="Pedido de suministros" />
     <string id="taom_sl_source_row" text="{NAME} ({RELATION})" />
     <string id="taom_sl_source_row_blocked" text="{NAME} ({RELATION}) - {REASON}" />
     <string id="taom_sl_total" text="Total" />
-    <string id="taom_sl_transport" text="Transport" />
-    <string id="taom_sl_troop_row" text="{NAME} - {COUNT} available, {PRICE} denars" />
-    <string id="taom_sl_troops" text="Recruits" />
-    <string id="taom_sl_troops_header" text="Volunteers (recruits)" />
-    <string id="taom_rf_party_name" text="Refuge" />
-    <string id="taom_rf_attacked" text="Your refuge is under attack by {ENEMY}!" />
-    <string id="taom_rf_blocks_camp" text="A refuge stands here - dismantle it to pitch a normal camp." />
-    <string id="taom_rf_cancel" text="Cancel" />
-    <string id="taom_rf_cap_refuge" text="Refuge" />
-    <string id="taom_rf_cap_stronghold" text="Stronghold" />
-    <string id="taom_rf_confirm" text="Confirm" />
-    <string id="taom_rf_dismantled" text="The refuge is dismantled; its garrison and stores return to your party." />
-    <string id="taom_rf_enemy" text="the enemy" />
-    <string id="taom_rf_found_tooltip" text="Cost: {GOLD} denars. Choose a warden (a companion, or a soldier promoted to officer), then garrison it." />
-    <string id="taom_rf_founded" text="Refuge founded - garrison it, then it will be raised." />
-    <string id="taom_rf_hold_note" text="Your company holds position while the refuge is raised. It can march once the work is done." />
-    <string id="taom_rf_menu_gone" text="No refuge stands within reach." />
-    <string id="taom_rf_menu_status" text="Your {TIER} stands here - garrison: {COUNT}." />
-    <string id="taom_rf_menu_status_warden" text="Your {TIER} stands here - garrison: {COUNT}, warden: {WARDEN}." />
-    <string id="taom_rf_no_warden" text="You need a companion - or a soldier you can promote - to lead a refuge." />
-    <string id="taom_rf_opt_break" text="Dismantle refuge" />
-    <string id="taom_rf_opt_enter" text="Enter refuge" />
-    <string id="taom_rf_opt_found" text="Establish a refuge here" />
-    <string id="taom_rf_opt_items" text="Store goods" />
-    <string id="taom_rf_opt_leave" text="Leave" />
-    <string id="taom_rf_opt_manage" text="Manage garrison (troops and prisoners)" />
-    <string id="taom_rf_opt_upgrade" text="Upgrade to stronghold" />
-    <string id="taom_rf_promote_failed" text="Could not assign that warden." />
-    <string id="taom_rf_raised" text="The refuge is raised. It stands as your forward base; manage it to deposit troops." />
-    <string id="taom_rf_reason_already_here" text="A refuge already stands here - manage it instead." />
-    <string id="taom_rf_reason_blocked" text="You cannot do that here." />
-    <string id="taom_rf_reason_building" text="The refuge is still being raised." />
-    <string id="taom_rf_reason_camp_type" text="Only a field or fortified camp can be raised into a refuge." />
-    <string id="taom_rf_reason_disabled" text="Refuges are disabled in the mod options." />
-    <string id="taom_rf_reason_enlisted" text="You cannot raise a refuge while serving in another lord's army." />
-    <string id="taom_rf_reason_gold" text="You cannot afford this - it costs {GOLD} denars." />
-    <string id="taom_rf_reason_limit" text="Your clan already holds the most refuges it can support ({LIMIT})." />
-    <string id="taom_rf_reason_no_camp" text="Establish a camp here first, then raise a refuge from it." />
-    <string id="taom_rf_reason_no_refuge" text="No refuge within reach." />
-    <string id="taom_rf_reason_top_tier" text="Already a stronghold - the highest tier." />
-    <string id="taom_rf_reason_town" text="Too close to a town or castle - raise a refuge farther from settlements." />
-    <string id="taom_rf_status_raising" text="Raising refuge." />
-    <string id="taom_rf_status_upgrading" text="Rebuilding into a stronghold." />
-    <string id="taom_rf_stronghold_done" text="The stronghold is complete; its walls and garrison stand stronger." />
-    <string id="taom_rf_tier_refuge" text="refuge" />
-    <string id="taom_rf_tier_stronghold" text="stronghold" />
-    <string id="taom_rf_upgrade_no_gold" text="Not enough gold to rebuild the refuge into a stronghold." />
-    <string id="taom_rf_upgrade_tooltip" text="Cost: {GOLD} denars. Your company stays while it is rebuilt into a stronghold." />
-    <string id="taom_rf_upgrading" text="Rebuilding the refuge into a stronghold - your company must stay until it is done." />
-    <string id="taom_rf_warden_desc" text="Choose who commands the refuge - a companion, or promote one of your soldiers into an officer. They leave your party to lead it." />
-    <string id="taom_rf_warden_title" text="Assign a Warden" />
-    <string id="taom_rf_fallen" text="Your refuge has fallen. What remains of its garrison is lost; your warden's fate rides with the survivors." />
-    <string id="taom_rf_food_note" text="The garrison eats from the stored goods; keep the stash provisioned or it will starve." />
-    <string id="taom_rf_menu_orphan" text="An abandoned refuge stands here, beyond repair. It can only be dismantled." />
-    <string id="taom_sl_caravan_meet" text="Your supply caravan presses on toward your position." />
-    <string id="taom_fcamp_ambush_enemy" text="the enemy" />
-    <string id="taom_fcamp_ambush_fail" text="You were spotted by {ENEMY} before you could strike - attack anyway?" />
-    <string id="taom_fcamp_ambush_ok" text="Your ambush is set against {ENEMY} - strike now?" />
-    <string id="taom_fcamp_ambush_terrain" text="Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
-    <string id="taom_fcamp_ambush_title" text="Ambush" />
-    <string id="taom_fcamp_broken" text="Camp broken." />
-    <string id="taom_fcamp_btn_make" text="Make Camp" />
-    <string id="taom_fcamp_btn_options" text="Camp Options" />
-    <string id="taom_fcamp_building" text="The camp is still being set up." />
-    <string id="taom_fcamp_established" text="{CAMP} established." />
-    <string id="taom_fcamp_forage_field_only" text="Only a field or fortified camp can forage." />
-    <string id="taom_fcamp_forage_start" text="Forage for supplies" />
-    <string id="taom_fcamp_forage_stop" text="Stop foraging" />
-    <string id="taom_fcamp_foraged" text="Foraged +{N} grain (camp total: {TOTAL})." />
-    <string id="taom_fcamp_fortify_cost" text="Cost: {GOLD}{GOLD_ICON}" />
-    <string id="taom_fcamp_fortify_field_only" text="Only a field camp can be fortified." />
-    <string id="taom_fcamp_lookout_terrain" text="Needs high ground or open vantage - mountains, hills, forest, steppe or plains." />
-    <string id="taom_fcamp_menu_active" text="Active: {CAMP}" />
-    <string id="taom_fcamp_menu_active_forage" text="Active: {CAMP} (foraging for supplies)" />
-    <string id="taom_fcamp_menu_base" text="Your party makes camp.{NEWLINE}{TAOM_FC_STATUS}" />
-    <string id="taom_fcamp_menu_raising" text="{RAISING} {PROGRESS}% (its effects start once set up)" />
-    <string id="taom_fcamp_move_no" text="Stay camped" />
-    <string id="taom_fcamp_move_text" text="Moving will break your camp. Break camp and move on?" />
-    <string id="taom_fcamp_move_title" text="Break camp?" />
-    <string id="taom_fcamp_move_yes" text="Break camp and move" />
-    <string id="taom_fcamp_need_camp" text="Establish a camp first." />
-    <string id="taom_fcamp_need_field" text="Establish a field camp first." />
-    <string id="taom_fcamp_no_gold" text="Not enough gold to fortify the camp." />
-    <string id="taom_fcamp_opt_ambush" text="Set up an ambush" />
-    <string id="taom_fcamp_opt_break" text="Break camp" />
-    <string id="taom_fcamp_opt_continue" text="Continue" />
-    <string id="taom_fcamp_opt_field" text="Establish a field camp" />
-    <string id="taom_fcamp_opt_fortify" text="Upgrade to fortified camp" />
-    <string id="taom_fcamp_opt_leave" text="Leave" />
-    <string id="taom_fcamp_opt_lookout" text="Create a lookout" />
-    <string id="taom_fcamp_opt_manage" text="Manage camp" />
-    <string id="taom_fcamp_opt_supplies" text="Order supplies" />
-    <string id="taom_fcamp_raising_ambush" text="Setting up the ambush." />
-    <string id="taom_fcamp_raising_field" text="Raising the field camp." />
-    <string id="taom_fcamp_raising_fortified" text="Raising the fortified camp." />
-    <string id="taom_fcamp_raising_generic" text="Raising the camp." />
-    <string id="taom_fcamp_raising_lookout" text="Raising the lookout." />
-    <string id="taom_fcamp_reason_blocked" text="You cannot make camp here." />
-    <string id="taom_fcamp_reason_disabled" text="Field camps are disabled in the mod options." />
-    <string id="taom_fcamp_reason_enlisted" text="You cannot make camp while serving in another lord's army." />
-    <string id="taom_fcamp_reason_moving" text="Halt your party before making camp." />
-    <string id="taom_fcamp_reason_settlement" text="You cannot pitch camp inside a settlement." />
-    <string id="taom_fcamp_reason_terrain" text="The ground here does not suit this camp." />
-    <string id="taom_fcamp_state_ambush" text="Ambush ready" />
-    <string id="taom_fcamp_state_field" text="Field camp" />
-    <string id="taom_fcamp_state_fortified" text="Fortified camp" />
-    <string id="taom_fcamp_state_generic" text="Camp" />
-    <string id="taom_fcamp_state_lookout" text="Lookout posted" />
-    <string id="taom_fcamp_status_choose" text="Choose how to make camp here." />
-    <string id="taom_fcamp_status_foraging" text="{CAMP} (foraging - {GRAIN} grain)" />
-    <string id="taom_fcamp_supplies_needs" text="Supply lines are disabled." />
-    <string id="taom_fcamp_supplies_stealth" text="Ambush and lookout camps stay hidden - no supply convoys." />
-    <string id="taom_fcamp_too_close" text="Too close to a town or castle - pitch a field camp farther from settlements." />
-    <string id="taom_rf_clan_row_building" text="{NAME} (being raised)" />
-    <string id="taom_rf_found_orders_warning" text="Breaking camp to raise the refuge cancels any supply orders placed from this camp; their goods and gold are forfeit." />
-    <string id="taom_rf_promote_entry_tier" text="{NAME} (Tier {TIER}, promote to officer)" />
-    <string id="taom_rf_warden_lost" text="Your refuge has lost its warden. The garrison holds the camp, but it can only be dismantled now." />
-    <string id="taom_sl_lord_dispatched" text="{LORD} sends reinforcements, they are on the way." />
+    <string id="taom_sl_transport" text="Transporte" />
+    <string id="taom_sl_troop_row" text="{NAME} - {COUNT} disponibles, {PRICE} denarios" />
+    <string id="taom_sl_troops" text="Reclutas" />
+    <string id="taom_sl_troops_header" text="Voluntarios (reclutas)" />
+    <string id="taom_rf_party_name" text="Refugio" />
+    <string id="taom_rf_attacked" text="¡Tu refugio está siendo atacado por {ENEMY}!" />
+    <string id="taom_rf_blocks_camp" text="Aquí se alza un refugio: desmántelalo para instalar un campamento normal." />
+    <string id="taom_rf_cancel" text="Cancelar" />
+    <string id="taom_rf_cap_refuge" text="Refugio" />
+    <string id="taom_rf_cap_stronghold" text="Fortaleza" />
+    <string id="taom_rf_confirm" text="Confirmar" />
+    <string id="taom_rf_dismantled" text="El refugio ha sido desmantelado; su guarnición y provisiones vuelven a tu partida." />
+    <string id="taom_rf_enemy" text="el enemigo" />
+    <string id="taom_rf_found_tooltip" text="Costo: {GOLD} denarios. Elige un alcaide (un compañero o un soldado ascendido a oficial) y luego guarnécelo." />
+    <string id="taom_rf_founded" text="Refugio fundado: guarnécelo y entonces será levantado." />
+    <string id="taom_rf_hold_note" text="Tu compañía mantiene la posición mientras se levanta el refugio. Podrá marchar cuando la obra esté terminada." />
+    <string id="taom_rf_menu_gone" text="No hay ningún refugio al alcance." />
+    <string id="taom_rf_menu_status" text="Tu {TIER} se alza aquí. Guarnición: {COUNT}." />
+    <string id="taom_rf_menu_status_warden" text="Tu {TIER} se alza aquí. Guarnición: {COUNT}, alcaide: {WARDEN}." />
+    <string id="taom_rf_no_warden" text="Necesitas un compañero, o un soldado al que puedas ascender, para dirigir un refugio." />
+    <string id="taom_rf_opt_break" text="Desmantelar el refugio" />
+    <string id="taom_rf_opt_enter" text="Entrar al refugio" />
+    <string id="taom_rf_opt_found" text="Establecer un refugio aquí" />
+    <string id="taom_rf_opt_items" text="Almacenar bienes" />
+    <string id="taom_rf_opt_leave" text="Partir" />
+    <string id="taom_rf_opt_manage" text="Administrar la guarnición (tropas y prisioneros)" />
+    <string id="taom_rf_opt_upgrade" text="Mejorar a fortaleza" />
+    <string id="taom_rf_promote_failed" text="No se pudo asignar ese alcaide." />
+    <string id="taom_rf_raised" text="El refugio está levantado. Se alza como tu base de avanzada; administra para depositar tropas." />
+    <string id="taom_rf_reason_already_here" text="Ya hay un refugio aquí: administra ese en su lugar." />
+    <string id="taom_rf_reason_blocked" text="No puedes hacer eso aquí." />
+    <string id="taom_rf_reason_building" text="El refugio aún está siendo levantado." />
+    <string id="taom_rf_reason_camp_type" text="Solo un campamento de campaña o fortificado puede convertirse en refugio." />
+    <string id="taom_rf_reason_disabled" text="Los refugios están desactivados en las opciones del mod." />
+    <string id="taom_rf_reason_enlisted" text="No puedes levantar un refugio mientras sirves en el ejército de otro señor." />
+    <string id="taom_rf_reason_gold" text="No puedes costearlo: cuesta {GOLD} denarios." />
+    <string id="taom_rf_reason_limit" text="Tu clan ya posee todos los refugios que puede sostener ({LIMIT})." />
+    <string id="taom_rf_reason_no_camp" text="Establece primero un campamento aquí y luego levanta un refugio a partir de él." />
+    <string id="taom_rf_reason_no_refuge" text="No hay refugio al alcance." />
+    <string id="taom_rf_reason_top_tier" text="Ya es una fortaleza: el nivel más alto." />
+    <string id="taom_rf_reason_town" text="Demasiado cerca de una ciudad o castillo: levanta el refugio más lejos de los asentamientos." />
+    <string id="taom_rf_status_raising" text="Levantando el refugio." />
+    <string id="taom_rf_status_upgrading" text="Reconstruyendo como fortaleza." />
+    <string id="taom_rf_stronghold_done" text="La fortaleza está completa; sus muros y su guarnición son más fuertes." />
+    <string id="taom_rf_tier_refuge" text="refugio" />
+    <string id="taom_rf_tier_stronghold" text="fortaleza" />
+    <string id="taom_rf_upgrade_no_gold" text="No tienes suficiente oro para reconstruir el refugio y convertirlo en una fortaleza." />
+    <string id="taom_rf_upgrade_tooltip" text="Costo: {GOLD} denarios. Tu compañía permanecerá aquí mientras se reconstruye como fortaleza." />
+    <string id="taom_rf_upgrading" text="Reconstruyendo el refugio como fortaleza: tu compañía debe permanecer hasta que esté terminado." />
+    <string id="taom_rf_warden_desc" text="Elige quién comandará el refugio: un compañero, o asciende a uno de tus soldados a oficial. Dejará tu partida para dirigirlo." />
+    <string id="taom_rf_warden_title" text="Asignar un guardián" />
+    <string id="taom_rf_fallen" text="Tu refugio ha caído. Lo que quedaba de su guarnición está perdido; el destino de tu guardián cabalga con los supervivientes." />
+    <string id="taom_rf_food_note" text="La guarnición se alimenta de las provisiones almacenadas; mantén el depósito abastecido o pasará hambre." />
+    <string id="taom_rf_menu_orphan" text="Aquí se alza un refugio abandonado, imposible de reparar. Solo puede ser desmantelado." />
+    <string id="taom_sl_caravan_meet" text="Tu caravana de suministros avanza hacia tu posición." />
+    <string id="taom_fcamp_ambush_enemy" text="el enemigo" />
+    <string id="taom_fcamp_ambush_fail" text="{ENEMY} te ha descubierto antes de que pudieras atacar. ¿Atacar de todos modos?" />
+    <string id="taom_fcamp_ambush_ok" text="Tu emboscada está preparada contra {ENEMY}. ¿Atacar ahora?" />
+    <string id="taom_fcamp_ambush_terrain" text="Requiere terreno que oculte: bosque, colinas, pantano, cañón, dunas, un puente o un vado." />
+    <string id="taom_fcamp_ambush_title" text="Emboscada" />
+    <string id="taom_fcamp_broken" text="Campamento levantado." />
+    <string id="taom_fcamp_btn_make" text="Acampar" />
+    <string id="taom_fcamp_btn_options" text="Opciones de campamento" />
+    <string id="taom_fcamp_building" text="El campamento aún se está montando." />
+    <string id="taom_fcamp_established" text="{CAMP} establecido." />
+    <string id="taom_fcamp_forage_field_only" text="Solo un campamento de campaña o fortificado puede forrajear." />
+    <string id="taom_fcamp_forage_start" text="Forrajear en busca de suministros" />
+    <string id="taom_fcamp_forage_stop" text="Dejar de forrajear" />
+    <string id="taom_fcamp_foraged" text="Forrajeado: +{N} de grano (total del campamento: {TOTAL})." />
+    <string id="taom_fcamp_fortify_cost" text="Costo: {GOLD}{GOLD_ICON}" />
+    <string id="taom_fcamp_fortify_field_only" text="Solo un campamento de campaña puede ser fortificado." />
+    <string id="taom_fcamp_lookout_terrain" text="Requiere terreno elevado o una vista despejada: montañas, colinas, bosque, estepa o llanuras." />
+    <string id="taom_fcamp_menu_active" text="Activo: {CAMP}" />
+    <string id="taom_fcamp_menu_active_forage" text="Activo: {CAMP} (forrajeando en busca de suministros)" />
+    <string id="taom_fcamp_menu_base" text="Tu partida acampa.{NEWLINE}{TAOM_FC_STATUS}" />
+    <string id="taom_fcamp_menu_raising" text="{RAISING} {PROGRESS}% (sus efectos comienzan una vez montado)" />
+    <string id="taom_fcamp_move_no" text="Permanecer acampado" />
+    <string id="taom_fcamp_move_text" text="Moverte levantará tu campamento. ¿Levantar el campamento y partir?" />
+    <string id="taom_fcamp_move_title" text="¿Levantar el campamento?" />
+    <string id="taom_fcamp_move_yes" text="Levantar el campamento y partir" />
+    <string id="taom_fcamp_need_camp" text="Establece un campamento primero." />
+    <string id="taom_fcamp_need_field" text="Establece un campamento de campaña primero." />
+    <string id="taom_fcamp_no_gold" text="No tienes suficiente oro para fortificar el campamento." />
+    <string id="taom_fcamp_opt_ambush" text="Preparar una emboscada" />
+    <string id="taom_fcamp_opt_break" text="Levantar el campamento" />
+    <string id="taom_fcamp_opt_continue" text="Continuar" />
+    <string id="taom_fcamp_opt_field" text="Establecer un campamento de campaña" />
+    <string id="taom_fcamp_opt_fortify" text="Mejorar a campamento fortificado" />
+    <string id="taom_fcamp_opt_leave" text="Salir" />
+    <string id="taom_fcamp_opt_lookout" text="Crear un puesto de vigilancia" />
+    <string id="taom_fcamp_opt_manage" text="Administrar campamento" />
+    <string id="taom_fcamp_opt_supplies" text="Pedir suministros" />
+    <string id="taom_fcamp_raising_ambush" text="Preparando la emboscada." />
+    <string id="taom_fcamp_raising_field" text="Levantando el campamento de campaña." />
+    <string id="taom_fcamp_raising_fortified" text="Levantando el campamento fortificado." />
+    <string id="taom_fcamp_raising_generic" text="Levantando el campamento." />
+    <string id="taom_fcamp_raising_lookout" text="Levantando el puesto de vigilancia." />
+    <string id="taom_fcamp_reason_blocked" text="No puedes acampar aquí." />
+    <string id="taom_fcamp_reason_disabled" text="Los campamentos de campaña están desactivados en las opciones del mod." />
+    <string id="taom_fcamp_reason_enlisted" text="No puedes acampar mientras sirves en el ejército de otro señor." />
+    <string id="taom_fcamp_reason_moving" text="Detén a tu grupo antes de acampar." />
+    <string id="taom_fcamp_reason_settlement" text="No puedes acampar dentro de un asentamiento." />
+    <string id="taom_fcamp_reason_terrain" text="El terreno de aquí no es adecuado para este campamento." />
+    <string id="taom_fcamp_state_ambush" text="Emboscada lista" />
+    <string id="taom_fcamp_state_field" text="Campamento de campaña" />
+    <string id="taom_fcamp_state_fortified" text="Campamento fortificado" />
+    <string id="taom_fcamp_state_generic" text="Campamento" />
+    <string id="taom_fcamp_state_lookout" text="Vigía apostado" />
+    <string id="taom_fcamp_status_choose" text="Elige cómo acampar aquí." />
+    <string id="taom_fcamp_status_foraging" text="{CAMP} (forrajeando - {GRAIN} de grano)" />
+    <string id="taom_fcamp_supplies_needs" text="Las líneas de suministro están desactivadas." />
+    <string id="taom_fcamp_supplies_stealth" text="Los campamentos de emboscada y vigilancia permanecen ocultos: sin convoyes de suministros." />
+    <string id="taom_fcamp_too_close" text="Demasiado cerca de una ciudad o castillo: monta el campamento de campaña más lejos de los asentamientos." />
+    <string id="taom_rf_clan_row_building" text="{NAME} (en construcción)" />
+    <string id="taom_rf_found_orders_warning" text="Desmontar el campamento para levantar el refugio cancela cualquier pedido de suministros hecho desde este campamento; sus bienes y oro se pierden." />
+    <string id="taom_rf_promote_entry_tier" text="{NAME} (Nivel {TIER}, ascender a oficial)" />
+    <string id="taom_rf_warden_lost" text="Tu refugio ha perdido a su guardián. La guarnición mantiene el campamento, pero ahora solo puede ser desmantelado." />
+    <string id="taom_sl_lord_dispatched" text="{LORD} envía refuerzos, ya están en camino." />
   </strings>
 </base>

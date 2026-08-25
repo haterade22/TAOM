@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="Reina de la Marca" />
     <string id="TAOM_liege_rhun" text="Loke-Kan de Rhûn" />
     <string id="TAOM_liege_rhun_female" text="Loke-Kan de Rhûn" />
+    <string id="aom_lord_1_27_name_bn" text="Ugrukhôr" />
+    <string id="aom_lord_1_37_name_bn" text="Dolguphel" />
+    <string id="aom_lord_1_47_name_bn" text="Ulbar" />
+    <string id="aom_lord_1_27_1_name_bn" text="Nûlubêth" />
+    <string id="aom_lord_1_27_2_name_bn" text="Aganuzîr" />
+    <string id="aom_lord_1_27_3_name_bn" text="Ugruphel" />
+    <string id="aom_lord_1_47_1_name_bn" text="Zimrabêth" />
+    <string id="aom_lord_1_47_2_name_bn" text="Azruphel" />
+    <string id="aom_lord_1_47_3_name_bn" text="Abrazîn" />
+    <string id="aom_lord_SE9_c1_name_bn" text="Zigûrbêl" />
+    <string id="aom_lord_SE9_c2_name_bn" text="Zimrazîn" />
+    <string id="aom_lord_SE9_l_name_bn" text="Zagarkhôr" />
+    <string id="aom_lord_SE9_s_name_bn" text="Pharazîn" />
+    <string id="TAOM_hero_1_27_bn" text="Ugrukhôr guarda el adarve del Morannon para la Boca de Sauron. Es de la antigua sangre numenoreana negra, y considera a los orcos bajo su mando como herramientas más que como soldados." />
+    <string id="TAOM_hero_1_27_1_bn" text="Nûlubêth es una hechicera numenoreana negra al servicio de la Torre Oscura. Su nombre significa Palabra de Noche en la antigua lengua adúnaica, y ella misma lo eligió." />
+    <string id="TAOM_hero_1_27_2_bn" text="Aganuzîr dirige las partidas de saqueo que cabalgan al oeste de la Puerta Negra. Su nombre significa Amante de la Muerte, y su madre lo concibió como una bendición." />
+    <string id="TAOM_hero_1_27_3_bn" text="Ugruphel cabalga con los saqueadores de su hermano y lleva la cuenta de todo lo que toman. Nunca ha visto el mar que cruzaron sus antepasados." />
+    <string id="TAOM_hero_1_37_bn" text="Dolguphel es la hija de la Boca de Sauron, aunque él hace tiempo que dejó de lado el título de padre. Comanda la caballería de Carach Angren y estudia las artes que su casa no nombra en voz alta." />
+    <string id="TAOM_hero_1_47_bn" text="Ulbar cuida las forjas bajo Carach Angren y a los esclavos que las alimentan. El suyo es uno de los pocos nombres que su pueblo sacó de Númenor sin cambios." />
+    <string id="TAOM_hero_1_47_1_bn" text="Zimrabêth habla en nombre de la casa de su esposo ante la Puerta Negra, y habla bastante mejor que él. La Boca de Sauron la ha encontrado útil más de una vez." />
+    <string id="TAOM_hero_1_47_2_bn" text="Azruphel tiene catorce años y ya cabalga con las patrullas del Morannon. Su nombre significa Hija del Mar, por un mar que ningún numenoreano negro vivo ha visto." />
+    <string id="TAOM_hero_1_47_3_bn" text="Abrazîn recibió su nombre por la antigua virtud numenoreana de la firmeza. En Mordor la palabra ha llegado a significar algo mucho más cercano a la obediencia." />
+    <string id="TAOM_hero_SE9_l_bn" text="Zagarkhôr, el Señor de la Espada, guarda Cirith Nargil para la Torre Oscura. Su casa conservó la lengua adúnaica cuando el resto de la Tierra Media la abandonó, y corregirá a cualquiera que lo nombre en élfico." />
+    <string id="TAOM_hero_SE9_s_bn" text="Pharazîn es una hechicera numenoreana negra, y la verdadera autoridad en Cirith Nargil siempre que su esposo sale a campaña. Su nombre recuerda al último Rey de Númenor." />
+    <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl es el heredero de Cirith Nargil y está instruido en las artes oscuras. Su nombre significa Amante del Hechicero, que es como Númenor llamaba a Sauron antes de saber lo que era." />
+    <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn es la segunda hija del Señor de la Espada y la más peligrosa de los dos. Tiene los talentos de su madre y nada de su paciencia." />
   </strings>
 </base>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<!-- Identity transformation - copies everything by default -->
 	<xsl:output omit-xml-declaration="no" indent="yes"/>
@@ -967,7 +967,7 @@
 	<xsl:template match="Hero[@id='lord_1_27']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_27}Maugrash is an Orc captain who has risen through sheer brutality and cunning.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_27_bn}Ugrukhôr holds the wall-walk of the Morannon for the Mouth of Sauron. He is of the old Black Numenorean blood, and he counts the Orcs under his command as tools rather than soldiers.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_27_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -976,7 +976,7 @@
 	<xsl:template match="Hero[@id='lord_1_27_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_27_1}Verina is a Black Numenorean sorceress in service to the Dark Tower.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_27_1_bn}Nûlubêth is a Black Numenorean sorceress in service to the Dark Tower. Her name means Night-Word in the old Adunaic speech, and she chose it herself.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_27</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -985,7 +985,7 @@
 	<xsl:template match="Hero[@id='lord_1_27_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_27_2}Throznak leads raiding parties into the western lands.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_27_2_bn}Aganuzîr leads the raiding parties that ride west of the Black Gate. His name means Death-Lover, and his mother intended it as a blessing.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_27</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_27_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -995,7 +995,7 @@
 	<xsl:template match="Hero[@id='lord_1_27_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_27_3}Vasilia serves the Dark Lord in the shadows.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_27_3_bn}Ugruphel rides with her brother's raiders and keeps the tally of everything they take. She has never seen the sea her ancestors crossed.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_27</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_27_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1005,7 +1005,7 @@
 	<xsl:template match="Hero[@id='lord_1_37']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_37}Goshank commands a regiment of Mordor orcs with cruel efficiency.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_37_bn}Dolguphel is the daughter of the Mouth of Sauron, though he has long since put aside the title of father. She commands the horse of Carach Angren and studies the arts her house does not name aloud.</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_14</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1014,7 +1014,7 @@
 	<xsl:template match="Hero[@id='lord_1_47']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_47}Ulbos is an Orc taskmaster, driving slaves in the forges of Mount Doom.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_47_bn}Ulbar keeps the forges beneath Carach Angren and the slaves who feed them. His is one of the few names his people carried out of Numenor unchanged.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_47_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1023,7 +1023,7 @@
 	<xsl:template match="Hero[@id='lord_1_47_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_47_1}Mina serves the dark powers of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_47_1_bn}Zimrabêth speaks for her husband's house at the Black Gate, and speaks rather better than he does. The Mouth of Sauron has found her useful more than once.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_47</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1032,7 +1032,7 @@
 	<xsl:template match="Hero[@id='lord_1_47_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_47_2}Casyrea is a servant of the Shadow.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_47_2_bn}Azruphel is fourteen and already rides with the Morannon patrols. Her name means Sea-Daughter, for a sea no living Black Numenorean has laid eyes on.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_47</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_47_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1042,7 +1042,7 @@
 	<xsl:template match="Hero[@id='lord_1_47_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_47_3}Colambea dwells in the darkness of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_47_3_bn}Abrazîn was named for the old Numenorean virtue of steadfastness. In Mordor the word has come to mean something much closer to obedience.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_47</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_47_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1424,7 +1424,7 @@
 	<xsl:template match="Hero[@id='lord_SE9_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_SE9_l}A Black Numenorean lord who commands a fortress in Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_SE9_l_bn}Zagarkhôr, the Sword-Lord, holds Cirith Nargil for the Dark Tower. His house kept the Adunaic tongue when the rest of Middle-earth let it go, and he will correct anyone who names him in Elvish.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_SE9_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1433,7 +1433,7 @@
 	<xsl:template match="Hero[@id='lord_SE9_s']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_SE9_s}A Black Numenorean sorceress of dark power.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_SE9_s_bn}Pharazîn is a Black Numenorean sorceress, and the real authority at Cirith Nargil whenever her husband takes the field. Her name recalls the last King of Numenor.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_SE9_l</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1442,7 +1442,7 @@
 	<xsl:template match="Hero[@id='lord_SE9_c1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_SE9_c1}Heir to a Black Numenorean house, trained in dark arts.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_SE9_c1_bn}Zigûrbêl is heir to Cirith Nargil and trained in the dark arts. His name means Lover of the Wizard, which is what Numenor called Sauron before it learned what he was.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_SE9_l</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_SE9_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1452,7 +1452,7 @@
 	<xsl:template match="Hero[@id='lord_SE9_c2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_SE9_c2}Second child of the Black Numenorean lord.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_SE9_c2_bn}Zimrazîn is the second child of the Sword-Lord and the more dangerous of the two. She has her mother's talents and none of her patience.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_SE9_l</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_SE9_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>

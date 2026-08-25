@@ -1449,5 +1449,31 @@
     <string id="TAOM_liege_rohan_female" text="マークの女王" />
     <string id="TAOM_liege_rhun" text="ルーンのロケ＝カン" />
     <string id="TAOM_liege_rhun_female" text="ルーンのロケ＝カン" />
+    <string id="aom_lord_1_27_name_bn" text="ウグルコール" />
+    <string id="aom_lord_1_37_name_bn" text="ドルグフェル" />
+    <string id="aom_lord_1_47_name_bn" text="ウルバル" />
+    <string id="aom_lord_1_27_1_name_bn" text="ヌールベス" />
+    <string id="aom_lord_1_27_2_name_bn" text="アガヌズィール" />
+    <string id="aom_lord_1_27_3_name_bn" text="ウグルフェル" />
+    <string id="aom_lord_1_47_1_name_bn" text="ジムラベス" />
+    <string id="aom_lord_1_47_2_name_bn" text="アズルフェル" />
+    <string id="aom_lord_1_47_3_name_bn" text="アブラズィーン" />
+    <string id="aom_lord_SE9_c1_name_bn" text="ジグールベール" />
+    <string id="aom_lord_SE9_c2_name_bn" text="ジムラズィーン" />
+    <string id="aom_lord_SE9_l_name_bn" text="ザガルホール" />
+    <string id="aom_lord_SE9_s_name_bn" text="ファラズィーン" />
+    <string id="TAOM_hero_1_27_bn" text="ウグルホールは、サウロンの口のためにモランノンの城壁の見張り道を守っている。彼は古き黒きヌーメノール人の血を引き、麾下のオークたちを兵ではなく道具と見なしている。" />
+    <string id="TAOM_hero_1_27_1_bn" text="ヌールベスは暗黒の塔に仕える黒きヌーメノール人の女魔術師である。その名は古いアドゥーナイク語で「夜の言葉」を意味し、彼女自らが選んだ名である。" />
+    <string id="TAOM_hero_1_27_2_bn" text="アガヌズィールは黒門の西へ駆ける襲撃隊を率いている。その名は「死を愛する者」を意味し、母は祝福としてこの名を与えた。" />
+    <string id="TAOM_hero_1_27_3_bn" text="ウグルフェルは兄の襲撃隊と共に馬を駆け、奪ったものすべての records を数え上げる。彼女は祖先が渡った海を一度も見たことがない。" />
+    <string id="TAOM_hero_1_37_bn" text="ドルグフェルはサウロンの口の娘だが、彼は父の名をとうに捨て去っている。彼女はカラハ・アングレンの騎兵を指揮し、その家が声に出して名を呼ばぬ術を学んでいる。" />
+    <string id="TAOM_hero_1_47_bn" text="ウルバルはカラハ・アングレンの地下の鍛冶場と、そこへ送られる奴隷たちを管理している。その名は彼の民がヌーメノールから変わらぬまま持ち出したわずかな名の一つである。" />
+    <string id="TAOM_hero_1_47_1_bn" text="ジムラベスは黒門にて夫の家のために語り、しかも夫よりはるかに巧みに語る。サウロンの口は彼女を幾度も役立つと見なしてきた。" />
+    <string id="TAOM_hero_1_47_2_bn" text="アズルフェルは十四歳ながら、すでにモランノンの巡邏隊と共に馬を駆っている。その名は「海の娘」を意味するが、その海を目にした黒きヌーメノール人は今や一人もいない。" />
+    <string id="TAOM_hero_1_47_3_bn" text="アブラズィーンは古きヌーメノールの美徳たる不動の心にちなんで名づけられた。だがモルドールにおいて、その言葉は服従にずっと近い意味を帯びるようになった。" />
+    <string id="TAOM_hero_SE9_l_bn" text="「剣の主」ザガルホールは、暗黒の塔のためにキリス・ナルギルを守っている。彼の家は中つ国の他の者たちがアドゥーナイク語を捨てた後もそれを守り続け、彼をエルフ語の名で呼ぶ者は誰であれ正される。" />
+    <string id="TAOM_hero_SE9_s_bn" text="ファラズィーンは黒きヌーメノール人の女魔術師であり、夫が出陣している間はキリス・ナルギルの真の支配者である。その名は最後のヌーメノール王を思わせる。" />
+    <string id="TAOM_hero_SE9_c1_bn" text="ジグールベールはキリス・ナルギルの継嗣であり、闇の術を学んでいる。その名は「魔術師を愛する者」を意味する――ヌーメノールがサウロンの本性を知る前に彼をそう呼んでいたのである。" />
+    <string id="TAOM_hero_SE9_c2_bn" text="ジムラズィーンは剣の主の二番目の子であり、二人のうちより危険な方である。母の才を受け継ぎながら、その忍耐は少しも受け継いでいない。" />
   </strings>
 </base>

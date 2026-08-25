@@ -149,7 +149,7 @@ subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
 ## Localization
 
 12 languages (BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR) × 3 modules ≈ 10K strings/lang.
-PL is hand-translated; the other 11 are AI first-draft (`tools/translate_with_claude.py`).
+All 12 are AI first-draft (`tools/translate_with_claude.py`); none is hand-translated.
 **New player-facing text → wrap `{=KEY}default`, register, translate, validate: `/localize`** +
 [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md). Overrides in
 `tools/translation_overrides/<lang>.json` always win over the LLM.

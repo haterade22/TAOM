@@ -370,7 +370,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'culture' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
       <xsl:attribute name="name">{=TAOM_clan_empire_south_9}Wâwrim</xsl:attribute>
-      <xsl:attribute name="owner">Hero.lord_1_48_3</xsl:attribute>
+      <xsl:attribute name="owner">Hero.lord_SE9_l</xsl:attribute>
       <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
       <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF2D2928</xsl:attribute>

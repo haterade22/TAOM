@@ -96,7 +96,7 @@ Workflow when editing content:
 1. Edit `factions.json` content (preserve `{=KEY}` prefix or add new keys per the convention).
 2. Run `python tools/harvest_factionmap_strings.py` to update the auto-harvested block in `taom_module_strings.xml`. Idempotent — re-runs replace the marked block without duplication.
 3. For difficulty strings or any C# code that returns keyed strings (`FactionSelectionService.FormatDifficultyText`), hand-author the matching `<string>` entry in `taom_module_strings.xml` above the auto-harvested block.
-4. Run `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` per language to propagate to 11 AI languages (Polish is hand-translated). Cache deduplicates already-translated strings.
+4. Run `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` per language to propagate to all 12 languages. Cache deduplicates already-translated strings.
 5. Validate: `dotnet test TAOM.Tests --filter FactionMap` covers JSON parse, key coverage, per-playable-faction shape; `LanguageDataXmlTests` covers per-language file parse.
 
 Cross-references:
