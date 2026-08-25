@@ -36,7 +36,7 @@ public class EnlistmentFeatureToggleTests
         _commander = Substitute.For<ICommanderLordAdapter>();
         _attachment = Substitute.For<IServiceAttachmentService>();
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
-        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
             .Returns(new AttachmentAssessment(AttachmentStatus.Attached));
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party", partyIsActive: true));
@@ -192,7 +192,7 @@ public class EnlistmentReviewGuardTests
         _attachment = Substitute.For<IServiceAttachmentService>();
 
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
-        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
             .Returns(new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing));
         // Commander captured: alive, but party-less — the shape that starts a grace window.
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(

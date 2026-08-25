@@ -92,7 +92,7 @@ public class EnlistmentPumpAuthorityTests
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isInMapEvent: playerInMapEvent, hasPlayerEncounter: encounterOpen));
         _encounter.HasCurrent.Returns(encounterOpen);
-        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
             .Returns(new AttachmentAssessment(AttachmentStatus.Attached));
 
         _reconciler.ReconcileHourly(100.0 / 24.0);
@@ -120,7 +120,7 @@ public class EnlistmentPumpAuthorityTests
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
             partyIsInMapEvent: true));
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true, isActive: false, isVisible: false));
-        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
             .Returns(new AttachmentAssessment(AttachmentStatus.BattleJoinRequired));
         var raised = 0;
         _reconciler.BattleJoinRequested += _ => raised++;
@@ -142,7 +142,7 @@ public class EnlistmentPumpAuthorityTests
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true, partyIsInMapEvent: true));
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true, isActive: false, isVisible: false));
-        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
             .Returns(new AttachmentAssessment(AttachmentStatus.BattleJoinRequired));
         var raised = 0;
         _reconciler.BattleJoinRequested += _ => raised++;

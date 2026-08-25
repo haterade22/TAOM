@@ -34,6 +34,12 @@ public interface IEnlistmentWaitMenuPresenter
 
     /// <summary>Tell the player what asking for work produced. "Nothing right now" is an answer.</summary>
     void ReportDutyRequest(Duties.DutyRequestResult result);
+
+    /// <summary>
+    /// The column has stopped somewhere: offer the pass while it is actually stopped. Idempotent
+    /// per settlement stop, so a re-follow does not re-ask.
+    /// </summary>
+    void OfferTownLeave(string settlementId);
 }
 
 public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
@@ -47,6 +53,13 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IServiceStatusService _status;
     private readonly IEnlistmentPlayerActionService _actions;
     private readonly IGameMenuAdapter _gameMenu;
+    private readonly IEnlistmentFeatureSettingsProvider _settings;
+
+    /// <summary>
+    /// Which settlement we last offered a pass for. Session state, never persisted: see
+    /// <see cref="OfferTownLeave"/>.
+    /// </summary>
+    private string _lastOfferedSettlementId;
 
     public EnlistmentWaitMenuPresenter(
         IEnlistmentStore store,
@@ -57,7 +70,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         ICoopSessionProvider coopSession,
         IEnlistmentPlayerActionService actions,
         IGameMenuAdapter gameMenu,
-        IServiceStatusService status)
+        IServiceStatusService status,
+        IEnlistmentFeatureSettingsProvider settings)
     {
         _store = store;
         _commander = commander;
@@ -68,6 +82,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         _actions = actions;
         _gameMenu = gameMenu;
         _status = status;
+        _settings = settings;
     }
 
     /// <summary>
@@ -79,6 +94,46 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     {
         _status.Invalidate();
         _status.RefreshIfChanged();
+    }
+
+    /// <summary>
+    /// THE POPUP IS THE PAUSE. InformationManager.ShowInquiry halts the game while it is up, which
+    /// is the entire reason this is a modal and not a toast: the wait menu runs at
+    /// UnstoppableFastForward, so a lord's few-hour town stop is about two real seconds and the
+    /// menu option cannot be clicked in that time (#512).
+    ///
+    /// Deliberately NOT done by touching TimeControlMode. Hand-editing time control on a wait-menu
+    /// path is the #506 freeze class, which is why taom.time_status and taom.rescue_time exist.
+    /// </summary>
+    public void OfferTownLeave(string settlementId)
+    {
+        if (!_coopSession.IsAuthority)
+            return;
+
+        // Once per stop. In-memory ON PURPOSE: a save/reload mid-stop re-asking is harmless and
+        // self-healing, whereas persisting it would buy save-compat surface for nothing.
+        if (string.IsNullOrEmpty(settlementId) || settlementId == _lastOfferedSettlementId)
+            return;
+        _lastOfferedSettlementId = settlementId;
+
+        if (!_settings.OfferLeaveOnArrival)
+            return;
+
+        // Ask the same gate the menu option asks, so the popup can never offer what the option
+        // would refuse — including the already-on-leave case.
+        if (!_actions.CanTakeTownLeave())
+            return;
+
+        _inquiry.ShowTwoOptionInquiry(
+            "taom_enlist_arrival_title", "The column halts",
+            "taom_enlist_arrival_body",
+            "Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself.",
+            "taom_enlist_arrival_take", "Take your leave",
+            "taom_enlist_arrival_stay", "Stay with the company",
+            TakeTownLeave, null,
+            // `?.` on the SNAPSHOT, not just the name: GetSnapshot returns null for a commander
+            // who no longer resolves, and this runs on an arrival that may race his death.
+            "SETTLEMENT", _commander.GetSnapshot(_store.Record.CommanderHeroId)?.SettlementName ?? settlementId);
     }
 
     public void TakeTownLeave()

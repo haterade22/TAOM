@@ -63,7 +63,15 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     {
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
         CampaignEvents.ConversationEnded.AddNonSerializedListener(this, OnConversationEnded);
+
+        // Offer the pass while the column is ACTUALLY stopped. -= before += because RegisterEvents
+        // runs once per session but this behavior outlives a campaign, and a plain += would stack a
+        // second subscription on the next new game, popping the inquiry twice.
+        _attachment.ColumnEnteredSettlement -= OnColumnEnteredSettlement;
+        _attachment.ColumnEnteredSettlement += OnColumnEnteredSettlement;
     }
+
+    private void OnColumnEnteredSettlement(string settlementId) => _presenter.OfferTownLeave(settlementId);
 
     public override void SyncData(IDataStore dataStore) { }
 

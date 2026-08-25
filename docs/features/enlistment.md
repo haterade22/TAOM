@@ -912,6 +912,56 @@ you are not immediately re-engaged; discharge and confirm pre-enlistment wars ar
 the kingdom Armies tab and hover the commander's party on the map; both were the crash surface.
 Translation of the 5 new keys (#434).
 
+## Shore leave holds the settlement (#512)
+
+The pass suspends service following. It ends when the PLAYER walks out, not when the commander does.
+
+### What was wrong
+
+Shore leave shipped 2026-08-12 and never once worked, for three independent reasons:
+
+| # | Cause | Evidence |
+|---|---|---|
+| 1 | `OnTownLeave` appeared nowhere in the attachment layer, so `Assess` returned `SettlementExitRequired` the moment the commander's settlement differed and the hourly reconciler dragged the player out mid-shop | `grep OnTownLeave` over `EnlistmentReconciler.cs` and `ServiceAttachmentService.cs` returned nothing |
+| 2 | `SyncPositionCached` ended with an unconditional `main.Position = party.Position`, called every cheap pump pass while `EnlistedAttached`, including inside a settlement | pump cheap tier, 4 Hz |
+| 3 | The window to click the option was about two real seconds | live log: `FOLLOW 08:22:59` then `EXIT 08:23:01` |
+
+A lord's town stop is a few campaign hours, and the wait menu runs at `UnstoppableFastForward`
+(`GameMenu.StartWait`), which is what turns "a few hours" into two seconds.
+
+### The three fixes
+
+**`Assess` takes `onTownLeave`.** Two ordering constraints, both pinned by tests because a future
+reorder is silent: it sits BELOW the commander-fitness block, so a dead or captured commander still
+reaches `Blocked` and a pass never outranks losing your commander; and the exit clause stays ABOVE
+the battle branch, so falling through on a pass still reaches `PartyIsInMapEvent` and a commander
+battle still raises `BattleJoinRequired`. A soldier on leave is still enlisted.
+
+**`SyncPositionCached` never drags a party that is inside a settlement.** Correct independent of
+shore leave: the engine pins such a party to its gate.
+
+**The arrival offer is a modal, and the modal IS the pause.**
+`ServiceAttachmentService` raises `ColumnEnteredSettlement` after the follow transaction lands;
+`EnlistmentMenuBehavior` subscribes and the presenter shows a two-option inquiry.
+`InformationManager.ShowInquiry` halts the game while it is up, so this needs **no**
+`TimeControlMode` edit. That is deliberate: hand-editing time control on a wait-menu path is the
+#506 freeze class, which is why `taom.time_status` and `taom.rescue_time` exist. Do not go near it.
+
+Gating: host-only, once per settlement stop (in-memory, deliberately not persisted, since a reload
+re-asking is harmless and persisting it would buy save-compat surface for nothing), only when
+`CanTakeTownLeave()` already agrees, and behind the MCM toggle `OfferLeaveOnArrival` (default ON,
+classified `PlayerLocal` for co-op because the pass it offers is host-gated anyway).
+
+`TownLeavePolicy.ShouldRevokeLeave` is unchanged: it already revokes exactly when the player is no
+longer inside the settlement, which is the wanted behaviour. Only the exit sweep needed teaching.
+
+### Still open
+
+Crash bundle `d7d9f7d3` shows the same FOLLOW/EXIT pair oscillating on a 6 to 7 second period for
+fifteen minutes while the commander sat in `town_EW1`. If that survives this fix with no pass held,
+the commander's settlement is being read unstably and that is a separate defect. Check the log
+before assuming it is gone.
+
 ## The settlement-encounter invariant (#510)
 
 **Whenever TAOM puts the main party inside a settlement and a vanilla settlement menu can reach the

@@ -19,4 +19,10 @@ public sealed class EnlistmentFeatureSettingsProvider : IEnlistmentFeatureSettin
     internal static bool ResolveEnabled(bool? raw) => raw ?? true;
 
     public bool IsEnabled => ResolveEnabled(TaomSettings.Instance?.EnableEnlistment);
+
+    /// <summary>Same fail-open reasoning, same must-match-the-compiled-default rule.</summary>
+    internal static bool ResolveOfferLeaveOnArrival(bool? raw) => raw ?? true;
+
+    public bool OfferLeaveOnArrival =>
+        ResolveOfferLeaveOnArrival(TaomSettings.Instance?.OfferLeaveOnArrival);
 }

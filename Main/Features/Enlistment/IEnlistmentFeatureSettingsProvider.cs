@@ -20,4 +20,14 @@ public interface IEnlistmentFeatureSettingsProvider
 {
     /// <summary>True when the enlistment feature is active. Default true.</summary>
     bool IsEnabled { get; }
+
+    /// <summary>
+    /// Offer shore leave with a popup when the column enters a settlement. Default true.
+    ///
+    /// Exists because the option alone is unreachable: a lord's town stop is a few campaign hours
+    /// and the service wait menu runs at UnstoppableFastForward, so "Take leave in the settlement"
+    /// appears and vanishes inside about two real seconds (#512). Turning this off leaves the menu
+    /// option working for a player who would rather not be interrupted.
+    /// </summary>
+    bool OfferLeaveOnArrival { get; }
 }

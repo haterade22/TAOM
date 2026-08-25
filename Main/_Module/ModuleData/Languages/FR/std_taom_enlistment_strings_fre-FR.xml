@@ -419,6 +419,14 @@
 
 	<string id="taom_enlist_leave_refused" text="You cannot take your leave here just now." />
 
+	<string id="taom_enlist_arrival_title" text="The column halts" />
+
+	<string id="taom_enlist_arrival_body" text="Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself." />
+
+	<string id="taom_enlist_arrival_take" text="Take your leave" />
+
+	<string id="taom_enlist_arrival_stay" text="Stay with the company" />
+
   </strings>
 
 </base>

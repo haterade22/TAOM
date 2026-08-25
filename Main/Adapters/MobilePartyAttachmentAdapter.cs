@@ -186,6 +186,15 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
             if (party == null)
                 return false;
 
+            // NEVER DRAG A PARTY THAT IS INSIDE A SETTLEMENT. This runs on the pump's cheap tier,
+            // every pass while EnlistedAttached, and the enlisted player is deliberately INSIDE the
+            // commander's settlement whenever the column rests. Writing Position against a party the
+            // engine pins to a settlement gate is meaningless at best, and while a shore-leave pass is
+            // held it is a second mechanism tugging the player out of the town they chose to stay in
+            // (#512). One field read, so the cheap tier stays cheap.
+            if (main.CurrentSettlement != null)
+                return false;
+
             main.Position = party.Position;
             return true;
         }

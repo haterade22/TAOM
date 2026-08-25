@@ -25,6 +25,7 @@ public class EnlistmentWaitMenuPresenterTests
     private ICoopSessionProvider _coop;
     private IEnlistmentPlayerActionService _actions = null!;
     private IGameMenuAdapter _menuAdapter = null!;
+    private IEnlistmentFeatureSettingsProvider _settings = null!;
     private EnlistmentWaitMenuPresenter _sut;
 
     [TestInitialize]
@@ -44,8 +45,11 @@ public class EnlistmentWaitMenuPresenterTests
 
         _actions = Substitute.For<IEnlistmentPlayerActionService>();
         _menuAdapter = Substitute.For<IGameMenuAdapter>();
+        _settings = Substitute.For<IEnlistmentFeatureSettingsProvider>();
+        _settings.IsEnabled.Returns(true);
+        _settings.OfferLeaveOnArrival.Returns(true);
         _sut = new EnlistmentWaitMenuPresenter(_store, _commander, _gate, _service, _inquiry, _coop,
-            _actions, _menuAdapter, Substitute.For<IServiceStatusService>());
+            _actions, _menuAdapter, Substitute.For<IServiceStatusService>(), _settings);
     }
 
     [TestMethod]
@@ -150,5 +154,88 @@ public class EnlistmentWaitMenuPresenterTests
         confirm();
 
         _service.DidNotReceiveWithAnyArgs().RequestDischarge(default);
+    }
+
+    // ---- Arrival offer (#512) ------------------------------------------------------------
+    // The menu option alone is unreachable: a lord's town stop is a few campaign hours and the
+    // wait menu runs at UnstoppableFastForward, so it appears and vanishes in about two real
+    // seconds. The modal is the pause, because ShowInquiry halts the game while it is up.
+
+    [TestMethod]
+    public void OfferTownLeave_Eligible_AsksOnce()
+    {
+        _actions.CanTakeTownLeave().Returns(true);
+
+        _sut.OfferTownLeave("town_EW1");
+
+        _inquiry.Received(1).ShowTwoOptionInquiry(
+            "taom_enlist_arrival_title", Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(),
+            Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(),
+            Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_SameSettlementTwice_AsksOnlyOnce()
+    {
+        _actions.CanTakeTownLeave().Returns(true);
+
+        _sut.OfferTownLeave("town_EW1");
+        _sut.OfferTownLeave("town_EW1");
+
+        _inquiry.Received(1).ShowTwoOptionInquiry(
+            "taom_enlist_arrival_title", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_ToggleOff_NeverAsks()
+    {
+        _actions.CanTakeTownLeave().Returns(true);
+        _settings.OfferLeaveOnArrival.Returns(false);
+
+        _sut.OfferTownLeave("town_EW1");
+
+        _inquiry.DidNotReceive().ShowTwoOptionInquiry(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_GateRefuses_NeverAsks()
+    {
+        // Never offer what the menu option itself would refuse — including an already-held pass.
+        _actions.CanTakeTownLeave().Returns(false);
+
+        _sut.OfferTownLeave("town_EW1");
+
+        _inquiry.DidNotReceive().ShowTwoOptionInquiry(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_NotAuthority_NeverAsks()
+    {
+        _actions.CanTakeTownLeave().Returns(true);
+        _coop.IsAuthority.Returns(false);
+
+        _sut.OfferTownLeave("town_EW1");
+
+        _inquiry.DidNotReceive().ShowTwoOptionInquiry(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
     }
 }

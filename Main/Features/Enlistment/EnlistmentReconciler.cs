@@ -337,7 +337,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         if (record.State == EnlistmentState.EnlistedBattle && noBattleAnywhere)
             _machine.TryTransition(EnlistmentState.EnlistedAttached);
 
-        var assessment = _attachment.Assess(record.State, snapshot, presence);
+        var assessment = _attachment.Assess(record.State, snapshot, presence, record.OnTownLeave);
 
         // GATE SHAPE RULE (every [EnlistDiag] gate in this feature): the gate is an
         // `if (_diag?.IsEnabled == true)` wrapping EXACTLY ONE logging statement. Never a block,

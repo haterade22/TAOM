@@ -49,8 +49,8 @@ public class SettlementFollowingTests
             isActive: !parked, isVisible: !parked,
             settlementId: settlementId, isInMapEvent: inMapEvent);
 
-    private AttachmentStatus Assess(CommanderSnapshot c, PlayerPresenceSnapshot p) =>
-        _sut.Assess(EnlistmentState.EnlistedAttached, c, p).Status;
+    private AttachmentStatus Assess(CommanderSnapshot c, PlayerPresenceSnapshot p, bool onTownLeave = false) =>
+        _sut.Assess(EnlistmentState.EnlistedAttached, c, p, onTownLeave).Status;
 
     // ---- Assess ---------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ public class SettlementFollowingTests
     public void Assess_CommanderInSettlementPlayerOutside_SettlementFollowRequired()
     {
         Assert.AreEqual(AttachmentStatus.SettlementFollowRequired,
-            Assess(Commander("town_ES1"), Player()));
+            Assess(Commander("town_ES1"), Player(), onTownLeave: false));
     }
 
     [TestMethod]
@@ -67,21 +67,21 @@ public class SettlementFollowingTests
         // Inside the walls the party is deliberately active and visible, so LooksParked is false.
         // Returning AttachRequired here would re-park the player back outside every single hour.
         Assert.AreEqual(AttachmentStatus.Attached,
-            Assess(Commander("town_ES1"), Player("town_ES1", parked: false)));
+            Assess(Commander("town_ES1"), Player("town_ES1", parked: false), onTownLeave: false));
     }
 
     [TestMethod]
     public void Assess_PlayerInSettlementCommanderLeft_SettlementExitRequired()
     {
         Assert.AreEqual(AttachmentStatus.SettlementExitRequired,
-            Assess(Commander(), Player("town_ES1", parked: false)));
+            Assess(Commander(), Player("town_ES1", parked: false), onTownLeave: false));
     }
 
     [TestMethod]
     public void Assess_PlayerInDifferentSettlement_SettlementExitRequired()
     {
         Assert.AreEqual(AttachmentStatus.SettlementExitRequired,
-            Assess(Commander("town_ES2"), Player("town_ES1", parked: false)));
+            Assess(Commander("town_ES2"), Player("town_ES1", parked: false), onTownLeave: false));
     }
 
     [TestMethod]
@@ -93,7 +93,7 @@ public class SettlementFollowingTests
         // off exactly that field — turning an assault on the walls into a field fight for
         // everyone in it.
         Assert.AreEqual(AttachmentStatus.SettlementExitRequired,
-            Assess(Commander(inMapEvent: true), Player("town_ES1", parked: false)));
+            Assess(Commander(inMapEvent: true), Player("town_ES1", parked: false), onTownLeave: false));
     }
 
     [TestMethod]
@@ -102,21 +102,21 @@ public class SettlementFollowingTests
         // The player inside the settlement the commander is defending is the CORRECT state, and
         // the reason this batch improves siege joins rather than risking them.
         Assert.AreEqual(AttachmentStatus.BattleJoinRequired,
-            Assess(Commander("town_ES1", inMapEvent: true), Player("town_ES1", parked: false)));
+            Assess(Commander("town_ES1", inMapEvent: true), Player("town_ES1", parked: false), onTownLeave: false));
     }
 
     [TestMethod]
     public void Assess_NeitherInSettlement_UnchangedParkedBehaviour()
     {
-        Assert.AreEqual(AttachmentStatus.Attached, Assess(Commander(), Player()));
-        Assert.AreEqual(AttachmentStatus.AttachRequired, Assess(Commander(), Player(parked: false)));
+        Assert.AreEqual(AttachmentStatus.Attached, Assess(Commander(), Player(), onTownLeave: false));
+        Assert.AreEqual(AttachmentStatus.AttachRequired, Assess(Commander(), Player(parked: false), onTownLeave: false));
     }
 
     [TestMethod]
     public void Assess_CaptivityStillOutranksSettlementFollowing()
     {
         var player = new PlayerPresenceSnapshot(mainPartyExists: true, isCaptive: true, settlementId: "town_ES1");
-        var result = _sut.Assess(EnlistmentState.EnlistedAttached, Commander("town_ES2"), player);
+        var result = _sut.Assess(EnlistmentState.EnlistedAttached, Commander("town_ES2"), player, onTownLeave: false);
 
         Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
         Assert.AreEqual(AttachmentBlockReason.PlayerCaptive, result.BlockReason);
@@ -126,7 +126,7 @@ public class SettlementFollowingTests
     public void Assess_MissingCommanderStillOutranksSettlementExit()
     {
         var result = _sut.Assess(
-            EnlistmentState.EnlistedAttached, CommanderSnapshot.Missing, Player("town_ES1", parked: false));
+            EnlistmentState.EnlistedAttached, CommanderSnapshot.Missing, Player("town_ES1", parked: false), onTownLeave: false);
 
         Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
         Assert.AreEqual(AttachmentBlockReason.CommanderPartyMissing, result.BlockReason);
@@ -213,6 +213,27 @@ public class SettlementFollowingTests
         Assert.IsFalse(_sut.ExitSettlementForService("lord_1"));
         _attachment.DidNotReceive().ParkNear(Arg.Any<string>());
     }
+
+    // ---- A held pass suspends the exit sweep, end to end (#512) ------------------------------
+
+    [TestMethod]
+    public void Assess_PassHeld_CommanderMarchedOn_DoesNotOrderAnExit()
+    {
+        // The reconciler acts on this verdict by calling ExitSettlementForService. Returning
+        // anything but SettlementExitRequired is what keeps the player in the town they paid for.
+        var verdict = Assess(Commander(), Player("town_ES1", parked: false), onTownLeave: true);
+
+        Assert.AreNotEqual(AttachmentStatus.SettlementExitRequired, verdict);
+        Assert.AreEqual(AttachmentStatus.Attached, verdict);
+    }
+
+    [TestMethod]
+    public void Assess_NoPass_CommanderMarchedOn_StillOrdersTheExit()
+    {
+        Assert.AreEqual(
+            AttachmentStatus.SettlementExitRequired,
+            Assess(Commander(), Player("town_ES1", parked: false), onTownLeave: false));
+    }
 }
 
 /// <summary>
@@ -279,7 +300,7 @@ public class SettlementFollowingReconcilerTests
 
     private void Verdict(AttachmentStatus status)
     {
-        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
             .Returns(new AttachmentAssessment(status));
     }
 
@@ -401,13 +422,13 @@ public class CommanderSettlementIdentityTests
         // 1) outside -> follow in
         var outside = new PlayerPresenceSnapshot(mainPartyExists: true);
         Assert.AreEqual(AttachmentStatus.SettlementFollowRequired,
-            attachment.Assess(EnlistmentState.EnlistedAttached, commander, outside).Status);
+            attachment.Assess(EnlistmentState.EnlistedAttached, commander, outside, onTownLeave: false).Status);
 
         // 2) now inside the SAME settlement -> must settle, not demand an exit
         var inside = new PlayerPresenceSnapshot(
             mainPartyExists: true, isActive: true, isVisible: true, settlementId: "town_EW1");
         Assert.AreEqual(AttachmentStatus.Attached,
-            attachment.Assess(EnlistmentState.EnlistedAttached, commander, inside).Status,
+            attachment.Assess(EnlistmentState.EnlistedAttached, commander, inside, onTownLeave: false).Status,
             "following into the commander's settlement must terminate — an Exit verdict here is the teleport loop");
     }
 }

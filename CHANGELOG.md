@@ -2,6 +2,42 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-25
+
+### fix(enlistment): shore leave now actually holds the settlement (#512)
+
+Field report: went into a town twice while enlisted, and it did not wait either time. The live log
+agreed, with a two second stop: `FOLLOW: entered 'town_EW1'` at 08:22:59, `EXIT: left the settlement`
+at 08:23:01.
+
+Shore leave shipped on 2026-08-12 and never worked, for three independent reasons. `OnTownLeave`
+appeared nowhere in the attachment layer, so the hourly reconciler dragged the player out of the town
+the moment the commander walked out of it, pass or no pass. The pump's cheap tier wrote
+`main.Position = party.Position` four times a second regardless of the player standing in a
+settlement. And the window to click the option was about two real seconds, because a lord's town stop
+is a few campaign hours and the service wait menu runs at `UnstoppableFastForward`.
+
+`Assess` now takes the pass into account. The ordering is the correctness argument and both halves
+are pinned by tests: it sits below the commander-fitness block, so a dead commander still outranks a
+pass, and the exit clause stays above the battle branch, so a commander battle still pulls a
+soldier on leave back in. The position sync no longer drags a party the engine has pinned to a
+settlement gate.
+
+Arriving with the column now offers the pass in a two-option popup, and the popup is the pause:
+`InformationManager.ShowInquiry` halts the game while it is up, so this needed no `TimeControlMode`
+edit at all. That was deliberate. Hand-editing time control on a wait-menu path is the #506 freeze
+class. The offer is host-only, fires once per settlement stop, asks the same gate the menu option
+asks, and sits behind a new MCM toggle that defaults on.
+
+`TownLeavePolicy.ShouldRevokeLeave` is untouched: it already ended the pass exactly when the player
+leaves the settlement, which is what we wanted. Only the exit sweep needed teaching.
+
+Known, unresolved: crash bundle `d7d9f7d3` shows that same FOLLOW/EXIT pair oscillating every six to
+seven seconds for fifteen minutes while the commander sat still. If that survives with no pass held,
+the commander's settlement is being read unstably and it needs its own issue.
+
+Suite 7507 passed / 2 skipped.
+
 ## 2026-08-24
 
 ### fix(enlistment): a settlement menu with no encounter behind it (#510)

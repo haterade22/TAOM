@@ -50,6 +50,10 @@
 	<string id="taom_enlist_act_march" text="{=taom_enlist_act_march}You march with {COMMANDER}&#x27;s company, at your commander&#x27;s pace." />
 	<string id="taom_enlist_act_settlement" text="{=taom_enlist_act_settlement}The column rests inside {SETTLEMENT}." />
 	<string id="taom_enlist_act_siege" text="{=taom_enlist_act_siege}You are camped before the walls with {COMMANDER}&#x27;s company." />
+	<string id="taom_enlist_arrival_title" text="{=taom_enlist_arrival_title}The column halts" />
+	<string id="taom_enlist_arrival_body" text="{=taom_enlist_arrival_body}Your company has stopped at {SETTLEMENT}. Your sergeant will look the other way if you want a few hours to yourself." />
+	<string id="taom_enlist_arrival_take" text="{=taom_enlist_arrival_take}Take your leave" />
+	<string id="taom_enlist_arrival_stay" text="{=taom_enlist_arrival_stay}Stay with the company" />
 	<string id="taom_enlist_board_arrears" text="{=taom_enlist_board_arrears}{NEWLINE}Pay owed to you: {GOLD}{GOLD_ICON}" />
 	<string id="taom_enlist_board_duty" text="{=taom_enlist_board_duty}{NEWLINE}You have orders: {DUTY_NAME}" />
 	<string id="taom_enlist_duty_already" text="{=taom_enlist_duty_already}You already have your orders. See them done first." />

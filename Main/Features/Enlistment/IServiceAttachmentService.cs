@@ -10,7 +10,17 @@ namespace TAOM.Features.Enlistment;
 /// </summary>
 public interface IServiceAttachmentService
 {
-    AttachmentAssessment Assess(EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player);
+    AttachmentAssessment Assess(
+        EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player,
+        bool onTownLeave);
+
+    /// <summary>
+    /// Raised with the settlement id after the follow transaction has fully landed, so a listener
+    /// can offer the player shore leave while the column is actually stopped. Deliberately an
+    /// event rather than a direct presenter call: this is a service, and popups are presentation.
+    /// Mirrors <c>IServiceMaintenanceService.BattleJoinRequested</c>.
+    /// </summary>
+    event System.Action<string> ColumnEnteredSettlement;
 
     /// <summary>Pass the commander id or distToCommander reads -1 and the drift line prints '?'.</summary>
     PlayerPresenceSnapshot GetPresence(string commanderHeroId = null);

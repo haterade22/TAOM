@@ -91,6 +91,10 @@ public static class CoopSettingsRelevance
         "LowValueThreshold", "SellLowValueEquipped", "ExcludeLowValueFood",
         "ExcludeLowValueHorses", "ExcludeLowValueTradeGoods",
         "EnableEquipmentPresets", "MaxPresetsPerCharacter",
+        // Whether YOUR client pops the shore-leave offer when the column halts. The pass it
+        // offers is host-gated in EnlistmentWaitMenuPresenter.OfferTownLeave, so two peers
+        // disagreeing about the prompt cannot make them simulate differently (#512).
+        "OfferLeaveOnArrival",
     };
 
     /// <summary>Presentation, and the clock BT already owns.</summary>

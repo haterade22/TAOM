@@ -20,7 +20,11 @@ public class ServiceAttachmentService : IServiceAttachmentService
         _logger = logger;
     }
 
-    public AttachmentAssessment Assess(EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player)
+    public event System.Action<string> ColumnEnteredSettlement;
+
+    public AttachmentAssessment Assess(
+        EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player,
+        bool onTownLeave)
     {
         if (state != EnlistmentState.EnlistedAttached && state != EnlistmentState.EnlistedBattle)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.NotInAttachableState);
@@ -50,7 +54,20 @@ public class ServiceAttachmentService : IServiceAttachmentService
         // that field for a joining defender — turning an assault on the walls into a field fight
         // for every participant. Being inside the settlement the commander is defending is the
         // CORRECT state and is exempt; being inside a different one is not.
-        if (playerIsSomewhere && !sameSettlement)
+        // SHORE LEAVE SUSPENDS THE EXIT SWEEP, and this clause is the whole of #512. Without the
+        // `!onTownLeave` term the reconciler drags the player out of the town the moment the
+        // commander walks out of it, so a pass lasted about two real seconds at wait-menu speed and
+        // the feature never once did what it promised. The pass ends when the PLAYER leaves the
+        // settlement, which TownLeavePolicy.ShouldRevokeLeave already implements correctly.
+        //
+        // ORDERING, both halves load-bearing and both pinned by tests:
+        //   - This sits BELOW the commander-fitness block above, so a dead or captured commander
+        //     still reaches Blocked. A pass must never outrank losing your commander.
+        //   - It sits ABOVE the battle branch for the reason the original comment gives, and the
+        //     `onTownLeave` term does not change that: falling through on a pass reaches
+        //     PartyIsInMapEvent next, so a commander battle still raises BattleJoinRequired. A
+        //     soldier on leave is still enlisted.
+        if (playerIsSomewhere && !sameSettlement && !onTownLeave)
             return new AttachmentAssessment(AttachmentStatus.SettlementExitRequired);
 
         if (commander.PartyIsInMapEvent)
@@ -69,6 +86,12 @@ public class ServiceAttachmentService : IServiceAttachmentService
         // visible, pinned to the gate. Returning AttachRequired here would re-park the player back
         // outside every hour, which is the same "standing at the gate" bug with extra steps.
         if (sameSettlement)
+            return new AttachmentAssessment(AttachmentStatus.Attached);
+
+        // On a pass and standing in a settlement: stay. Reached only when the commander is
+        // somewhere else entirely, since sameSettlement returned Attached just above. Placed here
+        // rather than earlier so every fitness and battle rule got its say first.
+        if (onTownLeave && playerIsSomewhere)
             return new AttachmentAssessment(AttachmentStatus.Attached);
 
         if (!string.IsNullOrEmpty(commanderSettlement))
@@ -134,6 +157,20 @@ public class ServiceAttachmentService : IServiceAttachmentService
         }
 
         _logger?.LogInfo($"[EnlistDiag] FOLLOW: entered '{settlementId}' with the commander's column");
+
+        // AFTER the transaction has fully landed, never before: a listener will put a modal in
+        // front of the player, and doing that mid-placement would pause the game over a
+        // half-configured state. Subscriber throws are swallowed for the same reason the discharge
+        // pipeline swallows its own: the placement has already succeeded and must report so.
+        try
+        {
+            ColumnEnteredSettlement?.Invoke(settlementId);
+        }
+        catch (System.Exception ex)
+        {
+            _logger?.LogError($"[EnlistDiag] ColumnEnteredSettlement subscriber threw for '{settlementId}': {ex.Message}");
+        }
+
         return true;
     }
 

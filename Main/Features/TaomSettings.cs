@@ -466,6 +466,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // sites produced the other ~99, and those are the ones worth keeping: oath, joins, duties,
     // promotion, rewards, discharge. A player now carries the events and none of the trace.
 
+    [SettingPropertyGroup("Enlistment", GroupOrder = 41)]
+    [SettingPropertyBool("Offer Leave When The Column Halts", Order = 10, RequireRestart = false,
+        HintText = "When your company stops at a town, castle or village, ask whether you want a few hours to yourself. The popup exists because the wait menu runs at full speed: a lord's stop is a few campaign hours, which is about two real seconds, and the 'Take leave in the settlement' menu option appears and vanishes inside it. Turn this off and that menu option still works. Takes effect immediately; no restart. Default ON.")]
+    public bool OfferLeaveOnArrival { get; set; } = true;
+
     [SettingPropertyGroup("Enlistment/Diagnostics", GroupOrder = 42)]
     [SettingPropertyBool("Enable Enlistment Diagnostics", Order = 0, RequireRestart = false,
         HintText = "Log the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, RESTORE ok) to the TAOM debug log. OFF by default: it is roughly ten times the volume of the ordinary enlistment log and exists for diagnosing the service loop, not for playing. Turn it ON before reproducing an enlistment problem you intend to report. Real faults are always logged regardless of this setting, so [EnlistDiag] lines will still appear when it is off. Takes effect immediately; no restart. Default OFF.")]
