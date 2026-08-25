@@ -456,3 +456,31 @@ entry must state how that caller keeps the vanilla UI unreachable.
 
 **Source:** issue #510, player crash bundle `d7d9f7d3` (TAOM v2.0.20 on Bannerlord v1.4.8); site B
 shipped in v2.0.21 and v2.0.22. `docs/features/enlistment.md` "The settlement-encounter invariant".
+
+### A flag that gates the UI must also gate the LOGIC the UI is describing, or the feature is inert
+
+Shore leave set `record.OnTownLeave`, and that flag reached exactly two places: the menu redirect and
+the wait-menu re-assertion. It never reached the attachment layer. `grep OnTownLeave` over
+`EnlistmentReconciler.cs` and `ServiceAttachmentService.cs` returned nothing, so `Assess` went on
+returning `SettlementExitRequired` the instant the commander's settlement differed and the hourly
+reconciler dragged the player straight back out of the town the pass had just unlocked. A second
+mechanism, the pump's 4 Hz position sync, pulled in the same direction. The feature shipped, read
+correctly at every individual call site, and did nothing at all for two releases.
+
+The tell is a state flag whose every consumer lives in the presentation or menu layer. A flag that
+changes what the player may DO has to reach the code that decides what happens TO them.
+
+**Why missed:** the feature was specified and reviewed as a menu-routing change, which is what it
+literally was, and the menu routing worked. Nothing asked the second question: what else acts on the
+player while the flag is set? Unit tests passed because they exercised the redirect, which was right.
+
+**Prevent:** when adding a state flag, grep for it across the whole feature and list every layer it
+reaches; if it reaches only presentation, say out loud why no service needs it. And measure the
+feature end to end at least once, because a two second window is invisible to every test and obvious
+in one log line. The live log here read `FOLLOW 08:22:59` / `EXIT 08:23:01`.
+
+**Related but distinct** from the mask lesson above: that one is about suppressing vanilla UI to hide
+an invalid state; this one is about a flag that changes the UI without changing the state at all.
+
+**Source:** issue #512, live log 2026-08-25, `docs/features/enlistment.md` "Shore leave holds the
+settlement (#512)".
