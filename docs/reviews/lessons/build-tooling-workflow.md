@@ -1489,3 +1489,31 @@ remember: (1) nuget package versions are NOT assembly versions (package 4.5.3 = 
 package 6.0.0 = 6.0.0.0) - derive the required pin from the consumer's reference metadata, never
 from "latest"; (2) build outputs overwrite vendored module files at deploy, so a wrong package pin
 silently clobbers a correct vendored DLL forever - DependenciesPairingTests now pins both sides.
+
+### Prove WHICH build a log came from before reading anything into it, and search the DLL correctly
+
+A log is evidence about the binary that produced it, not about your working tree. Twice in one
+session the answer turned on this: a log at 09:07 ran a DLL deployed 09:05 and therefore DID carry
+the fix, while a log at 11:02 ran one deployed at 09:05 because the next deploy landed at 11:16, one
+minute after that session ended. Reading either as "the fix did not work" would have been wrong.
+
+The check is two timestamps and one content probe: the deployed DLL's mtime under
+`<game>/Modules/TAOM/bin/Win64_Shipping_Client/`, the log's start time, and a search of the DLL for a
+symbol only the new code has.
+
+**The content probe has a trap that will silently mislead you.** Method and type names live in the
+metadata heaps as UTF-8, so `b'MyNewMethod' in dll_bytes` works. **String literals live in the #US
+heap as UTF-16LE**, so the same search for a log message returns MISSING for a DLL that definitely
+contains it. Searching four names and two literals produced "2 MISSING" and a wrong conclusion until
+the literals were re-searched as `s.encode('utf-16-le')`, which found all of them.
+
+**Why missed:** the first probe used method names and worked, so the technique looked validated. The
+second probe mixed names and literals without noticing they are stored differently.
+
+**Prevent:** probe with a METHOD or TYPE name (UTF-8) as the primary check. If you must probe a
+string literal, encode it `utf-16-le`. And when a build script reports failure while the game is
+running, read which STEP failed: `dotnet build` returning `0 Error(s)` with `build.ps1` still failing
+is the module-copy step hitting a file lock, which means the compile is fine and the deploy did not
+happen, so the running game keeps the OLD binary.
+
+**Source:** enlistment #512 follow-up, 2026-08-25, two log sessions and one blocked deploy.
