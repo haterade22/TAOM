@@ -38,6 +38,31 @@ the commander's settlement is being read unstably and it needs its own issue.
 
 Suite 7507 passed / 2 skipped.
 
+### fix(enlistment): the column now rests long enough to be worth stopping for
+
+Follow-up on the same issue, from the next session's log. The pass held correctly, but the strobe
+underneath it did not go away: ten settlement transitions across three towns in three real minutes,
+median 2.5 seconds inside, twice entering and leaving within the SAME second. An AI lord dips into a
+town for well under a campaign hour, and following him straight back out leaves nothing usable.
+Calibrated from a duty in that log, one campaign hour was running in about three real seconds.
+
+A placement is now held for a minimum dwell before the exit sweep may undo it. **The battle carve-out
+is not optional and has its own test**: `Assess` puts the exit rule above the battle branch on
+purpose, because joining a map event while `CurrentSettlement` points at another settlement makes
+`MapEvent.AddInvolvedPartyInternal` rewrite a siege assault to SiegeOutside for a joining defender.
+A dwell that outranked a commander battle would corrupt the battle everyone else is fighting, not
+merely delay the join, so it yields the moment he is in one.
+
+The arrival offer gained a cooldown for the same reason. Latching on settlement id alone was not
+enough: a commander cycling three towns changes the id every few seconds, which would have popped a
+modal on nearly every transition. The dwell holds the placement; the cooldown holds the question.
+
+Two diagnostics added, because this session's log could not answer its own questions: the offer now
+logs when it fires, and the EXIT lines now name where the commander actually is. That is what will
+separate a lord genuinely leaving from a stale snapshot, which is still unresolved.
+
+Suite 7513 passed / 2 skipped.
+
 ## 2026-08-24
 
 ### fix(enlistment): a settlement menu with no encounter behind it (#510)

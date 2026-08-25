@@ -411,15 +411,34 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 return;
 
             case AttachmentStatus.SettlementFollowRequired:
-                _attachment.FollowCommanderIntoSettlement(record.CommanderHeroId, snapshot.SettlementId);
+                if (_attachment.FollowCommanderIntoSettlement(record.CommanderHeroId, snapshot.SettlementId))
+                    _attachment.StampSettlementEntry(nowDays * 24.0);
                 return;
 
             case AttachmentStatus.SettlementExitRequired:
+                // MINIMUM DWELL. An AI lord dips into a town for under a campaign hour, and
+                // following him straight back out gave ten transitions across three towns in three
+                // real minutes (measured 2026-08-25), twice in and out within the SAME second.
+                // Hold the placement briefly so the stop is usable.
+                //
+                // THE BATTLE CARVE-OUT IS NOT OPTIONAL. The exit rule sits ABOVE the battle branch
+                // in Assess on purpose: joining a map event with CurrentSettlement pointing at some
+                // other settlement makes MapEvent.AddInvolvedPartyInternal rewrite a siege ASSAULT
+                // to SiegeOutside for a joining defender. So a dwell that outranked a commander
+                // battle would not merely delay the join, it would corrupt the battle everyone
+                // else is fighting. When he is in a map event the dwell yields immediately.
+                if (!snapshot.PartyIsInMapEvent && _attachment.IsWithinSettlementDwell(nowDays * 24.0))
+                {
+                    if (_diag?.IsEnabled == true)
+                        _logger?.LogInfo($"[EnlistDiag] EXIT deferred — holding '{presence.SettlementId}' for the minimum dwell (commander is in '{snapshot.SettlementId ?? "the field"}')");
+                    return;
+                }
+
                 // Checked, not discarded: a persistently failing LeaveSettlement would return
                 // SettlementExitRequired again every hour forever, silently, with the player
                 // stuck inside a settlement the commander has left.
                 if (!_attachment.ExitSettlementForService(record.CommanderHeroId))
-                    _logger?.LogError($"[EnlistDiag] hourly EXIT failed — the player is stuck inside a settlement '{presence.SettlementId}' the commander has left");
+                    _logger?.LogError($"[EnlistDiag] hourly EXIT failed — the player is stuck inside a settlement '{presence.SettlementId}' the commander has left (he is in '{snapshot.SettlementId ?? "the field"}')");
                 return;
 
             case AttachmentStatus.AttachRequired:

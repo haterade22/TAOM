@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Domain;
@@ -49,7 +50,8 @@ public class EnlistmentWaitMenuPresenterTests
         _settings.IsEnabled.Returns(true);
         _settings.OfferLeaveOnArrival.Returns(true);
         _sut = new EnlistmentWaitMenuPresenter(_store, _commander, _gate, _service, _inquiry, _coop,
-            _actions, _menuAdapter, Substitute.For<IServiceStatusService>(), _settings);
+            _actions, _menuAdapter, Substitute.For<IServiceStatusService>(), _settings,
+            Substitute.For<IModLogger>());
     }
 
     [TestMethod]
@@ -166,7 +168,7 @@ public class EnlistmentWaitMenuPresenterTests
     {
         _actions.CanTakeTownLeave().Returns(true);
 
-        _sut.OfferTownLeave("town_EW1");
+        _sut.OfferTownLeave("town_EW1", 100.0);
 
         _inquiry.Received(1).ShowTwoOptionInquiry(
             "taom_enlist_arrival_title", Arg.Any<string>(),
@@ -184,8 +186,8 @@ public class EnlistmentWaitMenuPresenterTests
     {
         _actions.CanTakeTownLeave().Returns(true);
 
-        _sut.OfferTownLeave("town_EW1");
-        _sut.OfferTownLeave("town_EW1");
+        _sut.OfferTownLeave("town_EW1", 100.0);
+        _sut.OfferTownLeave("town_EW1", 100.0);
 
         _inquiry.Received(1).ShowTwoOptionInquiry(
             "taom_enlist_arrival_title", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
@@ -200,7 +202,7 @@ public class EnlistmentWaitMenuPresenterTests
         _actions.CanTakeTownLeave().Returns(true);
         _settings.OfferLeaveOnArrival.Returns(false);
 
-        _sut.OfferTownLeave("town_EW1");
+        _sut.OfferTownLeave("town_EW1", 100.0);
 
         _inquiry.DidNotReceive().ShowTwoOptionInquiry(
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
@@ -215,7 +217,7 @@ public class EnlistmentWaitMenuPresenterTests
         // Never offer what the menu option itself would refuse — including an already-held pass.
         _actions.CanTakeTownLeave().Returns(false);
 
-        _sut.OfferTownLeave("town_EW1");
+        _sut.OfferTownLeave("town_EW1", 100.0);
 
         _inquiry.DidNotReceive().ShowTwoOptionInquiry(
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
@@ -230,10 +232,42 @@ public class EnlistmentWaitMenuPresenterTests
         _actions.CanTakeTownLeave().Returns(true);
         _coop.IsAuthority.Returns(false);
 
-        _sut.OfferTownLeave("town_EW1");
+        _sut.OfferTownLeave("town_EW1", 100.0);
 
         _inquiry.DidNotReceive().ShowTwoOptionInquiry(
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_DifferentSettlementInsideTheCooldown_DoesNotAskAgain()
+    {
+        // A commander cycling three towns changes the id every few seconds. Per-settlement latching
+        // alone would pop a modal on nearly every transition; the cooldown is what stops that.
+        _actions.CanTakeTownLeave().Returns(true);
+
+        _sut.OfferTownLeave("town_EW1", 100.0);
+        _sut.OfferTownLeave("town_EW2", 100.5);   // half an hour later, still cycling
+
+        _inquiry.Received(1).ShowTwoOptionInquiry(
+            "taom_enlist_arrival_title", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_DifferentSettlementAfterTheCooldown_AsksAgain()
+    {
+        _actions.CanTakeTownLeave().Returns(true);
+
+        _sut.OfferTownLeave("town_EW1", 100.0);
+        _sut.OfferTownLeave("town_EW2", 130.0);   // a day and a bit later
+
+        _inquiry.Received(2).ShowTwoOptionInquiry(
+            "taom_enlist_arrival_title", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());

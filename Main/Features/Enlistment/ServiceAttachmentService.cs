@@ -20,7 +20,28 @@ public class ServiceAttachmentService : IServiceAttachmentService
         _logger = logger;
     }
 
+    /// <summary>
+    /// How long a placement is protected from the exit sweep. Calibrated from a live log where
+    /// 1 campaign hour ran in about 3 real seconds under the wait menu's UnstoppableFastForward,
+    /// so 6 hours is roughly 18 real seconds of standing still: long enough to read the screen,
+    /// short enough that the player is not left behind meaningfully.
+    /// </summary>
+    public const double SettlementDwellHours = 6.0;
+
     public event System.Action<string> ColumnEnteredSettlement;
+
+    /// <summary>Campaign hour of the last successful placement. Session state; see IsWithinSettlementDwell.</summary>
+    private double? _settlementEntryHours;
+
+    /// <summary>
+    /// Set by the follow path so the dwell can be measured. Taken as a parameter rather than read
+    /// from CampaignTime here, because this service is pure of engine clocks and its tests depend
+    /// on that.
+    /// </summary>
+    public void StampSettlementEntry(double nowHours) => _settlementEntryHours = nowHours;
+
+    public bool IsWithinSettlementDwell(double nowHours) =>
+        _settlementEntryHours.HasValue && nowHours - _settlementEntryHours.Value < SettlementDwellHours;
 
     public AttachmentAssessment Assess(
         EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player,
@@ -186,6 +207,7 @@ public class ServiceAttachmentService : IServiceAttachmentService
             return false;
         }
 
+        _settlementEntryHours = null;
         _logger?.LogInfo("[EnlistDiag] EXIT: left the settlement to rejoin the column");
         return _attachment.ParkNear(commanderHeroId);
     }

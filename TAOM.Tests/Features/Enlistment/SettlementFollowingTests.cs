@@ -370,6 +370,86 @@ public class SettlementFollowingReconcilerTests
 
         _attachment.Received(1).SyncPosition("lord_1_1");
     }
+
+    // ---- Minimum dwell: do not undo a placement we just made (#512 follow-up) ----------------
+    // An AI lord dips into a town for under a campaign hour. Following him straight back out gave
+    // ten transitions across three towns in three real minutes, twice in and out within the SAME
+    // second (measured 2026-08-25). Nothing is usable in that window.
+
+    [TestMethod]
+    public void SettlementExitRequired_WithinDwell_HoldsThePlacement()
+    {
+        Commander();                              // commander has moved on, no settlement
+        Presence("town_EW1", parked: false);      // player still inside
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(),
+            Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
+            .Returns(new AttachmentAssessment(AttachmentStatus.SettlementExitRequired));
+        _attachment.IsWithinSettlementDwell(Arg.Any<double>()).Returns(true);
+
+        _sut.ReconcileHourly(Now);
+
+        _attachment.DidNotReceive().ExitSettlementForService(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void SettlementExitRequired_DwellExpired_ExitsAsBefore()
+    {
+        Commander();
+        Presence("town_EW1", parked: false);
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(),
+            Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
+            .Returns(new AttachmentAssessment(AttachmentStatus.SettlementExitRequired));
+        _attachment.IsWithinSettlementDwell(Arg.Any<double>()).Returns(false);
+
+        _sut.ReconcileHourly(Now);
+
+        _attachment.Received(1).ExitSettlementForService("lord_1_1");
+    }
+
+    /// <summary>
+    /// THE CARVE-OUT, and it is not optional. Assess puts the exit rule ABOVE the battle branch on
+    /// purpose: joining a map event while CurrentSettlement points at another settlement makes
+    /// MapEvent.AddInvolvedPartyInternal rewrite a siege ASSAULT to SiegeOutside for a joining
+    /// defender. A dwell that outranked a commander battle would corrupt the battle everyone else
+    /// is fighting, not merely delay the join.
+    /// </summary>
+    [TestMethod]
+    public void SettlementExitRequired_WithinDwellButCommanderInBattle_ExitsAnyway()
+    {
+        _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            partyIsInMapEvent: true, name: "Lord Test"));
+        Presence("town_EW1", parked: false);
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(),
+            Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
+            .Returns(new AttachmentAssessment(AttachmentStatus.SettlementExitRequired));
+        _attachment.IsWithinSettlementDwell(Arg.Any<double>()).Returns(true);
+
+        _sut.ReconcileHourly(Now);
+
+        _attachment.Received(1).ExitSettlementForService("lord_1_1");
+    }
+
+    [TestMethod]
+    public void SettlementFollowRequired_StampsTheDwellOnlyWhenThePlacementLanded()
+    {
+        Commander("town_EW1");
+        Presence(null, parked: true);
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(),
+            Arg.Any<PlayerPresenceSnapshot>(), Arg.Any<bool>())
+            .Returns(new AttachmentAssessment(AttachmentStatus.SettlementFollowRequired));
+        _attachment.FollowCommanderIntoSettlement(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+
+        _sut.ReconcileHourly(Now);
+
+        _attachment.DidNotReceive().StampSettlementEntry(Arg.Any<double>());
+
+        _attachment.FollowCommanderIntoSettlement(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+        _sut.ReconcileHourly(Now);
+
+        _attachment.Received(1).StampSettlementEntry(Now * 24.0);
+    }
+
 }
 
 /// <summary>

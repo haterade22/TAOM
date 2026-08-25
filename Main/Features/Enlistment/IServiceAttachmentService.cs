@@ -22,6 +22,20 @@ public interface IServiceAttachmentService
     /// </summary>
     event System.Action<string> ColumnEnteredSettlement;
 
+    /// <summary>
+    /// True while the player is inside a settlement we placed them in less than
+    /// <see cref="ServiceAttachmentService.SettlementDwellHours"/> campaign hours ago.
+    ///
+    /// Exists to stop the strobe. Measured 2026-08-25: an AI lord dips into a town for under an
+    /// hour of campaign time, and following him in and straight back out produced ten transitions
+    /// across three towns in three real minutes, median 2.5 seconds inside, twice entering and
+    /// leaving within the SAME second. Nothing is usable in that window.
+    /// </summary>
+    bool IsWithinSettlementDwell(double nowHours);
+
+    /// <summary>Record when a placement happened, so the dwell above can be measured from it.</summary>
+    void StampSettlementEntry(double nowHours);
+
     /// <summary>Pass the commander id or distToCommander reads -1 and the drift line prints '?'.</summary>
     PlayerPresenceSnapshot GetPresence(string commanderHeroId = null);
 

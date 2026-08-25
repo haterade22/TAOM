@@ -71,7 +71,8 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         _attachment.ColumnEnteredSettlement += OnColumnEnteredSettlement;
     }
 
-    private void OnColumnEnteredSettlement(string settlementId) => _presenter.OfferTownLeave(settlementId);
+    private void OnColumnEnteredSettlement(string settlementId) =>
+        _presenter.OfferTownLeave(settlementId, CampaignTime.Now.ToHours);
 
     public override void SyncData(IDataStore dataStore) { }
 

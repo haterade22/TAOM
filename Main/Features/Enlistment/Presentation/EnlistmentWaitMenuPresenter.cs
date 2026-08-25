@@ -2,6 +2,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Domain;
 
@@ -39,7 +40,7 @@ public interface IEnlistmentWaitMenuPresenter
     /// The column has stopped somewhere: offer the pass while it is actually stopped. Idempotent
     /// per settlement stop, so a re-follow does not re-ask.
     /// </summary>
-    void OfferTownLeave(string settlementId);
+    void OfferTownLeave(string settlementId, double nowHours);
 }
 
 public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
@@ -54,12 +55,19 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IEnlistmentPlayerActionService _actions;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly IEnlistmentFeatureSettingsProvider _settings;
+    private readonly IModLogger _logger;
 
     /// <summary>
     /// Which settlement we last offered a pass for. Session state, never persisted: see
     /// <see cref="OfferTownLeave"/>.
     /// </summary>
     private string _lastOfferedSettlementId;
+
+    /// <summary>Campaign hour of the last offer, so a cycling commander cannot spam the modal.</summary>
+    private double? _lastOfferedAtHours;
+
+    /// <summary>Minimum campaign hours between offers. One in-game day.</summary>
+    private const double OfferCooldownHours = 24.0;
 
     public EnlistmentWaitMenuPresenter(
         IEnlistmentStore store,
@@ -71,7 +79,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         IEnlistmentPlayerActionService actions,
         IGameMenuAdapter gameMenu,
         IServiceStatusService status,
-        IEnlistmentFeatureSettingsProvider settings)
+        IEnlistmentFeatureSettingsProvider settings,
+        IModLogger logger)
     {
         _store = store;
         _commander = commander;
@@ -83,6 +92,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         _gameMenu = gameMenu;
         _status = status;
         _settings = settings;
+        _logger = logger;
     }
 
     /// <summary>
@@ -105,7 +115,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     /// Deliberately NOT done by touching TimeControlMode. Hand-editing time control on a wait-menu
     /// path is the #506 freeze class, which is why taom.time_status and taom.rescue_time exist.
     /// </summary>
-    public void OfferTownLeave(string settlementId)
+    public void OfferTownLeave(string settlementId, double nowHours)
     {
         if (!_coopSession.IsAuthority)
             return;
@@ -114,7 +124,16 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         // self-healing, whereas persisting it would buy save-compat surface for nothing.
         if (string.IsNullOrEmpty(settlementId) || settlementId == _lastOfferedSettlementId)
             return;
+
+        // AND a cooldown, because per-settlement alone is not enough. A commander cycling three
+        // towns changes the id every few seconds (measured 2026-08-25: ten transitions in three
+        // real minutes), so an id-keyed latch would pop a modal on nearly every one of them. The
+        // dwell holds the placement; this holds the question.
+        if (_lastOfferedAtHours.HasValue && nowHours - _lastOfferedAtHours.Value < OfferCooldownHours)
+            return;
+
         _lastOfferedSettlementId = settlementId;
+        _lastOfferedAtHours = nowHours;
 
         if (!_settings.OfferLeaveOnArrival)
             return;
@@ -134,6 +153,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
             // `?.` on the SNAPSHOT, not just the name: GetSnapshot returns null for a commander
             // who no longer resolves, and this runs on an arrival that may race his death.
             "SETTLEMENT", _commander.GetSnapshot(_store.Record.CommanderHeroId)?.SettlementName ?? settlementId);
+
+        _logger?.LogInfo($"[Enlistment] offered shore leave on arrival at '{settlementId}'");
     }
 
     public void TakeTownLeave()
