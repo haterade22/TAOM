@@ -441,7 +441,15 @@ The AI pipeline has produced first-draft translations across all 12 supported la
 | TR   | 94%  | 64%      | 84%    | 97%                 |
 | CNs  | 99%  | 98%      | 89%    | 100%                |
 | CNt  | 99%  | 100%     | 91%    | 99.9%               |
-| PL   | (measured below) | (measured below) | (measured below) | (measured below) |
+| PL   | see note | see note | see note | see note |
+
+**PL, added 2026-08-25.** PL was excluded from every translator run until 2026-08-25, on the
+mistaken belief that it was hand-translated. Its backlog was cleared that day: 5,033 entries
+written across all three modules, 4,009 of them needing an LLM pass, 0 failures, $7.26.
+No percentage is quoted for PL because the figures above were measured on 2026-05-24 by a
+method this pass could not reproduce (the external modules ship no EN reference file to diff
+against), and a number derived a different way does not belong in the same column as the
+others. The whole table predates the 2026-08-25 runs and is due a re-measure.
 
 Untranslated entries fall back to English text — the game stays valid, just shows English where translation wasn't available.
 

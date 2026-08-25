@@ -4,6 +4,36 @@
 
 ## 2026-08-25
 
+### chore(i18n): clear Polish's 4,009-entry backlog
+
+PL had never been through the translator, so its backlog spanned all three modules: 5,033 entries
+written, 4,009 of them needing an LLM pass against 0 for every other language, 0 failures, $7.26
+actual against a $7.62 estimate.
+
+**Most of this is not in this repo, and that is a hazard worth stating plainly.** Only the TAOM
+module lives here. The other 21 files the run wrote (`loc_settlements.xml`, the 11 culture files,
+`loc_LOTRAOM_weapons.xml`, `loc_LOTRLOME_crafting_pieces.xml` and the rest) went to
+`TAOM_Map/ModuleData/Languages/PL/` and `LOTRLOME_Armory/ModuleData/Languages/PL/` inside the game
+install, which nothing versions. A module reinstall reverts every one of them and git will show a
+clean tree throughout.
+
+The one thing standing between that and a repeat $7.26 is `tools/translation_cache/pl.json`, which
+is tracked and now carries all 4,009 results. After a reinstall, re-running the translator refills
+those files from cache at zero API cost. Treat that file as the durable artifact of this run, not
+the language files.
+
+The repo's own PL files show no diff: their TAOM-module strings were already correct from the
+earlier `--module TAOM` pass and landed in the Black Numenorean commit. This run's repo-visible
+change is the cache alone.
+
+Also here: `tools/translation_cache/pl.json` loses its 7 Noxix keys, deferred from the removal commit
+because this run was writing the file at the time. No live Noxix reference remains anywhere.
+
+The TRANSLATOR_GUIDE coverage table now carries a dated PL note rather than a PL percentage. The
+table was measured 2026-05-24 by a method this pass could not reproduce, since the external modules
+ship no EN reference file to diff against, and a figure derived a different way does not belong in
+the same column as the others. The table predates these runs and is due a re-measure.
+
 ### chore(companions): remove Noxix
 
 `named_companion_noxix` is gone from the files rather than switched off. The config carries an
