@@ -186,6 +186,7 @@ instructions `AGENTS.md`.
 | **Culture party templates** | An XSLT `Culture[@id=]` block inherits vanilla for every attribute it never names, so the culture silently fields Calradians. Caravans come only from the CHILD lists, which UNION: emit AND exclude vanilla's. A null binding CTDs vanilla `SpawnPatrolParty`/`SpawnCaravan`. `CulturePartyTemplateTests` gates it. `docs/features/culture-playability-wiring.md`. |
 | **Enlisted service** | Parked hidden+inactive is legitimate, so is ACTIVE+VISIBLE in the commander's settlement. Only `DischargeService` ends service. Duties never detach (#428). For ONE battle both share `PlayerTeam`; outside it `Army` is null (#443). `docs/features/enlistment.md`. |
 | **Game menus stop time** | A standard `GameMenu` stops campaign time unconditionally with dead time controls, and `MapState` persists the open menu id into the save, so a player left in a menu after starting a timed process sees a "frozen" game that survives load. Land on the map (or use a wait menu) after starting anything timed. `taom.time_status` / `taom.rescue_time` diagnose and recover a frozen session. |
+| **Hero capture** | `Hero.CanBecomePrisoner()` returns `true` unconditionally for every non-`MainHero`, so `CanHeroBecomePrisonerEvent` NEVER fires for an AI lord: patch the method. Denying capture IS granting escape (`MapEvent.cs:2004-2008` falls through to `MakeHeroFugitiveAction`). Both `Patch76` seams must carry the SAME `DeathMark` guard. `docs/features/uncapturable-heroes.md`. |
 | **Settlement menus need an encounter** | Inside a settlement with no `PlayerEncounter`, every vanilla settlement menu CTDs: `game_menu_settlement_wait_on_init` derefs `EncounterSettlement`, the rest deref `LocationEncounter`. Only `IEncounterAdapter.EnsureSettlementEncounter` may place the player there; an IL ban test enforces it (#510). |
 
 ## Architecture (One-liner)
@@ -203,7 +204,7 @@ Override pattern + base-class + registration rules: `.claude/rules/gamemodels.md
 
 ## Harmony Patch Categories
 
-79 categories mapping a stack trace to its owning feature -> exact target -> status.
+80 categories mapping a stack trace to its owning feature -> exact target -> status.
 **Full table (category -> feature -> target -> status) + rationale / history / RCAs:
 [`docs/reference/harmony-patch-registry.md`](docs/reference/harmony-patch-registry.md)** — grep the
 failing type there. This is the crash-triage lookup; `/investigate` + `/native-crash-triage`

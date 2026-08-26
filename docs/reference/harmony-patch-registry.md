@@ -677,6 +677,26 @@ The clan-screen postfix appends ready refuges to the Garrisons list as `ClanPart
 
 **What is deliberately NOT here:** the source module's two combat patches (`SimulateHit`, `ApplyDamageReductions`). Both targets are TAOM-owned model slots, so the defender damage reduction rides the model chain instead: `TaomCombatMechanicsModel.ApplyDamageReductions` (real-time) and `TaomCombatSimulationModel.SimulateHit` (auto-resolve), both consulting `IRefugeDefenseService`. One decision, two consumers, no Harmony ordering accident.
 
+## Patch76_UncapturableHeroes
+
+**Targets:** `Hero.CanBecomePrisoner()` (public instance, Postfix) + `TakePrisonerAction.Apply(PartyBase, Hero)` (public static, Prefix). Two patch classes, one category.
+
+**Feature:** UncapturableHeroes (#513), `Main/Features/UncapturableHeroes/Hooks/Hero_CanBecomePrisoner_Patch.cs` + `TakePrisonerAction_Apply_Patch.cs`. **Status:** ACTIVE.
+
+Sauron and the Nine are never taken prisoner; they escape as fugitives instead. **The escape is free and that is the whole design.** `MapEvent.CaptureDefeatedPartyMembers` gates capture on `CanBecomePrisoner()` at `MapEvent.cs:1983`, and when that gate fails the hero is still in the defeated member roster, so vanilla's own fall-through at `MapEvent.cs:2004-2008` applies `MakeHeroFugitiveAction`. The postfix writes the veto; the engine writes the escape.
+
+**Do not try to use `CampaignEvents.CanHeroBecomePrisonerEvent` instead.** `Hero.cs:2010-2012` returns `true` unconditionally for every hero that is not `MainHero`, *before* the dispatcher is reached, so that event never fires for an AI lord. The method has to be patched. `CanBecomePrisoner()` has exactly two engine call sites: the battle gate above, and `EncounterGameMenuBehavior.cs:1892` (player voluntary surrender, `MainHero`-guarded on our side).
+
+The prefix covers the capture routes that never consult the gate at all. The one that matters is `PrisonerCaptureCampaignBehavior.cs:67` (a hero inside a settlement that changes hands, or whose host declares war). It targets the PUBLIC `Apply` rather than private `ApplyInternal`: the only caller `Apply` misses is `ApplyByTakenFromPartyScreen`, already unreachable for a hero because `PlayerEncounter.DoCaptureHeroes` (`PlayerEncounter.cs:1611`) strips every hero out of `RosterToReceiveLootPrisoners` first. Three guards carry it: `MainHero` defers, an already-`IsPrisoner` hero defers (`MakeHeroFugitiveAction` never removes anyone from a `PrisonRoster`, so converting would leave him Fugitive and still held), and a failed escape returns `true` so vanilla capture proceeds rather than stranding him.
+
+**Both hooks must fail open.** `PatchShield.ShieldFinalizerWithResult` swallows `Missing*`/`TypeLoad` and the patched method then returns `default(bool)`, which for the postfix means `false` = every hero in the game uncapturable. Each body is wrapped in its own try/catch that leaves the vanilla answer alone.
+
+Does NOT block death: a hero who dies in the battle still dies (`MapEvent.cs:1977` skips the whole block for `DiedInBattle`/`DiedInLabor`), and that is deliberate. Co-op disposition: ReviewedSafe (lore-fixed identity from compiled roster plus shipped data; `CoopVetoClassificationTests`). The `MapEvent` fall-through premise is pinned by an IL test in `UncapturableHeroesBindingTests`, because if it ever moves the failure is completely silent in game.
+
+**Three drift hazards this category is unusually exposed to, all pinned by `UncapturableHeroesBindingTests`.** (1) Harmony binds the prefix's parameters BY NAME, so a TaleWorlds rename of `capturerParty`/`prisonerCharacter` would silently feed the prefix nulls and turn the seam into a no-op that resolving-by-type would not catch; a `ParameterInfo.Name` assertion covers it. (2) A `Missing*`/`TypeLoad` raised while JITting the postfix fires BEFORE its own try/catch is entered, so the patch cannot self-guard; it reaches `PatchShield`'s finalizer, which returns `default(bool)` = `false` = every hero uncapturable, and because `PatchShieldPolicy.CompiledProtectedOwnerPrefixes` contains `"TAOM"` the shield refuses to unpatch, making that state persist for the session. Every engine member the postfix touches, including `KillCharacterActionDetail.None`, therefore has a binding assertion. (3) The postfix carries `[HarmonyPriority(Priority.Last)]` so another mod's postfix cannot re-grant capture after TAOM denies it; the reverse stays open, since the guard never flips `false` to `true`.
+
+**Known behavioural interaction, deliberate:** `LordConversationsCampaignBehavior.cs:3072-3076` / `:3145-3149` ("You are my prisoner now.") are not `IsPrisoner`-gated, so a protected hero escapes after the player picks the line. Both pass `MainParty` as the captor, so the escape message fires immediately and resolves it narratively. Not gated, on purpose.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

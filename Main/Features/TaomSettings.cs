@@ -964,6 +964,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When off, troops on your team are immune and dread only touches the AI. Leave it on and an enemy wraith can rout your soldiers, and routed troops are LOST from your party, not merely shaken. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
     public bool DreadAuraAffectsPlayerTroops { get; set; } = true;
 
+    // --- World / Uncapturable Heroes ---
+
+    [SettingPropertyGroup("World/Uncapturable Heroes", GroupOrder = 48)]
+    [SettingPropertyBool("Sauron and the Nazgûl Cannot Be Captured", Order = 0,
+        HintText = "When you beat them, they escape the field as fugitives instead of going to your dungeon, and return with a new army within days. This does NOT make them immortal: one of the Nine can still die in a battle he could not be captured in. Edit uncapturable_heroes_config.json to change who this covers.")]
+    public bool EnableUncapturableHeroes { get; set; } = true;
+
     // --- Map UI / Settlement Nameplates ---
 
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]

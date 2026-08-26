@@ -87,6 +87,17 @@ public class CoopVetoClassificationTests
             "is already allied. Condition is Kingdom.IsAllyWith — replicated vanilla state, so both " +
             "peers compute the same answer. Gating it would restore the decision-queue saturation " +
             "it exists to prevent."),
+        ["TakePrisonerAction_Apply_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Does skip a replicated campaign-state mutation (a hero entering a captor's " +
+            "PrisonRoster), so what carries it matters: the condition is lore-fixed identity. Who " +
+            "is protected comes from the compiled NazgulRegistry roster plus a shipped hero/race " +
+            "list, and the FaceGen race id it reads is shipped character data, so every peer " +
+            "computes the same answer from the same files. The alternative was deferring to the " +
+            "host, which was rejected because the sibling battle seam " +
+            "(Hero_CanBecomePrisoner_Patch) is a postfix on a query and cannot be host-gated " +
+            "without making Sauron capturable in a fief but not in a field battle. An edited " +
+            "config or mismatched TAOM version diverges here, which is the same exposure every " +
+            "other shipped-data mechanic in TAOM already carries."),
         ["TraitLevelingHelper_OnLordExecuted_Patch"] = new(CoopVeto.ReviewedSafe,
             "Skips the vanilla honour penalty. Condition is AlignmentService.AreEnemyAlignments — a " +
             "static shipped kingdom->alignment table, no campaign state, so peers agree."),

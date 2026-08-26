@@ -172,6 +172,13 @@ public static class IoC
         // camp book at founding time.
         Features.Refuge.RefugeIoC.RegisterRefugeFeature(container);
 
+        // AFTER Enlistment: UncapturableHeroes injects IInquiryAdapter for its escape toast, and
+        // that adapter is registered in exactly one place (EnlistmentIoC) with no
+        // IfAlreadyRegistered. Registering our own copy earlier with Keep would NOT help — Keep
+        // only suppresses the registration that carries it, so ours would land first and
+        // Enlistment's would be appended as a second unkeyed default.
+        Features.UncapturableHeroes.UncapturableHeroesIoC.RegisterUncapturableHeroesFeature(container);
+
         _container = container;
 
         // Eager patch-static initialisation runs ONLY after the last registration above: an eager
@@ -180,6 +187,7 @@ public static class IoC
         // camp-block). One block, at the end, for every patch that captures a service statically.
         FieldCampIoC.InitializePatchStatics(container);
         Features.Refuge.RefugeIoC.InitializePatchStatics(container);
+        Features.UncapturableHeroes.UncapturableHeroesIoC.InitializePatchStatics(container);
 
         // Post-registration initialization
         CareerSystemIoC.InitializeCalculators(container.Resolve<Features.CareerSystem.Mutations.IMutationCalculatorRegistry>());

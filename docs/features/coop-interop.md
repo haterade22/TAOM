@@ -307,12 +307,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **222** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **223** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 208 in `TaomSettings`, 7 in `BattleLoadDiagnosticsSettings`, 6 in
+  the split is 209 in `TaomSettings`, 7 in `BattleLoadDiagnosticsSettings`, 6 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **163 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 163 are in
+  **164 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 164 are in
   `TaomSettings`. The 57 excluded are instrumentation, player-local inventory convenience,
   presentation, one action button, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
@@ -325,13 +325,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 163: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 164: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. It reads all four classes, not just `TaomSettings`:
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 163 values read off two screens.
+  short strings instead of 164 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -349,11 +349,11 @@ to characterise. The existing try/catch around acceptance is containment, not co
   PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
   need hashing more urgently than a global, not less.
 
-  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 163
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 164
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset, the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 163 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 164 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 

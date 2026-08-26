@@ -2604,5 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (Stufe {TIER}, zum Offizier befördern)" />
     <string id="taom_rf_warden_lost" text="Deine Zuflucht hat ihren Vogt verloren. Die Garnison hält das Lager, doch es kann nun nur noch abgebaut werden." />
     <string id="taom_sl_lord_dispatched" text="{LORD} entsendet Verstärkung, sie ist auf dem Weg." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
   </strings>
 </base>

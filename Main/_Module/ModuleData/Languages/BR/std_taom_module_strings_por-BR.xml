@@ -2604,5 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (Nível {TIER}, promover a oficial)" />
     <string id="taom_rf_warden_lost" text="Seu refúgio perdeu seu guardião. A guarnição mantém o acampamento, mas agora ele só pode ser desmantelado." />
     <string id="taom_sl_lord_dispatched" text="{LORD} envia reforços, eles estão a caminho." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
   </strings>
 </base>

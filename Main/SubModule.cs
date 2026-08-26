@@ -1308,6 +1308,13 @@ public class SubModule : MBSubModuleBase
         // Patch75 (#507): refuge clan-screen listing + click-to-manage encounter interception.
         _harmony.PatchCategory("Patch75_Refuge");
 
+        // Patch76 (#513): Sauron and the Nine are never taken prisoner; they escape as fugitives.
+        // Two seams — the battle capture gate (Hero.CanBecomePrisoner, where vanilla's own
+        // fall-through performs the escape) and the direct-capture chokepoint
+        // (TakePrisonerAction.Apply, which covers a hero captured inside a settlement that changes
+        // hands). Does NOT block death; that is deliberate.
+        _harmony.PatchCategory("Patch76_UncapturableHeroes");
+
         // Patch73 (#505): suppress the meeting conversation when the player clicks a supply
         // caravan (its component has no Leader, so vanilla would open a conversation with an
         // arbitrary troop; review round A / Codex round 1).
@@ -1659,5 +1666,7 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.Arena.Hooks.Patch69_TournamentRosterGuard.ResetForUnload();
         TAOM.Features.Arena.Hooks.Patch69_TournamentEndGuard.ResetForUnload();
         TAOM.Features.FieldCommission.Hooks.Patch71_HeroResetEquipmentsGuard.ResetForUnload();
+        TAOM.Features.UncapturableHeroes.Hooks.Hero_CanBecomePrisoner_Patch.ResetForUnload();
+        TAOM.Features.UncapturableHeroes.Hooks.TakePrisonerAction_Apply_Patch.ResetForUnload();
     }
 }

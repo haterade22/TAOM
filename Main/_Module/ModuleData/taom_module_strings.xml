@@ -2851,4 +2851,6 @@
 	<string id="taom_rf_promote_entry_tier" text="{=taom_rf_promote_entry_tier}{NAME} (Tier {TIER}, promote to officer)" />
 	<string id="taom_rf_warden_lost" text="{=taom_rf_warden_lost}Your refuge has lost its warden. The garrison holds the camp, but it can only be dismantled now." />
 	<string id="taom_sl_lord_dispatched" text="{=taom_sl_lord_dispatched}{LORD} sends reinforcements, they are on the way." />
+	<string id="taom_uncapturable_escapes_battle" text="{=taom_uncapturable_escapes_battle}{HERO} cannot be held. He slips away from the field before he can be taken." />
+	<string id="taom_uncapturable_escapes_capture" text="{=taom_uncapturable_escapes_capture}{HERO} cannot be held. He is gone before your men reach him." />
 </strings>

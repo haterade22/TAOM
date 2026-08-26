@@ -2604,5 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (уровень {TIER}, повысить до офицера)" />
     <string id="taom_rf_warden_lost" text="Ваше убежище лишилось смотрителя. Гарнизон удерживает лагерь, но теперь его можно только разобрать." />
     <string id="taom_sl_lord_dispatched" text="{LORD} шлёт подкрепление, оно уже в пути." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
   </strings>
 </base>

@@ -4,6 +4,89 @@
 
 ## 2026-08-26
 
+### feat(heroes): Sauron and the Nine are never taken prisoner (#513)
+
+Beating Sauron in a battle used to put him in a dungeon with a ransom price. Nothing in the engine
+exempts anybody: `Hero.CanBecomePrisoner()` returns true unconditionally for every AI hero, and TAOM
+had no code touching hero capture at all. Now the ten of them slip the field as fugitives instead.
+They still lose the battle, still lose the army, and still take days to raise another, so beating
+them is still worth doing.
+
+**This does not make them immortal, and players will assume it does.** A hero who dies in the battle
+still dies; the Witch-king can be killed in a fight he could not be captured in. That is deliberate,
+and it is said in the MCM hint text as well as the feature doc.
+
+The escape needed no code. `MapEvent.CaptureDefeatedPartyMembers` gates capture on
+`CanBecomePrisoner()`, and when that gate fails the hero is still in the defeated roster, so vanilla's
+own fall-through applies `MakeHeroFugitiveAction` with correct party teardown and settlement exit. A
+postfix writes the veto and the engine writes the escape. Because that fall-through is the single
+premise the whole feature rests on, and because it would fail completely silently in game if
+TaleWorlds ever moved it, an IL test asserts that method still calls both halves.
+
+`CampaignEvents.CanHeroBecomePrisonerEvent` looks like the right hook and is a dead end: the
+dispatcher sits behind `if (this != MainHero)`, so the event never fires for an AI lord. Recorded in
+the patch registry so the next person does not spend an afternoon on it.
+
+A second prefix on `TakePrisonerAction.Apply` covers the one route that never consults the gate, a
+hero captured because the fief he was resting in changed hands. It defers on an already-imprisoned
+hero, because `MakeHeroFugitiveAction` never removes anyone from a captor's prison roster and would
+otherwise leave him a fugitive and still held.
+
+Identity turned out to be the hard half. Six of the Nine carry no race attribute at all, three are
+`race="uruk"`, and Sauron is the only character in the mod with `race="sauron"`, so a race rule
+either misses most of them or protects every uruk lord in the game. The compiled `nazgul_nine` set is
+the only axis that covers all nine, and a test fails if a future cleanup drops it. Config takes an
+exclude list evaluated first, then hero ids, then named sets, then the race rule.
+
+Two shipped comments in `dread_aura_config.json` and `DreadRegistry.cs` state that distribution
+wrongly (they say Khamûl is `race="orc"`; he carries no race attribute and is Dol Guldur). DreadAura
+behaves correctly regardless, since it keys off the same hero set. Left for its own commit and issue.
+
+Adding one MCM toggle moved the co-op settings fingerprint, so the pinned counts in
+`SettingsFingerprintTests`, `coop-interop.md` and `bannerlord-together-compat.md` moved with it.
+
+A six-agent deep review followed, and the focused adversarial pass on the two patches earned its
+keep: it was the only agent that opened PatchShield and the conversation behaviour. Three of its
+findings were real and are fixed. A `Missing*`/`TypeLoad` raised while JITting the postfix fires
+before that method's own try/catch, so the patch cannot self-guard; it reaches PatchShield's
+finalizer, which hands back `default(bool)` = every hero uncapturable, and since
+`CompiledProtectedOwnerPrefixes` lists TAOM the shield will not unpatch, so the state would persist
+for the session. Every engine member the postfix touches now has a binding assertion, including the
+enum member that had none. The binding test also resolved `TakePrisonerAction.Apply` by parameter
+type when Harmony binds by name, so a silent engine rename would have made the seam a no-op that
+nothing could see; it now pins the names. And the postfix takes `[HarmonyPriority(Priority.Last)]`
+so another mod cannot re-grant a capture TAOM denied.
+
+Two agent findings did not survive checking and are recorded as disputed in the RCA rather than
+acted on: a test-coverage rule that turned out to be scoped to service methods rather than Harmony
+entry points, and a quest interaction whose behaviour TAOM already suppresses.
+
+Then an independent Codex pass found a real bug the whole first round missed, and it is the
+instructive one. The postfix deliberately defers when a hero carries a death mark, because a kill
+applied inside a map event only stages a mark and the fugitive fall-through would not pick him up.
+Vanilla then answers yes, `MapEvent.cs:1993` calls `TakePrisonerAction.Apply`, and the prefix, which
+had no such guard, vetoed the capture the postfix had just decided not to veto. The guard existed;
+it had simply been written on one of two mirrored paths, which reads as finished because the
+reasoning beside it is sound.
+
+Codex also showed that three of the first round's fixes claimed more than they checked: a binding
+assertion on a name described as closing a JIT hazard, a call-presence test described as pinning a
+control-flow premise, and a suite described as covering the feature while a one-character inversion
+survived it. Those are tightened where tightening was cheap and honestly labelled where it was not.
+Two smaller fixes came out of the same pass: the announce path is fully guarded so a throw after the
+escape cannot hand the hero back to vanilla, and the battle message is captor-neutral now that we
+noticed it said "your men" for a battle the player might have lost.
+
+One correction worth stating plainly: this changelog and the feature doc previously said vanilla has
+no generic AI-prisoner escape. That was wrong and never verified. `PrisonerReleaseCampaignBehavior`
+gives every prisoner a 4% daily escape roll. Fixed in the doc and in #513.
+
+Full suite 7593 green. RCA both rounds: `docs/reviews/rca-uncapturable-heroes-2026-08-26.md`, with
+eight lessons in `docs/reviews/lessons/harmony-il.md`. Owed: the 12-language translation run for the
+two new strings, and the two in-game smokes (beat a Nazgûl-led party, then take a fief holding one).
+
+## 2026-08-26
+
 ### docs(audio): the voice pack is HTML now, because the reader is not a developer
 
 The four `docs/audio/` files shipped yesterday as markdown, which is the wrong format for the one

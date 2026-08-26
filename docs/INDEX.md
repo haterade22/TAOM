@@ -122,6 +122,7 @@
 - [supply-lines](features/supply-lines.md): resupply convoys from towns/castles/lords (yotthani port #505): real stock deducted, sources credited, full-screen Gauntlet order UI, TAOM's first custom PartyComponent
 - [field-camp](features/field-camp.md): campaign-map camps (yotthani port #506): field/fortified/ambush/lookout, forage + morale, tpac visuals, map-overlay Make Camp, `taom_fcamp_` loc prefix (taom_fc_ is FieldCommission's)
 - [refuge](features/refuge.md): movable player base raised from a camp (yotthani port #507): warden + garrison + stash, Refuge/Stronghold tiers, model-chain defence bonus, orphan-adopt on warden loss
+- [uncapturable-heroes](features/uncapturable-heroes.md): Sauron and the Nazgul can never be taken prisoner, they escape as fugitives; why the race axis cannot find the Nine, and why death is deliberately still possible
 - [main-menu-customizer](features/main-menu-customizer.md) — hide Campaign, rename Sandbox → "Enter The Age Of Men"
 - [lotr-issues](features/lotr-issues.md) — **IMPLEMENTED** (2026-06-20) — all 43 vanilla procedural issues suppressed + replaced by 43 LOTR issues via XML-config + 3 generic templates (DeliverGoods/DeliverPersonnel/Combat); `RemoveBehaviors<T>` suppression + SaveableTypeDefiner (base 726900801); per-issue disposition matrix retained for provenance
 - [encyclopedia](features/encyclopedia.md) — encyclopedia screen extensions, dispatch entry points

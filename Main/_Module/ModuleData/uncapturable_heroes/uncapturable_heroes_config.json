@@ -1,0 +1,21 @@
+{
+  "_comment_feature": "Heroes who can never be taken prisoner. When a battle they lose would capture them, they become fugitives instead: they lose the field and their army, and return within days. This does NOT block death - a hero who dies in the battle still dies. Full design: docs/features/uncapturable-heroes.md",
+
+  "_comment_enabled": "Master switch. The in-game MCM toggle overrides this at runtime; this value is the fallback when MCM is absent. Editing this file needs a full game restart, not a new campaign.",
+  "enabled": true,
+
+  "_comment_heroSets": "INCLUDE, by named lore group. Only 'nazgul_nine' is known; it resolves to the nine Ringwraith StringIds compiled into Main/Features/NazgulFamily/NazgulRegistry.cs. This is the axis that finds the Nazgul: six of them carry no race attribute and three are race 'uruk', so no race list can reach them without also protecting every uruk lord in the game. Unknown names are skipped with a warning, never coerced.",
+  "heroSets": ["nazgul_nine"],
+
+  "_comment_heroIds": "INCLUDE, by individual Hero StringId. lord_1_17 is Sauron. He is listed here as well as under uncapturableRaces so the feature survives a data change that drops his race attribute.",
+  "heroIds": ["lord_1_17"],
+
+  "_comment_uncapturableRaces": "THE DEFAULT RULE: any hero whose FaceGen race is named here is uncapturable without being listed by id. On shipped data 'sauron' matches exactly one hero, because lord_1_17 is the only character in the mod carrying that race. Adding 'cave_troll' is all a no-capturing-trolls variant needs. Names are validated against the live race registry on first use; unknown names are skipped with a warning.",
+  "uncapturableRaces": ["sauron"],
+
+  "_comment_excludeHeroIds": "EXCLUDE. Evaluated FIRST and beats the rule and every include list. Put a StringId here to hand that hero back to vanilla capture.",
+  "excludeHeroIds": [],
+
+  "_comment_announceEscape": "Write a line to the campaign message feed when one of these heroes escapes a capture the player could have seen: their own battle, or a capture their own faction was making. Escapes elsewhere in the world are always silent.",
+  "announceEscape": true
+}

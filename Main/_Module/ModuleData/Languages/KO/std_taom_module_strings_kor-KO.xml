@@ -2604,5 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (등급 {TIER}, 장교로 승진)" />
     <string id="taom_rf_warden_lost" text="당신의 피난처가 관리자를 잃었습니다. 수비대가 야영지를 지키고 있지만, 이제는 해체만 가능합니다." />
     <string id="taom_sl_lord_dispatched" text="{LORD}이(가) 증원군을 보냈으며, 지금 오는 중입니다." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
   </strings>
 </base>

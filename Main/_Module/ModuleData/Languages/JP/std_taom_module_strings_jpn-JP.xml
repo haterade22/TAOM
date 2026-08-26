@@ -2604,5 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME}(ティア {TIER}、士官に昇進させる)" />
     <string id="taom_rf_warden_lost" text="あなたの隠れ里は守将を失いました。守備隊が陣営を維持していますが、今は解体することしかできません。" />
     <string id="taom_sl_lord_dispatched" text="{LORD}が援軍を送りました。彼らは向かっています。" />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
   </strings>
 </base>
