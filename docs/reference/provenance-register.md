@@ -82,6 +82,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
+| Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
 
 <!-- provenance-register-end -->
 
@@ -405,3 +406,25 @@ naming thirteen files that do. TOR_Core is a separate source, referenced for eng
 6. Add a detail section if the row needs more than the table can hold.
 7. For a brand new adoption, run `/adopt-external` first. Its security and license pass is the front
    door; this register is where its answer gets written down.
+
+### Khuzdul vocabulary (J.R.R. Tolkien)
+
+Source: J.R.R. Tolkien's published writings, chiefly *The Lord of the Rings* Appendix F and the
+Hornburg chapter, *The Silmarillion*, and the linguistic papers in the *History of Middle-earth*
+series. License `UNKNOWN`, status `uncleared`.
+
+**Scope of this row is deliberately narrow.** It covers the roughly thirty-eight attested Khuzdul
+words and two phrases reproduced verbatim in
+[`docs/audio/khuzdul-lexicon.html`](../audio/khuzdul-lexicon.html) Part 1, and their use as spoken lines
+in [`docs/audio/vo-script-dwarves.html`](../audio/vo-script-dwarves.html). It is **not** a statement
+about TAOM's overall relationship to Tolkien's work, which is the project's founding premise and a
+much larger question this register has never addressed. Someone should open that question; this row
+does not answer it.
+
+`verbatim-port` is the narrowest true value: the words are reproduced exactly, because a language is
+not paraphrasable. TAOM's own coinages, listed in Part 2 of the lexicon and marked as coinages, are
+maintainer-owned and are not covered by this row.
+
+**Explicitly excluded: the neo-Khuzdul written by David Salo for the Peter Jackson films.** It is his
+creative work, TAOM derives nothing from it, and the lexicon carries a standing rule forbidding its
+import. There is no row for it because there is nothing to declare, and that is the intended state.

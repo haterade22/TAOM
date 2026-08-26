@@ -77,24 +77,39 @@ ModuleSounds/LOTR/<Race>/Voice/*.wav      (loose audio, no FMOD bank)
 
 ### Race to voice binding
 
-Extracted from the live `LOTRLOME_Armory/ModuleData/skins.xml` (45 custom `<voice_type>` refs across
-14 `<race>` entries).
+Extracted from the live `LOTRLOME_Armory/ModuleData/skins.xml`, re-measured 2026-08-25.
 
-| Race | Custom voice | Vanilla entries also in pool | Effective hit rate |
-|------|--------------|------------------------------|--------------------|
-| `uruk`, `pale_uruk`, `dg_uruk`, `goblin` | `uruk_01` | 0 | 100% |
-| `dwarf` | `dwarf_01` | 6 | about 1 in 7 |
-| `uruk_hai` | `uruk_hai_01` | 10 | about 1 in 11 |
-| `berserker` | `uruk_01` | 10 | about 1 in 11 |
-| `nazghul`, `orc`, `cave_troll`, `hill_troll`, `elf`, `saruman`, `sauron` | none | 12 | 0% |
+**Read the maturity row, not the race.** Each `<race>` holds ten `<skin>` elements, one per gender
+and maturity (adult, teenager, tween, child, toddler), and the `<voice_types>` pool is per skin, not
+per race. Only the two **adult** skins ever spawn as troops, so those are the only rows that decide
+what a battle sounds like.
 
-**The dilution is the important row.** Because `CurrentVoice` is an index into the whole pool,
-leaving vanilla entries alongside a custom one means most spawns draw vanilla. Dwarves reach their
-own voice roughly one spawn in seven. The four pure uruk races are the correct pattern: custom voice
-only, nothing else in the list.
+| Race | Adult male pool | Adult female pool |
+|------|-----------------|-------------------|
+| `dwarf`, `uruk`, `pale_uruk`, `dg_uruk`, `goblin` | custom only | custom only |
+| `uruk_hai` | `uruk_hai_01` only | vanilla `female_01` to `_05` |
+| `berserker` | `uruk_01` only | vanilla `female_01` to `_05` |
+| `orc`, `nazghul`, `elf`, `cave_troll`, `hill_troll`, `saruman`, `sauron` | vanilla `male_02` to `_08` | vanilla `female_01` to `_05` |
 
-Dilution is invisible in play, because the custom voice does fire sometimes. Only a check catches
-it. See Validation below.
+**Every bound race is 100% custom on the adult male skin.** There is no dilution on any troop line.
+
+### Correction, 2026-08-25
+
+This section previously reported a dilution defect: `dwarf` hitting `dwarf_01` "about 1 in 7",
+`uruk_hai` and `berserker` "about 1 in 11". **That was wrong, and it was wrong in a specific way
+worth remembering.** The original count summed every `<voice_type>` inside the `<race>` element
+without noticing that the element contains ten skins. The vanilla entries it counted live on the
+teenager, tween, child and toddler skins, which never field a soldier. Both adult dwarf skins are
+`dwarf_01` alone.
+
+The one real gap the corrected table shows is narrower and different: `uruk_hai` and `berserker`
+have no custom voice on their **adult female** skin. That is an unbound skin, not a diluted one.
+
+**The trap that caused the miscount is still live.** `orc`, `nazghul` and `saruman` write the
+attribute as `mesh_maturity_type ="adult"`, with a space before the `=`. A `grep` for
+`mesh_maturity_type="adult"` silently skips those three races and returns a confident partial answer.
+Match on `mesh_maturity_type\s*=\s*"adult"`. This is the same class of defect as the multiline
+attribute gotcha recorded under Gotchas below.
 
 ### Assets and definitions
 
@@ -109,7 +124,7 @@ it. See Validation below.
 
 | Defect | Detail |
 |--------|--------|
-| **Diluted skins** | `dwarf`, `uruk_hai`, `berserker` mix a custom voice with vanilla entries, so shipped audio plays far below its intended rate |
+| **Unbound adult female skins** | `uruk_hai` and `berserker` have a custom voice on the adult male skin and vanilla `female_*` on the adult female one. Narrow, since female troops are rare, but it is a real hole. Corrected 2026-08-25 from an earlier and wrong "diluted skins" reading |
 | **Seven unbound races** | `elf`, `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice |
 | **Orphaned Théoden set** | 83 clips under `ModuleSounds/LOTR/Rohan/Voice/Theoden` are registered in `module_sounds.xml` and reachable by nothing: no Rohan voice definition exists, and Rohan is the vanilla human race anyway |
 | **Dangling mbproj entry** | `project.mbproj` line 9 declares `ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml`; that directory does not exist in this repo. Fails silently |
@@ -146,7 +161,7 @@ agentVisuals.SetVoiceDefinitionIndex(indices[k], voicePitch);
 
 ### Voice types
 
-68 declared types, and **it is not a C# enum.** `SkinVoiceManager.SkinVoiceType` is a struct whose
+62 declared types, and **it is not a C# enum.** `SkinVoiceManager.SkinVoiceType` is a struct whose
 `Index` resolves at type-initialization through `MBAPI.IMBVoiceManager.GetVoiceTypeIndex(typeID)`.
 Identity is a string against the merged `<voice_type_declarations>` block, so a module can declare
 `<voice_type name="OrcHowl"/>` and construct `new SkinVoiceManager.SkinVoiceType("OrcHowl")` in C#
@@ -215,6 +230,8 @@ GameModel work per `.claude/rules/gamemodels.md`.
 | `Main/_Module/ModuleData/project.mbproj` | Registers the voice definitions and `module_sounds.xml`. **The only registration point**; `SubModule.xml` plays no part |
 | `Main/_Module/ModuleData/module_sounds.xml` | 231 `<module_sound>` entries mapping names to loose audio |
 | `Main/_Module/ModuleData/lotr_dwarf_voice_def.xml` | 56-slot reference definition, the model to copy |
+| `docs/audio/vo-script-dwarves.html` | The written line sheet for `dwarf_01`: what each slot actually says, and which stem feeds which sound group |
+| `docs/audio/vo-recording-guide.html`, `docs/audio/khuzdul-lexicon.html` | The actor-facing brief and the dwarvish reference behind that script |
 | `Main/_Module/ModuleData/lotr_uruk_voice_def.xml`, `lotr_uruk_hai_voice_def.xml` | The other two definitions |
 | `Main/_Module/ModuleSounds/LOTR/<Race>/Voice/` | Audio assets |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/skins.xml` | **External, unversioned.** Owns `soln_skins` and every race-to-voice binding |
@@ -382,14 +399,22 @@ Check 3 earns its keep: dilution is invisible in play because the voice does fir
 
 ## Tests
 
-None. No TAOM C# touches the voice API, and no validator covers the data.
+No validator covers the data, and no test covers the voice API. One TAOM feature does call it:
+`Main/Features/DreadAura/Hooks/DreadPulseRunner.cs:96` fires `VoiceType.Fear` on a dread pulse, gated
+by `DreadAuraConfig.FearVoiceChancePerPulse` (default 0.02). `Fear` is bound only on `dwarf_01`,
+`uruk_01` and `uruk_hai_01`, so on any other race that call is silent.
 
 ## Changelog
 
+- 2026-08-25: corrected the race-to-voice table against the live `skins.xml`. The dilution defect was
+  a miscount across the ten per-maturity skins and does not exist; every bound race is fully custom on
+  the adult male skin. Corrected the type count from 68 to 62, recorded `DreadPulseRunner` as a live
+  caller of the voice API, and linked the new `docs/audio/` recording scripts.
 - 2026-08-12: doc created from a two-pass research sweep. Recorded the race-to-voice binding table,
-  the dilution defect, the three binding routes, the FMOD loose-file mechanism, the 68 voice types,
+  the dilution defect, the three binding routes, the FMOD loose-file mechanism, the voice types,
   and the seven known defects.
 
 ## GitHub Issue
 
-None filed. The dangling mbproj entry, the dilution, and the asset provenance each warrant one.
+None filed. The dangling mbproj entry, the unbound adult female skins, and the asset provenance each
+warrant one.

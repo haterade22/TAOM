@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAOM — Khuzdul Lexicon</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --panel: #ffffff; --ink: #23201a; --muted: #6b645a;
+    --accent: #8a6d2f; --accent-ink: #5c4a1e; --line: #e2dccf;
+    --code-bg: #2b2622; --code-ink: #f3ead6;
+    --warn-bg: #fbe7d6; --warn-line: #d99a4e; --warn-ink: #7a4a12;
+    --ok-bg: #e4efe0; --ok-line: #6fa361; --ok-ink: #315a2a;
+    --rec-bg: #eef3fa; --rec-line: #6f93c4; --rec-ink: #2f4d78;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17140f; --panel: #211d16; --ink: #ece5d6; --muted: #a49a86;
+      --accent: #d9b56b; --accent-ink: #e7c987; --line: #362f24;
+      --code-bg: #0e0c09; --code-ink: #f3ead6;
+      --warn-bg: #3a2a15; --warn-line: #b9822f; --warn-ink: #f0c98a;
+      --ok-bg: #1e2c1a; --ok-line: #5d8a50; --ok-ink: #b7d9ab;
+      --rec-bg: #16232f; --rec-line: #4d6f9c; --rec-ink: #a9c6e8;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.title { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 8px; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 6px; letter-spacing: .2px; }
+  h2 {
+    font-size: 1.2rem; margin: 38px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line); color: var(--accent-ink);
+  }
+  h3 { font-size: 1.02rem; margin: 26px 0 8px; }
+  p { margin: 12px 0; }
+  .lede { color: var(--muted); font-size: 1.02rem; margin-top: 4px; }
+  a { color: var(--accent-ink); }
+  code {
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    background: rgba(138,109,47,.14); padding: .12em .4em; border-radius: 4px; font-size: .92em;
+    word-break: break-word;
+  }
+  .callout { border-radius: 8px; padding: 14px 16px 14px 18px; margin: 18px 0; border-left: 5px solid; }
+  .callout p:first-child { margin-top: 0; } .callout p:last-child { margin-bottom: 0; }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-line);   color: var(--ok-ink); }
+  .callout.rec  { background: var(--rec-bg);  border-color: var(--rec-line);  color: var(--rec-ink); }
+  .tablewrap { overflow-x: auto; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--panel); color: var(--accent-ink); font-size: .8rem;
+    text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid var(--accent);
+    position: sticky; top: 0; z-index: 2;
+  }
+  tbody tr:nth-child(even) { background: rgba(138,109,47,.05); }
+  .kz {
+    font-size: 1.06rem; font-weight: 700; color: var(--accent-ink);
+    white-space: nowrap; letter-spacing: .2px;
+  }
+  .say { font-style: italic; color: var(--muted); white-space: nowrap; }
+  ul.notes { padding-left: 20px; } ul.notes li { margin: 10px 0; }
+  .hero {
+    background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--accent);
+    border-radius: 10px; padding: 18px 22px; margin: 24px 0; text-align: center;
+  }
+  .hero .kzbig { font-size: 1.5rem; font-weight: 700; color: var(--accent-ink); line-height: 1.4; }
+  .hero .saybig { font-style: italic; color: var(--muted); margin-top: 6px; }
+  .hero .glossbig { margin-top: 8px; }
+  footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .88rem;
+  }
+  @media print {
+    :root {
+      --bg: #fff; --panel: #fff; --ink: #000; --muted: #444; --line: #bbb;
+      --accent: #6b5320; --accent-ink: #4a3a16;
+    }
+    body { font-size: 10.5pt; }
+    .wrap { max-width: none; padding: 0; }
+    thead th { position: static; }
+    tr, .callout, .hero { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>TAOM Khuzdul Lexicon</h1>
+  <p class="lede">The dwarvish used in TAOM's voice-over scripts, and the rules for adding to it.</p>
+</header>
+
+<p>Khuzdul is the Dwarves' own language. Tolkien published very little of it, perhaps a hundred words
+and a handful of phrases, because in the story the Dwarves guard it and almost never speak it in
+front of outsiders. That leaves a working problem: TAOM's dwarf voice set needs about forty spoken
+lines, and Tolkien's corpus does not contain forty lines' worth of vocabulary. So most of what a TAOM
+dwarf shouts has to be built.</p>
+
+<p>This page separates the two halves so nobody has to guess which is which. <b>Part 1 is Tolkien's,
+with a source for every entry. Part 2 is ours, marked as ours.</b> Part 3 is the pronunciation key
+the voice actor actually reads.</p>
+
+<div class="callout warn">
+  <p><b>The rule that governs additions: build only from Part 1. Never import film Khuzdul.</b></p>
+  <p>The Khuzdul spoken in the Peter Jackson films is neo-Khuzdul written by David Salo. It is his
+  creative work, not Tolkien's published vocabulary, and TAOM has no claim on it. Tolkien's own
+  published words are a different matter: short invented words and names quoted from a book are the
+  same kind of reference as the place names and character names TAOM already uses throughout. Our own
+  coinages are ours.</p>
+  <p>So: a new word is either sourced to Tolkien, or built by us from Tolkien's roots and patterns and
+  recorded in Part 2. There is no third category, and "I saw it in the film" is not a source.</p>
+</div>
+
+<p>Registered in <code>docs/reference/provenance-register.md</code> per
+<code>.claude/rules/provenance.md</code>.</p>
+
+<h2>Part 1: attested Khuzdul</h2>
+
+<p>Everything in this table is Tolkien's. Sources are given as the work each appears in. Where Tolkien
+glossed a word himself the gloss is his; where the meaning is recovered by splitting a compound he
+translated, the entry says so.</p>
+
+<h3>Words and elements</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Word</th><th>Meaning</th><th>Where it comes from</th></tr></thead>
+<tbody>
+<tr><td class="kz">Khazâd</td><td>the Dwarves (what they call themselves)</td><td><i>The Lord of the Rings</i>, Appendix F</td></tr>
+<tr><td class="kz">Khuzd</td><td>a Dwarf, singular</td><td>the singular behind <span class="kz">Khazâd</span>; Tolkien's papers</td></tr>
+<tr><td class="kz">Khuzdul</td><td>Dwarvish, the language</td><td>Appendix F. Literally "of the Dwarves"</td></tr>
+<tr><td class="kz">baruk</td><td>axes (of)</td><td>"Baruk Khazâd!", <i>The Two Towers</i></td></tr>
+<tr><td class="kz">ai-mênu</td><td>upon you (plural)</td><td>"Khazâd ai-mênu!", <i>The Two Towers</i></td></tr>
+<tr><td class="kz">uzbad</td><td>lord</td><td>Balin's tomb inscription, <i>The Fellowship of the Ring</i></td></tr>
+<tr><td class="kz">-ul</td><td>genitive and adjectival ending, "of"</td><td><span class="kz">Fundinul</span> "son of Fundin", <span class="kz">Khuzdul</span> "of the Dwarves"</td></tr>
+<tr><td class="kz">-u</td><td>genitive ending on a name</td><td><span class="kz">Khazaddûmu</span> "of Khazad-dûm"</td></tr>
+<tr><td class="kz">dûm</td><td>halls, excavations (plural or collective)</td><td><span class="kz">Khazad-dûm</span></td></tr>
+<tr><td class="kz">gabil</td><td>great</td><td><span class="kz">Gabilgathol</span> "Great Fortress", Belegost</td></tr>
+<tr><td class="kz">gathol</td><td>fortress</td><td><span class="kz">Gabilgathol</span></td></tr>
+<tr><td class="kz">sigin</td><td>long</td><td><span class="kz">Sigin-tarâg</span> "Longbeards"</td></tr>
+<tr><td class="kz">tarâg</td><td>beards</td><td><span class="kz">Sigin-tarâg</span></td></tr>
+<tr><td class="kz">baraz</td><td>red</td><td><span class="kz">Barazinbar</span> "Redhorn"</td></tr>
+<tr><td class="kz">inbar</td><td>horn</td><td><span class="kz">Barazinbar</span></td></tr>
+<tr><td class="kz">bund</td><td>head</td><td><span class="kz">Bundushathûr</span> "Head of Clouds"</td></tr>
+<tr><td class="kz">shathûr</td><td>cloud, clouds</td><td><span class="kz">Bundushathûr</span></td></tr>
+<tr><td class="kz">zirak</td><td>spike</td><td><span class="kz">Zirakzigil</span> "Silvertine"</td></tr>
+<tr><td class="kz">zigil</td><td>silver, of silver</td><td><span class="kz">Zirakzigil</span></td></tr>
+<tr><td class="kz">kibil</td><td>silver (the metal)</td><td><span class="kz">Kibil-nâla</span> "Silverlode"</td></tr>
+<tr><td class="kz">nâla</td><td>watercourse, streambed</td><td><span class="kz">Kibil-nâla</span></td></tr>
+<tr><td class="kz">kheled</td><td>glass</td><td><span class="kz">Kheled-zâram</span> "Mirrormere"</td></tr>
+<tr><td class="kz">zâram</td><td>lake, pool</td><td><span class="kz">Kheled-zâram</span></td></tr>
+<tr><td class="kz">narâg</td><td>black</td><td><span class="kz">Narag-zâram</span>, <span class="kz">Nargûn</span> "the Black Land" (Mordor)</td></tr>
+<tr><td class="kz">uzn</td><td>shadow, dimness (singular)</td><td>recovered from <span class="kz">azan</span></td></tr>
+<tr><td class="kz">azan</td><td>shadows, dimnesses (plural of <span class="kz">uzn</span>)</td><td><span class="kz">Azanulbizar</span></td></tr>
+<tr><td class="kz">bizar</td><td>dale, valley</td><td><span class="kz">Azanulbizar</span> "Vale of Dim Streams"</td></tr>
+<tr><td class="kz">duban</td><td>dale, valley</td><td><span class="kz">duban Azanulbizar</span>, the fuller form of the name</td></tr>
+<tr><td class="kz">tumun</td><td>hollow</td><td><span class="kz">Tumunzahar</span> "Hollowbold", Nogrod</td></tr>
+<tr><td class="kz">zahar</td><td>delving, excavation</td><td><span class="kz">Tumunzahar</span></td></tr>
+<tr><td class="kz">mazarbul</td><td>of records</td><td>the Chamber of Mazarbul, <i>The Fellowship of the Ring</i></td></tr>
+<tr><td class="kz">rukhs</td><td>an Orc</td><td>Tolkien's later linguistic papers</td></tr>
+<tr><td class="kz">rakhâs</td><td>Orcs, plural</td><td>plural of <span class="kz">rukhs</span>. Note the long <b>â</b>, the same pattern as <span class="kz">Khuzd</span> to <span class="kz">Khazâd</span></td></tr>
+<tr><td class="kz">gunud</td><td>to delve, to tunnel</td><td>Tolkien's notes on the root</td></tr>
+<tr><td class="kz">felek</td><td>to hew rock</td><td>Tolkien's notes; <span class="kz">felak</span> is the tool for it</td></tr>
+<tr><td class="kz">aglâb</td><td>spoken language</td><td>Tolkien's notes, paired with <span class="kz">iglishmêk</span></td></tr>
+<tr><td class="kz">iglishmêk</td><td>the Dwarves' sign language</td><td>Tolkien's notes</td></tr>
+<tr><td class="kz">Mahal</td><td>Aulë, the Vala who made the Dwarves</td><td><i>The Silmarillion</i></td></tr>
+<tr><td class="kz">Sharbhund</td><td>Bald Hill</td><td>the Dwarves' name for Amon Rûdh</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Phrases</h3>
+
+<div class="hero">
+  <div class="kzbig">Baruk Khazâd! Khazâd ai-mênu!</div>
+  <div class="saybig">BAR-uk kha-ZAAD! kha-ZAAD eye-MAY-noo!</div>
+  <div class="glossbig">"Axes of the Dwarves! The Dwarves are upon you!"</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:0">
+    Gimli's war cry at the Hornburg, <i>The Two Towers</i>. The single most famous line in the
+    language, and the one line a player might actually recognise.
+  </p>
+</div>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Phrase</th><th>Meaning</th><th>Where it comes from</th></tr></thead>
+<tbody>
+<tr><td class="kz">Balin Fundinul uzbad Khazaddûmu</td><td>"Balin son of Fundin, Lord of Moria"</td><td>Balin's tomb, <i>The Fellowship of the Ring</i></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>What the shape of the language tells us</h3>
+
+<p>Four patterns visible in the table above, which are what Part 2 is built on:</p>
+
+<ul class="notes">
+  <li><b>Roots are consonant skeletons.</b> <span class="kz">Kh-Z-D</span> gives both
+  <span class="kz">Khuzd</span> and <span class="kz">Khazâd</span>; the vowels between the consonants
+  carry the grammar. This is why dwarvish words feel blocky and front-loaded.</li>
+  <li><b>Plurals lengthen a vowel inside the word</b> rather than adding an ending.
+  <span class="kz">rukhs</span> becomes <span class="kz">rakhâs</span>,
+  <span class="kz">Khuzd</span> becomes <span class="kz">Khazâd</span>. There is no dwarvish
+  <code>-s</code>.</li>
+  <li><b>In a compound the describing word comes first.</b> <span class="kz">gabil-gathol</span> is
+  great-fortress, <span class="kz">sigin-tarâg</span> is long-beards,
+  <span class="kz">baraz-inbar</span> is red-horn.</li>
+  <li><b>Possession runs the other way.</b> <span class="kz">Baruk Khazâd</span> is
+  axes-of-the-Dwarves, the thing owned first. And a sentence needs no verb:
+  <span class="kz">Khazâd ai-mênu</span> is just "Dwarves upon-you".</li>
+</ul>
+
+<h2>Part 2: TAOM coinages</h2>
+
+<div class="callout rec">
+  <p><b>Every word below is invented for TAOM.</b> None of it is Tolkien's and none of it is film
+  Khuzdul. Each one is built on the patterns above: consonants Tolkien actually used, the compound
+  order he used, plurals in long <b>â</b>.</p>
+</div>
+
+<p>Two devices are ours and used consistently, so learn them once:</p>
+
+<ul class="notes">
+  <li><b><span class="kz">na-</span> reverses a word.</b> <span class="kz">shakil</span> is "loose",
+  <span class="kz">nashkil</span> is "hold your shot". <span class="kz">zurun</span> is "mount",
+  <span class="kz">nazurun</span> is "get down". It gives paired orders that sound related, which is
+  how real command vocabulary behaves.</li>
+  <li><b><span class="kz">-zai</span> marks a formation.</b> Three of the eight formation orders are
+  rank shapes, and they share the ending: <span class="kz">sigin-zai</span>,
+  <span class="kz">zirak-zai</span>, <span class="kz">zûn-zai</span>. The other five formations are
+  deliberately single distinct words instead, so the whole set does not rhyme.</li>
+</ul>
+
+<h3>Verbs, given as shouted commands</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Word</th><th>Meaning</th><th>Built from</th></tr></thead>
+<tbody>
+<tr><td class="kz">nakhud</td><td>advance, go forward</td><td><span class="kz">gunud</span> and <span class="kz">felek</span> pattern, consonants N-Kh-D</td></tr>
+<tr><td class="kz">nurkad</td><td>fall back, give ground</td><td>N-R-K-D, deliberately close to <span class="kz">nakhud</span> because the two orders are a pair</td></tr>
+<tr><td class="kz">guzrak</td><td>break off, retreat</td><td>G-Z-R-K</td></tr>
+<tr><td class="kz">zathar</td><td>halt, stop where you are</td><td>Z-Th-R</td></tr>
+<tr><td class="kz">dushum</td><td>move, shift position</td><td>D-Sh-M</td></tr>
+<tr><td class="kz">khagam</td><td>follow me</td><td>Kh-G-M</td></tr>
+<tr><td class="kz">shakil</td><td>loose, shoot</td><td>Sh-K-L</td></tr>
+<tr><td class="kz">nashkil</td><td>hold your shot</td><td><span class="kz">na-</span> + <span class="kz">shakil</span></td></tr>
+<tr><td class="kz">turkun</td><td>turn, face</td><td>T-R-K-N</td></tr>
+<tr><td class="kz">zurun</td><td>mount up</td><td>Z-R-N</td></tr>
+<tr><td class="kz">nazurun</td><td>dismount</td><td><span class="kz">na-</span> + <span class="kz">zurun</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Nouns and other words</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Word</th><th>Meaning</th><th>Built from</th></tr></thead>
+<tbody>
+<tr><td class="kz">bakhar</td><td>foe, enemy</td><td>B-Kh-R</td></tr>
+<tr><td class="kz">zin</td><td>that way, yonder</td><td>a bare pointing word, kept short so it carries at distance</td></tr>
+<tr><td class="kz">bakûn</td><td>gate</td><td>B-K-N with the long <b>û</b> of <span class="kz">Nargûn</span></td></tr>
+<tr><td class="kz">khazgun</td><td>siege engine</td><td><span class="kz">Khazâd</span> and <span class="kz">gunud</span> welded together: a dwarf-made delving machine</td></tr>
+<tr><td class="kz">salgar</td><td>ladder</td><td>S-L-G-R</td></tr>
+<tr><td class="kz">sulâk</td><td>spears</td><td>plural in long <b>â</b>, on the <span class="kz">rakhâs</span> pattern</td></tr>
+<tr><td class="kz">thurâd</td><td>foot soldiers</td><td>same plural pattern</td></tr>
+<tr><td class="kz">kurunâd</td><td>archers, bowmen</td><td>same plural pattern, from a coined <span class="kz">kurun</span> "bow"</td></tr>
+<tr><td class="kz">zagrâd</td><td>riders</td><td>same plural pattern. Erebor fields goat riders, not horse</td></tr>
+<tr><td class="kz">thagûn</td><td>shield</td><td>Th-G-N with a long <b>û</b></td></tr>
+<tr><td class="kz">khadal</td><td>wall</td><td>Kh-D-L</td></tr>
+<tr><td class="kz">zai</td><td>rank, formation</td><td>the formation ending described above</td></tr>
+<tr><td class="kz">zûn</td><td>narrow, deep</td><td>Z-N</td></tr>
+<tr><td class="kz">zabir</td><td>spread out, open order</td><td>Z-B-R</td></tr>
+<tr><td class="kz">rushak</td><td>scatter, run wide</td><td>R-Sh-K</td></tr>
+<tr><td class="kz">kulum</td><td>ring, circle</td><td>K-L-M</td></tr>
+<tr><td class="kz">arbaz</td><td>square, four-sided</td><td>R-B-Z</td></tr>
+<tr><td class="kz">guzâm</td><td>victory, triumph</td><td>plural-shaped long <b>â</b> for weight</td></tr>
+<tr><td class="kz">mênî</td><td>upon me</td><td>coined to pair with Tolkien's <span class="kz">mênu</span> "upon you"</td></tr>
+<tr><td class="kz">nâ</td><td>no</td><td>the bare negative, held long for a cry of dismay</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Coined phrases used in the scripts</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Phrase</th><th>Meaning</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="kz">Thagûn-khadal!</td><td>"Shield wall!"</td><td>compound, describer first, per pattern 3</td></tr>
+<tr><td class="kz">Sigin-zai!</td><td>"Line!" literally "long rank"</td><td>uses Tolkien's <span class="kz">sigin</span></td></tr>
+<tr><td class="kz">Zirak-zai!</td><td>"Wedge!" literally "spike rank"</td><td>uses Tolkien's <span class="kz">zirak</span></td></tr>
+<tr><td class="kz">Zûn-zai!</td><td>"Column!" literally "narrow rank"</td><td></td></tr>
+<tr><td class="kz">Felek bakûn!</td><td>"Hew the gate!"</td><td>Tolkien's verb, our noun</td></tr>
+<tr><td class="kz">Felek rakhâs!</td><td>"Hew the Orcs!"</td><td>both words Tolkien's, the sentence ours</td></tr>
+<tr><td class="kz">Uzbad mênu!</td><td>"The command is yours", literally "lordship upon you"</td><td>both words Tolkien's, built on the shape of <span class="kz">Khazâd ai-mênu</span></td></tr>
+<tr><td class="kz">Uzbad mênî!</td><td>"I have the command again"</td><td>the same, turned around with our <span class="kz">mênî</span></td></tr>
+<tr><td class="kz">Guzâm Khazâd!</td><td>"Victory of the Dwarves!"</td><td>possessive order per pattern 4</td></tr>
+<tr><td class="kz">Turkun bakhar!</td><td>"Face the enemy!"</td><td></td></tr>
+<tr><td class="kz">Turkun zin!</td><td>"Face that way!"</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Part 3: how to say it</h2>
+
+<p>For the voice actor. You do not need to understand the grammar; you need six sounds and one stress
+rule.</p>
+
+<h3>The six sounds that are not English</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Written</th><th>Say it</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td class="kz">kh</td><td>The scrape at the end of Scottish <i>loch</i> or German <i>Bach</i>. Not a <b>k</b>. If you cannot get it, a hard <b>k</b> with grit on it is acceptable and better than a soft one</td><td class="kz">Khazâd, bakhar</td></tr>
+<tr><td class="kz">th</td><td>As in <i>thin</i>, never as in <i>this</i></td><td class="kz">zathar, thagûn</td></tr>
+<tr><td class="kz">sh</td><td>As in <i>ship</i></td><td class="kz">rakhâs, shakil</td></tr>
+<tr><td class="kz">z</td><td>As in <i>zoo</i>, buzzed, never softened to an <b>s</b></td><td class="kz">zirak, guzâm</td></tr>
+<tr><td class="kz">r</td><td>Tapped or lightly rolled, as in Scots. Never the swallowed English <b>r</b></td><td class="kz">baruk, turkun</td></tr>
+<tr><td class="kz">g</td><td>Always hard, as in <i>gate</i>, never as in <i>gem</i></td><td class="kz">gabil, guzrak</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Vowels</h3>
+
+<p>Short vowels are pure and clipped: <b>a</b> as in <i>father</i> but short, <b>i</b> as in <i>sit</i>,
+<b>u</b> as in <i>put</i>, <b>e</b> as in <i>set</i>, <b>o</b> as in <i>hot</i>.</p>
+
+<div class="callout ok">
+  <p><b>A circumflex means hold it.</b> <b>â î û ê</b> are the same vowels but roughly twice as long,
+  and they are where the weight of a dwarvish word sits. <span class="kz">Khazâd</span> is
+  <span class="say">kha-ZAAD</span>. <span class="kz">rakhâs</span> is <span class="say">ra-KHAAS</span>.
+  Do not shorten them; the long vowel is most of what makes the language sound dwarvish rather than
+  orcish.</p>
+</div>
+
+<h3>Stress</h3>
+
+<p><b>Stress the long vowel.</b> If the word has a circumflex, that syllable takes the beat:
+<span class="kz">Khazâd</span>, <span class="kz">rakhâs</span>, <span class="kz">thagûn</span>,
+<span class="kz">guzâm</span>.</p>
+
+<p><b>If there is no long vowel, stress the first syllable:</b> <span class="say">BAR-uk</span>,
+<span class="say">ZIR-ak</span>, <span class="say">NAKH-ud</span>, <span class="say">TUR-kun</span>.</p>
+
+<h3>Two habits to fight</h3>
+
+<ul class="notes">
+  <li><b>Release the final consonant.</b> English lets word-final <b>d</b>, <b>k</b>, <b>t</b> die in
+  the throat. Khuzdul does not. <span class="kz">Khazâd</span> ends on an audible <b>d</b>.
+  <span class="kz">Baruk</span> ends on an audible <b>k</b>. Across a battlefield that final consonant
+  is the whole difference between one order and another.</li>
+  <li><b>Do not soften the clusters.</b> <span class="kz">Zirak-zai</span>,
+  <span class="kz">Thagûn-khadal</span> and <span class="kz">Nashkil</span> open hard and stay hard.
+  There is nothing graceful about this language; it was made for shouting in a tunnel.</li>
+</ul>
+
+<h3>If you want one reference for the whole register</h3>
+
+<div class="hero">
+  <div class="kzbig">Baruk Khazâd! Khazâd ai-mênu!</div>
+  <div class="saybig">BAR-uk kha-ZAAD! kha-ZAAD eye-MAY-noo!</div>
+  <p style="margin-bottom:0">That line is Tolkien's own, and every other line in the script should
+  sound like it came from the same throat.</p>
+</div>
+
+<h2>Sources</h2>
+
+<ul class="notes">
+  <li>J.R.R. Tolkien, <i>The Lord of the Rings</i>, especially Appendix F and the Hornburg chapter in
+  <i>The Two Towers</i>.</li>
+  <li>J.R.R. Tolkien, <i>The Silmarillion</i>, for <span class="kz">Mahal</span>,
+  <span class="kz">Tumunzahar</span>, <span class="kz">Gabilgathol</span>,
+  <span class="kz">Sharbhund</span>.</li>
+  <li>Tolkien's later linguistic papers, published in the <i>History of Middle-earth</i> series, for
+  <span class="kz">rukhs</span>, <span class="kz">rakhâs</span>, <span class="kz">gunud</span>,
+  <span class="kz">felek</span>, <span class="kz">aglâb</span>,
+  <span class="kz">iglishmêk</span>.</li>
+  <li>Helge Fauskanger, "Khuzdul: the secret tongue of the Dwarves", Ardalambion, used to cross-check
+  the attested list and the compound patterns:
+  <a href="https://www.ardalambion.org/khuzdul.htm">ardalambion.org/khuzdul.htm</a></li>
+  <li>Tolkien Gateway's Khuzdul word category, used the same way:
+  <a href="https://tolkiengateway.net/wiki/Category:Khuzdul_words">tolkiengateway.net</a></li>
+</ul>
+
+<p>The two web references were consulted to confirm that Part 1 contains nothing invented. They are
+not themselves sources for the language; Tolkien is.</p>
+
+<footer>
+  Related: <a href="vo-script-dwarves.html">the dwarf script</a>, where every word above is actually
+  used, and <a href="vo-recording-guide.html">the recording guide</a>.
+  Engine side: <code>docs/features/kingdom-voices.md</code>.
+</footer>
+
+</div>
+</body>
+</html>

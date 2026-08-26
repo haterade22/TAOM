@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAOM — Voice Recording Guide</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --panel: #ffffff; --ink: #23201a; --muted: #6b645a;
+    --accent: #8a6d2f; --accent-ink: #5c4a1e; --line: #e2dccf;
+    --code-bg: #2b2622; --code-ink: #f3ead6;
+    --warn-bg: #fbe7d6; --warn-line: #d99a4e; --warn-ink: #7a4a12;
+    --ok-bg: #e4efe0; --ok-line: #6fa361; --ok-ink: #315a2a;
+    --rec-bg: #eef3fa; --rec-line: #6f93c4; --rec-ink: #2f4d78;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17140f; --panel: #211d16; --ink: #ece5d6; --muted: #a49a86;
+      --accent: #d9b56b; --accent-ink: #e7c987; --line: #362f24;
+      --code-bg: #0e0c09; --code-ink: #f3ead6;
+      --warn-bg: #3a2a15; --warn-line: #b9822f; --warn-ink: #f0c98a;
+      --ok-bg: #1e2c1a; --ok-line: #5d8a50; --ok-ink: #b7d9ab;
+      --rec-bg: #16232f; --rec-line: #4d6f9c; --rec-ink: #a9c6e8;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.title { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 8px; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 6px; letter-spacing: .2px; }
+  h2 {
+    font-size: 1.2rem; margin: 38px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line); color: var(--accent-ink);
+  }
+  h3 { font-size: 1.02rem; margin: 24px 0 8px; }
+  p { margin: 12px 0; }
+  .lede { color: var(--muted); font-size: 1.02rem; margin-top: 4px; }
+  a { color: var(--accent-ink); }
+  code {
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    background: rgba(138,109,47,.14); padding: .12em .4em; border-radius: 4px; font-size: .92em;
+    word-break: break-word;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-ink); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 12px 0;
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    font-size: .88rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; border-radius: 0; color: inherit; font-size: 1em; }
+  .callout { border-radius: 8px; padding: 14px 16px 14px 18px; margin: 18px 0; border-left: 5px solid; }
+  .callout p:first-child { margin-top: 0; } .callout p:last-child { margin-bottom: 0; }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-line);   color: var(--ok-ink); }
+  .callout.rec  { background: var(--rec-bg);  border-color: var(--rec-line);  color: var(--rec-ink); }
+  .tablewrap { overflow-x: auto; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--panel); color: var(--accent-ink); font-size: .8rem;
+    text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid var(--accent);
+  }
+  tbody tr:nth-child(even) { background: rgba(138,109,47,.05); }
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 16px 0; }
+  ol.steps > li {
+    position: relative; padding: 4px 0 18px 52px; margin: 0;
+    border-left: 2px solid var(--line); margin-left: 16px;
+  }
+  ol.steps > li:last-child { border-left-color: transparent; }
+  ol.steps > li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: -17px; top: 0; width: 32px; height: 32px;
+    background: var(--accent); color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .95rem;
+  }
+  ul.notes { padding-left: 20px; } ul.notes li { margin: 10px 0; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 4px 22px 14px; margin: 20px 0;
+  }
+  footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .88rem;
+  }
+  @media print {
+    :root {
+      --bg: #fff; --panel: #fff; --ink: #000; --muted: #444; --line: #bbb;
+      --accent: #6b5320; --accent-ink: #4a3a16;
+    }
+    body { font-size: 11pt; }
+    .wrap { max-width: none; padding: 0; }
+    tr, .callout, .panel { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>Voice Recording Guide</h1>
+  <p class="lede">TAOM (Tales From the Age of Men). Read once before the first session.</p>
+</header>
+
+<p>This guide covers what is true for every culture: what the recordings are for, what the game does
+with each kind of line, how to name the files, and what format to deliver. The per-culture scripts
+carry the actual lines. After this you only need the script itself.</p>
+
+<h2>What you are recording for</h2>
+
+<p>TAOM is a total conversion of <i>Mount &amp; Blade II: Bannerlord</i> into Middle-earth. It replaces
+the game's world, factions, troops and equipment. Battles run to hundreds of soldiers a side, in real
+time, with the player standing in the line.</p>
+
+<p>Your recordings become a <b>combat voice set</b>: the pool of sounds one culture's soldiers draw
+from during a battle. Every dwarf on the field, on both sides, pulls from the same set. Two things
+follow from that.</p>
+
+<div class="callout rec">
+  <p><b>You are not playing a character. You are playing a hundred men at once.</b> Vary the takes.
+  Three readings of the same line should sound like three different soldiers, not one soldier
+  recorded three times. Different pitch, different urgency, different amount of breath.</p>
+  <p><b>The game repeats you.</b> If a line has one take, players hear that exact clip every single
+  time. This is why the script asks for three to five takes of everything. The variation is the
+  product.</p>
+</div>
+
+<h2>How the game uses each kind of line</h2>
+
+<p>The game does not play lines from a script. It fires a named slot when something happens. Knowing
+what triggers a slot tells you what emotional state the line sits in, which is most of the direction
+you need.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Kind of line</th><th>When the game fires it</th></tr></thead>
+<tbody>
+<tr><td><b>Effort and impact</b><br>grunt, jump, climb, focus</td><td>Involuntary, from the engine itself, when a soldier swings, jumps, climbs a siege ladder, or braces. Body sounds, not performance</td></tr>
+<tr><td><b>Pain</b></td><td>The moment a soldier takes a wound. Short, real, no acting</td></tr>
+<tr><td><b>Death</b></td><td>The moment he dies</td></tr>
+<tr><td><b>Stun</b></td><td>A hit hard enough to stagger him</td></tr>
+<tr><td><b>Fear</b></td><td>TAOM-specific: some enemies project dread, and a soldier near them may break. Fires rarely, so it lands as a moment. A flinch and a caught breath, not a scream</td></tr>
+<tr><td><b>War cry</b></td><td>Unprompted, and again when a rally goes up. This is the soldier choosing to make noise</td></tr>
+<tr><td><b>Victory</b></td><td>At the end of a battle his side won</td></tr>
+<tr><td><b>Dismay</b></td><td>When his formation's morale breaks and men start running</td></tr>
+<tr><td><b>Orders</b><br>advance, fall back, form up, and about thirty more</td><td>Shouted by a captain when the player or the AI gives that order. He is projecting across a field, over other men shouting</td></tr>
+<tr><td><b>Multiplayer calls</b></td><td>Player-to-player callouts in multiplayer only</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><b>The orders are shouted, and there are a lot of them.</b> Roughly forty of the fifty lines in a
+culture script are a man yelling across open ground with a battle running. That is the dominant
+register and it should drive how you pitch the whole session.</p>
+
+<p><b>The involuntary sounds are not performed.</b> A grunt is the sound of effort, a pain cry is a
+reflex. The most common failure in game voice work is acting them. Do the thing, do not portray it.</p>
+
+<h2>Length limits, which the engine enforces</h2>
+
+<p>These are hard caps. A file over the limit gets cut off mid-word in play.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Kind of line</th><th>Limit</th></tr></thead>
+<tbody>
+<tr><td>Shouted lines: war cries, orders, formation calls, death cries</td><td><b>8 seconds</b></td></tr>
+<tr><td>Everything else: grunts, effort, pain, stun, victory, dismay</td><td><b>4 seconds</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>In practice nothing should come near these. A shouted order wants to be one to two seconds. The
+limit exists to catch mistakes, not as a target. The script marks the limit on every line so you
+never have to guess.</p>
+
+<h2>Delivery format</h2>
+
+<div class="callout ok">
+  <p><b>48 kHz, 24-bit, mono WAV. One file per take. Unprocessed.</b></p>
+</div>
+
+<p><b>Unprocessed</b> means no compression, no limiting, no EQ, no de-essing, no reverb, no
+normalisation, no noise reduction. Send us the raw take. Everything the game needs doing to these
+files, we do at our end, and we cannot undo processing that is already baked in.</p>
+
+<p>Do trim obvious dead air, and leave roughly a quarter second of silence before and after the line
+rather than cutting hard against the first consonant.</p>
+
+<p>The engine itself is tolerant and would accept a good deal less than this. We ask for 48 kHz mono
+because the same recordings feed a second system later on, for spoken dialogue, which does want
+exactly that, and starting there means nothing gets resampled twice.</p>
+
+<p>If your setup cannot do 24-bit, 16-bit at 48 kHz is fine. If it cannot do 48 kHz, tell us before
+the session rather than converting on your end.</p>
+
+<h2>File naming</h2>
+
+<div class="callout warn">
+  <p><b>This is the part that costs us real time if it goes wrong</b>, because a mislabelled take is a
+  take nobody can find a use for.</p>
+</div>
+
+<p>Every line in the script prints its filename stem. Add the take number and <code>.wav</code>:</p>
+
+<pre><code>&lt;stem&gt;_&lt;take&gt;.wav
+
+dwarf_shieldwall_01.wav
+dwarf_shieldwall_02.wav
+dwarf_shieldwall_03.wav
+dwarf_pain_01.wav</code></pre>
+
+<p>Take numbers are two digits, starting at <code>01</code>. Do not rename, do not add your initials,
+do not add the date, do not put the line text in the filename. Just the stem and the number.</p>
+
+<p>If you record an alternate reading you want us to hear, add <code>_alt</code>:
+<code>dwarf_charge_02_alt.wav</code>. If a take is a mistake, do not send it; do not send a file named
+<code>dwarf_charge_02_bad.wav</code>.</p>
+
+<h2>Session order and looking after your voice</h2>
+
+<p>The scripts are ordered deliberately. Work top to bottom.</p>
+
+<ol class="steps">
+  <li><strong>Wordless and effort first</strong>, while your voice is fresh and undamaged. Grunts,
+  pain, stun, climbing.</li>
+  <li><strong>Orders and formations next.</strong> This is the bulk of the work and it is all
+  projection.</li>
+  <li><strong>War cries, victory and death last.</strong> These are the most destructive lines in the
+  script, and putting them at the end means the rasp they leave lands where it belongs. A war cry
+  recorded on a tired throat sounds better than one recorded fresh. A grunt recorded on a tired
+  throat does not.</li>
+</ol>
+
+<p>Take the breaks. Two shorter sessions produce better material than one long one, and the death and
+war-cry blocks are worth their own day if your voice is not built for shouting.</p>
+
+<h2>What happens to the files afterwards</h2>
+
+<p>Short version, so "done" means something concrete:</p>
+
+<ul class="notes">
+  <li>We convert each take to the format the game loads and drop it into the module.</li>
+  <li>We register the takes as alternatives for their slot, so the game picks between them at random.</li>
+  <li>We run a field battle and listen for anything that lands wrong, then come back to you with a
+  short pickup list if we need one.</li>
+</ul>
+
+<h2>The per-culture scripts</h2>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Culture</th><th>Script</th></tr></thead>
+<tbody>
+<tr>
+  <td>Dwarves<br><span style="color:var(--muted)">Erebor, the Iron Hills, Ironpass</span></td>
+  <td><a href="vo-script-dwarves.html">vo-script-dwarves.html</a>, with
+      <a href="khuzdul-lexicon.html">khuzdul-lexicon.html</a> for the language</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Others follow. The running order is in <a href="README.html">README.html</a>.</p>
+
+<footer>
+  TAOM (Tales From the Age of Men). Engine-side reference for this system:
+  <code>docs/features/kingdom-voices.md</code>.
+</footer>
+
+</div>
+</body>
+</html>

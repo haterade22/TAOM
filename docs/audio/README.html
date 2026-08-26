@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAOM — Voice-Over Documents</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --panel: #ffffff; --ink: #23201a; --muted: #6b645a;
+    --accent: #8a6d2f; --accent-ink: #5c4a1e; --line: #e2dccf;
+    --warn-bg: #fbe7d6; --warn-line: #d99a4e; --warn-ink: #7a4a12;
+    --ok-bg: #e4efe0; --ok-line: #6fa361; --ok-ink: #315a2a;
+    --rec-bg: #eef3fa; --rec-line: #6f93c4; --rec-ink: #2f4d78;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17140f; --panel: #211d16; --ink: #ece5d6; --muted: #a49a86;
+      --accent: #d9b56b; --accent-ink: #e7c987; --line: #362f24;
+      --warn-bg: #3a2a15; --warn-line: #b9822f; --warn-ink: #f0c98a;
+      --ok-bg: #1e2c1a; --ok-line: #5d8a50; --ok-ink: #b7d9ab;
+      --rec-bg: #16232f; --rec-line: #4d6f9c; --rec-ink: #a9c6e8;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.title { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 8px; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 6px; }
+  h2 {
+    font-size: 1.2rem; margin: 38px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line); color: var(--accent-ink);
+  }
+  p { margin: 12px 0; }
+  .lede { color: var(--muted); font-size: 1.02rem; margin-top: 4px; }
+  a { color: var(--accent-ink); }
+  code {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    background: rgba(138,109,47,.14); padding: .12em .4em; border-radius: 4px; font-size: .92em;
+    word-break: break-word;
+  }
+  .callout { border-radius: 8px; padding: 14px 16px 14px 18px; margin: 18px 0; border-left: 5px solid; }
+  .callout p:first-child { margin-top: 0; } .callout p:last-child { margin-bottom: 0; }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+  .callout.rec  { background: var(--rec-bg);  border-color: var(--rec-line);  color: var(--rec-ink); }
+  .tablewrap { overflow-x: auto; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--panel); color: var(--accent-ink); font-size: .78rem;
+    text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid var(--accent);
+  }
+  tbody tr:nth-child(even) { background: rgba(138,109,47,.05); }
+  td.num { font-weight: 700; color: var(--accent-ink); text-align: center; }
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 16px 0; }
+  ol.steps > li {
+    position: relative; padding: 4px 0 18px 52px; margin: 0;
+    border-left: 2px solid var(--line); margin-left: 16px;
+  }
+  ol.steps > li:last-child { border-left-color: transparent; }
+  ol.steps > li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: -17px; top: 0; width: 32px; height: 32px;
+    background: var(--accent); color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .95rem;
+  }
+  footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .88rem;
+  }
+  @media print {
+    :root { --bg: #fff; --panel: #fff; --ink: #000; --muted: #444; --line: #bbb; --accent-ink: #4a3a16; }
+    .wrap { max-width: none; padding: 0; }
+    tr, .callout { page-break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>TAOM Voice-Over Documents</h1>
+  <p class="lede">Recording scripts for TAOM's voice actors, and the reference material behind them.</p>
+</header>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>What it is</th><th>Who reads it</th></tr></thead>
+<tbody>
+<tr>
+  <td><a href="vo-recording-guide.html">vo-recording-guide.html</a></td>
+  <td>The general brief: what the recordings are for, what triggers each kind of line, delivery format, file naming, session order</td>
+  <td>The actor, once</td>
+</tr>
+<tr>
+  <td><a href="vo-script-dwarves.html">vo-script-dwarves.html</a></td>
+  <td>The dwarf script. 200 combat takes, plus dialogue and narration blocks</td>
+  <td>The actor, at the microphone</td>
+</tr>
+<tr>
+  <td><a href="khuzdul-lexicon.html">khuzdul-lexicon.html</a></td>
+  <td>The dwarvish used in the dwarf script: what is Tolkien's, what is ours, and how to pronounce all of it</td>
+  <td>The actor, and anyone adding dwarvish later</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Engine side, which none of the above duplicates:
+<code>docs/features/kingdom-voices.md</code>.</p>
+
+<h2>Two facts that shape every script in this folder</h2>
+
+<div class="callout warn">
+  <p><b>Voice binds to race, not to culture.</b> A soldier picks his voice from his race's skin, and
+  nothing in that path consults his culture. So Erebor, the Iron Hills and Ironpass all share one
+  dwarf voice and cannot be told apart by ear, and Gondor, Rohan and Dale share the vanilla human
+  race and therefore cannot have separate voices at all without new code. Plan a script per
+  <b>race</b>, not per culture, and check which cultures fall under it before promising a distinct
+  sound.</p>
+</div>
+
+<div class="callout warn">
+  <p><b>Half the races have no voice of their own.</b> Seven of the fourteen custom races fall through
+  to Calradian voices today: <code>elf</code>, <code>orc</code>, <code>nazghul</code>,
+  <code>cave_troll</code>, <code>hill_troll</code>, <code>saruman</code>, <code>sauron</code>. An elf
+  currently sounds like an Imperial levy.</p>
+</div>
+
+<h2>Running order for the remaining scripts</h2>
+
+<p>Ordered by what each session buys, not by how much anyone likes the culture.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>#</th><th>Script</th><th>Race or races</th><th>Cultures it covers</th><th>Why here</th></tr></thead>
+<tbody>
+<tr>
+  <td class="num">1</td><td><b>Dwarves</b></td><td><code>dwarf</code></td>
+  <td>Erebor, Iron Hills, Ironpass, Blacklocks</td>
+  <td><b>Done.</b> Replaces a voice library with a provenance problem, and dwarves are visibly a signature culture</td>
+</tr>
+<tr>
+  <td class="num">2</td><td><b>Elves</b></td><td><code>elf</code></td>
+  <td>Rivendell, Mirkwood, Lothlórien, Lindon</td>
+  <td>Four cultures off one script, and the race is entirely unvoiced today. Biggest single gain left. Voice design was already trialled for this one</td>
+</tr>
+<tr>
+  <td class="num">3</td><td><b>Orcs</b></td><td><code>orc</code>, and a revisit of <code>uruk</code> / <code>uruk_hai</code></td>
+  <td>Mordor, Gundabad, Dol Guldur, Misty Mountain, Goblins, Blue Craig, Isengard</td>
+  <td><code>orc</code> is unbound. The uruk sets that do exist have the same sourcing problem the dwarf library had, so they want re-recording rather than extending</td>
+</tr>
+<tr>
+  <td class="num">4</td><td><b>Trolls and beasts</b></td><td><code>cave_troll</code>, <code>hill_troll</code></td>
+  <td>creature units</td>
+  <td>Different technique: these bind through the monster's sound class rather than a skin, which needs a monster file, a voice definition and a collision-info block. Eleven troll sound entries are already registered that nothing can reach</td>
+</tr>
+<tr>
+  <td class="num">5</td><td><b>Men</b></td><td>vanilla human</td>
+  <td>Gondor, Rohan, Dale, Dunland, Harad, Khand, Rhûn, Umbar, and the rest</td>
+  <td><b>Blocked, and not on recording.</b> Every mannish culture shares one race, so telling them apart needs code that forces a voice definition per agent at spawn. Do not book a session for these until that exists</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Nazgûl, Saruman and Sauron are named individuals rather than troop lines. They belong with dialogue
+work, not with a combat voice set.</p>
+
+<h2>Before starting a new script</h2>
+
+<ol class="steps">
+  <li><strong>Check how the race is currently bound</strong>, and whether it is bound at all.
+  <code>docs/features/kingdom-voices.md</code> has the table.</li>
+  <li><strong>Pull the real slot list, do not guess the count.</strong> That race's sound groups come
+  out of <code>Main/_Module/ModuleData/module_sounds.xml</code> and its slot mapping out of the
+  matching <code>lotr_&lt;race&gt;_voice_def.xml</code>. Those two files decide how many lines the
+  script needs.</li>
+  <li><strong>Copy the structure of the dwarf script.</strong> The block order (wordless first, cries
+  last) exists to protect the actor's voice, and the appendix mapping stems to sound groups is what
+  makes the files usable when they come back.</li>
+  <li><strong>If the script invents language, it needs its own lexicon</strong> alongside, split into
+  sourced and invented the way the Khuzdul one is.</li>
+</ol>
+
+<footer>
+  TAOM (Tales From the Age of Men).
+</footer>
+
+</div>
+</body>
+</html>

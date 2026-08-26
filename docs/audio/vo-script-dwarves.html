@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAOM — Dwarf Voice Script</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --panel: #ffffff; --ink: #23201a; --muted: #6b645a;
+    --accent: #8a6d2f; --accent-ink: #5c4a1e; --line: #e2dccf;
+    --code-bg: #2b2622; --code-ink: #f3ead6;
+    --warn-bg: #fbe7d6; --warn-line: #d99a4e; --warn-ink: #7a4a12;
+    --ok-bg: #e4efe0; --ok-line: #6fa361; --ok-ink: #315a2a;
+    --rec-bg: #eef3fa; --rec-line: #6f93c4; --rec-ink: #2f4d78;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17140f; --panel: #211d16; --ink: #ece5d6; --muted: #a49a86;
+      --accent: #d9b56b; --accent-ink: #e7c987; --line: #362f24;
+      --code-bg: #0e0c09; --code-ink: #f3ead6;
+      --warn-bg: #3a2a15; --warn-line: #b9822f; --warn-ink: #f0c98a;
+      --ok-bg: #1e2c1a; --ok-line: #5d8a50; --ok-ink: #b7d9ab;
+      --rec-bg: #16232f; --rec-line: #4d6f9c; --rec-ink: #a9c6e8;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.title { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 8px; }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 6px; letter-spacing: .2px; }
+  h2 {
+    font-size: 1.25rem; margin: 44px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line); color: var(--accent-ink);
+  }
+  h3 { font-size: 1.05rem; margin: 28px 0 8px; }
+  p { margin: 12px 0; }
+  .lede { color: var(--muted); font-size: 1.02rem; margin-top: 4px; }
+  a { color: var(--accent-ink); }
+  code {
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    background: rgba(138,109,47,.14); padding: .12em .4em; border-radius: 4px; font-size: .92em;
+    word-break: break-word;
+  }
+  .callout { border-radius: 8px; padding: 14px 16px 14px 18px; margin: 18px 0; border-left: 5px solid; }
+  .callout p:first-child { margin-top: 0; } .callout p:last-child { margin-bottom: 0; }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-line);   color: var(--ok-ink); }
+  .callout.rec  { background: var(--rec-bg);  border-color: var(--rec-line);  color: var(--rec-ink); }
+
+  nav.toc {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 18px; margin: 22px 0;
+  }
+  nav.toc b { font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; color: var(--accent-ink); }
+  nav.toc ul { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 8px; }
+  nav.toc a {
+    display: inline-block; text-decoration: none; font-size: .88rem;
+    border: 1px solid var(--line); border-radius: 20px; padding: 3px 12px; background: var(--bg);
+  }
+  nav.toc a:hover { border-color: var(--accent); }
+
+  .tablewrap { overflow-x: auto; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--panel); color: var(--accent-ink); font-size: .78rem;
+    text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid var(--accent);
+    position: sticky; top: 0; z-index: 2;
+  }
+  tbody tr:nth-child(even) { background: rgba(138,109,47,.05); }
+
+  td.file {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: .84rem; color: var(--muted); white-space: nowrap;
+  }
+  td.kz { font-size: 1.16rem; font-weight: 700; color: var(--accent-ink); line-height: 1.35; }
+  td.say { font-style: italic; color: var(--muted); white-space: nowrap; font-size: .92rem; }
+  td.take { font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
+  .en {
+    display: inline-block; margin-top: 6px; font-size: .84rem;
+    background: var(--rec-bg); color: var(--rec-ink); border: 1px solid var(--rec-line);
+    border-radius: 5px; padding: 2px 8px; font-style: normal;
+  }
+  .limit {
+    display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .4px;
+    background: var(--accent); color: #fff; padding: 2px 8px; border-radius: 20px;
+    vertical-align: middle; margin-left: 8px;
+  }
+  .takes {
+    display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .4px;
+    background: var(--rec-line); color: #fff; padding: 2px 8px; border-radius: 20px;
+    vertical-align: middle; margin-left: 6px;
+  }
+  ul.notes { padding-left: 20px; } ul.notes li { margin: 10px 0; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 4px 22px 14px; margin: 20px 0;
+  }
+  .hero {
+    background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--accent);
+    border-radius: 10px; padding: 18px 22px; margin: 24px 0; text-align: center;
+  }
+  .hero .kzbig { font-size: 1.5rem; font-weight: 700; color: var(--accent-ink); line-height: 1.4; }
+  .hero .saybig { font-style: italic; color: var(--muted); margin-top: 6px; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .88rem;
+  }
+  @media print {
+    :root {
+      --bg: #fff; --panel: #fff; --ink: #000; --muted: #444; --line: #bbb;
+      --accent: #6b5320; --accent-ink: #4a3a16;
+    }
+    body { font-size: 10.5pt; }
+    .wrap { max-width: none; padding: 0; }
+    nav.toc { display: none; }
+    thead th { position: static; }
+    tr, .callout, .panel, .hero { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+    a { color: inherit; text-decoration: none; }
+    td.kz { font-size: 12pt; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>Dwarf Voice Script</h1>
+  <p class="lede">TAOM (Tales From the Age of Men). Culture: Erebor. 200 takes.</p>
+</header>
+
+<p><b>One voice set covers every dwarf in the game</b>: Erebor, the Iron Hills, Ironpass, and the
+Blacklock outlaws. Whatever you record here is what every dwarf on the field sounds like, on both
+sides of every battle.</p>
+
+<p><b>Read first:</b> <a href="vo-recording-guide.html">the recording guide</a> for the format, the
+file naming and the session order. <a href="khuzdul-lexicon.html">the Khuzdul lexicon</a> for how to
+say the dwarvish, which is most of this script.</p>
+
+<div class="callout ok">
+  <p><b>Total: 200 takes.</b> 193 of them are the combat set; 7 are the addendum at the end. On top of
+  that there is a dialogue block and a narration block, listed after the combat set, which are
+  separate jobs and can be a separate session.</p>
+</div>
+
+<nav class="toc">
+  <b>Jump to</b>
+  <ul>
+    <li><a href="#who">Who these men are</a></li>
+    <li><a href="#dwarvish">About the dwarvish</a></li>
+    <li><a href="#b1">1. Wordless and effort</a></li>
+    <li><a href="#b2">2. Orders</a></li>
+    <li><a href="#b3">3. Formations</a></li>
+    <li><a href="#b4">4. Troop types</a></li>
+    <li><a href="#b5">5. Cries and victory</a></li>
+    <li><a href="#b6">Addendum</a></li>
+    <li><a href="#dialogue">Dialogue</a></li>
+    <li><a href="#narration">Narration</a></li>
+    <li><a href="#appendix">Appendix</a></li>
+  </ul>
+</nav>
+
+<h2 id="who">Who these men are</h2>
+
+<p>Dwarves of the Lonely Mountain and the Iron Hills. Miners, smiths and gate wardens who fight in
+close order behind shields, with axes, mattocks and crossbows. They are short, immensely strong, and
+they do not break. The game gives their kingdom the trait "Dwarven Stubbornness" and it is the right
+word for the whole culture: they are slow to build the wall and the wall holds until the mountain
+falls.</p>
+
+<div class="panel">
+  <h3>The register</h3>
+  <p>Deep, chesty, ground-down. Weight rather than volume. These are men who work underground and
+  shout over hammers, so the voice sits low and pushes from the gut, never from the throat. Gravel is
+  welcome. Refinement is not. When in doubt, go lower and heavier than feels natural and let the
+  microphone take it.</p>
+  <h3>Not this</h3>
+  <p>Not comic. Not a stage Scotsman. Not the boisterous drinking-song dwarf. There is humour in
+  these men but it is dry and it is not in the battle lines. <b>If a take sounds cheerful, do it
+  again.</b></p>
+  <h3>Accent</h3>
+  <p>Bring whatever gives you the deepest, most weighted chest voice. If that is Northern English,
+  Scots or Yorkshire, use it. The one thing to avoid is a bright, forward, well-spoken sound. The
+  vowels want to be dark.</p>
+</div>
+
+<h2 id="dwarvish">About the dwarvish</h2>
+
+<p>Most of these lines are in Khuzdul, the Dwarves' own language. You do not need to learn it. Every
+line prints its pronunciation and its meaning, and the meaning is there so you can act the line
+rather than recite it.</p>
+
+<div class="hero">
+  <div class="kzbig">Baruk Khazâd! Khazâd ai-mênu!</div>
+  <div class="saybig">BAR-uk kha-ZAAD! kha-ZAAD eye-MAY-noo!</div>
+  <p>"Axes of the Dwarves! The Dwarves are upon you!" Tolkien's own line, and the reference for the
+  whole script. Everything else should sound like it came from the same throat.</p>
+  <p style="margin-bottom:0"><b>A circumflex means hold the vowel.</b> <b>Khazâd</b> is
+  <i>kha-ZAAD</i>, not <i>kha-zad</i>. The long vowels carry the weight and they are most of what
+  makes this sound dwarvish.</p>
+</div>
+
+<div class="callout rec">
+  <p><b>Every order and formation line also gets one English take.</b> That is the last take in each
+  group, marked <span class="en">Take 04 English</span> in the tables. It is insurance: if the
+  dwarvish turns out to be unreadable in a live battle we swap to English without booking you again.
+  Record it flat and functional, same register, no performance.</p>
+</div>
+
+<hr>
+
+<h2 id="b1">Block 1: wordless and effort <span class="takes">5 takes each</span> <span class="limit">40 takes</span></h2>
+
+<div class="callout warn">
+  <p><b>Record this block first</b>, while your voice is fresh and undamaged. These are body sounds,
+  not performances. Do the thing; do not portray it. If a take sounds like acting, it is wrong.</p>
+</div>
+
+<p>Vary them: different pitch, different length, different amount of air. Three of the five should
+sound like three different men.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>What it is</th><th>Limit</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td class="file">dwarf_grunt</td><td>Swinging an axe</td><td>4 s</td><td>Short exhale of effort on impact. The sound of a heavy tool meeting something. Not a shout. Half of these should be almost inaudible, a working man's <i>hnh</i></td></tr>
+<tr><td class="file">dwarf_pain</td><td>Taking a wound</td><td>4 s</td><td>Involuntary. The air punched out of him. Somewhere between a bark and a grunt. Two of the five should be bad, the kind that catches at the end</td></tr>
+<tr><td class="file">dwarf_death</td><td>Dying</td><td>8 s</td><td>Not a scream. A dwarf goes down hard and angry, and the sound cuts off rather than fading. Give one that is defiant to the last breath and one that is just the body giving out</td></tr>
+<tr><td class="file">dwarf_jump</td><td>Jumping down or across</td><td>4 s</td><td>The grunt of landing. Brief, compressed</td></tr>
+<tr><td class="file">dwarf_stun</td><td>Staggered by a heavy blow</td><td>4 s</td><td>Dazed. A groan with the wind gone, no words in it, no clean edge</td></tr>
+<tr><td class="file">dwarf_fear</td><td>Near something that frightens him</td><td>4 s</td><td>Rare in play, so it lands as a moment. A caught breath and a low sound of dread. Not a scream, not a whimper. This is a man who does not frighten easily being frightened</td></tr>
+<tr><td class="file">dwarf_climb</td><td>Hauling up a siege ladder</td><td>4 s</td><td>Sustained effort, teeth gritted. Heavier than the axe grunt and longer</td></tr>
+<tr><td class="file">dwarf_focus</td><td>Bracing, drawing, steadying</td><td>4 s</td><td>A held breath and a low growl of concentration. The sound before the effort, not during it</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<h2 id="b2">Block 2: orders <span class="takes">3 dwarvish + 1 English</span> <span class="limit">80 takes</span></h2>
+
+<p>A captain shouting across open ground with a battle running. Full projection, chest not throat,
+every final consonant landed hard. These are the lines that must carry over other men shouting.
+All 8 second limit.</p>
+
+<p><b>Vary the three dwarvish takes properly.</b> One should be a clean command, one strained and
+urgent as though things are going badly, one flat and hard as though this is the fourth time he has
+given it.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Line</th><th>Say it</th><th>Means</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td class="file">dwarf_charge</td><td class="kz">Baruk Khazâd!</td><td class="say">BAR-uk kha-ZAAD</td><td>"Axes of the Dwarves!"</td><td>The big one. The line the whole culture is built on. Everything he has.<br><span class="en">Take 04 English: "Charge!"</span></td></tr>
+<tr><td class="file">dwarf_advance</td><td class="kz">Nakhud! Khazâd!</td><td class="say">NAKH-ud, kha-ZAAD</td><td>"Forward, Dwarves!"</td><td>Measured, not a charge. Men walking into range together.<br><span class="en">Take 04 English: "Advance!"</span></td></tr>
+<tr><td class="file">dwarf_fallback</td><td class="kz">Nurkad!</td><td class="say">NUR-kad</td><td>"Give ground!"</td><td>Controlled. This is a fighting withdrawal, not a rout, and his job is to stop it becoming one.<br><span class="en">Take 04 English: "Fall back!"</span></td></tr>
+<tr><td class="file">dwarf_retreat</td><td class="kz">Guzrak! Guzrak!</td><td class="say">GUZ-rak, GUZ-rak</td><td>"Break off!"</td><td>The order that is not controlled. Urgent, repeated, close to the edge.<br><span class="en">Take 04 English: "Retreat!"</span></td></tr>
+<tr><td class="file">dwarf_move</td><td class="kz">Dushum!</td><td class="say">DUSH-um</td><td>"Move!"</td><td>Flat, functional, get over there.<br><span class="en">Take 04 English: "Move up!"</span></td></tr>
+<tr><td class="file">dwarf_stop</td><td class="kz">Zathar!</td><td class="say">ZATH-ar</td><td>"Halt!"</td><td>Hard stop. One syllable of weight on the front.<br><span class="en">Take 04 English: "Halt!"</span></td></tr>
+<tr><td class="file">dwarf_follow</td><td class="kz">Khagam!</td><td class="say">KHAG-am</td><td>"Follow me!"</td><td>Over the shoulder, on the move.<br><span class="en">Take 04 English: "On me!"</span></td></tr>
+<tr><td class="file">dwarf_fireatwill</td><td class="kz">Shakil!</td><td class="say">SHAK-il</td><td>"Loose!"</td><td>Crossbows. Short and sharp, the word a man says at the exact moment.<br><span class="en">Take 04 English: "Loose!"</span></td></tr>
+<tr><td class="file">dwarf_holdfire</td><td class="kz">Nashkil!</td><td class="say">NASH-kil</td><td>"Hold your shot!"</td><td>Sharper than the loose order, because it is stopping something already in motion.<br><span class="en">Take 04 English: "Hold your fire!"</span></td></tr>
+<tr><td class="file">dwarf_pickspears</td><td class="kz">Sulâk!</td><td class="say">soo-LAAK</td><td>"Spears!"</td><td>Bracing for something coming at them.<br><span class="en">Take 04 English: "Spears!"</span></td></tr>
+<tr><td class="file">dwarf_pickdefault</td><td class="kz">Baruk!</td><td class="say">BAR-uk</td><td>"Axes!"</td><td>Spears away, back to what a dwarf actually prefers. There should be some satisfaction in this one.<br><span class="en">Take 04 English: "Axes!"</span></td></tr>
+<tr><td class="file">dwarf_facenemy</td><td class="kz">Turkun bakhar!</td><td class="say">TUR-kun BAKH-ar</td><td>"Face the foe!"</td><td>They are being flanked and he has seen it. Urgent.<br><span class="en">Take 04 English: "Face the enemy!"</span></td></tr>
+<tr><td class="file">dwarf_facedirection</td><td class="kz">Turkun zin!</td><td class="say">TUR-kun ZIN</td><td>"Face that way!"</td><td>Same shape, less alarm. He is pointing.<br><span class="en">Take 04 English: "Face that way!"</span></td></tr>
+<tr><td class="file">dwarf_attackgate</td><td class="kz">Felek bakûn!</td><td class="say">FEL-ek ba-KOON</td><td>"Hew the gate!"</td><td><b>Felek</b> is Tolkien's own word for hewing rock, and a dwarf takes a gate the way he takes a rock face.<br><span class="en">Take 04 English: "The gate! Break it down!"</span></td></tr>
+<tr><td class="file">dwarf_siegeweapon</td><td class="kz">Khazgun!</td><td class="say">KHAZ-gun</td><td>"To the engines!"</td><td>Dwarf-built machinery, and he is proud of it.<br><span class="en">Take 04 English: "Man the engines!"</span></td></tr>
+<tr><td class="file">dwarf_ladders</td><td class="kz">Salgar!</td><td class="say">SAL-gar</td><td>"Ladders!"</td><td>Sending men up a wall under fire.<br><span class="en">Take 04 English: "Ladders! Up!"</span></td></tr>
+<tr><td class="file">dwarf_mount</td><td class="kz">Zurun!</td><td class="say">ZUR-un</td><td>"Mount up!"</td><td>Dwarves ride goats, not horses. Keep it earthy.<br><span class="en">Take 04 English: "Mount up!"</span></td></tr>
+<tr><td class="file">dwarf_dismount</td><td class="kz">Nazurun!</td><td class="say">na-ZUR-un</td><td>"Get down!"</td><td>The same word reversed, so it should sound like the same word reversed.<br><span class="en">Take 04 English: "Dismount!"</span></td></tr>
+<tr><td class="file">dwarf_delegate</td><td class="kz">Uzbad mênu!</td><td class="say">UZ-bad MAY-noo</td><td>"The command is yours."</td><td>Handing over. Not a shout into a battle; a shout to one man. Slightly more formal than the rest.<br><span class="en">Take 04 English: "You have the command!"</span></td></tr>
+<tr><td class="file">dwarf_undelegate</td><td class="kz">Uzbad mênî!</td><td class="say">UZ-bad MAY-nee</td><td>"The command is mine."</td><td>Taking it back, and not asking.<br><span class="en">Take 04 English: "I have the command!"</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<h2 id="b3">Block 3: formations <span class="takes">3 dwarvish + 1 English</span> <span class="limit">28 takes</span></h2>
+
+<p>Same projection as Block 2. These are the orders that shape the line, and in a real battle a dwarf
+hears them constantly, so they need to be distinguishable from each other by sound alone.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Line</th><th>Say it</th><th>Means</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td class="file">dwarf_shieldwall</td><td class="kz">Thagûn-khadal!</td><td class="say">tha-GOON KHAD-al</td><td>"Shield wall!"</td><td>The dwarf formation. Heavy, planted, four solid syllables. This is the one they are best at and he knows it.<br><span class="en">Take 04 English: "Shield wall!"</span></td></tr>
+<tr><td class="file">dwarf_line</td><td class="kz">Sigin-zai!</td><td class="say">SIG-in ZY</td><td>"Long rank!"</td><td><b>Sigin</b> is Tolkien's "long", the word in "Longbeards". Spreading them wide.<br><span class="en">Take 04 English: "Line!"</span></td></tr>
+<tr><td class="file">dwarf_skein</td><td class="kz">Zirak-zai!</td><td class="say">ZIR-ak ZY</td><td>"Spike rank!" (a wedge)</td><td><b>Zirak</b> is Tolkien's "spike". A wedge driving into something. Aggressive.<br><span class="en">Take 04 English: "Wedge!"</span></td></tr>
+<tr><td class="file">dwarf_column</td><td class="kz">Zûn-zai!</td><td class="say">ZOON ZY</td><td>"Narrow rank!"</td><td>Marching order, not fighting order. Calmer than the rest of the block.<br><span class="en">Take 04 English: "Column!"</span></td></tr>
+<tr><td class="file">dwarf_circle</td><td class="kz">Kulum!</td><td class="say">KUL-um</td><td>"Ring!"</td><td>Surrounded and forming a ring. Grim.<br><span class="en">Take 04 English: "Circle!"</span></td></tr>
+<tr><td class="file">dwarf_square</td><td class="kz">Arbaz!</td><td class="say">AR-baz</td><td>"Square!"</td><td>Same situation, more discipline in it.<br><span class="en">Take 04 English: "Square!"</span></td></tr>
+<tr><td class="file">dwarf_loose</td><td class="kz">Zabir!</td><td class="say">ZAB-ir</td><td>"Open order!"</td><td>Spread out, stop clustering, usually because arrows are coming in.<br><span class="en">Take 04 English: "Spread out!"</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<h2 id="b4">Block 4: calling out troop types <span class="takes">3 dwarvish + 1 English</span> <span class="limit">20 takes</span></h2>
+
+<p>Short calls, used to get one part of the army's attention across a field. They need to cut through
+noise more than they need weight.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Line</th><th>Say it</th><th>Means</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td class="file">dwarf_everyone</td><td class="kz">Khazâd!</td><td class="say">kha-ZAAD</td><td>"Dwarves!" (all of you)</td><td>Calling the whole army. The most-heard word in the script, so give the three takes real range.<br><span class="en">Take 04 English: "All of you!"</span></td></tr>
+<tr><td class="file">dwarf_infantry</td><td class="kz">Thurâd!</td><td class="say">thu-RAAD</td><td>"Foot!"</td><td>The bulk of any dwarf army.<br><span class="en">Take 04 English: "Infantry!"</span></td></tr>
+<tr><td class="file">dwarf_archers</td><td class="kz">Kurunâd!</td><td class="say">ku-ru-NAAD</td><td>"Bowmen!"</td><td>Crossbows, mostly, and the Iron Hills are famous for them.<br><span class="en">Take 04 English: "Archers!"</span></td></tr>
+<tr><td class="file">dwarf_cavalry</td><td class="kz">Zagrâd!</td><td class="say">zag-RAAD</td><td>"Riders!"</td><td>Erebor's troop tree has no cavalry, but a player can take the goat-rider path, so this does get used. Riders, never "horse".<br><span class="en">Take 04 English: "Riders!"</span></td></tr>
+<tr><td class="file">dwarf_horsearchers</td><td class="kz">Kurunâd-zagrâd!</td><td class="say">ku-ru-NAAD zag-RAAD</td><td>"Mounted bowmen!"</td><td>Rarest line in the script. Functional is fine.<br><span class="en">Take 04 English: "Mounted archers!"</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<h2 id="b5">Block 5: cries, victory and dismay <span class="takes">5 takes each</span> <span class="limit">25 takes</span></h2>
+
+<div class="callout warn">
+  <p><b>Record this block last.</b> It is the most destructive material in the script and a tired
+  throat suits it. There is no English safety take here; these are meant to be dwarvish.</p>
+</div>
+
+<p>Here the five takes are <b>five different lines</b> rather than five readings of one.</p>
+
+<h3>dwarf_warcry <span class="limit">8 s</span></h3>
+<p>Unprompted, mid-battle, and again when a rally goes up. A man making noise because he has decided to.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Take</th><th>Line</th><th>Say it</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td class="take">01</td><td class="kz">Baruk Khazâd!</td><td class="say">BAR-uk kha-ZAAD</td><td>"Axes of the Dwarves!"</td></tr>
+<tr><td class="take">02</td><td class="kz">Khazâd ai-mênu!</td><td class="say">kha-ZAAD eye-MAY-noo</td><td>"The Dwarves are upon you!"</td></tr>
+<tr><td class="take">03</td><td class="kz">Khazâd!</td><td class="say">kha-ZAAD</td><td>"Dwarves!" A raw single word, more roar than speech</td></tr>
+<tr><td class="take">04</td><td class="kz">Mahal!</td><td class="say">MA-hal</td><td>The name of the god who made them. Closer to a prayer shouted in anger than to a war cry</td></tr>
+<tr><td class="take">05</td><td class="kz">Sigin-tarâg!</td><td class="say">SIG-in ta-RAAG</td><td>"Longbeards!" Their own people's name, thrown at the enemy</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>dwarf_battlecry <span class="limit">8 s</span></h3>
+<p>The bigger set-piece cry, and the multiplayer call for help. Longer and less controlled than the war cry.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Take</th><th>Line</th><th>Say it</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td class="take">01</td><td class="kz">Baruk Khazâd! Khazâd ai-mênu!</td><td class="say">BAR-uk kha-ZAAD! kha-ZAAD eye-MAY-noo</td><td>The full Tolkien line. <b>The single most important take in this script</b></td></tr>
+<tr><td class="take">02</td><td class="kz">Felek! Felek!</td><td class="say">FEL-ek, FEL-ek</td><td>"Hew! Hew!" The rhythm of an axe going in</td></tr>
+<tr><td class="take">03</td><td class="kz">Rakhâs! Baruk Khazâd!</td><td class="say">ra-KHAAS! BAR-uk kha-ZAAD</td><td>"Orcs! Axes of the Dwarves!" Sighting the enemy and answering it</td></tr>
+<tr><td class="take">04</td><td class="kz">Khazâd ai-mênu!</td><td class="say">kha-ZAAD eye-MAY-noo</td><td>As take 02 of the war cry set, but bigger and rougher</td></tr>
+<tr><td class="take">05</td><td class="kz">(roar) Khazâd!</td><td class="say">kha-ZAAD</td><td>A wordless roar breaking into the word. Start with sound, land on the word</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>dwarf_victory <span class="limit">4 s</span></h3>
+<p>The battle is over and his side won. He is exhausted.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Take</th><th>Line</th><th>Say it</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td class="take">01</td><td class="kz">Guzâm Khazâd!</td><td class="say">gu-ZAAM kha-ZAAD</td><td>"Victory of the Dwarves!" Full-throated</td></tr>
+<tr><td class="take">02</td><td class="kz">Khazâd! Khazâd!</td><td class="say">kha-ZAAD, kha-ZAAD</td><td>Chanted, the way a line of men would pick it up</td></tr>
+<tr><td class="take">03</td><td class="kz">Mahal!</td><td class="say">MA-hal</td><td>Thanks, roughly given</td></tr>
+<tr><td class="take">04</td><td class="kz">(laugh) Baruk Khazâd!</td><td class="say">BAR-uk kha-ZAAD</td><td>A hard laugh first. Relief and adrenaline</td></tr>
+<tr><td class="take">05</td><td class="kz">Khazâd&hellip;</td><td class="say">kha-ZAAD</td><td>Quiet. Spent. Almost to himself. <b>One of the five should be this</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>dwarf_killthemall <span class="limit">8 s</span></h3>
+<p>A multiplayer attack call, and the nastiest line in the script. Both words are Tolkien's.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Take</th><th>Line</th><th>Say it</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td class="take">01 to 05</td><td class="kz">Felek rakhâs!</td><td class="say">FEL-ek ra-KHAAS</td><td>"Hew the Orcs!"</td></tr>
+</tbody>
+</table>
+</div>
+<p>Five readings, and let them differ. One cold and instructional. One savage. One almost weary, the
+sound of a man who has done this many times. Dwarves and Orcs have a long history and none of it is
+abstract to him.</p>
+
+<h3>dwarf_no <span class="limit">4 s</span></h3>
+<p>Fires when his formation's morale breaks and men around him start running. Dismay, not fear.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Take</th><th>Line</th><th>Say it</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td class="take">01 to 05</td><td class="kz">Nâ! Nâ!</td><td class="say">NAAH, NAAH</td><td>"No! No!"</td></tr>
+</tbody>
+</table>
+</div>
+<p>Held long on the vowel. This is a man watching something he cannot stop. <b>Two of the five should
+have no word in them at all</b>, just the sound of it.</p>
+
+<hr>
+
+<h2 id="b6">Addendum: two slots that need new lines <span class="limit">7 takes</span></h2>
+
+<p>These are not in the game's dwarf voice set yet. Recording them lets us add them.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Takes</th><th>Line</th><th>Means</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td class="file">dwarf_drown</td><td class="take">3</td><td class="kz">(wordless)</td><td>drowning</td><td>The game does play a drowning sound and dwarves currently have none, so a dwarf who goes into deep water dies silently. Choking, water in it, cut short. Grim and quick</td></tr>
+<tr><td class="file">dwarf_scatter</td><td class="take">3 + 1</td><td class="kz">Rushak!</td><td>"Scatter!" <span class="say">ROO-shak</span></td><td>Currently shares a clip with the open-order call, which is a different order. Break and run wide, right now, usually because something terrible is coming. More alarm than any other formation call.<br><span class="en">Take 04 English: "Scatter!"</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<h2 id="dialogue">Dialogue block</h2>
+
+<p><b>Separate job, separate session, and worth reading the caveat first.</b></p>
+
+<p>This is normal spoken dialogue: a conversation with the player, indoors, no shouting. Composed,
+close-mic, conversational. It is a completely different instrument from everything above, which is
+why it is not mixed into the combat blocks.</p>
+
+<div class="callout warn">
+  <p><b>The caveat: the game cannot play this yet.</b> Spoken dialogue in Bannerlord runs through a
+  separate system from combat barks, and that system currently has no idea TAOM's cultures exist.
+  Making it work is a code change on our side that has not been done. Recording these now means the
+  audio is ready when it lands; it does not mean anyone will hear it this month. Say the word if you
+  would rather wait.</p>
+</div>
+
+<h3>Gimli, son of Glóin</h3>
+
+<p>The only canonical Tolkien character in this block. Proud, blunt, spoiling for something worth
+doing. Younger and hungrier than the Gimli most people picture; this is a dwarf who has not yet made
+his name and is impatient about it. The boasting is real, not ironic, but there is warmth under it.</p>
+
+<p>Four lines, spoken across one conversation. Three takes each.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Line</th></tr></thead>
+<tbody>
+<tr><td class="file">gimli_backstory_a</td><td>"I am Gimli, son of Glóin, a dwarf of the mountain halls. My axe seeks worthy battles."</td></tr>
+<tr><td class="file">gimli_backstory_b</td><td>"The forge grows cold when there are no deeds to inspire the songs. I seek glory and gold, as any proper dwarf should!"</td></tr>
+<tr><td class="file">gimli_backstory_c</td><td>"My father spoke of great adventures in his youth. Now it's my turn to prove that dwarf steel and dwarf courage remain unmatched in all the realm."</td></tr>
+<tr><td class="file">gimli_backstory_d</td><td>"Boasting? Ha! My axe has felled more foes than you've had hot meals! But I seek companions worthy of a dwarf's loyalty. Perhaps you'll do."</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Line <b>d</b> is a reply to being called a braggart. It should land as amused rather than offended,
+and the last sentence is the one that matters: he is sizing the player up.</p>
+
+<h3>The four other dwarf companions</h3>
+
+<p>TAOM has four more dwarf companions, each with the same four-line recruitment conversation:
+Rukumazig-khamîz the Smith, Thanor, Whitegoat the Pathfinder, and Hatérade.</p>
+
+<div class="callout rec">
+  <p><b>Flagged for a decision before recording, not a problem with the writing.</b> These four are
+  tributes to the people who built the mod, and their dialogue is written as such: it talks about
+  programming, interface design and building the world itself. Hatérade introduces himself as
+  "architect of this very realm you walk". Voicing them straight would put four openly out-of-world
+  characters in the same breath as Gimli, and it is worth deciding whether that is the intent before
+  spending session time on it.</p>
+</div>
+
+<hr>
+
+<h2 id="narration">Narration block</h2>
+
+<p><b>The one block that is immediately usable</b>, because it needs no game code at all. Not shouted,
+not conversational. This is a storyteller's register: slow, weighted, spoken to a room. Three takes
+each.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Text</th></tr></thead>
+<tbody>
+<tr><td class="file">narr_erebor_culture</td><td>"The noble Dwarves of Erebor are renowned for their craftsmanship, resilience, and pride. From their halls in the Lonely Mountain they forge mighty weapons, and treasures of unmatched beauty. Clad in mail and armed with axes, they defend their kin with steadfast courage, seeking to reclaim their legacy and preserve their heritage against all who threaten it."</td></tr>
+<tr><td class="file">narr_erebor_kingdom</td><td>"The Lonely Mountain, reclaimed. Its people are master smiths, slow to raise a wall, and slower still to let one fall. They are stubborn past reason, loyal past death, and they have never yet been driven from a hall they meant to hold."</td></tr>
+<tr><td class="file">narr_erebor_trailer</td><td>"Under the mountain, the forges are lit again. The Kingdom Under the Mountain has a King, and the King has an army. <b>Baruk Khazâd.</b>"</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The last three words of the trailer read are dwarvish: <i>BAR-uk kha-ZAAD</i>, "Axes of the
+Dwarves". Drop into it rather than shouting it. It should sound like a threat being made quietly.</p>
+
+<hr>
+
+<h2 id="appendix">Appendix: what each file becomes in the game</h2>
+
+<p>Reference for us, not needed at the microphone. Every recording stem maps to a named sound group in
+the game and to one or more voice slots. All 48 dwarf sound groups and all 56 voice slots are
+accounted for.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Stem</th><th>Sound group</th><th>Voice slots it fills</th></tr></thead>
+<tbody>
+<tr><td class="file">dwarf_grunt</td><td class="file">LOTR/Dwarf/Grunts, LOTR/Dwarf/dwarf_grunt</td><td>Grunt, MpSorry</td></tr>
+<tr><td class="file">dwarf_pain</td><td class="file">LOTR/Dwarf/Pains</td><td>Pain</td></tr>
+<tr><td class="file">dwarf_death</td><td class="file">LOTR/Dwarf/Deaths</td><td>Death</td></tr>
+<tr><td class="file">dwarf_jump</td><td class="file">LOTR/Dwarf/D1_Jumping.wav</td><td>Jump</td></tr>
+<tr><td class="file">dwarf_stun</td><td class="file">LOTR/Dwarf/dwarf_stun</td><td>Stun</td></tr>
+<tr><td class="file">dwarf_fear</td><td class="file">LOTR/Dwarf/D1_Fear.wav</td><td>Fear</td></tr>
+<tr><td class="file">dwarf_climb</td><td class="file">LOTR/Dwarf/climb_sounds</td><td>Climb</td></tr>
+<tr><td class="file">dwarf_focus</td><td class="file">LOTR/Dwarf/focus_sounds</td><td>Focus</td></tr>
+<tr><td class="file">dwarf_charge</td><td class="file">LOTR/Dwarf/Dwarven_Charge</td><td>Charge</td></tr>
+<tr><td class="file">dwarf_advance</td><td class="file">LOTR/Dwarf/dwarf_advance</td><td>Advance</td></tr>
+<tr><td class="file">dwarf_fallback</td><td class="file">LOTR/Dwarf/dwarf_fall_back</td><td>FallBack</td></tr>
+<tr><td class="file">dwarf_retreat</td><td class="file">LOTR/Dwarf/dwarven_retreat</td><td>Retreat</td></tr>
+<tr><td class="file">dwarf_move</td><td class="file">LOTR/Dwarf/dwarfven_move</td><td>Move, HorseRally</td></tr>
+<tr><td class="file">dwarf_stop</td><td class="file">LOTR/Dwarf/dwarf_stop</td><td>Stop, HorseStop</td></tr>
+<tr><td class="file">dwarf_follow</td><td class="file">LOTR/Dwarf/dwarf_follow</td><td>Follow, MpRegroup</td></tr>
+<tr><td class="file">dwarf_fireatwill</td><td class="file">LOTR/Dwarf/dwarf_fire_at_will</td><td>FireAtWill</td></tr>
+<tr><td class="file">dwarf_holdfire</td><td class="file">LOTR/Dwarf/dwarf_hold_fire</td><td>HoldFire</td></tr>
+<tr><td class="file">dwarf_pickspears</td><td class="file">LOTR/Dwarf/dwarf_pickspears</td><td>PickSpears</td></tr>
+<tr><td class="file">dwarf_pickdefault</td><td class="file">LOTR/Dwarf/dwarf_pickdefault</td><td>PickDefault</td></tr>
+<tr><td class="file">dwarf_facenemy</td><td class="file">LOTR/Dwarf/dwarf_facenemy</td><td>FaceEnemy</td></tr>
+<tr><td class="file">dwarf_facedirection</td><td class="file">LOTR/Dwarf/dwarf_facedirection</td><td>FaceDirection, MpSpot</td></tr>
+<tr><td class="file">dwarf_attackgate</td><td class="file">LOTR/Dwarf/dwarf_attackgate</td><td>AttackGate</td></tr>
+<tr><td class="file">dwarf_siegeweapon</td><td class="file">LOTR/Dwarf/dwarf_usesiegeweapons</td><td>UseSiegeWeapon</td></tr>
+<tr><td class="file">dwarf_ladders</td><td class="file">LOTR/Dwarf/dwarf_useladders</td><td>UseLadders</td></tr>
+<tr><td class="file">dwarf_mount</td><td class="file">LOTR/Dwarf/dwarf_mount</td><td>Mount</td></tr>
+<tr><td class="file">dwarf_dismount</td><td class="file">LOTR/Dwarf/dwarf_dismount</td><td>Dismount</td></tr>
+<tr><td class="file">dwarf_delegate</td><td class="file">LOTR/Dwarf/dwarf_command_delegate</td><td>CommandDelegate</td></tr>
+<tr><td class="file">dwarf_undelegate</td><td class="file">LOTR/Dwarf/dwarf_command_undelegate</td><td>CommandUndelegate</td></tr>
+<tr><td class="file">dwarf_line</td><td class="file">LOTR/Dwarf/dwarf_line</td><td>FormLine</td></tr>
+<tr><td class="file">dwarf_shieldwall</td><td class="file">LOTR/Dwarf/dwarf_shieldwall</td><td>FormShieldWall, MpDefend</td></tr>
+<tr><td class="file">dwarf_loose</td><td class="file">LOTR/Dwarf/dwarf_loose</td><td>FormLoose, FormScatter</td></tr>
+<tr><td class="file">dwarf_circle</td><td class="file">LOTR/Dwarf/dwarf_circle</td><td>FormCircle</td></tr>
+<tr><td class="file">dwarf_square</td><td class="file">LOTR/Dwarf/dwarf_square</td><td>FormSquare</td></tr>
+<tr><td class="file">dwarf_skein</td><td class="file">LOTR/Dwarf/dwarf_skein</td><td>FormSkein</td></tr>
+<tr><td class="file">dwarf_column</td><td class="file">LOTR/Dwarf/dwarf_column</td><td>FormColumn</td></tr>
+<tr><td class="file">dwarf_infantry</td><td class="file">LOTR/Dwarf/Infantry_1</td><td>Infantry</td></tr>
+<tr><td class="file">dwarf_cavalry</td><td class="file">LOTR/Dwarf/dwarven_cavalry</td><td>Cavalry</td></tr>
+<tr><td class="file">dwarf_archers</td><td class="file">LOTR/Dwarf/dwarven_archers</td><td>Archers</td></tr>
+<tr><td class="file">dwarf_horsearchers</td><td class="file">LOTR/Dwarf/dwarven_horse_archers</td><td>HorseArchers</td></tr>
+<tr><td class="file">dwarf_everyone</td><td class="file">LOTR/Dwarf/dwarves_everyone</td><td>Everyone, Mixed</td></tr>
+<tr><td class="file">dwarf_warcry</td><td class="file">LOTR/Dwarf/Warcries</td><td>Yell</td></tr>
+<tr><td class="file">dwarf_battlecry</td><td class="file">LOTR/Dwarf/Battlecries, LOTR/Dwarf/D1_Battlecry1.wav</td><td>MpHelp, MpAffirmative</td></tr>
+<tr><td class="file">dwarf_victory</td><td class="file">LOTR/Dwarf/Victories, LOTR/Dwarf/victory_1</td><td>Victory, MpThanks</td></tr>
+<tr><td class="file">dwarf_killthemall</td><td class="file">LOTR/Dwarf/Kill_Them_All</td><td>MpAttack</td></tr>
+<tr><td class="file">dwarf_no</td><td class="file">LOTR/Dwarf/dwarf_no</td><td>Debacle, MpNegative</td></tr>
+<tr><td class="file">dwarf_drown</td><td class="file">new group needed</td><td>Drown</td></tr>
+<tr><td class="file">dwarf_scatter</td><td class="file">new group needed</td><td>FormScatter, splitting it off dwarf_loose</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The six voice slots <code>dwarf_01</code> does not fill are <code>BoardAtWill</code> and
+<code>AvoidBoarding</code> (naval, and TAOM's naval feature is switched off), <code>Idle</code>,
+<code>Neigh</code> and <code>Collide</code> (mount sounds, which belong to the goat rather than the
+rider), and <code>Drown</code>, which the addendum above covers.</p>
+
+<footer>
+  TAOM (Tales From the Age of Men). Engine side:
+  <code>docs/features/kingdom-voices.md</code>. Language reference:
+  <a href="khuzdul-lexicon.html">khuzdul-lexicon.html</a>.
+</footer>
+
+</div>
+</body>
+</html>

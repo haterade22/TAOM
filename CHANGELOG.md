@@ -2,7 +2,80 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-26
+
+### docs(audio): the voice pack is HTML now, because the reader is not a developer
+
+The four `docs/audio/` files shipped yesterday as markdown, which is the wrong format for the one
+person who has to use them. A voice actor reads a script at a microphone, on a tablet or on paper,
+and markdown is neither. Converted all four to self-contained HTML on the pattern
+`docs/SAVE-REPAIR-GUIDE.html` already set: hand-authored, one file each, no external assets, the
+same warm palette, light and dark both handled.
+
+The conversion bought a few things a straight reformat would not have. The Khuzdul lines render
+large and coloured so they read at a glance from a stand, with the pronunciation directly under
+them. Table headers stick to the top of the viewport, which matters on the twenty-row order block.
+The English safety take is a tinted chip inside its row rather than a sentence at the end of a
+paragraph. There is a print stylesheet that drops to black on white and refuses to break a line
+across pages. The script gained a jump-to bar for its ten sections.
+
+No markdown library is installed and installing one is not this session's call, so these are written
+by hand rather than generated. Parity was checked mechanically rather than by eye: all 48 dwarf
+sound groups, all 56 voice slots and all 47 recording stems appear in the HTML, and the four files
+pass a tag-balance parse. The markdown originals are gone and the inbound links in
+`kingdom-voices.md` and `provenance-register.md` now point at the `.html`.
+
 ## 2026-08-25
+
+### docs(audio): a voice actor can now be handed a script instead of a system diagram
+
+TAOM has a voice actor and had nothing to give him. The combat voice system has shipped for months:
+a 56-slot `dwarf_01` definition, 48 registered dwarf sound groups, 62 audio files on disk.
+`kingdom-voices.md` documents the entire binding chain and stops one step short of the only thing an
+actor needs, which is what a dwarf actually shouts when the order to form a shield wall goes out.
+Nobody had ever written the lines.
+
+New `docs/audio/`, four files. A culture-agnostic recording brief covering what triggers each slot,
+the length caps the engine enforces, the delivery format and the file naming. The dwarf script
+itself: 200 takes across six blocks, ordered so the material that wrecks a throat comes last. A
+Khuzdul lexicon. And a running order for the remaining cultures, written around the fact that voice
+binds to race rather than culture, which is why one dwarf script covers Erebor, the Iron Hills and
+Ironpass, and why no script at all can separate Gondor from Rohan without new code.
+
+**The lines are heavy Khuzdul, which needed a lexicon before it needed a script.** Tolkien published
+about a hundred words of dwarvish, nowhere near forty lines' worth, so most of what a TAOM dwarf says
+had to be built. The lexicon splits hard: Part 1 is Tolkien's with a source per entry, Part 2 is ours
+and says so, and there is no third category. The coinages follow his patterns rather than inventing
+freely, so plurals lengthen an internal vowel and compounds put the describing word first. Film
+neo-Khuzdul is excluded by a standing rule, because it is David Salo's work and not Tolkien's
+published vocabulary. A provenance row records all of this, scoped to the vocabulary and explicitly
+not to the larger question of the mod's relationship to Tolkien, which nobody has ever written down
+and somebody should.
+
+Recording heavy Khuzdul costs battlefield legibility, so every order and formation line carries a
+fourth take in English. If it plays badly we swap the registered variation instead of re-booking him.
+
+**Three things in `kingdom-voices.md` turned out to be wrong, and one of them was wrong in an
+instructive way.** The doc reported a dilution defect: dwarves supposedly drawing their own voice
+about one spawn in seven, with vanilla filling the rest. Measured against the live `skins.xml`, both
+adult dwarf skins are `dwarf_01` alone and there is no dilution anywhere on any troop line. The
+original count had summed every `voice_type` inside the `race` element without noticing the element
+holds ten skins by gender and maturity; the vanilla entries it counted sit on the teenager, tween,
+child and toddler skins, which never field a soldier. The real hole is narrower and different:
+`uruk_hai` and `berserker` have no custom voice on their adult female skin.
+
+Re-measuring surfaced the trap that caused it. `orc`, `nazghul` and `saruman` write the attribute as
+`mesh_maturity_type ="adult"`, with a space before the equals sign, so a grep for the obvious
+spelling skips three of fourteen races and returns a confident partial answer. Same class of defect
+as the multiline-attribute gotcha already recorded in that doc. The validator sketch now specifies a
+tolerant match.
+
+The other two: the engine declares 62 voice types, not 68, confirmed against both Native's
+`voice_definitions.xml` and `SkinVoiceManager`; and the claim that no TAOM C# touches the voice API
+is stale, since `DreadPulseRunner` fires `VoiceType.Fear` on a dread pulse. `docs/INDEX.md` and
+`docs/reference/feature-map.md` still repeat the 68 and were left alone.
+
+No XML changed. Registering new audio waits on there being audio.
 
 ### docs(legal): say which parts are ours, and stop claiming the parts that are not
 

@@ -51,5 +51,6 @@
     "ilspy",
     "taom-moduledata",
     "imagine"
-  ]
+  ],
+  "outputStyle": "default"
 }
