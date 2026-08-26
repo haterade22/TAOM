@@ -4,6 +4,31 @@
 
 ## 2026-08-26
 
+### fix(process): put the Harmony lessons read where the patch gets written
+
+Asked whether the uncapturable-heroes RCA existed to ensure the lessons record actually gets used,
+the answer turned out to be no. The RCA was written and eight lessons were appended, but
+`docs/reviews/lessons/harmony-il.md` was never read before the patches were written. It was opened
+once, at the end, to append to.
+
+Two entries already in that file describe the two most serious findings of that review. The
+defer-on-error catch that would have handed an already-escaped hero back to vanilla capture is
+lesson "Fall through to vanilla on error is only safe when vanilla is a safe default at THAT call
+site", which landed on 2026-08-20 from #486, six days earlier, and whose worked example is the same
+actor in the same state. The missing guard on the second seam is covered by "When a Prefix returns
+false, decompile the FULL call chain and replicate every safety gate".
+
+CLAUDE.md already says to read the category file before touching a subsystem, so restating it would
+change nothing. The problem is that the instruction is general and always loaded, while the moment
+it matters is specific: opening a file under `Main/**/Hooks/**`. The path-scoped rule that already
+auto-loads on that glob opened with "read its registry entry" and never mentioned the lessons at
+all. It now leads with the lessons read and cites the incident, so it does not read as boilerplate.
+
+The same wiring is owed for the other category files whose subsystems have a path-scoped rule
+(gamemodels, adapters, xslt, native C++ ports). Recorded as a lesson rather than done blind here.
+
+## 2026-08-26
+
 ### feat(heroes): Sauron and the Nine are never taken prisoner (#513)
 
 Beating Sauron in a battle used to put him in a dungeon with a ransom price. Nothing in the engine

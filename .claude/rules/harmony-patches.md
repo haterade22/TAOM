@@ -7,7 +7,24 @@ paths:
 
 # Harmony Patch Rules
 
-## Before editing ANY patch: read its registry entry
+## Before writing ANY patch: read the lessons file (MANDATORY, and it is the step that gets skipped)
+
+Read **[`docs/reviews/lessons/harmony-il.md`](../../docs/reviews/lessons/harmony-il.md)** before
+writing or modifying a Harmony patch. It is the accumulated trap list for this exact subsystem, and
+it is cheaper than re-deriving a trap from a crash or from a review round.
+
+**This is not boilerplate.** On 2026-08-26 the UncapturableHeroes feature shipped two defects into
+review that were already written down in that file, one of them six days old: a defer-on-error catch
+that handed a hero back to vanilla capture after the patch had already made him a fugitive (the
+lesson's own worked example is the same actor in the same state), and a `false`-returning prefix that
+dropped a safety gate its sibling seam applied. CLAUDE.md's general "read the category file" line did
+not fire because it is general; this one loads when you open the file you are about to break. RCA:
+`docs/reviews/rca-uncapturable-heroes-2026-08-26.md`.
+
+Append to the lessons file after a review, but the append is the cheap half. The read is the half
+that prevents the bug.
+
+## Before editing an EXISTING patch: also read its registry entry
 
 Every patch category's rationale, history, crash-guard semantics, and RCA links live in
 [`docs/reference/harmony-patch-registry.md`](../../docs/reference/harmony-patch-registry.md) —

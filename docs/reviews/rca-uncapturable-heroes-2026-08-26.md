@@ -110,3 +110,44 @@ about vanilla behaviour written into shipped documentation, a published GitHub i
 without ever being checked, in a session that verified far harder claims properly.
 `.claude/rules/evidence-over-claims.md` C names this exact failure. The tell was that it sounded
 like a fact rather than a finding, so it never got queued for verification.
+
+## The finding that matters most: the lessons record already had two of these
+
+Asked afterwards whether the RCA existed "to ensure our lessons learned are used", the honest
+answer turned out to be no. The RCA was written. The lessons were appended. But
+`docs/reviews/lessons/harmony-il.md` was never READ before the patches were written, even though
+CLAUDE.md says to read the category file before touching a subsystem. It was opened once, at the
+end, to append to it.
+
+Two entries that were already in that file describe the two most serious findings of this review.
+
+**Codex P2, finding 6, was lesson "Fall through to vanilla on error is only safe when vanilla is a
+safe default at THAT call site"** (landed `b3259e1d`, 2026-08-20, six days before this work, from
+#486). Its worked example is a guard prefix whose catch returned `true` on a hero that vanilla had
+already de-clanned, de-partied **and made a fugitive**. That is this bug, with the same actor in the
+same state. Its Prevent line is: *"before writing a defer-on-error catch, state in one sentence what
+vanilla actually DOES at this call site."* That sentence was never written here.
+
+**Codex P1, finding 5, is covered by lesson "When a Prefix returns false, decompile the FULL call
+chain and replicate every safety gate"**. The fit is less exact, since the gate we dropped lives in
+the caller rather than in a helper the target delegates to, but the discipline it prescribes, trace
+the whole chain and replicate every gate before returning `false`, is what would have surfaced the
+missing `DeathMark` guard.
+
+So the earlier "why missed" analysis for those two findings is incomplete and is corrected here. It
+is not that the questions were hard, or that the review agents lacked a rule. **The rules existed,
+in the file the project tells you to read, and the read never happened.** A review pipeline that
+only appends is a write-only log; the value is in the read, and nothing enforced it.
+
+### Preventive action
+
+CLAUDE.md already carries the instruction and it did not fire, so restating it would change nothing.
+The gap is that the instruction lives in a general always-loaded document while the moment it
+matters is specific: opening a file under `Main/**/Hooks/**`. TAOM already has a mechanism for
+exactly that, the path-scoped rule `.claude/rules/harmony-patches.md`, which auto-loads on that
+glob and previously opened with "Before editing ANY patch: read its registry entry" while never
+mentioning the lessons file at all.
+
+That rule now leads with the lessons read. The registry tells you what a patch does; the lessons
+tell you how patches in this codebase have gone wrong before, and the second one is what this
+session needed and skipped.
