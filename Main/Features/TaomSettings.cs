@@ -1250,6 +1250,28 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // Reload the save (or start a new campaign) after the rebuild completes to pick up the
     // new distances.
 
+    // --- Player Switcher (#514) ---
+
+    [SettingPropertyGroup("Player Switcher")]
+    [SettingPropertyBool("Enable Player Switcher", Order = 0,
+        HintText = "Adds a panel to the character creation face generator listing the existing lords of your chosen culture. Pick one and you play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The character you build is set aside. Off means the panel never loads and character creation is untouched.")]
+    public bool EnablePlayerSwitcher { get; set; } = true;
+
+    [SettingPropertyGroup("Player Switcher")]
+    [SettingPropertyBool("Include Wanderers", Order = 1,
+        HintText = "Also lists the wanderers of your culture. A wanderer has no clan, so instead of taking over a house they are adopted into the clan you named, with the banner you designed, and you lead it. Only 20 of 39 cultures have any wanderers.")]
+    public bool PlayerSwitcherIncludeWanderers { get; set; } = true;
+
+    [SettingPropertyGroup("Player Switcher")]
+    [SettingPropertyBool("Allow Sauron and the Nazgul", Order = 2,
+        HintText = "Offers the lore-locked dark lords as playable. Off by default for a reason: TAOM's capture immunity defers to vanilla for the player character, so a player-controlled Sauron or Witch-king CAN be captured and ransomed like any other lord. Turning this on knowingly trades that lore promise for the option.")]
+    public bool PlayerSwitcherAllowLoreLockedHeroes { get; set; } = false;
+
+    [SettingPropertyGroup("Player Switcher")]
+    [SettingPropertyBool("Carry Over Starting Gold", Order = 3,
+        HintText = "Adds the gold your created character would have started with on top of the lord's own treasury. Off by default: an established lord is already funded, so stacking a startup package on them is a balance change rather than a fix.")]
+    public bool PlayerSwitcherTransferStartingGold { get; set; } = false;
+
     [SettingPropertyGroup("Map Tools/Distance Cache Rebuild", GroupOrder = 100)]
     [SettingPropertyButton("Rebuild Settlement Distance Cache",
         RequireRestart = false,

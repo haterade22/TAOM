@@ -2,6 +2,49 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-27
+
+### feat(player-switcher): eligibility policy and handover contract (#514, phase 1)
+
+Brings back the Player Switcher from LOTRAOM, the 1.2.12 predecessor mod: at the character
+creation face generator, pick an existing lord of your culture and play the campaign as them.
+This commit lands the offline half, which is everything that can be proven without the game
+running.
+
+The old 15-file feature is a specification, not a port. Three of its seams no longer bind on
+1.4.8: `BodyGeneratorView`'s constructor gained a 13th parameter so the old 12-type Harmony
+attribute matches nothing, `CharacterCreationContentBase` and the per-mode content subclasses are
+gone in favour of a priority-ordered handler registry, and `ChangeKingdomAction.ApplyByJoinToKingdom`
+took a `CampaignTime` in the third slot so the old positional call will not compile. Roughly half
+the rest duplicates capability TAOM already ships better.
+
+Phase 0 verified the handover against the 1.4.8 sources before any code was written, and two
+findings shaped the design. `ChangePlayerCharacterAction.Apply` hands the old party to the new main
+hero through `LordPartyComponent.ChangePartyOwner` when it still holds troops, and that method is
+`internal` and does not move `MobileParty.ActualClan`. Because the leftover party stays registered
+to the throwaway clan, `KillCharacterAction` reaches `DestroyClanAction.ApplyByClanLeaderDeath` and
+sweeps it, but only if the player clan pointer moves off that clan first: line 133 guards on
+`victim.Clan != Clan.PlayerClan`. So the step ordering is load-bearing rather than stylistic, and
+the old mod's `WarPartyComponent` sweep (which carried a live operator-precedence bug that would
+have merged every other lord's party in a royal clan into the player) is not needed at all.
+
+Landed here: the domain contract (`HeroPickRow`, `HeroPickList`, `SwitchPlan`, `SwitchTicket`,
+`PlayerSwitchPolicy`), `HeroPickerService` with every eligibility rule, `SwitchPlanner`, the session
+store that replaces the old feature's five static mutable fields, the policy provider with a
+session latch, the `IHeroPickerAdapter` seam, and a four-property MCM group. 40 new tests, full
+suite 7,633 green.
+
+Sauron and the Nazgul are opt-in and default off: `Patch76` defers to vanilla for `Hero.MainHero`,
+so a player-controlled dark lord can be captured and ransomed, which would silently contradict
+`docs/features/uncapturable-heroes.md`.
+
+Adding four MCM settings tripped `SettingsFingerprintTests`, which pins the co-op settings split by
+count. All four are simulation-relevant under the include-by-default rule (they decide which hero
+the player becomes), so the pins and both co-op docs move 223 to 227 total and 164 to 168 relevant.
+
+Save-compat: none. No `SaveableTypeDefiner`, no new save keys; the feature runs only during the
+character creation of a new campaign.
+
 ## 2026-08-26
 
 ### fix(process): put the Harmony lessons read where the patch gets written

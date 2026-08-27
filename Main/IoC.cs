@@ -91,6 +91,7 @@ public static class IoC
         Features.Arena.ArenaIoC.RegisterArenaFeature(container);
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
+        Features.PlayerSwitcher.PlayerSwitcherIoC.RegisterPlayerSwitcherFeature(container);
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
         DiplomacyIoC.RegisterDiplomacyFeature(container);
         Features.WarOfTheRingMomentum.WarOfTheRingMomentumIoC.RegisterWarOfTheRingMomentumFeature(container);
