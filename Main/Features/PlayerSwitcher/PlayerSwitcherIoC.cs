@@ -8,8 +8,10 @@ public static class PlayerSwitcherIoC
     public static void RegisterPlayerSwitcherFeature(IContainer container)
     {
         container.Register<IHeroPickerAdapter, HeroPickerAdapter>(Reuse.Singleton);
+        container.Register<IPlayerIdentityAdapter, PlayerIdentityAdapter>(Reuse.Singleton);
         container.Register<IHeroPickerService, HeroPickerService>(Reuse.Singleton);
         container.Register<ISwitchPlanner, SwitchPlanner>(Reuse.Singleton);
+        container.Register<IHeroSwitchService, HeroSwitchService>(Reuse.Singleton);
         container.Register<IPlayerSwitchPolicyProvider, PlayerSwitchPolicyProvider>(Reuse.Singleton);
 
         // One store, two faces. The reader goes to consumers that must observe the selection but

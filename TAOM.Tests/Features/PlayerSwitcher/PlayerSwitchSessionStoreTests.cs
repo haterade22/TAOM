@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.PlayerSwitcher;
+using TAOM.Features.PlayerSwitcher.Domain;
 
 namespace TAOM.Tests.Features.PlayerSwitcher;
 
@@ -16,6 +17,9 @@ public class PlayerSwitchSessionStoreTests
     [TestInitialize]
     public void Setup() => _sut = new PlayerSwitchSessionStore();
 
+    private static HeroPickRow Row(string id, int race = 3, bool hasClan = true)
+        => new HeroPickRow(id, "Dain", HeroPickerGroup.ClanLeaders, race, false, true, hasClan);
+
     [TestMethod]
     public void AFreshStore_HasNoSelection()
     {
@@ -25,20 +29,21 @@ public class PlayerSwitchSessionStoreTests
     }
 
     [TestMethod]
-    public void SelectingAHero_RecordsTheIdAndRace()
+    public void SelectingAHero_RecordsTheWholeRow()
     {
-        _sut.Select("dain", race: 3);
+        _sut.Select(Row("dain", race: 3));
 
         Assert.IsTrue(_sut.HasSelection);
         Assert.AreEqual("dain", _sut.SelectedHeroId);
         Assert.AreEqual(3, _sut.SelectedRace);
+        Assert.IsTrue(_sut.SelectedRow.HasClan, "the planner reads HasClan off the stored row");
     }
 
     [TestMethod]
     public void SelectingAgain_ReplacesThePreviousSelection()
     {
-        _sut.Select("dain", 3);
-        _sut.Select("thorin", 3);
+        _sut.Select(Row("dain"));
+        _sut.Select(Row("thorin"));
 
         Assert.AreEqual("thorin", _sut.SelectedHeroId);
     }
@@ -46,7 +51,7 @@ public class PlayerSwitchSessionStoreTests
     [TestMethod]
     public void Clearing_RemovesTheSelection()
     {
-        _sut.Select("dain", 3);
+        _sut.Select(Row("dain"));
 
         _sut.Clear();
 
@@ -57,7 +62,7 @@ public class PlayerSwitchSessionStoreTests
     [TestMethod]
     public void Clearing_AlsoEndsThePreview()
     {
-        _sut.Select("dain", 3);
+        _sut.Select(Row("dain"));
         _sut.SetPreviewActive(true);
 
         _sut.Clear();
@@ -69,7 +74,7 @@ public class PlayerSwitchSessionStoreTests
     [TestMethod]
     public void ThePreviewFlagTogglesIndependentlyOfTheSelection()
     {
-        _sut.Select("dain", 3);
+        _sut.Select(Row("dain"));
 
         _sut.SetPreviewActive(true);
         Assert.IsTrue(_sut.IsPreviewActive);
@@ -80,13 +85,12 @@ public class PlayerSwitchSessionStoreTests
     }
 
     [TestMethod]
-    public void SelectingANullOrEmptyId_CountsAsNoSelection()
+    public void SelectingAnEmptyRow_CountsAsNoSelection()
     {
-        _sut.Select(null!, 0);
-        Assert.IsFalse(_sut.HasSelection);
+        _sut.Select(default);
 
-        _sut.Select(string.Empty, 0);
         Assert.IsFalse(_sut.HasSelection);
+        Assert.AreEqual(string.Empty, _sut.SelectedHeroId);
     }
 
     [TestMethod]
@@ -95,7 +99,7 @@ public class PlayerSwitchSessionStoreTests
         IPlayerSwitchSessionWriter writer = _sut;
         IPlayerSwitchSession reader = _sut;
 
-        writer.Select("dain", 3);
+        writer.Select(Row("dain"));
 
         Assert.AreEqual("dain", reader.SelectedHeroId);
     }

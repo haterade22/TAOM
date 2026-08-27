@@ -81,6 +81,12 @@ public class ReflectionSiteBindingTests
     // --- SettlementGuards patch-body reflection (patch TARGETS are auto-covered by HarmonyPatchBindingTests) ---
     [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "PrepareGuardAgentDataFromGarrison", "Method", "GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:30")]
     [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "_garrisonTroops", "Field", "GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs:33")]
+    // --- Player Switcher (#514). The single load-bearing reflection site of the feature.
+    // Campaign.PlayerDefaultFaction is internal, Clan.PlayerClan is a computed getter over it, and
+    // ChangePlayerCharacterAction never updates it. Without this write the player clan pointer stays
+    // on the abandoned character-creation clan, CharacterDeveloperVM throws enumerating its Heroes,
+    // and KillCharacterAction's victim.Clan != Clan.PlayerClan guard stops that clan being destroyed.
+    [DataRow("TaleWorlds.CampaignSystem.Campaign", "Campaign", "PlayerDefaultFaction", "Property", "PlayerIdentityAdapter.cs:34")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

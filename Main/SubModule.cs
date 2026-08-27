@@ -754,6 +754,19 @@ public class SubModule : MBSubModuleBase
         var ccLogger = IoC.Resolve<IModLogger>();
         campaignStarter.AddBehavior(new CharacterCreationRegistrationBehavior(ccContentService, ccLogger));
 
+        // #514 Player Switcher. Registers its own character-creation handler at priority 1100,
+        // deliberately after the 1050 above: by then every TAOM grant has landed on the throwaway
+        // creation hero, so taking over a lord needs no repair. Registration is wrapped inside the
+        // behaviour, because a duplicate priority throws out of the engine's handler dispatch.
+        campaignStarter.AddBehavior(new TAOM.Features.PlayerSwitcher.PlayerSwitchRegistrationBehavior(
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IHeroSwitchService>(),
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.ISwitchPlanner>(),
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSession>(),
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSessionWriter>(),
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>(),
+            IoC.Resolve<ICareerMenuService>(),
+            ccLogger));
+
         // Re-applies the character-creation package when a multiplayer join swaps the controlled
         // hero out from under it. Inert in single-player. Field report 2026-08-03 §1 + §7.
         campaignStarter.AddBehavior(new TAOM.Features.PlayerPossession.PlayerPossessionBehavior(

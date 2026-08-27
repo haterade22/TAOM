@@ -1,3 +1,5 @@
+using TAOM.Features.PlayerSwitcher.Domain;
+
 namespace TAOM.Features.PlayerSwitcher;
 
 /// <summary>
@@ -6,6 +8,13 @@ namespace TAOM.Features.PlayerSwitcher;
 /// </summary>
 public interface IPlayerSwitchSession
 {
+    /// <summary>
+    /// The chosen lord, or an empty row when nothing is selected. The whole row is held rather
+    /// than just an id so the handover can be planned at finalize time without re-querying a
+    /// campaign whose culture selection may since have moved on.
+    /// </summary>
+    HeroPickRow SelectedRow { get; }
+
     /// <summary>Empty when nothing is selected.</summary>
     string SelectedHeroId { get; }
 

@@ -1,3 +1,5 @@
+using TAOM.Features.PlayerSwitcher.Domain;
+
 namespace TAOM.Features.PlayerSwitcher;
 
 /// <summary>
@@ -6,7 +8,7 @@ namespace TAOM.Features.PlayerSwitcher;
 /// </summary>
 public interface IPlayerSwitchSessionWriter
 {
-    void Select(string heroId, int race);
+    void Select(HeroPickRow row);
 
     /// <summary>Clears the selection. Called on every BodyGeneratorView construction.</summary>
     void Clear();

@@ -4,6 +4,42 @@
 
 ## 2026-08-27
 
+### feat(player-switcher): the handover, offline (#514, phase 2)
+
+The ordered hand-over of the player character, plus the seam it runs from. No UI yet.
+
+`PlayerSwitchContentHandler` registers at character-creation handler priority 1100, which is the
+whole design in one number: vanilla's core handler is 800 and TAOM's own is 1050, so by 1100 every
+destructive effect in `ApplyFinalEffects` and every TAOM grant has already landed on the throwaway
+creation hero and the throwaway clan, both deleted moments later. The lord being taken over is
+never touched, which is why this needs no edit anywhere inside the 41-file CharacterCreation module.
+
+`HeroSwitchService` runs the sequence and `HeroSwitchServiceTests` pins it with `Received.InOrder`,
+because two of the steps are ordered for reasons that are invisible in the code. Reassigning the
+player clan must precede removing the created hero, or `KillCharacterAction`'s
+`victim.Clan != Clan.PlayerClan` guard skips `DestroyClanAction` and the campaign keeps an orphan
+clan forever. Removing the hero must follow the swap, or `KillCharacterAction` takes its main-hero
+branches against the live player.
+
+Phase 0 turned up a defect the plan had not anticipated, and it only affects the adoption path.
+`ChangePlayerCharacterAction` hands the character-creation party to the new main hero when it still
+holds troops, without moving its `ActualClan`. On the takeover path that is harmless: the party is
+still registered to the throwaway clan, so `DestroyClanAction` sweeps it. On the adoption path the
+throwaway clan IS the player's clan and is never destroyed, so the party would linger as a second
+player-owned party. `SwitchTicket` now captures the party id and the adoption path absorbs it
+explicitly, one id at a time, never by predicate.
+
+Two plan assumptions did not survive contact with the engine. `ICareerDataService` has no
+`ClearCareer`, so the career is re-keyed with `OnCareerSelected` alone. `IsKnownToPlayer` lives on
+`Hero`, not `Clan`.
+
+`PlayerSwitcherBindingTests` pins the engine surface that is not compiler-checked and all six run
+against the installed DLLs: `BodyGeneratorView` declares exactly one constructor of 13 parameters
+(the arity binding Patch77 will use, after the predecessor's 12-type attribute stopped matching),
+`Campaign.PlayerDefaultFaction` still has a setter, `KillCharacterAction.ApplyByRemove` still takes
+`isForced`, and `ClanPartyMemberItemVM` is still unsealed. Suite 7,658 green.
+
+
 ### feat(player-switcher): eligibility policy and handover contract (#514, phase 1)
 
 Brings back the Player Switcher from LOTRAOM, the 1.2.12 predecessor mod: at the character

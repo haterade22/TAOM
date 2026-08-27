@@ -1,3 +1,5 @@
+using TAOM.Features.PlayerSwitcher.Domain;
+
 namespace TAOM.Features.PlayerSwitcher;
 
 /// <summary>
@@ -8,26 +10,23 @@ namespace TAOM.Features.PlayerSwitcher;
 /// </summary>
 public class PlayerSwitchSessionStore : IPlayerSwitchSession, IPlayerSwitchSessionWriter
 {
-    public string SelectedHeroId { get; private set; } = string.Empty;
+    public HeroPickRow SelectedRow { get; private set; }
 
-    public int SelectedRace { get; private set; }
+    public string SelectedHeroId => SelectedRow.HeroId ?? string.Empty;
+
+    public int SelectedRace => SelectedRow.Race;
 
     public bool IsPreviewActive { get; private set; }
 
-    public bool HasSelection => !string.IsNullOrEmpty(SelectedHeroId);
+    public bool HasSelection => !SelectedRow.IsEmpty;
 
-    public void Select(string heroId, int race)
-    {
-        SelectedHeroId = heroId ?? string.Empty;
-        SelectedRace = race;
-    }
+    public void Select(HeroPickRow row) => SelectedRow = row;
 
     public void Clear()
     {
-        SelectedHeroId = string.Empty;
-        SelectedRace = 0;
+        SelectedRow = default;
 
-        // Ending the preview here matters as much as dropping the id. A stale IsPreviewActive
+        // Ending the preview here matters as much as dropping the row. A stale IsPreviewActive
         // would keep Patch9_RaceFilter early-returning for the rest of character creation, so the
         // culture race filter would silently stop applying to a player building their own face.
         IsPreviewActive = false;
