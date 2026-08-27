@@ -2,6 +2,30 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-27
+
+### balance(mordor): consolidate the Mordor roster onto the orc and warg lines
+
+Mordor's `mordor_num_*` troop tree is retired. The 13 troops, their party-template stacks, their
+weight and war-spoils rows and their elite-emissary entries are gone, and the six lord equipment
+rosters that went with them are removed.
+
+The two clan templates that had been rebuilt around that line, `empire_south_1` and
+`empire_south_9`, are restored to the orc and warg composition they carried before, taken from the
+file's own pre-conversion state rather than hand-rewritten, then re-normalised with
+`tools/rebalance_party_template_maxes.py --apply` so all 193 templates sit back on their culture
+targets. Stripping the stacks without that restore would have left both clans fielding about 8% of
+a normal army: they were 3225 of 3500.
+
+All 16 lords keep their names, clans, fiefs and skill sets. They bind the standard Mordor lord kit
+(`mordor_bat_template_medium_*` / `mordor_civ_template_default_*`) spread across the five variants.
+
+`VolunteerRecruitmentServiceTests` loses the recruitment-reachability exemption the line needed,
+since nothing is exempt any more. The four generators and the anchor test that authored the line
+are removed with it.
+
+Verified: `validate_moduledata.py` PASS, 612 tool tests OK, 7,592 C# tests passing.
+
 ## 2026-08-26
 
 ### fix(process): put the Harmony lessons read where the patch gets written

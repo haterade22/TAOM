@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Armor Balance Overview Analyzer for TAOM (READ-ONLY).
 
@@ -64,7 +64,6 @@ EXCLUDE_ID_SUBSTRINGS = (
                                          # WEARER'S LEVEL, not to the mesh's tier token, so a
                                          # `_light_` id deliberately carries heavy-row stats and
                                          # name-based tier detection reports false inversions on
-                                         # every piece. See generate_black_numenorean_armor.py.
 )
 
 

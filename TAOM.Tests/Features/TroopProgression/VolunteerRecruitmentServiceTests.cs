@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
@@ -2839,56 +2839,7 @@ public class VolunteerRecruitmentServiceTests
         => troopId.Contains("_militia_")          // settlement militia — spawned, not recruited
            || troopId.EndsWith("_boss")           // bandit-hideout bosses
            || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
-           || troopId == "cave_troll"             // non-humanoid monster; deferred pending spider-style spawn support
-           || BlackNumenoreanLine.Contains(troopId);
-
-    // The Black Numenorean line is not offered by any VOLUNTEER POOL, which is all this test
-    // measures. It is NOT "AI-only": taom_partyTemplates.xml grants mordor_num_vet_infantry as a
-    // Mordor vassal reward, and DefaultVassalRewardsModel adds every stack in that template
-    // straight into the joining player's own troop roster. Prisoner recruitment is a second
-    // player-facing route, and both then walk the upgrade tree normally.
-    //
-    // Mordor's elite_basic_troop stays mordor_uruk_warrior and VolunteerRecruitmentService.Mordor.cs
-    // gains no entry, so no notable ever offers an Initiate. Recruiting Sauron's human nobility from
-    // a village notable would be wrong on its own terms.
-    //
-    // This is an EXPLICIT SET, not a StartsWith("mordor_num_") prefix. A prefix exempts an unbounded
-    // namespace, so a future Black Numenorean troop that was accidentally orphaned from the upgrade
-    // graph would silently pass the very guard that exists to catch it. Adding a troop to the line
-    // means adding it here deliberately.
-    //
-    // If the line is ever made recruitable, delete this set rather than extending it, and add
-    // mordor_num_initiate to VolunteerRecruitmentService.Mordor.cs.
-    private static readonly System.Collections.Generic.HashSet<string> BlackNumenoreanLine =
-        new System.Collections.Generic.HashSet<string>
-        {
-            "mordor_num_initiate",
-            "mordor_num_cavalry", "mordor_num_vet_cavalry", "mordor_num_knight", "mordor_num_temple_knight",
-            "mordor_num_infantry", "mordor_num_vet_infantry", "mordor_num_warden", "mordor_num_temple_guard",
-            "mordor_num_archer", "mordor_num_vet_archer", "mordor_num_marksman", "mordor_num_shadowbow",
-        };
-
-    [TestMethod]
-    public void BlackNumenoreanExemptionSet_MatchesTheTroopsActuallyDefined()
-    {
-        // Guards the explicit set above against drift in both directions: a new mordor_num_* troop
-        // that nobody added here fails the reachability test with a useful message, and an id left
-        // here after a rename silently exempts nothing.
-        var troopsDir = ResolveTroopsDir();
-        if (troopsDir == null)
-        {
-            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/troops relative to test bin");
-            return;
-        }
-        var (nodes, _) = ParseTroopGraph(troopsDir);
-        var defined = new System.Collections.Generic.HashSet<string>(
-            System.Linq.Enumerable.Where(nodes, n => n.StartsWith("mordor_num_")));
-
-        CollectionAssert.AreEquivalent(
-            System.Linq.Enumerable.ToList(BlackNumenoreanLine),
-            System.Linq.Enumerable.ToList(defined),
-            "BlackNumenoreanLine must list exactly the mordor_num_* troops defined in troops_mordor.xml");
-    }
+           || troopId == "cave_troll";             // non-humanoid monster; deferred pending spider-style spawn support
 
     private static string ResolveTroopsDir()
     {

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TroopWeights>
     <!-- Default weight is 1.0 for all unlisted troops -->
 
@@ -129,18 +129,4 @@
     <TroopWeight id="orc_warg_overseer" weight="2.0" />
     <TroopWeight id="orc_warg_enforcer" weight="2.0" />
     <TroopWeight id="orc_warg_lieutenant" weight="2.0" />
-    <!-- Black Numenorean line: the 2.0 elite band -->
-    <TroopWeight id="mordor_num_initiate" weight="2.0" />
-    <TroopWeight id="mordor_num_cavalry" weight="2.0" />
-    <TroopWeight id="mordor_num_infantry" weight="2.0" />
-    <TroopWeight id="mordor_num_archer" weight="2.0" />
-    <TroopWeight id="mordor_num_vet_cavalry" weight="2.0" />
-    <TroopWeight id="mordor_num_vet_infantry" weight="2.0" />
-    <TroopWeight id="mordor_num_vet_archer" weight="2.0" />
-    <TroopWeight id="mordor_num_knight" weight="2.0" />
-    <TroopWeight id="mordor_num_warden" weight="2.0" />
-    <TroopWeight id="mordor_num_marksman" weight="2.0" />
-    <TroopWeight id="mordor_num_temple_knight" weight="2.0" />
-    <TroopWeight id="mordor_num_temple_guard" weight="2.0" />
-    <TroopWeight id="mordor_num_shadowbow" weight="2.0" />
 </TroopWeights>

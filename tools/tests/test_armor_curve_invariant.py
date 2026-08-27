@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Unit tests for the armor curve's two-tier overtake invariant.
 
 Run:  python -m unittest discover -s tools/tests -p "test_*.py"
@@ -148,7 +148,7 @@ class GeneratorCurveSyncTests(unittest.TestCase):
     # Generators that import the curve instead of copying it. The drift class the
     # class docstring describes cannot reach these, so the guard is the INVERSE:
     # assert no private table was ever reintroduced.
-    CURVE_IMPORTERS = ('generate_black_numenorean_armor',)
+    CURVE_IMPORTERS = ()
 
     def test_generator_shoulder_tables_match_the_curve(self):
         import importlib
