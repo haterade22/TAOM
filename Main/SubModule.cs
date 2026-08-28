@@ -1206,6 +1206,21 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch6_BannerEditor");
         _harmony.PatchCategory("Patch7_FactionMap");
         _harmony.PatchCategory("Patch9_RaceFilter");
+        // Patch77 (#514) — attaches the Player Switcher panel to the character creation face
+        // generator and tears it down again. Wrapped because the constructor postfix binds by
+        // arity: if a future engine build declares a second BodyGeneratorView constructor, Prepare
+        // returns false and nothing binds, but a PatchCategory throw here would brick startup.
+        try
+        {
+            TAOM.Features.PlayerSwitcher.Hooks.Patch77_BodyGeneratorView_Constructor.Initialize(IoC.Resolve<IModLogger>());
+            TAOM.Features.PlayerSwitcher.Hooks.Patch77_BodyGeneratorView_OnFinalize.Initialize(IoC.Resolve<IModLogger>());
+            _harmony.PatchCategory("Patch77_PlayerSwitcher");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>()
+                .DisableForSession($"Patch77 could not be applied: {ex.Message}");
+        }
         _harmony.PatchCategory("Patch20_NarrativeHorseGuard");
         _harmony.PatchCategory("Patch8_SiegeCampGuard");
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");

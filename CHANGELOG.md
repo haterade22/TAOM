@@ -4,6 +4,52 @@
 
 ## 2026-08-27
 
+### feat(player-switcher): the picker panel (#514, phase 3)
+
+The UI. `Patch77_PlayerSwitcher` attaches the hero picker to the character creation face
+generator and tears it down with it.
+
+The constructor postfix binds by ARITY rather than by a hand-written type array. That is the
+difference between working and bricking startup: the predecessor mod pinned a 12-type attribute and
+1.4.8 added a 13th parameter, so that attribute now matches nothing and throws at `PatchCategory`
+time. `AccessTools.Constructor` with no type array is not a substitute either, because Harmony
+normalises a null parameter array to `Type.EmptyTypes` and looks for a parameterless constructor.
+A `Prepare()` guard stops the patch binding at all if a future build declares a second constructor,
+and `PlayerSwitcherBindingTests` asserts the count and the arity against the installed DLLs.
+
+The panel is kept off the barber screen and the multiplayer face generator, which build the same
+view, by an `ActiveState is CharacterCreationState` guard. Clearing the selection on construction
+IS the whole selection lifecycle: because the view is rebuilt on every entry to the stage, going
+back to the culture stage and returning resets it, and no patch on `ExecuteDone`, `ExecuteCancel`
+or `ResetFaceToDefault` is needed.
+
+The prefab crossed over from LOTRAOM unchanged and is used as-is, so the ViewModels were written to
+fit the file. `PlayerSwitcherPrefabContractTests` reads the shipped XML and proves every
+`DataSource`, `Text`, `IsSelected` and `Command.Click` name resolves on a public member, because
+Gauntlet renders nothing for a missing binding and logs nothing about it. `HeroPickItemVM` derives
+from the vanilla `ClanPartyMemberItemVM` so an engine change breaks the build rather than blanking
+a row, and supplies the four members the vanilla `ClanLordTuple` binds that the base does not.
+Both the outer and inner click handlers exist and route to the same place, so the unresolved
+question of which one Gauntlet fires stops mattering.
+
+`Patch9_RaceFilter` gains one early return. `SetBodyProperties` triggers `Refresh(clearProperties:
+true)` on every race change, so without it the culture race rebuild would snap a dwarf or a Sauron
+preview back to the culture default the instant it applied.
+
+Sprite handling is deliberate: `SpriteCategory` carries an `IsLoaded` bool and no reference count,
+so the teardown unloads `ui_clan` only when the picker was the one that loaded it. Unloading a
+sheet another consumer is using would blank their icons with no error.
+
+Localization added `taom_player_switcher_strings.xml` (11 keys), a `LanguageFile` reference and a
+stub in all 12 languages, and the language-file count assertion moves 12 to 13. The rows are seeded
+with the English fallback rather than left absent, so the game renders real text instead of a raw
+id. **The machine translation is still owed**: no API key is set in this environment, and the
+translator's own filter treats a row whose text still equals English as untranslated, so a later
+run picks all 11 up rather than skipping them.
+
+Suite 7,663 green, `validate_moduledata` PASS.
+
+
 ### feat(player-switcher): the handover, offline (#514, phase 2)
 
 The ordered hand-over of the player character, plus the seam it runs from. No UI yet.

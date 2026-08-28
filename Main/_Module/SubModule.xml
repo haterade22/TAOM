@@ -898,6 +898,15 @@
       </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
+      <XmlName id="GameText" path="taom_player_switcher_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
       <XmlName id="GameText" path="taom_cc_strings"/>
       <IncludedGameTypes>
         <GameType value="Campaign"/>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="taom_ps_title" text="Play as an existing lord" />
+    <string id="taom_ps_hint" text="Pick a lord to take their place. You keep their face, gear, skills, clan and kingdom. The character you build is set aside." />
+    <string id="taom_ps_group_kingdom" text="Royal House" />
+    <string id="taom_ps_group_clans" text="Clan Leaders" />
+    <string id="taom_ps_group_wanderers" text="Wanderers" />
+    <string id="taom_ps_none" text="none" />
+    <string id="taom_ps_clear" text="Play as my own character" />
+    <string id="taom_ps_selected" text="Selected: {HERO}" />
+    <string id="taom_ps_switched" text="You now play as {HERO} of {CLAN}." />
+    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
+    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
+  </strings>
+</base>

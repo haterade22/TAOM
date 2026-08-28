@@ -12,4 +12,5 @@
   <LanguageFile xml_path="CNt/std_taom_wotr_strings_zho-HK.xml" />
   <LanguageFile xml_path="CNt/std_taom_enlistment_strings_zho-HK.xml" />
   <LanguageFile xml_path="CNt/std_taom_keybind_strings_zho-HK.xml" />
+  <LanguageFile xml_path="CNt/std_taom_player_switcher_strings_zho-HK.xml" />
 </LanguageData>
