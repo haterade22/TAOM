@@ -11,11 +11,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -30,15 +30,15 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -50,19 +50,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -80,11 +80,11 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -99,8 +99,8 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -117,10 +117,10 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.easterling_head" />
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -137,11 +137,11 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -178,18 +178,18 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.easterling_head" />
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.easterling_head" />
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -201,19 +201,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -224,19 +224,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -260,11 +260,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -275,11 +275,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -303,11 +303,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -318,11 +318,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -347,11 +347,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -375,11 +375,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -391,19 +391,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -415,23 +415,23 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -443,26 +443,26 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -472,24 +472,24 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -500,19 +500,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -524,19 +524,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -547,19 +547,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -570,19 +570,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -593,19 +593,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -617,19 +617,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -640,19 +640,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -663,19 +663,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -687,15 +687,15 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -707,11 +707,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -722,11 +722,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -737,19 +737,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -761,12 +761,12 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -777,11 +777,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -792,11 +792,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -806,12 +806,12 @@
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -821,14 +821,14 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -839,13 +839,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -856,13 +856,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -872,14 +872,14 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -889,12 +889,12 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -905,13 +905,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -923,11 +923,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -936,14 +936,14 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -952,14 +952,14 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -970,14 +970,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -987,13 +987,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1004,14 +1004,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1020,14 +1020,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1036,12 +1036,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1050,14 +1050,14 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1067,11 +1067,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1080,14 +1080,14 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1099,11 +1099,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1113,11 +1113,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1128,12 +1128,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1142,14 +1142,14 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1158,14 +1158,14 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1187,7 +1187,7 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1197,8 +1197,8 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
-				<equipment slot="Body" id="Item.easterling_torso" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1208,9 +1208,9 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
-				<equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-				<equipment slot="Gloves" id="Item.easterling_glove" />
-				<equipment slot="Leg" id="Item.easterling_boots" />
+				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1220,11 +1220,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

@@ -180,21 +180,21 @@
 					<equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
 					<equipment slot="Item1"	id="Item.gond_shield_two_swan" />
 					<equipment slot="Item2" 	id="Item.wm_swan_knight_sworda" />
-					<equipment slot="Body" id="Item.imrahil_body" />
-					<equipment slot="Head" id="Item.imrahil_helmet" />
-					<equipment slot="Gloves" id="Item.imrahil_gloves" />
-					<equipment slot="Leg" id="Item.imrahil_boot" />
-					<equipment slot="Cape" id="Item.imrahil_shoulder" />
+					<equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
+					<equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
+					<equipment slot="Gloves" id="Item.sk_gd_dol_bracer_elite_a" />
+					<equipment slot="Leg" id="Item.sk_gd_dol_grvs_elite_a" />
+					<equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 					<equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
 					<equipment slot="Item1"	id="Item.gond_shield_two_swan" />
 					<equipment slot="Item2" 	id="Item.wm_swan_knight_sworda" />
-					<equipment slot="Body" id="Item.imrahil_body" />
-					<equipment slot="Head" id="Item.imrahil_helmet" />
-					<equipment slot="Gloves" id="Item.imrahil_gloves" />
-					<equipment slot="Leg" id="Item.imrahil_boot" />
-					<equipment slot="Cape" id="Item.imrahil_shoulder" />
+					<equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
+					<equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
+					<equipment slot="Gloves" id="Item.sk_gd_dol_bracer_elite_a" />
+					<equipment slot="Leg" id="Item.sk_gd_dol_grvs_elite_a" />
+					<equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
 				</EquipmentRoster>
 				</Equipments>
 			</NPCCharacter>
@@ -332,11 +332,11 @@
 				<Equipments>
 				<EquipmentRoster>
 					<equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
-					<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_legionary_b2_blue"/>
-					<equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a_blue"/>
-					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_d_blue"/>
-					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_d_blue"/>
-					<equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_a_blue"/>
+					<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_legionary_b2"/>
+					<equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a"/>
+					<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_d"/>
+					<equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_d"/>
+					<equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_a"/>
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 					<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>

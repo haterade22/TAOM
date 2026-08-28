@@ -1132,107 +1132,107 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
 			<Equipment slot="Item2" id="Item.composite_bow" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item2" id="Item.composite_bow" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item2" id="Item.composite_bow" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />

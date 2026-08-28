@@ -2104,10 +2104,10 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2117,10 +2117,10 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2130,10 +2130,10 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2143,10 +2143,10 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2156,10 +2156,10 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2169,10 +2169,10 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2182,10 +2182,10 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2195,10 +2195,10 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2208,10 +2208,10 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2221,10 +2221,10 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.easterling_head" />
-    			<Equipment slot="Body" id="Item.easterling_torso" />
-    			<Equipment slot="Gloves" id="Item.easterling_glove" />
-    			<Equipment slot="Leg" id="Item.easterling_boots" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>

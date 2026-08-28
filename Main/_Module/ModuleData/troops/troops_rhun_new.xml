@@ -262,7 +262,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_b" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_med_d" />
@@ -601,7 +601,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_c" />
@@ -638,7 +638,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.khuzait_sword_4_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
@@ -675,7 +675,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
@@ -710,7 +710,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
@@ -983,7 +983,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_c" />
@@ -1060,7 +1060,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
@@ -1317,7 +1317,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_elite_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_scalemail_elite_a" />
@@ -1327,7 +1327,7 @@
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_elite_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_scalemail_elite_b" />
@@ -1458,7 +1458,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_elite_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_scalemail_elite_a" />
@@ -1468,7 +1468,7 @@
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_elite_c" />
                 <equipment slot="Body" id="Item.sk_rh_loke_scalemail_elite_b" />
@@ -1929,7 +1929,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_med_d" />
@@ -1965,7 +1965,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.mirkwood_spear_a01" />
                 <equipment slot="Item1" id="Item.aserai_sword_3_t3" />
-                <equipment slot="Item2" id="Item.easterling_shield" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_c" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_med_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_c" />
@@ -1999,7 +1999,7 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
-                <equipment slot="Item1" id="Item.easterling_shield" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.khuzait_sword_4_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_med_d" />
@@ -4864,7 +4864,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.aserai_sword_5_t4" />
-                <equipment slot="Item2" id="Item.easterling_shield" />
+                <equipment slot="Item2" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_a" />

@@ -381,11 +381,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -669,7 +669,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -677,7 +677,7 @@
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
@@ -815,11 +815,11 @@
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -941,11 +941,11 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -1049,12 +1049,12 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
@@ -1125,11 +1125,11 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.lossarnach_coat" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
 		</Equipments>
