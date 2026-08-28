@@ -521,6 +521,34 @@ mordor` would have flattened the whole set onto the elite row.
 
 ---
 
+### Reusing a vanilla lord id silently inherits its sex, and the beard block is what renders
+TAOM reuses vanilla NPCCharacter ids for entirely different characters. `lord_WE8_c` is vanilla's
+Icratia, a woman, reused for Pelendur son of Golasgil. `lord_1_46_1` is vanilla's Seorgys, a man,
+reused for Thorwen, Malrior's wife. `lord_4_6` is Countess Calatild, reused for Grimbold of
+Grimslade. In all three the rename landed and `is_female` did not, so the roster shipped a man
+rendered as a woman and two women rendered as men. Two Lothlorien elf-ladies (`lord_L2_5`
+Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is_female="true"` on
+`taom_elf_lady_skills`, and a `<beard_tags>` block left in the face.
+
+- **Why missed:** `is_female` is one attribute in a 200-line block, and every OTHER layer had already
+  been updated, which is what makes this class invisible. The registry, all 12 language files, the
+  encyclopedia bio and the `father`/`mother` wiring in `heroes.xslt` all described Pelendur as
+  Golasgil's son while the character data said woman. Reviewing any one of those layers confirms the
+  intent and never reaches the defect. The second trap is that `is_female` alone does not undress a
+  character: `<beard_tags>` is what actually renders facial hair, so flipping the attribute without
+  deleting the block leaves a bearded woman, and deleting the block without the attribute leaves a
+  clean-shaven man the engine still treats as female.
+- **Prevent:** `TAOM.Tests/Core/LordNameAndSexConsistencyTests.cs` asserts no `is_female="true"` lord
+  carries `<beard_tags>` (it accepts the six `is_female="True"` entries too, since the engine's bool
+  parse tolerates either casing). Nothing else can see this: `validate_moduledata.py` has no rule
+  touching sex, and the body-properties key is authored inline rather than as a `BodyProperty.*`
+  reference, so `BROKEN_BODY_PROPERTY_REF` never fires on a female key worn by a man. When you reuse
+  a vanilla id, treat `is_female`, `<beard_tags>` and the `<BodyProperties key=>` as one unit and
+  change all three or none. The prose is the spec: the bio in `heroes.xslt` and
+  `taom_xslt_strings.xml` says son / daughter / wife, and it is the cheapest thing to check against.
+- **Source:** 2026-08-28, `a00086da`; the same class shipped three weeks earlier as `3c7f4e25`
+  (Grimbold) with no lesson recorded, which is why it recurred.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -102,6 +102,31 @@ When migrating sprites from one atlas category to another (e.g. `ui_taom` → `u
 - **Prevent:** before writing any `Brush="X"`, grep `Main/_Module/GUI/Brushes/*.xml` + the relevant vanilla `Modules/*/GUI/Brushes/*.xml` for `<Brush Name="X"`. Rule widened in `gui-ui.md` "Sprite References" (now sprites AND brushes).
 - **Source:** career UX arc deep review 2026-08-05 (compatibility agent). RCA: `docs/reviews/rca-career-ux-arc-2026-08-05.md`
 
+### There is no English language folder, so the inline `{=key}` fallback IS the English text
+`Main/_Module/ModuleData/Languages/` holds 12 locales and no `EN`; `language_data.xml` is an empty
+`<LanguageData id="English">`. A `name="{=aom_lord_X_name}Literal"` reference therefore resolves from
+a language file in the other 12 locales and from the literal in English. Rename a lord in
+`taom_xslt_strings.xml` and run the translator, and every locale on earth shows the new name while
+English keeps the old one. Thirteen lords had drifted this way, `lord_WE8_c` for long enough that
+English players saw "Icratia" while the registry, all 12 translations, the encyclopedia bio and the
+parent wiring said Pelendur.
+
+- **Why missed:** the rename looks complete from every angle a reviewer checks. The registry has the
+  new name, `LanguageFileCoverageTests` is green, and spot-checking any translated locale in game
+  shows the new name. English is the only locale that can exhibit the bug and the only one with no
+  file to inspect. `LanguageFileCoverageTests` cannot help by design: it asserts a key HAS a row, not
+  what the row says, so renaming under an existing key never turns it red.
+- **Prevent:** `TAOM.Tests/Core/LordNameAndSexConsistencyTests.cs` asserts every inline fallback in
+  `characters/lords.xml` equals the registered English text, with a small documented exemption list.
+  `tools/oneoff/sync_lord_name_fallbacks.py` does the repair. Treat the English fallback as a
+  thirteenth translation that no tool updates for you. Related trap in the same direction:
+  `translate_with_claude.py` refills only rows whose target text still equals the English source and
+  keys its cache by string id alone, so **changing** English under an existing id propagates to
+  nothing. A rename is only safe when the registry, the 12 language files, the cache and the inline
+  fallback all move together, and picking a name the registry does not already hold means editing all
+  of them by hand.
+- **Source:** 2026-08-28, `a00086da`.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

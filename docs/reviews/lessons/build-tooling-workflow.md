@@ -440,6 +440,26 @@ templates and revert the party-size rescale with it.
   regeneration is a silent revert, and it will not fail any gate.
 - **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` finding 8.
 
+### A regenerator that honours an override "only when present" restores the vanilla value when you delete it
+`tools/complete_lords_xslt.py` rebuilds `lords.xslt` from vanilla plus the overrides it parses back
+out of the current `lords.xslt`. For most attributes that round-trips a hand edit safely. For
+`is_female` it does not, because the male convention is to OMIT the attribute: deleting the line is
+indistinguishable from never having overridden it, so the next `--apply` copies vanilla's
+`is_female="true"` straight back in. The fix is a separate `GENDER_OVERRIDES` table that forces the
+absence, which is why `lord_4_6` and `lord_WE8_c` are listed there by id.
+
+- **Why missed:** "the generator preserves my overrides" is true for every attribute whose corrected
+  value is a value. It fails only where the corrected value is *nothing*, and that is exactly the
+  case nobody tests, because the evidence of success and the evidence of failure look identical in
+  the source file: an absent attribute.
+- **Prevent:** when an override's correct state is an absent attribute, it needs an explicit forcing
+  table, not a deletion. Prove it the way the fix was proved, by running the merge in-process and
+  reading the resulting attribute rather than eyeballing the file:
+  `merge_lords(parse_vanilla_lords(...), parse_current_xslt(...))` should report `None` for
+  `lord_WE8_c` where vanilla reports `true`. Note the guard covers `lords.xslt` only; the file that
+  actually wins at runtime, `characters/lords.xml`, has no regenerator and therefore no guard.
+- **Source:** 2026-08-28, `a00086da`.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -214,6 +214,17 @@ and no `is_female="true"` lord carries beard tags. Neither `validate_moduledata.
 `is_female="false"` with a beard) and `lord_1_52_1` (Anariel, "daughter of Hirluin", male with a
 beard).
 
+**Documentation.** Three lessons recorded, one per category: the vanilla-id-reuse sex trap in
+`lessons/data-content-cultures.md`, the missing English locale in `lessons/localization-ui.md`, and
+the regenerator that restores a deleted attribute in `lessons/build-tooling-workflow.md`. The
+Grimbold fix three weeks earlier recorded none, which is why the same class recurred.
+`docs/ai-includes/lord-skills-authoring.md` gains a "wrong sex" row in its symptom table, a note
+that an English-only wrong name is fallback drift rather than a rename, and the three traps in
+Gotchas. `tools/README.md` documents `sync_lord_name_fallbacks.py` with its re-run condition and
+records that `GENDER_OVERRIDES` in `complete_lords_xslt.py` is load-bearing rather than decorative.
+The `LESSONS-LEARNED.md` category recount and a coverage note for
+`docs/features/moduledata-validation.md` are held back: another session is editing both files.
+
 Verified: `validate_moduledata.py` PASS, `check_external_xslt.py` clean across 16 stylesheets,
 `dotnet test TAOM.Tests` 7716 passed / 0 failed, and the `complete_lords_xslt.py` merge now omits
 `is_female` for `lord_WE8_c` where vanilla says `true`.
