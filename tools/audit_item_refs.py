@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Audit every `id="Item.X"` reference in TAOM ModuleData XML against the actual
-v1.4.5 item registry (vanilla + LOTRLOME_Armory + Alliance.Wargs + TAOM-owned).
+v1.4.5 item registry (vanilla + LOTRLOME_Armory + TAOM-owned).
 
 Reports references that resolve to no known item. Each unresolved ref is a
 silent-null at runtime → empty equipment slot in-game.
@@ -30,7 +30,6 @@ ITEM_REGISTRY_ROOTS = [
     GAME_MODULES / "StoryMode" / "ModuleData",
     GAME_MODULES / "CustomBattle" / "ModuleData",
     GAME_MODULES / "LOTRLOME_Armory" / "ModuleData",
-    GAME_MODULES / "Alliance.Wargs" / "ModuleData",
     GAME_MODULES / "ADOD_Beasts" / "ModuleData",
     GAME_MODULES / "NavalDLC" / "ModuleData",
     TAOM_MODULEDATA,

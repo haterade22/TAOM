@@ -997,7 +997,7 @@ def build_item_class_registry(moduledata, game_modules) -> dict:
     item_roots = []
     if game_modules:
         for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle",
-                     "LOTRLOME_Armory", "Alliance.Wargs", "ADOD_Beasts", "NavalDLC"):
+                     "LOTRLOME_Armory", "ADOD_Beasts", "NavalDLC"):
             item_roots.append(game_modules / name / "ModuleData")
     item_roots.append(moduledata)
 
@@ -1218,7 +1218,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     item_roots, npc_roots, pt_roots = [], [moduledata], [moduledata]
     if game_modules:
         for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle",
-                     "LOTRLOME_Armory", "Alliance.Wargs", "ADOD_Beasts", "NavalDLC"):
+                     "LOTRLOME_Armory", "ADOD_Beasts", "NavalDLC"):
             item_roots.append(game_modules / name / "ModuleData")
         for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle"):
             npc_roots.append(game_modules / name / "ModuleData")

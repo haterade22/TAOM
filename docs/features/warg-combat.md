@@ -26,7 +26,7 @@ The `Agent` class is sealed (cannot subclass). Warg AI must run alongside the ex
 ### Component Diagram
 
 ```
-Alliance.Wargs (XML: monster, items, animations)
+LOTRLOME_Armory (XML: monster, items, animations, sounds)
         |
   WargMissionBehavior (MissionLogic)
      |         |
@@ -108,7 +108,9 @@ Alliance.Wargs (XML: monster, items, animations)
 ## Dependencies
 
 - `Main/BehaviorTrees/` + `Main/BehaviorTreeWrapper/` — TAOM-inlined BT framework (decompiled from formerly-vendored `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` on 2026-05-24, full source ownership; compiles into `TAOM.dll`)
-- `Alliance.Wargs` — XML module: Monster id="warg", animations, sounds, items
+- `LOTRLOME_Armory` (external, untracked) - Monster id="warg", `as_warg` action sets, 80 `act_warg_*` types,
+  the `warg` usage set, animations, sounds and the four warg items. Absorbed from the retired
+  `Alliance.Wargs` module on 2026-08-28; ledger: [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md)
 - `IModLogger` (Core) — Logging
 - `IMissionAdapterFactory` (Adapters) — Agent wrapping
 
@@ -120,7 +122,7 @@ Alliance.Wargs (XML: monster, items, animations)
 
 ## How to Add a New Creature with Custom Attacks
 
-1. Create XML module with Monster definition (like Alliance.Wargs)
+1. Add the Monster definition to `LOTRLOME_Armory` (the warg is the reference shape)
 2. Create `BehaviorTreeElements/` folder with BT nodes implementing your creature's AI
 3. Create a `{Creature}BehaviorTree.cs` using the fluent BT builder API
 4. Create `{Creature}MissionBehavior.cs` to register the BT and attach components
@@ -145,6 +147,12 @@ Alliance.Wargs (XML: monster, items, animations)
 
 ## Changelog
 
+- 2026-08-28 - Absorbed the standalone `Alliance.Wargs` module into `LOTRLOME_Armory` so players no
+  longer install it: Monster, `as_warg` action sets, 80 `act_warg_*` types, the `warg` usage set and its
+  22 rider XSLT rows, physics/collision classes, 17 sound events, four items and the cooked asset pack.
+  Ids unchanged, so no C# or troop-roster edit was needed. The spider's rider overlay borrows 12
+  `rider_warg_*` clips, so this was a prerequisite for ever removing that module. Ledger:
+  [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md).
 - 2026-05-14 — Phase 9b: refactored `IWargAttackService.HandleWargTargetHit`/`WargAttack` to take `IAgentAdapter` instead of sealed `Agent`, making all three attack methods directly unit-testable (closes #178).
 - 2026-05-13 — Updated the Tests section to reflect `WargAttackServiceTests.cs` (7 tests); cross-referenced #178 ADR-007 blocker (#199).
 - 2026-03-27 — Fixed BT runtime failures: moved tree init to first `OnMissionTick`, made the no-rider tree construction null-safe, so wargs actually attack in combat.

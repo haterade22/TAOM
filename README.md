@@ -148,7 +148,7 @@ TAOM is developed with a structured, AI-assisted engineering pipeline.
 
 TAOM ships as a set of modules. Required alongside the core `TAOM` module:
 
-- Companion modules: **TAOM_Map**, **LOTRLOME_Armory**, **TAOM.Dependencies**, **Alliance.Wargs**
+- Companion modules: **TAOM_Map**, **LOTRLOME_Armory**, **TAOM.Dependencies**
 - BUTR dependencies: **Harmony** and **Mod Configuration Menu (MCM)**
 
 Place all modules in your Bannerlord `Modules/` directory, enable them in the launcher, and start a

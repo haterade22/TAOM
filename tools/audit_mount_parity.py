@@ -7,7 +7,7 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
   C. monster_usage row key coverage per table (movements / upper_body / adders / jumps /
      falls / strikes) + the declared TYPE of each referenced action
   D. action_set element attributes + binding coverage for every action the usage set references
-  E. rider partial (as_human_warrior) rows: LOTRLOME (spider) vs Alliance.Wargs (warg)
+  E. rider partial (as_human_warrior) rows: spider vs warg (both now in LOTRLOME)
   F. chariot vs VANILLA HORSE — the chariot is a ridden vehicle with no behaviour tree, so its
      reference class is the horse, not the warg. Sections A-E are baselined on the spider and
      deliberately do not cover it.
@@ -28,13 +28,14 @@ from _gamedir import game_dir
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
 GAME = os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"), "Modules")
 LOTR = GAME + r"\LOTRLOME_Armory\ModuleData"
-WARG = GAME + r"\Alliance.Wargs\ModuleData"
+# Warg data was absorbed into LOTRLOME_Armory on 2026-08-28; Alliance.Wargs is retired.
+# Ledger: docs/reference/lotrlome-warg-changes.md
 NATIVE = GAME + r"\Native\ModuleData"
 
 FILES = {
     "monster": {
         "spider":   LOTR + r"\Monsters\LOTR\lotr_monster_spider.xml",
-        "warg":     WARG + r"\Monsters\LOTR\lotr_monster_warg.xml",
+        "warg":     LOTR + r"\Monsters\LOTR\lotr_monster_warg.xml",
         "elephant": LOTR + r"\Monsters\LOTR\lotr_monster_elephant.xml",
         # Mûmakil = scaled-up elephant; should diff ZERO vs elephant except the id (taom_mumakil).
         "mumakil":  LOTR + r"\Monsters\LOTR\lotr_monster_mumakil.xml",
@@ -42,7 +43,7 @@ FILES = {
     },
     "usage": {
         "spider":   (LOTR + r"\monster_usage_sets.xml", "spider"),
-        "warg":     (WARG + r"\MonsterUsage\LOTR\lotr_monster_usage_warg.xml", "warg"),
+        "warg":     (LOTR + r"\monster_usage_sets.xml", "warg"),
         "elephant": (LOTR + r"\monster_usage_sets.xml", "elephant"),
         # Mûmakil reuses the elephant usage set verbatim (same skeleton/clips) — parity by construction.
         "mumakil":  (LOTR + r"\monster_usage_sets.xml", "elephant"),
@@ -50,19 +51,18 @@ FILES = {
     },
     "action_types": [
         LOTR + r"\action_types.xml",
-        WARG + r"\Animations\action_types_warg.xml",
         NATIVE + r"\action_types.xml",
     ],
     "action_sets": {
         "spider":   (LOTR + r"\action_sets.xml", "as_spider"),
-        "warg":     (WARG + r"\Animations\action_sets_warg.xml", "as_warg"),
+        "warg":     (LOTR + r"\action_sets.xml", "as_warg"),
         "elephant": (LOTR + r"\action_sets.xml", "as_elephant"),
         # Mûmakil reuses the elephant action set verbatim (same skeleton/clips) — parity by construction.
         "mumakil":  (LOTR + r"\action_sets.xml", "as_elephant"),
     },
     "rider_partials": {
         "spider (LOTRLOME)": LOTR + r"\action_sets.xml",
-        "warg (Alliance.Wargs)": WARG + r"\Animations\action_sets_warg.xml",
+        "warg (LOTRLOME)": LOTR + r"\action_sets.xml",
     },
 }
 
@@ -291,7 +291,7 @@ def section_e():
         rows[label] = partial_rows
         print(f"  {label}: {len(partial_rows)} partial rows")
     spider_rows = {k: v for k, v in rows["spider (LOTRLOME)"].items() if "spider" in k}
-    warg_rows = {k: v for k, v in rows["warg (Alliance.Wargs)"].items() if "warg" in k}
+    warg_rows = {k: v for k, v in rows["warg (LOTRLOME)"].items() if "warg" in k}
     # map suffixes
     def suffix(k, pre):
         return k.replace(pre, "", 1)

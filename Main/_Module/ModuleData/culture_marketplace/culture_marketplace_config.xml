@@ -30,7 +30,7 @@
 <CultureMarketplaceConfig>
 
   <Routing>
-    <!-- Warg mounts from Alliance.Wargs/ModuleData/Items/LOTR/lotr_warg.xml are tagged
+    <!-- Warg mounts from LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml are tagged
          Culture.isengard upstream but should appear in all four "evil" culture markets.
          min_stock="1" guarantees at least one of each variant + the saddle is always
          available in Isengard / Mordor / Gundabad / Dol Guldur towns. -->

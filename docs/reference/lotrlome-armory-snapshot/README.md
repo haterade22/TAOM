@@ -16,9 +16,13 @@ Any future Steam-Workshop or manual update of `LOTRLOME_Armory` will overwrite o
 
 | File | Purpose | Size |
 |---|---|---|
-| `action_sets.xml` | All LOTRLOME race action sets (combat / facegen / villager / etc.). **Includes the 1.3 action-type aliases** added 2026-05-04 across all 12 pre-existing facegen sets, **plus** the new `as_elf_facegen` + `as_elf_female_facegen` action_sets authored 2026-05-22 (see CC parent fix checklist below). | ~3.7 MB |
+| `action_sets.xml` | All LOTRLOME race action sets (combat / facegen / villager / etc.). **Includes the 1.3 action-type aliases** added 2026-05-04 across all 12 pre-existing facegen sets, **plus** the new `as_elf_facegen` + `as_elf_female_facegen` action_sets authored 2026-05-22 (see CC parent fix checklist below), **plus** `as_warg` / `as_warg_map` / `as_warg_town_and_village` and the 75 warg rider rows absorbed 2026-08-28 ([lotrlome-warg-changes.md](../lotrlome-warg-changes.md)). | ~3.9 MB |
 | `monsters.xml` | LOTRLOME monster definitions (dwarf, uruk, nazghul, orc, etc.) and their skeleton bindings | ~63 KB |
-| `skins.xml` | Race-to-skeleton mapping, body proportions, mesh slot configurations | ~5.3 MB |
+| `skins.xml` | Race-to-skeleton mapping, body proportions, mesh slot configurations | ~5.4 MB |
+| `action_types.xml` | Every LOTRLOME action-type declaration. **Added to the snapshot 2026-08-28**: it now carries the 80 `act_warg_*` types absorbed from the retired `Alliance.Wargs`, 32 of them explicitly typed, which a module reinstall would otherwise destroy. | ~16 KB |
+| `monster_usage_sets.xml` | The `spider` / `elephant` / `chariot` / `warg` usage sets. **Added 2026-08-28** for the same reason. | ~81 KB |
+| `monster_usage_sets.xslt` | Rider-side `mount_id` injections into vanilla's `human` usage set: 22 warg rows across mountings, strikes and falls, plus the elephant and chariot rows. **Added 2026-08-28.** | ~13 KB |
+| `project.mbproj` | The native-side registration manifest. **Added 2026-08-28** because the warg's three new `<file>` rows live only here. | ~3.6 KB |
 | `weapon_descriptions.xslt` | The Armory's additive override of Native's `<AvailablePieces>` lists: which crafting pieces each `WeaponDescription` accepts, and therefore which usages a crafted weapon resolves to. **Carries the one-handed-polearm registration** for the Dale spears and the Black Numenorean lance (see APPLIED EDIT below). | ~79 KB |
 
 > The first three are race-defining XML and are auto-loaded from every module root. `weapon_descriptions.xslt` is neither — it is here because it now carries an applied edit, and unlike the other three the live copy is already CRLF, so live and snapshot are byte-identical rather than differing by line ending.
@@ -382,6 +386,7 @@ If you re-snapshot later (e.g., after a LOTRLOME update we want to track), bump 
 
 - [docs/features/character-creation.md](../../features/character-creation.md)
 - [docs/reference/armory-guide.md](../armory-guide.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reviews/rca-isengard-black-tableau-2026-08-06.md](../../reviews/rca-isengard-black-tableau-2026-08-06.md)
 
 <!-- backlinks-end -->

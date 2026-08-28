@@ -59,6 +59,25 @@ docs/scene-scripts/ATTRIBUTION.md in the TAOM repository.
 
 ----
 
+WARG ASSETS  --  companion module LOTRLOME_Armory
+
+The warg skeleton, meshes, textures, animation clips and sound bank distributed in the
+companion LOTRLOME_Armory module are the work of Byak0, author of the Alliance mod
+(https://github.com/Byak0/Alliance), and are redistributed with the author's permission.
+TAOM does not claim them and does not license them onward. They are excluded from the
+CC BY-NC-SA 4.0 grant that covers TAOM's own content.
+
+They shipped as a separate Alliance.Wargs module until 2026-08-28, when they were absorbed
+into LOTRLOME_Armory to reduce the number of modules a player installs. The warg voice
+definition at _Module/ModuleData/VoiceDefinitions/LOTR/ came across in the same change.
+
+TAOM's warg behaviour -- the behaviour tree, rage mode, attack service and the surrounding
+code under Main/Features/Warg/ and Main/Features/AdvancedCombat/ -- is original TAOM
+software under the MIT License, ported from the maintainer's own LOTRAOM project. It is not
+derived from Byak0's work.
+
+----
+
 AUDIO  --  _Module/ModuleSounds/  (342 .wav, 93 .mp3, plus the culture music set)
 
 Third-party in origin. TAOM does not hold rights in this audio, does not claim

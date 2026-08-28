@@ -1,0 +1,990 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<monster_usage_sets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	type="monster_usage_set">
+	<!-- ==================== SPIDER ==================== -->
+	<!-- Behavior template for the giant spider creature. Movements use our custom act_spider_* actions.
+	     num_paces=6 -> paces 0-5: 0=slow/backward, 1=idle, 2=walk, 3-5=run (one fast gait reused).
+	     EVERY mountable monster in the game is num_paces=6 (horse/camel/mule/warg/elephant) - the
+	     mount machinery indexes the gallop pace (5); the detached-era num_paces=5 left no pace-5
+	     data for a Mountable monster (2026-06-10 thumbnail-AV investigation, bisect step).
+	     EVERY pace 0..num_paces-1 MUST define a direction="none" turn_direction="none" reference
+	     movement: the engine reads each pace's "none" clip during native CreateAgent to build that
+	     pace's movement data; a MISSING one divides by zero (this was the spawn crash, fixed 2026-06-04
+	     by mirroring the warg, which defines a "none" reference for every pace). In-place anims are fine
+	     here; the engine measures the foot/gait motion, not the (intentionally stationary) root.
+	     Strikes are bite attacks; body_part="chest" uses the spider's chest_m bone as the attack origin.
+
+	     MOUNT SURFACE (2026-06-10): the spider is Mountable="true" (ridden by taom_spider_creature) so
+	     this set carries the SAME surface every mountable monster's set has (horse/camel/elephant):
+	     the 10 verb attributes + upper_body_movements + movement_adders + jumps + falls. A verb-less
+	     set on a Mountable monster leaves null action entries in the native MonsterUsageSet struct;
+	     the mount build path (CharacterSpawner.SpawnMount -> Skeleton.TickAnimations) dereferences
+	     them -> AccessViolation (target=base+0x10). The detached-walker era never hit this because
+	     non-mounted spawns don't read the mount verbs. The adder rows use the GLOBAL horse RIDER
+	     adder codes (they animate the rider, not the spider); jumps reuse the act_horse_jump_* codes
+	     which as_spider binds (elephant-parity, action_sets.xml). Rows stop at pace 4 (num_paces=5;
+	     the elephant defines pace 5 because its num_paces is higher - do not copy pace-5 rows here). -->
+	<monster_usage_set
+		id="spider"
+		rear_action="act_spider_rear"
+		rear_damaged_action="act_spider_rear_damaged"
+		dash_action="act_spider_dash"
+		kick_action="act_spider_kick"
+		fast_quick_stop_action="act_spider_quick_stop_when_fast"
+		gallop_acceleration_head_action="act_spider_idle"
+		quick_stop_action="act_spider_quick_stop"
+		hit_object_action="act_spider_hit_object"
+		hit_object_falling_action="act_spider_hit_object_while_falling"
+		jump_start_action="act_spider_jump">
+		<monster_usage_upper_body_movements>
+			<!-- Spider has no head-turn clips; turn rows use the full-body turn actions, pace-1 rows idle. -->
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="right" action="act_spider_turn_right" />
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="left" action="act_spider_turn_left" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="right" action="act_spider_turn_right" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="left" action="act_spider_turn_left" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="right" action="act_spider_turn_right" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="left" action="act_spider_turn_left" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="right" action="act_spider_turn_right" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="left" action="act_spider_turn_left" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="right" action="act_spider_turn_right" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="left" action="act_spider_turn_left" />
+			<monster_usage_upper_body_movement pace="1" direction="front" action="act_spider_idle_1" />
+			<monster_usage_upper_body_movement pace="1" direction="back" action="act_spider_idle" />
+			<monster_usage_upper_body_movement pace="1" direction="none" action="act_spider_idle" />
+		</monster_usage_upper_body_movements>
+		<monster_usage_movements>
+			<!-- Pace 0: slow/backward (no dedicated backward clip -> reuse walk; idle = the required reference) -->
+			<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_spider_walk_forward" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="none"  turn_direction="none" action="act_spider_idle" />
+			<!-- Pace 1: stand + turns + strafes -->
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none"  action="act_spider_idle" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_spider_turn_right" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="left"  action="act_spider_turn_left" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<!-- Pace 2: walk (forward + strafes + movement-data reference) -->
+			<monster_usage_movement is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_spider_walk_forward" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="none"  turn_direction="none" action="act_spider_walk_forward" />
+			<!-- Paces 3-4: run (one fast gait; each needs its own movement-data reference; no run-strafe clips -> walk strafes) -->
+			<monster_usage_movement is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="none"  turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="none"  turn_direction="none" action="act_spider_run_forward" />
+			<!-- Pace 5: gallop (mount machinery indexes this pace; warg/elephant define both foot variants) -->
+			<monster_usage_movement is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="none"  turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="True"  pace="5" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="True"  pace="5" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="True"  pace="5" direction="left"  turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="True"  pace="5" direction="none"  turn_direction="none" action="act_spider_run_forward" />
+		</monster_usage_movements>
+		<monster_usage_movement_adders>
+			<!-- Rider-side additive anims (GLOBAL act_horse_rider_* codes - animate the rider, not the spider). -->
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_run_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_run_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="none" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="left" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="none" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="left" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="none" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="left" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="front" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="right" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="left" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+		</monster_usage_movement_adders>
+		<monster_usage_jumps>
+			<!-- act_horse_jump_* are bound in as_spider (elephant-parity bindings -> an_spi_walk_2).
+			     TOTAL direction coverage (2026-06-12): the engine's jump-record lookup accepts NINE
+			     directions (front/none/left/right/back/front_left/front_right/back_left/back_right —
+			     the monster_usage.cpp parser's own vocabulary) but every vanilla/warg set covers only
+			     front+none. A spider turning mid-jump produced a directional query with no row -> the
+			     1.4.6 unordered_map find dereferences its end-sentinel on miss (offset 0x634396,
+			     target 0x3; debugger caught a spider mid act_horse_jump_high_loop with corrupted
+			     action-record memory). A missing key CRASHES; an extra row is inert -> cover all 9.
+			     Forward-ish directions reuse the forward family; the rest reuse the high family. -->
+			<monster_usage_jump jump_state="start" direction="front" action="act_horse_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front" action="act_horse_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front" action="act_horse_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front" action="act_horse_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front" action="act_horse_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="front_left" action="act_horse_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front_left" action="act_horse_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front_left" action="act_horse_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front_left" action="act_horse_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front_left" action="act_horse_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="front_right" action="act_horse_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front_right" action="act_horse_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front_right" action="act_horse_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front_right" action="act_horse_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front_right" action="act_horse_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="none" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="none" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="none" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="none" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="none" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="left" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="left" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="left" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="left" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="left" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="right" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="right" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="right" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="right" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="right" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="back" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="back" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="back" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="back" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="back" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="back_left" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="back_left" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="back_left" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="back_left" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="back_left" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="back_right" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="back_right" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="back_right" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="back_right" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="back_right" action="act_horse_jump_high_end_hard" is_hard="True" />
+		</monster_usage_jumps>
+		<monster_usage_falls>
+			<!-- Knockdown matrix (elephant row shape) on the TYPED actt_fall codes; roll rows -> death_1
+			     class clips, sideways/slow -> death_2 (see as_spider bindings). -->
+			<monster_usage_fall is_heavy="True" is_left_stance="False" direction="front" body_part="none" death_type="roll" action="act_spider_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="right" body_part="none" death_type="roll" action="act_spider_fall_slow_left" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="left" body_part="none" death_type="roll" action="act_spider_fall_slow_right" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="front" body_part="none" death_type="roll" action="act_spider_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="back" body_part="none" death_type="roll" action="act_spider_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="right" body_part="none" death_type="other" action="act_spider_fall_left" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="left" body_part="none" death_type="other" action="act_spider_fall_right" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="front" body_part="none" death_type="other" action="act_spider_fall_backwards" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="back" body_part="none" death_type="other" action="act_spider_fall_backwards" />
+		</monster_usage_falls>
+		<monster_usage_strikes>
+			<!-- Warg-exact strike matrix (parity audit 2026-06-12): heavy rows use the TYPED
+			     actt_mount_strike codes, light (is_heavy=False) rows use dedicated UNTYPED
+			     *_while_moving codes - exactly the warg's shape (act_warg_strike_back vs
+			     act_warg_strike_back_while_moving). Directional biting is the BT's job. -->
+			<monster_usage_strike is_heavy="True" is_left_stance="False" direction="back" body_part="none" impact="1" action="act_spider_strike_back" />
+			<monster_usage_strike is_heavy="False" is_left_stance="False" direction="back" body_part="none" impact="1" action="act_spider_strike_back_while_moving" />
+			<monster_usage_strike is_heavy="True" is_left_stance="False" direction="front" body_part="none" impact="1" action="act_spider_strike_front" />
+			<monster_usage_strike is_heavy="False" is_left_stance="False" direction="front" body_part="none" impact="1" action="act_spider_strike_front_while_moving" />
+		</monster_usage_strikes>
+	</monster_usage_set>
+
+	<!-- ==================== ELEPHANT ==================== -->
+	<!-- Movement data for the war elephant mount (monster_usage="elephant").
+	     Ported from ADOD_Beasts/ModuleData/monster_usage_sets.xml (MCMv5 conflict prevents ADOD from loading).
+	     Every pace 0..num_paces-1 MUST define a direction="none" turn_direction="none" reference movement
+	     or CreateAgentSkeleton divides by zero (see spider comment above for the same pattern). -->
+	<monster_usage_set
+		id="elephant"
+		rear_action="act_elephant_rear"
+		rear_damaged_action="act_elephant_rear_damaged"
+		dash_action="act_elephant_dash"
+		kick_action="act_elephant_kick"
+		fast_quick_stop_action="act_elephant_quick_stop_when_fast"
+		gallop_acceleration_head_action="act_elephant_gallop_acceleration_head"
+		quick_stop_action="act_elephant_quick_stop"
+		hit_object_action="act_elephant_hit_object"
+		hit_object_falling_action="act_elephant_hit_object_while_falling"
+		jump_start_action="act_elephant_jump_start">
+		<monster_usage_upper_body_movements>
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="right" action="act_elephant_turn_right_head" />
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="left" action="act_elephant_turn_left_head" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="right" action="act_elephant_walk_turn_right_head" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="left" action="act_elephant_walk_turn_left_head" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="right" action="act_elephant_trot_turn_right_head" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="left" action="act_elephant_trot_turn_left_head" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="right" action="act_elephant_canter_turn_right_head" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="left" action="act_elephant_canter_turn_left_head" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="right" action="act_elephant_gallop_turn_right_head" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="left" action="act_elephant_gallop_turn_left_head" />
+			<monster_usage_upper_body_movement pace="1" direction="front" action="act_elephant_stand_1" />
+			<monster_usage_upper_body_movement pace="1" direction="back" action="act_elephant_stand_1" />
+			<monster_usage_upper_body_movement pace="1" direction="none" action="act_elephant_stand_1" />
+		</monster_usage_upper_body_movements>
+		<monster_usage_movements>
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_elephant_turn_right" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_elephant_turn_left" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_elephant_backward_walk" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_elephant_backward_walk_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_elephant_backward_walk_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_elephant_backward_walk_stand" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_elephant_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_elephant_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_elephant_stand_for_movement_data" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_elephant_forward_walk" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_elephant_forward_walk_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_elephant_forward_walk_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="none" turn_direction="none" action="act_elephant_forward_walk_stand" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_elephant_forward_trot" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_elephant_forward_trot_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="left" turn_direction="none" action="act_elephant_forward_trot_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="none" turn_direction="none" action="act_elephant_forward_trot_stand" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_elephant_forward_canter" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_elephant_forward_canter_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="left" turn_direction="none" action="act_elephant_forward_canter_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="none" turn_direction="none" action="act_elephant_forward_canter_stand" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_elephant_forward_gallop_right_foot" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_elephant_forward_gallop_right_foot_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="left" turn_direction="none" action="act_elephant_forward_gallop_right_foot_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="none" turn_direction="none" action="act_elephant_forward_gallop_right_foot_stand" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="front" turn_direction="none" action="act_elephant_forward_gallop_left_foot" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="right" turn_direction="none" action="act_elephant_forward_gallop_left_foot_strafe_right" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="left" turn_direction="none" action="act_elephant_forward_gallop_left_foot_strafe_left" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_elephant_forward_gallop_left_foot_stand" />
+		</monster_usage_movements>
+		<monster_usage_movement_adders>
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_run_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_run_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="none" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="left" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="none" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="left" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="none" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="left" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="front" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="right" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="left" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+		</monster_usage_movement_adders>
+		<monster_usage_jumps>
+			<!-- TOTAL direction coverage (2026-06-12, same fix as the spider set above): the
+			     engine's jump-record lookup accepts NINE directions but the old front+none-only
+			     rows leave directional jump queries unanswerable -> 1.4.6 sentinel-deref AV
+			     (spider repro: monster_usage.cpp offset 0x634396). The elephant shares this
+			     template; cover all 9 before an elephant battle finds it on 1.4.6. -->
+			<monster_usage_jump jump_state="start" direction="front" action="act_horse_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front" action="act_horse_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front" action="act_horse_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front" action="act_horse_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front" action="act_horse_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="front_left" action="act_horse_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front_left" action="act_horse_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front_left" action="act_horse_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front_left" action="act_horse_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front_left" action="act_horse_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="front_right" action="act_horse_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front_right" action="act_horse_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front_right" action="act_horse_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front_right" action="act_horse_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front_right" action="act_horse_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="none" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="none" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="none" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="none" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="none" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="left" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="left" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="left" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="left" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="left" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="right" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="right" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="right" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="right" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="right" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="back" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="back" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="back" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="back" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="back" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="back_left" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="back_left" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="back_left" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="back_left" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="back_left" action="act_horse_jump_high_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="back_right" action="act_horse_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="back_right" action="act_horse_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="back_right" action="act_horse_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="back_right" action="act_horse_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="back_right" action="act_horse_jump_high_end_hard" is_hard="True" />
+		</monster_usage_jumps>
+		<monster_usage_falls>
+			<monster_usage_fall is_heavy="True" is_left_stance="False" direction="front" body_part="none" death_type="roll" action="act_elephant_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="right" body_part="none" death_type="roll" action="act_elephant_fall_slow_left" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="left" body_part="none" death_type="roll" action="act_elephant_fall_slow_right" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="front" body_part="none" death_type="roll" action="act_elephant_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="back" body_part="none" death_type="roll" action="act_elephant_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="right" body_part="none" death_type="other" action="act_elephant_fall_left" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="left" body_part="none" death_type="other" action="act_elephant_fall_right" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="front" body_part="none" death_type="other" action="act_elephant_fall_backwards" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="back" body_part="none" death_type="other" action="act_elephant_fall_backwards" />
+		</monster_usage_falls>
+		<monster_usage_strikes>
+			<monster_usage_strike is_heavy="True" is_left_stance="False" direction="back" body_part="none" impact="1" action="act_elephant_strike_back" />
+			<monster_usage_strike is_heavy="False" is_left_stance="False" direction="back" body_part="none" impact="1" action="act_elephant_strike_back_while_moving" />
+			<monster_usage_strike is_heavy="True" is_left_stance="False" direction="front" body_part="none" impact="1" action="act_elephant_strike_front" />
+			<monster_usage_strike is_heavy="False" is_left_stance="False" direction="front" body_part="none" impact="1" action="act_elephant_strike_front_while_moving" />
+		</monster_usage_strikes>
+	</monster_usage_set>
+
+  <!-- ============================== WAR CHARIOT usage (Rhûn Wainriders) ==============================
+       Ported verbatim from ROT 8.0 monster_usage_sets.xml <monster_usage_set id="chariot"> (issue #279).
+       References only act_chariot_* (registered in action_types.xml) + vanilla act_horse_*/adder actions. -->
+  <monster_usage_set id="chariot"
+                     rear_action="act_horse_rear"
+                     rear_damaged_action="act_horse_rear_damaged"
+                     dash_action="act_horse_dash"
+                     kick_action ="act_horse_kick"
+                     fast_quick_stop_action="act_horse_quick_stop_when_fast"
+                     gallop_acceleration_head_action="act_horse_gallop_acceleration_head"
+                     quick_stop_action="act_horse_quick_stop"
+                     hit_object_action="act_horse_hit_object"
+                     hit_object_falling_action="act_horse_hit_object_while_falling"
+                     jump_start_action="act_horse_jump_start">
+
+    <monster_usage_upper_body_movements>
+      <monster_usage_upper_body_movement pace="0"
+                                         direction="none"
+                                         turn_direction="right"
+                                         action="act_horse_turn_right_head" />
+      <monster_usage_upper_body_movement pace="0"
+                                         direction="none"
+                                         turn_direction="left"
+                                         action="act_horse_turn_left_head" />
+      <monster_usage_upper_body_movement pace="2"
+                                         direction="none"
+                                         turn_direction="right"
+                                         action="act_horse_walk_turn_right_head" />
+      <monster_usage_upper_body_movement pace="2"
+                                         direction="none"
+                                         turn_direction="left"
+                                         action="act_horse_walk_turn_left_head" />
+      <monster_usage_upper_body_movement pace="3"
+                                         direction="none"
+                                         turn_direction="right"
+                                         action="act_horse_trot_turn_right_head" />
+      <monster_usage_upper_body_movement pace="3"
+                                         direction="none"
+                                         turn_direction="left"
+                                         action="act_horse_trot_turn_left_head" />
+      <monster_usage_upper_body_movement pace="4"
+                                         direction="none"
+                                         turn_direction="right"
+                                         action="act_horse_canter_turn_right_head" />
+      <monster_usage_upper_body_movement pace="4"
+                                         direction="none"
+                                         turn_direction="left"
+                                         action="act_horse_canter_turn_left_head" />
+      <monster_usage_upper_body_movement pace="5"
+                                         direction="none"
+                                         turn_direction="right"
+                                         action="act_horse_gallop_turn_right_head" />
+      <monster_usage_upper_body_movement pace="5"
+                                         direction="none"
+                                         turn_direction="left"
+                                         action="act_horse_gallop_turn_left_head" />
+      <monster_usage_upper_body_movement pace="1"
+                                         direction="front"
+                                         action="act_chariot_idle_1" />
+      <monster_usage_upper_body_movement pace="1"
+                                         direction="none"
+                                         action="act_chariot_stand_1" />
+      <!-- parity audit 2026-06-12: vanilla horse has a pace=1 direction=back row (riderless idle);
+           relevant here because chariots are remountable, so riderless chariots exist mid-battle.
+           Pointed at act_chariot_stand_1 (already mapped in as_chariot) so the lookup always resolves. -->
+      <monster_usage_upper_body_movement pace="1"
+                                         direction="back"
+                                         action="act_chariot_stand_1" />
+    </monster_usage_upper_body_movements>
+    <monster_usage_movements>
+      <monster_usage_movement is_left_foot="False"
+                              pace="1"
+                              direction="none"
+                              turn_direction="right"
+                              action="act_chariot_turn_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="1"
+                              direction="none"
+                              turn_direction="left"
+                              action="act_chariot_turn_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="0"
+                              direction="front"
+                              turn_direction="none"
+                              action="act_chariot_backward_walk" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="0"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_horse_backward_walk_strafe_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="0"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_horse_backward_walk_strafe_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="0"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_backward_walk_stand" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="1"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_horse_strafe_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="1"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_horse_strafe_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="1"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_stand_for_movement_data" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="2"
+                              direction="front"
+                              turn_direction="none"
+                              action="act_chariot_forward_walk" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="2"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_chariot_forward_walk_strafe_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="2"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_chariot_forward_walk_strafe_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="2"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_forward_walk_stand" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="3"
+                              direction="front"
+                              turn_direction="none"
+                              action="act_chariot_forward_trot" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="3"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_chariot_forward_trot_strafe_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="3"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_chariot_forward_trot_strafe_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="3"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_forward_trot_stand" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="4"
+                              direction="front"
+                              turn_direction="none"
+                              action="act_chariot_forward_canter" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="4"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_chariot_forward_canter_strafe_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="4"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_chariot_forward_canter_strafe_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="4"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_forward_canter_stand" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="5"
+                              direction="front"
+                              turn_direction="none"
+                              action="act_chariot_forward_gallop_right_foot" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="5"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_horse_forward_gallop_right_foot_strafe_right" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="5"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_horse_forward_gallop_right_foot_strafe_left" />
+      <monster_usage_movement is_left_foot="False"
+                              pace="5"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_forward_gallop_right_foot_stand" />
+      <monster_usage_movement is_left_foot="True"
+                              pace="5"
+                              direction="front"
+                              turn_direction="none"
+                              action="act_chariot_forward_gallop_left_foot" />
+      <monster_usage_movement is_left_foot="True"
+                              pace="5"
+                              direction="right"
+                              turn_direction="none"
+                              action="act_horse_forward_gallop_left_foot_strafe_right" />
+      <monster_usage_movement is_left_foot="True"
+                              pace="5"
+                              direction="left"
+                              turn_direction="none"
+                              action="act_horse_forward_gallop_left_foot_strafe_left" />
+      <monster_usage_movement is_left_foot="True"
+                              pace="5"
+                              direction="none"
+                              turn_direction="none"
+                              action="act_chariot_forward_gallop_left_foot_stand" />
+    </monster_usage_movements>
+    <monster_usage_movement_adders>
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="1"
+                                    direction="none"
+                                    turn_direction="right"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="1"
+                                    direction="none"
+                                    turn_direction="left"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="0"
+                                    direction="front"
+                                    turn_direction="none"
+                                    action="act_run_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="0"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="0"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="0"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_run_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="1"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="1"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="1"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="2"
+                                    direction="front"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="2"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="2"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="2"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_horse_rider_walk_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="3"
+                                    direction="front"
+                                    turn_direction="none"
+                                    action="act_horse_rider_trot_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="3"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_trot_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="3"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_trot_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="3"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_horse_rider_trot_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="4"
+                                    direction="front"
+                                    turn_direction="none"
+                                    action="act_horse_rider_canter_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="4"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_canter_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="4"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_canter_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="4"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_horse_rider_canter_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="5"
+                                    direction="front"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="5"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="5"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="False"
+                                    pace="5"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="True"
+                                    pace="5"
+                                    direction="front"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="True"
+                                    pace="5"
+                                    direction="right"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="True"
+                                    pace="5"
+                                    direction="left"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+      <monster_usage_movement_adder is_left_foot="True"
+                                    pace="5"
+                                    direction="none"
+                                    turn_direction="none"
+                                    action="act_horse_rider_gallop_forward_adder" />
+    </monster_usage_movement_adders>
+
+
+    <monster_usage_jumps>
+      <monster_usage_jump jump_state="start"
+                          direction="front"
+                          action="act_horse_jump_forward" />
+      <monster_usage_jump jump_state="loop"
+                          direction="front"
+                          action="act_horse_jump_forward_loop"
+                          is_hard="False" />
+      <monster_usage_jump jump_state="loop"
+                          direction="front"
+                          action="act_horse_jump_forward_loop"
+                          is_hard="True" />
+      <monster_usage_jump jump_state="end"
+                          direction="front"
+                          action="act_horse_jump_forward_end"
+                          is_hard="False" />
+      <monster_usage_jump jump_state="end"
+                          direction="front"
+                          action="act_horse_jump_forward_end_hard"
+                          is_hard="True" />
+      <monster_usage_jump jump_state="start"
+                          direction="none"
+                          action="act_horse_jump_high" />
+      <monster_usage_jump jump_state="loop"
+                          direction="none"
+                          action="act_horse_jump_high_loop"
+                          is_hard="False" />
+      <monster_usage_jump jump_state="loop"
+                          direction="none"
+                          action="act_horse_jump_high_loop"
+                          is_hard="True" />
+      <monster_usage_jump jump_state="end"
+                          direction="none"
+                          action="act_horse_jump_high_end"
+                          is_hard="False" />
+      <monster_usage_jump jump_state="end"
+                          direction="none"
+                          action="act_horse_jump_high_end_hard"
+                          is_hard="True" />
+    </monster_usage_jumps>
+
+    <monster_usage_falls>
+      <monster_usage_fall is_heavy="True"
+                          is_left_stance="False"
+                          direction="front"
+                          body_part="none"
+                          death_type="roll"
+                          action="act_horse_fall_roll" />
+
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="right"
+                          body_part="none"
+                          death_type="roll"
+                          action="act_horse_fall_roll" />
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="left"
+                          body_part="none"
+                          death_type="roll"
+                          action="act_horse_fall_roll" />
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="front"
+                          body_part="none"
+                          death_type="roll"
+                          action="act_horse_fall_roll" />
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="back"
+                          body_part="none"
+                          death_type="roll"
+                          action="act_horse_fall_roll" />
+
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="right"
+                          body_part="none"
+                          death_type="other"
+                          action="act_horse_fall_left" />
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="left"
+                          body_part="none"
+                          death_type="other"
+                          action="act_horse_fall_right" />
+      <!-- parity audit 2026-06-12: vanilla horse covers front/back light-hit falls; ROT's flat
+           set lacked them (9 vs 7 rows). Missing fall rows = 1.4.6 strict-lookup risk on death. -->
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="front"
+                          body_part="none"
+                          death_type="other"
+                          action="act_horse_fall_backwards" />
+      <monster_usage_fall is_heavy="False"
+                          is_left_stance="False"
+                          direction="back"
+                          body_part="none"
+                          death_type="other"
+                          action="act_horse_fall_backwards" />
+    </monster_usage_falls>
+
+    <monster_usage_strikes>
+      <monster_usage_strike is_heavy="True"
+                            is_left_stance="False"
+                            direction="back"
+                            body_part="none"
+                            impact="1"
+                            action="" />
+      <monster_usage_strike is_heavy="False"
+                            is_left_stance="False"
+                            direction="back"
+                            body_part="none"
+                            impact="1"
+                            action="" />
+      <monster_usage_strike is_heavy="True"
+                            is_left_stance="False"
+                            direction="front"
+                            body_part="none"
+                            impact="1"
+                            action="" />
+      <monster_usage_strike is_heavy="False"
+                            is_left_stance="False"
+                            direction="front"
+                            body_part="none"
+                            impact="1"
+                            action="" />
+    </monster_usage_strikes>
+  </monster_usage_set>
+
+  <!-- ===== WARG (absorbed from Alliance.Wargs 2026-08-28; Byak0 assets, used with permission) =====
+       Verbatim from Alliance.Wargs/ModuleData/MonsterUsage/LOTR/lotr_monster_usage_warg.xml.
+       The rider-side mount_id="warg" rows live in monster_usage_sets.xslt, folded in the same change. -->
+	<monster_usage_set id="warg"
+						 rear_action="act_warg_rear"
+						 rear_damaged_action="act_warg_rear_damaged"
+						 dash_action="act_warg_dash"
+						 kick_action="act_warg_kick"
+						 fast_quick_stop_action="act_warg_quick_stop_when_fast"
+						 quick_stop_action="act_warg_quick_stop"
+						 hit_object_action="act_warg_hit_object"
+						 hit_object_falling_action="act_warg_hit_object_while_falling"
+						 jump_start_action="act_warg_jump_start">
+
+		<monster_usage_upper_body_movements>
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="right" action="act_warg_turn_right_head" />
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="left" action="act_warg_turn_left_head" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="right" action="act_warg_walk_turn_right_head" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="left" action="act_warg_walk_turn_left_head" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="right" action="act_warg_trot_turn_right_head" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="left" action="act_warg_trot_turn_left_head" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="right" action="act_warg_canter_turn_right_head" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="left" action="act_warg_canter_turn_left_head" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="right" action="act_warg_gallop_turn_right_head" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="left" action="act_warg_gallop_turn_left_head" />
+			<monster_usage_upper_body_movement pace="1" direction="front" action="act_warg_idle_1" />
+			<monster_usage_upper_body_movement pace="1" direction="none" action="act_warg_stand_1" />
+		</monster_usage_upper_body_movements>
+		
+		<monster_usage_movements>
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_warg_turn_right" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_warg_turn_left" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_warg_backward_walk" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_warg_backward_walk_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_warg_backward_walk_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_warg_backward_walk_stand" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_warg_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_warg_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_warg_stand_for_movement_data" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_warg_forward_walk" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_warg_forward_walk_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_warg_forward_walk_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="none" turn_direction="none" action="act_warg_forward_walk_stand" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_warg_forward_trot" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_warg_forward_trot_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="left" turn_direction="none" action="act_warg_forward_trot_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="none" turn_direction="none" action="act_warg_forward_trot_stand" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_warg_forward_canter" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_warg_forward_canter_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="left" turn_direction="none" action="act_warg_forward_canter_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="none" turn_direction="none" action="act_warg_forward_canter_stand" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_warg_forward_gallop_right_foot" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_warg_forward_gallop_right_foot_strafe_right" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="left" turn_direction="none" action="act_warg_forward_gallop_right_foot_strafe_left" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="none" turn_direction="none" action="act_warg_forward_gallop_right_foot_stand" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="front" turn_direction="none" action="act_warg_forward_gallop_left_foot" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="right" turn_direction="none" action="act_warg_forward_gallop_left_foot_strafe_right" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="left" turn_direction="none" action="act_warg_forward_gallop_left_foot_strafe_left" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_warg_forward_gallop_left_foot_stand" />
+		</monster_usage_movements>
+		
+		<monster_usage_movement_adders>
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_run_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_run_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="2" direction="none" turn_direction="none" action="act_horse_rider_walk_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="left" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="3" direction="none" turn_direction="none" action="act_horse_rider_trot_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="left" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="4" direction="none" turn_direction="none" action="act_horse_rider_canter_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="left" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="False" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="front" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="right" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="left" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
+		</monster_usage_movement_adders>
+
+		<monster_usage_jumps>
+			<monster_usage_jump jump_state="start" direction="front" action="act_warg_jump_forward" />
+			<monster_usage_jump jump_state="loop" direction="front" action="act_warg_jump_forward_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="front" action="act_warg_jump_forward_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="front" action="act_warg_jump_forward_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="front" action="act_warg_jump_forward_end_hard" is_hard="True" />
+			<monster_usage_jump jump_state="start" direction="none" action="act_warg_jump_high" />
+			<monster_usage_jump jump_state="loop" direction="none" action="act_warg_jump_high_loop" is_hard="False" />
+			<monster_usage_jump jump_state="loop" direction="none" action="act_warg_jump_high_loop" is_hard="True" />
+			<monster_usage_jump jump_state="end" direction="none" action="act_warg_jump_high_end" is_hard="False" />
+			<monster_usage_jump jump_state="end" direction="none" action="act_warg_jump_high_end_hard" is_hard="True" />
+		</monster_usage_jumps>
+
+		<monster_usage_falls>
+			<monster_usage_fall is_heavy="True" is_left_stance="False" direction="front" body_part="none" death_type="roll" action="act_warg_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="right" body_part="none" death_type="roll" action="act_warg_fall_slow_left" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="left" body_part="none" death_type="roll" action="act_warg_fall_slow_right" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="front" body_part="none" death_type="roll" action="act_warg_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="back" body_part="none" death_type="roll" action="act_warg_fall_roll" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="right" body_part="none" death_type="other" action="act_warg_fall_left" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="left" body_part="none" death_type="other" action="act_warg_fall_right" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="front" body_part="none" death_type="other" action="act_warg_fall_backwards" />
+			<monster_usage_fall is_heavy="False" is_left_stance="False" direction="back" body_part="none" death_type="other" action="act_warg_fall_backwards" />
+		</monster_usage_falls>
+
+		<monster_usage_strikes>
+			<monster_usage_strike is_heavy="True" is_left_stance="False" direction="back" body_part="none" impact="1" action="act_warg_strike_back" />
+			<monster_usage_strike is_heavy="False" is_left_stance="False" direction="back" body_part="none" impact="1" action="act_warg_strike_back_while_moving" />
+			<monster_usage_strike is_heavy="True" is_left_stance="False" direction="front" body_part="none" impact="1" action="act_warg_strike_front" />
+			<monster_usage_strike is_heavy="False" is_left_stance="False" direction="front" body_part="none" impact="1" action="act_warg_strike_front_while_moving" />
+		</monster_usage_strikes>
+	</monster_usage_set>
+  <!-- ===== /WARG ===== -->
+</monster_usage_sets>

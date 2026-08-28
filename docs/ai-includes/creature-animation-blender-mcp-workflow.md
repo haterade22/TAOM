@@ -111,6 +111,14 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
   `act_<mount>_*` → `rider_<mount>_*` clip (e.g. `act_warg_forward_gallop` → `rider_warg_forward_gallop`).
 - The **rider is parented to the mount's `rider_sit_bone`**; the clip poses the body relative to that.
   Sit bones: **warg `Spine1_M`, spider `chest_m`, elephant ` Spine1_05`, horse `horsespine2`.**
+
+> **Where the warg FBX sources live after the 2026-08-28 absorption.** The warg's runtime data and
+> cooked assets moved into `LOTRLOME_Armory`, but `Alliance.Wargs/AssetSources/` (646 MB of FBX and
+> PNG) deliberately did **not**: it is editor-only and does not ship. The paths below therefore still
+> point into the retired module's folder. **Retire that folder by renaming it to `Alliance.Wargs.OFF`,
+> not by deleting it**, or the rig and animation sources needed for any future warg animation work are
+> gone. See [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md).
+
 - **Warg has a full dedicated set** (`Alliance.Wargs\AssetSources\2_lotr\monster\warg\animations\
   rider_warg_*.fbx`): idle, stand×2, walk(±L/R, backward), trot, canter, gallop(±L/R), dash, quickstop,
   strafe(L/R), attack_running, attack_stand, jump(start/loop/end), taunt.

@@ -6,7 +6,7 @@ This is the multi-culture generalization of `validate_gondor_refs.py`. It is the
 gate against the underwear bug for the full TAOM faction lineup.
 
 Out of scope: weapons, arrows, mounts, harnesses — those live in other modules
-(LOTRAOM_weapons, Alliance.Wargs, Native).
+(LOTRAOM_weapons, Native).
 
 Usage:
     python tools/validate_all_troop_refs.py

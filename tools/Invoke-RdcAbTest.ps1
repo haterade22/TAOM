@@ -44,7 +44,7 @@ param(
     [Parameter(ParameterSetName = 'On')]    [switch] $On,
     [Parameter(ParameterSetName = 'Status')][switch] $Status,
     [Parameter(ParameterSetName = 'Report')][switch] $Report,
-    [string[]] $Modules = @('TAOM', 'TAOM_Map', 'LOTRLOME_Armory', 'Alliance.Wargs'),
+    [string[]] $Modules = @('TAOM', 'TAOM_Map', 'LOTRLOME_Armory'),
     [string]   $GameDir,
     [int]      $SinceMinutes = 120
 )

@@ -102,7 +102,7 @@
 			   CanBeInGroup="true"
 			   CanSprint="true"
 			   IsHumanoid="true"
-			   CanRide="false"
+			   CanRide="true"
 			   CanWieldWeapon="true"
 			   CanCrouch="true"
 			   CanRetreat="true" />

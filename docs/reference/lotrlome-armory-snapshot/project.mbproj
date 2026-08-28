@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="solution">
+	<file id="soln_skins" name="ModuleData/skins.xml" type="skin" />
+	<file id="soln_action_sets" name="ModuleData/action_sets.xml" type="action_set" />
+	<file id="soln_monsters" name="ModuleData/monsters.xml" type="monster" />
+	<!-- Spider: the runtime loads a module's animation data ONLY from project.mbproj <file> entries
+	     whose id is a RECOGNIZED standard value (soln_action_sets / soln_action_types /
+	     soln_monster_usage_sets). The previous soln_spider_* CUSTOM ids were silently ignored at
+	     runtime, so action_sets_spider.xml / action_types_spider.xml / lotr_monster_usage_spider.xml
+	     never loaded -> as_spider + the "spider" monster_usage set never registered ->
+	     GetMonsterUsageIndex("spider") = -1 -> native CreateAgent DivideByZero on spawn (2026-06-04).
+	     Fix: standard ids only. as_spider is merged into the module's single action_sets.xml
+	     (soln_action_sets, above); spider action_types + monster_usage_set are top-level files. The
+	     old Animations/ + MonsterUsage/ subfolder copies are now superseded and unused. -->
+	<file id="soln_action_types" name="ModuleData/action_types.xml" type="action_type" />
+	<file id="soln_monster_usage_sets" name="ModuleData/monster_usage_sets.xml" type="monster_usage_set" />
+	<file id="soln_spider_monster" name="ModuleData/Monsters/LOTR/lotr_monster_spider.xml" type="monster" />
+	<!-- LOTR misc action_type declarations (CC father/mother, drunk_trio, lancer_ride, polearm_brace) -->
+	<file id="soln_lotr_misc_action_types" name="ModuleData/Animations/action_types_lotr_misc.xml" type="action_type" />
+	<!-- Elephant: monster def only. Elephant action_sets (as_elephant, as_elephant_town_and_village,
+	     as_elephant_map) are merged into the SINGLE soln_action_sets file above (action_sets.xml),
+	     mirroring the spider pattern. DO NOT add a second soln_action_sets entry pointing at a separate
+	     action_sets_elephant.xml: MergeElements is called once per additional soln_action_sets entry on
+	     the fully-accumulated element1 (all prior modules merged). If ANY child XPath in that accumulated
+	     tree is absent from the action_sets XSD schema → KeyNotFoundException at startup (Crash #3,
+	     2026-06-08). The standalone action_sets_elephant.xml still exists as a reference copy but is
+	     NOT registered anywhere; the live entries are the appended block at the bottom of action_sets.xml. -->
+	<file id="soln_monsters" name="ModuleData/Monsters/LOTR/lotr_monster_elephant.xml" type="monster" />
+	<file id="soln_module_sound" name="ModuleData/module_sounds.xml" type="module_sound" />
+	<!-- Warg (absorbed from Alliance.Wargs 2026-08-28; Byak0 assets, used with permission).
+	     as_warg / as_warg_map / as_warg_town_and_village are merged into the SINGLE soln_action_sets
+	     file above, and the 80 act_warg_* types into soln_action_types, per the elephant's Crash #3.
+	     soln_monsters / soln_physics_materials / soln_collision_infos have NO XSD, so duplicating those
+	     ids is a plain concat, not a MergeElements pass. Ledger: docs/reference/lotrlome-warg-changes.md -->
+	<file id="soln_monsters" name="ModuleData/Monsters/LOTR/lotr_monster_warg.xml" type="monster" />
+	<file id="soln_physics_materials" name="ModuleData/physics_materials.xml" type="physics_material" />
+	<file id="soln_collision_infos" name="ModuleData/CollisionInfos/LOTR/collision_infos_warg.xml" type="collision_infos" />
+</base>

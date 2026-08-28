@@ -132,7 +132,7 @@ MCM: "Combat Mechanics" group (GroupOrder 24) — master + 8 per-mechanic toggle
 
 ## Dependencies
 
-`IRaceManager` (race validation), `ICareerAgentStatService` (inherited career passives), `IPathService`/`IModLogger`, `FiniteFloatValidator`/`SettingClamp`, `Monster.Weight` + `RelativeSpeedLimitForCharge` from monsters.xml (Native + LOTRLOME + Alliance.Wargs).
+`IRaceManager` (race validation), `ICareerAgentStatService` (inherited career passives), `IPathService`/`IModLogger`, `FiniteFloatValidator`/`SettingClamp`, `Monster.Weight` + `RelativeSpeedLimitForCharge` from monsters.xml (Native + LOTRLOME; the warg Monster moved into LOTRLOME on 2026-08-28).
 
 ## Tests
 
@@ -164,6 +164,7 @@ All overrides are per-hit. Services precompute lookups at construction (monster-
 
 ## Referenced by
 
+- [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

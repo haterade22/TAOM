@@ -54,6 +54,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Source | Tokens | License | Derivation | Covers | Status |
 |---|---|---|---|---|---|
 | Alliance | `Byak0/Alliance` `Alliance mod` | GPL-3.0 | clean-room | `Main/SceneScripts/**` | cleared |
+| Alliance.Wargs (Byak0) | `Alliance.Wargs` | author-granted, terms informal | redistributed | `<game>/Modules/Alliance.Wargs/**` (and, after absorption, the warg subset inside `LOTRLOME_Armory`) | cleared |
 | BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
@@ -90,7 +91,7 @@ TAOM's own and predecessor modules. The checker skips these entirely.
 
 <!-- taom-owned-start -->
 `TAOM` `TAOM_Map` `TAOM_Online` `TAOM.Dependencies` `TAOM.NativeSkinFixes`
-`LOTRLOME` `LOTRLOME_Armory` `Alliance.Wargs` `LOTRAOM`
+`LOTRLOME` `LOTRLOME_Armory` `LOTRAOM`
 <!-- taom-owned-end -->
 
 Vanilla TaleWorlds module ids (`Native`, `SandBox`, `SandBoxCore`, `StoryMode`, `CustomBattle`,
@@ -111,6 +112,35 @@ written from the spec, and a cross-check pass confirmed no structural collision.
 per-file table: [`docs/scene-scripts/ATTRIBUTION.md`](../scene-scripts/ATTRIBUTION.md). Specs:
 `docs/scene-scripts/specs/`. Every covered file carries a four-line header naming Alliance, its
 license, and its spec.
+
+### Alliance.Wargs
+
+Upstream: Byak0, the author of the Alliance mod (https://github.com/Byak0/Alliance). Granted to the
+TAOM maintainer with full permission to use, which is why the module ships its `AssetSources/` FBX
+and PNG alongside the cooked packs. Basis recorded 2026-08-28 on the maintainer's statement; the
+grant is informal, so `author-granted, terms informal` is the honest value rather than an SPDX id.
+The same shape as the ADOD_Beasts row below, and worth one line in writing for the same reason.
+
+**This corrects an earlier misclassification.** Until 2026-08-28 `Alliance.Wargs` sat in this file's
+taom-owned token block, alongside `TAOM_Map` and `LOTRAOM`. That was an affirmative claim of
+ownership over another author's art, which `.claude/rules/provenance.md` names as the same defect as
+an unattributed taking, pointed the other way. `tools/package_release.py:51` had it right, calling
+the module "a redistributed companion" and keeping it out of `DEFAULT_MODULES`.
+
+**Distinct from the Alliance row above.** That row covers a GPL-3.0 clean-room port of Alliance's
+scene scripts into `Main/SceneScripts/**`, where the copyleft is the whole reason for the clean-room
+procedure. This row covers art assets given directly to the maintainer: a different grant, a
+different derivation, and no copyleft reaching TAOM's code.
+
+**What it covers.** The warg skeleton, meshes, textures, 129 animation clips and sound bank, plus the
+Isengard orc-rider equipment and uruk skin assets that ship in the same module. TAOM's warg
+*behaviour* is not covered here and is not derived from Byak0: `Main/Features/Warg/**` and
+`Main/Features/AdvancedCombat/**` are original TAOM work ported from LOTRAOM (see `docs/features/warg-combat.md`).
+
+**Notice obligation.** While the module is a separate player download, the redistribution is Byak0's
+own. If the warg data is absorbed into `LOTRLOME_Armory` (which `package_release.py` ships by
+default), TAOM starts redistributing these assets itself, and that move must land a
+`THIRD-PARTY-LICENSES.txt` entry naming Byak0 in the same change.
 
 ### BetterExceptionWindow
 
@@ -428,3 +458,20 @@ maintainer-owned and are not covered by this row.
 **Explicitly excluded: the neo-Khuzdul written by David Salo for the Peter Jackson films.** It is his
 creative work, TAOM derives nothing from it, and the lexicon carries a standing rule forbidding its
 import. There is no row for it because there is nothing to declare, and that is the intended state.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/features/field-camp.md](../features/field-camp.md)
+- [docs/features/refuge.md](../features/refuge.md)
+- [docs/features/supply-lines.md](../features/supply-lines.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/asset-provenance.md](./asset-provenance.md)
+- [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
+- [docs/reviews/adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md)
+
+<!-- backlinks-end -->

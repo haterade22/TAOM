@@ -6,7 +6,7 @@ Welcome testers! Work through each section below and report any **crashes, visua
 
 ## :wrench: Pre-Test Setup
 - Ensure **LOTRLOME_Armory** module is installed (NOT `Armory_2`)
-- Ensure **Alliance.Wargs** module is installed
+- Ensure **LOTRLOME_Armory** module is installed (it carries the warg data since 2026-08-28; **Alliance.Wargs** is no longer required and should be unchecked)
 - Start with a **fresh new campaign** for most tests
 - Enable **MCM** mod settings menu if available
 

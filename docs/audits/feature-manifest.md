@@ -68,7 +68,7 @@ Single source of truth for "what features exist in TAOM and what wiring touchpoi
 | TimeAcceleration | Service+UI | ✅ | ✅ | — | 0 | 0 | — | Time Acceleration | ✅ | ✅ | `OnApplicationTick` consumer (line 92). Adapter pattern. UI mixin/prefab present. |
 | TroopProgression | Model | ✅ | ✅ | — | 0 | 2 (`TaomPartyWageModel`, `TaomVolunteerModel`) | `troops/` | — | ✅ | ✅ | Also feeds `TaomCharacterStatsModel` (registered under CharacterCreation in matrix; data span overlaps). |
 | TroopWeight | Patch+Service | ✅ | ✅ | `Patch17_TroopWeight` | 0 | 0 | `TroopWeights/` | Troop Weight | ✅ | ✅ | 4 hook services resolved at lines 135-138. |
-| Warg | Service | ✅ | ✅ | — | 0 | 0 | — (data in external `Alliance.Wargs` module) | — | ✅ | ✅ | External module dependency for monster/animations. |
+| Warg | Service | ✅ | ✅ | — | 0 | 0 | `LOTRLOME_Armory` (external) | — | ✅ | ✅ | Monster/animation data lives in LOTRLOME_Armory (absorbed from Alliance.Wargs 2026-08-28). |
 | WeatherBoundsGuard | Patch | ❌ | ❌ | `Patch10_WeatherBoundsGuard` | 0 | 0 | — | — | ✅ | ✅ | Pure Harmony; intentional. |
 
 ## Cross-cuts

@@ -182,6 +182,14 @@ The combat bite-collision uses the **front legs' outer bones** (`SpiderConfig` f
 - Variants: `spider_correct_Xaxis.fbx` (primary X — proves it breaks symmetry), `spider_correct_Yleaf.fbx`.
 
 ## Source-of-truth reference: the WARG (works in-game)
+
+> **Where the warg FBX sources live after the 2026-08-28 absorption.** The warg's runtime data and
+> cooked assets moved into `LOTRLOME_Armory`, but `Alliance.Wargs/AssetSources/` (646 MB of FBX and
+> PNG) deliberately did **not**: it is editor-only and does not ship. The paths below therefore still
+> point into the retired module's folder. **Retire that folder by renaming it to `Alliance.Wargs.OFF`,
+> not by deleting it**, or the rig and animation sources needed for any future warg animation work are
+> gone. See [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md).
+
 `E:\Steam\...\Modules\Alliance.Wargs` — `AssetSources/2_lotr/monster/warg/Warg_Rig_V5.fbx` (rig, root `Skeleton_Warg`), `animations/*.fbx` (anim roots `Skeleton_Warg_notused`), `Assets/.../animations/*_geo.tpac` (compiled clips). This is where the `_notused` convention + the working-creature structure were confirmed.
 
 ## Mesh-split — the "per-mesh bone limit" was a MISDIAGNOSIS (corrected 2026-06-13)

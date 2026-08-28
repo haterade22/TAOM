@@ -127,8 +127,8 @@ attribute gotcha recorded under Gotchas below.
 | **Unbound adult female skins** | `uruk_hai` and `berserker` have a custom voice on the adult male skin and vanilla `female_*` on the adult female one. Narrow, since female troops are rare, but it is a real hole. Corrected 2026-08-25 from an earlier and wrong "diluted skins" reading |
 | **Seven unbound races** | `elf`, `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice |
 | **Orphaned Théoden set** | 83 clips under `ModuleSounds/LOTR/Rohan/Voice/Theoden` are registered in `module_sounds.xml` and reachable by nothing: no Rohan voice definition exists, and Rohan is the vanilla human race anyway |
-| **Dangling mbproj entry** | `project.mbproj` line 9 declares `ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml`; that directory does not exist in this repo. Fails silently |
-| **`uruk_01` defined twice** | Both here and in `Alliance.Wargs/ModuleData/VoiceDefinitions/LOTR/lotr_uruk_voice_def.xml`. Cross-module merge precedence is undocumented |
+| ~~**Dangling mbproj entry**~~ | FIXED 2026-08-28. `project.mbproj` line 9 declares `ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml`; the file now exists, carrying `warg_01` absorbed from the retired `Alliance.Wargs` module. See [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md) |
+| ~~**`uruk_01` defined twice**~~ | RESOLVED 2026-08-28 by retiring `Alliance.Wargs`. Its duplicate `uruk_01` was deliberately not carried over in the absorption; TAOM's is now the only definition |
 | **mp3 of undetermined support** | 93 `.mp3` files under `ModuleSounds/LOTR/Dwarf/`. Native's own comment documents `.ogg` and `.wav` only; whether FMOD accepts mp3 here could not be determined from the shipping-client decompile and needs a runtime test |
 | **Asset provenance** | The custom voice library reads as BFME-sourced on filename convention: `Death1_Isengard.wav`, `Grunt1_Isengard.wav`, `D1_Warcry1..5`, `D1_Battlecry1..3`, Théoden's `Advance_Forth and fear no darkness.wav`, Lurtz's `Defend me you cowards.wav`. Covers dwarf, uruk, uruk_hai, Lurtz and Théoden |
 
@@ -140,7 +140,7 @@ clips plays, so it should follow asset replacement rather than precede it.
 | Route | Applies to | Mechanism | Status |
 |-------|-----------|-----------|--------|
 | **A. `skins.xml` `<voice_types>`** | any race with its own `<race>` entry | add the definition name to the skin's voice pool | **Proven, in use, 7 races bound.** Per-race only. Edits an unversioned external module |
-| **B. monster sound class** | orcs, trolls, ents, wargs | distinct `sound_and_collision_info_class` on the `<monster>`, matched on the `<voice_definition>` | Untried here. All three TAOM definitions declare `human`. This is how vanilla does `horse` / `camel` / `bovine`; `Alliance.Wargs` uses it for `warg_01` |
+| **B. monster sound class** | orcs, trolls, ents, wargs | distinct `sound_and_collision_info_class` on the `<monster>`, matched on the `<voice_definition>` | Untried here. All three TAOM definitions declare `human`. This is how vanilla does `horse` / `camel` / `bovine`, and how `warg_01` works |
 | **C. `MBAgentVisuals.SetVoiceDefinitionIndex`** | anything | force a voice definition on agent spawn from C# | **Only route that can key on culture.** Needs a MissionBehavior |
 
 **Route A is the default.** It already works and needs no code. Every one of the seven unbound races
@@ -236,7 +236,7 @@ GameModel work per `.claude/rules/gamemodels.md`.
 | `Main/_Module/ModuleSounds/LOTR/<Race>/Voice/` | Audio assets |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/skins.xml` | **External, unversioned.** Owns `soln_skins` and every race-to-voice binding |
 | `docs/reference/lotrlome-armory-snapshot/skins.xml` | Repo snapshot, byte-identical to live as of 2026-08-12 (5,678,421 bytes, 45 custom refs) |
-| `<game>/Modules/Alliance.Wargs/ModuleData/VoiceDefinitions/LOTR/` | Ships `warg_01` (the route B mount example) and a duplicate `uruk_01` |
+| `Main/_Module/ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml` | `warg_01`, the route B mount example. Moved here 2026-08-28 from the retired `Alliance.Wargs`, filling the dangling `project.mbproj` entry |
 
 ## How to add a voice for a race
 
@@ -418,3 +418,15 @@ by `DreadAuraConfig.FearVoiceChancePerPulse` (default 0.02). `Fear` is bound onl
 
 None filed. The dangling mbproj entry, the unbound adult female skins, and the asset provenance each
 warrant one.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+
+<!-- backlinks-end -->

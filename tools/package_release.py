@@ -48,7 +48,8 @@ EXCLUDE = "exclude"
 UNKNOWN = "unknown"
 
 # Default module set: the TAOM release modules that ship RDC, plus Dependencies.
-# Alliance.Wargs is a redistributed companion (README.md) -- opt in explicitly.
+# Alliance.Wargs was absorbed into LOTRLOME_Armory on 2026-08-28 and is no longer shipped
+# as its own module; see docs/reference/lotrlome-warg-changes.md.
 DEFAULT_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory", "TAOM.Dependencies")
 
 # Top-level directories observed across TAOM's release set AND vanilla Native /

@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<action_types>
+	<!-- ==================== SPIDER ==================== -->
+	<!-- Action types for the giant spider creature. Bound to animations in
+	     action_sets_spider.xml under the 'as_spider' action_set. -->
+	<!-- Idles -->
+	<action name="act_spider_idle" />
+	<!-- actt_idle dedicated row action (parity audit 2026-06-12): the warg's upper-body
+	     pace-1/front row uses act_warg_idle_1 TYPED actt_idle; this is the spider mirror.
+	     Kept separate from the untyped act_spider_idle (which feeds verb slots). -->
+	<action name="act_spider_idle_1" type="actt_idle" />
+	<action name="act_spider_idle_2" />
+	<action name="act_spider_idle_dg" />
+	<!-- Movement -->
+	<action name="act_spider_walk_forward" />
+	<action name="act_spider_walk_left" />
+	<action name="act_spider_walk_right" />
+	<action name="act_spider_run_forward" />
+	<!-- actt_dash (NOT actt_jump) 2026-06-12: warg (act_warg_jump_start) AND elephant
+	     (act_elephant_jump_start) both type their usage-set jump_start_action as actt_dash.
+	     A jump-TYPED action that is absent from the monster_usage_jump rows misses the engine's
+	     jump_actions_map_ - tolerated on 1.4.5, AV on 1.4.6 (monster_usage.cpp sentinel deref,
+	     ~34s into battle at first spider jump). Backup: .bak-jumptype-146. -->
+	<action name="act_spider_jump" type="actt_dash" />
+	<action name="act_spider_turn_left" />
+	<action name="act_spider_turn_right" />
+	<!-- Attacks -->
+	<action name="act_spider_attack_front" />
+	<action name="act_spider_attack_back" />
+	<action name="act_spider_attack_left" />
+	<action name="act_spider_attack_right" />
+	<action name="act_spider_attack_top" />
+	<action name="act_spider_attack_bottom" />
+	<action name="act_spider_attack_charge" />
+	<!-- Hit reactions -->
+	<action name="act_spider_hit_front" />
+	<action name="act_spider_hit_back" />
+	<action name="act_spider_hit_left" />
+	<action name="act_spider_hit_right" />
+	<!-- Death -->
+	<action name="act_spider_death" />
+	<action name="act_spider_death_2" />
+	<!-- Mount knockdown/fall surface (2026-06-11): every Mountable monster needs TYPED
+	     actt_fall codes + _continue siblings (warg/elephant parity); the blow handler
+	     chains <fall>_continue on downed mounts; missing/untyped = native AV (HandleBlowAux). -->
+	<action name="act_spider_fall_right" type="actt_fall" />
+	<action name="act_spider_fall_right_continue" type="actt_fall" />
+	<action name="act_spider_fall_left" type="actt_fall" />
+	<action name="act_spider_fall_left_continue" type="actt_fall" />
+	<action name="act_spider_fall_roll" type="actt_fall" />
+	<action name="act_spider_fall_roll_continue" type="actt_fall" />
+	<action name="act_spider_fall_backwards" type="actt_fall" />
+	<action name="act_spider_fall_backwards_continue" type="actt_fall" />
+	<action name="act_spider_fall_slow_right" type="actt_fall" />
+	<action name="act_spider_fall_slow_right_continue" type="actt_fall" />
+	<action name="act_spider_fall_slow_left" type="actt_fall" />
+	<action name="act_spider_fall_slow_left_continue" type="actt_fall" />
+	<!-- Mount verb surface, TYPED (elephant parity): the native dispatch is type-driven
+	     (actt_rear fires on damaged mounts, actt_mount_strike on tramples, etc.); untyped
+	     verb actions feed the wrong native handler. 2026-06-11 blow-AV fix, round 2. -->
+	<action name="act_spider_rear" type="actt_rear" />
+	<action name="act_spider_rear_damaged" type="actt_rear" />
+	<action name="act_spider_dash" type="actt_dash" />
+	<action name="act_spider_kick" type="actt_kick" />
+	<action name="act_spider_quick_stop" type="actt_mount_quick_stop" />
+	<action name="act_spider_quick_stop_when_fast" type="actt_mount_quick_stop" />
+	<action name="act_spider_hit_object" type="actt_hit_object" />
+	<action name="act_spider_hit_object_while_falling" type="actt_hit_object" />
+	<action name="act_spider_strike_front" type="actt_mount_strike" />
+	<action name="act_spider_strike_back" type="actt_mount_strike" />
+	<!-- UNTYPED while-moving light strikes (parity audit 2026-06-12): warg's is_heavy=False
+	     strike rows use dedicated untyped *_while_moving actions; same shape here. -->
+	<action name="act_spider_strike_front_while_moving" />
+	<action name="act_spider_strike_back_while_moving" />
+	<!-- Misc -->
+	<action name="act_spider_taunt" />
+
+	<!-- ==================== ELEPHANT ==================== -->
+	<!-- Action types for the war elephant mount. Ported from ADOD_Beasts
+	     action_types.xslt (MCMv5 conflict prevents ADOD from loading alongside TAOM).
+	     All act_elephant_* references in action_sets_elephant.xml and
+	     monster_usage_sets.xml must be declared here or TickAnimations crashes
+	     (AV on unregistered action type lookup). -->
+	<!-- Rider dismount -->
+	<action name="act_elephant_rider_fall_right" />
+	<action name="act_elephant_rider_fall_left" />
+	<!-- Idles / reference -->
+	<action name="act_elephant_stand_1" type="actt_idle" />
+	<action name="act_elephant_stand_2" type="actt_idle" />
+	<action name="act_elephant_stand_3" type="actt_idle" />
+	<action name="act_elephant_stand_for_movement_data" />
+	<!-- Walk -->
+	<action name="act_elephant_forward_walk" />
+	<action name="act_elephant_forward_walk_stand" />
+	<action name="act_elephant_forward_walk_strafe_left" />
+	<action name="act_elephant_forward_walk_strafe_right" />
+	<!-- Trot -->
+	<action name="act_elephant_forward_trot" />
+	<action name="act_elephant_forward_trot_stand" />
+	<action name="act_elephant_forward_trot_strafe_left" />
+	<action name="act_elephant_forward_trot_strafe_right" />
+	<!-- Canter -->
+	<action name="act_elephant_forward_canter" />
+	<action name="act_elephant_forward_canter_stand" />
+	<action name="act_elephant_forward_canter_strafe_left" />
+	<action name="act_elephant_forward_canter_strafe_right" />
+	<!-- Gallop (right foot) -->
+	<action name="act_elephant_forward_gallop_right_foot" />
+	<action name="act_elephant_forward_gallop_right_foot_stand" />
+	<action name="act_elephant_forward_gallop_right_foot_strafe_left" />
+	<action name="act_elephant_forward_gallop_right_foot_strafe_right" />
+	<!-- Gallop (left foot) -->
+	<action name="act_elephant_forward_gallop_left_foot" />
+	<action name="act_elephant_forward_gallop_left_foot_stand" />
+	<action name="act_elephant_forward_gallop_left_foot_strafe_left" />
+	<action name="act_elephant_forward_gallop_left_foot_strafe_right" />
+	<!-- Backward -->
+	<action name="act_elephant_backward_walk" />
+	<action name="act_elephant_backward_walk_stand" />
+	<action name="act_elephant_backward_walk_strafe_left" />
+	<action name="act_elephant_backward_walk_strafe_right" />
+	<!-- Strafes -->
+	<action name="act_elephant_strafe_left" />
+	<action name="act_elephant_strafe_right" />
+	<!-- Turns (body) -->
+	<action name="act_elephant_turn_left" />
+	<action name="act_elephant_turn_right" />
+	<!-- Turns (head) -->
+	<action name="act_elephant_turn_left_head" />
+	<action name="act_elephant_turn_right_head" />
+	<action name="act_elephant_walk_turn_left_head" />
+	<action name="act_elephant_walk_turn_right_head" />
+	<action name="act_elephant_trot_turn_left_head" />
+	<action name="act_elephant_trot_turn_right_head" />
+	<action name="act_elephant_canter_turn_left_head" />
+	<action name="act_elephant_canter_turn_right_head" />
+	<action name="act_elephant_gallop_turn_left_head" />
+	<action name="act_elephant_gallop_turn_right_head" />
+	<!-- Attacks -->
+	<action name="act_elephant_attack_1" />
+	<action name="act_elephant_attack_2" />
+	<action name="act_elephant_attack_3" />
+	<action name="act_elephant_attack_4" />
+	<!-- Strikes (trample) -->
+	<action name="act_elephant_strike_back" type="actt_mount_strike" />
+	<action name="act_elephant_strike_front" type="actt_mount_strike" />
+	<action name="act_elephant_strike_back_while_moving" type="actt_mount_strike" />
+	<action name="act_elephant_strike_front_while_moving" type="actt_mount_strike" />
+	<!-- Special movement -->
+	<action name="act_elephant_rear" type="actt_rear" />
+	<action name="act_elephant_rear_damaged" type="actt_rear" />
+	<action name="act_elephant_dash" type="actt_dash" />
+	<action name="act_elephant_jump_start" type="actt_dash" />
+	<action name="act_elephant_kick" type="actt_kick" />
+	<action name="act_elephant_quick_stop" type="actt_mount_quick_stop" />
+	<action name="act_elephant_quick_stop_when_fast" type="actt_mount_quick_stop" />
+	<action name="act_elephant_gallop_acceleration_head" />
+	<action name="act_elephant_hit_object" type="actt_hit_object" />
+	<action name="act_elephant_hit_object_while_falling" type="actt_hit_object" />
+	<!-- Dismount -->
+	<action name="act_dismount_elephant_to_left" />
+	<action name="act_dismount_elephant_to_right" />
+	<!-- Falls -->
+	<action name="act_elephant_fall_right" type="actt_fall" />
+	<action name="act_elephant_fall_right_continue" type="actt_fall" />
+	<action name="act_elephant_fall_left" type="actt_fall" />
+	<action name="act_elephant_fall_left_continue" type="actt_fall" />
+	<action name="act_elephant_fall_roll" type="actt_fall" />
+	<action name="act_elephant_fall_roll_continue" type="actt_fall" />
+	<action name="act_elephant_fall_backwards" type="actt_fall" />
+	<action name="act_elephant_fall_slow_right" type="actt_fall" />
+	<action name="act_elephant_fall_slow_right_continue" type="actt_fall" />
+	<action name="act_elephant_fall_slow_left" type="actt_fall" />
+	<action name="act_elephant_fall_slow_left_continue" type="actt_fall" />
+
+	<!-- ==================== WAR CHARIOT (Rhûn Wainriders — ROT 8.0 port, issue #279) ====================
+	     23 mount action types + 4 actt_mount rider actions, 1-for-1 from ROT action_types.xml.
+	     The act_mount_chariot_* names are derived by the engine from monster_usage="chariot". -->
+	<action name="act_chariot_stand_for_movement_data"/>
+	<action name="act_chariot_stand_1"/>
+	<action name="act_chariot_idle_1" type="actt_idle" />
+	<action name="act_chariot_forward_walk_stand" />
+	<action name="act_chariot_forward_walk" />
+	<action name="act_chariot_forward_walk_strafe_right" />
+	<action name="act_chariot_forward_walk_strafe_left" />
+	<action name="act_chariot_forward_trot_stand" />
+	<action name="act_chariot_forward_trot" />
+	<action name="act_chariot_forward_trot_strafe_right" />
+	<action name="act_chariot_forward_trot_strafe_left" />
+	<action name="act_chariot_forward_canter_stand" />
+	<action name="act_chariot_forward_canter" />
+	<action name="act_chariot_forward_canter_strafe_right" />
+	<action name="act_chariot_forward_canter_strafe_left" />
+	<action name="act_chariot_forward_gallop_left_foot_stand" />
+	<action name="act_chariot_forward_gallop_left_foot" />
+	<action name="act_chariot_forward_gallop_right_foot_stand" />
+	<action name="act_chariot_forward_gallop_right_foot" />
+	<action name="act_chariot_turn_right" />
+	<action name="act_chariot_turn_left" />
+	<action name="act_chariot_backward_walk_stand" />
+	<action name="act_chariot_backward_walk" />
+	<action type="actt_mount" name="act_mount_chariot_from_left"/>
+	<action type="actt_mount" name="act_mount_chariot_fast_from_left"/>
+	<action type="actt_mount" name="act_mount_chariot_from_right"/>
+	<action type="actt_mount" name="act_mount_chariot_fast_from_right"/>
+
+	<!-- ===== WARG (absorbed from Alliance.Wargs 2026-08-28; Byak0 assets, used with permission) =====
+	     Verbatim from Alliance.Wargs/ModuleData/Animations/action_types_warg.xml. The type= values are
+	     load-bearing for the 1.4.6 native lookup hardening: copy them, never re-derive. -->
+	<!-- Warg -->
+	<action name="act_warg_attack_stand" type="actt_mount_strike" />
+	<action name="act_warg_attack_running" type="actt_mount_strike" />
+	
+	<action name="act_warg_stand_for_movement_data"/>
+	<action name="act_warg_stand_1"/>
+	<action name="act_warg_stand_2"/>
+	<action name="act_warg_idle_1" type="actt_idle" />
+	<action name="act_warg_idle_2" type="actt_idle" />
+	<action name="act_warg_rear"/>
+	<action name="act_warg_rear_damaged"/>
+	<action name="act_warg_kick"/>
+
+	<action name="act_warg_rider_walk_forward_adder" />
+	
+	<action name="act_warg_hit_object" type="actt_hit_object" />
+	<action name="act_warg_hit_object_while_falling" type="actt_hit_object" />
+	
+	<action name="act_warg_gallop_acceleration_head"/>
+	<action name="act_warg_forward_walk_stand" />
+	<action name="act_warg_forward_walk" />
+	<action name="act_warg_forward_walk_strafe_right" />
+	<action name="act_warg_forward_walk_strafe_left" />
+	<action name="act_warg_forward_trot_stand" />
+	<action name="act_warg_forward_trot" />
+	<action name="act_warg_forward_trot_strafe_right" />
+	<action name="act_warg_forward_trot_strafe_left" />
+	<action name="act_warg_forward_canter_stand" />
+	<action name="act_warg_forward_canter" />
+	<action name="act_warg_forward_canter_strafe_right" />
+	<action name="act_warg_forward_canter_strafe_left" />
+	<action name="act_warg_forward_gallop_left_foot_stand" />
+	<action name="act_warg_forward_gallop_left_foot" />
+	<action name="act_warg_forward_gallop_left_foot_strafe_right" />
+	<action name="act_warg_forward_gallop_left_foot_strafe_left" />
+	<action name="act_warg_forward_gallop_right_foot_stand" />
+	<action name="act_warg_forward_gallop_right_foot" />
+	<action name="act_warg_forward_gallop_right_foot_strafe_right" />
+	<action name="act_warg_forward_gallop_right_foot_strafe_left" />
+	<action name="act_warg_turn_right" />
+	<action name="act_warg_turn_left" />
+	<action name="act_warg_backward_walk_stand" />
+	<action name="act_warg_backward_walk" />
+	<action name="act_warg_backward_walk_strafe_right" />
+	<action name="act_warg_backward_walk_strafe_left" />
+	<action name="act_warg_strike_back" type="actt_mount_strike" />
+	<action name="act_warg_strike_front" type="actt_mount_strike" />
+	<action name="act_warg_strike_back_while_moving" />
+	<action name="act_warg_strike_front_while_moving" />
+	
+
+	<action name="act_warg_strafe_right" />
+	<action name="act_warg_strafe_left" />
+
+	<action name="act_warg_turn_right_head" />
+	<action name="act_warg_walk_turn_right_head" />
+	<action name="act_warg_trot_turn_right_head" />
+	<action name="act_warg_canter_turn_right_head" />
+	<action name="act_warg_gallop_turn_right_head" />
+
+	<action name="act_warg_turn_left_head" />
+	<action name="act_warg_walk_turn_left_head" />
+	<action name="act_warg_trot_turn_left_head" />
+	<action name="act_warg_canter_turn_left_head" />
+	<action name="act_warg_gallop_turn_left_head" />
+
+	<action name="act_warg_quick_stop" type="actt_mount_quick_stop" />
+	<action name="act_warg_quick_stop_when_fast" type="actt_mount_quick_stop" />
+	<action name="act_warg_jump_start" type="actt_dash" />
+	<action name="act_warg_dash" type="actt_dash" />
+
+	<action name="act_warg_jump_forward" type="actt_jump_start" />
+	<action name="act_warg_jump_forward_loop" type="actt_jump" />
+	<action name="act_warg_jump_forward_end" type="actt_jump_end" />
+	<action name="act_warg_jump_forward_end_hard" type="actt_jump_end_hard" />
+	<action name="act_warg_jump_high" type="actt_jump_start" />
+	<action name="act_warg_jump_high_loop" type="actt_jump" />
+	<action name="act_warg_jump_high_end" type="actt_jump_end" />
+	<action name="act_warg_jump_high_end_hard" type="actt_jump_end_hard" />
+
+	<action name="act_warg_fall_right" type="actt_fall" />
+	<action name="act_warg_fall_left" type="actt_fall" />
+	<action name="act_warg_fall_right_continue" type="actt_fall" />
+	<action name="act_warg_fall_left_continue" type="actt_fall" />
+	<action name="act_warg_fall_roll" type="actt_fall" />
+	<action name="act_warg_fall_roll_continue" type="actt_fall" />
+	<action name="act_warg_fall_backwards" type="actt_fall" />
+	<action name="act_warg_fall_backwards_continue" type="actt_fall" />
+	<action name="act_warg_fall_slow_right" type="actt_fall" />
+	<action name="act_warg_fall_slow_right_continue" type="actt_fall" />
+	<action name="act_warg_fall_slow_left" type="actt_fall" />
+	<action name="act_warg_fall_slow_left_continue" type="actt_fall" />
+	<!-- ===== /WARG ===== -->
+</action_types>

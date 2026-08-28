@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Patch a skeleton tpac to populate its SkeletonUserData with default Body records
-and D6 ragdoll constraints, mirroring the structure that works in Alliance.Wargs.
+and D6 ragdoll constraints, mirroring the structure that works for the warg
+(LOTRLOME_Armory/AssetPackages/warg.tpac since the 2026-08-28 absorption).
 
 Symptom this addresses:
   Spider skeleton has Usage='other', 62 placeholder Bodies (body_type='none', mass=0),
