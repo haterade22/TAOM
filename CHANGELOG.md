@@ -4,6 +4,59 @@
 
 ## 2026-08-27
 
+### fix(player-switcher): nine review findings, two of them feature-breaking (#514)
+
+Five parallel review agents plus an independent Codex adversarial pass over the four phases.
+Standards passed 8/8, API compatibility verified 22/22 signatures against the installed 1.4.8 DLLs,
+and completeness passed. The other reviewers found nine defects. RCA:
+`docs/reviews/rca-player-switcher-2026-08-27.md`.
+
+**The picker never appeared at all.** `HeroPickItemVM` derived from vanilla
+`ClanPartyMemberItemVM` so that an engine change would break the build. That base constructor opens
+`IsLeader = hero == party.LeaderHero;` with no null guard. Wanderers have no party and ship enabled
+by default, so the first wanderer threw inside the panel build, the attach patch swallowed it, and
+the whole panel silently failed to appear. The row VM now supplies the tuple contract directly, and
+a binding test pins the vanilla constructor's unguarded dereference so the reason stays recorded.
+
+**A failure after the swap claimed the player kept their own character.** There is no engine
+transaction: once `ChangePlayerCharacterAction.Apply` runs, `Game.Current.PlayerTroop` has changed
+and the events have been dispatched. The handover now tracks whether it crossed that point and
+reports `SwitchedWithErrors` rather than `Failed`, with its own message. The old failure test threw
+before the first mutation, so it proved the safe case and looked like it proved the general one.
+
+**Adoption doubled every item stack.** Vanilla `HeirSelectionCampaignBehavior` listens to the same
+player-character-changed events and already copies the old party's items into the new one.
+`AbsorbOriginalParty` now transfers members and prisoners only.
+
+**StoryMode would have stranded a clan and a party.** Its player clan holds an adult elder brother,
+so `KillCharacterAction` promotes him instead of destroying the clan, and the leftover
+character-creation party survives with it. The takeover is refused unless the startup clan is
+genuinely disposable, which gates StoryMode out without naming it.
+
+**Previewing a lord could overwrite the player's own face.** Vanilla calls
+`BodyGenerator.SaveCurrentCharacter()` from both `Done()` and `GoToIndex()`, persisting whatever is
+previewed into `CharacterObject.PlayerCharacter`. Restoring now writes the player's body back.
+
+Also: the preview suppression flag no longer sticks on a failed preview and is now cleared BEFORE
+the restoring refresh (so the refresh actually rebuilds the culture race selector); teardown moved
+from a Postfix to a `[HarmonyFinalizer]` so it runs even when vanilla throws; `ui_clan` is never
+unloaded, because `IsLoaded` is a bare bool with no reference count and "I loaded it" is not
+ownership; and `PlayerSwitcherVM` cascades `OnFinalize()` into its rows.
+
+Seven localization keys were declared, translated into twelve languages, and rendered by nothing.
+Three of them were the player-facing outcome messages, specified in the plan and never wired, so a
+failed handover told the player nothing at all. Those are now wired; the other four are deleted. A
+new test asserts every declared key is actually referenced, closing the reverse direction the
+existing one-directional localization gate never checked.
+
+Known limitation, deliberately deferred: the picker does not filter `HeroState`, so a prisoner or a
+`NotSpawned` hero may be offered. Taking over a prisoner would begin the campaign in captivity.
+Reachability against shipped TAOM data could not be established by either reviewer; it is the first
+thing the in-game smoke should probe.
+
+Suite 7,680 green, `validate_moduledata` PASS.
+
+
 ### feat(player-switcher): the kingdom-join offer (#514, phase 4)
 
 Completes the feature. Wanderer adoption itself landed with the handover in phase 2; what was

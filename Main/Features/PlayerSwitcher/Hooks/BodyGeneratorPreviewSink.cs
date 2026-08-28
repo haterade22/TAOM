@@ -56,6 +56,8 @@ public class BodyGeneratorPreviewSink : IHeroPreviewSink
         if (hero == null)
             return;
 
+        var applied = false;
+
         try
         {
             TakeSnapshotOnce(vm);
@@ -89,10 +91,22 @@ public class BodyGeneratorPreviewSink : IHeroPreviewSink
             vm.CanChangeGender = false;
 
             Dress(hero);
+            applied = true;
         }
         catch (Exception ex)
         {
             _logger.LogWarning($"Player Switcher: preview failed for '{row.HeroId}', continuing undressed: {ex.Message}");
+        }
+        finally
+        {
+            // A preview that did NOT apply must not leave the race filter suppressed. Only the
+            // success path earns the suppression, and only RestoreDefault lifts it afterwards.
+            // Without this, the parse-failure return above and the catch beside it would leave
+            // IsPreviewActive true, and Patch9_RaceFilter would silently stop applying the
+            // culture race filter for the rest of this face generator visit, to a player who is
+            // by then building their own face again.
+            if (!applied)
+                _session.SetPreviewActive(false);
         }
     }
 
@@ -105,6 +119,13 @@ public class BodyGeneratorPreviewSink : IHeroPreviewSink
             return;
         }
 
+        // Cleared FIRST, not in a finally. SetBodyProperties below triggers
+        // Refresh(clearProperties: true), and that refresh is the only thing that rebuilds the
+        // culture-filtered race selector. Clearing afterwards meant the one refresh that would
+        // have restored the filter was itself suppressed, so deselecting a lord of another race
+        // left the unfiltered vanilla selector in place for the rest of the visit.
+        _session.SetPreviewActive(false);
+
         try
         {
             vm.SetBodyProperties(_defaultBody, ignoreDebugValues: false, race: _defaultRace, gender: _defaultGender);
@@ -115,16 +136,20 @@ public class BodyGeneratorPreviewSink : IHeroPreviewSink
                 CopyInto(_defaultEquipment);
 
             _view.IsDressed = _defaultIsDressed;
+
+            // Write the player's own body back into the character object.
+            //
+            // The preview mutates the live BodyGenerator, and vanilla calls
+            // BodyGenerator.SaveCurrentCharacter() from both IFaceGeneratorHandler.Done() and
+            // GoToIndex(), which persists whatever is currently previewed into
+            // CharacterObject.PlayerCharacter via UpdatePlayerCharacterBodyProperties. Without
+            // this line, previewing a lord and then abandoning the selection would leave the
+            // player wearing that lord's face on the character they built.
+            _view.BodyGen?.SaveCurrentCharacter();
         }
         catch (Exception ex)
         {
             _logger.LogWarning($"Player Switcher: could not restore the player's own preview: {ex.Message}");
-        }
-        finally
-        {
-            // Always last. Leaving this set would keep the culture race filter suppressed for the
-            // rest of character creation.
-            _session.SetPreviewActive(false);
         }
     }
 

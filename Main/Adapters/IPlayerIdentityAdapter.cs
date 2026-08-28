@@ -24,6 +24,19 @@ public interface IPlayerIdentityAdapter
     bool IsSwitchable(string heroId);
 
     /// <summary>
+    /// True when the character-creation clan holds no living adult lord besides the player, so
+    /// removing the created hero will actually destroy it.
+    ///
+    /// The takeover path depends on that destruction: it is what sweeps the abandoned clan AND the
+    /// leftover character-creation party, which is still registered to it. In SandBox the startup
+    /// clan contains only the created hero, so this holds. StoryMode puts an adult elder brother in
+    /// the same clan, and vanilla KillCharacterAction then promotes him with
+    /// ChangeClanLeaderAction rather than destroying the clan, leaving an orphan clan and a
+    /// masterless party in the campaign forever.
+    /// </summary>
+    bool StartupClanIsDisposable { get; }
+
+    /// <summary>
     /// Snapshots the pre-swap world. Must run before any mutation: once the swap happens,
     /// Hero.MainHero and Clan.PlayerClan no longer describe the character the player built.
     /// </summary>

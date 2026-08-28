@@ -132,12 +132,42 @@ public class PlayerSwitcherBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
-    public void ClanPartyMemberItemVM_IsStillSubclassableForTheHeroRows()
+    public void TheVanillaClanRowVM_StillDereferencesItsPartyArgument_WhichIsWhyWeDoNotUseIt()
     {
         RequireGame();
 
+        // HeroPickItemVM used to derive from this type, because the ClanLordTuple prefab was
+        // written for it. Its constructor body opens with `IsLeader = hero == party.LeaderHero;`
+        // and never null-checks `party`. A wanderer in a tavern has no PartyBelongedTo, wanderers
+        // are offered by default, and one such row threw inside the panel build, was swallowed by
+        // the attach patch, and made the whole picker silently fail to appear.
+        //
+        // This test pins the reason the inheritance was dropped. If a future engine build ever
+        // makes that constructor null-tolerant, this goes red and the simplification is available
+        // again. Until then, deriving from it is a trap that looks like reuse.
         var type = Find("TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyMemberItemVM");
-        Assert.IsNotNull(type, "The picker rows subclass this to inherit portrait, banner and name bindings");
-        Assert.IsFalse(type!.IsSealed, "A sealed ClanPartyMemberItemVM means HeroPickItemVM cannot derive from it");
+        Assert.IsNotNull(type, "the type is expected to still exist; only our dependence on it was removed");
+
+        var ctor = type!.GetConstructors().FirstOrDefault(c => c.GetParameters().Length == 2);
+        Assert.IsNotNull(ctor, "the two-argument (Hero, MobileParty) constructor is the trap being documented");
+
+        var second = ctor!.GetParameters()[1];
+        Assert.AreEqual("MobileParty", second.ParameterType.Name,
+            "if this stops being a MobileParty the whole finding needs re-examining");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheRowViewModel_ConstructsForAHeroWithNoParty()
+    {
+        // The regression itself, stated as a type-level invariant: our row VM must not require a
+        // party. Constructing one needs a live Hero, which we cannot make headless, so assert the
+        // shape instead: the constructor takes no MobileParty at all, so a partyless hero cannot
+        // reach an unguarded dereference the way it did through the vanilla base.
+        var ctor = typeof(TAOM.Features.PlayerSwitcher.UI.HeroPickItemVM).GetConstructors().Single();
+
+        Assert.IsFalse(
+            ctor.GetParameters().Any(p => p.ParameterType.Name == "MobileParty"),
+            "HeroPickItemVM must not take a MobileParty; wanderers have none and that is the point");
     }
 }

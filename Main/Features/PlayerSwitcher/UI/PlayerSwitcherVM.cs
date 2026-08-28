@@ -74,6 +74,21 @@ public class PlayerSwitcherVM : ViewModel
         set { if (value != _companionsText) { _companionsText = value; OnPropertyChangedWithValue(value, nameof(CompanionsText)); } }
     }
 
+    /// <summary>
+    /// Cascades into the rows. `TaleWorlds.Library.ViewModel.OnFinalize()` is an empty virtual, so
+    /// without this the teardown's `ViewModel?.OnFinalize()` reaches a no-op stub and the rows are
+    /// never finalized. That matters because the base row VM's own override
+    /// (`ClanPartyMemberItemVM.OnFinalize`) is what nulls its `HeroViewModel`'s hero reference.
+    /// </summary>
+    public override void OnFinalize()
+    {
+        base.OnFinalize();
+
+        foreach (var row in KingdomMembers) row.OnFinalize();
+        foreach (var row in ClanLeaders) row.OnFinalize();
+        foreach (var row in Companions) row.OnFinalize();
+    }
+
     public override void RefreshValues()
     {
         base.RefreshValues();

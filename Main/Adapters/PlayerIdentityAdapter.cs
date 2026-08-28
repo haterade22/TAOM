@@ -51,6 +51,27 @@ public class PlayerIdentityAdapter : IPlayerIdentityAdapter
         return hero != null && hero.IsAlive && hero != Hero.MainHero;
     }
 
+    public bool StartupClanIsDisposable
+    {
+        get
+        {
+            var clan = Clan.PlayerClan;
+            var player = Hero.MainHero;
+            if (clan == null || player == null)
+                return false;
+
+            foreach (var member in clan.Heroes)
+            {
+                if (member == null || member == player)
+                    continue;
+                if (member.IsAlive && !member.IsChild && member.IsLord)
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
     public SwitchTicket Capture(string targetHeroId, string careerId)
     {
         var original = Hero.MainHero;
@@ -126,7 +147,13 @@ public class PlayerIdentityAdapter : IPlayerIdentityAdapter
         if (party == null || main == null || party == main)
             return;
 
-        main.Party.ItemRoster.Add(party.ItemRoster);
+        // Members and prisoners only. The ITEMS are deliberately not copied here.
+        //
+        // Vanilla SandBox ships HeirSelectionCampaignBehavior, which listens to the same
+        // player-character-changed events ChangePlayerCharacterAction fires. It snapshots the old
+        // main party's ItemRoster in OnBeforePlayerCharacterChanged and, when the main party
+        // changed, adds it to the new one in OnPlayerCharacterChanged. So by the time we get here
+        // the goods have already moved. Adding them again doubled every stack.
         main.Party.MemberRoster.Add(party.MemberRoster);
         main.Party.PrisonRoster.Add(party.PrisonRoster);
 

@@ -43,7 +43,10 @@ public class KingdomJoinOfferService : IKingdomJoinOfferService
         if (!_policy.Current.Enabled)
             return;
 
-        if (_session.LastOutcome != SwitchOutcome.Switched)
+        // A partially completed handover still made the player that hero, so the offer is
+        // still the right question to ask.
+        if (_session.LastOutcome != SwitchOutcome.Switched &&
+            _session.LastOutcome != SwitchOutcome.SwitchedWithErrors)
             return;
 
         // A taken-over lord already belongs to whatever kingdom their clan belongs to.

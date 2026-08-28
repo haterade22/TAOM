@@ -25,11 +25,23 @@ public static class Patch77_BodyGeneratorView_OnFinalize
 
     public static void Initialize(IModLogger logger) => _logger = logger;
 
-    [HarmonyPostfix]
-    public static void Postfix(BodyGeneratorView __instance)
+    /// <summary>
+    /// A FINALIZER, deliberately, not a postfix.
+    ///
+    /// A postfix does not run when the original method throws, and this body is the only thing
+    /// that releases the movie, disposes the ViewModel graph and drops the sprite category. If
+    /// vanilla's own OnFinalize threw partway (it tears down a scene and an agent renderer), a
+    /// postfix would silently skip all of that and leave the statics pointing at a dead view.
+    /// A finalizer runs either way.
+    ///
+    /// It returns <paramref name="__exception"/> unchanged, so a vanilla failure still propagates.
+    /// Swallowing it here would convert an engine bug into a silent leak somewhere else.
+    /// </summary>
+    [HarmonyFinalizer]
+    public static Exception? Finalizer(BodyGeneratorView __instance, Exception? __exception)
     {
         if (Patch77_BodyGeneratorView_Constructor.HostView != __instance)
-            return;
+            return __exception;
 
         try
         {
@@ -46,6 +58,8 @@ public static class Patch77_BodyGeneratorView_OnFinalize
             Patch77_BodyGeneratorView_Constructor.ViewModel = null;
             Patch77_BodyGeneratorView_Constructor.WeLoadedSpriteCategory = false;
         }
+
+        return __exception;
     }
 
     private static void Release(BodyGeneratorView view)
@@ -56,9 +70,12 @@ public static class Patch77_BodyGeneratorView_OnFinalize
 
         Patch77_BodyGeneratorView_Constructor.ViewModel?.OnFinalize();
 
-        // Only unload what we loaded. SpriteCategory has no reference count, so unloading a sheet
-        // another consumer is using would blank their icons with no error.
-        if (Patch77_BodyGeneratorView_Constructor.WeLoadedSpriteCategory)
-            UIResourceManager.GetSpriteCategory(SpriteCategory)?.Unload();
+        // ui_clan is deliberately NOT unloaded, even when this feature was the one that loaded it.
+        //
+        // SpriteCategory carries a bare IsLoaded bool and no reference count, so "I loaded it" is
+        // not ownership. If any other screen or mod starts using the category while the picker is
+        // open, its own Load() is a no-op, and unloading here would release the textures out from
+        // under it with no error and no log line. Leaving a vanilla category resident costs some
+        // memory; releasing a sheet somebody else is drawing from costs them their icons.
     }
 }

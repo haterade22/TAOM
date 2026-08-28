@@ -48,12 +48,17 @@ gold, starting equipment) has already landed on the **throwaway** character-crea
 **throwaway** `player_faction` clan, both of which the handover deletes moments later. The lord
 being taken over is never touched by any of it.
 
-That is why this feature needs:
+That is why this feature needs no `BornSettlement` repair, no party reposition, and **zero edits
+inside the 41-file `Main/Features/CharacterCreation/` module**.
 
-- no `BornSettlement` repair,
-- no party reposition,
-- no grant suppression,
-- and **zero edits inside the 41-file `Main/Features/CharacterCreation/` module**.
+**One caveat, found by the Codex review and worth knowing.** The isolation is not total. Vanilla
+SandBox ships `HeirSelectionCampaignBehavior`, which listens to the same player-character-changed
+events `ChangePlayerCharacterAction` fires. It snapshots the old main party's `ItemRoster` and the
+old player's battle and civilian equipment, then adds both to the new main party. So TAOM's startup
+equipment does not die with the throwaway hero: it arrives in the lord's party as loose inventory.
+That is a cosmetic-ish gain rather than a correctness problem, and it is left alone. What it DID
+cause was real: on the adoption path vanilla had already moved the items, so `AbsorbOriginalParty`
+adding them again doubled every stack. That method now transfers members and prisoners only.
 
 **Registering any lower would apply all of it to a real lore clan.** Below 1050, Erebor would start
 at renown zero with a relocated home settlement, and `SetPlayerRace` would overwrite Sauron's
@@ -170,11 +175,17 @@ other way round. `PlayerSwitcherPrefabContractTests` parses the shipped XML and 
 `DataSource`, `Text`, `IsSelected` and `Command.Click` name resolves to a public member, because
 Gauntlet renders nothing for a missing binding and logs nothing about it.
 
-`HeroPickItemVM` derives from vanilla `ClanPartyMemberItemVM` on purpose: an engine bump that
-removes or reshapes it breaks the BUILD, which is the strongest gate available. The base supplies
-`Name`, `Visual`, `Banner_9`, `ExecuteLink`, `ExecuteBeginHint` and `ExecuteEndHint`; the four the
-vanilla `ClanLordTuple` binds that it does not supply (`IsSelected`, `IsChild`,
-`CurrentActionText`, `OnCharacterSelect`) are added. Both `OnCharacterSelect` and
+`HeroPickItemVM` deliberately does **not** derive from vanilla `ClanPartyMemberItemVM`, though the
+`ClanLordTuple` prefab was written for it and an earlier revision did.
+
+That base takes `(Hero, MobileParty)` and its constructor opens with
+`IsLeader = hero == party.LeaderHero;` with no null guard. A wanderer in a tavern has no
+`PartyBelongedTo`, wanderers are offered by default, and one such row threw inside the panel build,
+was swallowed by the attach patch, and made the entire picker silently fail to appear. Inheritance
+bought a compile-time break on an engine change and cost the feature working at all for most
+cultures. `HeroPickItemVM` therefore supplies the tuple's whole contract itself, and
+`PlayerSwitcherBindingTests` pins the vanilla constructor's unguarded dereference so the reason
+stays recorded. Both `OnCharacterSelect` and
 `OnPreBuildCharacterSelected` route to the same handler, so the unresolved question of whether the
 outer or inner click fires stops mattering.
 
@@ -183,13 +194,41 @@ by slot. That field is `private readonly`, so it can never be replaced, only mut
 in the extra weapon slot is cleared exactly as the view's own constructor does. `CanChangeRace` and
 `CanChangeGender` are set to false **after** `SetBodyProperties`, never before.
 
+**Restoring a preview also writes the body back.** The preview mutates the live `BodyGenerator`, and
+vanilla calls `BodyGenerator.SaveCurrentCharacter()` from both `IFaceGeneratorHandler.Done()` and
+`GoToIndex()`, which persists whatever is currently previewed into `CharacterObject.PlayerCharacter`.
+Without an explicit save on restore, previewing a lord and then abandoning the selection left the
+player wearing that lord's face on the character they had built. `RestoreDefault` now clears the
+suppression flag FIRST (so the restoring refresh actually rebuilds the culture-filtered race
+selector), restores the snapshot, and saves.
+
 `Patch9_RaceFilter` gains one early return keyed on `IPlayerSwitchSession.IsPreviewActive`.
 `SetBodyProperties` triggers `Refresh(clearProperties: true)` on every race change, so without it
 the culture race rebuild would snap a dwarf or Sauron preview straight back to the culture default.
 
-**Sprites.** `SpriteCategory` carries an `IsLoaded` bool and **no reference count**, so the
-teardown unloads `ui_clan` only when the picker was the one that loaded it. An unconditional
-`Unload()` would blank another consumer's icons with no error.
+**Sprites.** `SpriteCategory` carries an `IsLoaded` bool and **no reference count**, so `ui_clan` is
+loaded when absent and then **never unloaded**. "I loaded it" is not ownership: if any other screen
+starts using the category while the picker is open, its own `Load()` is a no-op, and unloading on
+teardown would release the textures out from under it with no error and no log line. A resident
+vanilla sprite sheet is the cheaper mistake.
+
+## Two refusals worth knowing
+
+**The startup clan must be disposable.** The takeover leaves the character-creation clan behind and
+relies on vanilla destroying it when its leader is removed. That only happens when the created hero
+is the last lord in it. StoryMode seeds the same clan with an adult elder brother, so
+`KillCharacterAction` promotes him via `ChangeClanLeaderAction` instead, the clan survives, and the
+leftover character-creation party survives with it. `IPlayerIdentityAdapter.StartupClanIsDisposable`
+is checked before any mutation and the takeover is refused when it is false. This gates StoryMode
+out without naming StoryMode, which is the more durable form of the rule.
+
+**A failure after the swap is never reported as a failure.** The engine offers no transaction. Once
+`ChangePlayerCharacterAction.Apply` has run, `Game.Current.PlayerTroop` has changed and the
+player-character-changed events have been dispatched to every listener; there is no rollback. The
+handover therefore tracks whether it crossed that point, and a later exception yields
+`SwitchOutcome.SwitchedWithErrors` rather than `Failed`. The distinction is not cosmetic: the
+`Failed` message tells the player they are continuing as their own character, which after the swap
+would be a lie.
 
 ## Reflection sites
 
@@ -297,6 +336,13 @@ Each step on a fresh campaign unless stated.
 
 ## Owed
 
+- **Hero states are not filtered.** `Hero.AllAliveHeroes` excludes dead and disabled heroes but
+  still includes prisoners, fugitives, released and `NotSpawned` heroes, and the picker does not
+  inspect `HeroState`, `DeathMark`, or eliminated-clan status. Taking over a prisoner would begin
+  the campaign in captivity, because `Campaign.OnPlayerCharacterChanged` recognises the captor.
+  The Codex review raised this as SUSPECTED and could not establish reachability against shipped
+  TAOM startup data; neither could I. **Probe it first in the smoke**: if a prisoner or a
+  `NotSpawned` hero can appear in the list, add the state filter before shipping.
 - All twelve in-game smoke steps. Nothing here has been run in the game.
 - The machine translation. The 15 keys are seeded with English in all twelve languages, so the game
   renders real text rather than a raw id, but no API key was available in the authoring session.

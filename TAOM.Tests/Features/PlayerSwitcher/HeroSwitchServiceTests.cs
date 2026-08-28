@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -40,6 +41,7 @@ public class HeroSwitchServiceTests
         _logger = Substitute.For<IModLogger>();
 
         _identity.CanReassignPlayerClan.Returns(true);
+        _identity.StartupClanIsDisposable.Returns(true);
         _identity.IsSwitchable(Target).Returns(true);
         _identity.Capture(Target, Career).Returns(
             new SwitchTicket(Original, OriginalClan, OriginalParty, TargetClan, Career));
@@ -245,18 +247,60 @@ public class HeroSwitchServiceTests
         _identity.DidNotReceive().ApplyPlayerCharacter(Arg.Any<string>());
     }
 
+    // ---------- The startup clan must actually be disposable ----------
+
+    [TestMethod]
+    public void ATakeoverIsRefusedWhenTheCreationClanHoldsAnotherAdultLord()
+    {
+        // StoryMode seeds the player clan with an adult elder brother. Vanilla KillCharacterAction
+        // then promotes him instead of destroying the clan, so the abandoned clan and the leftover
+        // character-creation party would both survive in the campaign forever.
+        _identity.StartupClanIsDisposable.Returns(false);
+
+        var outcome = _sut.Execute(TakeoverPlan());
+
+        Assert.AreEqual(SwitchOutcome.Blocked, outcome);
+        _identity.DidNotReceive().ApplyPlayerCharacter(Arg.Any<string>());
+        _identity.DidNotReceive().RemoveOriginalHero(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void AdoptionIsUnaffectedByTheStartupClanCheck()
+    {
+        // Adoption keeps the player's own clan and never relies on it being destroyed.
+        _identity.StartupClanIsDisposable.Returns(false);
+
+        Assert.AreEqual(SwitchOutcome.Switched, _sut.Execute(AdoptionPlan()));
+    }
+
     // ---------- Failure is survivable ----------
 
     [TestMethod]
-    public void AThrowPartway_IsReportedAsFailedAndLogged_NotRethrown()
+    public void AThrowBeforeAnyMutation_IsReportedAsFailed()
     {
         _identity.When(a => a.ApplyPlayerCharacter(Target))
             .Do(_ => throw new System.InvalidOperationException("engine said no"));
 
         var outcome = _sut.Execute(TakeoverPlan());
 
-        Assert.AreEqual(SwitchOutcome.Failed, outcome, "character creation must still complete");
+        Assert.AreEqual(SwitchOutcome.Failed, outcome,
+            "nothing had mutated yet, so the player really is still their created character");
         _logger.Received().LogError(Arg.Is<string>(m => m.Contains("engine said no")));
+    }
+
+    [TestMethod]
+    public void AThrowAFTERTheSwap_IsNotReportedAsFailed()
+    {
+        // The engine offers no transaction: once ChangePlayerCharacterAction has run,
+        // Game.Current.PlayerTroop has changed and the events have been dispatched. Reporting that
+        // as Failed would tell the player they kept their own character while they are the lord.
+        _identity.When(a => a.MarkClanAndKingdomKnown(Target))
+            .Do(_ => throw new System.InvalidOperationException("late step exploded"));
+
+        var outcome = _sut.Execute(TakeoverPlan());
+
+        Assert.AreEqual(SwitchOutcome.SwitchedWithErrors, outcome);
+        _logger.Received().LogError(Arg.Is<string>(m => m.Contains("ALREADY APPLIED")));
     }
 
     [TestMethod]
@@ -273,20 +317,28 @@ public class HeroSwitchServiceTests
     // ---------- Standing regression guard ----------
 
     [TestMethod]
-    public void TheHandoverNeverTouchesRaceOrStartupGrants()
+    public void TheHandoverExposesNoWayToReGrantRaceOrStartupResources()
     {
-        _sut.Execute(TakeoverPlan());
+        // The whole design rests on running at handler priority 1100, AFTER TAOM's own 1050 grants
+        // have landed on the throwaway hero. If this adapter ever gained a grant-shaped mutator, a
+        // future edit could re-run those against the real lord and overwrite a canonical race
+        // (Sauron's race="sauron" becoming a culture default), which RacePersistenceService would
+        // then faithfully persist.
+        //
+        // Scoped to MUTATORS on purpose. The first version of this matched any member name
+        // containing "race", "startup" or "grant", which fired on the read-only
+        // StartupClanIsDisposable property the moment it was added. A guard that goes red for a
+        // getter teaches people to weaken it.
+        var mutators = typeof(IPlayerIdentityAdapter).GetMethods()
+            .Where(m => !m.IsSpecialName)          // excludes property getters and setters
+            .Select(m => m.Name)
+            .ToArray();
 
-        // The whole design rests on running at handler priority 1100, after TAOM's own 1050 grants
-        // have already landed on the throwaway hero. If a future refactor made this service grant
-        // race or startup resources, it would overwrite the lord's own race (Sauron's race="sauron"
-        // becoming a culture default) and RacePersistenceService would then persist the damage.
-        // The adapter has no such method, and this test exists so that adding one is a deliberate act.
-        var members = typeof(IPlayerIdentityAdapter).GetMethods();
-        foreach (var m in members)
+        foreach (var name in mutators)
         {
-            StringAssert.DoesNotMatch(m.Name, new System.Text.RegularExpressions.Regex("(?i)race|startup|grant"),
-                $"IPlayerIdentityAdapter.{m.Name} looks like a grant; the 1100 ordering exists so grants are not re-run");
+            StringAssert.DoesNotMatch(name,
+                new System.Text.RegularExpressions.Regex("(?i)(set|grant|apply|give).*(race|startup|resource)"),
+                $"IPlayerIdentityAdapter.{name} looks like a grant; the 1100 ordering exists so grants are not re-run");
         }
     }
 }

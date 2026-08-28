@@ -54,18 +54,29 @@ public class HeroSwitchService : IHeroSwitchService
             return SwitchOutcome.Blocked;
         }
 
+        // Tracks whether the irreversible step has run. Everything before it is a safe abort;
+        // everything after it has already changed who the player is, and there is no rollback.
+        var committed = false;
+
         try
         {
-            return Run(plan);
+            return Run(plan, ref committed);
+        }
+        catch (Exception ex) when (committed)
+        {
+            _logger.LogError(
+                $"Player Switcher: the swap to '{plan.HeroId}' HAD ALREADY APPLIED when a later step failed. " +
+                $"The player is that lord; some follow-up state may be incomplete: {ex}");
+            return SwitchOutcome.SwitchedWithErrors;
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Player Switcher: handover failed, continuing as the created character: {ex}");
+            _logger.LogError($"Player Switcher: handover failed before any mutation, continuing as the created character: {ex}");
             return SwitchOutcome.Failed;
         }
     }
 
-    private SwitchOutcome Run(SwitchPlan plan)
+    private SwitchOutcome Run(SwitchPlan plan, ref bool committed)
     {
         // Snapshot first. After ApplyPlayerCharacter, Hero.MainHero and Clan.PlayerClan describe
         // the lord, so nothing about the created character can be read back.
@@ -84,10 +95,26 @@ public class HeroSwitchService : IHeroSwitchService
             return SwitchOutcome.Blocked;
         }
 
+        // The takeover leaves the character-creation clan behind and relies on vanilla destroying
+        // it when its leader is removed. That only happens when the created hero is the last lord
+        // in it. StoryMode seeds the same clan with an adult elder brother, so vanilla promotes him
+        // instead and the clan survives, taking the leftover character-creation party with it.
+        // Refuse rather than strand both in the campaign.
+        if (takeover && !_identity.StartupClanIsDisposable)
+        {
+            _logger.LogWarning(
+                "Player Switcher: the character creation clan holds another adult lord (StoryMode seeds one), " +
+                "so removing the created hero would promote them instead of destroying the clan. Handover refused.");
+            return SwitchOutcome.Blocked;
+        }
+
         if (!takeover)
             _identity.AdoptIntoPlayerClan(plan.HeroId);
 
+        // The point of no return. Past here the engine has changed Game.Current.PlayerTroop and
+        // dispatched the player-character-changed events; nothing can put that back.
         _identity.ApplyPlayerCharacter(plan.HeroId);
+        committed = true;
 
         if (takeover)
         {

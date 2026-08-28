@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.PlayerSwitcher.Domain;
@@ -32,6 +33,7 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
     private readonly IPlayerSwitchSessionWriter _sessionWriter;
     private readonly IPlayerSwitchPolicyProvider _policy;
     private readonly ICareerMenuService _careerMenu;
+    private readonly IInquiryAdapter _inquiry;
     private readonly IModLogger _logger;
 
     public PlayerSwitchContentHandler(
@@ -41,6 +43,7 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         IPlayerSwitchSessionWriter sessionWriter,
         IPlayerSwitchPolicyProvider policy,
         ICareerMenuService careerMenu,
+        IInquiryAdapter inquiry,
         IModLogger logger)
     {
         _switchService = switchService;
@@ -49,6 +52,7 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         _sessionWriter = sessionWriter;
         _policy = policy;
         _careerMenu = careerMenu;
+        _inquiry = inquiry;
         _logger = logger;
     }
 
@@ -72,11 +76,20 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         if (!_session.HasSelection)
             return;
 
+        // Captured before Execute, because the handover deletes the created character and the
+        // selection is cleared below; the toast still has to name the lord afterwards.
+        var heroName = _session.SelectedRow.Name ?? string.Empty;
+
         var plan = _planner.Plan(_session.SelectedRow, _policy.Current, _careerMenu.SelectedCareerStringId);
         var outcome = _switchService.Execute(plan);
 
         if (outcome != SwitchOutcome.Switched)
             _logger.LogWarning($"Player Switcher: handover ended as {outcome} for '{plan.HeroId}'");
+
+        // Tell the player either way. Without this a failed handover is completely silent: they
+        // simply arrive on the map as the character they built, with no indication that the lord
+        // they picked was not applied.
+        Announce(outcome, heroName);
 
         // Recorded before the clear, because OnCharacterCreationIsOverEvent fires after this and
         // the kingdom-join offer needs to know whether a handover actually happened.
@@ -84,5 +97,29 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
 
         // The selection itself has been consumed either way.
         _sessionWriter.Clear();
+    }
+
+    private void Announce(SwitchOutcome outcome, string heroName)
+    {
+        if (outcome == SwitchOutcome.Switched)
+        {
+            _inquiry.ShowMessage(
+                "taom_ps_switched", "You now play as {HERO}.",
+                "HERO", heroName);
+            return;
+        }
+
+        if (outcome == SwitchOutcome.SwitchedWithErrors)
+        {
+            // Never claim the player kept their own character here: they did not.
+            _inquiry.ShowMessage(
+                "taom_ps_partial", "You are now {HERO}, but part of the handover did not finish. See the log.",
+                "HERO", heroName);
+            return;
+        }
+
+        _inquiry.ShowMessage(
+            "taom_ps_failed", "You could not take the place of {HERO}. Continuing as your own character.",
+            "HERO", heroName);
     }
 }

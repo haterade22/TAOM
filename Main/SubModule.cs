@@ -765,6 +765,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSessionWriter>(),
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>(),
             IoC.Resolve<ICareerMenuService>(),
+            IoC.Resolve<TAOM.Adapters.IInquiryAdapter>(),
             ccLogger));
 
         // #514 — offers an adopted player a place in their culture's kingdom, once, after

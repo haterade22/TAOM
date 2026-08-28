@@ -1,6 +1,7 @@
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 
@@ -37,6 +38,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
     private readonly IPlayerSwitchSessionWriter _sessionWriter;
     private readonly IPlayerSwitchPolicyProvider _policy;
     private readonly ICareerMenuService _careerMenu;
+    private readonly IInquiryAdapter _inquiry;
     private readonly IModLogger _logger;
 
     public PlayerSwitchRegistrationBehavior(
@@ -46,6 +48,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         IPlayerSwitchSessionWriter sessionWriter,
         IPlayerSwitchPolicyProvider policy,
         ICareerMenuService careerMenu,
+        IInquiryAdapter inquiry,
         IModLogger logger)
     {
         _switchService = switchService;
@@ -54,6 +57,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         _sessionWriter = sessionWriter;
         _policy = policy;
         _careerMenu = careerMenu;
+        _inquiry = inquiry;
         _logger = logger;
     }
 
@@ -74,7 +78,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         try
         {
             var handler = new PlayerSwitchContentHandler(
-                _switchService, _planner, _session, _sessionWriter, _policy, _careerMenu, _logger);
+                _switchService, _planner, _session, _sessionWriter, _policy, _careerMenu, _inquiry, _logger);
 
             manager.RegisterCharacterCreationContentHandler(handler, HandlerPriority);
             _logger.LogInfo($"Registered TAOM player switcher handler at priority {HandlerPriority}");

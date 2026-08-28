@@ -86,8 +86,13 @@ public static class Patch77_BodyGeneratorView_Constructor
         if (!identity.CanReassignPlayerClan)
         {
             // The probe failed, so the handover could not complete. Never show a panel that
-            // promises something the campaign cannot deliver.
+            // promises something the campaign cannot deliver, and say so once rather than
+            // leaving the player wondering where the feature went.
             policy.DisableForSession("the player clan pointer is not reachable on this engine build");
+            IoC.Resolve<TAOM.Adapters.IInquiryAdapter>().ShowMessage(
+                "taom_ps_unavailable",
+                "The player switcher could not start and is disabled for this session.",
+                null, null);
             return;
         }
 
