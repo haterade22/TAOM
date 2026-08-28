@@ -359,7 +359,43 @@ Each step on a fresh campaign unless stated.
 12. **Degrade path.** Force the reflection probe to fail. Correct: the panel never loads and
     character creation completes normally.
 
+## In-game verification (2026-08-28)
+
+First real runs. Evidence is from `taom_debug_2026-08-28_*.log`; anything not listed here is still
+unexercised, and the distinction is deliberate.
+
+**Confirmed by log, not by inference:**
+
+| Claim | Evidence |
+|---|---|
+| The 1100 ordering does what it was designed for | At `11:06:17` the 1050 grants land on the throwaway hero (`Set player race to 'uruk_hai'`, `assigned career 'uruk_berserker' to hero 'main_hero'`, starting equipment), and only then `Player Switcher: player is now 'lord_I1_1' via AssumeIdentity` |
+| The takeover completes and reaches the campaign map | Same session, no `[ERROR]` line anywhere in it |
+| The career re-key works | `assigned career 'uruk_berserker' to hero 'main_hero'` followed by `assigned career 'uruk_berserker' to hero 'lord_I1_1'`, then `RefreshCareerState hero='lord_I1_1' HasCareer=True unspent=29` |
+| Co-op possession is closed by ordering, as designed | `[Possession] Captured character-creation choices for 'lord_I1_1'` records the LORD, not the throwaway hero, because it fires on `OnCharacterCreationIsOverEvent` after the 1100 handler. This is smoke step 8, passed without needing a co-op session |
+| A non-human lord renders correctly | `Patch2 race=5 monster='uruk_hai' 'as_uruk_hai_warrior'`, 122 skeleton meshes, `agentVisible=True` |
+| The preview switches race, not just face | Confirmed by the user on the post-fix build, after the `SetRaceGenderAndAdjustParams` repair landed |
+| Deselect restores the player's own character | Confirmed by the user on the same build |
+
+**A caveat worth keeping:** the successful takeover above ran at 11:06 on a build that predated the
+race repair. The repair changed the preview, not the handover, so the handover evidence stands, but
+the takeover has not yet been repeated end to end on the current build.
+
 ## Owed
+
+The three checks that still matter most, because they exercise the reflection write that the whole
+takeover rests on:
+
+1. **Open the character screen after a takeover.** This is the `CharacterDeveloperVM` crash the
+   predecessor mod documented, caused by `Clan.PlayerClan` still pointing at the abandoned clan.
+   Landing on the map does NOT exercise it.
+2. **Open the clan screen.** It should show the lord's family rather than unknown entries, which is
+   what `MarkClanAndKingdomKnown` exists for.
+3. **Check renown and tier are non-zero and the old `player_faction` clan is gone** from the clan
+   list. Both depend on the reassign-before-remove ordering.
+
+Then the paths never run at all: **wanderer adoption**, the **kingdom-join offer** that follows it,
+the **lore-locked gate** (Sauron and the Nazgul, MCM off then on), the **barber screen** guard, and
+**race surviving a save cycle**.
 
 - **Hero states are not filtered.** `Hero.AllAliveHeroes` excludes dead and disabled heroes but
   still includes prisoners, fugitives, released and `NotSpawned` heroes, and the picker does not
@@ -368,7 +404,6 @@ Each step on a fresh campaign unless stated.
   The Codex review raised this as SUSPECTED and could not establish reachability against shipped
   TAOM startup data; neither could I. **Probe it first in the smoke**: if a prisoner or a
   `NotSpawned` hero can appear in the list, add the state filter before shipping.
-- All twelve in-game smoke steps. Nothing here has been run in the game.
 - The machine translation. The 15 keys are seeded with English in all twelve languages, so the game
   renders real text rather than a raw id, but no API key was available in the authoring session.
   The translator's own filter treats a row equal to English as untranslated, so a later

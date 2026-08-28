@@ -247,3 +247,36 @@ The in-game confirmation covers the race switch, the restore, and the mid-visit 
 untested in game: the wanderer adoption path, the kingdom-join offer, and the full takeover through
 to the campaign map.
 
+## Closing note, 2026-08-28: what the in-game runs settled
+
+The feature reached a campaign. Three claims that had only ever been reasoned are now observed in
+`taom_debug_2026-08-28_11-01-35.log`:
+
+- **Priority 1100 behaves as designed.** The 1050 grants land on the throwaway hero, then the
+  handover swaps. The log shows `Set player race to 'uruk_hai'` and
+  `assigned career ... to hero 'main_hero'` BEFORE
+  `Player Switcher: player is now 'lord_I1_1' via AssumeIdentity`.
+- **The career re-key works**, and is visible as two assignments: first to `main_hero`, then to
+  `lord_I1_1`, ending `HasCareer=True unspent=29`.
+- **The co-op collision really is closed by ordering rather than by a flag.**
+  `[Possession] Captured character-creation choices for 'lord_I1_1'` records the lord, because that
+  behaviour fires after the 1100 handler. This was smoke step 8, and it passed without a co-op
+  session existing.
+
+That last one is worth keeping in mind for future features: an ordering guarantee that is only
+argued in a design doc can sometimes be *verified from a log line* rather than from a dedicated test,
+if the two systems both log what they acted on. Cheaper than the integration test nobody writes.
+
+### The counting that is still honest
+
+Fifteen findings across this feature. Two of them (the partyless-wanderer constructor, and my own
+wrong retry fix) would have shipped a visibly broken feature, and **neither was findable by any
+offline gate** the project has: the first was an unguarded dereference inside a vanilla constructor,
+the second was a claim about which branch of a vanilla method runs. Both were caught by review, and
+the second only because a reviewer opened `UpdateFacegen` and read it instead of trusting my comment.
+
+The through-line across all fifteen: **every defect was in vanilla code we called, not in code we
+wrote.** The eligibility rules, the ordering, the domain types and the tests were all correct on the
+first pass. What broke was consistently an assumption about what an engine method does, and the only
+things that caught those were reading the decompile and running the game.
+
