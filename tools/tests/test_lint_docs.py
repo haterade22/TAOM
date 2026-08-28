@@ -418,6 +418,53 @@ class DeadLinkNeverCommittedTests(_PathConstantRepo):
         self.assertEqual(ld.check_dead_links([doc]), [])
 
 
+class UntrackedLinkTargetTests(_PathConstantRepo):
+    """#517: a link target that exists on disk but is not tracked by git.
+
+    `check_dead_links` resolves with `Path.exists()`, a filesystem stat, so trackedness is
+    invisible to it. On 2026-08-28 docs/INDEX.md and docs/reference/doc-lookup.md were pushed
+    carrying links to docs/features/armoury-mesh-cleanup.md while that file was still untracked:
+    the linter read 0 dead links locally and the remote carried 2. Same asymmetry as the
+    gitignored-raw case, opposite cause. Report-only, and it must never fire on a missing
+    target, which is check_dead_links' job.
+    """
+
+    def test_untracked_target_is_reported(self):
+        self._doc("features/brand-new.md", "# new\n")
+        doc = self._doc("INDEX.md", "See [new](features/brand-new.md).\n")
+        found = ld.check_untracked_link_targets(
+            [doc], untracked={ld.REPO_ROOT / "docs" / "features" / "brand-new.md"})
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0][2], "features/brand-new.md")
+
+    def test_tracked_target_is_not_reported(self):
+        self._doc("features/committed.md", "# committed\n")
+        doc = self._doc("INDEX.md", "See [doc](features/committed.md).\n")
+        self.assertEqual(ld.check_untracked_link_targets([doc], untracked=set()), [])
+
+    def test_a_missing_target_is_left_to_the_dead_link_check(self):
+        # Not on disk at all, so it is not "untracked", it is dead. Reporting it here too
+        # would double-count every dead link.
+        doc = self._doc("INDEX.md", "See [gone](features/gone.md).\n")
+        self.assertEqual(
+            ld.check_untracked_link_targets(
+                [doc], untracked={ld.REPO_ROOT / "docs" / "features" / "gone.md"}), [])
+
+    def test_no_untracked_paths_means_no_findings(self):
+        # Fail open: git unavailable yields an empty set, so this can only under-report.
+        self._doc("features/thing.md", "# thing\n")
+        doc = self._doc("INDEX.md", "See [t](features/thing.md).\n")
+        self.assertEqual(ld.check_untracked_link_targets([doc], untracked=set()), [])
+
+    def test_gitignored_raw_targets_stay_exempt(self):
+        # --exclude-standard already omits ignored files, but pin it: a raw transcript must
+        # not migrate from "exempt dead link" to "untracked link".
+        doc = self._doc("reviews/rca-thing.md", "See [review](raw/codex-thing.md).\n")
+        self.assertEqual(
+            ld.check_untracked_link_targets(
+                [doc], untracked={ld.REPO_ROOT / "docs" / "reviews" / "raw" / "codex-thing.md"}), [])
+
+
 EM = "—"
 EN = "–"
 

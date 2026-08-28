@@ -222,6 +222,7 @@ DOC_ROOTS = [DOCS_DIR]
 @dataclass
 class LintReport:
     dead_links: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    untracked_targets: list[tuple[Path, int, str, str]] = field(default_factory=list)
     stale_versions: list[tuple[Path, int, str, str]] = field(default_factory=list)
     orphan_features: list[Path] = field(default_factory=list)
     backlinks_prose: list[tuple[Path, int, str, str]] = field(default_factory=list)
@@ -236,6 +237,7 @@ class LintReport:
     def total(self) -> int:
         return (
             len(self.dead_links)
+            + len(self.untracked_targets)
             + len(self.stale_versions)
             + len(self.orphan_features)
             + len(self.backlinks_prose)
@@ -355,6 +357,67 @@ def check_dead_links(files: list[Path]) -> list[tuple[Path, int, str, str]]:
                 if is_never_committed_target(resolved):
                     continue
                 if not resolved.exists():
+                    findings.append((f, lineno, target, label))
+    return findings
+
+
+def _untracked_paths() -> set[Path]:
+    """Every untracked, non-ignored path in the repo.
+
+    Fail open: `_git_out` returns None on any failure and that becomes an EMPTY set, so a broken
+    or absent git can only make the caller under-report. It can never invent a finding.
+    `--exclude-standard` honours .gitignore, so the gitignored `docs/reviews/raw/` transcripts
+    stay out of this set and keep their existing dead-link exemption rather than migrating into
+    a new one.
+    """
+    out = _git_out("-c", "core.quotePath=false", "ls-files", "--others", "--exclude-standard")
+    if not out:
+        return set()
+    return {REPO_ROOT / name.strip() for name in out.splitlines() if name.strip()}
+
+
+def check_untracked_link_targets(
+    files: list[Path], untracked: set[Path] | None = None
+) -> list[tuple[Path, int, str, str]]:
+    """Links whose target exists on disk but is NOT tracked by git (#517).
+
+    `check_dead_links` resolves a target with `Path.exists()`, a filesystem stat, so trackedness
+    is invisible to it by construction. A link to an untracked file therefore reads clean on the
+    machine that authored it and is dead for everyone else. Not hypothetical: on 2026-08-28
+    `docs/INDEX.md` and `docs/reference/doc-lookup.md` were pushed carrying links to
+    `docs/features/armoury-mesh-cleanup.md` while it was still untracked. This linter reported
+    0 dead links; the remote carried 2.
+
+    Deliberately a separate finding rather than folded into `dead_links`, because the fixes
+    differ: a dead link wants the link corrected or the target written, this wants `git add`.
+    A target that is missing from disk entirely is left to `check_dead_links`, so nothing is
+    double-counted.
+    """
+    if untracked is None:
+        untracked = _untracked_paths()
+    if not untracked:
+        return []
+    findings: list[tuple[Path, int, str, str]] = []
+    for f in files:
+        if is_dead_link_exempt(f):
+            continue
+        try:
+            text = f.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for lineno, line in iter_lines_outside_code_fences(text):
+            scrubbed = INLINE_CODE_RE.sub("", line)
+            for match in LINK_RE.finditer(scrubbed):
+                label, target = match.group(1), match.group(2).strip()
+                if not looks_like_path_target(target):
+                    continue
+                resolved = resolve_link(f, target)
+                if resolved is None or is_never_committed_target(resolved):
+                    continue
+                # Missing from disk is a dead link, not an untracked one.
+                if not resolved.exists():
+                    continue
+                if resolved in untracked:
                     findings.append((f, lineno, target, label))
     return findings
 
@@ -1000,6 +1063,8 @@ def format_report(report: LintReport, quick: bool) -> str:
     out.append("# Doc lint report")
     out.append("")
     out.append(f"- Dead links: **{len(report.dead_links)}**")
+    out.append(f"- Link targets present but UNTRACKED (dead on the remote): "
+               f"**{len(report.untracked_targets)}**")
     if not quick:
         out.append(f"- Stale version refs (outside migration/archive): **{len(report.stale_versions)}**")
         out.append(f"- Orphan feature docs (no inbound references): **{len(report.orphan_features)}**")
@@ -1015,6 +1080,17 @@ def format_report(report: LintReport, quick: bool) -> str:
         out.append("## Dead links")
         out.append("")
         for f, lineno, target, label in report.dead_links:
+            out.append(f"- `{rel(f)}:{lineno}` — `[{label}]({target})`")
+        out.append("")
+    if report.untracked_targets:
+        out.append("## Link targets present but untracked")
+        out.append("")
+        out.append("These resolve on this machine and are dead for everyone else: the target "
+                   "exists on disk but git is not tracking it, so a push publishes the link "
+                   "without the file. `git add` the target, or drop the link. (2026-08-28: two "
+                   "such links reached the remote while this check did not exist.)")
+        out.append("")
+        for f, lineno, target, label in report.untracked_targets:
             out.append(f"- `{rel(f)}:{lineno}` — `[{label}]({target})`")
         out.append("")
     if not quick:
@@ -1137,6 +1213,7 @@ def main(argv: list[str]) -> int:
 
     report = LintReport()
     report.dead_links = check_dead_links(files)
+    report.untracked_targets = check_untracked_link_targets(files)
     if not args.quick:
         report.stale_versions = check_stale_versions(files)
         report.orphan_features = check_orphan_features(files)

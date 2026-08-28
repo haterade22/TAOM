@@ -314,6 +314,32 @@ Verified: `validate_moduledata.py` PASS, `check_external_xslt.py` clean across 1
 Not-tested: in-game appearance. Hero sex, body properties and equipment bake at hero creation, so
 this needs a game restart and a NEW campaign to observe.
 
+### fix(tooling): the doc linter could not see a link to an untracked file (#517)
+
+`check_dead_links` resolved a target with `Path.exists()`, a filesystem stat, so git trackedness
+was invisible to it. A link to an untracked file read clean on the machine that authored it and
+was dead for everyone else. That is how `docs/INDEX.md` and `docs/reference/doc-lookup.md` reached
+the remote linking to `docs/features/armoury-mesh-cleanup.md` while it was still untracked: the
+linter said 0 dead links, the remote had 2.
+
+`check_untracked_link_targets` reports those as their own finding rather than folding them into
+dead links, because the fix is different: a dead link wants the link corrected or the target
+written, this one wants `git add`. A target missing from disk stays with the old check, so nothing
+double-counts.
+
+It fails open. `_git_out` already returns `None` on any failure and that becomes an empty set, so
+a broken git can only under-report. `--exclude-standard` honours `.gitignore`, so the gitignored
+`docs/reviews/raw/` transcripts keep the dead-link exemption they were given in #397 rather than
+reappearing under a new heading.
+
+**It found six live cases on its first real run**, all pointing at `docs/reference/lotrlome-warg-changes.md`
+from the in-flight warg work. Those links are still uncommitted, so this time the warning arrives
+before the push rather than after.
+
+The second `exists()` call, in `build_inbound_reference_index`, was left alone on purpose. It
+decides whether a link counts toward the orphan-doc index, and treating an untracked target as
+absent there would report a legitimately new doc as an orphan. Same call, different question.
+
 ### fix(armory): re-dress everything the asset cleanup left wearing nothing
 
 45 items had a deleted mesh and a live wearer. 41 are now re-pointed at surviving art, 484
