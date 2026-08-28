@@ -132,6 +132,59 @@ public class PlayerSwitcherBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void TheRaceRepairSeam_StillResolves()
+    {
+        RequireGame();
+
+        // The preview repairs a lord whose body key carries indices his new race does not define.
+        // Without this repair the race silently never commits: FaceGenVM.Refresh throws partway on
+        // the voice index, so UpdateFace, and therefore BodyGenerator.RefreshFace, never run, and
+        // RefreshFace is the only assignment of BodyGenerator.Race outside the constructor.
+        //
+        // Three string-based lookups carry that repair. A rename in a future engine build makes
+        // them resolve null, the repair silently stops happening, and the feature regresses to
+        // exactly the in-game symptom this test exists to prevent: the face changes, the body
+        // does not.
+        const BindingFlags All = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+        var faceGenVm = Find("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM");
+        Assert.IsNotNull(faceGenVm, "FaceGenVM is the preview's data source");
+
+        Assert.IsNotNull(faceGenVm!.GetField("_faceGenerationParams", All),
+            "the repair adjusts this struct in place; without it there is nothing to clamp");
+        Assert.IsNotNull(faceGenVm.GetField("_characterRefreshEnabled", All),
+            "Refresh early-returns unless this is set, and the aborted call leaves it false");
+        Assert.IsNotNull(faceGenVm.GetMethod("Refresh", new[] { typeof(bool) }),
+            "the repair drives Refresh directly rather than via SetBodyProperties, which would re-decode the key");
+
+        var paramsType = Find("TaleWorlds.MountAndBlade.FaceGenerationParams");
+        Assert.IsNotNull(paramsType, "FaceGenerationParams carries CurrentVoice and the clamp");
+        Assert.IsNotNull(paramsType!.GetMethod("SetRaceGenderAndAdjustParams",
+            BindingFlags.Instance | BindingFlags.Public),
+            "this is the engine's own post-decode clamp that SetBodyProperties omits; the whole fix is calling it");
+        Assert.IsNotNull(paramsType.GetField("CurrentVoice", BindingFlags.Instance | BindingFlags.Public),
+            "CurrentVoice is the index that overruns the target race's voice list");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void BodyGeneratorRace_IsStillTheFieldThatProvesAPreviewCommitted()
+    {
+        RequireGame();
+
+        // The preview no longer trusts "no exception escaped" as success; it asks the engine
+        // whether BodyGenerator.Race actually became the target. If this field moves, that check
+        // silently stops verifying anything.
+        var type = Find("TaleWorlds.MountAndBlade.BodyGenerator");
+        Assert.IsNotNull(type, "BodyGenerator holds the committed race");
+        Assert.IsNotNull(type!.GetField("Race", BindingFlags.Instance | BindingFlags.Public),
+            "Race is a public field, assigned only by the constructor and RefreshFace");
+        Assert.IsNotNull(type.GetMethod("SaveCurrentCharacter", BindingFlags.Instance | BindingFlags.Public),
+            "vanilla persists the previewed body through this; the restore path calls it deliberately");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void TheVanillaClanRowVM_StillDereferencesItsPartyArgument_WhichIsWhyWeDoNotUseIt()
     {
         RequireGame();

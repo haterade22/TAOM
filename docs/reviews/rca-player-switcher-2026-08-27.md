@@ -205,3 +205,45 @@ feature doc's Owed list and is the first thing the in-game smoke should probe.
 
 Suite 7,680 green. Two regression tests were added beyond the fixes: a container-level `AreSame` on
 the session mapping, and a reverse localization check asserting every declared key is rendered.
+
+---
+
+# Addendum, 2026-08-28: the in-game run, and a fix that was wrong
+
+The feature reached a real game for the first time. The panel rendered correctly and clicking a lord
+did nothing visible. What followed is worth recording because the first fix was confidently wrong and
+a review caught it before it shipped.
+
+## What the in-game run exposed
+
+| # | Sev | Bug | Why missed |
+|---|---|---|---|
+| 11 | HIGH | `FaceGenVM.SetBodyProperties` never applies the post-decode clamp that `BodyGenerator.InitBodyGenerator` applies (`FaceGenerationParams.SetRaceGenderAndAdjustParams`). A lord whose body key encodes a voice index his new race lacks makes `Refresh` throw inside `GetVoiceUIIndex`, before `UpdateFace` runs, so `RefreshFace` never commits the race. Face changed, race did not | Nothing offline could see it. The prefab-contract test proves binding NAMES resolve; it cannot prove a click routes or a race applies. Every gate was green |
+| 12 | HIGH | The first fix retried `SetBodyProperties` unchanged, on the reasoning that the retry takes the `UpdateFacegen` branch and so avoids the voice list. `UpdateFacegen` calls `SoundPreset.Value = GetVoiceUIIndex()` unconditionally. It threw again, its own catch swallowed it, and the code still reached `applied = true` | Reasoned about the branch I wanted to reach, never read the branch's body. The comment asserting it "never touches the voice list" was written from the plan, not from the decompile |
+| 13 | HIGH | `applied` meant "no exception escaped", not "the preview worked", and it gates `IsPreviewActive`, which suppresses `Patch9_RaceFilter` | The flag was introduced for a different purpose (deciding whether to lift the suppression) and quietly became a success signal without ever being one |
+| 14 | MED | `RestoreDefault` had no failure isolation: a throw in its first call skipped the equipment restore AND the save, so a deselect could leave the player wearing the lord's gear | `ApplyPreview` was hardened against a `SetBodyProperties` throw; its mirror image was not. Same opener/closer asymmetry as finding 1, third instance in this feature |
+| 15 | MED | `_snapshotTaken` never re-armed within a stage visit, so preview, deselect, edit your own face, preview again, deselect restored the ORIGINAL snapshot and silently discarded the edits | The snapshot was designed as "capture once, it is the player's character". Nobody asked what happens when the player keeps editing between previews |
+
+## The lesson that is actually new
+
+Findings 12 and 13 are the same mistake in two forms: **I trusted my own reasoning about engine
+control flow instead of reading it, and then encoded that reasoning as a confident comment.** The
+comment on the retry was not a description of the code; it was a restatement of the plan. A reviewer
+had to open `UpdateFacegen` to discover the claim was false, and the code said the opposite of the
+truth in the meantime.
+
+**Prevent:** when a fix's correctness depends on which BRANCH of an engine method runs, read that
+branch's body before writing the fix, and cite the line in the comment. A comment that asserts what
+an engine method does NOT do is a claim requiring evidence, not a summary.
+
+Both the Claude reviewer and Codex independently reached finding 12 and refuted the fix. That is the
+second time on this feature that the review caught something no offline gate could, the first being
+the partyless-wanderer constructor. The pattern across both: **the defect was always in vanilla code
+we called, never in code we wrote.**
+
+## Owed
+
+The in-game confirmation covers the race switch, the restore, and the mid-visit edit case. Still
+untested in game: the wanderer adoption path, the kingdom-join offer, and the full takeover through
+to the campaign map.
+

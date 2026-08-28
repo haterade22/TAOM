@@ -131,17 +131,7 @@ public class PlayerSwitcherVM : ViewModel
     private void OnRowClicked(HeroPickItemVM clicked)
     {
         if (clicked == null)
-        {
-            _logger.LogInfo("[PS-DIAG] OnRowClicked fired with a null row");
             return;
-        }
-
-        // #514 diagnostic. The first in-game run showed a panel that renders correctly and does
-        // nothing when clicked. This line is what distinguishes "the click never reaches the
-        // ViewModel" from "the click lands and the preview fails silently".
-        _logger.LogInfo(
-            $"[PS-DIAG] OnRowClicked hero={clicked.Row.HeroId} name={clicked.Row.Name} " +
-            $"race={clicked.Row.Race} wasSelected={clicked.IsSelected}");
 
         // Clicking the selected lord again is how the player takes their own character back,
         // since the prefab offers no separate button for it.

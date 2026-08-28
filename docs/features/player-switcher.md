@@ -202,6 +202,31 @@ player wearing that lord's face on the character they had built. `RestoreDefault
 suppression flag FIRST (so the restoring refresh actually rebuilds the culture-filtered race
 selector), restores the snapshot, and saves.
 
+**The race repair, and why the preview needs one.** `FaceGenVM.SetBodyProperties` decodes the lord's
+body-properties key and switches race, but it never applies the post-decode clamp that the engine's
+own `BodyGenerator.InitBodyGenerator` applies: `FaceGenerationParams.SetRaceGenderAndAdjustParams`,
+which bounds `CurrentVoice` (and hair, beard, textures, tattoo, eyebrow) to the target race's limits.
+A lord whose key encodes a voice index his new race does not define therefore makes
+`Refresh` throw inside `GetVoiceUIIndex`, part way through, before `UpdateFace` runs. `UpdateFace`
+calls `BodyGenerator.RefreshFace`, the only assignment of `BodyGenerator.Race` outside the
+constructor, so the face changes and the race silently does not.
+
+The preview catches that, applies the engine's own clamp to the live params, and drives `Refresh`
+directly. Directly, not through `SetBodyProperties` again, because a second call re-decodes the key
+and undoes the clamp. This was found in game, on Isengard, where every `uruk_hai` lord failed and the
+single `uruk` lord worked.
+
+**Success is asked, not assumed.** The preview verifies `BodyGen.Race == row.Race` rather than
+treating "no exception escaped" as success, and a preview that did not commit is rolled back through
+`RestoreDefault`. That matters because `SetBodyProperties` assigns `CurrentBodyProperties` near its
+top while race and gender are written later: a half-applied preview leaves the lord's body paired
+with the player's race, and vanilla persists exactly that trio the next time `Done()` or
+`GoToIndex()` calls `SaveCurrentCharacter`.
+
+**The snapshot re-arms after every restore.** Otherwise previewing a lord, deselecting, editing your
+own face, then previewing another and deselecting would restore the ORIGINAL snapshot and silently
+discard the edits made in between.
+
 `Patch9_RaceFilter` gains one early return keyed on `IPlayerSwitchSession.IsPreviewActive`.
 `SetBodyProperties` triggers `Refresh(clearProperties: true)` on every race change, so without it
 the culture race rebuild would snap a dwarf or Sauron preview straight back to the culture default.
