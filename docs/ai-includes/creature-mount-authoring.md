@@ -21,6 +21,74 @@ Companion docs: [spider.md](../features/spider.md) (architecture + every RCA),
 
 ---
 
+## 🐏 FIRST: is this a RESKIN? Then most of this document does not apply
+
+Everything below was distilled from the war elephant and the giant spider, both of which ship **their
+own skeleton and their own authored clips**. That is the maximal case. If your creature's mesh is
+skinned to a skeleton the engine has **already registered**, you are on a far shorter path and
+following the phases literally will cost you weeks of unnecessary work.
+
+Worked example: the **Dwarven war ram** (issue #515, [war-ram.md](../features/war-ram.md)). Its meshes
+are skinned to the stock vanilla **`horse_skeleton`**, bone for bone, so its Monster is the vanilla
+`horse_2` shape:
+
+```xml
+<Monster id="taom_war_ram" base_monster="horse" action_set="as_horse"
+         weight="320" hit_points="160"
+         jump_acceleration="7.5" relative_speed_limit_for_charge="4.0" />
+```
+
+`Monster.Deserialize` copies `Flags`, `ActionSetCode`, `FemaleActionSetCode`, `MonsterUsage` and every
+capsule field from the base, and any attribute the derived Monster does not name keeps the inherited
+value. So that seven-attribute element inherits `Mountable`, `family_type="1"`,
+`monster_usage="horse"`, `num_paces="6"`, every bone name, the slope block and **all twelve rein
+attributes**.
+
+**Phases 1 to 5 below are then skipped outright.** No clips, no `quad_movement` tagging, no
+`action_types`, no `action_sets`, no `monster_usage_sets`, no rider partial. The war ram authored
+**zero** animation data. It is also, as a direct consequence, the only TAOM mount carrying vanilla's
+complete rein surface, so it sidesteps gotcha 18 rather than adding to it.
+
+### The price of a reskin: you inherit the donor's BEHAVIOUR, not just its animations
+
+This is the one thing a reskin must understand, and it is the opposite of the custom-skeleton case.
+
+A creature with a bespoke usage set owns its whole `act_<creature>_*` vocabulary. Nothing else in the
+game fires those actions, so picking one for a behaviour-tree attack is safe by construction. **A
+reskin shares its vocabulary with the engine**, and the moment it does, "our code never fires this"
+stops implying "nothing fires this".
+
+The war ram got this wrong **twice**, the second time while fixing the first:
+
+| Action | Type | Why it was wrong |
+|---|---|---|
+| `act_horse_rear` | `actt_rear` (`ActionCodeType.Rear = 47`) | The inherited `horse` usage set declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount. Worse, `Agent.Mount` reads `mountAgent.GetCurrentActionType(0) == ActionCodeType.Rear` and **refuses the mount while true**, so forcing it each cooldown made the ram briefly unmountable in combat |
+| `act_horse_strike_front` / `_back` | `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) | Sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the band `Agent.IsInBeingStruckAction` treats as **being struck**. The clips are named `horse_hit_from_front` / `_back`. The creature flinches as though hit while you emit damage |
+
+**The fact underneath both: the vanilla horse rig has no attack animation at all.** Horses deal damage
+through charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack
+table. The rig's only genuinely offensive action is **`act_horse_kick`** (`actt_kick`,
+`ActionCodeType.Kick = 28`), which is what the ram ships with. If a horse-rig creature needs to attack
+with anything other than a kick, that clip does not exist and must be authored.
+
+**So before binding ANY action on a reskin, establish three things:** its type in `action_types.xml`;
+whether the inherited `monster_usage` set names it in a **verb slot or table** (which means the engine
+fires it too); and whether the engine **branches on that type** anywhere (`ActionCodeType`,
+`AgentActionFlag`, `IsInBeingStruckAction`). `ActionIndexCache` + `AnyUnresolved()` answer only "is
+this name real", which both wrong choices passed.
+
+Two more reskin-specific notes:
+
+- **`body_length` does not scale the mount only.** `EquipmentIndex.ArmorItemEndSlot` and
+  `EquipmentIndex.Horse` are the same value (10), the scale block in `Mission.BuildAgent` has no
+  `IsMount` guard, and `BuildAgent` runs for the rider as well as the mount with the Horse item still
+  in the rider's spawn equipment. Any value other than 100 scales the RIDER too. This is pre-existing
+  engine behaviour, not reskin-specific, but a reskin is where you are most likely to reach for it.
+- **The campaign-map variant comes free.** The map mount visual resolves
+  `monster.ActionSetCode + "_map"` (`SandBox.View`, three call sites), so a creature reusing `as_horse`
+  gets `as_horse_map` without authoring it. A custom skeleton must author its own `_map` child.
+  The sibling `_town_and_village` child is a different matter: see the correction under Phase 4.
+
 ## ⚠️ REPLACING FBX / TPAC FILES — read before EVERY refine cycle
 
 **Animation refinement is constant; the asset-swap is where a working mount silently breaks.** A
@@ -217,8 +285,19 @@ The native dispatch is **TYPE-driven**. Declare, exactly:
    global `act_horse_jump_*` family, movements, idles incl. `_1`, turns) to a **real, validated**
    clip. Also bind `act_horse_forward_canter` explicitly — the thumbnail/tableau pose resolves it
    (`as_warg` does the same).
-2. **Children**: `as_<c>_town_and_village` + `as_<c>_map` (`base_set="as_<c>"`) — campaign map
-   icons + settlement scenes resolve them; missing child = native AV (elephant "Crash #4" class).
+2. **Children**: `as_<c>_map` (`base_set="as_<c>"`) is resolved by name for the campaign-map icon:
+   `SandBox.View` builds the map mount visual with `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")`
+   at three call sites. Author it.
+
+   **CORRECTED 2026-08-28: `as_<c>_town_and_village` is NOT the same kind of requirement, and the
+   "missing child = native AV (elephant Crash #4)" claim previously stated here is unsupported.**
+   Measured against the installed v1.4.8: **no managed code anywhere appends `_town_and_village`**
+   (zero hits across the shipping and modules builds), and two shipping, rideable vanilla mounts ship
+   without it. `as_camel` has `_map` but no `_town_and_village`; so does `as_horse_2`, which carries a
+   real `<Horse>` item and is ridden by vanilla troops. Only `as_horse` has one. A native-side consumer
+   cannot be ruled out from managed decompilation, but the vanilla counter-examples make the crash
+   attribution very unlikely, and it should not be repeated as fact. Author one if you want parity with
+   `as_horse`; do not author one believing it prevents a crash.
 3. **The rider partial**: a partial `<action_set id="as_human_warrior">` block mapping every
    creature usage-set action to a RIDER overlay clip (`rider_warg_*` + vanilla `rider_fall_*`).
    **It MUST sit at the TOP of the file** — `base_set` inheritance snapshots at definition time,
@@ -344,7 +423,9 @@ invariant under Phase 2, still unverified). Keep the previous decompile as
 - [docs/features/elephant.md](../features/elephant.md)
 - [docs/features/mumakil.md](../features/mumakil.md)
 - [docs/features/spider.md](../features/spider.md)
+- [docs/features/war-ram.md](../features/war-ram.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/lotrlome-war-ram-changes.md](../reference/lotrlome-war-ram-changes.md)
 
 <!-- backlinks-end -->

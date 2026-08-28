@@ -2226,3 +2226,63 @@ first run against a speculative row I had just added, which is the gate working.
 
 Suite arc: 7492 -> 7493 -> 7494 green. RCA:
 `docs/reviews/rca-settlement-encounter-2026-08-24.md`. Deferred with written rationale: #511.
+
+## Review 90: Dwarven war ram (#515), 6-agent deep-review plus a Codex adversarial pass (2026-08-28)
+
+The ram is a reskin. It inherits `base_monster="horse"`, authors no animation clip of its own, and
+rides on the shared `ElephantLike` attack stack. That is why the feature is small, and it is also
+exactly what produced both P1s.
+
+**The attack clip was wrong twice, and the second time happened while fixing the first.** The first
+was `act_horse_rear`, typed `actt_rear`: the inherited `horse` usage set declares
+`rear_action="act_horse_rear"`, so the engine fires it itself on a damaged mount, and `Agent.Mount`
+refuses a mount whose channel-0 action type is `Rear`. Forcing it every cooldown would have made the
+ram briefly unmountable in combat, on the one TAOM mount deliberately built to be player-rideable.
+Caught by the API compatibility agent, the only pass that decompiled `Agent.Mount`. The replacement
+was `act_horse_strike_front`, typed `actt_mount_strike`, which is `ActionCodeType.MountStrike = 52`
+and sits inside the `StrikeBegin = 48 .. StrikeEnd = 52` band that `Agent.IsInBeingStruckAction`
+reads as BEING STRUCK; the clip is named `horse_hit_from_front`. Caught by Codex. What ships is
+`act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`).
+
+**The fact underneath both: vanilla horses have no attack animation at all.** They deal damage
+through charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an
+attack table. Choosing an attack out of it means choosing a reaction.
+
+The data-flow agent reached the companion bug from the other side. Two profile slots documented as
+unused were still read by `ElephantLikeCombatProfile.IsAttack`, which ORs across all four, so an
+engine-driven action satisfied the ram's own "am I already attacking" gate and silently suppressed
+its attack for that tick. A slot nothing writes can still be read.
+
+**Codex refuted a claim the docs had already published.** `body_length` was written up as scaling the
+mount only. `EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same value (10), the
+scale block in `BuildAgent` carries no `IsMount` guard, and `BuildAgent` runs for the rider too.
+Harmless at the shipped 100, which is identity, and wrong as a statement. Corrected.
+
+Two independent passes caught the same untested relaxation: the `MOUNTED_DWARF` allowlist admits
+`default_group="HorseArcher"` as well as `Cavalry`, with no test and no current consumer. Both a
+positive and a negative test were added.
+
+Two more from Codex with nothing to do with the creature. `Main/IoC.cs` and `Main/SubModule.cs` had
+been written with doubled carriage returns, turning two one-line changes into 233 and 1709-line
+rewrites; repaired. And party-template minimum sums had drifted up, +4 on the culture default and +1
+per clan, while the max sums held at 2000, so only the ceiling had actually been checked. Ram stacks
+moved to min 0 and all eight sums now match HEAD exactly.
+
+**A live pre-existing bug surfaced that the new validator structurally cannot see.**
+`player_career_erebor_cavalry_m` and `_f` equip `Item.saddle_horse`, a vanilla horse on a dwarf,
+which is precisely the case `MOUNTED_DWARF` exists to forbid. Career rosters are applied at runtime
+and are never named by an `NPCCharacter`, so no XML gate reaches them. Two shipped-data tests now
+pin it, both mutation-tested by reintroducing the bug.
+
+One P1 was deferred by explicit decision: there is no mount-lock, so a dismounted dwarf can take an
+ordinary horse and enemy cavalry can take a riderless ram. Recorded as a CHANGELOG known limitation
+and as finding 6 in the RCA.
+
+Suite arc: 7708 -> 7712 -> 7716 green, plus 693 Python tests. RCA:
+`docs/reviews/rca-war-ram-2026-08-28.md`.
+
+The generalisable lesson: **a reskin inherits the donor's behaviour, not just its animations.** Every
+previous TAOM creature owns a bespoke `act_<creature>_*` vocabulary, so nothing but TAOM fires it and
+picking one for a behaviour tree is safe by construction. The war ram is the first mount that shares
+its vocabulary with the engine, which is where "our code does not fire this" stopped implying
+"nothing fires this". It broke that assumption twice in one review.

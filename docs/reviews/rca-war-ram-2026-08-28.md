@@ -105,8 +105,14 @@ Recorded so a future reader does not re-litigate the design:
   **child element**, which the ram's self-closing element does not.
 - `CanRide` gates `CheckSkillForMounting` only. The spawn path checks `HorseComponent.IsRideable` with
   no flag reference, so AI spawn was never blocked.
-- `SetInitialAgentScale(0.01f * BodyLength)` fires only on the mount agent. `BodyLength` has exactly
-  three managed readers and none of the others has a side effect.
+- ~~`SetInitialAgentScale(0.01f * BodyLength)` fires only on the mount agent.~~ **REFUTED by the Codex
+  pass, corrected 2026-08-28.** `EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the
+  same value (10), the scale block in `BuildAgent` has no `IsMount` guard, and `BuildAgent` runs for
+  the rider as well as the mount with the Horse item still in the rider's spawn equipment, so any
+  `body_length` other than 100 scales the RIDER too. The ram ships at 100 (identity), so it is
+  unaffected. `BodyLength` has three managed readers and none of the others has a side effect.
+  This entry is left struck through rather than deleted: it was published as verified in three docs
+  before the refutation, and finding 7 below is about exactly this failure mode.
 - Harness fit compares `HorseComponent.Monster.FamilyType`, and `SPInventoryVM` is its only managed
   enforcement.
 - `as_dwarf_warrior` carries 203 `act_horse_*`/`act_ride*` rows, set-for-set identical to vanilla
@@ -118,3 +124,13 @@ Recorded so a future reader does not re-litigate the design:
 - Patch47's absence is an inference by analogy, not a proof. The spider hand-authored its Monster
   fields to match vanilla; the ram uses the engine's own `base_monster` copy, and vanilla `horse_2`
   is a shipped precedent for exactly that. **A ridden-death in-game test is still owed.**
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/war-ram.md](../features/war-ram.md)
+
+<!-- backlinks-end -->

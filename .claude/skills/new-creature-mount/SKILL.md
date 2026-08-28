@@ -17,11 +17,34 @@ per-agent behavior tree. NO spawn patches, NO detached combatants (built twice, 
 **The warg (Alliance.Wargs) is the reference implementation — when in doubt, do what the warg
 does, byte-for-byte in shape.**
 
+## FIRST: is this a reskin? (if yes, Phases 1 to 5 are skipped outright)
+
+If the mesh is skinned to an **already-registered skeleton**, answer this before authoring
+anything. The war ram uses the stock vanilla `horse_skeleton`, so its Monster is the vanilla
+`horse_2` shape: `base_monster="horse"` + an action set + a few tuning attributes, inheriting
+Flags, `family_type`, `monster_usage`, every bone, the slope block and all twelve rein
+attributes. **No clips, no `quad_movement`, no action_types / action_sets / monster_usage_sets,
+no rider partial, no animation data at all.** Phases 1 to 5 below do not apply.
+
+**The cost is shared vocabulary.** A reskin inherits the donor's *behaviour*, not just its
+animations, so "our code never fires this" stops implying "nothing fires this". Before binding
+any action to a behavior tree check three things: its type in `action_types.xml`, whether the
+inherited `monster_usage` set names it in a verb slot or table, and whether the engine branches
+on that type. The ram got this wrong twice. The vanilla horse rig has **no attack animation at
+all** (horses damage by charge collision, so `monster_usage_strikes` is a hit-REACTION table);
+its only offensive action is `act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`).
+`act_horse_rear` is `actt_rear` and blocks `Agent.Mount`; `act_horse_strike_front` is
+`actt_mount_strike = 52`, inside the `48..52` band `Agent.IsInBeingStruckAction` reads as being
+struck. Worked example: [docs/features/war-ram.md](../../../docs/features/war-ram.md).
+
 ## Phase order (each gated before the next)
 
-1. **Assets** (doc Phase 0–1): skeleton ≤64 bones; meshes ≤~38 bones each (split + recombine
-   via `<AdditionalMeshes>`); clips in-place; **every gait clip carries `quad_movement` +
-   step points** (Kit Clip *usages*, not Flags), gallop-pace runs also `cyclic`.
+1. **Assets** (doc Phase 0-1): skeleton **≤63 bones**: the ONLY cap is
+   `Skeleton.MaxBoneCount = 64`, a skeleton TOTAL. **There is no per-mesh bone limit** (the old
+   "~38 bones, split + recombine" rule is retired): keep the whole body in ONE mesh, split only
+   for a genuinely separate sub-mesh such as the warg's cloth-simulated fur. Clips in-place;
+   **every gait clip carries `quad_movement` + step points** (Kit Clip *usages*, not Flags),
+   gallop-pace runs also `cyclic`.
 2. **Monster XML** (Phase 2): `num_paces=6`, `family_type=1`, Flags EXACTLY
    `Mountable CanRear RunsAwayWhenHit CanCharge CanWander` — **`CanAttack` is forbidden**
    (engine attack-AI path; 1.4.6 charge CTD). Rein surface + rider capsule/eye adders.

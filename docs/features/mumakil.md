@@ -29,6 +29,35 @@ troop, and a thin C# clone of the elephant attack feature.
 scales the whole agent uniformly — skeleton, rider-attach bone, **ragdoll bodies, and the collision capsule** all go
 3× (confirmed in-game: the rider sits correctly high on the 3× back).
 
+#### UNVERIFIED (2026-08-28): `body_length` probably scales the RIDER too
+
+`[Likely]` The scale block is not mount-only. Traced against the installed v1.4.8 decompile and
+independently by a Codex pass during the [war ram](war-ram.md) review:
+
+- `EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are **the same value, 10**
+  (`TaleWorlds.Core`, `EquipmentIndex`). The slot the scale block reads *is* the Horse slot.
+- The block in `Mission.BuildAgent` has **no `IsMount` guard**. It scales any agent whose
+  `SpawnEquipment[EquipmentIndex.ArmorItemEndSlot]` holds an item with non-zero
+  `HorseComponent.BodyLength`.
+- `Mission.SpawnAgent` runs `BuildAgent` for the **rider as well as** the mount, and only the mount
+  gets a trimmed equipment set: the mount agent is given a fresh `Equipment` holding slots 10 and 11
+  alone, while the rider keeps the full set with the Horse item still in slot 10.
+
+The Mûmakil ships `body_length="300"`, so this predicts a **3× rider**, not a normal-sized man on a
+3× beast. Nothing settles it offline: `SetInitialAgentScale` is a one-line call into native
+(`MBAPI.IMBAgent.SetAgentScale`), and nothing else in the managed layer resets an agent's scale
+afterwards.
+
+**Owed: an in-game look.** Spawn `harad_mumakil_rider` beside a foot troop and compare heights.
+Nothing already written here settles it either way. The paragraph above records "the rider sits
+correctly high on the 3× back", which is an observation about where the rider sits, not how big he
+is, and a 3× rider on a 3× mount would look proportionate from any distance. The "How-to" line
+below, "large scales can produce rider-perched-high quirks", may already be this same effect seen
+from the outside rather than a separate problem, so treat a rider that looks wrong as evidence for
+this rather than as a second bug. The war-ram RCA records the general shape of this miss (an
+engine path assumed inert because TAOM's own code does not drive it):
+[rca-war-ram-2026-08-28.md](../reviews/rca-war-ram-2026-08-28.md).
+
 ### Shared skeleton + animation reuse
 
 - The Mûmakil mesh (`sk_mumakil_basemesh_a1` + the `sk_mumakil_platform_a1` war-tower) is skinned to

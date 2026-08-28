@@ -4,6 +4,43 @@
 
 ## 2026-08-28
 
+### docs(war-ram): write down what the reskin path actually costs
+
+Follow-up to the war ram (#515). The documentation was calibrated entirely on the spider and the
+elephant, both custom-skeleton creatures with authored clips, so it over-served a reskin badly:
+following `creature-mount-authoring.md` literally for the war ram would have meant authoring a
+`monster_usage` set with 45 jump rows and a rider partial, none of which was needed.
+
+That doc now opens with a reskin short-circuit before Phase 0, and `/new-creature-mount` carries the
+same test. If the mesh is skinned to a skeleton the engine already registers, the Monster collapses to
+the vanilla `horse_2` shape and **Phases 1 to 5 are skipped outright**. The price is stated alongside
+it: a reskin SHARES its action vocabulary with the engine, so "our code never fires this" stops
+implying "nothing fires this", which is how the war ram's attack clip was got wrong twice.
+
+**A published engine fact turned out to be wrong, and it had spread.** Both docs claimed a missing
+`as_<c>_town_and_village` child causes a native AV, the "elephant Crash #4" class. It does not.
+Measured against the installed v1.4.8: **no managed code anywhere appends `_town_and_village`** (zero
+hits across the shipping and modules builds), and two shipping rideable vanilla mounts ship without
+one, `as_camel` and `as_horse_2`, the latter carrying a real Horse item. Only `as_horse` has one. The
+sibling `_map` claim IS real (`MBGlobals.GetActionSet(monster.ActionSetCode + "_map")`, unguarded, at
+three call sites in `SandBox.View`), so the two children were split apart wherever the claim appeared.
+Raised by a concurrent session, verified independently here, and corrected at the root
+(`elephant.md`, where it originated) as well as in the distillate.
+
+The `MOUNTED_DWARF` documentation now records the war-ram carve-out and, more usefully, the
+**structural blind spot** it exposed: the rule scans `NPCCharacter` definitions and the rosters they
+name, so career starting rosters, which are applied to the player at runtime and never named by an
+`NPCCharacter`, are invisible to it. That is how a dwarf shipped equipped with a vanilla `saddle_horse`
+through green validator runs.
+
+Also: `body_length` scales the RIDER as well as the mount (`ArmorItemEndSlot` and `Horse` are the same
+enum value and `BuildAgent` has no `IsMount` guard). Harmless for the ram at 100, but the mumakil ships
+300, so `mumakil.md` carries that as an explicitly unverified prediction owed an in-game look.
+
+Includes two paragraphs authored by concurrent sessions and taken by agreement rather than left
+stranded: the "parse the result before writing it" note in `.claude/rules/moduledata-validation.md`,
+and the `is_female` coverage-boundary paragraph in `docs/features/moduledata-validation.md`.
+
 ### feat(player-switcher): play as an existing lord, confirmed in a campaign (#514)
 
 The Player Switcher from LOTRAOM is back, reimplemented for 1.4.8. At the character creation face

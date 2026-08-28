@@ -26,8 +26,9 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
   `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.
   (`LANDLESS_CULTURE`)
-- **A dwarf authored as cavalry, or handed a mount** — the dwarf skeleton's rider bone is
-  misaligned, so a mounted dwarf spawns inside the horse mesh. (`MOUNTED_DWARF`)
+- **A dwarf authored as cavalry, or handed a mount other than the Dwarven war ram.** The dwarf
+  skeleton's rider bone is misaligned, so a mounted dwarf spawns inside the horse mesh.
+  (`MOUNTED_DWARF`)
 
 "Schemas are the source of truth": field/enum/ref knowledge lives in `tools/schemas/*.json`, not hardcoded in Python.
 
@@ -97,6 +98,18 @@ question is owned by `TAOM.Tests/Core/CulturePartyTemplateTests.cs`, which trans
 and checks each emitted binding against the set of ids TAOM authors. The two are complementary: the
 validator catches a typo'd id, the test catches a real id that belongs to the wrong faction. Run both.
 
+A fourth boundary is semantic rather than structural: **the validator models ids and enums, so a
+field whose correct value depends on who the character IS is invisible to it.** `is_female` has no
+rule at all, and a lord's name is free text behind a localization key. `lord_WE8_c` therefore passed
+every run while shipping as vanilla's female "Icratia" long after TAOM had renamed him to Pelendur,
+son of Golasgil, and `lord_1_46_1` passed while shipping Malrior's wife as a bearded man. Nor does
+`BROKEN_BODY_PROPERTY_REF` help: it fires only on a `BodyProperty.*` reference, and every Gondor lord
+carries an inline `<BodyProperties key=>` instead, so a female body key worn by a man resolves to
+nothing to check. `TAOM.Tests/Core/LordNameAndSexConsistencyTests.cs` owns this pair, asserting that
+every inline English name fallback matches `taom_xslt_strings.xml` and that no `is_female="true"` lord
+carries `<beard_tags>`. Same complementary split as above: the validator catches a bad id, the test
+catches a good id describing the wrong person.
+
 ## Landless-culture check (`LANDLESS_CULTURE`)
 
 **Severity ERROR.** Fires when a culture carried by an `NPCCharacter` with `occupation="Lord"`, a
@@ -151,10 +164,10 @@ spec reports `PASS`. Pinned by `SettlementEconomyFloorTests` and `SettlementEcon
 
 ## Mounted-dwarf check (`MOUNTED_DWARF`)
 
-**Severity ERROR.** Fires on an `NPCCharacter` with `race="dwarf"` that is either tagged
-`default_group="Cavalry"`/`"HorseArcher"`, or can reach a mount — a `slot="Horse"` entry in its own
-inline `<EquipmentRoster>`, or in a standalone `<EquipmentRoster>` it names via
-`<EquipmentSet id="…"/>`.
+**Severity ERROR.** Fires on an `NPCCharacter` with `race="dwarf"` that can reach a mount which is
+not a Dwarven war ram (a `slot="Horse"` entry in its own inline `<EquipmentRoster>`, or in a
+standalone `<EquipmentRoster>` it names via `<EquipmentSet id="…"/>`), or that is tagged
+`default_group="Cavalry"`/`"HorseArcher"` while carrying no ram.
 
 Dwarves use a custom, shorter skeleton whose rider bone is misaligned, so a mounted dwarf spawns
 *inside* the horse mesh. `Patch46_TournamentDwarfDismount` already strips Horse + HorseHarness from
@@ -171,14 +184,63 @@ same invariant, so a troop revamp or a copy-pasted roster cannot reintroduce the
 So `default_group="Infantry"` on a lord holding a horse buys nothing — the mount alone spawns him
 mounted. Checking only the enum would have missed exactly that case.
 
-**Scope.** Only mounts a dwarf *character* can reach. Culture-selected player rosters (character
-creation, career starters) are deliberately out of scope: no `NPCCharacter` references them, and all
-12 custom cultures ship the same 16-of-55 sumpter-horse template, so gating them would flag a shared
-vanilla-parity pattern rather than a dwarf defect.
+### The war-ram carve-out (`WAR_RAM_MOUNT_IDS`, #515)
 
-Evidence at introduction: **0** `MOUNTED_DWARF` issues across all 185 `race="dwarf"` characters
-(169 Infantry, 16 Ranged) — the data already complied. Negative control: flipping `lord_E1_1` to
-`default_group="Cavalry"` produced `1 error(s)` at `characters/lords.xml:9829`, then reverted.
+The [Dwarven war ram](./war-ram.md) is the one mount a dwarf may ride: it is built for the dwarf
+skeleton, so the rider bone lines up and he does not spawn inside the mesh. The allowlist is exactly
+two ids, pinned in `tools/taom_schema.py`:
+
+```python
+WAR_RAM_MOUNT_IDS = frozenset({"taom_war_ram_a", "taom_war_ram_b"})
+```
+
+A dwarf who carries one is legal, and **the group rule relaxes with it**: `default_group="Cavalry"`
+and `"HorseArcher"` both pass for a ram rider, because a ram rider genuinely is cavalry. The relaxation
+is per character, not global. Every other mount that character can reach is still reported, and a
+dwarf with a cavalry `default_group` and no ram is still an error.
+
+Two implementation properties matter when reading a result:
+
+- **Every reachable mount is resolved, not just the first.** `_mounts_in` collects all `slot="Horse"`
+  entries in document order, and the character's inline equipment *and* every standalone roster he
+  names are both read even when the inline half already produced a mount. Before the allowlist existed
+  the first-wins shortcut was harmless; with it, a ram listed ahead of a horse would have taken the
+  pass and masked the horse. Only one issue is raised per character, naming the first mount the
+  allowlist does not cover, so the offender is not buried under the legal ram.
+- **The ids are pinned, not prefix-matched, and the `Item.` prefix is required.** A later
+  `taom_war_ram_c` has to be reviewed into the frozenset deliberately. And the mount id compared
+  against the allowlist is whatever `_ITEM_REF_ATTR_RE` (`id="Item\.(…)"`) captured, so a Horse slot
+  written `id="taom_war_ram_a"` without the prefix matches nothing, is recorded as `(unnamed mount)`,
+  and errors. That is the intended failure direction: an unparseable mount is never allowlisted.
+
+**Scope, and the blind spot it left.** The check reads `NPCCharacter` definitions and the rosters they
+name. Player rosters selected by culture (character creation, career starters) were declared out of
+scope on the reasoning that no `NPCCharacter` references them and all 12 custom cultures ship the same
+16-of-55 sumpter-horse template, so gating them would flag a shared vanilla-parity pattern rather than
+a dwarf defect. **The first half of that reasoning is exactly why a real defect hid there.** The career
+starting rosters in `equipmentsets/taom_career_starting_equipment.xml` are applied to the player at
+runtime by `CareerStartingEquipmentService.ApplyCareerStartingEquipment`, which builds the roster id
+from culture, career archetype and sex and hands it to the equipment adapter. Nothing in the XML tree
+points at them, so the sweep cannot see them, and `player_career_erebor_cavalry_m`/`_f` shipped
+equipping `Item.saddle_horse`: a vanilla horse on a dwarf, the precise case this check exists to
+forbid, through every green validator run. It was found by hand during #515.
+
+Coverage for those rosters now lives in tests rather than in this validator:
+`TAOM.Tests/Features/CharacterCreation/CareerCultureCoverageTests.cs` pins both directions
+(`EreborCareerStartingRosters_EquipOnlyWarRams` rejects any non-ram mount, and
+`EreborCavalryCareerRoster_ActuallyGrantsAWarRam` stops the first test passing trivially if the mount
+is simply deleted). The general lesson generalises past dwarves: **any XML applied to a character at
+runtime is invisible to every pass in this validator**, which walks static definitions only.
+
+Evidence at introduction (2026-08-04): **0** `MOUNTED_DWARF` issues across all 185 `race="dwarf"`
+characters (169 Infantry, 16 Ranged); the data already complied. Negative control: flipping
+`lord_E1_1` to `default_group="Cavalry"` produced `1 error(s)` at `characters/lords.xml:9829`, then
+reverted.
+
+Re-measured 2026-08-28 after the war ram landed: **191** `race="dwarf"` characters (159 Infantry,
+16 Ranged, 16 Cavalry) and a full-run `PASS`. All 16 Cavalry dwarves carry a ram: 12 Erebor lords via
+the `erebor_bat_template_ram_a..e` rosters, and the 4 Ironpass troops inline. No dwarf anywhere in
+TAOM's ModuleData reaches a non-ram mount.
 
 ### The `settled_cultures` registry (`build_settled_cultures`)
 
@@ -430,6 +492,15 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-08-28: `MOUNTED_DWARF` gained the war-ram carve-out (`WAR_RAM_MOUNT_IDS`, #515): a dwarf
+  carrying `taom_war_ram_a`/`_b` is legal, cavalry `default_group` included, and every other mount he
+  can reach still errors. The work also closed a latent hole in the pre-existing code: mount
+  resolution was first-wins, so once an allowlist existed a ram listed ahead of a horse would have
+  masked the horse. `_mounts_in` now returns every Horse slot and both the inline equipment and every
+  named roster are read. Same issue recorded the structural blind spot above: career starting rosters
+  are applied at runtime and named by no `NPCCharacter`, so this validator never saw
+  `player_career_erebor_cavalry_m`/`_f` equipping `Item.saddle_horse`. Coverage for those moved to
+  `CareerCultureCoverageTests`.
 - 2026-08-04 — Added `MOUNTED_DWARF` (pass 6). Asked to confirm no dwarven lord is cavalry, the
   audit found the data already compliant — 185 `race="dwarf"` characters, all Infantry or Ranged,
   no lord roster carrying a mount — so the work became pinning the invariant rather than fixing it.
@@ -462,6 +533,7 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 ## Referenced by
 
 - [docs/features/doc-health-linter.md](./doc-health-linter.md)
+- [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/engine/formations-and-team-ai.md](../reference/engine/formations-and-team-ai.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
