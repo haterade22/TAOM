@@ -38,6 +38,24 @@
     <Item id="warg_dark"   cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
     <Item id="warg_albino" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
     <Item id="warg_saddle" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
+
+    <!-- Dwarven war rams and their bardings (#515), from
+         LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml. Unlike the wargs above,
+         all ten already carry culture="Culture.erebor" upstream, so the auto-derived pool
+         would place them correctly on its own. These entries are here for min_stock: routing
+         is the only way to guarantee a floor, and Ironpass ram cavalry is unusable if a player
+         cannot reliably buy a remount or replace lost barding. Routing an already-erebor item
+         to erebor is a no-op for pool placement (CultureItemPoolService.BuildPools). -->
+    <Item id="taom_war_ram_a" cultures="erebor" min_stock="1" />
+    <Item id="taom_war_ram_b" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_light_a" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_light_b" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_med_a" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_med_b" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_heavy_a" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_heavy_b" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_elite_a" cultures="erebor" min_stock="1" />
+    <Item id="taom_ram_barding_elite_b" cultures="erebor" min_stock="1" />
   </Routing>
 
 </CultureMarketplaceConfig>

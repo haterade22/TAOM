@@ -4,10 +4,12 @@
 
 Certain TAOM cultures (currently Erebor/dwarves) intentionally omit horses from character creation equipment. This requires four Harmony patches to prevent vanilla's CC narrative stage from crashing when no horse is present in a culture's battle equipment roster.
 
+> **Updated 2026-08-28 (issue #515): "no-mount" now means "no HORSE".** Erebor fields a rideable war ram, so `troops_erebor.xml` carries Horse-slot entries for the first time and dwarves are no longer `CanRide="false"`. Nothing in this document's crash analysis changes: the patches key on whether a *character-creation* roster has a Horse slot, and the Erebor CC rosters still do not. The `MOUNTED_DWARF` validator rule likewise still fires for a dwarf on a horse; it allowlists only the two war-ram item ids. See [war-ram.md](war-ram.md).
+
 ## Why This Exists
 
 - **Vanilla behavior:** Six `Get*NarrativeMenuCharacterArgs` private methods in `CharacterCreationCampaignBehavior` drive each CC stage. Three of them (youth, adult, age selection) unconditionally read `DefaultEquipment[Horse].Item.StringId` and spawn a horse actor. All vanilla culture CC rosters include horse + harness slots.
-- **TAOM requirement:** Dwarves don't ride horses (lore). Their CC equipment rosters have no horse slots.
+- **TAOM requirement:** Dwarves don't ride horses (lore). Their CC equipment rosters have no horse slots. (They do ride war rams as of #515, but that is a battle-roster mount and never appears in a CC roster, so this patch family is unaffected.)
 - **Without this fix:** Two cascading crashes per horse-reading CC stage:
   1. `NullReferenceException` in `Get{Youth|Adult|AgeSelection}MenuNarrativeMenuCharacterArgs` — `DefaultEquipment[Horse].Item` is null.
   2. `ArgumentNullException("key")` in `SpawnNonHumanNarrativeMenuCharacter` — horse scene character has uninitialized (null) item ID because `ModifyMenuCharacters` never set it.

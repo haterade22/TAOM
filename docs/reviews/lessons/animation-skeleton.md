@@ -163,6 +163,41 @@ tableau or agent. To enumerate what a character actually draws, use
   `Material.GetTextureWithSlot(0)` (slot 0 == `DiffuseMap`) instead of `GetTexture(MBTextureType.DiffuseMap)`.
 - **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
 
+### Verify an engine action's TYPE and its other drivers, not just that it resolves
+
+`ActionIndexCache` + `AnyUnresolved()` answer "is this name real". They cannot answer "what does the
+engine DO when this action is active" or "who else fires it". Before binding any action to a behaviour
+tree, establish three things: its `action_types.xml` **type**; whether the creature's `monster_usage`
+set names it in a **verb slot or table** (which means the engine fires it too); and whether the engine
+**branches on that type** anywhere (`ActionCodeType`, `AgentActionFlag`, `IsInBeingStruckAction`).
+
+- **Why missed:** the war ram's attack clip was chosen for how it reads and verified only for
+  existence. It was got wrong TWICE, the second time while fixing the first, which is the reason this
+  is a rule and not a note.
+  1. `act_horse_rear` is typed `actt_rear` (`ActionCodeType.Rear = 47`). The inherited `horse` usage set
+     declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount, and
+     `Agent.Mount` refuses a mount whose channel-0 type is `Rear`. The mount would go unmountable
+     mid-fight.
+  2. The replacement `act_horse_strike_front` is typed `actt_mount_strike`
+     (`ActionCodeType.MountStrike = 52`), which sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the
+     band `Agent.IsInBeingStruckAction` reads as BEING STRUCK. The clips are named
+     `horse_hit_from_front`/`_back`. The creature flinches as though hit while you emit damage.
+- **The fact underneath both:** **vanilla horses have no attack animation at all.** They deal damage by
+  charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack table.
+  The horse rig's only genuinely offensive action is `act_horse_kick` (`actt_kick`,
+  `ActionCodeType.Kick = 28`). If you need a creature on the horse rig to attack with anything other
+  than a kick, the clip does not exist and must be authored.
+- **Prevent:** this risk is specific to a mount that **inherits a vanilla `monster_usage`**. A creature
+  with a bespoke usage set owns its whole `act_<creature>_*` vocabulary, so nothing else fires it; a
+  reskin SHARES the vocabulary with the engine, and "our code never fires this" stops implying "nothing
+  fires this". When reviewing a reskin, grep the inherited usage set for every action the feature binds
+  and treat any hit as engine-driven. Check the candidate's `ActionCodeType` against the engine's
+  classification bands before binding it. Collapse spare profile slots onto the creature's own attack
+  rather than parking them on unrelated real actions, or you silently widen an "am I busy" check.
+- **Generalises:** a reskin inherits the donor's BEHAVIOUR, not just its animations. The property that
+  makes it cheap is the same one that couples it.
+- **Source:** #515 / `docs/reviews/rca-war-ram-2026-08-28.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

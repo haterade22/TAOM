@@ -4,6 +4,130 @@
 
 ## 2026-08-28
 
+### feat(erebor): a war ram for the Dwarves
+
+TAOM shipped a `ram_rider` career with nothing to ride. `taom_careers.xml:637` has had the ranks
+(Ram-Breaker, Goatback Charger, Vanguard of Dain), the Erebor culture gate, a "Mountain Charge"
+ability and a `CareerArchetype.Cavalry` registration for a mount that did not exist. It exists now.
+
+**This is the first horse-skeleton reskin the mod has shipped, and it made the whole thing cheap.**
+Both ram bodies and all eight bardings are skinned to the stock vanilla horse skeleton bone for
+bone, so the Monster is the vanilla `horse_2` shape: `base_monster="horse"`, `action_set="as_horse"`,
+and four tuning attributes. `Monster.Deserialize` copies Flags, ActionSetCode and MonsterUsage from
+the base and leaves unnamed attributes inherited, so the ram gets `Mountable`, `family_type="1"`,
+`monster_usage="horse"`, every bone name, the slope block and all twelve rein attributes for free.
+Phases 1 to 5 of the creature-mount workflow (clips, `quad_movement`, action_types, action_sets,
+monster_usage_sets, the rider partial) are skipped outright. **No animation data was authored.**
+
+Two consequences worth recording. The ram is the only TAOM mount carrying vanilla's complete rein
+surface, so it sidesteps gotcha #18 rather than adding to it (the spider and warg declare 5 of 12,
+the elephant and mumakil 0, and v1.4.8 changed the native rein path that runs on mounted death). And
+inheriting `monster_usage="horse"` is what makes a DWARF rider work at no cost: `as_dwarf_warrior`
+has no `base_set`, so the rider-partial trick never reaches dwarves, but it already carries 203
+`act_horse_*` rows, the same count as vanilla `as_human_warrior`.
+
+Three things had to be cleared first, and the third explains the other two:
+
+* `Monster.dwarf` shipped `CanRide="false"`, the only race besides `cave_troll`. It does not gate AI
+  spawn, but it gates `Agent.CheckSkillForMounting`, so a dismounted dwarf could never remount.
+* `MOUNTED_DWARF` is a hard validator error. It now allowlists the two ram ids only, and the work
+  found a latent hole: the old `_first_mount` was first-wins, so a ram listed ahead of a horse would
+  have masked the horse. It scans every mount now.
+* **The dwarf rider bone is misaligned because `Monster.dwarf`'s height fields are a byte-for-byte
+  copy of `human`'s** (eye 1.70, crouch 1.10, mounted 0.75) while `dwarf_skeleton_a` renders at about
+  82% of human height. Measured off armour meshes in one space: dwarf chest tops at z=1.30, human at
+  z=1.59. The engine seats a rider it believes is human sized. Since the ram is dwarf-only, the
+  correction belongs on the ram's own rider adders, not on `Monster.dwarf`, which would move every
+  dwarf on foot. That is why `EyeHeightAdjustmentHook` only ever papered over it.
+
+Content: two mounts (`body_length="100"`, so the ram ships at its authored size; the scale call
+hits the mount agent only) and eight bardings whose armour follows measured coverage from the FBX, 20 through 54. A new
+Ironpass cavalry branch off `ironpass_warrior` at 21/26/31/36, matching the axeman branch, four
+rosters each so all ten items are reachable. Loadout is spear plus metal shield plus axe, built only
+from ids already in shipped Erebor rosters: `sm_dwarf_erebor_spear_a` is a `TwoHandedPolearm`
+CraftedItem, which is exactly the shield-plus-polearm class that has shipped three times, and
+`audit_polearm_shield_parity.py` passes.
+
+The ram attacks on its own using `act_horse_kick`, a **vanilla clip** bound in `as_horse`. The C#
+reuses the shared `ElephantLike` attack stack with no new node classes: a marker sub-interface, a
+tuned service, a profile and a one-branch tree. Deliberately no mount-lock (it is a player-rideable
+culture mount with a career attached, like the chariot) and deliberately no Patch47 entry (the spider
+and elephant needed it because their Monsters lacked vanilla's rider-death surface; this one inherits
+it whole).
+
+Party templates keep both their 2000 max sum AND their original minimum sums, so expected spawn size
+is genuinely unchanged and the rams take a share rather than growing the roster. The review caught that
+the minimums had drifted up (+4 on the culture default, +1 per clan); the ram stacks now sit at min 0
+like their neighbours. The branch is deliberately NOT in a volunteer pool: it is
+reachable by upgrade, and offering an armoured level-21 rider from a village notable would skip the
+Ironpass foot progression.
+
+Build clean, 7,708 C# tests and 691 Python tests green, `validate_moduledata`,
+`validate_all_troop_refs` and `audit_polearm_shield_parity` all PASS.
+
+**A player who picks the Ram Rider career now spawns on a ram, which fixes a live bug.**
+`player_career_erebor_cavalry_m`/`_f` was equipping `Item.saddle_horse` plus `Item.light_harness`: a
+vanilla horse on a dwarf, the exact case `MOUNTED_DWARF` exists to forbid. Nothing caught it because
+that rule scans `NPCCharacter` definitions and the rosters they name, while career rosters are applied
+to the player at runtime, so the schema sweep can never reach them. `ram_rider` is the only Erebor
+Cavalry career, so the roster belongs to it alone. Two shipped-data tests now pin both halves (no
+non-ram mount, and a ram actually present), each mutation-tested by reintroducing the bug. The mount's
+`difficulty` also dropped 30 to 0, matching the `saddle_horse` it replaced: the career hands a starting
+player this mount and `CheckSkillForMounting` would otherwise have let a low-Riding character be unable
+to remount.
+
+**Twelve lords ride them, which is what makes the ram visible on the campaign map at all.** The map
+icon draws only the party leader (`AddCharacterToPartyIcon` is called once, with
+`GetVisualPartyLeader`), so troops contribute nothing to it and Erebor lords carried zero Horse slots.
+The three tier-3 frontier clans (Bit Gror, Bit Róri, Bit Nórin) now ride: 12 of 37 lords, via
+`erebor_bat_template_ram_a..e`, which are verbatim clones of the shared `medium_a..e` sets plus the two
+mount slots. Cloning rather than editing matters, because all five medium sets are shared by every
+lord group and editing one would have mounted the whole kingdom. Dáin stays on foot by decision.
+Rendering needed no work: the mount resolves `monster.ActionSetCode + "_map"`, which for the ram is
+the already-existing `as_horse_map`.
+
+Recorded because it cost a false start: "Iron Hills" and "Ironpass" are troop-line labels, not clans
+or settlements. All seven Erebor clans are "Bit ..." named and all field both lines.
+
+The review caught three real bugs before they shipped, and two of them were the same mistake.
+
+**The attack clip was wrong twice.** It started as `act_horse_rear`, which reads well but is typed
+`actt_rear`: the inherited `horse` usage set declares `rear_action="act_horse_rear"`, and `Agent.Mount`
+refuses a mount whose channel-0 action is `ActionCodeType.Rear`, so the ram would have gone briefly
+unmountable in combat. The replacement, `act_horse_strike_front`, was no better: `actt_mount_strike` is
+`ActionCodeType.MountStrike = 52`, inside the `StrikeBegin = 48 .. StrikeEnd = 52` band that
+`Agent.IsInBeingStruckAction` treats as **being struck**, and the clip is literally named
+`horse_hit_from_front`. The ram would have flinched as though hit while dealing damage.
+
+The root cause is that **the vanilla horse rig has no attack animation at all**. Horses damage by charge
+collision, so `monster_usage_strikes` is the mount's hit-reaction table. The only genuinely offensive
+action on the rig is `act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`), which is what ships. It
+reads as a buck rather than a head strike, an accepted compromise against authoring a bespoke clip.
+
+**`body_length` does not scale the mount only.** `EquipmentIndex.ArmorItemEndSlot` and
+`EquipmentIndex.Horse` are the same value, the scale block in `BuildAgent` has no `IsMount` guard, and
+`BuildAgent` runs for the rider too. Any value other than 100 scales the dwarf as well. Harmless at the
+shipped 100, but the docs asserted the opposite and are corrected.
+
+RCA: `docs/reviews/rca-war-ram-2026-08-28.md`.
+
+**Known limitation, deliberately not fixed here.** The ram has no mount-lock, by design, because it
+is a player-rideable culture mount with a career attached. The consequence is reciprocal: a
+dismounted dwarf can mount an ordinary horse, and enemy cavalry can take a riderless ram. That
+contradicts the "dwarves ride rams and nothing else" framing, which is a data-authoring rule
+(`MOUNTED_DWARF`) rather than a runtime one. Raised by the Codex pass as P1 and consciously
+deferred; closing it needs target-specific authorization on both `Agent.CheckSkillForMounting` and
+the AI `CanAgentRideMount` path, since a GameModel change alone would not cover player mounting.
+
+**Not shippable yet, one asset step remains.** The eight barding meshes are in `Assets/` but not in
+the cooked `AssetPackages/pack*.tpac`, which were last built 2026-08-25 while the barding was
+imported on 08-28. So a ram spawns with a bare body today. `validate_mesh_refs.py` fails on it (exit
+1, 10 errors: these eight plus the two Khamul bardings from `68fe7b5b`, which have the same gap). One
+re-cook fixes both. Confirmed three independent ways, and the data plane lives in the untracked
+`LOTRLOME_Armory`, so it is written up in `docs/reference/lotrlome-war-ram-changes.md`.
+
+Issue #515. Feature doc `docs/features/war-ram.md`.
+
 ### fix(lords): Pelendur was showing up as Icratia, and as a woman
 
 **Pelendur.** `lord_WE8_c` is vanilla's Icratia, reused for Golasgil's son. Every layer of TAOM

@@ -31,6 +31,16 @@ public partial class VolunteerRecruitmentService
         ("erebor_oathsworn",       1),  // Oathsworn elite line entry
     };
 
+    // #515 (Ironpass ram cavalry): deliberately NOT pooled, and the mix above stays at total
+    // weight 15. ironpass_ram_rider is the branch entry at level 21, but ironpass_warrior (16)
+    // upgrades into it and the pooled ironpass_recruit (11) already reaches ironpass_warrior, so
+    // the branch is recruitable through the tree. That is what separates it from the two entries
+    // added above as reachability fixes: nothing in troops_erebor.xml upgrades into
+    // ironpass_recruit or erebor_oathsworn, so those two lines were genuinely unreachable.
+    // Precedent for leaving mounted troops out of a pool: Rohan is a cavalry culture and offers
+    // only its seven is_basic_troop recruits. Pinned by EreborRamCavalry_IsNotOfferedByAny-
+    // VolunteerPool and EreborRamCavalry_IsReachableFromAPooledRoot in the test file.
+
     private static void InitializeEreborSettlements()
     {
         // Towns

@@ -4847,6 +4847,8 @@
                 id="NPCCharacter.ironpass_infantry" />
             <upgrade_target
                 id="NPCCharacter.ironpass_arbalest" />
+            <upgrade_target
+                id="NPCCharacter.ironpass_ram_rider" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -6031,6 +6033,704 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
+
+    <!-- Ironpass war-ram cavalry (issue #515). The third branch off ironpass_warrior,
+         at the same 21/26/31/36 depth as the axeman branch. These are the FIRST dwarf
+         troops in TAOM with a Horse slot: Erebor was a deliberate no-mount culture, and
+         the war ram is the single exception. Mount and barding items live in the external
+         LOTRLOME_Armory module; the barding grade climbs with the tier. -->
+    <NPCCharacter
+        id="ironpass_ram_rider"
+        race="dwarf"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_ironpass_ram_rider_name}[Ironpass] Ram Rider"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="120" />
+            <skill
+                id="OneHanded"
+                value="130" />
+            <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.ironpass_goat_charger" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_med_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_a2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_med_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_medium_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_med_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_medium_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_b1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_a2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_med_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_medium_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="ironpass_goat_charger"
+        race="dwarf"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_ironpass_goat_charger_name}[Ironpass] Goatback Charger"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="115" />
+            <skill
+                id="Riding"
+                value="160" />
+            <skill
+                id="OneHanded"
+                value="170" />
+            <skill
+                id="TwoHanded"
+                value="145" />
+            <skill
+                id="Polearm"
+                value="190" />
+            <skill
+                id="Bow"
+                value="25" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.ironpass_ram_breaker" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_b3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_b2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_medium_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_b3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_b2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_medium_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_med_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_med_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="ironpass_ram_breaker"
+        race="dwarf"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_ironpass_ram_breaker_name}[Ironpass] Ram-Breaker"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="200" />
+            <skill
+                id="OneHanded"
+                value="220" />
+            <skill
+                id="TwoHanded"
+                value="185" />
+            <skill
+                id="Polearm"
+                value="240" />
+            <skill
+                id="Bow"
+                value="25" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="85" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.ironpass_ram_vanguard" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_c2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_c2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_heavy_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_heavy_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="ironpass_ram_vanguard"
+        race="dwarf"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_ironpass_ram_vanguard_name}[Ironpass] Ram Vanguard"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="150" />
+            <skill
+                id="Riding"
+                value="240" />
+            <skill
+                id="OneHanded"
+                value="270" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="285" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_elite_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_elite_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_elite_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_elite_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_elite_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_heavy_c3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_elite_b" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
 
 
     <NPCCharacter

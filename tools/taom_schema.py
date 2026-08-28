@@ -177,6 +177,21 @@ def _lineno(text: str, pos: int) -> int:
     return text.count("\n", 0, pos) + 1
 
 
+# The Dwarven war ram (issue #515) is the one mount a dwarf may ride: it is
+# built for the dwarf skeleton, so the rider bone lines up and he does not spawn
+# inside the mesh. Every other mount stays a hard MOUNTED_DWARF error. The ids
+# are pinned rather than prefix-matched, so a later `taom_war_ram_c` has to be
+# reviewed and added here on purpose instead of arriving by name alone.
+WAR_RAM_MOUNT_IDS = frozenset({"taom_war_ram_a", "taom_war_ram_b"})
+
+
+def _is_war_ram(mount_id: str) -> bool:
+    """Allowlist test that tolerates the `Item.` prefix. _mounts_in strips it
+    (via _ITEM_REF_ATTR_RE), but a caller reading the raw attribute would not."""
+    bare = mount_id[len("Item."):] if mount_id.startswith("Item.") else mount_id
+    return bare in WAR_RAM_MOUNT_IDS
+
+
 # --------------------------------------------------------------------------- #
 # Validator                                                                    #
 # --------------------------------------------------------------------------- #
@@ -735,6 +750,11 @@ class Validator:
     # standalone roster they name. Culture-selected player rosters (character
     # creation, career starters) are deliberately out of scope -- no NPCCharacter
     # references them, and every culture ships the same sumpter-horse template.
+    #
+    # The one carve-out is the war ram (WAR_RAM_MOUNT_IDS, issue #515). A dwarf on
+    # a ram is legal and is genuinely Cavalry, so the group rule relaxes too -- but
+    # only for a character who actually carries one, and only for the ram itself:
+    # every OTHER mount he can reach is still reported.
     _DWARF_RACE = "dwarf"
     _MOUNTED_GROUPS = ("Cavalry", "HorseArcher")
     _NPC_BLOCK_RE = re.compile(r"<NPCCharacter\b([^>]*?)(?:/>|>(.*?)</NPCCharacter>)", re.S)
@@ -742,29 +762,32 @@ class Validator:
     _GROUP_ATTR_RE = re.compile(r'\bdefault_group="([A-Za-z]+)"')
     _EQSET_REF_RE = re.compile(r'<EquipmentSet\b[^>]*?\bid="([^"]+)"')
 
-    def _first_mount(self, body: str):
-        """The first Horse-slot item in this block, or None if it is footed.
+    def _mounts_in(self, body: str) -> list:
+        """Every Horse-slot item in this block, in document order; empty if footed.
         Matches both <Equipment> and <equipment> -- TAOM ships both spellings, and
         a case-sensitive matcher reads one of them as 'no horses anywhere', which
-        is a false CLEAN rather than a false alarm."""
+        is a false CLEAN rather than a false alarm. Every mount is collected, not
+        just the first: with the war-ram allowlist in play, a ram listed ahead of
+        a horse would otherwise take the pass and hide the horse behind it."""
+        mounts = []
         for tag in self._EQ_TAG_RE.finditer(body):
             slot = self._SLOT_ATTR_RE.search(tag.group(0))
             if not slot or slot.group(1) != "Horse":
                 continue
             item = self._ITEM_REF_ATTR_RE.search(tag.group(0))
-            return item.group(1) if item else "(unnamed mount)"
-        return None
+            mounts.append(item.group(1) if item else "(unnamed mount)")
+        return mounts
 
     def _mounted_rosters(self) -> dict:
-        """Standalone EquipmentRoster id -> the mount it equips. Footed rosters are
+        """Standalone EquipmentRoster id -> the mounts it equips. Footed rosters are
         omitted, so membership alone answers 'does this roster mount its wearer'."""
         mounted = {}
         for path in self._xml_files():
             text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
             for m in self._ROSTER_RE.finditer(text):
-                mount = self._first_mount(m.group(2))
-                if mount is not None:
-                    mounted[m.group(1)] = mount
+                mounts = self._mounts_in(m.group(2))
+                if mounts:
+                    mounted[m.group(1)] = mounts
         return mounted
 
     def _mounted_dwarves(self) -> list:
@@ -785,8 +808,20 @@ class Validator:
                 entry_id = idm.group(1) if idm else "(unnamed)"
                 line = _lineno(text, m.start())
 
+                # Resolve every mount this dwarf can reach BEFORE judging either
+                # rule: his own inline equipment, then every standalone roster he
+                # names. Both are read even when the inline half already has a
+                # mount, so an allowlisted ram cannot stop the named roster from
+                # being looked at.
+                reachable = [(mid, "its own equipment") for mid in self._mounts_in(body)]
+                for ref in self._EQSET_REF_RE.findall(body):
+                    reachable += [(mid, f'roster "{ref}"')
+                                  for mid in mounted_rosters.get(ref, ())]
+                rides_a_war_ram = any(_is_war_ram(mid) for mid, _ in reachable)
+
                 group = self._GROUP_ATTR_RE.search(attrs)
-                if group and group.group(1) in self._MOUNTED_GROUPS:
+                if (group and group.group(1) in self._MOUNTED_GROUPS
+                        and not rides_a_war_ram):
                     issues.append(Issue(
                         severity=Severity.ERROR, code="MOUNTED_DWARF",
                         file=rel, line=line, entry_id=entry_id,
@@ -798,13 +833,12 @@ class Validator:
                         ),
                     ))
 
-                mount, source = self._first_mount(body), "its own equipment"
-                if mount is None:
-                    for ref in self._EQSET_REF_RE.findall(body):
-                        if ref in mounted_rosters:
-                            mount, source = mounted_rosters[ref], f'roster "{ref}"'
-                            break
-                if mount is not None:
+                # One issue per character, naming the first mount the allowlist
+                # does not cover. Reporting the ram as well would bury the defect.
+                offender = next(((mid, src) for mid, src in reachable
+                                 if not _is_war_ram(mid)), None)
+                if offender is not None:
+                    mount, source = offender
                     issues.append(Issue(
                         severity=Severity.ERROR, code="MOUNTED_DWARF",
                         file=rel, line=line, entry_id=entry_id,

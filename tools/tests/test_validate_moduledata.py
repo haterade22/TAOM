@@ -929,7 +929,8 @@ class MountedDwarfTests(unittest.TestCase):
         self.md = Path(self._tmp.name) / "ModuleData"
         self.md.mkdir(parents=True)
         self.registries = ts.Registries(
-            items={"None", "good_sword", "saddle_horse"},
+            items={"None", "good_sword", "saddle_horse", "sumpter_horse",
+                   "taom_war_ram_a", "taom_war_ram_b"},
             item_def_files={},
             npccharacters=set(),
             cultures={"erebor", "vlandia"},
@@ -1060,6 +1061,111 @@ class MountedDwarfTests(unittest.TestCase):
             '        <!-- <Equipment slot="Horse" id="Item.saddle_horse" /> -->\n'
             '      </EquipmentRoster>\n'
             '    </Equipments>\n'))
+        self.assertEqual(self._mounted(), [])
+
+    # -- rule C: the war-ram carve-out (issue #515) ------------------------ #
+    # The Dwarven war ram is the one mount dwarves may ride. Every other mount,
+    # horses included, stays a hard error, and "dwarf tagged Cavalry with no mount
+    # at all" is still caught by test_dwarf_cavalry_is_reported above.
+    def _inline(self, *item_ids) -> str:
+        rows = "".join('        <Equipment slot="Horse" id="Item.%s" />\n' % i
+                       for i in item_ids)
+        return ('    <Equipments>\n'
+                '      <EquipmentRoster>\n'
+                + rows +
+                '      </EquipmentRoster>\n'
+                '    </Equipments>\n')
+
+    def _write_roster(self, roster_id: str, mount_id: str) -> None:
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_erebor.xml",
+               '<?xml version="1.0"?>\n<EquipmentRosters>\n'
+               '  <EquipmentRoster id="%s" culture="Culture.erebor">\n'
+               '    <EquipmentSet>\n'
+               '      <Equipment slot="Horse" id="Item.%s" />\n'
+               '    </EquipmentSet>\n'
+               '  </EquipmentRoster>\n</EquipmentRosters>\n' % (roster_id, mount_id))
+
+    def test_dwarf_cavalry_on_a_war_ram_is_clean(self):
+        # A ram rider genuinely IS cavalry, so the group tag must be allowed here.
+        self._write_lord(group="Cavalry", body=self._inline("taom_war_ram_a"))
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_on_the_second_war_ram_variant_is_clean(self):
+        self._write_lord(group="Cavalry", body=self._inline("taom_war_ram_b"))
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_infantry_on_a_war_ram_is_clean(self):
+        self._write_lord(group="Infantry", body=self._inline("taom_war_ram_a"))
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_horse_archer_on_a_war_ram_is_clean(self):
+        # _MOUNTED_GROUPS relaxes BOTH Cavalry and HorseArcher for a ram rider, so pin the second
+        # one too. The rule's purpose is "do not declare a dwarf mounted WITHOUT a ram"; a ram
+        # rider carrying a bow violates that no more than one carrying a spear does. Flagged by
+        # two independent reviewers as permitted-but-untested (issue #515), which is exactly the
+        # shape that rots into an accidental behaviour change later.
+        self._write_lord(group="HorseArcher", body=self._inline("taom_war_ram_a"))
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_horse_archer_without_a_war_ram_is_still_reported(self):
+        # The negative half: the relaxation must be gated on actually riding a ram, not on the
+        # group tag alone.
+        self._write_lord(group="HorseArcher")
+        found = self._mounted()
+        self.assertTrue(found, "a dwarf HorseArcher with no ram must still be reported")
+
+    def test_dwarf_on_a_war_ram_via_a_named_roster_is_clean(self):
+        self._write_lord(group="Cavalry", body=(
+            '    <Equipments>\n'
+            '      <EquipmentSet id="erebor_ram_a" />\n'
+            '    </Equipments>\n'))
+        self._write_roster("erebor_ram_a", "taom_war_ram_b")
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_on_a_sumpter_horse_is_still_reported(self):
+        # Regression guard: the carve-out is an id allowlist, not "any mount".
+        self._write_lord(body=self._inline("sumpter_horse"))
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertIn("sumpter_horse", found[0].message)
+
+    def test_dwarf_cavalry_with_a_horse_still_reports_both_halves(self):
+        # No ram anywhere, so neither the group rule nor the mount rule relaxes.
+        self._write_lord(group="Cavalry", body=self._inline("saddle_horse"))
+        found = self._mounted()
+        self.assertEqual(len(found), 2)
+        self.assertTrue(any("Cavalry" in i.message for i in found))
+        self.assertTrue(any("saddle_horse" in i.message for i in found))
+
+    def test_a_war_ram_does_not_mask_a_horse_in_the_same_roster(self):
+        # The ram is listed FIRST, so a "first mount wins" scan allowlists it and
+        # never looks at the horse behind it. That is the point of this case.
+        self._write_lord(group="Cavalry",
+                         body=self._inline("taom_war_ram_a", "sumpter_horse"))
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertIn("sumpter_horse", found[0].message)
+        self.assertNotIn("war_ram", found[0].message)
+
+    def test_a_war_ram_does_not_mask_a_horse_in_a_named_roster(self):
+        # Inline ram plus a named roster carrying the horse. An allowlisted inline
+        # mount must not stop the named roster from being resolved.
+        self._write_lord(group="Cavalry", body=(
+            '    <Equipments>\n'
+            '      <EquipmentRoster>\n'
+            '        <Equipment slot="Horse" id="Item.taom_war_ram_a" />\n'
+            '      </EquipmentRoster>\n'
+            '      <EquipmentSet id="erebor_bat_a" />\n'
+            '    </Equipments>\n'))
+        self._write_roster("erebor_bat_a", "saddle_horse")
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertIn("saddle_horse", found[0].message)
+
+    def test_non_dwarf_on_a_war_ram_is_clean(self):
+        # The rule never applied to non-dwarves; the carve-out must not change that.
+        self._write_lord(group="Cavalry", race="human",
+                         body=self._inline("taom_war_ram_a"))
         self.assertEqual(self._mounted(), [])
 
 

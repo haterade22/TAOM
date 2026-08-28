@@ -10730,7 +10730,7 @@
             <EquipmentSet id="erebor_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_1" race="dwarf" name="{=aom_lord_E4_1_name}Nár" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_young_skills">
+    <NPCCharacter id="lord_E4_1" race="dwarf" name="{=aom_lord_E4_1_name}Nár" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_young_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -10777,11 +10777,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_c" />
+            <EquipmentSet id="erebor_bat_template_ram_c" />
             <EquipmentSet id="erebor_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_2" race="dwarf" name="{=aom_lord_E4_2_name}Tíli" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
+    <NPCCharacter id="lord_E4_2" race="dwarf" name="{=aom_lord_E4_2_name}Tíli" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -10825,11 +10825,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_d" />
+            <EquipmentSet id="erebor_bat_template_ram_d" />
             <EquipmentSet id="erebor_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_3" race="dwarf" name="{=aom_lord_E4_3_name}Nali" age="30" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_warrior_skills">
+    <NPCCharacter id="lord_E4_3" race="dwarf" name="{=aom_lord_E4_3_name}Nali" age="30" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_warrior_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -10876,11 +10876,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_e" />
+            <EquipmentSet id="erebor_bat_template_ram_e" />
             <EquipmentSet id="erebor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_4" race="dwarf" name="{=aom_lord_E4_4_name}Táli" age="37" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
+    <NPCCharacter id="lord_E4_4" race="dwarf" name="{=aom_lord_E4_4_name}Táli" age="37" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -10924,11 +10924,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_a" />
+            <EquipmentSet id="erebor_bat_template_ram_a" />
             <EquipmentSet id="erebor_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E4_11" race="dwarf" name="{=aom_lord_E4_11_name}Ôrn" age="1" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
+    <NPCCharacter id="lord_E4_11" race="dwarf" name="{=aom_lord_E4_11_name}Ôrn" age="1" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -10980,7 +10980,7 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_b" />
+            <EquipmentSet id="erebor_bat_template_ram_b" />
             <EquipmentSet id="erebor_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
@@ -11292,7 +11292,7 @@
             <EquipmentSet id="erebor_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_1" race="dwarf" name="{=aom_lord_E6_1_name}Flói" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_young_skills">
+    <NPCCharacter id="lord_E6_1" race="dwarf" name="{=aom_lord_E6_1_name}Flói" age="18" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_young_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11339,11 +11339,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_d" />
+            <EquipmentSet id="erebor_bat_template_ram_d" />
             <EquipmentSet id="erebor_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_2" race="dwarf" name="{=aom_lord_E6_2_name}Dráli" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
+    <NPCCharacter id="lord_E6_2" race="dwarf" name="{=aom_lord_E6_2_name}Dráli" age="18" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11387,11 +11387,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_e" />
+            <EquipmentSet id="erebor_bat_template_ram_e" />
             <EquipmentSet id="erebor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_3" race="dwarf" name="{=aom_lord_E6_3_name}Flási" age="23" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
+    <NPCCharacter id="lord_E6_3" race="dwarf" name="{=aom_lord_E6_3_name}Flási" age="23" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11435,11 +11435,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_a" />
+            <EquipmentSet id="erebor_bat_template_ram_a" />
             <EquipmentSet id="erebor_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_4" race="dwarf" name="{=aom_lord_E6_4_name}Idrún" age="25" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_warrior_skills">
+    <NPCCharacter id="lord_E6_4" race="dwarf" name="{=aom_lord_E6_4_name}Idrún" age="25" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_warrior_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11486,11 +11486,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_b" />
+            <EquipmentSet id="erebor_bat_template_ram_b" />
             <EquipmentSet id="erebor_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E6_11" race="dwarf" name="{=aom_lord_E6_11_name}Thrân" age="4" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
+    <NPCCharacter id="lord_E6_11" race="dwarf" name="{=aom_lord_E6_11_name}Thrân" age="4" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_phalanx_skills_rookie">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11542,11 +11542,11 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_c" />
+            <EquipmentSet id="erebor_bat_template_ram_c" />
             <EquipmentSet id="erebor_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E7_1" race="dwarf" name="{=aom_lord_E7_1_name}Náran" age="22" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_young_skills">
+    <NPCCharacter id="lord_E7_1" race="dwarf" name="{=aom_lord_E7_1_name}Náran" age="22" voice="earnest" is_hero="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_young_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11593,11 +11593,11 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_d" />
+            <EquipmentSet id="erebor_bat_template_ram_d" />
             <EquipmentSet id="erebor_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_E7_11" race="dwarf" name="{=aom_lord_E7_11_name}Thália" age="15" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
+    <NPCCharacter id="lord_E7_11" race="dwarf" name="{=aom_lord_E7_11_name}Thália" age="15" voice="earnest" is_hero="true" is_female="true" culture="Culture.erebor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_dwarf_lady_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
@@ -11641,7 +11641,7 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="erebor_bat_template_medium_e" />
+            <EquipmentSet id="erebor_bat_template_ram_e" />
             <EquipmentSet id="erebor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
@@ -20200,7 +20200,7 @@
             <EquipmentSet id="isengard_civ_template_f" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_I2_3" race="uruk" name="{=aom_lord_I2_3_name}Sharku, Warg-Rider Commander" age="29" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_I2_3_skills">
+    <NPCCharacter id="lord_I2_3" race="orc" name="{=aom_lord_I2_3_name}Sharku, Warg-Rider Commander" age="29" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_I2_3_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.1435" build="0.1597" key="0000000FC0000000E77F0FEEEFFF008F01FA76160877EFEF8888888881F87FF90082260308888888000000000000000000000000000000000000000043040140" />
             <hair_tags>

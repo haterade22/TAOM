@@ -70,6 +70,18 @@
     <TroopWeight id="iron_hills_noble_hammer_guard" weight="2.0" />
     <TroopWeight id="iron_hills_noble_anvilguard" weight="2.0" />
     <TroopWeight id="iron_hills_noble_ironbreaker" weight="2.0" />
+    <!-- Ironpass ram cavalry (#515) - the whole branch at 2.0, matching every other mounted
+         line in this file. Warg riders sit flat at 2.0 from level 11 (orc_warg_scout) to 36
+         (dg_fell_warg_rider), and the Black Numenorean horse branch is flat 2.0 across all
+         four of its tiers including the level-46 temple knight, so a mounted branch does not
+         escalate with tier here. 2.0 is also double their Ironpass foot peers
+         (infantry/axeman/veteran_axeman/mountain_guard, all unlisted at 1.0), the same ratio
+         warg riders carry over orc infantry. Erebor 3.0 stays reserved for the level-46 royal
+         tips; ironpass_ram_vanguard is a level-36 branch tip, not a culture T-max. -->
+    <TroopWeight id="ironpass_ram_rider" weight="2.0" />
+    <TroopWeight id="ironpass_goat_charger" weight="2.0" />
+    <TroopWeight id="ironpass_ram_breaker" weight="2.0" />
+    <TroopWeight id="ironpass_ram_vanguard" weight="2.0" />
 
     <!-- ===== MORDOR ===== -->
     <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />

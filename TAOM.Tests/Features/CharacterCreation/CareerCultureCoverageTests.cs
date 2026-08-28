@@ -188,4 +188,67 @@ public class CareerCultureCoverageTests
         Assert.AreEqual(0, invalidAttributes.Count,
             $"Invalid attribute names in career_menu.json: {string.Join(", ", invalidAttributes)}");
     }
+    [TestMethod]
+    public void EreborCareerStartingRosters_EquipOnlyWarRams()
+    {
+        // The ram_rider career is the ONLY Erebor Cavalry career, and its starting roster used to
+        // equip Item.saddle_horse: a VANILLA HORSE on a dwarf, which is exactly the case the
+        // MOUNTED_DWARF validator exists to forbid. No gate caught it, because these rosters are
+        // applied at runtime by CareerStartingEquipmentService rather than sitting on an
+        // NPCCharacter, so the schema sweep never sees them. Issue #515.
+        var path = Path.Combine(ModuleDataPath, "equipmentsets", "taom_career_starting_equipment.xml");
+        Assert.IsTrue(File.Exists(path), $"taom_career_starting_equipment.xml not found at {path}");
+
+        var allowedMounts = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "Item.taom_war_ram_a",
+            "Item.taom_war_ram_b",
+        };
+
+        var offenders = new List<string>();
+        foreach (var roster in XDocument.Load(path).Descendants("EquipmentRoster"))
+        {
+            var rosterId = roster.Attribute("id")?.Value ?? string.Empty;
+            if (!rosterId.StartsWith("player_career_erebor_", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            foreach (var equipment in roster.Descendants("Equipment"))
+            {
+                if (!string.Equals(equipment.Attribute("slot")?.Value, "Horse", StringComparison.OrdinalIgnoreCase))
+                    continue;
+                var itemId = equipment.Attribute("id")?.Value ?? string.Empty;
+                if (!allowedMounts.Contains(itemId))
+                    offenders.Add($"{rosterId} equips {itemId}");
+            }
+        }
+
+        Assert.AreEqual(0, offenders.Count,
+            "A dwarf career starting roster equips a mount that is not a war ram. Dwarves ride rams "
+            + "and nothing else: the dwarf skeleton's rider bone is misaligned on a horse. Offenders: "
+            + string.Join(", ", offenders));
+    }
+
+    [TestMethod]
+    public void EreborCavalryCareerRoster_ActuallyGrantsAWarRam()
+    {
+        // The negative test above passes trivially if the mount is simply deleted. This is the
+        // positive half: selecting the ram_rider career must actually spawn the player on a ram.
+        var path = Path.Combine(ModuleDataPath, "equipmentsets", "taom_career_starting_equipment.xml");
+        var doc = XDocument.Load(path);
+
+        foreach (var suffix in new[] { "m", "f" })
+        {
+            var rosterId = $"player_career_erebor_cavalry_{suffix}";
+            var roster = doc.Descendants("EquipmentRoster")
+                .FirstOrDefault(r => string.Equals(r.Attribute("id")?.Value, rosterId, StringComparison.OrdinalIgnoreCase));
+            Assert.IsNotNull(roster, $"{rosterId} is missing; the ram_rider career would fall back to culture-default gear");
+
+            var mount = roster.Descendants("Equipment")
+                .FirstOrDefault(e => string.Equals(e.Attribute("slot")?.Value, "Horse", StringComparison.OrdinalIgnoreCase));
+            Assert.IsNotNull(mount, $"{rosterId} has no Horse slot; a ram_rider player would start on foot");
+            StringAssert.StartsWith(mount.Attribute("id")?.Value ?? string.Empty, "Item.taom_war_ram",
+                $"{rosterId} must mount the player on a war ram");
+        }
+    }
+
 }

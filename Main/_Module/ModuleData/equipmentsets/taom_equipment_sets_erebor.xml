@@ -148,4 +148,76 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- Ram-mounted lord battle templates (issue #515). Verbatim clones of
+	     erebor_bat_template_medium_a..e plus the two mount slots, so each lord keeps the exact
+	     gear he already wore and only gains a war ram. Used ONLY by the three tier-3 frontier
+	     clans (Bit Gror / Bit Rori / Bit Norin = lord_E4_*, lord_E6_*, lord_E7_*). The medium_*
+	     originals stay untouched because all seven lord groups share them, so editing one would
+	     have mounted every dwarf lord in the kingdom. Dain keeps his own dain_bat_equipment and
+	     stays on foot by decision. Heavy barding, not elite: elite is left as headroom.
+	     NOTE these are BATTLE sets only; the civilian sets are deliberately unchanged. -->
+	<EquipmentRoster id="erebor_bat_template_ram_a" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_iron_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_iron_shield_b_gold" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
+			<Equipment slot="Horse" id="Item.taom_war_ram_a" />
+			<Equipment slot="HorseHarness" id="Item.taom_ram_barding_heavy_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster id="erebor_bat_template_ram_b" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_tower_e" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_c" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_d" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
+			<Equipment slot="Horse" id="Item.taom_war_ram_b" />
+			<Equipment slot="HorseHarness" id="Item.taom_ram_barding_heavy_b" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster id="erebor_bat_template_ram_c" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_iron_hammer_a" />
+			<Equipment slot="Item1" id="Item.sm_iron_shield_tower_c" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_d" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
+			<Equipment slot="Horse" id="Item.taom_war_ram_a" />
+			<Equipment slot="HorseHarness" id="Item.taom_ram_barding_heavy_b" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster id="erebor_bat_template_ram_d" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_axe_2h_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
+			<Equipment slot="Horse" id="Item.taom_war_ram_b" />
+			<Equipment slot="HorseHarness" id="Item.taom_ram_barding_heavy_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster id="erebor_bat_template_ram_e" culture="Culture.erebor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_iron_sword_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_e" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
+			<Equipment slot="Horse" id="Item.taom_war_ram_a" />
+			<Equipment slot="HorseHarness" id="Item.taom_ram_barding_heavy_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>

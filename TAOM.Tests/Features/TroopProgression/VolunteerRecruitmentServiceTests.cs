@@ -3024,4 +3024,109 @@ public class VolunteerRecruitmentServiceTests
         Assert.IsTrue(_sut.HasCulturePool("mirkwood"));
         Assert.IsTrue(_sut.HasCulturePool("umbar"));
     }
+
+    // --- Erebor ram-cavalry branch (#515): reached by upgrade, never offered as a volunteer ---
+
+    // The four Ironpass ram-cavalry troops. ironpass_ram_rider (21) is the branch ENTRY, but the
+    // branch hangs off ironpass_warrior (16), which the POOLED ironpass_recruit (11) already
+    // upgrades into. So the whole line is reachable without a pool entry of its own.
+    //
+    // That is what separates it from the two ids the Erebor pools DO carry as reachability fixes:
+    // nothing in troops_erebor.xml upgrades into ironpass_recruit or erebor_oathsworn (zero
+    // upgrade_target references to either), so those two lines are unreachable unless pooled.
+    // Precedent for leaving mounted troops out: Rohan is a cavalry culture and pools only its seven
+    // is_basic_troop recruits, reaching every horseman by upgrade. A village notable offering a
+    // level-21 armoured ram rider would skip the entire Ironpass foot progression.
+    private static readonly string[] RamCavalryLine =
+    {
+        "ironpass_ram_rider",
+        "ironpass_goat_charger",
+        "ironpass_ram_breaker",
+        "ironpass_ram_vanguard",
+    };
+
+    [TestMethod]
+    public void EreborRamCavalry_IsNotOfferedByAnyVolunteerPool()
+    {
+        var pooled = new HashSet<string>(VolunteerRecruitmentService.AllPooledTroopIds());
+
+        foreach (var id in RamCavalryLine)
+            Assert.IsFalse(pooled.Contains(id),
+                id + " is a mid-branch mounted troop and must stay upgrade-only. If you deliberately "
+                   + "want it recruitable, add it to BOTH EreborMix and CultureMap[\"erebor\"] and "
+                   + "retune every Next(15) stub in this file, then delete this assertion.");
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborCulture_RollsAgainstTotalWeightFifteen()
+    {
+        // Pins the Erebor culture pool's total weight at 15. PickWeighted rolls
+        // _random.Next(totalWeight) and every Erebor test in this file stubs a literal Next(15).
+        // Move the pool and those stubs stop matching: NSubstitute hands back the default 0 and
+        // each of them silently starts asserting the FIRST pool entry instead of the one it names.
+        // rca-mumakil-2026-06-29 records that failure mode. This test fails loudly instead.
+        _random.Next(15).Returns(14);
+        var context = new VolunteerContext(null, null, null, "erebor");
+
+        Assert.AreEqual("erebor_oathsworn", _sut.GetVolunteerTroopId(context));
+        _random.Received().Next(15);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborSettlement_RollsAgainstTotalWeightFifteen()
+    {
+        // Same guard for the settlement/clan mix (EreborMix), which the culture pool mirrors.
+        _random.Next(15).Returns(14);
+        var context = new VolunteerContext("town_E1", null, null, "erebor");
+
+        Assert.AreEqual("erebor_oathsworn", _sut.GetVolunteerTroopId(context));
+        _random.Received().Next(15);
+    }
+
+    [TestMethod]
+    public void EreborRamCavalry_IsReachableFromAPooledRoot()
+    {
+        // The companion to EreborRamCavalry_IsNotOfferedByAnyVolunteerPool: leaving the branch out
+        // of every pool is only correct while an upgrade edge reaches it. Detach the branch from
+        // ironpass_warrior and this fails, naming the ids that fell off the graph.
+        var troopsDir = ResolveTroopsDir();
+        if (troopsDir == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/troops relative to test bin");
+            return;
+        }
+
+        var (nodes, upgrades) = ParseTroopGraph(troopsDir);
+        if (!nodes.Contains(RamCavalryLine[0]))
+        {
+            // troops_erebor.xml is owned by a parallel worker on #515; until the branch lands there
+            // is no graph to check. The repo-wide AllNonMilitiaNonBossTroops_AreReachable... guard
+            // covers it from the moment it does.
+            Assert.Inconclusive("ram-cavalry troops are not defined in troops_erebor.xml yet");
+            return;
+        }
+
+        var reachable = new HashSet<string>();
+        var stack = new Stack<string>();
+        foreach (var id in VolunteerRecruitmentService.AllPooledTroopIds())
+            if (nodes.Contains(id))
+                stack.Push(id);
+        while (stack.Count > 0)
+        {
+            var n = stack.Pop();
+            if (!reachable.Add(n)) continue;
+            if (upgrades.TryGetValue(n, out var kids))
+                foreach (var k in kids)
+                    if (!reachable.Contains(k)) stack.Push(k);
+        }
+
+        var gaps = new List<string>();
+        foreach (var id in RamCavalryLine)
+            if (!reachable.Contains(id))
+                gaps.Add(id);
+
+        Assert.AreEqual(0, gaps.Count,
+            "Ram-cavalry troops unreachable from every volunteer pool root. Either restore the "
+            + "ironpass_warrior upgrade edge or pool the branch entry: " + string.Join(", ", gaps));
+    }
 }
