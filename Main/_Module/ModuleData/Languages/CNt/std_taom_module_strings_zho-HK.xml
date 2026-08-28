@@ -2604,7 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME}（第 {TIER} 階，晉升為軍官）" />
     <string id="taom_rf_warden_lost" text="你的庇護所失去了守衛官。駐軍仍守著營地，但現在只能將其拆除。" />
     <string id="taom_sl_lord_dispatched" text="{LORD} 派出了援軍，他們正在路上。" />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} 無法被擒。在被捉住之前，他已悄然離開戰場。" />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} 無法被擒。你的人尚未趕到，他便已不見蹤影。" />
   </strings>
 </base>

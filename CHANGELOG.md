@@ -4,6 +4,40 @@
 
 ## 2026-08-28
 
+### chore(localization): clear the translation backlog, and find the file the translator could not see
+
+All 12 languages swept across TAOM, TAOM_Map and LOTRLOME_Armory. Zero failures.
+
+**The Player Switcher's 12 keys were invisible to the translator.** `english_source_files` in
+`tools/translate_with_claude.py` is a hardcoded list of source XMLs, and
+`taom_player_switcher_strings.xml` was never added to it. The stubs existed, the keys were
+registered in all 12 `language_data.xml`, the coverage test passed, and the translator walked
+straight past the file. A first run reported 2 entries needing the API when the real answer was 14.
+An audit of every `*strings*.xml` against that list found this was the only one missing, so the
+gap is closed rather than merely patched for one file.
+
+**Three strings failed on the placeholder-integrity guard, and that guard was right.** Bannerlord
+conditional blocks look like `{?RULER.GENDER}her{?}his{\?}`, and the engine needs the count to
+match English exactly. For Simplified Chinese, Korean and Turkish the model collapsed or duplicated
+a block, because none of those languages inflects for gender the way the English source assumes, so
+the tool kept English rather than shipping a string the engine would mis-parse. The three are now
+hand-authored in `tools/translation_overrides/{cns,ko,tr}.json` with the block counts and every
+named variable verified against the English source. Where the target language has no grammatical
+gender, both branches carry the same word on purpose.
+
+**The residual count is not remaining work.** The translator defines untranslated as "target text
+equals English text", which cannot tell "nobody has translated this" apart from "the correct
+translation is the English string". After the sweep, French still reports 1,441 and Polish 1,808,
+and in every language sampled that number is exactly the count of entries whose cached translation
+is deliberately identical to English: Rohan, Rhûn, Riddermark, Rohirrim, Dunlending, Blacklocks,
+"OK", and one string that is nothing but placeholders. Japanese and Russian sit at 4 because they
+transliterate proper nouns into their own script. The number cannot be driven to zero and should
+not be read as a backlog.
+
+Writes to `TAOM_Map` and `LOTRLOME_Armory` land in the live game install, which is unversioned. A
+module reinstall reverts them.
+
+
 ### refactor(warg): absorb Alliance.Wargs into LOTRLOME_Armory, one fewer module to install
 
 Players no longer install or enable a separate `Alliance.Wargs` module. Its whole data plane now

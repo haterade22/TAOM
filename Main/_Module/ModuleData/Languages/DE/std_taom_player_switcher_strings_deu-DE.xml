@@ -6,17 +6,17 @@
     <tag language="German" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Königshaus" />
+    <string id="taom_ps_group_clans" text="Sippenführer" />
+    <string id="taom_ps_group_wanderers" text="Wanderer" />
+    <string id="taom_ps_none" text="keine" />
+    <string id="taom_ps_switched" text="Ihr spielt nun als {HERO}." />
+    <string id="taom_ps_failed" text="Ihr konntet nicht die Stelle von {HERO} einnehmen. Ihr spielt weiter als Euer eigener Charakter." />
+    <string id="taom_ps_unavailable" text="Der Spielerwechsel konnte nicht gestartet werden und ist für diese Sitzung deaktiviert." />
+    <string id="taom_ps_join_title" text="Einem König Treue schwören?" />
+    <string id="taom_ps_join_body" text="Eure Sippe steht allein. {KINGDOM} nähme Euren Eid und Euer Banner an. Wollt Ihr Euch ihnen jetzt anschließen?" />
+    <string id="taom_ps_join_yes" text="Den Eid schwören" />
+    <string id="taom_ps_join_no" text="Unabhängig bleiben" />
+    <string id="taom_ps_partial" text="Ihr seid nun {HERO}, doch ein Teil der Übergabe wurde nicht abgeschlossen. Seht ins Protokoll." />
   </strings>
 </base>

@@ -481,7 +481,7 @@
     <string id="PP7KD7OC" text="{KINGDOM}의 {RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 동등하게 나뉜 가운데 {OTHER_KINGDOM}와(과) 무역 협정을 체결하기로 결정했습니다." />
     <string id="PutoRsWp" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 석방하면 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 제안합니다." />
     <string id="q9DnHVcZ" text="{KINGDOM_NAME}의 전쟁에 참여하는 것은 우리의 이익에 부합하지 않습니다." />
-    <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
+    <string id="qa4FlTWS" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀{?}그{\?}의 자문회의 반대를 무낯쓰고 {SETTLEMENT}을(를) {?RULER.GENDER}그녀{?}그{\?}의 영지로 삼았습니다." />
     <string id="qgN9o2ip" text="우리의 동맹 {KINGDOM_NAME}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할 때입니다! 왕국은 그들에게 참전 요청 협정을 제안할지 투표할 것입니다." />
     <string id="qN3x2usk" text="{CALL_TO_WAR_COST}{GOLD_ICON}를 지불하고 {CALLED_KINGDOM}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할지 투표하십시오." />
     <string id="R0bJS0pn" text="{OTHER_FACTION}와(과) 평화 협정 체결" />
@@ -2604,7 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (등급 {TIER}, 장교로 승진)" />
     <string id="taom_rf_warden_lost" text="당신의 피난처가 관리자를 잃었습니다. 수비대가 야영지를 지키고 있지만, 이제는 해체만 가능합니다." />
     <string id="taom_sl_lord_dispatched" text="{LORD}이(가) 증원군을 보냈으며, 지금 오는 중입니다." />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO}은(는) 붙잡을 수 없습니다. 그는 사로잡히기 전에 전장을 빠져나갑니다." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO}은(는) 붙잡을 수 없습니다. 당신의 부하들이 닿기도 전에 사라졌습니다." />
   </strings>
 </base>

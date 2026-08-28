@@ -6,17 +6,17 @@
     <tag language="Russian" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Королевский дом" />
+    <string id="taom_ps_group_clans" text="Главы родов" />
+    <string id="taom_ps_group_wanderers" text="Странники" />
+    <string id="taom_ps_none" text="нет" />
+    <string id="taom_ps_switched" text="Теперь вы играете за {HERO}." />
+    <string id="taom_ps_failed" text="Вам не удалось занять место {HERO}. Продолжаете игру за своего персонажа." />
+    <string id="taom_ps_unavailable" text="Не удалось запустить смену персонажа — функция отключена на эту сессию." />
+    <string id="taom_ps_join_title" text="Присягнуть королю?" />
+    <string id="taom_ps_join_body" text="Ваш род стоит сам по себе. {KINGDOM} примет вашу присягу и ваше знамя. Присоединиться сейчас?" />
+    <string id="taom_ps_join_yes" text="Принести присягу" />
+    <string id="taom_ps_join_no" text="Остаться независимым" />
+    <string id="taom_ps_partial" text="Теперь вы — {HERO}, но часть передачи не завершилась. Смотрите журнал." />
   </strings>
 </base>

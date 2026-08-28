@@ -496,7 +496,7 @@
     <string id="syGyjjKE" text="{CALLING_KINGDOM}'ın çağrısını yanıtla ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş ilan et." />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}, sizden onlar adına savaşarak kazanacağınız her etki puanı başına {GOLD_AMOUNT}{GOLD_ICON} ödeyerek paralı asker olarak çalışmanızı teklif ediyor. Kabul ediyor musunuz?" />
     <string id="uc4M4bhG" text="Şey, istediğim bir şey var. {TARGET_FACTION}'dan uzun, çok uzun bir geçmişim olan bir {?TARGET_HERO.GENDER}hanımefendi{?}lord{\?} var. Ve dostane bir geçmiş değil. Şimdi savaştayken, {?TARGET_HERO.GENDER}o{?}o{\?} özgür olduğu sürece hayatımın ve topraklarımın güvende olmadığını biliyorum. Dediğim gibi, hiç kolay olmayacak. Ama bunu başaran, {?TARGET_HERO.GENDER}onu{?}onu{\?} bana canlı getiren kişi, minnettarlığımı bir kenara bırakırsak, gerçekten çok zengin bir adam olacak.[if:convo_grave][ib:closed2]" />
-    <string id="uiY3ds0Z" text="{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="uiY3ds0Z" text="{RULER.NAME}, {CALLING_KINGDOM} çağrısına yanıt verdi ve {?RULER.GENDER}onun{?}onun{\?} meclisinin yarısının desteğiyle {KINGDOM_TO_CALL_TO_WAR_AGAINST} devletine savaş ilan etti." />
     <string id="UQq4ekeu" text="{KINGDOM} hükümdarı {RULER.NAME}, {OTHER_KINGDOM} ile ticaret anlaşması imzalamamayı seçti." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}, {CALLED_KINGDOM_LINK}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}'e karşı savaş ilan etmeye çağırdı." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}, {CHARACTER_FACTION_SHORT}'ın bir üyesiydi. {FURTHER_DETAILS}." />
@@ -2604,7 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (Kademe {TIER}, subaylığa terfi ettir)" />
     <string id="taom_rf_warden_lost" text="Sığınağın muhafızını kaybetti. Garnizon kampı tutuyor, ancak artık yalnızca dağıtılabilir." />
     <string id="taom_sl_lord_dispatched" text="{LORD} takviye gönderiyor, yoldalar." />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} tutulamaz. Ele geçirilmeden önce meydandan sıyrılıp gider." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} tutulamaz. Adamların ona ulaşmadan çoktan gitmiştir." />
   </strings>
 </base>

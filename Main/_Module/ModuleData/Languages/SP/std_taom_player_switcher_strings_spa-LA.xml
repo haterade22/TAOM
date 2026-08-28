@@ -6,17 +6,17 @@
     <tag language="Spanish (LA)" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Casa Real" />
+    <string id="taom_ps_group_clans" text="Líderes de clan" />
+    <string id="taom_ps_group_wanderers" text="Errantes" />
+    <string id="taom_ps_none" text="ninguno" />
+    <string id="taom_ps_switched" text="Ahora juegas como {HERO}." />
+    <string id="taom_ps_failed" text="No pudiste ocupar el lugar de {HERO}. Continúas con tu propio personaje." />
+    <string id="taom_ps_unavailable" text="El cambiador de personaje no pudo iniciarse y está desactivado en esta sesión." />
+    <string id="taom_ps_join_title" text="¿Jurar lealtad a un rey?" />
+    <string id="taom_ps_join_body" text="Tu clan está solo. {KINGDOM} aceptaría tu juramento y tu estandarte. ¿Deseas unirte a ellos ahora?" />
+    <string id="taom_ps_join_yes" text="Pronunciar el juramento" />
+    <string id="taom_ps_join_no" text="Permanecer independiente" />
+    <string id="taom_ps_partial" text="Ahora eres {HERO}, pero parte del traspaso no se completó. Consulta el registro." />
   </strings>
 </base>

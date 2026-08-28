@@ -2604,7 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (Ranga {TIER}, awansuj na oficera)" />
     <string id="taom_rf_warden_lost" text="Twoje schronienie straciło zarządcę. Garnizon utrzymuje obóz, ale można go teraz jedynie rozebrać." />
     <string id="taom_sl_lord_dispatched" text="{LORD} wysyła posiłki, są już w drodze." />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} nie da się pojmać. Wymyka się z pola bitwy, zanim zdołano go schwytać." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} nie da się pojmać. Znika, zanim twoi ludzie do niego dotarli." />
   </strings>
 </base>

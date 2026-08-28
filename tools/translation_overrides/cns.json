@@ -1,0 +1,4 @@
+{
+  "_comment": "Hand-authored to preserve Bannerlord conditional placeholders. The AI translator's placeholder-integrity guard rejected its own output for these ids because the model collapsed or duplicated a {?VAR}a{?}b{\\?} block; the engine needs the count to match English exactly. Where the target language has no grammatical gender, both branches carry the same word on purpose.",
+  "uc4M4bhG": "嗯，我确实有个心愿。{TARGET_FACTION}有一位{?TARGET_HERO.GENDER}女领主{?}领主{\\?}，我与此人有着漫长的恩怨，绝非友善的交情。如今我们已然开战，只要{?TARGET_HERO.GENDER}她{?}他{\\?}还逍遥在外，我的性命与领地便不得安宁。我说过，这绝非易事。但若有谁能将{?TARGET_HERO.GENDER}她{?}他{\\?}活着带到我面前，除了我的感激之外，此人必将富甲一方。[if:convo_grave][ib:closed2]"
+}

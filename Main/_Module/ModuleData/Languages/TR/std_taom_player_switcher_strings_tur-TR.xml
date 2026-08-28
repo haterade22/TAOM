@@ -6,17 +6,17 @@
     <tag language="Turkish" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Kraliyet Hanedanı" />
+    <string id="taom_ps_group_clans" text="Klan Liderleri" />
+    <string id="taom_ps_group_wanderers" text="Gezginler" />
+    <string id="taom_ps_none" text="yok" />
+    <string id="taom_ps_switched" text="Artık {HERO} olarak oynuyorsun." />
+    <string id="taom_ps_failed" text="{HERO} kişisinin yerini alamadın. Kendi karakterinle devam ediyorsun." />
+    <string id="taom_ps_unavailable" text="Oyuncu değiştirici başlatılamadı ve bu oturum için devre dışı bırakıldı." />
+    <string id="taom_ps_join_title" text="Bir krala yemin edilsin mi?" />
+    <string id="taom_ps_join_body" text="Klanın yapayalnız. {KINGDOM} yeminini ve sancağını kabul eder. Şimdi onlara katılasın mı?" />
+    <string id="taom_ps_join_yes" text="Yemini et" />
+    <string id="taom_ps_join_no" text="Bağımsız kal" />
+    <string id="taom_ps_partial" text="Artık {HERO}'sun, ancak devir teslimin bir kısmı tamamlanmadı. Kayda bak." />
   </strings>
 </base>

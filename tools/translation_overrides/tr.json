@@ -1,0 +1,4 @@
+{
+  "_comment": "Hand-authored to preserve Bannerlord conditional placeholders. The AI translator's placeholder-integrity guard rejected its own output for these ids because the model collapsed or duplicated a {?VAR}a{?}b{\\?} block; the engine needs the count to match English exactly. Where the target language has no grammatical gender, both branches carry the same word on purpose.",
+  "uiY3ds0Z": "{RULER.NAME}, {CALLING_KINGDOM} çağrısına yanıt verdi ve {?RULER.GENDER}onun{?}onun{\\?} meclisinin yarısının desteğiyle {KINGDOM_TO_CALL_TO_WAR_AGAINST} devletine savaş ilan etti."
+}

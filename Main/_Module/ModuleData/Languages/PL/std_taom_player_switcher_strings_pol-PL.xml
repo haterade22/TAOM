@@ -6,17 +6,17 @@
     <tag language="Polish" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Dom królewski" />
+    <string id="taom_ps_group_clans" text="Przywódcy rodów" />
+    <string id="taom_ps_group_wanderers" text="Wędrowcy" />
+    <string id="taom_ps_none" text="brak" />
+    <string id="taom_ps_switched" text="Grasz teraz jako {HERO}." />
+    <string id="taom_ps_failed" text="Nie udało się zająć miejsca {HERO}. Kontynuujesz jako własna postać." />
+    <string id="taom_ps_unavailable" text="Przełącznik postaci nie mógł się uruchomić i jest wyłączony na tę sesję." />
+    <string id="taom_ps_join_title" text="Złożyć przysięgę królowi?" />
+    <string id="taom_ps_join_body" text="Twój ród stoi sam. {KINGDOM} przyjęłoby twoją przysięgę i twój sztandar. Przyłączyć się teraz?" />
+    <string id="taom_ps_join_yes" text="Złóż przysięgę" />
+    <string id="taom_ps_join_no" text="Pozostań niezależny" />
+    <string id="taom_ps_partial" text="Jesteś teraz {HERO}, lecz część przekazania się nie dokończyła. Sprawdź dziennik." />
   </strings>
 </base>

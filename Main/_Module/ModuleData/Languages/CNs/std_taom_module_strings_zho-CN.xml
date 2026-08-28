@@ -495,7 +495,7 @@
     <string id="SR9FC5jH" text="一名信使从{MAP_FACTION_NAME}带来和平提议。{MAP_FACTION_NAME}将每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金以结束双方的战争。你的王国将投票决定是否接受这一提议。" />
     <string id="syGyjjKE" text="响应{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}正向你提供雇佣工作,为你代表他们作战所获得的每点影响力支付{GOLD_AMOUNT}{GOLD_ICON}。你接受吗?" />
-    <string id="uc4M4bhG" text="Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
+    <string id="uc4M4bhG" text="嗯，我确实有个心愿。{TARGET_FACTION}有一位{?TARGET_HERO.GENDER}女领主{?}领主{\?}，我与此人有着漫长的恩怨，绝非友善的交情。如今我们已然开战，只要{?TARGET_HERO.GENDER}她{?}他{\?}还逍遥在外，我的性命与领地便不得安宁。我说过，这绝非易事。但若有谁能将{?TARGET_HERO.GENDER}她{?}他{\?}活着带到我面前，除了我的感激之外，此人必将富甲一方。[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}选择不与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}召唤{CALLED_KINGDOM_LINK}向{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}宣战。" />
@@ -2604,7 +2604,7 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME}（{TIER} 级，晋升为军官）" />
     <string id="taom_rf_warden_lost" text="你的避难所失去了守护者。守军仍据守营地，但如今只能将其拆除。" />
     <string id="taom_sl_lord_dispatched" text="{LORD} 派出了援军，他们正在路上。" />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO} cannot be held. He slips away from the field before he can be taken." />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO} cannot be held. He is gone before your men reach him." />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO}无法被擒。他在被俘之前便已溜出战场。" />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO}无法被擒。你的人还没赶到,他就已不见踪影。" />
   </strings>
 </base>

@@ -6,17 +6,17 @@
     <tag language="Japanese" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="王家" />
+    <string id="taom_ps_group_clans" text="氏族の長たち" />
+    <string id="taom_ps_group_wanderers" text="放浪者" />
+    <string id="taom_ps_none" text="なし" />
+    <string id="taom_ps_switched" text="あなたは{HERO}としてプレイします。" />
+    <string id="taom_ps_failed" text="{HERO}に成り代わることができませんでした。元のキャラクターのまま続行します。" />
+    <string id="taom_ps_unavailable" text="プレイヤー切替機能を開始できなかったため、このセッションでは無効になっています。" />
+    <string id="taom_ps_join_title" text="王に忠誠を誓うか？" />
+    <string id="taom_ps_join_body" text="あなたの氏族は孤立している。{KINGDOM}はあなたの誓いと旗を受け入れるだろう。今すぐ加わるか？" />
+    <string id="taom_ps_join_yes" text="忠誠を誓う" />
+    <string id="taom_ps_join_no" text="独立を保つ" />
+    <string id="taom_ps_partial" text="あなたは{HERO}になりましたが、引き継ぎの一部が完了しませんでした。ログを確認してください。" />
   </strings>
 </base>

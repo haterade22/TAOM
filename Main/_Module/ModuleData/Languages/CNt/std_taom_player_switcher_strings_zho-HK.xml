@@ -6,17 +6,17 @@
     <tag language="Traditional Chinese" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="王室" />
+    <string id="taom_ps_group_clans" text="氏族首領" />
+    <string id="taom_ps_group_wanderers" text="流浪者" />
+    <string id="taom_ps_none" text="無" />
+    <string id="taom_ps_switched" text="你現在扮演 {HERO}。" />
+    <string id="taom_ps_failed" text="你無法取代 {HERO} 的身分。將繼續使用你原本的角色。" />
+    <string id="taom_ps_unavailable" text="角色切換器無法啟動，本次遊戲中已停用。" />
+    <string id="taom_ps_join_title" text="向國王宣誓？" />
+    <string id="taom_ps_join_body" text="你的氏族孤立無援。{KINGDOM} 願意接受你的誓言與旗幟。現在加入他們嗎？" />
+    <string id="taom_ps_join_yes" text="宣誓效忠" />
+    <string id="taom_ps_join_no" text="保持獨立" />
+    <string id="taom_ps_partial" text="你現在是 {HERO}，但部分交接未能完成。請查看日誌。" />
   </strings>
 </base>

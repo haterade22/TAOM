@@ -6,17 +6,17 @@
     <tag language="Korean" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="왕가" />
+    <string id="taom_ps_group_clans" text="가문 수장" />
+    <string id="taom_ps_group_wanderers" text="방랑자" />
+    <string id="taom_ps_none" text="없음" />
+    <string id="taom_ps_switched" text="이제 {HERO}(으)로 플레이합니다." />
+    <string id="taom_ps_failed" text="{HERO}의 자리를 대신할 수 없었습니다. 기존 캐릭터로 계속합니다." />
+    <string id="taom_ps_unavailable" text="플레이어 전환기를 시작할 수 없어 이번 세션에서는 비활성화되었습니다." />
+    <string id="taom_ps_join_title" text="왕에게 충성을 맹세하시겠습니까?" />
+    <string id="taom_ps_join_body" text="당신의 가문은 홀로 서 있습니다. {KINGDOM}이(가) 당신의 맹세와 깃발을 받아들이려 합니다. 지금 합류하시겠습니까?" />
+    <string id="taom_ps_join_yes" text="맹세를 하다" />
+    <string id="taom_ps_join_no" text="독립을 유지하다" />
+    <string id="taom_ps_partial" text="이제 당신은 {HERO}입니다. 다만 인계 과정의 일부가 완료되지 않았습니다. 기록을 확인하십시오." />
   </strings>
 </base>

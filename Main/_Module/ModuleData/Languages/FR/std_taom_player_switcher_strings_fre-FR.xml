@@ -6,17 +6,17 @@
     <tag language="French" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Maison royale" />
+    <string id="taom_ps_group_clans" text="Chefs de clan" />
+    <string id="taom_ps_group_wanderers" text="Vagabonds" />
+    <string id="taom_ps_none" text="aucun" />
+    <string id="taom_ps_switched" text="Vous incarnez désormais {HERO}." />
+    <string id="taom_ps_failed" text="Vous n'avez pas pu prendre la place de {HERO}. Vous continuez avec votre propre personnage." />
+    <string id="taom_ps_unavailable" text="Le changeur de personnage n'a pas pu démarrer et est désactivé pour cette session." />
+    <string id="taom_ps_join_title" text="Prêter serment à un roi ?" />
+    <string id="taom_ps_join_body" text="Votre clan est seul. {KINGDOM} accepterait votre serment et votre bannière. Les rejoindre maintenant ?" />
+    <string id="taom_ps_join_yes" text="Prêter serment" />
+    <string id="taom_ps_join_no" text="Rester indépendant" />
+    <string id="taom_ps_partial" text="Vous êtes désormais {HERO}, mais une partie du transfert n'a pas abouti. Consultez le journal." />
   </strings>
 </base>

@@ -1,0 +1,4 @@
+{
+  "_comment": "Hand-authored to preserve Bannerlord conditional placeholders. The AI translator's placeholder-integrity guard rejected its own output for these ids because the model collapsed or duplicated a {?VAR}a{?}b{\\?} block; the engine needs the count to match English exactly. Where the target language has no grammatical gender, both branches carry the same word on purpose.",
+  "qa4FlTWS": "{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀{?}그{\\?}의 자문회의 반대를 무낯쓰고 {SETTLEMENT}을(를) {?RULER.GENDER}그녀{?}그{\\?}의 영지로 삼았습니다."
+}

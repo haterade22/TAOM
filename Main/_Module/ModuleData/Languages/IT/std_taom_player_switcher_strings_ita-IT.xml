@@ -6,17 +6,17 @@
     <tag language="Italian" />
   </tags>
   <strings>
-    <string id="taom_ps_group_kingdom" text="Royal House" />
-    <string id="taom_ps_group_clans" text="Clan Leaders" />
-    <string id="taom_ps_group_wanderers" text="Wanderers" />
-    <string id="taom_ps_none" text="none" />
-    <string id="taom_ps_switched" text="You now play as {HERO}." />
-    <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
-    <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
-    <string id="taom_ps_join_title" text="Swear to a king?" />
-    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
-    <string id="taom_ps_join_yes" text="Swear the oath" />
-    <string id="taom_ps_join_no" text="Stay independent" />
-    <string id="taom_ps_partial" text="You are now {HERO}, but part of the handover did not finish. See the log." />
+    <string id="taom_ps_group_kingdom" text="Casa Reale" />
+    <string id="taom_ps_group_clans" text="Capi di Clan" />
+    <string id="taom_ps_group_wanderers" text="Vagabondi" />
+    <string id="taom_ps_none" text="nessuno" />
+    <string id="taom_ps_switched" text="Ora giochi nei panni di {HERO}." />
+    <string id="taom_ps_failed" text="Non hai potuto prendere il posto di {HERO}. Continui con il tuo personaggio." />
+    <string id="taom_ps_unavailable" text="Il cambio di personaggio non è riuscito ad avviarsi ed è disattivato per questa sessione." />
+    <string id="taom_ps_join_title" text="Giurare fedeltà a un re?" />
+    <string id="taom_ps_join_body" text="Il tuo clan è solo. {KINGDOM} accetterebbe il tuo giuramento e il tuo vessillo. Unirti a loro adesso?" />
+    <string id="taom_ps_join_yes" text="Pronuncia il giuramento" />
+    <string id="taom_ps_join_no" text="Rimani indipendente" />
+    <string id="taom_ps_partial" text="Ora sei {HERO}, ma parte del passaggio non è stata completata. Consulta il registro." />
   </strings>
 </base>
