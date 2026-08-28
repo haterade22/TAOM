@@ -4,6 +4,56 @@
 
 ## 2026-08-28
 
+### fix(lords): Pelendur was showing up as Icratia, and as a woman
+
+**Pelendur.** `lord_WE8_c` is vanilla's Icratia, reused for Golasgil's son. Every layer of TAOM
+already knew that: `taom_xslt_strings.xml` registers the name as Pelendur, all 12 language files
+carry it, the encyclopedia bio reads "Pelendur, son of Golasgil", and `heroes.xslt` wires
+`father="Hero.lord_1_71"` plus `mother="Hero.lord_1_71_1"`. Only `characters/lords.xml` still said
+`Icratia` with `is_female="true"`, and that is the file that wins at runtime (`SubModule.xml:157`
+loads it after the `lords.xslt` overlay). There is no English language folder, so the inline literal
+IS the English text, which is why English players saw a name no other locale showed. He is now male,
+bearded, on a male body key, aged 23, and wearing `gondor_lord_anfalas_1` instead of a Dunland
+template.
+
+**Thorwen.** `lord_1_46_1` is vanilla's male Seorgys, reused as Malrior's wife. The bio calls her "a
+capable woman" in all 12 languages while the data kept `is_female="false"` and a `<beard_tags>`
+block, which is what actually renders facial hair. She is female now, on the body key TAOM had
+already authored for her in `lords.xslt`, and in Lond Galen kit. `heroes.xslt` also let vanilla's
+`father="Hero.lord_1_46"` survive its attribute copy while adding `spouse="Hero.lord_1_46"`, so
+Malrior was both her father and her husband. That template now strips `father`.
+
+**Eleven more stale names.** The same drift had reached 13 lords: `lords.xml` carried a name the
+registry and every translation had already replaced (Sophalia for Calathiel, Popilia for Belwen,
+Arador for Anariel, and nine others). `tools/oneoff/sync_lord_name_fallbacks.py` syncs them. It
+skips `lord_WE9_l`, where `lords.xml` has the fuller "Duinhir, Lord of Morthond" and the registry
+has only the given name; syncing that one down would drop the title from the single locale that
+renders it. No translation run was needed, because the translator refills only rows whose text still
+matches English, so the 12 locales were already correct.
+
+**Two bearded elf-maidens.** `lord_L2_5` (Nimlothiel) and `lord_L3_3` (Silivren) of Lothlorien are
+`is_female="true"` on `taom_elf_lady_skills` and carried `<beard_tags>`. Removed.
+
+**Guards.** `tools/complete_lords_xslt.py` regenerates `lords.xslt` from vanilla and honours an
+`is_female` override only when the attribute is present, so deleting it would have let vanilla's
+`true` back in on the next `--apply`. `lord_WE8_c` joins `lord_4_6` in `GENDER_OVERRIDES`. That
+table covers `lords.xslt` only; `characters/lords.xml` has no regeneration guard. A new test,
+`LordNameAndSexConsistencyTests`, pins both invariants: every name fallback matches the registry,
+and no `is_female="true"` lord carries beard tags. Neither `validate_moduledata.py` nor
+`LanguageFileCoverageTests` can see either problem.
+
+**Left for a decision.** Three lords have the same sex defect and were not touched: `lord_WE9_u`
+(Duilin, "elder son of Duinhir", `is_female="true"`), `lord_WE9_u2` (Rosfin, "wife of Duinhir",
+`is_female="false"` with a beard) and `lord_1_52_1` (Anariel, "daughter of Hirluin", male with a
+beard).
+
+Verified: `validate_moduledata.py` PASS, `check_external_xslt.py` clean across 16 stylesheets,
+`dotnet test TAOM.Tests` 7716 passed / 0 failed, and the `complete_lords_xslt.py` merge now omits
+`is_female` for `lord_WE8_c` where vanilla says `true`.
+
+Not-tested: in-game appearance. Hero sex, body properties and equipment bake at hero creation, so
+this needs a game restart and a NEW campaign to observe.
+
 ### fix(rhun): the Khamul barding items now exist
 
 The lord armour pass pointed 8 Rhun lord rosters and 9 mounted dragon/Khamul troops at

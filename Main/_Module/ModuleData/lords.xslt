@@ -21037,13 +21037,12 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_WE8_c_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005580B4000300DA55B8899724689763869956B7B86578578658A96886733790003000203B8789800001105000030A30000001F000000000000000000000000"/>
+                <BodyProperties version="4" weight="0.2534" build="0.5733" key="00057C0D0000131AC186C84D4697AC7356B46C8983BEB92A379743C66986654300B946030BACA5A60000000000000000000000000000000000000000676C6082"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -21076,8 +21075,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_anorien_3" />
-                <EquipmentSet id="gondor_lord_anorien_3_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anfalas_1" />
+                <EquipmentSet id="gondor_lord_anfalas_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>

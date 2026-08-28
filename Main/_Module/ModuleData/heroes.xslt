@@ -734,7 +734,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_46_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_46_1}Thorwen, wife of Malrior, is a capable woman who manages her household with quiet determination.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_46</xsl:attribute>
 			<xsl:apply-templates select="node()"/>

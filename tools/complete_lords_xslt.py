@@ -41,7 +41,8 @@ SKIP_IDS = {'main_hero'}
 # is_female is wrong and must not be copied through on regeneration.
 # lord_4_6 is vanilla Countess Calatild, reused as Grimbold of Grimslade.
 GENDER_OVERRIDES = {
-    'lord_4_6': None,   # None = male (attribute omitted entirely)
+    'lord_4_6': None,     # vanilla Countess Calatild, reused as Grimbold of Grimslade
+    'lord_WE8_c': None,   # vanilla Icratia, reused as Pelendur son of Golasgil
 }
 
 # Faction groupings for organizing output
