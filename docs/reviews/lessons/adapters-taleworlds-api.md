@@ -360,3 +360,17 @@ honestly through the party ceasing to exist. Corollary: IsRaid is the settlement
 not "is being attacked": a field battle never sets it, so a raid-gated loss branch is dead code.
 
 **Source:** same RCA, Class 2 + Class 6 (delivery-vs-MapEvent; the dead IsRaid input).
+
+### A vanilla action dispatches events; enumerate the OTHER listeners before treating the call as a leaf
+
+The design reasoned carefully about what `ChangePlayerCharacterAction.Apply` itself does and never asked what subscribes to the events it fires. Vanilla SandBox ships `HeirSelectionCampaignBehavior`, which snapshots the old main party's `ItemRoster` and the old hero's battle and civilian equipment on `OnBeforePlayerCharacterChanged` and adds both to the new main party on `OnPlayerCharacterChanged`. Two consequences, both invisible in our code: the throwaway character-creation hero's startup gear survives onto the taken-over lord, and on the adoption path our own roster transfer added items vanilla had already moved, doubling every stack.
+- **Why missed:** every reviewer traced TAOM-internal data flow. This is vanilla-internal flow reacting to a TAOM call. `.claude/rules/csharp-architecture.md` "GameModel Cross-Entity Propagation" encodes exactly this instinct but triggers only on a `GameModel` override returning a per-entity value, and this feature has no GameModel.
+- **Prevent:** for any vanilla `*Action` call, find the events it dispatches and read every subscriber before assuming the call is self-contained. `CampaignEventDispatcher` makes it mechanical: find the event, find its subscribers, read what they do. Treat this as the non-GameModel form of the cross-entity propagation rule.
+- **Source:** docs/reviews/rca-player-switcher-2026-08-27.md finding 7 (#514; Codex P2).
+
+### Subclassing a vanilla ViewModel inherits its unguarded constructor, not just its bindings
+
+A picker row derived from `ClanPartyMemberItemVM` deliberately, so that an engine change removing it would break the build rather than blank a row. That base takes `(Hero, MobileParty)` and its constructor's first statement is `IsLeader = hero == party.LeaderHero;` with no null check. Wanderers have no `PartyBelongedTo` and shipped enabled by default, so the first wanderer threw inside the panel build, the attach patch's try/catch swallowed it, and the entire feature's UI silently never appeared.
+- **Why missed:** the binding test asserted the base type was unsealed and had the expected constructor SIGNATURE. Nobody read the constructor BODY. Standards and API-compatibility agents both passed it correctly: the type exists, is unsealed, and its signature is unchanged.
+- **Prevent:** before deriving from an engine VM for compile-time safety, read its constructor body for unguarded dereferences of arguments you may legitimately pass as null. Inheritance bought for a build-time gate is worth nothing if the base cannot accept your data. When you drop such an inheritance, pin the reason in a test so the "simplification" is not reintroduced.
+- **Source:** docs/reviews/rca-player-switcher-2026-08-27.md finding 5 (#514; Codex P1).

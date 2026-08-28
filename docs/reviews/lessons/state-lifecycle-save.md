@@ -484,3 +484,17 @@ an invalid state; this one is about a flag that changes the UI without changing 
 
 **Source:** issue #512, live log 2026-08-25, `docs/features/enlistment.md` "Shore leave holds the
 settlement (#512)".
+
+### Enumerate every exit from the scope that SETS a latch, not just the one that clears it
+
+A flag that gates other code's behaviour was set at the top of a `try` in `ApplyPreview` and cleared in a `finally` in the matching `RestoreDefault`. The pair looked symmetrical, so nobody enumerated the setter's own exits: a parse-failure `return` and a broad `catch` both left it set. The flag suppressed `Patch9_RaceFilter`, so a failed preview silently disabled the culture race filter for the rest of that face-generator visit, for a player who was by then editing their own face again. Codex found a third path the Claude agents missed, and it is the subtlest: `RestoreDefault` cleared the flag AFTER calling `SetBodyProperties`, and that call is the only thing that rebuilds the filtered selector, so the one refresh that would have restored the filter was itself suppressed.
+- **Why missed:** reviewing the closer is not reviewing the latch. `.claude/rules/harmony-patches.md` "Latches & Toggle Gates" already states the closer-per-opener rule, but its stated scope is Harmony patch latches and this latch lives in a Hook class, so it never pattern-matched. Scope gap, not a missing rule.
+- **Prevent:** acquire a cross-cutting flag in a `try`/`finally`, or clear it on every early return. Then ask separately whether the clear happens at the right MOMENT: if lifting the suppression is what allows some refresh to run, clear before that refresh, not after it.
+- **Source:** docs/reviews/rca-player-switcher-2026-08-27.md findings 1 and 10 (#514).
+
+### There is no rollback past `ChangePlayerCharacterAction`; report a post-commit failure as such
+
+The handover wrapped its whole sequence in one catch that reported "continuing as the created character". That message is true only before `ChangePlayerCharacterAction.Apply` runs. After it, `Game.Current.PlayerTroop` has changed and the player-character-changed events have been dispatched to every listener; the engine offers no transaction and no rollback, so the player IS the new hero and the message is a lie about their own identity.
+- **Why missed:** the test covering the catch threw at the ENTRY to `ApplyPlayerCharacter`, before any mutation. It validated the one scenario where the message is accurate and looked like it validated the general case. A test proves the scenario it constructs and nothing more.
+- **Prevent:** when a sequence contains an irreversible step, track whether it ran and report post-commit failures with a distinct outcome and a distinct message. Write the failure test to throw AFTER the irreversible step, not before it.
+- **Source:** docs/reviews/rca-player-switcher-2026-08-27.md finding 6 (#514; Codex P1).

@@ -432,3 +432,10 @@ Supply Order buttons shipped that way and every review round missed it because t
 registered and the round-trip gate compares registered rows against inline defaults, not
 against how a prefab consumes them. Rule: prefab text is @Property or {=!}{VARIABLE}, never a
 literal key; the prefab sweep test now enforces it module-wide.
+
+### The localization gate is one-directional; assert that every declared key is actually rendered
+
+TAOM's localization suite proves every English key has a row in all twelve language files. Nothing proved the reverse. A feature shipped fifteen keys of which seven were referenced by nothing, and they were not merely wasted translation: three were the player-facing outcome messages (`switched`, `failed`, `unavailable`), specified in the implementation plan and then never wired, so a failed handover told the player nothing at all while the exact string for it sat translated in twelve languages.
+- **Why missed:** the completeness checklist asks whether localization is PRESENT, never whether it is REACHABLE. Presence is what the existing tests enforce, so a dead key looks identical to a healthy one at every gate.
+- **Prevent:** for each feature strings file, assert every declared `{=key}` is referenced from C# or a prefab. A dead key is usually the fossil of a specified step that was never built, which makes this test a spec-compliance check wearing a tidiness costume.
+- **Source:** docs/reviews/rca-player-switcher-2026-08-27.md finding 2 (#514).
