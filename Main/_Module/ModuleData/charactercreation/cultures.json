@@ -81,6 +81,7 @@
     "races": [
       "uruk_hai",
       "berserker",
+      "orc",
       "human"
     ],
     "starting_settlement": "town_isengard",
