@@ -4,6 +4,30 @@
 
 ## 2026-08-28
 
+### docs(multi-session): never write a reconstructed shared file to disk
+
+Two sessions lost work to the same idiom today, so it is now a rule rather than folklore.
+
+Rebuilding a shared file (CHANGELOG.md is the one that keeps getting hit) from HEAD plus your own
+hunk and writing the result to the WORKING TREE silently destroys every other session's uncommitted
+entries. It fails quietly because the output is a perfectly well-formed file. Two CHANGELOG entries
+were destroyed this way and were unrecoverable: present in no commit on any branch, and absent from
+all 80 dangling blobs. They came back only because the session that wrote them still had its
+transcript.
+
+The distinction is the DESTINATION, not the technique. Reconstructing HEAD plus your hunk is correct,
+and is how one session commits its own changes to a file two sessions are editing; it just has to land
+in the INDEX (`git hash-object -w` plus `git update-index --cacheinfo`), which never touches the
+working tree.
+
+The tell: an append shows insertions only, while a rebuild shows deletions, because HEAD by definition
+holds nobody's uncommitted work. The worktree copy can also drift BEHIND HEAD the same way, in which
+case the next commit from the worktree silently reverts entries that were already pushed.
+
+A second, milder hazard from the same day: the git INDEX is shared across every session in a worktree.
+Stage and commit in one shell invocation, because a concurrent commit between the two clears what you
+staged.
+
 ### docs(war-ram): write down what the reskin path actually costs
 
 Follow-up to the war ram (#515). The documentation was calibrated entirely on the spider and the
