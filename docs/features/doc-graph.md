@@ -192,6 +192,7 @@ it"; reach for this tool via `/doc-graph`.
 - [docs/ai-includes/agent-operating-manual.md](../ai-includes/agent-operating-manual.md)
 - [docs/features/doc-health-linter.md](./doc-health-linter.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
 
 <!-- backlinks-end -->

@@ -113,3 +113,13 @@ that the "throw on the first line" counterexample I asked it to hunt for cannot 
 
 A design pass was dispatched in parallel with implementation rather than before it. Parallelising a
 review against the thing it reviews wastes the review. Dispatch the design agent, then wait.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)
+
+<!-- backlinks-end -->

@@ -181,3 +181,15 @@ disagrees.
 - 12-language translation run for the `{=taom_rf_*}` keys, including the four added in the round-B
   fix pass (`taom_rf_warden_lost`, `taom_rf_clan_row_building`, `taom_rf_promote_entry_tier`,
   `taom_rf_found_orders_warning`; `taom_rf_promote_entry` is superseded and unreferenced).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

@@ -238,3 +238,13 @@ one was about the seam BELOW the policy (ordering, persistence, wiring); this on
 ABOVE it.
 
 **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #9.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/enlistment.md](../features/enlistment.md)
+
+<!-- backlinks-end -->

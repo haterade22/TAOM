@@ -259,3 +259,13 @@ starting a campaign if `golbin` was intended.
 - 2026-06-02 — Added the Goblins of Blue Craig kingdom and forever-alliance diplomacy (`diplomacy/diplomacy.json`).
 - 2026-06-02 — Added cultural feats, CC-playability, orc-only armor + no-cavalry troops, and Third-Age lord/settlement names for Misty Mountains + Lindon.
 - 2026-06-01 — Initial feature: three new kingdoms and two new cultures (Misty Mountain Orcs, Goblins, Lindon) as full AI map-factions.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/culture-playability-wiring.md](./culture-playability-wiring.md)
+
+<!-- backlinks-end -->

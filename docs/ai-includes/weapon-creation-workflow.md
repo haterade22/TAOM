@@ -364,6 +364,7 @@ ships as a downloadable Release zip. Export tuned offsets to JSON and patch them
 
 ## Referenced by
 
+- [docs/features/black-numenorean.md](../features/black-numenorean.md)
 - [docs/features/weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)

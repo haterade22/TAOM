@@ -414,3 +414,15 @@ the **lore-locked gate** (Sauron and the Nazgul, MCM off then on), the **barber 
 [character-selection.md](character-selection.md) (the shipping race-aware transpiler that makes a
 non-human preview render), [uncapturable-heroes.md](uncapturable-heroes.md),
 [coop-interop.md](coop-interop.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/character-selection.md](./character-selection.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)
+
+<!-- backlinks-end -->

@@ -164,6 +164,7 @@ above has no automated check — it was verified by ad-hoc parse for this audit.
 
 ## Referenced by
 
+- [docs/features/black-numenorean.md](../features/black-numenorean.md)
 - [docs/features/mesh-ref-validation.md](../features/mesh-ref-validation.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/armory-guide.md](./armory-guide.md)

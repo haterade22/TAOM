@@ -240,3 +240,15 @@ Gauntlet does not localize literal prefab text, only VM-bound strings pass throu
 They are now `@EscortNoneText` etc., built in the SupplyOrderScreenVM constructor, and
 `SupplyOrderPrefabBindingTests.NoPrefabAnywhere_CarriesALiteralLocalizationToken` sweeps every
 prefab in the module so the class cannot ship again.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

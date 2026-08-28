@@ -328,3 +328,16 @@ Any CTD goes to `/native-crash-triage`, never a blind retry.
 ## GitHub Issue
 
 [#515](https://github.com/haterade22/TAOM/issues/515)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
+- [docs/features/no-mount-cultures.md](./no-mount-cultures.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/lotrlome-war-ram-changes.md](../reference/lotrlome-war-ram-changes.md)
+
+<!-- backlinks-end -->

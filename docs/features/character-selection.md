@@ -74,6 +74,7 @@ The suffix `"_facegen"` is hardcoded in the `GetActionSet` static method inside 
 
 ## Referenced by
 
+- [docs/features/player-switcher.md](./player-switcher.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

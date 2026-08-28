@@ -270,5 +270,6 @@ Restart the game. Patch37 won't apply; the other mod's Finalizers take over.
 
 - [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
 
 <!-- backlinks-end -->

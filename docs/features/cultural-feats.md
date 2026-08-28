@@ -358,7 +358,9 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 
 ## Referenced by
 
+- [docs/features/troop-weight-system.md](./troop-weight-system.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
 - [docs/research/cultural-feats-roadmap.md](../research/cultural-feats-roadmap.md)
 - [docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md](../reviews/rca-culturefeat-partyculture-nre-2026-06-15.md)
 

@@ -741,6 +741,8 @@ CharacterSelection face-generator action-set injection. The transpiler finds the
 
 - [docs/features/arena.md](../features/arena.md)
 - [docs/features/banner-bearers.md](../features/banner-bearers.md)
+- [docs/features/field-commission.md](../features/field-commission.md)
+- [docs/features/hero-race.md](../features/hero-race.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

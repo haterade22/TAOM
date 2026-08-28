@@ -51,3 +51,13 @@ The honest answer to "what can we do more effectively": almost nothing here that
 
 - `python tools/audit_claude_config.py` (self-audit after the edits) — exit 0, no new findings.
 - Both edits are documentation-only (a playbook reference + an always-load rule line); no code, no tests affected.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -360,5 +360,6 @@ are affected.
 ## Referenced by
 
 - [docs/features/coop-interop.md](../features/coop-interop.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
 
 <!-- backlinks-end -->

@@ -249,5 +249,6 @@ Becoming the **ruler of a kingdom** crashed to desktop. Two crash logs (2026-06-
 - [docs/features/troll-race.md](./troll-race.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

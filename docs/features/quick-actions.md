@@ -155,5 +155,6 @@ Claims from the CLAUDE.md Key Paths row, verified against the current source (`M
 
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
 
 <!-- backlinks-end -->

@@ -213,9 +213,9 @@ the v1.4.8 decompile, 2026-08-14:
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/lessons/gamemodels-services.md](./gamemodels-services.md)
 
 <!-- backlinks-end -->
-
 ### When a design rests on "these always tie", do the arithmetic for the case where they do not
 
 The fief-grant rebalance (#458) was built on the claim that every finalist in a vanilla

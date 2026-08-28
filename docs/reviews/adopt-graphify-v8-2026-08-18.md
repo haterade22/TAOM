@@ -308,3 +308,19 @@ fix the routing row, not CLAUDE.md.
 - This review.
 - A `graphify` row in [provenance-register.md](../reference/provenance-register.md). The register had **no** graphify row despite `tools/doc_graph.py` deriving from it since June, so this backfills a real gap as well as recording the trial.
 - No repo code or config changed. All trial artifacts live in the session scratchpad.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/ai-includes/external-repo-adoption.md](../ai-includes/external-repo-adoption.md)
+- [docs/features/doc-graph.md](../features/doc-graph.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
+- [docs/reviews/adopt-graphify-2026-06-08.md](./adopt-graphify-2026-06-08.md)
+
+<!-- backlinks-end -->

@@ -194,6 +194,7 @@ A memo keyed on a service method's *input* is only correct if that input determi
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/lessons/campaign-mechanics.md](./campaign-mechanics.md)
 
 <!-- backlinks-end -->
 ### Gate the rule, not the call site

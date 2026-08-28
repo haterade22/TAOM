@@ -222,3 +222,13 @@ assign the harness explicitly, so only the player can mix them.
    `taom_war_ram_b`. Check before shipping that item.
 6. **`t_eb_ram_barding_a2_d2.png`** is 2048x2048 but only 72 KB, so near-flat. Purpose unknown;
    confirm what binds it.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](./feature-map.md)
+
+<!-- backlinks-end -->

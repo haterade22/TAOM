@@ -268,3 +268,15 @@ is `culture="Culture.dolguldur"`, and his "orc" is a `skill_template`
 DreadAura's behaviour is unaffected, since it finds the Nine through `heroSets` exactly as this
 feature does; only the stated reasoning is wrong. It needs its own issue and commit, because anyone
 re-deriving "which heroes can the race axis reach" from those comments gets the wrong answer.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/player-switcher.md](./player-switcher.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

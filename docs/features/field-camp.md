@@ -176,3 +176,15 @@ the lock, unpauses the engine and force-resumes time. Both live in
   is done: batch-2 integration purged every `taom_fc_` row from `taom_module_strings.xml`,
   registered all 58 `taom_fcamp_` keys, and rebuilt the 12 language files with English fallbacks;
   FieldCommission's `taom_fc_` rows live untouched in `taom_enlistment_strings.xml`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

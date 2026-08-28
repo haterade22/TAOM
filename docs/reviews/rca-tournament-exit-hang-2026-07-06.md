@@ -86,5 +86,6 @@ Standards/Efficiency/Completeness/Data-Flow: PASS with zero gaps (the round-1 la
 ## Referenced by
 
 - [docs/features/arena.md](../features/arena.md)
+- [docs/features/dread-aura.md](../features/dread-aura.md)
 
 <!-- backlinks-end -->

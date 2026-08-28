@@ -52,3 +52,12 @@
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | PrisonerRecruitment: no morale lost recruiting a prisoner of your own faction (same culture) or own non-Neutral alignment side — Isengard absorbing Mordor/Gundabad/Dunland troops. Covers AI + party screen + cost label in one override. See `docs/features/prisoner-recruitment.md` |
 | `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` | BannerBearers: bearers-per-formation scales with size per class (vanilla hardcodes 1) + JSON race gate. **Disabled path must `return base.X()`** — a computed "off" suppresses vanilla's own banner path. Subclass, NOT `BaseModel`-decorate. See `docs/features/banner-bearers.md` |
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
+
+<!-- backlinks-end -->

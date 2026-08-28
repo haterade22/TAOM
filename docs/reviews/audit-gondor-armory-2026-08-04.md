@@ -173,6 +173,7 @@ shadow.
 
 ## Referenced by
 
+- [docs/features/armoury-mesh-cleanup.md](../features/armoury-mesh-cleanup.md)
 - [docs/features/mesh-ref-validation.md](../features/mesh-ref-validation.md)
 
 <!-- backlinks-end -->

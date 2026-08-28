@@ -265,6 +265,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 
 ## Referenced by
 
+- [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/features/mixed-formations.md](./mixed-formations.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
