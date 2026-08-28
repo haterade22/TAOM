@@ -112,6 +112,13 @@ not cross-referenced at all.
 Not-tested: in-game appearance. Hero equipment bakes at hero creation, so this needs a game restart
 and a NEW campaign to observe.
 
+### fix(lords): Grimbold of Grimslade was female
+
+**Grimbold.** `lord_4_6` is vanilla Countess Calatild, and `tools/complete_lords_xslt.py` copied
+`is_female="true"` through when the lord was renamed. The attribute is gone, and the script gained
+a `GENDER_OVERRIDES` table so the next regeneration cannot restore it. Verified by running the
+merge: vanilla says `true`, the merge now omits it, and his wife Deorwyn stays female.
+
 ## 2026-08-27
 
 ### fix(player-switcher): nine review findings, two of them feature-breaking (#514)

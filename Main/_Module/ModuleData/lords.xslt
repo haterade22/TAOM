@@ -12368,7 +12368,6 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_6_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>

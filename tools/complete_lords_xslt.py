@@ -36,6 +36,14 @@ ATTR_ORDER = [
 # Skip main_hero (player character)
 SKIP_IDS = {'main_hero'}
 
+# Lords TAOM re-genders relative to vanilla.
+# The vanilla id is reused for a different canon character, so vanilla's
+# is_female is wrong and must not be copied through on regeneration.
+# lord_4_6 is vanilla Countess Calatild, reused as Grimbold of Grimslade.
+GENDER_OVERRIDES = {
+    'lord_4_6': None,   # None = male (attribute omitted entirely)
+}
+
 # Faction groupings for organizing output
 FACTION_SECTIONS = [
     {
@@ -274,6 +282,14 @@ def merge_lords(vanilla, xslt_data):
         attrs = {}
         for attr_name in ATTR_ORDER:
             vanilla_val = v_data['attrs'].get(attr_name)
+
+            # Forced gender: TAOM reuses some vanilla ids for a different
+            # canon character, so vanilla's is_female must never win here.
+            if attr_name == 'is_female' and lord_id in GENDER_OVERRIDES:
+                forced = GENDER_OVERRIDES[lord_id]
+                if forced is not None:
+                    attrs[attr_name] = forced
+                continue
 
             # TAOM overrides for specific attributes
             if x_data and attr_name in x_data['overrides']:
