@@ -146,7 +146,7 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_boromir_sword" />
 			<Equipment slot="Item1" id="Item.wm_boromir_shield" />
 			<Equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
@@ -158,10 +158,236 @@
 	<EquipmentRoster id="boromir_civ_equipment" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== BORHADOR ==================== -->
+
+	<EquipmentRoster id="borhador_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="borhador_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== RONDAMIR ==================== -->
+
+	<EquipmentRoster id="rondamir_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="rondamir_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== DENETHOR II ==================== -->
+
+	<EquipmentRoster id="denethor_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_fount_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_fount_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="denethor_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_fount_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_fount_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== HURIONETH ==================== -->
+
+	<EquipmentRoster id="hurioneth_bat_equipment" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_mns_fount_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_fount_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_fount_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="hurioneth_civ_equipment" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_mns_fount_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_gd_mns_fount_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_fount_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ========== REGIONAL LORD SETS (non-Dol-Amroth) ========== -->
+
+	<EquipmentRoster id="gondor_lord_lossarnach_1" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_los_noble_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_los_nob_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_los_pauld_cape_nob_lord_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_lossarnach_1_civ" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_los_noble_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_los_nob_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_los_pauld_cape_nob_lord_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_lamedon_1" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_lamedon_1_civ" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_anfalas_1" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_anfalas_1_civ" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_blackroot_1" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_vale_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_vale_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_vale_pauld_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_blackroot_1_civ" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_vale_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_vale_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_gd_vale_pauld_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_anorien_4" culture="Culture.gondor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gondor_lord_anorien_4_civ" culture="Culture.gondor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_noble_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -456,8 +682,8 @@
 			<Equipment slot="Head" id="Item.sk_gd_lon_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_lon_chest_lord_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_sere_pauld_cape_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -469,8 +695,8 @@
 			<Equipment slot="Head" id="Item.sk_gd_lon_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_lon_chest_lord_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_sere_pauld_cape_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -482,8 +708,8 @@
 			<Equipment slot="Head" id="Item.sk_gd_lon_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_gd_lon_chest_lord_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_sere_pauld_cape_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -495,8 +721,8 @@
 			<Equipment slot="Head" id="Item.sk_gd_lon_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_gd_lon_chest_lord_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_sere_pauld_cape_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -557,7 +783,7 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_gd_lin_helmet_elite_a" />
+			<Equipment slot="Head" id="Item.sk_gd_lin_helmet_lord_a" />
 			<Equipment slot="Body" id="Item.sk_gd_lin_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_lin_bracer_elite_a" />
@@ -570,7 +796,7 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
 			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_gd_lin_helmet_elite_a" />
+			<Equipment slot="Head" id="Item.sk_gd_lin_helmet_lord_a" />
 			<Equipment slot="Body" id="Item.sk_gd_lin_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_lin_bracer_elite_a" />

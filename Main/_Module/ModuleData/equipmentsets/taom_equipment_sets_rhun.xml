@@ -3,140 +3,170 @@
 
 	<!-- ==================== RHUN LORD BATTLE EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="rhun_bat_template_medium_a" culture="Culture.khuzait">
+		<EquipmentRoster id="rhun_bat_template_medium_a" culture="Culture.khuzait">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_loke_shield_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="rhun_bat_template_medium_b" culture="Culture.khuzait">
+		<EquipmentRoster id="rhun_bat_template_medium_b" culture="Culture.khuzait">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.battered_kite_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Item0" id="Item.sm_rh_drag_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_drag_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_drag_cape_plate_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="rhun_bat_template_medium_c" culture="Culture.khuzait">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_lord_a" />
+			<Equipment slot="Body" id="Item.sk_dg_khml_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_dg_khml_cape_plate_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="rhun_bat_template_medium_d" culture="Culture.khuzait">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_loke_shield_cav_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_cav_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="rhun_bat_template_medium_c" culture="Culture.khuzait">
+		<EquipmentRoster id="rhun_bat_template_medium_e" culture="Culture.khuzait">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="rhun_bat_template_medium_d" culture="Culture.khuzait">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.battered_kite_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="rhun_bat_template_medium_e" culture="Culture.khuzait">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Item0" id="Item.sm_rh_drag_1h_mace_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_drag_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_drag_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<!-- ==================== RHUN LORD CIVILIAN EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="rhun_civ_template_a" culture="Culture.khuzait">
+		<EquipmentRoster id="rhun_civ_template_a" culture="Culture.khuzait">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_loke_shield_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="rhun_civ_template_b" culture="Culture.khuzait">
+		<EquipmentRoster id="rhun_civ_template_b" culture="Culture.khuzait">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.battered_kite_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
+			<Equipment slot="Item0" id="Item.sm_rh_drag_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_drag_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_drag_cape_plate_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="rhun_civ_template_c" culture="Culture.khuzait">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_lord_a" />
+			<Equipment slot="Body" id="Item.sk_dg_khml_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_dg_khml_cape_plate_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="rhun_civ_template_d" culture="Culture.khuzait">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_axe_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_loke_shield_cav_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_cav_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="rhun_civ_template_c" culture="Culture.khuzait">
+		<EquipmentRoster id="rhun_civ_template_e" culture="Culture.khuzait">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterlingwarriors01_torso" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterling_boots" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Item0" id="Item.sm_rh_drag_1h_mace_a" />
+			<Equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_lord_a" />
+			<Equipment slot="Body" id="Item.sk_rh_drag_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_drag_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="rhun_civ_template_d" culture="Culture.khuzait">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.battered_kite_shield" />
-			<Equipment slot="Head" id="Item.easterling_head" />
-			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+	<EquipmentRoster id="rhun_bat_template_medium_f" culture="Culture.khuzait">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
+			<Equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_lord_a" />
+			<Equipment slot="Body" id="Item.sk_dg_khml_scalemail_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="rhun_civ_template_e" culture="Culture.khuzait">
+	<EquipmentRoster id="rhun_civ_template_f" culture="Culture.khuzait">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
-			<Equipment slot="Body" id="Item.easterling_torso" />
-			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
-			<Equipment slot="Gloves" id="Item.easterling_glove" />
-			<Equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
+			<Equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_lord_a" />
+			<Equipment slot="Body" id="Item.sk_dg_khml_scalemail_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>

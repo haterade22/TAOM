@@ -3,64 +3,68 @@
 
 	<!-- ==================== ISENGARD LORD BATTLE EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="isengard_bat_template_medium_a" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_bat_template_medium_a" culture="Culture.isengard">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
 			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_bat_template_medium_b" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_bat_template_medium_b" culture="Culture.isengard">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_br1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_bat_template_medium_c" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_bat_template_medium_c" culture="Culture.isengard">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.isengard_pike_a" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_br2" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_bat_template_medium_d" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_bat_template_medium_d" culture="Culture.isengard">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.isengard_pike_b" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_light_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_captain_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_bat_template_medium_e" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_bat_template_medium_e" culture="Culture.isengard">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.isengard_pike_b" />
-			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Item0" id="Item.isengard_berserker_sword_2h" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_bers_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -68,64 +72,96 @@
 
 	<!-- ==================== ISENGARD LORD CIVILIAN EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="isengard_civ_template_a" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_civ_template_a" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
 			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_civ_template_b" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_civ_template_b" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
-			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_br1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_civ_template_c" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_civ_template_c" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.isengard_pike_a" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_gloves_a1" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_br2" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_civ_template_d" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_civ_template_d" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.isengard_pike_b" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_light_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_captain_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="isengard_civ_template_e" culture="Culture.isengard">
+		<EquipmentRoster id="isengard_civ_template_e" culture="Culture.isengard">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.isengard_pike_b" />
-			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-			<Equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
-			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			<Equipment slot="Item0" id="Item.isengard_berserker_sword_2h" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_bers_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="isengard_bat_template_medium_f" culture="Culture.isengard">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_nazg_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="isengard_civ_template_f" culture="Culture.isengard">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_nazg_ar1" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>

@@ -1,6 +1,116 @@
-﻿# CHANGELOG — TAOM (Tales From the Age of Men)
+﻿﻿# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
+
+## 2026-08-28
+
+### fix(lords): wrong armour on named lords across eight cultures
+
+Player-reported: Borhador and Rondamir were wearing the chestplate that reads as Boromir's
+while Boromir wore a different one, and Denethor and Hurioneth were dressed as Dol Amroth Swan
+Knights. The pass grew to cover every culture's lord rosters.
+
+**Gondor.** Boromir takes back `sk_gd_osg_inf_chest_elite_a` (Osgiliath Elite); Borhador and
+Rondamir move to `sk_gd_osg_inf_chest_heavy_b`. Both had been sharing region rosters with 4 and
+11 other lords, so each got a forked named roster rather than an in-place edit that would have
+re-armoured everyone. Denethor and Hurioneth move onto Fountain Guard Elite with their own
+rosters, losing the swan shield with it.
+
+**The swan set was being used as a generic lord slot.** 28 lords wore the four
+`gondor_lord_dolamroth_*` rosters and only 9 were of Dol Amroth. The other 17 moved to armour
+matching the region named in their own bio: Baranor to Lossarnach, Thingol and Balatar and Narmir
+to Lamedon, Nimriel and Orlathiel and Barandil to Anfalas, Duinhir's house to the Blackroot Vale.
+Five new regional lord rosters carry them. Imrahil's kin keep the swan armour.
+
+**Rohan.** All lords now wear Amorcon's `roh_nbl_*` noble kit, weapons and mounts untouched.
+Done as four roster edits rather than ~80 lord edits, since `rohan_bat_template_medium_a` to `_d`
+are referenced by nothing outside the two lord files.
+
+**Two bugs found while doing it.** Eomer's `eomer_bat_equipment` never reached the game: his
+`lords.xslt` template strips and replaces the `<Equipments>` block that `characters/lords.xml`
+sets, and the XSLT wins. 13 other Rohan lords carry the same silent override. Separately, complete
+named sets for Theodred and Erkenbrand were shipping in the Armory with zero references; both are
+now wired up.
+**Gondor lord tier ladder.** Named-lord slots now climb lord > elite > heavy. The region is read
+per slot from the item already there, so a roster that deliberately borrows another region's look
+keeps it and simply climbs inside that family, and the pass is upgrade-only so it can never
+downgrade a slot. Ten upgrades across six rosters: Lond-Galen's borrowed Serelond bracers and
+greaves reach `_lord_a`, and Linhir 3 reaches `sk_gd_lin_helmet_lord_a`. The Anorien rosters keep
+`sk_gd_osg_inf_chest_elite_a` because Anorien's own ceiling is heavy and tier wins there.
+Denethor's kit is hand-specified and exempt: Ithil Guard helmet, Fountain Guard chest, Fountain
+Guard cape, Anorien noble elite bracers and greaves.
+
+**Dwarves.** The 35 non-Dain lords alternate between an Iron Hills Red and an Erebor Gold and Gray
+set built from the `sk_dwarf_dain_*` pieces, across the five `erebor_*` templates. No roster gained
+a mount (dwarves never ride), and the spear roster carries a sidearm instead of a shield so it
+cannot hit the polearm `requires_no_shield` trap. Dain keeps his crown and unique kit.
+
+**Gundabad.** All 100 lords move onto the uruk lord kit: `chest_lord_a` to `_f`, the eight
+`helmet_elite_a` to `_h`, the four caped elite pauldrons, and the elite bracers and boots. The
+template set grew from five rosters to eight so every helmet in the range gets used, and the lords
+were redistributed round-robin across all eight (13/13/13/13/12/12/12/12). Rosters `a` to `e` keep
+the weapons they already had. The spear roster carries a sidearm rather than a shield, for the same
+polearm reason as the dwarves. There is no `sk_gb_uruk_pauldron_lord_*` line in the Armory; the
+shoulder request resolved to `sk_gb_uruk_pauldron_cape_elite_a` to `_d`.
+
+**Dol Guldur.** All 126 lords move onto the uruk lord kit: `helmet_lord_a` to `_h`,
+`chest_elite_a` to `_f`, `pauldron_elite_cape_a` to `_f`, `bracer_elite_a` to `_j`, and
+`boots_elite_a` to `_f`. The template set grew from five rosters to ten, which is what it takes to
+use all ten bracers, and the lords were redistributed round-robin across them. Rosters `a` to `e`
+keep the weapons they already had. The two-handed mace roster carries no shield and the halberd
+roster carries a sidearm instead of one. Khamul the Easterling is untouched: he has his own named
+roster and is the one Dol Guldur lord defined in `lords.xslt` rather than `characters/lords.xml`.
+
+**Isengard.** All 45 lords move onto the red uruk kit: the six `ar`/`br` helmets (Command VI,
+VIII and IX, Captain V, Berserker V, Nazg V), `plate_elite_a3`/`b3`, `pauldron_heavy_br2`/`br3`,
+`bracer_elite_ar2`/`br2`, and `greaves_heavy_ar2`/`ar3`. They had been stuck on `plate_light` and
+`chainmail` tier 2 while the elite plate shipped unused. The template set grew from five rosters to
+six, one per red helmet, and the lords were redistributed across them.
+
+**Isengard rosters gained a Cape slot.** No Isengard roster had a shoulder at all, so the pauldrons
+required adding the slot rather than repointing an existing one.
+
+**Rhun.** All 44 living lords move onto lord-tier kit, split across the culture's three armour
+families: `sk_rh_loke` (serpent), `sk_rh_drag` (dragon) and `sk_dg_khml` (Khamul's Easterling set,
+which the Rhun troop tree already draws on). Six rosters, two per family. Head and Body take the
+lord tier, Leg takes elite and Cape and Gloves take heavy, because those are the authored ceilings:
+no Rhun family has a lord or elite Cape or Gloves at all. Each roster also drops its vanilla
+Calradian weapons (`aserai_sword_3_t3`, `battered_kite_shield`, `desert_round_shield`) for its own
+family's sword, axe, mace and shield. The four `dead_lord_6_*` entries carry no `<Equipments>` block
+and were left alone.
+
+**Dale.** Every item on every Dale lord was vanilla Calradian Sturgian while a full authored Dale
+set shipped unused. All 53 lords with an equipment block now wear the 04 tier, the highest
+authored: eight rosters covering archer, chivalry, infantry and Lake-town mariner in both the a04
+and b04 variants. They also gain Dale shields and, on the two archer rosters, the Dale longbow and
+recurve bow.
+
+Two Armory quirks are load-bearing here and must not be tidied. The chest items spell it
+`chivalry` while the helmet, shoulder, gauntlet and boot items spell it `chivlary`, and every slot
+spells infantry `infrantry`. There is also no mariner Cape, so the two mariner rosters borrow the
+archer shoulder.
+
+Melee stays vanilla Sturgian because Dale has no authored melee weapon: the `wm_dale_ws_*` ids are
+`CraftingPiece` entries feeding the smithy templates, not equippable items. Dale's only equippable
+weapons are its shields and two bows.
+
+**Rhun barding.** The dragon and Khamul mounted sets take `sk_rh_khml_barding_a` at the top tier
+and `sk_rh_khml_barding_b` elsewhere: the four dragon and Khamul lord rosters and
+`darkhun_cultist_knight` on the former, the other eight mounted dragon/Khamul troops on the latter.
+**These two items do not exist in LOTRLOME_Armory yet**, so `validate_moduledata` reports 17
+`BROKEN_ITEM_REF` errors and those mounts spawn unbarded until the Armory update lands. Committed
+deliberately and knowingly ahead of that update.
+
+Civilian rosters were updated alongside the battle ones for Rohan and Erebor, since they are
+byte-copies and would otherwise leave lords in their old armour inside settlements.
+
+Verified: `validate_moduledata` PASS, `validate_all_troop_refs` PASS, `audit_polearm_shield_parity`
+PASS, 7,680 tests green. A new scratch check confirmed all 290 referenced roster ids resolve, which
+the shipped validator does not cover: `<EquipmentSet id>` carries no `Item.`-style prefix and so is
+not cross-referenced at all.
+
+Not-tested: in-game appearance. Hero equipment bakes at hero creation, so this needs a game restart
+and a NEW campaign to observe.
 
 ## 2026-08-27
 

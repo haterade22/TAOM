@@ -759,7 +759,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t2_khuzait_horse" />
-            <equipment slot="HorseHarness" id="Item.steppe_harness" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -2957,7 +2957,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3113,7 +3113,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -3319,7 +3319,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -4563,7 +4563,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
 
@@ -4641,7 +4641,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
 
@@ -4719,7 +4719,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
 
@@ -4795,7 +4795,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
         </Equipments>
     </NPCCharacter>
 
@@ -4833,7 +4833,7 @@
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
-            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_a" />
         </Equipments>
     </NPCCharacter>
 

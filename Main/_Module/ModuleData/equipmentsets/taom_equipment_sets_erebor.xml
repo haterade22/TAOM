@@ -3,125 +3,123 @@
 
 	<!-- ==================== EREBOR LORD BATTLE EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="erebor_bat_template_medium_a" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_bat_template_medium_a" culture="Culture.erebor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_iron_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_iron_shield_b_gold" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_bat_template_medium_b" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_bat_template_medium_b" culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_b" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_b" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_b" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_b" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_b" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_tower_e" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_c" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_d" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_bat_template_medium_c" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_bat_template_medium_c" culture="Culture.erebor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_c" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_c" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_c" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_c" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_c" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_c" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_iron_hammer_a" />
+			<Equipment slot="Item1" id="Item.sm_iron_shield_tower_c" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_d" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_bat_template_medium_d" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_bat_template_medium_d" culture="Culture.erebor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_d" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_d" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_a" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_d" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_d" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_axe_2h_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_bat_template_medium_e" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_bat_template_medium_e" culture="Culture.erebor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_e" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_med_a" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_b" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_b" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_a" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_iron_sword_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_e" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<!-- ==================== EREBOR LORD CIVILIAN EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="erebor_civ_template_default_a" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_civ_template_default_a" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_iron_sword_a" />
+			<Equipment slot="Item1" id="Item.sm_iron_shield_b_gold" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_civ_template_default_b" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_civ_template_default_b" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_b" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_b" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_b" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_b" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_b" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_b" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_tower_e" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_c" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_d" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_civ_template_default_c" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_civ_template_default_c" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_c" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_c" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_c" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_c" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_c" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_c" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_iron_hammer_a" />
+			<Equipment slot="Item1" id="Item.sm_iron_shield_tower_c" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_d" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_civ_template_default_d" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_civ_template_default_d" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_d" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_d" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_a" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_d" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_d" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_axe_2h_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="erebor_civ_template_default_e" culture="Culture.erebor">
+		<EquipmentRoster id="erebor_civ_template_default_e" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_e" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_med_a" />
-			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_elite_b" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_b" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_a" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_iron_sword_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_e" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

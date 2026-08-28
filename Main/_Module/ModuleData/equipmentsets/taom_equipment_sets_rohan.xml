@@ -7,11 +7,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -21,11 +21,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a02_gsw" />
-			<Equipment slot="Head" id="Item.cts_rohan_helmet3" />
-			<Equipment slot="Body" id="Item.cts_rohan_armor1" />
-			<Equipment slot="Cape" id="Item.cts_rohan_cape3" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
-			<Equipment slot="Leg" id="Item.cts_rohan_boots1" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -35,11 +35,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a03_gsw" />
-			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
-			<Equipment slot="Body" id="Item.cts_rohan_armor2" />
-			<Equipment slot="Cape" id="Item.cts_rohan_cape2" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
-			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -48,11 +48,11 @@
 	<EquipmentRoster id="rohan_bat_template_medium_d" culture="Culture.vlandia">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.vlandia_sword_5_t5" />
-			<Equipment slot="Head" id="Item.cts_rohan_helmet3a" />
-			<Equipment slot="Body" id="Item.cts_rohan_armor3" />
-			<Equipment slot="Cape" id="Item.roh_nbl_shldr_c" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_armguard3" />
-			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -77,11 +77,11 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -91,11 +91,11 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a02_gsw" />
-			<Equipment slot="Head" id="Item.cts_rohan_helmet3" />
-			<Equipment slot="Body" id="Item.cts_rohan_armor1" />
-			<Equipment slot="Cape" id="Item.cts_rohan_cape3" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
-			<Equipment slot="Leg" id="Item.cts_rohan_boots1" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -105,11 +105,11 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a03_gsw" />
-			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
-			<Equipment slot="Body" id="Item.cts_rohan_armor2" />
-			<Equipment slot="Cape" id="Item.cts_rohan_cape2" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
-			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -118,11 +118,11 @@
 	<EquipmentRoster id="rohan_civ_template_default_d" culture="Culture.vlandia">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_5_t5" />
-			<Equipment slot="Head" id="Item.cts_rohan_helmet3a" />
-			<Equipment slot="Body" id="Item.cts_rohan_armor3" />
-			<Equipment slot="Cape" id="Item.roh_nbl_shldr_c" />
-			<Equipment slot="Gloves" id="Item.cts_rohan_armguard3" />
-			<Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
+			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
+			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -212,6 +212,58 @@
 			<Equipment slot="Cape" id="Item.theoden_shoulder" />
 			<Equipment slot="Gloves" id="Item.theoden_glove" />
 			<Equipment slot="Leg" id="Item.theoden_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== THEODRED ==================== -->
+
+	<EquipmentRoster id="theodred_bat_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+			<Equipment slot="Head" id="Item.theodred_helmet" />
+			<Equipment slot="Body" id="Item.theodred_armour" />
+			<Equipment slot="Cape" id="Item.theodred_pauldrons" />
+			<Equipment slot="Gloves" id="Item.theodred_bracers" />
+			<Equipment slot="Leg" id="Item.theodred_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="theodred_civ_equipment" culture="Culture.vlandia">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.theodred_helmet" />
+			<Equipment slot="Body" id="Item.theodred_armour" />
+			<Equipment slot="Cape" id="Item.theodred_pauldrons" />
+			<Equipment slot="Gloves" id="Item.theodred_bracers" />
+			<Equipment slot="Leg" id="Item.theodred_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== ERKENBRAND ==================== -->
+
+	<EquipmentRoster id="erkenbrand_bat_equipment" culture="Culture.vlandia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
+			<Equipment slot="Item1" id="Item.wm_rohan_shield_a02_gsw" />
+			<Equipment slot="Head" id="Item.erkenbrand_helmet" />
+			<Equipment slot="Body" id="Item.erkenbrand_torso" />
+			<Equipment slot="Cape" id="Item.erkenbrand_shoulder" />
+			<Equipment slot="Gloves" id="Item.erkenbrand_glove" />
+			<Equipment slot="Leg" id="Item.erkenbrand_boots" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="erkenbrand_civ_equipment" culture="Culture.vlandia">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.erkenbrand_helmet" />
+			<Equipment slot="Body" id="Item.erkenbrand_torso" />
+			<Equipment slot="Cape" id="Item.erkenbrand_shoulder" />
+			<Equipment slot="Gloves" id="Item.erkenbrand_glove" />
+			<Equipment slot="Leg" id="Item.erkenbrand_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

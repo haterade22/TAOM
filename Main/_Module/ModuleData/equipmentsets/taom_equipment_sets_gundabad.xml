@@ -3,55 +3,13 @@
 
 	<!-- ==================== GUNDABAD LORD BATTLE EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="gundabad_bat_template_medium_a" culture="Culture.gundabad">
+		<EquipmentRoster id="gundabad_bat_template_medium_a" culture="Culture.gundabad">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
 			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="gundabad_bat_template_medium_b" culture="Culture.gundabad">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_b" />
-			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
-			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="gundabad_bat_template_medium_c" culture="Culture.gundabad">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_c" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
-			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_c" />
-			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="gundabad_bat_template_medium_d" culture="Culture.gundabad">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
 			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_a" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
@@ -59,13 +17,55 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="gundabad_bat_template_medium_e" culture="Culture.gundabad">
+		<EquipmentRoster id="gundabad_bat_template_medium_b" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="gundabad_bat_template_medium_c" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_c" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_c" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="gundabad_bat_template_medium_d" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_d" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="gundabad_bat_template_medium_e" culture="Culture.gundabad">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b02" />
 			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_b" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_b" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_b" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_e" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_e" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
@@ -75,55 +75,13 @@
 
 	<!-- ==================== GUNDABAD LORD CIVILIAN EQUIPMENT ==================== -->
 
-	<EquipmentRoster id="gundabad_civ_template_default_a" culture="Culture.gundabad">
+		<EquipmentRoster id="gundabad_civ_template_default_a" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
 			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="gundabad_civ_template_default_b" culture="Culture.gundabad">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_b" />
-			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
-			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="gundabad_civ_template_default_c" culture="Culture.gundabad">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_c" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
-			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_c" />
-			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="gundabad_civ_template_default_d" culture="Culture.gundabad">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
 			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_a" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
@@ -131,15 +89,141 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="gundabad_civ_template_default_e" culture="Culture.gundabad">
+		<EquipmentRoster id="gundabad_civ_template_default_b" culture="Culture.gundabad">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_b" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="gundabad_civ_template_default_c" culture="Culture.gundabad">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_c" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_c" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="gundabad_civ_template_default_d" culture="Culture.gundabad">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_d" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="gundabad_civ_template_default_e" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b02" />
 			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_b" />
-			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_b" />
-			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_b" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_e" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_e" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
 			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gundabad_bat_template_medium_f" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_f" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_f" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gundabad_civ_template_default_f" culture="Culture.gundabad">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_f" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_f" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gundabad_bat_template_medium_g" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_g" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gundabad_civ_template_default_g" culture="Culture.gundabad">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_g" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gundabad_bat_template_medium_h" culture="Culture.gundabad">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_sword_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_h" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_brown" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="gundabad_civ_template_default_h" culture="Culture.gundabad">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_sword_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_h" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_b" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_d" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_b" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>

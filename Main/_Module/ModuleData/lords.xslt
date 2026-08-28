@@ -387,8 +387,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_1" />
-                <EquipmentSet id="gondor_lord_dolamroth_1_civ" equipmentType="Civilian" />
+                <EquipmentSet id="denethor_bat_equipment" />
+                <EquipmentSet id="denethor_civ_equipment" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -442,8 +442,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_2" />
-                <EquipmentSet id="gondor_lord_dolamroth_2_civ" equipmentType="Civilian" />
+                <EquipmentSet id="hurioneth_bat_equipment" />
+                <EquipmentSet id="hurioneth_civ_equipment" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3052,8 +3052,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_anorien_2" />
-                <EquipmentSet id="gondor_lord_anorien_2_civ" equipmentType="Civilian" />
+                <EquipmentSet id="borhador_bat_equipment" />
+                <EquipmentSet id="borhador_civ_equipment" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3214,8 +3214,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_1" />
-                <EquipmentSet id="gondor_lord_dolamroth_1_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_lossarnach_1" />
+                <EquipmentSet id="gondor_lord_lossarnach_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3430,8 +3430,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_2" />
-                <EquipmentSet id="gondor_lord_dolamroth_2_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_lamedon_1" />
+                <EquipmentSet id="gondor_lord_lamedon_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3484,8 +3484,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_3" />
-                <EquipmentSet id="gondor_lord_dolamroth_3_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_3" />
+                <EquipmentSet id="gondor_lord_arndir_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5462,8 +5462,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_4" />
-                <EquipmentSet id="gondor_lord_dolamroth_4_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_4" />
+                <EquipmentSet id="gondor_lord_anorien_4_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7172,8 +7172,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_f" />
+                <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7226,8 +7226,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_g" />
+                <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7280,8 +7280,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_h" />
+                <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7334,8 +7334,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7389,8 +7389,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7444,8 +7444,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7498,8 +7498,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7553,8 +7553,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7607,8 +7607,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_f" />
+                <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7661,8 +7661,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_g" />
+                <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7715,8 +7715,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_h" />
+                <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7769,8 +7769,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7823,8 +7823,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7877,8 +7877,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7931,8 +7931,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -7985,8 +7985,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8039,8 +8039,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_f" />
+                <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8093,8 +8093,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_g" />
+                <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8147,8 +8147,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_h" />
+                <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8201,8 +8201,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8255,8 +8255,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8310,8 +8310,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8365,8 +8365,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8420,8 +8420,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8475,8 +8475,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_f" />
+                <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8530,8 +8530,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_g" />
+                <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8585,8 +8585,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_h" />
+                <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8640,8 +8640,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8695,8 +8695,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8750,8 +8750,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8805,8 +8805,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8860,8 +8860,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8915,8 +8915,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_f" />
+                <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -8970,8 +8970,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_g" />
+                <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -9025,8 +9025,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_h" />
+                <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -9355,8 +9355,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_f" />
+                <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -9410,8 +9410,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_g" />
+                <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -9465,8 +9465,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_h" />
+                <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -12460,8 +12460,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rohan_bat_template_medium_a" />
-                <EquipmentSet id="rohan_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="theodred_bat_equipment" />
+                <EquipmentSet id="theodred_civ_equipment" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -13057,8 +13057,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rohan_bat_template_medium_b" />
-                <EquipmentSet id="rohan_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="erkenbrand_bat_equipment" />
+                <EquipmentSet id="erkenbrand_civ_equipment" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -13815,8 +13815,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rohan_bat_template_medium_a" />
-                <EquipmentSet id="rohan_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="eomer_bat_equipment" />
+                <EquipmentSet id="eomer_civ_equipment" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17394,8 +17394,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17426,8 +17426,8 @@
                 <Trait id="Generosity" value="-1"/>
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17480,8 +17480,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17533,8 +17533,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17587,8 +17587,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_e" />
-                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17640,8 +17640,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17694,8 +17694,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17749,8 +17749,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17804,8 +17804,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17859,8 +17859,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_e" />
-                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17912,8 +17912,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -17966,8 +17966,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18020,8 +18020,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18074,8 +18074,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18128,8 +18128,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_e" />
-                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18182,8 +18182,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18236,8 +18236,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18290,8 +18290,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18344,8 +18344,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18398,8 +18398,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_e" />
-                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18452,8 +18452,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18507,8 +18507,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18562,8 +18562,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18617,8 +18617,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -18672,8 +18672,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_e" />
-                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19002,8 +19002,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19057,8 +19057,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19112,8 +19112,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19167,8 +19167,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_c" />
+                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19222,8 +19222,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_e" />
-                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_d" />
+                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19277,8 +19277,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_a" />
-                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_e" />
+                <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19332,8 +19332,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_b" />
-                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_f" />
+                <EquipmentSet id="rhun_civ_template_f" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19387,8 +19387,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_c" />
-                <EquipmentSet id="rhun_civ_template_c" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_a" />
+                <EquipmentSet id="rhun_civ_template_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -19442,8 +19442,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="rhun_bat_template_medium_d" />
-                <EquipmentSet id="rhun_civ_template_d" equipmentType="Civilian" />
+                <EquipmentSet id="rhun_bat_template_medium_b" />
+                <EquipmentSet id="rhun_civ_template_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20527,8 +20527,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_d" />
-                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_a" />
+                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20582,8 +20582,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_e" />
-                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_b" />
+                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20637,8 +20637,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_a" />
-                <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_c" />
+                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20692,8 +20692,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_b" />
-                <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_d" />
+                <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -20747,8 +20747,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="dale_bat_template_medium_c" />
-                <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dale_bat_template_medium_e" />
+                <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21132,8 +21132,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_1" />
-                <EquipmentSet id="gondor_lord_dolamroth_1_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anfalas_1" />
+                <EquipmentSet id="gondor_lord_anfalas_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21187,8 +21187,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_2" />
-                <EquipmentSet id="gondor_lord_dolamroth_2_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_blackroot_1" />
+                <EquipmentSet id="gondor_lord_blackroot_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21242,8 +21242,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_3" />
-                <EquipmentSet id="gondor_lord_dolamroth_3_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_blackroot_1" />
+                <EquipmentSet id="gondor_lord_blackroot_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21297,8 +21297,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_lord_dolamroth_4" />
-                <EquipmentSet id="gondor_lord_dolamroth_4_civ" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_blackroot_1" />
+                <EquipmentSet id="gondor_lord_blackroot_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
