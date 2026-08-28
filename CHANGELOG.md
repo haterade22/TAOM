@@ -4,6 +4,49 @@
 
 ## 2026-08-28
 
+### feat(player-switcher): play as an existing lord, confirmed in a campaign (#514)
+
+The Player Switcher from LOTRAOM is back, reimplemented for 1.4.8. At the character creation face
+generator you pick an existing lord of your culture and play the campaign as them: their face,
+gear, skills, clan, fiefs and kingdom. The character you build is set aside.
+
+The design is one number. The handover runs from a second `ICharacterCreationContentHandler` at
+priority **1100**, above TAOM's own 1050, so every destructive step in `ApplyFinalEffects` and every
+TAOM grant has already landed on the throwaway creation hero and clan that the handover then
+deletes. The log now proves it: race, career and starting equipment are assigned to `main_hero`,
+and only then does `player is now 'lord_I1_1' via AssumeIdentity` fire. Nothing inside the 41-file
+CharacterCreation module needed to change.
+
+**The bug that made it look broken in game.** `FaceGenVM.SetBodyProperties` never applies the
+post-decode clamp the engine's own `BodyGenerator.InitBodyGenerator` applies
+(`FaceGenerationParams.SetRaceGenderAndAdjustParams`, which bounds `CurrentVoice` to the target
+race). A lord whose body key encodes a voice index his new race lacks makes `Refresh` throw inside
+`GetVoiceUIIndex`, partway, before `UpdateFace` runs, and `UpdateFace` calls `RefreshFace`, the only
+assignment of `BodyGenerator.Race` outside the constructor. The face changed and the race did not.
+On Isengard every uruk_hai lord failed and the single uruk lord worked, which is why it presented as
+culture-specific. The preview now applies the engine's own clamp and drives `Refresh` directly.
+
+**Fifteen review findings, across five parallel agents and two Codex passes.** Two would have
+shipped a visibly broken feature: the row VM inherited a vanilla constructor that dereferences its
+`MobileParty` argument, so the first partyless wanderer made the entire panel silently fail to
+appear; and my own first fix for the race bug was wrong, retrying a call whose other branch throws
+identically. Neither was findable by any offline gate. Full account:
+`docs/reviews/rca-player-switcher-2026-08-27.md`.
+
+Sauron and the Nazgul are opt-in and default off, because `Patch76` defers to vanilla for
+`Hero.MainHero` and a player-controlled dark lord loses capture immunity.
+
+**Known limitation:** the picker does not filter `HeroState`, so taking over a prisoner would begin
+the campaign in captivity. Reachability against shipped data was never established.
+
+**Not yet exercised in game:** the character and clan screens after a takeover (the
+`CharacterDeveloperVM` crash the reflection write exists to prevent), wanderer adoption, the
+kingdom-join offer, the lore-locked gate, and race surviving a save cycle.
+
+Save-compat: none. No `SaveableTypeDefiner`, no new save keys; runs only during the character
+creation of a new campaign.
+
+
 ### feat(erebor): a war ram for the Dwarves
 
 TAOM shipped a `ram_rider` career with nothing to ride. `taom_careers.xml:637` has had the ranks
