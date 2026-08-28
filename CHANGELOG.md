@@ -4,6 +4,26 @@
 
 ## 2026-08-28
 
+### fix(rhun): the Khamul barding items now exist
+
+The lord armour pass pointed 8 Rhun lord rosters and 9 mounted dragon/Khamul troops at
+`sk_rh_khml_barding_a` and `_b` before those items existed, leaving 17 `BROKEN_ITEM_REF` errors
+and unbarded mounts. The assets were never missing:
+`Assets/horse_armor/Rhun/sk_rh_khml_barding_a_geo.tpac` carries BOTH meshes with full LODs, plus
+body and head materials in two colourways. Nothing had ever declared them as items.
+
+**The item definitions live in LOTRLOME_Armory, not here.** Two `HorseHarness` items were added to
+`LOTRLOME_items/LOTRAOM_horses.xml` with display names in all twelve
+`Languages/<L>/loc_LOTRAOM_horses.xml`. `body_armor` puts the top variant above Kataphrakt (55
+against 50) and holds the common variant level with it at 50, so the eight troops moved onto `_b`
+keep the protection they had. That change belongs to the Armory repo and has to be committed there.
+
+Nothing was needed on the TAOM side: the roster and troop references were already correct and
+committed. `tools/validate_moduledata.py` is the standing gate, since it fails with those same 17
+`BROKEN_ITEM_REF` errors the moment the items go missing, which is how the gap surfaced.
+
+`validate_moduledata` now PASSES: 17 errors to 0.
+
 ### fix(lords): wrong armour on named lords across eight cultures
 
 Player-reported: Borhador and Rondamir were wearing the chestplate that reads as Boromir's
