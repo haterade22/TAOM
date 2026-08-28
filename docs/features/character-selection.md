@@ -1,5 +1,11 @@
 # Character Selection
 
+> **Used by the Player Switcher (#514).** The transpiler below is what makes a non-human lord's
+> character-creation preview render with a race-appropriate action set instead of a bind pose, so
+> the picker in [player-switcher.md](player-switcher.md) depends on it staying alive. Do not retire
+> it without checking that feature first.
+
+
 ## Overview
 Character Selection fixes the character body generator view so that the face-generation preview uses the correct action set for the character's race. Without this patch, all races default to the human facegen animation set, causing visual errors or crashes in the character customisation screen for non-human player races.
 

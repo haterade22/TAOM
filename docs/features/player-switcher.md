@@ -1,0 +1,310 @@
+# Player Switcher
+
+Issue [#514](https://github.com/haterade22/TAOM/issues/514). Branch `feat/player-switcher`.
+
+## Overview
+
+At the character creation face generator, a panel lists the existing lords of the culture you
+picked, in three groups: the ruling house, the clan leaders, and the wanderers. Choose one and you
+play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The
+character you built is set aside.
+
+This is a reimplementation of a feature LOTRAOM shipped on Bannerlord 1.2.12. Two of its assets
+crossed into this repo years ago and sat unused: the picker prefab
+(`Main/_Module/GUI/Prefabs/FacGen/PreBuildCharacterSelection.xml`) and the race-aware face
+generator transpiler (`Main/Features/CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs`,
+which is what makes a non-human preview render animated rather than in a bind pose).
+
+## Why this is a reimplementation and not a port
+
+The old 15-file feature does not build on 1.4.8. Three of its seams no longer bind:
+
+- `BodyGeneratorView`'s constructor gained a 13th parameter (`FaceGenHistory`). Harmony matches
+  constructor overloads by exact type array, so the old 12-type attribute matches nothing and
+  throws at `PatchCategory` time, which bricks startup.
+- `CharacterCreationContentBase`, `SandboxCharacterCreationContent` and
+  `StoryModeCharacterCreationContent` are gone. Stage flow moved to `CharacterCreationManager`,
+  and per-mode content subclassing became a priority-ordered `ICharacterCreationContentHandler`
+  registry.
+- `ChangeKingdomAction.ApplyByJoinToKingdom`'s third positional slot is now a `CampaignTime`, so
+  the old `ApplyByJoinToKingdom(clan, kingdom, true)` does not compile.
+
+Roughly half the rest duplicates capability TAOM already ships better, and three pieces were
+deliberately dropped. See "What was dropped" below.
+
+## The design in one number: handler priority 1100
+
+`PlayerSwitchContentHandler` registers at 1100. Vanilla's core handler is 800, StoryMode 900,
+NavalDLC 1000, and TAOM's own `CharacterCreationRegistrationBehavior` is 1050.
+
+`CharacterCreationManager.ApplyFinalEffects` runs, in order: `Clan.PlayerClan.Renown = 0f`, then
+`CharacterCreationContent.ApplyCulture` (which rewrites `Hero.MainHero.Culture`,
+`Clan.PlayerClan.Culture`, calls `ResetPlayerHomeAndFactionMidSettlement()` and rewrites
+`BornSettlement`), then the selected narrative options, then the trait XP update, then the culture
+start-point teleport, then the handler loop in priority order.
+
+At 1100, every one of those effects and every TAOM grant (`SetPlayerRace`, `AssignCareer`, startup
+gold, starting equipment) has already landed on the **throwaway** character-creation hero and the
+**throwaway** `player_faction` clan, both of which the handover deletes moments later. The lord
+being taken over is never touched by any of it.
+
+That is why this feature needs:
+
+- no `BornSettlement` repair,
+- no party reposition,
+- no grant suppression,
+- and **zero edits inside the 41-file `Main/Features/CharacterCreation/` module**.
+
+**Registering any lower would apply all of it to a real lore clan.** Below 1050, Erebor would start
+at renown zero with a relocated home settlement, and `SetPlayerRace` would overwrite Sauron's
+`race="sauron"` with a culture default, which `RacePersistenceService` would then faithfully
+persist forever.
+
+`PlayerSwitchRegistrationBehavior` wraps its registration in try/catch. `_handlers` is a
+`SortedList<int, ICharacterCreationContentHandler>` and registration is a plain `Add`, so a
+duplicate priority throws `ArgumentException` from inside `OnCharacterCreationInitializedEvent`
+dispatch, which would take character creation down entirely. Degrading to "the switcher is
+unavailable" is always the better trade.
+
+## The handover, and why its order is load-bearing
+
+`HeroSwitchService.Execute` runs the sequence below. `HeroSwitchServiceTests` pins it with
+`Received.InOrder`, because two of the orderings are invisible at the call site and silently
+corrupt a save if reversed.
+
+**Takeover (`AssumeIdentity`, the target already has a clan):**
+
+1. `Capture` a `SwitchTicket`: original hero id, original clan id, original party id, target clan
+   id, career id. Must be first; after the swap, `Hero.MainHero` and `Clan.PlayerClan` no longer
+   describe the character the player built.
+2. `ApplyPlayerCharacter` calls `ChangePlayerCharacterAction.Apply`.
+3. `ReassignPlayerClan` writes `Campaign.PlayerDefaultFaction`. **This must precede step 6.**
+4. Optional gold transfer.
+5. Career re-key, then `MarkClanAndKingdomKnown`.
+6. `RemoveOriginalHero`. **This must follow step 2.**
+7. `ClearPendingNotifications`.
+
+**Why 3 before 6.** `KillCharacterAction.ApplyInternal` line 133 guards clan destruction on
+`victim.Clan != Clan.PlayerClan`. Once the player clan pointer has moved to the target clan, the
+throwaway clan is no longer `Clan.PlayerClan`, the guard passes, and
+`DestroyClanAction.ApplyByClanLeaderDeath` runs. Reverse the two and the campaign keeps an orphan
+empty clan forever, which is save-visible.
+
+**Why 6 after 2.** `KillCharacterAction` takes its `victim == Hero.MainHero` branches and would run
+`MakeDead` against the live player character.
+
+**The leftover party is swept for free, but only on this path.**
+`ChangePlayerCharacterAction.Apply` hands the character-creation party to the new main hero via
+`LordPartyComponent.ChangePartyOwner` when it still holds troops, and destroys it only when the
+roster is empty. `ChangePartyOwner` is `internal` (a mod cannot call it) and it does **not** move
+`MobileParty.ActualClan`. So the leftover party stays registered to the throwaway clan, and
+`DestroyClanAction.ApplyInternal` destroys every war party of the clan it dissolves. Nothing extra
+is needed.
+
+**Adoption (`AdoptIntoPlayerClan`, a clanless hero or wanderer):**
+
+`AdoptIntoPlayerClan` sets `Occupation.Lord` then `Clan.PlayerClan.SetLeader(hero)` (which assigns
+`leader.Clan` itself). The player keeps the clan they named and the banner they designed, so there
+is **no** `PlayerDefaultFaction` reflection on this path at all.
+
+Because the throwaway clan IS the player's clan here, it is never destroyed, so the leftover party
+is **not** swept for free. `AbsorbOriginalParty` transfers its rosters into the player's party and
+destroys it, after the original hero has been removed from that roster, and always by the single
+captured party id.
+
+> The predecessor mod did this with a predicate over the clan's war parties whose operator
+> precedence made its second clause match every OTHER lord's party in the clan. Applied to a royal
+> clan that would have merged and deleted all of them. Never sweep by predicate here.
+
+**One asymmetry worth knowing.** On the adoption path the created character's gold reaches the
+player anyway, regardless of the MCM knob, because `KillCharacterAction` line 98 gives a non-leader
+clan member's gold to their clan leader on removal, and after adoption the player IS that leader.
+This is left as it is: it is your own clan's money, not a windfall on top of a stranger's treasury.
+
+## Eligibility
+
+`HeroPickerService` owns every rule and is engine-free, so all of it is unit tested.
+
+| Rule | Reason |
+|---|---|
+| Culture must match | The adapter may over-return; the service filters |
+| Never the current player, a child, or a notable | Notables anchor settlement issues; vanilla asserts when one is removed holding an issue quest |
+| Placeholder names filtered | TAOM ships at least four heroes whose names contain "place holder" |
+| One hero appears once | The ruling house wins over the clan-leader list, so a ruler who also leads their clan is not listed twice |
+| Lore-locked heroes hidden by default | See below |
+| Wanderers only when the MCM knob allows | Only 20 of 39 cultures have any |
+
+**Lore-locked heroes.** Sauron and the Nazgul are opt-in and default off. Both `Patch76` hooks
+return early for `Hero.MainHero` and defer to vanilla, so a player-controlled dark lord CAN be
+captured and ransomed, which silently contradicts [uncapturable-heroes.md](uncapturable-heroes.md).
+The MCM hint text states that consequence. **Do not "fix" this by adding a `Hero.MainHero` special
+case to `Patch76`**: that would change vanilla player-captivity behaviour for everyone.
+
+`HeroPickerAdapter` makes a single `Hero.AllAliveHeroes` pass with no `DeadOrDisabledHeroes` union.
+The old mod unioned the two sets to catch not-yet-spawned wanderers, but
+`CampaignObjectManager.OnHeroAdded` buckets into `DeadOrDisabledHeroes` only for `Dead` or
+`Disabled`, so a `NotSpawned` wanderer is already in `AllAliveHeroes` and the union only risked
+offering genuinely dead heroes.
+
+## The UI
+
+`Patch77_PlayerSwitcher`, two postfixes on `BodyGeneratorView`.
+
+**Bind by arity, never by a type array.** The 1.4.8 constructor takes 13 parameters and is the only
+one declared. `TargetMethods()` yields it only when `GetConstructors().Length == 1`, and
+`Prepare()` refuses to bind otherwise. `AccessTools.Constructor(typeof(BodyGeneratorView))` with no
+type array is **not** a substitute: Harmony normalises a null parameter array to `Type.EmptyTypes`
+and looks for a parameterless constructor, which does not exist.
+
+**The state guard is what keeps the panel off the barber screen** and the multiplayer face
+generator, both of which construct the same view.
+
+**Clearing on construction is the entire selection lifecycle.** The view is rebuilt every time the
+player enters the face generator stage, so leaving to the culture stage and returning resets the
+selection by itself. No patch on `ExecuteDone`, `ExecuteCancel` or `ResetFaceToDefault` is needed.
+`OnFinalize` deliberately does **not** clear, because it fires when leaving the stage in either
+direction and a selection must survive advancing forward.
+
+**The prefab is used unchanged**, so the ViewModels were written to fit the file rather than the
+other way round. `PlayerSwitcherPrefabContractTests` parses the shipped XML and asserts every
+`DataSource`, `Text`, `IsSelected` and `Command.Click` name resolves to a public member, because
+Gauntlet renders nothing for a missing binding and logs nothing about it.
+
+`HeroPickItemVM` derives from vanilla `ClanPartyMemberItemVM` on purpose: an engine bump that
+removes or reshapes it breaks the BUILD, which is the strongest gate available. The base supplies
+`Name`, `Visual`, `Banner_9`, `ExecuteLink`, `ExecuteBeginHint` and `ExecuteEndHint`; the four the
+vanilla `ClanLordTuple` binds that it does not supply (`IsSelected`, `IsChild`,
+`CurrentActionText`, `OnCharacterSelect`) are added. Both `OnCharacterSelect` and
+`OnPreBuildCharacterSelected` route to the same handler, so the unresolved question of whether the
+outer or inner click fires stops mattering.
+
+**The preview** copies the lord's `BattleEquipment` into `BodyGeneratorView._dressedEquipment` slot
+by slot. That field is `private readonly`, so it can never be replaced, only mutated, and a banner
+in the extra weapon slot is cleared exactly as the view's own constructor does. `CanChangeRace` and
+`CanChangeGender` are set to false **after** `SetBodyProperties`, never before.
+
+`Patch9_RaceFilter` gains one early return keyed on `IPlayerSwitchSession.IsPreviewActive`.
+`SetBodyProperties` triggers `Refresh(clearProperties: true)` on every race change, so without it
+the culture race rebuild would snap a dwarf or Sauron preview straight back to the culture default.
+
+**Sprites.** `SpriteCategory` carries an `IsLoaded` bool and **no reference count**, so the
+teardown unloads `ui_clan` only when the picker was the one that loaded it. An unconditional
+`Unload()` would blank another consumer's icons with no error.
+
+## Reflection sites
+
+Two, both catalogued in `docs/reference/taleworlds-api-snapshot/reflection-sites.md`.
+
+| Site | Why | Failure behaviour |
+|---|---|---|
+| `Campaign.PlayerDefaultFaction` (`PlayerIdentityAdapter`) | `internal { get; set; }`; `Clan.PlayerClan` is a computed getter over it and `ChangePlayerCharacterAction` never updates it | Probed once at construction, before any UI exists. A failed probe disables the feature for the session rather than leaving a campaign half-swapped |
+| `BodyGeneratorView._dressedEquipment` (`BodyGeneratorPreviewSink`) | `private readonly Equipment` | Soft. The preview renders undressed and character creation continues |
+
+## Save compatibility
+
+**None needed.** No `SaveableTypeDefiner`, no new save keys, no base id consumed off TAOM's `+100`
+ladder. Everything durable rides existing systems: identity on `Game.PlayerTroop` and
+`Campaign.PlayerDefaultFaction` (both already engine-serialised), the lord's race on both their own
+template `race=` attribute and `RacePersistenceService`, the career on `ICareerDataService` keyed by
+`StringId`. Every code path runs only during the character creation of a new campaign, so existing
+saves are untouched and the resulting save is structurally the same shape as one made after vanilla
+heir succession.
+
+One accepted cost: the throwaway hero's career row is left in the career store rather than deleted,
+because `ICareerDataService` has no `ClearCareer` and adding one would reach into another feature
+for one orphan dictionary entry.
+
+## What was dropped, and why it must stay dropped
+
+| Dropped | Reason |
+|---|---|
+| `KeepHeroRaceCampaignBehavior` + its `SaveableTypeDefiner` | Would race the shipped `RacePersistenceService` over `OnBeforeSave` and `OnSessionLaunched`, and burn a base id. The shipped service already covers the case and carries three post-ship bug fixes the old one does not |
+| `NazgulEditDisablePatch` | Keys on FaceGen race `"nazghul"`. TAOM has no hero at that race (six of the Nine carry no race attribute, three carry `uruk`), so it would compile, run, and match nothing. Any equivalent lock keys off `IUncapturableRegistry` |
+| The `WarPartyComponent` sweep | Live operator-precedence bug, described above |
+| The five `FaceGeneratorVMPatch` patches | Replaced by one early return in `Patch9_RaceFilter` |
+| The heirless-leader eligibility rule | Unreachable. Adoption only ever targets clanless heroes, and a clanless hero leads no clan, so no clan is ever left with a dangling `_leader`. Do not restore it without a case that can actually reach it |
+
+## Configuration
+
+`[SettingPropertyGroup("Player Switcher")]` in `Main/Features/TaomSettings.cs`, read only through
+`PlayerSwitchPolicyProvider`.
+
+| Setting | Default | Note |
+|---|---|---|
+| `EnablePlayerSwitcher` | `true` | Off means the movie never loads and the handler no-ops |
+| `PlayerSwitcherIncludeWanderers` | `true` | Only 20 of 39 cultures have any |
+| `PlayerSwitcherAllowLoreLockedHeroes` | `false` | Hint text states the capture caveat |
+| `PlayerSwitcherTransferStartingGold` | `false` | An established lord is already funded |
+
+All four are simulation-relevant for co-op under the include-by-default rule, and are counted in
+`SettingsFingerprintTests`.
+
+## Interactions checked
+
+- **Co-op possession.** Closed by ordering rather than a flag. `PlayerPossessionBehavior` captures
+  its choices on `OnCharacterCreationIsOverEvent`, which fires **after** the 1100 handler, so it
+  records the lord and its own `currentHeroId == _choices.HeroId` guard suppresses the re-grant.
+  Do not "fix" this by adding a switcher flag to `PlayerPossessionService`.
+- **Landless cultures.** `Patch65` guards the AI daily clan tick, which never runs for
+  `Hero.MainHero`, so no new crash surface. Any fallback chain must still tolerate a null clan home
+  settlement.
+- **Enlistment.** Cannot collide: no enlistment record can exist during character creation.
+
+## Verification
+
+```
+dotnet test TAOM.Tests --filter FullyQualifiedName~PlayerSwitcher
+dotnet test TAOM.Tests
+./build.ps1 -RunTests                                                  # game closed
+dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=   # game running
+```
+
+### In-game smoke
+
+Each step on a fresh campaign unless stated.
+
+1. **Feature off.** Master toggle off, run character creation through to the map. Correct: no
+   panel, no behavioural change, no log noise. Proves both patches are inert.
+2. **Panel and preview.** Toggle on, new campaign, pick Erebor. The panel lists three groups. Click
+   Dain. Correct: the model becomes a dwarf, animated rather than in a bind pose (this exercises
+   `RefreshCharacterEntityAuxPatch`), wearing his own gear; race and gender controls grey out.
+   Click him again: the preview reverts and the controls re-enable.
+3. **Back and forward.** Go back to the culture stage and return. Correct: the panel rebuilds, the
+   selection is cleared, the created character is intact.
+4. **The takeover.** Select Dain and finish creation. Correct on the map: you are Dain; the
+   character screen opens without a crash (this is the exact `CharacterDeveloperVM` failure the old
+   mod documented); the clan screen shows his family, not "unknown"; the kingdom screen shows
+   Erebor with you as ruler; his fiefs are yours; **his clan's renown and tier are non-zero**; your
+   party sits where his was, with his troops; your career is the one you picked; the old
+   `player_faction` clan is gone from the clan list.
+5. **A non-ruling clan leader.** Same flow. Correct: you lead that clan as a vassal of Erebor, and
+   both screens are coherent.
+6. **Race survives a save cycle.** Save, quit to the main menu, reload. Correct: still Dain, still
+   a dwarf, career intact.
+7. **Lore-locked gate.** With the toggle off, Sauron is absent from Mordor's list and Khamul from
+   Dol Guldur's. Turn it on and they appear. Play as Sauron. Correct: the campaign boots and
+   `rgl_log` shows the priority-1100 handler line with **no** `SetPlayerRace` line naming Sauron.
+8. **Co-op non-regression.** With a co-op mod loaded, repeat step 4 and let several in-game hours
+   pass. Correct: no `[Possession] Controlled hero changed` line and no re-grant.
+9. **Wanderer adoption.** Pick a wanderer. Correct: your clan is the one you named, with your
+   banner, you lead it, and your party holds the starting troops.
+10. **Kingdom join.** Accept the prompt that follows step 9. Correct: your clan joins and the
+    kingdom screen agrees. The prompt must NOT appear after step 4, nor after an ordinary character
+    creation with no lord selected.
+11. **Barber screen.** Load the step 4 save and visit a barber. Correct: no picker panel.
+12. **Degrade path.** Force the reflection probe to fail. Correct: the panel never loads and
+    character creation completes normally.
+
+## Owed
+
+- All twelve in-game smoke steps. Nothing here has been run in the game.
+- The machine translation. The 15 keys are seeded with English in all twelve languages, so the game
+  renders real text rather than a raw id, but no API key was available in the authoring session.
+  The translator's own filter treats a row equal to English as untranslated, so a later
+  `tools/translate_with_claude.py` run picks all 15 up.
+
+## See also
+
+[character-selection.md](character-selection.md) (the shipping race-aware transpiler that makes a
+non-human preview render), [uncapturable-heroes.md](uncapturable-heroes.md),
+[coop-interop.md](coop-interop.md).

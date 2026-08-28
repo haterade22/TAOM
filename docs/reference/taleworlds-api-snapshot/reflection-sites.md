@@ -62,9 +62,12 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…Map.DistanceCache.SandBoxNavigationCache` | `GetSceneXmlCrcValues` | method | `NavigationCacheAdapter.cs:107` | Scene CRC validation |
 | `SandBox.CampaignBehaviors.GuardsCampaignBehavior` | `PrepareGuardAgentDataFromGarrison` | method (static) | `GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:30` | SettlementGuards config-pool guard build (backfilled 2026-07-14 — predates the gate) |
 | `…GuardsCampaignBehavior` | `_garrisonTroops` | field | `GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs:33` | Excluded-race guard scrub (#346) |
+| `TaleWorlds.CampaignSystem.Campaign` | `PlayerDefaultFaction` | property (internal) | `PlayerIdentityAdapter.cs:34` | Player Switcher (#514). `Clan.PlayerClan` is a computed getter over it and `ChangePlayerCharacterAction` never updates it. Probed at construction; a failed probe disables the feature for the session |
+| `…GauntletUI.BodyGenerator.BodyGeneratorView` | `_dressedEquipment` | field (private readonly) | `BodyGeneratorPreviewSink.cs:26` | Player Switcher (#514). Readonly, so the preview mutates its slots in place. Soft-fails to an undressed preview |
 
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**
 Status (2026-07-14): SettlementGuards rows added (`PrepareGuardAgentDataFromGarrison` backfill + `_garrisonTroops`, #346) — **all 35 gate rows resolve against installed v1.4.7.**
+Status (2026-08-27): Player Switcher (#514) adds two rows — `Campaign.PlayerDefaultFaction` and `BodyGeneratorView._dressedEquipment` — **both resolve against installed v1.4.8**, asserted by `PlayerSwitcherBindingTests` and the `ReflectionSiteBindingTests` row.
 Status (2026-08-10): v1.4.8 engine bump — **every gate row still resolves; no row added or removed.** `BindingVerification` ran 106/106 green against the installed v1.4.8 DLLs. 1.4.8 rewrote `NavigationCache` for speed (`GetClosestSettlementToPosition` gained an optional `useEarlyOut` parameter), but no member this table names changed shape.
 
 ---

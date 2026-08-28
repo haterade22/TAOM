@@ -697,6 +697,24 @@ Does NOT block death: a hero who dies in the battle still dies (`MapEvent.cs:197
 
 **Known behavioural interaction, deliberate:** `LordConversationsCampaignBehavior.cs:3072-3076` / `:3145-3149` ("You are my prisoner now.") are not `IsPrisoner`-gated, so a protected hero escapes after the player picks the line. Both pass `MainParty` as the captor, so the escape message fires immediately and resolves it narratively. Not gated, on purpose.
 
+## Patch77_PlayerSwitcher
+
+**Targets:** `BodyGeneratorView` constructor (public instance, Postfix, bound by ARITY) + `BodyGeneratorView.OnFinalize()` (public instance, Postfix). Two patch classes, one category.
+
+**Feature:** PlayerSwitcher (#514), `Main/Features/PlayerSwitcher/Hooks/Patch77_BodyGeneratorView_Constructor.cs` + `Patch77_BodyGeneratorView_OnFinalize.cs`. **Status:** ACTIVE.
+
+Attaches the hero picker to the character creation face generator, so the player can take over an existing lord. The panel itself does nothing; the handover runs from an `ICharacterCreationContentHandler` at priority 1100 and needs no Harmony at all.
+
+**Bind by arity, never by a `Type[]`.** The 1.4.8 constructor takes THIRTEEN parameters; the predecessor mod pinned a 12-type attribute and 1.4.8 added `FaceGenHistory`, so that attribute matches nothing and throws at `PatchCategory` time, which bricks startup. `TargetMethods()` yields the single declared constructor and `Prepare()` refuses to bind when more than one exists. `AccessTools.Constructor(typeof(BodyGeneratorView))` with no type array is NOT a substitute: Harmony normalises a null parameter array to `Type.EmptyTypes` and looks for a parameterless constructor, which does not exist. `PlayerSwitcherBindingTests` asserts both the count and the arity against the installed DLLs.
+
+**The `ActiveState is CharacterCreationState` guard is load-bearing.** The barber screen and the multiplayer face generator construct the same view, and an unguarded postfix would load the picker into both.
+
+**Clearing the selection on construction IS the selection lifecycle.** The view is rebuilt on every entry to the face generator stage, so leaving to the culture stage and returning resets it by itself; no patch on `ExecuteDone`, `ExecuteCancel` or `ResetFaceToDefault` is needed. The `OnFinalize` postfix deliberately does NOT clear, because it fires when leaving the stage in EITHER direction and the selection must survive advancing forward.
+
+**Sprite teardown is conditional on purpose.** `SpriteCategory` carries an `IsLoaded` bool and no reference count, so `ui_clan` is unloaded only when this patch was the one that loaded it. An unconditional `Unload()` would blank another consumer's icons with no error and no crash.
+
+Applied from `SubModule.cs` inside try/catch alongside `Patch9_RaceFilter`; a failure disables the feature for the session rather than taking startup down. Full design: [player-switcher.md](../features/player-switcher.md).
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)
