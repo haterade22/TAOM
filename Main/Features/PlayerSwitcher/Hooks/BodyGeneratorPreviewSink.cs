@@ -50,11 +50,21 @@ public class BodyGeneratorPreviewSink : IHeroPreviewSink
     {
         var vm = _view?.DataSource;
         if (vm == null || row.IsEmpty)
+        {
+            _logger.LogInfo($"[PS-DIAG] ApplyPreview bailed: dataSourceNull={vm == null} rowEmpty={row.IsEmpty}");
             return;
+        }
 
         var hero = Campaign.Current?.CampaignObjectManager?.Find<Hero>(row.HeroId);
         if (hero == null)
+        {
+            _logger.LogInfo($"[PS-DIAG] ApplyPreview bailed: hero {row.HeroId} did not resolve");
             return;
+        }
+
+        _logger.LogInfo(
+            $"[PS-DIAG] ApplyPreview enter hero={row.HeroId} targetRace={row.Race} " +
+            $"bodyGenRace={_view.BodyGen?.Race} vmGender={vm.SelectedGender} canChangeRace={vm.CanChangeRace}");
 
         var applied = false;
 
@@ -99,6 +109,10 @@ public class BodyGeneratorPreviewSink : IHeroPreviewSink
         }
         finally
         {
+            _logger.LogInfo(
+                $"[PS-DIAG] ApplyPreview exit hero={row.HeroId} applied={applied} " +
+                $"bodyGenRaceAfter={_view.BodyGen?.Race} isDressed={_view.IsDressed}");
+
             // A preview that did NOT apply must not leave the race filter suppressed. Only the
             // success path earns the suppression, and only RestoreDefault lifts it afterwards.
             // Without this, the parse-failure return above and the catch beside it would leave
