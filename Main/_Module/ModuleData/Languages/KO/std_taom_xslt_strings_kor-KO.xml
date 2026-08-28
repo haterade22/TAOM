@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="제나" />
     <string id="aom_lord_2_1_name" text="바르드 2세" />
     <string id="aom_lord_2_2_name" text="아스타" />
-    <string id="aom_lord_2_3_name" text="소린 3세 스톤헬름" />
+    <string id="aom_lord_2_3_name" text="Rand" />
     <string id="aom_lord_2_4_name" text="시가" />
-    <string id="aom_lord_2_5_name" text="오리" />
+    <string id="aom_lord_2_5_name" text="Ask" />
     <string id="aom_lord_2_6_name" text="에르타" />
     <string id="aom_lord_2_7_name" text="시미르" />
     <string id="aom_lord_2_8_name" text="우리크" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="비다르" />
     <string id="aom_lord_2_14_name" text="이스반" />
     <string id="aom_lord_2_15_name" text="라타고스트" />
-    <string id="aom_lord_2_16_name" text="보푸르" />
-    <string id="aom_lord_2_17_name" text="소린 2세 오컨쉴드" />
-    <string id="aom_lord_2_18_name" text="글로인" />
-    <string id="aom_lord_2_19_name" text="드왈린" />
-    <string id="aom_lord_2_20_name" text="오인" />
+    <string id="aom_lord_2_16_name" text="Hauk" />
+    <string id="aom_lord_2_17_name" text="Stein" />
+    <string id="aom_lord_2_18_name" text="Ulf" />
+    <string id="aom_lord_2_19_name" text="Geir" />
+    <string id="aom_lord_2_20_name" text="Val" />
     <string id="aom_lord_2_21_name" text="스베도른" />
     <string id="aom_lord_2_22_name" text="라쇼넥" />
     <string id="aom_lord_2_23_name" text="갈덴" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="송곳니절단자 루릭" />
     <string id="aom_lord_S8_u_name" text="갈릭" />
     <string id="aom_lord_S9_c_name" text="포림" />
-    <string id="aom_lord_S9_l_name" text="봄부르" />
+    <string id="aom_lord_S9_l_name" text="Orvar" />
     <string id="aom_lord_S9_m_name" text="다킬라" />
     <string id="aom_lord_S9_u_name" text="차스티미르" />
     <string id="aom_lord_SE8_c_name" text="이타리아" />
@@ -1204,13 +1204,13 @@
     <string id="TAOM_hero_2_7_1" text="미미르는 골짜기나라 왕가의 왕자다." />
     <string id="TAOM_hero_2_10" text="발라는 골짜기나라의 공주로, 외교와 정치 기술을 훈련받았다." />
     <string id="TAOM_hero_2_13" text="비다르는 북부 변경지대의 영주로, 동방인의 침입에 대비해 경비를 선다." />
-    <string id="TAOM_hero_2_3" text="토린 3세 스톤헬름, 산 아래의 왕은 에레보르의 드워프들을 통치한다. 그는 데일과의 고대 동맹을 유지하며 어둠에 맞서 방어할 준비를 하고 있다." />
+    <string id="TAOM_hero_2_3" text="Rand is a lord of Dale, warden of the eastern vales, who keeps the old alliance with the Dwarves of Erebor." />
     <string id="TAOM_hero_2_4" text="시가는 두린 가문의 드워프 귀족 여성이다." />
     <string id="TAOM_hero_2_4_1" text="아폴라네아는 귀족 출신의 드워프 처녀이다." />
     <string id="TAOM_hero_2_8" text="우릭은 에레보르의 드워프 왕자로, 대장간 기술과 전투에 능숙하다." />
     <string id="TAOM_hero_2_11" text="이드룬은 왕실 근위대의 드워프 전사이다." />
     <string id="TAOM_hero_2_111" text="로지볼은 산의 문을 지키는 드워프 전사이다." />
-    <string id="TAOM_hero_2_5" text="오리는 소린 오켄쉴드의 동료 중 한 명의 후손인 드워프 군주이다. 그는 에레보르와 데일 사이의 무역로를 관리한다." />
+    <string id="TAOM_hero_2_5" text="Ask is a lord of Dale who manages the trade routes between the Mountain and the Long Lake." />
     <string id="TAOM_hero_2_6" text="에르타는 오리의 아내로, 보석 세공 기술로 유명하다." />
     <string id="TAOM_hero_2_9" text="렉은 오리의 영지를 물려받을 후계자로, 무역과 전투 모두에서 훈련받았다." />
     <string id="TAOM_hero_2_12" text="스바나는 무역 가문의 딸이다." />
@@ -1219,18 +1219,18 @@
     <string id="TAOM_hero_2_14_1" text="발카바는 이스반 군주의 아내이다." />
     <string id="TAOM_hero_2_14_2" text="자베레나는 동쪽 영지의 후계자이다." />
     <string id="TAOM_hero_2_14_3" text="비즈두나는 동쪽 변경 지대의 젊은 귀족이다." />
-    <string id="TAOM_hero_2_16" text="보푸르는 에레보르의 드워프 군주로, 전설적인 원정대의 후손이다." />
-    <string id="TAOM_hero_2_16_1" text="티야스카는 보푸르의 아내로, 치유 기술에 능숙하다." />
+    <string id="TAOM_hero_2_16" text="Hauk is a lord of Dale, master of the market roads and the winter caravans." />
+    <string id="TAOM_hero_2_16_1" text="Tyaska is wife to Hauk, skilled in the healing arts." />
     <string id="TAOM_hero_2_21" text="스베도른은 호수마을의 수비대를 지휘한다." />
     <string id="TAOM_hero_2_21_1" text="이즈덴카는 호수마을의 업무를 관리한다." />
-    <string id="TAOM_hero_2_17" text="소린 2세 오켄쉴드는 스마우그로부터 에레보르를 되찾은 영웅으로 기억된다. 그의 영혼은 후손들에게 영감을 준다." />
+    <string id="TAOM_hero_2_17" text="Stein is a lord of Dale, remembered for holding the northern gate in the years after the dragon fell." />
     <string id="TAOM_hero_2_17_1" text="드라차는 옛 왕의 기억을 살아있게 한다." />
     <string id="TAOM_hero_2_22" text="라쇼넥은 데일의 전사들을 지휘한다." />
     <string id="TAOM_hero_2_22_1" text="제네바는 라쇼넥의 아내이다." />
     <string id="TAOM_hero_2_24" text="알바르는 데일 근위대의 대장이다." />
     <string id="TAOM_hero_2_24_1" text="조리나는 데일의 귀족 부인이다." />
-    <string id="TAOM_hero_2_18" text="글로인은 에레보르의 드워프 군주로, 원정대의 김리의 아버지이다." />
-    <string id="TAOM_hero_2_18_1" text="조리카는 글로인의 아내이자, 유명한 김리의 어머니이다." />
+    <string id="TAOM_hero_2_18" text="Ulf is a lord of Dale, captain of the river-watch upon the Running River." />
+    <string id="TAOM_hero_2_18_1" text="Zorika is wife to Ulf, and mistress of his hall upon the Running River." />
     <string id="TAOM_hero_2_23" text="갈덴은 데일의 남부 수비대를 지휘한다." />
     <string id="TAOM_hero_2_23_1" text="즐라트카는 갈덴의 딸이다." />
     <string id="TAOM_hero_2_15" text="라타고스트는 국정 문제에 대해 왕에게 조언하는 현명한 고문이다." />
@@ -1238,10 +1238,10 @@
     <string id="TAOM_hero_2_15_2" text="밀란카는 궁정의 귀족 여성이다." />
     <string id="TAOM_hero_2_15_3" text="벨리나는 왕실 가문을 섬긴다." />
     <string id="TAOM_hero_2_15_4" text="보반은 데일의 젊은 귀족이다." />
-    <string id="TAOM_hero_2_19" text="드왈린은 대단한 명성을 지닌 드워프 전사로, 최초 원정대의 마지막 생존자이다." />
-    <string id="TAOM_hero_2_19_1" text="비토미라는 드왈린과 함께 봉사한다." />
-    <string id="TAOM_hero_2_20" text="오인은 드워프 장로로, 고대 전승과 치유 기술의 수호자이다." />
-    <string id="TAOM_hero_2_20_1" text="키샤는 오인의 아내로, 약초 지식에 능숙하다." />
+    <string id="TAOM_hero_2_19" text="Geir is a warrior of Dale of great renown, kin to the old line of Girion." />
+    <string id="TAOM_hero_2_19_1" text="Vitomira serves alongside Geir." />
+    <string id="TAOM_hero_2_20" text="Val is an elder of Dale, keeper of lore and of the healing arts." />
+    <string id="TAOM_hero_2_20_1" text="Kisha is wife to Val, skilled in herb lore." />
     <string id="TAOM_hero_S8_u" text="산의 홀을 지키는 노련한 베테랑이다." />
     <string id="TAOM_hero_3_1" text="카두라크는 하라드의 타스크랄로, 남부 군대의 최고 사령관이다. 그는 곤도르에 맞서 모르도르와 동맹을 맺고 자신의 민족의 적들에 맞서 무마킬 전쟁 코끼리를 이끈다." />
     <string id="TAOM_hero_3_2" text="높은 지위의 하라드림 귀족 여성." />

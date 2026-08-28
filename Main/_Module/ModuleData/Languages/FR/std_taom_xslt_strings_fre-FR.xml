@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="Zena" />
     <string id="aom_lord_2_1_name" text="Bard II" />
     <string id="aom_lord_2_2_name" text="Asta" />
-    <string id="aom_lord_2_3_name" text="Thorin III Heaume de Pierre" />
+    <string id="aom_lord_2_3_name" text="Rand" />
     <string id="aom_lord_2_4_name" text="Siga" />
-    <string id="aom_lord_2_5_name" text="Ori" />
+    <string id="aom_lord_2_5_name" text="Ask" />
     <string id="aom_lord_2_6_name" text="Erta" />
     <string id="aom_lord_2_7_name" text="Simir" />
     <string id="aom_lord_2_8_name" text="Urik" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="Vidar" />
     <string id="aom_lord_2_14_name" text="Isvan" />
     <string id="aom_lord_2_15_name" text="Ratagost" />
-    <string id="aom_lord_2_16_name" text="Bofur" />
-    <string id="aom_lord_2_17_name" text="Thorin II Écu-de-Chêne" />
-    <string id="aom_lord_2_18_name" text="Glóin" />
-    <string id="aom_lord_2_19_name" text="Dwalin" />
-    <string id="aom_lord_2_20_name" text="Óin" />
+    <string id="aom_lord_2_16_name" text="Hauk" />
+    <string id="aom_lord_2_17_name" text="Stein" />
+    <string id="aom_lord_2_18_name" text="Ulf" />
+    <string id="aom_lord_2_19_name" text="Geir" />
+    <string id="aom_lord_2_20_name" text="Val" />
     <string id="aom_lord_2_21_name" text="Svedorn" />
     <string id="aom_lord_2_22_name" text="Lashonek" />
     <string id="aom_lord_2_23_name" text="Galden" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="Rurik Mord-Croc" />
     <string id="aom_lord_S8_u_name" text="Galyk" />
     <string id="aom_lord_S9_c_name" text="Forim" />
-    <string id="aom_lord_S9_l_name" text="Bombur" />
+    <string id="aom_lord_S9_l_name" text="Orvar" />
     <string id="aom_lord_S9_m_name" text="Dakhila" />
     <string id="aom_lord_S9_u_name" text="Chastimir" />
     <string id="aom_lord_SE8_c_name" text="Itaria" />
@@ -1204,13 +1204,13 @@
     <string id="TAOM_hero_2_7_1" text="Mimir est un prince de la maison royale de Dale." />
     <string id="TAOM_hero_2_10" text="Valla est une princesse de Dale, formée à la diplomatie et à l'art de gouverner." />
     <string id="TAOM_hero_2_13" text="Vidar est un seigneur des marches septentrionales, gardant contre les incursions des Orientaux." />
-    <string id="TAOM_hero_2_3" text="Thorin III Heaume de Pierre, Roi sous la Montagne, règne sur les Nains d'Erebor. Il maintient l'ancienne alliance avec Dale et se tient prêt à défendre contre l'Ombre." />
+    <string id="TAOM_hero_2_3" text="Rand is a lord of Dale, warden of the eastern vales, who keeps the old alliance with the Dwarves of Erebor." />
     <string id="TAOM_hero_2_4" text="Siga est une noble Naine de la lignée de Durin." />
     <string id="TAOM_hero_2_4_1" text="Apolanea est une jeune Naine de noble naissance." />
     <string id="TAOM_hero_2_8" text="Urik est un prince nain d'Erebor, versé dans l'art de la forge et de la guerre." />
     <string id="TAOM_hero_2_11" text="Idrun est une guerrière naine de la garde royale." />
     <string id="TAOM_hero_2_111" text="Rozhivol est un guerrier nain qui garde les portes de la montagne." />
-    <string id="TAOM_hero_2_5" text="Ori est un seigneur nain descendant de l'un des compagnons de Thorin Écu-de-Chêne. Il gère les routes commerciales entre Erebor et Dale." />
+    <string id="TAOM_hero_2_5" text="Ask is a lord of Dale who manages the trade routes between the Mountain and the Long Lake." />
     <string id="TAOM_hero_2_6" text="Erta est l'épouse d'Ori, réputée pour son talent dans la taille des gemmes." />
     <string id="TAOM_hero_2_9" text="Lek est l'héritier des domaines d'Ori, formé au commerce et au combat." />
     <string id="TAOM_hero_2_12" text="Svana est une fille de la maison marchande." />
@@ -1219,18 +1219,18 @@
     <string id="TAOM_hero_2_14_1" text="Valkava est l'épouse du seigneur Isvan." />
     <string id="TAOM_hero_2_14_2" text="Zaverena est l'héritière des domaines orientaux." />
     <string id="TAOM_hero_2_14_3" text="Vizhduna est une jeune noble des marches orientales." />
-    <string id="TAOM_hero_2_16" text="Bofur est un seigneur nain d'Erebor, descendant de la légendaire compagnie." />
-    <string id="TAOM_hero_2_16_1" text="Tyaska est l'épouse de Bofur, versée dans les arts de la guérison." />
+    <string id="TAOM_hero_2_16" text="Hauk is a lord of Dale, master of the market roads and the winter caravans." />
+    <string id="TAOM_hero_2_16_1" text="Tyaska is wife to Hauk, skilled in the healing arts." />
     <string id="TAOM_hero_2_21" text="Svedorn commande la garnison d'Esgaroth." />
     <string id="TAOM_hero_2_21_1" text="Izdenka gère les affaires d'Esgaroth." />
-    <string id="TAOM_hero_2_17" text="Thorin II Écu-de-Chêne est resté dans les mémoires comme le héros qui reprit Erebor à Smaug. Son esprit inspire ses descendants." />
+    <string id="TAOM_hero_2_17" text="Stein is a lord of Dale, remembered for holding the northern gate in the years after the dragon fell." />
     <string id="TAOM_hero_2_17_1" text="Dracha préserve la mémoire de l'ancien roi." />
     <string id="TAOM_hero_2_22" text="Lashonek commande les guerriers de Dale." />
     <string id="TAOM_hero_2_22_1" text="Zheneva est l'épouse de Lashonek." />
     <string id="TAOM_hero_2_24" text="Alvar est un capitaine de la garde de Dale." />
     <string id="TAOM_hero_2_24_1" text="Zorina est une dame noble de Dale." />
-    <string id="TAOM_hero_2_18" text="Glóin est un seigneur nain d'Erebor, père de Gimli de la Communauté." />
-    <string id="TAOM_hero_2_18_1" text="Zorika est l'épouse de Glóin, mère du célèbre Gimli." />
+    <string id="TAOM_hero_2_18" text="Ulf is a lord of Dale, captain of the river-watch upon the Running River." />
+    <string id="TAOM_hero_2_18_1" text="Zorika is wife to Ulf, and mistress of his hall upon the Running River." />
     <string id="TAOM_hero_2_23" text="Galden commande la garnison méridionale de Dale." />
     <string id="TAOM_hero_2_23_1" text="Zlatka est la fille de Galden." />
     <string id="TAOM_hero_2_15" text="Ratagost est un sage conseiller qui prodigue ses avis au roi sur les affaires de l'État." />
@@ -1238,10 +1238,10 @@
     <string id="TAOM_hero_2_15_2" text="Milanka est une dame noble de la cour." />
     <string id="TAOM_hero_2_15_3" text="Velina sert la maison royale." />
     <string id="TAOM_hero_2_15_4" text="Bovan est un jeune noble de Dale." />
-    <string id="TAOM_hero_2_19" text="Dwalin est un guerrier nain de grand renom, dernier survivant de la compagnie originelle." />
-    <string id="TAOM_hero_2_19_1" text="Vitomira sert aux côtés de Dwalin." />
-    <string id="TAOM_hero_2_20" text="Oïn est un ancien nain, gardien des savoirs anciens et des arts de la guérison." />
-    <string id="TAOM_hero_2_20_1" text="Kisha est l'épouse d'Oïn, versée dans la science des herbes." />
+    <string id="TAOM_hero_2_19" text="Geir is a warrior of Dale of great renown, kin to the old line of Girion." />
+    <string id="TAOM_hero_2_19_1" text="Vitomira serves alongside Geir." />
+    <string id="TAOM_hero_2_20" text="Val is an elder of Dale, keeper of lore and of the healing arts." />
+    <string id="TAOM_hero_2_20_1" text="Kisha is wife to Val, skilled in herb lore." />
     <string id="TAOM_hero_S8_u" text="Un vétéran aguerri qui garde les salles de la montagne." />
     <string id="TAOM_hero_3_1" text="Khadurak est le Taskral du Harad, commandant suprême des armées du sud. Il mène les Mûmakil, les éléphants de guerre, contre les ennemis de son peuple, allié au Mordor contre le Gondor." />
     <string id="TAOM_hero_3_2" text="Une dame noble haradrim de haut rang." />

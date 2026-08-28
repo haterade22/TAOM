@@ -1557,7 +1557,7 @@
 	<xsl:template match="Hero[@id='lord_2_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_3}Thorin III Stonehelm, King under the Mountain, rules the Dwarves of Erebor. He maintains the ancient alliance with Dale and stands ready to defend against the Shadow.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_3}Rand is a lord of Dale, warden of the eastern vales, who keeps the old alliance with the Dwarves of Erebor.</xsl:attribute>
 			<xsl:attribute name="father">Hero.dead_lord_2_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1612,7 +1612,7 @@
 	<xsl:template match="Hero[@id='lord_2_5']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_5}Ori is a Dwarf lord descended from one of Thorin Oakenshield's companions. He manages the trade routes between Erebor and Dale.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_5}Ask is a lord of Dale who manages the trade routes between the Mountain and the Long Lake.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_6</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1699,7 +1699,7 @@
 	<xsl:template match="Hero[@id='lord_2_16']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_16}Bofur is a Dwarf lord of Erebor, descendant of the legendary company.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_16}Hauk is a lord of Dale, master of the market roads and the winter caravans.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1708,7 +1708,7 @@
 	<xsl:template match="Hero[@id='lord_2_16_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_16_1}Tyaska is wife to Bofur, skilled in the healing arts.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_16_1}Tyaska is wife to Hauk, skilled in the healing arts.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_16</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1736,7 +1736,7 @@
 	<xsl:template match="Hero[@id='lord_2_17']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_17}Thorin II Oakenshield is remembered as the hero who reclaimed Erebor from Smaug. His spirit inspires his descendants.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_17}Stein is a lord of Dale, remembered for holding the northern gate in the years after the dragon fell.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_17_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1791,7 +1791,7 @@
 	<xsl:template match="Hero[@id='lord_2_18']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_18}Gloin is a Dwarf lord of Erebor, father to Gimli of the Fellowship.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_18}Ulf is a lord of Dale, captain of the river-watch upon the Running River.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_18_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1800,7 +1800,7 @@
 	<xsl:template match="Hero[@id='lord_2_18_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_18_1}Zorika is wife to Gloin, mother of the famous Gimli.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_18_1}Zorika is wife to Ulf, and mistress of his hall upon the Running River.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_18</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1871,7 +1871,7 @@
 	<xsl:template match="Hero[@id='lord_2_19']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_19}Dwalin is a Dwarf warrior of great renown, last survivor of the original company.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_19}Geir is a warrior of Dale of great renown, kin to the old line of Girion.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_19_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1880,7 +1880,7 @@
 	<xsl:template match="Hero[@id='lord_2_19_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_19_1}Vitomira serves alongside Dwalin.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_19_1}Vitomira serves alongside Geir.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_19</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1890,7 +1890,7 @@
 	<xsl:template match="Hero[@id='lord_2_20']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_20}Oin is a Dwarf elder, keeper of ancient lore and healing arts.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_20}Val is an elder of Dale, keeper of lore and of the healing arts.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_20_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1899,7 +1899,7 @@
 	<xsl:template match="Hero[@id='lord_2_20_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_2_20_1}Kisha is wife to Oin, skilled in herb lore.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_2_20_1}Kisha is wife to Val, skilled in herb lore.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_2_20</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>

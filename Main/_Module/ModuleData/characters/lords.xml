@@ -29469,7 +29469,7 @@
             <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S9_l" name="{=aom_lord_S9_l_name}Bombur" is_female="false" age="25" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_S9_l" name="{=aom_lord_S9_l_name}Orvar" is_female="false" age="25" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <!-- PLACEHOLDER FACE KEY -->
             <BodyProperties version="4" weight="0.696" build="0.9" key="00054C0140B409C39659749D884A5B5E98B6C9967C75966FAF9645C85A918D950068A6030687C763000000000000000000000000000000000000000062BC2083" />

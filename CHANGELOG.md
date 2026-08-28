@@ -119,6 +119,36 @@ and a NEW campaign to observe.
 a `GENDER_OVERRIDES` table so the next regeneration cannot restore it. Verified by running the
 merge: vanilla says `true`, the merge now omits it, and his wife Deorwyn stays female.
 
+### fix(dale): no more Dwarves in Dale
+
+Eight Tolkien Dwarves were sitting in `Culture.sturgia` as Dale lords with `race` absent, so they
+rendered as men: Thorin III Stonehelm, Thorin II Oakenshield, Dwalin, Gloin, Oin, Ori, Bofur and
+Bombur. Two of them duplicated real Erebor lords. Dale is Men, so all eight were renamed.
+
+The replacements follow Tolkien's actual Dale pattern rather than invented ones. He built the
+Dale-king names from short Old Norse common nouns: Girion from `geirr` (spear), Brand from
+`brandr` (sword), Bard from `bardi` (a high-prowed ship). The new names take the same shape and
+none is drawn from the Dvergatal, the Voluspa dwarf-catalogue Tolkien mined for Dwarf outer-names:
+Rand (`randr`, shield-rim), Ask (`askr`, ash-spear), Hauk (`haukr`, hawk), Stein (`steinn`, stone),
+Ulf (`ulfr`, wolf), Geir (`geirr`, the same root as Girion), Val (`valr`, falcon) and Orvar
+(`orvar`, arrows) for the Lake-town bowman.
+
+Worth recording, because it is the reason the data looked wrong rather than merely odd: a Dwarf's
+outer name IS a Dale-language name. Tolkien had the Dwarves take names from the tongue of Dale
+because their true Khuzdul names were never spoken to outsiders. Norse naming is therefore correct
+for Men of Dale; these eight were wrong only because they belong to named canonical Dwarves.
+
+Renaming alone was not enough. Seven of the eight carried bios calling them "a Dwarf lord of
+Erebor", and four Dale wives were described as married to them, one of them "mother of the famous
+Gimli". All eleven bios were rewritten as Men of Dale, and every one of the eleven plus the eight
+names was written into all twelve language files. Deleting the stale translated rows instead was
+the obvious move and it is wrong: `LanguageFileCoverageTests` requires every language to declare a
+row for every English key, and dropping them failed the suite. Rewriting each row to the new
+English text satisfies that and still queues the work, because `_diff_files` counts a row as
+untranslated precisely when its text equals the English source. **`/localize` is owed** to turn
+those 228 rows back into real translations; until then non-English players see correct English
+rather than a Dale lord named Stein whose bio reads "Thorin II. Eichenschild".
+
 ## 2026-08-27
 
 ### fix(player-switcher): nine review findings, two of them feature-breaking (#514)

@@ -6965,7 +6965,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_3']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_3</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_3_name}Thorin III Stonehelm</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_3_name}Rand</xsl:attribute>
             <xsl:attribute name="age">48</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -7074,7 +7074,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_5']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_5</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_5_name}Ori</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_5_name}Ask</xsl:attribute>
             <xsl:attribute name="age">50</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -7780,7 +7780,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_16']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_16</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_16_name}Bofur</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_16_name}Hauk</xsl:attribute>
             <xsl:attribute name="age">31</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -7834,7 +7834,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_17']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_17</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_17_name}Thorin II Oakenshield</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_17_name}Stein</xsl:attribute>
             <xsl:attribute name="age">32</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -7888,7 +7888,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_18']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_18</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_18_name}Glóin</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_18_name}Ulf</xsl:attribute>
             <xsl:attribute name="age">26</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -7942,7 +7942,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_19']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_19</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_19_name}Dwalin</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_19_name}Geir</xsl:attribute>
             <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -7996,7 +7996,7 @@
     <xsl:template match="NPCCharacter[@id='lord_2_20']">
         <xsl:copy>
             <xsl:attribute name="id">lord_2_20</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_2_20_name}Óin</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_2_20_name}Val</xsl:attribute>
             <xsl:attribute name="age">29</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -20592,7 +20592,7 @@
     <xsl:template match="NPCCharacter[@id='lord_S9_l']">
         <xsl:copy>
             <xsl:attribute name="id">lord_S9_l</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_S9_l_name}Bombur</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_S9_l_name}Orvar</xsl:attribute>
             <xsl:attribute name="age">52</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
