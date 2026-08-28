@@ -11,7 +11,7 @@
 | **Global items** | `LOTRLOME_items\LOTRAOM_weapons.xml`, `LOTRAOM_shields.xml`, `LOTRAOM_horses.xml` |
 | **Shield rule** | `item_usage="hand_shield"` (centre-grip) MUST pair with `ForceAttachOffHandPrimaryItemBone="true"`; `item_usage="shield"` (forearm-strapped) with `ForceAttachOffHandSecondaryItemBone="true"`. Never both. `body_name` is the `bo_cap_*` capsule, `shield_body_name` the full `bo_*` body. Two entries look mistyped and must NOT be corrected — see [armory-shield-audit.md](armory-shield-audit.md) |
 | **Harness rule** | Every `Type="HorseHarness"` MUST carry `<Armor family_type="N">` matching its mount's `Monster.family_type` (1 horse/warg/spider, 4 chariot, 10 elephant/mûmakil). A missing attribute deserializes to **0 = human**, and the inventory screen then refuses the harness on every mount **with no error message** (`SPInventoryVM.IsItemEquipmentPossible`, v1.4.7 `:4112`) while stripping any pre-placed one on the next transfer (`:3923`). Mount-side authority is the monsters XML only — `family_type` on `<Horse>` is never parsed. Enforced by `python tools/validate_moduledata.py` (`MISSING_HARNESS_FAMILY_TYPE` / `HARNESS_FAMILY_MISMATCH`). |
-| **Gondor prefixes** | **17 regional tokens**, all `sk_gd_<region>_` in `gondor/`: `ano` Anórien (49 items), `dol` Dol Amroth (33), `pin` Pinnath Gelin (32), `los` Lossarnach (26), `lam` Lamedon (24), `sere` Serelond (22), `lin` Linhir (22), `vale` Blackroot Vale (20), `osg` Osgiliath (17), `anf` Anfalas (13), `cair` Cair Andros (11), `mns` Minas Tirith (11), `lon` Lond-Galen (10), `har` Harondor (9), `bel` Belfalas (7), `ith` Minas Ithil (6), `leb` Lebennin (6). Counts verified 2026-08-04 — this row listed only 5 of the 17 until then. Ten further head-armor ids are named/unique rather than regional (`imrahil_helmet`, `gondor_king_crown`, `ithilien_hood*`, `angbor_helmet`, `forlong_helmet`, `hirluin_helmet`, `golasgil_helment` *(misspelling is load-bearing — the mesh matches)*) |
+| **Gondor prefixes** | **17 regional tokens**, all `sk_gd_<region>_` in `gondor/`: `ano` Anórien (49 items), `dol` Dol Amroth (33), `pin` Pinnath Gelin (32), `los` Lossarnach (26), `lam` Lamedon (24), `sere` Serelond (22), `lin` Linhir (22), `vale` Blackroot Vale (20), `osg` Osgiliath (17), `anf` Anfalas (13), `cair` Cair Andros (11), `mns` Minas Tirith (11), `lon` Lond-Galen (10), `har` Harondor (9), `bel` Belfalas (7), `ith` Minas Ithil (6), `leb` Lebennin (6). Counts verified 2026-08-04; this row listed only 5 of the 17 until then. Ten further head-armor ids are named/unique rather than regional (`imrahil_helmet`, `gondor_king_crown`, `ithilien_hood*`, `angbor_helmet`, `forlong_helmet`, `hirluin_helmet`, `golasgil_helment`). **The five named-lord helmets in that list are DEAD as of 2026-08-28**: their meshes were deleted, the item definitions survive but nothing references them, and the lords are dressed from their regions instead. `golasgil_helment`'s misspelling was load-bearing only while its mesh matched, so treat it now as a dead id, not a name to preserve. See "Deleted on 2026-08-28" below |
 | **KEYforce spec drops** | `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` — per-culture item lists + unit progression specs |
 | **CC facegen action_sets** | LIVE at `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml`; tracked snapshot `docs/reference/lotrlome-armory-snapshot/`. Every TAOM race id needs full-surface `as_<race>_facegen` + `_female_facegen` (copy `as_dwarf_facegen`; slim entries break post-parent CC). See [character-creation.md](../../docs/features/character-creation.md) |
 | **action_sets structure** | Every `<action>` MUST be nested inside an `<action_set>` — `<action_sets>` accepts only `<action_set>` children (`<game>/XmlSchemas/soln_action_sets.xsd`, byte-identical in the game and dedicated-server installs). A root-level `<action>` is structurally illegal, but the game client **loads it silently**: build 1.4.7.117484 tolerates the file, while build 117131 — which the dedicated-server engine ships — throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at schema path `/action_sets/action` and dies on boot. Both build numbers are as reported in the 2026-08-03 co-op field report; the installed client's `Version.xml` carries only `v1.4.7`, so they are not locally verifiable. Note the XSD is *not* the enforcement point — it never declares `base_set`, which every shipped file uses heavily, so the client clearly does not validate against it; the invariant is enforced by the loader's merge path. Guard: `python tools/audit_action_set_parity.py` exits non-zero on any root-level `<action>`. Fixer for the 2026-08-03 case (twelve self-closing `as_<race>_female_villager_in_aserai_tavern` sets orphaning 168 elements): `tools/oneoff/fix_orphaned_tavern_conversation_actions.py`, which repairs the LIVE file and the tracked snapshot together. Fuller action-set tooling: [lotrlome-armory-snapshot/README.md](lotrlome-armory-snapshot/README.md) |
@@ -35,12 +35,46 @@
 
 **Validation:** When adding/changing equipment, always verify item IDs exist in Armory. Characters appear in underwear when items are missing. Run `python tools/validate_all_troop_refs.py` to cross-check every `sk_*/ar_*/clo_urukscout_*/urukscout_*` reference across all 7 troop XML files in one pass.
 
+## Two asset trees, and why a clean validator run can lie
+
+The Armory carries the same art twice, and they can disagree:
+
+| Tree | What it is | Read by |
+|---|---|---|
+| `AssetPackages/pack0-9.tpac` | the **cooked** packs the running game loads | `tools/validate_mesh_refs.py` |
+| `Assets/**/*.tpac` | the **authoring** tree, one tpac per asset | `tools/audit_deleted_mesh_impact.py` |
+
+Packs are rebuilt only on an explicit re-cook. **Art deleted from `Assets/` keeps shipping
+from a stale pack, so `validate_mesh_refs.py` returns `PASS` while the source tree is
+already broken.** The reverse also happens: art imported after the last cook exists for the
+editor and not for the game, and renders naked in-game right now. Check both directions
+before trusting either. Full case: [`docs/features/armoury-mesh-cleanup.md`](../features/armoury-mesh-cleanup.md).
+
+## Deleted on 2026-08-28 (do not re-reference)
+
+Four `lotraom-assets` commits removed 755 asset files. What that means for authoring:
+
+- **No Erebor team colours.** All 57 `sk_dwarf_erebor_*_{blue,green,red}` items are gone
+  from both Armory copies. Use the base id and let `Flags/UseTeamColor` do the work; that
+  is what made the per-colour meshes redundant in the first place.
+- **No Easterling armour set.** `easterling_*` and `easterlingwarriors0N_*` are dead art.
+  Rhûn's living set is Loke-Rim (`sk_rh_loke_*`) and Dragon-Wrath (`sk_rh_drag_*`).
+- **No bespoke Gondor lord kits.** `angbor_*`, `forlong_*`, `golasgil_*`, `hirluin_*`,
+  `imrahil_*`, `lossarnach_coat` and `ar_ardunian_elite_*` are dead. Dress named Gondor
+  lords from their region's own prefix instead.
+
+**Gondor regional slot coverage is uneven**, which matters when dressing a lord: Dol Amroth
+(`sk_gd_dol_`) is the only region shipping all five slots. Lamedon and Anfalas ship no
+gloves, greaves or cape; Lossarnach and Pinnath Gelin ship no greaves. The generic
+lord-tier fallbacks are `sk_gd_sere_bracer_lord_a` and `sk_gd_sere_grvs_lord_a`.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
 
+- [docs/features/armoury-mesh-cleanup.md](../features/armoury-mesh-cleanup.md)
 - [docs/reference/armory-shield-audit.md](./armory-shield-audit.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
 

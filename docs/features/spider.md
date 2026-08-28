@@ -26,8 +26,9 @@ LOTR needs Dol Guldur's giant spiders as a fielded force. Bannerlord has no firs
 non-humanoid roster troop, so three shapes were tried:
 
 1. **Rideable mount (2026-06-03, first attempt)** — abandoned at the time for a map-icon
-   `ForceUpdateBoneFrames` AV that was later understood (missing `_map`/`_town_and_village`
-   child action sets — the elephant Crash #4 class) and for the thumbnail/tableau AV whose true
+   `ForceUpdateBoneFrames` AV that was later understood (a missing `_map`
+   child action set, the elephant Crash #4 class; **corrected 2026-08-28**, this used to say
+   `_map`/`_town_and_village` and the second half is wrong, see the Child sets row) and for the thumbnail/tableau AV whose true
    root cause took until 2026-06-11 to find (below).
 2. **Detached riderless combatant (2026-06-04 → 06-05)** — `Mission.SpawnAgent` prefix
    hand-building a `FromHorseObj` spider with native wield guards. Worked in battle, then hit a
@@ -101,7 +102,7 @@ the detached spawn paths that earlier testing exercised.
 |---|---|---|
 | Monster | `ModuleData/Monsters/LOTR/lotr_monster_spider.xml` | `id="spider"`, `Mountable="true"`, `rider_sit_bone="chest_m"`, `num_paces="6"` (every mountable monster is 6 — paces 0–5), **`family_type="1"`** (the horse family — was 11 during the bisect, returned to 1 on 06-11 for the vanilla rider-death/dismount surface; deployed is 1), slope block (head + front/back leg roots), `action_set="as_spider"`, `monster_usage="spider"` |
 | Action set | `ModuleData/action_sets.xml` → `as_spider` | `skeleton="spider_skeleton"`, `movement_system="quadrupedal"`, 36 bindings. Movement actions bind ONLY tagged clips (walk_2/left/right, run). Idles/turns/jump/taunt currently bind tagged walk clips (pose-correct idles need a tagged Kit recompile). `act_horse_forward_canter` is bound explicitly (the tableau pose; warg precedent — `as_warg` binds it too) |
-| Child sets | same file: `as_spider_town_and_village`, `as_spider_map` | `base_set="as_spider"`; absence = map-icon/thumbnail AV class (elephant Crash #4) |
+| Child sets | same file: `as_spider_town_and_village`, `as_spider_map` | `base_set="as_spider"`. **Only `_map` is load-bearing**: its absence is the map-icon/thumbnail AV class (elephant Crash #4), because `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")` is called unguarded in `SandBox.View`. **CORRECTED 2026-08-28:** `_town_and_village` was listed here as equally required and is not. No managed code appends `_town_and_village` (0 hits, v1.4.8), and the rideable vanilla `as_camel` and `as_horse_2` ship without one. Keeping the spider's is harmless |
 | Usage set | `ModuleData/monster_usage_sets.xml` → `id="spider"` | Full mount surface: 10 verb attrs (rear/dash/kick/quick-stops/jump/hit-object…), upper-body movements, movements (paces 0–5, gallop both foot variants), rider movement-adders (`act_horse_rider_*` — global codes animating the RIDER), jumps (`act_horse_jump_*`, bound in as_spider), falls, strikes. Every pace 0–5 keeps a `direction="none"` reference row (missing one = native ÷0, the 2026-06-04 crash) |
 | Mount item | `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` → `spider_mount_a` | `is_mountable`, `<Horse monster="Monster.spider" maneuver=60 speed=40 charge_damage=10 body_length=100>`, `<AdditionalMeshes><Mesh name="sk_spider_forest_c_2"/>` (the L/R split second half) |
 | Skeleton + Meshes (bundled) | `Assets/creature/spider/animations/spider_correct_geo.tpac` (2.78MB) | **LIVE = the PROVEN 6/11 working bundle, RESTORED 2026-06-14 from `E:\LOTRAOMAssets\_tpac_backup_20260613\spider\`** (skeleton `owner_guid a9ec7d87…`, `Usage='horse'`; the 6/10 pre-rework mesh). `sk_spider_forest_c` / `_c_2` L/R-split meshes (≤38 bones/half; the unsplit 58-bone mesh AVs `PreloadForRendering`) + the 62-bone **`spider_skeleton`** resource. The action_set's `skeleton="spider_skeleton"` resolves here. **The 2026-06-13 Kit-rebuild bundle (different mesh) caused a FATAL battle-spawn AV** in the native `sound_and_collision_info` agent-build (`Agent.BuildAux`→native `Build`, RVA 0x490E02) — preserved as `.bak-kitbroken-20260614`; my physics-transplant attempts (`.transplanted-20260614`, `.bak-bundled-crashing-20260614`) likewise didn't fix it. **Restoring the backup did, in one copy.** Lesson: `feedback_creature_rework_restore_from_backup_first.md`. *(In-game battle verification owed.)* |
@@ -118,7 +119,8 @@ with **standard ids**: `soln_action_sets` → root `action_sets.xml`, `soln_acti
 `action_types.xml`, `soln_monster_usage_sets` → root `monster_usage_sets.xml`. Custom ids are
 silently ignored (2026-06-04 RCA, comment in the mbproj itself). The `Animations/` and
 `MonsterUsage/` subfolder copies are superseded reference copies. SubModule.xml `<Xmls>` handles
-only the managed types (Monsters, Items). Alliance.Wargs follows the same pattern.
+only the managed types (Monsters, Items). The warg followed the same pattern before its data was
+absorbed into LOTRLOME_Armory on 2026-08-28.
 
 ### Rider-side bindings (the thrust-loop fix, 2026-06-11)
 
@@ -126,12 +128,14 @@ When an agent rides a mount, the engine resolves the **mount's usage-set actions
 RIDER's action set** to pick the rider's lean/sway overlay (this is what the
 `as_goblin_warrior does not contain act_spider_*` rgl warnings were). Unresolved rider-side
 lookups degrade per-set — the elephant's mahout falls back benignly, the spider's goblin looped
-a thrust action. The supported mechanism (Alliance.Wargs precedent — the FIRST set in
+a thrust action. The supported mechanism (the warg precedent: the FIRST set in
 `action_sets_warg.xml` is a partial `as_human_warrior`!) is a **partial `as_human_warrior`
 block that the engine merges into the global set**, binding every usage-referenced mount action
 to a rider animation. The spider's partial lives in the root `action_sets.xml` right above
 `as_spider` (24 bindings) and **reuses the globally-registered `rider_warg_*` clips**
-(Alliance.Wargs is a hard dependency) until bespoke spider-rider clips exist. `act_horse_*`
+(they ship in LOTRLOME_Armory since the 2026-08-28 warg absorption; before that they made
+Alliance.Wargs an undeclared hard dependency of the spider) until bespoke spider-rider clips
+exist. `act_horse_*`
 codes (rider adders, jumps, canter) are already vanilla-covered rider-side. Race sets like
 `as_goblin_warrior` inherit the human-warrior surface (goblin WARG riders work via the same
 merge), so one partial covers all riders incl. the player.

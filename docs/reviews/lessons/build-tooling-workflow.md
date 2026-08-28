@@ -1543,3 +1543,54 @@ TAOM's review pipeline reliably APPENDS lessons after every RCA and reliably fai
 - **Why missed:** the instruction to read the category file lives in CLAUDE.md, which is always loaded and therefore general. Generic always-on instructions lose to specific in-the-moment ones. Nothing connected "I am about to write a Harmony patch" to "there is a file of Harmony patch traps", so the file was opened only at the end, to append to.
 - **Prevent:** put the read instruction in the PATH-SCOPED rule that auto-loads for the subsystem, not only in CLAUDE.md, and make it cite a concrete incident so it does not read as boilerplate. Done for `.claude/rules/harmony-patches.md` → `lessons/harmony-il.md`. The same wiring is owed for the other category files whose subsystems have a path-scoped rule (`gamemodels.md`, `adapters.md`, `xslt.md`, `native-cpp-ports.md`). General rule: when a process step is skipped repeatedly, do not restate it louder, move it to where the work happens.
 - **Source:** docs/reviews/rca-uncapturable-heroes-2026-08-26.md, "The finding that matters most".
+### A transform that changes text length invalidates every offset you recorded before it
+
+Masking regions you must not touch (XML comments, CDATA, code fences) by recording their byte
+spans and writing them back at those spans is correct only while the text length is fixed. On
+2026-08-28 an item-id swap did exactly this: comments were blanked in place, the swap replaced
+ids with longer ones, and restoration then spliced a `GOLASGIL` comment into the middle of an
+item id and left NUL bytes behind. Eight ModuleData files went out malformed.
+- **Why missed:** the masking and the restoring were written together and read as obviously
+  symmetric. The asymmetry is introduced by the code BETWEEN them, which was added later. Unit
+  tests covered swaps and comments separately, and both passed, because neither exercised a
+  replacement of a different length next to a comment.
+- **Prevent:** restore by TOKEN, not by offset. Substitute each masked region for an indexed
+  private-use sentinel that cannot occur in XML and matches no pattern, transform freely, then
+  restore with a regex on the sentinel. Length-independent and order-independent. Then add the
+  backstop that makes the class unshippable: **parse the transformed document and refuse to write
+  it if it no longer parses.** A data-mutating script that cannot detect it has produced garbage
+  will ship garbage.
+- **Source:** docs/features/armoury-mesh-cleanup.md; tools/apply_dead_mesh_item_swaps.py.
+
+### Revert per file, never per directory, in a tree another session is working in
+
+Undoing a bad write with a directory-wide `git checkout` reverts everything uncommitted under it,
+including files you never touched. On 2026-08-28 that took a concurrent session's four new
+war-ram troops in troops_erebor.xml along with the eight files being repaired. It was recoverable
+only because that session had a generator script and could re-run it.
+- **Why missed:** the mental model was "undo my change", but the command's scope is "the
+  directory", and in a multi-session tree those are not the same set. The corrupted files were 8
+  of the 9 modified paths, so a directory revert felt equivalent and was not.
+- **Prevent:** name the paths, using the exact list the tool reported writing. Before any revert
+  wider than one file, run `git status --porcelain <dir>` and diff that against your own
+  written-file list; anything in the first and not the second belongs to someone else. The
+  stronger fix is upstream: a script that refuses to write malformed output never creates the mess
+  a wide revert is reaching for.
+- **Source:** docs/features/armoury-mesh-cleanup.md; CLAUDE.md "Multi-session git safety".
+
+### A zero you did not prove is not a zero: LFS pointers and pipeline exit codes both fake one
+
+Two independent silent-zero failures in one session. (1) Scanning the pre-image of every deleted
+`.tpac` with `git show` returned a 128-byte Git LFS pointer, not the pack, so the TOC scan found
+no meshes and the corroboration step reported "0 names recovered, 0 agreeing" as though the
+deleted set were empty. (2) A peer concluded `validate_mesh_refs.py` "exits 0 even with 10 errors,
+so it is a report and not a gate" after running it piped through `tail`; the shell reports the
+LAST command in a pipeline, and the tool actually returns 1.
+- **Why missed:** both produce the shape of a clean result. A zero count and a zero exit code are
+  exactly what success looks like, so neither prompts the question that would expose it.
+- **Prevent:** for LFS-tracked blobs use `git cat-file --filters`, which applies the smudge
+  filter, and explicitly detect the pointer header so an unresolvable object is COUNTED and
+  reported rather than skipped. For exit codes, never read the status after a pipe: redirect to a
+  file, or read `PIPESTATUS`. Generally: when a check reports nothing wrong, confirm it actually
+  ran before believing it.
+- **Source:** docs/features/armoury-mesh-cleanup.md; tools/audit_deleted_mesh_impact.py.

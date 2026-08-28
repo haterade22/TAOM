@@ -278,6 +278,40 @@ burying a twelve-row change in a 106,152-line diff that no reviewer can read.
 
 ## Referenced by
 
+- [docs/features/culture-playability-wiring.md](../../features/culture-playability-wiring.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/rca-dale-2026-05-26.md](../rca-dale-2026-05-26.md)
 
 <!-- backlinks-end -->
+### In a stylesheet the owning entity is the template's match predicate, not an enclosing element
+
+Attributing a reference to its owner by scanning for an enclosing `NPCCharacter` element works in
+authored XML and finds nothing in a stylesheet, where the owner is an
+`xsl:template match="NPCCharacter[@id='lord_1_1']"` predicate. On 2026-08-28 that made all 778
+roster references in `lords.xslt` resolve to no owner, so every one of roughly 389 XSLT-authored
+vanilla lords was reported as unaffected by a change that did affect them. Angbor, Forlong,
+Golasgil, Hirluin and Imrahil only appeared in the blast radius once it was fixed.
+- **Why missed:** the sweep walked `*.xslt` files, so it looked like stylesheet coverage was
+  handled. Reading the files is not the same as understanding their ownership model, and the
+  failure is silent: no error, just a smaller answer.
+- **Prevent:** any ownership scan over a tree containing stylesheets must recognise BOTH shapes,
+  the element and the template match predicate. Same for `spcultures.xslt`, where the six
+  re-skinned vanilla cultures' reward items and default rosters exist ONLY in the stylesheet.
+  Corollary re-confirmed: a fix applied to merged output is discarded, because `lords.xslt`
+  replaces each lord's whole `Equipments` block via a `not(self::Equipments)` predicate.
+- **Source:** docs/features/armoury-mesh-cleanup.md; tools/audit_deleted_mesh_impact.py.
+
+### An anonymous wrapper element steals ownership from a "next id below the tag" scan
+
+Resolving an owner by setting a flag on an opening tag and taking the next `id` seen breaks on
+TAOM's troop and character files, where equipment sits inside an ANONYMOUS
+`EquipmentRoster civilian="true"`. The scan walks past the id-less roster and latches onto the
+first item reference underneath, so every character comes out named after a sword. The result
+looks populated and is entirely wrong.
+- **Why missed:** it produces plausible data rather than an error, and the ids it invents are real
+  ids that exist elsewhere in the file. It survived a unit test that used a named roster.
+- **Prevent:** match the WHOLE opening tag (a pattern that spans to the closing angle bracket, so
+  multi-line opens still resolve) and read the id from inside that match. An element with no id
+  then contributes no owner instead of hijacking the next one. Pin it with a test whose fixture
+  uses an anonymous wrapper, and assert no owner ever starts with a reference prefix.
+- **Source:** docs/features/armoury-mesh-cleanup.md.

@@ -519,8 +519,6 @@ mordor` would have flattened the whole set onto the elite row.
 - **Sibling entries:** same family as "The lance must exclude `swing`" in [black-numenorean.md](../../features/black-numenorean.md) and `rca-crafting-usage-features-2026-07-26.md` (20 mace heads). All three are one root cause: a crafted weapon's behaviour is assembled from description membership and usage-feature tokens, never declared on the item, so an incomplete assembly is silent by construction.
 - **Source:** 2026-08-20, merging PR #447. The gate the PR added found this on its first run against trunk.
 
----
-
 ### Reusing a vanilla lord id silently inherits its sex, and the beard block is what renders
 TAOM reuses vanilla NPCCharacter ids for entirely different characters. `lord_WE8_c` is vanilla's
 Icratia, a woman, reused for Pelendur son of Golasgil. `lord_1_46_1` is vanilla's Seorgys, a man,
@@ -549,12 +547,48 @@ Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is
 - **Source:** 2026-08-28, `a00086da`; the same class shipped three weeks earlier as `3c7f4e25`
   (Grimbold) with no lesson recorded, which is why it recurred.
 
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
 
 - [docs/features/faction-map.md](../../features/faction-map.md)
+- [docs/INDEX.md](../../INDEX.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
 
 <!-- backlinks-end -->
+### A mesh validator that resolves against cooked packs cannot see art deleted after the last cook
+
+`validate_mesh_refs.py` builds its present-set from `AssetPackages/pack0-9.tpac`. Those are
+rebuilt only on an explicit re-cook, so art deleted from `Assets/` or `AssetSources/` keeps
+shipping from a stale pack. On 2026-08-28 four asset-repo commits deleted 755 files and the
+validator still returned `PASS: no mesh-reference issues found`, sitting on top of 179
+already-deleted meshes that 149 item references still named. The breakage was one re-cook away
+and invisible until then.
+- **Why missed:** the tool was trusted as "the mesh check" without asking which tree it reads. A
+  `PASS` is a strong signal and nothing distinguished it from a `PASS` on genuinely clean data.
+- **Prevent:** treat the two trees as separate sources of truth and diff them. `AssetPackages`
+  minus `Assets` is art that is gone but still shipping (breaks at the next cook); `Assets` minus
+  `AssetPackages` is art imported but not cooked (renders naked NOW). Both are real defects and
+  they are opposite, so a tool reporting one must not be read as covering the other. The two
+  questions also give different counts on purpose: "imported but not cooked" is wider than
+  "referenced by an item and not cooked", because the latter only walks item XML.
+- **Source:** docs/features/armoury-mesh-cleanup.md; tools/audit_deleted_mesh_impact.py.
+
+### Regional armour sets have uneven slot coverage, so "their own region's gear" is not always possible
+
+Re-dressing the five named Gondor lords from their own regions looked like a lookup and was not.
+Measured 2026-08-28: **Dol Amroth is the only Gondor region shipping all five slots.** Lamedon and
+Anfalas ship no gloves, greaves or cape at all; Lossarnach and Pinnath Gelin ship no greaves.
+Anfalas ships only infantry gear, so its own top tier is heavy rather than lord.
+- **Why missed:** the culture reads as complete because body and head armour are well covered in
+  every region, and those are the slots checked first. Gloves, greaves and capes are authored far
+  more sparsely, and nothing surfaces the gap until a specific slot has to be filled.
+- **Prevent:** before promising region-faithful equipment, enumerate surviving items per region
+  AND per slot, with armour values, and decide the fallback explicitly (here the generic lord-tier
+  Serelond bracer and greaves). Also compare tiers before swapping: the bespoke lord pieces were
+  85 body / 50 head / 35 gloves and nothing any region ships exceeds 70 / 41 / 27, so the swap was
+  a real nerf that had to be stated rather than discovered later.
+- **Source:** docs/features/armoury-mesh-cleanup.md; docs/reference/armory-guide.md.

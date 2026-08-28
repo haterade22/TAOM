@@ -4,29 +4,50 @@
 
 ## 2026-08-28
 
-### docs(multi-session): never write a reconstructed shared file to disk
+### refactor(warg): absorb Alliance.Wargs into LOTRLOME_Armory, one fewer module to install
 
-Two sessions lost work to the same idiom today, so it is now a rule rather than folklore.
+Players no longer install or enable a separate `Alliance.Wargs` module. Its whole data plane now
+lives in `LOTRLOME_Armory`, the same move the war elephant made off `ADOD_Beasts` in June.
 
-Rebuilding a shared file (CHANGELOG.md is the one that keeps getting hit) from HEAD plus your own
-hunk and writing the result to the WORKING TREE silently destroys every other session's uncommitted
-entries. It fails quietly because the output is a perfectly well-formed file. Two CHANGELOG entries
-were destroyed this way and were unrecoverable: present in no commit on any branch, and absent from
-all 80 dangling blobs. They came back only because the session that wrote them still had its
-transcript.
+The module was data and assets only: no assembly, no `bin/`, an empty `<SubModules>`. Every line of
+warg behaviour already lived in TAOM under `Main/Features/Warg/` and `Main/Features/AdvancedCombat/`.
 
-The distinction is the DESTINATION, not the technique. Reconstructing HEAD plus your hunk is correct,
-and is how one session commits its own changes to a file two sessions are editing; it just has to land
-in the INDEX (`git hash-object -w` plus `git update-index --cacheinfo`), which never touches the
-working tree.
+Two things made this worth doing beyond the module count. The dependency was never declared: TAOM
+ships 392 `Item.warg_*` references across 12 ModuleData files plus `AgentAdapter.IsWarg()` matching
+`Monster.StringId == "warg"`, and nothing in `SubModule.xml` or the launcher enforced the module's
+presence. And the spider quietly depended on it too, binding 35 of its rider actions to 12
+`rider_warg_*` clips that were in none of LOTRLOME's own packs, so removing the module without this
+work would have broken the spider's rider animation.
 
-The tell: an append shows insertions only, while a rebuild shows deletions, because HEAD by definition
-holds nobody's uncommitted work. The worktree copy can also drift BEHIND HEAD the same way, in which
-case the next commit from the worktree silently reverts entries that were already pushed.
+Moved into LOTRLOME_Armory: the `warg` Monster, `as_warg` and `as_warg_map` plus 75 rider rows folded
+into the existing `as_human_warrior` partial, 80 `act_warg_*` action types, the `warg` monster usage
+set and the 22 rider rows its XSLT injects into vanilla's `human` set, a new `physics_materials`
+pair and `collision_infos_warg.xml`, 17 sound events with 87 wavs, the four warg items, and the
+cooked asset pack as `AssetPackages/warg.tpac`. The warg voice definition went to
+`Main/_Module/` instead, filling a `project.mbproj` entry that had been dangling at a nonexistent
+file. `as_warg_town_and_village` is new, added purely for parity with the other creatures.
 
-A second, milder hazard from the same day: the git INDEX is shared across every session in a worktree.
-Stage and commit in one shell invocation, because a concurrent commit between the two clears what you
-staged.
+**Ids are unchanged on purpose.** Renaming would have rewritten those 392 references and stripped
+warg mounts off every existing save, the same failure as the "wearing nothing" bug fixed earlier the
+same day. The trade is that a player who re-enables the old module feeds a second `as_warg` into the
+native action_sets merge, so retirement is a rename to `.OFF` first, not a delete.
+
+Also corrected: `docs/reference/provenance-register.md` listed `Alliance.Wargs` as TAOM-owned. It is
+not. The assets are Byak0's, given to the maintainer with full permission, and now carry a real
+register row and a notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` because absorbing them into a
+module that ships by default turns a separate download into redistribution.
+
+Verified: 0 broken item refs across 3,017 referenced items with the old module dropped from the
+registry roots, `validate_moduledata` PASS, mesh validator holding at its pre-existing 10 errors with
+zero warg entries, all 75 warg animation targets resolving without `Alliance.Wargs`, and 7,716 tests
+passing. In-game ladder still owed.
+
+Ledger for the untracked-module edits: `docs/reference/lotrlome-warg-changes.md`.
+
+Not-tested: every in-game rung. Nothing here has been run in the game yet.
+Research: MBObjectManager.GetMergedXmlForNative, ModuleHelper.GetXsdPath, ModuleInfo.LoadWithFullPath, ActionSetCode.
+Save-compat: safe. No id changed, so existing warg mounts and saddles resolve exactly as before.
+
 
 ### docs(war-ram): write down what the reskin path actually costs
 
@@ -292,6 +313,94 @@ Verified: `validate_moduledata.py` PASS, `check_external_xslt.py` clean across 1
 
 Not-tested: in-game appearance. Hero sex, body properties and equipment bake at hero creation, so
 this needs a game restart and a NEW campaign to observe.
+
+### fix(armory): re-dress everything the asset cleanup left wearing nothing
+
+45 items had a deleted mesh and a live wearer. 41 are now re-pointed at surviving art, 484
+references across 8 files. `validate_moduledata.py` PASS, 693 tests green.
+
+**Gondor lords wear their own region now.** Angbor of Lamedon, Forlong of Lossarnach, Golasgil of
+Anfalas, Hirluin of Pinnath Gelin and Imrahil of Dol Amroth each take the highest tier their own
+region ships. Four of the five regions ship no gloves or greaves at all, so those slots fall back to
+the generic Gondor lord-tier Serelond pieces, and Lamedon and Anfalas borrow an Anorien noble elite
+cape. Hirluin and Imrahil are mounted, so they get cavalry helms.
+
+This costs the lords real armour and there is no way around it: the bespoke pieces were 85 body /
+50 head / 35 gloves and nothing any region ships goes above 70 / 41 / 27. The art backing those
+numbers was deleted.
+
+**Easterling becomes Loke-Rim**, tier-matched piece by piece so no notable or troop silently gains
+or loses protection (88 to 89, 52 to 51, 41 to 41, and so on). One exception, stated because it is a
+real nerf: `easterlingwarriors04_cape` was 30 and Loke-Rim's heaviest shoulder is 24.
+`easterling_shield` becomes `sm_rh_loke_shield_med_a`.
+
+**Erebor loses blue, green and red.** All 57 colour-variant items are deleted from both the live
+Armory and the `lotraom-assets` copy; every one had a dead mesh. The 5 that something still equipped
+all dressed `named_companion_yotthani` and each had an exact surviving base counterpart, so he now
+wears the plain versions.
+
+**The three career starter boots are re-meshed, not swapped.** Their armour is tuned to 5 / 7 / 9
+and the lowest surviving Loke leg item is 15, so a reference swap would have near-tripled starting
+leg armour. Pointing the mesh at `sk_rh_loke_boots_a` fixes the invisible boot and leaves the tuning
+alone.
+
+`lossarnach_coat` (villagers, notables, headman, ransom broker) becomes `gondor_noble_coat_a`,
+24 to 20, already worn by the rest of that file's cast.
+
+Deliberately not covered, still dead and still equipped: `ar_ardunian_elite_armour` (Umbar) and
+`lotr_troll_armor` / `_bracers` / `_helmet` (Mordor). No replacement was chosen for those.
+
+One process failure worth recording. The first apply corrupted 8 files: comments were masked by byte
+offset and restored at those offsets, but a swap changes the text length, so every comment landed in
+the wrong place, spliced into the middle of item ids. Fixing it meant a `git checkout` over
+`Main/_Module/ModuleData`, which reverted a concurrent session's uncommitted work on
+`troops/troops_erebor.xml`. They had a generator and re-applied it, so nothing was lost, but the
+lesson stands: **revert per file, never a directory**, and the tool now parses every transformed
+document and refuses to write a malformed one, so there is nothing to mass-revert in the first place.
+
+Not-tested: in-game appearance (needs a build, a full game restart and a new campaign, per the
+no-hot-reload rule). Save-compat: existing saves keep the item ids their heroes already hold, so a
+running campaign shows the change only where equipment is re-rolled.
+
+### tooling(armory): find the items the asset cleanup left pointing at nothing
+
+Four commits in `lotraom-assets` (`0ecd5df1`, `7946f65c`, `f6029ca9`, `312f5ab9`) deleted 755 asset
+files, and the deletion synced into the live install. Nothing removed the mesh ids from the item
+XMLs, and nothing noticed: `validate_mesh_refs.py` resolves against the cooked
+`AssetPackages/pack*.tpac`, which were built on 08-25 and still ship every deleted mesh. So the
+forward audit read `PASS`, the game kept rendering the items, and the breakage was sitting one
+re-cook away.
+
+`tools/audit_deleted_mesh_impact.py` diffs the two trees instead of trusting either, then joins the
+result through to the troops:
+
+* **179 meshes deleted**, 149 of them still named by item XML, across 153 items and 26 files.
+* **57 are Erebor team-colour variants** (`_blue`/`_green`/`_red`) whose base mesh survives in every
+  case, so they re-point mechanically and let `UseTeamColor` do the work. 96 are real content loss:
+  Easterling, Moria orc, the five Gondor lord sets, `ar_ardunian_elite_*`, troll.
+* **45 need a decision** (lost art that something still equips). 164 characters are affected,
+  concentrated in Rhun, where the easterling armour dresses most of the civilian population.
+* **11 meshes are broken the other way**: imported but not yet cooked, so they render naked right
+  now. That set is in-flight work (the Khamul barding, the Erebor goat bardings, the Gondor horse
+  plate).
+
+Corroborated against the four commits: 431 deleted `.tpac` pre-images parsed, 175 mesh names
+recovered, all 175 agreeing with the set difference and none contradicting it. That needed
+`git cat-file --filters` rather than `git show`, because the asset repo tracks `*.tpac` through LFS
+and `git show` hands back a 128-byte pointer whose scan finds no meshes, reporting a silent zero
+that reads exactly like a confirmed-empty result.
+
+Report only. Nothing in the live Armory or the troop XMLs was touched by this half.
+
+Two bugs the hand-verification caught, both of which had produced plausible-looking wrong answers:
+the owner scan latched onto the first `id="Item.x"` under an anonymous
+`<EquipmentRoster civilian="true">`, so every character came out named after a sword; and owners in
+`lords.xslt` are `<xsl:template match="NPCCharacter[@id='lord_1_1']">` rather than elements, so all
+778 roster references there resolved to nobody and every XSLT-authored lord looked unaffected.
+Angbor, Forlong, Golasgil, Hirluin and Imrahil only appear in the blast radius once that is fixed.
+
+Not-tested: the in-game consequence of a re-cook (needs a pack rebuild plus a restart).
+Research: the tpac TOC parser is reused from `validate_mesh_refs.scan_tpac_metameshes`.
 
 ### fix(rhun): the Khamul barding items now exist
 

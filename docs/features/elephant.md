@@ -578,7 +578,13 @@ humanoid, so the whole spider problem (a riderless non-humanoid body) never aris
 
 **4. Action set** (`action_sets.xml` `as_elephant`, lines 353–463): `skeleton="elephant_skeleton"`,
 `movement_system="quadrupedal"`; binds the 31 elephant clips; defines custom `act_elephant_attack_1..4`;
-**requires** the `as_elephant_town_and_village` + `as_elephant_map` child derivations. (Porting note: ADOD_Beasts's
+**requires** the `as_elephant_map` child derivation. (**CORRECTED 2026-08-28:** this used to name
+`as_elephant_town_and_village` as equally required. It is not. Measured against the installed v1.4.8,
+**no managed code anywhere appends `_town_and_village`** (0 hits across the shipping and modules
+builds), and two shipping rideable vanilla mounts ship without one: `as_camel` and `as_horse_2`, the
+latter carrying a real Horse item. Only `as_horse` has one. The `_map` half IS real:
+`MBGlobals.GetActionSet(monster.ActionSetCode + "_map")` has call sites in `SandBox.View`. Authoring a
+`_town_and_village` child is harmless, just not load-bearing.) (Porting note: ADOD_Beasts's
 `as_elephant_town_and_village` has a copy-paste bug — it sets `act_elephant_stand_1` four times instead of
 `stand_1/2/3/4`; fix on port.) Plus a full `monster_usage_set` named `elephant` (`monster_usage_sets.xml`).
 
@@ -630,7 +636,8 @@ Ordered, following the deep-dive's step list (structure from warg, data from ADO
    - **Item** (Horse) `taom_war_elephant`: `Type="Horse"`, `culture=Culture.harad` (not empire), tuned `charge_damage`,
      body mesh + `<AdditionalMeshes>` for armor/howdah + `<Materials>` → the elephant textures,
      `<Horse monster="Monster.taom_war_elephant" is_mountable="true">`; + a `HorseHarness` (`family_type="10"`).
-   - **action_set** `as_war_elephant` + the **required** `_town_and_village` + `_map` children (fix ADOD_Beasts's
+   - **action_set** `as_war_elephant` + the **required** `_map` child, plus an optional `_town_and_village`
+     one (not load-bearing, corrected 2026-08-28 above) (fix ADOD_Beasts's
      `stand_1`×4 copy-paste bug); the `monster_usage_set`. Rename `act_elephant_*` → `act_war_elephant_*` so we
      carry no runtime dependency on ADOD_Beasts being installed. Register all in `SubModule.xml`.
 4. **Validate data** — `python tools/validate_moduledata.py` before any C# (the external LOTRLOME XML is
