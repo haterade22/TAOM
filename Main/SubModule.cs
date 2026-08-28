@@ -767,6 +767,13 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<ICareerMenuService>(),
             ccLogger));
 
+        // #514 — offers an adopted player a place in their culture's kingdom, once, after
+        // character creation ends. Gated on an actual adoption, unlike the predecessor mod's
+        // version which asked every player regardless.
+        campaignStarter.AddBehavior(new TAOM.Features.PlayerSwitcher.KingdomJoinOfferBehavior(
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IKingdomJoinOfferService>(),
+            ccLogger));
+
         // Re-applies the character-creation package when a multiplayer join swaps the controlled
         // hero out from under it. Inert in single-player. Field report 2026-08-03 §1 + §7.
         campaignStarter.AddBehavior(new TAOM.Features.PlayerPossession.PlayerPossessionBehavior(

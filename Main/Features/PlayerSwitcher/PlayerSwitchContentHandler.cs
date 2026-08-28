@@ -52,9 +52,12 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         _logger = logger;
     }
 
-    /// <summary>A new character creation starts with no lord chosen.</summary>
+    /// <summary>
+    /// A new character creation starts clean. Resets the recorded outcome too, so a second
+    /// campaign started in the same process cannot inherit the first one's result.
+    /// </summary>
     public void InitializeContent(CharacterCreationManager characterCreationManager)
-        => _sessionWriter.Clear();
+        => _sessionWriter.ResetForNewCreation();
 
     public void AfterInitializeContent(CharacterCreationManager characterCreationManager)
     {
@@ -75,8 +78,11 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         if (outcome != SwitchOutcome.Switched)
             _logger.LogWarning($"Player Switcher: handover ended as {outcome} for '{plan.HeroId}'");
 
-        // The selection has been consumed either way. Leaving it set would let a second character
-        // creation in the same process inherit it.
+        // Recorded before the clear, because OnCharacterCreationIsOverEvent fires after this and
+        // the kingdom-join offer needs to know whether a handover actually happened.
+        _sessionWriter.RecordOutcome(outcome, plan.Path, plan.HeroId);
+
+        // The selection itself has been consumed either way.
         _sessionWriter.Clear();
     }
 }

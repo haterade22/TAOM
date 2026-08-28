@@ -17,5 +17,9 @@
     <string id="taom_ps_switched" text="You now play as {HERO} of {CLAN}." />
     <string id="taom_ps_failed" text="You could not take the place of {HERO}. Continuing as your own character." />
     <string id="taom_ps_unavailable" text="The player switcher could not start and is disabled for this session." />
+    <string id="taom_ps_join_title" text="Swear to a king?" />
+    <string id="taom_ps_join_body" text="Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
+    <string id="taom_ps_join_yes" text="Swear the oath" />
+    <string id="taom_ps_join_no" text="Stay independent" />
   </strings>
 </base>

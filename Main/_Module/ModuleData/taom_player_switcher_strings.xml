@@ -22,4 +22,11 @@
 	<string id="taom_ps_failed" text="{=taom_ps_failed}You could not take the place of {HERO}. Continuing as your own character." />
 	<string id="taom_ps_unavailable" text="{=taom_ps_unavailable}The player switcher could not start and is disabled for this session." />
 
+	<!-- Kingdom-join offer, raised once after an adoption. The takeover path never sees this,
+	     because a taken-over lord already belongs to their clan's kingdom. -->
+	<string id="taom_ps_join_title" text="{=taom_ps_join_title}Swear to a king?" />
+	<string id="taom_ps_join_body" text="{=taom_ps_join_body}Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?" />
+	<string id="taom_ps_join_yes" text="{=taom_ps_join_yes}Swear the oath" />
+	<string id="taom_ps_join_no" text="{=taom_ps_join_no}Stay independent" />
+
 </strings>

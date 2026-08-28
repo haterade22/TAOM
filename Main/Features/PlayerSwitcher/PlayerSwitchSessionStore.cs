@@ -33,4 +33,25 @@ public class PlayerSwitchSessionStore : IPlayerSwitchSession, IPlayerSwitchSessi
     }
 
     public void SetPreviewActive(bool active) => IsPreviewActive = active;
+
+    public SwitchOutcome LastOutcome { get; private set; } = SwitchOutcome.NotAttempted;
+
+    public SwitchPath LastPath { get; private set; } = SwitchPath.AssumeIdentity;
+
+    public string LastSwitchedHeroId { get; private set; } = string.Empty;
+
+    public void RecordOutcome(SwitchOutcome outcome, SwitchPath path, string heroId)
+    {
+        LastOutcome = outcome;
+        LastPath = path;
+        LastSwitchedHeroId = heroId ?? string.Empty;
+    }
+
+    public void ResetForNewCreation()
+    {
+        Clear();
+        LastOutcome = SwitchOutcome.NotAttempted;
+        LastPath = SwitchPath.AssumeIdentity;
+        LastSwitchedHeroId = string.Empty;
+    }
 }

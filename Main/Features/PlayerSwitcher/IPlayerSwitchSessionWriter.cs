@@ -14,4 +14,13 @@ public interface IPlayerSwitchSessionWriter
     void Clear();
 
     void SetPreviewActive(bool active);
+
+    /// <summary>Records what the handover did, for listeners that run after character creation ends.</summary>
+    void RecordOutcome(SwitchOutcome outcome, SwitchPath path, string heroId);
+
+    /// <summary>
+    /// Wipes everything including the recorded outcome. Called when a NEW character creation
+    /// begins, so a second campaign in one process cannot inherit the first one's result.
+    /// </summary>
+    void ResetForNewCreation();
 }

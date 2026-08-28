@@ -4,6 +4,38 @@
 
 ## 2026-08-27
 
+### feat(player-switcher): the kingdom-join offer (#514, phase 4)
+
+Completes the feature. Wanderer adoption itself landed with the handover in phase 2; what was
+still missing was the offer that follows it.
+
+An adopted player keeps the clan they named and the banner they designed, which means they start
+independent. The offer asks, once, whether they want to swear to their culture's kingdom.
+
+The gate is the point. The predecessor mod raised this prompt without checking whether a handover
+had happened at all, so an ordinary character creation could be asked to join a kingdom; its own
+feature doc filed that as a quirk. Three conditions now hold before anything is shown, and each
+excludes a real case: the handover must have succeeded, it must have been the adoption path (taking
+over a lord already puts you in their kingdom, so the question is meaningless), and the clan must
+genuinely be kingdomless with a kingdom of its culture available. `KingdomJoinOfferServiceTests`
+covers all three refusals plus accept and decline.
+
+`ChangeKingdomAction.ApplyByJoinToKingdom` is called with named arguments. The third positional
+slot became a `CampaignTime` in 1.4.8, so the old three-positional call does not compile, and a
+positional call here would be one refactor away from meaning something else.
+
+The offer runs from `OnCharacterCreationIsOverEvent` rather than from the handover handler.
+The handler executes inside `ApplyFinalEffects` while the map state is still being pushed, so a
+prompt raised there would sit over a screen about to be popped; by the time this event fires the
+player is on a live map with time running.
+
+The session now records what the handover did, and that record survives the selection being
+cleared, because the event fires afterwards. `InitializeContent` resets it, so a second campaign
+started in the same process cannot inherit the first one's result.
+
+Four more localization keys, seeded across all twelve languages. Suite 7,671 green.
+
+
 ### feat(player-switcher): the picker panel (#514, phase 3)
 
 The UI. `Patch77_PlayerSwitcher` attaches the hero picker to the character creation face

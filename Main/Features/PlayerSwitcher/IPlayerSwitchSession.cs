@@ -28,4 +28,18 @@ public interface IPlayerSwitchSession
     bool IsPreviewActive { get; }
 
     bool HasSelection { get; }
+
+    /// <summary>
+    /// What the handover did, recorded at finalize so a later listener can react to it. Survives
+    /// <see cref="IPlayerSwitchSessionWriter.Clear"/>, because the selection is consumed at
+    /// finalize but the outcome is still needed by OnCharacterCreationIsOverEvent, which fires
+    /// afterwards.
+    /// </summary>
+    SwitchOutcome LastOutcome { get; }
+
+    /// <summary>Which path the handover took. Only meaningful when <see cref="LastOutcome"/> is Switched.</summary>
+    SwitchPath LastPath { get; }
+
+    /// <summary>The hero the player became, or empty.</summary>
+    string LastSwitchedHeroId { get; }
 }
