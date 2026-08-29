@@ -19,6 +19,13 @@ listed only the first ten, and mapped battania to Dunland (it is Khand)._
 This mapping is load-bearing and lives only in the data, so it is recorded here. It is not a defect;
 these cultures deliberately have no roster of their own.
 
+Two of the rows arrived a different way. Blue Craig and the Misty Mountain Orcs were promoted out of
+a borrowed culture in August 2026, and the promotion cloned a whole troop tree for each. Neither
+clone ever diverged in a way a player could see, so all three goblin kingdoms shared one roster in
+everything but the encyclopedia, which listed 69 near-identical troops. The clones were retired on
+2026-08-29 and each culture kept a single bespoke capstone. The lesson generalises: a promoted
+culture needs a roster of its OWN or a share, and a clone is neither.
+
 | Culture | Shares | Why |
 |---|---|---|
 | lothlorien | rivendell | Both elven, one roster |
@@ -26,6 +33,8 @@ these cultures deliberately have no roster of their own.
 | umbar | harad | Has its own `umbar_elite` noble line, but no basic or militia line |
 | shaghana | harad | Haradrim sub-culture, lord parties are entirely `harad_*` |
 | abanissa | harad | Same |
+| bluecraig | goblin | Its own tree was a clone of goblin's that never diverged. Keeps one bespoke T7 capstone, `bluecraig_bolgs_ironfang` ("Skarnak's Ironfang") |
+| mistymountainorcs | goblin | Same clone, differing only in a race tag and skill numbers. Keeps `mistymountainorcs_bolgs_ironfang` |
 
 **Deferred, tracked here so it is not lost:** umbar, shaghana and abanissa still carry roughly 40
 vanilla `*_aserai` **NPC role** bindings between them (tavernkeeper, blacksmith, guard, ransom broker,

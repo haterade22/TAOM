@@ -251,4 +251,34 @@ public class CareerCultureCoverageTests
         }
     }
 
+    [TestMethod]
+    public void EreborCavalryCareerRoster_GrantsTheLightRamBarding()
+    {
+        // A bare ram is legal data and renders fine, so nothing above would notice the harness
+        // going missing. Starting the ram_rider barded is a deliberate design call, so it gets its
+        // own pin rather than riding along on the mount assertion.
+        //
+        // The id must be the LIGHT barding specifically: the eight bardings are a progression
+        // ladder (body_armor 20 to 54) and starting on anything above the bottom rung hands a new
+        // character mid-tier armour for free.
+        const string ExpectedBarding = "Item.taom_ram_barding_light_a";
+
+        var path = Path.Combine(ModuleDataPath, "equipmentsets", "taom_career_starting_equipment.xml");
+        var doc = XDocument.Load(path);
+
+        foreach (var suffix in new[] { "m", "f" })
+        {
+            var rosterId = $"player_career_erebor_cavalry_{suffix}";
+            var roster = doc.Descendants("EquipmentRoster")
+                .FirstOrDefault(r => string.Equals(r.Attribute("id")?.Value, rosterId, StringComparison.OrdinalIgnoreCase));
+            Assert.IsNotNull(roster, $"{rosterId} is missing; the ram_rider career would fall back to culture-default gear");
+
+            var harness = roster.Descendants("Equipment")
+                .FirstOrDefault(e => string.Equals(e.Attribute("slot")?.Value, "HorseHarness", StringComparison.OrdinalIgnoreCase));
+            Assert.IsNotNull(harness, $"{rosterId} has no HorseHarness slot; the ram_rider player would start on a bare ram");
+            Assert.AreEqual(ExpectedBarding, harness.Attribute("id")?.Value,
+                $"{rosterId} must start the player on the light ram barding");
+        }
+    }
+
 }

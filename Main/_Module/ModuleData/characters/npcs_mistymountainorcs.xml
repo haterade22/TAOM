@@ -29,7 +29,7 @@
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<upgrade_targets>
-			<upgrade_target id="NPCCharacter.mistymountainorcs_snaga" />
+			<upgrade_target id="NPCCharacter.goblin_snaga" />
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>

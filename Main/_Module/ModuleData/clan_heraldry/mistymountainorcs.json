@@ -1,7 +1,7 @@
 {
   "culture": "mistymountainorcs",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF2A2A2A/FF6E5A40 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=mistymountainorcs).",
+  "_note": "Per-clan color = FF2A2A2A/FF6E5A40 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=goblin).",
   "clans": [
     {
       "id": "clan_mistymountainorcs_1",
@@ -11,62 +11,62 @@
       "color2": "FF573D33",
       "roster": [
         {
-          "troop": "mistymountainorcs_snaga",
+          "troop": "goblin_snaga",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_militia_spearman",
+          "troop": "goblin_militia_spearman",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_grunt",
+          "troop": "goblin_grunt",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_guard",
+          "troop": "goblin_guard",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_brute",
+          "troop": "goblin_brute",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
+          "troop": "goblin_veteran_sword_warrior",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
+          "troop": "goblin_veteran_spear_warrior",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_hunter",
+          "troop": "goblin_hunter",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_militia_archer",
+          "troop": "goblin_militia_archer",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_lurker",
+          "troop": "goblin_lurker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_archer",
+          "troop": "goblin_militia_veteran_archer",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_sentry",
+          "troop": "goblin_sentry",
           "min": 0,
           "max": 1
         }
@@ -81,62 +81,62 @@
       "color2": "FF634B39",
       "roster": [
         {
-          "troop": "mistymountainorcs_militia_spearman",
+          "troop": "goblin_militia_spearman",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_grunt",
+          "troop": "goblin_grunt",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
+          "troop": "goblin_militia_veteran_spearman",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_fighter",
+          "troop": "goblin_fighter",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_brute",
+          "troop": "goblin_brute",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_sword_warrior",
+          "troop": "goblin_sword_warrior",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_spear_warrior",
+          "troop": "goblin_spear_warrior",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_berserker",
+          "troop": "goblin_berserker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
+          "troop": "goblin_veteran_spear_warrior",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_veteran_berserker",
+          "troop": "goblin_veteran_berserker",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_militia_archer",
+          "troop": "goblin_militia_archer",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_archer",
+          "troop": "goblin_archer",
           "min": 0,
           "max": 1
         }
@@ -151,57 +151,57 @@
       "color2": "FF6E5A40",
       "roster": [
         {
-          "troop": "mistymountainorcs_grunt",
+          "troop": "goblin_grunt",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
+          "troop": "goblin_militia_veteran_spearman",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_sword_warrior",
+          "troop": "goblin_sword_warrior",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_spear_warrior",
+          "troop": "goblin_spear_warrior",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_veteran_berserker",
+          "troop": "goblin_veteran_berserker",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_hunter",
+          "troop": "goblin_hunter",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_militia_archer",
+          "troop": "goblin_militia_archer",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_lurker",
+          "troop": "goblin_lurker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_archer",
+          "troop": "goblin_militia_veteran_archer",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_sentry",
+          "troop": "goblin_sentry",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_archer",
+          "troop": "goblin_archer",
           "min": 0,
           "max": 1
         }
@@ -216,27 +216,27 @@
       "color2": "FF796B47",
       "roster": [
         {
-          "troop": "mistymountainorcs_spear_warrior",
+          "troop": "goblin_spear_warrior",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_berserker",
+          "troop": "goblin_berserker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_guard",
+          "troop": "goblin_guard",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_chosen_of_tharzog",
+          "troop": "goblin_chosen_of_tharzog",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "troop": "goblin_guardian_of_the_tower",
           "min": 0,
           "max": 1
         },
@@ -246,27 +246,27 @@
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
+          "troop": "goblin_veteran_sword_warrior",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_archer",
+          "troop": "goblin_militia_veteran_archer",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_lurker",
+          "troop": "goblin_lurker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_archer",
+          "troop": "goblin_archer",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_sentry",
+          "troop": "goblin_sentry",
           "min": 0,
           "max": 1
         }
@@ -281,52 +281,52 @@
       "color2": "FF857D4D",
       "roster": [
         {
-          "troop": "mistymountainorcs_fighter",
+          "troop": "goblin_fighter",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_snaga",
+          "troop": "goblin_snaga",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_berserker",
+          "troop": "goblin_berserker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "troop": "goblin_guardian_of_the_tower",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_hunter",
+          "troop": "goblin_hunter",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_militia_archer",
+          "troop": "goblin_militia_archer",
           "min": 2,
           "max": 4
         },
         {
-          "troop": "mistymountainorcs_lurker",
+          "troop": "goblin_lurker",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_archer",
+          "troop": "goblin_militia_veteran_archer",
           "min": 1,
           "max": 2
         },
         {
-          "troop": "mistymountainorcs_sentry",
+          "troop": "goblin_sentry",
           "min": 0,
           "max": 1
         },
         {
-          "troop": "mistymountainorcs_archer",
+          "troop": "goblin_archer",
           "min": 0,
           "max": 1
         }

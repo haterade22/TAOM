@@ -316,6 +316,207 @@ cooked pack. If a texture is missing rather than merely un-compilable, restore t
 `_taom_disabled/` and reopen the question, because that would mean the engine wanted the loose
 definitions after all.
 
+## 11. Materials and animations after the Kit re-import (2026-08-28)
+
+Absorbing the data plane is not the whole job. Once the meshes and textures are re-imported
+through the Modding Kit so they live under this module's `AssetSources`, the creature still needs
+its materials and its animation wiring, and none of that survives a copy unchanged.
+
+### What the import produced, and what was missing
+
+| | `_geo` | `_tex` | `_anm` clips | `_mtl` materials |
+|---|---|---|---|---|
+| After the Kit import | 57 | 21 | **0** | **0** |
+| Donor module | 57 | 21 | 73 | 12 |
+| Elephant, for reference | 73 | 18 | 36 | 6 |
+
+The Kit imports geometry and textures. Materials and animation clips are authored assets: it does
+not invent them, so both were absent and were copied from the donor. They are worth copying rather
+than recreating, because they carry authored options that are tedious to reproduce and easy to get
+subtly wrong:
+
+- clips: `quad_movement` 15, `cyclic` 10, `make_walk_sound` 14, `make_bodyfall_sound` 5,
+  `lock_movement` 3, `client_prediction` 42, `synch_with_horse` 11
+- materials: `two_sided` 12/12, `bumpmap` 12/12, `skinning` 12/12, `use_specular` 6, `alpha_test` 5
+
+Every count matches the donor exactly after the move.
+
+### The guid problem, and two ways to get it wrong
+
+**The Kit mints a fresh asset guid for every item it imports.** Copied materials and clips still
+name the donor's guids, so every reference dangles. Nothing fails loudly; you get
+`CONTENT WARNING: Unable to find DiffuseMap of material <name>` and a creature that renders
+untextured, plus `Unable to find item to add dependency(depender <clip>)`.
+
+Measured here: all 21 texture guids changed, each of the 12 materials embedded exactly 3 stale ones
+(Diffuse, Normal, Specular) for 36 dead references, and the clips carried a further 28.
+
+`tools/remap_creature_asset_guids.py` repairs this by matching items between the two trees and
+substituting guid for guid. Two mistakes were made getting there, both worth knowing:
+
+**Mistake 1: keying the map on item 0.** A `_geo` from an FBX import holds two items, the source
+`.fbx` and the skeleton animation named `<rig>_notused|<clip>`, and **their order is not stable**.
+The Kit writes the `.fbx` first on import and the skeleton animation first once the asset is saved,
+which is the order the donor's files are in. Keying on item 0 therefore mapped a donor skeleton
+animation onto a new `.fbx`, and **broke 17 clips that had been correctly wired**. The tool now
+matches every item by name.
+
+**Mistake 2: patching after patching.** Once the first pass had overwritten a guid, the second pass
+had nothing to match: the donor value it needed was already gone. The repair was to stop patching,
+restore all 85 files from the backups (verified byte-identical to the donor originals) and run one
+correct pass. Prefer a restore-and-redo over a corrective patch whenever a previous pass wrote the
+wrong value.
+
+### Clip names and take names do not correspond
+
+56 source FBX takes yield 73 clips, because one take is sliced into several clips with frame ranges
+in the clip's Source1/Source2 fields. The names diverge accordingly: the clip `rider_warg_forward_walk`
+comes from the take `warg_rider_walkfast`, and `rider_warg_gallop_turn_left_head` from
+`warg_rider_gallop_l`. **The pairing is not derivable from filenames.** It survives only because the
+donor's guids encode it, which is the whole reason the copied clips are worth having.
+
+Result: 65 clips wired, pairing identical to the donor's, 0 differing. 8 clips the donor never wired
+either, so there is nothing to copy for those.
+
+### Owner Skeleton has to be set in the Kit
+
+A skeleton animation's metadata is `int32(1) | GUID_A(16) | GUID_B(16) | trailer(13)`. GUID_B is the
+Owner Skeleton and is all-zero when unset, which produces:
+
+```
+RGL WARNING: Please set owner skeleton name for anim: rider_warg_canter
+Unable to write RDC for animation clip rider_warg_canter.
+```
+
+**Writing that field by hand does not work, and the reason is the checksum.** Each item carries an
+8-byte checksum immediately after its metadata block. Substituting a guid for another guid leaves
+the item otherwise unchanged and the existing checksum stays consistent, which is why the clip
+repair above holds. Introducing a value into a field that was zero is a real content change, so the
+checksum must be recomputed, and its algorithm is not known here. A patch that skips it is silently
+ignored: the Kit still shows the field unset. Verified by diffing a hand-set file against the patched
+one, same size, different checksum:
+
+```
+rider_warg_dash_geo.tpac   11565 -> 11565 bytes   checksum 1347615467139852255 -> -3110447808552502235
+```
+
+> **The rule.** Guid-for-guid substitution in a tpac is safe. Writing a value into a previously empty
+> field is not, because the item checksum goes stale and the change is discarded. Reading back the
+> bytes you just wrote proves only that you wrote them, not that the engine will accept them.
+
+So the 48 Owner Skeleton assignments were made in the Kit by hand. What automation can still do is
+tell you **which** skeleton each one takes, derived from the FBX rigs rather than guessed:
+
+| | takes |
+|---|---|
+| `skeleton_warg` | 34 |
+| `human_skeleton` | 22 |
+
+**`Warg_AnimRider_Idle.fbx` is the one whose name lies:** it is rigged to the human skeleton despite
+the `Warg_` prefix. Every other file follows the `rider_*` / `Warg_*` convention. Two independent
+sources agree on the split: the bones present in each FBX, and the action sets, where
+`as_human_warrior` (`skeleton="human_skeleton"`) binds exactly 22 clips and `as_warg`
+(`skeleton="skeleton_warg"`) binds 40, with none claimed by both. `skeleton_warg2_notused` has a
+single anim (`Warg_Taunt2_geo.tpac`) and takes `skeleton_warg`.
+
+### Where it ended up
+
+| | |
+|---|---|
+| Owner Skeleton set | 48 of 48 |
+| Clips wired to their skeleton anim | 65, matching the donor exactly |
+| Clips unwired in the donor too | 8 |
+| Material to texture references live | 36 |
+| Stale donor guids anywhere in the tree | 0 |
+
+The remaining 8 (`new_animation_clip`, `new_animation_clip_3` and six others) have no source to copy
+from and need an Animation source chosen by hand if they are wanted.
+
+## 12. Why the warg did not render: the materials were not on the meshes (2026-08-29)
+
+Everything in sections 1 through 11 was correct and the warg still did not appear, in battle or on
+the campaign map. It also had a second symptom that turned out to be the same defect: the three
+colour variants (`warg_brown`, `warg_dark`, `warg_albino`) all looked identical, brown.
+
+**The cause is that the re-imported rig bound only 3 of the 7 materials the donor bound.** The Kit
+imports the material assignments the FBX carries, and `Warg_Rig_V5.fbx` carries exactly three
+(`warg_skin`, `warg_fur`, `orc_rider_saddle`) for five meshes. The other four were assigned by hand
+in Alliance's editor and saved into its compiled tpac. **An FBX re-import cannot recover a material
+assignment that was never in the FBX**, and it does not warn, because from its point of view nothing
+is missing.
+
+| Mesh | After the re-import | Alliance | After the fix |
+|---|---|---|---|
+| `warg_low` | `warg_fur` x3, `warg_skin` x3 | same | same |
+| `warg_low_fur` | `warg_fur` x4 | + `warg_fur_lod` x4 | matches |
+| `warg_low_fur_with_saddle` | `warg_fur` x4 | + `warg_fur_lod` x4 | matches |
+| `warg_low_fur_with_saddle_2` | `warg_fur` x4 | + `warg_fur_2` x4 | matches |
+| `warg_low_fur_with_saddle_3` | `warg_fur` x4 | + `warg_fur_3`, `warg_fur_3_lod` x3 | `warg_fur_3` x4 |
+| `orc_rider_saddle` | byte-identical to Alliance | | unchanged |
+
+`orc_rider_saddle` returning byte-identical is the control that matters: the import itself is
+faithful, so the divergence is specifically the assignments the FBX never held.
+
+### How the colour variants work, and why they collapsed
+
+Each item names the same base mesh and a different fur mesh:
+
+| Item | mesh | AdditionalMesh | Material override |
+|---|---|---|---|
+| `warg_brown` | `warg_low` | `warg_low_fur_with_saddle` | `warg_skin`, `warg_skin2`, `warg_skin3`, `warg_skin4` |
+| `warg_dark` | `warg_low` | `warg_low_fur_with_saddle_2` | `warg_skin_2` |
+| `warg_albino` | `warg_low` | `warg_low_fur_with_saddle_3` | `warg_skin_3` |
+
+The colour lives in the fur mesh's own material, not in the item XML. All twelve materials were
+present the whole time and resolved to distinct textures (`warg_fur_2` to `warg_fur_2_d/_n/_s`,
+`warg_fur_3` to `warg_fur_3_d/_n/_s`), so the assets were never the problem. With every fur mesh
+bound to plain `warg_fur`, all three variants were brown and nothing in the data said otherwise.
+
+### The four missing bindings sat one per LOD
+
+They appear four times each, alongside each `warg_fur` binding, which is one per LOD level. That is
+consistent with a creature that renders correctly in a close-up UI preview and is absent in the
+world, where it is drawn at a lower LOD.
+
+### The wrong turn, recorded so it is not taken again
+
+This section previously claimed the cause was that the warg had never been packaged into
+`EmAssetPackages`. That was wrong. The war ram is the counterexample: it lives only as loose tpac at
+`Assets/creature/ram/SK_EB_Goat_A_geo.tpac`, has no `EmAssetPackages` entry, and renders in game.
+**Loose `Assets/` is read at runtime.** The correlation that theory rested on (four cooked creatures
+render, two uncooked ones do not) had a sample of two on the failing side and one of them had simply
+not been checked. Do not build a cause on an unchecked half of a correlation.
+
+Neither packages folder was ever relevant, and the reason is what they are for. `AssetPackages` is
+the cooked form shipped to **players**; `EmAssetPackages` is the cooked form shipped to **other
+modders**, so they can open the module in the Modding Kit without being given `AssetSources`. On a
+dev install the editor and the game both read `Assets/`, so a creature with no entry in either
+packages folder is in its normal pre-release state rather than broken. This module happens to have
+no `AssetPackages` folder at all and 13.6 GB of `EmAssetPackages`; neither fact had anything to do
+with the warg. Folder semantics:
+[bannerlord-engine-and-toolchain.md](bannerlord-engine-and-toolchain.md) section 6.1.
+
+### It could not be patched from files
+
+Fixing this outside the Kit would mean inserting a material reference, not substituting one. The
+metadata lengths differ between the two versions of the same mesh (1,317 bytes against 1,349 on the
+dark variant), so there is no slot to overwrite. That runs into the same wall as the Owner Skeleton
+in section 11: adding content invalidates the item's 8-byte checksum, whose algorithm is not known
+here, and the Kit then discards the edit silently. The assignments were made in the Modding Kit.
+
+### Residual
+
+`warg_low_fur_with_saddle_3` now carries `warg_fur_3` on all four LODs where Alliance used
+`warg_fur_3` on LOD0 and `warg_fur_3_lod` on the lower three. Both resolve to the same
+`warg_fur_3_d/_n/_s` textures, so it looks correct; it runs the full-detail material at distance.
+The other two fur meshes do use `warg_fur_lod` correctly. Worth tidying on the next Kit pass, not
+worth one of its own.
+
+> **The rule.** After re-importing a creature from FBX, diff its mesh-to-material bindings against
+> the donor before anything else. The FBX carries only what the DCC tool assigned; anything assigned
+> in the editor lives in the compiled tpac alone and is lost on re-import, with no warning. A missing
+> binding does not read as an error, it reads as a creature that is the wrong colour, or absent.
+
 ## Verification performed
 
 | Gate | Result |

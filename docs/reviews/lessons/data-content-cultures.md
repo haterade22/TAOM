@@ -647,3 +647,24 @@ comment as "roughly a fresh hero's untrained value" and which no log has ever pr
 - **Why missed:** the floor's assumption was authored alongside the rows it protects, so it flattered them. A constant that decides whether a test can fail is part of the test's claim and needs the same evidence as any other.
 - **Prevent:** model the WEAKEST player a row's own gates admit, and for an untrained skill that is 0. Where a check should get easier with service, name a second skill the player provably accrues (in TAOM, `RunDailyTick` grants Leadership 10 XP/day to every enlisted player regardless of assignment) rather than lowering difficulty alone. Also assert a minimum pass probability: "passable at all" admits a 1-in-51 row, which in play is indistinguishable from a broken one.
 - **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md findings M4 and the #438 root cause (#520).
+
+### Cloning a culture's troop tree to promote it ships a duplicate faction, and reachability hides it
+Promoting a kingdom out of a borrowed culture gave Blue Craig and the Misty Mountain Orcs a full
+copy of the goblin tree each. Neither copy ever diverged. Blue Craig's differed from the source in
+the `culture=` attribute and one display name; the Orc-host's added a race tag and different skill
+numbers but kept the same 23 troops, the same upgrade graph and a byte-identical equipment list. In
+play that is two kingdoms called "Goblins" fielding units a player cannot tell apart, and an
+encyclopedia listing 69 near-identical goblin entries.
+- **Why missed:** every gate that could have caught it measures reachability, not distinctness. `validate_moduledata.py` proved each ref resolved, `CulturePartyTemplateTests` proved each culture bound a TAOM template, and the volunteer-pool test proved every troop was recruitable. All three pass perfectly on a duplicate, because a duplicate is fully wired by construction. The one player-facing surface that would have shown it, the encyclopedia, walks `CharacterObject.All` and never asks whether two rows are the same unit twice.
+- **Prevent:** when a clone script copies a troop tree, treat the copy as a debt with a due date, not as content. Before it ships, either author the divergence or point the new culture at the source tree, which is a supported and test-blessed pattern (Lothlorien fields Rivendell's whole, Umbar fields Harad's and keeps `umbar_elite`). A cheap standing check is to normalise the id prefix away and diff the troop files: 112 differing lines out of 2455 is not a second faction. Note that orphaning a duplicate is NOT enough to hide it, since the encyclopedia ignores reachability; the attribute for that is `is_hidden_encyclopedia`, not `hidden_in_encyclopedia`.
+- **Source:** the 2026-08-29 goblin tree merge. Origin recorded in `tools/promote_borrowed_cultures.py`, which states plainly that both kingdoms previously ran on their host culture.
+
+### A pool-composition tool that never filtered mercenaries was hidden by pool ordering
+`tools/build_clan_specs.py` excluded `_boss` troops from the roster pool but not `_merc` ones, so
+tavern mercenaries were always eligible for a lord's party template. No shipped spec contained one,
+which read as evidence the filter was unnecessary. It was luck: the composer draws by group and
+band, and the merc leaf simply never won a slot. Pointing one culture at another culture's pool
+shifted the ordering and two clan rosters immediately picked up `goblin_fighter_merc`.
+- **Why missed:** absence of the bug in output was mistaken for absence of the bug. A latent filter gap in a seeded, order-sensitive generator produces clean output until an unrelated input change perturbs the order.
+- **Prevent:** when a generator has an exclusion list, check it against the definitive list of things that should be excluded rather than against its current output. Here the authoritative list already existed in a test: `VolunteerRecruitmentServiceTests.IsIntentionallyUnrecruited` names `_militia_`, `_boss` and `_merc`, and the tool knew about only one of the three.
+- **Source:** the 2026-08-29 goblin tree merge, caught by `generate_clan_heraldry.py`'s own drift gate refusing to regenerate.

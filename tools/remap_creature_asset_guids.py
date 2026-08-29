@@ -29,6 +29,14 @@ moves. Only referenced ids change; every authored option is untouched.
 NOT a substitute for re-authoring in the Kit. It is the cheap, exact repair when the donor's
 options are the ones you want and only the ids are wrong.
 
+SCOPE BOUNDARY, learned the hard way (2026-08-28)
+This tool only ever swaps one 16-byte guid for another. That is safe because the item is otherwise
+unchanged, so the 8-byte checksum that follows its metadata block stays consistent. Do NOT extend it
+to write a value into a field that was empty, such as a skeleton animation's Owner Skeleton: that is
+a real content change, the checksum goes stale, and the Kit silently ignores the edit while still
+showing the field unset. Those belong in the Modding Kit. Reading back the bytes you just wrote is
+not verification; it proves only that the write happened.
+
 Usage:
   python tools/remap_creature_asset_guids.py --new <new-creature-dir> --old <donor-dir> [--apply]
 
@@ -38,6 +46,7 @@ Usage:
 Defaults to a dry run. Writes a `.bak-guidremap-<date>` sibling before touching anything.
 """
 import argparse
+import struct
 import binascii
 import collections
 import datetime
@@ -55,6 +64,51 @@ def item0_guid(path):
     with open(path, "rb") as f:
         head = f.read(0x44)
     return head[ITEM0_GUID] if len(head) >= 0x44 else None
+
+
+def _read_sized_string(f):
+    n = struct.unpack("<i", f.read(4))[0]
+    return f.read(n).decode("utf-8", "replace")
+
+
+def all_items(path):
+    """[(item_name, item_guid)] for EVERY item in the package.
+
+    Keying on item 0 alone is not enough. A `_geo` from an FBX import holds two items, the
+    source `.fbx` and the skeleton animation named `<rig>_notused|<clip>`, and their order
+    is not stable: the Modding Kit rewrites the package on save and puts the skeleton
+    animation first. Animation clips reference the SKELETON ANIMATION's guid, so a map built
+    from item 0 repoints the wrong one and leaves every clip pointing at the donor, which
+    surfaces as "Assigned skeleton animation not found" in the clip inspector.
+    """
+    out = []
+    try:
+        with open(path, "rb") as f:
+            if f.read(4) != b"TPAC":
+                return out
+            ver = struct.unpack("<I", f.read(4))[0]
+            f.read(16)
+            n = struct.unpack("<I", f.read(4))[0]
+            f.read(8)
+            for _ in range(n):
+                f.read(16)
+                ig = f.read(16)
+                if ver > 1:
+                    f.read(4)
+                name = _read_sized_string(f)
+                msz = struct.unpack("<q", f.read(8))[0]
+                f.seek(msz, 1)
+                f.read(8)
+                segs = struct.unpack("<i", f.read(4))[0]
+                f.seek(segs * 69, 1)
+                udep = struct.unpack("<i", f.read(4))[0]
+                if not (0 <= udep <= 1000):
+                    break
+                f.seek(udep * 48, 1)
+                out.append((name, ig))
+    except Exception:
+        pass
+    return out
 
 
 def fmt_guid(g):
@@ -77,9 +131,12 @@ def build_map(new_root, old_root):
             q = os.path.join(old_dir, os.path.basename(p))
             if not os.path.exists(q):
                 continue
-            old_g, new_g = item0_guid(q), item0_guid(p)
-            if old_g and new_g and old_g != new_g:
-                mapping[old_g] = (new_g, os.path.basename(p))
+            # Match EVERY item by name, not just item 0: see all_items().
+            old_by_name = dict(all_items(q))
+            for name, new_g in all_items(p):
+                old_g = old_by_name.get(name)
+                if old_g and old_g != new_g:
+                    mapping[old_g] = (new_g, "%s :: %s" % (os.path.basename(p), name))
     return mapping
 
 

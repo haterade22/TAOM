@@ -44,15 +44,18 @@ public partial class VolunteerRecruitmentService
 
     private static void InitializeMistyMountainOrcsCulture()
     {
-        // Orc-host of the Misty Mountains — culture-only pool (hostile faction).
+        // Orc-host of the Misty Mountains — culture-only pool (hostile faction). Fields the
+        // shared goblin tree; its own duplicate of that tree was retired. The one troop that
+        // stayed bespoke, mistymountainorcs_bolgs_ironfang, is a T7 capstone reached by upgrade
+        // rather than recruited, so it does not belong in this pool.
         CultureMap["mistymountainorcs"] = new List<VolunteerChance>
         {
-            new VolunteerChance("mistymountainorcs_snaga", 7),
-            new VolunteerChance("mistymountainorcs_grunt", 2),
-            new VolunteerChance("mistymountainorcs_fighter", 1),
-            // Reachability fix (same shape as Gundabad): MMO archer line
-            // (mistymountainorcs_hunter -> lurker -> sentry -> archer) was orphaned.
-            new VolunteerChance("mistymountainorcs_hunter", 2)  // archer line entry
+            new VolunteerChance("goblin_snaga", 7),
+            new VolunteerChance("goblin_grunt", 2),
+            new VolunteerChance("goblin_fighter", 1),
+            // Reachability fix (same shape as Gundabad): the archer line
+            // (goblin_hunter -> lurker -> sentry -> archer) was orphaned.
+            new VolunteerChance("goblin_hunter", 2)  // archer line entry
         };
     }
 }

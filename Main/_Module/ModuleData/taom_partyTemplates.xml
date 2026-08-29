@@ -1814,75 +1814,24 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_template">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="262" troop="NPCCharacter.mistymountainorcs_snaga" />
-			<PartyTemplateStack min_value="8" max_value="273" troop="NPCCharacter.mistymountainorcs_grunt" />
-			<PartyTemplateStack min_value="8" max_value="273" troop="NPCCharacter.mistymountainorcs_hunter" />
-			<PartyTemplateStack min_value="5" max_value="289" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="5" max_value="289" troop="NPCCharacter.mistymountainorcs_guard" />
-			<PartyTemplateStack min_value="4" max_value="294" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="3" max_value="300" troop="NPCCharacter.mistymountainorcs_brute" />
-			<PartyTemplateStack min_value="3" max_value="300" troop="NPCCharacter.mistymountainorcs_sword_warrior" />
-			<PartyTemplateStack min_value="3" max_value="300" troop="NPCCharacter.mistymountainorcs_spear_warrior" />
-			<PartyTemplateStack min_value="2" max_value="305" troop="NPCCharacter.mistymountainorcs_sentry" />
-			<PartyTemplateStack min_value="2" max_value="305" troop="NPCCharacter.mistymountainorcs_berserker" />
+			<PartyTemplateStack min_value="10" max_value="262" troop="NPCCharacter.goblin_snaga" />
+			<PartyTemplateStack min_value="8" max_value="273" troop="NPCCharacter.goblin_grunt" />
+			<PartyTemplateStack min_value="8" max_value="273" troop="NPCCharacter.goblin_hunter" />
+			<PartyTemplateStack min_value="5" max_value="289" troop="NPCCharacter.goblin_fighter" />
+			<PartyTemplateStack min_value="5" max_value="289" troop="NPCCharacter.goblin_guard" />
+			<PartyTemplateStack min_value="4" max_value="294" troop="NPCCharacter.goblin_lurker" />
+			<PartyTemplateStack min_value="3" max_value="300" troop="NPCCharacter.goblin_brute" />
+			<PartyTemplateStack min_value="3" max_value="300" troop="NPCCharacter.goblin_sword_warrior" />
+			<PartyTemplateStack min_value="3" max_value="300" troop="NPCCharacter.goblin_spear_warrior" />
+			<PartyTemplateStack min_value="2" max_value="305" troop="NPCCharacter.goblin_sentry" />
+			<PartyTemplateStack min_value="2" max_value="305" troop="NPCCharacter.goblin_berserker" />
 			<PartyTemplateStack min_value="1" max_value="310" troop="NPCCharacter.mistymountainorcs_bolgs_ironfang" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="kingdom_hero_party_mercenary_mistymountainorcs_template">
-		<stacks>
-			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.mistymountainorcs_grunt" />
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.mistymountainorcs_berserker" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="kingdom_hero_party_outlaw_mistymountainorcs_template">
-		<stacks>
-			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.mistymountainorcs_snaga" />
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.mistymountainorcs_sword_warrior" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="militia_mistymountainorcs_template">
-		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mistymountainorcs_militia_spearman" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mistymountainorcs_militia_archer" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="patrol_party_mistymountainorcs_template_level_1">
-		<stacks>
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.mistymountainorcs_grunt" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mistymountainorcs_sword_warrior" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="patrol_party_mistymountainorcs_template_level_2">
-		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.mistymountainorcs_brute" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.mistymountainorcs_berserker" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="patrol_party_mistymountainorcs_template_level_3">
-		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.mistymountainorcs_guard" />
-			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.mistymountainorcs_sentry" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.mistymountainorcs_brute" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.mistymountainorcs_berserker" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="rebels_mistymountainorcs_template">
-		<stacks>
-			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.mistymountainorcs_snaga" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.mistymountainorcs_lurker" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="vassal_reward_troops_mistymountainorcs">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mistymountainorcs_bolgs_ironfang" />
-			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.mistymountainorcs_berserker" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.goblin_berserker" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -3364,82 +3313,82 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_mistymountainorcs_1_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_snaga" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_militia_spearman" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_grunt" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_guard" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_brute" />
-			<PartyTemplateStack min_value="0" max_value="298" troop="NPCCharacter.mistymountainorcs_veteran_sword_warrior" />
-			<PartyTemplateStack min_value="0" max_value="297" troop="NPCCharacter.mistymountainorcs_veteran_spear_warrior" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_hunter" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_militia_archer" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_militia_veteran_archer" />
-			<PartyTemplateStack min_value="0" max_value="297" troop="NPCCharacter.mistymountainorcs_sentry" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_snaga" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_grunt" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_guard" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_brute" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_veteran_sword_warrior" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_veteran_spear_warrior" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_hunter" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_archer" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_lurker" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_militia_veteran_archer" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_sentry" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_mistymountainorcs_2_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_militia_spearman" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_grunt" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_brute" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_sword_warrior" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_spear_warrior" />
-			<PartyTemplateStack min_value="1" max_value="292" troop="NPCCharacter.mistymountainorcs_berserker" />
-			<PartyTemplateStack min_value="0" max_value="298" troop="NPCCharacter.mistymountainorcs_veteran_spear_warrior" />
-			<PartyTemplateStack min_value="0" max_value="297" troop="NPCCharacter.mistymountainorcs_veteran_berserker" />
-			<PartyTemplateStack min_value="2" max_value="288" troop="NPCCharacter.mistymountainorcs_militia_archer" />
-			<PartyTemplateStack min_value="0" max_value="297" troop="NPCCharacter.mistymountainorcs_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_grunt" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_fighter" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_brute" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_sword_warrior" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_spear_warrior" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_berserker" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_veteran_spear_warrior" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_veteran_berserker" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_archer" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_mistymountainorcs_3_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="313" troop="NPCCharacter.mistymountainorcs_grunt" />
-			<PartyTemplateStack min_value="2" max_value="313" troop="NPCCharacter.mistymountainorcs_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="1" max_value="319" troop="NPCCharacter.mistymountainorcs_sword_warrior" />
-			<PartyTemplateStack min_value="1" max_value="319" troop="NPCCharacter.mistymountainorcs_spear_warrior" />
-			<PartyTemplateStack min_value="0" max_value="324" troop="NPCCharacter.mistymountainorcs_veteran_berserker" />
-			<PartyTemplateStack min_value="2" max_value="313" troop="NPCCharacter.mistymountainorcs_hunter" />
-			<PartyTemplateStack min_value="2" max_value="313" troop="NPCCharacter.mistymountainorcs_militia_archer" />
-			<PartyTemplateStack min_value="1" max_value="319" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="1" max_value="319" troop="NPCCharacter.mistymountainorcs_militia_veteran_archer" />
-			<PartyTemplateStack min_value="0" max_value="324" troop="NPCCharacter.mistymountainorcs_sentry" />
-			<PartyTemplateStack min_value="0" max_value="324" troop="NPCCharacter.mistymountainorcs_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_grunt" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_sword_warrior" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_spear_warrior" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_veteran_berserker" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_hunter" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_archer" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_lurker" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_militia_veteran_archer" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_sentry" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_mistymountainorcs_4_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="315" troop="NPCCharacter.mistymountainorcs_spear_warrior" />
-			<PartyTemplateStack min_value="1" max_value="315" troop="NPCCharacter.mistymountainorcs_berserker" />
-			<PartyTemplateStack min_value="1" max_value="315" troop="NPCCharacter.mistymountainorcs_guard" />
-			<PartyTemplateStack min_value="0" max_value="320" troop="NPCCharacter.mistymountainorcs_chosen_of_tharzog" />
-			<PartyTemplateStack min_value="0" max_value="321" troop="NPCCharacter.mistymountainorcs_guardian_of_the_tower" />
-			<PartyTemplateStack min_value="0" max_value="321" troop="NPCCharacter.mistymountainorcs_bolgs_ironfang" />
-			<PartyTemplateStack min_value="0" max_value="321" troop="NPCCharacter.mistymountainorcs_veteran_sword_warrior" />
-			<PartyTemplateStack min_value="1" max_value="315" troop="NPCCharacter.mistymountainorcs_militia_veteran_archer" />
-			<PartyTemplateStack min_value="1" max_value="315" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="0" max_value="321" troop="NPCCharacter.mistymountainorcs_archer" />
-			<PartyTemplateStack min_value="0" max_value="321" troop="NPCCharacter.mistymountainorcs_sentry" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_spear_warrior" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_berserker" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_guard" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_chosen_of_tharzog" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_guardian_of_the_tower" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.mistymountainorcs_bolgs_ironfang" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_veteran_sword_warrior" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_militia_veteran_archer" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_lurker" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_archer" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_sentry" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_mistymountainorcs_5_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mistymountainorcs_fighter" />
-			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mistymountainorcs_snaga" />
-			<PartyTemplateStack min_value="1" max_value="351" troop="NPCCharacter.mistymountainorcs_berserker" />
-			<PartyTemplateStack min_value="0" max_value="357" troop="NPCCharacter.mistymountainorcs_guardian_of_the_tower" />
-			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mistymountainorcs_hunter" />
-			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mistymountainorcs_militia_archer" />
-			<PartyTemplateStack min_value="1" max_value="351" troop="NPCCharacter.mistymountainorcs_lurker" />
-			<PartyTemplateStack min_value="1" max_value="351" troop="NPCCharacter.mistymountainorcs_militia_veteran_archer" />
-			<PartyTemplateStack min_value="0" max_value="357" troop="NPCCharacter.mistymountainorcs_sentry" />
-			<PartyTemplateStack min_value="0" max_value="357" troop="NPCCharacter.mistymountainorcs_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_fighter" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_snaga" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_berserker" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_guardian_of_the_tower" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_hunter" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.goblin_militia_archer" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_lurker" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.goblin_militia_veteran_archer" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_sentry" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.goblin_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -5269,75 +5218,24 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="kingdom_hero_party_bluecraig_template">
 		<stacks>
-			<PartyTemplateStack min_value="10" max_value="336" troop="NPCCharacter.bluecraig_snaga" />
-			<PartyTemplateStack min_value="8" max_value="350" troop="NPCCharacter.bluecraig_grunt" />
-			<PartyTemplateStack min_value="8" max_value="350" troop="NPCCharacter.bluecraig_hunter" />
-			<PartyTemplateStack min_value="5" max_value="371" troop="NPCCharacter.bluecraig_fighter" />
-			<PartyTemplateStack min_value="5" max_value="371" troop="NPCCharacter.bluecraig_guard" />
-			<PartyTemplateStack min_value="4" max_value="379" troop="NPCCharacter.bluecraig_lurker" />
-			<PartyTemplateStack min_value="3" max_value="386" troop="NPCCharacter.bluecraig_brute" />
-			<PartyTemplateStack min_value="3" max_value="386" troop="NPCCharacter.bluecraig_sword_warrior" />
-			<PartyTemplateStack min_value="3" max_value="386" troop="NPCCharacter.bluecraig_spear_warrior" />
-			<PartyTemplateStack min_value="2" max_value="393" troop="NPCCharacter.bluecraig_sentry" />
-			<PartyTemplateStack min_value="2" max_value="393" troop="NPCCharacter.bluecraig_berserker" />
+			<PartyTemplateStack min_value="10" max_value="336" troop="NPCCharacter.goblin_snaga" />
+			<PartyTemplateStack min_value="8" max_value="350" troop="NPCCharacter.goblin_grunt" />
+			<PartyTemplateStack min_value="8" max_value="350" troop="NPCCharacter.goblin_hunter" />
+			<PartyTemplateStack min_value="5" max_value="371" troop="NPCCharacter.goblin_fighter" />
+			<PartyTemplateStack min_value="5" max_value="371" troop="NPCCharacter.goblin_guard" />
+			<PartyTemplateStack min_value="4" max_value="379" troop="NPCCharacter.goblin_lurker" />
+			<PartyTemplateStack min_value="3" max_value="386" troop="NPCCharacter.goblin_brute" />
+			<PartyTemplateStack min_value="3" max_value="386" troop="NPCCharacter.goblin_sword_warrior" />
+			<PartyTemplateStack min_value="3" max_value="386" troop="NPCCharacter.goblin_spear_warrior" />
+			<PartyTemplateStack min_value="2" max_value="393" troop="NPCCharacter.goblin_sentry" />
+			<PartyTemplateStack min_value="2" max_value="393" troop="NPCCharacter.goblin_berserker" />
 			<PartyTemplateStack min_value="1" max_value="399" troop="NPCCharacter.bluecraig_bolgs_ironfang" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="kingdom_hero_party_mercenary_bluecraig_template">
-		<stacks>
-			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.bluecraig_grunt" />
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.bluecraig_fighter" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.bluecraig_berserker" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="kingdom_hero_party_outlaw_bluecraig_template">
-		<stacks>
-			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.bluecraig_snaga" />
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.bluecraig_lurker" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.bluecraig_sword_warrior" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="militia_bluecraig_template">
-		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_militia_spearman" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_militia_archer" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="patrol_party_bluecraig_template_level_1">
-		<stacks>
-			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.bluecraig_grunt" />
-			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.bluecraig_lurker" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_fighter" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_sword_warrior" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="patrol_party_bluecraig_template_level_2">
-		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.bluecraig_fighter" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.bluecraig_lurker" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_brute" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_berserker" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="patrol_party_bluecraig_template_level_3">
-		<stacks>
-			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.bluecraig_guard" />
-			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.bluecraig_sentry" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.bluecraig_brute" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_berserker" />
-		</stacks>
-	</MBPartyTemplate>
-	<MBPartyTemplate id="rebels_bluecraig_template">
-		<stacks>
-			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.bluecraig_snaga" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.bluecraig_fighter" />
-			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.bluecraig_lurker" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="vassal_reward_troops_bluecraig">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_bolgs_ironfang" />
-			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.bluecraig_berserker" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.goblin_berserker" />
 		</stacks>
 	</MBPartyTemplate>
 

@@ -2720,7 +2720,7 @@ public class VolunteerRecruitmentServiceTests
     {
         _random.Next(12).Returns(0);
         var context = new VolunteerContext(null, null, null, "mistymountainorcs");
-        Assert.AreEqual("mistymountainorcs_snaga", _sut.GetVolunteerTroopId(context));
+        Assert.AreEqual("goblin_snaga", _sut.GetVolunteerTroopId(context));
     }
 
     [TestMethod]
@@ -2728,7 +2728,7 @@ public class VolunteerRecruitmentServiceTests
     {
         _random.Next(12).Returns(9);
         var context = new VolunteerContext(null, null, null, "mistymountainorcs");
-        Assert.AreEqual("mistymountainorcs_fighter", _sut.GetVolunteerTroopId(context));
+        Assert.AreEqual("goblin_fighter", _sut.GetVolunteerTroopId(context));
     }
 
     // rivendell pool: imladris_recruit(5)[0..4]/imladris_infantry(3)[5..7]/imladris_bowman(2)[8..9]
@@ -2840,7 +2840,29 @@ public class VolunteerRecruitmentServiceTests
            || troopId.EndsWith("_boss")           // bandit-hideout bosses
            || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
            || troopId == "cave_troll"             // non-humanoid monster; deferred pending spider-style spawn support
+           || BorrowedCultureCapstones.Contains(troopId)
            || BlackNumenoreanLine.Contains(troopId);
+
+    // Blue Craig and the Misty Mountain Orcs field the shared goblin tree. Each kept exactly one
+    // bespoke top-tier troop so its elite slot stays its own, the same shape Umbar keeps umbar_elite
+    // against Harad's tree. Neither is AI-only: taom_partyTemplates.xml grants each one through its
+    // culture's vassal reward (vassal_reward_troops_bluecraig, vassal_reward_troops_mistymountainorcs),
+    // and DefaultVassalRewardsModel drops every stack in that template into the joining player's own
+    // roster. Prisoner recruitment out of a lord party is the second player-facing route.
+    //
+    // What they are NOT is upgrade-reachable, and that is deliberate. The only troop that could
+    // upgrade into them is the shared goblin_chosen_of_tharzog, and adding them there would let a
+    // Goblin-town player promote a Mountain Guard into another kingdom's signature unit, which is
+    // the exact distinction these two troops exist to draw.
+    //
+    // An EXPLICIT SET, not a StartsWith, for the reason spelled out under BlackNumenoreanLine: a
+    // prefix exempts an unbounded namespace, so the next orphan would pass the guard silently.
+    private static readonly System.Collections.Generic.HashSet<string> BorrowedCultureCapstones =
+        new System.Collections.Generic.HashSet<string>
+        {
+            "bluecraig_bolgs_ironfang",
+            "mistymountainorcs_bolgs_ironfang",
+        };
 
     // The Black Numenorean line is not offered by any VOLUNTEER POOL, which is all this test
     // measures. It is NOT "AI-only": taom_partyTemplates.xml grants mordor_num_vet_infantry as a

@@ -240,6 +240,107 @@ duplicate-registration crash. Cook into the pack, or move the old pack aside for
 Full record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) section 10.
 
 
+### A tpac item's checksum goes stale the moment you add a value, so guid substitution is safe and setting an empty field is not
+
+Absorbing the warg on 2026-08-28 needed two binary repairs to its copied animation assets. One
+worked, one silently did nothing, and the difference is a field it is easy to walk straight past.
+
+A tpac item is laid out as `type_guid | item_guid | version | name | meta_size | metadata |
+**checksum(8)** | segments | dependencies`. A skeleton animation's metadata is
+`int32(1) | GUID_A(16) | GUID_B(16) | trailer(13)`, where GUID_B is the Owner Skeleton.
+
+**Substituting one guid for another is safe.** Repointing 170 references from a donor module's asset
+ids to the re-imported ones worked, held across a Kit reload, and fixed 65 clip bindings. The item is
+otherwise unchanged, so its existing checksum stays consistent with its content.
+
+**Writing a value into a field that was zero is not.** Setting the Owner Skeleton is a real content
+change, so the checksum must be recomputed. Skipping it does not error: the Kit reads the item,
+finds the checksum inconsistent, and shows the field as still unset. The maintainer had to set all 48
+by hand. Proof, from diffing a hand-set file against the patched one:
+
+```
+rider_warg_dash_geo.tpac   11565 -> 11565 bytes   checksum 1347615467139852255 -> -3110447808552502235
+```
+
+Same size, different checksum. The algorithm is not known here, so this class of edit belongs in the
+Kit, full stop.
+
+**The verification failure is the reusable part.** The patch was checked by re-reading the bytes that
+had just been written, which only proves the write happened. It says nothing about whether the
+consumer will accept them. For a binary format with any integrity field, verification means a
+round trip through the real consumer, or a diff against an artefact that consumer produced.
+
+**What automation can still do** is decide *which* value belongs where, which is the part a human gets
+wrong. The 56 source FBX split 34 to `skeleton_warg` and 22 to `human_skeleton`, derived from the
+bones present in each file and confirmed independently by the action sets. That caught
+`Warg_AnimRider_Idle.fbx`, which is rigged to the human skeleton despite its `Warg_` prefix and would
+have been mis-assigned by anyone going off filenames.
+
+Related trap from the same absorption: a `_geo`'s two items (the `.fbx` and the skeleton animation
+`<rig>_notused|<clip>`) **are not in a stable order**. The Kit writes the `.fbx` first on import and
+the skeleton animation first after a save. Keying a guid map on item 0 therefore mapped the wrong one
+and broke 17 correctly-wired clips. Match items by name. And once a pass has written a wrong value,
+restore from backup and redo rather than patching the patch: the second pass has nothing to match
+because the value it needed is already gone.
+
+Full record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) section 11.
+Tool: `tools/remap_creature_asset_guids.py`.
+
+
+### An FBX re-import restores only the materials the FBX carries, and the editor-assigned ones vanish silently
+
+Absorbing the warg into `LOTRLOME_Armory` on 2026-08-28 ended with a creature that had every XML row,
+every material asset, every animation clip and all its Owner Skeletons correct, and that still did
+not appear in battle or on the campaign map. It also had a second symptom which read as unrelated:
+the three colour variants (`warg_brown`, `warg_dark`, `warg_albino`) all rendered brown.
+
+One defect caused both. **The re-imported rig bound 3 materials where the donor bound 7.**
+`Warg_Rig_V5.fbx` carries exactly three material slots (`warg_skin`, `warg_fur`,
+`orc_rider_saddle`) for five meshes. The other four (`warg_fur_lod`, `warg_fur_2`, `warg_fur_3`,
+`warg_fur_3_lod`) had been assigned by hand in the donor's editor and existed only inside its
+compiled tpac. The Kit imported what the FBX held, which is all it can do, and reported nothing
+wrong because from its point of view nothing was.
+
+```
+                              AFTER RE-IMPORT      DONOR
+warg_low_fur               -> warg_fur x4          warg_fur x4 + warg_fur_lod x4
+warg_low_fur_with_saddle   -> warg_fur x4          warg_fur x4 + warg_fur_lod x4
+warg_low_fur_with_saddle_2 -> warg_fur x4          warg_fur x4 + warg_fur_2 x4
+warg_low_fur_with_saddle_3 -> warg_fur x4          warg_fur x4 + warg_fur_3 + warg_fur_3_lod x3
+orc_rider_saddle           -> byte-identical to the donor
+```
+
+`orc_rider_saddle` coming back byte-identical is the control: the import is faithful, so what
+diverged is exactly the part the FBX never carried.
+
+**Why the two symptoms look unrelated and are not.** The colour of a warg variant lives in its fur
+mesh's own material, not in the item XML, so every variant bound to plain `warg_fur` is brown. And
+the missing bindings appear four times each, one per LOD level, which fits a creature that renders
+in a close-up UI preview and is absent in the world where it is drawn at a lower LOD. **A missing
+material binding does not present as a missing material. It presents as the wrong colour, or as
+nothing at all.**
+
+**It cannot be repaired outside the Kit**, for the reason already recorded above for the Owner
+Skeleton. Adding a binding changes the item's metadata length (1,317 bytes against 1,349 on the dark
+variant), so there is no slot to overwrite: it is an insert, not a guid substitution, the 8-byte
+checksum goes stale, and the edit is discarded without complaint.
+
+**The detection method, since no tool in this repo checks it.** Index every item guid in both trees,
+then for each mesh item scan its byte range for 16-byte sequences that resolve to a material item,
+and compare the sets per mesh. `validate_mesh_refs.py` does not do this, and neither does
+`verify_mount_assets.py`.
+
+**The debugging lesson is separate and worth more.** Before this was found, the cause was confidently
+attributed to the warg never having been cooked into `EmAssetPackages`, resting on a correlation
+across six creatures: four cooked ones rendered, two uncooked ones did not. The failing side had a
+sample of two, and one of them, the war ram, had never actually been checked. It renders. **Do not
+build a cause on the half of a correlation you have not verified**, especially when that half is
+what makes the pattern look clean.
+
+Full record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) section 12.
+Checklist row: [creature-mount-authoring.md](../../ai-includes/creature-mount-authoring.md) #7.
+
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -15,8 +15,11 @@ namespace TAOM.Features.PlayerSwitcher.Hooks;
 /// moving forward to the clan naming and review stages. Clearing happens on construction instead,
 /// which covers going back and returning.
 /// </remarks>
-[HarmonyPatchCategory("Patch77_PlayerSwitcher")]
+// Order matters to BUTR.Harmony.Analyzer, not to Harmony: with the category attribute first the
+// analyzer reads its string as a member name and reports BHA0001 against BodyGeneratorView. Every
+// other patch class in the repo puts HarmonyPatch first, so this one does too.
 [HarmonyPatch(typeof(BodyGeneratorView), nameof(BodyGeneratorView.OnFinalize))]
+[HarmonyPatchCategory("Patch77_PlayerSwitcher")]
 public static class Patch77_BodyGeneratorView_OnFinalize
 {
     private const string SpriteCategory = "ui_clan";

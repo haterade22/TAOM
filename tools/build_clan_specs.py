@@ -43,7 +43,6 @@ CULTURE_TABLE = {
     "dolguldur":         ("dolguldur",         "FF3A2E22", "FF6E7A3E"),
     "umbar":             ("umbar",             "FF2E2A24", "FFB58A4E"),
     "goblin":            ("goblin",            "FF22301E", "FF4A5A30"),
-    "mistymountainorcs": ("mistymountainorcs", "FF2A2A2A", "FF6E5A40"),
 }
 
 # Cultures with no own troop pool. value: (clan_culture, pool_culture|None, base1, base2)
@@ -53,6 +52,21 @@ TROOPLESS_TABLE = {
     "abanissa":   ("abanissa",   "aserai",    "FF1A3560", "FFAA9240"),  # Far-Harad, fields Harad troops
     "lothlorien": ("lothlorien", "rivendell", "FF184031", "FFC0E3B5"),  # Galadhrim, fields Rivendell troops
     "khand":      ("battania",   None,        "FF8A5A1E", "FF5A1E18"),  # Variags: no TAOM pool -> colors only
+    # Moved out of CULTURE_TABLE when troops_mistymountainorcs.xml was retired: it was a duplicate
+    # of the goblin tree (same shape, same gear, different race tag and skill numbers), so the
+    # Orc-host now fields troops_goblin.xml. Its clans keep their own ids and colors, hence
+    # clan_culture stays mistymountainorcs while the roster pool comes from goblin. The one troop
+    # it kept, mistymountainorcs_bolgs_ironfang, lives in troops_goblin.xml now.
+    "mistymountainorcs": ("mistymountainorcs", "goblin", "FF2A2A2A", "FF6E5A40"),
+}
+
+# A culture that borrows another's pool but kept one bespoke troop of its own. Without this the
+# composer hands the borrower the POOL culture's signature unit, so Misty Mountain lords would
+# field Goblin-town's "Bolg's Ironfang", which is the exact distinction the bespoke troop exists
+# to draw. Explicit pairs, not a computed suffix: an unbounded rule would silently swap a troop
+# nobody meant to swap.  lotr -> {pool troop id: this culture's replacement}
+BESPOKE_SWAPS = {
+    "mistymountainorcs": {"goblin_bolgs_ironfang": "mistymountainorcs_bolgs_ironfang"},
 }
 
 GROUPS = ("Infantry", "Ranged", "Cavalry", "HorseArcher")
@@ -106,6 +120,12 @@ def index_troops():
             if grp.group(1) not in GROUPS:
                 continue
             if cid.group(1).endswith("_boss"):
+                continue
+            # Tavern mercenaries are Occupation.Mercenary leaves hired for gold from
+            # <basic_mercenary_troops>, not troops a lord fields. They were never drawn into a
+            # live clan roster, but only by luck of pool ordering: nothing excluded them until a
+            # culture started pooling from another culture and the ordering shifted.
+            if cid.group(1).endswith("_merc"):
                 continue
             out[cul.group(1)].append({
                 "id": cid.group(1), "group": grp.group(1),
@@ -197,6 +217,17 @@ def select_clans(registry, culture_id):
     return out
 
 
+def apply_bespoke_swaps(lotr, roster):
+    """Swap the pool culture's signature troop for the borrowing culture's own (see BESPOKE_SWAPS)."""
+    swaps = BESPOKE_SWAPS.get(lotr)
+    if not swaps:
+        return roster
+    for row in roster:
+        if row["troop"] in swaps:
+            row["troop"] = swaps[row["troop"]]
+    return roster
+
+
 def build_spec(lotr, clan_culture, pool_culture, base1, base2, registry, troop_index):
     clans = select_clans(registry, clan_culture)
     colors_only = pool_culture is None
@@ -215,7 +246,7 @@ def build_spec(lotr, clan_culture, pool_culture, base1, base2, registry, troop_i
             "id": c["id"], "source": c["source"],
             "theme": "%s house %d%s" % (lotr, i + 1, "" if colors_only else " — " + arch),
             "color": vary_hex(base1, i, n), "color2": vary_hex(base2, i, n),
-            "roster": [] if colors_only else compose(pool, arch, seed=i),
+            "roster": [] if colors_only else apply_bespoke_swaps(lotr, compose(pool, arch, seed=i)),
         }
         if not colors_only:
             entry["template_id"] = "kingdom_hero_party_%s_%s_template" % (lotr, re.sub(r'^clan_', '', c["id"]))

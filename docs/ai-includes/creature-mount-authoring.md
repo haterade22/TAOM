@@ -126,7 +126,7 @@ then know these requirements BEFORE replacing, and run the gate AFTER.
 > skeleton+collision setup (a 49-bone single-mesh creature mount that builds cleanly) rather than
 > authoring from scratch, and test incrementally: launch → thumbnail → spawn → battle.
 
-### The four ways a re-export breaks a working mount (all observed)
+### The ways a re-export breaks a working mount (all observed)
 
 | # | What the swap drops | Symptom | Detect | Fix |
 |---|---|---|---|---|
@@ -136,6 +136,8 @@ then know these requirements BEFORE replacing, and run the gate AFTER.
 | 4 | ~~**The mesh split**~~ **— RETIRED (corrected 2026-06-13): there is NO per-mesh bone limit** | — | **The only bone cap is `Skeleton.MaxBoneCount = 64` (engine code), a SKELETON-total cap, not per-mesh. Author skeletons ≤63. A single mesh skins the whole skeleton — proven: elephant 59 active bones / chariot 54, both one mesh, both render.** | **Never split a body for bone count.** Keep the whole body in ONE mesh. Split a mesh ONLY for a genuinely separate sub-mesh — e.g. the warg's `warg_low_fur` is split so the FUR can cloth-simulate independently (cloth-driven, not bone-driven). A fully-disjoint full-body `<AdditionalMeshes>` mesh may not render (chariot 2nd horse). See `feedback_no_40_bone_per_mesh_limit` |
 | 5 | **HorseHarness on the mount** suppresses the Horse item's `<AdditionalMeshes>` | always-render parts (a chariot's cart) vanish the moment a harness is equipped | native mount-compositing drops Horse-item AdditionalMeshes when the HorseHarness slot is filled (chariot 2026-06-13: barding dropped the cart) | put anything that must ALWAYS render (vehicle/cart/reins) in the **base mesh**, not `<AdditionalMeshes>`; leave only optional geometry (mane) as an AdditionalMesh. See `feedback_custom_mount_harness_rules` |
 | 6 | **Custom-skeleton harness** shipped as a standalone FBX | **Kit CRASHES on import** (native, no rgl_log) when the harness skin uses bones outside the stock horse skeleton (`B`-set, cart bones) and Type=horse is picked | the editor binds a standalone `_notused` harness to the built-in horse skeleton, which lacks the custom bones | build the harness mesh INSIDE the creature FBX that defines the skeleton (where `chariot_horse_harness_imperial_b` lives); the HorseHarness item references it by metamesh name. `family_type` on the Horse item + harness must match. See `feedback_custom_mount_harness_rules` |
+
+| 7 | **Editor-assigned materials.** An FBX carries only the material slots the DCC tool assigned; anything bound in the editor lives in the compiled tpac alone and does not survive a re-import | two symptoms that look unrelated: every colour variant renders as the base material, and the creature is absent in the world while a close-up UI preview looks correct, because the lost bindings sit one per LOD | diff the mesh-to-material bindings against the donor tpac before trusting the import. Resolve every 16-byte guid inside each mesh item against the material items in the tree, then compare the two sets per mesh | re-assign in the Modding Kit, per mesh per LOD. **It cannot be patched from files:** the metadata length changes, so it is an insert rather than a guid swap, the item's 8-byte checksum goes stale and the edit is silently discarded. Warg 2026-08-29, [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md) section 12 |
 
 Two more invariants the swap must preserve: the **skeleton resource NAME must equal the
 action_set's `skeleton="…"`** (the Blender armature name becomes the skeleton name; the FBX-export
@@ -153,7 +155,7 @@ It statically checks all of #1–#3 (skeleton present in a live loose tpac, ever
 clip tagged, no phantom bindings) and exits non-zero on any FAIL. **PASS is necessary but not
 sufficient** — it cannot see #4 (mesh bone-palette) or in-game behavior, so a PASS still requires
 an **in-game spawn-with-rider check** (the mount must appear *with* its rider, not a lone rider).
-Add a new creature to the tool's `CREATURES` config. Skeleton/tag/binding internals:
+It also cannot see #7: **diff the mesh-to-material bindings against the donor yourself after every re-import**, because a missing binding is not an error to any tool in this repo. Add a new creature to the tool's `CREATURES` config. Skeleton/tag/binding internals:
 `tools/tpac_skeleton_scan.py` + `docs/tools/spider-skeleton-tpac-tools.md`. Lesson memory:
 `feedback-mesh-reexport-drops-skeleton-resource`.
 

@@ -18,15 +18,17 @@ public partial class VolunteerRecruitmentService
 {
     private static void InitializeBlueCraigCulture()
     {
-        // Western goblins of the Ered Luin. Same swarm shape as the Goblin-town pool it was cloned
-        // from: a cheap melee root plus the archer-line entry, which does not sit on the melee
-        // upgrade path and so has to be reachable directly or the whole bow branch is AI-only.
+        // Western goblins of the Ered Luin. The clone of the Goblin-town tree it used to field was
+        // retired, so this is now the Goblin-town pool itself: a cheap melee root plus the
+        // archer-line entry, which does not sit on the melee upgrade path and so has to be
+        // reachable directly or the whole bow branch is AI-only. Blue Craig's one bespoke troop,
+        // bluecraig_bolgs_ironfang, is a T7 capstone reached by upgrade rather than recruited.
         CultureMap["bluecraig"] = new List<VolunteerChance>
         {
-            new VolunteerChance("bluecraig_snaga", 7),
-            new VolunteerChance("bluecraig_grunt", 2),
-            new VolunteerChance("bluecraig_fighter", 1),
-            new VolunteerChance("bluecraig_hunter", 2)  // archer line entry
+            new VolunteerChance("goblin_snaga", 7),
+            new VolunteerChance("goblin_grunt", 2),
+            new VolunteerChance("goblin_fighter", 1),
+            new VolunteerChance("goblin_hunter", 2)  // archer line entry
         };
     }
 

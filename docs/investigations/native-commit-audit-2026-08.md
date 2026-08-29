@@ -214,6 +214,17 @@ exclusion to *candidate*: it needs its own Procmon/A-B pass before anyone drops 
 Same check cleared `SceneEditData` and `SceneObj` — vanilla ships both (Native: 0.19 GB / 1.1 GB),
 so they belong in a public build.
 
+*(c, resolved 2026-08-29 by the maintainer.)* The reasoning above was backwards. `AssetPackages` is
+the cooked form given to **players**; `EmAssetPackages` is the cooked form given to **other modders**
+who want to build against the module in the Modding Kit without receiving its `AssetSources`.
+Vanilla shipping 26.36 GB of it is therefore evidence **for** the editor-distribution reading, not
+against it: `Native` is the module every modder opens in the Kit. Neither folder is read on a dev
+install, where the editor and the game both load `Assets/`. That makes `EmAssetPackages` a genuine
+exclusion candidate for a **player** build, and the 11.74 GB is a real saving, but it is a
+release-shape decision (a modder build would be a separate artifact) and `package_release.py` is
+unchanged pending it. Folder semantics:
+[bannerlord-engine-and-toolchain.md](../reference/bannerlord-engine-and-toolchain.md) section 6.1.
+
 **Tooling now exists for both halves** (2026-08-10):
 
 - `tools/Invoke-RdcAbTest.ps1` — `-Status` / `-Off` / `-On` / `-Report`. Renames only, never deletes,

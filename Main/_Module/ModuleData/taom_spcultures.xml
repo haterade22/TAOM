@@ -4595,20 +4595,20 @@
     is_main_culture="true"
     color="0xFF2E2E2E"
     color2="0xFF6E5A40"
-    elite_basic_troop="NPCCharacter.mistymountainorcs_fighter"
-    basic_troop="NPCCharacter.mistymountainorcs_snaga"
-    melee_militia_troop="NPCCharacter.mistymountainorcs_militia_spearman"
-    ranged_militia_troop="NPCCharacter.mistymountainorcs_militia_archer"
-    melee_elite_militia_troop="NPCCharacter.mistymountainorcs_militia_veteran_spearman"
-    ranged_elite_militia_troop="NPCCharacter.mistymountainorcs_militia_veteran_archer"
+    elite_basic_troop="NPCCharacter.goblin_fighter"
+    basic_troop="NPCCharacter.goblin_snaga"
+    melee_militia_troop="NPCCharacter.goblin_militia_spearman"
+    ranged_militia_troop="NPCCharacter.goblin_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.goblin_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.goblin_militia_veteran_archer"
     can_have_settlement="true"
     villager_party_template="PartyTemplate.villager_mistymountainorcs_template"
     default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
-    settlement_patrol_template_level_1="PartyTemplate.patrol_party_mistymountainorcs_template_level_1"
-    settlement_patrol_template_level_2="PartyTemplate.patrol_party_mistymountainorcs_template_level_2"
-    settlement_patrol_template_level_3="PartyTemplate.patrol_party_mistymountainorcs_template_level_3"
-    militia_party_template="PartyTemplate.militia_mistymountainorcs_template"
-    rebels_party_template="PartyTemplate.rebels_mistymountainorcs_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_goblin_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_goblin_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_goblin_template_level_3"
+    militia_party_template="PartyTemplate.militia_goblin_template"
+    rebels_party_template="PartyTemplate.rebels_goblin_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_mistymountainorcs"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_sturgia"
@@ -4915,7 +4915,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.mistymountainorcs_fighter_merc" />
+      <template name="NPCCharacter.goblin_fighter_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -5266,20 +5266,20 @@
     is_main_culture="true"
     color="0xFF2A3A5A"
     color2="0xFF44586E"
-    elite_basic_troop="NPCCharacter.bluecraig_fighter"
-    basic_troop="NPCCharacter.bluecraig_snaga"
-    melee_militia_troop="NPCCharacter.bluecraig_militia_spearman"
-    ranged_militia_troop="NPCCharacter.bluecraig_militia_archer"
-    melee_elite_militia_troop="NPCCharacter.bluecraig_militia_veteran_spearman"
-    ranged_elite_militia_troop="NPCCharacter.bluecraig_militia_veteran_archer"
+    elite_basic_troop="NPCCharacter.goblin_fighter"
+    basic_troop="NPCCharacter.goblin_snaga"
+    melee_militia_troop="NPCCharacter.goblin_militia_spearman"
+    ranged_militia_troop="NPCCharacter.goblin_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.goblin_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.goblin_militia_veteran_archer"
     can_have_settlement="true"
     villager_party_template="PartyTemplate.villager_bluecraig_template"
     default_party_template="PartyTemplate.kingdom_hero_party_bluecraig_template"
-    settlement_patrol_template_level_1="PartyTemplate.patrol_party_bluecraig_template_level_1"
-    settlement_patrol_template_level_2="PartyTemplate.patrol_party_bluecraig_template_level_2"
-    settlement_patrol_template_level_3="PartyTemplate.patrol_party_bluecraig_template_level_3"
-    militia_party_template="PartyTemplate.militia_bluecraig_template"
-    rebels_party_template="PartyTemplate.rebels_bluecraig_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_goblin_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_goblin_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_goblin_template_level_3"
+    militia_party_template="PartyTemplate.militia_goblin_template"
+    rebels_party_template="PartyTemplate.rebels_goblin_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_bluecraig"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_sturgia"
@@ -5587,7 +5587,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.bluecraig_fighter_merc" />
+      <template name="NPCCharacter.goblin_fighter_merc" />
     </basic_mercenary_troops>
   </Culture>
 

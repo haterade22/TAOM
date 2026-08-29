@@ -305,6 +305,16 @@ was written before the culture existed.
 
 ## Changelog
 
+- 2026-08-29: retired the troop trees the 2026-08-10 promotion cloned. `bluecraig` and
+  `mistymountainorcs` now field `troops_goblin.xml`, each keeping one bespoke T7 capstone, the shape
+  Umbar already uses against Harad. The clones never diverged: normalise the id prefix away and Blue
+  Craig differed from Goblin-town in 112 lines out of 2455, all but one of them the `culture=`
+  attribute. **The lesson for the next promotion is that cloning a roster is not the same as giving
+  a culture one.** Every gate here measures reachability, and a clone is fully reachable by
+  construction, so nothing in this doc's contract could have caught it. The player-visible symptom
+  lived where no test looks: the encyclopedia walks `CharacterObject.All` and listed 69 goblin
+  troops a player could not tell apart. Prefer pointing a promoted culture at its host's tree, and
+  clone only when the divergence is authored in the same pass.
 - 2026-08-12: nine town-owning cultures were spawning Calradian patrols, villagers, militia, rebels
   and caravans. Bound every party template on all six retagged cultures plus `umbar`, `shaghana` and
   `abanissa`, authored the three Dale templates that never existed, and added the party-template

@@ -2,7 +2,162 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-29
+
+### refactor(troops): three goblin kingdoms, one troop tree
+
+TAOM shipped three copies of one goblin tree. `troops_goblin.xml`, `troops_bluecraig.xml` and
+`troops_mistymountainorcs.xml` were each exactly 2455 lines with the same 23 troops, the same
+upgrade graph and a byte-identical equipment list. Normalise the id prefix away and Blue Craig
+differed from Goblin-town in 112 lines out of 2455: the `culture=` attribute, and one display name.
+The Orc-host differed in 970, all of them a race tag, the `[Goblin]` name prefix and skill numbers.
+In play that was two kingdoms both called Goblins fielding units a player could not tell apart, and
+an encyclopedia listing 69 near-identical goblin entries.
+
+Both clones are retired. `bluecraig` and `mistymountainorcs` now field `troops_goblin.xml`, which is
+the pattern Lothlorien already uses against Rivendell and Umbar against Harad, and which
+`CulturePartyTemplateTests` explicitly allows. Each kept exactly one bespoke troop, its T7 capstone,
+so its elite slot stays its own: `bluecraig_bolgs_ironfang` ("Skarnak's Ironfang") and
+`mistymountainorcs_bolgs_ironfang`. Both moved into `troops_goblin.xml` carrying their own
+`culture=` attribute. The encyclopedia goes from 69 goblin entries to 25.
+
+Blue Craig was already half-merged and nobody had noticed: its five clan lord-party templates were
+named `kingdom_hero_party_goblin_bluecraig_N_template` and had always held real `goblin_*` troops,
+so most Blue Craig lords already fought with Goblin-town's roster. Only the culture-level templates
+still used the clone.
+
+What moved: 11 troop and party-template attributes plus the `<basic_mercenary_troops>` child on each
+of the two culture blocks; 14 now-dead party templates deleted (mercenary, outlaw, militia, three
+patrol levels and rebels, per culture) and the two kept ones repointed; the five Misty Mountain clan
+templates repointed in place, keeping their ids because `clans.xml` binds them by name; both
+villager `upgrade_target`s; and both volunteer recruitment pools. The civilian side is untouched on
+purpose. `npcs_bluecraig.xml` and `npcs_mistymountainorcs.xml` are each town's population and were
+never duplicated content, so villagers, caravan guards, notables and townsfolk stay their own.
+
+Two things the merge surfaced rather than caused. The capstones are no longer upgrade-reachable,
+and deliberately so: the only troop that could promote into them is the shared
+`goblin_chosen_of_tharzog`, and putting them there would let a Goblin-town player promote into
+another kingdom's signature unit. They reach the player through the vassal reward and through
+prisoner recruitment, the same route the Black Numenorean line uses, and the reachability test
+records the exemption. Separately, `tools/build_clan_specs.py` had never filtered `_merc` troops out
+of its roster pool; no shipped spec contained one, but only by luck of pool ordering, and the moment
+a culture started pooling from another culture two clan rosters picked up `goblin_fighter_merc`.
+Filter added, and a `BESPOKE_SWAPS` table so a borrowing culture gets its own capstone rather than
+the pool culture's.
+
+No localization work: the troop name keys were inline defaults, registered in no strings file and
+translated in none of the 12 languages.
+
+Suite 7733 green, `validate_moduledata.py` PASS, `validate_all_troop_refs.py` PASS.
+
+**Owed:** an in-game smoke on a NEW campaign, and a separate load of a pre-change save to record
+what happens to a party still holding `bluecraig_*` or `mistymountainorcs_*` units. Deleting troop
+rows is a deliberate departure from the never-delete rule in `.claude/rules/troops.md`.
+
+
+### fix(warg): put the missing materials back on the meshes
+
+The warg did not render in battle or on the campaign map, and its three colour variants all came out
+brown. One cause: the re-imported rig bound 3 materials where the donor bound 7.
+
+`Warg_Rig_V5.fbx` carries three material slots (`warg_skin`, `warg_fur`, `orc_rider_saddle`) for
+five meshes. `warg_fur_lod`, `warg_fur_2`, `warg_fur_3` and `warg_fur_3_lod` were assigned by hand
+in the donor's editor and lived only in its compiled tpac, so the Kit had nothing to import and
+reported nothing wrong. A warg variant's colour comes from its fur mesh's material rather than from
+the item XML, so with every fur mesh on plain `warg_fur` all three were brown. The four lost
+bindings sat one per LOD, which fits a creature that looks right in a close-up preview and is absent
+in the world. `orc_rider_saddle` returned byte-identical to the donor, the control proving the
+import itself was faithful.
+
+Re-assigned in the Modding Kit. Five of the six meshes now match the donor's binding set exactly;
+`warg_low_fur_with_saddle_3` carries `warg_fur_3` on all four LODs where the donor used
+`warg_fur_3_lod` on the lower three, same textures either way.
+
+This could not be done from files. Adding a binding changes the item's metadata length, so it is an
+insert rather than a guid substitution, and the 8-byte checksum then goes stale and the Kit discards
+the edit. Same wall as the Owner Skeleton yesterday.
+
+Section 12 of the ledger previously blamed this on the warg never being cooked into
+`EmAssetPackages`. That was wrong, and it is corrected in place. The war ram disproves it: loose
+only, no cooked entry, renders fine. Loose `Assets/` is read at runtime. The mistake was resting on
+a correlation whose failing side had two samples, one of them unchecked.
+
+Docs: `docs/reference/lotrlome-warg-changes.md` section 12 rewritten,
+`docs/ai-includes/creature-mount-authoring.md` gains re-export failure mode #7 plus a post-deploy
+gate note, `docs/reviews/lessons/animation-skeleton.md` gains the lesson.
+
+Not-tested: no automated gate covers mesh-to-material bindings. `validate_mesh_refs.py` and
+`verify_mount_assets.py` are both blind to them.
+
+### docs: what the four asset folders are actually for
+
+Recorded because two separate write-ups had it wrong in two different directions.
+
+`AssetSources/` is the raw art and ships to nobody, which is the point of packaging. `Assets/` is the
+compiled working tree, and on a dev install both the editor and the game read it. `AssetPackages/`
+is the cooked form for **players**. `EmAssetPackages/` is the cooked form for **other modders**, so
+they can build against the module in the Kit without receiving your sources.
+
+So neither packages folder matters locally, and a creature with no entry in either is in its normal
+pre-release state rather than broken. That is what yesterday's invisible-warg misdiagnosis turned on.
+
+It also settles an open item. `docs/investigations/native-commit-audit-2026-08.md` correction (c)
+demoted `EmAssetPackages` from "exclude" to "candidate" because vanilla `Native` ships 26.36 GB of
+it, reading that as proof it is not editor-only. It is the opposite: `Native` is the module every
+modder opens in the Kit, so shipping its editor form is deliberate.
+
+Left as a decision rather than a change: `tools/package_release.py` still ships `EmAssetPackages`
+(11.74 GB) to players as a candidate include. A player build likely does not need it, but that is a
+release-shape call, so the packager is untouched.
+
+New reference: `docs/reference/bannerlord-engine-and-toolchain.md` section 6.1.
+
 ## 2026-08-28
+
+### feat(warg): materials and animation wiring after the Kit re-import
+
+The warg's data plane moved into `LOTRLOME_Armory` earlier today; this is the asset half. The Kit
+imports geometry and textures but not materials or animation clips, so both were copied from the
+donor: 12 `_mtl` and 73 `_anm`, byte-identical, carrying authored options that are tedious to
+recreate and easy to get subtly wrong (`quad_movement` on 15 clips, `cyclic` on 10,
+`make_walk_sound` on 14, `two_sided`/`bumpmap`/`skinning` on all 12 materials). Every count matches
+the donor exactly.
+
+Copying them is only half the job, because **the Kit mints a fresh asset guid for every item it
+imports** and the copies still name the donor's. All 21 texture guids had changed, each material
+embedded 3 stale ones for 36 dead references, and the clips carried 28 more. New tool
+`tools/remap_creature_asset_guids.py` matches items between the two trees and substitutes guid for
+guid: 170 references repointed, 0 stale, and the materials render.
+
+Two mistakes on the way there, both recorded because they generalise. Keying the map on **item 0**
+of a `_geo` is wrong: it holds the `.fbx` and the skeleton animation, and their order is not stable
+(the Kit writes the `.fbx` first on import and the skeleton animation first after a save), so the
+first pass mapped a skeleton animation onto an `.fbx` and broke 17 correctly-wired clips. And once a
+pass has written a wrong value the next one has nothing to match, so the repair was to restore all
+85 files from backup and run one correct pass rather than patch the patch.
+
+**The Owner Skeleton could not be automated, and the reason is a checksum.** A skeleton animation's
+metadata is `int32 | GUID_A | GUID_B | trailer` with GUID_B the owner, all-zero when unset. Each item
+also carries an 8-byte checksum right after its metadata. Swapping guid for guid leaves that
+consistent, which is why the clip repair holds; writing into an empty field does not, so the edit is
+silently discarded and the Kit still shows the field unset. Same file size, different checksum, on
+every sample. Those 48 assignments were made by hand in the Kit.
+
+What automation could still do is say **which** skeleton each takes: 34 to `skeleton_warg`, 22 to
+`human_skeleton`, derived from the bones in each FBX and confirmed independently by the action sets.
+That caught `Warg_AnimRider_Idle.fbx`, human-rigged despite the `Warg_` prefix, which anyone reading
+filenames would have mis-assigned.
+
+Final state: Owner Skeleton 48/48, 65 clips wired with the donor's exact pairing, 36 material
+references live, 0 stale donor guids. 8 clips the donor never wired remain, and need a source chosen
+by hand if wanted.
+
+Ledger: `docs/reference/lotrlome-warg-changes.md` section 11. Lesson:
+`docs/reviews/lessons/animation-skeleton.md`.
+
+Not-tested: in-game. The Kit accepts the assets and writes RDC; no battle has been run.
+Research: tpac item layout (metadata, checksum, segment and dependency blocks) via tools/tpac_skeleton_scan.py.
+
 ### chore(enlistment): turn the diagnostics trace back on, temporarily
 
 For the #520 in-game smoke, and meant to be reverted straight after. The trust economy now rests on

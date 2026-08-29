@@ -2452,4 +2452,80 @@
         </Equipments>
     </NPCCharacter>
 
+
+  <!-- ===== BORROWED-CULTURE CAPSTONES =====
+       Blue Craig and the Misty Mountain Orcs field this file's tree (see their blocks in
+       taom_spcultures.xml). Each keeps ONE bespoke top-tier troop so its elite slot stays
+       its own, the same shape Umbar uses against Harad's tree. They live here because
+       troops_bluecraig.xml and troops_mistymountainorcs.xml were retired as duplicates.
+       The ids are save-visible and must not be renamed. -->
+  <NPCCharacter
+      id="bluecraig_bolgs_ironfang"
+      race="goblin"
+      default_group="Infantry"
+      level="36"
+      name="{=aom_bluecraig_bolgs_ironfang_name}[Goblin] Skarnak's Ironfang"
+      occupation="Soldier"
+      culture="Culture.bluecraig">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gundabad" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="130" />
+      <skill id="Riding" value="15" />
+      <skill id="OneHanded" value="262" />
+      <skill id="TwoHanded" value="245" />
+      <skill id="Polearm" value="267" />
+      <skill id="Bow" value="45" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="85" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter
+      id="mistymountainorcs_bolgs_ironfang"
+      race="orc"
+      default_group="Infantry"
+      level="36"
+      name="{=aom_mistymountainorcs_bolgs_ironfang_name}[Misty Mountains] Bolg's Ironfang"
+      occupation="Soldier"
+      culture="Culture.mistymountainorcs">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gundabad" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="145" />
+      <skill id="Riding" value="25" />
+      <skill id="OneHanded" value="270" />
+      <skill id="TwoHanded" value="255" />
+      <skill id="Polearm" value="278" />
+      <skill id="Bow" value="20" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="95" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
 </NPCCharacters>

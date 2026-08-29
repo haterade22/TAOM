@@ -24,8 +24,8 @@ namespace TAOM.Features.PlayerSwitcher.Hooks;
 /// The ActiveState guard is what keeps the picker off the barber screen and the multiplayer face
 /// generator, both of which construct the same view.
 /// </remarks>
-[HarmonyPatchCategory("Patch77_PlayerSwitcher")]
 [HarmonyPatch]
+[HarmonyPatchCategory("Patch77_PlayerSwitcher")]
 public static class Patch77_BodyGeneratorView_Constructor
 {
     private const string SpriteCategory = "ui_clan";

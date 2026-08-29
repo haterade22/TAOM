@@ -39,6 +39,28 @@ Update ALL of the following (checklist):
 | Gondor | Human | no `race` attribute |
 | Gundabad | Goblin/Orc | `race="goblin"` / `race="orc"` |
 
+## Three cultures, one goblin tree
+
+`goblin` (Goblin-town), `bluecraig` (Ered Luin) and `mistymountainorcs` all field
+`troops/troops_goblin.xml`. There is no `troops_bluecraig.xml` or `troops_mistymountainorcs.xml`:
+both were clones of the goblin tree that never diverged in any way a player could see, so they were
+retired. Blue Craig and the Orc-host each keep exactly ONE bespoke troop, a T7 capstone, and both
+live in `troops_goblin.xml` carrying their own `culture=` attribute.
+
+Two consequences worth knowing before you edit any of the three:
+
+- **Editing `troops_goblin.xml` changes three kingdoms.** A stat or gear tweak meant for Goblin-town
+  lands on Blue Craig and the Misty Mountains as well.
+- **The capstones are not upgrade-reachable and that is deliberate.** The only troop that could
+  promote into them is the shared `goblin_chosen_of_tharzog`, and putting them there would let a
+  Goblin-town player promote into another kingdom's signature unit. They reach the player through
+  the vassal reward and through prisoner recruitment, the same route the Black Numenorean line uses.
+  `VolunteerRecruitmentServiceTests.BorrowedCultureCapstones` is the exemption that records this.
+
+Cross-culture sharing is the normal TAOM pattern, not a special case: Lothlorien fields Rivendell's
+tree whole, Umbar fields Harad's but keeps `umbar_elite`. `CulturePartyTemplateTests` allows it as
+long as the target is TAOM-authored.
+
 ## Party Template Types
 
 Each culture typically has these templates in `taom_partyTemplates.xml`:
@@ -72,7 +94,10 @@ minus its `clan_` prefix (`clan_erebor_1` binds `kingdom_hero_party_erebor_erebo
 Gondor's 14 embed a fief instead and the clan id appears nowhere in them (`clan_empire_west_9` binds
 `kingdom_hero_party_gondor_blackroot_vale_template`). The leading token names the ROSTER's culture,
 which is not always the clan's: the five `Culture.bluecraig` clans bind
-`..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. Computing instead of
+`..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. The five
+`Culture.mistymountainorcs` clans are the counter-example that proves the token is a convention and
+not a derivation: they keep `..._mistymountainorcs_mistymountainorcs_N_template` while their stacks
+are `goblin_*` too, because renaming a bound template id breaks `clans.xml`. Computing instead of
 grepping also hides dead data. Two of the 193 (`..._gondor_ithilien_template`,
 `..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14.
 

@@ -191,7 +191,7 @@ bluecraig (Culture.goblin) and Lindon (Culture.rivendell) inherit their culture'
 | Layer | File | New / Modified |
 |---|---|---|
 | Cultures | `taom_spcultures.xml` | +2 `<Culture>` blocks (no `<cultural_feats>`) |
-| Troops | `troops/troops_goblin.xml`, `troops/troops_mistymountainorcs.xml` | new (28 troops each, cloned) |
+| Troops | `troops/troops_goblin.xml` | new (cloned). `troops_mistymountainorcs.xml` shipped alongside it and was **retired 2026-08-29**: it was the same tree with a different race tag and skill numbers, so the Orc-host now fields the goblin file and keeps one bespoke capstone in it |
 | NPCs | `characters/npcs_goblin.xml`, `…_mistymountainorcs.xml` | new (69 NPCs each) |
 | Equipment | `equipmentsets/taom_equipment_sets_{goblin,mistymountainorcs}.xml` | new (10 rosters each) |
 | Wanderers | `taom_wanderers.xml`, `equipmentsets/taom_wanderer_equipment.xml` | +10 wanderers + roster per culture |
@@ -227,6 +227,13 @@ bluecraig (Culture.goblin) and Lindon (Culture.rivendell) inherit their culture'
    (`sk_md_orc_*`/`sk_gn_orc_*`) + mixed Gundabad/Mordor/Dol-Guldur weapons (placeholder).
    Authoring dedicated Goblin / Misty-Mountain trees + bespoke armor is optional polish via
    `docs/ai-includes/new-culture-authoring.md`.
+
+   **Update 2026-08-29:** the Misty Mountain clone was retired rather than diverged. It had the same
+   23 troops, the same upgrade graph and a byte-identical equipment list as the goblin tree, so the
+   two read as one faction duplicated. `mistymountainorcs` now points at `troops_goblin.xml` and
+   keeps a single bespoke T7 capstone. Blue Craig went the same way in the same pass. If a real
+   Misty-Mountain tree is ever authored, that is the moment to reverse this, not before: the point
+   of the merge is that no distinguishing content existed to lose.
 6. **Careers — DONE** (2026-08-10). Each orc culture has three careers cloned from Gundabad's by
    `tools/insert_new_faction_careers.py`; both cultures are un-parked from
    `CareerCultureCoverageTests` documentedExceptions. Art and FX ids are deliberately reused from

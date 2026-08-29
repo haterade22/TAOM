@@ -24,6 +24,10 @@ param(
   [Parameter(Mandatory=$true)][string[]]$Clips,
   [string]$OutDir      = "E:\LOTRAOMAssets\_troll_extract\json",
   [string]$Skeleton    = "human_skeleton",
+  # Package holding the Skeleton asset. Defaults to human, which is where the troll/spider work
+  # started; the horse rig lives in EmAssetPackages\pack_horse_customrig for the war ram's charge
+  # clips, so the path had to stop being hardcoded. Relative to $NativeDir.
+  [string]$SkeletonPackage = "EmAssetPackages\human\human.tpac",
   [string]$TpacToolBin = "E:\Bannerlord_Art\TpacTool_0.4.0\TpacTool\bin",
   [string]$NativeDir   = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\Native"
 )
@@ -51,7 +55,7 @@ function Frames($sl, [bool]$isQuat){
 }
 
 # --- load skeleton (bone order + rest) ONCE ---
-$skPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir "EmAssetPackages\human\human.tpac"),$true,$true))
+$skPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir $SkeletonPackage),$true,$true))
 $skel=$skPkg.Items|Where-Object{$_.GetType().Name -eq "Skeleton" -and $_.Name -eq $Skeleton}|Select-Object -First 1
 if(-not $skel){ throw "skeleton '$Skeleton' not found" }
 $sd=$skel.Definition.Data

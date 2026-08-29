@@ -254,6 +254,41 @@ art source (.fbx, textures)
 - The **skeleton** lives inside a `*_geo.tpac` (e.g. LOTRLOME's `elephant_harad_armor_01_geo.tpac` carries
   `elephant_skeleton`); animation **clips** are skeleton-relative (bind by skeleton name).
 
+### 6.1 The four asset folders, and who each one is for
+
+A module can carry four asset directories. They are not four stages of one pipeline that the game
+walks in order; three of them are **distribution formats**, and which one you need depends entirely
+on who is receiving the module.
+
+| Folder | What it holds | Who it is for |
+|---|---|---|
+| `AssetSources/` | The raw art: FBX, source PNG, uncompressed textures | Nobody outside the team. Not shipping this is the whole point of packaging |
+| `Assets/` | Compiled per-asset tpac (`*_geo`, `*_mtl`, `*_anm`, `*_tex`) | The working tree. Both the editor and the game read it on a dev install |
+| `AssetPackages/` | Cooked packs | **Players.** This is the runtime form in a release |
+| `EmAssetPackages/` | Cooked packs in editor form | **Other modders**, so they can build against the module in the Modding Kit without receiving your `AssetSources` |
+
+Three consequences that are easy to get backwards:
+
+- **Neither packages folder matters on a dev install.** The editor reads `Assets/`, and so does the
+  game. Deleting `AssetPackages` locally costs nothing; Publish Module regenerates it.
+- **A creature with no entry in either packages folder is in its normal pre-release state, not
+  broken.** On 2026-08-29 an invisible warg was misattributed to exactly this, on a correlation
+  across six creatures whose failing side had two samples and one of them, the war ram, had never
+  been checked. The ram is loose-only with no cooked entry and renders fine. The real cause was four
+  missing mesh-to-material bindings ([lotrlome-warg-changes.md](lotrlome-warg-changes.md) section 12).
+- **`EmAssetPackages` is the editor-distribution form, which settles an open question.**
+  `docs/investigations/native-commit-audit-2026-08.md` correction (c) demoted it from "exclude" to
+  "candidate" because vanilla `Modules\Native` ships 26.36 GB of it, reasoning that this "is not
+  what an editor-only directory looks like". It is exactly what one looks like: Native is the module
+  every modder opens in the Kit, so TaleWorlds ships its editor form deliberately. Shipping it is
+  evidence for the editor-distribution reading, not against it.
+
+**Open decision, not yet taken.** `tools/package_release.py` currently ships `EmAssetPackages`
+(11.74 GB) to players as a `candidate=True` include, with the reason string "vanilla Native ships
+26.36 GB of these -- unproven as editor-only". If the editor-distribution reading is right, a player
+build does not need it, and a modder build is a separate artifact. That is a release-shape decision
+and the packager is unchanged pending it.
+
 ## 7. Custom non-humanoid creature workflow (the cross-cutting recipe)
 
 Pulling the above together — to add a renderable, animated, fighting custom creature (spider/warg/elephant):

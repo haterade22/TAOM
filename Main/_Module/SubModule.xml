@@ -374,15 +374,6 @@
       </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
-      <XmlName id="NPCCharacters" path="troops/troops_mistymountainorcs"/>
-      <IncludedGameTypes>
-        <GameType value ="Campaign"/>
-        <GameType value ="CampaignStoryMode"/>
-        <GameType value = "CustomGame"/>
-        <GameType value = "EditorGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
       <XmlName id="NPCCharacters" path="characters/npcs_mistymountainorcs"/>
       <IncludedGameTypes>
         <GameType value ="Campaign"/>
@@ -422,15 +413,6 @@
     </XmlNode>
     <XmlNode>
       <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_lindon"/>
-      <IncludedGameTypes>
-        <GameType value ="Campaign"/>
-        <GameType value ="CampaignStoryMode"/>
-        <GameType value = "CustomGame"/>
-        <GameType value = "EditorGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="NPCCharacters" path="troops/troops_bluecraig"/>
       <IncludedGameTypes>
         <GameType value ="Campaign"/>
         <GameType value ="CampaignStoryMode"/>
