@@ -837,6 +837,45 @@ Three consequences worth naming, because the score feeds more than trust.
 This does not touch #443's own design call about which team the enlisted player belongs on. It fixes
 the merit-scoring fallout only.
 
+#### Confirmed in play 2026-08-28, and the same run reproduced the defect that was reverted
+
+`taom_debug_2026-08-28_20-58-46.log`, diagnostics on, one fought-through Infantry battle, won:
+
+```
+[Enlistment] battle merit 46 -> band 'solid' (kills=0, won=True)
+```
+
+That line had never appeared in any log before. The merit path is observed working end to end for the
+first time, and the flat win renown of 2 plus the band's 1 arrived as `renown=3`.
+
+**The 46 is worth keeping, because it proves the fallback without needing the ratios logged.** The
+player was in the Infantry formation, and infantry role fit requires `CohesionRatio >= 0.5`, so
+before this change cohesion contributed nothing AND role fit was unreachable. A zero-kill battle
+therefore topped out at survival 25 + commander 10 + engagement 10 = **45**. Anything above 45 at
+zero kills is only reachable with the fallback running.
+
+Decomposing further: role fit must still have been off, because switching it on needs cohesion and
+engagement both at 0.5 or better, which is 12.5 points against the 11 available above survival. So
+cohesion was saturated near 1.0 with engagement near 0.2. **That is the stander shape**, in the line
+all battle, rarely near an enemy, nothing killed, landing at 46 and inside `solid`. Paying trust from
+`solid`, which is what the first version of this fix did, would have paid standing for hanging back.
+The review caught it on arithmetic; play reproduced it within three campaign hours of shipping.
+
+It also answers the question the cohesion section above flags as unmeasured: an ally really is inside
+25 m on essentially every sample, so cohesion does saturate for anyone standing in a formation. Read
+the 25 m fallback as generous by design, not as a threshold that discriminates.
+
+**The duty half is still unexercised.** Zero `[Enlistment.Duties]` lines: the oath was sworn and the
+battle fought inside about three campaign hours, against `minDaysBeforeFirstOffer: 3`. Nothing in
+that run touches the eight rows that were impossible or the retune that fixed them, which is the
+larger half of #520. It needs 3+ days of service and "Ask your sergeant for work"; the line that
+settles it is `duty '<id>' completed`.
+
+Calibration, from the same run: 46 sat 14 short of `strong`, which is where standing is earned. Three
+kills would have made 61, and holding engagement above 0.5 unlocks the 10-point role fit on its own.
+Participation pays and presence does not, which is the intent, but it does mean the duty loop carries
+most of the standing economy.
+
 #### What the economy looks like afterwards, including its one-way half
 
 Standing is now a **ratchet on the field-duty track**. `record.Trust` has one writer

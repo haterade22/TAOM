@@ -636,7 +636,7 @@ own line banks survival 25 + cohesion 15 = 40 with no kills and no engagement at
 in ordinary play, neither visible in a diff that changed one character.
 - **Why missed:** the change was costed as "one integer, one band". The author verified the mechanism (does the reward now flow?) and not the population (who else does it now flow to?). Nothing in the reviewable artifact showed the attainable-score distribution.
 - **Prevent:** for any threshold that gates a reward, write down the maximum score attainable by each way of NOT doing the thing the reward is for (quitting, standing still, dying early, auto-resolving) and assert the threshold sits above all of them. Pin it as a test that reads the SHIPPED config, and pin the positive side too (someone who does the thing must still clear it), or "no free reward" is satisfiable by paying nobody. Config comments recording such a ceiling are claims: re-derive the sum before trusting one, since the comment here reached its number by leaving kills out.
-- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding H1 (#520).
+- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding H1 (#520). Reproduced in play within three campaign hours of shipping: a zero-kill battle scored 46 with cohesion saturated and engagement near 0.2, landing inside the band that the reverted change would have had pay standing.
 
 ### A skill-check row that names only a specialist skill is unwinnable, not hard
 Ten of thirteen enlistment field duties gated on Scouting, Charm, Steward or Tactics, which a warrior

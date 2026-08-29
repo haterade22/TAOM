@@ -176,8 +176,16 @@ trust on both outcomes, while its sibling is easier, pays trust, and triggers th
 in its own change. Sergeant's `minLeadershipSkill: 50` is a second, separate wall: 34,575 XP against
 a 10/day grant. Both are #521.
 
-Not-tested: the in-game run. Existing saves carry their negative standing and climb back through the
-merit band; no migration was added.
+Verified in play 2026-08-28 (log `taom_debug_2026-08-28_20-58-46`): one fought battle produced
+`battle merit 46 -> band 'solid' (kills=0, won=True)`, the first time that line has ever been
+observed, and 46 is a point above the 45 ceiling the pre-fix cohesion code could reach at zero kills,
+so the fallback is live. It also reproduced the reverted defect exactly: cohesion saturated,
+engagement near 0.2, no kills, landing inside `solid`. Paying trust there would have rewarded hanging
+back.
+
+Not-tested: the duty half, which is the larger half. No duty was offered in three campaign hours
+against `minDaysBeforeFirstOffer: 3`, so the retune is still unexercised in play. Existing saves
+carry their negative standing and climb back through the merit band; no migration was added.
 
 
 ### refactor(warg): absorb Alliance.Wargs into LOTRLOME_Armory, one fewer module to install

@@ -83,11 +83,54 @@ Appended to the category files (`docs/reviews/lessons/`), not just recorded here
 3. **campaign-mechanics.md**: an invariant that holds only because two independently-tuned numbers
    happen not to overlap is not enforced; state it in code.
 
-## Still owed
+## In-game run, 2026-08-28 21:05 to 21:08: the merit half is proven and H1 reproduced
 
-The in-game run, with MCM Enlistment Diagnostics ON. Every number in this document, including both
-HIGH findings, is arithmetic over shipped config and decompiled bodies. **No `[Enlistment] battle
-merit <score> -> band` line has ever been positively observed in a live session**, so the merit path
-that carries half the trust economy is unproven end to end, and the premise under H1's stander shape
-(that an ally is inside 25 m on essentially every sample) is a physical assumption about formation
-spacing that nobody has measured. One fought-through battle and a grep of the log settles both.
+`taom_debug_2026-08-28_20-58-46.log`, diagnostics on (119 `[EnlistDiag]` lines), deployed
+`TAOM.dll` stamped 20:57:39 so the run carries this changeset. One fought-through battle, Infantry,
+won:
+
+```
+[Enlistment] battle merit 46 -> band 'solid' (kills=0, won=True)
+[Enlistment] reward 'merit-solid': xp=12 gold=5 skill=/0 trust=0 renown=0
+[Enlistment] reward 'battle-won':  xp=0  gold=0 skill=/0 trust=0 renown=3
+```
+
+**The merit path is observed working for the first time.** That line had never appeared in any log
+on this machine, which is what made half the trust economy unproven end to end. Renown 3 is the flat
+win base of 2 plus the `solid` band's 1, so the band-renown chain resolves too.
+
+**The cohesion fallback is proven live by the score itself.** The player was placed in the Infantry
+formation, and infantry role fit requires `CohesionRatio >= 0.5`, so before this change cohesion
+contributed 0 AND role fit was structurally unreachable. The ceiling for a zero-kill battle was
+therefore survival 25 + commander 10 + engagement 10 = **45**. The observed 46 is one point above a
+ceiling the old code could not exceed.
+
+**H1 reproduced on the first live battle.** Decompose 46 with no kills: role fit must be off, because
+switching it on requires cohesion and engagement both at 0.5 or better, which is 12.5 points against
+the 11 available. So cohesion is saturated near 1.0 while engagement sits near 0.2. That is exactly
+the stander shape, in the line all battle, rarely near an enemy, nothing killed, landing at 46 and
+inside `solid`. Had the `solid` band shipped paying 1 trust, this battle would have paid standing for
+hanging back. The review found it by arithmetic; play reproduced it within three campaign hours.
+
+It also settles the premise the completeness critic flagged as unmeasured: an ally really is inside
+25 m on essentially every sample, so cohesion does saturate for anyone standing in a formation.
+
+Standing correctly did not move. The run was clean otherwise: three warnings, all expected, including
+the `PlayerEncounter` self-heal firing as designed.
+
+## Still owed: the duty half, which is the larger half
+
+Zero `[Enlistment.Duties]` lines. The oath was sworn at 21:05 and the battle fought at 21:05, about
+three campaign hours, against `minDaysBeforeFirstOffer: 3`. No duty was owed, so nothing in this run
+touches the eight rows that were impossible or the retune that fixed them. **Nothing here validates
+the change that motivated the issue.**
+
+The next run needs 3+ campaign days of service and "Ask your sergeant for work". The line that
+settles it is `duty '<id>' completed`, an outcome an untrained hero could effectively not reach
+before.
+
+One calibration note from the same run: 46 sat 14 short of `strong`, where standing is actually
+earned. Three kills would have made 61, and holding engagement above 0.5 unlocks the 10-point role
+fit alone. That is the intended shape, participation pays and presence does not, but it does mean the
+duty loop carries most of the standing economy, which is a second reason the duty smoke matters more
+than this one did.
