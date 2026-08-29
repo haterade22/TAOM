@@ -1594,3 +1594,32 @@ LAST command in a pipeline, and the tool actually returns 1.
   file, or read `PIPESTATUS`. Generally: when a check reports nothing wrong, confirm it actually
   ran before believing it.
 - **Source:** docs/features/armoury-mesh-cleanup.md; tools/audit_deleted_mesh_impact.py.
+### Report what a transform DID, never what it was asked to do
+
+A mutation script logged its insert counts from the request constants (`len(NEW_PIECE_BLOCKS)`)
+while logging its removal counts from actual matches. The asymmetry meant a no-op second run
+printed `+4 pieces` against a byte-identical file, and a silent insert failure (anchor tag not
+found, function returns the text unchanged) would have printed `+4` just the same.
+- **Why missed:** the removal path was written to count matches because the count was interesting
+  (11 of 12 requested ids existed). The insert path was written from the constants because they
+  were in lexical scope and the number "looked right" on the first run, when it happened to be
+  true. No test asserted an insert count, so nothing distinguished 4-because-it-worked from
+  4-because-it-is-a-literal.
+- **Prevent:** every mutating helper returns `(text, count)` and the caller prints that count.
+  Pin it with a test that runs the transform twice and asserts the second run reports 0. This is
+  the write-side of the same rule as "a zero you did not prove is not a zero": a non-zero you did
+  not measure is not a non-zero either.
+- **Source:** docs/reviews/rca-rohan-spear-reforge-2026-08-28.md finding 2.
+
+### A heredoc is not a safe transport for source containing escape sequences
+
+Twice in one session, Python string literals containing `\n` were appended to a file through a
+Bash heredoc and arrived as real newlines, breaking the file's syntax both times. The second
+occurrence came after the first had already been diagnosed and fixed by hand.
+- **Why missed:** the quoted-heredoc form (`<<'EOF'`) genuinely does suppress shell expansion, so
+  the technique looks safe and works for prose. It is the tool-layer wrapping around the command,
+  not the shell, that rewrites the escapes, and that is invisible from the script's own text.
+- **Prevent:** author any file containing backslash escapes with the Write/Edit tools. Reserve
+  heredocs for data with no backslashes. If a heredoc-written file is source, parse it immediately
+  (`python -c "import ast; ast.parse(open(p).read())"`) before trusting it.
+- **Source:** docs/reviews/rca-rohan-spear-reforge-2026-08-28.md, "Process lesson".
