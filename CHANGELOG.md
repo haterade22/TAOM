@@ -4,6 +4,43 @@
 
 ## 2026-08-28
 
+### feat(rohan): two new spear parts replace twelve, and they couch
+
+The artist delivered two blades and two handles (plus the two collision bodies) to replace six
+blades and six handles. Four new crafting pieces in, eleven out, five crafted spears collapse to
+two, and the eight Rohan rosters carrying the retired three are remapped by damage family so the
+heavy/light split survives: `wm_rohan_spear_c` and `_d` were the 3.1-thrust spears and go to
+`wm_rohan_spear_a`, `_f` was 1.87 and goes to `_b`.
+
+**The mesh names are lowercase.** The FBX is `SM_Ro_Rohan_Spear_A.fbx` and the tpac stores
+`sm_ro_rohan_spear_blade_a`. Authoring the CamelCase form would have resolved to nothing, silently,
+which is exactly what workflow Step C means by never trusting the editor label.
+
+**Couchable and still usable with a shield, which is not a given.** Vanilla's `TwoHandedPolearm`
+template lists its descriptions in order: `OneHandedPolearm`, `TwoHandedPolearm`,
+`TwoHandedPolearm_Couchable`, `TwoHandedPolearm_Bracing`. The engine takes the first whose
+`AvailablePieces` cover every piece as the primary usage and adds the later matches as extra
+usages, so registering in all four gives a shield-compatible primary AND a couch. That matters
+because eight Rohan rosters pair these spears with a shield, and a polearm absent from
+`OneHandedPolearm` resolves `requires_no_shield`: the troop carries it and never draws it.
+`audit_polearm_shield_parity.py` still passes.
+
+`wm_rohan_spear_e_handle` was never defined, so variant `e` was a blade with no handle and no
+crafted item. Eleven pieces removed of the twelve listed, and the run says so rather than
+quietly accepting the mismatch.
+
+Reach drops. The old spears were 345cm and 343cm; the new ones are 280cm and 270cm.
+
+**Not shippable until the packs are re-cooked.** All six new assets are in `Assets/` and in none
+of `AssetPackages/pack0-9.tpac`. A missing visual mesh would only render naked, but
+`bo_sm_ro_rohan_spear_blade_a`/`_b` are missing collision bodies, and an unresolvable `body_name`
+makes `PreloadHelper.WaitForMeshesToBeLoaded` spin forever: no crash, no log, one core at 100%,
+mission never loads (#352). Any battle with a Rohan spearman hangs until the cook. The workflow's
+sanctioned stopgap is to point `body_name` at a surviving cooked body until then.
+
+Not-tested: in-game. Needs the pack re-cook first, then a smithy check that the pieces combine,
+and a couch test on horseback.
+
 ### chore(localization): clear the translation backlog, and find the file the translator could not see
 
 All 12 languages swept across TAOM, TAOM_Map and LOTRLOME_Armory. Zero failures.

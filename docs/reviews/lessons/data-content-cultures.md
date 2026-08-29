@@ -592,3 +592,37 @@ Anfalas ships only infantry gear, so its own top tier is heavy rather than lord.
   85 body / 50 head / 35 gloves and nothing any region ships exceeds 70 / 41 / 27, so the swap was
   a real nerf that had to be stated rather than discovered later.
 - **Source:** docs/features/armoury-mesh-cleanup.md; docs/reference/armory-guide.md.
+### A many-to-few remap silently destroys variety wherever one entity referenced two of the folded ids
+
+Collapsing 5 Rohan crafted spears into 2 left `rohan_edoras_golden_hall_supreme_rider` with three
+equipment rosters that previously offered two different spears and now offer the same one. Nothing
+caught it: `validate_moduledata` passes because every `Item.X` still resolves, the polearm/shield
+gate passes because the troop can still draw the weapon, and the data-flow trace passes because the
+piece-to-item-to-troop chain genuinely is intact. The defect is not a broken reference, it is a
+degenerate one.
+- **Why missed:** every existing gate asks a RESOLUTION question ("does this id resolve", "can this
+  troop use it"). None asks a COMPOSITION question ("does this entity now hold the same item
+  twice"). Reference-level validation is structurally blind to it, so five of six review agents
+  passed the change; only the agent that diffed per-troop instead of per-reference saw it.
+- **Prevent:** for any migration that folds N ids into M < N, enumerate the affected entities and
+  diff their id MULTISET before and after, not just the set of live references. Report any entity
+  whose distinct-item count dropped. Do this before applying, because after the fact the
+  pre-change composition only survives in a backup. And do not "fix" it by re-diversifying on the
+  fly: substituting a different item to restore variety changes that entity's stats, which is a
+  balance decision, not a data repair.
+- **Source:** docs/reviews/rca-rohan-spear-reforge-2026-08-28.md finding 4.
+
+### Read the mesh names out of the tpac; the FBX filename is not the id
+
+Rohan's new spear art ships as `SM_Ro_Rohan_Spear_A.fbx`, and the tpac stores
+`sm_ro_rohan_spear_blade_a`. Authoring the CamelCase form the artist hands you resolves to nothing,
+silently: no error, no log line, the crafting piece simply never loads.
+- **Why missed:** it wasn't, this time, but only because the workflow doc's Step C says to extract
+  the authoritative strings from the `.tpac` and the extraction was actually run. The trap is that
+  every human-facing artifact (the FBX, the asset folder, the artist's message) carries the
+  CamelCase form, so the wrong string is the one in front of you.
+- **Prevent:** `grep -aoE` the `_geo.tpac` for the mesh and `bo_` names and author from that output,
+  every time. Related: TAOM crafting-piece ids use BOTH `wm_` (36) and `sm_` (22) prefixes and no
+  tooling keys off either, so matching the tpac's prefix is safe.
+- **Source:** docs/reviews/rca-rohan-spear-reforge-2026-08-28.md; docs/ai-includes/weapon-creation-workflow.md Step C.
+
