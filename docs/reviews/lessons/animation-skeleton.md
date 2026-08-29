@@ -198,6 +198,48 @@ set names it in a **verb slot or table** (which means the engine fires it too); 
   makes it cheap is the same one that couples it.
 - **Source:** #515 / `docs/reviews/rca-war-ram-2026-08-28.md`
 
+### A loose `Assets/` definition and a cooked `AssetPackages/` entry must not both claim one asset name with a reachable source
+
+Absorbing the warg from `Alliance.Wargs` on 2026-08-28 produced a startup crash that took three
+attempts to shape correctly. The mechanism generalises to every creature absorbed from another module.
+
+The warg tpacs were imported and cooked in an editor module called `Alliance.Editor`, which exists in
+no install, and that name is baked into each tpac as the asset's **source** path. In game this shows
+as a modal `RGL WARNING: Unable to locate source file .../Warg_skin_n.png of texture Warg_skin_n to
+compile`.
+
+The tempting fix is to make the pointer resolve: `Alliance.Editor` and `LOTRLOME_Armory` are both
+exactly 15 characters, so an in-place byte substitution preserves every offset in the container, and
+the 111 real source files can simply be copied in. Doing that **crashes the game on startup**:
+
+```
+rglAsset_package_item_texture validate_rdc : Warg_skin_d
+Compiled image Warg_skin_d(B8G8R8->DXT1)(2048x2048->2048x2048)
+rglAsset_manager::signal_package_item_change - Warg_skin_d
+Assertion Failed!  rglIntrusive_ptr.h:151  Expression: px != nullptr
+```
+
+A loose asset definition whose source is **missing** is harmless: the engine warns and moves on. Make
+that source **reachable** and the warning becomes a real compile, of a texture the cooked pack has
+already registered under the same name. The package-item swap mid-startup then dereferences null.
+
+Dangling is safe. Cooked-only is safe. Both, resolvable, crashes. The elephant never hit this because
+its loose stubs carry a bare texture name (`t_creature_elephant_a1_d`) with no `$BASE/Modules/...`
+source path, so nothing can trigger the recompile; the warg stubs are the same 466 to 553 bytes but
+carry a full path, which is the whole difference.
+
+**What to do instead.** Keep the cooked pack, keep `AssetSources/` for re-baking in the Kit, and do
+not ship a loose `Assets/` tree for that creature. Note the two-sided cost of removing it: `Assets/`
+is what the Modding Kit asset browser reads, so the creature disappears from the editor. That is
+acceptable when the sources are present to re-bake from, and it is not acceptable to leave the loose
+tpacs in place just to keep the browser populated.
+
+When re-baking, do not leave newly cooked loose tpacs beside the old pack: that reproduces the same
+duplicate-registration crash. Cook into the pack, or move the old pack aside for the bake.
+
+Full record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) section 10.
+
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

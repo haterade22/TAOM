@@ -710,12 +710,16 @@ def absorb_translations(batch: list[Entry], translated_map: dict[str, str],
 
 # ── Id sync ────────────────────────────────────────────────────────────────────
 
-def sync_missing_ids(source_path: Path, target_path: Path) -> list[str]:
+def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False) -> list[str]:
     """Seed the per-language file with any {=KEY} the English source declares but it lacks.
 
     write_back substitutes by id, so a key with no <string id="KEY"> element has nowhere to
     land and its translation is silently discarded. Appending the key with its English text
     gives the next run somewhere to write. Returns the ids added; idempotent.
+
+    dry_run reports what WOULD be seeded without touching the file. Until 2026-08-28 this
+    function wrote unconditionally, so `--sync-ids --dry-run` mutated every language file
+    while the same run printed "no files written". A dry run that writes is worse than none.
     """
     if not target_path.exists():
         return []
@@ -751,6 +755,8 @@ def sync_missing_ids(source_path: Path, target_path: Path) -> list[str]:
         if blank_separated:
             block.append("")
 
+    if dry_run:
+        return missing
     lines[insert_at:insert_at] = block
     target_path.write_text(nl.join(lines), encoding="utf-8", newline="")
     return missing
@@ -866,13 +872,31 @@ def main():
 
     if args.sync_ids:
         seeded = 0
-        for _, src, tpl in english_source_files("TAOM"):
-            target = TAOM_LANG_DIR / lang / tpl.format(locale=locale)
-            added = sync_missing_ids(src, target)
-            if added:
-                print(f"  +{len(added):>4} ids seeded into {target.name}")
-                seeded += len(added)
-        print(f"  Ids seeded: {seeded}")
+        if args.module in ("TAOM", "all"):
+            for _, src, tpl in english_source_files("TAOM"):
+                target = TAOM_LANG_DIR / lang / tpl.format(locale=locale)
+                added = sync_missing_ids(src, target, dry_run=args.dry_run)
+                if added:
+                    print(f"  +{len(added):>4} ids {'to seed' if args.dry_run else 'seeded'} into {target.name}")
+                    seeded += len(added)
+        # Armory: the English source is Languages/loc_*.xml at the module root and each
+        # per-language folder mirrors it under the SAME filename. Until 2026-08-28 this
+        # block ran for TAOM only, so `--sync-ids --module Armory` seeded nothing: any key
+        # the language file lacked had nowhere for write_back to substitute into, and its
+        # translation was discarded after being paid for. Same failure write_back's own
+        # docstring warns about, one level up.
+        if args.module in ("Armory", "all"):
+            armory_root = armory_lang_dir()
+            target_dir = armory_root / lang
+            if target_dir.exists():
+                for src_file in sorted(armory_root.glob("loc_*.xml")):
+                    added = sync_missing_ids(src_file, target_dir / src_file.name, dry_run=args.dry_run)
+                    if added:
+                        print(f"  +{len(added):>4} ids {'to seed' if args.dry_run else 'seeded'} into {lang}/{src_file.name}")
+                        seeded += len(added)
+            else:
+                print(f"  WARNING: Armory sync skipped, not found: {target_dir}", file=sys.stderr)
+        print(f"  Ids {chr(0x77)}ould-be-seeded: {seeded}" if args.dry_run else f"  Ids seeded: {seeded}")
 
     entries = discover_entries(lang, args.module)
     print(f"\n  Untranslated entries discovered: {len(entries)}")

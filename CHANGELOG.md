@@ -3,7 +3,6 @@
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
 ## 2026-08-28
-
 ### chore(enlistment): turn the diagnostics trace back on, temporarily
 
 For the #520 in-game smoke, and meant to be reverted straight after. The trust economy now rests on
@@ -24,42 +23,49 @@ has a persisted value.** MCM writes every property to
 after, so this flip changes fresh installs only. The same trap as ShaderPrecompilation's, pointing
 the other way: there, flipping a default to OFF failed to reach installs persisting `true`.
 
-### feat(rohan): two new spear parts replace twelve, and they couch
 
-The artist delivered two blades and two handles (plus the two collision bodies) to replace six
-blades and six handles. Four new crafting pieces in, eleven out, five crafted spears collapse to
-two, and the eight Rohan rosters carrying the retired three are remapped by damage family so the
-heavy/light split survives: `wm_rohan_spear_c` and `_d` were the 3.1-thrust spears and go to
-`wm_rohan_spear_a`, `_f` was 1.87 and goes to `_b`.
+### fix(armory): two `project.mbproj` registrations the engine never read
 
-**The mesh names are lowercase.** The FBX is `SM_Ro_Rohan_Spear_A.fbx` and the tpac stores
-`sm_ro_rohan_spear_blade_a`. Authoring the CamelCase form would have resolved to nothing, silently,
-which is exactly what workflow Step C means by never trusting the editor label.
+A `<file>` row in `project.mbproj` only loads if something asks for its `id`.
+`GetMergedXmlForNative` matches `XmlResource.MbprojXmls` entries on exact string equality, and it is
+reached only from eight hardcoded ids plus a native callback that builds `"soln_" + xmlType` from
+type names native supplies. An invented id therefore matches nothing: no file is read, nothing is
+logged, and the row reads exactly like working registration.
 
-**Couchable and still usable with a shield, which is not a given.** Vanilla's `TwoHandedPolearm`
-template lists its descriptions in order: `OneHandedPolearm`, `TwoHandedPolearm`,
-`TwoHandedPolearm_Couchable`, `TwoHandedPolearm_Bracing`. The engine takes the first whose
-`AvailablePieces` cover every piece as the primary usage and adds the later matches as extra
-usages, so registering in all four gives a shield-compatible primary AND a couch. That matters
-because eight Rohan rosters pair these spears with a shield, and a polearm absent from
-`OneHandedPolearm` resolves `requires_no_shield`: the troop carries it and never draws it.
-`audit_polearm_shield_parity.py` still passes.
+`LOTRLOME_Armory` had two, and across the 12 installed modules it was the only one that had invented
+any. ADOD, ADOD_Beasts and Alliance.Wargs all use vanilla ids exclusively.
 
-`wm_rohan_spear_e_handle` was never defined, so variant `e` was a blade with no handle and no
-crafted item. Eleven pieces removed of the twelve listed, and the run says so rather than
-quietly accepting the mismatch.
+**`soln_lotr_misc_action_types` was the one with a consequence.**
+`Animations/action_types_lotr_misc.xml` exists to declare 20 action types, its header comment says so
+in as many words, and it had never loaded. The names are absent from vanilla and from the Armory's
+own registered `action_types.xml`, while `action_sets.xml` binds them 221 times, so all 221 resolved
+to `act_none`: the character-creation father and mother poses behind every face-gen set, the drunk
+village trio, two lancer idles and the polearm brace. Unresolved actions across the file drop from 27
+to 7. The 20 declarations now live in `action_types.xml`, the module's single `soln_action_types`
+file, and the orphan is retired to a `.bak`.
 
-Reach drops. The old spears were 345cm and 343cm; the new ones are 280cm and 270cm.
+A second `soln_action_types` row would have been the smaller edit and was rejected. Duplicating an id
+is safe only when no XSD exists for it: `MergeTwoXmls` plain-appends in that case, which is why three
+`soln_monsters` rows ship happily, but `soln_action_types.xsd` does exist, so a second row takes the
+`MergeElements` path whose raw dictionary indexing is the elephant "Crash #3" `KeyNotFoundException`.
 
-**Not shippable until the packs are re-cooked.** All six new assets are in `Assets/` and in none
-of `AssetPackages/pack0-9.tpac`. A missing visual mesh would only render naked, but
-`bo_sm_ro_rohan_spear_blade_a`/`_b` are missing collision bodies, and an unresolvable `body_name`
-makes `PreloadHelper.WaitForMeshesToBeLoaded` spin forever: no crash, no log, one core at 100%,
-mission never loads (#352). Any battle with a Rohan spearman hangs until the cook. The workflow's
-sanctioned stopgap is to point `body_name` at a surviving cooked body until then.
+**`soln_spider_monster` was inert and always harmless.** The spider Monster loads the managed way, via
+`SubModule.xml`, which is also how the mumakil, chariot and war ram load. The row is gone, replaced by
+a comment saying not to re-add it as `soln_monsters`, which would start merging the spider into the
+native monster table for no reason.
 
-Not-tested: in-game. Needs the pack re-cook first, then a smithy check that the pieces combine,
-and a couch test on horseback.
+This class already cost one crash: the 2026-06 `soln_spider_*` ids produced a native `CreateAgent`
+DivideByZero. The lesson was written into a comment at the top of that very file, and these two rows
+outlived it, one of them sitting directly underneath it. So the fix ships with a gate rather than
+another comment: `tools/audit_mbproj_registration.py` flags dead ids, actions bound but declared
+nowhere, and duplicated ids that carry an XSD. It is mutation-tested against a reconstruction of the
+pre-fix state built from the backups, exiting 1 there and 0 on the fixed install.
+
+Everything above is static analysis. `LOTRLOME_Armory` is external and untracked, so a reinstall
+reverts it silently, and an in-game check is still owed. Seven other actions remain undeclared: they
+are declared in no file anywhere, a separate pre-existing gap, and are baselined in the tool rather
+than guessed at, because declaring a name does not make its animation exist.
+Ledger: `docs/reference/lotrlome-soln-id-fix.md`.
 
 ### chore(localization): clear the translation backlog, and find the file the translator could not see
 
@@ -483,6 +489,43 @@ Verified: `validate_moduledata.py` PASS, `check_external_xslt.py` clean across 1
 
 Not-tested: in-game appearance. Hero sex, body properties and equipment bake at hero creation, so
 this needs a game restart and a NEW campaign to observe.
+
+### feat(rohan): two new spear parts replace twelve, and they couch
+
+The artist delivered two blades and two handles (plus the two collision bodies) to replace six
+blades and six handles. Four new crafting pieces in, eleven out, five crafted spears collapse to
+two, and the eight Rohan rosters carrying the retired three are remapped by damage family so the
+heavy/light split survives: `wm_rohan_spear_c` and `_d` were the 3.1-thrust spears and go to
+`wm_rohan_spear_a`, `_f` was 1.87 and goes to `_b`.
+
+**The mesh names are lowercase.** The FBX is `SM_Ro_Rohan_Spear_A.fbx` and the tpac stores
+`sm_ro_rohan_spear_blade_a`. Authoring the CamelCase form would have resolved to nothing, silently,
+which is exactly what workflow Step C means by never trusting the editor label.
+
+**Couchable and still usable with a shield, which is not a given.** Vanilla's `TwoHandedPolearm`
+template lists its descriptions in order: `OneHandedPolearm`, `TwoHandedPolearm`,
+`TwoHandedPolearm_Couchable`, `TwoHandedPolearm_Bracing`. The engine takes the first whose
+`AvailablePieces` cover every piece as the primary usage and adds the later matches as extra
+usages, so registering in all four gives a shield-compatible primary AND a couch. That matters
+because eight Rohan rosters pair these spears with a shield, and a polearm absent from
+`OneHandedPolearm` resolves `requires_no_shield`: the troop carries it and never draws it.
+`audit_polearm_shield_parity.py` still passes.
+
+`wm_rohan_spear_e_handle` was never defined, so variant `e` was a blade with no handle and no
+crafted item. Eleven pieces removed of the twelve listed, and the run says so rather than
+quietly accepting the mismatch.
+
+Reach drops. The old spears were 345cm and 343cm; the new ones are 280cm and 270cm.
+
+**Not shippable until the packs are re-cooked.** All six new assets are in `Assets/` and in none
+of `AssetPackages/pack0-9.tpac`. A missing visual mesh would only render naked, but
+`bo_sm_ro_rohan_spear_blade_a`/`_b` are missing collision bodies, and an unresolvable `body_name`
+makes `PreloadHelper.WaitForMeshesToBeLoaded` spin forever: no crash, no log, one core at 100%,
+mission never loads (#352). Any battle with a Rohan spearman hangs until the cook. The workflow's
+sanctioned stopgap is to point `body_name` at a surviving cooked body until then.
+
+Not-tested: in-game. Needs the pack re-cook first, then a smithy check that the pieces combine,
+and a couch test on horseback.
 
 ### fix(tooling): the doc linter could not see a link to an untracked file (#517)
 

@@ -86,6 +86,13 @@ def main():
         print(f"FAIL: {total_missing} armor refs do not resolve.")
         sys.exit(1)
     print("PASS: all armor refs resolve across all cultures.")
+    # Say the scope again at the point where someone reads a green run and concludes
+    # "safe to commit". The docstring already limits this tool to armor and line 55
+    # filters through ARMOR_PREFIX_RE, but on 2026-08-28 two sessions in one exchange
+    # gated a WEAPON change (five wm_rohan_spear_* id swaps) on this tool passing.
+    # A scope note nobody reads is not a scope note.
+    print("       Scope: ARMOR ids only. Weapons, arrows, mounts and harnesses are NOT")
+    print("       checked here. For those run: python tools/audit_item_refs.py")
 
 
 if __name__ == "__main__":

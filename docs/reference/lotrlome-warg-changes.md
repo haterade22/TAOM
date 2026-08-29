@@ -156,10 +156,14 @@ exists. The install ships exactly 14 `soln_*.xsd`, and `soln_monsters`, `soln_ph
 and `soln_action_types` are among them, which is why the warg content for those two was merged into
 the existing files instead.
 
-**Do not invent custom `soln_*` ids.** `GetMergedXmlForNative` is only ever called with the fixed
-vanilla id strings, so a custom id matches nothing on the native side. LOTRLOME's pre-existing
-`soln_spider_monster` and `soln_lotr_misc_action_types` are dead for exactly this reason; the spider
-survives only because it is also registered managed-side in `SubModule.xml`.
+**Do not invent custom `soln_*` ids.** `GetMergedXmlForNative` matches `XmlResource.MbprojXmls`
+entries on exact string equality, and it is reached only from eight hardcoded ids plus a native
+callback that builds `"soln_" + xmlType` from type names native itself supplies, so a custom id
+matches nothing. LOTRLOME's pre-existing `soln_spider_monster` and `soln_lotr_misc_action_types` were
+dead for exactly this reason. **Both were removed on 2026-08-28**, after this was written: the spider
+row was inert but harmless, since the Monster is also registered managed-side in `SubModule.xml`,
+while the misc row meant 20 action types had never loaded at all while `action_sets.xml` bound them
+221 times. Ledger: [lotrlome-soln-id-fix.md](lotrlome-soln-id-fix.md).
 
 `SubModule.xml` gained one `<XmlNode>` for `Monsters/LOTR/lotr_monster_warg`, cloned from the
 mumakil's. The warg is registered in **both** places, matching the spider and elephant, because
@@ -210,6 +214,107 @@ a dangling entry that failed silently, logged as a defect in
 [kingdom-voices.md](../features/kingdom-voices.md). The warg voice definition (`warg_01`) now fills
 that slot, which puts it in a **version-controlled** module where a LOTRLOME reinstall cannot revert
 it. Alliance's duplicate `uruk_01` was not carried over, because TAOM already owns that one.
+
+
+## 10. The `Alliance.Editor` source pointers (found in game, 2026-08-28)
+
+Launching with the absorbed warg produced a modal `RGL WARNING`:
+
+```
+Unable to locate source file
+$BASE/Modules/Alliance.Editor/AssetSources/2_lotr/monster/warg/Warg_skin_n.png
+of texture Warg_skin_n to compile
+```
+
+**Cause.** The warg assets were imported and cooked in an editor module called `Alliance.Editor`,
+and that module name is baked into the tpacs as the asset's *source* path. No such module exists in
+any install. The engine reads a loose asset definition, decides the texture needs compiling, looks
+for the source PNG under a module that is not there, and warns.
+
+Two places carried the dangling pointer, and only one of them mattered at runtime:
+
+| Where | Count | Effect |
+|---|---|---|
+| Loose `Assets/creature/warg/**` (78 of 163 files) | 78 | **This is what warned.** A loose definition is what makes the engine attempt a compile |
+| Cooked `AssetPackages/warg.tpac` | 54 | Inert at runtime, but untrue metadata. LOTRLOME's own packs point at `$BASE/Modules/LOTRLOME_Armory/...`, their own module |
+
+**Why the elephant never warned.** Its loose stubs
+(`Assets/creature/elephant/textures/*_tex.tpac`, 456 to 553 bytes) contain only the texture *name*,
+`t_creature_elephant_a1_d`, with no `$BASE/Modules/...` source path. Nothing to compile, nothing to
+warn about. The warg stubs are the same size but carry a full source path, which is the whole
+difference.
+
+### What was actually wrong, and the shape that works
+
+It took three attempts. The two failed ones are recorded because each was a reasonable-looking move
+that broke something different, and the reasons generalise to every absorbed creature.
+
+**Attempt 1: remove the loose `Assets/creature/warg/` tree.** Correct that it is redundant at
+runtime: all 75 warg-side animation targets resolve from `AssetPackages/warg.tpac` (62) plus vanilla
+`animation_clips.tpac` (13), verified against warg.tpac alone and against all twelve cooked packs.
+Wrong because `Assets/` is what the **Modding Kit asset browser reads**. The cooked pack does not
+appear in the Kit at all, so the warg vanished from the editor.
+
+**Attempt 2: repoint the tpacs and supply the sources they name.** `Alliance.Editor` and
+`LOTRLOME_Armory` are both exactly 15 characters, so the substitution is byte-safe, and the 111
+source files were copied in so every pointer resolved. This **crashed the game on startup**:
+
+```
+18:40:08.658  rglAsset_package_item_texture validate_rdc : Warg_skin_d
+18:40:09.448  Compiled image Warg_skin_d(B8G8R8->DXT1)(2048x2048->2048x2048)
+18:40:09.452  rglAsset_manager::signal_package_item_change - Warg_skin_d
+18:40:09.459  Assertion Failed!  rglIntrusive_ptr.h:151  Expression: px != nullptr
+```
+
+**The mechanism, and the rule to take from it.** A loose asset definition whose source is missing is
+harmless: the engine warns "unable to locate source file to compile" and moves on. Make that source
+resolvable and the warning becomes a real compile. The engine then recompiles a texture the cooked
+pack has **already registered under the same name**, signals a package-item swap mid-startup, and
+dereferences a null intrusive pointer.
+
+> **A loose `Assets/` definition and a cooked `AssetPackages/` entry must never claim the same asset
+> name with a reachable source.** Dangling is safe. Cooked-only is safe. Both, resolvable, crashes at
+> `signal_package_item_change`. This is why the elephant is fine: its loose stubs carry a bare texture
+> name and no `$BASE/Modules/...` source path, so nothing can ever trigger the recompile.
+
+### The shipped shape
+
+| Location | State | Why |
+|---|---|---|
+| `AssetPackages/warg.tpac` | 307 MB, kept | The runtime form. Self-sufficient, and the only warg asset players need |
+| `AssetSources/creature/warg/` | 78 files, 177 MB, kept | Real sources for re-baking. `package_release.py` marks `AssetSources` EXCLUDE, so it never ships |
+| `Assets/creature/warg/` | **absent** | Its removal is what stops the startup recompile. Parked at `<game>/_taom_disabled/warg_loose_assets_20260828/` |
+
+**The sources follow LOTRLOME's own tree, not the donor module's.** The first copy preserved Alliance's
+`2_lotr/monster/warg/` shape, which put a foreign top-level folder in `AssetSources` and matched
+nothing else in the Armory. Restructured 2026-08-28 into the convention the other five creatures
+already use, `creature/<name>/{animations, mesh, textures}`:
+
+```
+AssetSources/creature/warg/animations/   56 FBX    20.7 MB
+AssetSources/creature/warg/mesh/          1 FBX    14.5 MB   Warg_Rig_V5.fbx
+AssetSources/creature/warg/textures/     21 PNG   141.7 MB   warg skin/fur + orc_rider_saddle
+```
+
+`AssetSources/creature/` now reads `chariot elephant mumakil ram spider warg`, mirroring
+`Assets/creature/`. The rider gear that rode along in the same pack went to the existing Isengard
+tree rather than staying under a creature: `AssetSources/Isengard/{orc_rider, orc_weapons, uruk}`,
+33 files. Nothing in TAOM or LOTRLOME references those, but they are what `warg.tpac`'s own items
+were built from, so they are kept with their culture. The `2_lotr` folder is gone.
+
+**The tpac source pointers now dangle again, and that is the correct state.** They still name
+`AssetSources/2_lotr/...`, which no longer exists. Both crash preconditions are therefore false:
+there is no loose `Assets/` definition to trigger a compile, and no reachable source for one to
+compile from. Re-baking in the Kit will write fresh pointers at the new paths, which is why they were
+not rewritten by hand: unlike the `Alliance.Editor` to `LOTRLOME_Armory` swap, the new paths are a
+different length, so a byte-preserving in-place substitution is not available.
+
+### What to check in game
+
+Relaunch and confirm the `RGL WARNING` is gone. The warg should render with full textures from the
+cooked pack. If a texture is missing rather than merely un-compilable, restore the loose folder from
+`_taom_disabled/` and reopen the question, because that would mean the engine wanted the loose
+definitions after all.
 
 ## Verification performed
 

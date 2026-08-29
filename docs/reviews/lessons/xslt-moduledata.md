@@ -315,3 +315,39 @@ looks populated and is entirely wrong.
   then contributes no owner instead of hijacking the next one. Pin it with a test whose fixture
   uses an anonymous wrapper, and assert no owner ever starts with a reference prefix.
 - **Source:** docs/features/armoury-mesh-cleanup.md.
+
+### Duplicating a `project.mbproj` id is safe only when no XSD exists for it
+
+Two rules govern `project.mbproj` and they pull in opposite directions, so knowing one and not the
+other produces a wrong edit either way. First, an **invented `soln_*` id is inert**:
+`GetMergedXmlForNative` matches `XmlResource.MbprojXmls` entries on exact string equality and is
+reached only from eight hardcoded ids plus a native callback building `"soln_" + xmlType`, so a
+custom id opens no file and logs nothing while looking exactly like registration. Second, the
+obvious fix, adding a second row under the standard id, is the documented elephant "Crash #3"
+startup `KeyNotFoundException`. Both are true, and the reconciliation is the XSD:
+
+```csharp
+string text = ModuleHelper.GetXsdPath(id) ?? string.Empty;   // <game root>/XmlSchemas/<id>.xsd
+if (!File.Exists(text)) { text = ""; }
+...
+if (keepDuplicates || xsdPath == "") xDocument.Root.Add(...);       // plain append, safe
+else MergeElements(xDocument.Root, xDocument2.Root, xsdPath);       // raw dict index, can throw
+```
+
+No XSD means a plain append, which is why three `soln_monsters` rows ship without incident. An XSD
+means `MergeElements`, whose `elementSchema[...]` lookup throws on any element XPath the schema does
+not carry. `soln_action_types`, `soln_action_sets`, `soln_skins` and `soln_monster_usage_sets` all
+have one; `soln_monsters`, `soln_physics_materials`, `soln_collision_infos` and `soln_module_sound`
+do not.
+- **Why missed:** the spider's 2026-06 `soln_spider_*` DivideByZero taught rule one, and the lesson
+  was written as a comment at the top of the Armory's own `project.mbproj`. Two custom-id rows
+  survived that cleanup for two years, one sitting directly underneath the comment explaining why it
+  could not work, because nothing mechanical ever read the file. A comment is not a gate.
+- **Prevent:** fold the content into the single file already registered under the standard id, and
+  only consider a second row after confirming `<game root>/XmlSchemas/<id>.xsd` does not exist.
+  Gated by `tools/audit_mbproj_registration.py`, which also flags actions bound in `action_sets.xml`
+  but declared in no `action_types.xml` (the observable symptom: 221 bindings resolving to
+  `act_none`). Note that a Monster does not need the native row at all; four ship registered only via
+  `SubModule.xml`.
+- **Source:** docs/reference/lotrlome-soln-id-fix.md. No issue filed; found while auditing a
+  cross-session report on 2026-08-28.
