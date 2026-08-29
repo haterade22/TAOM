@@ -105,6 +105,61 @@ public class EnlistmentBattlePayoutServiceTests
             "merit-distinguished");
     }
 
+    /// <summary>
+    /// Leaving the field never pays standing, and the guard is here rather than in the band ladder
+    /// on purpose. The ladder's own protection is emergent: it holds only while no band a walkout
+    /// can reach happens to pay trust, and the walkout ceiling (45 with a full kill count, because
+    /// leftFieldPenalty cancels the survival weight and leaves the other four terms standing) sits
+    /// close enough to the boundaries that one tuning edit puts it over. `MeritTrustFloorTests` pins
+    /// the shipped numbers; this pins the rule, so a future ladder cannot reintroduce it.
+    ///
+    /// Only trust is withheld. XP and gold still reflect what the player actually did before he
+    /// left, which is the same reasoning that made LeftTheField zero the survival term alone.
+    /// </summary>
+    [TestMethod]
+    public void PayOut_LeftTheField_WithholdsBandTrustEvenWhenTheBandPaysIt()
+    {
+        MakeEnlisted();
+        var config = EnlistmentContentConfigProvider.BuildDefaults();
+        // A deliberately generous ladder: every score pays trust. The gate must hold anyway.
+        config.MeritBands = new System.Collections.Generic.List<MeritBand>
+        {
+            new MeritBand { MinScore = 0, ServiceXp = 12, Gold = 5, Trust = 5, GradeKey = "rough" },
+        };
+        _config.GetConfig().Returns(config);
+
+        _accumulator.Submit(new MeritSample
+        {
+            Kills = 6, SurvivalRatio = 1f, CohesionRatio = 1f,
+            CommanderProximityRatio = 1f, EngagementRatio = 1f, RoleFit = true,
+            LeftTheField = true,
+        });
+
+        _service.PayOutBattle(won: false);
+
+        _rewards.Received(1).Grant(
+            Arg.Is<RewardSpec>(r => r.Trust == 0 && r.ServiceXp == 12 && r.Gold == 5),
+            "merit-rough");
+    }
+
+    [TestMethod]
+    public void PayOut_StayedToTheEnd_StillReceivesTheBandTrust()
+    {
+        MakeEnlisted();
+        var config = EnlistmentContentConfigProvider.BuildDefaults();
+        config.MeritBands = new System.Collections.Generic.List<MeritBand>
+        {
+            new MeritBand { MinScore = 0, ServiceXp = 12, Gold = 5, Trust = 5, GradeKey = "rough" },
+        };
+        _config.GetConfig().Returns(config);
+
+        _accumulator.Submit(new MeritSample { Kills = 6, SurvivalRatio = 1f, LeftTheField = false });
+
+        _service.PayOutBattle(won: true);
+
+        _rewards.Received(1).Grant(Arg.Is<RewardSpec>(r => r.Trust == 5), "merit-rough");
+    }
+
     [TestMethod]
     public void PayOut_SampleConsumedExactlyOnce()
     {

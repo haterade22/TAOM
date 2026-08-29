@@ -79,6 +79,13 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
     {
         new MeritBand { MinScore = 80, ServiceXp = 30, Gold = 20, Trust = 2, Renown = 3, RepDomain = ReputationDomain.Field, RepAmount = 2, GradeKey = "distinguished" },
         new MeritBand { MinScore = 60, ServiceXp = 20, Gold = 10, Trust = 1, Renown = 2, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "strong" },
+        // `strong` is the LOWEST band that pays standing, and moving that line down is not a tuning
+        // choice. 40 is reachable without fighting: a maximum-kill walkout banks 45 (leftFieldPenalty
+        // cancels the survival weight and nothing else), and a soldier who merely stands inside his
+        // own line banks survival + cohesion = 40 with no kills and no engagement. Paying trust here
+        // pays both of them. `MeritTrustFloorTests` pins the boundary against this file AND against
+        // enlistment_config.json, which must carry the same values — an install without the file
+        // would otherwise earn standing at a different rate.
         new MeritBand { MinScore = 40, ServiceXp = 12, Gold = 5, Trust = 0, Renown = 1, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "solid" },
         new MeritBand { MinScore = 0, ServiceXp = 4, Gold = 0, Trust = 0, Renown = 0, RepDomain = ReputationDomain.None, RepAmount = 0, GradeKey = "rough" },
     };
@@ -361,6 +368,11 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
                 // A row with no supportSkills would roll against skill 0 forever — silently
                 // unwinnable at any rank. SKIP it rather than ship a duty nobody can pass.
                 || (duty.SupportSkills == null || duty.SupportSkills.Count == 0) && Warn(duty.Id, "supportSkills is empty — the duty would roll against skill 0", out reason)
+                // The check reads exactly two: FieldDutyRuntime takes [0] as primary and [1] as
+                // secondary, and EffectiveSkill returns the better of them. A third entry is not a
+                // third chance, it is a line of data the game silently ignores — and the author who
+                // wrote it has no way to find that out. Skip loudly instead.
+                || duty.SupportSkills.Count > 2 && Warn(duty.Id, $"supportSkills has {duty.SupportSkills.Count} entries but only the first two are ever read", out reason)
                 || duty.SupportSkills.Any(s => !KnownSkills.Contains(s)) && Warn(duty.Id, $"unknown supportSkill '{duty.SupportSkills.First(s => !KnownSkills.Contains(s))}'", out reason))
             {
                 _ = reason;

@@ -626,3 +626,24 @@ silently: no error, no log line, the crafting piece simply never loads.
   tooling keys off either, so matching the tpac's prefix is safe.
 - **Source:** docs/reviews/rca-rohan-spear-reforge-2026-08-28.md; docs/ai-includes/weapon-creation-workflow.md Step C.
 
+### Before changing a reward threshold, enumerate what is attainable WITHOUT earning it
+Lowering the band that pays a reward is a one-integer edit whose consequence lives in the scoring
+function, not in the diff. Paying enlistment trust from the `solid` merit band (minScore 40) silently
+started paying two populations that never fought: a player who quits the battle with a full kill
+count banks 45, because the left-field penalty cancels only the survival term and kills, cohesion,
+proximity, engagement and role fit all survive the exit; and a soldier who merely stands inside his
+own line banks survival 25 + cohesion 15 = 40 with no kills and no engagement at all. Both reachable
+in ordinary play, neither visible in a diff that changed one character.
+- **Why missed:** the change was costed as "one integer, one band". The author verified the mechanism (does the reward now flow?) and not the population (who else does it now flow to?). Nothing in the reviewable artifact showed the attainable-score distribution.
+- **Prevent:** for any threshold that gates a reward, write down the maximum score attainable by each way of NOT doing the thing the reward is for (quitting, standing still, dying early, auto-resolving) and assert the threshold sits above all of them. Pin it as a test that reads the SHIPPED config, and pin the positive side too (someone who does the thing must still clear it), or "no free reward" is satisfiable by paying nobody. Config comments recording such a ceiling are claims: re-derive the sum before trusting one, since the comment here reached its number by leaving kills out.
+- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding H1 (#520).
+
+### A skill-check row that names only a specialist skill is unwinnable, not hard
+Ten of thirteen enlistment field duties gated on Scouting, Charm, Steward or Tactics, which a warrior
+hero carries at 0 for an entire campaign. Against a d51 roll, eight rows needed more than a natural
+maximum: not punishing, impossible, and each attempt charged standing. The suite stayed green for
+months because the reachability test assumed `UntrainedSkill = 10`, a number described in its own
+comment as "roughly a fresh hero's untrained value" and which no log has ever produced.
+- **Why missed:** the floor's assumption was authored alongside the rows it protects, so it flattered them. A constant that decides whether a test can fail is part of the test's claim and needs the same evidence as any other.
+- **Prevent:** model the WEAKEST player a row's own gates admit, and for an untrained skill that is 0. Where a check should get easier with service, name a second skill the player provably accrues (in TAOM, `RunDailyTick` grants Leadership 10 XP/day to every enlisted player regardless of assignment) rather than lowering difficulty alone. Also assert a minimum pass probability: "passable at all" admits a 1-in-51 row, which in play is indistinguishable from a broken one.
+- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md findings M4 and the #438 root cause (#520).

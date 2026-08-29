@@ -28,6 +28,7 @@ internal static class MeritGeometryScanner
             : Absent;
 
         var nearestHeroSq = Absent;
+        var nearestAllySq = Absent;
         var nearestEnemySq = Absent;
         foreach (var agent in mission.Agents)
         {
@@ -44,13 +45,28 @@ internal static class MeritGeometryScanner
             {
                 if (nearestEnemySq < 0f || distanceSq < nearestEnemySq)
                     nearestEnemySq = distanceSq;
+                continue;
             }
-            else if (agent.IsHero && (nearestHeroSq < 0f || distanceSq < nearestHeroSq))
-            {
+
+            // Every ally, not just the heroes among them. The hero reading is the commander-proximity
+            // input and stays separate; this one is the cohesion fallback for a player whose
+            // formation has no captain to measure against.
+            if (nearestAllySq < 0f || distanceSq < nearestAllySq)
+                nearestAllySq = distanceSq;
+
+            if (agent.IsHero && (nearestHeroSq < 0f || distanceSq < nearestHeroSq))
                 nearestHeroSq = distanceSq;
-            }
         }
 
-        accumulator.AddSample(captainSq, nearestHeroSq, nearestEnemySq);
+        // Named arguments, because this call is the one place the whole cohesion fix can break
+        // silently. `nearestAllySq` and `nearestHeroSq` are same-typed locals feeding different
+        // gates, and swapping them compiles, reads plausibly, and is invisible to the suite: nothing
+        // in TAOM.Tests reaches this method (there is no InternalsVisibleTo and no Mission to build),
+        // so the mapping is pinned by review rather than by a test. Naming it is what makes a swap
+        // visible in a diff.
+        accumulator.AddSample(
+            captainDistanceSq: MeritGeometryAccumulator.CohesionDistanceSq(captainSq, nearestAllySq),
+            alliedHeroDistanceSq: nearestHeroSq,
+            enemyDistanceSq: nearestEnemySq);
     }
 }

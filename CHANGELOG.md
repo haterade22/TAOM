@@ -75,6 +75,85 @@ Writes to `TAOM_Map` and `LOTRLOME_Armory` land in the live game install, which 
 module reinstall reverts them.
 
 
+### fix(enlistment): standing had no way up, so the rank ladder stopped at Soldier (#520)
+
+A live service reached day 73 with 2903 service XP, eight times the Veteran requirement, still a
+Soldier, reading "badly thought of" with the ladder line stuck on *your commander's confidence*.
+Nothing was wrong with the display and nothing was wrong with the thresholds. Standing simply had no
+source the player could reach.
+
+`AdjustTrust` has three call sites and none of them is a passive gain for serving. Standing rises
+only from a duty success, or from a merit band scoring 60 and above. Both were shut:
+
+* **The duty side was unwinnable.** The check is `skill + max(0,trust)x2 + rank*4 + d51 >=
+  difficulty`, and ten of the thirteen rows named only a specialist skill (Scouting, Charm, Steward,
+  Tactics) that a warrior hero carries at zero for the whole campaign. At skill 0, eight rows needed
+  more than a natural maximum: not hard, impossible. Every attempt cost a point of standing. The
+  reachability test stayed green throughout because it assumed `UntrainedSkill = 10`, a number no
+  log has ever produced.
+* **The battle side paid nothing below 60.** An ordinary fought battle lands in the `solid` band,
+  which paid 0 trust.
+
+Veteran gates on `minTrust: 0` and two duty successes, so both halves sat downstream of the same
+closed loop: the duties that grant standing needed a skill you did not have, and the duties that are
+winnable at high standing need standing you could not reach.
+
+Three changes on the duty side, none of them to the rank thresholds:
+
+1. `UntrainedSkill` is 0, and the difficulties were retuned to meet the honest floor. The Recruit
+   band rescales into [40, 48] and the Soldier band into [52, 52], keeping the author's relative
+   ordering. The three Veteran rows are untouched at 70 / 72 / 76; their `minTrust` gates already
+   carried them.
+2. Every row carries a second `supportSkills` entry an enlisted soldier actually trains, Riding,
+   Athletics or Leadership. `EffectiveSkill` already took the best of two, so the same duty now gets
+   easier as service accumulates instead of staying flat forever. Leadership is the default for
+   company work because `RunDailyTick` grants it 10 XP a day to everyone in service.
+3. `failureReward.trust` is 0 on all thirteen field duties. A field duty is handed to you, the offer
+   states no odds, and the roll happens off screen. Forfeiting the reward is the cost. Interactive
+   duties and incidents keep their negative outcomes, because those are opt-in.
+
+The battle side is one change, and it is not the one this started as. Cohesion had a blind spot:
+`MeritGeometryScanner` measured it against the formation captain and reported "absent" when the only
+candidate was the player himself, which is the ordinary case, because an enlisted player is routed to
+a one-man `PlayerTeam` (#443). Cohesion scored a flat zero for entire battles. That is 15 points of
+100 outright plus the 10-point infantry role-fit bonus, which needs a cohesion ratio of 0.5, and
+those 25 points are what stood between an ordinary battle and the `strong` band that already paid
+trust. It now falls back to the nearest ally, and stays absent when neither is observable, so being
+genuinely alone still fails the gate.
+
+**Paying trust from the `solid` band was tried and reverted, and the reason is worth keeping.** It
+looked like the obvious second earner. `BattleMeritScorer` zeroes only the survival term on
+`LeftTheField`, so kills, cohesion, proximity, engagement and role fit all survive a walkout: the
+ceiling for quitting with a full kill count is 45, inside `solid`. A soldier who merely stands in his
+own line banks survival plus cohesion = 40, also inside `solid`. Both were reachable in ordinary play
+with no guard anywhere in the payout chain, so the band that pays stays at `strong`, and two things
+hold it there. `MeritTrustFloorTests` pins the invariant from both sides against the shipped config:
+no score attainable without fighting may reach a trust-paying band, and a soldier who held formation,
+stayed engaged and took a kill still must. `EnlistmentBattlePayoutService` withholds band trust when
+the sample says `LeftTheField`, whatever the boundaries are. The comment on `leftFieldPenalty`
+claimed 30 was sized to sink the best walkout into the bottom band; it reached that number by leaving
+kills out of the sum, and it is corrected.
+
+Four floors in `FieldDutyReachabilityTests` now: a row must be passable by the weakest player its
+gates admit, its ceiling must rise with the rank it requires, it must not be trust-negative in
+expectation, and it must not be passable only on a near-maximum roll. The third passes today through
+the zeroed failure cost, which makes it a guard rather than a live constraint; the fourth exists
+because the gap between the first two is wide enough to hold a 2% duty, and `bandit_hunt` and
+`deserter_sweep` first landed in it. `MeritBandTrust_MatchesBetweenTheShippedFileAndTheCompiledDefaults`
+reads the JSON file rather than the provider, because four paths inside the provider swap in the
+compiled defaults (one of them logging nothing at all), and a test that went through it would compare
+the defaults against themselves and pass on exactly the divergence it exists to catch.
+
+Known limitation: `press_claim` (the pay-delay incident) is Charm 65 with no rank bonus and charges
+trust on both outcomes, while its sibling is easier, pays trust, and triggers the same
+`ReleaseDeferredPay`. It is strictly dominated and predates this change; retuning an incident belongs
+in its own change. Sergeant's `minLeadershipSkill: 50` is a second, separate wall: 34,575 XP against
+a 10/day grant. Both are #521.
+
+Not-tested: the in-game run. Existing saves carry their negative standing and climb back through the
+merit band; no migration was added.
+
+
 ### refactor(warg): absorb Alliance.Wargs into LOTRLOME_Armory, one fewer module to install
 
 Players no longer install or enable a separate `Alliance.Wargs` module. Its whole data plane now

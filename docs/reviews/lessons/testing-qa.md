@@ -801,3 +801,25 @@ code". Coverage tooling cannot ask it either. **Prevent:** write the sensitivity
 own comment when the assertion is not obviously discriminating, and for ban tests assert the
 allow-list is fully exercised. **Source:** `docs/reviews/rca-settlement-encounter-2026-08-24.md`
 findings 9 and the ban-test hardening; technique adopted from Codex review 82.
+
+### A file-vs-compiled-defaults parity test must read the FILE, not the provider's output
+A test pinning that a shipped config and its compiled defaults agree is worthless if it obtains the
+"shipped" side by calling the provider. TAOM config providers revert to compiled defaults on missing
+file, unparseable file, a null-or-empty section, and failed semantic validation. On every one of
+those paths the test compares the defaults against themselves and reports green, which is exactly the
+divergence it was written to catch. One of the four (`meritBands` null or empty) logs nothing at all,
+so even a `_logger.DidNotReceive()` guard cannot see it.
+- **Why missed:** the test was written from the provider's interface ("GetConfig() returns the shipped config") rather than from its fallback behaviour, and its own sibling twenty lines above already had the correct shape (raw-text assertions plus logger guards). Reading the neighbour would have been enough.
+- **Prevent:** parse the raw file with `JObject.Parse` and compare against `BuildDefaults()`, keyed by a stable identifier (`gradeKey`, `id`) rather than by array index so a reordered file names the band that actually diverged. Keep a separate provider round-trip with `_logger.DidNotReceive().LogWarning/LogError` so a file that fails validation still reddens. Ask of any parity test: what does the "actual" side return when the artifact under test is missing entirely?
+- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding H2 (#520).
+
+### A green validator proves only what that validator checks: read its scope before citing it as a gate
+A `/deep-review` action item said to run `tools/validate_all_troop_refs.py` against a change that
+swapped five WEAPON ids in `troops_rohan.xml`. That tool cannot see weapons. Its own docstring says
+"Out of scope: weapons, arrows, mounts, harnesses", and it filters every reference through
+`ARMOR_PREFIX_RE` before checking anything, so it would have printed PASS no matter what happened to
+those spear ids. The correct gate was `tools/audit_item_refs.py`, which covers all 3,000-odd
+referenced items. Two sessions in one exchange treated the green run as coverage.
+- **Why missed:** the tool's NAME reads as general ("all troop refs") and the recommendation was relayed from a subagent's action item without opening the file. This is the same error as inferring a script's blast radius from a flag name instead of from its diff, which happened in the same exchange: a plausible name was taken for verified behaviour twice in an hour. `evidence-over-claims.md` A.4 covers relaying a subagent's claim; it applies to a recommended COMMAND just as much as to a finding.
+- **Prevent:** before naming a validator as the gate for a change, open it and confirm the class of thing you changed is in what it inspects. If a tool has a scope narrower than its name, make it say so at the point a human reads the result: `validate_all_troop_refs.py` now prints "Scope: ARMOR ids only ... For those run: python tools/audit_item_refs.py" on SUCCESS, because the failure mode is someone reading PASS and concluding "safe to commit". A validator that is honest only in its docstring is honest only to people who did not need telling.
+- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding L14 and the cross-session exchange that followed it (#520).

@@ -552,9 +552,10 @@ one presenter. Rows failing validation are SKIPPED with a warning (never silentl
 
 A field duty is **camp work, not a journey** (reworked 2026-08-09, #428): you are given orders, they
 occupy you for `durationHours` (4–8), and one `ISkillCheckService` roll against the row's
-`difficulty` (45–76) decides the outcome. Success pays `reportReward`, failure pays
+`difficulty` (40 to 76) decides the outcome. Success pays `reportReward`, failure pays
 `failureReward` — both through the one `IServiceRewardService.Grant` chokepoint, so a duty cannot
-pay through a side channel. Skills come from the row's `supportSkills`.
+pay through a side channel. Skills come from the row's `supportSkills`, best of the two, and no
+failure costs standing (see "Duty gates must admit someone who can pass" below).
 
 ### When the commander stops having a command
 
@@ -656,33 +657,205 @@ own gates admit, and the difficulty ceiling must **rise** with the rank required
 cannot hand the player easier work than it just unlocked. Both are floors, not balance opinions —
 whether a 6% duty is *good* belongs to whoever plays it; whether a 0% duty is a *bug* does not.
 
-#### The floor rests on `UntrainedSkill = 10`, and the 2026-08-12 field log says 0 (open)
+#### The floor rested on `UntrainedSkill = 10`, and the field log said 0 (#438, answered by #520)
 
-The reachability test does not read the player's skill (it cannot; there is no player at test time).
-It assumes one, `UntrainedSkill = 10`, documented in the test as "roughly a fresh hero's untrained
-value". That constant is the whole floor: every row passes against it, which is why the suite is
-green.
+The reachability test cannot read the player's skill; there is no player at test time. It assumed
+one, `UntrainedSkill = 10`, documented as "roughly a fresh hero's untrained value". That constant
+was the whole floor, and every row passed against it, which is why the suite stayed green while
+eight rows were unwinnable in play.
 
-A live session on 2026-08-12 produced the counter-example. The gating skill was **0**, not 10:
+Two live sessions produced the counter-example. The gating skill is **0**, not 10:
 
 ```
 [Enlistment.Duties] duty 'recruitment_errand' failed — skill 0 trust -1 rank Recruit vs difficulty 54
+[Enlistment.Duties] duty 'service_shift' failed — check 6 (skill 6, trust +0, rank Recruit +0)
+                    + roll 0-50 vs difficulty 45
 ```
 
 A Bannerlord hero has 0 in any skill they never invested in, and Charm on an orc warrior is the
-ordinary case rather than a corner one. Recompute the ceiling with skill 0 and eight of the thirteen
-rows go from hard to impossible: `road_patrol` (52) and `supply_delivery` (52) need 2, `recruitment_errand`
-(54) needs 4, `recon_sweep` (55) needs 5, `scout_route` (56) needs 6, `bandit_hunt` (58) needs 8,
-`mounted_pursuit` (62 at Soldier) needs 8, `deserter_sweep` (64 at Soldier) needs 10. Only `forage`
-(48) and `service_shift` (45) survive, at 6% and 12%.
+ordinary case rather than a corner one. `service_shift` is the easiest row in the file.
 
-The three Veteran-gated rows are **not** affected and need no revisit: `trusted_dispatch`,
-`relief_dispatch` and `hideout_strike` all clear their difficulty by 2 to 18 even at skill 0, because
-`minTrust` 8 to 15 carries them. That is the fix recorded above doing its job.
+The constant is now **0** and the difficulties were retuned to meet it. The Recruit band was
+rescaled into [40, 48] and the Soldier band into [52, 52], preserving the author's relative
+ordering, so no row needs better than a natural maximum from a player with nothing trained:
 
-Nothing has been retuned. The decision is whose call the constant is: lowering `UntrainedSkill`
-toward 0 makes the existing floor tell the truth and will redden eight rows, which is the point of a
-floor, but which rows move and how is a balance question. Tracked under #438.
+| Row | Was | Now | | Row | Was | Now |
+|---|---|---|---|---|---|---|
+| `service_shift` | 45 | **40** | | `scout_route` | 56 | **48** |
+| `forage` | 48 | **42** | | `bandit_hunt` | 58 | **48** |
+| `road_patrol` | 52 | **44** | | `mounted_pursuit` | 62 | **52** |
+| `supply_delivery` | 52 | **44** | | `deserter_sweep` | 64 | **52** |
+| `recruitment_errand` | 54 | **46** | | `recon_sweep` | 55 | **47** |
+
+`bandit_hunt` and `deserter_sweep` first landed at 50 and 54, which is `needed == 50` for the weakest
+player each admits: legal under the floor, and one roll in fifty-one in play. A fourth assertion,
+`NoFieldDuty_IsPassableOnlyOnANearMaximumRoll`, now rejects anything at two rolls or fewer of
+headroom, because the two floors above leave exactly that gap. Passable-at-all is satisfied by a 2%
+row, and trust-positive-in-expectation is satisfied by any row that charges nothing for failure,
+which since this change is all thirteen.
+
+The three Veteran rows keep 70 / 72 / 76 untouched: their `minTrust` 8 to 15 already carries them
+past their difficulty at skill 0, which is the `hideout_strike` fix above still holding.
+
+#### Every row also carries a second support skill, and failure no longer costs standing
+
+Retuning difficulty alone would have left the real defect in place, because the difficulty was never
+the interesting half. `EffectiveSkill` takes the **best** of `supportSkills[0]` and `[1]`, and ten
+rows named only a specialist skill (Scouting, Charm, Steward, Tactics) that a warrior hero has at
+zero for the whole campaign. Each row now names a second skill an enlisted soldier actually trains,
+so the same duty gets easier as service accumulates rather than staying flat forever:
+
+| Row | Specialist | Second |
+|---|---|---|
+| `recon_sweep`, `mounted_pursuit`, `road_patrol`, `scout_route` | Scouting | Riding |
+| `bandit_hunt` | Tactics | Athletics |
+| `deserter_sweep` | Leadership | Athletics |
+| `forage` | Steward | Athletics |
+| `recruitment_errand` | Charm | Leadership |
+| `supply_delivery` | Steward | Leadership |
+| `service_shift` | Athletics | Leadership |
+| `relief_dispatch` | Riding | Leadership |
+
+Leadership is the deliberate default for company work: `RunDailyTick` grants it 10 XP a day to every
+enlisted player regardless of assignment, so it is the one skill service itself guarantees.
+
+**`failureReward.trust` is 0 on all thirteen rows.** A field duty is handed to you, the offer states
+no odds, and the check happens off screen, so charging standing for a roll the player could not see
+and often could not win is a trap rather than a cost. Failure still forfeits the success reward, and
+that is the cost. The interactive duties and incidents keep their negative outcomes, because those
+are opt-in: an incident happens TO you but you pick the option, where a field duty is simply handed
+over.
+
+Be precise about what that does and does not justify, because the first version of this paragraph
+said the popup "stated the stakes" and it does not. `InteractiveDutyPresenter.PresentIncident` passes
+`ShowTwoOptionInquiry` exactly four strings: a title and body from the static `DutyCopy` table, and
+`Humanize(option.Key)` for each button. No difficulty, no skill name, no trust delta reaches the
+player. The exemption rests on the choice being the player's, nothing more. Making the stakes legible
+would be a real improvement and is not in this change.
+
+One incident row is worse than that exemption can carry, and it predates this change: `press_claim`
+(pay_delay) is Charm 65 with `rankBonusApplies` unset, so a Recruit at Charm 0 needs 65 on a d50 and
+cannot pass, and it charges 1 trust on **both** outcomes. Its sibling `wait_it_out` is Steward 50,
+pays +1 on success, costs nothing on failure, and triggers the same `ReleaseDeferredPay` effect,
+because the effect is keyed on the incident and fires for whichever option passes. `press_claim` is
+therefore strictly dominated: harder, always costs standing, and buys only `repDomain: Command`,
+which has no reader. Left alone here deliberately and tracked as #521, because retuning an incident
+belongs in its own change rather than folded into the field-duty economy.
+
+`FieldDutyReachabilityTests` now pins a third floor beside the two above: at skill 0, for the
+weakest player a row's own gates admit, the expectation `p·success + (1-p)·failure` must be `>= 0`.
+Every row satisfies it today through the zeroed failure cost, which makes it a guard rather than a
+live constraint. That is the point. Re-add a trust cost without lowering the difficulty to match and
+it reddens.
+
+### Standing had no reachable source, which is what pinned the ladder (#520)
+
+The two sections above are one bug seen from the duty side. From the ladder side it reads
+differently, and worse. `AdjustTrust` has three call sites and **none of them is a passive gain for
+serving**: standing rises only from a duty success or from a merit band that pays trust. With the
+duty side unwinnable, and the merit bands paying trust only at score 60 and above, a soldier who
+fought steadily and took camp work he could not pass drifted downward with no floor above
+`trustMin`.
+
+A live service reached day 73 with 2903 service XP, eight times the Veteran requirement, still a
+Soldier, reading "badly thought of" with the ladder line stuck on *your commander's confidence*.
+Veteran gates on `minTrust: 0` and `minDutySuccesses: 2`, so both halves of that gate sat downstream
+of the same closed loop: the duties that grant trust needed a skill the player did not have, and the
+duties that are winnable at high trust need trust he could not reach.
+
+The fix is two independent earners, neither depending on the other:
+
+- the duty loop, repaired above;
+- the merit path, reopened by the cohesion fix below. `strong` (`minScore: 60`) already paid 1 trust
+  and `distinguished` 2; what was missing was any way for an ordinary battle to reach them, because
+  cohesion scored a flat zero.
+
+**The band that pays was NOT moved down, and the first attempt at this fix moved it.** Paying trust
+from `solid` (`minScore: 40`) looked like the obvious second earner and quietly paid two shapes that
+never fought. `BattleMeritScorer` zeroes only the survival term on `LeftTheField`, so kills, cohesion,
+proximity, engagement and role fit all survive a walkout: the ceiling for quitting with a full kill
+count is `30 + 15 + 10 + 10 + 10 − 30 = 45`, which is inside `solid`. And a soldier who simply stands
+in his own line banks survival + cohesion = 40 with no kills and no engagement at all, which is also
+inside `solid`. Both were reachable through ordinary play with no guard anywhere in the payout chain.
+
+So the boundary stays where it was, and two things now hold it there:
+
+- `MeritTrustFloorTests` pins the invariant against the shipped config from both sides: no score
+  attainable **without fighting** may reach a band that pays trust, and a soldier who held formation,
+  stayed engaged and took a kill still must. A future tuner cannot move a `minScore` past either.
+- `EnlistmentBattlePayoutService` withholds band trust outright when the sample says `LeftTheField`,
+  independent of where the boundaries sit. XP and gold still reflect what the player did before he
+  left, which is the same reasoning that made `LeftTheField` zero the survival term alone. The
+  comment on `MeritScoringConfig.LeftFieldPenalty` used to claim 30 was "sized to sink the best
+  possible walkout into the bottom band"; it arrived at that by leaving kills out of the sum, and it
+  has been corrected.
+
+`MeritBandTrust_MatchesBetweenTheShippedFileAndTheCompiledDefaults` pins the JSON against
+`DefaultMeritBands()`, and it reads the **file**, not `GetConfig()`. Four paths inside the provider
+replace `MeritBands` wholesale with the compiled defaults, one of them (`meritBands` null or empty)
+logging nothing at all, so a test that went through the provider would compare the defaults against
+themselves and report green on exactly the divergence it exists to catch.
+
+The rank thresholds themselves were not touched. They were never the bug.
+
+#### Cohesion had a blind spot that held the merit score under the band
+
+`MeritGeometryScanner` measured cohesion against the player's formation **captain**, and reported
+`Absent` when the only candidate was the player himself. That is the ordinary case, not an edge one:
+per #443 an enlisted player is routed to a one-man `PlayerTeam`, so his formation contains nobody
+else and cohesion scored a flat zero for entire battles. The cost is 15 points of the 100 outright,
+plus the 10-point infantry role-fit bonus, which requires `CohesionRatio >= 0.5`. Twenty-five points
+is what stood between an ordinary infantry battle and the `strong` band.
+
+`MeritGeometryAccumulator.CohesionDistanceSq` now takes the captain reading when there is one and
+the **nearest ally** when there is not, and the scanner tracks that distance in the loop it was
+already running (the allied branch previously skipped every non-hero). Absent still means absent
+when neither is observable: alone on the field is a real state and it must keep failing the gate,
+never collapse to a distance of zero and score a free hit.
+
+The fallback is measured against the same `cohesionDistance` of 25 m, which was calibrated for
+distance-to-captain and is a looser bar for distance-to-anybody: inside a friendly line it is a hit
+on essentially every sample. That is deliberate given #443 (there is no captain to measure against
+and the alternative is a permanent zero), and it is why the trust boundary is held by
+`MeritTrustFloorTests` rather than by the score distribution. It is also unmeasured: nobody has
+observed the resulting `CohesionRatio` in a live battle.
+
+Three consequences worth naming, because the score feeds more than trust.
+`EnlistmentBattlePayoutService` grants the band's `ServiceXp`, `Gold`, `Trust`, `RepDomain`/
+`RepAmount` and folds `band.Renown` into `BattleRenownPolicy`:
+
+- **`distinguished` becomes reachable for Infantry for the first time.** With cohesion pinned at 0
+  the Infantry ceiling was `30 + 25 + 10 + 10 = 75`, under the band's `minScore: 80`. It is now 100.
+  That unlocks 30 XP, 20 gold, 2 trust, 3 renown and 2 FieldRep at the top of the ladder.
+- **Reputation accrues into nothing.** `FieldRep` and its three siblings have one writer and no
+  reader; `TrustLedger.DominantDomain` claims to drive "officer-duty selection + status flavor" and
+  is called from no production path. `ArmyRhythmSnapshotService.HighScrutiny` is the same shape:
+  assigned, never read.
+- **Renown is the one payout that reaches the wider campaign**, through `GainRenownAction` to the
+  player's own clan, so a better merit distribution is mild clan-tier inflation.
+
+This does not touch #443's own design call about which team the enlisted player belongs on. It fixes
+the merit-scoring fallout only.
+
+#### What the economy looks like afterwards, including its one-way half
+
+Standing is now a **ratchet on the field-duty track**. `record.Trust` has one writer
+(`ServiceRewardService.AdjustTrust`), no field duty charges it, no merit band pays it negative, and
+there is no daily decay, defeat penalty or discharge penalty. Every remaining sink is opt-in: the
+assignment swap (1, behind a 7-day cooldown), and the `press_claim`, `forage_extra` and
+`break_it_up` incident options. A player who declines those walks monotonically to `trustMax: 20` and
+pins there. That is defensible (standing is meant to be earned and kept, and the ladder tops out at
+`minTrust: 6` for Sergeant) but it was not a decision anyone wrote down, so it is written down here.
+
+Two knock-on effects follow from trust actually climbing, neither of which is a bug:
+
+- The three Veteran duty rows gated at `minTrust` 8 and 15 go from near-unreachable to routine, which
+  is what those gates were for.
+- Duty offers get more frequent. `DutyRotationPolicy` computes
+  `baseOfferChance + (pressure ? 0.15 : 0) + max(0, trust) * 0.01`, so the quiet chance moves from the
+  0.06 floor toward 0.26 as trust saturates, clamped by `maxOfferChance: 0.4`. Read `0.06` as the
+  starting rate, not the operative one. The provider's attainable-ceiling warning is unaffected:
+  `0.06 + 0.15 + 20 x 0.01 = 0.41`, and `0.4 > 0.41` is false either way.
 
 ### The player is NEVER detached by a duty — do not re-add travel
 

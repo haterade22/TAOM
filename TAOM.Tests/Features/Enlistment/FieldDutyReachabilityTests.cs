@@ -40,12 +40,19 @@ public class FieldDutyReachabilityTests
         };
 
     /// <summary>
-    /// The skill a gated-in player is assumed to have. Ten is not pessimistic — it is roughly a
-    /// fresh hero's untrained value, and nothing in the gates requires a duty's support skill to
-    /// have been trained at all. A row that needs more than this from an untrained soldier is
-    /// relying on a prerequisite it never states.
+    /// The skill a gated-in player is assumed to have. **Zero**, because that is what a Bannerlord
+    /// hero actually has in a skill they never invested in, and nothing in a duty's gates requires
+    /// its support skill to have been trained at all. Charm on an orc warrior is the ordinary case,
+    /// not a corner one.
+    ///
+    /// This constant used to be 10, described in a comment as "roughly a fresh hero's untrained
+    /// value". It is not, and the whole floor rested on it: a live session on 2026-08-12 logged
+    /// `duty 'recruitment_errand' failed — skill 0 ... vs difficulty 54`, and recomputing at 0 turned
+    /// eight of the thirteen rows from hard into impossible while the suite stayed green. The
+    /// difficulties were retuned to meet the honest floor rather than the constant being kept
+    /// flattering (#438).
     /// </summary>
-    private const int UntrainedSkill = 10;
+    private const int UntrainedSkill = 0;
 
     private static JArray FieldDuties()
     {
@@ -69,6 +76,22 @@ public class FieldDutyReachabilityTests
         return (RankOrdinal[rankName], Math.Max(0, minTrust));
     }
 
+    /// <summary>The roll this row demands of the weakest player its own gates admit.</summary>
+    private static int NeededRoll(JToken duty)
+    {
+        var difficulty = (int)duty["difficulty"];
+        var (rank, trust) = WeakestAdmitted(duty);
+        return difficulty - UntrainedSkill - (trust * 2) - (rank * SkillCheckService.RankBonusPerLevel);
+    }
+
+    /// <summary>
+    /// How many of the 51 equally-likely rolls clear <paramref name="needed"/>. Counted rather than
+    /// divided, so the expectation below stays in integers and no float exists here to round the
+    /// wrong way at a boundary.
+    /// </summary>
+    private static int PassingRolls(int needed)
+        => Math.Max(0, Math.Min(SkillCheckService.RollRange, SkillCheckService.RollRange - needed));
+
     [TestMethod]
     public void EveryFieldDuty_IsPassableByTheWeakestPlayerItsGatesAdmit()
     {
@@ -78,7 +101,7 @@ public class FieldDutyReachabilityTests
         {
             var difficulty = (int)duty["difficulty"];
             var (rank, trust) = WeakestAdmitted(duty);
-            var needed = difficulty - UntrainedSkill - (trust * 2) - (rank * SkillCheckService.RankBonusPerLevel);
+            var needed = NeededRoll(duty);
 
             // RollRange is exclusive (Next(51) yields 0..50), so the best possible roll is one less.
             if (needed > SkillCheckService.RollRange - 1)
@@ -93,14 +116,92 @@ public class FieldDutyReachabilityTests
             + "the duty's gates or lower its difficulty:\n  " + string.Join("\n  ", impossible));
     }
 
+    /// <summary>
+    /// Passable is not the same as worth taking. A row that pays +2 on success and charges -1 on
+    /// failure is a standing SINK below a one-in-three pass rate, and the player has no way to see
+    /// that: the board shows standing as words, the offer states no odds, and the check happens off
+    /// screen. Ten such rows shipped, which is how a 73-day soldier reached "badly thought of" with
+    /// 2903 service XP and no route to Veteran (its gate is `minTrust: 0`).
+    ///
+    /// So the floor is the expectation, not the possibility: at skill 0, for the weakest player the
+    /// row's own gates admit, a field duty may not be trust-negative on average. Every row meets it
+    /// today by charging no standing for failure, which makes this a guard rather than a live
+    /// constraint — that is the point. Re-add a trust cost without lowering the difficulty to match
+    /// and this reddens.
+    ///
+    /// Interactive duties and incidents are deliberately NOT covered. Their negative outcomes follow
+    /// a choice the player made from a popup that stated the stakes; a field duty is handed to you.
+    /// </summary>
+    [TestMethod]
+    public void EveryFieldDuty_IsTrustPositiveInExpectationForTheWeakestPlayerItsGatesAdmit()
+    {
+        var sinks = new List<string>();
+
+        foreach (var duty in FieldDuties())
+        {
+            var onSuccess = (int?)duty["reportReward"]?["trust"] ?? 0;
+            var onFailure = (int?)duty["failureReward"]?["trust"] ?? 0;
+
+            var needed = NeededRoll(duty);
+            var passing = PassingRolls(needed);
+            var failing = SkillCheckService.RollRange - passing;
+
+            // Expectation x RollRange, so the comparison is exact integer arithmetic.
+            var expectation = (passing * onSuccess) + (failing * onFailure);
+            if (expectation < 0)
+                sinks.Add(
+                    $"{duty["id"]} — needs {needed} on a d{SkillCheckService.RollRange - 1} "
+                    + $"({passing}/{SkillCheckService.RollRange} pass), pays {onSuccess:+#;-#;0} / "
+                    + $"charges {onFailure:+#;-#;0}: {expectation / (double)SkillCheckService.RollRange:0.00} trust per offer");
+        }
+
+        Assert.AreEqual(0, sinks.Count,
+            "Field duties that cost the player standing on average. Accepting camp work must never "
+            + "be the wrong move for a soldier who cannot see the odds. Lower the difficulty, raise "
+            + "the gates, or stop charging trust for the failure:\n  " + string.Join("\n  ", sinks));
+    }
+
+    /// <summary>
+    /// The gap between the two floors above. Passable-at-all is satisfied by a row needing exactly
+    /// 50 on a d50, which is one roll in fifty-one; trust-positive-in-expectation is satisfied by
+    /// any row that charges nothing for failure, which since #520 is all thirteen. So both can be
+    /// green while a row is, in practice, the unreachable-standing bug wearing a legal number.
+    /// <c>bandit_hunt</c> (50) and <c>deserter_sweep</c> (54) landed exactly there and were lowered.
+    ///
+    /// Two rolls of headroom is a deliberately weak line, not a balance opinion. A real pass-rate
+    /// floor at, say, one in three would redden most of the ladder at skill 0, and whether a 6% duty
+    /// is GOOD belongs to whoever plays it. Whether a 2% duty is indistinguishable from a broken one
+    /// does not.
+    /// </summary>
+    [TestMethod]
+    public void NoFieldDuty_IsPassableOnlyOnANearMaximumRoll()
+    {
+        var razorThin = FieldDuties()
+            .Select(d => new { Id = (string)d["id"], Passing = PassingRolls(NeededRoll(d)) })
+            .Where(x => x.Passing <= 2)
+            .Select(x => $"{x.Id} ({x.Passing}/{SkillCheckService.RollRange})")
+            .ToList();
+
+        Assert.AreEqual(0, razorThin.Count,
+            "Field duties a gated-in player clears only on a near-maximum roll. Legal under the "
+            + "impossibility floor, and in play indistinguishable from it:\n  "
+            + string.Join("\n  ", razorThin));
+    }
+
     [TestMethod]
     public void FieldDutyDifficulty_RisesWithTheRankRequiredToBeOfferedIt()
     {
-        // Not a balance assertion — an ORDERING one. If a Recruit-gated duty is harder than a
-        // Veteran-gated one, the gates are not doing the job they exist for, and the promotion
-        // that should have opened up harder work has instead handed the player something easier.
-        // This is how `bandit_hunt` (58, Recruit) came to sit above `deserter_sweep` (64, Soldier)
-        // in difficulty while sitting below it in requirement.
+        // Not a balance assertion — an ORDERING one. If the hardest work open to a Recruit is
+        // harder than anything a Veteran can be handed, the gates are not doing the job they exist
+        // for, and a promotion that should have opened up harder work has instead handed the player
+        // something easier. A Recruit row at 80 against a Soldier band topping out at 52 is the
+        // shape this catches.
+        //
+        // Read the scope precisely, because the example that used to sit here did not: this compares
+        // band CEILINGS, so overlap is legal and an individual inversion between two rows is
+        // invisible to it. (The old comment offered `bandit_hunt` 58 Recruit "above" `deserter_sweep`
+        // 64 Soldier, which is neither an inversion nor something this assertion could see. Both
+        // numbers were real; the sentence was not.)
         var byRank = new Dictionary<int, (int Min, int Max, List<string> Ids)>();
 
         foreach (var duty in FieldDuties())

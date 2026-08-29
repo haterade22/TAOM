@@ -86,11 +86,19 @@ public class EnlistmentBattlePayoutService : IEnlistmentBattlePayoutService
             var band = BattleMeritScorer.ResolveBand(score, config.MeritBands);
             if (band != null)
             {
+                // Standing is the one band reward a player who WALKED OUT may never collect, and
+                // the guard lives here rather than in the ladder because the ladder's protection is
+                // emergent. leftFieldPenalty cancels the survival weight and nothing else, so kills,
+                // cohesion, proximity, engagement and role fit all survive the exit: the walkout
+                // ceiling is 45 of 100, close enough to the band boundaries that one tuning edit
+                // puts quitting back into a paying band. XP and gold still reflect what the player
+                // did before he left, which is the same reasoning that made LeftTheField zero the
+                // survival term alone.
                 _rewards.Grant(new RewardSpec
                 {
                     ServiceXp = band.ServiceXp,
                     Gold = band.Gold,
-                    Trust = band.Trust,
+                    Trust = sample.LeftTheField ? 0 : band.Trust,
                     RepDomain = band.RepDomain,
                     RepAmount = band.RepAmount,
                 }, $"merit-{band.GradeKey}");

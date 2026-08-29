@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Newtonsoft.Json.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Content;
@@ -255,6 +256,84 @@ public class EnlistmentContentConfigProviderTests
         _logger.DidNotReceive().LogError(Arg.Any<string>());
     }
 
+    /// <summary>
+    /// Standing has exactly two earners: a duty success, and a merit band that pays trust. The band
+    /// half has to survive both surfaces or it does not exist for half the installs — an
+    /// <c>enlistment_config.json</c> that omits the key silently takes the compiled default, and a
+    /// compiled default that disagrees with the shipped file means two players on the same build
+    /// progress at different rates with nothing in the log.
+    ///
+    /// This is the same class of gap as the renown chain above, on the field that gates promotion:
+    /// Veteran requires <c>minTrust: 0</c>, so a soldier who fights steadily and takes no camp work
+    /// is stuck at Soldier forever if no band he can reach pays trust. That shipped, and a live
+    /// 73-day service reached "badly thought of" on 2903 XP because of it.
+    /// </summary>
+    [TestMethod]
+    public void MeritBandTrust_MatchesBetweenTheShippedFileAndTheCompiledDefaults()
+    {
+        // Read the FILE, not the provider's output. Going through GetConfig() looks stronger and is
+        // strictly weaker: four paths inside LoadConfig/ValidateConfig replace MeritBands wholesale
+        // with DefaultMeritBands() — file missing, unparseable, a null-or-empty meritBands array
+        // (which logs NOTHING at all), and IsValidBandLadder rejecting a reordered or partially
+        // edited ladder. On any of them this test would compare the defaults against themselves and
+        // report green, which is precisely the divergence it exists to catch.
+        var raw = JObject.Parse(File.ReadAllText(Path.Combine(
+            ShippedModuleDataPath(), "enlistment", "enlistment_config.json")));
+        var shipped = ((JArray)raw["meritBands"])
+            .ToDictionary(b => (string)b["gradeKey"], b => (int?)b["trust"] ?? 0);
+        var compiled = EnlistmentContentConfigProvider.BuildDefaults().MeritBands;
+
+        // Keyed by gradeKey, not by index: a reordered file must report the band that actually
+        // diverged rather than whichever one happened to land in that slot.
+        foreach (var band in compiled)
+        {
+            Assert.IsTrue(shipped.ContainsKey(band.GradeKey),
+                $"band '{band.GradeKey}' exists in DefaultMeritBands() but not in enlistment_config.json");
+            Assert.AreEqual(band.Trust, shipped[band.GradeKey],
+                $"band '{band.GradeKey}' pays {shipped[band.GradeKey]} trust in enlistment_config.json "
+                + $"but {band.Trust} in DefaultMeritBands() — an install without the file would earn "
+                + "standing at a different rate");
+        }
+
+        Assert.AreEqual(compiled.Count, shipped.Count, "band count diverged between file and defaults");
+
+        // The earner has to exist at all; WHICH band carries it is MeritTrustFloorTests' call, and
+        // it is not a free choice — the bands below `strong` are reachable without fighting.
+        Assert.IsTrue(compiled.Any(b => b.Trust > 0),
+            "no merit band pays trust, so fighting well cannot raise standing at all");
+
+        for (var i = 1; i < compiled.Count; i++)
+            Assert.IsTrue(compiled[i].Trust <= compiled[i - 1].Trust,
+                $"band '{compiled[i].GradeKey}' pays more trust than the better band above it");
+
+        // The round trip must also be clean, or a future edit could satisfy every assertion above
+        // while the provider silently discarded the file at load.
+        new EnlistmentContentConfigProvider(ShippedPaths(), _logger).GetConfig();
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    /// <summary>
+    /// The duty half of the same gap. `ShippedPaths()` was reached only by `GetConfig()` callers, so
+    /// no test loaded the real `enlistment_duties.json` through the provider's own validation —
+    /// `FieldDutyReachabilityTests` parses the file directly and every other duty test stubs the
+    /// provider. `LoadDuties` SKIPS a bad row with nothing but a log warning, so a typo in one of
+    /// the 11 rows that gained a second support skill (or in any retuned difficulty) would drop that
+    /// duty at runtime while every other test kept counting thirteen.
+    /// </summary>
+    [TestMethod]
+    public void ShippedDuties_LoadThroughTheProviderWithoutBeingSkipped()
+    {
+        var duties = new EnlistmentContentConfigProvider(ShippedPaths(), _logger).GetDuties();
+
+        Assert.AreEqual(13, duties.FieldDuties.Count, "a field duty row was skipped at load");
+        Assert.AreEqual(11, duties.InteractiveDuties.Count, "an interactive duty row was skipped at load");
+        Assert.AreEqual(3, duties.Incidents.Count, "an incident row was skipped at load");
+
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
     private IPathService ShippedPaths()
     {
         var paths = Substitute.For<IPathService>();
@@ -326,6 +405,33 @@ public class EnlistmentContentConfigProviderTests
 
         Assert.AreEqual(0, duties.InteractiveDuties.Count);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("Scoutting")));
+    }
+
+    [TestMethod]
+    public void GetDuties_MoreThanTwoSupportSkills_SkipsRowWithWarning()
+    {
+        // Only [0] and [1] are ever read, and EffectiveSkill returns the better of the two. A third
+        // entry looks like a third chance to the author and is dead data at runtime — the exact
+        // shape of silence this provider exists to refuse.
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"too_many\",\"difficulty\":50,\"durationHours\":6,"
+            + "\"supportSkills\":[\"Scouting\",\"Riding\",\"Athletics\"]}]}");
+
+        var duties = Provider().GetDuties();
+
+        Assert.AreEqual(0, duties.FieldDuties.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("only the first two")));
+    }
+
+    [TestMethod]
+    public void GetDuties_TwoSupportSkills_IsAccepted()
+    {
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"pairing\",\"difficulty\":50,\"durationHours\":6,"
+            + "\"supportSkills\":[\"Scouting\",\"Riding\"]}]}");
+
+        var duties = Provider().GetDuties();
+
+        Assert.AreEqual(1, duties.FieldDuties.Count, "the two-skill pairing is the shipped shape");
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("supportSkills")));
     }
 
     [TestMethod]

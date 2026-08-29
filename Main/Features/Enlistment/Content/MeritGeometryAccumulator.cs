@@ -35,6 +35,26 @@ public sealed class MeritGeometryAccumulator
         _engagementSq = SquareOrUnreachable(config?.EngagementDistance ?? UnreachableThreshold);
     }
 
+    /// <summary>
+    /// Which of the two readings the cohesion gate should use, given that the formation captain is
+    /// not always observable. The captain wins whenever there is one — cohesion means holding the
+    /// line your formation is being ordered onto, not merely being near somebody — and the nearest
+    /// ally stands in when there is not.
+    ///
+    /// The fallback exists because an enlisted player has no captain in the ordinary case. He is
+    /// routed to a one-man <c>PlayerTeam</c> (#443), so his formation contains only himself, the
+    /// scanner reported "absent" on every tick, and cohesion scored a flat zero for whole battles.
+    /// That is 15 merit points outright plus the 10-point infantry role-fit bonus, which needs
+    /// <see cref="CohesionRatio"/> at 0.5 — between them enough to hold an ordinary fought battle
+    /// under the score where the merit band starts paying standing, which is one of only two places
+    /// standing can be earned at all.
+    ///
+    /// Absent stays absent when neither is observable. Alone on the field is a real state and it
+    /// must keep failing the gate; collapsing it to zero would score a free hit.
+    /// </summary>
+    public static float CohesionDistanceSq(float captainDistanceSq, float nearestAllyDistanceSq)
+        => Measured(captainDistanceSq) ? captainDistanceSq : nearestAllyDistanceSq;
+
     public int Samples { get; private set; }
 
     public int CohesionHits { get; private set; }

@@ -149,6 +149,51 @@ public class MeritGeometryAccumulatorTests
     }
 
     [TestMethod]
+    public void CohesionDistanceSq_CaptainMeasured_PrefersTheCaptain()
+    {
+        // The captain is the better reading whenever there is one: cohesion means holding the line
+        // your formation is being ordered onto, not merely being near somebody.
+        Assert.AreEqual(400f, MeritGeometryAccumulator.CohesionDistanceSq(400f, 100f));
+    }
+
+    [TestMethod]
+    public void CohesionDistanceSq_NoCaptain_FallsBackToTheNearestAlly()
+    {
+        // An enlisted player fights on a one-man PlayerTeam (#443), so his formation has no captain
+        // but himself and the scanner reported "absent" every tick. Cohesion scored a flat zero for
+        // the whole battle, costing 15 merit points outright plus the 10-point infantry role-fit
+        // bonus, which needs CohesionRatio >= 0.5 — enough on its own to keep an ordinary battle
+        // under the score where the merit band starts paying standing.
+        Assert.AreEqual(100f, MeritGeometryAccumulator.CohesionDistanceSq(-1f, 100f));
+    }
+
+    [TestMethod]
+    public void CohesionDistanceSq_NeitherObservable_StaysAbsent()
+    {
+        // Alone on the field is a real state, and it must keep failing the gate rather than
+        // collapsing to a distance of zero and scoring a free hit.
+        Assert.IsTrue(MeritGeometryAccumulator.CohesionDistanceSq(-1f, -1f) < 0f);
+    }
+
+    [TestMethod]
+    public void CohesionDistanceSq_NonFiniteCaptain_FallsBackRatherThanPoisoningTheGate()
+    {
+        // NaN is not "measured". Passing it through would fail the threshold anyway, but it would
+        // also discard a perfectly good ally reading for no reason.
+        Assert.AreEqual(100f, MeritGeometryAccumulator.CohesionDistanceSq(float.NaN, 100f));
+    }
+
+    [TestMethod]
+    public void AddSample_NoCaptainButAllyInLine_CountsCohesionThroughTheFallback()
+    {
+        var sut = Sut();
+
+        sut.AddSample(MeritGeometryAccumulator.CohesionDistanceSq(-1f, 400f), -1f, -1f);
+
+        Assert.AreEqual(1, sut.CohesionHits);
+    }
+
+    [TestMethod]
     public void AddSample_NullConfig_NothingCanScoreAHit()
     {
         var sut = new MeritGeometryAccumulator(null);

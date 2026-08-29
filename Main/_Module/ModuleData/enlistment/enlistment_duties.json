@@ -2,7 +2,7 @@
   "fieldDuties": [
     {
       "id": "recon_sweep",
-      "difficulty": 55,
+      "difficulty": 47,
       "durationHours": 5,
       "reportReward": {
         "serviceXp": 45,
@@ -16,18 +16,19 @@
       },
       "failureReward": {
         "serviceXp": 10,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit"
       },
       "supportSkills": [
-        "Scouting"
+        "Scouting",
+        "Riding"
       ]
     },
     {
       "id": "mounted_pursuit",
-      "difficulty": 62,
+      "difficulty": 52,
       "durationHours": 4,
       "reportReward": {
         "serviceXp": 55,
@@ -41,7 +42,7 @@
       },
       "failureReward": {
         "serviceXp": 12,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Soldier",
@@ -50,12 +51,13 @@
         ]
       },
       "supportSkills": [
-        "Scouting"
+        "Scouting",
+        "Riding"
       ]
     },
     {
       "id": "bandit_hunt",
-      "difficulty": 58,
+      "difficulty": 48,
       "durationHours": 6,
       "reportReward": {
         "serviceXp": 54,
@@ -69,18 +71,19 @@
       },
       "failureReward": {
         "serviceXp": 12,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit"
       },
       "supportSkills": [
-        "Tactics"
+        "Tactics",
+        "Athletics"
       ]
     },
     {
       "id": "deserter_sweep",
-      "difficulty": 64,
+      "difficulty": 52,
       "durationHours": 6,
       "reportReward": {
         "serviceXp": 60,
@@ -94,18 +97,19 @@
       },
       "failureReward": {
         "serviceXp": 13,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Soldier"
       },
       "supportSkills": [
-        "Leadership"
+        "Leadership",
+        "Athletics"
       ]
     },
     {
       "id": "road_patrol",
-      "difficulty": 52,
+      "difficulty": 44,
       "durationHours": 5,
       "reportReward": {
         "serviceXp": 48,
@@ -119,18 +123,19 @@
       },
       "failureReward": {
         "serviceXp": 11,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit"
       },
       "supportSkills": [
-        "Scouting"
+        "Scouting",
+        "Riding"
       ]
     },
     {
       "id": "scout_route",
-      "difficulty": 56,
+      "difficulty": 48,
       "durationHours": 4,
       "reportReward": {
         "serviceXp": 58,
@@ -144,7 +149,7 @@
       },
       "failureReward": {
         "serviceXp": 13,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit",
@@ -154,12 +159,13 @@
         ]
       },
       "supportSkills": [
-        "Scouting"
+        "Scouting",
+        "Riding"
       ]
     },
     {
       "id": "recruitment_errand",
-      "difficulty": 54,
+      "difficulty": 46,
       "durationHours": 6,
       "reportReward": {
         "serviceXp": 48,
@@ -173,13 +179,14 @@
       },
       "failureReward": {
         "serviceXp": 11,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit"
       },
       "supportSkills": [
-        "Charm"
+        "Charm",
+        "Leadership"
       ]
     },
     {
@@ -198,7 +205,7 @@
       },
       "failureReward": {
         "serviceXp": 14,
-        "trust": -2
+        "trust": 0
       },
       "gates": {
         "minRank": "Veteran",
@@ -225,19 +232,20 @@
       },
       "failureReward": {
         "serviceXp": 15,
-        "trust": -2
+        "trust": 0
       },
       "gates": {
         "minRank": "Veteran",
         "minTrust": 8
       },
       "supportSkills": [
-        "Riding"
+        "Riding",
+        "Leadership"
       ]
     },
     {
       "id": "supply_delivery",
-      "difficulty": 52,
+      "difficulty": 44,
       "durationHours": 5,
       "reportReward": {
         "serviceXp": 50,
@@ -251,18 +259,19 @@
       },
       "failureReward": {
         "serviceXp": 11,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit"
       },
       "supportSkills": [
-        "Steward"
+        "Steward",
+        "Leadership"
       ]
     },
     {
       "id": "forage",
-      "difficulty": 48,
+      "difficulty": 42,
       "durationHours": 4,
       "reportReward": {
         "serviceXp": 46,
@@ -276,7 +285,7 @@
       },
       "failureReward": {
         "serviceXp": 10,
-        "trust": -1
+        "trust": 0
       },
       "gates": {
         "minRank": "Recruit",
@@ -285,7 +294,8 @@
         ]
       },
       "supportSkills": [
-        "Steward"
+        "Steward",
+        "Athletics"
       ]
     },
     {
@@ -304,7 +314,7 @@
       },
       "failureReward": {
         "serviceXp": 16,
-        "trust": -2
+        "trust": 0
       },
       "gates": {
         "minRank": "Veteran", "minTrust": 15 },
@@ -315,7 +325,7 @@
     },
     {
       "id": "service_shift",
-      "difficulty": 45,
+      "difficulty": 40,
       "durationHours": 4,
       "reportReward": {
         "serviceXp": 38,
@@ -335,7 +345,8 @@
         "minRank": "Recruit"
       },
       "supportSkills": [
-        "Athletics"
+        "Athletics",
+        "Leadership"
       ]
     }
   ],

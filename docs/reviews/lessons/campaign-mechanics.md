@@ -273,3 +273,14 @@ settled it in one screenshot. Two rules: after starting anything timed, land the
 map or in a WAIT menu (AddWaitGameMenu; Enlistment precedent), never a standard one; and a
 source-parity port of a UX trap is still a defect, so smoke the first-run player flow of every
 port before calling it verified. Recovery in the field: taom.rescue_time.
+
+### An invariant that holds only because two tuned numbers do not overlap is not enforced
+Quitting an enlisted battle never paid standing, but nothing forbade it. It merely happened that the
+best score a walkout could reach (45) landed in a band paying zero trust. The moment that band's
+trust value changed by one, the protection disappeared with no test failing anywhere, because the
+protection had never been written down. The reasoning even existed as a code comment, and the comment
+was itself wrong: it computed the walkout ceiling as 45 "without kills" while the scorer counts kills,
+so the sentence was true of one walkout and false of every other.
+- **Why missed:** emergent guards are invisible by construction. Neither number looks load-bearing on its own, and the relationship between them lives in no file. A reviewer reading either side sees a legal value.
+- **Prevent:** when a rule matters ("leaving the field must never pay standing"), state it in code at the point of payment, not in the tuning that currently happens to satisfy it. Here that is one ternary in the payout service, independent of where any band boundary sits, plus a test pinning the shipped numbers from both directions. Treat a comment asserting a numeric ceiling as a claim owed a re-derivation, not as documentation.
+- **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding H1 and its root-cause section (#520).

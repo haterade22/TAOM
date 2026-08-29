@@ -20,9 +20,24 @@ public sealed class MeritScoringConfig
 
     /// <summary>
     /// Subtracted when the player quit the field before the battle resolved — the retreat or
-    /// surrender inquiry, or walking out of the battle boundary. Sized (30) to sink the best
-    /// possible walkout into the bottom band: the most a departing player can bank without kills
-    /// is cohesion + commander + engagement + role fit = 45, which this drops to 15.
+    /// surrender inquiry, or walking out of the battle boundary.
+    ///
+    /// <para>
+    /// Read the ceiling carefully, because the original note here got it wrong in a way that later
+    /// mattered. It said 30 was "sized to sink the best possible walkout into the bottom band",
+    /// arriving at 45 by adding cohesion + commander + engagement + role fit and stopping there.
+    /// That excludes kills, which <see cref="BattleMeritScorer"/> does not: only the survival term
+    /// is zeroed on <see cref="MeritSample.LeftTheField"/>. With the kill cap counted the real
+    /// ceiling is 30 + 15 + 10 + 10 + 10 − 30 = <b>45</b>, which is the `solid` band, not the bottom
+    /// one. The sentence was true of a walkout that killed nobody and false of every other.
+    /// </para>
+    /// <para>
+    /// Nothing rests on that ceiling any more. `EnlistmentBattlePayoutService` withholds band trust
+    /// outright when the sample says LeftTheField, so a walkout cannot buy standing at any penalty
+    /// value, and `MeritTrustFloorTests` pins the shipped ladder against the ceiling as well. Both
+    /// exist because relying on a boundary that happens to sit above 45 is exactly how paying trust
+    /// from `solid` quietly started rewarding quitters.
+    /// </para>
     /// </summary>
     public int LeftFieldPenalty { get; set; } = 30;
 
