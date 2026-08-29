@@ -4,6 +4,26 @@
 
 ## 2026-08-28
 
+### chore(enlistment): turn the diagnostics trace back on, temporarily
+
+For the #520 in-game smoke, and meant to be reverted straight after. The trust economy now rests on
+two earners and only one has ever been observed working: no `[Enlistment] battle merit <score> ->
+band` line appears in any log on this machine, so the merit half is unproven end to end and a silent
+test run would settle nothing.
+
+Four literals move together, which is the whole hazard: `TaomSettings.EnableEnlistmentDiagnostics`,
+the provider's `??` fallback, and the two test pins that name the posture.
+`CompiledDefault_AndProviderFallback_Agree` is symmetric and cannot tell you which way is current,
+so it catches a half-flip and nothing else. `EnlistmentDiagnosticsGateTests` still asserts the OFF
+path deliberately: that is the path of anyone who turns the toggle off, and of every existing
+install.
+
+Which is the part worth writing down. **A compiled default does not reach an install that already
+has a persisted value.** MCM writes every property to
+`Configs/ModSettings/Global/TAOM/TAOM.json` on first save and loads that over the default forever
+after, so this flip changes fresh installs only. The same trap as ShaderPrecompilation's, pointing
+the other way: there, flipping a default to OFF failed to reach installs persisting `true`.
+
 ### feat(rohan): two new spear parts replace twelve, and they couch
 
 The artist delivered two blades and two handles (plus the two collision bodies) to replace six

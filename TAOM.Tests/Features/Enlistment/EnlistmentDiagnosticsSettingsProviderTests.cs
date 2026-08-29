@@ -7,40 +7,44 @@ using TAOM.Features.Enlistment;
 namespace TAOM.Tests.Features.Enlistment;
 
 /// <summary>
-/// Fail-direction pin for the enlistment diagnostics toggle. The toggle ships ON while the enlisted
-/// service loop is under active diagnosis, so a missing MCM instance must resolve to ON too —
-/// otherwise a player whose MCM failed to load silently loses the trace we are asking them for, and
-/// MCM-absent behaviour would differ from MCM-present-at-default behaviour.
+/// Fail-direction pin for the enlistment diagnostics toggle. The toggle is ON again from 2026-08-28
+/// while the #520 standing and rank loop is verified in play, so a missing MCM instance must resolve
+/// to ON too — otherwise a player whose MCM failed to load silently loses the trace we are asking
+/// them for, and MCM-absent behaviour would differ from MCM-present-at-default behaviour.
 ///
 /// <see cref="EnlistmentDiagnosticsSettingsProvider.ResolveEnabled"/> is a pure seam that never
 /// touches the MCM static, so the fail direction stays pinned regardless of whether
 /// <c>TaomSettings.Instance</c> is reachable from the MSTest host.
 ///
-/// When the toggle is later flipped to default OFF, BOTH the compiled default and the <c>??</c>
-/// fallback flip together — <see cref="CompiledDefault_AndProviderFallback_Agree"/> is what makes
-/// changing only one of them fail.
+/// This ON posture is TEMPORARY and reverts when #520's smoke has run. Whichever way it goes, BOTH
+/// the compiled default and the <c>??</c> fallback flip together — <see
+/// cref="CompiledDefault_AndProviderFallback_Agree"/> is what makes changing only one of them fail,
+/// and it is symmetric, so it cannot tell you which posture is current. These two tests can.
 /// </summary>
 [TestClass]
 public class EnlistmentDiagnosticsSettingsProviderTests
 {
     [TestMethod]
-    public void ResolveEnabled_NullSetting_ReturnsFalse()
+    public void ResolveEnabled_NullSetting_ReturnsTrue()
     {
-        // The whole guard. Reddened by changing the provider's `?? false` back to `?? true`.
+        // The whole guard. Reddened by changing the provider's `?? true` back to `?? false`.
         //
-        // FLIPPED 2026-08-09 with the compiled default. A missing MCM instance must land on the
-        // QUIET posture: a player without the settings host has no way to turn the trace off, so
-        // defaulting them into it is the one direction that cannot be undone in game.
-        Assert.IsFalse(EnlistmentDiagnosticsSettingsProvider.ResolveEnabled(null));
+        // Flipped OFF 2026-08-09, and back ON 2026-08-28 with the compiled default, for the #520
+        // smoke. The cost of the loud posture for an MCM-less player is a bigger log file; the cost
+        // of the quiet one is that the session we are asking them to reproduce tells us nothing.
+        // While a defect is under investigation the second is the worse trade. Flip both back after.
+        Assert.IsTrue(EnlistmentDiagnosticsSettingsProvider.ResolveEnabled(null));
     }
 
     [TestMethod]
     public void ResolveEnabled_False_ReturnsFalse()
     {
         // Kills a vacuous hard-coded implementation: the seam must pass the player's choice
-        // through, not just always answer with the default. Since the default flipped to OFF, the
-        // test that now carries that weight is ResolveEnabled_True_ReturnsTrue below — this one
-        // agrees with the default and can no longer distinguish a constant from a passthrough.
+        // through, not just always answer with the default. With the default back ON this is again
+        // the test carrying that weight, because it is the one that disagrees with the default;
+        // ResolveEnabled_True_ReturnsTrue now agrees with it and cannot tell a constant from a
+        // passthrough. Exactly one of this pair is load-bearing at any time, and which one swaps
+        // every time the posture does.
         Assert.IsFalse(EnlistmentDiagnosticsSettingsProvider.ResolveEnabled(false));
     }
 
@@ -51,13 +55,13 @@ public class EnlistmentDiagnosticsSettingsProviderTests
     }
 
     [TestMethod]
-    public void IsEnabled_NoMcmInstance_DefaultsFalse()
+    public void IsEnabled_NoMcmInstance_DefaultsTrue()
     {
         // TaomSettings.Instance is null in the test host (MCM v5 isn't loaded), so the provider
         // falls back to the compiled default. Same shape as NameplateFadeSettingsProviderTests.
         var sut = new EnlistmentDiagnosticsSettingsProvider();
 
-        Assert.IsFalse(sut.IsEnabled);
+        Assert.IsTrue(sut.IsEnabled);
     }
 
     [TestMethod]
