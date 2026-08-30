@@ -88,7 +88,6 @@
 		faction="Faction.clan_erebor_3" />
 	<Hero
 		id="lord_E3_11"
-		father="Hero.lord_E3_4"
 		faction="Faction.clan_erebor_3" />
 
 	<!-- Bit Gror -->
@@ -276,7 +275,7 @@
 		father="Hero.lord_M1_1"
 		mother="Hero.lord_M1_2"
 		faction="Faction.clan_mirkwood_1"
-		text="{=placeholder_description}This placeholder child ensures game stability for Nos Lasgalen, representing the enduring lineage of Thranduil's house in the shadowed woods of Mirkwood." />
+		text="{=aom_lord_M1_12_bio}Faelen is a child of Nos Lasgalen, too young for the bow and kept close to the halls while the wood grows darker." />
 
 	<!-- Nos Oropher -->
 	<Hero
@@ -445,13 +444,17 @@
 		faction="Faction.clan_isengard_1"
 		text="{=ugluk_description}Uglúk, the ruthless and cunning warlord of Isengard, commands Saruman's fearsome Uruk-hai with brutal efficiency. Fiercely loyal to his master, Uglúk embodies the relentless discipline and savagery that define the White Wizard's armies. Known for his harsh demeanor and unyielding resolve, he leads his troops with a mix of intimidation and tactical prowess, ensuring their dominance on the battlefield. Uglúk's disdain for weakness and his willingness to crush any opposition make him a fearsome figure among both his allies and enemies. Under his command, Isengard's forces strike terror into the hearts of the Free Peoples of Middle-earth, advancing Saruman's dark ambitions with every victory." />
 	<Hero
+		id="lord_I1_2"
+		faction="Faction.clan_isengard_1"
+		text="{=zorlag_description}Zorlag, a cunning and relentless warlord of the White Hand, drives Isengard's Uruk-hai with a fierce blend of strategy and savagery. His loyalty to Saruman is absolute, and his sharp mind ensures that every maneuver serves the White Wizard's grand designs. Zorlag's calculating nature makes him a master of exploiting enemy weaknesses, while his harsh leadership inspires both fear and obedience in his ranks. With a cold disdain for mercy, he crushes opposition with brutal precision, cementing his reputation as a formidable commander whose victories bolster Isengard's growing dominion." />
+	<Hero
 		id="lord_I1_11"
 		father="Hero.lord_I1_1"
 		faction="Faction.clan_isengard_1" />
 	<Hero
 		id="lord_I2_2"
 		faction="Faction.clan_isengard_1"
-		text="{=zorlag_description}Zorlag, a cunning and relentless warlord of the White Hand, drives Isengard's Uruk-hai with a fierce blend of strategy and savagery. His loyalty to Saruman is absolute, and his sharp mind ensures that every maneuver serves the White Wizard's grand designs. Zorlag's calculating nature makes him a master of exploiting enemy weaknesses, while his harsh leadership inspires both fear and obedience in his ranks. With a cold disdain for mercy, he crushes opposition with brutal precision, cementing his reputation as a formidable commander whose victories bolster Isengard's growing dominion." />
+		text="{=lugburz_description}Lugburz is scoutmaster of the White Hand, and the maps of the Gap of Rohan are kept in his head rather than on paper. He sends his runners out in threes and expects two back." />
 	<Hero
 		id="lord_I1_31"
 		father="Hero.lord_I1_3"
@@ -483,11 +486,12 @@
 	<Hero
 		id="lord_I3_2"
 		faction="Faction.clan_isengard_3"
-		text="{=rukthar_description}Rukthar, a grim and indomitable warlord of the Black Echelon, leads his Uruk-hai with a chilling blend of discipline and cruelty. His unwavering devotion to Saruman fuels his relentless campaigns, his forces striking with precision and terror under his command. Rukthar's disdain for weakness and his strategic brilliance make him a fearsome adversary, his troops a scourge upon Middle-earth's Free Peoples. With a heart as cold as Isengard's forges, he advances Saruman's ambitions, leaving only ruin in his wake." />
+		text="{=korgul_description}Korgul is a lieutenant of the Black Echelon who rose by outlasting the uruks placed above him. He gives an order once and looks for the axe if it is not obeyed." />
 	<Hero
 		id="lord_I3_21"
 		father="Hero.lord_I3_2"
-		faction="Faction.clan_isengard_3" />
+		faction="Faction.clan_isengard_3"
+		text="{=rukthar_description}Rukthar, a grim and indomitable warlord of the Black Echelon, leads his Uruk-hai with a chilling blend of discipline and cruelty. His unwavering devotion to Saruman fuels his relentless campaigns, his forces striking with precision and terror under his command. Rukthar's disdain for weakness and his strategic brilliance make him a fearsome adversary, his troops a scourge upon Middle-earth's Free Peoples. With a heart as cold as Isengard's forges, he advances Saruman's ambitions, leaving only ruin in his wake." />
 	<Hero
 		id="lord_I3_31"
 		father="Hero.lord_I3_3"
@@ -509,15 +513,16 @@
 	<Hero
 		id="lord_I4_3"
 		faction="Faction.clan_isengard_4"
-		text="{=drugash_description}Drûgash, a cunning and iron-willed leader of the Black Maw, commands his Uruk-hai with a blend of calculated strategy and raw aggression. His devotion to Saruman fuels his relentless drive, his forces sweeping across Middle-earth with disciplined savagery. Drûgash's sharp intellect and scorn for weakness make him a formidable commander, his troops a relentless engine of destruction. Under his leadership, the Black Maw carves a path of ruin, advancing Isengard's dark ambitions with every bloody triumph." />
+		text="{=thrakgul_description}Thrakgul oversees the Black Maw's pit-gangs and counts a shift wasted if nothing is broken in it. Saruman's overseers leave him to his methods because the mail comes out on time." />
 	<Hero
 		id="lord_I4_31"
 		father="Hero.lord_I4_3"
-		faction="Faction.clan_isengard_4" />
+		faction="Faction.clan_isengard_4"
+		text="{=drugash_description}Drûgash, a cunning and iron-willed leader of the Black Maw, commands his Uruk-hai with a blend of calculated strategy and raw aggression. His devotion to Saruman fuels his relentless drive, his forces sweeping across Middle-earth with disciplined savagery. Drûgash's sharp intellect and scorn for weakness make him a formidable commander, his troops a relentless engine of destruction. Under his leadership, the Black Maw carves a path of ruin, advancing Isengard's dark ambitions with every bloody triumph." />
 	<Hero
 		id="lord_I4_4"
 		faction="Faction.clan_isengard_4"
-		text="{=thrakul_description}Thrakul, a towering and merciless warlord of the Black Maw, rules his Uruk-hai with an unyielding grip, his loyalty to Saruman matched only by his thirst for slaughter. His commanding presence and brutal tactics ensure that his forces strike with overwhelming force, leaving no survivors in their wake. Thrakul's disdain for mercy and his strategic prowess make him a terror to Middle-earth's defenders, his victories a testament to Isengard's might. With the Black Maw at his back, he drives Saruman's war machine forward, crushing all opposition." />
+		text="{=gorlag_description}Gorlag, a towering and merciless warlord of the Black Maw, rules his Uruk-hai with an unyielding grip, his loyalty to Saruman matched only by his thirst for slaughter. His commanding presence and brutal tactics ensure that his forces strike with overwhelming force, leaving no survivors in their wake. Gorlag's disdain for mercy and his strategic prowess make him a terror to Middle-earth's defenders, his victories a testament to Isengard's might. With the Black Maw at his back, he drives Saruman's war machine forward, crushing all opposition." />
 	<Hero
 		id="lord_I4_41"
 		father="Hero.lord_I4_4"
@@ -526,7 +531,7 @@
 	<!-- Additional Isengard Clans 5-11 -->
 	<Hero id="lord_I1_4"
 		faction="Faction.clan_isengard_5"
-		text="{=lord_I1_4_text}Grishnak earned his command through brutality and cunning during countless raids. His knowledge of Rohan's borderlands makes him invaluable for lightning strikes against enemy supply lines." />
+		text="{=lord_I1_4_text}Grisnak earned his command through brutality and cunning during countless raids. His knowledge of Rohan's borderlands makes him invaluable for lightning strikes against enemy supply lines." />
 	<Hero id="lord_I1_7"
 		faction="Faction.clan_isengard_5"
 		text="{=lord_I1_7_text}Krûklash maintains discipline among the Uruk-hai with an iron fist. Those who disobey his orders rarely live to regret their mistake." />
@@ -1043,12 +1048,12 @@
 		id="lord_D1_2"
 		faction="Faction.clan_dolguldur_1"
 		spouse="Hero.lord_D1_3"
-		text="{=thrangul_description}Thrangul, a twisted orc chieftain in the Shadow Tower Clan, serves Khamul with brutal efficiency, leading raids that echo the orc assaults in Tolkien's tales, sowing fear among the Wood-elves of Mirkwood." />
+		text="{=thrangul_description}Thrangul, a twisted orc chieftain in the Shadow Tower Clan, serves Khamûl with brutal efficiency, leading raids that echo the orc assaults in Tolkien's tales, sowing fear among the Wood-elves of Mirkwood." />
 	<Hero
 		id="lord_D1_3"
 		faction="Faction.clan_dolguldur_1"
 		spouse="Hero.lord_D1_2"
-		text="{=morgulash_description}Morgulash, a shadowy sorceress, weaves dark spells in Dol Guldur, her arts reminiscent of the necromancy that corrupted the hill fortress in the books, aiding Khamul in summoning undead minions." />
+		text="{=morgulash_description}Morgulash, a shadowy sorceress, weaves dark spells in Dol Guldur, her arts reminiscent of the necromancy that corrupted the hill fortress in the books, aiding Khamûl in summoning undead minions." />
 	<Hero
 		id="lord_D1_4"
 		faction="Faction.clan_dolguldur_1"
@@ -1060,7 +1065,7 @@
 	<Hero
 		id="lord_D1_6"
 		faction="Faction.clan_dolguldur_1"
-		text="{=gorzag_description}Gorzag, an orc warlord, rallies hordes for Khamul, his ferocity mirroring the orc captains in The Hobbit, pushing incursions into elven territories." />
+		text="{=gorzag_description}Gorzag, an orc warlord, rallies hordes for Khamûl, his ferocity mirroring the orc captains in The Hobbit, pushing incursions into elven territories." />
 	<Hero
 		id="lord_D1_7"
 		faction="Faction.clan_dolguldur_1"
@@ -1092,7 +1097,7 @@
 	<Hero
 		id="lord_D2_3"
 		faction="Faction.clan_dolguldur_2"
-		text="{=thrargol_description}Thrargol, a grave robber, desecrates tombs for Khamul, fueling the undead hordes as hinted in Sauron's dark arts." />
+		text="{=thrargol_description}Thrargol, a grave robber, desecrates tombs for Khamûl, fueling the undead hordes as hinted in Sauron's dark arts." />
 	<Hero
 		id="lord_D2_4"
 		faction="Faction.clan_dolguldur_2"
@@ -1120,7 +1125,7 @@
 	<Hero
 		id="lord_D2_10"
 		faction="Faction.clan_dolguldur_2"
-		text="{=durzha_description}Durzha, a resurrectionist, revives the slain, bolstering Khamul's endless armies." />
+		text="{=durzha_description}Durzha, a resurrectionist, revives the slain, bolstering Khamûl's endless armies." />
 
 	<!-- Black Spider Horde -->
 	<Hero
@@ -1132,7 +1137,7 @@
 		id="lord_D3_2"
 		faction="Faction.clan_dolguldur_3"
 		spouse="Hero.lord_D3_1"
-		text="{=nargrash_description}Nargrash, a web weaver, ensnares prey for Khamul, her tactics mimicking the spider ambushes in the books." />
+		text="{=nargrash_description}Nargrash, a web weaver, ensnares prey for Khamûl, her tactics mimicking the spider ambushes in the books." />
 	<Hero
 		id="lord_D3_3"
 		faction="Faction.clan_dolguldur_3"
@@ -1148,7 +1153,7 @@
 	<Hero
 		id="lord_D3_6"
 		faction="Faction.clan_dolguldur_3"
-		text="{=durmorg_description}Durmorg, a brood keeper, raises spiderlings, bolstering Khamul's creepy allies." />
+		text="{=durmorg_description}Durmorg, a brood keeper, raises spiderlings, bolstering Khamûl's creepy allies." />
 	<Hero
 		id="lord_D3_7"
 		faction="Faction.clan_dolguldur_3"
@@ -1192,7 +1197,7 @@
 	<Hero
 		id="lord_D4_6"
 		faction="Faction.clan_dolguldur_4"
-		text="{=narzia_description}Narzia, a wraith binder, enslaves souls, bolstering Khamul's ethereal forces." />
+		text="{=narzia_description}Narzia, a wraith binder, enslaves souls, bolstering Khamûl's ethereal forces." />
 	<Hero
 		id="lord_D4_7"
 		faction="Faction.clan_dolguldur_4"
@@ -1208,7 +1213,7 @@
 	<Hero
 		id="lord_D4_10"
 		faction="Faction.clan_dolguldur_4"
-		text="{=vorzul_description}Vorzul, a phantom reaper, harvests souls, feeding Khamul's insatiable hunger." />
+		text="{=vorzul_description}Vorzul, a phantom reaper, harvests souls, feeding Khamûl's insatiable hunger." />
 
 	<!-- Fell Beast Tribe -->
 	<Hero
@@ -1228,7 +1233,7 @@
 	<Hero
 		id="lord_D5_4"
 		faction="Faction.clan_dolguldur_5"
-		text="{=zulgor_description}Zulgor, a wing breeder, hatches fell eggs, expanding Khamul's airborne dominion." />
+		text="{=zulgor_description}Zulgor, a wing breeder, hatches fell eggs, expanding Khamûl's airborne dominion." />
 	<Hero
 		id="lord_D5_5"
 		faction="Faction.clan_dolguldur_5"
@@ -1259,7 +1264,7 @@
 		id="lord_D6_1"
 		faction="Faction.clan_dolguldur_6"
 		spouse="Hero.lord_D6_2"
-		text="{=thrurg_description}Thrurg, head of the Dark Sorcerer's Guard, wields forbidden magics, guarding Khamul with spells akin to Sauron's sorcery in lore." />
+		text="{=thrurg_description}Thrurg, head of the Dark Sorcerer's Guard, wields forbidden magics, guarding Khamûl with spells akin to Sauron's sorcery in lore." />
 	<Hero
 		id="lord_D6_2"
 		faction="Faction.clan_dolguldur_6"
@@ -1284,7 +1289,7 @@
 	<Hero
 		id="lord_D6_7"
 		faction="Faction.clan_dolguldur_6"
-		text="{=gralnia_description}Gralnia, a necromantic healer, sustains the wounded, twisting life to unlife for Khamul's service." />
+		text="{=gralnia_description}Gralnia, a necromantic healer, sustains the wounded, twisting life to unlife for Khamûl's service." />
 	<Hero
 		id="lord_D6_8"
 		faction="Faction.clan_dolguldur_6"
@@ -1296,7 +1301,7 @@
 	<Hero
 		id="lord_D6_10"
 		faction="Faction.clan_dolguldur_6"
-		text="{=kazla_description}Kazla, a arcane enforcer, punishes disloyalty, maintaining order in Khamul's shadowed halls." />
+		text="{=kazla_description}Kazla, a arcane enforcer, punishes disloyalty, maintaining order in Khamûl's shadowed halls." />
 	<!-- Dol Guldur Clan 7 (Ghâshrûz) -->
 	<Hero
 		id="lord_D7_1"
@@ -1716,21 +1721,50 @@
 		id="lord_EW_14_3"
 		spouse="Hero.lord_EW_14_2"
 		faction="Faction.clan_empire_west_12"
-		text="{=aom_lord_EW_14_3_bio}Rumen of the line of Cirdacar rode out of Pinnath Gelin to wed Nimethil, bringing the green banner and the troth of shepherd-spears unto Garvirionath. Though yet young in years, he proved his valor at a skirmish nigh Cair Andros, where he held a broken ford against orc-scouts until the beacon-riders came. He follows his lord-father Vorondir in the cause of the Steward, and dreams of a sword-name of his own ere his beard is grown." />
+		text="{=aom_lord_EW_14_3_bio}Rúmen of the line of Cirdacar rode out of Pinnath Gelin to wed Nimethil, bringing the green banner and the troth of shepherd-spears unto Garvirionath. Though yet young in years, he proved his valor at a skirmish nigh Cair Andros, where he held a broken ford against orc-scouts until the beacon-riders came. He follows his lord-father Vorondir in the cause of the Steward, and dreams of a sword-name of his own ere his beard is grown." />
 
 	<!-- ========== ROHAN (VLANDIA) - Additional Heroes ========== -->
+	<!-- The house of Eoforing. Theodwyn, Eomund, Eomer and Eowyn were all authored in
+	     characters/lords.xml, but only Eomer ever received a Hero entry, so the other three
+	     never entered a campaign. Their biographies had been written onto lord_4_3 (vanilla's
+	     Aldric) and lord_4_24_1 (Grima's wife) instead, which is how Grima came to be married
+	     to Eowyn. The bios are reattached here to the ids that already carry the names. -->
 	<Hero
 		id="lord_4_3_3"
-		faction="Faction.clan_vlandia_2" />
-	<Hero
-		id="lord_4_16_2"
-		faction="Faction.clan_vlandia_4" />
-	<Hero
-		id="lord_4_21_4"
-		faction="Faction.clan_vlandia_5" />
+		spouse="Hero.lord_rohan_10_1"
+		faction="Faction.clan_vlandia_2"
+		text="{=TAOM_hero_4_3_3}Théodwyn was sister to King Théoden and mother of Éomer and Éowyn. She died of grief after her husband Éomund was slain by Orcs." />
 	<Hero
 		id="lord_rohan_10_1"
-		faction="Faction.clan_vlandia_10" />
+		spouse="Hero.lord_4_3_3"
+		faction="Faction.clan_vlandia_10"
+		text="{=TAOM_hero_rohan_10_1}Éomund of the Eastfold rode as Marshal of the Mark and wed Théodwyn, sister of the king. Orcs cut him down in the Emyn Muil, and his two children passed into Théoden's keeping." />
+	<Hero
+		id="lord_4_3_2"
+		father="Hero.lord_rohan_10_1"
+		mother="Hero.lord_4_3_3"
+		faction="Faction.clan_vlandia_2"
+		text="{=TAOM_hero_4_3_2}Éowyn, Lady of Rohan, is sister to Éomer and niece to Théoden. She slew the Witch-King at the Pelennor, striking down the terror of the ages." />
+	<Hero
+		id="lord_4_6_2"
+		father="Hero.lord_4_6"
+		mother="Hero.lord_4_5"
+		faction="Faction.clan_vlandia_3"
+		text="{=TAOM_hero_4_6_2}Elfgrim serves as a rider of the royal household." />
+	<Hero
+		id="lord_4_16_2"
+		father="Hero.lord_4_16"
+		mother="Hero.lord_4_16_1"
+		faction="Faction.clan_vlandia_4"
+		text="{=TAOM_hero_4_16_2}Herubrand guards the king's hall." />
+	<Hero
+		id="lord_4_21_1"
+		faction="Faction.clan_vlandia_5"
+		text="{=TAOM_hero_4_21_1}Siegeberht patrols the borders of Rohan." />
+	<Hero
+		id="lord_4_21_4"
+		spouse="Hero.lord_4_21"
+		faction="Faction.clan_vlandia_5" />
 	<Hero
 		id="lord_4_29"
 		spouse="Hero.lord_4_29_1"
@@ -1741,6 +1775,7 @@
 		faction="Faction.clan_vlandia_12" />
 	<Hero
 		id="lord_rohan_13_1"
+		spouse="Hero.lord_4_22_1"
 		faction="Faction.clan_vlandia_13" />
 	<Hero
 		id="lord_rohan_14_1"
@@ -1773,11 +1808,11 @@
 	<Hero
 		id="lord_M12_1"
 		faction="Faction.clan_empire_south_12"
-		text="{=aom_lord_M12_1_bio}Ruklash holds his banner in the slag-pits and forges of Gorgoroth, under the red light of Orodruin, where his sire was a taskmaster of the bellows. He clawed up out of the labour-gangs by breaking the captain who had flogged him as a snaga, and dragged the body up the slag-heap so the smiths would see who walked down. The men of Gondor know nothing of him yet, but the smith-orcs name him the Hammer of the Pit. He despises the Arki of Udun, who he says do nothing but stand in lines and be counted." />
+		text="{=aom_lord_M12_1_bio}Rûklash holds his banner in the slag-pits and forges of Gorgoroth, under the red light of Orodruin, where his sire was a taskmaster of the bellows. He clawed up out of the labour-gangs by breaking the captain who had flogged him as a snaga, and dragged the body up the slag-heap so the smiths would see who walked down. The men of Gondor know nothing of him yet, but the smith-orcs name him the Hammer of the Pit. He despises the Arki of Udun, who he says do nothing but stand in lines and be counted." />
 	<Hero
 		id="lord_M13_1"
 		faction="Faction.clan_empire_south_13"
-		text="{=aom_lord_M13_1_bio}Thurak stands sentinel at the Morannon, the iron Black Gate where the legions of Lugburz pour out into the northern wastes. Fear of the Great Eye is the marrow of him, for he was once flogged on the gate-stones for letting a tark scout slip past in the dusk. Since that day he has not slept the whole night through, and his uruks know better than to be found drowsing on the wall. The Brughash of Durzan he watches with a particular dread, for they keep their own counsel in the south and do not answer the muster as swiftly as the Gate would like." />
+		text="{=aom_lord_M13_1_bio}Thûrak stands sentinel at the Morannon, the iron Black Gate where the legions of Lugburz pour out into the northern wastes. Fear of the Great Eye is the marrow of him, for he was once flogged on the gate-stones for letting a tark scout slip past in the dusk. Since that day he has not slept the whole night through, and his uruks know better than to be found drowsing on the wall. The Brughash of Dûrzan he watches with a particular dread, for they keep their own counsel in the south and do not answer the muster as swiftly as the Gate would like." />
 	<Hero
 		id="lord_M13_2"
 		faction="Faction.clan_empire_south_13"
@@ -1785,7 +1820,7 @@
 	<Hero
 		id="lord_M13_3"
 		faction="Faction.clan_empire_south_13"
-		text="{=aom_lord_M13_3_bio}Mazgur keeps the watch-fires on the northern wall of the Black Gate, a sharp-eyed archer who trusts no shadow that moves out on the Dagorlad." />
+		text="{=aom_lord_M13_3_bio}Mazgûr keeps the watch-fires on the northern wall of the Black Gate, a sharp-eyed archer who trusts no shadow that moves out on the Dagorlad." />
 	<Hero
 		id="lord_M13_4"
 		faction="Faction.clan_empire_south_13"
@@ -1801,7 +1836,7 @@
 	<Hero
 		id="lord_M13_13"
 		faction="Faction.clan_empire_south_13"
-		text="{=aom_lord_M13_13_bio}Bruga oversees the weapon-pits behind the Black Gate, and flogs any smith-snaga who lets a blade go dull." />
+		text="{=aom_lord_M13_13_bio}Brûga oversees the weapon-pits behind the Black Gate, and flogs any smith-snaga who lets a blade go dull." />
 	<Hero
 		id="lord_M13_14"
 		faction="Faction.clan_empire_south_13"
@@ -1813,11 +1848,11 @@
 	<Hero
 		id="lord_M14_1"
 		faction="Faction.clan_empire_south_14"
-		text="{=aom_lord_M14_1_bio}Uznash is an overseer-captain of the Nurn slave-pens, where the thralls of Harad and the East break their backs to feed the legions. He came up through the whip-gangs, and his hatred of Men is a cold practiced thing, learned on the fields and not in any battle. The horse-boys of the Mark have never heard of him, and that is a wound he means to repair when the great muster comes. He has an old quarrel with Gulnak of the Arki, who named his uruks farm-snaga at a Udun counting." />
+		text="{=aom_lord_M14_1_bio}Uznash is an overseer-captain of the Nurn slave-pens, where the thralls of Harad and the East break their backs to feed the legions. He came up through the whip-gangs, and his hatred of Men is a cold practiced thing, learned on the fields and not in any battle. The horse-boys of the Mark have never heard of him, and that is a wound he means to repair when the great muster comes. He has an old quarrel with Gûlnak of the Arki, who named his uruks farm-snaga at a Udun counting." />
 	<Hero
 		id="lord_M14_2"
 		faction="Faction.clan_empire_south_14"
-		text="{=aom_lord_M14_2_bio}Durbgul is a whip-captain of the Nurn pens, who measures a thrall's worth by how long it lasts under the lash." />
+		text="{=aom_lord_M14_2_bio}Durbgûl is a whip-captain of the Nurn pens, who measures a thrall's worth by how long it lasts under the lash." />
 	<Hero
 		id="lord_M14_3"
 		faction="Faction.clan_empire_south_14"
@@ -1829,11 +1864,11 @@
 	<Hero
 		id="lord_M14_5"
 		faction="Faction.clan_empire_south_14"
-		text="{=aom_lord_M14_5_bio}Gorbuz came up through the whip-gangs beside Uznash, and resents that the pens answer to his old comrade and not to him." />
+		text="{=aom_lord_M14_5_bio}Gorbûz came up through the whip-gangs beside Uznash, and resents that the pens answer to his old comrade and not to him." />
 	<Hero
 		id="lord_M14_12"
 		faction="Faction.clan_empire_south_14"
-		text="{=aom_lord_M14_12_bio}Vushka keeps the tally of the Nurn thralls, and culls the count herself when the books run long." />
+		text="{=aom_lord_M14_12_bio}Vûshka keeps the tally of the Nurn thralls, and culls the count herself when the books run long." />
 	<Hero
 		id="lord_M14_13"
 		faction="Faction.clan_empire_south_14"
@@ -1849,15 +1884,15 @@
 	<Hero
 		id="lord_M15_1"
 		faction="Faction.clan_empire_south_15"
-		text="{=aom_lord_M15_1_bio}Durzan commands a Tower-guard company in the shadow of Barad-dur itself, chosen for cunning over bulk by an officer of the Mouth's household. Payback is the engine of him, for a Morgul-captain reported his company light at a muster three years past and his banner was nearly broken for it. That captain is dead now in a stair-quarrel none can quite explain, and Durzan has been seen at the Mouth's gate more than once since. He keeps a particular eye on the Cirith Ungol garrison, and on Maugrukh's accounting of the dead." />
+		text="{=aom_lord_M15_1_bio}Dûrzan commands a Tower-guard company in the shadow of Barad-dur itself, chosen for cunning over bulk by an officer of the Mouth's household. Payback is the engine of him, for a Morgul-captain reported his company light at a muster three years past and his banner was nearly broken for it. That captain is dead now in a stair-quarrel none can quite explain, and Dûrzan has been seen at the Mouth's gate more than once since. He keeps a particular eye on the Cirith Ungol garrison, and on Maugrukh's accounting of the dead." />
 	<Hero
 		id="lord_M15_2"
 		faction="Faction.clan_empire_south_15"
-		text="{=aom_lord_M15_2_bio}Razhuk stands a Tower-guard company beneath Barad-dur, chosen for cunning, and trusts none of his own captains." />
+		text="{=aom_lord_M15_2_bio}Razhûk stands a Tower-guard company beneath Barad-dur, chosen for cunning, and trusts none of his own captains." />
 	<Hero
 		id="lord_M15_3"
 		faction="Faction.clan_empire_south_15"
-		text="{=aom_lord_M15_3_bio}Muzgash patrols the stairs below the Dark Tower, a silent killer who reports straight to the Mouth's household." />
+		text="{=aom_lord_M15_3_bio}Mûzgash patrols the stairs below the Dark Tower, a silent killer who reports straight to the Mouth's household." />
 	<Hero
 		id="lord_M15_4"
 		faction="Faction.clan_empire_south_15"
@@ -1869,7 +1904,7 @@
 	<Hero
 		id="lord_M15_12"
 		faction="Faction.clan_empire_south_15"
-		text="{=aom_lord_M15_12_bio}Yagul carries word between Barad-dur and the Morgul Vale, and has seen the inside of the Tower more than once." />
+		text="{=aom_lord_M15_12_bio}Yagûl carries word between Barad-dur and the Morgul Vale, and has seen the inside of the Tower more than once." />
 	<Hero
 		id="lord_M15_13"
 		faction="Faction.clan_empire_south_15"
@@ -1881,19 +1916,19 @@
 	<Hero
 		id="lord_M15_15"
 		faction="Faction.clan_empire_south_15"
-		text="{=aom_lord_M15_15_bio}Lozka watches the Cirith Ungol garrison on Durzan's behalf, and counts their failings against the day she takes their pass." />
+		text="{=aom_lord_M15_15_bio}Lozka watches the Cirith Ungol garrison on Dûrzan's behalf, and counts their failings against the day she takes their pass." />
 	<Hero
 		id="lord_M16_1"
 		faction="Faction.clan_empire_south_10"
-		text="{=aom_lord_M16_1_bio}Gulnak stands at Mauhoshat's right hand in the Udun camps, and the clerks of Lugburz mark him as the sharper blade of the two. He has been passed over twice for a banner of his own, and the resentment of it sits behind his teeth like a second tongue. He waits for Mauhoshat to be summoned to the Black Gate or thinned in the Pelennor, and reckons the Arki muster will fall to him before the next great war-march. Until that day he flatters his captain and counts his rivals." />
+		text="{=aom_lord_M16_1_bio}Gûlnak stands at Mauhoshat's right hand in the Udun camps, and the clerks of Lugburz mark him as the sharper blade of the two. He has been passed over twice for a banner of his own, and the resentment of it sits behind his teeth like a second tongue. He waits for Mauhoshat to be summoned to the Black Gate or thinned in the Pelennor, and reckons the Arki muster will fall to him before the next great war-march. Until that day he flatters his captain and counts his rivals." />
 	<Hero
 		id="lord_M17_1"
 		faction="Faction.clan_empire_south_11"
-		text="{=aom_lord_M17_1_bio}Thulnar serves as Maugrukh's lieutenant on the Cirith Ungol stair, and he has counted every coin in the captain's strongbox twice. Loot is his drive and the tower his hunting-ground, for caravans bound from Minas Morgul up to the pass are easily skimmed by the orcs who watch the road. He pays his uruks in trinkets stolen from the men of Gondor, and keeps the heavier plunder for a day when Maugrukh slips on the stair. He nurses an old grudge against Kuragh of the Akheth, who once stole his share of a Morgul-train." />
+		text="{=aom_lord_M17_1_bio}Thûlnar serves as Maugrukh's lieutenant on the Cirith Ungol stair, and he has counted every coin in the captain's strongbox twice. Loot is his drive and the tower his hunting-ground, for caravans bound from Minas Morgul up to the pass are easily skimmed by the orcs who watch the road. He pays his uruks in trinkets stolen from the men of Gondor, and keeps the heavier plunder for a day when Maugrukh slips on the stair. He nurses an old grudge against Kûragh of the Akheth, who once stole his share of a Morgul-train." />
 	<Hero
 		id="lord_M18_1"
 		faction="Faction.clan_empire_south_12"
-		text="{=aom_lord_M18_1_bio}Kuragh of the Akheth is Ruklash's foremost uruk in the Gorgoroth forges, and the smith-snaga fear him more than the bellows. Plunder is his sickness, and he has been known to march his company up the Morgul road on private errands of robbery. He took a fat share from a Cirith Ungol train two winters past, and Thulnar has not forgotten it. He watches Ruklash for any sign of weakness, and reckons that a hammer-captain who tires at the anvil will not last a march to the Black Gate." />
+		text="{=aom_lord_M18_1_bio}Kûragh of the Akheth is Rûklash's foremost uruk in the Gorgoroth forges, and the smith-snaga fear him more than the bellows. Plunder is his sickness, and he has been known to march his company up the Morgul road on private errands of robbery. He took a fat share from a Cirith Ungol train two winters past, and Thûlnar has not forgotten it. He watches Rûklash for any sign of weakness, and reckons that a hammer-captain who tires at the anvil will not last a march to the Black Gate." />
 
 	<!-- ========== RHUN (KHUZAIT) - Additional Heroes ========== -->
 	<Hero
@@ -1923,7 +1958,7 @@
 	<Hero
 		id="lord_6_23"
 		faction="Faction.clan_khuzait_12"
-		text="{=aom_lord_6_23_bio}Borlad, lord of House Hûz, holds the saddle-thrones of his Easterling kin east of the Sea of Rhûn and bends the tribes to the will of the Dark Tower." />
+		text="{=aom_lord_6_23_bio}Hûz-Margôz, lord of House Hûz, holds the saddle-thrones of his Easterling kin east of the Sea of Rhûn and bends the tribes to the will of the Dark Tower." />
 	<Hero
 		id="lord_6_23_1"
 		spouse="Hero.lord_6_23_2"
@@ -1967,7 +2002,7 @@
 	<Hero
 		id="lord_6_24"
 		faction="Faction.clan_khuzait_13"
-		text="{=aom_lord_6_24_bio}Brodda, lord of House Adekig, holds the saddle-thrones of his Easterling kin east of the Sea of Rhûn and bends the tribes to the will of the Dark Tower." />
+		text="{=aom_lord_6_24_bio}Nikath, lord of House Adekig, holds the saddle-thrones of his Easterling kin east of the Sea of Rhûn and bends the tribes to the will of the Dark Tower." />
 	<Hero
 		id="lord_6_24_1"
 		spouse="Hero.lord_6_24_2"
@@ -3733,5 +3768,158 @@
 		faction="Faction.clan_lindon_2"
 		spouse="Hero.lord_LN2_3" />
   <!-- TAOM-NEWFACTIONS:lindon:END -->
+
+	<!-- ========== LORDS THAT HAD NO HERO ENTRY ========== -->
+	<!-- Authored in characters/lords.xml and never instantiated, so none of them entered a
+	     campaign. Clan and parentage below are taken from the lord each one belongs to, not
+	     invented: the Mordor heirs sit in their father's warband, the four Rohirrim head the
+	     houses spclans.xslt names after them, and the rest are the children of a couple the
+	     data already declares. The 22 unassigned lord_EW_* and lord_WE9_l_1 are deliberately
+	     NOT here; see the exclusion list in LordIdentityConsistencyTests. -->
+	<Hero
+		id="lord_1_9_1"
+		father="Hero.lord_1_9"
+		mother="Hero.lord_1_9_5"
+		faction="Faction.clan_empire_west_2" />
+	<Hero
+		id="lord_1_9_2"
+		father="Hero.lord_1_9"
+		mother="Hero.lord_1_9_5"
+		faction="Faction.clan_empire_west_2" />
+	<Hero
+		id="lord_1_9_3"
+		father="Hero.lord_1_9"
+		mother="Hero.lord_1_9_5"
+		faction="Faction.clan_empire_west_2" />
+	<Hero
+		id="lord_1_9_4"
+		father="Hero.lord_1_9"
+		mother="Hero.lord_1_9_5"
+		faction="Faction.clan_empire_west_2" />
+	<Hero
+		id="lord_1_11_3"
+		faction="Faction.clan_empire_west_3" />
+	<Hero
+		id="lord_1_11_4"
+		faction="Faction.clan_empire_west_3" />
+	<Hero
+		id="lord_1_11_5"
+		faction="Faction.clan_empire_west_3" />
+	<Hero
+		id="lord_1_45_4"
+		father="Hero.lord_1_45"
+		mother="Hero.lord_1_45_1"
+		faction="Faction.clan_empire_west_5" />
+	<Hero
+		id="lord_1_45_5"
+		father="Hero.lord_1_45"
+		mother="Hero.lord_1_45_1"
+		faction="Faction.clan_empire_west_5" />
+	<Hero
+		id="lord_1_45_6"
+		father="Hero.lord_1_45"
+		mother="Hero.lord_1_45_1"
+		faction="Faction.clan_empire_west_5" />
+	<Hero
+		id="lord_1_52_3"
+		father="Hero.lord_1_52"
+		mother="Hero.lord_1_52_4"
+		faction="Faction.clan_empire_west_6" />
+	<Hero
+		id="lord_1_53_3"
+		father="Hero.lord_1_53"
+		mother="Hero.lord_1_73_1"
+		faction="Faction.clan_empire_west_7" />
+	<Hero
+		id="lord_4_21_2"
+		faction="Faction.clan_vlandia_5" />
+	<Hero
+		id="lord_4_21_3"
+		faction="Faction.clan_vlandia_5" />
+	<Hero
+		id="lord_4_27_2"
+		faction="Faction.clan_vlandia_9" />
+	<Hero
+		id="lord_4_27_3"
+		faction="Faction.clan_vlandia_9" />
+	<Hero
+		id="lord_4_27_4"
+		faction="Faction.clan_vlandia_9" />
+	<Hero
+		id="lord_4_28_3"
+		father="Hero.lord_4_28"
+		faction="Faction.clan_vlandia_20" />
+	<Hero
+		id="lord_4_29_2"
+		father="Hero.lord_4_29"
+		mother="Hero.lord_4_29_1"
+		faction="Faction.clan_vlandia_12" />
+	<Hero
+		id="lord_V11_l_1"
+		spouse="Hero.lord_V11_l"
+		faction="Faction.clan_vlandia_18" />
+	<Hero
+		id="lord_V11_l_2"
+		father="Hero.lord_V11_l"
+		mother="Hero.lord_V11_l_1"
+		faction="Faction.clan_vlandia_18" />
+	<Hero
+		id="lord_V11_l_3"
+		father="Hero.lord_V11_l"
+		mother="Hero.lord_V11_l_1"
+		faction="Faction.clan_vlandia_18" />
+	<Hero
+		id="lord_V11_l_4"
+		father="Hero.lord_V11_l"
+		mother="Hero.lord_V11_l_1"
+		faction="Faction.clan_vlandia_18" />
+	<Hero
+		id="lord_rohan_2_1"
+		faction="Faction.clan_vlandia_2" />
+	<Hero
+		id="lord_rohan_5_1"
+		faction="Faction.clan_vlandia_5" />
+	<Hero
+		id="lord_rohan_9_1"
+		faction="Faction.clan_vlandia_9" />
+	<Hero
+		id="lord_rohan_11_1"
+		faction="Faction.clan_vlandia_11" />
+	<Hero
+		id="lord_M10_11"
+		father="Hero.lord_M10_1"
+		faction="Faction.clan_empire_south_10" />
+	<Hero
+		id="lord_M11_11"
+		father="Hero.lord_M11_1"
+		faction="Faction.clan_empire_south_11" />
+	<Hero
+		id="lord_M12_11"
+		father="Hero.lord_M12_1"
+		faction="Faction.clan_empire_south_12" />
+	<Hero
+		id="lord_M13_11"
+		father="Hero.lord_M13_1"
+		faction="Faction.clan_empire_south_13" />
+	<Hero
+		id="lord_M14_11"
+		father="Hero.lord_M14_1"
+		faction="Faction.clan_empire_south_14" />
+	<Hero
+		id="lord_M15_11"
+		father="Hero.lord_M15_1"
+		faction="Faction.clan_empire_south_15" />
+	<Hero
+		id="lord_M16_11"
+		father="Hero.lord_M16_1"
+		faction="Faction.clan_empire_south_10" />
+	<Hero
+		id="lord_M17_11"
+		father="Hero.lord_M17_1"
+		faction="Faction.clan_empire_south_11" />
+	<Hero
+		id="lord_M18_11"
+		father="Hero.lord_M18_1"
+		faction="Faction.clan_empire_south_12" />
 </Heroes>
 

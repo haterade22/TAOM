@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17 19:55:53",
+  "generatedAt": "2026-08-29 12:32:48",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -14084,462 +14084,6 @@
         }
       ]
     },
-    "sk_dwarf_erebor_helmet_plate_legionary_a2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet V",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_b2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet VI",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_c2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet VII",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_d2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet VIII",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_a2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet V",
-      "current": 70,
-      "weight": 9.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 18,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_b2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet VI",
-      "current": 72,
-      "weight": 9.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 20,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_c2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet VII",
-      "current": 75,
-      "weight": 9.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 23,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_d2_blue": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet VIII",
-      "current": 78,
-      "weight": 9.8,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 26,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_a2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet VIX",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_b2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet X",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_c2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet XI",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_d2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Legionary Helmet XII",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_a2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet IX",
-      "current": 70,
-      "weight": 9.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 18,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_b2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet X",
-      "current": 72,
-      "weight": 9.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 20,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_c2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet XI",
-      "current": 75,
-      "weight": 9.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 23,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_d2_green": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Erebor] Lord Plate Helmet XII",
-      "current": 78,
-      "weight": 9.8,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 26,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_a2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Legionary Helmet VIX",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_b2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Legionary Helmet X",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_c2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Legionary Helmet XI",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_legionary_d2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Legionary Helmet XII",
-      "current": 65,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_a2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Lord Plate Helmet IX",
-      "current": 70,
-      "weight": 9.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 18,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_b2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Lord Plate Helmet X",
-      "current": 72,
-      "weight": 9.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 20,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_c2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Lord Plate Helmet XI",
-      "current": 75,
-      "weight": 9.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 23,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_helmet_plate_lord_d2_red": {
-      "culture": "erebor",
-      "slot": "head",
-      "name": "[Iron Hills] Lord Plate Helmet XII",
-      "current": 78,
-      "weight": 9.8,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 52,
-      "delta": 26,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_dwarf_erebor_chest_chain_a": {
       "culture": "erebor",
       "slot": "body",
@@ -15423,348 +14967,6 @@
           "level": 46
         }
       ]
-    },
-    "sk_dwarf_erebor_chest_plate_elite_a_blue": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour VII",
-      "current": 40,
-      "weight": 16.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -14,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_b_blue": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour VIII",
-      "current": 42,
-      "weight": 17.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_c_blue": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour IX",
-      "current": 42,
-      "weight": 17.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_d_blue": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour X",
-      "current": 40,
-      "weight": 21.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -14,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_e_blue": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XI",
-      "current": 42,
-      "weight": 21.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_f_blue": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XII",
-      "current": 44,
-      "weight": 22.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -10,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_a_green": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XIII",
-      "current": 40,
-      "weight": 16.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -14,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_b_green": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XIV",
-      "current": 42,
-      "weight": 17.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_c_green": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XV",
-      "current": 42,
-      "weight": 17.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_d_green": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XVI",
-      "current": 40,
-      "weight": 21.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -14,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_e_green": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XVII",
-      "current": 42,
-      "weight": 21.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_f_green": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Erebor] Elite Platemail Armour XVIII",
-      "current": 44,
-      "weight": 22.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -10,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_a_red": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Iron Hills] Elite Platemail Armour XIII",
-      "current": 40,
-      "weight": 16.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -14,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_b_red": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Iron Hills] Elite Platemail Armour XIV",
-      "current": 42,
-      "weight": 17.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_c_red": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Iron Hills] Elite Platemail Armour XV",
-      "current": 42,
-      "weight": 17.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_d_red": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Iron Hills] Elite Platemail Armour XVI",
-      "current": 40,
-      "weight": 21.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -14,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_e_red": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Iron Hills] Elite Platemail Armour XVII",
-      "current": 42,
-      "weight": 21.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -12,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_chest_plate_elite_f_red": {
-      "culture": "erebor",
-      "slot": "body",
-      "name": "[Iron Hills] Elite Platemail Armour XVIII",
-      "current": 44,
-      "weight": 22.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 54,
-      "delta": -10,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "sk_dwarf_dress_normal_a": {
       "culture": "erebor",
@@ -16781,63 +15983,6 @@
         }
       ]
     },
-    "sk_dwarf_erebor_bracers_elite_d_blue": {
-      "culture": "erebor",
-      "slot": "arm",
-      "name": "[Erebor] Elite Bracers X",
-      "current": 39,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 30,
-      "delta": 9,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_bracers_elite_d_green": {
-      "culture": "erebor",
-      "slot": "arm",
-      "name": "[Erebor] Elite Bracers XI",
-      "current": 39,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 30,
-      "delta": 9,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_bracers_elite_d_red": {
-      "culture": "erebor",
-      "slot": "arm",
-      "name": "[Iron Hills] Elite Bracers X",
-      "current": 39,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 30,
-      "delta": 9,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_dwarf_erebor_boots_light_a": {
       "culture": "erebor",
       "slot": "leg",
@@ -17538,120 +16683,6 @@
         }
       ]
     },
-    "sk_dwarf_erebor_greaves_elite_a_blue": {
-      "culture": "erebor",
-      "slot": "leg",
-      "name": "[Erebor] Royal Guard Greaves I",
-      "current": 40,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 38,
-      "delta": 2,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_greaves_elite_b_blue": {
-      "culture": "erebor",
-      "slot": "leg",
-      "name": "[Erebor] Royal Guard Greaves II",
-      "current": 42,
-      "weight": 5.2,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 38,
-      "delta": 4,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_greaves_elite_a_green": {
-      "culture": "erebor",
-      "slot": "leg",
-      "name": "[Erebor] Royal Guard Greaves III",
-      "current": 40,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 38,
-      "delta": 2,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_greaves_elite_b_green": {
-      "culture": "erebor",
-      "slot": "leg",
-      "name": "[Erebor] Royal Guard Greaves IV",
-      "current": 42,
-      "weight": 5.2,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 38,
-      "delta": 4,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_greaves_elite_a_red": {
-      "culture": "erebor",
-      "slot": "leg",
-      "name": "[Iron Hills] Royal Guard Greaves I",
-      "current": 40,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 38,
-      "delta": 2,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_greaves_elite_b_red": {
-      "culture": "erebor",
-      "slot": "leg",
-      "name": "[Iron Hills] Royal Guard Greaves II",
-      "current": 42,
-      "weight": 5.2,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 38,
-      "delta": 4,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_dwarf_erebor_pauldron_scale_a": {
       "culture": "erebor",
       "slot": "shoulder",
@@ -18285,7 +17316,7 @@
       "anchorLevel": 26,
       "maxLevel": 36,
       "levelSpan": 10,
-      "wearerCount": 8,
+      "wearerCount": 10,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 13,
@@ -18323,124 +17354,18 @@
           "level": 31
         },
         {
+          "troop": "ironpass_ram_breaker",
+          "level": 31
+        },
+        {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         }
       ]
-    },
-    "sk_dwarf_erebor_pauldron_plate_cape_elite_a_blue": {
-      "culture": "erebor",
-      "slot": "shoulder",
-      "name": "[Erebor] Royal Plate Pauldrons I - Cape - Blue",
-      "current": 22,
-      "weight": 6.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 23,
-      "delta": -1,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_pauldron_plate_cape_elite_b_blue": {
-      "culture": "erebor",
-      "slot": "shoulder",
-      "name": "[Erebor]Royal Plate Pauldrons II - Cape - Blue",
-      "current": 24,
-      "weight": 6.2,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 23,
-      "delta": 1,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_pauldron_plate_cape_elite_a_green": {
-      "culture": "erebor",
-      "slot": "shoulder",
-      "name": "[Erebor] Royal Plate Pauldrons III - Cape - Green",
-      "current": 22,
-      "weight": 6.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 23,
-      "delta": -1,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_pauldron_plate_cape_elite_b_green": {
-      "culture": "erebor",
-      "slot": "shoulder",
-      "name": "[Erebor]Royal Plate Pauldrons IV - Cape - Green",
-      "current": 24,
-      "weight": 6.2,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 23,
-      "delta": 1,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_pauldron_plate_cape_elite_a_red": {
-      "culture": "erebor",
-      "slot": "shoulder",
-      "name": "[Iron Hills] Royal Plate Pauldrons I - Cape - Red",
-      "current": 22,
-      "weight": 6.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 23,
-      "delta": -1,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_dwarf_erebor_pauldron_plate_cape_elite_b_red": {
-      "culture": "erebor",
-      "slot": "shoulder",
-      "name": "[Iron Hills]Royal Plate Pauldrons II - Cape - Red",
-      "current": 24,
-      "weight": 6.2,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 23,
-      "delta": 1,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "ithilien_hood": {
       "culture": "gondor",
@@ -34790,7 +33715,7 @@
       "anchorLevel": 36,
       "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 45,
@@ -34801,6 +33726,10 @@
       "wearers": [
         {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         }
       ]
@@ -34814,7 +33743,7 @@
       "anchorLevel": 36,
       "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 45,
@@ -34825,6 +33754,10 @@
       "wearers": [
         {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         }
       ]
@@ -35052,7 +33985,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 6,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 37,
@@ -35070,11 +34003,19 @@
           "level": 26
         },
         {
+          "troop": "ironpass_goat_charger",
+          "level": 26
+        },
+        {
           "troop": "ironpass_veteran_axeman",
           "level": 31
         },
         {
           "troop": "ironpass_sharpshooter",
+          "level": 31
+        },
+        {
+          "troop": "ironpass_ram_breaker",
           "level": 31
         }
       ]
@@ -35088,7 +34029,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 6,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 37,
@@ -35106,11 +34047,19 @@
           "level": 26
         },
         {
+          "troop": "ironpass_goat_charger",
+          "level": 26
+        },
+        {
           "troop": "ironpass_veteran_axeman",
           "level": 31
         },
         {
           "troop": "ironpass_sharpshooter",
+          "level": 31
+        },
+        {
+          "troop": "ironpass_ram_breaker",
           "level": 31
         }
       ]
@@ -35356,7 +34305,7 @@
       "anchorLevel": 21,
       "maxLevel": 26,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 29,
@@ -35371,6 +34320,10 @@
         },
         {
           "troop": "ironpass_arbalest",
+          "level": 21
+        },
+        {
+          "troop": "ironpass_ram_rider",
           "level": 21
         },
         {
@@ -36142,7 +35095,7 @@
       "anchorLevel": 21,
       "maxLevel": 36,
       "levelSpan": 15,
-      "wearerCount": 8,
+      "wearerCount": 9,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 47,
@@ -36157,6 +35110,10 @@
         },
         {
           "troop": "ironpass_arbalest",
+          "level": 21
+        },
+        {
+          "troop": "ironpass_ram_rider",
           "level": 21
         },
         {
@@ -36194,7 +35151,7 @@
       "anchorLevel": 26,
       "maxLevel": 36,
       "levelSpan": 10,
-      "wearerCount": 6,
+      "wearerCount": 7,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 47,
@@ -36209,6 +35166,10 @@
         },
         {
           "troop": "ironpass_veteran_arbalest",
+          "level": 26
+        },
+        {
+          "troop": "ironpass_goat_charger",
           "level": 26
         },
         {
@@ -36238,7 +35199,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 5,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 47,
@@ -36256,7 +35217,15 @@
           "level": 31
         },
         {
+          "troop": "ironpass_ram_breaker",
+          "level": 31
+        },
+        {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         }
       ]
@@ -36634,10 +35603,10 @@
       "name": "[Iron Hills] Heavy Bracers C1",
       "current": 25,
       "weight": 1.7,
-      "anchorLevel": 36,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 25,
@@ -36647,7 +35616,15 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "ironpass_ram_breaker",
+          "level": 31
+        },
+        {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         },
         {
@@ -36686,10 +35663,10 @@
       "name": "[Iron Hills] Heavy Bracers C3",
       "current": 25,
       "weight": 1.7,
-      "anchorLevel": 36,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 25,
@@ -36699,7 +35676,15 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "ironpass_ram_breaker",
+          "level": 31
+        },
+        {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         }
       ]
@@ -37134,10 +36119,10 @@
       "name": "[Iron Hills] Medium Bracers A1",
       "current": 25,
       "weight": 1.1,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 19,
@@ -37146,6 +36131,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
         {
           "troop": "ironpass_axeman",
           "level": 26
@@ -37173,7 +36162,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 19,
@@ -37188,6 +36177,10 @@
         },
         {
           "troop": "ironpass_veteran_arbalest",
+          "level": 26
+        },
+        {
+          "troop": "ironpass_goat_charger",
           "level": 26
         },
         {
@@ -37206,10 +36199,10 @@
       "name": "[Iron Hills] Medium Bracers B1",
       "current": 25,
       "weight": 1.1,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 19,
@@ -37218,6 +36211,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
         {
           "troop": "ironpass_axeman",
           "level": 26
@@ -37270,10 +36267,10 @@
       "name": "[Iron Hills] Medium Bracers B3",
       "current": 25,
       "weight": 1.1,
-      "anchorLevel": 31,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 19,
@@ -37282,6 +36279,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_goat_charger",
+          "level": 26
+        },
         {
           "troop": "ironpass_veteran_axeman",
           "level": 31
@@ -37606,10 +36607,10 @@
       "name": "[Iron Hills] Elite Boots A1",
       "current": 28,
       "weight": 3.0,
-      "anchorLevel": 36,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
@@ -37619,7 +36620,15 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "ironpass_ram_breaker",
+          "level": 31
+        },
+        {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         }
       ]
@@ -37911,7 +36920,7 @@
       "anchorLevel": 21,
       "maxLevel": 36,
       "levelSpan": 15,
-      "wearerCount": 6,
+      "wearerCount": 8,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 33,
@@ -37929,7 +36938,15 @@
           "level": 21
         },
         {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
+        {
           "troop": "ironpass_axeman",
+          "level": 26
+        },
+        {
+          "troop": "ironpass_goat_charger",
           "level": 26
         },
         {
@@ -37952,24 +36969,36 @@
       "name": "[Iron Hills] Heavy Boots B2",
       "current": 33,
       "weight": 3.6,
-      "anchorLevel": 31,
+      "anchorLevel": 21,
       "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "levelSpan": 15,
+      "wearerCount": 6,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 33,
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": false,
+      "shared": true,
       "wearers": [
+        {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
+        {
+          "troop": "ironpass_goat_charger",
+          "level": 26
+        },
         {
           "troop": "ironpass_veteran_axeman",
           "level": 31
         },
         {
           "troop": "ironpass_sharpshooter",
+          "level": 31
+        },
+        {
+          "troop": "ironpass_ram_breaker",
           "level": 31
         },
         {
@@ -38614,7 +37643,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 18,
@@ -38625,6 +37654,10 @@
       "wearers": [
         {
           "troop": "ironpass_axeman",
+          "level": 26
+        },
+        {
+          "troop": "ironpass_goat_charger",
           "level": 26
         },
         {
@@ -38642,7 +37675,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 18,
@@ -38653,6 +37686,10 @@
       "wearers": [
         {
           "troop": "ironpass_veteran_axeman",
+          "level": 31
+        },
+        {
+          "troop": "ironpass_ram_breaker",
           "level": 31
         },
         {
@@ -38670,7 +37707,7 @@
       "anchorLevel": 36,
       "maxLevel": 41,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 18,
@@ -38681,6 +37718,10 @@
       "wearers": [
         {
           "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
           "level": 36
         },
         {
@@ -38759,10 +37800,10 @@
       "name": "[Iron Hills] Medium Pauldrons B",
       "current": 19,
       "weight": 4.9,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 8,
+      "levelSpan": 10,
+      "wearerCount": 9,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 14,
@@ -38771,6 +37812,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
         {
           "troop": "erebor_reg_fighter",
           "level": 26
@@ -38847,10 +37892,10 @@
       "name": "[Iron Hills] Medium Pauldrons D",
       "current": 21,
       "weight": 5.1,
-      "anchorLevel": 31,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 3,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 14,
@@ -38859,6 +37904,14 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
+        {
+          "troop": "ironpass_goat_charger",
+          "level": 26
+        },
         {
           "troop": "iron_hills_reg_axe_warrior",
           "level": 31
@@ -45957,7 +45010,7 @@
       "anchorLevel": 1,
       "maxLevel": 16,
       "levelSpan": 15,
-      "wearerCount": 19,
+      "wearerCount": 9,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 14,
@@ -45983,22 +45036,6 @@
           "level": 1
         },
         {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_hunter",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
-        {
           "troop": "goblin_snaga",
           "level": 11
         },
@@ -46015,31 +45052,7 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_grunt",
           "level": 16
         }
       ]
@@ -46053,7 +45066,7 @@
       "anchorLevel": 6,
       "maxLevel": 11,
       "levelSpan": 5,
-      "wearerCount": 12,
+      "wearerCount": 6,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 14,
@@ -46075,18 +45088,6 @@
           "level": 6
         },
         {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
-        {
           "troop": "goblin_snaga",
           "level": 11
         },
@@ -46096,18 +45097,6 @@
         },
         {
           "troop": "goblin_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
           "level": 11
         }
       ]
@@ -46121,7 +45110,7 @@
       "anchorLevel": 11,
       "maxLevel": 26,
       "levelSpan": 15,
-      "wearerCount": 8,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
@@ -46139,27 +45128,11 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
           "troop": "goblin_militia_veteran_spearman",
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_spear_warrior",
-          "level": 26
-        },
-        {
           "troop": "goblin_spear_warrior",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_spear_warrior",
           "level": 26
         }
       ]
@@ -46349,7 +45322,7 @@
       "anchorLevel": 11,
       "maxLevel": 21,
       "levelSpan": 10,
-      "wearerCount": 16,
+      "wearerCount": 6,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
@@ -46363,40 +45336,12 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "goblin_militia_veteran_spearman",
           "level": 16
         },
         {
           "troop": "goblin_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_sentry",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter_merc",
-          "level": 21
         },
         {
           "troop": "goblin_sentry",
@@ -46408,18 +45353,6 @@
         },
         {
           "troop": "goblin_fighter_merc",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_sentry",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter_merc",
           "level": 21
         }
       ]
@@ -47026,7 +45959,7 @@
       "anchorLevel": 21,
       "maxLevel": 31,
       "levelSpan": 10,
-      "wearerCount": 10,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
@@ -47040,18 +45973,6 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_berserker",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
-        },
-        {
           "troop": "goblin_berserker",
           "level": 31
         },
@@ -47061,18 +45982,6 @@
         },
         {
           "troop": "goblin_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_berserker",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
           "level": 31
         }
       ]
@@ -47124,7 +46033,7 @@
       "anchorLevel": 26,
       "maxLevel": 36,
       "levelSpan": 10,
-      "wearerCount": 13,
+      "wearerCount": 5,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
@@ -47134,28 +46043,12 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
           "troop": "goblin_archer",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_archer",
           "level": 26
         },
         {
           "troop": "mordor_warg_beastmaster",
           "level": 26
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
         },
         {
           "troop": "goblin_veteran_sword_warrior",
@@ -47166,23 +46059,7 @@
           "level": 31
         },
         {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
           "troop": "goblin_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_veteran_berserker",
           "level": 36
         }
       ]
@@ -47196,7 +46073,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 7,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
@@ -47206,27 +46083,11 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "goblin_militia_veteran_spearman",
           "level": 16
         },
         {
           "troop": "goblin_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
           "level": 16
         },
         {
@@ -47244,7 +46105,7 @@
       "anchorLevel": 21,
       "maxLevel": 36,
       "levelSpan": 15,
-      "wearerCount": 14,
+      "wearerCount": 6,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
@@ -47262,14 +46123,6 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_brute",
-          "level": 26
-        },
-        {
           "troop": "goblin_archer",
           "level": 26
         },
@@ -47278,35 +46131,11 @@
           "level": 26
         },
         {
-          "troop": "mistymountainorcs_archer",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_brute",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_chosen_of_tharzog",
-          "level": 36
-        },
-        {
           "troop": "goblin_veteran_berserker",
           "level": 36
         },
         {
           "troop": "goblin_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_chosen_of_tharzog",
           "level": 36
         }
       ]
@@ -47358,7 +46187,7 @@
       "anchorLevel": 11,
       "maxLevel": 21,
       "levelSpan": 10,
-      "wearerCount": 7,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 14,
@@ -47372,27 +46201,11 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_grunt",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_guard",
-          "level": 21
-        },
-        {
           "troop": "goblin_guard",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_guard",
           "level": 21
         }
       ]
@@ -47406,7 +46219,7 @@
       "anchorLevel": 16,
       "maxLevel": 26,
       "levelSpan": 10,
-      "wearerCount": 7,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
@@ -47416,15 +46229,7 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
           "troop": "goblin_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_lurker",
           "level": 16
         },
         {
@@ -47432,15 +46237,7 @@
           "level": 16
         },
         {
-          "troop": "bluecraig_sword_warrior",
-          "level": 26
-        },
-        {
           "troop": "goblin_sword_warrior",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_sword_warrior",
           "level": 26
         }
       ]
@@ -47511,7 +46308,7 @@
       "anchorLevel": 21,
       "maxLevel": 36,
       "levelSpan": 15,
-      "wearerCount": 13,
+      "wearerCount": 7,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
@@ -47525,28 +46322,8 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
           "troop": "goblin_archer",
           "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_archer",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
         },
         {
           "troop": "goblin_veteran_berserker",
@@ -47561,11 +46338,7 @@
           "level": 36
         },
         {
-          "troop": "mistymountainorcs_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "troop": "bluecraig_bolgs_ironfang",
           "level": 36
         },
         {
@@ -48255,8 +47028,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Plain Hood I",
-      "current": 14,
-      "weight": 1.7,
+      "current": 23,
+      "weight": 2.8,
       "anchorLevel": null,
       "maxLevel": null,
       "levelSpan": 0,
@@ -48274,8 +47047,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Plain Hood II",
-      "current": 14,
-      "weight": 1.7,
+      "current": 23,
+      "weight": 2.8,
       "anchorLevel": null,
       "maxLevel": null,
       "levelSpan": 0,
@@ -48293,61 +47066,79 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Light Hood I",
-      "current": 14,
-      "weight": 1.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "light",
-      "tierSource": "id-keyword",
-      "target": 14,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": []
-    },
-    "sk_md_num_hood_light_b": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Black Numenorean Light Hood II",
-      "current": 14,
-      "weight": 1.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "light",
-      "tierSource": "id-keyword",
-      "target": 14,
-      "delta": 0,
-      "status": "match",
-      "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "sk_md_num_hood_med_a": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Black Numenorean Hood I",
-      "current": 23,
-      "weight": 2.8,
+      "current": 31,
+      "weight": 3.9,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
+      "tier": "light",
       "tierSource": "id-keyword",
-      "target": 23,
-      "delta": 0,
-      "status": "match",
+      "target": 14,
+      "delta": 17,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_initiate",
           "level": 26
+        },
+        {
+          "troop": "mordor_num_archer",
+          "level": 31
+        }
+      ]
+    },
+    "sk_md_num_hood_light_b": {
+      "culture": "mordor",
+      "slot": "head",
+      "name": "[Mordor] Black Numenorean Light Hood II",
+      "current": 31,
+      "weight": 3.9,
+      "anchorLevel": 26,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
+      "tier": "light",
+      "tierSource": "id-keyword",
+      "target": 14,
+      "delta": 17,
+      "status": "over",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mordor_num_initiate",
+          "level": 26
+        },
+        {
+          "troop": "mordor_num_archer",
+          "level": 31
+        }
+      ]
+    },
+    "sk_md_num_hood_med_a": {
+      "culture": "mordor",
+      "slot": "head",
+      "name": "[Mordor] Black Numenorean Hood I",
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 36,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "medium",
+      "tierSource": "id-keyword",
+      "target": 23,
+      "delta": 24,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mordor_num_vet_archer",
+          "level": 36
         }
       ]
     },
@@ -48355,23 +47146,23 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Hood II",
-      "current": 23,
-      "weight": 2.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
-      "delta": 0,
-      "status": "match",
+      "delta": 24,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_initiate",
-          "level": 26
+          "troop": "mordor_num_vet_archer",
+          "level": 36
         }
       ]
     },
@@ -48379,64 +47170,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Heavy Hood I",
-      "current": 31,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 31,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mordor_num_archer",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_archer",
-          "level": 36
-        }
-      ]
-    },
-    "sk_md_num_hood_heavy_b": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Black Numenorean Heavy Hood II",
-      "current": 31,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 31,
-      "delta": 0,
-      "status": "match",
-      "line": "b",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mordor_num_archer",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_archer",
-          "level": 36
-        }
-      ]
-    },
-    "sk_md_num_hood_heavy_c": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Black Numenorean Heavy Hood III",
-      "current": 31,
-      "weight": 3.9,
+      "current": 47,
+      "weight": 5.5,
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
@@ -48444,8 +47179,56 @@
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mordor_num_marksman",
+          "level": 41
+        }
+      ]
+    },
+    "sk_md_num_hood_heavy_b": {
+      "culture": "mordor",
+      "slot": "head",
+      "name": "[Mordor] Black Numenorean Heavy Hood II",
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 31,
+      "delta": 16,
+      "status": "over",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mordor_num_marksman",
+          "level": 41
+        }
+      ]
+    },
+    "sk_md_num_hood_heavy_c": {
+      "culture": "mordor",
+      "slot": "head",
+      "name": "[Mordor] Black Numenorean Heavy Hood III",
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 31,
+      "delta": 16,
+      "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
@@ -48459,8 +47242,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Heavy Hood IV",
-      "current": 31,
-      "weight": 3.9,
+      "current": 47,
+      "weight": 5.5,
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
@@ -48468,8 +47251,8 @@
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
@@ -48483,8 +47266,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Elite Hood I",
-      "current": 39,
-      "weight": 5.0,
+      "current": 47,
+      "weight": 5.5,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -48492,8 +47275,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -48507,8 +47290,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Elite Hood II",
-      "current": 39,
-      "weight": 5.0,
+      "current": 47,
+      "weight": 5.5,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -48516,8 +47299,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -48531,8 +47314,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Elite Hood III",
-      "current": 39,
-      "weight": 5.0,
+      "current": 47,
+      "weight": 5.5,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -48540,8 +47323,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
@@ -48555,8 +47338,8 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Elite Hood IV",
-      "current": 39,
-      "weight": 5.0,
+      "current": 47,
+      "weight": 5.5,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -48564,8 +47347,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
@@ -48617,23 +47400,27 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Infantry Helmet I",
-      "current": 23,
-      "weight": 2.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "current": 39,
+      "weight": 5.0,
+      "anchorLevel": 31,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_initiate",
-          "level": 26
+          "troop": "mordor_num_infantry",
+          "level": 31
+        },
+        {
+          "troop": "mordor_num_vet_infantry",
+          "level": 36
         }
       ]
     },
@@ -48641,27 +47428,23 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Infantry Heavy Helmet I",
-      "current": 31,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_infantry",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
+          "troop": "mordor_num_warden",
+          "level": 41
         }
       ]
     },
@@ -48669,27 +47452,23 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Infantry Heavy Helmet II",
-      "current": 31,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_infantry",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
+          "troop": "mordor_num_warden",
+          "level": 41
         }
       ]
     },
@@ -48697,24 +47476,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Infantry Elite Helmet I",
-      "current": 39,
-      "weight": 5.0,
-      "anchorLevel": 41,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_warden",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_guard",
           "level": 46
@@ -48725,24 +47500,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Infantry Elite Helmet II",
-      "current": 39,
-      "weight": 5.0,
-      "anchorLevel": 41,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_warden",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_guard",
           "level": 46
@@ -48791,23 +47562,27 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Cavalry Helmet I",
-      "current": 23,
-      "weight": 2.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "current": 39,
+      "weight": 5.0,
+      "anchorLevel": 31,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_initiate",
-          "level": 26
+          "troop": "mordor_num_cavalry",
+          "level": 31
+        },
+        {
+          "troop": "mordor_num_vet_cavalry",
+          "level": 36
         }
       ]
     },
@@ -48815,27 +47590,23 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Cavalry Heavy Helmet I",
-      "current": 31,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_cavalry",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_cavalry",
-          "level": 36
+          "troop": "mordor_num_knight",
+          "level": 41
         }
       ]
     },
@@ -48843,27 +47614,23 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Cavalry Heavy Helmet II",
-      "current": 31,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_cavalry",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_cavalry",
-          "level": 36
+          "troop": "mordor_num_knight",
+          "level": 41
         }
       ]
     },
@@ -48871,24 +47638,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Cavalry Elite Helmet I",
-      "current": 39,
-      "weight": 5.0,
-      "anchorLevel": 41,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_knight",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -48899,24 +47662,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Black Numenorean Cavalry Elite Helmet II",
-      "current": 39,
-      "weight": 5.0,
-      "anchorLevel": 41,
+      "current": 47,
+      "weight": 5.5,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 39,
-      "delta": 0,
-      "status": "match",
+      "delta": 8,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_knight",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -50298,7 +49057,7 @@
       "anchorLevel": 1,
       "maxLevel": 11,
       "levelSpan": 10,
-      "wearerCount": 15,
+      "wearerCount": 9,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 19,
@@ -50332,18 +49091,6 @@
           "level": 6
         },
         {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
-        {
           "troop": "goblin_snaga",
           "level": 11
         },
@@ -50353,18 +49100,6 @@
         },
         {
           "troop": "goblin_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
           "level": 11
         }
       ]
@@ -50378,7 +49113,7 @@
       "anchorLevel": 6,
       "maxLevel": 16,
       "levelSpan": 10,
-      "wearerCount": 15,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 19,
@@ -50400,18 +49135,6 @@
           "level": 6
         },
         {
-          "troop": "bluecraig_hunter",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
-        {
           "troop": "goblin_hunter",
           "level": 11
         },
@@ -50424,27 +49147,7 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_grunt",
           "level": 16
         }
       ]
@@ -50458,7 +49161,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 5,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 19,
@@ -50476,15 +49179,7 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_grunt",
           "level": 16
         }
       ]
@@ -50498,7 +49193,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 6,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
@@ -50516,15 +49211,7 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
           "troop": "goblin_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_lurker",
           "level": 16
         },
         {
@@ -50585,7 +49272,7 @@
       "anchorLevel": 21,
       "maxLevel": 26,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
@@ -50599,15 +49286,7 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
           "troop": "goblin_archer",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_archer",
           "level": 26
         }
       ]
@@ -50716,7 +49395,7 @@
       "anchorLevel": 11,
       "maxLevel": 11,
       "levelSpan": 0,
-      "wearerCount": 11,
+      "wearerCount": 5,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 19,
@@ -50725,18 +49404,6 @@
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
         {
           "troop": "goblin_snaga",
           "level": 11
@@ -50747,18 +49414,6 @@
         },
         {
           "troop": "goblin_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
           "level": 11
         },
         {
@@ -50780,7 +49435,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 11,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
@@ -50789,14 +49444,6 @@
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "goblin_militia_veteran_spearman",
           "level": 16
@@ -50810,27 +49457,11 @@
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "mordor_warg_reaver",
           "level": 16
         },
         {
-          "troop": "bluecraig_sentry",
-          "level": 21
-        },
-        {
           "troop": "goblin_sentry",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_sentry",
           "level": 21
         }
       ]
@@ -50863,7 +49494,7 @@
       "anchorLevel": 11,
       "maxLevel": 26,
       "levelSpan": 15,
-      "wearerCount": 14,
+      "wearerCount": 6,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
@@ -50877,18 +49508,6 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "goblin_lurker",
           "level": 16
         },
@@ -50901,31 +49520,11 @@
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "mordor_orc_warrior",
           "level": 16
         },
         {
-          "troop": "bluecraig_sword_warrior",
-          "level": 26
-        },
-        {
           "troop": "goblin_sword_warrior",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_sword_warrior",
           "level": 26
         }
       ]
@@ -50939,7 +49538,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 20,
+      "wearerCount": 8,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
@@ -50948,18 +49547,6 @@
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "goblin_lurker",
           "level": 16
@@ -50973,36 +49560,12 @@
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "mordor_orc_impaler",
           "level": 16
         },
         {
           "troop": "mordor_orc_impaler_merc",
           "level": 16
-        },
-        {
-          "troop": "bluecraig_fighter",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_guard",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter_merc",
-          "level": 21
         },
         {
           "troop": "goblin_fighter",
@@ -51014,18 +49577,6 @@
         },
         {
           "troop": "goblin_fighter_merc",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_guard",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter_merc",
           "level": 21
         }
       ]
@@ -51082,7 +49633,7 @@
       "anchorLevel": 11,
       "maxLevel": 36,
       "levelSpan": 25,
-      "wearerCount": 22,
+      "wearerCount": 10,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
@@ -51092,14 +49643,6 @@
       "shared": true,
       "wearers": [
         {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_hunter",
-          "level": 11
-        },
-        {
           "troop": "goblin_snaga",
           "level": 11
         },
@@ -51108,23 +49651,7 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_grunt",
           "level": 16
         },
         {
@@ -51144,14 +49671,6 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_berserker",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
           "troop": "goblin_berserker",
           "level": 31
         },
@@ -51160,23 +49679,7 @@
           "level": 31
         },
         {
-          "troop": "mistymountainorcs_berserker",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
           "troop": "goblin_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_veteran_berserker",
           "level": 36
         }
       ]
@@ -51252,7 +49755,7 @@
       "anchorLevel": 11,
       "maxLevel": 36,
       "levelSpan": 25,
-      "wearerCount": 35,
+      "wearerCount": 15,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
@@ -51262,14 +49765,6 @@
       "shared": true,
       "wearers": [
         {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_hunter",
-          "level": 11
-        },
-        {
           "troop": "goblin_snaga",
           "level": 11
         },
@@ -51278,36 +49773,12 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_grunt",
           "level": 16
         },
         {
           "troop": "mordor_orc_reaver",
           "level": 21
-        },
-        {
-          "troop": "bluecraig_brute",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_spear_warrior",
-          "level": 26
         },
         {
           "troop": "goblin_brute",
@@ -51318,24 +49789,8 @@
           "level": 26
         },
         {
-          "troop": "mistymountainorcs_brute",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_spear_warrior",
-          "level": 26
-        },
-        {
           "troop": "mordor_warg_beastmaster",
           "level": 26
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
         },
         {
           "troop": "goblin_veteran_sword_warrior",
@@ -51344,30 +49799,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
         },
         {
           "troop": "goblin_veteran_berserker",
@@ -51386,15 +49817,7 @@
           "level": 36
         },
         {
-          "troop": "mistymountainorcs_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "troop": "bluecraig_bolgs_ironfang",
           "level": 36
         },
         {
@@ -51875,36 +50298,17 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Initiate Chest",
-      "current": 19,
-      "weight": 8.8,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "light",
-      "tierSource": "id-keyword",
-      "target": 19,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": []
-    },
-    "sm_md_num_arc_chest_med_a": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Black Numenorean Archer Chest I",
-      "current": 31,
-      "weight": 14.3,
+      "current": 41,
+      "weight": 19.8,
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
       "wearerCount": 1,
-      "tier": "medium",
+      "tier": "light",
       "tierSource": "id-keyword",
-      "target": 31,
-      "delta": 0,
-      "status": "match",
+      "target": 19,
+      "delta": 22,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -51914,50 +50318,75 @@
         }
       ]
     },
-    "sm_md_num_arc_chest_med_b": {
+    "sm_md_num_arc_chest_med_a": {
       "culture": "mordor",
       "slot": "body",
-      "name": "[Mordor] Black Numenorean Archer Chest II",
-      "current": 31,
-      "weight": 14.3,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "name": "[Mordor] Black Numenorean Archer Chest I",
+      "current": 49,
+      "weight": 24.2,
+      "anchorLevel": 31,
+      "maxLevel": 31,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
-      "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "sm_md_num_arc_chest_heavy_a": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Black Numenorean Archer Heavy Chest I",
-      "current": 41,
-      "weight": 19.8,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 41,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_archer",
           "level": 31
-        },
+        }
+      ]
+    },
+    "sm_md_num_arc_chest_med_b": {
+      "culture": "mordor",
+      "slot": "body",
+      "name": "[Mordor] Black Numenorean Archer Chest II",
+      "current": 49,
+      "weight": 24.2,
+      "anchorLevel": 31,
+      "maxLevel": 31,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "medium",
+      "tierSource": "id-keyword",
+      "target": 31,
+      "delta": 18,
+      "status": "over",
+      "line": "b",
+      "shared": false,
+      "wearers": [
         {
-          "troop": "mordor_num_vet_archer",
-          "level": 36
+          "troop": "mordor_num_archer",
+          "level": 31
+        }
+      ]
+    },
+    "sm_md_num_arc_chest_heavy_a": {
+      "culture": "mordor",
+      "slot": "body",
+      "name": "[Mordor] Black Numenorean Archer Heavy Chest I",
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 41,
+      "delta": 18,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mordor_num_marksman",
+          "level": 41
         }
       ]
     },
@@ -51965,24 +50394,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Archer Heavy Chest II",
-      "current": 41,
-      "weight": 19.8,
-      "anchorLevel": 31,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_archer",
-          "level": 31
-        },
         {
           "troop": "mordor_num_vet_archer",
           "level": 36
@@ -51993,24 +50418,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Archer Elite Chest I",
-      "current": 49,
-      "weight": 24.2,
-      "anchorLevel": 41,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_marksman",
-          "level": 41
-        },
         {
           "troop": "mordor_num_shadowbow",
           "level": 46
@@ -52021,24 +50442,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Archer Elite Chest II",
-      "current": 49,
-      "weight": 24.2,
-      "anchorLevel": 41,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_marksman",
-          "level": 41
-        },
         {
           "troop": "mordor_num_shadowbow",
           "level": 46
@@ -52049,23 +50466,23 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Cavalry Chest I",
-      "current": 31,
-      "weight": 14.3,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "current": 49,
+      "weight": 24.2,
+      "anchorLevel": 31,
+      "maxLevel": 31,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_initiate",
-          "level": 26
+          "troop": "mordor_num_cavalry",
+          "level": 31
         }
       ]
     },
@@ -52073,46 +50490,47 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Cavalry Chest II",
-      "current": 31,
-      "weight": 14.3,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "current": 49,
+      "weight": 24.2,
+      "anchorLevel": 31,
+      "maxLevel": 31,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "sm_md_num_cav_chest_heavy_a": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Black Numenorean Cavalry Heavy Chest I",
-      "current": 41,
-      "weight": 19.8,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 41,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_cavalry",
           "level": 31
-        },
+        }
+      ]
+    },
+    "sm_md_num_cav_chest_heavy_a": {
+      "culture": "mordor",
+      "slot": "body",
+      "name": "[Mordor] Black Numenorean Cavalry Heavy Chest I",
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 41,
+      "delta": 18,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
-          "troop": "mordor_num_vet_cavalry",
-          "level": 36
+          "troop": "mordor_num_knight",
+          "level": 41
         }
       ]
     },
@@ -52120,24 +50538,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Cavalry Heavy Chest II",
-      "current": 41,
-      "weight": 19.8,
-      "anchorLevel": 31,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_cavalry",
-          "level": 31
-        },
         {
           "troop": "mordor_num_vet_cavalry",
           "level": 36
@@ -52148,24 +50562,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Cavalry Elite Chest I",
-      "current": 49,
-      "weight": 24.2,
-      "anchorLevel": 41,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_knight",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -52176,24 +50586,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Cavalry Elite Chest II",
-      "current": 49,
-      "weight": 24.2,
-      "anchorLevel": 41,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_knight",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -52204,23 +50610,23 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Infantry Chest I",
-      "current": 31,
-      "weight": 14.3,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "current": 49,
+      "weight": 24.2,
+      "anchorLevel": 31,
+      "maxLevel": 31,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_initiate",
-          "level": 26
+          "troop": "mordor_num_infantry",
+          "level": 31
         }
       ]
     },
@@ -52228,23 +50634,23 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Infantry Chest II",
-      "current": 31,
-      "weight": 14.3,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "current": 49,
+      "weight": 24.2,
+      "anchorLevel": 31,
+      "maxLevel": 31,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_initiate",
-          "level": 26
+          "troop": "mordor_num_infantry",
+          "level": 31
         }
       ]
     },
@@ -52252,27 +50658,23 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Infantry Heavy Chest I",
-      "current": 41,
-      "weight": 19.8,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 41,
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "mordor_num_infantry",
-          "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
+          "troop": "mordor_num_warden",
+          "level": 41
         }
       ]
     },
@@ -52280,24 +50682,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Infantry Heavy Chest II",
-      "current": 41,
-      "weight": 19.8,
-      "anchorLevel": 31,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 41,
-      "delta": 0,
-      "status": "match",
+      "delta": 18,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_infantry",
-          "level": 31
-        },
         {
           "troop": "mordor_num_vet_infantry",
           "level": 36
@@ -52308,24 +50706,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Infantry Elite Chest I",
-      "current": 49,
-      "weight": 24.2,
-      "anchorLevel": 41,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_warden",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_guard",
           "level": 46
@@ -52336,24 +50730,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Black Numenorean Infantry Elite Chest II",
-      "current": 49,
-      "weight": 24.2,
-      "anchorLevel": 41,
+      "current": 59,
+      "weight": 26.4,
+      "anchorLevel": 46,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_warden",
-          "level": 41
-        },
         {
           "troop": "mordor_num_temple_guard",
           "level": 46
@@ -53008,7 +51398,7 @@
       "anchorLevel": 16,
       "maxLevel": 36,
       "levelSpan": 20,
-      "wearerCount": 63,
+      "wearerCount": 29,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 13,
@@ -53017,22 +51407,6 @@
       "line": "a",
       "shared": true,
       "wearers": [
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "goblin_grunt",
           "level": 16
@@ -53062,22 +51436,6 @@
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "mordor_orc_warrior",
           "level": 16
         },
@@ -53092,22 +51450,6 @@
         {
           "troop": "mordor_orc_impaler_merc",
           "level": 16
-        },
-        {
-          "troop": "bluecraig_sentry",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_guard",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter_merc",
-          "level": 21
         },
         {
           "troop": "goblin_sentry",
@@ -53130,36 +51472,8 @@
           "level": 21
         },
         {
-          "troop": "mistymountainorcs_sentry",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_guard",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter_merc",
-          "level": 21
-        },
-        {
           "troop": "mordor_orc_archer",
           "level": 21
-        },
-        {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_brute",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_spear_warrior",
-          "level": 26
         },
         {
           "troop": "goblin_archer",
@@ -53174,30 +51488,6 @@
           "level": 26
         },
         {
-          "troop": "mistymountainorcs_archer",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_brute",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_spear_warrior",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_berserker",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
-        },
-        {
           "troop": "goblin_berserker",
           "level": 31
         },
@@ -53208,34 +51498,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_berserker",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
         },
         {
           "troop": "goblin_veteran_berserker",
@@ -53254,15 +51516,7 @@
           "level": 36
         },
         {
-          "troop": "mistymountainorcs_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "troop": "bluecraig_bolgs_ironfang",
           "level": 36
         },
         {
@@ -53280,7 +51534,7 @@
       "anchorLevel": 16,
       "maxLevel": 36,
       "levelSpan": 20,
-      "wearerCount": 24,
+      "wearerCount": 12,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 13,
@@ -53290,27 +51544,11 @@
       "shared": true,
       "wearers": [
         {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "goblin_militia_veteran_spearman",
           "level": 16
         },
         {
           "troop": "goblin_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
           "level": 16
         },
         {
@@ -53334,28 +51572,12 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_sword_warrior",
-          "level": 26
-        },
-        {
           "troop": "goblin_sword_warrior",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_sword_warrior",
           "level": 26
         },
         {
           "troop": "mordor_warg_beastmaster",
           "level": 26
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
         },
         {
           "troop": "goblin_veteran_sword_warrior",
@@ -53366,23 +51588,7 @@
           "level": 31
         },
         {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
           "troop": "goblin_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_veteran_berserker",
           "level": 36
         }
       ]
@@ -53724,41 +51930,17 @@
       "culture": "mordor",
       "slot": "arm",
       "name": "[Mordor] Black Numenorean Archer Bracer",
-      "current": 13,
-      "weight": 1.1,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 13,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mordor_num_initiate",
-          "level": 26
-        }
-      ]
-    },
-    "sk_md_num_arc_bracer_heavy_a": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Black Numenorean Archer Heavy Bracer",
-      "current": 19,
-      "weight": 1.7,
+      "current": 25,
+      "weight": 2.2,
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
       "wearerCount": 4,
-      "tier": "heavy",
+      "tier": "medium",
       "tierSource": "id-keyword",
-      "target": 19,
-      "delta": 0,
-      "status": "match",
+      "target": 13,
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -53780,21 +51962,21 @@
         }
       ]
     },
-    "sk_md_num_arc_bracer_elite_a": {
+    "sk_md_num_arc_bracer_heavy_a": {
       "culture": "mordor",
       "slot": "arm",
-      "name": "[Mordor] Black Numenorean Archer Elite Bracer",
-      "current": 25,
-      "weight": 2.2,
+      "name": "[Mordor] Black Numenorean Archer Heavy Bracer",
+      "current": 33,
+      "weight": 2.8,
       "anchorLevel": 41,
-      "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 4,
-      "tier": "elite",
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "heavy",
       "tierSource": "id-keyword",
-      "target": 25,
-      "delta": 0,
-      "status": "match",
+      "target": 19,
+      "delta": 14,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -53805,7 +51987,27 @@
         {
           "troop": "mordor_num_marksman",
           "level": 41
-        },
+        }
+      ]
+    },
+    "sk_md_num_arc_bracer_elite_a": {
+      "culture": "mordor",
+      "slot": "arm",
+      "name": "[Mordor] Black Numenorean Archer Elite Bracer",
+      "current": 33,
+      "weight": 2.8,
+      "anchorLevel": 46,
+      "maxLevel": 46,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 25,
+      "delta": 8,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
           "troop": "mordor_num_temple_guard",
           "level": 46
@@ -53839,41 +52041,17 @@
       "culture": "mordor",
       "slot": "arm",
       "name": "[Mordor] Black Numenorean Infantry Bracer",
-      "current": 13,
-      "weight": 1.1,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 13,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mordor_num_initiate",
-          "level": 26
-        }
-      ]
-    },
-    "sk_md_num_inf_bracer_heavy_a": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Black Numenorean Infantry Heavy Bracer",
-      "current": 19,
-      "weight": 1.7,
+      "current": 25,
+      "weight": 2.2,
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
       "wearerCount": 4,
-      "tier": "heavy",
+      "tier": "medium",
       "tierSource": "id-keyword",
-      "target": 19,
-      "delta": 0,
-      "status": "match",
+      "target": 13,
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -53895,21 +52073,21 @@
         }
       ]
     },
-    "sk_md_num_inf_bracer_elite_a": {
+    "sk_md_num_inf_bracer_heavy_a": {
       "culture": "mordor",
       "slot": "arm",
-      "name": "[Mordor] Black Numenorean Infantry Elite Bracer",
-      "current": 25,
-      "weight": 2.2,
+      "name": "[Mordor] Black Numenorean Infantry Heavy Bracer",
+      "current": 33,
+      "weight": 2.8,
       "anchorLevel": 41,
-      "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 4,
-      "tier": "elite",
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "heavy",
       "tierSource": "id-keyword",
-      "target": 25,
-      "delta": 0,
-      "status": "match",
+      "target": 19,
+      "delta": 14,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -53920,7 +52098,27 @@
         {
           "troop": "mordor_num_warden",
           "level": 41
-        },
+        }
+      ]
+    },
+    "sk_md_num_inf_bracer_elite_a": {
+      "culture": "mordor",
+      "slot": "arm",
+      "name": "[Mordor] Black Numenorean Infantry Elite Bracer",
+      "current": 33,
+      "weight": 2.8,
+      "anchorLevel": 46,
+      "maxLevel": 46,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 25,
+      "delta": 8,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -54547,7 +52745,7 @@
       "anchorLevel": 6,
       "maxLevel": 11,
       "levelSpan": 5,
-      "wearerCount": 17,
+      "wearerCount": 11,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 11,
@@ -54577,18 +52775,6 @@
           "level": 6
         },
         {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
-        {
           "troop": "goblin_snaga",
           "level": 11
         },
@@ -54602,18 +52788,6 @@
         },
         {
           "troop": "isengard_orc_ravager",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
           "level": 11
         },
         {
@@ -54635,7 +52809,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 15,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 11,
@@ -54644,18 +52818,6 @@
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "bluecraig_hunter",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_militia_archer",
-          "level": 11
-        },
         {
           "troop": "goblin_hunter",
           "level": 11
@@ -54673,18 +52835,6 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_militia_archer",
-          "level": 11
-        },
-        {
           "troop": "mordor_orc_fighter",
           "level": 11
         },
@@ -54693,15 +52843,7 @@
           "level": 11
         },
         {
-          "troop": "bluecraig_grunt",
-          "level": 16
-        },
-        {
           "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_grunt",
           "level": 16
         }
       ]
@@ -54715,7 +52857,7 @@
       "anchorLevel": 11,
       "maxLevel": 36,
       "levelSpan": 25,
-      "wearerCount": 41,
+      "wearerCount": 21,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 19,
@@ -54727,18 +52869,6 @@
         {
           "troop": "isengard_orc_warg_rider_v2",
           "level": 11
-        },
-        {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
         },
         {
           "troop": "goblin_lurker",
@@ -54758,18 +52888,6 @@
         },
         {
           "troop": "isengard_orc_butcher",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
           "level": 16
         },
         {
@@ -54793,22 +52911,6 @@
           "level": 16
         },
         {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_brute",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_sword_warrior",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_spear_warrior",
-          "level": 26
-        },
-        {
           "troop": "goblin_archer",
           "level": 26
         },
@@ -54825,52 +52927,12 @@
           "level": 26
         },
         {
-          "troop": "mistymountainorcs_archer",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_brute",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_sword_warrior",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_spear_warrior",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_berserker",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
           "troop": "goblin_berserker",
           "level": 31
         },
         {
           "troop": "goblin_veteran_sword_warrior",
           "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_berserker",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
         },
         {
           "troop": "goblin_veteran_berserker",
@@ -54881,7 +52943,7 @@
           "level": 36
         },
         {
-          "troop": "mistymountainorcs_veteran_berserker",
+          "troop": "bluecraig_bolgs_ironfang",
           "level": 36
         },
         {
@@ -54899,7 +52961,7 @@
       "anchorLevel": 16,
       "maxLevel": 36,
       "levelSpan": 20,
-      "wearerCount": 39,
+      "wearerCount": 19,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 19,
@@ -54908,14 +52970,6 @@
       "line": "b",
       "shared": true,
       "wearers": [
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "goblin_militia_veteran_spearman",
           "level": 16
@@ -54927,30 +52981,6 @@
         {
           "troop": "isengard_orc_warg_raider_v2",
           "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_sentry",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_guard",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter_merc",
-          "level": 21
         },
         {
           "troop": "goblin_sentry",
@@ -54981,22 +53011,6 @@
           "level": 21
         },
         {
-          "troop": "mistymountainorcs_sentry",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_guard",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter_merc",
-          "level": 21
-        },
-        {
           "troop": "mordor_orc_infantry",
           "level": 21
         },
@@ -55017,14 +53031,6 @@
           "level": 26
         },
         {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
-        },
-        {
           "troop": "goblin_veteran_sword_warrior",
           "level": 31
         },
@@ -55033,35 +53039,11 @@
           "level": 31
         },
         {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_guardian_of_the_tower",
-          "level": 36
-        },
-        {
           "troop": "goblin_chosen_of_tharzog",
           "level": 36
         },
         {
           "troop": "goblin_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
           "level": 36
         }
       ]
@@ -55326,63 +53308,24 @@
       "culture": "mordor",
       "slot": "leg",
       "name": "[Mordor] Black Numenorean Light Greaves",
-      "current": 11,
-      "weight": 1.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
+      "current": 27,
+      "weight": 3.9,
+      "anchorLevel": 26,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 11,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": []
-    },
-    "sm_md_num_grvs_med_a": {
-      "culture": "mordor",
-      "slot": "leg",
-      "name": "[Mordor] Black Numenorean Greaves",
-      "current": 19,
-      "weight": 2.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 19,
-      "delta": 0,
-      "status": "match",
+      "delta": 16,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_initiate",
           "level": 26
-        }
-      ]
-    },
-    "sm_md_num_grvs_heavy_a": {
-      "culture": "mordor",
-      "slot": "leg",
-      "name": "[Mordor] Black Numenorean Heavy Greaves",
-      "current": 27,
-      "weight": 3.9,
-      "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 6,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 27,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
+        },
         {
           "troop": "mordor_num_cavalry",
           "level": 31
@@ -55394,7 +53337,27 @@
         {
           "troop": "mordor_num_archer",
           "level": 31
-        },
+        }
+      ]
+    },
+    "sm_md_num_grvs_med_a": {
+      "culture": "mordor",
+      "slot": "leg",
+      "name": "[Mordor] Black Numenorean Greaves",
+      "current": 41,
+      "weight": 5.0,
+      "anchorLevel": 36,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "tier": "medium",
+      "tierSource": "id-keyword",
+      "target": 19,
+      "delta": 22,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
           "troop": "mordor_num_vet_cavalry",
           "level": 36
@@ -55409,21 +53372,21 @@
         }
       ]
     },
-    "sm_md_num_grvs_elite_a": {
+    "sm_md_num_grvs_heavy_a": {
       "culture": "mordor",
       "slot": "leg",
-      "name": "[Mordor] Black Numenorean Elite Greaves",
-      "current": 33,
-      "weight": 4.4,
+      "name": "[Mordor] Black Numenorean Heavy Greaves",
+      "current": 41,
+      "weight": 5.0,
       "anchorLevel": 41,
-      "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 6,
-      "tier": "elite",
+      "maxLevel": 41,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "tier": "heavy",
       "tierSource": "id-keyword",
-      "target": 33,
-      "delta": 0,
-      "status": "match",
+      "target": 27,
+      "delta": 14,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -55438,7 +53401,27 @@
         {
           "troop": "mordor_num_marksman",
           "level": 41
-        },
+        }
+      ]
+    },
+    "sm_md_num_grvs_elite_a": {
+      "culture": "mordor",
+      "slot": "leg",
+      "name": "[Mordor] Black Numenorean Elite Greaves",
+      "current": 41,
+      "weight": 5.0,
+      "anchorLevel": 46,
+      "maxLevel": 46,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 33,
+      "delta": 8,
+      "status": "over",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -55949,7 +53932,7 @@
       "anchorLevel": 6,
       "maxLevel": 26,
       "levelSpan": 20,
-      "wearerCount": 15,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 4,
@@ -55961,14 +53944,6 @@
         {
           "troop": "isengard_orc_brawler",
           "level": 6
-        },
-        {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_hunter",
-          "level": 11
         },
         {
           "troop": "goblin_snaga",
@@ -55983,39 +53958,15 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
           "troop": "mordor_orc_fighter",
           "level": 11
-        },
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
         },
         {
           "troop": "goblin_grunt",
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_grunt",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_spear_warrior",
-          "level": 26
-        },
-        {
           "troop": "goblin_spear_warrior",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_spear_warrior",
           "level": 26
         }
       ]
@@ -56029,7 +53980,7 @@
       "anchorLevel": 11,
       "maxLevel": 21,
       "levelSpan": 10,
-      "wearerCount": 17,
+      "wearerCount": 9,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 4,
@@ -56038,14 +53989,6 @@
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "bluecraig_snaga",
-          "level": 11
-        },
-        {
-          "troop": "bluecraig_hunter",
-          "level": 11
-        },
         {
           "troop": "goblin_snaga",
           "level": 11
@@ -56063,20 +54006,8 @@
           "level": 11
         },
         {
-          "troop": "mistymountainorcs_snaga",
-          "level": 11
-        },
-        {
-          "troop": "mistymountainorcs_hunter",
-          "level": 11
-        },
-        {
           "troop": "mordor_warg_raider",
           "level": 11
-        },
-        {
-          "troop": "bluecraig_grunt",
-          "level": 16
         },
         {
           "troop": "goblin_grunt",
@@ -56087,23 +54018,11 @@
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_grunt",
-          "level": 16
-        },
-        {
           "troop": "mordor_orc_scout",
           "level": 16
         },
         {
-          "troop": "bluecraig_guard",
-          "level": 21
-        },
-        {
           "troop": "goblin_guard",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_guard",
           "level": 21
         }
       ]
@@ -56136,7 +54055,7 @@
       "anchorLevel": 16,
       "maxLevel": 36,
       "levelSpan": 20,
-      "wearerCount": 47,
+      "wearerCount": 21,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
@@ -56145,18 +54064,6 @@
       "line": "a",
       "shared": true,
       "wearers": [
-        {
-          "troop": "bluecraig_lurker",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "bluecraig_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "goblin_lurker",
           "level": 16
@@ -56178,18 +54085,6 @@
           "level": 16
         },
         {
-          "troop": "mistymountainorcs_lurker",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mistymountainorcs_militia_veteran_archer",
-          "level": 16
-        },
-        {
           "troop": "mordor_orc_warrior",
           "level": 16
         },
@@ -56204,18 +54099,6 @@
         {
           "troop": "mordor_orc_impaler_merc",
           "level": 16
-        },
-        {
-          "troop": "bluecraig_sentry",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter",
-          "level": 21
-        },
-        {
-          "troop": "bluecraig_fighter_merc",
-          "level": 21
         },
         {
           "troop": "goblin_sentry",
@@ -56234,28 +54117,8 @@
           "level": 21
         },
         {
-          "troop": "mistymountainorcs_sentry",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter",
-          "level": 21
-        },
-        {
-          "troop": "mistymountainorcs_fighter_merc",
-          "level": 21
-        },
-        {
           "troop": "mordor_orc_archer",
           "level": 21
-        },
-        {
-          "troop": "bluecraig_brute",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_sword_warrior",
-          "level": 26
         },
         {
           "troop": "goblin_brute",
@@ -56264,26 +54127,6 @@
         {
           "troop": "goblin_sword_warrior",
           "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_brute",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_sword_warrior",
-          "level": 26
-        },
-        {
-          "troop": "bluecraig_berserker",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
         },
         {
           "troop": "goblin_berserker",
@@ -56298,39 +54141,11 @@
           "level": 31
         },
         {
-          "troop": "mistymountainorcs_berserker",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_chosen_of_tharzog",
-          "level": 36
-        },
-        {
           "troop": "goblin_veteran_berserker",
           "level": 36
         },
         {
           "troop": "goblin_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_chosen_of_tharzog",
           "level": 36
         }
       ]
@@ -56344,7 +54159,7 @@
       "anchorLevel": 21,
       "maxLevel": 36,
       "levelSpan": 15,
-      "wearerCount": 21,
+      "wearerCount": 13,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
@@ -56374,28 +54189,12 @@
           "level": 21
         },
         {
-          "troop": "bluecraig_archer",
-          "level": 26
-        },
-        {
           "troop": "goblin_archer",
-          "level": 26
-        },
-        {
-          "troop": "mistymountainorcs_archer",
           "level": 26
         },
         {
           "troop": "mordor_warg_beastmaster",
           "level": 26
-        },
-        {
-          "troop": "bluecraig_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_veteran_spear_warrior",
-          "level": 31
         },
         {
           "troop": "goblin_veteran_sword_warrior",
@@ -56406,22 +54205,6 @@
           "level": 31
         },
         {
-          "troop": "mistymountainorcs_veteran_sword_warrior",
-          "level": 31
-        },
-        {
-          "troop": "mistymountainorcs_veteran_spear_warrior",
-          "level": 31
-        },
-        {
-          "troop": "bluecraig_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
-        },
-        {
           "troop": "goblin_guardian_of_the_tower",
           "level": 36
         },
@@ -56430,7 +54213,7 @@
           "level": 36
         },
         {
-          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "troop": "bluecraig_bolgs_ironfang",
           "level": 36
         },
         {
@@ -56873,23 +54656,27 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Archer Pauldron I",
-      "current": 8,
-      "weight": 5.5,
+      "current": 18,
+      "weight": 9.9,
       "anchorLevel": 31,
-      "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_archer",
           "level": 31
+        },
+        {
+          "troop": "mordor_num_vet_archer",
+          "level": 36
         }
       ]
     },
@@ -56897,24 +54684,20 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Archer Heavy Pauldron I",
-      "current": 12,
-      "weight": 7.7,
-      "anchorLevel": 36,
+      "current": 24,
+      "weight": 12.1,
+      "anchorLevel": 41,
       "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
-      "delta": 0,
-      "status": "match",
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_vet_archer",
-          "level": 36
-        },
         {
           "troop": "mordor_num_marksman",
           "level": 41
@@ -56925,24 +54708,20 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Archer Heavy Pauldron II",
-      "current": 12,
-      "weight": 7.7,
-      "anchorLevel": 36,
+      "current": 24,
+      "weight": 12.1,
+      "anchorLevel": 41,
       "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
-      "delta": 0,
-      "status": "match",
+      "delta": 12,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_vet_archer",
-          "level": 36
-        },
         {
           "troop": "mordor_num_marksman",
           "level": 41
@@ -56953,8 +54732,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Archer Elite Pauldron I",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -56962,8 +54741,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -56977,8 +54756,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Archer Elite Pauldron II",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -56986,8 +54765,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -57001,23 +54780,27 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Cavalry Pauldron I",
-      "current": 8,
-      "weight": 5.5,
+      "current": 18,
+      "weight": 9.9,
       "anchorLevel": 31,
-      "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_cavalry",
           "level": 31
+        },
+        {
+          "troop": "mordor_num_vet_cavalry",
+          "level": 36
         }
       ]
     },
@@ -57025,24 +54808,20 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Cavalry Heavy Pauldron I",
-      "current": 12,
-      "weight": 7.7,
-      "anchorLevel": 36,
+      "current": 24,
+      "weight": 12.1,
+      "anchorLevel": 41,
       "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
-      "delta": 0,
-      "status": "match",
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_vet_cavalry",
-          "level": 36
-        },
         {
           "troop": "mordor_num_knight",
           "level": 41
@@ -57053,8 +54832,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Cavalry Elite Pauldron I",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -57062,8 +54841,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -57077,23 +54856,27 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Pauldron I",
-      "current": 8,
-      "weight": 5.5,
+      "current": 18,
+      "weight": 9.9,
       "anchorLevel": 31,
-      "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
-      "delta": 0,
-      "status": "match",
+      "delta": 10,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
         {
           "troop": "mordor_num_infantry",
           "level": 31
+        },
+        {
+          "troop": "mordor_num_vet_infantry",
+          "level": 36
         }
       ]
     },
@@ -57101,24 +54884,20 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Heavy Pauldron I",
-      "current": 12,
-      "weight": 7.7,
-      "anchorLevel": 36,
+      "current": 24,
+      "weight": 12.1,
+      "anchorLevel": 41,
       "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
-      "delta": 0,
-      "status": "match",
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
-        },
         {
           "troop": "mordor_num_warden",
           "level": 41
@@ -57129,8 +54908,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Elite Pauldron I",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -57138,8 +54917,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -57153,8 +54932,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Elite Pauldron II",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -57162,8 +54941,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -57177,8 +54956,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Cavalry Caped Heavy Pauldron I",
-      "current": 12,
-      "weight": 7.7,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
@@ -57186,8 +54965,8 @@
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
-      "delta": 0,
-      "status": "match",
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -57201,8 +54980,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Cavalry Caped Elite Pauldron I",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -57210,8 +54989,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -57225,24 +55004,20 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Caped Heavy Pauldron I",
-      "current": 12,
-      "weight": 7.7,
-      "anchorLevel": 36,
+      "current": 24,
+      "weight": 12.1,
+      "anchorLevel": 41,
       "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
-      "delta": 0,
-      "status": "match",
+      "delta": 12,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
-        },
         {
           "troop": "mordor_num_warden",
           "level": 41
@@ -57253,8 +55028,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Caped Elite Pauldron I",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -57262,8 +55037,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -57277,8 +55052,8 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Black Numenorean Infantry Caped Elite Pauldron II",
-      "current": 18,
-      "weight": 9.9,
+      "current": 24,
+      "weight": 12.1,
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
@@ -57286,8 +55061,8 @@
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 18,
-      "delta": 0,
-      "status": "match",
+      "delta": 6,
+      "status": "over",
       "line": "b",
       "shared": false,
       "wearers": [

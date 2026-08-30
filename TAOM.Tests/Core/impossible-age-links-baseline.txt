@@ -1,0 +1,78 @@
+# Parent links that already shipped with an impossible age gap (parent less than 14 years older
+# than the child). Read by LordIdentityConsistencyTests.NoParentIsTooYoungToBeOne.
+#
+# This is a content backlog, not licence. The list is SHRINK-ONLY: the test fails if an entry
+# here is no longer a violation, so a repair must delete its line. Nothing may be added.
+#
+# Established 2026-08-29 during the lord identity reconciliation, which introduced eight links of
+# this shape by inferring parentage from id patterns and then removed all eight. These 68 predate
+# it. Format: childId|role|parentId
+
+lord_1_1_16|mother|lord_1_1_15
+lord_1_1_8|mother|lord_1_1_7
+lord_1_33|mother|lord_1_1_7
+lord_1_45_2|mother|lord_1_45_1
+lord_1_46|mother|lord_1_40_1
+lord_1_47_3|mother|lord_1_47_1
+lord_1_49_2|mother|lord_1_49_1
+lord_1_56_2|mother|lord_1_56_1
+lord_1_6|mother|lord_1_1_7
+lord_4_22|father|lord_rohan_13_1
+lord_4_22|mother|lord_4_22_1
+lord_E1_2|father|lord_E1_1
+lord_E1_2|mother|lord_E1_6
+lord_E1_4|father|lord_E1_1
+lord_E1_4|mother|lord_E1_6
+lord_E1_5|father|lord_E1_2
+lord_E1_5|mother|lord_E1_3
+lord_E2_11|father|lord_E2_3
+lord_E2_3|father|lord_E2_1
+lord_E2_3|mother|lord_E2_2
+lord_E2_4|father|lord_E2_1
+lord_E2_4|mother|lord_E2_2
+lord_E3_3|father|lord_E3_1
+lord_E3_3|mother|lord_E3_2
+lord_E3_4|father|lord_E3_1
+lord_E3_4|mother|lord_E3_2
+lord_E3_5|father|lord_E3_1
+lord_E3_5|mother|lord_E3_2
+lord_E4_3|father|lord_E4_1
+lord_E4_3|mother|lord_E4_2
+lord_E4_4|father|lord_E4_1
+lord_E4_4|mother|lord_E4_2
+lord_E5_11|father|lord_E5_5
+lord_E5_3|father|lord_E5_1
+lord_E5_3|mother|lord_E5_2
+lord_E5_4|father|lord_E5_1
+lord_E5_4|mother|lord_E5_2
+lord_E5_5|father|lord_E5_1
+lord_E5_5|mother|lord_E5_2
+lord_E6_3|father|lord_E6_1
+lord_E6_3|mother|lord_E6_2
+lord_E6_4|father|lord_E6_1
+lord_E6_4|mother|lord_E6_2
+lord_E7_11|father|lord_E7_1
+lord_EW_6_2|father|lord_EW_6
+lord_EW_6_2|mother|lord_EW_6_1
+lord_EW_6_3|father|lord_EW_6
+lord_EW_6_3|mother|lord_EW_6_1
+lord_I1_31|father|lord_I1_3
+lord_M1_11|father|lord_M1_1
+lord_M1_11|mother|lord_M1_2
+lord_NE8_c1|father|lord_NE8_l
+lord_NE8_c1|mother|lord_NE8_s
+lord_NE8_c2|father|lord_NE8_l
+lord_NE8_c2|mother|lord_NE8_s
+lord_NE9_d|father|lord_NE9_l
+lord_NE9_s|father|lord_NE9_l
+lord_R1_11|father|lord_R1_4
+lord_R1_3|father|lord_R1_1
+lord_R1_3|mother|lord_R1_2
+lord_R1_4|father|lord_R1_1
+lord_R1_4|mother|lord_R1_2
+lord_R1_5|father|lord_R1_1
+lord_R1_5|mother|lord_R1_2
+lord_SE9_c1|father|lord_SE9_l
+lord_SE9_c2|father|lord_SE9_l
+lord_WE9_3|mother|lord_WE9_u2
+lord_WE9_u|mother|lord_WE9_u2

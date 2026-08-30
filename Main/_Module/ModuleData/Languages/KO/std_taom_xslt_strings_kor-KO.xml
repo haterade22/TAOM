@@ -751,12 +751,12 @@
     <string id="aom_lord_1_52_1_name" text="아나리엘" />
     <string id="aom_lord_1_52_2_name" text="바란도르" />
     <string id="aom_lord_1_73_1_name" text="벨웬" />
-    <string id="aom_lord_1_62_1_name" text="아리사" />
+    <string id="aom_lord_1_62_1_name" text="Isfin" />
     <string id="aom_lord_1_30_1_name" text="스발라 레드팽" />
-    <string id="aom_lord_1_30_2_name" text="칼리니아" />
-    <string id="aom_lord_1_30_3_name" text="시네시오스" />
+    <string id="aom_lord_1_30_2_name" text="Mogra" />
+    <string id="aom_lord_1_30_3_name" text="Snaga" />
     <string id="aom_lord_1_48_1_name" text="나즈굴, 오염된 자" />
-    <string id="aom_lord_1_48_2_name" text="나즈굴, 북방인의 그림자" />
+    <string id="aom_lord_1_48_2_name" text="Nazgûl, the Shadow of the Northmen" />
     <string id="aom_lord_1_48_3_name" text="나즈굴, 움바르의 그림자" />
     <string id="aom_lord_1_54_1_name" text="콘스탈리아" />
     <string id="aom_lord_1_55_1_name" text="메게시아" />
@@ -923,7 +923,7 @@
     <string id="aom_lord_V11_u_name" text="볼레릭" />
     <string id="aom_lord_V9_u_name" text="우룬둘프" />
     <string id="aom_lord_5_1_name" text="바르굴, 칸드의 대장군" />
-    <string id="aom_lord_5_7_name" text="칸드 플레이스홀더" />
+    <string id="aom_lord_5_7_name" text="Cadwyr" />
     <string id="aom_lord_5_3_name" text="에르게온" />
     <string id="aom_lord_5_4_name" text="니윈" />
     <string id="aom_lord_5_5_name" text="멜리디르" />
@@ -945,7 +945,7 @@
     <string id="aom_lord_5_20_name" text="시아라무스" />
     <string id="aom_lord_5_21_name" text="카르피드" />
     <string id="aom_lord_5_22_name" text="피아라드" />
-    <string id="aom_lord_5_1_1_name" text="RandomDude" />
+    <string id="aom_lord_5_1_1_name" text="Nyveth" />
     <string id="aom_lord_5_3_1_name" text="라나온" />
     <string id="aom_lord_5_3_2_name" text="라도구알" />
     <string id="aom_lord_5_5_1_name" text="에일리" />
@@ -1028,7 +1028,7 @@
     <string id="aom_lord_S9_l_name" text="봄부르" />
     <string id="aom_lord_S9_m_name" text="다킬라" />
     <string id="aom_lord_S9_u_name" text="차스티미르" />
-    <string id="aom_lord_SE8_c_name" text="이타리아" />
+    <string id="aom_lord_SE8_c_name" text="Shagrala" />
     <string id="aom_lord_SE9_c1_name" text="파가리오스" />
     <string id="aom_lord_SE9_c2_name" text="디아스카" />
     <string id="aom_lord_SE9_l_name" text="우루크 대장 그리슈나크" />
@@ -1038,13 +1038,13 @@
     <string id="aom_lord_WE9_l_name" text="두인히르" />
     <string id="aom_lord_WE9_u_name" text="두일린" />
     <string id="aom_lord_WE9_u2_name" text="로스핀" />
-    <string id="TAOM_hero_dead_2_1" text="연로한 바르딩 영주는 동방인 약탈자들에 맞서 데일을 방어하다 전사했다. 그의 희생은 산맥 고개를 지켜냈으며 왕국 전역의 노래로 기억되고 있다." />
-    <string id="TAOM_hero_dead_2_2" text="전쟁 후 닥친 겨울 역병으로 세상을 떠난 데일의 귀부인. 그녀는 평민들에 대한 자선으로 유명했다." />
-    <string id="TAOM_hero_dead_3_1" text="검은 문 전투에서 사막 기병대를 이끈 하라드림 전쟁군주. 그는 곤도르의 화살에 쓰러졌지만 남부에서는 순교자로 숭배받고 있다." />
-    <string id="TAOM_hero_dead_6_1" text="룬의 깃발 아래 동방인 부족들을 최초로 통합한 위대한 칸. 그의 정복은 황금 왕국의 경계를 룬 바다의 해안까지 확장시켰다." />
-    <string id="TAOM_hero_dead_6_2" text="자유 민족들과의 전투에서 전사한 존경받는 노얀. 그의 미망인 구르틸름은 이제 강철 같은 결단력으로 그들의 씨족을 이끌고 있다." />
-    <string id="TAOM_hero_dead_6_3" text="아르킷 씨족의 수석 노얀. 기마 궁술 전술에서의 그의 전술적 명석함은 동방인 전사들의 전 세대에 영향을 끼쳤다." />
-    <string id="TAOM_hero_dead_6_4" text="아르킷 씨족의 귀족이자 위대한 노얀의 아들. 그는 젊은 나이에 죽었지만 전사로서의 가능성을 보여주었다." />
+    <string id="TAOM_hero_dead_2_1" text="Olek the Old fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom." />
+    <string id="TAOM_hero_dead_2_2" text="Varra, a noblewoman of Dale, perished in the winter plague that followed the war. She was known for her charity to the common folk." />
+    <string id="TAOM_hero_dead_3_1" text="Nimr was a Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south." />
+    <string id="TAOM_hero_dead_6_1" text="Urkhun was the great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun." />
+    <string id="TAOM_hero_dead_6_2" text="Solun was a respected noyan who fell in battle against the Free Peoples. His widow Gûrtilm now leads their clan with iron determination." />
+    <string id="TAOM_hero_dead_6_3" text="Kuyug was chief noyan of the Arkit clan. His brilliance with horse archery shaped an entire generation of Easterling warriors." />
+    <string id="TAOM_hero_dead_6_4" text="Undul was a noble of the Arkit clan and son of the great noyan. He died young but showed promise as a warrior." />
     <string id="TAOM_hero_1_1" text="브레닌 울프는 철권으로 던랜드의 야생 씨족들을 통치한다. 아이언핸드로 알려진 그는 정복과 교활함으로 흩어진 언덕 부족들을 통합했다. 그는 로한의 말-영주들에게 빼앗긴 땅을 되찾는 꿈을 꾼다." />
     <string id="TAOM_hero_1_2" text="프레야 울프하트는 브레닌 울프의 용맹한 아내이다. 그녀는 도끼와 방패를 다루는 솜씨로 전사들 사이에서 존경받는다." />
     <string id="TAOM_hero_1_41" text="베레군드 울프본은 던랜드의 신뢰받는 대장으로, 로히림 정착지를 습격하는 기술로 유명하다." />
@@ -1086,16 +1086,16 @@
     <string id="TAOM_hero_1_67" text="에오르윈 페더볼트는 칼보다 활을 선호하며, 그림자에서 공격한다." />
     <string id="TAOM_hero_1_58" text="잔혹한 고르빈은 던렌딩들 사이에서도 그 잔인함이 전설적인 무시무시한 족장이다." />
     <string id="TAOM_hero_1_70" text="그림자의 베이라는 적의 진영에 몰래 침투하여 밤에 목을 베는 자다." />
-    <string id="TAOM_hero_NE7_u" text="부족의 족장을 보좌하는 노련한 전사." />
-    <string id="TAOM_hero_NE8_l" text="산악 부족의 족장으로, 수년간의 국경 전쟁으로 단련되었다." />
-    <string id="TAOM_hero_NE8_s" text="족장의 아내로, 치유술과 약초 지식에 능하다." />
-    <string id="TAOM_hero_NE8_c1" text="부족의 장자로, 어린 시절부터 전쟁 훈련을 받았다." />
-    <string id="TAOM_hero_NE8_c2" text="부족 지도자의 둘째 자녀로, 교활함과 야망으로 알려져 있다." />
+    <string id="TAOM_hero_NE7_u" text="Haldric the Black Fang advises his clan's chieftain, and earned the name before he was twenty." />
+    <string id="TAOM_hero_NE8_l" text="Eadric the Swift is chieftain of a mountain clan, hardened young by border warfare." />
+    <string id="TAOM_hero_NE8_s" text="Aeloria is wife to the chieftain, and skilled in the healing arts and herb lore." />
+    <string id="TAOM_hero_NE8_c1" text="Cerdic, called the Anvil, is firstborn of the clan and has trained for war since childhood." />
+    <string id="TAOM_hero_NE8_c2" text="Morwen is second child of the clan leader, known already for cunning and ambition." />
     <string id="TAOM_hero_1_56" text="망치의 토르문드는 전쟁 망치를 휘두르는 파괴적인 돌격으로 그 이름을 얻었다." />
     <string id="TAOM_hero_1_56_1" text="그웬나는 토르문드의 아내로, 그가 전쟁터에 있는 동안 부족의 영지를 관리한다." />
-    <string id="TAOM_hero_NE9_l" text="모든 던렌딩 부족들이 그의 지혜를 구하는 노령의 족장." />
-    <string id="TAOM_hero_NE9_s" text="늙은 족장의 아들로, 전투에서 자신을 증명하고자 열망한다." />
-    <string id="TAOM_hero_NE9_d" text="부족의 딸로, 전투와 외교 모두에 훈련받았다." />
+    <string id="TAOM_hero_NE9_l" text="Valthor Scalecleaver is a chieftain whose counsel is sought across the Dunlending clans." />
+    <string id="TAOM_hero_NE9_s" text="Rurik Fanghew is son of the old chieftain, and eager to prove himself in battle." />
+    <string id="TAOM_hero_NE9_d" text="Sylva Serpent-Strike is a daughter of the clan, trained in both combat and diplomacy." />
     <string id="TAOM_hero_1_7" text="곤도르의 집정 데네소르 2세는 미나스 티리스의 백색 탑에서 통치한다. 한때 위대한 지혜를 가진 사람이었으나, 그는 오만하고 완고해졌다. 그는 왕의 귀환을 거부하며, 오직 자신만이 곤도르를 모르도르의 그림자로부터 구할 수 있다고 믿는다." />
     <string id="TAOM_hero_1_75" text="데네소르의 장남 보로미르는 곤도르의 장군이다. 명성 높은 위대한 전사로, 그는 어둠에 맞서 자신의 백성을 지키기 위한 어떤 무기든 찾고 있다." />
     <string id="TAOM_hero_1_8" text="후리오네스는 후리니오나스 가문을 섬기며, 곤도르 집정들의 전승을 지키는 확고한 수호자이다." />
@@ -1169,8 +1169,8 @@
     <string id="TAOM_hero_1_49" text="오브론은 모르도르 오크 부대를 이끈다." />
     <string id="TAOM_hero_1_49_1" text="트리스타니아는 어둠의 세력에 복무한다." />
     <string id="TAOM_hero_1_49_2" text="고르디아나는 어둠의 탑 그림자 속에 거한다." />
-    <string id="TAOM_hero_1_30_2" text="칼리니아는 모르도르의 어둠의 힘을 섬긴다." />
-    <string id="TAOM_hero_1_30_3" text="시네시오스는 그림자의 하인이다." />
+    <string id="TAOM_hero_1_30_2" text="Mogra serves the dark powers of Mordor." />
+    <string id="TAOM_hero_1_30_3" text="Snaga is a servant of the Shadow." />
     <string id="TAOM_hero_1_56_2" text="루스티카는 어둠의 군대에 복무한다." />
     <string id="TAOM_hero_1_63_2" text="코마타사는 전쟁을 위해 사육된 오크다." />
     <string id="TAOM_hero_1_63_3" text="엘리딜레아는 어둠의 계급에 복무한다." />
@@ -1189,7 +1189,7 @@
     <string id="TAOM_hero_1_55_1" text="메게티아는 어둠의 힘을 섬긴다." />
     <string id="TAOM_hero_1_72" text="볼그는 더러운 자 아조그의 후손인 강력한 오크 족장이다." />
     <string id="TAOM_hero_1_72_1" text="비비아나는 어둠의 계급에 복무한다." />
-    <string id="TAOM_hero_SE8_c" text="모르도르의 구덩이에서 사육된 오크." />
+    <string id="TAOM_hero_SE8_c" text="Shagrala was bred in the pits of Mordor and has fought her way up to a command of her own." />
     <string id="TAOM_hero_SE9_l" text="모르도르의 요새를 지휘하는 검은 누메노르인 영주." />
     <string id="TAOM_hero_SE9_s" text="어둠의 힘을 지닌 검은 누메노르인 마녀." />
     <string id="TAOM_hero_SE9_c1" text="어둠의 기술을 훈련받은 검은 누메노르인 가문의 후계자." />
@@ -1242,7 +1242,7 @@
     <string id="TAOM_hero_2_19_1" text="비토미라는 드왈린과 함께 봉사한다." />
     <string id="TAOM_hero_2_20" text="오인은 드워프 장로로, 고대 전승과 치유 기술의 수호자이다." />
     <string id="TAOM_hero_2_20_1" text="키샤는 오인의 아내로, 약초 지식에 능숙하다." />
-    <string id="TAOM_hero_S8_u" text="산의 홀을 지키는 노련한 베테랑이다." />
+    <string id="TAOM_hero_S8_u" text="Galyk is a grizzled veteran who guards the mountain halls." />
     <string id="TAOM_hero_3_1" text="카두라크는 하라드의 타스크랄로, 남부 군대의 최고 사령관이다. 그는 곤도르에 맞서 모르도르와 동맹을 맺고 자신의 민족의 적들에 맞서 무마킬 전쟁 코끼리를 이끈다." />
     <string id="TAOM_hero_3_2" text="높은 지위의 하라드림 귀족 여성." />
     <string id="TAOM_hero_3_7" text="디율은 타스크랄의 후계자로, 무마킬 기수의 방식으로 훈련받았다." />
@@ -1299,7 +1299,9 @@
     <string id="TAOM_hero_4_14" text="Morcon은 왕의 가신단에서 신뢰받는 대장이다." />
     <string id="TAOM_hero_4_141" text="Amorcon은 근위대에서 그의 친족과 함께 복무한다." />
     <string id="TAOM_hero_4_15" text="Erdurand는 세오덴의 가신단 기병이다." />
-    <string id="TAOM_hero_4_3" text="세오드윈은 세오덴 왕의 누이이자 에오메르와 에오윈의 어머니였다. 그녀는 남편 에오문드가 오크에게 살해된 후 슬픔으로 사망했다." />
+    <string id="TAOM_hero_4_3_3" text="세오드윈은 세오덴 왕의 누이이자 에오메르와 에오윈의 어머니였다. 그녀는 남편 에오문드가 오크에게 살해된 후 슬픔으로 사망했다." />
+    <string id="TAOM_hero_4_3" text="Aldric holds a hall in the Eastfold and rides in the muster of Edoras. He is a plain horseman of no great house, trusted for it." />
+    <string id="TAOM_hero_rohan_10_1" text="Éomund of the Eastfold rode as Marshal of the Mark and wed Théodwyn, sister of the king. Orcs cut him down in the Emyn Muil, and his two children passed into Théoden's keeping." />
     <string id="TAOM_hero_4_3_1" text="에오메르 에아디그는 제3원수이자 세오덴의 조카이며 왕위 계승자이다. 그는 동부 평원의 기병들을 맹렬한 충성심으로 이끈다." />
     <string id="TAOM_hero_4_4" text="Elthild는 에오포링 가문의 귀족 부인이다." />
     <string id="TAOM_hero_4_8" text="Furnhard는 에오메르의 휘하에서 신뢰받는 기병으로 복무한다." />
@@ -1328,20 +1330,24 @@
     <string id="TAOM_hero_4_23_2" text="엘레두란은 왕의 군대를 위해 군마를 훈련한다." />
     <string id="TAOM_hero_4_23_3" text="엘레두란 2세는 말 관리인으로 복무한다." />
     <string id="TAOM_hero_4_24" text="그리마 벌레혀는 세오덴의 조언자였지만, 실제로는 사루만의 간첩이었다. 그의 속삭이는 거짓말은 왕의 마음을 오염시켰으나 간달프가 그 마법을 깨뜨렸다." />
-    <string id="TAOM_hero_4_24_1" text="로한의 귀부인 에오윈은 에오메르의 여동생이자 세오덴의 조카이다. 그녀는 펠렌노르 전투에서 마술사왕을 쓰러뜨려 시대의 공포를 물리쳤다." />
-    <string id="TAOM_hero_4_24_2" text="엘프그림은 왕실 기병대의 기병으로 복무한다." />
-    <string id="TAOM_hero_4_24_3" text="헤루브란드는 왕의 전당을 수호한다." />
-    <string id="TAOM_hero_4_24_4" text="시게베르트는 로한의 국경을 순찰한다." />
+    <string id="TAOM_hero_4_24_1" text="Adaltrud was wed to Gríma Grimmóding before his counsel turned to Saruman. She keeps a hall at Edoras that the riders no longer visit." />
+    <string id="TAOM_hero_4_24_2" text="Gudonhelda is the eldest daughter of Gríma Grimmóding. She learned early that her father's name opens no doors in Edoras." />
+    <string id="TAOM_hero_4_24_3" text="Ingunde, second daughter of Gríma Grimmóding, tends the horses of a house nobody rides out with." />
+    <string id="TAOM_hero_4_24_4" text="Irmgard is the youngest of Gríma Grimmóding's daughters, and the only one too young to remember the hall before the whispering started." />
+    <string id="TAOM_hero_4_3_2" text="로한의 귀부인 에오윈은 에오메르의 여동생이자 세오덴의 조카이다. 그녀는 펠렌노르 전투에서 마술사왕을 쓰러뜨려 시대의 공포를 물리쳤다." />
+    <string id="TAOM_hero_4_6_2" text="엘프그림은 왕실 기병대의 기병으로 복무한다." />
+    <string id="TAOM_hero_4_16_2" text="헤루브란드는 왕의 전당을 수호한다." />
+    <string id="TAOM_hero_4_21_1" text="시게베르트는 로한의 국경을 순찰한다." />
     <string id="TAOM_hero_4_26" text="페릭은 로한의 협곡 일대의 기병들을 지휘한다." />
     <string id="TAOM_hero_4_26_1" text="라인가르다는 협곡의 방패전사 여인이다." />
     <string id="TAOM_hero_4_27" text="에텔라핑의 아엘레는 던랜드의 습격으로부터 골짜기를 수호한다." />
     <string id="TAOM_hero_4_27_1" text="바에르부르크는 아엘레의 아내이다." />
-    <string id="TAOM_hero_V9_u" text="지역 영주에게 조언을 하는 노련한 기병." />
+    <string id="TAOM_hero_V9_u" text="Urundulf is a seasoned rider who advises the local thane." />
     <string id="TAOM_hero_4_28" text="모르카르가스의 파스트헬름은 남부 초소를 지휘한다." />
     <string id="TAOM_hero_4_28_1" text="모르카르는 파스트헬름의 아들이다." />
     <string id="TAOM_hero_4_28_2" text="헤레스위스는 남부 초소 사령관의 딸이다." />
     <string id="TAOM_hero_5_1" text="칸드의 대장군 바르굴은 용맹한 바리아그 기병들을 이끈다. 모르도르와의 동맹으로 그의 전사들은 중간계의 전쟁에서 곤도르에 맞서 싸운다." />
-    <string id="TAOM_hero_5_1_1" text="대장군의 수행부대 전사." />
+    <string id="TAOM_hero_5_1_1" text="Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
     <string id="TAOM_hero_5_3" text="에르게온은 신속한 기병 전술로 유명한 동부 바리아그 부족들을 이끄는 족장이다." />
     <string id="TAOM_hero_5_3_1" text="라나온은 에르게온의 전단의 후계자이다." />
     <string id="TAOM_hero_5_3_2" text="라도구알은 에르게온의 군대에서 대장으로 복무한다." />
@@ -1411,32 +1417,32 @@
     <string id="TAOM_hero_6_19_2" text="코르테는 바케랄탄의 정찰대 후계자이다." />
     <string id="TAOM_hero_6_20" text="쿠루브라 마샤키안은 룬의 북부 부족들을 지휘한다." />
     <string id="TAOM_hero_6_20_1" text="지구르는 쿠루브라의 아내이다." />
-    <string id="TAOM_hero_K8_u" text="북부 족장에게 조언하는 노련한 전사." />
+    <string id="TAOM_hero_K8_u" text="Boronchar is a seasoned warrior who advises the northern chieftain." />
     <string id="TAOM_hero_6_21" text="몰룩 일노리아는 강력한 기마 전사 일족을 지휘한다." />
     <string id="TAOM_hero_6_21_1" text="에사체이는 몰룩의 아내이다." />
     <string id="TAOM_hero_6_22" text="샤칼 2세 샤칼리안은 룬 해의 부유한 교역 일족을 다스린다." />
     <string id="TAOM_hero_6_22_1" text="에셀렌은 샤칼의 아내이다." />
     <string id="TAOM_hero_6_23" text="후즈-마르고즈 후즈는 서부 변경의 요새 수비대를 지휘한다." />
     <string id="TAOM_hero_6_24" text="니카스 아데키그는 룬으로 들어오는 남부 고갯길을 지킨다." />
-    <string id="TAOM_hero_A9_l" text="남부 황무지의 하라드림 족장." />
-    <string id="TAOM_hero_A9_s" text="남부 황무지 족장의 아내." />
-    <string id="TAOM_hero_A9_c" text="남부 황무지 족장의 후계자." />
-    <string id="TAOM_hero_A9_u" text="남부 부족의 전사." />
-    <string id="TAOM_hero_V11_l" text="서부 계곡의 로히림 영주." />
-    <string id="TAOM_hero_V11_u" text="영주에게 조언하는 노련한 기병." />
-    <string id="TAOM_hero_V11_c1" text="서부 계곡 영지의 후계자." />
-    <string id="TAOM_hero_V11_c2" text="서부 계곡 영주의 둘째 자녀." />
-    <string id="TAOM_hero_S9_l" text="북부 진입로를 지키는 데일의 귀족." />
-    <string id="TAOM_hero_S9_m" text="북부 바르딩 일족의 여족장." />
-    <string id="TAOM_hero_S9_c" text="북부 영지의 젊은 후계자." />
-    <string id="TAOM_hero_S9_u" text="북부 수비대의 노련한 전사." />
-    <string id="TAOM_hero_K9_l" text="먼 동방인 부족의 족장." />
-    <string id="TAOM_hero_K9_s" text="먼 족장의 아내." />
-    <string id="TAOM_hero_K9_c1" text="먼 부족 영지의 후계자." />
-    <string id="TAOM_hero_K9_c2" text="먼 족장의 둘째 자녀." />
-    <string id="TAOM_hero_B8_l" text="동부 언덕의 바리아그 전쟁군주." />
-    <string id="TAOM_hero_B8_s" text="바리아그 전쟁군주의 아내." />
-    <string id="TAOM_hero_B8_c" text="바리아그 전쟁군주의 후계자." />
+    <string id="TAOM_hero_A9_l" text="Caradan is a Haradrim chieftain of the southern wastes, young for the office and watched closely by older men." />
+    <string id="TAOM_hero_A9_s" text="Thiqa is wife to the chieftain of the southern wastes and keeps the water tallies of his camps." />
+    <string id="TAOM_hero_A9_c" text="Dhila is heir to the chieftain of the southern wastes. She has ridden the dune tracks since she could sit a saddle." />
+    <string id="TAOM_hero_A9_u" text="Qaban is a warrior of the southern tribes and rides in the chieftain's van." />
+    <string id="TAOM_hero_V11_l" text="Léomund Deáfringas is a Rohirrim lord of the western vales." />
+    <string id="TAOM_hero_V11_u" text="Voleric is a veteran rider who advises the lord." />
+    <string id="TAOM_hero_V11_c1" text="Elendara is heir to the western vale holdings." />
+    <string id="TAOM_hero_V11_c2" text="Dagunic is the second child of the western vale lord." />
+    <string id="TAOM_hero_S9_l" text="Orvar is a noble of Dale who guards the northern approaches." />
+    <string id="TAOM_hero_S9_m" text="Dakhila is matriarch of a northern Barding clan." />
+    <string id="TAOM_hero_S9_c" text="Forim is young heir to the northern holdings." />
+    <string id="TAOM_hero_S9_u" text="Chastimir is a seasoned warrior of the northern garrison." />
+    <string id="TAOM_hero_K9_l" text="Valathmir Mashakian is a chieftain of the distant Easterling tribes, and answers to Rhun only when it suits him." />
+    <string id="TAOM_hero_K9_s" text="Sevin is wife to the distant chieftain and holds his camp while he rides." />
+    <string id="TAOM_hero_K9_c1" text="Altu is heir to the tribal holdings east of the inland sea." />
+    <string id="TAOM_hero_K9_c2" text="Mela is the second child of the distant chieftain, and rides better than her brother." />
+    <string id="TAOM_hero_B8_l" text="Maireas is a Variag warlord of the eastern hills, and has held them through three winters of raiding." />
+    <string id="TAOM_hero_B8_s" text="Rodarac is wife to the Variag warlord and speaks for him when he is away at the hosting." />
+    <string id="TAOM_hero_B8_c" text="Guaran is heir to the Variag warlord, and has waited longer for it than he likes." />
     <string id="TAOM_liege_dunland" text="던랜드의 브레닌" />
     <string id="TAOM_liege_dunland_female" text="던랜드의 브레니네스" />
     <string id="TAOM_liege_dale" text="데일의 왕" />

@@ -14,7 +14,7 @@
 	<xsl:template match="Hero[@id='dead_lord_2_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_2_1}The elder Barding lord fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_2_1}Olek the Old fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -22,7 +22,7 @@
 	<xsl:template match="Hero[@id='dead_lord_2_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_2_2}A noblewoman of Dale who perished in the winter plague that followed the war. She was known for her charity to the common folk.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_2_2}Varra, a noblewoman of Dale, perished in the winter plague that followed the war. She was known for her charity to the common folk.</xsl:attribute>
 			<xsl:attribute name="father">Hero.dead_lord_2_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -31,7 +31,7 @@
 	<xsl:template match="Hero[@id='dead_lord_3_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_3_1}A Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_3_1}Nimr was a Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -39,7 +39,7 @@
 	<xsl:template match="Hero[@id='dead_lord_6_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_6_1}The great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_6_1}Urkhun was the great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -47,7 +47,7 @@
 	<xsl:template match="Hero[@id='dead_lord_6_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_6_2}A respected noyan who fell in battle against the Free Peoples. His widow Gurtilm now leads their clan with iron determination.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_6_2}Solun was a respected noyan who fell in battle against the Free Peoples. His widow Gûrtilm now leads their clan with iron determination.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -55,7 +55,7 @@
 	<xsl:template match="Hero[@id='dead_lord_6_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_6_3}Chief noyan of the Arkit clan. His tactical brilliance in horse archery tactics influenced an entire generation of Easterling warriors.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_6_3}Kuyug was chief noyan of the Arkit clan. His brilliance with horse archery shaped an entire generation of Easterling warriors.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -63,7 +63,7 @@
 	<xsl:template match="Hero[@id='dead_lord_6_4']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_dead_6_4}A noble of the Arkit clan, son of the great noyan. He died young but showed promise as a warrior.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_dead_6_4}Undul was a noble of the Arkit clan and son of the great noyan. He died young but showed promise as a warrior.</xsl:attribute>
 			<xsl:attribute name="father">Hero.dead_lord_6_3</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -454,7 +454,7 @@
 	<xsl:template match="Hero[@id='lord_NE7_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE7_u}A grizzled warrior who serves as advisor to the clan's chieftain.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE7_u}Haldric the Black Fang advises his clan's chieftain, and earned the name before he was twenty.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -463,7 +463,7 @@
 	<xsl:template match="Hero[@id='lord_NE8_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE8_l}Chieftain of a mountain clan, hardened by years of border warfare.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE8_l}Eadric the Swift is chieftain of a mountain clan, hardened young by border warfare.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_NE8_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -472,7 +472,7 @@
 	<xsl:template match="Hero[@id='lord_NE8_s']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE8_s}Wife of the chieftain, skilled in the healing arts and herb lore.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE8_s}Aeloria is wife to the chieftain, and skilled in the healing arts and herb lore.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_NE8_l</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -481,7 +481,7 @@
 	<xsl:template match="Hero[@id='lord_NE8_c1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE8_c1}Firstborn of the clan, trained in warfare since childhood.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE8_c1}Cerdic, called the Anvil, is firstborn of the clan and has trained for war since childhood.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_NE8_l</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_NE8_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -491,7 +491,7 @@
 	<xsl:template match="Hero[@id='lord_NE8_c2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE8_c2}Second child of the clan leader, known for cunning and ambition.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE8_c2}Morwen is second child of the clan leader, known already for cunning and ambition.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_NE8_l</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_NE8_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -520,7 +520,7 @@
 	<xsl:template match="Hero[@id='lord_NE9_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE9_l}A aged chieftain whose wisdom is sought by all the Dunlending clans.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE9_l}Valthor Scalecleaver is a chieftain whose counsel is sought across the Dunlending clans.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -528,7 +528,7 @@
 	<xsl:template match="Hero[@id='lord_NE9_s']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE9_s}Son of the old chieftain, eager to prove himself in battle.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE9_s}Rurik Fanghew is son of the old chieftain, and eager to prove himself in battle.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_NE9_l</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -537,7 +537,7 @@
 	<xsl:template match="Hero[@id='lord_NE9_d']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_NE9_d}Daughter of the clan, trained in both combat and diplomacy.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_NE9_d}Sylva Serpent-Strike is a daughter of the clan, trained in both combat and diplomacy.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_NE9_l</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -825,10 +825,11 @@
 
 	<xsl:template match="Hero[@id='lord_1_52_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_52_1}Anariel, daughter of Hirluin, has grown up among the warriors of Pinnath Gelin and can hold her own in battle.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_52</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_52_4</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_62</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -873,8 +874,9 @@
 
 	<xsl:template match="Hero[@id='lord_1_73']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_73}Narmir, younger brother of Angbor, serves in the defense of Lamedon. He shares his brother's courage if not yet his experience.</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_1_53_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -937,7 +939,7 @@
 
 	<xsl:template match="Hero[@id='lord_WE9_u']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_WE9_u}Duilin, elder son of Duinhir, leads his own company of archers and fights alongside his father in defense of Gondor.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_WE9_l</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_WE9_u2</xsl:attribute>
@@ -1004,9 +1006,9 @@
 
 	<xsl:template match="Hero[@id='lord_1_37']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'mother']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_37_bn}Dolguphel is the daughter of the Mouth of Sauron, though he has long since put aside the title of father. She commands the horse of Carach Angren and studies the arts her house does not name aloud.</xsl:attribute>
-			<xsl:attribute name="mother">Hero.lord_1_14</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_1_14</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1053,7 +1055,7 @@
 	<xsl:template match="Hero[@id='lord_1_15']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_15}The Witch-King of Angmar, Lord of the Nazgul, is Sauron's most terrible servant. He was once a great king of Men, corrupted by his Ring of Power into an undying wraith.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_15}The Witch-King of Angmar, Lord of the Nazgûl, is Sauron's most terrible servant. He was once a great king of Men, corrupted by his Ring of Power into an undying wraith.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1061,7 +1063,7 @@
 	<xsl:template match="Hero[@id='lord_1_155']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_155}The Dark Marshall commands the Nazgul in battle, second only to the Witch-King.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_155}The Dark Marshall commands the Nazgûl in battle, second only to the Witch-King.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1093,7 +1095,7 @@
 	<xsl:template match="Hero[@id='lord_1_48']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_48}Khamul the Easterling, second of the Nine, once ruled a great kingdom in Rhun before accepting a Ring of Power.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_48}Khamûl the Easterling, second of the Nine, once ruled a great kingdom in Rhun before accepting a Ring of Power.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1223,7 +1225,7 @@
 	<xsl:template match="Hero[@id='lord_1_30_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_30_2}Callinia serves the dark powers of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_30_2}Mogra serves the dark powers of Mordor.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_30</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_30_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1233,7 +1235,7 @@
 	<xsl:template match="Hero[@id='lord_1_30_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_30_3}Synesios is a servant of the Shadow.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_30_3}Snaga is a servant of the Shadow.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_30</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_30_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1415,7 +1417,7 @@
 	<xsl:template match="Hero[@id='lord_SE8_c']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_SE8_c}An Orc bred in the pits of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_SE8_c}Shagrala was bred in the pits of Mordor and has fought her way up to a command of her own.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1908,7 +1910,7 @@
 	<xsl:template match="Hero[@id='lord_S8_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_S8_u}A grizzled veteran who guards the mountain halls.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_S8_u}Galyk is a grizzled veteran who guards the mountain halls.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2157,7 +2159,7 @@
 	<xsl:template match="Hero[@id='lord_3_16']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_16}Rumil is a chieftain of the golden banner tribes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_16}Rúmil is a chieftain of the golden banner tribes.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2371,7 +2373,7 @@
 	<xsl:template match="Hero[@id='lord_4_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_1}Theoden, King of Rohan, rules from Meduseld in Edoras. Once bewitched by Saruman's servant Grima, he was freed by Gandalf and led his people to glory at Helm's Deep and the Pelennor Fields.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_1}Théoden, King of Rohan, rules from Meduseld in Edoras. Once bewitched by Saruman's servant Gríma, he was freed by Gandalf and led his people to glory at Helm's Deep and the Pelennor Fields.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2379,7 +2381,7 @@
 	<xsl:template match="Hero[@id='lord_4_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_2}Elfhild was queen of Rohan, mother of Theodred. She died in childbirth, a grief that shadowed Theoden's reign.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_2}Elfhild was queen of Rohan, mother of Théodred. She died in childbirth, a grief that shadowed Théoden's reign.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2387,7 +2389,7 @@
 	<xsl:template match="Hero[@id='lord_4_7']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_7}Theodred was the only son of King Theoden, Prince of Rohan. He fell defending the Fords of Isen against Saruman's Uruk-hai.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_7}Théodred was the only son of King Théoden, Prince of Rohan. He fell defending the Fords of Isen against Saruman's Uruk-hai.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_4_1</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_4_2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -2429,7 +2431,7 @@
 	<xsl:template match="Hero[@id='lord_4_15']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_15}Erdurand is a rider of Theoden's household.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_15}Erdurand is a rider of Théoden's household.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2437,9 +2439,8 @@
 	<!-- Vlandia Clan 2 - Eoforing (Eomer's family) -->
 	<xsl:template match="Hero[@id='lord_4_3']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_3}Theodwyn was sister to King Theoden and mother of Eomer and Eowyn. She died of grief after her husband Eomund was slain by Orcs.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_rohan_10_1</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_hero_4_3}Aldric holds a hall in the Eastfold and rides in the muster of Edoras. He is a plain horseman of no great house, trusted for it.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2447,7 +2448,7 @@
 	<xsl:template match="Hero[@id='lord_4_3_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_3_1}Eomer Eadig, Third Marshal of the Mark, is nephew to Theoden and heir to the throne. He leads the riders of the Eastfold with fierce loyalty.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_3_1}Éomer Eadig, Third Marshal of the Mark, is nephew to Théoden and heir to the throne. He leads the riders of the Eastfold with fierce loyalty.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_rohan_10_1</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_4_3_3</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -2465,7 +2466,7 @@
 	<xsl:template match="Hero[@id='lord_4_8']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_8}Furnhard serves as a trusted rider under Eomer's command.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_8}Furnhard serves as a trusted rider under Éomer's command.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2481,18 +2482,18 @@
 	<!-- Vlandia Clan 3 - Grimbold's family -->
 	<xsl:template match="Hero[@id='lord_4_6']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_6}Grimbold of Grimslade commands the riders of Westfold. A fierce warrior, he held the Fords of Isen and later died heroically at the Pelennor.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_4_6_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_6_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_6_1}Deorwyn is heir to Grimbold's command.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_4_6</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_4_6_1}Déorwyn is heir to Grimbold's command.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_4_6</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2507,24 +2508,30 @@
 
 	<xsl:template match="Hero[@id='lord_4_9']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_9}Thomund commands a company of Westfold riders.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_4_6</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_12']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_12}Silvind is a shieldmaiden of the Westfold.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_4_6</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_121']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_121}Lasand serves in the Westfold garrison.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_4_6</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_5</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2534,15 +2541,15 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_16}Erkenbrand, Lord of Westfold, commands the fortress of the Hornburg. He arrived with Gandalf at Helm's Deep to turn the tide of battle.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_4_16_2</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_4_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_16_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_16_1}Merthu is wife to Erkenbrand, Lady of the Hornburg.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_4_16_1}Mérthú is wife to Erkenbrand, Lady of the Hornburg.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_4_16</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2550,7 +2557,7 @@
 
 	<xsl:template match="Hero[@id='lord_4_17']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_17}Elbet serves in the household of Erkenbrand.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2558,24 +2565,27 @@
 
 	<xsl:template match="Hero[@id='lord_4_18']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_18}Amalgun is heir to Erkenbrand.</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_181']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_181}Arthamund serves as a captain of the Hornburg garrison.</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_4_19']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_19}Asela is a shieldmaiden who guards the Deeping Coomb.</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_4_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2600,7 +2610,7 @@
 	<xsl:template match="Hero[@id='lord_4_21']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_21}Cuthraed Ordlacing patrols the eastern borders.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_21}Cuthræd Ordlacing patrols the eastern borders.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_4_21_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2624,7 +2634,7 @@
 
 	<xsl:template match="Hero[@id='lord_4_22']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_4_22}Wulf Celmunding leads riders of the northern valleys.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_rohan_13_1</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_4_22_1</xsl:attribute>
@@ -2682,7 +2692,7 @@
 	<xsl:template match="Hero[@id='lord_4_24']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_24}Grima Wormtongue was Theoden's counselor, secretly a spy for Saruman. His whispered lies poisoned the king's mind until Gandalf broke the spell.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_24}Gríma Wormtongue was Théoden's counselor, secretly a spy for Saruman. His whispered lies poisoned the king's mind until Gandalf broke the spell.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2690,7 +2700,7 @@
 	<xsl:template match="Hero[@id='lord_4_24_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_24_1}Eowyn, Lady of Rohan, is sister to Eomer and niece to Theoden. She slew the Witch-King at the Pelennor, striking down the terror of the ages.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_24_1}Adaltrud was wed to Gríma Grimmóding before his counsel turned to Saruman. She keeps a hall at Edoras that the riders no longer visit.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2698,7 +2708,7 @@
 	<xsl:template match="Hero[@id='lord_4_24_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_24_2}Elfgrim serves as a rider of the royal household.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_24_2}Gudonhelda is the eldest daughter of Gríma Grimmóding. She learned early that her father's name opens no doors in Edoras.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2706,7 +2716,7 @@
 	<xsl:template match="Hero[@id='lord_4_24_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_24_3}Herubrand guards the king's hall.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_24_3}Ingunde, second daughter of Gríma Grimmóding, tends the horses of a house nobody rides out with.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2714,7 +2724,7 @@
 	<xsl:template match="Hero[@id='lord_4_24_4']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_24_4}Siegeberht patrols the borders of Rohan.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_24_4}Irmgard is the youngest of Gríma Grimmóding's daughters, and the only one too young to remember the hall before the whispering started.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2738,7 +2748,7 @@
 	<xsl:template match="Hero[@id='lord_4_27']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_27}Aelle Aethellafing guards the Folds against Dunlending raids.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_27}Ælle Æthellafing guards the Folds against Dunlending raids.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_4_27_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2747,7 +2757,7 @@
 	<xsl:template match="Hero[@id='lord_4_27_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_4_27_1}Waerburg is wife to Aelle.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_4_27_1}Wærburg is wife to Ælle.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_4_27</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2756,7 +2766,7 @@
 	<xsl:template match="Hero[@id='lord_V9_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_V9_u}A seasoned rider who advises the local thane.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_V9_u}Urundulf is a seasoned rider who advises the local thane.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2795,7 +2805,7 @@
 	<xsl:template match="Hero[@id='lord_5_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_5_1}Vargul, the High Warlord of Khand, leads the fierce Variag horsemen. His alliance with Mordor brings his warriors against Gondor in the war for Middle-earth.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_5_1}Vargûl, the High Warlord of Khand, leads the fierce Variag horsemen. His alliance with Mordor brings his warriors against Gondor in the war for Middle-earth.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2803,7 +2813,7 @@
 	<xsl:template match="Hero[@id='lord_5_1_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_5_1_1}A warrior of the High Warlord's retinue.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_5_1_1}Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_5_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2875,7 +2885,7 @@
 	<xsl:template match="Hero[@id='lord_5_7']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_5_7}A Variag warrior chieftain of Khand.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_5_7}Cadwyr is a Variag warrior chieftain of Khand.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_5_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -3165,7 +3175,7 @@
 	<xsl:template match="Hero[@id='lord_6_4']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_4}Gurtilm Salurian commands the western armies of Rhun. After her husband's death, she took command with iron resolve.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_4}Gûrtilm Salurian commands the western armies of Rhun. After her husband's death, she took command with iron resolve.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3208,7 +3218,7 @@
 	<xsl:template match="Hero[@id='lord_6_8']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_8}Esur is a warrior of Gurtilm's host.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_8}Esur is a warrior of Gûrtilm's host.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_6_3</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_6_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -3218,7 +3228,7 @@
 	<xsl:template match="Hero[@id='lord_6_81']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_81}Nayantai serves as a captain in Gurtilm's army.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_81}Nayantai serves as a captain in Gûrtilm's army.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_6_3</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_6_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -3257,7 +3267,7 @@
 	<xsl:template match="Hero[@id='lord_6_11']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_11}Yana is a noble of Gurtilm's host.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_11}Yana is a noble of Gûrtilm's host.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_6_3</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_6_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -3342,7 +3352,7 @@
 	<xsl:template match="Hero[@id='lord_6_17']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_17}Amdur Amdurid leads a powerful clan of the eastern steppes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_17}Amdûr Amdûrid leads a powerful clan of the eastern steppes.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_6_17_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -3351,7 +3361,7 @@
 	<xsl:template match="Hero[@id='lord_6_17_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_17_1}Ergene is wife to Amdur.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_17_1}Ergene is wife to Amdûr.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_6_17</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -3360,7 +3370,7 @@
 	<xsl:template match="Hero[@id='lord_6_17_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_17_2}Yesum is heir to the Amdurid holdings.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_17_2}Yesum is heir to the Amdûrid holdings.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_6_17</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_6_17_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -3370,7 +3380,7 @@
 	<xsl:template match="Hero[@id='lord_6_18']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_18}Luthkan Khundolar commands warriors of the western provinces.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_18}Lûthkan Khundolar commands warriors of the western provinces.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_6_18_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -3379,7 +3389,7 @@
 	<xsl:template match="Hero[@id='lord_6_18_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_18_1}Tilun is wife to Luthkan.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_18_1}Tilun is wife to Lûthkan.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_6_18</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -3398,7 +3408,7 @@
 	<xsl:template match="Hero[@id='lord_6_19']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_19}Vakheraltan Khundolar is brother to Luthkan, commanding cavalry scouts.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_19}Vakheraltan Khundolar is brother to Lûthkan, commanding cavalry scouts.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3438,7 +3448,7 @@
 	<xsl:template match="Hero[@id='lord_K8_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_K8_u}A seasoned warrior who advises the northern chieftain.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_K8_u}Boronchar is a seasoned warrior who advises the northern chieftain.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3482,7 +3492,7 @@
 	<xsl:template match="Hero[@id='lord_6_23']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
-			<xsl:attribute name="text">{=TAOM_hero_6_23}Huz-Margoz Huz commands fortress garrisons along the western frontier.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_6_23}Hûz-Margôz Huz commands fortress garrisons along the western frontier.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_khuzait_12</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -3503,7 +3513,7 @@
 	<xsl:template match="Hero[@id='lord_A9_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_A9_l}A Haradrim chieftain of the southern wastes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_A9_l}Caradan is a Haradrim chieftain of the southern wastes, young for the office and watched closely by older men.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3511,7 +3521,7 @@
 	<xsl:template match="Hero[@id='lord_A9_s']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_A9_s}Wife to the chieftain of the southern wastes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_A9_s}Thiqa is wife to the chieftain of the southern wastes and keeps the water tallies of his camps.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3519,7 +3529,7 @@
 	<xsl:template match="Hero[@id='lord_A9_c']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_A9_c}Heir to the southern waste chieftain.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_A9_c}Dhila is heir to the chieftain of the southern wastes. She has ridden the dune tracks since she could sit a saddle.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3527,7 +3537,7 @@
 	<xsl:template match="Hero[@id='lord_A9_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_A9_u}A warrior of the southern tribes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_A9_u}Qaban is a warrior of the southern tribes and rides in the chieftain's van.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3535,9 +3545,10 @@
 	<!-- Vlandia 11 — lord_V11_l moves to clan_vlandia_18 (Deáfringas) -->
 	<xsl:template match="Hero[@id='lord_V11_l']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
-			<xsl:attribute name="text">{=TAOM_hero_V11_l}A Rohirrim lord of the western vales.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction' and local-name() != 'spouse']"/>
+			<xsl:attribute name="text">{=TAOM_hero_V11_l}Léomund Deáfringas is a Rohirrim lord of the western vales.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_vlandia_18</xsl:attribute>
+			<xsl:attribute name="spouse">Hero.lord_V11_l_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3545,7 +3556,7 @@
 	<xsl:template match="Hero[@id='lord_V11_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_V11_u}A veteran rider who advises the lord.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_V11_u}Voleric is a veteran rider who advises the lord.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3553,7 +3564,7 @@
 	<xsl:template match="Hero[@id='lord_V11_c1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_V11_c1}Heir to the western vale holdings.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_V11_c1}Elendara is heir to the western vale holdings.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3561,7 +3572,7 @@
 	<xsl:template match="Hero[@id='lord_V11_c2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_V11_c2}Second child of the western vale lord.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_V11_c2}Dagunic is the second child of the western vale lord.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3570,7 +3581,7 @@
 	<xsl:template match="Hero[@id='lord_S9_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_S9_l}A noble of Dale who guards the northern approaches.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_S9_l}Orvar is a noble of Dale who guards the northern approaches.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3578,7 +3589,7 @@
 	<xsl:template match="Hero[@id='lord_S9_m']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_S9_m}Matriarch of a northern Barding clan.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_S9_m}Dakhila is matriarch of a northern Barding clan.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3586,7 +3597,7 @@
 	<xsl:template match="Hero[@id='lord_S9_c']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_S9_c}Young heir to the northern holdings.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_S9_c}Forim is young heir to the northern holdings.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3594,7 +3605,7 @@
 	<xsl:template match="Hero[@id='lord_S9_u']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_S9_u}A seasoned warrior of the northern garrison.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_S9_u}Chastimir is a seasoned warrior of the northern garrison.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3603,7 +3614,7 @@
 	<xsl:template match="Hero[@id='lord_K9_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_K9_l}A chieftain of the distant Easterling tribes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_K9_l}Valathmir Mashakian is a chieftain of the distant Easterling tribes, and answers to Rhun only when it suits him.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3611,7 +3622,7 @@
 	<xsl:template match="Hero[@id='lord_K9_s']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_K9_s}Wife to the distant chieftain.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_K9_s}Sevin is wife to the distant chieftain and holds his camp while he rides.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3619,7 +3630,7 @@
 	<xsl:template match="Hero[@id='lord_K9_c1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_K9_c1}Heir to the distant tribal holdings.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_K9_c1}Altu is heir to the tribal holdings east of the inland sea.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3627,7 +3638,7 @@
 	<xsl:template match="Hero[@id='lord_K9_c2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_K9_c2}Second child of the distant chieftain.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_K9_c2}Mela is the second child of the distant chieftain, and rides better than her brother.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3636,7 +3647,7 @@
 	<xsl:template match="Hero[@id='lord_B8_l']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_B8_l}A Variag warlord of the eastern hills.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_B8_l}Maireas is a Variag warlord of the eastern hills, and has held them through three winters of raiding.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -3644,15 +3655,17 @@
 	<xsl:template match="Hero[@id='lord_B8_s']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_B8_s}Wife to the Variag warlord.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_B8_s}Rodarac is wife to the Variag warlord and speaks for him when he is away at the hosting.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="Hero[@id='lord_B8_c']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_B8_c}Heir to the Variag warlord.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:attribute name="text">{=TAOM_hero_B8_c}Guaran is heir to the Variag warlord, and has waited longer for it than he likes.</xsl:attribute>
+			<xsl:attribute name="father">Hero.lord_B8_l</xsl:attribute>
+			<xsl:attribute name="mother">Hero.lord_B8_s</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>

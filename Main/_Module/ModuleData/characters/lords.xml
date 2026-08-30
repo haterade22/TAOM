@@ -103,15 +103,12 @@
             <EquipmentSet id="harad_civ_template_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_3_13_2" name="{=aom_lord_3_13_2_name}Razana" age="17" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
+    <NPCCharacter id="lord_3_13_2" name="{=aom_lord_3_13_2_name}Razana" age="17" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills" is_female="true">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CD0881003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="aserai" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -1261,7 +1258,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.battania -->
-    <NPCCharacter id="lord_5_1_1" name="{=aom_lord_5_1_1_name}RandomDude" age="12" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_5_1_1" name="{=aom_lord_5_1_1_name}Nyveth" age="12" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="00054548800027875ca466a563442bd406899779a794573b86a7c473581ab487000e66550e46c99d000000000000000000000000000000000000000001f83180"
@@ -1936,12 +1933,15 @@
             <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_B8_l" name="{=aom_lord_B8_l_name}Maireas" age="63" voice="ironic" is_female="true" is_hero="true" culture="Culture.battania" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_variag_lord_skills">
+    <NPCCharacter id="lord_B8_l" name="{=aom_lord_B8_l_name}Maireas" age="63" voice="ironic" is_hero="true" culture="Culture.battania" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_variag_lord_skills" is_female="false">
         <face>
-            <BodyProperties version="4" weight="0.7901" build="0.7686" key="0011F40FC00015C31F80050E3578F78FC00E740704D0F71BF0C8EC145B060A4F013006440385C177000000000000000000000000000000000000000000143144" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="00112C0A0FA0000A72557A7C9B879A8897CB1947DBA9DA87A53D947974F6DCB70167761306E83DA3000000000000000000000000000000000000000010CC0083" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
+            <beard_tags>
+            	<beard_tag name="battania" />
+            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -1981,15 +1981,12 @@
             <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_B8_s" name="{=aom_lord_B8_s_name}Rodarac" age="61" is_female="false" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_variag_lord_skills">
+    <NPCCharacter id="lord_B8_s" name="{=aom_lord_B8_s_name}Rodarac" age="61" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_variag_lord_skills" is_female="true">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000B2402C4CC000F46983AA68546B58A13047B958748D17A5AA943439A5AA44B018776130835D45200000000000000000000000000000000000000004F1C30C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0000240FD100300D453C497C68747AA8916C58A9C85518B98B75847C3A1893520197761309AB86730000000000000000000000000000000000000000472420C3" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="battania" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -2126,15 +2123,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D1_3" race="dg_uruk" name="{=aom_lord_D1_3_name}Morgulash" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D1_3" race="dg_uruk" name="{=aom_lord_D1_3_name}Morgulash" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -2552,15 +2546,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_j" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D2_2" race="dg_uruk" name="{=aom_lord_D2_2_name}Durkar" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D2_2" race="dg_uruk" name="{=aom_lord_D2_2_name}Durkar" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -2840,15 +2831,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_f" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D2_8" race="dg_uruk" name="{=aom_lord_D2_8_name}Thalruk" age="21" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D2_8" race="dg_uruk" name="{=aom_lord_D2_8_name}Grasha" age="21" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -2888,7 +2876,7 @@
             <EquipmentSet id="dolguldur_civ_template_default_g" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D2_9" race="dg_uruk" name="{=aom_lord_D2_9_name}Grasha" age="20" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_D2_9" race="dg_uruk" name="{=aom_lord_D2_9_name}Kzha" age="20" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -3026,15 +3014,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_j" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D3_2" race="dg_uruk" name="{=aom_lord_D3_2_name}Nargrash" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D3_2" race="dg_uruk" name="{=aom_lord_D3_2_name}Nargrash" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -3962,15 +3947,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_j" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D5_2" race="dg_uruk" name="{=aom_lord_D5_2_name}Gorvash" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D5_2" race="dg_uruk" name="{=aom_lord_D5_2_name}Gorvash" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -4154,15 +4136,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D5_6" race="dg_uruk" name="{=aom_lord_D5_6_name}Thrugash" age="23" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D5_6" race="dg_uruk" name="{=aom_lord_D5_6_name}Thrugash" age="23" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -4436,15 +4415,12 @@
             <EquipmentSet id="dolguldur_civ_template_default_j" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_D6_2" race="dg_uruk" name="{=aom_lord_D6_2_name}Zarlug" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_D6_2" race="dg_uruk" name="{=aom_lord_D6_2_name}Zarlug" age="27" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills" is_female="true">
         <face>
             <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -9131,7 +9107,7 @@
             <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_62_1" name="{=aom_lord_1_62_1_name}Arytha" age="35" voice="softspoken" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
+    <NPCCharacter id="lord_1_62_1" name="{=aom_lord_1_62_1_name}Isfin" age="35" voice="softspoken" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--face_key
 			value="000ba52cc03c300d658918a66a565a686aaab3a57a485991a57a63282749b75400056aa402ae984800001105000030a30000001f000000000000000000001000"
@@ -9732,12 +9708,15 @@
             <EquipmentSet id="dunland_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_u" name="{=aom_lord_WE9_u_name}Duilin" age="26" voice="earnest" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_WE9_u_skills">
+    <NPCCharacter id="lord_WE9_u" name="{=aom_lord_WE9_u_name}Duilin" age="26" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_WE9_u_skills" is_female="false">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
+            <beard_tags>
+            	<beard_tag name="empire" />
+            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -9777,16 +9756,13 @@
             <EquipmentSet id="gondor_lord_blackroot_1_civ" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_u2" name="{=aom_lord_WE9_u2_name}Rosfin" age="37" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
+    <NPCCharacter id="lord_WE9_u2" name="{=aom_lord_WE9_u2_name}Rosfin" age="37" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills" is_female="true">
         <face>
             <!-- Placeholder face key -->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003" />
+            <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -12423,15 +12399,12 @@
             <EquipmentSet id="gondor_lord_arndir_2_civ" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_52_1" name="{=aom_lord_1_52_1_name}Anariel" age="23" voice="ironic" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_1_52_1_skills">
+    <NPCCharacter id="lord_1_52_1" name="{=aom_lord_1_52_1_name}Anariel" age="23" voice="ironic" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_1_52_1_skills" is_female="true">
         <face>
-            <BodyProperties version="4" age="30.08" weight="0.2269" build="0.7361" key="0008700E4000138897700694F0015167328081FFB2570E00756880008F96C80300AB36030A39320100000000000000000000000000000000000000003D3C1002" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="empire" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>
@@ -22686,7 +22659,7 @@
             <EquipmentSet id="lothlorien_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_3" race="elf" name="{=aom_lord_L1_3_name}Child Placeholder" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_L1_3" race="elf" name="{=aom_lord_L1_3_name}Aerlin" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="00282b5fd7fc23c299c2761c4ac1a5954778548899a66659788878746a9d96290006165d06a7699c0000000000000000000000000000000000000000011c7140"
@@ -23403,7 +23376,7 @@
             <EquipmentSet id="legolas_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_12" race="elf" name="{=aom_lord_M1_12_name}PlaceHolder Child To Not Break Game" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
+    <NPCCharacter id="lord_M1_12" race="elf" name="{=aom_lord_M1_12_name}Faelen" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -25010,7 +24983,7 @@
             <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of the Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -25514,7 +25487,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE8_c" name="{=aom_lord_SE8_c_name}Itaria" is_female="true" voice="earnest" age="19" default_group="Infantry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+    <NPCCharacter id="lord_SE8_c" name="{=aom_lord_SE8_c_name}Shagrala" is_female="true" voice="earnest" age="19" default_group="Infantry" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
         <face>
             <!--face_key
 			value="0011b45b402410088733440e80468f1fff4f9274c862b448941b5637963e5d3e000a68810b7247a6000000000000000000000000000000000000000000003101"
@@ -27572,7 +27545,7 @@
             <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M16_11" name="{=aom_lord_M16_11_name}Uznash" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
+    <NPCCharacter id="lord_M16_11" name="{=aom_lord_M16_11_name}Ushgar" age="10" voice="earnest" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_shock_troop_skills_rookie">
         <face>
             <BodyProperties version="4" age="20" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -29995,7 +29968,7 @@
             <EquipmentSet id="eowyn_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_3_3" name="{=aom_lord_4_3_3_name}Théodwyn Eoforing" age="26" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_4_3_3" name="{=aom_lord_4_3_3_name}Théodwyn Eoforing" age="45" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <BodyProperties version="4" age="22.16" weight="0.1852" build="0.7199" key="0000240011B40004007033909950BA113BEE80A17FBF0E017751B80B8C7D1F04007B36030763A11700000000000000000000000000000000000000003CF420C3" />
             <hair_tags>
@@ -30137,7 +30110,7 @@
             <EquipmentSet id="rohan_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_4_16_1" name="{=aom_lord_4_16_1_name}Mérthú Felánding" age="29" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_4_16_1" name="{=aom_lord_4_16_1_name}Mérthú Felánding" age="41" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.4524" build="0.5804" key="0005340140CC00017071527435736265B7BE7A79B0614997BAB7F9397C2A987203597635053CBA5A00000000000000000000000000000000000000005CB41044" />
             <hair_tags>
@@ -31505,7 +31478,7 @@
             <EquipmentSet id="rohan_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_rohan_10_1" name="{=aom_lord_rohan_10_1_name}Eomund Eoforing" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_rohan_10_1" name="{=aom_lord_rohan_10_1_name}Éomund Eoforing" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008AC0A400013834BA6777C4487B836784BA7484671467588584B5C68A96BC200BA86030BBC875700000000000000000000000000000000000000003F742002" />
             <hair_tags>
@@ -32178,7 +32151,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Clan 2 - Imrazôrionath: daughter of Imrahil -->
-    <NPCCharacter id="lord_1_9_6" name="{=aom_lord_1_9_6_name}Lothíriel" age="33" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
+    <NPCCharacter id="lord_1_9_6" name="{=aom_lord_1_9_6_name}Lothériel" age="33" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
@@ -32650,15 +32623,12 @@
             <EquipmentSet id="rhun_civ_template_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_6_27" name="{=aom_lord_6_27_name}Neida Zorian" age="41" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_knight_skills">
+    <NPCCharacter id="lord_6_27" name="{=aom_lord_6_27_name}Neida Zorian" age="41" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.khuzait" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_knight_skills" is_female="true">
         <face>
-            <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0016FC0E5000100158708BD6CDC852299D4AB89EB77F390E84269783AA69586C017776130756C3A900000000000000000000000000000000000000003EF43083" />
             <hair_tags>
                 <hair_tag name="khuzait" />
             </hair_tags>
-            <beard_tags>
-                <beard_tag name="khuzait" />
-            </beard_tags>
             <tattoo_tags>
                 <tattoo_tag name="Cleanface" />
             </tattoo_tags>

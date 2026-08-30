@@ -659,6 +659,88 @@ encyclopedia listing 69 near-identical goblin entries.
 - **Prevent:** when a clone script copies a troop tree, treat the copy as a debt with a due date, not as content. Before it ships, either author the divergence or point the new culture at the source tree, which is a supported and test-blessed pattern (Lothlorien fields Rivendell's whole, Umbar fields Harad's and keeps `umbar_elite`). A cheap standing check is to normalise the id prefix away and diff the troop files: 112 differing lines out of 2455 is not a second faction. Note that orphaning a duplicate is NOT enough to hide it, since the encyclopedia ignores reachability; the attribute for that is `is_hidden_encyclopedia`, not `hidden_in_encyclopedia`.
 - **Source:** the 2026-08-29 goblin tree merge. Origin recorded in `tools/promote_borrowed_cultures.py`, which states plainly that both kingdoms previously ran on their host culture.
 
+### A data rule derived from the cases in front of you is calibrated, not proven
+One pass produced four instances of the same shape. A registry sync compared a trimmed value
+against an untrimmed one, which is safe only if no value carries stray whitespace: six did, and
+twelve languages lost real translations. "The translations already carry the accents, so an
+accent-only English change needs no re-translation" was verified against Théoden and Éomer and
+applied to Rhûn, Khand and Harad, where 23 of 28 keys were left permanently misspelled. A merge
+model was inferred from a load-order fact rather than read out of the engine. A parse floor of
+"> 1000" was picked against 1400 rows without asking which source contributes which rows, leaving
+an entire stylesheet able to stop matching while the gate stayed green.
+- **Why missed:** each rule was true of every case its author had looked at. Nothing prompted a
+  check of the complement, and a passing result looks the same whether the rule holds everywhere or
+  only on the sample.
+- **Prevent:** when you derive a data rule from examples, write down the population you checked and
+  then check the complement before generalising. If the rule encodes engine behaviour, decompile the
+  engine instead of inferring from an adjacent fact. If it is a threshold, derive it per source so
+  it cannot be satisfied by the wrong half of the data. Normalise both sides of any comparison, or
+  neither.
+- **Source:** the 2026-08-29 lord identity reconciliation, `docs/reviews/rca-lord-identity-2026-08-29.md`.
+
+### A translation row that merely RESEMBLES the English is invisible to the pipeline forever
+Four biographies were written into the twelve language files before a later step added diacritics
+to the English, leaving `Grima Grimmoding` against a registry that had moved to `Gríma Grimmóding`.
+The translator's discovery gate is `cur_text == eng_text`, so a near-miss is never staged again;
+`--sync-ids` does not help because the key is present rather than missing; and the cache is keyed on
+`string_id` alone, so a rebuild re-emits the same near-miss. The rows would have shipped as mangled
+English in all twelve languages permanently, with no diagnostic anywhere and
+`LanguageFileCoverageTests` green throughout, because presence is all it checks.
+- **Why missed:** the rows were correct when written. They went stale because a later edit touched
+  only the English and the registry. No gate looked for the near-miss, and the exact-match one
+  cannot: an untranslated row is legitimately identical to its English.
+- **Prevent:** when a reset writes English into a language file, copy the registry's BYTES rather
+  than retyping the sentence, and do it after any pass that edits the English. `AccentStrippedTranslationTests`
+  now fails on any row that is a diacritic-fold of its English, which a real translation never is.
+- **Source:** the same pass. Related: RCA #388, the cache serving old wording back.
+
+### An XSLT template that does not strip an attribute inherits vanilla's, and no repo test can see it
+`heroes.xslt` overlays vanilla `heroes.xml` with `<xsl:copy>` plus an `@*[local-name() != ...]`
+filter. Every attribute the filter does not name is copied from vanilla, and where TAOM has reused
+a vanilla id for a different character, vanilla's value describes somebody else. Shipped result:
+Gríma Wormtongue married to Éowyn with three children by her, Erkenbrand married to his own bearded
+son, Duilin married to the woman the same template calls his mother, and three of Grimbold's
+children with a female father and a male mother.
+- **Why missed:** the inherited value exists nowhere in the repo, so a test that reads the markup is
+  looking at a file that does not contain the bug. A first pass of gates built exactly that way went
+  green on all six family invariants while eight of these were still live.
+- **Prevent:** for data that reaches the game through a transform, assert on the transform's OUTPUT.
+  `LordFamilyTransformTests` runs both stylesheets over the real vanilla documents with
+  `XslCompiledTransform` and checks the graph the engine computes, skipping where the game is not
+  installed. The authoring rule that goes with it: a template that assigns `spouse`, `father` or
+  `mother` to a reused vanilla id must strip every family attribute it does not itself set.
+- **Source:** the 2026-08-29 lord identity reconciliation. `docs/features/lord-identity-reconciliation.md`.
+
+### A regex that pins attribute order silently halves a data gate's reach
+`LordNameAndSexConsistencyTests` matched `<NPCCharacter id="..." name="{=...}..."`, which requires
+`id` first and `name` second. Of 1184 entries in `characters/lords.xml`, 584 matched. The 600 it
+skipped are the ones written `id="..." race="..." name="..."`, which is the entire Dol Guldur,
+Isengard and Mordor roster: every orc and uruk in the mod. The gate had been reporting zero drift
+across a population it was not reading.
+- **Why missed:** a passing data gate looks identical whether it read everything or half of
+  everything. Nothing prints the denominator.
+- **Prevent:** parse attributes order-independently, and assert the population size the parse found
+  (`Assert.IsTrue(lords.Count > 1000)`) so a shape change fails loudly instead of quietly shrinking
+  the sample. Worth auditing any other data test whose regex bakes in attribute order.
+- **Source:** the 2026-08-29 lord identity reconciliation.
+
+### The same character authored twice, once with a name and once with a biography
+Five Rohirrim (Théodwyn, Éowyn, Elfgrim, Herubrand, Siegeberht) existed as correctly named
+`<NPCCharacter>` entries AND as biographies attached to entirely different vanilla ids. Three of the
+correctly named ones had no `<Hero>` entry, so they never entered a campaign at all: Éowyn Eoforing
+is fully authored, fully equipped, and has never once existed in play. The same shape turned up in
+Isengard (Zorlag, Rukthar, Drûgash) and for a second lord named Duilin.
+- **Why missed:** the two halves are separate files with separate authors and no cross-check, and a
+  lord with no `<Hero>` entry produces no error, no warning and no encyclopedia row. It is invisible
+  rather than wrong.
+- **Prevent:** gate that every lord either has a `<Hero>` entry or is on a named exclusion list, and
+  make the list self-expiring (a second assertion fails when an exclusion stops being needed). When
+  a biography names somebody the data does not, search the roster for that name before renaming
+  anything: the character usually already exists, and reattaching the prose keeps the twelve
+  translations as a key rename instead of throwing them away.
+- **Source:** the 2026-08-29 lord identity reconciliation, which added 36 missing `<Hero>` entries
+  and left 23 excluded for want of a derivable clan.
+
 ### A pool-composition tool that never filtered mercenaries was hidden by pool ordering
 `tools/build_clan_specs.py` excluded `_boss` troops from the roster pool but not `_merc` ones, so
 tavern mercenaries were always eligible for a lord's party template. No shipped spec contained one,

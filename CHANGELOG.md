@@ -4,6 +4,119 @@
 
 ## 2026-08-29
 
+### fix(lords): the encyclopedia was describing the wrong people
+
+A named lord is defined twice. `characters/lords.xml` and `lords.xslt` decide who he is; 
+`characters/heroes.xml` and `heroes.xslt` decide what the encyclopedia says about him. The two
+halves were authored from different rosters and never reconciled, so the game shipped Gríma
+Wormtongue married to Éowyn with three children by her, Erkenbrand married to his own bearded son,
+Duilin married to the woman the same template calls his mother, and one lord literally named
+**RandomDude**, translated as a placeholder into twelve languages (`ZufälligerTyp` in German,
+`СлучайныйПарень` in Russian).
+
+Two new test classes opened at **57 biographies naming somebody other than the lord they are
+attached to, 31 spelling a name with its diacritics stripped, 4 parent links pointing at a parent
+of the wrong sex, 15 same-sex marriages and 1 marriage that did not point back**. All are now zero.
+
+**Reattached rather than renamed.** Where a biography had been written onto the wrong id, the prose
+moved to the id that already carried that name, and the twelve translations moved with it as a key
+rename so nothing had to be re-translated. Théodwyn, Éowyn, Elfgrim, Herubrand and Siegeberht were
+all authored in `characters/lords.xml` already; three of them had no `<Hero>` entry at all, so
+Éowyn Eoforing has never once entered a campaign. `heroes.xslt:2452` was already wiring Éomer's
+mother to `lord_4_3_3`, which is Théodwyn, while her biography sat on `lord_4_3`, who is vanilla's
+Aldric. The registry and all twelve locales agreed with the lords side on every one of these, which
+is what settled the direction.
+
+**The half the repo cannot see.** A `heroes.xslt` template that does not strip `father`, `mother` or
+`spouse` inherits vanilla's, and vanilla's is about a different character. Eight defects were
+invisible to any test that reads markup, including three of Grimbold's children carrying a female
+father and a male mother ever since `3c7f4e25` made him male without turning the parents over.
+`LordFamilyTransformTests` now runs both stylesheets over the real vanilla documents with
+`XslCompiledTransform` and checks the graph the engine actually computes; it found those eight and
+is green on all 1,396 computed heroes. It skips rather than fails where the game is not installed.
+
+**Sex corrections, 14 of them,** each moving `is_female`, the `beard_tags` block and the
+`BodyProperties` key together as the lesson file requires. This clears the three `a00086da`
+deferred (`lord_WE9_u` Duilin, `lord_WE9_u2` Rosfin, `lord_1_52_1` Anariel) plus six Dol Guldur
+wives whose biographies say "she" throughout, and Maireas, the Variag warlord who was married to
+her own wife. `lord_WE9_u` and `lord_WE9_u2` are now in `GENDER_OVERRIDES`: vanilla says Euresa is
+female, so deleting the attribute alone would let the next `complete_lords_xslt.py --apply` put it
+straight back. That is how the Grimbold bug was made.
+
+**36 lords that never spawned** now have `<Hero>` entries, taken from the lord each belongs to and
+not invented: Imrahil's four children, nine Mordor heirs sitting in their fathers' warbands, four
+Rohirrim heading the houses `spclans.xslt` names after them, and the rest children of a couple the
+data already declares. **23 are deliberately left out** and named in the test: 22 `lord_EW_*`
+authored under a "Placeholder face" comment with no house anywhere in the repo, and `lord_WE9_l_1`,
+a second lord called Duilin.
+
+Localization: 5 keys renamed so their translations follow the character, and 6 new keys added. Of
+the 84 keys whose English moved, **50 moved materially and are reset to English in all twelve
+files and dropped from `tools/translation_cache/`**, which is keyed on `string_id` with no memory
+of the English it came from (RCA #388). 28 changes were accent-only. Mogra and Snaga were also
+reset: renamed off vanilla in `c9434b5a`, only Polish was ever re-translated and eleven locales
+still rendered Callinia and Synesios. **54 keys now await a translator run** (7 names, 47
+biographies).
+
+**Nine review agents found fourteen surviving findings, six of them defects this changeset
+introduced. All are fixed here; nothing deferred.** Full write-up:
+[`docs/reviews/rca-lord-identity-2026-08-29.md`](docs/reviews/rca-lord-identity-2026-08-29.md).
+
+Localization, three defects, all mine:
+
+1. Six `lords.xslt` name values carried a trailing space. The registry sync trimmed one side of its
+   comparison and not the other, read those six as changed strings, and overwrote their
+   translations in all twelve languages with the English. German lost `Nazgûl, der Dunkle
+   Marschall` and `Gorwulf, der Eber`. 49 locale rows and their cache rows restored, the six values
+   trimmed, and `EveryLordNameInLordsXsltMatchesTheRegistry` now fails on stray whitespace or on
+   any name where the stylesheet and the registry disagree. Nothing compared those two files.
+2. The four new Gríma-family biographies were written into the twelve language files BEFORE the
+   diacritic pass ran over the English, so every locale held `Grima Grimmoding` against a registry
+   that said `Gríma Grimmóding`. A row that merely resembles the English is invisible to the
+   translator forever, because its gate is `cur_text == eng_text`. 48 rows now carry the registry's
+   exact bytes, and `NoLanguageRowIsTheEnglishWithItsDiacriticsStripped` gates the class.
+3. "The translations already carry the accents" held for the Théoden family and failed everywhere
+   else: 23 of the 28 accent-only keys left up to seven Latin locales spelling Ælle, Rúmil, Gûrtilm,
+   Amdûr, Lûthkan and Cuthræd without diacritics, permanently. 140 rows had the accented token
+   substituted in place, keeping the prose, and 28 cache rows were dropped.
+
+Data, five more:
+
+4. **Three further names shipped as placeholders**, alongside RandomDude: `lord_5_7` "Khand
+   PlaceHolder" (registered and translated into twelve languages), `lord_L1_3` "Child Placeholder"
+   and `lord_M1_12` "PlaceHolder Child To Not Break Game". Now Cadwyr, Aerlin and Faelen.
+5. Eight parent links this pass inferred from id patterns were disproved by the ages: `lord_4_21_1`
+   had a father his own age, `lord_4_27_2` one a year older. Links dropped, and Théodwyn aged 26 to
+   45, which also repairs a pre-existing gap of five years to Éomer.
+6. Giving dormant lords Hero entries made five Gondor names collide between two lords who now both
+   spawn, and named Gûlnak's son after Gûlnak's rival (`lord_M16_11`, now Ushgar). `lord_6_23`'s
+   biography named "Borlad", a lord that exists nowhere.
+7. De-marrying Elbet left her holding three children by Erkenbrand. Mérthú at 29 could not be the
+   mother of his 19-year-old son either; she is 41 now and those three are hers.
+8. Seven Dol Guldur wives flipped to female kept a male skill set. The lesson names three things
+   that move together with `is_female`; `skill_template` is a fourth.
+
+Three of the new gates had the blind spots they exist to catch: a parse floor of `> 1000` against
+1400 rows let either stylesheet stop matching while staying green, both loaders modelled
+`characters/lords.xml` as replacing a node when `MBObjectManager.MergeElementAttributes` merges per
+ATTRIBUTE, and a duplicate id inside one file was swallowed by the last write. All three fixed.
+
+Four new gates: display-name collision within a culture, parent-age plausibility (68 pre-existing
+violations baselined in `impossible-age-links-baseline.txt`, shrink-only), stylesheet-versus-registry
+name agreement, and the accent-stripped translation check.
+
+Suite 7745 green, `validate_moduledata.py` PASS, `check_external_xslt.py` PASS on 17 stylesheets.
+
+**Owed:** `/localize` for the 54 staged rows (`ANTHROPIC_API_KEY` is not set in this environment, so
+the translator could not run here), and an in-game smoke on a NEW campaign. Name, `is_female` and
+the encyclopedia text all bake at hero creation (`Hero.cs:2239-2251`, `[SaveableProperty(200)]`,
+`[SaveableProperty(190)]`), so none of this reaches an existing save.
+
+**Flagged, not fixed:** `clan_vlandia_5` is "House of Oscyteling" in `spclans.xslt` while the family
+inside it is Ordlacing, and the `lord_NE*` Dunland bios carry Anglo-Saxon and Norse names while
+`lord_V11_l` has a Rohirric one on a "western vales" bio. Both look like the same swap, neither is
+a name-versus-biography disagreement, so both are left alone.
+
 ### refactor(troops): three goblin kingdoms, one troop tree
 
 TAOM shipped three copies of one goblin tree. `troops_goblin.xml`, `troops_bluecraig.xml` and
@@ -47,6 +160,17 @@ the pool culture's.
 
 No localization work: the troop name keys were inline defaults, registered in no strings file and
 translated in none of the 12 languages.
+
+`tools/data/armor_roster_tiers.json` regenerated, which carries more than this merge. The cache was
+built 2026-08-17 and the dead-mesh cleanup ran on the 28th, so 57 `sk_dwarf_erebor_*` items it still
+listed no longer exist: they survive only in the `.bak-deadmesh-20260828130236` files beside the real
+XML, and grepping the Armory folder without filtering to `*.xml` finds them and reads as if nothing
+had been deleted. The refresh also moves 59 `anchorLevel` values on Black Numenorean and dwarf-iron
+armor, from troop edits committed since the 17th. **No item changed its derived tier**, and no anchor
+moved because of a goblin-family wearer, which is what makes the goblin half of this diff safe: the
+retired troops wore equipment byte-identical to their goblin twins at identical levels, so every
+item's lowest-wearer anchor was already what it is now. The two capstones are the only merged-culture
+wearers left.
 
 Suite 7733 green, `validate_moduledata.py` PASS, `validate_all_troop_refs.py` PASS.
 

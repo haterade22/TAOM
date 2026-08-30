@@ -43,6 +43,15 @@ SKIP_IDS = {'main_hero'}
 GENDER_OVERRIDES = {
     'lord_4_6': None,     # vanilla Countess Calatild, reused as Grimbold of Grimslade
     'lord_WE8_c': None,   # vanilla Icratia, reused as Pelendur son of Golasgil
+    'lord_WE9_u': None,     # vanilla Euresa, reused as Duilin, elder son of Duinhir
+    'lord_WE9_u2': 'true',  # vanilla Torvasis, reused as Rosfin, wife of Duinhir
+    # Vanilla says female and TAOM wants male, so the attribute must be absent AND named here
+    # or a regeneration copies vanilla's true straight back.
+    'lord_B8_l': None,      # vanilla female, reused as Maireas the Variag warlord
+    # Vanilla says male and TAOM wants female. An explicit xsl:attribute survives on its own;
+    # these are belt and braces so a hand edit to the stylesheet cannot quietly undo them.
+    'lord_3_13_2': 'true',  # vanilla female already, pinned against a future flip
+    'lord_B8_s': 'true',    # vanilla Rodarac male, reused as the warlord's wife
 }
 
 # Faction groupings for organizing output

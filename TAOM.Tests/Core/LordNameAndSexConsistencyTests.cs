@@ -72,16 +72,23 @@ public class LordNameAndSexConsistencyTests
         Assert.IsTrue(registry.Count > 0, "parsed no lord name strings; taom_xslt_strings.xml shape changed");
 
         var drift = new List<string>();
-        foreach (Match m in Regex.Matches(
-            lords, @"<NPCCharacter id=""(?<id>[^""]+)"" name=""\{=(?<key>aom_lord_[^}]+)\}(?<literal>[^""]*)"""))
+        // Attribute-order independent on purpose. The original pattern required id first and name
+        // second, which silently skipped the 600 entries written `<NPCCharacter id="..." race="..."
+        // name="...">` - the whole Dol Guldur roster among them.
+        foreach (Match m in Regex.Matches(lords, @"<NPCCharacter\b(?<attrs>[^>]*)>"))
         {
-            var key = m.Groups["key"].Value;
+            var attrs = m.Groups["attrs"].Value;
+            var idMatch = Regex.Match(attrs, @"\bid=""(?<v>[^""]*)""");
+            var nameMatch = Regex.Match(attrs, @"\bname=""\{=(?<key>aom_lord_[^}]+)\}(?<literal>[^""]*)""");
+            if (!idMatch.Success || !nameMatch.Success) continue;
+
+            var key = nameMatch.Groups["key"].Value;
             if (AcceptedNameDifferences.Contains(key)) continue;
             if (!registry.TryGetValue(key, out var registered)) continue;
 
-            var literal = m.Groups["literal"].Value;
+            var literal = nameMatch.Groups["literal"].Value;
             if (!string.Equals(literal, registered, StringComparison.Ordinal))
-                drift.Add($"  {m.Groups["id"].Value}: lords.xml says \"{literal}\", registry says \"{registered}\"");
+                drift.Add($"  {idMatch.Groups["v"].Value}: lords.xml says \"{literal}\", registry says \"{registered}\"");
         }
 
         Assert.AreEqual(0, drift.Count,
@@ -99,8 +106,10 @@ public class LordNameAndSexConsistencyTests
         var lords = ReadModuleData(root, "characters", "lords.xml");
 
         var offenders = new List<string>();
-        foreach (Match m in Regex.Matches(lords, @"<NPCCharacter id=""(?<id>[^""]+)""(?<attrs>[^>]*)>"))
+        foreach (Match m in Regex.Matches(lords, @"<NPCCharacter\b(?<attrs>[^>]*)>"))
         {
+            var id = Regex.Match(m.Groups["attrs"].Value, @"\bid=""(?<v>[^""]*)""");
+            if (!id.Success) continue;
             var female = Regex.Match(m.Groups["attrs"].Value, @"is_female=""(?<v>\w+)""");
             // Six entries use is_female="True"; the engine's bool parse tolerates either casing.
             if (!female.Success ||
@@ -110,7 +119,7 @@ public class LordNameAndSexConsistencyTests
             var close = lords.IndexOf("</NPCCharacter>", m.Index, StringComparison.Ordinal);
             if (close < 0) continue;
             if (lords.IndexOf("<beard_tags>", m.Index, close - m.Index, StringComparison.Ordinal) >= 0)
-                offenders.Add("  " + m.Groups["id"].Value);
+                offenders.Add("  " + id.Groups["v"].Value);
         }
 
         Assert.AreEqual(0, offenders.Count,

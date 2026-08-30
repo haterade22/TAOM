@@ -751,12 +751,12 @@
     <string id="aom_lord_1_52_1_name" text="Anariel" />
     <string id="aom_lord_1_52_2_name" text="Barandor" />
     <string id="aom_lord_1_73_1_name" text="Belwen" />
-    <string id="aom_lord_1_62_1_name" text="Arytha" />
+    <string id="aom_lord_1_62_1_name" text="Isfin" />
     <string id="aom_lord_1_30_1_name" text="Svala Czerwony Kieł" />
     <string id="aom_lord_1_30_2_name" text="Mogra" />
     <string id="aom_lord_1_30_3_name" text="Snaga" />
     <string id="aom_lord_1_48_1_name" text="Nazgûl, Skażony" />
-    <string id="aom_lord_1_48_2_name" text="Nazgûl, Cień Ludzi Północy" />
+    <string id="aom_lord_1_48_2_name" text="Nazgûl, the Shadow of the Northmen" />
     <string id="aom_lord_1_48_3_name" text="Nazgûl, Cień Umbaru" />
     <string id="aom_lord_1_54_1_name" text="Constalia" />
     <string id="aom_lord_1_55_1_name" text="Megethia" />
@@ -923,7 +923,7 @@
     <string id="aom_lord_V11_u_name" text="Voleric" />
     <string id="aom_lord_V9_u_name" text="Urundulf" />
     <string id="aom_lord_5_1_name" text="Vargûl, Najwyższy Wodz Khandu" />
-    <string id="aom_lord_5_7_name" text="Khand PlaceHolder" />
+    <string id="aom_lord_5_7_name" text="Cadwyr" />
     <string id="aom_lord_5_3_name" text="Ergeon" />
     <string id="aom_lord_5_4_name" text="Nywin" />
     <string id="aom_lord_5_5_name" text="Melidir" />
@@ -945,7 +945,7 @@
     <string id="aom_lord_5_20_name" text="Siaramus" />
     <string id="aom_lord_5_21_name" text="Carfyd" />
     <string id="aom_lord_5_22_name" text="Fiarad" />
-    <string id="aom_lord_5_1_1_name" text="RandomDude" />
+    <string id="aom_lord_5_1_1_name" text="Nyveth" />
     <string id="aom_lord_5_3_1_name" text="Ranaon" />
     <string id="aom_lord_5_3_2_name" text="Ladogual" />
     <string id="aom_lord_5_5_1_name" text="Eilidh" />
@@ -1028,7 +1028,7 @@
     <string id="aom_lord_S9_l_name" text="Bombur" />
     <string id="aom_lord_S9_m_name" text="Dakhila" />
     <string id="aom_lord_S9_u_name" text="Chastimir" />
-    <string id="aom_lord_SE8_c_name" text="Itaria" />
+    <string id="aom_lord_SE8_c_name" text="Shagrala" />
     <string id="aom_lord_SE9_c1_name" text="Pagarios" />
     <string id="aom_lord_SE9_c2_name" text="Diasca" />
     <string id="aom_lord_SE9_l_name" text="Grishnákh, kapitan Uruków" />
@@ -1038,13 +1038,13 @@
     <string id="aom_lord_WE9_l_name" text="Duinhir" />
     <string id="aom_lord_WE9_u_name" text="Duilin" />
     <string id="aom_lord_WE9_u2_name" text="Rosfin" />
-    <string id="TAOM_hero_dead_2_1" text="Starszy pan Bardingów poległ, broniąc Dale przed najeźdźcami ze Wschodu. Jego ofiara zabezpieczyła górskie przełęcze i jest wspominana w pieśniach w całym królestwie." />
-    <string id="TAOM_hero_dead_2_2" text="Szlachcianka z Dale, która zmarła podczas zimowej zarazy po wojnie. Znana była z hojności wobec prostego ludu." />
-    <string id="TAOM_hero_dead_3_1" text="Wódz Haradrimów, który poprowadził pustynną jazdę w bitwie u Czarnej Bramy. Padł od gondorskich strzał, lecz na południu czczą go jako męczennika." />
-    <string id="TAOM_hero_dead_6_1" text="Wielki chan, który jako pierwszy zjednoczył plemiona Easterlingów pod sztandarem Rhûnu. Jego podboje przesunęły granice Złotego Królestwa aż po brzegi Morza Rhûn." />
-    <string id="TAOM_hero_dead_6_2" text="Szanowany nojan, który poległ w walce z Wolnymi Ludami. Jego wdowa Gurtilm z żelazną determinacją przewodzi teraz ich klanowi." />
-    <string id="TAOM_hero_dead_6_3" text="Główny nojan klanu Arkit. Jego taktyczny geniusz w konnym łucznictwie ukształtował całe pokolenie wojowników Wschodu." />
-    <string id="TAOM_hero_dead_6_4" text="Szlachcic z klanu Arkit, syn wielkiego nojana. Zmarł młodo, lecz zapowiadał się na znakomitego wojownika." />
+    <string id="TAOM_hero_dead_2_1" text="Olek the Old fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom." />
+    <string id="TAOM_hero_dead_2_2" text="Varra, a noblewoman of Dale, perished in the winter plague that followed the war. She was known for her charity to the common folk." />
+    <string id="TAOM_hero_dead_3_1" text="Nimr was a Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south." />
+    <string id="TAOM_hero_dead_6_1" text="Urkhun was the great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun." />
+    <string id="TAOM_hero_dead_6_2" text="Solun was a respected noyan who fell in battle against the Free Peoples. His widow Gûrtilm now leads their clan with iron determination." />
+    <string id="TAOM_hero_dead_6_3" text="Kuyug was chief noyan of the Arkit clan. His brilliance with horse archery shaped an entire generation of Easterling warriors." />
+    <string id="TAOM_hero_dead_6_4" text="Undul was a noble of the Arkit clan and son of the great noyan. He died young but showed promise as a warrior." />
     <string id="TAOM_hero_1_1" text="Brenin Wulf rządzi dzikimi klanami Dunlandu żelazną ręką. Zwany Żelazną Dłonią, zjednoczył rozproszone plemiona wzgórz podbojem i przebiegłością. Marzy o odzyskaniu ziem zabranych przez Władców Koni z Rohanu." />
     <string id="TAOM_hero_1_2" text="Freya Wilcze Serce jest zaciętą żoną Brenina Wulfa. Wojownicy szanują ją za biegłość w walce toporem i tarczą." />
     <string id="TAOM_hero_1_41" text="Beregund Wilczy Syn to zaufany kapitan Dunlandu, znany z umiejętności w napadach na osady Rohirrimów." />
@@ -1086,16 +1086,16 @@
     <string id="TAOM_hero_1_67" text="Eorwyn Pierzysty Bełt woli łuk od klingi i uderza z cienia." />
     <string id="TAOM_hero_1_58" text="Gorvin Groźny to ponury wódz, którego okrucieństwo jest legendarne nawet wśród Dunlandczyków." />
     <string id="TAOM_hero_1_70" text="Veyra Cień niezauważona wślizguje się do wrogich obozów, by nocą podcinać gardła." />
-    <string id="TAOM_hero_NE7_u" text="Posiwiały w bojach wojownik, który służy jako doradca wodza klanu." />
-    <string id="TAOM_hero_NE8_l" text="Wódz górskiego klanu, zahartowany latami wojen na pograniczu." />
-    <string id="TAOM_hero_NE8_s" text="Żona wodza, biegła w sztuce uzdrawiania i wiedzy o zielach." />
-    <string id="TAOM_hero_NE8_c1" text="Pierworodne dziecko klanu, szkolone w sztuce wojennej od dzieciństwa." />
-    <string id="TAOM_hero_NE8_c2" text="Drugie dziecko przywódcy klanu, znane ze sprytu i ambicji." />
+    <string id="TAOM_hero_NE7_u" text="Haldric the Black Fang advises his clan's chieftain, and earned the name before he was twenty." />
+    <string id="TAOM_hero_NE8_l" text="Eadric the Swift is chieftain of a mountain clan, hardened young by border warfare." />
+    <string id="TAOM_hero_NE8_s" text="Aeloria is wife to the chieftain, and skilled in the healing arts and herb lore." />
+    <string id="TAOM_hero_NE8_c1" text="Cerdic, called the Anvil, is firstborn of the clan and has trained for war since childhood." />
+    <string id="TAOM_hero_NE8_c2" text="Morwen is second child of the clan leader, known already for cunning and ambition." />
     <string id="TAOM_hero_1_56" text="Tormund Młot zdobył swe imię niszczącymi szarżami z młotem bojowym." />
     <string id="TAOM_hero_1_56_1" text="Gwenna jest żoną Tormunda; zarządza włościami klanu, gdy on wyrusza na wojnę." />
-    <string id="TAOM_hero_NE9_l" text="Sędziwy wódz, którego mądrości szukają wszystkie klany Dunlandczyków." />
-    <string id="TAOM_hero_NE9_s" text="Syn starego wodza, pragnący dowieść swej wartości w boju." />
-    <string id="TAOM_hero_NE9_d" text="Córka klanu, wyszkolona zarówno w walce, jak i w dyplomacji." />
+    <string id="TAOM_hero_NE9_l" text="Valthor Scalecleaver is a chieftain whose counsel is sought across the Dunlending clans." />
+    <string id="TAOM_hero_NE9_s" text="Rurik Fanghew is son of the old chieftain, and eager to prove himself in battle." />
+    <string id="TAOM_hero_NE9_d" text="Sylva Serpent-Strike is a daughter of the clan, trained in both combat and diplomacy." />
     <string id="TAOM_hero_1_7" text="Denethor II, Namiestnik Gondoru, rządzi z Białej Wieży Minas Tirith. Kiedyś człowiek wielkiej mądrości, stał się dumny i nieugięty. Sprzeciwia się powrotowi króla, wierząc, że tylko on może ocalić Gondor przed cieniem Mordoru." />
     <string id="TAOM_hero_1_75" text="Boromir, najstarszy syn Denethora, jest Naczelnym Kapitanem Gondoru. Wielki i słynny wojownik, szuka każdej broni, by obronić swój lud przed ciemnością." />
     <string id="TAOM_hero_1_8" text="Húrioneth służy Domowi Húrinionath, wierna stróżka wiedzy o namiestnikach Gondoru." />
@@ -1169,8 +1169,8 @@
     <string id="TAOM_hero_1_49" text="Skarnak prowadzi kompanię orków Mordoru, brutalny dowódca, który wspina się w hierarchii, łamiąc tych nad sobą. Bat i Oko to jedyne prawa, jakich przestrzega." />
     <string id="TAOM_hero_1_49_1" text="Tristania służy w ciemnych zastępach." />
     <string id="TAOM_hero_1_49_2" text="Gordiana mieszka w cieniu Czarnej Wieży." />
-    <string id="TAOM_hero_1_30_2" text="Callinia służy ciemnym potęgom Mordoru." />
-    <string id="TAOM_hero_1_30_3" text="Synesios jest sługą Cienia." />
+    <string id="TAOM_hero_1_30_2" text="Mogra serves the dark powers of Mordor." />
+    <string id="TAOM_hero_1_30_3" text="Snaga is a servant of the Shadow." />
     <string id="TAOM_hero_1_56_2" text="Rustica rusza na wojnę przy boku swego ojca Tormunda; to zapalczywa młoda wojowniczka klanu." />
     <string id="TAOM_hero_1_63_2" text="Comatasa to ork zrodzony do wojny." />
     <string id="TAOM_hero_1_63_3" text="Elidilea służy w ciemnej hierarchii." />
@@ -1189,7 +1189,7 @@
     <string id="TAOM_hero_1_55_1" text="Megethia służy ciemnym potęgom." />
     <string id="TAOM_hero_1_72" text="Bolg jest potężnym wodzem orków, potomkiem Azoga Plugawcy." />
     <string id="TAOM_hero_1_72_1" text="Viviana służy w ciemnej hierarchii." />
-    <string id="TAOM_hero_SE8_c" text="Ork wyhodowany w jamach Mordoru." />
+    <string id="TAOM_hero_SE8_c" text="Shagrala was bred in the pits of Mordor and has fought her way up to a command of her own." />
     <string id="TAOM_hero_SE9_l" text="Czarny Númenorejczyk, władca dowodzący twierdzą w Mordorze." />
     <string id="TAOM_hero_SE9_s" text="Czarnonúmenorejska czarodziejka o ciemnej mocy." />
     <string id="TAOM_hero_SE9_c1" text="Dziedzic czarnonúmenorejskiego rodu, wyszkolony w czarnych sztukach." />
@@ -1242,7 +1242,7 @@
     <string id="TAOM_hero_2_19_1" text="Vitomira służy przy boku Dwalina." />
     <string id="TAOM_hero_2_20" text="Oin jest krasnoludzkim starcem, strażnikiem dawnej wiedzy i sztuki uzdrawiania." />
     <string id="TAOM_hero_2_20_1" text="Kisha jest żoną Oina, biegłą w wiedzy o zielarstwie." />
-    <string id="TAOM_hero_S8_u" text="Posiwiały weteran, który strzeże górskich sal." />
+    <string id="TAOM_hero_S8_u" text="Galyk is a grizzled veteran who guards the mountain halls." />
     <string id="TAOM_hero_3_1" text="Khadurak jest Taskralem Haradu, najwyższym wodzem armii Południa. Prowadzi bojowe słonie mûmakil przeciw wrogom swego ludu, sprzymierzony z Mordorem przeciwko Gondorowi." />
     <string id="TAOM_hero_3_2" text="Szlachetna dama Haradrimów wysokiego rodu." />
     <string id="TAOM_hero_3_7" text="Dhiyul jest dziedzicem Taskrala, wyszkolonym w sztuce jeźdźców mûmaków." />
@@ -1268,7 +1268,7 @@
     <string id="TAOM_hero_3_15" text="Ghuzid dowodzi jeźdźcami mumaków z głębokiego południa." />
     <string id="TAOM_hero_3_15_1" text="Shimra jest żoną pana mumaków." />
     <string id="TAOM_hero_3_15_2" text="Bushila szkoli młodych jeźdźców mumaków." />
-    <string id="TAOM_hero_3_16" text="Rumil jest wodzem plemion złotego sztandaru." />
+    <string id="TAOM_hero_3_16" text="Rúmil jest wodzem plemion złotego sztandaru." />
     <string id="TAOM_hero_3_16_1" text="Farina jest żoną wodza złotego sztandaru." />
     <string id="TAOM_hero_3_17" text="Orophin dowodzi jeźdźcami węża z dalekiego południa." />
     <string id="TAOM_hero_3_17_1" text="Shaima jest żoną Orophina." />
@@ -1299,26 +1299,28 @@
     <string id="TAOM_hero_4_14" text="Morcon jest zaufanym kapitanem królewskiego dworu." />
     <string id="TAOM_hero_4_141" text="Amorcon służy w gwardii ramię w ramię ze swym krewnym." />
     <string id="TAOM_hero_4_15" text="Erdurand jest jeźdźcem z dworu Théodena." />
-    <string id="TAOM_hero_4_3" text="Théodwyn była siostrą króla Théodena i matką Éomera oraz Éowyny. Zmarła z żalu po tym, jak jej mąż Éomund został zabity przez orków." />
+    <string id="TAOM_hero_4_3_3" text="Théodwyn była siostrą króla Théodena i matką Éomera oraz Éowyny. Zmarła z żalu po tym, jak jej mąż Éomund został zabity przez orków." />
+    <string id="TAOM_hero_4_3" text="Aldric holds a hall in the Eastfold and rides in the muster of Edoras. He is a plain horseman of no great house, trusted for it." />
+    <string id="TAOM_hero_rohan_10_1" text="Éomund of the Eastfold rode as Marshal of the Mark and wed Théodwyn, sister of the king. Orcs cut him down in the Emyn Muil, and his two children passed into Théoden's keeping." />
     <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Trzeci Marszałek Marchii, jest bratankiem Théodena i następcą tronu. Z zaciekłą wiernością prowadzi jeźdźców Wschodniej Bruzdy." />
     <string id="TAOM_hero_4_4" text="Elthild jest szlachetną panią z rodu Eoforingów." />
     <string id="TAOM_hero_4_8" text="Furnhard służy jako zaufany jeździec pod komendą Éomera." />
     <string id="TAOM_hero_4_11" text="Liena służy na królewskim dworze." />
     <string id="TAOM_hero_4_6" text="Grimbold z Grimslade dowodzi jeźdźcami Zachodniej Bruzdy. Zacięty wojownik, obronił Brody Iseny, a później zginął bohatersko na Pelennorze." />
-    <string id="TAOM_hero_4_6_1" text="Deorwyn jest następcą Grimbolda w dowodzeniu." />
+    <string id="TAOM_hero_4_6_1" text="Déorwyn jest następcą Grimbolda w dowodzeniu." />
     <string id="TAOM_hero_4_5" text="Unthery służy jako kapitan jeźdźców Zachodniej Bruzdy." />
     <string id="TAOM_hero_4_9" text="Thomund dowodzi kompanią jeźdźców Zachodniej Bruzdy." />
     <string id="TAOM_hero_4_12" text="Silvind jest tarczodzierżną dziewicą z Zachodniej Bruzdy." />
     <string id="TAOM_hero_4_121" text="Lasand służy w garnizonie Zachodniej Bruzdy." />
     <string id="TAOM_hero_4_16" text="Erkenbrand, pan Zachodniej Bruzdy, dowodzi twierdzą Rogatego Gródka. Przybył z Gandalfem do Helmowego Jaru, by odwrócić losy bitwy." />
-    <string id="TAOM_hero_4_16_1" text="Merthu jest żoną Erkenbranda, panią Rogatego Gródka." />
+    <string id="TAOM_hero_4_16_1" text="Mérthú jest żoną Erkenbranda, panią Rogatego Gródka." />
     <string id="TAOM_hero_4_17" text="Elbet służy na dworze Erkenbranda." />
     <string id="TAOM_hero_4_18" text="Amalgun jest dziedzicem Erkenbranda." />
     <string id="TAOM_hero_4_181" text="Arthamund służy jako kapitan garnizonu Rogatego Gródka." />
     <string id="TAOM_hero_4_19" text="Asela jest tarczodzierżną dziewicą strzegącą Helmowego Wądołu." />
     <string id="TAOM_hero_4_25" text="Lucand dowodzi jeźdźcami Wschodniej Emnet." />
     <string id="TAOM_hero_4_25_1" text="Bertliana jest żoną Lucanda." />
-    <string id="TAOM_hero_4_21" text="Cuthraed Ordlacing patroluje wschodnie rubieże." />
+    <string id="TAOM_hero_4_21" text="Cuthræd Ordlacing patroluje wschodnie rubieże." />
     <string id="TAOM_hero_4_20" text="Varmund dowodzi garnizonem Aldburga." />
     <string id="TAOM_hero_4_20_1" text="Ingeltrud jest żoną Varmunda, panią Aldburga." />
     <string id="TAOM_hero_4_22" text="Wulf Celmunding prowadzi jeźdźców północnych dolin." />
@@ -1327,21 +1329,25 @@
     <string id="TAOM_hero_4_23_1" text="Wulfwynn jest córką Marhatha, wprawną jeźdźczynią." />
     <string id="TAOM_hero_4_23_2" text="Eleduran szkoli rumaki bojowe dla armii króla." />
     <string id="TAOM_hero_4_23_3" text="Eleduran młodszy służy jako dozorca koni." />
-    <string id="TAOM_hero_4_24" text="Grima Smoczy Język był doradcą Théodena, w sekrecie szpiegiem Sarumana. Jego szeptane kłamstwa zatruwały umysł króla, aż Gandalf złamał ten urok." />
-    <string id="TAOM_hero_4_24_1" text="Éowyna, pani Rohanu, jest siostrą Éomera i bratanicą Théodena. Zgładziła Czarnoksiężnika na Pelennorze, powalając postrach wieków." />
-    <string id="TAOM_hero_4_24_2" text="Elfgrim służy jako jeździec królewskiego dworu." />
-    <string id="TAOM_hero_4_24_3" text="Herubrand strzeże królewskiej sali." />
-    <string id="TAOM_hero_4_24_4" text="Siegeberht patroluje granice Rohanu." />
+    <string id="TAOM_hero_4_24" text="Gríma Smoczy Język był doradcą Théodena, w sekrecie szpiegiem Sarumana. Jego szeptane kłamstwa zatruwały umysł króla, aż Gandalf złamał ten urok." />
+    <string id="TAOM_hero_4_24_1" text="Adaltrud was wed to Gríma Grimmóding before his counsel turned to Saruman. She keeps a hall at Edoras that the riders no longer visit." />
+    <string id="TAOM_hero_4_24_2" text="Gudonhelda is the eldest daughter of Gríma Grimmóding. She learned early that her father's name opens no doors in Edoras." />
+    <string id="TAOM_hero_4_24_3" text="Ingunde, second daughter of Gríma Grimmóding, tends the horses of a house nobody rides out with." />
+    <string id="TAOM_hero_4_24_4" text="Irmgard is the youngest of Gríma Grimmóding's daughters, and the only one too young to remember the hall before the whispering started." />
+    <string id="TAOM_hero_4_3_2" text="Éowyna, pani Rohanu, jest siostrą Éomera i bratanicą Théodena. Zgładziła Czarnoksiężnika na Pelennorze, powalając postrach wieków." />
+    <string id="TAOM_hero_4_6_2" text="Elfgrim służy jako jeździec królewskiego dworu." />
+    <string id="TAOM_hero_4_16_2" text="Herubrand strzeże królewskiej sali." />
+    <string id="TAOM_hero_4_21_1" text="Siegeberht patroluje granice Rohanu." />
     <string id="TAOM_hero_4_26" text="Peric dowodzi jeźdźcami wzdłuż Bramy Rohanu." />
     <string id="TAOM_hero_4_26_1" text="Reingarda jest tarczodzierżną dziewicą z Bramy." />
-    <string id="TAOM_hero_4_27" text="Aelle Aethellafing broni Bruzd przed najazdami Dunlendingów." />
-    <string id="TAOM_hero_4_27_1" text="Waerburg jest żoną Aellego." />
-    <string id="TAOM_hero_V9_u" text="Doświadczony jeździec, który doradza miejscowemu tanowi." />
+    <string id="TAOM_hero_4_27" text="Ælle Æthellafing broni Bruzd przed najazdami Dunlendingów." />
+    <string id="TAOM_hero_4_27_1" text="Wærburg jest żoną Aellego." />
+    <string id="TAOM_hero_V9_u" text="Urundulf is a seasoned rider who advises the local thane." />
     <string id="TAOM_hero_4_28" text="Fasthelm Morcargas dowodzi południowymi posterunkami straży." />
     <string id="TAOM_hero_4_28_1" text="Morcar jest synem Fasthelma." />
     <string id="TAOM_hero_4_28_2" text="Hereswith jest córką dowódcy południowej straży." />
-    <string id="TAOM_hero_5_1" text="Vargul, Wysoki Wodz Khandu, przewodzi dzikim jeźdźcom Wariagów. Jego przymierze z Mordorem rzuca jego wojowników przeciw Gondorowi w wojnie o Śródziemie." />
-    <string id="TAOM_hero_5_1_1" text="Wojownik z orszaku Wysokiego Wodza." />
+    <string id="TAOM_hero_5_1" text="Vargûl, Wysoki Wodz Khandu, przewodzi dzikim jeźdźcom Wariagów. Jego przymierze z Mordorem rzuca jego wojowników przeciw Gondorowi w wojnie o Śródziemie." />
+    <string id="TAOM_hero_5_1_1" text="Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
     <string id="TAOM_hero_5_3" text="Ergeon jest wodzem, który przewodzi wschodnim klanom Wariagów, znanym z szybkich taktyk konnicy." />
     <string id="TAOM_hero_5_3_1" text="Ranaon jest dziedzicem drużyny Ergeona." />
     <string id="TAOM_hero_5_3_2" text="Ladogual służy jako kapitan w zastępie Ergeona." />
@@ -1381,17 +1387,17 @@
     <string id="TAOM_hero_6_1" text="Zhamik Zhamian, Loke-Khan Rhûnu, włada Złotym Królestwem Easterlingów. Jego przodkowie służyli Sauronowi, a on kontynuuje to mroczne przymierze, marząc o podbiciu ziem Zachodu." />
     <string id="TAOM_hero_6_2" text="Maraia jest żoną Loke-Khana, królową Złotego Królestwa." />
     <string id="TAOM_hero_6_3" text="Bagai służy jako kapitan gwardii królewskiej." />
-    <string id="TAOM_hero_6_4" text="Gurtilm Salurianka dowodzi zachodnimi armiami Rhûnu. Po śmierci męża przejęła dowództwo z żelazną stanowczością." />
+    <string id="TAOM_hero_6_4" text="Gûrtilm Salurianka dowodzi zachodnimi armiami Rhûnu. Po śmierci męża przejęła dowództwo z żelazną stanowczością." />
     <string id="TAOM_hero_6_5" text="Irbo Nikathian przewodzi klanowi Arkit, słynnym konnym łucznikom wschodnich stepów." />
     <string id="TAOM_hero_6_51" text="Khada jest dziedzicem klanu Arkit." />
     <string id="TAOM_hero_6_6" text="Suran dowodzi wojownikami plemion południowych." />
     <string id="TAOM_hero_6_7" text="Chaghan jest księciem Rhûnu, dziedzicem Złotego Królestwa." />
-    <string id="TAOM_hero_6_8" text="Esur jest wojownikiem zastępów Gurtilm." />
-    <string id="TAOM_hero_6_81" text="Nayantai służy jako kapitan w armii Gurtilm." />
+    <string id="TAOM_hero_6_8" text="Esur jest wojownikiem zastępów Gûrtilm." />
+    <string id="TAOM_hero_6_81" text="Nayantai służy jako kapitan w armii Gûrtilm." />
     <string id="TAOM_hero_6_9" text="Temun jest wojownikiem klanu Arkit." />
     <string id="TAOM_hero_6_10" text="Alijin jest księciem rodu królewskiego." />
     <string id="TAOM_hero_6_101" text="Bolat służy w dworze królewskim." />
-    <string id="TAOM_hero_6_11" text="Yana jest szlachcianką zastępów Gurtilm." />
+    <string id="TAOM_hero_6_11" text="Yana jest szlachcianką zastępów Gûrtilm." />
     <string id="TAOM_hero_6_12" text="Abagai jest dziedzicem włości klanu Arkit." />
     <string id="TAOM_hero_6_13" text="Bortu jest szlachcicem rodu królewskiego." />
     <string id="TAOM_hero_6_15" text="Oragur przewodzi konnym łucznikom klanu Arkit." />
@@ -1400,10 +1406,10 @@
     <string id="TAOM_hero_6_16" text="Akvoth Karmian dowodzi południowymi rubieżami Rhûnu." />
     <string id="TAOM_hero_6_16_1" text="Chambui jest żoną Akvotha." />
     <string id="TAOM_hero_6_16_2" text="Unagen jest dziedzicem dowództwa Akvotha." />
-    <string id="TAOM_hero_6_17" text="Amdur Amdurid przewodzi potężnemu klanowi wschodnich stepów." />
+    <string id="TAOM_hero_6_17" text="Amdur Amdûrid przewodzi potężnemu klanowi wschodnich stepów." />
     <string id="TAOM_hero_6_17_1" text="Ergene jest żoną Amdura." />
     <string id="TAOM_hero_6_17_2" text="Yesum jest dziedzicem włości Amduridów." />
-    <string id="TAOM_hero_6_18" text="Luthkan Khundolar dowodzi wojownikami zachodnich prowincji." />
+    <string id="TAOM_hero_6_18" text="Lûthkan Khundolar dowodzi wojownikami zachodnich prowincji." />
     <string id="TAOM_hero_6_18_1" text="Tilun jest żoną Luthkana." />
     <string id="TAOM_hero_6_18_2" text="Chagun jest dziedzicem Khundolarów." />
     <string id="TAOM_hero_6_19" text="Vakheraltan Khundolar jest bratem Luthkana i dowodzi konnymi zwiadowcami." />
@@ -1411,32 +1417,32 @@
     <string id="TAOM_hero_6_19_2" text="Korte jest dziedzicem zwiadowców Vakheraltana." />
     <string id="TAOM_hero_6_20" text="Khurubra Mashakian dowodzi północnymi plemionami Rhûnu." />
     <string id="TAOM_hero_6_20_1" text="Jigur jest żoną Khurubry." />
-    <string id="TAOM_hero_K8_u" text="Doświadczony wojownik, który doradza północnemu wodzowi." />
+    <string id="TAOM_hero_K8_u" text="Boronchar is a seasoned warrior who advises the northern chieftain." />
     <string id="TAOM_hero_6_21" text="Molluk Illnoria dowodzi potężnym klanem konnych wojowników." />
     <string id="TAOM_hero_6_21_1" text="Esachei jest żoną Molluka." />
     <string id="TAOM_hero_6_22" text="Shakhal II Shakhalian włada zamożnym klanem kupieckim Morza Rhûn." />
     <string id="TAOM_hero_6_22_1" text="Eselen jest żoną Shakhala." />
-    <string id="TAOM_hero_6_23" text="Huz-Margoz Huz dowodzi załogami twierdz na zachodnim pograniczu." />
+    <string id="TAOM_hero_6_23" text="Hûz-Margôz Huz dowodzi załogami twierdz na zachodnim pograniczu." />
     <string id="TAOM_hero_6_24" text="Nikath Adekig strzeże południowych przełęczy wiodących do Rhûnu." />
-    <string id="TAOM_hero_A9_l" text="Wódz Haradrimów z południowych pustkowi." />
-    <string id="TAOM_hero_A9_s" text="Żona wodza południowych pustkowi." />
-    <string id="TAOM_hero_A9_c" text="Dziedzic wodza południowych pustkowi." />
-    <string id="TAOM_hero_A9_u" text="Wojownik z południowych plemion." />
-    <string id="TAOM_hero_V11_l" text="Rohirrimski pan zachodnich dolin." />
-    <string id="TAOM_hero_V11_u" text="Doświadczony jeździec, który doradza panu." />
-    <string id="TAOM_hero_V11_c1" text="Dziedzic włości w zachodnich dolinach." />
-    <string id="TAOM_hero_V11_c2" text="Drugie dziecko pana zachodnich dolin." />
-    <string id="TAOM_hero_S9_l" text="Szlachcic z Dale, który strzeże północnych podejść." />
-    <string id="TAOM_hero_S9_m" text="Matriarchini północnego klanu Bardingów." />
-    <string id="TAOM_hero_S9_c" text="Młody dziedzic północnych włości." />
-    <string id="TAOM_hero_S9_u" text="Zaprawiony w boju wojownik północnego garnizonu." />
-    <string id="TAOM_hero_K9_l" text="Wódz odległych plemion Easterlingów." />
-    <string id="TAOM_hero_K9_s" text="Żona odległego wodza." />
-    <string id="TAOM_hero_K9_c1" text="Dziedzic odległych plemiennych włości." />
-    <string id="TAOM_hero_K9_c2" text="Drugie dziecko odległego wodza." />
-    <string id="TAOM_hero_B8_l" text="Wodzowie wojenny Wariagów ze wschodnich wzgórz." />
-    <string id="TAOM_hero_B8_s" text="Żona wodza wojennego Wariagów." />
-    <string id="TAOM_hero_B8_c" text="Dziedzic wodza wojennego Wariagów." />
+    <string id="TAOM_hero_A9_l" text="Caradan is a Haradrim chieftain of the southern wastes, young for the office and watched closely by older men." />
+    <string id="TAOM_hero_A9_s" text="Thiqa is wife to the chieftain of the southern wastes and keeps the water tallies of his camps." />
+    <string id="TAOM_hero_A9_c" text="Dhila is heir to the chieftain of the southern wastes. She has ridden the dune tracks since she could sit a saddle." />
+    <string id="TAOM_hero_A9_u" text="Qaban is a warrior of the southern tribes and rides in the chieftain's van." />
+    <string id="TAOM_hero_V11_l" text="Léomund Deáfringas is a Rohirrim lord of the western vales." />
+    <string id="TAOM_hero_V11_u" text="Voleric is a veteran rider who advises the lord." />
+    <string id="TAOM_hero_V11_c1" text="Elendara is heir to the western vale holdings." />
+    <string id="TAOM_hero_V11_c2" text="Dagunic is the second child of the western vale lord." />
+    <string id="TAOM_hero_S9_l" text="Orvar is a noble of Dale who guards the northern approaches." />
+    <string id="TAOM_hero_S9_m" text="Dakhila is matriarch of a northern Barding clan." />
+    <string id="TAOM_hero_S9_c" text="Forim is young heir to the northern holdings." />
+    <string id="TAOM_hero_S9_u" text="Chastimir is a seasoned warrior of the northern garrison." />
+    <string id="TAOM_hero_K9_l" text="Valathmir Mashakian is a chieftain of the distant Easterling tribes, and answers to Rhun only when it suits him." />
+    <string id="TAOM_hero_K9_s" text="Sevin is wife to the distant chieftain and holds his camp while he rides." />
+    <string id="TAOM_hero_K9_c1" text="Altu is heir to the tribal holdings east of the inland sea." />
+    <string id="TAOM_hero_K9_c2" text="Mela is the second child of the distant chieftain, and rides better than her brother." />
+    <string id="TAOM_hero_B8_l" text="Maireas is a Variag warlord of the eastern hills, and has held them through three winters of raiding." />
+    <string id="TAOM_hero_B8_s" text="Rodarac is wife to the Variag warlord and speaks for him when he is away at the hosting." />
+    <string id="TAOM_hero_B8_c" text="Guaran is heir to the Variag warlord, and has waited longer for it than he likes." />
     <string id="TAOM_liege_dunland" text="Brenin Dunlandu" />
     <string id="TAOM_liege_dunland_female" text="Brenhines Dunlandu" />
     <string id="TAOM_liege_dale" text="Król Dale" />
