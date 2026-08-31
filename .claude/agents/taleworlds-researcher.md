@@ -51,7 +51,7 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 The `ilspy` MCP server is configured in `.mcp.json`. Use it when `taom-src` can't resolve a type:
 ```
 # Decompile a specific type
-mcp__ilspy__decompile_type("E:\Steam\...\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<Class>")
+mcp__ilspy__decompile_assembly("E:\Steam\...\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<Class>")
 
 # List all types in an assembly
 mcp__ilspy__list_types("E:\Steam\...\Win64_Shipping_Client\<DLL>")
@@ -89,7 +89,7 @@ Stop when you have enough context to answer the research question. Don't decompi
 
 When decompilation fails, escalate through this chain before giving up:
 
-1. **ILSpy MCP** (preferred) — `mcp__ilspy__decompile_type(dll_path, type_name)`
+1. **ILSpy MCP** (preferred): `mcp__ilspy__decompile_assembly(assembly_path, type_name=...)`
 2. **ILSpy CLI** — `ilspycmd "<dll>" -t "<Type>"` via Bash
 3. **Grep the DLL** — `strings "<dll>" | grep -i "<pattern>"` for method names and signatures
 4. **Escalate** — After 3 failed attempts across all fallbacks, report what was found and what remains unknown. Do not guess.

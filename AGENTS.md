@@ -526,7 +526,7 @@ Example: `feat: add garrison patrol calculation`
 |------|--------|------|
 | 0. **[Engine process docs](docs/reference/engine/)** | Pre-filtered, TAOM-relevant, file:line-cited docs for 19 engine subsystems | **First** for "how does this process work" questions — lifecycle, formation/team AI, mount/rider, campaign-mission seam, campaign heartbeat, agent spawn pipeline, usable machines, GauntletUI, save/object system, GameModel, campaign behaviors, items. Saves raw decompile time. |
 | 1. **Read decompiled source** | Read or search files in `E:\Decompiled_Bannerlord\` | Signature and behavior verification once you know which class/method to check |
-| 2. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
+| 2. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
 
 > ⚠️ **The decompiled source at `E:\Decompiled_Bannerlord\` is the SHIPPING-CLIENT build — it strips editor-only code.** Editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX-import / animation authoring) exist ONLY in `Win64_Shipping_wEditor` DLLs. "Absent from the dump" ≠ "doesn't exist." If a class is missing, check the editor build at `E:\Decompiled_Bannerlord\_editor_build\` before concluding it's native. See [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md).
 
@@ -586,9 +586,9 @@ ls "E:/Decompiled_Bannerlord/Campaign/TaleWorlds.CampaignSystem/TaleWorlds/Campa
 If a type is not in the decompiled source, use the `ilspy` MCP tool:
 
 ```
-mcp__ilspy__decompile_type(
-  assembly: "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\SandBox.dll",
-  type: "SandBox.GameComponents.DefaultPartyWageModel"
+mcp__ilspy__decompile_assembly(
+  assembly_path: "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\SandBox.dll",
+  type_name: "SandBox.GameComponents.DefaultPartyWageModel"
 )
 ```
 

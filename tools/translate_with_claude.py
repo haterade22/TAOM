@@ -32,11 +32,23 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 # Force UTF-8 stdout/stderr so we can print translated Russian/Japanese/Chinese error messages
-# without crashing on Windows cp1252 console encoding
-if hasattr(sys.stdout, "buffer"):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
-if hasattr(sys.stderr, "buffer"):
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
+# without crashing on Windows cp1252 console encoding.
+#
+# reconfigure() in place, NOT `sys.stdout = io.TextIOWrapper(sys.stdout.buffer, ...)`.
+# The old form ran at IMPORT time and replaced whatever object was bound, which under
+# pytest is its capture object: wrapping its .buffer and rebinding left pytest holding a
+# stream it could no longer read, so every test module importing this one died with
+# "ValueError: I/O operation on closed file" during collection. That silently removed
+# tools/tests/test_translate_{batching,gamedir,providers}.py from every whole-directory
+# run (found 2026-08-31). reconfigure mutates the existing object instead, so the capture
+# machinery keeps its handle.
+for _stream_name in ("stdout", "stderr"):
+    _stream = getattr(sys, _stream_name, None)
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    except (AttributeError, ValueError, io.UnsupportedOperation):
+        pass  # not a reconfigurable text stream (captured, redirected, or None): leave it
+del _stream_name, _stream
 from dataclasses import dataclass, field
 from pathlib import Path
 

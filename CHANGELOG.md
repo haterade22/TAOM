@@ -4,6 +4,62 @@
 
 ## 2026-08-31
 
+### fix(harness): clear the rest of the audit findings, including the one keeping CI red
+
+Closes out the remaining confirmed findings from the 36-agent audit.
+
+**CI had failed 42 runs straight and nothing downstream of one step had run since
+2026-08-28.** The doc-graph ratchet was over baseline at 168 orphans against 152. The
+orphans were real: 142 review artefacts under `docs/reviews/`, RCAs and Codex prompts,
+that nothing linked to, so no reader would ever find them (the RCA written earlier today
+was one). They are now indexed from `REVIEW-LOG.md`, which drops orphans to 26 and
+components to 171 to 29, and the baseline is re-pinned there so the gain cannot silently
+erode. 0 dead links.
+
+**The git and filesystem MCP write tools bypassed every safety gate.** Every PreToolUse
+gate matches `Bash`, and `config-protection` matches `Edit|Write`, so `mcp__git__git_commit`,
+`git_reset`, `git_checkout`, `git_add` and `mcp__filesystem__write_file`/`edit_file` went
+around all of it: no changelog gate, no tracked-files gate, no ModuleData gate, no
+force-push gate. Nine write tools are now denied in `settings.local.json`; every read-only
+one (`git_diff`, `git_log`, `git_show`, `git_status`, all `filesystem` readers) is
+untouched.
+
+**Fail-open-but-never-fail-silent now covers all 10 gates, not 1.** In a starved
+environment nine of them allowed the commit and said nothing, which is indistinguishable
+from allowing because they looked and found nothing. A shared `taom_pybin_degraded` helper
+gives each one a line naming what is now unchecked, and `test_hooks.sh` check 5 fails if
+any blocking Bash gate goes quiet. Proven by canary.
+
+**The whole Python test suite had never run in one pass.** `translate_with_claude.py`
+rebound `sys.stdout`/`sys.stderr` to new wrappers at import time, which destroyed pytest's
+capture object, so any module importing it died during collection with "I/O operation on
+closed file". `reconfigure()` in place fixes it: **748 tests pass in a single
+whole-directory run**, recovering 36 that were silently uncollected. UTF-8 output is
+unchanged.
+
+**`statusline.sh`: 457ms to 119ms per repaint.** `jq` is absent, so a nine-subprocess
+grep/sed fallback always ran to read three scalars, and four `git` calls plus six pipe
+stages produced three integers. Bash parameter expansion and one
+`git status --porcelain=v1 --branch` do both. Output verified identical across clean,
+untracked, staged, MM, non-git, missing-field and empty-payload cases; on a detached HEAD
+it now prints `HEAD` where the old script printed an empty segment, which is a deliberate
+improvement and is recorded as such in the file.
+
+Also: `mcp__ilspy__decompile_type` does not exist and never did (the server exposes
+`decompile_assembly`), corrected across 8 live sites; `git_blame` does not exist on the git
+MCP server either; the documented test command in CLAUDE.md deployed 976 MB to the game
+install and hard-failed with the game running, now carries `-p:DisableModuleCopy=true
+-p:ModuleId=`; three MEMORY.md entries described committed work as uncommitted, corrected
+against `9758eb22`, `bee07b48` and `bbed0d6c`; and 3,044 stale `/tmp` session counters
+(3 MB) were removed, including the shared `default` file that every session had been
+incrementing to 14,925 because `CLAUDE_SESSION_ID` is not a variable the harness sets.
+
+**Declined, with the measurement:** giving `Validator.run()` a `codes` parameter to skip
+passes the commit hook discards. That finding assumed the pre-fix 16.5s figure. Profiled
+per pass afterwards, the discarded work is **0.18s of 2.05s**, so an API change to a
+validator with 748 tests buys 9% of an already-fast run. Rejected per
+`simplicity-criterion.md`.
+
 ### fix(hooks): what the review of the harness repair found, including in the repair itself
 
 A 36-agent audit and adversarial review of `0f348a84` returned 24 confirmed findings and refuted 3.

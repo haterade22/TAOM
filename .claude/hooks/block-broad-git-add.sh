@@ -46,6 +46,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "block-broad-git-add" "blanket git add / commit -a" jq && { echo '{}'; exit 0; }
+
 # Extract tool_input.command. Prefer jq; fall back to python3 for robust JSON
 # (handles escaped quotes). Mirrors block-dangerous-git.sh.
 if command -v jq >/dev/null 2>&1; then

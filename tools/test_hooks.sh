@@ -344,13 +344,41 @@ done
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
 # ---------------------------------------------------------------------------
 head2 "5. fail-open with no jq and no python on PATH"
+# The never-fail-silent assertion below applies only to hooks that can actually BLOCK a
+# Bash call: registered PreToolUse against a Bash-matching matcher, and carrying a deny or
+# exit-2 path. Advisory hooks (notify-*, suggest-compact, mark-verification-run) and hooks
+# matched on other tools legitimately produce nothing for this payload, and demanding
+# output from them would make the check noise rather than signal.
+BLOCKING_BASH_GATES=$("$HPY" - <<'PYEOF'
+import json, pathlib
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+out = []
+for group in d.get('hooks', {}).get('PreToolUse', []):
+    m = group.get('matcher', '')
+    if m and 'Bash' not in m:
+        continue
+    for h in group.get('hooks', []):
+        name = h['command'].rsplit('/', 1)[-1]
+        p = pathlib.Path('.claude/hooks') / name
+        if not p.exists():
+            continue
+        txt = p.read_text(encoding='utf-8', errors='replace')
+        if '"deny"' in txt or 'exit 2' in txt:
+            out.append(name)
+print(' '.join(sorted(set(out))))
+PYEOF
+)
+is_blocking_bash_gate() { [[ " $BLOCKING_BASH_GATES " == *" $1 "* ]]; }
+
 for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     name=$(basename "$hookfile")
     [[ "$name" == "_pybin.sh" ]] && continue
     S=$(date +%s%N)
+    ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
     OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master"},"hook_event_name":"PreToolUse"}' \
-          | timeout -k 2 10 env PATH=/usr/bin:/bin CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>/dev/null)
+          | timeout -k 2 10 env PATH=/usr/bin:/bin CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
     RC=$?
+    ERR=$(cat "$ERRFILE" 2>/dev/null); rm -f "$ERRFILE"
     E=$(date +%s%N); MS=$(( (E-S)/1000000 ))
     if [[ $RC -eq 124 || $RC -eq 137 ]]; then
         bad "$name HUNG with no interpreter available"
@@ -358,8 +386,14 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
         bad "$name exit $RC in a starved environment (must fail open, not error)"
     elif printf '%s' "$OUT" | grep -q '"permissionDecision":"deny"'; then
         bad "$name DENIED in a starved environment (a hook's own fault must never block)"
+    elif is_blocking_bash_gate "$name" && [[ -z "$ERR" ]]; then
+        # Fail open is only half the contract. hook-authoring.md: a detection hook must
+        # fail open but NEVER fail silent, because for a gate no output IS a claim. On
+        # 2026-08-31 nine of the ten PreToolUse gates allowed silently here, which is
+        # indistinguishable from allowing because they looked and found nothing.
+        bad "$name failed open SILENTLY (no stderr). A gate that cannot run must say so."
     else
-        ok "$name failed open in ${MS}ms"
+        ok "$name failed open in ${MS}ms$( [[ -n "$ERR" ]] && printf ', and said so')"
     fi
 done
 

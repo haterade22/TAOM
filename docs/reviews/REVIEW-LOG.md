@@ -2286,3 +2286,158 @@ previous TAOM creature owns a bespoke `act_<creature>_*` vocabulary, so nothing 
 picking one for a behaviour tree is safe by construction. The war ram is the first mount that shares
 its vocabulary with the engine, which is where "our code does not fire this" stopped implying
 "nothing fires this". It broke that assumption twice in one review.
+
+## Unlinked review artefacts (index)
+
+Every file below is a real review artefact that nothing linked to, so the doc graph
+counted it as an orphan and no reader would ever have found it. Indexed here on
+2026-08-31 after the doc-graph ratchet went over baseline and took CI down with it:
+the ratchet had been red since 2026-08-28, and because it ran before them in the same
+job, it silently skipped the native-CRT gate and the hook-harness gate too.
+
+New RCAs and Codex prompts belong in this list (or linked from the review section that
+produced them) in the same commit that creates them.
+
+- [audit-v1.4.5-refactor-2026-05-22.md](audit-v1.4.5-refactor-2026-05-22.md): v1.4.5 Behavioral Refactor Audit, Aggregate Report (2026-05-22)
+- [camps-review-log-2026-08-22.md](camps-review-log-2026-08-22.md): camps-review-log-2026-08-22
+- [codex-camps-round1-2026-08-22.prompt.md](codex-camps-round1-2026-08-22.prompt.md): Adversarial review: three ported features on branch feat/yotthani-camps
+- [codex-coop-authority-2026-08-01.prompt.md](codex-coop-authority-2026-08-01.prompt.md): Adversarial review, TAOM host-authority gating for BannerlordCoop
+- [codex-coop-interop-2026-08-01.prompt.md](codex-coop-interop-2026-08-01.prompt.md): Adversarial review, TAOM co-op interop (#370)
+- [codex-coverage-guards-2026-08-09.prompt.md](codex-coverage-guards-2026-08-09.prompt.md): Codex adversarial review, per-culture coverage guards + dead-member deletion (2026-08-09)
+- [codex-duty-autoresolve-2026-08-09.prompt.md](codex-duty-autoresolve-2026-08-09.prompt.md): Adversarial review: TAOM enlistment, field duties converted from travel to an auto-resolving roll
+- [codex-enlistment-battle-join-2026-08-07.prompt.md](codex-enlistment-battle-join-2026-08-07.prompt.md): Adversarial review, Enlistment battle-join fix (TAOM, Bannerlord 1.4.7)
+- [codex-enlistment-remediation-2026-08-07.prompt.md](codex-enlistment-remediation-2026-08-07.prompt.md): Adversarial review: TAOM Enlistment remediation arc (batches 0-10)
+- [codex-enlistment-survivors-2026-08-08.prompt.md](codex-enlistment-survivors-2026-08-08.prompt.md): Adversarial review: TAOM Enlistment, six changes, none compiled by their authors
+- [codex-herorace-patch72-2026-08-21.prompt.md](codex-herorace-patch72-2026-08-21.prompt.md): Adversarial review: HeroRace Patch72 tableau framing + console tuner + MCM eye height
+- [codex-modulelist-timing-2026-08-01.prompt.md](codex-modulelist-timing-2026-08-01.prompt.md): Decide one engine-timing question, is the active-module list populated at `OnSubModuleLoad`?
+- [codex-prereview-career-enum-prefab-cleanup-2026-07-06.prompt.md](codex-prereview-career-enum-prefab-cleanup-2026-07-06.prompt.md): Codex Pre-Review: career-enum-prefab-cleanup (2026-07-06)
+- [codex-prereview-shader-crash-guard-2026-06-18.prompt.md](codex-prereview-shader-crash-guard-2026-06-18.prompt.md): Codex pre-review -- ShaderPrecompileCrashGuard (per-scene crash auto-skip)
+- [codex-review-enlistment-2026-08-05.prompt.md](codex-review-enlistment-2026-08-05.prompt.md): codex-review-enlistment-2026-08-05.prompt
+- [codex-review-enlistment-field-fixes-2026-08-12.prompt.md](codex-review-enlistment-field-fixes-2026-08-12.prompt.md): Adversarial review; TAOM enlistment field-test fixes
+- [codex-review-fiefgranting-2026-08-14.prompt.md](codex-review-fiefgranting-2026-08-14.prompt.md): What was built (issue #458)
+- [codex-review-player-switcher-2026-08-27.prompt.md](codex-review-player-switcher-2026-08-27.prompt.md): codex-review-player-switcher-2026-08-27.prompt
+- [codex-review-preview-race-fix-2026-08-28.prompt.md](codex-review-preview-race-fix-2026-08-28.prompt.md): codex-review-preview-race-fix-2026-08-28.prompt
+- [codex-review-war-ram-2026-08-28.prompt.md](codex-review-war-ram-2026-08-28.prompt.md): Adversarial review: Dwarven War Ram (TAOM issue #515)
+- [codex-selfreview-career-quest-fixes-2026-06-01.prompt.md](codex-selfreview-career-quest-fixes-2026-06-01.prompt.md): Codex Self-Review -- TAOM Career Quest fixes (Phase 3)
+- [codex-uncapturable-heroes-2026-08-26.prompt.md](codex-uncapturable-heroes-2026-08-26.prompt.md): codex-uncapturable-heroes-2026-08-26.prompt
+- [donor-diff-enlistment-2026-08-07.md](donor-diff-enlistment-2026-08-07.md): Donor diff, RF_Enlistment vs TAOM Enlistment (2026-08-07)
+- [enlistment-remediation-plan-2026-08-07.md](enlistment-remediation-plan-2026-08-07.md): Enlistment remediation, sequenced implementation plan (2026-08-07)
+- [rca-AlignmentRecruitment-2026-06-17.md](rca-AlignmentRecruitment-2026-06-17.md): RCA, AlignmentRecruitment Codex Adversarial Review (2026-06-17)
+- [rca-ai-party-size-2026-08-18.md](rca-ai-party-size-2026-08-18.md): RCA: AI Party Size (#461) deep review, 2026-08-18
+- [rca-alignment-desertion-2026-06-27.md](rca-alignment-desertion-2026-06-27.md): RCA, AlignmentDesertion deep review (2026-06-27)
+- [rca-asset-pipeline-tools-2026-07-16.md](rca-asset-pipeline-tools-2026-07-16.md): RCA, UE→Bannerlord Asset-Pipeline Python Tools (deep review 2026-07-16)
+- [rca-autoresolve-diagnostics-2026-08-08.md](rca-autoresolve-diagnostics-2026-08-08.md): RCA, AutoResolveDiagnostics, 2026-08-08
+- [rca-bannerlord-crafting-tool-2026-06-08.md](rca-bannerlord-crafting-tool-2026-06-08.md): RCA, BannerlordCraftingTool deep-review (2026-06-08)
+- [rca-battle-load-diagnostics-2026-06-01.md](rca-battle-load-diagnostics-2026-06-01.md): RCA, BattleLoadDiagnostics deep-review (2026-06-01)
+- [rca-battle-load-triage-collection-2026-06-17.md](rca-battle-load-triage-collection-2026-06-17.md): RCA, battle-load triage tool + stall-marker collection (2026-06-17)
+- [rca-behaviortype-fix-2026-05-14.md](rca-behaviortype-fix-2026-05-14.md): RCA, BehaviorType fix (deep-review, 2026-05-14)
+- [rca-black-numenorean-2026-08-17.md](rca-black-numenorean-2026-08-17.md): RCA: Black Numenorean line (Mordor), 2026-08-17
+- [rca-caravan-trade-2026-07-04.md](rca-caravan-trade-2026-07-04.md): RCA, CaravanTrade deep-review (2026-07-04)
+- [rca-caravan-trade-recency-2026-07-11.md](rca-caravan-trade-recency-2026-07-11.md): RCA, CaravanTrade recency-visit-memory fix (2026-07-11)
+- [rca-career-enum-prefab-cleanup-2026-07-06.md](rca-career-enum-prefab-cleanup-2026-07-06.md): RCA: career-enum-prefab-cleanup review findings (2026-07-06)
+- [rca-career-ux-arc-2026-08-05.md](rca-career-ux-arc-2026-08-05.md): RCA, Career UX Arc (#377-#384) Deep Review, 2026-08-05
+- [rca-castle-recruitment-guard-2026-07-07.md](rca-castle-recruitment-guard-2026-07-07.md): RCA, CastleRecruitment missing-template guard deep-review findings (2026-07-07)
+- [rca-chariot-2026-06-12.md](rca-chariot-2026-06-12.md): RCA, War Chariot port deep-review findings (2026-06-12, issue #279)
+- [rca-combat-mechanics-2026-07-02.md](rca-combat-mechanics-2026-07-02.md): RCA, CombatMechanics deep review (2026-07-02)
+- [rca-companiontactics-2026-05-06.md](rca-companiontactics-2026-05-06.md): RCA, CompanionTactics port (2026-05-06)
+- [rca-companiontactics-overlay-input-2026-05-25.md](rca-companiontactics-overlay-input-2026-05-25.md): RCA, CompanionTactics OOB / BattleActionBar overlay input wiring (2026-05-25)
+- [rca-coop-authority-gating-2026-08-01.md](rca-coop-authority-gating-2026-08-01.md): RCA, co-op authority gating (BannerlordCoop interop), 2026-08-01
+- [rca-coop-interop-2026-07-31.md](rca-coop-interop-2026-07-31.md): RCA, Co-op interop layer (BannerlordTogether coexistence), 2026-07-31
+- [rca-coop-veto-surface-2026-08-01.md](rca-coop-veto-surface-2026-08-01.md): RCA, the co-op veto surface was gated at one call site out of four (2026-08-01)
+- [rca-cultural-feats-terrain-2026-05-28.md](rca-cultural-feats-terrain-2026-05-28.md): RCA, Cultural-Feats Terrain Movement-Speed Feats (2026-05-28)
+- [rca-culture-conversion-2026-06-02.md](rca-culture-conversion-2026-06-02.md): RCA, CultureConversion deep-review (2026-06-02)
+- [rca-culture-conversion-notables-2026-07-03.md](rca-culture-conversion-notables-2026-07-03.md): RCA, CultureConversion Notable Replacement (2026-07-03)
+- [rca-culture-conversion-timer-2026-07-07.md](rca-culture-conversion-timer-2026-07-07.md): RCA, CultureConversion hold-timer restart (#333, 2026-07-07)
+- [rca-custom-battle-lords-2026-06-27.md](rca-custom-battle-lords-2026-06-27.md): RCA, Custom Battle Curated Commander Lists (2026-06-27)
+- [rca-devconsole-phase0-2026-07-31.md](rca-devconsole-phase0-2026-07-31.md): RCA, DevConsole Phase 0 (shared console-command contract), 2026-07-31
+- [rca-diplomacy-same-alignment-war-block-2026-05-19.md](rca-diplomacy-same-alignment-war-block-2026-05-19.md): RCA, Diplomacy: same-alignment war block (2026-05-19)
+- [rca-dr3-2026-05-22.md](rca-dr3-2026-05-22.md): RCA, DR3 Deep-Review Findings (2026-05-22)
+- [rca-dread-aura-2026-08-13.md](rca-dread-aura-2026-08-13.md): RCA: DreadAura deep review, 2026-08-13
+- [rca-dropflaggeditem-guard-2026-08-10.md](rca-dropflaggeditem-guard-2026-08-10.md): RCA, Patch50 DropFlaggedItemGuard Prefix (2026-08-10)
+- [rca-duty-autoresolve-2026-08-09.md](rca-duty-autoresolve-2026-08-09.md): RCA, field-duty auto-resolve rework, 2026-08-09
+- [rca-dwarf-action-parity-2026-06-25.md](rca-dwarf-action-parity-2026-06-25.md): RCA, Dwarf action-set parity fix (water-fall CTD)
+- [rca-ecc-adoption-2026-05-29.md](rca-ecc-adoption-2026-05-29.md): RCA, ECC-adoption changeset review findings (2026-05-29)
+- [rca-economy-diagnostics-2026-08-06.md](rca-economy-diagnostics-2026-08-06.md): RCA, EconomyDiagnostics + caravan-gate diagnostics (2026-08-06)
+- [rca-education-crash-fix-2026-07-21.md](rca-education-crash-fix-2026-07-21.md): RCA, Age-8 child-education CTD (lothlorien + 3 cultures), issue #354
+- [rca-enlistment-battle-join-2026-08-07.md](rca-enlistment-battle-join-2026-08-07.md): RCA, Enlistment battle-join never worked (2026-08-07)
+- [rca-enlistment-content-2026-08-05.md](rca-enlistment-content-2026-08-05.md): RCA, Enlistment content/equipment/duties + FieldCommission (checkpoint 2, 2026-08-05)
+- [rca-enlistment-core-2026-08-04.md](rca-enlistment-core-2026-08-04.md): RCA, Enlistment core checkpoint review (2026-08-04)
+- [rca-enlistment-diagnostics-legibility-2026-08-12.md](rca-enlistment-diagnostics-legibility-2026-08-12.md): RCA: enlistment diagnostics legibility pass (2026-08-12)
+- [rca-enlistment-standing-2026-08-28.md](rca-enlistment-standing-2026-08-28.md): RCA: enlisted standing had no reachable source (#520), and the first fix paid quitters
+- [rca-enlistment-survivors-2026-08-08.md](rca-enlistment-survivors-2026-08-08.md): RCA, SAS-survivor implementations (six work items), 2026-08-08
+- [rca-equippresets-presets-button-silent-2026-05-19.md](rca-equippresets-presets-button-silent-2026-05-19.md): RCA, EquipPresets Presets button silent no-op (2026-05-19)
+- [rca-erebor-equipment-sweep-2026-07-30.md](rca-erebor-equipment-sweep-2026-07-30.md): RCA, Erebor / Iron Hills equipment sweep + noble crossbow uplift (2026-07-30)
+- [rca-faction-economy-2026-08-14.md](rca-faction-economy-2026-08-14.md): RCA: faction-economy rebalance (startup gold, influence, settlement floor), 2026-08-14
+- [rca-fiefgranting-2026-08-14.md](rca-fiefgranting-2026-08-14.md): RCA: FiefGranting deep review (#458), 2026-08-14
+- [rca-field-commission-2026-08-07.md](rca-field-commission-2026-08-07.md): RCA, Battlefield Promotions: the offer flow, not the companion (2026-08-07)
+- [rca-formation-preset-save-fix-2026-06-21.md](rca-formation-preset-save-fix-2026-06-21.md): RCA, Formation Preset save-corruption fix review (2026-06-21)
+- [rca-gamemodel-base-delegation-audit-2026-05-29.md](rca-gamemodel-base-delegation-audit-2026-05-29.md): RCA, GameModel base-delegation audit: dropped buyer-hero recruitment perks
+- [rca-gondor-polish-224-deep-review-2026-05-25.md](rca-gondor-polish-224-deep-review-2026-05-25.md): RCA, Gondor polish #224 deep-review findings (2026-05-25)
+- [rca-herorace-patch72-2026-08-21.md](rca-herorace-patch72-2026-08-21.md): RCA: HeroRace Patch72 tableau framing, tuner, MCM eye height (2026-08-21)
+- [rca-hook-harness-hang-2026-08-31.md](rca-hook-harness-hang-2026-08-31.md): RCA: the hook harness hung for 20 minutes per Bash call, then two commit gates died fixing it
+- [rca-improve-plans-2026-06-13.md](rca-improve-plans-2026-06-13.md): RCA, deep-review of the `/improve` audit-fix branches (2026-06-13)
+- [rca-javelin-shield-penetration-2026-08-17.md](rca-javelin-shield-penetration-2026-08-17.md): RCA: javelin shield penetration shipped a 3.33x buff (2026-08-17)
+- [rca-localization-pipeline-2026-05-24.md](rca-localization-pipeline-2026-05-24.md): RCA, Localization Pipeline Deep-Review Findings
+- [rca-lotr-issues-deliver-personnel-2026-07-30.md](rca-lotr-issues-deliver-personnel-2026-07-30.md): RCA, DeliverPersonnel captive count (#368), 2026-07-30
+- [rca-lotr-issues-suppression-gap-2026-07-21.md](rca-lotr-issues-suppression-gap-2026-07-21.md): RCA, LotrIssues suppression gap + review findings (2026-07-21)
+- [rca-lotr-issues-wave0-2026-06-17.md](rca-lotr-issues-wave0-2026-06-17.md): RCA, LotrIssues Wave 0 deep-review (2026-06-17)
+- [rca-memsample-telemetry-2026-08-05.md](rca-memsample-telemetry-2026-08-05.md): RCA, [MemSample] telemetry + minidump tooling deep review (2026-08-05)
+- [rca-menu-link-colors-2026-07-26.md](rca-menu-link-colors-2026-07-26.md): RCA, MenuLinkColors deep review (2026-07-26)
+- [rca-moduledata-validation-2026-05-30.md](rca-moduledata-validation-2026-05-30.md): RCA, ModuleData Validation Tooling (deep-review, 2026-05-30)
+- [rca-momentum-save-corruption-2026-07-07.md](rca-momentum-save-corruption-2026-07-07.md): RCA, v2.0.9 "A problem occured while trying to load the saved game." (momentum SyncData > 32 KB)
+- [rca-morannon-2026-06-08.md](rca-morannon-2026-06-08.md): RCA, Morannon armor + troop tree deep-review (2026-06-08)
+- [rca-mumakil-2026-06-29.md](rca-mumakil-2026-06-29.md): RCA, Mûmakil Phase 1 deep-review (2026-06-29)
+- [rca-named-companions-state-matrix-2026-05-13.md](rca-named-companions-state-matrix-2026-05-13.md): RCA, NamedCompanions State Matrix (#127 + #184, Codex Review 2026-05-13)
+- [rca-native-skin-fixes-crt-2026-06-18.md](rca-native-skin-fixes-crt-2026-06-18.md): RCA, NativeSkinFixes CRT load-failure fix (Codex review, 2026-06-18)
+- [rca-native-skin-fixes-port-2026-05-26.md](rca-native-skin-fixes-port-2026-05-26.md): RCA, NativeSkinFixes port deep-review findings (2026-05-26)
+- [rca-navaltravel-2026-06-24.md](rca-navaltravel-2026-06-24.md): RCA, NavalTravel Codex review (2026-06-24)
+- [rca-party-owner-getter-nre-2026-07-02.md](rca-party-owner-getter-nre-2026-07-02.md): RCA, PartyBase.get_Owner NRE: deterministic new-campaign CTD (v2.0.8.0, crash 0b462fd8)
+- [rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md](rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md): RCA, Party-screen troop thumbnails stuck on loading spinner (stale GUI prefab clone, 2026-05-31)
+- [rca-patch69-tournament-guard-2026-08-07.md](rca-patch69-tournament-guard-2026-08-07.md): RCA, Patch69 tournament winner-panel guard + female-dwarf mesh CTD (2026-08-07)
+- [rca-phase9b-autonomous-codex-review-2026-05-13.md](rca-phase9b-autonomous-codex-review-2026-05-13.md): RCA, Phase 9b Autonomous-Run Codex Review (2026-05-13)
+- [rca-player-alliance-freedom-2026-06-16.md](rca-player-alliance-freedom-2026-06-16.md): RCA, Player Alliance Freedom (2026-06-16)
+- [rca-player-startup-2026-05-06.md](rca-player-startup-2026-05-06.md): Root Cause Analysis, Player Startup Gold + CC Equipment Persistence Port
+- [rca-player-switcher-2026-08-27.md](rca-player-switcher-2026-08-27.md): RCA: Player Switcher (#514) deep review, 2026-08-27
+- [rca-prisoner-recruitment-2026-07-16.md](rca-prisoner-recruitment-2026-07-16.md): RCA, PrisonerRecruitment (alignment morale waiver), 2026-07-16
+- [rca-prone-character-tableau-2026-07-31.md](rca-prone-character-tableau-2026-07-31.md): RCA, characters render prone ("bendy man") in every UI tableau
+- [rca-provenance-register-2026-08-13.md](rca-provenance-register-2026-08-13.md): RCA: provenance register + third-party notices, 2026-08-13
+- [rca-quickactions-2026-05-06.md](rca-quickactions-2026-05-06.md): RCA, QuickActions (Codex review #36, 2026-05-06)
+- [rca-race-persistence-legend-2026-07-05.md](rca-race-persistence-legend-2026-07-05.md): RCA, race-persistence-legend (#330), 2026-07-05
+- [rca-refactor-stack-2026-07-01.md](rca-refactor-stack-2026-07-01.md): RCA, Overnight Refactor Stack Deep Review (2026-07-01)
+- [rca-repatch-crash-2026-06-18.md](rca-repatch-crash-2026-06-18.md): RCA, HarmonyException re-patch crash on the 2nd game-init in one process (2026-06-18)
+- [rca-rohan-spear-reforge-2026-08-28.md](rca-rohan-spear-reforge-2026-08-28.md): RCA: Rohan spear reforge deep review (2026-08-28)
+- [rca-round2-cleanups-2026-07-01.md](rca-round2-cleanups-2026-07-01.md): RCA, Round-2 Cleanups Deep Review (2026-07-01)
+- [rca-sauron-race-2026-07-02.md](rca-sauron-race-2026-07-02.md): RCA, Sauron race + grounding (#321) deep review, 2026-07-02
+- [rca-savetableau-2026-06-24.md](rca-savetableau-2026-06-24.md): RCA, Save/Load Hero Preview CTD Guard (issue #299), 2026-06-24
+- [rca-scene-scripts-cs-road-2026-05-13.md](rca-scene-scripts-cs-road-2026-05-13.md): RCA, Scene Scripts CS_Road (deep-review + Codex adversarial, 2026-05-13)
+- [rca-settlement-economy-2026-07-02.md](rca-settlement-economy-2026-07-02.md): RCA, SettlementEconomy (#317) deep review, 2026-07-02
+- [rca-settlement-encounter-2026-08-24.md](rca-settlement-encounter-2026-08-24.md): RCA: the settlement-encounter invariant (#510, #511)
+- [rca-settlement-food-2026-06-18.md](rca-settlement-food-2026-06-18.md): RCA, SettlementFood review (2026-06-18)
+- [rca-settlement-guards-troll-exclusion-2026-07-14.md](rca-settlement-guards-troll-exclusion-2026-07-14.md): RCA, SettlementGuards troll exclusion (#346), deep-review 2026-07-14
+- [rca-settlement-nameplate-fade-2026-05-25.md](rca-settlement-nameplate-fade-2026-05-25.md): RCA, Settlement Nameplate Fade (2026-05-25)
+- [rca-shader-precompilation-initial-zero-latch-2026-05-04.md](rca-shader-precompilation-initial-zero-latch-2026-05-04.md): RCA, ShaderPrecompilation Loading-Screen Latch Killed By Initial Zero
+- [rca-shader-precompile-phase0-2026-06-25.md](rca-shader-precompile-phase0-2026-06-25.md): RCA, Shader Pre-compile Phase 0 crash-mitigation review (2026-06-25)
+- [rca-shaderprecompilation-2026-06-17.md](rca-shaderprecompilation-2026-06-17.md): RCA, ShaderPrecompilation re-enable + scene-walk (2026-06-17)
+- [rca-siege-load-hang-2026-07-16.md](rca-siege-load-hang-2026-07-16.md): RCA, siege load hang: two physics-body typos, and the validator that never read the file (2026-07-16)
+- [rca-skillspector-2026-06-22.md](rca-skillspector-2026-06-22.md): RCA, SkillSpector adoption deep-review (2026-06-22)
+- [rca-specialresources-cheat-2026-07-30.md](rca-specialresources-cheat-2026-07-30.md): RCA, SpecialResources cheat command (`taom.add_special_resources`), 2026-07-30
+- [rca-spider-directional-attacks-2026-06-15.md](rca-spider-directional-attacks-2026-06-15.md): RCA, Spider directional-attack model + crash-fix guard (deep-review, 2026-06-15)
+- [rca-stub-modules-2026-05-25.md](rca-stub-modules-2026-05-25.md): RCA, Stub Modules Deep Review (2026-05-25)
+- [rca-superpowers-enforcement-2026-05-29.md](rca-superpowers-enforcement-2026-05-29.md): RCA, superpowers enforcement changeset review findings (2026-05-29)
+- [rca-timeacceleration-keybinds-2026-08-22.md](rca-timeacceleration-keybinds-2026-08-22.md): RCA: Rebindable Time Acceleration keys (2026-08-22)
+- [rca-tournament-exit-av-guard-2026-07-13.md](rca-tournament-exit-av-guard-2026-07-13.md): RCA, Patch62 tournament-exit AV guard + correlator fix (#339), deep-review 2026-07-13
+- [rca-troop-revamp-212-2026-05-23.md](rca-troop-revamp-212-2026-05-23.md): RCA, Troop Tree Revamp #212 (Mordor / Isengard / Dol Guldur / Gundabad / Erebor)
+- [rca-troop-skill-balance-2026-06-25.md](rca-troop-skill-balance-2026-06-25.md): RCA, Deep Review: Troop Skill Balance (2026-06-25)
+- [rca-troopweight-count-to-limit-2026-07-11.md](rca-troopweight-count-to-limit-2026-07-11.md): RCA, TroopWeight count→limit rework deep-review (2026-07-11)
+- [rca-troopweight-result-frame-2026-07-17.md](rca-troopweight-result-frame-2026-07-17.md): RCA, TroopWeight result-frame penalty fix, deep-review (2026-07-17)
+- [rca-uncapturable-heroes-2026-08-26.md](rca-uncapturable-heroes-2026-08-26.md): RCA: Uncapturable Heroes deep review, 2026-08-26
+- [rca-v1.4.5-migration-2026-05-22.md](rca-v1.4.5-migration-2026-05-22.md): RCA, v1.4.5 Migration deep-review findings (2026-05-22)
+- [rca-v1.4.7-bump-2026-07-08.md](rca-v1.4.7-bump-2026-07-08.md): RCA, v1.4.7 engine-bump deep review (2026-07-08)
+- [rca-validator-silent-scope-2026-08-03.md](rca-validator-silent-scope-2026-08-03.md): RCA, silent scope loss in the validator + a mis-attributed divide site (2026-08-03)
+- [rca-wotr-momentum-2026-07-03.md](rca-wotr-momentum-2026-07-03.md): RCA, War of the Ring Momentum port (#327), deep-review 2026-07-03
+- [rca-wotr-phase-ordering-2026-07-30.md](rca-wotr-phase-ordering-2026-07-30.md): RCA, War of the Ring phase-day ordering, deep-review (2026-07-30)
+- [rca-yotthani-camps-2026-08-23.md](rca-yotthani-camps-2026-08-23.md): rca-yotthani-camps-2026-08-23
+- [sas-comparative-analysis-2026-08-08.md](sas-comparative-analysis-2026-08-08.md): Serve as Soldier (SAS) vs TAOM Enlistment, comparative analysis
+- [session-prompts-2026-08-07-perf.md](session-prompts-2026-08-07-perf.md): Handoff session prompts, performance & optimization (2026-08-07)
+- [settlement-buildings-audit-2026-07-08.md](settlement-buildings-audit-2026-07-08.md): Settlement Building Levels, Curation Audit (2026-07-08)
+

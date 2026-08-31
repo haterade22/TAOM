@@ -116,6 +116,28 @@ taom_resolve_python() {
     return 1
 }
 
+# Announce a gate that cannot run.
+#
+# harness-facts.md mandates fail-OPEN: a hook's own bug must never block the user. But
+# hook-authoring.md's 2026-08-10 addition is the other half, and it is the one that keeps
+# getting dropped: for a gate, NO OUTPUT IS ITSELF A CLAIM. A gate that allows silently
+# because it could not parse its input is indistinguishable from one that allowed because
+# it looked and found nothing. On 2026-08-31 exactly one of the ten PreToolUse gates
+# (validate-push.sh) said anything in that state; the other nine returned rc=0 mute.
+#
+#   $1 gate name, $2 what is now unchecked, $3 "jq" if this hook has a jq fallback
+# Returns 0 (and warns) when the hook cannot parse, so callers write:
+#   taom_pybin_degraded "name" "what" jq && { echo '{}'; exit 0; }
+taom_pybin_degraded() {
+    [ -n "${PYBIN:-}" ] && return 1
+    if [ "${3:-}" = "jq" ] && command -v jq >/dev/null 2>&1; then
+        return 1
+    fi
+    printf '%s: no usable JSON parser (no safe python%s); %s NOT checked. Gate failed OPEN. Diagnose: bash tools/test_hooks.sh\n' \
+        "$1" "$([ "${3:-}" = "jq" ] && printf ' and no jq')" "$2" >&2
+    return 0
+}
+
 # NOTE: this resolution is per-process and cannot be shared. Each hook is spawned
 # separately by the harness, so an `export` here reaches nothing: every hook pays
 # the probe again. Measured cost of that on a Bash tool call: ~77ms per hook,

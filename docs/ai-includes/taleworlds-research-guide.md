@@ -82,7 +82,7 @@ The `ilspy` MCP server provides direct decompilation without manual CLI commands
 
 **Usage — decompile a specific type:**
 ```
-mcp__ilspy__decompile_type(assembly_path, type_name)
+mcp__ilspy__decompile_assembly(assembly_path, type_name=...)
 ```
 
 **Usage — list all types in an assembly:**
@@ -178,7 +178,7 @@ Common assemblies by feature area:
 **Preferred — Use the ILSpy MCP server:**
 ```
 # Decompile a specific class directly
-mcp__ilspy__decompile_type("E:\Steam\...\TaleWorlds.CampaignSystem.dll", "TaleWorlds.CampaignSystem.Party.MobileParty")
+mcp__ilspy__decompile_assembly("E:\Steam\...\TaleWorlds.CampaignSystem.dll", "TaleWorlds.CampaignSystem.Party.MobileParty")
 
 # List all types in an assembly to find the right class
 mcp__ilspy__list_types("E:\Steam\...\SandBox.dll")

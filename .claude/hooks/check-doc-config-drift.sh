@@ -29,6 +29,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "check-doc-config-drift" "doc/config drift and the CLAUDE.md budget" && { echo '{}'; exit 0; }
+
 # Extract the bash command from tool_input (mirrors check-moduledata-validation.sh).
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json

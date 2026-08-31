@@ -26,6 +26,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "block-no-verify" "the --no-verify ban" jq && { echo '{}'; exit 0; }
+
 # Prefer jq; fall back to python3 for robust JSON (handles escaped quotes).
 # Mirrors block-dangerous-git.sh.
 if command -v jq >/dev/null 2>&1; then

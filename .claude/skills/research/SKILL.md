@@ -25,7 +25,7 @@ Decompile and analyze: `$ARGUMENTS`
 2. **Decompile the class** — Use the ILSpy MCP server (preferred) or fall back to `ilspycmd`:
    ```
    # Preferred: ILSpy MCP (configured in .vscode/mcp.json)
-   mcp__ilspy__decompile_type("E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<ClassName>")
+   mcp__ilspy__decompile_assembly("E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<ClassName>")
 
    # Fallback: CLI
    ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\<DLL>" -t "TaleWorlds.<Namespace>.<ClassName>"

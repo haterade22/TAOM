@@ -18,6 +18,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "check-changelog-changed" "the CHANGELOG-staged requirement" && { echo '{}'; exit 0; }
+
 # Extract the bash command from tool_input.
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json

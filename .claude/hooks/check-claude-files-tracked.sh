@@ -19,6 +19,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "check-claude-files-tracked" "untracked or gitignored files under .claude/" && { echo '{}'; exit 0; }
+
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:

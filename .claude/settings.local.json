@@ -37,6 +37,17 @@
       "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug --no-restore --verbosity quiet 2>&1)",
       "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)"
     ],
+    "deny": [
+      "mcp__git__git_add",
+      "mcp__git__git_commit",
+      "mcp__git__git_reset",
+      "mcp__git__git_checkout",
+      "mcp__git__git_create_branch",
+      "mcp__filesystem__write_file",
+      "mcp__filesystem__edit_file",
+      "mcp__filesystem__move_file",
+      "mcp__filesystem__create_directory"
+    ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",

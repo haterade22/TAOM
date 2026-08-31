@@ -36,6 +36,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "block-dangerous-git" "destructive git commands" jq && { echo '{}'; exit 0; }
+
 # Extract tool_input.command. Prefer jq; fall back to python3 for robust JSON
 # (handles escaped quotes — the grep+sed fallback truncated those). Mirrors the
 # parser in check-claude-files-tracked.sh.

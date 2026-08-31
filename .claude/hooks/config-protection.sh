@@ -8,6 +8,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+taom_pybin_degraded "config-protection" "edits to settings.json / Directory.Build.props / ADRs" jq && { echo '{}'; exit 0; }
+
 # Parse file_path from tool input JSON
 # Prefer jq; fall back to python3 for robust JSON. The grep+sed fallback this used to
 # carry left the JSON backslash doubling intact, so a Windows path came back with every
