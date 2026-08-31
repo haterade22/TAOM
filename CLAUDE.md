@@ -330,7 +330,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-27 hook registrations across 9 events (+ the `/freeze` inline hook). Full catalog (hook → event → purpose):
+32 hook registrations: 27 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 28 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration. Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".

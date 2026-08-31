@@ -41,6 +41,19 @@ description: Verified Claude Code load semantics, hook lifecycle, and frontmatte
 
 **Handler-object fields** (beyond `matcher` / `command`): `type` (`command` | `http` | `mcp_tool` | `prompt` | `agent`), `if` (a permission-rule string like `"Bash(git commit*)"` that gates the handler at the harness level — so a `matcher: "Bash"` gate need not re-parse the command in-script to skip non-matches), `timeout`, `statusMessage` (spinner label while the hook runs), `once` (run once per session), and for command hooks `args` / `async` (background, non-blocking) / `asyncRewake` (background, wakes Claude on exit 2) / `shell` (`bash` | `powershell`).
 
+### Timeouts and concurrency (DOC-BACKED, https://code.claude.com/docs/en/hooks, verified 2026-08-31)
+
+These four facts are the ones the 2026-08-31 outage turned on, and none of them was written down here beforehand.
+
+| Fact | Why it matters |
+|---|---|
+| **All hooks matching an event run in PARALLEL.** | Wall-clock for an event is the MAX of its hooks, not the sum. Nine hooks at `timeout: 5` cost up to 5s per tool call, not 45s. |
+| **An omitted `timeout` defaults to 600 SECONDS** for command hooks (exceptions: `UserPromptSubmit` / `PreModelSwitch` / `PostModelSwitch` 30s, `MessageDisplay` 10s, `SessionEnd` a 1.5s shared budget). | This is the number that produced the 20.0-minute stalls: a wedged Bash call paid one 600s PreToolUse batch plus one 600s PostToolUse batch = 1200s. The first write-up assumed 60s and got near-enough the right answer for the wrong reason. **Every registration must carry an explicit `timeout`.** |
+| **A timed-out hook is KILLED and its output DISCARDED.** On `PreToolUse` the tool then proceeds through the normal permission flow (fail-open); no user-visible signal is documented. | So for a gate, "killed" and "passed cleanly" are the same observable event. A registered timeout is therefore a KILL, never a budget: bound slow work *inside* the script under the registered value, where an overrun can still speak. See `hook-authoring.md` "A timeout must be measured against the SLOW path". |
+| **Async hooks (`async: true`) are exempt from timeout enforcement entirely.** | Do not reach for `async` to dodge a timeout on a gate: a non-blocking hook cannot return a `permissionDecision`, so it cannot gate anything. |
+
+**NOT documented, do not assume either way:** whether the `env` block in `settings.json` reaches command-hook processes. The docs say only that hooks inherit the parent environment (minus `OTEL_*`). TAOM sets `TAOM_PYBIN` there and `_pybin.sh` validates and probes it rather than trusting it, so the pin is an optimisation that degrades to discovery if it never arrives. There is also **no documented `timeout` knob for `statusLine`**, which is why `.claude/statusline.sh` must stay cheap by construction (it was 457ms per repaint until 2026-08-31; now ~119ms).
+
 **Event-placement facts we act on:** a pure per-session logger belongs on `SessionEnd`, NOT `Stop` — `Stop` fires every turn (that is what let `session-log.md` reach 137 KB with a 2.8 MB rotated `.1` before the 2026-07-18 move). Per-turn *reminders* (changelog/deep-review/verification-evidence) correctly stay on `Stop`.
 
 **The `if:` migration is DEFERRED by decision.** TAOM's 8 PreToolUse Bash gates still use bare `matcher: "Bash"` + the in-script two-stage git-commit matcher (below). `if:` supersedes that hand-rolled matcher, but a mis-scoped `if:` silently disables a load-bearing gate, so the migration needs a prove-each-gate pass, not a bulk flip. `WorktreeCreate` / `WorktreeRemove` are wired nowhere: `WorktreeCreate`'s command hook is expected to PRINT the worktree path on stdout, so a passive logger there could redirect creation — surface stale worktrees read-only from `session-start.sh` instead (done 2026-07-18).

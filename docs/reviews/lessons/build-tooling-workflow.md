@@ -1741,3 +1741,68 @@ next time Git touches it" on all 15 modified hooks the whole time.
   wanting `i/lf w/lf` on every row. Scope it to `*.sh`: normalising `*.py` would have rewritten 72
   CRLF files for no benefit, which is churn a hook fix has no business causing.
 - **Source:** 2026-08-31, same RCA.
+
+### A gate registered on one tool name has a hole the size of every other tool
+
+Every PreToolUse safety hook here matches `Bash`, and `config-protection.sh` matches
+`Edit|Write`. Nothing matched `mcp__*`, so `mcp__git__git_commit`, `git_reset`, `git_checkout`,
+`git_add` and `mcp__filesystem__write_file` walked past the force-push block, the
+CHANGELOG-staged gate, the `.claude/`-tracked-files gate, the ModuleData ref gate and the
+settings/ADR protection simultaneously. CLAUDE.md's own MCP Usage Guide routed git work to
+those tools, so the documented happy path was the bypass.
+- **Why missed:** the gates were written when Bash was the only way to run git, and the MCP
+  servers arrived later. Nobody re-asked "what else can perform this action now?" A matcher is
+  a claim about the set of routes to an effect, and that set grows silently as tools are added.
+- **Prevent:** when a hook guards an EFFECT (a commit, a file write, a push), enumerate every
+  tool that can produce it, not just the one you had in mind. Deny the alternatives you do not
+  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json`,
+  and the read-only ones are untouched.
+- **Source:** 2026-08-31 audit, `docs/reviews/rca-hook-harness-hang-2026-08-31.md`.
+
+### A failing advisory step silences every real gate behind it in the same CI job
+
+The doc-graph ratchet went over baseline on 2026-08-28 and CI failed 42 runs straight. GitHub
+Actions stops a job at the first failed step, so the two steps after it never ran again: the
+native-CRT check (skipped silently since 2026-08-18, thirteen days) and the hook-harness gate
+added the same day to prevent this class of thing, which executed zero times.
+- **Why missed:** the job was red for a known, tolerated reason, so "CI is failing" stopped
+  carrying information. A single red step reads as one problem, not as everything downstream of
+  it being switched off.
+- **Prevent:** a gate that must always run gets its OWN job, not a step behind something that
+  can fail for unrelated reasons. Order steps so advisory checks come last. When a CI job has
+  been red for more than a day, read which steps SKIPPED, not just which one failed.
+- **Source:** 2026-08-31 audit, same RCA.
+
+### Rebinding sys.stdout at import time breaks every test that imports the module
+
+`tools/translate_with_claude.py` did `sys.stdout = io.TextIOWrapper(sys.stdout.buffer, ...)` at
+module scope to force UTF-8 on a cp1252 console. Under pytest, `sys.stdout` is the capture
+object: wrapping its `.buffer` and rebinding left pytest holding a stream it could not read, so
+every module importing this one died during collection with `ValueError: I/O operation on closed
+file`. Three test files were silently absent from every whole-directory run, and the
+whole-directory run had never completed at all.
+- **Why missed:** the three files passed when run individually, which is how anyone would check
+  them, and the directory-level failure looked like a broken pytest install rather than a
+  project bug. Nothing counts tests, so 36 missing ones raised no alarm.
+- **Prevent:** `sys.stdout.reconfigure(encoding=...)` mutates in place and leaves the capture
+  machinery's handle valid; never rebind a standard stream at import time. More generally,
+  import-time side effects on process-global state are a test-harness hazard: put them behind
+  `if __name__ == "__main__"` or make them idempotent and in-place. Watch the test COUNT, not
+  just the pass/fail: 748 in one run against "712 across per-file runs" is the tell.
+- **Source:** 2026-08-31 audit, same RCA.
+
+### Proving a gate fires once is not proving it fires
+
+The force-push gate was repaired, demonstrated to block `git push --force origin <trunk>`, and
+reported as alive. It still let five ordinary forms through silently: `git push origin +branch`
+(a leading `+` IS force, with no flag on the line), `--force origin HEAD`, `git -C <dir> push`,
+`refs/heads/master`, and `HEAD:master`. The detector keyed on the substring "git push", which
+`git -C ... push` does not contain, and never normalised the refspec.
+- **Why missed:** the verification reused the payload that had demonstrated the bug. That proves
+  the specific defect is gone, not that the gate covers its input space. For a security gate the
+  interesting inputs are the ones nobody thought of.
+- **Prevent:** verify a gate against a TABLE of invocations, must-block and must-allow, derived
+  from the tool's actual syntax rather than from the bug report. `git push --help` lists `+refspec`
+  and `src:dst`; both were in the manual the whole time. 15 block cases and 6 allow cases are now
+  pinned in the repair.
+- **Source:** 2026-08-31 audit, same RCA.

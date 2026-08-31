@@ -4,6 +4,35 @@
 
 ## 2026-08-31
 
+### docs(harness): write down what the outage taught, and correct two counts that hid it
+
+`.claude/rules/harness-facts.md` gained the four facts the whole incident turned on, none of
+which was recorded there before: **all hooks matching an event run in parallel**; **an omitted
+`timeout` defaults to 600 seconds**, not 60, which is what made a wedged Bash call cost
+600s + 600s = the observed 20.0 minutes; **a timed-out hook is killed and its output
+discarded**, so for a gate "killed" and "passed" are the same observable event and a registered
+timeout is a kill rather than a budget; and **async hooks are exempt from timeouts** but cannot
+return a `permissionDecision`, so async is not an escape hatch for a slow gate. Recorded
+alongside two honest "not documented" entries: whether the `env` block reaches hook processes,
+and whether `statusLine` has any timeout knob (it does not, which is why that script has to be
+cheap by construction).
+
+**Two counts were wrong in a way that caused the bug.** CLAUDE.md and `hooks-catalog.md` both
+said "27 registrations plus the `/freeze` skill-inline hook", counting the frontmatter side as
+one hook when it is five. Those five were the ones that had no `timeout` and inherited the 600s
+default. Both now read 32 (27 in `settings.json`, 5 in frontmatter) and 28 scripts, one of which
+is the `_pybin.sh` helper. `tools/test_hooks.sh` counts both surfaces, so the number has a gate
+behind it now instead of a recount date.
+
+`tools/README.md` documents `test_hooks.sh` and the `taom_schema.py` regex guard (with why it
+must not be removed). `docs/reference/mcp-servers.md` documents the nine denied write tools and
+why, plus the two tool names that never existed. Four lessons appended to
+`build-tooling-workflow.md` (125 to 129, index 529 to 533, every per-category count verified
+against the files): a gate registered on one tool name has a hole the size of every other tool;
+a failing advisory step silences every real gate behind it in the same CI job; rebinding
+`sys.stdout` at import time breaks every test that imports the module; and proving a gate fires
+once is not proving it fires.
+
 ### fix(harness): clear the rest of the audit findings, including the one keeping CI red
 
 Closes out the remaining confirmed findings from the 36-agent audit.

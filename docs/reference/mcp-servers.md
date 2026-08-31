@@ -10,13 +10,35 @@
 |--------|-------|---------|--------|
 | **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | `.mcp.json` |
 | **GitHub** | Project | PRs, issues, actions, code search (HTTP — needs auth; falls back to `gh` CLI when unauthenticated) | `.mcp.json` |
-| **filesystem** | Project | File operations across TAOM, Bannerlord Modules, LOTRAOM assets | `.mcp.json` |
+| **filesystem** | Project | READ operations across TAOM, Bannerlord Modules, LOTRAOM assets. Its write tools are denied (see "Denied write tools" below); use Edit/Write, which `config-protection.sh` actually guards | `.mcp.json` |
 | **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in settings.local.json because the safety hooks match Bash only | `.mcp.json` |
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |
 | **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
 | **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
+
+## Denied write tools (2026-08-31)
+
+Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.local.json`:
+
+`mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
+`mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
+
+**Why:** every safety hook in this repo is registered against `matcher: "Bash"`, and
+`config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
+write tools went straight past the force-push block, the CHANGELOG-staged gate, the
+`.claude/`-tracked-files gate, the ModuleData ref gate and the settings/ADR protection, all
+at once and silently. That was not a theoretical hole: CLAUDE.md's own MCP Usage Guide routed
+git work to those tools.
+
+Read-only tools are untouched: `git_diff`, `git_diff_staged`, `git_diff_unstaged`, `git_log`,
+`git_show`, `git_status`, `git_branch`, and every `filesystem` reader. Stage and commit through
+Bash, and write files through Edit/Write, which is where the gates live.
+
+Note also that `mcp__ilspy__decompile_type` and `mcp__git__git_blame` **do not exist** and never
+did; they were documented across nine sites until 2026-08-31. The real names are
+`decompile_assembly(assembly_path, type_name=...)` and, for blame, `git blame` via Bash.
 
 ## TaleWorlds Research — Lookup Order
 
