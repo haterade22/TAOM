@@ -4,6 +4,45 @@
 
 ## 2026-08-31
 
+### docs(lessons): four traps from the rename pass, and a rule whose scope was too narrow
+
+Four things went wrong during the lord identity and placeholder work that were nobody's fault but
+the process's, so they are written down rather than remembered.
+
+**Build, Tooling & Workflow** gains three:
+
+- *The tool you called decides the dialect and the escaping.* The existing heredoc lesson fired
+  **three more times**, each writing real newlines into C# string literals for an
+  `error CS1010: Newline in constant`. Separately a PowerShell here-string (`@'...'@`) went to the
+  Bash tool: the first line became the whole commit subject with a stray `@` on the front and the
+  body ran as shell commands, and the commit still succeeded. Two pressures point the wrong way
+  here, since a standing instruction to prefer Bash pulls toward heredocs while the two shells share
+  no here-doc syntax. Author anything with a backslash or a quote using Write/Edit, and read
+  `git log -1` back after writing a commit message.
+- *Uncommitted edits can vanish with no rebase, no error, and a clean `git status`.* A concurrent
+  session restored two `characters/*.xml` files to HEAD mid-turn. Exactly that turn's four edits
+  went; earlier ones survived because they were committed. It left the stylesheets and the registry
+  saying one name and the plain XML another, which is the exact defect class the pass existed to
+  remove.
+- *A mutating script must resolve every anchor before it writes the first byte.* Twice a script did
+  several successful in-memory replacements, printed `ok` for each, then failed an assertion and
+  exited before its single write. Nothing reached disk, but the console read as progress.
+
+**Testing & QA** gains one: *a sweep that returns zero has proved nothing until you have seen it
+report a known instance.* The placeholder scan printed "0 suspicious" twice while four real defects
+sat in the files, because it looked for `placeholder` as one word against data that said
+`Place Holder`, and for `Castle_E9` with an underscore against a value with a space. A zero from a
+search that found nothing is byte-identical to a zero from a search that could never match.
+
+**CLAUDE.md**: the multi-session row "Verify your own markers survived before committing" asked for
+a re-check *after any rebase or stash event*, and the revert above involved neither. Widened to any
+completion claim, with the note that a file reverting to HEAD leaves `git status` clean.
+
+**Index**: every per-file count in `LESSONS-LEARNED.md` re-derived with `grep -c '^### '`. Five were
+stale (animation-skeleton 22 to 26, build-tooling 118 to 121, campaign-mechanics 17 to 18,
+data-content-cultures 61 to 77, testing-qa 55 to 58) and the headline total moves 498 to **525**.
+The counts drift constantly, so recount rather than trusting the printed number.
+
 ### fix(troops): upgrading a troop could make it worse (#522, #523)
 
 Reported case: **Anórien Archer Militia into Anórien Skirmisher, Bow 130 down to 85**. Seven of that

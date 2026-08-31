@@ -823,3 +823,22 @@ referenced items. Two sessions in one exchange treated the green run as coverage
 - **Why missed:** the tool's NAME reads as general ("all troop refs") and the recommendation was relayed from a subagent's action item without opening the file. This is the same error as inferring a script's blast radius from a flag name instead of from its diff, which happened in the same exchange: a plausible name was taken for verified behaviour twice in an hour. `evidence-over-claims.md` A.4 covers relaying a subagent's claim; it applies to a recommended COMMAND just as much as to a finding.
 - **Prevent:** before naming a validator as the gate for a change, open it and confirm the class of thing you changed is in what it inspects. If a tool has a scope narrower than its name, make it say so at the point a human reads the result: `validate_all_troop_refs.py` now prints "Scope: ARMOR ids only ... For those run: python tools/audit_item_refs.py" on SUCCESS, because the failure mode is someone reading PASS and concluding "safe to commit". A validator that is honest only in its docstring is honest only to people who did not need telling.
 - **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding L14 and the cross-session exchange that followed it (#520).
+
+### A sweep that returns zero has proved nothing until you have seen it report a known instance
+A scan for placeholder names across `ModuleData/` printed "0 suspicious" twice, and both times the
+pattern was simply unable to match. It looked for `placeholder` as one word while the data said
+`Place Holder`, and for an id shape joined by an underscore (`Castle_E9`) while the value used a
+space (`Castle E9`). Four real defects sat in those files through the clean runs: a lord and two
+castles shipping under their own ids, one of them translated into twelve languages as *Burg E9* and
+*Замок G1*. They surfaced only when a human named one of them out loud.
+- **Why missed:** a zero produced by a search that found nothing is byte-identical to a zero
+  produced by a search that could never have found anything, and the output does not distinguish
+  them. Confidence came from having run a sweep at all, and the second sweep inherited the first
+  one's assumption about the separator instead of re-deriving it.
+- **Prevent:** seed the sweep with an instance you already know exists and confirm it appears in the
+  output before believing the count. Where no instance is known, deliberately over-match first, read
+  the false positives, and tighten from there; the over-matching run is the one that tells you what
+  the data actually looks like. Sibling lessons: "A zero you did not prove is not a zero" and "A
+  green validator proves only what that validator checks", both of which are this same error wearing
+  a different hat.
+- **Source:** the 2026-08-29 lord identity and placeholder rename pass.

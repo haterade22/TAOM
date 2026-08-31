@@ -1623,3 +1623,57 @@ occurrence came after the first had already been diagnosed and fixed by hand.
   heredocs for data with no backslashes. If a heredoc-written file is source, parse it immediately
   (`python -c "import ast; ast.parse(open(p).read())"`) before trusting it.
 - **Source:** docs/reviews/rca-rohan-spear-reforge-2026-08-28.md, "Process lesson".
+
+### The tool you called decides the dialect and the escaping, and it never tells you when you got it wrong
+
+The heredoc lesson above fired three more times on 2026-08-29, each time writing real newlines into
+C# string literals and producing `error CS1010: Newline in constant`. In the same session a
+PowerShell here-string (`@'...'@`) was handed to the Bash tool: the first line became the entire
+commit subject, prefixed with a stray `@`, and every following line ran as a shell command. The
+commit still succeeded. Only reading `git log -1` back afterwards showed it.
+- **Why missed:** two pressures point the wrong way. A standing instruction to prefer Bash for file
+  changes pulls toward heredocs, and the two shells' here-doc and here-string forms look
+  interchangeable while sharing no syntax. Neither failure is in the shell: one is the tool layer
+  rewriting escapes, the other is the wrong shell entirely, and both are invisible from the text you
+  wrote.
+- **Prevent:** author anything containing a backslash escape or a quote with Write/Edit, never a
+  heredoc. `<<'EOF'` is bash only and `@'...'@` is PowerShell only, so the dialect follows the tool
+  you invoked, not the machine you are on. For a commit message use `git commit -F -` with a quoted
+  heredoc that carries no escapes, then read `git log -1` back before doing anything else. A mangled
+  commit message is cheap to amend and expensive to notice.
+- **Source:** the 2026-08-29 lord identity and placeholder rename pass.
+
+### Your uncommitted edits can vanish with no rebase, no error, and a clean `git status`
+
+Mid-turn, a concurrent session restored two `characters/*.xml` files to HEAD. Exactly that turn's
+four edits disappeared; everything from earlier turns survived because it had already been
+committed. The stylesheets and the registry were untouched, so the data was left saying one name in
+one file and a different name in another, which is the defect class the whole pass existed to
+remove. `git status` showed the two files as clean, which reads as "nothing to do here", not "your
+work is gone".
+- **Why missed:** the existing rule asks for a marker re-check "after any rebase/stash event", and
+  there was no rebase and no stash. The trigger is not the git operation, it is elapsed time in a
+  tree somebody else is also writing to. A file reverting to HEAD produces no diff, no conflict and
+  no message.
+- **Prevent:** re-assert your own markers from disk before any completion claim, not only after a
+  git event. The strongest form is a test that compares the files against each other rather than
+  against your memory: here `EveryBiographyNamesTheLordItIsAttachedTo` and
+  `EveryLordNameFallbackMatchesTheRegisteredEnglishText` both failed and named the exact id, turning
+  a silent data inconsistency into a two-minute repair. Commit early in a shared tree; the edits
+  that survived were the ones already in a commit.
+- **Source:** the 2026-08-29 rename pass. The perpetrator side of the same event is "Revert per
+  file, never per directory, in a tree another session is working in", above.
+
+### A mutating script must resolve every anchor before it writes the first byte
+
+Twice in one session a script performed several successful in-memory replacements, printed an `ok`
+line for each, hit a failed assertion on the next anchor, and exited before the single `write()` at
+the end. Nothing reached disk and the successful edits were lost, but the console showed a column of
+`ok` lines, which reads as progress rather than as a rollback.
+- **Why missed:** the success print sat next to the mutation instead of next to the write, so the
+  output described intent, not effect. This is the same shape as "Report what a transform DID, never
+  what it was asked to do", one level down.
+- **Prevent:** resolve and assert every anchor first, mutate second, write third; or print nothing
+  until after the write returns. A partial run that writes nothing is safe. A partial run that
+  reports success is not, because the next thing you do is trust it.
+- **Source:** the 2026-08-29 rename pass.
