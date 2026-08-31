@@ -80,7 +80,10 @@ def inject(target, source, skel_name, out_path, dry_run=False):
             blobs.append(src[data_off:data_off + storage])
             struct.pack_into('<Q', it['toc'], rel_field, data_cur)   # rewrite segment offset
             data_cur += storage
-    header = struct.pack('<II', MAGIC, 2) + pkg + struct.pack('<III', len(out_items), 0, 0)
+    # offset 28..35 is the TOC SIZE; the engine derives data_start = 36 + toc_size from it.
+    # Hardcoding it to zero makes the engine read the TOC as segment data (rglBuffer.cpp:899,
+    # "Potential read/write miss match for rglVec3"). Verified tail == toc_size on 250 shipped tpacs.
+    header = struct.pack('<II', MAGIC, 2) + pkg + struct.pack('<I', len(out_items)) + struct.pack('<Q', toc_size)
     out = header + b''.join(bytes(it['toc']) for it in out_items) + b''.join(blobs)
 
     names = [it['name'] for it in out_items]

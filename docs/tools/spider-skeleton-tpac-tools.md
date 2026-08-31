@@ -83,6 +83,38 @@ After step 4, verify by re-running step 2 — you should see Usage flipped to `'
 
 ---
 
+## The file header, and the field that will bite you
+
+A tpac header is 36 bytes:
+
+```
+0..3    magic 'TPAC'
+4..7    version            (2 in all 6,107 tpacs measured on this install)
+8..23   package guid
+24..27  item count
+28..35  TOC SIZE           <- the engine derives data_start = 36 + toc_size from this
+```
+
+Offset 28..35 is easy to miss because a parser can walk the whole file without it. It is not
+padding. Measured on 250 shipped tpacs across Native, SandBox, LOTRLOME_Armory and Alliance.Wargs,
+`header[28:36] == sum(len(item.toc))` in 250 of 250, and the first segment's data offset is always
+exactly `36 + tail`.
+
+Write a zero there and the engine reads the table of contents as segment data, giving
+
+```
+rglBuffer.cpp:899
+(rglMath::nearly_equals(vector->w, 1.0f)) && "Potential read/write miss match for rglVec3"
+```
+
+during asset load, with no clue as to which file caused it. `tpac_skeleton_inject.py` shipped with
+exactly that bug until 2026-08-31.
+
+**So gate every writer with an identity rebuild:** parse, re-serialise with no modifications, and
+assert the output is byte-identical to the input. On a correct implementation this passes on the
+warg rig, the donor rig, the war ram and the chariot. It takes seconds and it catches the entire
+class.
+
 ## Tool reference
 
 ### `tpac_skeleton_scan.py` — TOC walker
@@ -115,6 +147,20 @@ python3 tools/tpac_skeleton_dump.py erkamspider_geo.tpac erkamspider_skeleton
 ```
 
 This is the equivalent of "open the Skeleton Editor and look at every panel" but as text output, scriptable, and diff-friendly. The fastest way to confirm whether your skeleton has populated joints.
+
+### `tpac_skeleton_swap.py` — transplant a Skeleton from a known-good compile
+
+Use this instead of the synthesiser when an older compile of the SAME skeleton still exists, because
+that compile IS the authored data. It copies the donor Skeleton item verbatim (guid, checksum,
+metadata, both segments) and rebuilds the target around it. Anything that referenced the old
+skeleton guid must then be re-pointed by same-length guid-for-guid substitution.
+
+```
+python tools/tpac_skeleton_swap.py <target.tpac> <source.tpac> <skeleton_name> <out.tpac> [--dry-run]
+```
+
+Verify with `tpac_skeleton_dump.py`: Bodies should show real body_type values and Constraints
+should be non-zero.
 
 ### `tpac_skeleton_transplant.py` — UserData patcher
 

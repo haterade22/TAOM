@@ -517,6 +517,91 @@ worth one of its own.
 > in the editor lives in the compiled tpac alone and is lost on re-import, with no warning. A missing
 > binding does not read as an error, it reads as a creature that is the wrong colour, or absent.
 
+## 13. The skeleton lost its physics data, and restoring it exposed a tool bug (2026-08-31)
+
+The maintainer's Skeleton Inspector showed `Body Type: none`, `Mass 0.000`, `Collision Body Radius
+-1.000` and an empty Joints node. That is a real loss, and the numbers are stark:
+
+| | Donor (Alliance) | After the Kit re-import |
+|---|---|---|
+| Bones | 49 | 49 |
+| `Usage` | `horse` | `horse` |
+| Bodies typed | 49 (abdomen 10, legs 10, chest 3, neck 2, head 12, arm_right 6, arm_left 6) | 0 of 49, all `none` |
+| Total ragdoll mass | 140.75 kg | 0.00 kg |
+| Collision radii | 47 non-zero | all at the `-1.0` unset sentinel |
+| d6 joint constraints | 48 | 0 |
+| SkeletonUserData | 13,525 B | 5,194 B |
+
+The warg was the only creature in `LOTRLOME_Armory` in that state: spider 61 constraints, elephant
+59, chariot 59, all typed. It is the state TaleWorlds themselves mark `_notused` on their raw import
+stubs.
+
+**It cannot be re-imported back.** Both modules' `Warg_Rig_V5.fbx` are the same 14,514,316 bytes with
+the same SHA1, and neither contains `Collision`, `Ragdoll`, `capsule`, `abdomen`, `legs`, `chest` or
+any body-type token. All of it was typed into the Kit's Skeleton Inspector against the donor's
+compiled tpac. The same is true of the `horse_body` and `horse_tail` submesh tags on `warg_low` and
+the `uses_cloth_simulation` flag on the four fur meshes, which live in the mesh items and are still
+missing.
+
+### What actually restored it
+
+`tools/tpac_skeleton_swap.py` (new) transplants the donor's Skeleton item into the target rig. The
+donor item is copied **verbatim**, guid included, and the 33 references that pointed at the old
+skeleton guid are re-pointed instead, by same-length guid-for-guid substitution across the animation
+`_geo` files and the rig's own `Warg_Rig_V5.fbx` item. Mesh items reference no skeleton guid on
+either side, verified, so they were unaffected.
+
+Result: 49 bodies typed, 48 d6 constraints, `Usage: horse`, Owner Skeleton resolution unchanged at
+24 warg / 22 human / 2 unset, and all six mesh material bindings untouched.
+
+### The tool bug that cost two failed attempts
+
+Two earlier attempts crashed the engine on asset load with
+`rglBuffer.cpp:899  nearly_equals(vector->w, 1.0f)`. Neither cause proposed at the time was right.
+`tools/tpac_skeleton_inject.py` wrote its header as
+
+```python
+struct.pack('<II', MAGIC, 2) + pkg + struct.pack('<III', len(out_items), 0, 0)
+```
+
+and the 8 bytes at offset 28..35 are the **TOC size**, from which the engine derives
+`data_start = 36 + toc_size`. Zeroed, the data section appears to begin at offset 36, on top of the
+TOC, so the engine reads guids and name strings as vectors. Verified `tail == toc_size` on 250
+shipped tpacs, with the first segment offset always exactly `36 + tail`. Fixed in both tools. An
+identity rebuild is now byte-identical on the warg rig, the donor rig, the war ram and the chariot,
+and that identity check is the gate before any future tpac surgery.
+
+> **The rule.** Any field a binary parser skips is a field its writer will invent. Make the rewriter
+> reproduce its input byte for byte before trusting it with real data.
+
+### CONFIRMED IN GAME, 2026-08-31: this was the invisibility
+
+After the transplant the warg renders on the campaign map, rider and all. The empty
+SkeletonUserData was the cause of the invisibility all along, not a separate cosmetic defect.
+
+That verdict was reached against the analysis, and the analysis was confident. A twelve-agent audit
+refuted the hypothesis with three controls, every one of which looked solid:
+
+| Control | Why it seemed to settle it |
+|---|---|
+| Vanilla `mule_skeleton` is `usage='other'`, mountable, and renders | a skeleton with no typed bodies clearly can render |
+| Vanilla ships four `usage='other'` skeletons with zero bodies and zero joints as campaign-map icons | and they render on the very screen in question |
+| `BoneBodyPartType` has no managed rendering consumer, only armour effectiveness, thrust-stick and body-part-hit | nothing in C# reads it on a render path |
+
+None of them generalised. The lesson is not that the agents were careless, it is that **a refutation
+by analogy to a different asset is weaker evidence than one cheap empirical test**, and the test was
+available the whole time. Six hypotheses were refuted across two workflows and the correct one was
+among them.
+
+### A misattribution worth recording
+
+The first crash was reported as caused by the change and was not. The editor asserted at 20:05 on
+pristine files; the first patch landed at 20:14. Across six sessions the assert split by launcher
+mode, not by file contents: three editor-mode runs asserted, three full-game runs of the same assets
+loaded cleanly, one running through to MapScreen. **There is a pre-existing editor-only
+`rglBuffer.cpp:899` assert on the untouched LOTRLOME_Armory asset set**, still unexplained, and it
+is not a usable pass/fail signal for asset work. Use a game launch for that.
+
 ## Verification performed
 
 | Gate | Result |

@@ -2,6 +2,64 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-31
+
+### fix(warg): restore the skeleton's collision bodies and ragdoll joints
+
+The warg's skeleton came back from the Kit re-import with its bone definition intact and its physics
+half empty: 0 of 49 bodies typed, 0.00 kg total mass, every collision radius at the `-1.0` unset
+sentinel, and 0 of the donor's 48 ragdoll constraints. It was the only creature in the Armoury in
+that state; spider, elephant and chariot all carry 59 to 61 typed constraints.
+
+None of it can be re-imported. Both modules' `Warg_Rig_V5.fbx` are the same 14,514,316 bytes with the
+same SHA1 and neither contains `Collision`, `Ragdoll`, `capsule` or any body-type token. It was typed
+into the Skeleton Inspector against the donor's compiled tpac and exists nowhere else.
+
+New tool `tools/tpac_skeleton_swap.py` transplants the donor Skeleton item verbatim and re-points the
+33 references that named the old guid, by same-length substitution across the animation `_geo` files
+and the rig's own fbx item. Mesh items reference no skeleton guid on either side, so they were
+untouched. After: 49 typed bodies, 48 d6 constraints, Owner Skeleton resolution unchanged at
+24 warg / 22 human / 2 unset, all six mesh material bindings unchanged.
+
+### fix(tools): tpac writers were zeroing the header's TOC-size field
+
+Two attempts at the above crashed the engine on asset load with `rglBuffer.cpp:899`,
+`nearly_equals(vector->w, 1.0f)`. Neither cause proposed at the time was correct. `parse_items` in
+`tools/tpac_skeleton_inject.py` skips the 8 bytes at header offset 28..35 and the writer hardcoded
+them to zero. That field is the TOC size and the engine derives `data_start = 36 + toc_size` from it,
+so a zero makes it read the table of contents as vertex data. Verified `tail == toc_size` on 250
+shipped tpacs, with the first segment offset always exactly `36 + tail`.
+
+Fixed in `tpac_skeleton_inject.py` and `tpac_skeleton_swap.py`. An identity rebuild (parse,
+re-serialise unmodified, compare) is now byte-identical on the warg rig, the donor rig, the war ram
+and the chariot, and that check is documented as the gate before any tpac surgery.
+
+Two corrections land with this. The earlier lesson blaming the item checksum for a failed Owner
+Skeleton patch is marked corrected: that field sits at metadata offset 21, not 20, and the patch was
+writing one byte early. Whether the checksum is validated at all is unknown rather than established.
+And the first crash was misattributed: the editor asserted at 20:05 on pristine files while the patch
+landed at 20:14. Across six sessions the assert split by launcher mode rather than file contents,
+three editor-mode runs asserting and three full-game runs of the same assets loading cleanly. **There
+is a pre-existing editor-only assert on the untouched LOTRLOME_Armory asset set**, still unexplained.
+
+**This was the invisibility.** After the transplant the warg renders on the campaign map, confirmed
+in game. A twelve-agent audit had refuted that hypothesis with three controls, a vanilla
+`usage='other'` mount that renders, vanilla map-icon skeletons with zero bodies and zero joints that
+render, and `BoneBodyPartType` having no managed rendering consumer. All three looked solid and none
+generalised. A refutation by analogy to a different asset is weaker than one cheap empirical test.
+
+Still open on the warg: the `horse_body` and `horse_tail` submesh tags on `warg_low` and the
+`uses_cloth_simulation` flag on the four fur meshes, all editor-authored and all still missing, which
+is why the three colour variants render identically.
+
+Docs: `docs/reference/lotrlome-warg-changes.md` section 13,
+`docs/reviews/lessons/animation-skeleton.md` (one new lesson, one corrected),
+`docs/ai-includes/creature-mount-authoring.md` re-export failure mode #8,
+`docs/tools/spider-skeleton-tpac-tools.md` header reference, `tools/README.md` tool table.
+
+Not-tested: in-game. The rig loads and dumps correctly; no battle has been run.
+Research: tpac header layout and TOC-size field, measured across 250 shipped packages.
+
 ## 2026-08-29
 
 ### fix(lords): the encyclopedia was describing the wrong people

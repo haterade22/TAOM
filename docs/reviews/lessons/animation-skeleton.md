@@ -242,6 +242,17 @@ Full record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md
 
 ### A tpac item's checksum goes stale the moment you add a value, so guid substitution is safe and setting an empty field is not
 
+> **CORRECTED 2026-08-31, and the correction matters more than the original.** The claim below that
+> the item checksum is what defeated the Owner Skeleton patch was never demonstrated, and two things
+> found since explain those failures without it. First, the Owner Skeleton guid sits at metadata
+> offset **21**, not 20; the patch script was writing one byte early, into the wrong field. Second,
+> two later attempts that rebuilt a whole rig tpac were blamed on the checksum and were actually
+> caused by the writer zeroing the file header's TOC-size field (see the next lesson). Guid-for-guid
+> substitution remains proven safe: 170 references, then another 33, both surviving reload. Whether
+> the checksum is validated at all is now **unknown**, not established. Treat the rule below as
+> "prefer the Kit for content changes", not as a measured fact about checksums.
+
+
 Absorbing the warg on 2026-08-28 needed two binary repairs to its copied animation assets. One
 worked, one silently did nothing, and the difference is a field it is easy to walk straight past.
 
@@ -339,6 +350,73 @@ what makes the pattern look clean.
 
 Full record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) section 12.
 Checklist row: [creature-mount-authoring.md](../../ai-includes/creature-mount-authoring.md) #7.
+
+
+### A tpac's header carries the TOC size, and a rebuild that zeroes it makes the engine read the table of contents as vertex data
+
+Restoring a creature's skeleton physics data needed the rig tpac re-serialised. Two attempts did
+that and both ended with the engine asserting during asset load:
+
+```
+Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...
+Assertion Failed!
+C:\BuildAgent\work\mb3\TaleWorlds.Shared\Source\Base\FairyTale.Library\rglBuffer.cpp:899
+Expression: (rglMath::nearly_equals(vector->w, 1.0f)) && "Potential read/write miss match for rglVec3"
+```
+
+The first attempt was blamed on a rewritten item guid, the second on the item checksum. Both were
+wrong. The defect was in `tools/tpac_skeleton_inject.py`, in one expression:
+
+```python
+header = struct.pack('<II', MAGIC, 2) + pkg + struct.pack('<III', len(out_items), 0, 0)
+```
+
+`parse_items` reads magic, version, package guid and item count, then **skips the 8 bytes at offset
+28..35**, and the writer hardcoded them to zero. Those bytes are the **TOC size**, and the engine
+derives `data_start = 36 + toc_size` from them. Measured on 250 shipped tpacs across Native,
+SandBox, LOTRLOME_Armory and Alliance.Wargs: `header_tail == sum(len(item.toc))` in 250 of 250, and
+the first segment's data offset is always exactly `36 + tail`. Of 6,107 tpacs on disk, every one is
+version 2 and exactly one has a zero there, a legitimate 0-item file.
+
+With the field zeroed the engine believes the data section starts at offset 36, which is where the
+TOC begins. It then reads guids and length-prefixed name strings as `rglVec3`, and the `w` component
+is not 1.0. The assert is the engine noticing precisely that.
+
+**The test that would have caught it in seconds, and is now the gate before any tpac surgery:**
+
+```
+parse the file, re-serialise it with NO modifications, compare byte for byte with the original
+```
+
+Run against the warg rig it differed in exactly two bytes, at offsets 28 and 29, because
+`12102 = 0x2F46` fits in two. Everything else round-tripped perfectly: item TOCs, the 69-byte
+segment descriptors, the `UnknownDependences` block, blob order, blob bytes, total length. After the
+fix the identity rebuild is byte-identical on the warg rig, the donor rig, the war ram and the
+chariot.
+
+**The reusable rule.** Before trusting a binary rewriter, make it reproduce its input exactly. A
+dry run that prints plausible numbers proves the script ran, not that the format survived. Any field
+the parser skips is a field the writer will invent, and the fields a parser skips are exactly the
+ones nobody has understood yet.
+
+**A second lesson, about attribution.** Both crashes were reported as caused by the change, and the
+first was not: the editor asserted at 20:05 on pristine files and the first patch landed at 20:14.
+The signal split by launcher mode rather than by file contents, three editor-mode runs asserting and
+three full-game runs of the same assets loading cleanly, one of them running through to MapScreen.
+**Establish that a failure signal is absent before the change before treating its presence after the
+change as proof.** Check the log timestamp against the edit timestamp.
+
+**Confirmed in game 2026-08-31, against the analysis.** Restoring the skeleton's bodies and
+constraints made the creature render on the campaign map. A twelve-agent audit had refuted that
+hypothesis using three controls: a vanilla `usage='other'` mount that renders, vanilla map-icon
+skeletons with zero bodies and zero joints that render, and the fact that `BoneBodyPartType` has no
+managed rendering consumer. All three were sound-looking and none generalised. **A refutation by
+analogy to a different asset is weaker than one cheap empirical test.** When the test is a game
+launch and the analysis is a dozen agents, run the test first.
+
+Tools: `tools/tpac_skeleton_swap.py` (transplant a Skeleton item from a known-good compile),
+`tools/tpac_skeleton_dump.py` (bones, bodies, constraints).
+Record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) section 13.
 
 
 ---
