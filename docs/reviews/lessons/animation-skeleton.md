@@ -428,3 +428,152 @@ Record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) sec
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### An animation must be authored against the ENGINE skeleton, not a mesh FBX
+
+Skinning uses bind matrices and is roll-independent, so a mesh FBX can carry arbitrary bone
+orientations and still deform perfectly in game. Rotations are NOT roll-independent. So "vanilla
+animations play correctly on this mesh, therefore its rig is right" is a false inference: it proves
+the bone POSITIONS and weights, and says nothing about orientations. An animation authored on that
+rig can look flawless in Blender and come out twisted in the engine, and nothing in Blender will ever
+show it.
+
+Get the real skeleton with `pwsh tools/dump_engine_skeleton.ps1 -Skeleton horse_skeleton`. For the
+war ram it revealed two things no mesh FBX could: the engine parents `horseneck1` to `horsespine3`
+(the mesh rig says `horsetail3`), and it has 32 bones with no `_nub_notused` entries.
+- **Why missed:** the whole session compared the ram against other FBX files, which are all proxies.
+  The engine's own `skeletons.tpac` was never opened until the end. Earlier attempts to read a horse
+  skeleton failed on `pack_horse_customrig` and four other packages, and that was taken as "the
+  skeleton is unobtainable" rather than "try another package". `skeletons.tpac` parses fine and holds
+  every vanilla skeleton.
+- **Prevent:** dump the engine skeleton FIRST, before authoring a single keyframe. Full write-up,
+  including the rest-frame maths and the ranked dead ends:
+  `docs/reference/bannerlord-skeleton-authoring.md`.
+- **Source:** war ram #515, 2026-08-29.
+
+### A verification that cannot fail is not a verification
+
+Three separate hypotheses were "refuted" this session by tests that were structurally incapable of
+detecting the fault, and two of them were later shown to be real problems.
+- Deleting the `_nub_notused` bones in Blender and seeing no pose change proves nothing: the nubs sit
+  at the same position as their child with identity rotation, so removing them is a no-op **by
+  construction**. It says nothing about a Kit that drops them from a track list.
+- Re-parenting `horseneck1` in Blender and seeing no pose change proves nothing either, for the same
+  reason, and the engine really does parent it differently.
+- Checking a bone's HEAD position cannot detect a rotation about its own origin. Head positions were
+  used to "confirm no yaw", and they are blind to exactly that. A whole sweep of head angles rendered
+  identically and was nearly accepted as "this bone does nothing"; the real cause was that the
+  assigned action was being re-applied at render time and silently overwriting the manual pose.
+- Every render for several hours was a SIDE view, which is close to blind to a yaw.
+- **Prevent:** before trusting a negative result, ask what the test would show if the hypothesis were
+  true. If the answer is "the same thing", the test is worthless. For pose work specifically: render a
+  FRONT view, and assert on bone DIRECTION vectors rather than head positions.
+- **Source:** war ram #515, 2026-08-29.
+
+### Pick a reference creature that matches the shape of the thing you are building
+
+Two rounds of work went into a 90-degree bone-convention gap measured against the chariot. `as_chariot`
+uses `chariot_skeleton`: two horses plus a cart, on its own skeleton asset, whose horse-NAMED bones
+are not the horse skeleton. Measured against the warg and the elephant, single-creature mounts with
+BT-driven attacks, a creature's animation FBX uses the SAME bone convention as its own mesh FBX
+(median 6.79 and 16.83 degrees, i.e. rest-pose differences), not a 90-degree flip.
+- **Prevent:** for a creature mount, compare against warg / spider / elephant. Never the chariot.
+- **Source:** war ram #515, 2026-08-29.
+
+### A mesh tpac holds bone indices, not bone names, so scanning for bone names is not a skinning test
+
+Restoring the fell warg meant proving whether the Kit had kept the skin weights on import. The test
+used was a byte scan of the compiled tpac for the warg's bone names, decompressing every segment
+first. It returned zero every time, against a control where the warg's own rig returned `Root_M` 12,
+`Head_M` 17, `Hip_R` 8. That was read as "still unskinned" and reported three times across three
+separate attempts, each followed by a different theory about why the Kit had dropped the binding.
+
+All three were wrong. The maintainer opened the model viewer, played `as_warg` clips against the fell
+warg, and it animated correctly.
+
+**A skinned mesh stores bone INDICES into its skeleton's bone array. The names live in the Skeleton
+item.** The warg's rig tpac contains bone names because it *bundles* `skeleton_warg` alongside its
+meshes. A mesh that binds to a skeleton living in a different tpac has no reason to carry a single
+bone name, and correctly does not.
+
+So the scan was measuring "does this tpac contain a Skeleton item", dressed up as a skinning test,
+and every creature that shares an existing skeleton would fail it.
+
+**What to test instead.** The FBX, before it reaches the Kit, where the answer is unambiguous:
+
+```
+                 LimbNode  Deformer  Cluster  Skin  BindPose
+skinned export     98        1001      490     10      20
+unrigged source     0           0        0      0       0
+```
+
+Then confirm in the model viewer with an actual animation. The cheap empirical check beat three
+rounds of binary analysis, and it beat them in one click.
+
+**The generalisable failure.** A test that returns the same answer for "broken" and for "correct but
+structured differently" is not a test. Before trusting a negative result, establish that the check
+can distinguish the two, ideally by running it against a known-good example of the *same shape*, not
+merely a known-good example. The warg was a bad control precisely because it bundles its skeleton and
+the fell warg does not.
+
+### The Modding Kit refusing a duplicate asset name is the protection working, not an obstacle
+
+Sharing an existing skeleton raises an obvious worry: will importing a second FBX that contains the
+same armature mint a second `skeleton_warg` and shadow the live one that `as_warg` resolves? The
+spider's 2026-06-14 guid collision and recursive native access violation is what that fear is built
+on.
+
+Two workarounds were tried. Renaming the exported armature to `skeleton_warg_notused`, following the
+convention animation clips use, produced a tpac with no Skeleton item, which looked like success.
+Exporting with the real name `Skeleton_Warg` produced this in the editor console:
+
+```
+Unable to import skeleton_warg(Skeleton). Item with same name already exists in
+Warg_Rig_V5_geo. Asset names are required to be unique within the same module.
+```
+
+**That message is the correct outcome.** The Kit enforces per-module name uniqueness itself, skips
+the duplicate, imports the meshes, and lets them bind to the skeleton already present. No workaround
+is needed and the `_notused` rename is unnecessary for a mesh that shares an existing skeleton. Both
+exports produced a working creature; only one of them said so out loud.
+
+Related, and measured on the same job: `primary_bone_axis='Y'` with `secondary_bone_axis='X'` is not
+optional on FBX export. At `X`/`Y` the bone *heads* and the bounding box stay correct to 1e-06 while
+the *tails* drift 0.575 m, putting `Hip_R` 88% of its reference motion out of place. A gate that
+checks head positions or bounding boxes passes the broken file. Check tails.
+`tools/blender/harness.py` and `arp_retarget.py` use the correct pair;
+**`tools/blender/creature_anim_ops.py` lines 288, 338 and 427 carry `X`/`Y` and are wrong.**
+
+### Texture rules the Modding Kit does not enforce loudly
+
+Three constraints found the hard way while importing 28 inherited textures, none of which produces a
+clear error message.
+
+**Dimensions must be divisible by 4, and should be a power of two.** BC block compression works on
+4x4 blocks. Eight of the fell warg's maps were 5689x5689, which is odd, so the Kit silently fell back
+to uncompressed `R8G8B8A8_UNORM` at **164 MiB each**. Six of them accounted for essentially the whole
+940 MB RuntimeDataCache payload for one creature. Nothing warned; the assets simply were not
+compressible. At 2048 with DXT5 and mips the same map is 5.33 MiB.
+
+The formula worth remembering: `bytes = width x height x bpp x 4/3`, where the `4/3` is the mip chain
+and bpp is 4.0 uncompressed, 1.0 for BC3/DXT5 and BC5, 0.5 for BC1 and BC4. **Halving the dimension
+quarters the memory.**
+
+**Palette-mode PNGs compile to single-channel BC4.** Four maps were 8-bit palette, including two
+normal maps, and a single-channel normal map is worthless. Re-saving them as RGB fixed it. Note that
+a resize pass will silently skip files that are already the target size, so they keep their palette;
+the de-palette has to be a separate forced re-encode.
+
+**Uppercase in a texture filename crashed the editor** when the texture was assigned to a material.
+Observed by the maintainer across repeated attempts; every one of the 28 inherited files carried
+uppercase, and renaming them all to lowercase resolved it. The rule may be narrower than "any
+uppercase", because the warg's own shipped `Warg_skin_d` carries a capital W and works, so the
+trigger could be the mixed `T_GD_` pattern or a case-only mismatch somewhere in the chain. Lowercase
+is safe either way. Worth knowing that mesh names are lowercased automatically on import
+(`SK_GD_Fellwarg` becomes `sk_gd_fellwarg`) while texture names keep their case, and that asymmetry
+is exactly the shape that produces a lookup miss.
+
+**And when resizing data maps, force the colour management off.** Normal, AO and metallic are data,
+not colour. Set `colorspace_settings.name = 'Non-Color'` and the scene view transform to `Standard`
+with gamma 1.0 before saving, or Blender applies a filmic transform to the buffer and produces a
+creature with subtly wrong lighting that nobody can explain later.

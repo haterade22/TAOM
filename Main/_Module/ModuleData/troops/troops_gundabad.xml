@@ -727,7 +727,7 @@
               <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_d" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_e" />
-              <equipment slot="Horse" id="Item.warg_brown" />
+              <equipment slot="Horse" id="Item.fell_warg" />
               <equipment slot="HorseHarness" id="Item.warg_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
@@ -757,7 +757,7 @@
                     id="Item.sk_gb_uruk_boots_med_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_brown" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -789,7 +789,7 @@
                     id="Item.sk_gb_uruk_boots_med_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_brown" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -821,7 +821,7 @@
                     id="Item.sk_gb_uruk_boots_med_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_brown" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -853,7 +853,7 @@
                     id="Item.sk_gb_uruk_boots_med_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_brown" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -915,7 +915,7 @@
               <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_elite_c" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
-              <equipment slot="Horse" id="Item.warg_dark" />
+              <equipment slot="Horse" id="Item.fell_warg" />
               <equipment slot="HorseHarness" id="Item.warg_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
@@ -945,7 +945,7 @@
                     id="Item.sk_gb_uruk_boots_heavy_a" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_dark" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -977,7 +977,7 @@
                     id="Item.sk_gb_uruk_boots_heavy_a" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_dark" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1009,7 +1009,7 @@
                     id="Item.sk_gb_uruk_boots_heavy_a" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_dark" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1041,7 +1041,7 @@
                     id="Item.sk_gb_uruk_boots_heavy_a" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_dark" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1310,7 +1310,7 @@
               <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
-              <equipment slot="Horse" id="Item.warg_albino" />
+              <equipment slot="Horse" id="Item.fell_warg" />
               <equipment slot="HorseHarness" id="Item.warg_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
@@ -1340,7 +1340,7 @@
                     id="Item.sk_gb_uruk_boots_elite_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_albino" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1372,7 +1372,7 @@
                     id="Item.sk_gb_uruk_boots_elite_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_albino" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1404,7 +1404,7 @@
                     id="Item.sk_gb_uruk_boots_elite_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_albino" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1436,7 +1436,7 @@
                     id="Item.sk_gb_uruk_boots_elite_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_albino" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
@@ -1468,7 +1468,7 @@
                     id="Item.sk_gb_uruk_boots_elite_b" />
                 <equipment
                     slot="Horse"
-                    id="Item.warg_albino" />
+                    id="Item.fell_warg" />
                 <equipment
                     slot="HorseHarness"
                     id="Item.warg_saddle" />

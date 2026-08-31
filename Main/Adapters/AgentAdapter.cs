@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.Warg;
 using TAOM.Features.AdvancedCombat.Services;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -55,7 +56,7 @@ public class AgentAdapter : IAgentAdapter
 
     internal Agent GetUnderlyingAgent() => _agent;
 
-    public bool IsWarg() => _agent.Monster.StringId == "warg";
+    public bool IsWarg() => WargConfig.IsWargMonster(_agent.Monster.StringId);
     public bool IsHorse() => _agent.Monster.StringId == "horse";
     public bool IsCamel() => _agent.Monster.StringId == "camel";
     public bool IsActive() => _agent?.IsActive() ?? false;

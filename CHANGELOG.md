@@ -4,6 +4,68 @@
 
 ## 2026-08-31
 
+### feat(fellwarg): rig inherited art onto the warg skeleton and wire it up
+
+The fell warg had sat in Alliance.Wargs as unreferenced art. It turned out never to have been a
+creature at all: `Alliance.Wargs/ModuleData` contains the string `fell` exactly zero times, and the
+geometry carried no rig (0 LimbNode, 0 Deformer, 0 Cluster, 0 Skin in both source FBX, against the
+warg's 98 / 2401 / 1176 / 24). The artist modelled it on the warg and delivered geometry plus
+textures, stopping before the Blender and Kit steps.
+
+Because it was modelled on the warg, both already share one world space, so the warg's own weights
+transfer onto it by proximity. Bound headless through `blender-launcher.exe -b`: 10 meshes across 5
+LODs each, zero unweighted vertices, weight sums exactly 1.0, no vertex group outside the warg's 49
+bones, rest pose reproduced to 5.7e-06 m. Confirmed animating with `as_warg` clips in the model
+viewer. New reusable tool: `tools/blender/bind_to_existing_skeleton.py`.
+
+Data layer: its own `<Monster id="fell_warg">` (weight 500 to 650, hit points 80 to 110) reusing
+`as_warg`, the `warg` usage set and the `warg` collision class verbatim, registered in both
+`SubModule.xml` and `project.mbproj`. One item, no `<Materials>` block because the mesh carries no
+`horse_body` tag and the baked material is already correct. Fielded by `dg_fell_warg_rider`, which
+already existed and had been riding an ordinary `warg_dark`, plus Gundabad's three Cavalry troops;
+the four HorseArchers stay on ordinary wargs so a heavier mount does not reach level 21 scouts.
+`validate_moduledata.py` PASS.
+
+`AgentAdapter.IsWarg()` was exact string equality on `"warg"`, and it is the only gate on the bite
+behaviour tree and rider hand posing. A second warg-family Monster would have got neither, silently.
+Now routed through `WargConfig.IsWargMonster`, six tests, full suite green.
+
+Known and deliberate: the jaw does not transfer. Combined `Jaw_M` mass is 0.0043 of the warg's
+because the fell warg has no surface where the warg's jaw sits, and both `as_warg` attacks drive that
+bone, so it bites with its mouth closed until someone paints those weights.
+
+### fix(warg): restore the submesh tags and cloth flag
+
+Section 12 left `horse_body`, `horse_tail` and `uses_cloth_simulation` open. Restored by transplanting
+the donor's mesh items whole and re-pointing the five references the `Warg_Rig_V5.fbx` bookkeeping
+item held to the replaced guids, which a naive swap would have left dangling. The Kit confirms cloth
+on the fur. `warg_low_fur_with_saddle_3` also regained `warg_fur_3_lod` on its lower LODs, which the
+hand-assignment had set to full detail.
+
+### docs: three lessons, one of which is a correction to my own method
+
+`docs/reviews/lessons/animation-skeleton.md` gains three. The load-bearing one: **a mesh tpac holds
+bone indices, not bone names**, so scanning a tpac for bone names is not a skinning test. That scan
+returned zero and was reported as "still unskinned" three times across three attempts, each with a
+different theory, and all three were wrong. The maintainer opened the model viewer and it animated.
+The warg was a bad control precisely because it bundles its own skeleton and the fell warg does not.
+
+Also recorded: the Kit refusing a duplicate asset name is the protection working rather than an
+obstacle, so the `_notused` armature rename is unnecessary for a mesh sharing an existing skeleton;
+and the texture rules the Kit does not enforce loudly (dimensions divisible by 4 or BC compression
+silently falls back to uncompressed at 164 MiB a map, palette PNGs compiling to single-channel BC4,
+uppercase filenames crashing the editor on material assignment, and data maps needing `Non-Color`
+before any resize).
+
+A live bug found in passing: `tools/blender/creature_anim_ops.py` lines 288, 338 and 427 use
+`primary_bone_axis='X'` / `secondary_bone_axis='Y'`. Measured, that leaves bone heads and bounding
+boxes correct to 1e-06 while tails drift 0.575 m, putting `Hip_R` 88% of its reference motion out of
+place. `harness.py` and `arp_retarget.py` have it right. Not fixed here; flagged.
+
+Not-tested: in-game. The mesh animates in the model viewer and the data validates, but no battle has
+been run.
+
+
 ### fix(ci): the hook gate's first real run failed, on a premise that was not true
 
 Giving the harness suite its own CI job let it execute for the first time, and it failed
@@ -746,6 +808,47 @@ release-shape call, so the packager is untouched.
 New reference: `docs/reference/bannerlord-engine-and-toolchain.md` section 6.1.
 
 ## 2026-08-28
+
+### docs(animation): author against the engine skeleton, not a mesh FBX
+
+The war-ram head-butt clip looked correct in Blender and came out twisted in game, and finding out
+why took a day and six wrong diagnoses. The root cause is a single asymmetry worth stating plainly:
+skinning uses bind matrices and is roll-independent, so a mesh FBX can carry arbitrary bone
+orientations and still deform perfectly in game. Rotations are not roll-independent. So "vanilla
+animations play on this mesh, therefore its rig is correct" proves the bone positions and weights and
+says nothing about orientations, which is exactly what an animation depends on.
+
+`tools/dump_engine_skeleton.ps1` reads the engine's own definition out of
+`Native/AssetPackages/skeletons.tpac`. For the horse it says 32 bones, no `_nub_notused` entries, and
+`horseneck1` parented to `horsespine3` where `SK_EB_Goat_A.fbx` says `horsetail3`. None of that is
+visible from any mesh file. Four earlier attempts to read a horse skeleton failed on
+`pack_horse_customrig` and friends, and that was taken as "unobtainable" rather than "wrong package".
+
+The clip is still not right, and the write-up says so rather than pretending otherwise.
+`docs/reference/bannerlord-skeleton-authoring.md` records the measured engine data as ground truth,
+ranks the three attempts by how close each got, and lists the dead ends so nobody re-walks them. One
+of those dead ends is the obvious inference from the engine data itself: the rest frames store each
+child at +length along its parent's X, so exporting with `primary_bone_axis='X'` looks correct and
+produced the worst result of the session. The storage convention and the right Blender export setting
+are two different questions.
+
+Three of the dead ends were "refuted" by tests that could not have failed. Deleting the
+`_nub_notused` bones in Blender is a no-op by construction, since they sit on top of their child with
+identity rotation. Re-parenting a bone whose candidate parents both have identity rest rotation
+changes nothing. And a bone's head position cannot detect a rotation about its own origin, which is
+precisely the yaw we were hunting; a whole sweep of head angles rendered identically and was nearly
+accepted as "this bone does nothing", when the real cause was the assigned action being re-applied at
+render time over the manual pose. Every render for hours was a side view, which is close to blind to
+a yaw. That pattern is now its own lessons entry.
+
+Also: comparing a creature mount against the chariot cost two rounds. `as_chariot` is two horses and
+a cart on its own `chariot_skeleton`, and its horse-named bones sit 90 degrees from every mesh rig,
+which reads as a smoking gun and is not one. Measured against the warg and the elephant, a creature's
+animation FBX uses the same bone convention as its own mesh FBX.
+
+`tools/rename_anim_clip_tpac.py` works around a separate Kit defect reported by Artem and confirmed
+in our logs: renaming an animation clip inside the Kit corrupts it until the tools are restarted, and
+the renamed file can disappear outright. Rename on disk with the Kit closed instead.
 
 ### feat(warg): materials and animation wiring after the Kit re-import
 

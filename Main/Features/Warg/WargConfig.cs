@@ -1,7 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace TAOM.Features.Warg;
 
 public static class WargConfig
 {
+    /// <summary>
+    /// Every Monster id the warg behaviour tree treats as a warg.
+    ///
+    /// <c>AgentAdapter.IsWarg()</c> gates the bite attack (<c>WargMissionBehavior</c>) and rider
+    /// hand posing (<c>WargRiderHandManager</c>). It was <c>StringId == "warg"</c>, so any second
+    /// warg-family Monster silently got neither, with no crash and no log line. The fell warg reuses
+    /// skeleton_warg and as_warg but carries its own Monster for weight (which drives the
+    /// charge-knockdown model) and base hit points, so it has to be named here.
+    /// </summary>
+    public static readonly IReadOnlyCollection<string> WargMonsterIds =
+        new[] { "warg", "fell_warg" };
+
+    /// <summary>Ordinal match, mirroring the equality this replaced. Monster ids are lowercase in XML.</summary>
+    public static bool IsWargMonster(string monsterStringId) =>
+        monsterStringId != null && WargMonsterIds.Contains(monsterStringId, StringComparer.Ordinal);
+
     internal static float WargAttackRange = 1f;
     // 2026-05-24: restored to 20f to match the original LOTRAOM value. This was
     // hardcoded as `float targetDetectionRange = 20f;` inside WargLogic.WargAttack

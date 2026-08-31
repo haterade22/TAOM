@@ -602,6 +602,100 @@ loaded cleanly, one running through to MapScreen. **There is a pre-existing edit
 `rglBuffer.cpp:899` assert on the untouched LOTRLOME_Armory asset set**, still unexplained, and it
 is not a usable pass/fail signal for asset work. Use a game launch for that.
 
+## 14. The submesh tags and cloth flag, restored the same way (2026-08-31)
+
+Section 12 identified `horse_body`, `horse_tail` and `uses_cloth_simulation` as editor-authored data
+the FBX re-import dropped, and left them open. They were restored by the same operation that fixed
+the skeleton: transplant the donor's mesh items verbatim, then re-point whatever named the old ones.
+
+| Mesh | Restored |
+|---|---|
+| `warg_low` | `horse_body`, `horse_tail` submesh tags |
+| `warg_low_fur`, `warg_low_fur_with_saddle`, `_2`, `_3` | `uses_cloth_simulation` |
+
+The Kit confirmed the cloth flag on the fur afterwards. `orc_rider_saddle` was left alone because it
+was already byte-identical to the donor, which is the control that keeps proving the import itself is
+faithful and only the editor-authored layer diverges.
+
+**A gate earned its keep here.** The swap script refused to run until it had checked whether anything
+outside the replaced items referenced their guids, and it found that `Warg_Rig_V5.fbx`, the
+bookkeeping item, lists the guid of every mesh imported from it. A naive swap would have left five
+dangling references. Those were re-pointed in the same write.
+
+A side effect worth recording: `warg_low_fur_with_saddle_3` regained `warg_fur_3_lod` on its lower
+LODs, which the maintainer's hand-assignment had set to full-detail `warg_fur_3` on all four. Taking
+the donor item whole recovers that kind of nuance for free.
+
+## 15. The fell warg: unrigged art, rigged headlessly (2026-08-31)
+
+The fell warg had been left behind in the absorption as unreferenced art. Investigating it produced
+a different answer from the warg's, and the difference matters for anyone who inherits creature art.
+
+**It was never a creature.** `Alliance.Wargs/ModuleData` contains the string `fell` exactly zero
+times: no item, no Monster, no usage set, no action set, no troop, in any module, ever. And the
+geometry was not rigged. Measured in the source FBX, against the warg's:
+
+| token | `fellwarg_mesh.fbx` | `fellwargfur_mesh.fbx` | `Warg_Rig_V5.fbx` |
+|---|---|---|---|
+| `LimbNode` | 0 | 0 | 98 |
+| `Deformer` | 0 | 0 | 2401 |
+| `Cluster` | 0 | 0 | 1176 |
+| `Skin` | 0 | 0 | 24 |
+| warg bones present | 0 of 49 | 0 of 49 | 49 of 49 |
+
+The artist modelled it on the warg and delivered geometry plus textures, stopping before the two
+steps that only exist in Blender and the Kit. The material slot names give it away: the meshes ask
+for `fellwarg_skin_3`, `fellwarg_teeth` and `fellwarg_fur_4`, mirroring the warg's own
+`warg_skin_2` / `warg_fur_3` naming, and none of the three existed anywhere in 143,057 items across
+29 modules.
+
+### Rigging it, headless
+
+Blender 5.2.1 drives fine from `blender-launcher.exe -b --factory-startup -P script.py`; the raw
+`blender.exe` under `WindowsApps` is ACL-locked and returns 126. The launcher detaches, so a script
+must write its results to a file rather than stdout.
+
+The creature was modelled on the warg, so both already share one world space and no alignment was
+needed. That makes proximity weight transfer the right technique rather than automatic weights:
+
+```
+data_transfer(data_type='VGROUP_WEIGHTS', vert_mapping='POLYINTERP_NEAREST',
+              layers_select_src='ALL', layers_select_dst='NAME', use_create=True)
+vertex_group_clean -> vertex_group_normalize_all -> purge empty groups -> parent_set(type='ARMATURE')
+```
+
+`layers_select_dst='NAME'` is what makes the bone-name match structural rather than hopeful: the
+destination group takes the source layer's name, so it can only ever be a warg bone name. Import
+order matters too, because the fell warg body FBX names its own geometry `warg_low.016` through
+`.020` and will steal the names if it loads first.
+
+Result: 10 meshes bound (5 LODs each), zero unweighted vertices, weight sums exactly 1.0, no vertex
+group outside the warg's 49 bones, rest pose reproduced to 5.7e-06 m.
+
+### What could not be transferred
+
+The jaw. Combined `Jaw_M` plus `JawEnd_M` weight mass per vertex is 0.000336 against the warg's
+0.078593, a ratio of 0.0043, and `JawEnd_M` ends with no weight at all. The cause is geometry: the
+fell warg has no surface where the warg's jaw sits. Four of six sampled `as_warg` clips drive
+`Jaw_M`, including both attacks, so **the fell warg bites with its mouth closed** until someone
+paints those weights by hand.
+
+### The data layer
+
+Its own `<Monster id="fell_warg">` cloned from the warg with `weight` 500 to 650 and `hit_points`
+80 to 110, reusing `action_set="as_warg"`, `monster_usage="warg"` and
+`sound_and_collision_info_class="warg"` verbatim, so it brings no animation, physics or sound data of
+its own. Registered in both `SubModule.xml` and `project.mbproj`, matching the warg and the elephant.
+
+The item declares **no `<Materials>` block**, deliberately. That block only reaches a mesh through
+`SetMaterialToSubMeshesWithTag(mat, "horse_body")`, the fell warg mesh carries no such tag, and the
+material baked into the tpac is already correct. Omitting it skips the call entirely rather than
+relying on a no-op.
+
+Fielded by `dg_fell_warg_rider` (Dol Guldur), which already existed and had been riding an ordinary
+`warg_dark`, plus Gundabad's three Cavalry troops. The four Gundabad HorseArchers stay on ordinary
+wargs so a heavier mount does not reach level 21 scouts.
+
 ## Verification performed
 
 | Gate | Result |

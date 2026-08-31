@@ -163,6 +163,45 @@ It cannot see #8 either: dump the skeleton and compare Bodies and Constraints to
 
 ---
 
+### Rigging inherited art onto an existing creature skeleton (headless)
+
+Art delivered as unrigged geometry can be bound to an existing creature's skeleton without opening
+Blender interactively, provided the art was modelled on that creature. Proven on the fell warg,
+2026-08-31.
+
+Run Blender as `blender-launcher.exe -b --factory-startup -P script.py`. The raw `blender.exe` under
+`WindowsApps` is ACL-locked and exits 126, and the launcher detaches, so the script must write its
+results to a file rather than stdout.
+
+1. Import the **rigged donor first**, then the unrigged meshes. Inherited art often names its
+   geometry after the donor's (`warg_low.016`), and whichever loads first claims the name.
+2. Pair each destination with the right donor part: body to body, fur to fur.
+3. `data_transfer(data_type='VGROUP_WEIGHTS', vert_mapping='POLYINTERP_NEAREST',
+   layers_select_src='ALL', layers_select_dst='NAME', use_create=True)`. The `NAME` selector makes
+   the bone-name match structural. `use_create=False` on a target with no groups is a silent no-op.
+4. `vertex_group_clean`, then `vertex_group_normalize_all`. Do **not** use
+   `vertex_group_limit_total`: it breaks normalisation, and the shipped warg does not obey a
+   4-influence cap either.
+5. Purge empty groups by hand; no stock operator does it.
+6. `parent_set(type='ARMATURE')`, not `ARMATURE_AUTO`, which would discard the transferred weights.
+7. Export with `primary_bone_axis='Y'`, `secondary_bone_axis='X'`, `add_leaf_bones=False`
+   (`True` turns 49 bones into 60 against a 64 cap), `axis_forward='-Y'`, `axis_up='Z'`,
+   `bake_anim=False`.
+
+Gate it before the Kit ever sees it: zero unweighted vertices, weight sums 1.0, no vertex group
+outside the donor's bones, bounding box unchanged, armature modifier present. Then re-import the
+exported file and check bone **tails** in world space, because the axis mistake above leaves heads
+and bounding boxes correct while tails drift half a metre.
+
+Do not rename the armature to `<skel>_notused` for a mesh export. The Kit enforces per-module name
+uniqueness itself and will refuse the duplicate skeleton while still importing and binding the
+meshes.
+
+**What weight transfer cannot do** is invent geometry. Where the destination has no surface at a
+donor bone, that bone gets no weight. On the fell warg the jaw transferred at 0.0043 of the warg's
+mass and `JawEnd_M` got nothing, so it bites with its mouth shut. Check the bones your action set
+actually drives before declaring a transfer complete.
+
 ## Phase 0 — Assets (skeleton, meshes, physics)
 
 | Requirement | Rule | Failure mode if violated |
