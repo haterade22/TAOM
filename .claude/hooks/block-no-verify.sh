@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse(Bash): refuse any git command carrying --no-verify.
 #
 # WHY THIS IS NOT ALSO A BUILD GATE
@@ -28,7 +31,7 @@ INPUT=$(cat)
 if command -v jq >/dev/null 2>&1; then
   COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 else
-  COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))

@@ -4,6 +4,59 @@
 
 ## 2026-08-31
 
+### fix(hooks): the harness hung 20 minutes per Bash call, and the first repair killed three gates
+
+Overnight sessions stalled in blocks of very close to 20.0 minutes. The first diagnosis blamed
+rate limits from a large parallel workflow. Wrong, and the precision was the tell: backoff varies,
+this did not.
+
+`python3` on this machine resolves only to a Microsoft Store App Execution Alias. Run from Git Bash
+it prints nothing, never exits, and ignores SIGTERM. Every hook parsed stdin JSON with `jq` and fell
+back to `python3`, and `jq` is not installed. No registration carried a `timeout`, and the harness
+default is **600 s**, not the 60 s first assumed: matching hooks run in parallel, so a Bash call paid
+one 600 s PreToolUse batch plus one 600 s PostToolUse batch. That is the 1200 s.
+
+**The root cause is a sentence we wrote.** `docs/reference/hooks-catalog.md` recorded on 2026-08-20
+that jq was absent and then prescribed "use the python3 fallback". Eleven days later that instruction
+had been followed into every JSON-parsing hook. It has been rewritten; the older CHANGELOG entries
+describing that fallback are historical record and stand, but the advice in them is superseded.
+
+**A first repair fixed the hang and then silently killed three gates.** Timeouts were sized against
+each hook's fast path. A harness kill discards the hook's output, so an overrun is indistinguishable
+from a clean pass. Measured with each hook's exact command: `check-moduledata-validation` 27.0 s
+against a 5 s registration, `check-doc-config-drift` 7.8 s against 5 s, `check-polearm-shield-parity`
+2.9 s against 5 s. The first two were dead, which is worse than the hang because the hang was loud.
+`validate-push.sh` was worse still: its `source _pybin.sh` landed at line 46 while `"$PYBIN"` is used
+at line 16, so a `git push --force origin bannerlord-1.4.5` payload returned rc=0 with no output and
+the trunk force-push block was unreachable. It now returns rc=2 on `--force`, on `-f`, and on a
+quoted branch name.
+
+Also fixed: six hang sites outside `.claude/hooks/` (`/context-budget` was unrunnable,
+`check-freeze.sh` still ran the original `python3`-first loop while guarding every Edit under
+`/freeze` and `/investigate`); five skill-frontmatter registrations that had no timeout and so
+inherited the 600 s default; and `mark-verification-run.sh`, whose `COMMAND="$INPUT"` fallback was
+the only path taken with jq absent, so any Bash call whose payload merely mentioned `dotnet test`
+muted the verification reminder.
+
+`.gitattributes` now pins `*.sh` to LF. `core.autocrlf` is true and there was no attributes file, so
+one `git checkout` of `.claude/hooks/` would have written CRLF and killed all 28 hooks at the
+shebang at once, silently. Scoped to `*.sh` deliberately: normalising `*.py` would rewrite 72 files
+for no benefit.
+
+`tools/test_hooks.sh` is the gate that speaks, wired into CI. It fails on a registration with no
+timeout, a hook running an external tool with no inner bound, an inner bound not strictly below its
+registered timeout, any hang, any exit code outside {0,2}, malformed JSON from a gate, and unguarded
+`python3`. Proven to fail: a deliberately broken canary produced 7 failures across three checks;
+removing it returned 174 passed / 0 failed.
+
+Measured per benign Bash call: 2783 ms of hook work before, 1620 ms after, 204 ms on the parallel
+critical path. `jq` was never the fix and is not required.
+
+RCA: `docs/reviews/rca-hook-harness-hang-2026-08-31.md`. Four lessons appended to
+`docs/reviews/lessons/build-tooling-workflow.md` (121 to 125). Rules added to
+`.claude/rules/hook-authoring.md`: measure the slow path, bound external work inside the script,
+never spell it `python3`, check skill frontmatter too.
+
 ### docs(lessons): four traps from the rename pass, and a rule whose scope was too narrow
 
 Four things went wrong during the lord identity and placeholder work that were nobody's fault but

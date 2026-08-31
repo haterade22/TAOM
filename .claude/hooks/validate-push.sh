@@ -3,6 +3,13 @@
 # Hard-blocks force pushes to master (CLAUDE.md policy).
 # Non-blocking warning for regular pushes to master/main.
 
+# Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
+# This MUST stay above the first "$PYBIN" use below. It was previously sourced at the
+# bottom of the flag-parsing block, so PYBIN was empty when line 16 ran, COMMAND came back
+# empty, and the force-push block below was unreachable. Verified dead 2026-08-31: a
+# `git push --force origin bannerlord-1.4.5` payload returned rc=0 with no output.
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+
 INPUT=$(cat)
 
 # Prefer jq; fall back to python3 for robust JSON. The grep+sed fallback this used to
@@ -12,8 +19,13 @@ INPUT=$(cat)
 # Mirrors block-dangerous-git.sh.
 if command -v jq >/dev/null 2>&1; then
   COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+elif [[ -z "$PYBIN" ]]; then
+  # No jq and no safe interpreter: fail open per harness-facts.md, but say so. Silence
+  # here would read as "not a push", which is the failure mode this hook exists to avoid.
+  echo "validate-push: no jq and no safe python; push NOT checked against branch policy." >&2
+  exit 0
 else
-  COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
@@ -41,6 +53,7 @@ for tok in $AFTER_PUSH; do
 done
 # shellcheck disable=SC2086
 set -- $POSITIONAL
+
 if [[ $# -ge 2 ]]; then
   TARGET="${!#}"
 else

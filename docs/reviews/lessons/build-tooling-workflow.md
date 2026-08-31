@@ -1677,3 +1677,67 @@ the end. Nothing reached disk and the successful edits were lost, but the consol
   until after the write returns. A partial run that writes nothing is safe. A partial run that
   reports success is not, because the next thing you do is trust it.
 - **Source:** the 2026-08-29 rename pass.
+
+### A gate the harness kills is not a gate
+
+`check-moduledata-validation.sh` runs a validator measured at 27.0s. A timeout pass registered it
+at 5s. The harness kills a hook that overruns and **discards its output**, surfacing nothing, so
+every ModuleData commit afterwards skipped the broken-ref / landless-culture / duplicate-id checks
+and looked exactly like a clean pass. `check-doc-config-drift.sh` died the same way at 7.8s against
+5s, while the tree carried drift it would have blocked on.
+- **Why missed:** the timeouts were sized against each hook's fast path, which is the path nobody
+  debugs, and the change was verified by "does it still return quickly" rather than "does it still
+  deny". A killed gate returns quickly. That is the whole problem.
+- **Prevent:** time the exact command the hook runs before choosing a number; bound external work
+  *inside* the script under the registered timeout (`timeout -k 2 45 "$PY" ...`) so an overrun stays
+  where it can still speak; treat rc 124 as `permissionDecision: "ask"`, never as a pass. Then prove
+  the gate denies something. `tools/test_hooks.sh` fails the build on a missing timeout, a missing
+  inner bound, or an inner bound not strictly below its registered timeout.
+- **Source:** 2026-08-31, `docs/reviews/rca-hook-harness-hang-2026-08-31.md`. Sibling of "a gate
+  sitting in an unmerged PR is not a gate": that one never ran, this one runs and is silenced.
+
+### `command -v` answers "is it installed", never "is it safe to execute"
+
+`python3` on this machine resolves to a Microsoft Store App Execution Alias that prints nothing,
+never exits and ignores SIGTERM. `command -v python3` succeeds, because a file genuinely exists at
+that path, so every guard written as `if command -v python3` selected the one binary that must
+never run. With no timeouts registered, each Bash tool call paid a 600s PreToolUse batch plus a
+600s PostToolUse batch: the 20.0-minute stalls in the overnight transcripts.
+- **Why missed:** the guard tested the wrong proposition, and the sibling project's `json-lib.sh`
+  tried to compensate by checking the candidate's *exit status*, which cannot help against something
+  that never exits. Both guards were reasonable against "not installed" and useless against "hangs".
+- **Prevent:** reject on the *resolved path* before executing (`case $p in *[Ww]indows[Aa]pps*)`),
+  and bound any probe with `timeout -k 1 5`; bare `timeout` sends SIGTERM then waits, so it hangs on
+  exactly the process it is guarding against. Outside a hook just write `python`, which resolves to
+  real CPython here. `.github/workflows/` is the only place bare `python3` is correct, because CI is
+  Linux.
+- **Source:** 2026-08-31, same RCA.
+
+### The doc that tells the next author how to do it is a load-bearing part of the system
+
+`docs/reference/hooks-catalog.md` recorded on 2026-08-20 that jq was absent and then prescribed
+"use the python3 fallback". Eleven days later that instruction had been followed into every
+JSON-parsing hook, and the hooks wedged. The trap was written down before it was sprung, and the
+doc was still recommending it when the repair started.
+- **Why missed:** the fix pass treated the hooks as the defect and the doc as commentary. Repairing
+  every call site while leaving the instruction intact means the next author reintroduces it, which
+  is how this class survives a cleanup.
+- **Prevent:** when a defect class is found, grep for the *advice* that produced it, not only the
+  code. If a doc, rule, or SKILL.md prescribes the broken pattern, that edit is part of the fix and
+  belongs in the same commit. Three of the six hang sites here were inside skills, and one was a
+  prose line in `skill-stocktake/SKILL.md` that exists specifically to be copied.
+- **Source:** 2026-08-31, same RCA.
+
+### A repo with core.autocrlf and no .gitattributes is one checkout from a dead harness
+
+Every hook script was LF on disk only because tools had written them directly. `core.autocrlf=true`
+with no `.gitattributes` meant one `git checkout -- .claude/hooks/`, or any fresh clone, would write
+CRLF, and a `.sh` with CRLF dies at the shebang. All 28 hooks would fail open at once, silently:
+every gate off, no error anywhere. `git diff` had been printing "LF will be replaced by CRLF the
+next time Git touches it" on all 15 modified hooks the whole time.
+- **Why missed:** the warning appears on unrelated diffs constantly and reads as noise, and nothing
+  had triggered a checkout of those paths yet. The failure is prospective, so no symptom existed.
+- **Prevent:** `*.sh text eol=lf` in `.gitattributes`. Verify with `git ls-files --eol '*.sh'`,
+  wanting `i/lf w/lf` on every row. Scope it to `*.sh`: normalising `*.py` would have rewritten 72
+  CRLF files for no benefit, which is churn a hook fix has no business causing.
+- **Source:** 2026-08-31, same RCA.

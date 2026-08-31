@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse hook (*): Suggest manual compaction at logical intervals AND
 # at task-boundary signals.
 #
@@ -47,8 +50,8 @@ fi
 # Inspect the tool input to detect task-boundary signals. Only fire one
 # boundary suggestion per ~10 calls so we don't spam.
 COMMAND=""
-if command -v python3 >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+if [ -n "$PYBIN" ]; then
+  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -112,5 +115,5 @@ if [[ $THROTTLE_OK -eq 1 && -n "$COMMAND" ]]; then
   fi
 fi
 
-echo "$INPUT"
+echo "{}"
 exit 0

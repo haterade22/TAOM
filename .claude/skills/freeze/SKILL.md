@@ -11,14 +11,17 @@ hooks:
       hooks:
         - type: command
           command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
+          timeout: 5
     - matcher: "Write"
       hooks:
         - type: command
           command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
+          timeout: 5
     - matcher: "NotebookEdit"
       hooks:
         - type: command
           command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
+          timeout: 5
 ---
 
 # /freeze — Restrict Edits to a Directory

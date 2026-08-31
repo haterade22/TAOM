@@ -14,9 +14,12 @@
 
 set -uo pipefail
 
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+
 INPUT=$(cat)
 
-COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())

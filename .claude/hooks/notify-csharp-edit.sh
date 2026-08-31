@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 INPUT=$(cat)
 
 # Extract tool_input.file_path. Prefer jq; fall back to python3 for robust JSON.
@@ -8,7 +11,7 @@ INPUT=$(cat)
 if command -v jq >/dev/null 2>&1; then
   FILE_PATH=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 else
-  FILE_PATH=$(printf '%s' "$INPUT" | python3 -c '
+  FILE_PATH=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     print(json.loads(sys.stdin.read()).get("tool_input", {}).get("file_path", ""))

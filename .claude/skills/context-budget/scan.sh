@@ -307,10 +307,16 @@ scan_mcp() {
         mcp_native=$(cygpath -w "$mcp" 2>/dev/null || echo "$mcp")
     fi
 
-    # Find a working python.
-    local PY=""
-    for cand in python3 python py; do
-        if command -v "$cand" >/dev/null 2>&1; then PY="$cand"; break; fi
+    # Find a working python. `python` FIRST, and never accept a WindowsApps path:
+    # `python3` on this machine is a Microsoft Store App Execution Alias that hangs
+    # forever and ignores SIGTERM, and `command -v` succeeding only proves a file exists
+    # at that name. That is what made /context-budget unrunnable until 2026-08-31.
+    local PY="" cand_path=""
+    for cand in python python3 py; do
+        command -v "$cand" >/dev/null 2>&1 || continue
+        cand_path=$(command -v "$cand" 2>/dev/null) || continue
+        case "$cand_path" in *[Ww]indows[Aa]pps*) continue ;; esac
+        PY="$cand_path"; break
     done
 
     local server_list=""
@@ -437,7 +443,7 @@ scan_plugins() {
             [[ $VERBOSE -eq 1 ]] && printf "  plugin %-39s %s\n" "$pname" "$(basename "$f")"
         done < <(find "$pdir/commands" -maxdepth 1 -name '*.md' 2>/dev/null; \
                  find "$pdir/skills" -maxdepth 2 -name 'SKILL.md' 2>/dev/null)
-    done < <(python3 - "$settings" <<'PYEOF' 2>/dev/null
+    done < <(python - "$settings" <<'PYEOF' 2>/dev/null
 import json, sys
 try:
     d = json.load(open(sys.argv[1]))

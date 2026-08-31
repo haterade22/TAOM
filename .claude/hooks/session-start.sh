@@ -24,6 +24,32 @@ echo "=== TAOM Session Context ==="
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 echo "Branch: $BRANCH"
 
+# Hook-toolchain health. Every gate in this repo parses its stdin JSON, so if no safe
+# interpreter resolves, every gate quietly turns off and looks exactly like a clean run.
+# Announce it rather than degrade in silence (hook-authoring.md, "fail open but NEVER
+# fail silent"). On 2026-08-31 the opposite failure cost ~20 minutes per Bash call:
+# `python3` resolved to a Microsoft Store App Execution Alias that never exits.
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
+if [[ -z "${PYBIN:-}" ]] && ! command -v jq >/dev/null 2>&1; then
+    echo ""
+    echo "!!! HOOK TOOLCHAIN DEGRADED: no jq and no safe python resolved. !!!"
+    echo "    Every JSON-parsing gate (force-push, ModuleData refs, config protection)"
+    echo "    is failing OPEN right now. Install jq, or check that a real python is on"
+    echo "    PATH ahead of the WindowsApps aliases. Diagnose: bash tools/test_hooks.sh"
+fi
+# A WindowsApps interpreter winning the PATH race is the trap itself, not just a nuisance.
+_wa=$(command -v python 2>/dev/null || true)
+case "$_wa" in
+    *[Ww]indows[Aa]pps*)
+        echo ""
+        echo "!!! WARNING: 'python' resolves to a Microsoft Store alias ($_wa)."
+        echo "    That alias hangs forever from Git Bash. Hooks are guarded, but any"
+        echo "    tools/*.py call you make by hand will wedge. Disable the alias in"
+        echo "    Settings > Apps > Advanced app settings > App execution aliases."
+        ;;
+esac
+unset _wa
+
 # Game-version drift check (the 1.4.5->1.4.6 Steam force-bump cost a morning of
 # misattributed crashes before anyone noticed). Pin lives in .claude/pinned-game-version.txt;
 # on drift, warn loudly and point at /engine-bump.

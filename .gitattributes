@@ -1,0 +1,21 @@
+# Line endings for executable scripts.
+#
+# WHY THIS FILE EXISTS
+# core.autocrlf is true on the dev machine and this repo had no .gitattributes, so Git
+# would write CRLF into every .sh on the next checkout or clone. A shell script with CRLF
+# dies at the shebang ("bad interpreter: /usr/bin/env bash^M"), which would take out all
+# 28 Claude Code hooks at once, silently: every hook fails open, so every gate turns off
+# and nothing reports an error. The hooks are LF today only because tools wrote them
+# directly rather than checking them out. `git diff` was already warning "LF will be
+# replaced by CRLF the next time Git touches it" on all 15 modified hooks.
+#
+# Verify with: git ls-files --eol .claude/hooks/   (want i/lf w/lf on every row)
+# Verified 2026-08-31: every tracked *.sh is already i/lf w/lf, so this pins the current
+# state rather than rewriting anything. No churn.
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# NOT *.py, deliberately. 72 tracked .py files are CRLF in the worktree; normalising them
+# would rewrite all 72 on the next checkout for no benefit, since Python is CRLF-tolerant
+# and no hook execs a .py through a shebang. If that churn is ever wanted, do it as its
+# own commit with `git add --renormalize`, not as a side effect of a hook fix.

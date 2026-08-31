@@ -114,6 +114,23 @@ jobs:
           fi
           echo "Native DLL links a static CRT — no redistributable dependency."
 
+      - name: Hook harness contract test
+        shell: bash
+        run: |
+          # Every Claude Code hook must terminate, exit 0 or 2, emit valid JSON if it is
+          # a gate, carry an explicit timeout, and bound any external tool it runs BELOW
+          # that timeout. On 2026-08-31 the hooks wedged for ~20 minutes per Bash call
+          # (python3 resolving to a Store alias that never exits), and the repair pass
+          # then silently killed two commit gates by sizing their timeouts against the
+          # fast path. Both classes are mechanical; this is the check that speaks.
+          #
+          # HONEST LIMITATION: this runner is Linux, where `python3` is the correct
+          # spelling and the Windows Store alias cannot exist. CI therefore catches
+          # contract violations, hangs, missing timeouts and mis-sized inner bounds, but
+          # NOT the Windows-specific alias trap itself. Check 1 of the script is a static
+          # lint, so that part does carry over.
+          bash tools/test_hooks.sh
+
   build:
     name: Build & Test
     runs-on: windows-latest

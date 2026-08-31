@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PostToolUse hook: summarize dotnet test results prominently
 INPUT=$(cat)
 
@@ -11,7 +14,7 @@ INPUT=$(cat)
 # delimiter, and any delimiter that survives shell round-tripping is more fragile than
 # just paying for a second interpreter start on the rare `dotnet test` call.
 json_field() {
-  printf '%s' "$INPUT" | python3 -c '
+  printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())

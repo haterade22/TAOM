@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # PostToolUse(Edit|Write): run the shield-vs-unusable-weapon gate after an edit that could
 # introduce that defect.
 #
@@ -25,6 +26,9 @@
 # The WARN block (43 rosters pairing a shield with a two-handed sword/axe/mace, issue #450) is
 # deliberately not reported. It is pre-existing, it is a roster decision rather than a data one,
 # and surfacing it on every edit would be permanent noise.
+
+# Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
@@ -82,10 +86,7 @@ report_once() {
     exit 0
 }
 
-PY=""
-for candidate in python python3; do
-    if command -v "$candidate" >/dev/null 2>&1; then PY="$candidate"; break; fi
-done
+PY="$PYBIN"
 
 if [[ -z "$PY" ]]; then
     report_once "polearm/shield gate did not run: no python on PATH. Run '$TOOL' by hand before committing $FILE_PATH."
@@ -94,8 +95,16 @@ if [[ ! -f "$TOOL" ]]; then
     report_once "polearm/shield gate did not run: $TOOL is absent from this tree (it landed on trunk 2026-08-20). A shield paired with a weapon the AI will not draw is silent in game."
 fi
 
-OUTPUT=$("$PY" "$TOOL" 2>&1)
+# Inner bound, below the 20s registered timeout. The audit measured 2.9s on 2026-08-31,
+# but it was registered at 5s, so a cold cache or a busy machine could push it past the
+# harness kill. A kill discards output, and for THIS hook silence is read as "no findings"
+# (see the CONTRACT above), so the overrun has to be caught here where it can still speak.
+OUTPUT=$(timeout -k 2 15 "$PY" "$TOOL" 2>&1)
 STATUS=$?
+
+if [[ $STATUS -eq 124 ]]; then
+    report_once "polearm/shield gate exceeded its 15s budget and was stopped. This is NOT a pass: the roster you just edited is unchecked for a shield paired with a weapon the AI will never draw. Run '$TOOL' by hand."
+fi
 
 if [[ $STATUS -eq 1 ]]; then
     # The FAIL block only: from the FAIL header to the blank line that ends it.

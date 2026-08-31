@@ -24,10 +24,13 @@
 
 set -uo pipefail
 
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+
 INPUT=$(cat)
 
 # Extract the bash command from tool_input (mirrors check-moduledata-validation.sh).
-COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -73,19 +76,31 @@ done <<< "$STAGED"
 [[ $RELEVANT -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).
-PY=$(command -v python3 || command -v python || true)
+PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 
 # Run the drift gate. --fail-on-drift prints the full report to stdout and exits 1
 # iff there is config-example drift or a version mismatch; 0 otherwise. Only rc=1 blocks.
-OUT=$("$PY" tools/lint_docs.py --fail-on-drift 2>/dev/null)
+#
+# Inner bound, below the 30s registered timeout. A harness kill discards this hook's
+# output, which reads as a clean pass; this gate was dead from 2026-08-31 when it ran at
+# a 5s registration against a measured 7.8s runtime. Keep the overrun inside the hook.
+OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --fail-on-drift 2>/dev/null)
 RC=$?
+
+# 124 = the inner timeout fired. Not a pass. Ask rather than block: an overrun is an
+# infrastructure fault, and a hook's own fault must never hard-block the user.
+if [[ $RC -eq 124 ]]; then
+    printf '%s\n' '{"permissionDecision":"ask","message":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --fail-on-drift"}'
+    exit 0
+fi
+
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
 # Extract just the gating sections (drift / version / CLAUDE.md budget — the report's tail), bounded.
 DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget)/{f=1} f' | head -40)
 
-MSG=$(printf '%s' "$DETAILS" | python3 -c '
+MSG=$(printf '%s' "$DETAILS" | "$PYBIN" -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][:36]
 print(json.dumps(

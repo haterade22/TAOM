@@ -1,6 +1,7 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "TAOM_PYBIN": "C:/Python314/python.exe"
   },
   "statusLine": {
     "type": "command",
@@ -13,11 +14,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-start.sh"
+            "command": ".claude/hooks/session-start.sh",
+            "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/detect-docs-gaps.sh"
+            "command": ".claude/hooks/detect-docs-gaps.sh",
+            "timeout": 10
           }
         ]
       }
@@ -28,42 +31,51 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/block-no-verify.sh"
+            "command": ".claude/hooks/block-no-verify.sh",
+            "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/validate-push.sh"
+            "command": ".claude/hooks/validate-push.sh",
+            "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-changelog-changed.sh"
+            "command": ".claude/hooks/check-changelog-changed.sh",
+            "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-claude-files-tracked.sh"
+            "command": ".claude/hooks/check-claude-files-tracked.sh",
+            "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-dangerous-git.sh"
+            "command": ".claude/hooks/block-dangerous-git.sh",
+            "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-broad-git-add.sh"
+            "command": ".claude/hooks/block-broad-git-add.sh",
+            "timeout": 5
           },
           {
             "type": "command",
             "command": ".claude/hooks/check-moduledata-validation.sh",
-            "statusMessage": "Validating ModuleData refs before commit…"
+            "statusMessage": "Validating ModuleData refs before commit…",
+            "timeout": 60
           },
           {
             "type": "command",
             "command": ".claude/hooks/check-native-dll-crt.sh",
-            "statusMessage": "Checking vendored native DLL links a static CRT…"
+            "statusMessage": "Checking vendored native DLL links a static CRT…",
+            "timeout": 5
           },
           {
             "type": "command",
             "command": ".claude/hooks/check-doc-config-drift.sh",
-            "statusMessage": "Linting docs for config drift, version, and budget…"
+            "statusMessage": "Linting docs for config drift, version, and budget…",
+            "timeout": 30
           }
         ]
       },
@@ -72,7 +84,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/config-protection.sh"
+            "command": ".claude/hooks/config-protection.sh",
+            "timeout": 5
           }
         ]
       },
@@ -81,7 +94,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/suggest-compact.sh"
+            "command": ".claude/hooks/suggest-compact.sh",
+            "timeout": 5
           }
         ]
       },
@@ -90,7 +104,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/mcp-health-check.sh"
+            "command": ".claude/hooks/mcp-health-check.sh",
+            "timeout": 5
           }
         ]
       }
@@ -101,12 +116,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/notify-csharp-edit.sh"
+            "command": ".claude/hooks/notify-csharp-edit.sh",
+            "timeout": 5
           },
           {
             "type": "command",
             "command": ".claude/hooks/check-polearm-shield-parity.sh",
-            "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…"
+            "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…",
+            "timeout": 20
           }
         ]
       },
@@ -115,11 +132,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/notify-test-results.sh"
+            "command": ".claude/hooks/notify-test-results.sh",
+            "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/mark-verification-run.sh"
+            "command": ".claude/hooks/mark-verification-run.sh",
+            "timeout": 5
           }
         ]
       }
@@ -130,7 +149,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/mcp-health-mark.sh"
+            "command": ".claude/hooks/mcp-health-mark.sh",
+            "timeout": 5
           }
         ]
       }
@@ -141,7 +161,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/pre-compact.sh"
+            "command": ".claude/hooks/pre-compact.sh",
+            "timeout": 10
           }
         ]
       }
@@ -152,7 +173,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/post-compact.sh"
+            "command": ".claude/hooks/post-compact.sh",
+            "timeout": 10
           }
         ]
       }
@@ -163,7 +185,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/log-agent.sh"
+            "command": ".claude/hooks/log-agent.sh",
+            "timeout": 10
           }
         ]
       }
@@ -174,19 +197,23 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/check-changelog-updated.sh"
+            "command": ".claude/hooks/check-changelog-updated.sh",
+            "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-deep-review.sh"
+            "command": ".claude/hooks/check-deep-review.sh",
+            "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-verification-evidence.sh"
+            "command": ".claude/hooks/check-verification-evidence.sh",
+            "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-version-tagged.sh"
+            "command": ".claude/hooks/check-version-tagged.sh",
+            "timeout": 10
           }
         ]
       }
@@ -197,7 +224,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-stop.sh"
+            "command": ".claude/hooks/session-stop.sh",
+            "timeout": 10
           }
         ]
       }

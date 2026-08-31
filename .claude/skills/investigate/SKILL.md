@@ -16,10 +16,12 @@ hooks:
       hooks:
         - type: command
           command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
+          timeout: 5
     - matcher: "Write"
       hooks:
         - type: command
           command: "bash ${CLAUDE_PROJECT_DIR}/.claude/skills/freeze/check-freeze.sh"
+          timeout: 5
 ---
 
 # /investigate — Systematic Root-Cause Debugging

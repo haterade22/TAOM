@@ -14,7 +14,7 @@ fi
 
 # Only check MCP tools (prefixed with mcp__)
 if [[ ! "$TOOL_NAME" == mcp__* ]]; then
-  echo "$INPUT"
+  echo "{}"
   exit 0
 fi
 
@@ -22,7 +22,7 @@ fi
 SERVER_NAME=$(echo "$TOOL_NAME" | sed 's/^mcp__//' | sed 's/__.*//')
 
 if [[ -z "$SERVER_NAME" ]]; then
-  echo "$INPUT"
+  echo "{}"
   exit 0
 fi
 
@@ -48,5 +48,5 @@ if [[ -f "$HEALTH_FILE" ]]; then
 fi
 
 # Allow the call — if it fails, the PostToolUseFailure hook will mark it unhealthy
-echo "$INPUT"
+echo "{}"
 exit 0

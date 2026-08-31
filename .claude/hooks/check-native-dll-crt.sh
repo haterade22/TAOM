@@ -19,10 +19,13 @@
 
 set -uo pipefail
 
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+
 INPUT=$(cat)
 
 # Extract the bash command from tool_input (mirrors check-moduledata-validation.sh).
-COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -63,7 +66,7 @@ done <<< "$STAGED"
 [[ $HAS_DLL -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Fail open if we can't run the check.
-PY=$(command -v python3 || command -v python || true)
+PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 [[ -f tools/pe_inspect.py ]] || { echo '{}'; exit 0; }
 
@@ -75,8 +78,17 @@ TMP=$(mktemp 2>/dev/null) || { echo '{}'; exit 0; }
 if ! git show ":$DLL" > "$TMP" 2>/dev/null || [[ ! -s "$TMP" ]]; then
     rm -f "$TMP"; echo '{}'; exit 0
 fi
-IMPORTS=$("$PY" tools/pe_inspect.py "$TMP" 2>/dev/null)
+# Inner bound, deliberately below this hook's registered 5s timeout. pe_inspect measured
+# 52ms on 2026-08-31, so 3s is ~60x headroom rather than a live constraint, but every
+# external-tool call in a hook gets one: a harness kill discards output, so an overrun
+# would read as "CRT is fine" and vendor a DLL that fails LoadLibrary on players machines.
+IMPORTS=$(timeout -k 2 3 "$PY" tools/pe_inspect.py "$TMP" 2>/dev/null)
+RC=$?
 rm -f "$TMP"
+if [[ $RC -eq 124 ]]; then
+    printf '%s\n' '{"permissionDecision":"ask","message":"[check-native-dll-crt] pe_inspect exceeded its 3s budget and was stopped, so the vendored native DLL is UNCHECKED for a dynamic CRT link. This is NOT a pass: a dynamic-CRT build fails LoadLibrary with error 126 on players machines. Run: python tools/pe_inspect.py <dll>"}'
+    exit 0
+fi
 [[ -z "$IMPORTS" ]] && { echo '{}'; exit 0; }
 
 # Dynamic CRT imports => the redistributable/debug runtime players lack. A
@@ -88,7 +100,7 @@ if ! printf '%s' "$IMPORTS" | grep -iqE 'VCRUNTIME|MSVCP[0-9]+|MSVCR[0-9]+|ucrtb
 fi
 
 # Build a JSON-escaped deny message with the import list (bounded).
-MSG=$(printf '%s' "$IMPORTS" | python3 -c '
+MSG=$(printf '%s' "$IMPORTS" | "$PYBIN" -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][-12:]
 print(json.dumps(

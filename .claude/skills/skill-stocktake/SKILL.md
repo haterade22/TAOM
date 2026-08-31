@@ -101,11 +101,19 @@ echo "Agents to audit:"; echo "$AGENTS"
 ```
 
 For each skill/agent, mechanically check what can be checked deterministically:
-- frontmatter parses as YAML (use `python3 -c "import yaml; yaml.safe_load(...)"`)
+- frontmatter parses as YAML (use `python -c "import yaml; yaml.safe_load(...)"`, **never
+  `python3`**: it is a Store alias on this machine and hangs forever, see
+  `.claude/hooks/_pybin.sh`)
 - `name` field matches dir/file name
 - description word count
 - presence of `triggers:` field (flag — undocumented in Claude Code)
 - hook command paths exist and are tracked + executable
+- **every skill-owned script and every `hooks:` frontmatter registration**: `grep -rn 'python3'
+  .claude/` must come back empty, and each registration must carry an explicit `timeout:`.
+  Three of the six hang sites found on 2026-08-31 were skill-owned (`context-budget/scan.sh`,
+  `freeze/check-freeze.sh`, this file), and five registrations in `freeze` / `investigate`
+  frontmatter had no timeout, so they inherited the 600s default. The hook-focused pass never
+  looked here.
 - paths to `.claude/rules/*`, `feedback_*.md`, `docs/`, `ADR-*` resolve
 
 ### Phase 2 — LLM judgment (the audit checklist)

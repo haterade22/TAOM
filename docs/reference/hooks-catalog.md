@@ -3,7 +3,19 @@
 > Every `.claude/hooks/` script -> event -> purpose (27 scripts / 27 registrations across 9 events, plus the `/freeze` skill-inline hook; recounted 2026-08-20 from `settings.json` and `ls .claude/hooks/*.sh`, which is the only way to get it right: the stated 25 had been wrong since `block-broad-git-add.sh` landed 2026-08-09 without a row here). Extracted from CLAUDE.md 2026-07-18. Authoring rules: `.claude/rules/hook-authoring.md`. Lifecycle facts: `.claude/rules/harness-facts.md`.
 
 
-> **`jq` is not on PATH in this Git Bash install** (verified 2026-08-20). Any hook that parses stdin JSON must guard with `command -v jq` and fall back, or it is silently inert: a fail-open hook that never runs looks exactly like a hook with nothing to report. Use the python3 fallback (`block-dangerous-git.sh` is the model); the older grep+sed fallback truncates a value at the first escaped quote and leaves Windows backslashes doubled.
+> **`jq` is not on PATH in this Git Bash install** (verified 2026-08-20). Any hook that parses stdin JSON must guard with `command -v jq` and fall back, or it is silently inert: a fail-open hook that never runs looks exactly like a hook with nothing to report. The grep+sed fallback truncates a value at the first escaped quote and leaves Windows backslashes doubled, so the fallback must be Python.
+>
+> **NEVER write `python3`.** On this machine that name resolves only to
+> `C:\Users\mikew\AppData\Local\Microsoft\WindowsApps\python3`, a Microsoft Store App Execution
+> Alias which, run from Git Bash, prints nothing, never exits, and ignores SIGTERM. `command -v`
+> succeeding proves only that a file exists at that name, so guarding on it does not help.
+> **Source `_pybin.sh` and use `"$PYBIN"`**, then honour its contract
+> (`[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`). `block-dangerous-git.sh` is the model.
+>
+> This paragraph used to say "use the python3 fallback". That advice, written 2026-08-20, is what
+> wedged every JSON-parsing hook: with no `timeout` on the registrations, a Bash call paid one
+> 600s PreToolUse batch plus one 600s PostToolUse batch, which is the 20.0-minute stall seen in the
+> 2026-08-31 transcripts. Outside a hook, plain `python` is safe and is the repo convention.
 
 | Hook | Event | Purpose |
 |------|-------|---------|

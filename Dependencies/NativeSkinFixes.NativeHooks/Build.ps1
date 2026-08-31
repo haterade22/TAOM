@@ -62,8 +62,12 @@ if (-not (Test-Path $dllPath)) {
 # LoadLibrary then fails with error 126. Reject the bad binary before it can be
 # vendored. See docs/features/native-skin-fixes.md "Build & CRT requirement".
 $peInspect = Join-Path $scriptDir '..\..\tools\pe_inspect.py'
-$py = Get-Command python3 -ErrorAction SilentlyContinue
-if (-not $py) { $py = Get-Command python -ErrorAction SilentlyContinue }
+# `python`, never `python3`. On the dev machine `python3` is a Microsoft Store App
+# Execution Alias: Get-Command RESOLVES it (it does not execute, so it cannot tell the
+# difference), which made the fallback on the next line unreachable and then hung the
+# build when `& $py.Source` ran the alias. Bare `python` is real CPython.
+$py = Get-Command python -ErrorAction SilentlyContinue
+if ($py -and $py.Source -like '*WindowsApps*') { $py = $null }
 if ($py -and (Test-Path $peInspect)) {
     $imports = & $py.Source $peInspect $dllPath 2>&1 | Out-String
     if ($imports -match '(?i)VCRUNTIME|MSVCP[0-9]+|MSVCR[0-9]+|ucrtbase|api-ms-win-crt') {

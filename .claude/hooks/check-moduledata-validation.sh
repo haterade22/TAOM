@@ -24,10 +24,13 @@
 
 set -uo pipefail
 
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+
 INPUT=$(cat)
 
 # Extract the bash command from tool_input (mirrors check-changelog-changed.sh).
-COMMAND=$(printf '%s' "$INPUT" | python3 -c '
+COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -68,17 +71,21 @@ done <<< "$STAGED"
 [[ $HAS_MD -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).
-PY=$(command -v python3 || command -v python || true)
+PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 
 # Run only the ERROR-severity checks. Validator exits 1 on ERROR, 0 clean,
 # 2 bad-input. Only rc=1 blocks; everything else fails open.
 # Keep this list in step with every ERROR-severity code in tools/taom_schema.py. It is an
-# allowlist, so a new ERROR check is silently non-blocking until it is named here: on
-# 2026-08-31 UPGRADE_SKILL_REGRESSION, LANDLESS_CULTURE, MOUNTED_DWARF,
-# SETTLEMENT_ECONOMY_FLOOR and BROKEN_BODY_PROPERTY_REF were all live ERROR checks that
-# this hook let straight through.
-OUT=$("$PY" tools/validate_moduledata.py \
+# allowlist, so a new ERROR check is silently non-blocking until it is named here: on 2026-08-31
+# UPGRADE_SKILL_REGRESSION, LANDLESS_CULTURE, MOUNTED_DWARF, SETTLEMENT_ECONOMY_FLOOR and
+# BROKEN_BODY_PROPERTY_REF were all live ERROR checks that this hook let straight through.
+# Inner bound, deliberately below the 60s registered timeout. A harness kill DISCARDS
+# the hook's output, so an overrun there is indistinguishable from a clean pass. That is
+# exactly how this gate died on 2026-08-31: it was re-registered at 5s against a 27.0s
+# runtime, so every ModuleData commit silently skipped the check. Bounding the work here
+# keeps the overrun inside the hook, where it can still speak.
+OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code BROKEN_ITEM_REF --code BROKEN_TROOP_REF --code UNKNOWN_CULTURE \
         --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \
         --code BROKEN_BODY_PROPERTY_REF --code LANDLESS_CULTURE --code MOUNTED_DWARF \
@@ -86,10 +93,18 @@ OUT=$("$PY" tools/validate_moduledata.py \
         --code SKILL_TEMPLATE_SHADOWS_SKILLS \
         2>/dev/null)
 RC=$?
+
+# 124 = the inner timeout fired. Never report this as a pass; ask instead of blocking,
+# because an overrun is an infrastructure fault and a hook's own fault must not hard-block.
+if [[ $RC -eq 124 ]]; then
+    printf '%s\n' '{"permissionDecision":"ask","message":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}'
+    exit 0
+fi
+
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
 # Build a JSON-escaped deny message with the validator's findings (bounded).
-MSG=$(printf '%s' "$OUT" | python3 -c '
+MSG=$(printf '%s' "$OUT" | "$PYBIN" -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][-30:]
 print(json.dumps(

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse hook (Edit|Write): Block modifications to critical config files
 # Prevents AI from weakening configs instead of fixing code
 # Exit 2 = block, Exit 0 = allow
@@ -14,7 +17,7 @@ INPUT=$(cat)
 if command -v jq >/dev/null 2>&1; then
   FILE_PATH=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.file // empty' 2>/dev/null)
 else
-  FILE_PATH=$(printf '%s' "$INPUT" | python3 -c '
+  FILE_PATH=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     ti = json.loads(sys.stdin.read()).get("tool_input", {})
@@ -26,14 +29,14 @@ fi
 
 # No file path = not a file edit, allow
 if [[ -z "$FILE_PATH" ]]; then
-  echo "$INPUT"
+  echo "{}"
   exit 0
 fi
 
 # Check for user-approved override (created manually or via explicit user request)
 OVERRIDE_FILE="/tmp/claude-config-override-${CLAUDE_SESSION_ID:-none}"
 if [[ -f "$OVERRIDE_FILE" ]]; then
-  echo "$INPUT"
+  echo "{}"
   exit 0
 fi
 
@@ -67,5 +70,5 @@ if [[ "$FILE_PATH" == *"/docs/adrs/"* && "$BASENAME" == *.md ]]; then
   exit 2
 fi
 
-echo "$INPUT"
+echo "{}"
 exit 0

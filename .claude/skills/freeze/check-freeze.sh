@@ -45,10 +45,18 @@ FILE_PATH=$(printf '%s' "$INPUT" \
     || true)
 
 if [[ -z "$FILE_PATH" ]]; then
-    # Python fallback. Try python3 first, then python.
-    for PY in python3 python py; do
-        if command -v "$PY" >/dev/null 2>&1; then
-            FILE_PATH=$(printf '%s' "$INPUT" | "$PY" -c '
+    # Python fallback, reached when the grep above misses: escaped quotes or nested
+    # JSON, which is exactly the Windows-path case this hook exists to handle.
+    #
+    # NEVER spell it `python3` here. On this machine that name resolves to a Microsoft
+    # Store App Execution Alias which, run from Git Bash, prints nothing, never exits and
+    # ignores SIGTERM. The old `for PY in python3 python py` loop picked it first because
+    # `command -v` only proves a file exists at that name. These registrations run on
+    # every Edit while /freeze or /investigate is active, so a wedge here stalls the
+    # debugging skill itself. _pybin.sh refuses anything under WindowsApps.
+    source "$PROJ_DIR/.claude/hooks/_pybin.sh" 2>/dev/null || PYBIN=""
+    if [[ -n "${PYBIN:-}" ]]; then
+        FILE_PATH=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -56,9 +64,7 @@ try:
 except Exception:
     pass
 ' 2>/dev/null || true)
-            [[ -n "$FILE_PATH" ]] && break
-        fi
-    done
+    fi
 fi
 
 # If we still cannot extract a file path, allow (don't block on parse failure).

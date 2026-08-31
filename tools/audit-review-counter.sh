@@ -80,7 +80,9 @@ if [[ "${1:-}" == "--fix" ]]; then
     if command -v cygpath >/dev/null 2>&1; then
         AGENTS_NATIVE=$(cygpath -w "$AGENTS" 2>/dev/null || echo "$AGENTS")
     fi
-    python3 -c "
+    # `python`, never `python3`: the latter is a Store App Execution Alias on the dev
+    # machine and hangs forever from Git Bash. Bare `python` resolves to real CPython.
+    python -c "
 import sys
 p = sys.argv[1]
 old = sys.argv[2]
