@@ -35,11 +35,15 @@ ok()   { PASS=$((PASS+1)); [[ $VERBOSE -eq 1 ]] && printf '  \033[32mok\033[0m  
 bad()  { FAIL=$((FAIL+1)); FAILED_DETAIL+=("$1"); printf '  \033[31mFAIL\033[0m %s\n' "$1"; return 0; }
 head2() { printf '\n\033[1m%s\033[0m\n' "$1"; }
 
-# A real interpreter for the harness itself. Never `python3` (see header).
+# A real interpreter for the harness itself.
+#
+# `python3` IS in this list, deliberately: the WindowsApps rejection below is what makes it
+# safe, not the spelling. Omitting it would make this script exit 1 on any Linux box that
+# ships only python3, which is most of them, and CI would then fail for the wrong reason.
 HPY=""
-for c in python py; do
+for c in python python3 py; do
     p=$(command -v "$c" 2>/dev/null) || continue
-    case "$p" in *[Ww]indows[Aa]pps*) continue ;; esac
+    case "${p,,}" in *windowsapps*) continue ;; esac
     HPY="$p"; break
 done
 [[ -z "$HPY" ]] && { echo "test_hooks: no safe python for the harness itself; cannot run."; exit 1; }
@@ -370,13 +374,33 @@ PYEOF
 )
 is_blocking_bash_gate() { [[ " $BLOCKING_BASH_GATES " == *" $1 "* ]]; }
 
+# The runtime "did it say so" assertion needs an environment with NO jq and NO python.
+# PATH=/usr/bin:/bin achieves that in Git Bash on the dev machine, and achieves NOTHING on
+# ubuntu-latest, which keeps both in /usr/bin: the hooks resolved an interpreter, behaved
+# correctly, stayed silent, and the assertion failed on a premise that was not true. (CI
+# caught that on 2026-08-31, the first run after this suite got its own job and could
+# execute at all.)
+#
+# Symlinking a private bin does not fix it either: an MSYS binary moved out of /usr/bin
+# cannot resolve its shared libraries, so `bash` itself exits 127.
+#
+# So the contract is enforced STATICALLY below (check 5b), which is portable, and the
+# runtime assertion runs only where the starvation demonstrably took.
+STARVED_PATH="/usr/bin:/bin"
+STARVATION_OK=1
+PATH="$STARVED_PATH" command -v jq >/dev/null 2>&1 && STARVATION_OK=0
+for p in python python3 py; do
+    PATH="$STARVED_PATH" command -v "$p" >/dev/null 2>&1 && STARVATION_OK=0
+done
+[[ $STARVATION_OK -eq 1 ]] || echo "  note: this platform keeps jq or python in $STARVED_PATH, so the runtime silence assertion is SKIPPED (not passed); check 5b enforces the same contract statically"
+
 for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     name=$(basename "$hookfile")
     [[ "$name" == "_pybin.sh" ]] && continue
     S=$(date +%s%N)
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
     OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master"},"hook_event_name":"PreToolUse"}' \
-          | timeout -k 2 10 env PATH=/usr/bin:/bin CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
+          | timeout -k 2 10 env PATH="$STARVED_PATH" CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
     RC=$?
     ERR=$(cat "$ERRFILE" 2>/dev/null); rm -f "$ERRFILE"
     E=$(date +%s%N); MS=$(( (E-S)/1000000 ))
@@ -386,7 +410,7 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
         bad "$name exit $RC in a starved environment (must fail open, not error)"
     elif printf '%s' "$OUT" | grep -q '"permissionDecision":"deny"'; then
         bad "$name DENIED in a starved environment (a hook's own fault must never block)"
-    elif is_blocking_bash_gate "$name" && [[ -z "$ERR" ]]; then
+    elif [[ $STARVATION_OK -eq 1 ]] && is_blocking_bash_gate "$name" && [[ -z "$ERR" ]]; then
         # Fail open is only half the contract. hook-authoring.md: a detection hook must
         # fail open but NEVER fail silent, because for a gate no output IS a claim. On
         # 2026-08-31 nine of the ten PreToolUse gates allowed silently here, which is
@@ -394,6 +418,23 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
         bad "$name failed open SILENTLY (no stderr). A gate that cannot run must say so."
     else
         ok "$name failed open in ${MS}ms$( [[ -n "$ERR" ]] && printf ', and said so')"
+    fi
+done
+
+# ---------------------------------------------------------------------------
+# 5b. Every blocking Bash gate must CARRY the never-fail-silent branch.
+#     Static, so it holds on every platform. The runtime check above can only run
+#     where jq and python are both absent from /usr/bin:/bin, which is true on the
+#     Windows dev machine and false on ubuntu-latest.
+# ---------------------------------------------------------------------------
+head2 "5b. every blocking Bash gate declares its degraded branch"
+for name in $BLOCKING_BASH_GATES; do
+    f=".claude/hooks/$name"
+    [[ -f "$f" ]] || { bad "$name is registered but missing from .claude/hooks/"; continue; }
+    if grep -q 'taom_pybin_degraded' "$f"; then
+        ok "$name declares taom_pybin_degraded"
+    else
+        bad "$name has no taom_pybin_degraded branch: it will fail open SILENTLY when no JSON parser is available, which for a gate is indistinguishable from finding nothing"
     fi
 done
 

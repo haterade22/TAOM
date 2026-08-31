@@ -12,18 +12,20 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
-# Prefer jq; fall back to python3 for robust JSON. The grep+sed fallback this used to
+# Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
+# Uses the shared helper rather than a bespoke branch, so `tools/test_hooks.sh` check 5b
+# can verify every blocking gate carries it. This hook had its own hand-rolled version and
+# was the lone exception until 2026-08-31, which is exactly the convention drift
+# hook-authoring.md warns about ("mirror the sibling's FULL convention set").
+taom_pybin_degraded "validate-push" "this push against the protected-branch policy" jq && exit 0
+
+# Prefer jq; fall back to "$PYBIN" for robust JSON. The grep+sed fallback this used to
 # carry truncated the command at the first escaped quote, and since jq is NOT on PATH in
 # this Git Bash install (verified 2026-08-20) that fallback was the only path ever taken.
 # A truncated command can drop a trailing --force, which is what this gate exists to catch.
 # Mirrors block-dangerous-git.sh.
 if command -v jq >/dev/null 2>&1; then
   COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-elif [[ -z "$PYBIN" ]]; then
-  # No jq and no safe interpreter: fail open per harness-facts.md, but say so. Silence
-  # here would read as "not a push", which is the failure mode this hook exists to avoid.
-  echo "validate-push: no jq and no safe python; push NOT checked against branch policy." >&2
-  exit 0
 else
   COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json

@@ -4,6 +4,29 @@
 
 ## 2026-08-31
 
+### fix(ci): the hook gate's first real run failed, on a premise that was not true
+
+Giving the harness suite its own CI job let it execute for the first time, and it failed
+immediately. Not a false alarm and not the Linux-`python` problem I had guessed at: check 5
+starved the environment with `PATH=/usr/bin:/bin`, which starves nothing on ubuntu-latest,
+because that runner keeps both `jq` and `python3` in `/usr/bin`. The hooks resolved an
+interpreter, behaved correctly, and stayed silent, and the never-fail-silent assertion then
+failed them for a degradation that had not happened.
+
+Symlinking a private bin does not fix it either: an MSYS binary moved out of `/usr/bin`
+cannot resolve its shared libraries, so `bash` itself exits 127. So the contract is now
+enforced **statically** by a new check 5b, which is portable, and the runtime assertion runs
+only where the starvation demonstrably takes, printing a loud SKIP line where it does not.
+An unrun check must never read as a passed one.
+
+Check 5b found a real gap on its first run: `validate-push.sh` had its own hand-rolled
+degraded branch instead of the shared `taom_pybin_degraded` helper, which is the convention
+drift `hook-authoring.md` warns about. Converted; all 15 force-push forms still block.
+
+`test_hooks.sh` also accepts `python3` when resolving its own interpreter now. The
+WindowsApps rejection is what makes a candidate safe, not the spelling, and omitting it
+would have made the script exit 1 on any Linux box shipping only `python3`.
+
 ### docs(harness): write down what the outage taught, and correct two counts that hid it
 
 `.claude/rules/harness-facts.md` gained the four facts the whole incident turned on, none of
