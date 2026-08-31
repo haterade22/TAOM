@@ -272,35 +272,50 @@ def data_quality(all_troops, file_cultures):
 # =============================================================================
 
 def check_monotonicity(all_troops, tolerance=25):
-    """Find genuine level-inversions among PROFESSIONAL troops.
+    """Find genuine level-inversions.
 
-    MILITIA ARE EXCLUDED by design: TAOM militia are intentionally over-statted for siege /
-    village defense (they take the L21 baseline regardless of level), so a low-level militia
-    out-statting a mid-level regular is deliberate, not a bug (user direction 2026-06-24).
+    MILITIA-TO-MILITIA EDGES ARE EXEMPT, militia troops are not. TAOM militia take the L21
+    baseline regardless of level so village defense stays costly (user direction 2026-06-24),
+    which makes a militia promoting into another militia flat by design. Skipping every militia
+    troop outright, which this check used to do, is how it reported zero inversions while the
+    worst upgrade edge in the game sat inside its own exclusion: gondor_ano_archer_militia was
+    name-matched as militia, took the L21 baseline at level 11, and out-statted its own level-16
+    upgrade target on all 8 skills. A militia that feeds a real line is now checked like anything
+    else, and the within-culture level sweep still skips militia because their whole point is to
+    out-stat their level.
 
     Comparison is total-skill based: weapon-spec swaps preserve a troop's total, so a melee
     troop upgrading into an archer (lower melee-primary, same/higher total) is NOT flagged.
+    Per-skill regressions are the C# TroopUpgradeSkillMonotonicityTests and the validator's
+    UPGRADE_SKILL_REGRESSION gate; this stays the report-only overview.
     """
     by_id = {t['id']: t for t in all_troops}
 
     def total(t):
         return sum(t['actual'].get(s, 0) for s in SKILL_NAMES)
 
-    def comparable(t):
-        return (not t['militia'] and not t.get('special')
+    def on_grid(t):
+        return (not t.get('special')
                 and len(t['actual']) >= 6 and t['level'] in BASELINE_LEVELS)
+
+    def comparable(t):
+        # The within-culture level sweep still skips militia: out-statting their level is the
+        # whole point of them, so they are not evidence of an inversion there.
+        return not t['militia'] and on_grid(t)
 
     upgrade_viol = []
     for t in all_troops:
-        if t['militia'] or t.get('special'):
+        if t.get('special'):
             continue
         for uid in t['upgrades']:
             u = by_id.get(uid)
-            if not u or u['militia']:
+            if not u or u.get('special'):
+                continue
+            if t['militia'] and u['militia']:
                 continue
             if u['level'] < t['level']:
                 upgrade_viol.append((t, u, 'target is lower level', t['level'] - u['level']))
-            elif comparable(t) and comparable(u) and total(u) < total(t) - tolerance:
+            elif on_grid(t) and on_grid(u) and total(u) < total(t) - tolerance:
                 upgrade_viol.append((t, u, 'target weaker (total)', total(t) - total(u)))
 
     by_cg = defaultdict(list)
@@ -319,7 +334,9 @@ def check_monotonicity(all_troops, tolerance=25):
     return {
         'upgrade_violations': sorted(upgrade_viol, key=lambda x: -x[3]),
         'level_violations': sorted(level_viol, key=lambda x: -x[2]),
-        'militia_excluded': sum(1 for t in all_troops if t['militia']),
+        'militia_edges_exempt': sum(1 for t in all_troops if t['militia']
+                                    for u in t['upgrades'] if by_id.get(u, {}).get('militia')),
+        'militia_level_sweep_excluded': sum(1 for t in all_troops if t['militia']),
         'tolerance': tolerance,
     }
 
@@ -536,9 +553,12 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
     # Monotonicity
     m = dq['monotonicity']
     L.append('## Level monotonicity (no lower level stronger than a higher level)\n')
-    L.append(f'Professional troops only — **militia excluded** (intentionally over-statted for siege / '
-             f'village defense). Total-skill based, ±{m["tolerance"]} tolerance for weapon-spec noise. '
-             f'{m["militia_excluded"]} militia not checked.\n')
+    L.append(f'**Upgrade sweep:** militia-to-militia edges are exempt ({m["militia_edges_exempt"]} of them), '
+             f'because militia take the L21 baseline whatever their level, so a militia promotion is flat by '
+             f'design; a militia that feeds a real line IS checked. **Within-culture level sweep:** all '
+             f'{m["militia_level_sweep_excluded"]} militia are still excluded there, since out-statting their '
+             f'own level is the entire point of them. Total-skill based, ±{m["tolerance"]} tolerance for '
+             f'weapon-spec noise.\n')
     if not m['upgrade_violations'] and not m['level_violations']:
         L.append('**No inversions.** ✅ Every professional troop is ≥ all lower-level troops in its '
                  'culture+group, and every upgrade target is higher-level and not weaker.\n')
@@ -843,9 +863,12 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
     # Monotonicity
     m = dq['monotonicity']
     H.append('<h2>Level monotonicity</h2>')
-    H.append(f'<p class="sub">No lower-level troop stronger than a higher-level one. Professional troops '
-             f'only — <b>{m["militia_excluded"]} militia excluded</b> (intentionally over-statted for siege / '
-             f'village defense). Total-skill based, ±{m["tolerance"]} tolerance for weapon-spec noise.</p>')
+    H.append(f'<p class="sub">No lower-level troop stronger than a higher-level one. Upgrade sweep: '
+             f'<b>{m["militia_edges_exempt"]} militia-to-militia edges exempt</b> (a militia promotion is '
+             f'flat by design); a militia feeding a real line IS checked. Within-culture level sweep: all '
+             f'<b>{m["militia_level_sweep_excluded"]} militia excluded</b>, since out-statting their level '
+             f'is the point of them. Total-skill based, ±{m["tolerance"]} tolerance for weapon-spec '
+             f'noise.</p>')
     if not m['upgrade_violations'] and not m['level_violations']:
         H.append('<div class="callout ok">No inversions — every upgrade target is higher-level and not '
                  'weaker, and no lower level out-totals a higher level within a culture+group.</div>')
@@ -981,7 +1004,7 @@ def main():
         print(f'Dead modifiers: {dq["dead_modifiers"]}')
         print(f'Special/creature troops: {len(dq["special_troops"])}')
         m = dq['monotonicity']
-        print(f'Monotonicity (professional troops, militia excluded): '
+        print(f'Monotonicity ({m["militia_edges_exempt"]} militia-to-militia edges exempt): '
               f'{len(m["upgrade_violations"])} upgrade + {len(m["level_violations"])} level inversions')
 
 

@@ -526,12 +526,14 @@
 	</NPCCharacter>
 
 	<!-- Guards -->
-	<NPCCharacter id="prison_guard_khand" default_group="Infantry" level="4" culture="Culture.battania" occupation="PrisonGuard" name="{=aom_kh_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="prison_guard_khand" default_group="Infantry" level="4" culture="Culture.battania" occupation="PrisonGuard" name="{=aom_kh_prison_guard}Prison Guard">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_battania" /></face>
 		<skills>
 			<skill id="OneHanded" value="50" />
 			<skill id="TwoHanded" value="50" />
 			<skill id="Polearm" value="50" />
+			<skill id="Athletics" value="30" />
+			<skill id="Throwing" value="20" />
 		</skills>
 		<upgrade_targets></upgrade_targets>
 		<Equipments>

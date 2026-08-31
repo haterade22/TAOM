@@ -37,7 +37,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="15" />
+                value="20" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.goblin_grunt" />
@@ -1893,8 +1893,7 @@
         level="11"
         name="{=aom_gob_militia_spear}[Goblin] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.goblin"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.goblin">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />
@@ -1997,8 +1996,7 @@
         level="11"
         name="{=aom_gob_militia_archer}[Goblin] Militia Archer"
         occupation="Soldier"
-        culture="Culture.goblin"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.goblin">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />
@@ -2113,8 +2111,7 @@
         level="16"
         name="{=aom_gob_militia_vet_spear}[Goblin] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.goblin"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.goblin">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />
@@ -2238,8 +2235,7 @@
         level="16"
         name="{=aom_gob_militia_vet_archer}[Goblin] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.goblin"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.goblin">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />

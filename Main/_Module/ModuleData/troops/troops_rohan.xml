@@ -3200,7 +3200,7 @@
                 value="80" />
             <skill
                 id="TwoHanded"
-                value="50" />
+                value="55" />
             <skill
                 id="Polearm"
                 value="110" />
@@ -5809,8 +5809,7 @@
         level="11"
         name="{=aom_rohan_militia_spearman_name}[Rohan] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.vlandia"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.vlandia">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rohan" />
@@ -5874,8 +5873,7 @@
         level="11"
         name="{=aom_rohan_militia_archer_name}[Rohan] Militia Archer"
         occupation="Soldier"
-        culture="Culture.vlandia"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.vlandia">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rohan" />
@@ -5941,8 +5939,7 @@
         level="16"
         name="{=aom_rohan_militia_veteran_spearman_name}[Rohan] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.vlandia"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.vlandia">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rohan" />
@@ -6012,8 +6009,7 @@
         level="16"
         name="{=aom_rohan_militia_veteran_archer_name}[Rohan] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.vlandia"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.vlandia">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rohan" />

@@ -25,6 +25,7 @@ import sys
 import glob
 import re
 import copy
+import codecs
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -216,6 +217,15 @@ CULTURAL_MODS = {
         'Athletics': 5, 'Riding': -5, 'TwoHanded': 5, 'Polearm': 3,
         'Bow': -10, 'Crossbow': -10, 'Throwing': 5,
     },
+    # Lindon is a Rivendell twin, not a culture of its own: 27 of its 30 troops have a
+    # rivendell_/imladris_ counterpart carrying identical skill values, down to the Gondolin
+    # capstones. It was the only
+    # culture file with no entry here, so the formula ran against it with a zero modifier and would
+    # have stripped the high-elf tuning off all 30 troops the first time anyone ran --apply.
+    'lindon': {
+        'Athletics': 35, 'Riding': 30, 'OneHanded': 35, 'TwoHanded': 40,
+        'Polearm': 40, 'Bow': 40, 'Crossbow': 40, 'Throwing': 40,
+    },
     # Dale / Esgaroth — Men of the North, polearm + two-handed + bow specialists.
     # Best non-elf polearm nation (Pol +25 tops iron_hills +20); top Men archery.
     'dale': {
@@ -331,10 +341,70 @@ def apply_specialization(skills, specialization):
     return s
 
 
-def is_militia(troop_id, troop_name):
-    """Check if a troop is a militia entry."""
-    name_lower = (troop_name + ' ' + troop_id).lower()
-    return 'militia' in name_lower and any(kw in name_lower for kw in ['spearman', 'archer', 'veteran'])
+# A culture binds its militia in one of two encodings: a plain attribute in taom_spcultures.xml
+# (militia_troop / melee_militia_troop / ranged_militia_troop / *_elite_militia_troop) and an
+# <xsl:attribute name="..."> element in spcultures.xslt. Dale and Rhun use only the second, so
+# both shapes have to be matched or those cultures silently fall off the militia rule.
+MILITIA_BINDING_FILES = ('taom_spcultures.xml', 'spcultures.xslt')
+# The leading (?<![A-Za-z0-9_]) stops a longer attribute that merely ENDS in militia_troop (say a
+# hypothetical reserve_melee_militia_troop) from being read as a militia binding.
+MILITIA_BINDING_RE = re.compile(
+    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(?:elite_)?militia_troop"?\s*(?:=\s*"|>)\s*'
+    r'NPCCharacter\.([A-Za-z0-9_]+)')
+_XML_COMMENT_RE = re.compile(r'<!--.*?-->', re.S)
+
+
+def _strip_xml_comments(text):
+    """Blank out comment bodies, keeping newlines so any line numbers stay accurate."""
+    return _XML_COMMENT_RE.sub(lambda m: '\n' * m.group(0).count('\n'), text)
+
+_militia_ids_cache = {}
+
+
+def militia_troop_ids(moduledata_dir=None):
+    """Troop ids a culture actually binds to a militia slot.
+
+    This replaces a name-substring heuristic ('militia' plus spearman/archer/veteran) that had
+    exactly one false positive across 871 troops: gondor_ano_archer_militia, a level-11 Anorien
+    LINE troop that the heuristic handed the level-21 militia baseline. It then out-statted its
+    own level-16 upgrade target on all 8 skills, -145 total, the worst upgrade edge in the game.
+    Same defect family as the name-based weapon detection replaced in #340/#341: the name is a
+    label, the binding is the fact.
+    """
+    root = os.path.abspath(moduledata_dir or MODULEDATA_DIR)
+    if root in _militia_ids_cache:
+        return _militia_ids_cache[root]
+    ids = set()
+    missing = []
+    for filename in MILITIA_BINDING_FILES:
+        path = os.path.join(root, filename)
+        if not os.path.isfile(path):
+            missing.append(filename)
+            continue
+        with open(path, 'r', encoding='utf-8-sig', errors='replace') as f:
+            # Mask comments first: a commented-out <Culture> block is not a live binding, and
+            # counting one would silently widen the militia exemption.
+            ids.update(MILITIA_BINDING_RE.findall(_strip_xml_comments(f.read())))
+    # FAIL CLOSED. This decision moved from a self-contained name heuristic (which could not fail)
+    # to a read of two external files. If that read comes back empty the tool would classify all 60
+    # militia as ordinary troops and a --apply would cut them to their level curve, roughly 55%,
+    # exiting 0 with one easily-missed line of output.
+    if missing or not ids:
+        raise RuntimeError(
+            "Militia bindings could not be read, so every militia would be restatted as an "
+            f"ordinary troop. Missing: {', '.join(missing) or 'none'}; ids found: {len(ids)}. "
+            f"Expected {', '.join(MILITIA_BINDING_FILES)} under {root}.")
+    _militia_ids_cache[root] = ids
+    return ids
+
+
+def is_militia(troop_id, troop_name=None):
+    """True when a culture binds this troop to one of its militia slots.
+
+    troop_name is accepted and ignored; it is what the old heuristic keyed off and callers still
+    pass it.
+    """
+    return troop_id in militia_troop_ids()
 
 
 def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None):
@@ -352,12 +422,11 @@ def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes
     if not baseline:
         return None
 
-    # For militia: use the level 21 baseline of Infantry or Ranged
-    if is_militia(troop_id, troop_name):
-        if 'archer' in (troop_name + ' ' + troop_id).lower():
-            militia_baseline = RANGED_BASELINES.get(21)
-        else:
-            militia_baseline = INFANTRY_BASELINES.get(21)
+    # For militia: use the level 21 baseline of Infantry or Ranged. The Ranged/melee split comes
+    # from default_group, not from the word "archer" in the name (the two agree on all 60 bound
+    # militia today; the group is the one that stays true after a rename).
+    if is_militia(troop_id):
+        militia_baseline = RANGED_BASELINES.get(21) if group == 'Ranged' else INFANTRY_BASELINES.get(21)
         if militia_baseline:
             baseline = militia_baseline
 
@@ -396,101 +465,257 @@ def get_display_name(name_attr):
     return name_attr
 
 
+SKILL_ENTRY_RE = re.compile(r'(?ms)^([ \t]*)(<skill\b.*?/>)')
+
+
+def insert_missing_skill_entries(skills_block, new_skills, troop_id):
+    """Add a <skill> element for any of the 8 skills the block does not already declare.
+
+    CharacterObject.GetSkillValue returns 0 for an undeclared skill, so a partial block is not
+    "leave it alone", it is a silent zero. 34 Mordor and Morannon troops shipped that way and the
+    value-only writer could never repair them: it rewrites values already present, which is why
+    they reported CHANGED every run and produced no byte change.
+
+    The new entries are cloned from the last existing entry in the same block, so a file using the
+    three-line <skill/id/value> shape keeps it and a file using the one-line shape keeps that.
+    """
+    present = set(re.findall(r'<skill\s[^>]*?id="([A-Za-z]+)"', skills_block, re.DOTALL))
+    missing = [s for s in SKILL_NAMES if s not in present]
+    if not missing:
+        return skills_block
+
+    entries = list(SKILL_ENTRY_RE.finditer(skills_block))
+    if not entries:
+        print(f"  WARNING: {troop_id} has no parseable <skill> entry to clone; "
+              f"leaving {', '.join(missing)} undeclared")
+        return skills_block
+
+    indent, template = entries[-1].group(1), entries[-1].group(2)
+    addition = ''
+    for skill_id in missing:
+        entry = re.sub(r'id="[A-Za-z]+"', f'id="{skill_id}"', template, count=1)
+        entry = re.sub(r'value="\d+"', f'value="{new_skills.get(skill_id, 0)}"', entry, count=1)
+        addition += '\n' + indent + entry
+    at = entries[-1].end()
+    return skills_block[:at] + addition + skills_block[at:]
+
+
+def _npc_block_span(content, troop_id):
+    """(start, end) of the NPCCharacter element whose id attribute is exactly troop_id.
+
+    Anchoring on the element rather than on a bare id="..." match keeps a troop's rewrite inside
+    its own block, and keeps an EquipmentRoster or EquipmentSet that happens to share an id from
+    being mistaken for the character.
+    """
+    for m in re.finditer(r'<NPCCharacter\b[^>]*(?:/>|>.*?</NPCCharacter>)', content, re.S):
+        head = m.group(0)[:m.group(0).find('>') + 1]
+        idm = re.search(r'\bid="([^"]*)"', head)
+        if idm and idm.group(1) == troop_id:
+            return m.start(), m.end()
+    return None
+
+
+def _render_skills_body(new_skills, indent):
+    """The full 8-skill body used when a troop has no usable <skill> entry to clone."""
+    skill_indent = indent + '    '
+    lines = []
+    for skill_id in SKILL_NAMES:
+        lines.append(
+            f'{skill_indent}<skill\n'
+            f'{skill_indent}    id="{skill_id}"\n'
+            f'{skill_indent}    value="{new_skills.get(skill_id, 0)}" />'
+        )
+    return '\n' + '\n'.join(lines) + '\n' + indent
+
+
 def apply_skills_via_regex(filepath, troop_skill_map):
+    """Apply skill changes to an XML file, preserving all formatting.
+
+    troop_skill_map: troop_id -> {skill_id: value, ...}
     """
-    Apply skill changes to XML file using regex, preserving all formatting.
-    troop_skill_map: dict of troop_id -> {skill_id: value, ...}
-    """
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
+    # Byte-faithful I/O per .claude/rules/moduledata-validation.md: read binary and decode here so
+    # the BOM (4 troop files carry one) and the file's newline style both survive. A plain text
+    # read plus a text write is the forbidden mixed shape: it strips the BOM and rewrites an
+    # LF-only file entirely as CRLF on Windows.
+    raw = open(filepath, 'rb').read()
+    bom = raw.startswith(codecs.BOM_UTF8)
+    content = raw.decode('utf-8-sig' if bom else 'utf-8')
+    newline = '\r\n' if '\r\n' in content else '\n'
+    content = content.replace('\r\n', '\n')
+    original = content
 
     for troop_id, new_skills in troop_skill_map.items():
-        # Find the NPCCharacter block for this troop
-        # Try <skills>...</skills> first, then self-closing <skills />
-        pattern = re.compile(
-            r'(id="' + re.escape(troop_id) + r'".*?<skills>)(.*?)(</skills>)',
-            re.DOTALL
-        )
-        match = pattern.search(content)
-
-        # Handle self-closing <skills /> (used in some militia entries)
-        if not match:
-            self_close_pattern = re.compile(
-                r'(id="' + re.escape(troop_id) + r'".*?)(<skills\s*/>)',
-                re.DOTALL
-            )
-            self_close_match = self_close_pattern.search(content)
-            if self_close_match:
-                # Replace <skills /> with <skills>..skills..</skills>
-                skills_line_match = re.search(r'\n(\s*)<skills', content[max(0, self_close_match.start(2) - 200):self_close_match.start(2) + 20])
-                indent = '        '
-                if skills_line_match:
-                    indent = skills_line_match.group(1)
-                skill_indent = indent + '    '
-                skill_lines = []
-                for skill_id in SKILL_NAMES:
-                    value = new_skills.get(skill_id, 0)
-                    skill_lines.append(
-                        f'{skill_indent}<skill\n'
-                        f'{skill_indent}    id="{skill_id}"\n'
-                        f'{skill_indent}    value="{value}" />'
-                    )
-                replacement = '<skills>\n' + '\n'.join(skill_lines) + '\n' + indent + '</skills>'
-                content = content[:self_close_match.start(2)] + replacement + content[self_close_match.end(2):]
+        # Isolate this troop's own NPCCharacter block FIRST. The old pattern ran from
+        # id="<troop>" to the next <skills> ANYWHERE in the file, so a troop with a self-closing
+        # <skills /> or none at all reached past </NPCCharacter> and wrote its values into the
+        # next troop while leaving itself untouched. Bounding the search makes that
+        # unrepresentable rather than merely unobserved.
+        span = _npc_block_span(content, troop_id)
+        if span is None:
+            print(f"  WARNING: {troop_id} not found in {os.path.basename(filepath)}; skipped")
             continue
+        lo, hi = span
+        block = content[lo:hi]
 
-        skills_block = match.group(2)
+        indent_match = re.search(r'\n([ \t]*)<skills\b', block)
+        indent = indent_match.group(1) if indent_match else '        '
 
-        # Check if skills block is empty (militia entries with <skills></skills>)
-        if not skills_block.strip():
-            # Detect indentation from the <skills> tag
-            skills_tag_pos = match.start(1)
-            line_start = content.rfind('\n', 0, match.start(0)) + 1
-            # Find indentation of <skills> line
-            skills_line_match = re.search(r'\n(\s*)<skills>', content[match.start(1) - 200:match.end(1)])
-            indent = '            '  # Default 12 spaces
-            if skills_line_match:
-                indent = skills_line_match.group(1)
-
-            skill_indent = indent + '    '
-            skill_lines = []
-            for skill_id in SKILL_NAMES:
-                value = new_skills.get(skill_id, 0)
-                skill_lines.append(
-                    f'{skill_indent}<skill\n'
-                    f'{skill_indent}    id="{skill_id}"\n'
-                    f'{skill_indent}    value="{value}" />'
-                )
-            new_skills_block = '\n' + '\n'.join(skill_lines) + '\n' + indent
-
-            content = content[:match.start(2)] + new_skills_block + content[match.end(2):]
+        match = re.search(r'(<skills>)(.*?)(</skills>)', block, re.DOTALL)
+        if not match:
+            # Self-closing <skills /> : expand it to a full block.
+            self_close = re.search(r'<skills\s*/>', block)
+            if not self_close:
+                print(f"  WARNING: {troop_id} has no <skills> element; skipped")
+                continue
+            replacement = '<skills>' + _render_skills_body(new_skills, indent) + '</skills>'
+            block = block[:self_close.start()] + replacement + block[self_close.end():]
+        elif not match.group(2).strip():
+            # Present but empty: <skills></skills>
+            block = block[:match.start(2)] + _render_skills_body(new_skills, indent) + block[match.end(2):]
         else:
-            # Replace each skill value within the existing skills block
-            new_skills_block = skills_block
-            for skill_id, value in new_skills.items():
-                skill_pattern = re.compile(
-                    r'(id="' + re.escape(skill_id) + r'"\s+value=")(\d+)(")'
-                )
-                new_skills_block = skill_pattern.sub(
-                    lambda m: m.group(1) + str(value) + m.group(3),
-                    new_skills_block
-                )
-                # Also handle value before id: value="X" id="SkillName"
-                skill_pattern_alt = re.compile(
-                    r'(value=")(\d+)("\s+id="' + re.escape(skill_id) + r'")'
-                )
-                new_skills_block = skill_pattern_alt.sub(
+            skills_block = match.group(2)
+            for skill_id, value in sorted(new_skills.items()):
+                skills_block = re.sub(
+                    r'(id="' + re.escape(skill_id) + r'"\s+value=")(\d+)(")',
                     lambda m, v=value: m.group(1) + str(v) + m.group(3),
-                    new_skills_block
-                )
+                    skills_block)
+                # Also handle value before id: value="X" id="SkillName"
+                skills_block = re.sub(
+                    r'(value=")(\d+)("\s+id="' + re.escape(skill_id) + r'")',
+                    lambda m, v=value: m.group(1) + str(v) + m.group(3),
+                    skills_block)
+            skills_block = insert_missing_skill_entries(skills_block, new_skills, troop_id)
+            block = block[:match.start(2)] + skills_block + block[match.end(2):]
 
-            content = content[:match.start(2)] + new_skills_block + content[match.end(2):]
+        content = content[:lo] + block + content[hi:]
 
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
+    if content == original:
+        return
+
+    # Parse before writing. Every replacement above is regex-driven, so a malformed result would
+    # otherwise reach disk and only surface as a load failure in game.
+    try:
+        ET.fromstring(content.encode('utf-8'))
+    except ET.ParseError as exc:
+        raise RuntimeError(
+            f"{os.path.basename(filepath)} would no longer be well-formed XML after the skill "
+            f"rewrite, so nothing was written: {exc}")
+
+    out = content.replace('\n', newline).encode('utf-8')
+    if bom:
+        out = codecs.BOM_UTF8 + out
+    with open(filepath, 'wb') as f:
+        f.write(out)
 
 
-def process_file(filepath, dry_run=True, item_classes=None):
+def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
+    """Raise any upgrade target that would come out worse than the troop it upgrades from.
+
+    base_on_curve=True is the rebaseline path: start from the formula result, so --apply both
+    rebaselines and clamps. base_on_curve=False is the --fix-monotonicity path: start from what is
+    on disk, so a run repairs the ladder WITHOUT rebaselining the roster. That distinction matters
+    because several lines are deliberately off-curve (the gondor_loss_noble line is documented as
+    do-not-apply-over, the Black Numenoreans and the dwarf ram riders are hand-authored), and
+    sweeping them into a bug fix is not the bug fix. restat_ids names the troops that should take
+    their formula value anyway, which is how a misclassified troop gets corrected on its own.
+
+    A player reads the troop tree as a ladder, so an upgrade that lowers a stat reads as a bug no
+    matter how it got there. Three separate causes produced them: the militia baseline leaking into
+    a real line, a default_group that contradicted the carried equipment, and the plain fact that
+    the Ranged table sits below the Infantry table on Polearm and TwoHanded, so an Infantry troop
+    branching into Ranged one tier up lost melee.
+
+    Runs over the whole roster at once because upgrade targets cross files. Troops the formula
+    skipped (creatures, hand-tuned lines, off-grid levels) take part using their current values:
+    they can lift a child, and they can be lifted, but a clamp only ever raises, so a hand-tune is
+    never reverted.
+
+    The one exemption is militia to militia. Militia are pinned to the level-21 baseline regardless
+    of level so village defence stays costly, which makes a militia promotion flat by design.
+    """
+    by_id = {c['id']: c for c in all_changes}
+    restat_ids = set(restat_ids)
+    base = {}
+    for c in all_changes:
+        curve = c.get('new')
+        take_curve = curve is not None and (base_on_curve or c['id'] in restat_ids)
+        if take_curve:
+            base[c['id']] = dict(curve)
+        else:
+            # An undeclared skill seeds at 0, which is exactly what the engine already reads for
+            # it, and the clamp then raises it to whatever a parent requires. Seeding from the
+            # curve instead would smuggle a rebaseline into the mode whose whole contract is not
+            # to rebaseline: it put 669 points into skills no parent asked for, including two
+            # troops that sit on no upgrade edge at all. Everything already on disk is untouched.
+            base[c['id']] = {s: c['old'].get(s, 0) for s in SKILL_NAMES}
+
+    edges = [(c['id'], t) for c in all_changes for t in c.get('upgrades', []) if t in by_id]
+
+    indegree = defaultdict(int)
+    for _, child in edges:
+        indegree[child] += 1
+    children = defaultdict(list)
+    for parent, child in edges:
+        children[parent].append(child)
+
+    queue = [i for i in base if indegree[i] == 0]
+    order = []
+    while queue:
+        node = queue.pop()
+        order.append(node)
+        for child in children[node]:
+            indegree[child] -= 1
+            if indegree[child] == 0:
+                queue.append(child)
+    if len(order) != len(base):
+        cyclic = sorted(set(base) - set(order))
+        raise RuntimeError(
+            "The upgrade graph is not acyclic, so there is no well-defined order to clamp in. "
+            f"Troops in or below a cycle: {', '.join(cyclic[:10])}")
+
+    # Snapshot before clamping so "raised" counts DISTINCT (troop, skill) pairs that ended up
+    # higher. Counting each assignment instead made the number depend on the order parents happen
+    # to be processed in: a child with two parents at 30 and 50 reported either 8 or 16 raises for
+    # the identical final result.
+    pre_clamp = {tid: dict(vals) for tid, vals in base.items()}
+    for parent in order:
+        for child in children[parent]:
+            if is_militia(parent) and is_militia(child):
+                continue
+            for skill in SKILL_NAMES:
+                if base[child][skill] < base[parent][skill]:
+                    base[child][skill] = base[parent][skill]
+    raised = sum(1 for tid, vals in base.items() for s in SKILL_NAMES
+                 if vals[s] > pre_clamp[tid][s])
+
+    # Report against the FINAL values, not the raw curve. A clamped troop sits above the curve on
+    # purpose and forever, so scoring it against the curve would print it as CHANGED on every run
+    # while producing no byte change -- exactly the misleading residual the partial <skills> blocks
+    # used to produce, and the reason nobody looked at them for months.
+    for c in all_changes:
+        final = base[c['id']]
+        c['final'] = final
+        # "clamped" means this troop was actually RAISED off its own values by a parent. Comparing
+        # against the curve instead reported a restatted-then-clamped troop as unclamped, and
+        # reported insert-only troops as clamped.
+        c['clamped'] = any(final[s] > c['old'].get(s, 0) for s in SKILL_NAMES)
+        c['inserted'] = [s for s in SKILL_NAMES if s not in c['old']]
+        needs_write = (any(c['old'].get(s, 0) != final[s] for s in SKILL_NAMES)
+                       or bool(c['inserted']))
+        if c.get('external'):
+            pass  # read-only source; its status stays as-is and it is never written
+        elif c.get('new') is None:
+            if needs_write:
+                c['status'] += ' + CLAMPED'
+        else:
+            c['status'] = 'CHANGED' if needs_write else 'UNCHANGED'
+        c['total_new'] = sum(final[s] for s in SKILL_NAMES)
+        c['total_old'] = sum(c['old'].get(s, 0) for s in SKILL_NAMES)
+        c['delta'] = c['total_new'] - c['total_old']
+    return raised
+
+
+def process_file(filepath, item_classes=None):
     """Process a single troop XML file. Returns list of change records.
 
     item_classes: item id -> skill class map from
@@ -508,25 +733,12 @@ def process_file(filepath, dry_run=True, item_classes=None):
     root = tree.getroot()
 
     changes = []
-    troop_skill_map = {}  # For regex-based writing
 
     for npc in root.findall('.//NPCCharacter'):
         troop_id = npc.get('id', '')
-        if troop_id in SKIP_TROOP_IDS:
-            changes.append({
-                'file': filename, 'id': troop_id,
-                'name': get_display_name(npc.get('name', '')),
-                'level': int(npc.get('level', '0')),
-                'group': npc.get('default_group', 'Infantry'),
-                'culture': detect_culture(troop_id, filename_culture),
-                'status': 'SKIPPED (excluded: creature/hand-tuned)',
-                'old': {}, 'new': None,
-            })
-            continue
         troop_name = get_display_name(npc.get('name', ''))
         level = int(npc.get('level', '0'))
         group = npc.get('default_group', 'Infantry')
-
         culture = detect_culture(troop_id, filename_culture)
 
         # Get current skills
@@ -536,51 +748,120 @@ def process_file(filepath, dry_run=True, item_classes=None):
             for s in skills_elem.findall('skill'):
                 old_skills[s.get('id')] = int(s.get('value', '0'))
 
-        # Calculate new skills
-        weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
-        new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
-        if new_skills is None:
-            changes.append({
-                'file': filename,
-                'id': troop_id,
-                'name': troop_name,
-                'level': level,
-                'group': group,
-                'culture': culture,
-                'status': 'SKIPPED (no baseline for level/group)',
-                'old': old_skills,
-                'new': None,
-            })
-            continue
+        # Upgrade targets feed the cross-file monotonicity clamp in main().
+        upgrades = [(u.get('id') or '').replace('NPCCharacter.', '', 1)
+                    for u in npc.findall('./upgrade_targets/upgrade_target')]
+        upgrades = [u for u in upgrades if u]
 
-        # Record changes
-        has_change = any(old_skills.get(s, 0) != new_skills[s] for s in SKILL_NAMES)
-        total_old = sum(old_skills.get(s, 0) for s in SKILL_NAMES)
-        total_new = sum(new_skills[s] for s in SKILL_NAMES)
-
-        changes.append({
+        record = {
             'file': filename,
             'id': troop_id,
             'name': troop_name,
             'level': level,
             'group': group,
             'culture': culture,
-            'status': 'CHANGED' if has_change else 'UNCHANGED',
             'old': old_skills,
+            'upgrades': upgrades,
+        }
+
+        if troop_id in SKIP_TROOP_IDS:
+            record.update(status='SKIPPED (excluded: creature/hand-tuned)', new=None)
+            changes.append(record)
+            continue
+
+        # Calculate new skills
+        weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
+        new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
+        if new_skills is None:
+            record.update(status='SKIPPED (no baseline for level/group)', new=None)
+            changes.append(record)
+            continue
+
+        # Record changes. An undeclared skill is a change even when the formula value is 0: the
+        # engine reads an absent <skill> as 0, so the element has to exist before anything can
+        # rely on the value.
+        has_change = (any(old_skills.get(s, 0) != new_skills[s] for s in SKILL_NAMES)
+                      or any(s not in old_skills for s in SKILL_NAMES))
+        total_old = sum(old_skills.get(s, 0) for s in SKILL_NAMES)
+        total_new = sum(new_skills[s] for s in SKILL_NAMES)
+
+        record.update({
+            'status': 'CHANGED' if has_change else 'UNCHANGED',
             'new': new_skills,
             'total_old': total_old,
             'total_new': total_new,
             'delta': total_new - total_old,
         })
-
-        if has_change:
-            troop_skill_map[troop_id] = new_skills
-
-    # Apply via regex (preserves all formatting, comments, whitespace)
-    if not dry_run and troop_skill_map:
-        apply_skills_via_regex(filepath, troop_skill_map)
+        changes.append(record)
 
     return changes
+
+
+CHARACTERS_DIR = os.path.join(MODULEDATA_DIR, 'characters')
+
+
+def load_external_sources():
+    """Upgrade sources that live OUTSIDE troops/ and feed into it.
+
+    The 15 `villager_<culture>` entries in characters/npcs_*.xml each upgrade into their culture's
+    tier-1 troop. The engine treats any character with a non-empty UpgradeTargets array as
+    upgradeable, so these are real edges, and six of them regressed until this was covered. They
+    are read-only participants: they seed the clamp so their targets get raised, and write_files
+    never touches a file outside troops/.
+    """
+    records = []
+    for filepath in sorted(glob.glob(os.path.join(CHARACTERS_DIR, 'npcs_*.xml'))):
+        try:
+            root = ET.parse(filepath).getroot()
+        except ET.ParseError:
+            continue
+        for npc in root.findall('.//NPCCharacter'):
+            upgrades = [(u.get('id') or '').replace('NPCCharacter.', '', 1)
+                        for u in npc.findall('./upgrade_targets/upgrade_target')]
+            upgrades = [u for u in upgrades if u]
+            if not upgrades:
+                continue
+            skills = {s.get('id'): int(s.get('value', '0'))
+                      for s in npc.findall('./skills/skill')}
+            records.append({
+                'file': os.path.basename(filepath),
+                'id': npc.get('id', ''),
+                'name': get_display_name(npc.get('name', '')),
+                'level': int(npc.get('level', '0')),
+                'group': npc.get('default_group', 'Infantry'),
+                'culture': npc.get('culture', ''),
+                'old': skills,
+                'upgrades': upgrades,
+                'status': 'EXTERNAL SOURCE (read-only, outside troops/)',
+                'new': None,
+                'external': True,
+            })
+    return records
+
+
+def write_files(all_changes, troop_files):
+    """Write every troop whose final skills differ from what is on disk.
+
+    Final means after the monotonicity clamp, so this deliberately includes troops the formula
+    skipped: a clamp only raises, so writing one cannot revert a hand-tune. External sources are
+    never written; they only feed the clamp.
+    """
+    by_file = defaultdict(dict)
+    for c in all_changes:
+        final = c.get('final')
+        if not final or c.get('external'):
+            continue
+        current = c['old']
+        if any(current.get(s, 0) != final[s] for s in SKILL_NAMES) or any(s not in current for s in SKILL_NAMES):
+            by_file[c['file']][c['id']] = final
+
+    written = 0
+    for filepath in troop_files:
+        troop_skill_map = by_file.get(os.path.basename(filepath))
+        if troop_skill_map:
+            apply_skills_via_regex(filepath, troop_skill_map)
+            written += 1
+    return written
 
 
 def print_report(all_changes):
@@ -607,7 +888,7 @@ def print_report(all_changes):
         print()
 
     for level in sorted(by_level.keys()):
-        level_changes = [c for c in by_level[level] if c['new'] is not None]
+        level_changes = [c for c in by_level[level] if c.get('final') is not None]
         if not level_changes:
             continue
 
@@ -625,7 +906,7 @@ def print_report(all_changes):
             print(f"  {'-'*108}")
 
             for c in sorted(group_changes, key=lambda x: (x['culture'], x['name'])):
-                n = c['new']
+                n = c['final']   # the values actually written, not the pre-clamp curve
                 delta_str = f"{c['delta']:+d}" if c['delta'] != 0 else "0"
                 marker = " ***" if abs(c.get('delta', 0)) > 50 else ""
                 print(f"  {c['name']:<45} {c['culture']:<12} "
@@ -653,12 +934,35 @@ def main():
             sys.exit(1)
         game_modules = args[i + 1]
         del args[i:i + 2]
-    if len(args) != 1 or args[0] not in ('--dry-run', '--apply'):
-        print("Usage: python rebalance_troops.py --dry-run|--apply [--game-modules <path>]")
+    restat_ids = []
+    if '--restat' in args:
+        i = args.index('--restat')
+        if i + 1 >= len(args):
+            print("ERROR: --restat requires a comma-separated troop id list")
+            sys.exit(1)
+        restat_ids = [t.strip() for t in args[i + 1].split(',') if t.strip()]
+        del args[i:i + 2]
+    # --dry-run is a MODIFIER, not a mode. It used to be a third mutually exclusive mode token,
+    # which meant the only previewable path was the full rebaseline: --fix-monotonicity had to be
+    # run for real to see what it would do, and the two modes do not produce the same change, so
+    # previewing with --dry-run was actively misleading rather than merely unavailable.
+    dry_run = '--dry-run' in args
+    args = [a for a in args if a != '--dry-run']
+    if not args:
+        args = ['--apply']  # bare --dry-run keeps its old meaning: preview the rebaseline
+
+    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity'):
+        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity) [--dry-run] "
+              "[--restat <id,id>] [--game-modules <path>]\n"
+              "  --apply             rebaseline the whole roster onto the curve, then clamp\n"
+              "  --fix-monotonicity  clamp only: repair upgrade ladders without rebaselining\n"
+              "  --dry-run           preview either mode; write nothing\n"
+              "  --restat            take the formula value for these ids even in clamp-only mode")
         sys.exit(1)
 
-    dry_run = args[0] == '--dry-run'
-    mode = "DRY RUN" if dry_run else "APPLYING CHANGES"
+    base_on_curve = args[0] != '--fix-monotonicity'
+    label = "full rebaseline + clamp" if base_on_curve else "monotonicity clamp only"
+    mode = f"{'DRY RUN' if dry_run else 'APPLYING CHANGES'} ({label})"
     print(f"\n*** {mode} ***\n")
 
     # Equipment-driven specialization needs the item-class registry from the
@@ -676,6 +980,9 @@ def main():
     troop_files = sorted(glob.glob(os.path.join(TROOPS_DIR, 'troops_*.xml')))
     print(f"Found {len(troop_files)} troop files")
 
+    print(f"Militia bound by culture: {len(militia_troop_ids())} troops "
+          f"(level-21 baseline, from {' + '.join(MILITIA_BINDING_FILES)})")
+
     all_changes = []
     for filepath in troop_files:
         filename = os.path.basename(filepath)
@@ -683,13 +990,37 @@ def main():
             print(f"  SKIPPING {filename}")
             continue
         print(f"  Processing {filename}...")
-        changes = process_file(filepath, dry_run=dry_run, item_classes=item_classes)
-        all_changes.extend(changes)
+        all_changes.extend(process_file(filepath, item_classes=item_classes))
+
+    external = load_external_sources()
+    all_changes.extend(external)
+    print(f"External upgrade sources outside troops/: {len(external)} "
+          f"(read-only; they seed the clamp, they are never written)")
+
+    if restat_ids:
+        known = {c['id'] for c in all_changes}
+        unknown = [t for t in restat_ids if t not in known]
+        if unknown:
+            print(f"ERROR: --restat names troops that do not exist: {', '.join(unknown)}")
+            sys.exit(1)
+        print(f"Restatting onto the formula: {', '.join(restat_ids)}")
+
+    raised = clamp_upgrade_monotonicity(all_changes, base_on_curve=base_on_curve,
+                                        restat_ids=restat_ids)
+    clamped = [c for c in all_changes if c.get('clamped')]
+    lifted_skips = [c for c in all_changes if c['status'].endswith('+ CLAMPED')]
+    print(f"\nMonotonicity clamp: raised {raised} skill values on {len(clamped)} troops above the "
+          f"curve so no upgrade target sits below the troop it upgrades from")
+    if lifted_skips:
+        print(f"  ...plus {len(lifted_skips)} formula-skipped troops lifted off their own values "
+              f"(a clamp only raises, so the hand-tune survives): "
+              f"{', '.join(c['id'] for c in lifted_skips)}")
 
     print_report(all_changes)
 
     if not dry_run:
-        print(f"\n*** Changes written to {len(troop_files) - len(SKIP_FILES)} files ***")
+        written = write_files(all_changes, troop_files)
+        print(f"\n*** Changes written to {written} files ***")
 
 
 if __name__ == '__main__':

@@ -55,12 +55,29 @@ Two `rebalance_troops.py` behaviors LOOK like bugs to a mechanical-tooling revie
 - **Why missed:** a mechanical-tooling agent reasons about what the code does ("missing skills are never added", "BOM survives only by accident") and flags both as data-loss/fragility. The domain meaning (archers don't need polearms) and the repo's mixed-BOM reality make both correct. Deep review 2026-06-25 flagged partial-block HIGH + BOM MED; the balance agent + direct verification refuted both.
 - **Prevent:** when reviewing `rebalance_troops.py`, treat partial skill-blocks and the utf-8 (not utf-8-sig) read/write as INTENDED — verify the present skills are on-curve rather than demanding all-8. A genuinely more robust BOM fix is the bytes-mode `had_bom` round-trip (`tools/README.md`), which preserves per-file state AND is string-preprocessing-safe — but it must NOT force a BOM, and it carries a CRLF-in-empty-block-insertion caveat. Not urgent; the current behavior ships correct data.
 - **Source:** docs/reviews/rca-troop-skill-balance-2026-06-25.md (refuted partial-block HIGH + BOM MED)
+- **SUPERSEDED 2026-08-31 (#522), both halves.** Half (1) was wrong about the engine.
+  `CharacterObject.GetSkillValue` returns **0** for a skill the block never declares, so a partial
+  block is not "leave this role-irrelevant skill alone", it is an explicit zero. On an upgrade
+  target that reads as a stat wipe: `mordor_uruk_skirmisher -> mordor_uruk_crossbow` showed Bow
+  130 -> 0 purely because the target omitted the element. The 2026-06-25 review was right that the
+  tool could not repair them and wrong that it should not; all 8 are now declared in `troops/`, and
+  the omission is gated. Half (2) was right that the plain utf-8 path happened to preserve the four
+  BOM files, and is now moot: the writer uses the bytes round-trip this very lesson recommended,
+  which also stops an LF-only file being rewritten wholesale as CRLF.
 
 ### Level monotonicity excludes militia by design — don't "fix" intentional toughness
 A balance pass must keep stats monotonic by level (no lower-level troop out-stats a higher-level one), checked by `analyze_troop_balance.py` across upgrade paths and within culture+group. But TAOM militia deliberately take the **L21 baseline regardless of level** so they make sieges and village defense costly — so a L6/L11 militia out-statting mid-level regulars is intentional, and the monotonicity check **excludes militia** (`is_militia`). When a check surfaces a class of "violations" that are all one intentional design category, exclude the category and report the count — do not normalize it away.
 - **Why missed:** the monotonicity request ("no lower level stronger than a higher level") reads as an absolute rule; applied literally it would have nerfed every culture's militia. The owner clarified militia are a deliberate defensive lever, not part of the clean progression.
 - **Prevent:** before "fixing" a wholesale inversion class, split the violations by category (militia vs professional). 79/79 here were militia; 0 were professional. A monotonicity/parity checker should carry a documented exclusion list (militia, creatures, off-grid) so intentional outliers don't generate noise or get auto-corrected. Also use TOTAL-skill (not per-skill primary) for the comparison — weapon-spec swaps preserve total, so a melee→archer upgrade isn't a false "primary skill dropped" inversion.
 - **Source:** docs/features/troop-skill-balance.md (2026-06-25 — monotonicity check + militia carve-out)
+- **AMENDED 2026-08-31 (#522).** The category was right; the exclusion was drawn one level too
+  wide. Excluding militia TROOPS also excluded every edge that leaves a militia, and the worst
+  upgrade edge in the game was sitting inside that blind spot for two months while the check
+  printed "0 inversions". The exemption is now per-EDGE: militia-to-militia is flat by design and
+  exempt, a militia feeding a real line is checked like anything else. The within-culture level
+  sweep still excludes militia entirely, which is correct and is now disclosed in the report
+  instead of implied. Generalisation worth carrying: **exempt the edge, not the entity**, and when
+  you add an exemption ask what a bug hiding inside it would look like.
 
 ### Enumerate new-attribute rows from the upstream source-of-truth, not the existing config
 When extending a config file with a new attribute, enumerate the expected rows from the **upstream source-of-truth** (e.g. `Main/_Module/ModuleData/charactercreation/cultures.json` for CC-selectable cultures, `taom_spkingdoms.xml` for kingdoms, `Languages/` for translation files), not from the config's own existing row list — the existing rows reflect what someone happened to add before, so copying them inherits the gaps.
@@ -750,3 +767,114 @@ shifted the ordering and two clan rosters immediately picked up `goblin_fighter_
 - **Why missed:** absence of the bug in output was mistaken for absence of the bug. A latent filter gap in a seeded, order-sensitive generator produces clean output until an unrelated input change perturbs the order.
 - **Prevent:** when a generator has an exclusion list, check it against the definitive list of things that should be excluded rather than against its current output. Here the authoritative list already existed in a test: `VolunteerRecruitmentServiceTests.IsIntentionallyUnrecruited` names `_militia_`, `_boss` and `_merc`, and the tool knew about only one of the three.
 - **Source:** the 2026-08-29 goblin tree merge, caught by `generate_clan_heraldry.py`'s own drift gate refusing to regenerate.
+
+### A name substring stood in for a binding, and the one false positive was the worst troop in the game
+`rebalance_troops.is_militia` decided militia by name (`militia` plus spearman/archer/veteran).
+Militia deliberately take the level-21 baseline whatever their real level, so a false positive does
+not produce a small error, it produces a level-11 troop wearing level-21 stats.
+`gondor_ano_archer_militia` was that troop: a plain Anorien line unit, never bound as a culture
+militia troop, which then out-statted its own level-16 upgrade target on seven of its eight skills, -145 total
+(Riding was already equal on both).
+One false positive across 871 troops, and it was the single worst upgrade edge in the mod.
+- **Why missed:** the heuristic was right 60 times out of 61, which is exactly the hit rate that
+  stops anyone re-examining it. The authoritative list already existed one file away, as the
+  `militia_troop` / `melee_militia_troop` / `ranged_militia_troop` bindings in `taom_spcultures.xml`
+  and `spcultures.xslt`.
+- **Prevent:** when a rule keys off a category, read the file that DEFINES the category. A name is a
+  label an author types; a binding is a fact the engine consumes. This is the third time (#340, #341,
+  #522): crossbowmen named "Sharpshooter", two-handers named "Knight", and now a line troop named
+  "Militia". Assert the derived set's size so a rename fails loudly instead of widening the match.
+- **Source:** #522, the 2026-08-30 troop upgrade regression fix.
+
+### A gate that excludes the category the bug lives in reports zero forever
+`analyze_troop_balance.check_monotonicity` excluded every militia troop, because militia
+out-statting their level is intentional. That exclusion is also where the mis-detected militia sat,
+so the check printed "0 inversions" for two months with a -145 upgrade edge inside its own blind
+spot. Running the fixed check against the unchanged pre-fix data names the bug on the first run.
+- **Why missed:** the exclusion was written for a real reason and documented as intentional, so
+  every later reader accepted it. Nothing distinguishes "excluded because it is fine" from
+  "excluded, and therefore never examined".
+- **Prevent:** exempt the EDGE, not the entity. Militia-to-militia is genuinely flat by design;
+  a militia that feeds a real line is an ordinary upgrade and must be checked. Whenever an exemption
+  is added, ask what a bug hiding inside it would look like, and whether anything else would catch it.
+- **Source:** #522.
+
+### default_group is data the curve trusts, and nothing checked it against the equipment
+`dg_warg_red_fang` was tagged `HorseArcher` while carrying sword, halberd and shield and no ranged
+weapon at all, so the skill curve handed it Bow 240. Its parent and its child are both `Cavalry`
+with Bow 25 and 40, which is where the -200 drop came from. It was the only HorseArcher in the mod
+carrying nothing ranged.
+- **Why missed:** `default_group` drives the battlefield formation AND the skill curve, but the two
+  consumers never compare notes, and the troop looked correct in play because the engine picks the
+  formation from equipment for the cases that matter. The wrong number was only visible in the
+  encyclopedia.
+- **Prevent:** the registry that answers this already exists. `taom_schema.build_item_class_registry`
+  plus `rebalance_troops.troop_weapon_classes` will tell you what a troop actually carries in one
+  call; a Ranged or HorseArcher troop carrying no Bow, Crossbow or Throwing item is worth a look
+  (five javelin skirmishers are legitimate, so it is a review prompt, not an error).
+- **Source:** #522.
+
+### A missing dictionary key rebaselines a whole faction and raises no error
+Lindon was the only culture file with no `CULTURAL_MODS` entry, so the formula ran against it with a
+zero modifier. 27 of its 30 troops have a Rivendell twin carrying identical skill values, so the first
+`--apply` after that gap opened would have stripped the high-elf tuning off the entire faction, in a
+commit whose stated purpose was something else entirely. It surfaced only because a diff that should
+have been 30 lines came out at 478.
+- **Why missed:** `dict.get(key, {})` is the normal way to write an optional modifier, and it makes
+  "this culture has no identity" and "somebody forgot to add this culture" the same value.
+- **Prevent:** assert that every culture file resolves to a key that exists. Read the diff size per
+  file before accepting a data-tool run: a file that moves an order of magnitude more than the tool
+  said it would is the tool doing something you did not ask for.
+- **Source:** #522, caught mid-apply and reverted before it shipped.
+
+### A rebaseline tool with no clamp-only mode turns a bug fix into a roster-wide rebalance
+The fix for the upgrade regressions needed one thing from `rebalance_troops.py`: raise a target to
+its source. The only write mode was `--apply`, which recomputes the whole curve first, so the run
+also rebaselined about 40 deliberately off-curve troops that had nothing to do with the bug: the
+`gondor_loss_noble` line the doc explicitly says not to apply over (#343), the hand-authored Black
+Numenoreans, the dwarf ram riders, and `mistymountainorcs_bolgs_ironfang`. All of it would have
+shipped inside a commit titled "fix upgrade regressions".
+- **Why missed:** the tool did exactly what it documents. Nothing was broken; the mode was simply
+  wider than the task, and "run the tool" felt like the whole job.
+- **Prevent:** before accepting a data-tool run, count the troops whose values went DOWN and name
+  every one of them. A fix that only ever raises should have a lowered-set you can list on one line
+  (here: the two deliberately reclassified troops). Split the mode when the tool cannot express
+  the narrower intent: `--fix-monotonicity` now clamps from what is on disk, `--apply` still
+  rebaselines, and `--restat <id>` handles the specific troops that genuinely need the curve.
+- **Source:** #522, caught during self-review by diffing troop-by-troop against `HEAD` rather than
+  trusting the tool's own change counter.
+
+### skill_template makes a character's inline <skills> block unreachable, and every TAOM tool read the dead half
+`BasicCharacterObject.Deserialize` (v1.4.8, `BasicCharacterObject.cs:337-358`) resolves
+`skill_template` first and only calls `DefaultCharacterSkills.Init(childNode)` when that reference
+came back **null**. So a character declaring both is asserting two different skill sets and the
+engine silently takes the template. 44 militia troops shipped that way, pointing at vanilla
+Calradian SkillSets: `rivendell_militia_spearman` was authored at 850 total and delivered 215. The
+whole "militia take the level-21 baseline so sieges stay costly" doctrine was inert for every one
+of them, and 17 prison guards had the same shape.
+- **Why missed:** nothing in the pipeline knows the attribute exists. `rebalance_troops.py` writes
+  the inline block, `analyze_troop_balance.py` reports it as the troop's actual skills, the feature
+  doc documents it as live behaviour, and the schema has no rule that the two fields conflict. An
+  earlier exploration did notice the pairing and recorded it as "vestigial `skill_template`
+  attributes... worth confirming which wins". It wins.
+- **Prevent:** `SKILL_TEMPLATE_SHADOWS_SKILLS` now errors on any character declaring both, in the
+  validator and in `TroopUpgradeSkillMonotonicityTests`. Generalisation: when two fields can both
+  supply the same value, find the engine's precedence rule and gate the contradiction, because a
+  silent winner means every tool downstream can be reading the loser. "Vestigial" is a hypothesis,
+  not a finding.
+- **Source:** #523, found while widening the #522 gate to cover upgrade sources outside `troops/`.
+
+### A gate scoped to where the bug was found inherits the bug's blind spot
+The #522 gates were globbed to `troops/troops_*.xml`, because that is where the reported regression
+was. 16 upgrade edges start outside it, in `characters/npcs_*.xml`, where each `villager_<culture>`
+upgrades into its culture's tier-1 troop. Six of those edges regressed, and `validate_moduledata.py`
+reported PASS the whole time. The engine treats any character with a non-empty `UpgradeTargets`
+array as upgradeable, so they are real edges, not a technicality.
+- **Why missed:** the scope was chosen from the symptom rather than from the definition. "Where do
+  upgrade edges live?" and "where did this bug happen?" have different answers, and only the first
+  one bounds a gate correctly.
+- **Prevent:** derive a gate's scope from the invariant it enforces, then verify the scope by
+  counting the thing being gated (698 edges across two directories, not 682 across one). A bare
+  filename glob with no floor assertion is the shape to distrust: it silently covers nothing when
+  a file is renamed.
+- **Source:** #522 Codex review, confirmed by re-deriving the edge count from both directories.

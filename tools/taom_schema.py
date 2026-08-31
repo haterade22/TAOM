@@ -224,6 +224,7 @@ class Validator:
         issues += self._settlement_economy_floor()
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
+        issues += self._upgrade_skill_regressions()
         issues.sort(key=lambda i: i.sort_key())
         return issues
 
@@ -789,6 +790,129 @@ class Validator:
                 if mounts:
                     mounted[m.group(1)] = mounts
         return mounted
+
+    # ----------------------------------------------------------------- #
+    # UPGRADE_SKILL_REGRESSION                                            #
+    # ----------------------------------------------------------------- #
+    # A player reads the troop tree as a ladder, so an upgrade that lowers a stat is a bug however
+    # it got there. Three causes shipped at once: the level-21 militia baseline leaking into a real
+    # line through a name-substring match, a default_group that contradicted the carried equipment,
+    # and the plain fact that the Ranged curve sits below the Infantry curve on Polearm/TwoHanded.
+    # The worst edge cost 145 points across all 8 skills.
+    #
+    # A skill the target never declares reads as 0 in the engine (CharacterObject.GetSkillValue),
+    # so an omitted <skill> element is a drop, not a "leave it alone". 34 troops shipped that way.
+    #
+    # The one exemption is militia to militia. Militia are pinned to the level-21 baseline whatever
+    # their real level so village defence stays costly, which makes a militia promotion flat by
+    # design. The exemption is keyed off what a culture BINDS, never off the word "militia" in a
+    # name -- name matching is what produced the bug.
+    _COMBAT_SKILLS = ("Athletics", "Riding", "OneHanded", "TwoHanded",
+                      "Polearm", "Bow", "Crossbow", "Throwing")
+    # Both attribute-quoting styles. A single-quoted document is valid XML, and a matcher that
+    # only accepts double quotes would parse zero skills, making every comparison 0 < 0 and the
+    # gate silently clean on arbitrarily broken data.
+    _SKILL_ENTRY_RE = re.compile(
+        r'<skill\b[^>]*?\bid=["\']([A-Za-z]+)["\'][^>]*?\bvalue=["\'](-?\d+)["\']', re.S)
+    _SKILL_ENTRY_ALT_RE = re.compile(
+        r'<skill\b[^>]*?\bvalue=["\'](-?\d+)["\'][^>]*?\bid=["\']([A-Za-z]+)["\']', re.S)
+    _UPGRADE_TARGET_RE = re.compile(r'<upgrade_target\b[^>]*?\bid=["\']([^"\']+)["\']')
+    _SKILL_TEMPLATE_RE = re.compile(r'\bskill_template=["\']([^"\']+)["\']')
+    # (?<![A-Za-z0-9_]) so a longer attribute merely ENDING in militia_troop is not read as one.
+    _MILITIA_BINDING_RE = re.compile(
+        r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(?:elite_)?militia_troop["\']?\s*(?:=\s*["\']|>)\s*'
+        r'NPCCharacter\.([A-Za-z0-9_]+)')
+
+    def _militia_bound_ids(self) -> set:
+        bound = set()
+        for name in ("taom_spcultures.xml", "spcultures.xslt"):
+            path = self.moduledata / name
+            if path.exists():
+                # Mask comments: a commented-out <Culture> block is not a live binding, and
+                # counting one would silently widen the militia exemption.
+                text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+                bound.update(self._MILITIA_BINDING_RE.findall(text))
+        return bound
+
+    def _upgrade_skill_regressions(self) -> list:
+        troops = {}
+        issues = []
+        # Sources also live OUTSIDE troops/: the 15 villager_<culture> entries in
+        # characters/npcs_*.xml each upgrade into their culture's tier-1 troop, and six of those
+        # edges regressed while the gate globbed only troops/. Scoping a gate to where the bug was
+        # found is how the analyzer's militia exclusion hid the worst edge in the game.
+        sources = (sorted((self.moduledata / "troops").glob("troops_*.xml"))
+                   + sorted((self.moduledata / "characters").glob("npcs_*.xml")))
+        for path in sources:
+            raw = self._read(path)
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                idm = re.search(r'\bid=["\']([A-Za-z0-9_.\-]+)["\']', attrs)
+                if not idm:
+                    continue
+                skills = {sid: int(val) for sid, val in self._SKILL_ENTRY_RE.findall(body)}
+                skills.update({sid: int(val) for val, sid in self._SKILL_ENTRY_ALT_RE.findall(body)})
+                upgrades = [t.split(".")[-1] for t in self._UPGRADE_TARGET_RE.findall(body)]
+                line = _lineno(text, m.start())
+
+                # A resolvable skill_template makes the inline <skills> block UNREACHABLE:
+                # BasicCharacterObject.Deserialize only calls DefaultCharacterSkills.Init when the
+                # template reference came back null (v1.4.8, BasicCharacterObject.cs:337-358). So
+                # a character carrying both is asserting two different skill sets and the engine
+                # silently takes the template. 44 militia shipped that way, wearing vanilla
+                # Calradian values while every TAOM tool reported the authored ones (#523).
+                tmpl = self._SKILL_TEMPLATE_RE.search(attrs)
+                if tmpl and skills:
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="SKILL_TEMPLATE_SHADOWS_SKILLS",
+                        file=rel, line=line, entry_id=idm.group(1),
+                        message=(
+                            f'declares {len(skills)} inline <skill> values AND '
+                            f'skill_template="{tmpl.group(1)}". The engine reads the template and '
+                            f"discards the inline block entirely, so the authored values never "
+                            f"reach the game. Drop one of the two"),
+                    ))
+
+                troops[idm.group(1)] = {
+                    "file": rel, "line": line, "skills": skills, "upgrades": upgrades,
+                    "templated": bool(tmpl),
+                }
+
+        militia = self._militia_bound_ids()
+        for source_id in sorted(troops):
+            source = troops[source_id]
+            for target_id in source["upgrades"]:
+                target = troops.get(target_id)
+                if target is None:
+                    continue  # BROKEN_TROOP_REF already owns an unresolvable target.
+                if source_id in militia and target_id in militia:
+                    continue
+                # A templated character's real skills live outside this file, so comparing its
+                # empty inline block would silently pass. SKILL_TEMPLATE_SHADOWS_SKILLS owns the
+                # case where both are declared; here we simply refuse to judge the edge.
+                if source["templated"] or target["templated"]:
+                    continue
+                drops = [
+                    f"{s} {source['skills'].get(s, 0)}->{target['skills'].get(s, 0)}"
+                    f"{' (undeclared, reads as 0)' if s not in target['skills'] else ''}"
+                    for s in self._COMBAT_SKILLS
+                    if target["skills"].get(s, 0) < source["skills"].get(s, 0)
+                ]
+                if not drops:
+                    continue
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="UPGRADE_SKILL_REGRESSION",
+                    file=target["file"], line=target["line"], entry_id=target_id,
+                    message=(
+                        f'upgrading "{source_id}" into this troop LOWERS {", ".join(drops)}. '
+                        f"An upgrade must never cost the player a stat. Re-run "
+                        f"tools/rebalance_troops.py, whose clamp pass raises a target to its "
+                        f"source rather than leaving the tree reading backwards"
+                    ),
+                ))
+        return issues
 
     def _mounted_dwarves(self) -> list:
         mounted_rosters = self._mounted_rosters()

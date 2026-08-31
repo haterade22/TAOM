@@ -317,13 +317,13 @@
                 value="40" />
             <skill
                 id="OneHanded"
-                value="260" />
+                value="310" />
             <skill
                 id="TwoHanded"
-                value="170" />
+                value="280" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="305" />
             <skill
                 id="Bow"
                 value="330" />
@@ -332,7 +332,7 @@
                 value="105" />
             <skill
                 id="Throwing"
-                value="130" />
+                value="140" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -398,7 +398,7 @@
                 value="350" />
             <skill
                 id="TwoHanded"
-                value="190" />
+                value="280" />
             <skill
                 id="Polearm"
                 value="370" />
@@ -410,7 +410,7 @@
                 value="85" />
             <skill
                 id="Throwing"
-                value="120" />
+                value="140" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -479,7 +479,7 @@
                 value="380" />
             <skill
                 id="TwoHanded"
-                value="210" />
+                value="280" />
             <skill
                 id="Polearm"
                 value="400" />
@@ -491,7 +491,7 @@
                 value="90" />
             <skill
                 id="Throwing"
-                value="120" />
+                value="140" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -554,13 +554,13 @@
                 value="45" />
             <skill
                 id="OneHanded"
-                value="280" />
+                value="310" />
             <skill
                 id="TwoHanded"
-                value="190" />
+                value="280" />
             <skill
                 id="Polearm"
-                value="190" />
+                value="305" />
             <skill
                 id="Bow"
                 value="350" />
@@ -569,7 +569,7 @@
                 value="110" />
             <skill
                 id="Throwing"
-                value="130" />
+                value="140" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -908,13 +908,13 @@
                 value="45" />
             <skill
                 id="OneHanded"
-                value="300" />
+                value="310" />
             <skill
                 id="TwoHanded"
-                value="200" />
+                value="280" />
             <skill
                 id="Polearm"
-                value="200" />
+                value="305" />
             <skill
                 id="Bow"
                 value="370" />
@@ -923,7 +923,7 @@
                 value="115" />
             <skill
                 id="Throwing"
-                value="130" />
+                value="140" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -971,8 +971,7 @@
         level="11"
         name="{=aom_mk_militia_spear}[Mirkwood] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.mirkwood"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.mirkwood">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_mirkwood" />
@@ -1078,8 +1077,7 @@
         level="11"
         name="{=aom_mk_militia_archer}[Mirkwood] Militia Archer"
         occupation="Soldier"
-        culture="Culture.mirkwood"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.mirkwood">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_mirkwood" />
@@ -1194,8 +1192,7 @@
         level="16"
         name="{=aom_mk_militia_vet_spear}[Mirkwood] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.mirkwood"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.mirkwood">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_mirkwood" />
@@ -1353,8 +1350,7 @@
         level="16"
         name="{=aom_mk_militia_vet_archer}[Mirkwood] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.mirkwood"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.mirkwood">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_mirkwood" />

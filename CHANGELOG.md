@@ -4,6 +4,104 @@
 
 ## 2026-08-31
 
+### fix(troops): upgrading a troop could make it worse (#522, #523)
+
+Reported case: **Anórien Archer Militia into Anórien Skirmisher, Bow 130 down to 85**. Seven of that
+troop's eight skills drop, 145 points in total (Riding was equal on both). It was the worst upgrade
+edge in the game.
+
+I checked all 698 upgrade edges against vanilla as a control. Vanilla sheds secondary skills on
+specialization branches too, 87 of its 195 edges, so a drop is not by itself wrong. What was wrong:
+TAOM had single drops down to **-200** against vanilla's worst of -70, five edges where the total of
+all eight skills fell, and seven where the target simply omitted a `<skill>` element the source
+declared. `CharacterObject.GetSkillValue` returns 0 for an undeclared skill, so that last one is a
+silent wipe rather than "unchanged".
+
+**Four independent causes, all live at once.**
+
+*Militia were detected by name.* Militia deliberately take the level-21 baseline whatever their real
+level, so a false positive does not produce a small error, it produces a level-11 troop wearing
+level-21 stats. `is_militia` matched the word `militia` plus spearman/archer/veteran: 61 troops,
+against the 60 a culture actually binds to a militia slot. The one difference,
+`gondor_ano_archer_militia`, is a plain Anórien line troop. Detection now reads the bindings in
+`taom_spcultures.xml` and `spcultures.xslt`, both encodings (Dale, Dunland, Harad, Rhûn and Rohan
+use only the `<xsl:attribute>` form), with comments masked and the exact 60 ids pinned by a test.
+Third time a name heuristic has mis-statted troops, after the crossbowmen of #340 and the
+two-handers of #341.
+
+*A `default_group` that contradicted the equipment.* `dg_warg_red_fang` was tagged `HorseArcher`
+while carrying sword, halberd and shield and nothing ranged, so the curve gave it Bow 240 and its
+Cavalry child read as a -200 drop. Against the real item-class registry it was the only HorseArcher
+in the mod carrying no ranged weapon. Retagged `Cavalry`.
+
+*The Ranged curve sits below the Infantry curve* on Polearm and TwoHanded, so an Infantry troop
+branching into Ranged one tier up lost melee. A new clamp walks the upgrade graph in topological
+order (acyclicity asserted, not assumed) and raises a target to its source. Troops the formula skips
+take part using their current values: a clamp only ever raises, so a hand-tune can lift a child
+without being reverted.
+
+*And `skill_template` was quietly deleting half the data (#523).* This one was found by widening the
+gate, and it is the largest. `BasicCharacterObject.Deserialize` (v1.4.8, `BasicCharacterObject.cs`
+337-358) resolves `skill_template` first and only reads the inline `<skills>` block when that
+reference came back null. **A resolved template makes the authored block unreachable.** 44 militia
+troops carried both, pointing at vanilla Calradian SkillSets: `rivendell_militia_spearman` was
+authored at 850 total and delivered 215. The entire "militia are tough so sieges cost you" doctrine
+has been inert for every one of them, and every TAOM tool has been reading and rewriting the dead
+half. 17 prison guards had the same shape. The templates are gone, the authored values now apply,
+and a character declaring both is an error in the validator and in the test suite.
+
+**Scope was wrong too.** Both gates globbed `troops/troops_*.xml`, but 16 upgrade edges start in
+`characters/npcs_*.xml`, where each `villager_<culture>` upgrades into its culture's tier-1 troop.
+Six of those regressed while `validate_moduledata.py` reported PASS. The villagers now declare their
+skills explicitly, at exactly the values the vanilla template was giving them, so the data is
+self-describing and the graph is complete at 698 edges.
+
+**222 troops changed: 251 existing skill values, 113 previously undeclared `<skill>` elements
+written, 44 dead `skill_template` attributes removed, across all 16 culture files.** Plus 32 NPCs in
+`characters/`. Exactly two troops end up with any value lower than before, and both are the
+deliberate reclassifications. The Anórien chain now reads Bow 5 / 55 / 85 / 130 / 170. Landed with:
+
+```
+python tools/rebalance_troops.py --fix-monotonicity --restat gondor_ano_archer_militia,dg_warg_red_fang
+```
+
+**A mode split came out of review.** A plain `--apply` does not just clamp, it rebaselines first, and
+on this roster that swept up 23 deliberately off-curve troops with nothing to do with the bug: the
+`gondor_loss_noble` line #343 documents as do-not-apply-over, the hand-authored Black Numenoreans,
+and the dwarf ram riders. `--fix-monotonicity` clamps from what is on disk instead, `--restat` forces
+the curve for named ids, and `--dry-run` is now a modifier rather than a third mode, so the
+clamp-only path can finally be previewed before it writes.
+
+Also fixed along the way: the writer's whole-file regex could reach past `</NPCCharacter>` and write
+one troop's skills into the next; it now bounds itself to the troop's own element, round-trips bytes
+so the four BOM files and any LF-only file survive, and refuses to write XML that no longer parses.
+And `.claude/hooks/check-moduledata-validation.sh` was allowlisting six error codes while five more
+existed, so `UPGRADE_SKILL_REGRESSION`, `LANDLESS_CULTURE`, `MOUNTED_DWARF`,
+`SETTLEMENT_ECONOMY_FLOOR` and `BROKEN_BODY_PROPERTY_REF` could none of them block a commit.
+
+Four gates now, because nothing existing could have caught any of this:
+`TroopUpgradeSkillMonotonicityTests` (4 tests), `UPGRADE_SKILL_REGRESSION` and
+`SKILL_TEMPLATE_SHADOWS_SKILLS` in `taom_schema.py`, and 25 Python contract tests.
+`check_monotonicity` now exempts militia-to-militia **edges** rather than militia troops: excluding
+the troops is exactly how it printed "0 inversions" for two months with the -145 edge inside its own
+blind spot.
+
+Known and accepted. `gondor_ano_archer_militia` loses 25 to 64 percent per skill, which is the
+correction but is a live nerf to a troop players already field. Militia get 2 to 4 times stronger,
+which restores the documented intent rather than inventing new numbers but will be felt immediately
+in siege and village defence. The clamp hands some troops a proficiency they never use, and that is
+**not** inert: `FieldCommission` copies a troop's whole skill vector onto a commissioned companion,
+so a commissioned `sagarun_naffatun` now carries Crossbow 155 rather than 30. Ten upgrade edges
+still do not raise the level and ten end up exactly flat; the level class was out of scope here and
+none of them lowers a stat. Three cross-branch level inversions remain in Gondor Ranged, all of them
+melee an archer inherited from an infantry parent, with the higher-tier troop still ahead on Bow.
+Troop skills are read from XML at spawn with nothing serialized per troop type, so all of this lands
+on existing saves as well as new campaigns. In-game smoke still owed.
+
+Research: BasicCharacterObject.Deserialize skill_template precedence (v1.4.8)
+Save-compat: no migration needed; skills and levels are read from XML at agent spawn
+Not-tested: in-game. Build and full suite are green; no campaign has been run.
+
 ### fix(warg): restore the skeleton's collision bodies and ragdoll joints
 
 The warg's skeleton came back from the Kit re-import with its bone definition intact and its physics
@@ -61,6 +159,102 @@ Not-tested: in-game. The rig loads and dumps correctly; no battle has been run.
 Research: tpac header layout and TOC-size field, measured across 250 shipped packages.
 
 ## 2026-08-29
+
+### fix(map): two castles shipped named after their own ids
+
+`castle_E9` displayed as **"Castle E9"** and `castle_G1` as **"Castle G1"**, and both had been
+faithfully localized that way: German showed *Burg E9*, French *Château E9*, Russian *Замок G1*.
+They are the only two of the map's **988 settlements** without a real name.
+
+An earlier sweep missed them because it tested for id-shaped names with an underscore
+(`Castle_E9`) and the actual values use a space.
+
+| id | culture | owner | now | why |
+|---|---|---|---|---|
+| `castle_E9` | erebor | `clan_erebor_1` | **Bergfast** | Old Norse `berg` "rock" plus `fast` "stronghold", built like the existing Járnfast. Region `E` is a Khuzdul and Old Norse mix, and this castle's own three villages (Vânholt, Gronnar, Saevarn) and its clan-mates Irongap and Flogalith are all on the Norse side of it |
+| `castle_G1` | gundabad | `clan_gundabad_4` | **Bagbûrz** | Every other Gundabad castle shares a stem with its villages: Dûglarshun with Düglar-tang, Mazôglod with Mazūg-zâr, Shúrdmúl with Shôrd-krish. This one's villages are Bagmosh and Skarn-uruk, so the stem is `Bag-`; `-bûrz` "dark" comes from the naming doc's Black Speech element list, and from `burzum` "darkness" in the Ring inscription |
+
+Applied through `tools/Apply-MapVillageNames.py`, which is the versioned artifact that matters
+here: the file it edits, `TAOM_Map/ModuleData/settlements.xml`, lives in the game install and is
+**not** in this repo, so a module reinstall silently reverts it. The dict entry is what restores
+the names. The repo's own `Main/_Module/ModuleData/settlements.xml` is the documented stale shadow
+and was deliberately left alone; it still reads "Castle E9", which is correct for a file the
+engine never loads.
+
+423 names now in the dict, up from 345 villages, so it is no longer villages-only despite the
+filename. Master plus all twelve `loc_settlements.xml` files re-parse clean, and a re-sweep finds
+**zero** settlements whose name contains a digit or a placeholder word.
+
+**Not gated.** Nothing tests this: the file is outside the repo, so a check would only run on a
+machine with the game installed, which is the same weakness `LordFamilyTransformTests` already has.
+The dict itself is in the repo and could be gated cheaply (no value may be id-shaped), but that
+would not have caught these two, which were missing from the dict entirely.
+
+### fix(lords): the last placeholder, and seven Haradrim wearing elf names
+
+A sweep of every `name=` value under `ModuleData/` found one lord still shipping a placeholder:
+`lord_3_2` **"Harad Place Holder"**, registered and translated into all twelve languages. The
+previous pass missed it because it searched for "placeholder" as one word and this one is two. Its
+biography passed the name gate only because "Harad" is a substring of "Haradrim".
+
+Reading that roster turned up a larger break: **seven Haradrim lords carried Sindarin elf names**,
+and five collided with a real elf elsewhere in the mod. `lord_3_5` was **Haldir**, `lord_3_16`
+**Rúmil** and `lord_3_17` **Orophin**: Lothlórien's three marchwardens, commanding Corsair-allied
+coastal Haradrim and serpent riders of the far south. `lord_3_22` was a second **Duilin** against
+Duinhir's son of Morthond, and `lord_3_3` a second **Calemir** against a Lindon elf.
+
+Twelve lords renamed in total, including the four the previous session renamed with invented names
+rather than researched ones.
+
+**Where the names come from.** Tolkien left the Southron tongue undeveloped: the only word stated
+to be Southron is *mûmak*, and the implied register is Semitic and Arabic forms adapted to Adûnaic
+spelling, most strongly for the groups nearest Umbar with Black Númenórean blood. TAOM already
+ships that register in `taom_spcultures.xml` as the `shaghana` pool (30 male, 30 female) and the
+circumflexed `harad_raiders` pool, and the existing Harad noblewomen (Salma, Zulaika, Sukayna) sit
+in it already, so nothing needed inventing. The coastal Umbar-allied lord takes the Adûnaic-flavoured
+pool; the rest take `shaghana`.
+
+| id | was | now | why |
+|---|---|---|---|
+| `lord_3_2` | Harad Place Holder | **Khalida** | wife of Khadurak, a noble lady of high standing |
+| `lord_3_5` | Haldir | **Akhôr** | coastal and Corsair-allied, the group closest to Adûnaic |
+| `lord_3_16` | Rúmil | **Zafar** | "victory", for the golden banner tribes |
+| `lord_3_17` | Orophin | **Azrak** | the serpent riders of the far south |
+| `lord_3_22` | Duilin | **Namir** | "leopard", for a commander of desert archers |
+| `lord_3_3` | Calemir | **Marzuk** | lord of the oasis settlements |
+| `lord_3_18` | Aranthon | **Kareem** | "generous", for a merchant prince |
+| `lord_3_19` | Aethirion | **Zulkhan** | a fortress on the northern frontier |
+| `lord_5_7` | Cadwyr | **Kharzul** | son of Vargûl, and echoes his father's ending |
+| `lord_5_1_1` | Nyveth | **Khazna** | daughter of Vargûl |
+| `lord_L1_3` | Aerlin | **Galadion** | `galad-` of the Galadhrim plus the masculine `-ion`; "Aerlin" read feminine on a male elf |
+| `lord_M1_12` | Faelen | **Calenor** | `calen` "green", echoing his brother Legolas and Greenwood |
+
+**Khand.** "Variag" is Slavic, from the Norse Varangian mercenaries, and a draft of Appendix F puts
+the word in the speech of the Men of the East. Beyond that Khand is blank, TAOM has no Khand name
+pool, and the surrounding roster is unmodified vanilla Battanian Celtic (Ergeon, Floraidh, Eilidh),
+which is leftover rather than a decision. These two are the children of `lord_5_1` "Vargûl, the High
+Warlord of Khand", so they take the Eastern register from `rhun_raiders` and read as his family
+rather than as Britons.
+
+**The elves** come from the 50-name Sindarin pools TAOM already ships per elf culture. By the late
+Third Age the Silvan tongue survived only in place and person names, with Sindarin spoken in both
+realms and Thranduil's line Sindar out of Doriath, so Sindarin is right for Lothlórien and Mirkwood
+alike. `-ion` is the masculine patronymic and `-iel` the feminine.
+
+Ten of the twelve are registered keys, so each took the stylesheet, the registry, twelve locale rows
+and a cache drop; the locale rows were copied from the registry's bytes rather than retyped, which
+is what made four rows nearly ship as mangled English last pass. `lord_L1_3` and `lord_M1_12` are
+registered nowhere and were English-only edits. Eleven biographies moved with the names.
+
+`AcceptedDuplicateNames` gained the shrink-only assertion its two sibling exception lists already
+had. Renaming five colliding Haradrim is exactly the repair that leaves a stale entry behind.
+
+Suite 7748 green, `validate_moduledata.py` PASS, `check_external_xslt.py` PASS on 17 stylesheets.
+Zero placeholder lord names remain; Haldir, Orophin and Calemir now each name exactly one lord, and
+that lord is an elf.
+
+**Owed:** `/localize` picks these 20 keys up alongside the 53 already staged. Names bake at hero
+creation, so the in-game check is a NEW campaign.
 
 ### fix(lords): the encyclopedia was describing the wrong people
 

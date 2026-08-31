@@ -26,10 +26,10 @@
                 value="33" />
             <skill
                 id="TwoHanded"
-                value="8" />
+                value="20" />
             <skill
                 id="Polearm"
-                value="23" />
+                value="30" />
             <skill
                 id="Bow"
                 value="15" />
@@ -38,7 +38,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="10" />
+                value="20" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -298,10 +298,10 @@
                 value="35" />
             <skill
                 id="TwoHanded"
-                value="15" />
+                value="20" />
             <skill
                 id="Polearm"
-                value="25" />
+                value="30" />
             <skill
                 id="Bow"
                 value="65" />
@@ -611,7 +611,7 @@
                 value="85" />
             <skill
                 id="TwoHanded"
-                value="40" />
+                value="45" />
             <skill
                 id="Polearm"
                 value="95" />
@@ -1613,7 +1613,7 @@
                 value="80" />
             <skill
                 id="Riding"
-                value="30" />
+                value="80" />
             <skill
                 id="OneHanded"
                 value="110" />
@@ -1701,7 +1701,7 @@
                 value="120" />
             <skill
                 id="TwoHanded"
-                value="50" />
+                value="75" />
             <skill
                 id="Polearm"
                 value="140" />
@@ -1778,10 +1778,10 @@
                 value="165" />
             <skill
                 id="OneHanded"
-                value="105" />
+                value="110" />
             <skill
                 id="TwoHanded"
-                value="45" />
+                value="75" />
             <skill
                 id="Polearm"
                 value="75" />
@@ -1864,7 +1864,7 @@
                 value="175" />
             <skill
                 id="TwoHanded"
-                value="70" />
+                value="75" />
             <skill
                 id="Polearm"
                 value="190" />
@@ -1944,7 +1944,7 @@
                 value="145" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="75" />
             <skill
                 id="Polearm"
                 value="105" />
@@ -2086,8 +2086,7 @@
         level="11"
         name="{=aom_harad_militia_spearman_name}[Harad] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.aserai"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.aserai">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_haradrim" />
@@ -2153,8 +2152,7 @@
         level="11"
         name="{=aom_harad_militia_archer_name}[Harad] Militia Archer"
         occupation="Soldier"
-        culture="Culture.aserai"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.aserai">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_haradrim" />
@@ -2221,8 +2219,7 @@
         level="16"
         name="{=aom_harad_militia_vet_spear_name}[Harad] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.aserai"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.aserai">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_haradrim" />
@@ -2282,8 +2279,7 @@
         level="16"
         name="{=aom_harad_militia_vet_arch_name}[Harad] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.aserai"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.aserai">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_haradrim" />

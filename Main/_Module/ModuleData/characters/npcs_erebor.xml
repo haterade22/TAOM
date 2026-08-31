@@ -23,9 +23,18 @@
 	</NPCCharacter>
 
 	<!-- Villager (upgrades to erebor_reg_miner) -->
-	<NPCCharacter id="villager_erebor" race="dwarf" default_group="Infantry" level="1" name="{=aom_er_villager}Villager" occupation="Villager" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_erebor" race="dwarf" default_group="Infantry" level="1" name="{=aom_er_villager}Villager" occupation="Villager" culture="Culture.erebor">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
-		<skills></skills>
+		<skills>
+			<skill id="Athletics" value="30" />
+			<skill id="Riding" value="0" />
+			<skill id="OneHanded" value="30" />
+			<skill id="TwoHanded" value="20" />
+			<skill id="Polearm" value="30" />
+			<skill id="Bow" value="0" />
+			<skill id="Crossbow" value="0" />
+			<skill id="Throwing" value="20" />
+		</skills>
 		<upgrade_targets>
 			<upgrade_target id="NPCCharacter.erebor_reg_miner" />
 		</upgrade_targets>
@@ -458,12 +467,14 @@
 	</NPCCharacter>
 
 	<!-- Guards -->
-	<NPCCharacter id="prison_guard_erebor" race="dwarf" default_group="Infantry" level="4" culture="Culture.erebor" occupation="PrisonGuard" name="{=aom_er_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="prison_guard_erebor" race="dwarf" default_group="Infantry" level="4" culture="Culture.erebor" occupation="PrisonGuard" name="{=aom_er_prison_guard}Prison Guard">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills>
 			<skill id="OneHanded" value="50" />
 			<skill id="TwoHanded" value="50" />
 			<skill id="Polearm" value="50" />
+			<skill id="Athletics" value="30" />
+			<skill id="Throwing" value="20" />
 		</skills>
 		<upgrade_targets></upgrade_targets>
 		<Equipments>

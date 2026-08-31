@@ -2516,13 +2516,13 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="85" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="70" />
+                value="110" />
             <skill
                 id="Polearm"
-                value="63" />
+                value="113" />
             <skill
                 id="Bow"
                 value="80" />
@@ -2574,10 +2574,10 @@
                 value="115" />
             <skill
                 id="TwoHanded"
-                value="90" />
+                value="110" />
             <skill
                 id="Polearm"
-                value="88" />
+                value="113" />
             <skill
                 id="Bow"
                 value="125" />
@@ -2634,7 +2634,7 @@
                 value="110" />
             <skill
                 id="Polearm"
-                value="108" />
+                value="113" />
             <skill
                 id="Bow"
                 value="165" />
@@ -2897,7 +2897,7 @@
     <NPCCharacter
         id="dg_warg_red_fang"
         race="dg_uruk"
-        default_group="HorseArcher"
+        default_group="Cavalry"
         level="31"
         name="{=aom_dg_warg_red_fang_name}[Dol Guldur] Warg Fang"
         occupation="Soldier"
@@ -2909,28 +2909,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="157" />
+                value="142" />
             <skill
                 id="Riding"
-                value="250" />
+                value="205" />
             <skill
                 id="OneHanded"
-                value="195" />
+                value="235" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="125" />
             <skill
                 id="Polearm"
-                value="158" />
+                value="268" />
             <skill
                 id="Bow"
-                value="240" />
+                value="30" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="20" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dg_fell_warg_rider" />
@@ -3202,12 +3202,12 @@
         <skills>
             <skill id="Athletics" value="127" />
             <skill id="Riding" value="20" />
-            <skill id="OneHanded" value="180" />
-            <skill id="TwoHanded" value="125" />
-            <skill id="Polearm" value="118" />
+            <skill id="OneHanded" value="190" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="188" />
             <skill id="Bow" value="200" />
             <skill id="Crossbow" value="35" />
-            <skill id="Throwing" value="70" />
+            <skill id="Throwing" value="80" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -3331,8 +3331,8 @@
             <skill id="Athletics" value="142" />
             <skill id="Riding" value="25" />
             <skill id="OneHanded" value="210" />
-            <skill id="TwoHanded" value="145" />
-            <skill id="Polearm" value="138" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="188" />
             <skill id="Bow" value="240" />
             <skill id="Crossbow" value="45" />
             <skill id="Throwing" value="80" />
@@ -3396,11 +3396,11 @@
             <skill id="Athletics" value="182" />
             <skill id="Riding" value="315" />
             <skill id="OneHanded" value="325" />
-            <skill id="TwoHanded" value="185" />
+            <skill id="TwoHanded" value="275" />
             <skill id="Polearm" value="358" />
             <skill id="Bow" value="45" />
             <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="80" />
+            <skill id="Throwing" value="100" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -3464,11 +3464,11 @@
             <skill id="Athletics" value="197" />
             <skill id="Riding" value="355" />
             <skill id="OneHanded" value="355" />
-            <skill id="TwoHanded" value="205" />
+            <skill id="TwoHanded" value="275" />
             <skill id="Polearm" value="388" />
             <skill id="Bow" value="50" />
             <skill id="Crossbow" value="35" />
-            <skill id="Throwing" value="80" />
+            <skill id="Throwing" value="100" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3753,8 +3753,8 @@
             <skill id="Athletics" value="162" />
             <skill id="Riding" value="30" />
             <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="165" />
-            <skill id="Polearm" value="158" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="188" />
             <skill id="Bow" value="275" />
             <skill id="Crossbow" value="50" />
             <skill id="Throwing" value="90" />
@@ -3819,7 +3819,7 @@
             <skill id="Riding" value="35" />
             <skill id="OneHanded" value="255" />
             <skill id="TwoHanded" value="185" />
-            <skill id="Polearm" value="178" />
+            <skill id="Polearm" value="188" />
             <skill id="Bow" value="295" />
             <skill id="Crossbow" value="55" />
             <skill id="Throwing" value="90" />
@@ -3874,8 +3874,7 @@
         level="11"
         name="{=aom_dg_militia_spearman}Dol Guldur Militia Spearman"
         occupation="Soldier"
-        culture="Culture.dolguldur"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.dolguldur">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dolguldur" />
@@ -3980,8 +3979,7 @@
         level="11"
         name="{=aom_dg_militia_archer}Dol Guldur Militia Archer"
         occupation="Soldier"
-        culture="Culture.dolguldur"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.dolguldur">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dolguldur" />
@@ -4092,8 +4090,7 @@
         level="16"
         name="{=aom_dg_militia_vet_spear}Dol Guldur Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.dolguldur"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.dolguldur">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dolguldur" />
@@ -4207,8 +4204,7 @@
         level="16"
         name="{=aom_dg_militia_vet_archer}Dol Guldur Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.dolguldur"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.dolguldur">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dolguldur" />

@@ -31,7 +31,7 @@
                 value="23" />
             <skill
                 id="Polearm"
-                value="28" />
+                value="30" />
             <skill
                 id="Bow"
                 value="5" />
@@ -1246,7 +1246,7 @@
                 value="105" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="90" />
             <skill
                 id="Polearm"
                 value="160" />
@@ -1326,7 +1326,7 @@
                 value="175" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="90" />
             <skill
                 id="Polearm"
                 value="195" />
@@ -1488,7 +1488,7 @@
                 value="145" />
             <skill
                 id="Polearm"
-                value="65" />
+                value="95" />
             <skill
                 id="Bow"
                 value="25" />
@@ -1568,7 +1568,7 @@
                 value="195" />
             <skill
                 id="Polearm"
-                value="85" />
+                value="95" />
             <skill
                 id="Bow"
                 value="30" />
@@ -1793,10 +1793,10 @@
                 value="75" />
             <skill
                 id="TwoHanded"
-                value="50" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="45" />
+                value="70" />
             <skill
                 id="Bow"
                 value="85" />
@@ -2107,10 +2107,10 @@
                 value="145" />
             <skill
                 id="Bow"
-                value="25" />
+                value="85" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="25" />
             <skill
                 id="Throwing"
                 value="45" />
@@ -2190,10 +2190,10 @@
                 value="195" />
             <skill
                 id="Bow"
-                value="30" />
+                value="85" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="25" />
             <skill
                 id="Throwing"
                 value="55" />
@@ -2273,7 +2273,7 @@
                 value="250" />
             <skill
                 id="Bow"
-                value="35" />
+                value="85" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -2964,10 +2964,10 @@
                 value="105" />
             <skill
                 id="TwoHanded"
-                value="70" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="95" />
             <skill
                 id="Bow"
                 value="30" />
@@ -3044,7 +3044,7 @@
                 value="90" />
             <skill
                 id="Polearm"
-                value="90" />
+                value="95" />
             <skill
                 id="Bow"
                 value="35" />
@@ -3177,8 +3177,7 @@
         level="11"
         name="{=aom_dunland_militia_spearman_name}[Dunland] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.empire"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.empire">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dunland_b" />
@@ -3243,8 +3242,7 @@
         level="11"
         name="{=aom_dunland_militia_archer_name}[Dunland] Militia Archer"
         occupation="Soldier"
-        culture="Culture.empire"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.empire">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dunland_c" />
@@ -3311,8 +3309,7 @@
         level="16"
         name="{=aom_dunland_militia_vet_spear_name}[Dunland] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.empire"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.empire">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dunland_d" />
@@ -3382,8 +3379,7 @@
         level="16"
         name="{=aom_dunland_militia_vet_arch_name}[Dunland] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.empire"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.empire">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_dunland_e" />

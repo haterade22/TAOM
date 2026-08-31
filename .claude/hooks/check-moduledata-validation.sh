@@ -73,9 +73,17 @@ PY=$(command -v python3 || command -v python || true)
 
 # Run only the ERROR-severity checks. Validator exits 1 on ERROR, 0 clean,
 # 2 bad-input. Only rc=1 blocks; everything else fails open.
+# Keep this list in step with every ERROR-severity code in tools/taom_schema.py. It is an
+# allowlist, so a new ERROR check is silently non-blocking until it is named here: on
+# 2026-08-31 UPGRADE_SKILL_REGRESSION, LANDLESS_CULTURE, MOUNTED_DWARF,
+# SETTLEMENT_ECONOMY_FLOOR and BROKEN_BODY_PROPERTY_REF were all live ERROR checks that
+# this hook let straight through.
 OUT=$("$PY" tools/validate_moduledata.py \
         --code BROKEN_ITEM_REF --code BROKEN_TROOP_REF --code UNKNOWN_CULTURE \
         --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \
+        --code BROKEN_BODY_PROPERTY_REF --code LANDLESS_CULTURE --code MOUNTED_DWARF \
+        --code SETTLEMENT_ECONOMY_FLOOR --code UPGRADE_SKILL_REGRESSION \
+        --code SKILL_TEMPLATE_SHADOWS_SKILLS \
         2>/dev/null)
 RC=$?
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }

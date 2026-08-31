@@ -701,19 +701,19 @@
                 value="220" />
             <skill
                 id="TwoHanded"
-                value="110" />
+                value="165" />
             <skill
                 id="Polearm"
                 value="255" />
             <skill
                 id="Bow"
-                value="25" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="15" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="75" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_tracker" />
@@ -888,19 +888,19 @@
                 value="270" />
             <skill
                 id="TwoHanded"
-                value="140" />
+                value="165" />
             <skill
                 id="Polearm"
                 value="305" />
             <skill
                 id="Bow"
-                value="35" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="20" />
             <skill
                 id="Throwing"
-                value="65" />
+                value="75" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_dread_rider_of_the_tower" />
@@ -1291,7 +1291,7 @@
                 value="345" />
             <skill
                 id="Bow"
-                value="40" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -2992,8 +2992,7 @@
         level="11"
         name="{=aom_gb_militia_spear}[Gundabad] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.gundabad"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.gundabad">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />
@@ -3096,8 +3095,7 @@
         level="11"
         name="{=aom_gb_militia_archer}[Gundabad] Militia Archer"
         occupation="Soldier"
-        culture="Culture.gundabad"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.gundabad">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />
@@ -3212,8 +3210,7 @@
         level="16"
         name="{=aom_gb_militia_vet_spear}[Gundabad] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.gundabad"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.gundabad">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />
@@ -3337,8 +3334,7 @@
         level="16"
         name="{=aom_gb_militia_vet_archer}[Gundabad] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.gundabad"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.gundabad">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_gundabad" />

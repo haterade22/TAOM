@@ -11,8 +11,7 @@
         level="11"
         name="{=aom_er_militia_spear}[Erebor] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.erebor"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.erebor">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_erebor" />
@@ -112,8 +111,7 @@
         level="11"
         name="{=aom_er_militia_archer}[Erebor] Militia Archer"
         occupation="Soldier"
-        culture="Culture.erebor"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.erebor">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_erebor" />
@@ -222,8 +220,7 @@
         level="16"
         name="{=aom_er_militia_vet_spear}[Erebor] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.erebor"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.erebor">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_erebor" />
@@ -344,8 +341,7 @@
         level="16"
         name="{=aom_er_militia_vet_archer}[Erebor] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.erebor"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.erebor">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_erebor" />
@@ -629,8 +625,8 @@
             <skill id="Athletics" value="105" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="80" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="105" />
             <skill id="Bow" value="130" />
             <skill id="Crossbow" value="30" />
             <skill id="Throwing" value="50" />
@@ -749,7 +745,7 @@
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="150" />
             <skill id="TwoHanded" value="105" />
-            <skill id="Polearm" value="100" />
+            <skill id="Polearm" value="105" />
             <skill id="Bow" value="170" />
             <skill id="Crossbow" value="35" />
             <skill id="Throwing" value="60" />
@@ -1286,10 +1282,10 @@
                 value="110" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="105" />
             <skill
                 id="Polearm"
-                value="80" />
+                value="105" />
             <skill
                 id="Bow"
                 value="130" />
@@ -1554,7 +1550,7 @@
                 value="105" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="105" />
             <skill
                 id="Bow"
                 value="170" />
@@ -3850,10 +3846,10 @@
                 value="115" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="105" />
             <skill
                 id="Polearm"
-                value="90" />
+                value="115" />
             <skill
                 id="Bow"
                 value="130" />
@@ -3991,7 +3987,7 @@
                 value="105" />
             <skill
                 id="Polearm"
-                value="110" />
+                value="115" />
             <skill
                 id="Bow"
                 value="170" />
@@ -5585,10 +5581,10 @@
                 value="110" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="105" />
             <skill
                 id="Polearm"
-                value="80" />
+                value="105" />
             <skill
                 id="Bow"
                 value="30" />
@@ -5747,7 +5743,7 @@
                 value="105" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="105" />
             <skill
                 id="Bow"
                 value="35" />
@@ -6829,10 +6825,10 @@
                 value="115" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="105" />
             <skill
                 id="Polearm"
-                value="90" />
+                value="115" />
             <skill
                 id="Bow"
                 value="35" />
@@ -6904,7 +6900,7 @@
                 value="105" />
             <skill
                 id="Polearm"
-                value="110" />
+                value="115" />
             <skill
                 id="Bow"
                 value="40" />

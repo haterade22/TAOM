@@ -304,10 +304,10 @@
                 value="80" />
             <skill
                 id="TwoHanded"
-                value="50" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="45" />
+                value="60" />
             <skill
                 id="Bow"
                 value="85" />
@@ -1203,7 +1203,7 @@
                 value="230" />
             <skill
                 id="TwoHanded"
-                value="105" />
+                value="170" />
             <skill
                 id="Polearm"
                 value="250" />
@@ -1215,7 +1215,7 @@
                 value="25" />
             <skill
                 id="Throwing"
-                value="50" />
+                value="70" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -1867,7 +1867,7 @@
                 value="90" />
             <skill
                 id="Bow"
-                value="35" />
+                value="130" />
             <skill
                 id="Crossbow"
                 value="170" />

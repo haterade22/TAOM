@@ -662,10 +662,10 @@
                 value="175" />
             <skill
                 id="TwoHanded"
-                value="125" />
+                value="150" />
             <skill
                 id="Polearm"
-                value="130" />
+                value="170" />
             <skill
                 id="Bow"
                 value="210" />
@@ -2007,10 +2007,10 @@
                 value="200" />
             <skill
                 id="TwoHanded"
-                value="140" />
+                value="150" />
             <skill
                 id="Polearm"
-                value="140" />
+                value="170" />
             <skill
                 id="Bow"
                 value="245" />
@@ -2295,7 +2295,7 @@
                 value="360" />
             <skill
                 id="Crossbow"
-                value="80" />
+                value="90" />
             <skill
                 id="Throwing"
                 value="125" />
@@ -2578,7 +2578,7 @@
                 value="345" />
             <skill
                 id="TwoHanded"
-                value="200" />
+                value="290" />
             <skill
                 id="Polearm"
                 value="380" />
@@ -2590,7 +2590,7 @@
                 value="75" />
             <skill
                 id="Throwing"
-                value="110" />
+                value="130" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2884,7 +2884,7 @@
                 value="160" />
             <skill
                 id="Polearm"
-                value="160" />
+                value="170" />
             <skill
                 id="Bow"
                 value="285" />
@@ -3365,7 +3365,7 @@
                 value="310" />
             <skill
                 id="TwoHanded"
-                value="195" />
+                value="240" />
             <skill
                 id="Polearm"
                 value="260" />
@@ -3374,7 +3374,7 @@
                 value="385" />
             <skill
                 id="Crossbow"
-                value="85" />
+                value="90" />
             <skill
                 id="Throwing"
                 value="130" />
@@ -3724,7 +3724,7 @@
                 value="360" />
             <skill
                 id="TwoHanded"
-                value="220" />
+                value="290" />
             <skill
                 id="Polearm"
                 value="425" />
@@ -3736,7 +3736,7 @@
                 value="80" />
             <skill
                 id="Throwing"
-                value="110" />
+                value="130" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -8378,7 +8378,7 @@
                 value="405" />
             <skill
                 id="TwoHanded"
-                value="240" />
+                value="370" />
             <skill
                 id="Polearm"
                 value="440" />
@@ -8390,7 +8390,7 @@
                 value="80" />
             <skill
                 id="Throwing"
-                value="120" />
+                value="140" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -9448,7 +9448,7 @@
                 value="390" />
             <skill
                 id="Polearm"
-                value="370" />
+                value="390" />
             <skill
                 id="Bow"
                 value="80" />
@@ -10529,8 +10529,7 @@
         level="11"
         name="{=aom_rv_militia_spear}[Rivendell] Militia Spearman"
         occupation="Soldier"
-        culture="Culture.rivendell"
-        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        culture="Culture.rivendell">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rivendell" />
@@ -10658,8 +10657,7 @@
         level="11"
         name="{=aom_rv_militia_archer}[Rivendell] Militia Archer"
         occupation="Soldier"
-        culture="Culture.rivendell"
-        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        culture="Culture.rivendell">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rivendell" />
@@ -10771,8 +10769,7 @@
         level="16"
         name="{=aom_rv_militia_vet_spear}[Rivendell] Militia Veteran Spearman"
         occupation="Soldier"
-        culture="Culture.rivendell"
-        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        culture="Culture.rivendell">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rivendell" />
@@ -11127,8 +11124,7 @@
         level="16"
         name="{=aom_rv_militia_vet_archer}[Rivendell] Militia Veteran Archer"
         occupation="Soldier"
-        culture="Culture.rivendell"
-        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        culture="Culture.rivendell">
         <face>
             <face_key_template
                 value="BodyProperty.fighter_rivendell" />
