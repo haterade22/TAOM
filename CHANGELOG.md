@@ -4,6 +4,63 @@
 
 ## 2026-08-31
 
+### fix(hooks): what the review of the harness repair found, including in the repair itself
+
+A 36-agent audit and adversarial review of `0f348a84` returned 24 confirmed findings and refuted 3.
+The three worst were in, or created by, that commit.
+
+**The force-push gate I claimed to have revived blocked exactly one spelling.** Five ordinary forms
+still returned rc=0 silently: `git push origin +branch` (a leading `+` is force, with no flag on the
+line), `git push --force origin HEAD`, `git -C <dir> push --force origin master`, `refs/heads/master`
+and `HEAD:master`. The old detector keyed on the substring "git push", which `git -C ... push` does
+not contain, and never normalised the refspec. It now tokenises, requires a real `git` token before
+`push`, and normalises `+`, `src:dst`, `refs/heads/` and `HEAD`. Fifteen force forms block, six
+benign ones do not.
+
+**The CI gate added to prevent recurrence had never run.** It shipped as a step inside `validate-xml`,
+positioned after the doc-graph ratchet, which has been failing since 2026-08-28. Actions stops a job
+at the first failed step, so the gate executed zero times, and so did the native-CRT check above it,
+silently skipped since 2026-08-18. That is verbatim the lesson the RCA cites, reproduced by the fix
+for it. The harness now has its own job, and the ratchet moved to the end of `validate-xml` so a red
+ratchet can no longer mask the gates behind it.
+
+**`_pybin.sh` accepted things it should not.** `[ -x ]` is true for a directory, so a pin of
+`C:/Python314` with the filename left off would have been accepted and killed every gate again; the
+`*[Ww]indows[Aa]pps*` glob varied exactly two letters, so `WINDOWSAPPS` passed; and the probe checked
+an exit status, which `/usr/bin/true` satisfies. It now requires a regular file, lowercases before
+matching, checks the probe's OUTPUT, and probes the pin instead of trusting it. The probe bound went
+5s to 0.8s: three candidates at 5s each could outlive the 5s registered timeout of the 12 hooks that
+carry one. Worst case measured 3.4s.
+
+**`tools/test_hooks.sh` checked four hardcoded hook names** while the CHANGELOG, the RCA and
+`hook-authoring.md` all claimed it caught any hook running an external tool unbounded. It now
+discovers them. A new check 3b parses every skill and agent frontmatter, after that check itself
+shipped broken and reported a pass: a `SyntaxError` left the output empty and the else-branch called
+it green, which is the defect class this suite exists to catch.
+
+**Four SKILL.md frontmatters were not valid YAML** (`argument-hint: [--quick] [--write-report]` is two
+flow sequences), so `lint-docs`, `taom-src`, `finish-branch` and `lint-cleanup-loop` lost their
+descriptions from the eager routing surface entirely. `/release`'s description was truncated at
+"Enforces the" by an unquoted `#`. `taom-src` is the tool CLAUDE.md mandates first for every
+TaleWorlds lookup and its trigger text was simply absent. All five quoted; the live skill listing
+re-rendered with the full text, which is how the fix was confirmed.
+
+**`validate_moduledata.py`: 20.6s to 4.0s, byte-identical output.** 16.5s of it was one regex
+requiring `</EquipmentSet>` scanning `characters/lords.xml`, which has 2,368 self-closing
+`<EquipmentSet .../>` and zero closes, from every opening tag. Guarding both block patterns on the
+presence of their own close tag is exactly equivalent. This gates every ModuleData commit.
+
+**`suggest-compact.sh` is registered with matcher `""`**, so it ran on every Read, Grep, Edit and MCP
+call, sourcing `_pybin.sh` and spawning Python to read a field those payloads do not have: ~450ms to
+~165ms. Its counter keyed on `CLAUDE_SESSION_ID`, which the harness never sets, so every session in
+every project shared one file that had reached 14,880; the id now comes from the payload.
+
+Also: `mark-verification-run.sh` matches an invocation rather than a mention (`grep -rn "dotnet test"`
+no longer mutes the verification reminder, 11 cases pinned); the `session-start.sh` banner no longer
+ANDs its two conditions, because five gates are python-only and die without jq being involved; the
+`ilspy` MCP launch was `-m ilspy_mcp_server` on a package with no `__main__.py`, wrong in three config
+files since it was added, now `-m ilspy_mcp_server.server`; and the lessons index counts were stale.
+
 ### fix(hooks): the harness hung 20 minutes per Bash call, and the first repair killed three gates
 
 Overnight sessions stalled in blocks of very close to 20.0 minutes. The first diagnosis blamed

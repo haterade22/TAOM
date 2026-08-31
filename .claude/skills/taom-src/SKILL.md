@@ -1,7 +1,7 @@
 ---
 name: taom-src
 description: Use before patching, overriding, or adapting a TaleWorlds type — `taom-src path <Type>` decompiles + caches the installed engine, returning an absolute path.
-argument-hint: [path|list|remove|clean] <FullyQualifiedType>
+argument-hint: "[path|list|remove|clean] <FullyQualifiedType>"
 ---
 
 # taom-src — one-command TaleWorlds source lookup

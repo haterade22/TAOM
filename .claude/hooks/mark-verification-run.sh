@@ -48,11 +48,34 @@ fi
 # a stray .claude/logs/ tree got written under .claude/hooks/ on 2026-08-31 when these
 # scripts were run from that directory.
 LOGDIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
-case "$COMMAND" in
-  *"dotnet build"* | *"dotnet test"* | *"build.ps1"* )
-    mkdir -p "$LOGDIR" 2>/dev/null
-    touch "$LOGDIR/.verification-ran" 2>/dev/null || true
-    ;;
-esac
+
+# Match an INVOCATION, not a mention. A substring test on the whole command still marks
+# verification for `grep -rn "dotnet test" docs/`, which mutes the reminder that backs
+# evidence-over-claims.md. Split on shell separators and inspect each segment's leading
+# token, the same shape block-dangerous-git.sh already uses.
+MARK=0
+while IFS= read -r seg; do
+  seg="${seg#"${seg%%[![:space:]]*}"}"          # left-trim
+  while :; do                                    # drop env-var prefixes: FOO=bar cmd
+    case "$seg" in
+      [A-Za-z_]*=*\ *) seg="${seg#* }"; seg="${seg#"${seg%%[![:space:]]*}"}" ;;
+      *) break ;;
+    esac
+  done
+  first="${seg%% *}"
+  case "$first" in
+    dotnet)
+      case "$seg" in "dotnet build"* | "dotnet test"*) MARK=1 ;; esac ;;
+    ./build.ps1 | build.ps1 | *[/\\]build.ps1)
+      MARK=1 ;;
+    pwsh | powershell | powershell.exe)
+      case "$seg" in *build.ps1*) MARK=1 ;; esac ;;
+  esac
+done <<< "$(printf '%s' "$COMMAND" | tr ';&|' '\n')"
+
+if [[ $MARK -eq 1 ]]; then
+  mkdir -p "$LOGDIR" 2>/dev/null
+  touch "$LOGDIR/.verification-ran" 2>/dev/null || true
+fi
 
 exit 0

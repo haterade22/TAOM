@@ -1,6 +1,6 @@
 ---
 name: release
-description: Cut a TAOM module release — bump the version fields, write the release note, commit, tag, and push. Enforces the #371 Dependencies pairing.
+description: "Cut a TAOM module release: bump the version fields, write the release note, commit, tag, and push. Enforces the #371 Dependencies pairing."
 argument-hint: [version, e.g. 2.0.19]
 ---
 

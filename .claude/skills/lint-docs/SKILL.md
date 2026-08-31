@@ -1,7 +1,7 @@
 ---
 name: lint-docs
 description: Run the doc-health linter (tools/lint_docs.py) over docs/ and summarize dead links, stale version refs, orphan/missing feature docs. Use when auditing knowledge-base health or after large doc moves.
-argument-hint: [--quick] [--write-report]
+argument-hint: "[--quick] [--write-report]"
 ---
 
 # Doc Lint

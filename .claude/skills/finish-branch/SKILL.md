@@ -1,7 +1,7 @@
 ---
 name: finish-branch
 description: Integrate a merge-ready branch into the trunk — fast-forward check, merge, regenerate backlinks, CHANGELOG, delete branch (local+remote), push with confirmation. TAOM trunk-based, not Git Flow.
-argument-hint: [branch] [base=bannerlord-1.4.5]
+argument-hint: "[branch] [base=bannerlord-1.4.5]"
 disable-model-invocation: true
 ---
 

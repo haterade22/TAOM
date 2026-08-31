@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
-source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse hook (*): Suggest manual compaction at logical intervals AND
 # at task-boundary signals.
 #
@@ -18,9 +16,32 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 INPUT=$(cat)
 
-# Session-specific counter file
-SESSION_ID="${CLAUDE_SESSION_ID:-default}"
-SESSION_ID=$(echo "$SESSION_ID" | tr -cd 'a-zA-Z0-9_-')
+# Pull scalars straight out of the payload with parameter expansion. This hook is
+# registered with matcher "" so it runs on EVERY tool call (Read, Grep, Edit, Task, MCP,
+# not just Bash), which makes its floor cost the floor cost of the whole session.
+# Measured 2026-08-31 before this change: ~450ms on a Read payload, nearly all of it the
+# _pybin probe plus a Python spawn to read one string. No interpreter is needed for that.
+json_str() {
+    local key="$1" t
+    t="${INPUT#*\"$key\":\"}"
+    [ "$t" = "$INPUT" ] && return 1          # key absent
+    printf '%s' "${t%%\"*}"
+}
+
+TOOL_NAME=$(json_str tool_name || true)
+
+# Session-specific counter file.
+#
+# The id comes from the PAYLOAD, not the environment. `CLAUDE_SESSION_ID` is not a
+# variable the harness sets (verified 2026-08-31: unset in a hook), so the previous
+# `${CLAUDE_SESSION_ID:-default}` collapsed every session in every project onto one
+# shared file, which had reached 14,880. That broke both halves of the feature: the
+# `-eq THRESHOLD` branch can never fire again, and the `% 25` branch nags forever with a
+# number that means nothing.
+SESSION_ID=$(json_str session_id || true)
+[ -z "$SESSION_ID" ] && SESSION_ID="default"
+SESSION_ID=$(printf '%s' "$SESSION_ID" | tr -cd 'a-zA-Z0-9_-')
+[ -z "$SESSION_ID" ] && SESSION_ID="default"
 COUNTER_FILE="/tmp/claude-tool-count-${SESSION_ID}"
 BOUNDARY_FILE="/tmp/claude-last-boundary-${SESSION_ID}"
 THRESHOLD=${COMPACT_THRESHOLD:-50}
@@ -49,9 +70,15 @@ fi
 # --- Boundary-aware suggestions (Pick #9) ---
 # Inspect the tool input to detect task-boundary signals. Only fire one
 # boundary suggestion per ~10 calls so we don't spam.
+# Only a Bash call can carry a boundary signal, so only a Bash call pays for the parse.
+# Everything below this point (sourcing _pybin.sh, spawning Python) used to run on every
+# Read and every Grep for a field those payloads do not even have.
 COMMAND=""
-if [ -n "$PYBIN" ]; then
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
+if [ "$TOOL_NAME" = "Bash" ]; then
+  # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
+  source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+  if [ -n "$PYBIN" ]; then
+    COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -59,6 +86,7 @@ try:
 except Exception:
     pass
 ' 2>/dev/null)
+  fi
 fi
 
 # Check throttle: don't re-fire boundary suggestion within 10 calls of last one

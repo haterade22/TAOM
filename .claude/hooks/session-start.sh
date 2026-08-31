@@ -30,12 +30,21 @@ echo "Branch: $BRANCH"
 # fail silent"). On 2026-08-31 the opposite failure cost ~20 minutes per Bash call:
 # `python3` resolved to a Microsoft Store App Execution Alias that never exits.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
-if [[ -z "${PYBIN:-}" ]] && ! command -v jq >/dev/null 2>&1; then
+# Two separate conditions, deliberately NOT ANDed. Five gates
+# (check-changelog-changed, check-claude-files-tracked, check-doc-config-drift,
+# check-moduledata-validation, check-native-dll-crt) have no jq path at all and call
+# "$PYBIN" unconditionally, so they die on a missing python whether jq is present or not.
+# ANDing the two conditions hid exactly that case.
+if [[ -z "${PYBIN:-}" ]]; then
     echo ""
-    echo "!!! HOOK TOOLCHAIN DEGRADED: no jq and no safe python resolved. !!!"
-    echo "    Every JSON-parsing gate (force-push, ModuleData refs, config protection)"
-    echo "    is failing OPEN right now. Install jq, or check that a real python is on"
-    echo "    PATH ahead of the WindowsApps aliases. Diagnose: bash tools/test_hooks.sh"
+    echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
+    echo "    The five python-only gates are failing OPEN right now: changelog-staged,"
+    echo "    claude-files-tracked, doc-config-drift, moduledata-refs, native-DLL-CRT."
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "    jq is absent too, so EVERY JSON-parsing gate is open, force-push included."
+    fi
+    echo "    Check that a real python precedes the WindowsApps aliases on PATH."
+    echo "    Diagnose: bash tools/test_hooks.sh"
 fi
 # A WindowsApps interpreter winning the PATH race is the trap itself, not just a nuisance.
 _wa=$(command -v python 2>/dev/null || true)

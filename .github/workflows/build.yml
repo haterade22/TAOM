@@ -75,23 +75,6 @@ jobs:
           if ($errors -gt 0) { exit 1 }
           Write-Host "All JSON files are well-formed."
 
-      - name: Doc-graph ratchet (isolated docs must not grow)
-        shell: bash
-        run: |
-          # /doc-graph shipped 2026-06-08 and was then run by nothing: no hook, no
-          # CI job. Ten weeks later isolated docs had gone 64 -> 153 and components
-          # 70 -> 156, with every unit test green the whole time, because those
-          # tests check the ALGORITHM against synthetic fixtures and never look at
-          # the real docs/ tree. This is the check that speaks (#462 follow-up).
-          #
-          # Ratchets orphans and components only. Node/edge counts grow legitimately
-          # with every doc that lands; an orphan (no inbound AND no outbound .md
-          # link, so nothing will ever find it) is always a defect.
-          #
-          # Lowering the baseline is the goal: link isolates in, run
-          # `python tools/check_doc_graph_ratchet.py --update`, commit the drop.
-          python3 tools/check_doc_graph_ratchet.py
-
       - name: Validate native DLL links a static CRT
         shell: bash
         run: |
@@ -113,6 +96,36 @@ jobs:
             exit 1
           fi
           echo "Native DLL links a static CRT — no redistributable dependency."
+
+      - name: Doc-graph ratchet (isolated docs must not grow)
+        shell: bash
+        run: |
+          # /doc-graph shipped 2026-06-08 and was then run by nothing: no hook, no
+          # CI job. Ten weeks later isolated docs had gone 64 -> 153 and components
+          # 70 -> 156, with every unit test green the whole time, because those
+          # tests check the ALGORITHM against synthetic fixtures and never look at
+          # the real docs/ tree. This is the check that speaks (#462 follow-up).
+          #
+          # Ratchets orphans and components only. Node/edge counts grow legitimately
+          # with every doc that lands; an orphan (no inbound AND no outbound .md
+          # link, so nothing will ever find it) is always a defect.
+          #
+          # Lowering the baseline is the goal: link isolates in, run
+          # `python tools/check_doc_graph_ratchet.py --update`, commit the drop.
+          python3 tools/check_doc_graph_ratchet.py
+
+
+  hook-harness:
+    name: Hook Harness Contract
+    runs-on: ubuntu-latest
+    # Its OWN job, deliberately. It first shipped as a step inside validate-xml,
+    # positioned after the doc-graph ratchet, which has been failing since 2026-08-28.
+    # GitHub Actions stops a job at the first failed step, so this gate never executed
+    # once, and neither did the native-CRT check above it (silently skipped since
+    # 2026-08-18). A gate that cannot run is not a gate: the exact lesson this suite
+    # exists to enforce, reproduced by the commit that added it.
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Hook harness contract test
         shell: bash

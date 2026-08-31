@@ -16,7 +16,7 @@
     },
     "ilspy": {
       "command": "python",
-      "args": ["-m", "ilspy_mcp_server"],
+      "args": ["-m", "ilspy_mcp_server.server"],
       "env": {
         "ILSPY_PATH": "ilspycmd"
       }

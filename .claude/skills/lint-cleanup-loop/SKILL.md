@@ -1,7 +1,7 @@
 ---
 name: lint-cleanup-loop
 description: Autonomous doc-rot loop — fix one lint finding at a time, re-lint, commit on improvement; runs until clean or N stuck iterations.
-argument-hint: [--category stale_versions|dead_links|orphan_features|missing_features|all] [--max-iters N]
+argument-hint: "[--category stale_versions|dead_links|orphan_features|missing_features|all] [--max-iters N]"
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---

@@ -139,31 +139,132 @@ fi
 #    This is the check that would have caught the dead ModuleData gate.
 # ---------------------------------------------------------------------------
 head2 "3. registered timeout vs measured slow path"
-declare -A SLOW_TOOL=(
-    ["check-moduledata-validation.sh"]="tools/validate_moduledata.py --code BROKEN_ITEM_REF"
-    ["check-doc-config-drift.sh"]="tools/lint_docs.py --fail-on-drift"
-    ["check-polearm-shield-parity.sh"]="tools/audit_polearm_shield_parity.py"
-    ["check-native-dll-crt.sh"]="tools/pe_inspect.py"
-)
-for hook in "${!SLOW_TOOL[@]}"; do
-    REG=$("$HPY" -c "
-import json,sys
-d=json.load(open('.claude/settings.json',encoding='utf-8'))
-for ev,gs in d['hooks'].items():
+# DISCOVERED, not hardcoded. This check first shipped with a four-name array while the
+# CHANGELOG, the RCA and hook-authoring.md all claimed it caught "any hook running an
+# external tool with no inner bound". A confident instruction that outlives its truth is
+# the exact shape of the hooks-catalog.md sentence that caused the original outage, so
+# the list is derived from the hooks themselves and cannot rot.
+TOOL_HOOKS=$(grep -lE '"\$PY(BIN)?" +[^ ]*tools/[A-Za-z0-9_]+\.py|tools/[A-Za-z0-9_]+\.py' .claude/hooks/*.sh 2>/dev/null              | xargs -r grep -lE '\$\{?PY' 2>/dev/null || true)
+if [[ -z "$TOOL_HOOKS" ]]; then
+    bad "discovery found no tool-invoking hooks at all; the check 3 pattern is broken"
+fi
+for hookfile in $TOOL_HOOKS; do
+    hook=$(basename "$hookfile")
+    REG=$("$HPY" - "$hook" <<'PYEOF'
+import json, sys
+name = sys.argv[1]
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+for ev, gs in d['hooks'].items():
     for g in gs:
         for h in g['hooks']:
-            if h['command'].endswith('$hook'): print(h.get('timeout',600)); sys.exit()
-print(0)")
-    [[ "$REG" == "0" ]] && { ok "$hook not registered, skipped"; continue; }
-    INNER=$(grep -oE 'timeout -k [0-9]+ [0-9]+' ".claude/hooks/$hook" 2>/dev/null | head -1 | awk '{print $4}')
+            if h['command'].endswith(name):
+                print(h.get('timeout', 600)); sys.exit()
+print(0)
+PYEOF
+)
+    [[ "$REG" == "0" ]] && { ok "$hook not registered in settings.json, skipped"; continue; }
+    # Accept fractional bounds (timeout -k 0.2 0.8) as well as integers.
+    INNER=$(grep -oE 'timeout -k [0-9.]+ [0-9.]+' "$hookfile" 2>/dev/null | head -1 | awk '{print $4}')
     if [[ -z "$INNER" ]]; then
-        bad "$hook runs an external tool with NO inner timeout: a harness kill would be silent"
-    elif (( INNER >= REG )); then
+        bad "$hook invokes a tools/*.py but has NO inner timeout: a harness kill would be silent"
+    elif "$HPY" -c "import sys; sys.exit(0 if float(sys.argv[1]) >= float(sys.argv[2]) else 1)" "$INNER" "$REG"; then
         bad "$hook inner bound ${INNER}s >= registered ${REG}s (harness kills first, silently)"
     else
         ok "$hook inner ${INNER}s < registered ${REG}s"
     fi
 done
+
+# ---------------------------------------------------------------------------
+# 3b. Every skill/agent frontmatter must parse as YAML.
+#     Four SKILL.md files shipped with an unquoted `argument-hint: [a] [b]`, which is
+#     not valid YAML, so the WHOLE frontmatter was dropped and those skills lost their
+#     eager description from the model's routing surface. Nothing detected it.
+# ---------------------------------------------------------------------------
+head2 "3b. skill/agent frontmatter parses as YAML"
+FM=$("$HPY" - <<'PYEOF'
+import pathlib, sys
+try:
+    import yaml
+except ImportError:
+    print("SKIP no pyyaml"); sys.exit(0)
+
+def frontmatter(txt):
+    """Line-based, deliberately. A regex here needs escaped newlines, and this file is
+    a shell heredoc inside a shell script: the escaping was wrong the first time and the
+    resulting SyntaxError was swallowed into a PASS."""
+    lines = txt.splitlines()
+    if not lines or lines[0].strip() != '---':
+        return None
+    for i in range(1, len(lines)):
+        if lines[i].strip() == '---':
+            return "\n".join(lines[1:i])
+    return None
+
+bad = []
+n = 0
+for p in list(pathlib.Path('.claude/skills').glob('*/SKILL.md')) + list(pathlib.Path('.claude/agents').glob('*.md')):
+    txt = p.read_text(encoding='utf-8', errors='replace')
+    fm = frontmatter(txt)
+    if fm is None:
+        continue
+    n += 1
+    try:
+        d = yaml.safe_load(fm)
+    except Exception as e:
+        bad.append(f"{p}: {type(e).__name__}: {str(e).splitlines()[0][:80]}")
+        continue
+    if not isinstance(d, dict):
+        bad.append(f"{p}: frontmatter parsed as {type(d).__name__}, expected a mapping")
+        continue
+    # An unquoted `#` silently truncates a description into a YAML comment. That one is
+    # PROVEN: /release's description was cut at "Enforces the" in the live skill listing,
+    # and quoting it restored the full text in the same session.
+    #
+    # argument-hint is deliberately NOT type-checked. 16 skills write
+    # `argument-hint: [feature-name]`, which YAML reads as a list. That is the conventional
+    # way the hint is written and there is no evidence the harness mishandles it, so
+    # failing on it would make this suite permanently red over an unverified claim. The
+    # real defect in that field is a PARSE failure (`[--quick] [--write-report]` is two
+    # flow sequences and takes the whole frontmatter down), and the try/except above
+    # already catches exactly that.
+    v = d.get('description')
+    if v is not None and not isinstance(v, str):
+        bad.append(f"{p}: description parsed as {type(v).__name__}, expected a quoted string")
+
+    # The `#` truncation yields a VALID, SHORTER string, so no type check can see it.
+    # Catch it in the raw text instead: an unquoted scalar containing " #" loses
+    # everything from the # onward to a YAML comment. /release lost "the #371
+    # Dependencies pairing." this way and read as "...Enforces the" in the live listing.
+    for raw in fm.splitlines():
+        stripped = raw.strip()
+        for field in ('description:', 'argument-hint:'):
+            if not stripped.startswith(field):
+                continue
+            val = stripped[len(field):].strip()
+            if val[:1] in ('"', "'"):
+                continue  # quoted, the # is safe
+            if ' #' in val:
+                bad.append(f"{p}: unquoted '#' in {field[:-1]} truncates it at that point (YAML comment); quote the value")
+print(f"COUNT {n}")
+for b in bad:
+    print("BAD " + b)
+PYEOF
+)
+# The check must be able to FAIL. The first version of this block died on a SyntaxError,
+# $FM came back empty, and the else-branch reported a pass with a blank count: a broken
+# check reading as a green one, which is the whole defect class this suite exists to catch.
+if printf '%s' "$FM" | grep -q '^SKIP'; then
+    # Loud, not silent: an unrun check must never read as a pass.
+    echo "  note: pyyaml unavailable, frontmatter parse check SKIPPED (not passed)"
+elif ! printf '%s' "$FM" | grep -q '^COUNT [0-9]'; then
+    bad "frontmatter check did not run (no COUNT line). Output was: $(printf '%s' "$FM" | head -c 200)"
+elif printf '%s' "$FM" | grep -q '^BAD '; then
+    while IFS= read -r line; do
+        [[ "$line" == BAD\ * ]] && bad "frontmatter: ${line#BAD }"
+    done <<< "$FM"
+else
+    ok "all $(printf '%s' "$FM" | sed -n 's/^COUNT //p') frontmatters parse; description/argument-hint are strings"
+fi
 
 # ---------------------------------------------------------------------------
 # 4. Contract test: every hook, every payload shape, in a sandbox.

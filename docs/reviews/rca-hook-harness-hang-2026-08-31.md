@@ -149,3 +149,31 @@ checked. Run in that repo:
 `tools/test_hooks.sh` is repo-relative and mostly portable: checks 1, 4 and 5 should run in LOTRAOM
 unchanged, while checks 2 and 3 read `.claude/settings.json` and a hardcoded hook list that would
 need adjusting to that repo's hooks.
+
+---
+
+## Addendum: what the review of this fix found (same day)
+
+A 36-agent audit and adversarial review returned 24 confirmed findings, 3 refuted. Three of the
+worst were introduced or left standing by the repair above, which is the part worth recording.
+
+| Defect | Why the first pass missed it |
+|---|---|
+| The revived force-push gate blocked one spelling of five. `+branch`, `--force origin HEAD`, `git -C <dir> push`, `refs/heads/x` and `HEAD:master` all returned rc=0 silently. | The fix was verified against the payload that had been used to demonstrate the bug, not against the space of real invocations. Proving a gate fires once is not proving it fires. |
+| The CI gate meant to prevent recurrence had executed zero times: it sat behind a doc-graph ratchet step that has been red since 2026-08-28, in the same job. | "Wired into CI" was written from the diff, not from a run. `Not-tested: the CI job itself` in the commit body understated it: the step was not merely untested, it was unreachable. The native-CRT gate above it had been skipped the same way since 2026-08-18 and nobody noticed for 13 days. |
+| `_pybin.sh` accepted a directory (`[ -x ]` is true for one), accepted `WINDOWSAPPS` (the glob varied two letters), and accepted `/usr/bin/true` (the probe read an exit status, which `true` satisfies). | Each guard was written against the failure that had actually happened, not against the class. The exit-status probe is the same mistake LOTRAOM's `json-lib.sh` made, and this RCA already names it. |
+
+The self-referential one is worth keeping in view: `test_hooks.sh` check 3b, added to catch silent
+frontmatter failures, itself shipped with a `SyntaxError`, produced no output, and was reported as a
+PASS by its own else-branch. It was caught by planting a canary, not by reading it. Any check whose
+"no findings" path is reached by an empty variable can report success for having crashed.
+
+**Fixed in the follow-up commit**, along with 20.6s to 4.0s on `validate_moduledata.py` (one
+quadratic regex on `lords.xml`), ~450ms to ~165ms on every non-Bash tool call (`suggest-compact.sh`
+runs with matcher `""`), five unparseable or truncated SKILL.md frontmatters, and the `ilspy` MCP
+launch command.
+
+**Known limitation, stated rather than claimed:** `taom_pybin_is_safe` resolves a symlink before
+judging it, so a link from outside WindowsApps pointing in is rejected. That path could NOT be tested
+here: MSYS `ln -s` copies rather than links on this machine, so the case is not constructible. The
+code is correct by inspection and unverified by execution.

@@ -10,7 +10,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 |------|---------|
 | Build mod | `./build.ps1` |
 | Build + test | `./build.ps1 -RunTests` |
-| Run tests | `dotnet test TAOM.Tests` |
+| Run tests | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` |
 
 ## Critical Rules (NEVER VIOLATE)
 
@@ -315,7 +315,7 @@ and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/refer
 | Navigate C# symbols, find references | **Serena** (`find_symbol`, `get_symbols_overview`) | Grep for class names |
 | Research TaleWorlds classes | **Read/Grep** `E:\Decompiled_Bannerlord\` first, **ilspy** MCP as fallback | On-demand decompilation |
 | Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
-| Git blame, diff analysis | **git** (`git_blame`, `git_diff`) | `git` via Bash |
+| Diff analysis (read-only) | **git** (`git_diff`, `git_log`, `git_show`) | `git` via Bash. NOTE: there is no `git_blame` tool; use `git blame` via Bash. And the git/filesystem MCP **write** tools bypass every PreToolUse gate, which matches `Bash` only, so stage and commit via Bash. |
 | Create/close GitHub issues | **GitHub** | `gh` via Bash |
 | Validate/query TAOM ModuleData (does item/troop/culture id exist? what references id X? are there broken refs?) | **taom-moduledata** MCP (`validate_moduledata`, `item_exists`, `troop_exists`, `culture_exists`, `find_references`, `list_cultures`) — or `python tools/validate_moduledata.py` if the MCP isn't loaded | Grep ModuleData / hand-rolling a one-off ref validator |
 | Research before implementing | **`taom-src path <Type>`** for signatures, **Read/Grep** decompiled source for browsing patterns, **Serena** for symbol nav, **ilspy** MCP as fallback | Manual decompilation workflow |

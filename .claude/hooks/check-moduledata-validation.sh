@@ -85,6 +85,12 @@ PY="$PYBIN"
 # exactly how this gate died on 2026-08-31: it was re-registered at 5s against a 27.0s
 # runtime, so every ModuleData commit silently skipped the check. Bounding the work here
 # keeps the overrun inside the hook, where it can still speak.
+#
+# The validator itself now runs in ~4s, not 27s: 16.5s of that original figure was one
+# quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
+# file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
+# left deliberately generous. Headroom costs nothing unless the work overruns, and being
+# killed is the failure mode this gate has already suffered once.
 OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code BROKEN_ITEM_REF --code BROKEN_TROOP_REF --code UNKNOWN_CULTURE \
         --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \

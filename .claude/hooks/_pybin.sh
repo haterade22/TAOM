@@ -34,21 +34,68 @@
 # Reject anything we must never execute, without executing it. `command -v`
 # succeeding proves only that a file exists at that name, which is exactly the trap.
 taom_pybin_is_safe() {
-    local p="$1"
+    local p="$1" lp
     [ -n "$p" ] || return 1
-    case "$p" in
-        *[Ww]indows[Aa]pps*) return 1 ;;
+
+    # Lowercase via bash expansion, NOT `tr`. This function runs for every candidate in
+    # every hook on every tool call, so a subprocess here is paid hundreds of times a
+    # session; ${p,,} is a builtin and free. (Measured 2026-08-31: readlink + tr as
+    # subprocesses doubled the PreToolUse critical path from 204ms to 414ms.)
+    # Substring-match rather than guessing casings: the previous *[Ww]indows[Aa]pps*
+    # glob varied exactly two letters, so WINDOWSAPPS passed as safe.
+    lp="${p,,}"
+    case "$lp" in
+        *windowsapps*) return 1 ;;
     esac
+
+    # Only resolve a link when there IS one. The WindowsApps entries present as symlinks
+    # into C:\Program Files\WindowsApps\..., so a link from elsewhere could still point at
+    # the alias, but `[ -L ]` is a builtin and the common case is a real file that skips
+    # the readlink subprocess entirely.
+    if [ -L "$p" ]; then
+        p=$(readlink -f "$p" 2>/dev/null || printf '%s' "$p")
+        lp="${p,,}"
+        case "$lp" in
+            *windowsapps*) return 1 ;;
+        esac
+    fi
+
+    # -x alone is TRUE FOR A DIRECTORY. A pin of "C:/Python314" with the filename left
+    # off would be accepted, every "$PYBIN" -c call would fail, and every gate would go
+    # silently dead again. Require a regular file.
+    [ -f "$p" ] || return 1
     [ -x "$p" ] || return 1
     return 0
 }
 
+# Prove the candidate is a live Python, under a hard bound.
+#
+# Check the OUTPUT, not the exit status. `/usr/bin/true -c 'import json,sys'` exits 0
+# because true ignores its arguments, so an exit-status probe accepts any always-succeeding
+# binary as a Python interpreter. Requiring the marker on stdout is what actually proves it
+# ran Python. (This is the same shape as the bug _pybin.sh exists to fix: LOTRAOM's
+# json-lib.sh also trusted an exit status to answer a question exit status cannot answer.)
+#
+# The bound is per candidate and the loop tries three, so the worst case must stay under
+# the smallest registered timeout: 12 of the 27 registrations are 5s. `-k 0.2 0.8` means a
+# SIGTERM-ignoring candidate costs at most 1.0s, so 3 x 1.0 = 3.0s < 5s. -k is essential:
+# without it GNU timeout sends SIGTERM then WAITS forever on a process that ignores it,
+# which is precisely the hazard being guarded against. Empty stdin so the probe cannot
+# consume the hook's payload. A successful probe measures ~40-80ms here.
+# -S -E: skip site-packages and ignore PYTHON* env for the probe only. It measures 86ms
+# instead of 98ms and cannot be perturbed by a broken PYTHONPATH. Callers still get a
+# normal interpreter; the flags apply to this one-shot check, not to later invocations.
+taom_pybin_probe() {
+    [ "$(printf '' | timeout -k 0.2 0.8 "$1" -S -E -c 'import sys; sys.stdout.write("taompy")' 2>/dev/null)" = "taompy" ]
+}
+
 taom_resolve_python() {
-    # A pinned interpreter (settings.json env block) skips the probe entirely, but
-    # is VALIDATED rather than trusted: an inherited value must clear the same
-    # WindowsApps bar as a probed one, or the pin becomes a way to smuggle the
-    # alias back in. A stale pin on another machine simply fails here and we probe.
-    if taom_pybin_is_safe "${TAOM_PYBIN:-}"; then
+    # A pinned interpreter (settings.json env block) skips the SEARCH, but is still
+    # validated AND probed rather than trusted. An inherited value must clear the same
+    # bar as a discovered one, or the pin becomes a way to smuggle the alias back in;
+    # and a pin that is stale on another machine must fall through to discovery rather
+    # than take every hook down with it. Probing costs ~40ms and buys that guarantee.
+    if taom_pybin_is_safe "${TAOM_PYBIN:-}" && taom_pybin_probe "$TAOM_PYBIN"; then
         printf '%s' "$TAOM_PYBIN"
         return 0
     fi
@@ -60,13 +107,7 @@ taom_resolve_python() {
         command -v "$py" >/dev/null 2>&1 || continue
         resolved=$(command -v "$py" 2>/dev/null) || continue
         taom_pybin_is_safe "$resolved" || continue
-
-        # Even for a safe-looking candidate, probe under a hard bound so an
-        # unexpected stall degrades to "no python" instead of wedging the hook.
-        # -k matters: without it GNU timeout sends SIGTERM and then WAITS, so a
-        # process that ignores SIGTERM hangs the guard itself. Empty stdin, so the
-        # probe cannot consume the hook's payload.
-        if printf '' | timeout -k 1 5 "$resolved" -c 'pass' >/dev/null 2>&1; then
+        if taom_pybin_probe "$resolved"; then
             printf '%s' "$resolved"
             return 0
         fi

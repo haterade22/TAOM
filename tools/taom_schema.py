@@ -689,13 +689,25 @@ class Validator:
             # Mask comments but keep newlines so line attribution stays accurate.
             text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
             rel = self._rel(path)
-            blocks = [(m.start(), m.group(1)) for m in self._EQSET_BLOCK_RE.finditer(text)]
+            # Bail out when the close tag is absent instead of letting the regex look for
+            # it. Both patterns REQUIRE the literal close tag, so "no close tag in the
+            # file" and "no matches" are the same answer, but the regex arrives at it by
+            # scanning the rest of the file from every opening tag. characters/lords.xml
+            # has 2,368 self-closing <EquipmentSet .../> and zero </EquipmentSet>, which
+            # made that quadratic: 16.5s of the validator's 20.6s total, on a pass that
+            # could never report anything. This gates every ModuleData commit, so the cost
+            # was paid on each one. Measured 2026-08-31: 20.6s -> 4.1s, identical output.
+            if "</EquipmentSet>" in text:
+                blocks = [(m.start(), m.group(1)) for m in self._EQSET_BLOCK_RE.finditer(text)]
+            else:
+                blocks = []
             # A roster is paired as a unit only when it holds equipment directly
             # (the troop-roster shape); one that wraps EquipmentSets is covered by
             # the sweep above, and pairing it whole would cross-pair set 1's mount
             # with set 2's harness.
-            blocks += [(m.start(), m.group(1)) for m in self._EQROSTER_BLOCK_RE.finditer(text)
-                       if "<EquipmentSet" not in m.group(1)]
+            if "</EquipmentRoster>" in text:
+                blocks += [(m.start(), m.group(1)) for m in self._EQROSTER_BLOCK_RE.finditer(text)
+                           if "<EquipmentSet" not in m.group(1)]
             for start, body in blocks:
                 slots = {}
                 for tag in self._EQ_TAG_RE.finditer(body):
