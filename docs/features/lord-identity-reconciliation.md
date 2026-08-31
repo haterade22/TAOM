@@ -1,6 +1,6 @@
 # Lord identity: the two halves and how they drift
 
-**Status:** landed 2026-08-29, uncommitted. Suite 7745 green. Reviewed by nine agents; the fourteen
+**Status:** landed 2026-08-29, uncommitted. Suite 7748 green. Reviewed by nine agents; the fourteen
 surviving findings are all fixed, and the write-up is
 [`docs/reviews/rca-lord-identity-2026-08-29.md`](../reviews/rca-lord-identity-2026-08-29.md).
 In-game smoke and `/localize` owed.
@@ -104,6 +104,39 @@ an existing key stays green, and so does a row holding a near-copy of the Englis
 **Still ungated:** nothing pins a translation to the character it describes. If a key rename moved
 the wrong translation, every test here would stay green. The renames in this pass were verified by
 reading the DE, FR and RU rows by hand.
+
+## Placeholder names, and the register each culture uses
+
+Five lords shipped with a placeholder name. Four were caught on 2026-08-29 and one more,
+`lord_3_2` "Harad **Place Holder**", only after the sweep was widened to two-word forms. Search for
+both spellings plus `RandomDude`, `dummy`, `TBD` and `not break`; the "Practice Dummy" and "Gear
+Dummy" entries under `characters/npcs_*.xml` are legitimate training targets and stay.
+
+**Do not invent a name.** TAOM already ships a register per culture in
+`Main/_Module/ModuleData/taom_spcultures.xml`, and drawing from it keeps a new lord consistent with
+the roster he joins:
+
+| culture | pool | register |
+|---|---|---|
+| Harad, inland | `shaghana` | 30 male, 30 female, Arabic-flavoured. The existing Haradrim noblewomen already sit here |
+| Harad, coastal and Umbar-allied | `harad_raiders` | circumflexed and Adûnaic-adapted (`Akhôr`, `Mûzan`, `Zûran`), matching the Black Númenórean connection those groups had |
+| Rhûn and Khand | `rhun_raiders` | the only Eastern vocabulary the mod has. Khand has no pool of its own, and its roster is unmodified vanilla Battanian Celtic, which is leftover rather than a decision |
+| Lothlórien, Mirkwood | per-culture pools | 50 Sindarin male and 50 female each. `-ion` is the masculine patronymic, `-iel` the feminine |
+
+Tolkien gives almost nothing for either of the Southron and Eastern peoples: the only word stated to
+be Southron is *mûmak*, and "Variag" is a Slavic borrowing from the Norse Varangian mercenaries that
+a draft of Appendix F assigns to the speech of the Men of the East. The pools above are therefore
+the closest thing to an authority, and they are internally consistent, which matters more.
+
+Sindarin is right for both elf realms despite their Silvan population: by the late Third Age the
+Silvan tongue survived only in place and person names, and Thranduil's line is Sindar out of
+Doriath.
+
+**Seven Haradrim carried Sindarin elf names** until 2026-08-29, five of them colliding with a real
+elf: `lord_3_5` Haldir, `lord_3_16` Rúmil and `lord_3_17` Orophin were Lothlórien's three
+marchwardens; `lord_3_22` was a second Duilin and `lord_3_3` a second Calemir. Renaming them from
+the pools above cleared the collisions as a side effect.
+
 
 ## Deliberate exclusions
 

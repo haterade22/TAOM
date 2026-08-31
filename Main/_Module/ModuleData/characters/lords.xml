@@ -1258,7 +1258,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.battania -->
-    <NPCCharacter id="lord_5_1_1" name="{=aom_lord_5_1_1_name}Nyveth" age="12" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_5_1_1" name="{=aom_lord_5_1_1_name}Khazna" age="12" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.battania" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="00054548800027875ca466a563442bd406899779a794573b86a7c473581ab487000e66550e46c99d000000000000000000000000000000000000000001f83180"
@@ -22659,7 +22659,7 @@
             <EquipmentSet id="lothlorien_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_3" race="elf" name="{=aom_lord_L1_3_name}Aerlin" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
+    <NPCCharacter id="lord_L1_3" race="elf" name="{=aom_lord_L1_3_name}Galadion" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
         <face>
             <!--face_key
 			value="00282b5fd7fc23c299c2761c4ac1a5954778548899a66659788878746a9d96290006165d06a7699c0000000000000000000000000000000000000000011c7140"
@@ -23376,7 +23376,7 @@
             <EquipmentSet id="legolas_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_M1_12" race="elf" name="{=aom_lord_M1_12_name}Faelen" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
+    <NPCCharacter id="lord_M1_12" race="elf" name="{=aom_lord_M1_12_name}Calenor" age="6" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_fian_skills_rookie">
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>

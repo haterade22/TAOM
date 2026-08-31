@@ -543,7 +543,8 @@ public class LordIdentityConsistencyTests
         "Elphir", "Erchirion", "Amrothos", "Ivriniel", "Belwen",
 
         // Pre-existing. Father and son both Wulf Celmunding, which is what makes lord_4_22_1's
-        // biography ("Sunnifa is wife to Wulf") ambiguous.
+        // biography ("Sunnifa is wife to Wulf") ambiguous. Dorwen is lord_EW_1_3 against
+        // lord_WE8_1, both Gondor.
         "Wulf Celmunding",
         "Dorwen",
 
@@ -573,6 +574,22 @@ public class LordIdentityConsistencyTests
             "in this file matches on the name, so a biography about one silently satisfies the\n" +
             "other. Rename one, or add the name to AcceptedDuplicateNames with the reason.\n" +
             string.Join("\n", groups));
+
+        // Shrink-only, like the other two exception lists in this suite. Without it a name stays
+        // excused long after the collision has gone, and renaming the Haradrim Duilin, Haldir,
+        // Rumil, Orophin and Calemir on 2026-08-29 is exactly the repair that leaves one behind.
+        var live = new HashSet<string>(
+            lords.Values
+                .Where(l => l.Name.Length > 0 && l.Culture.Length > 0 && heroes.ContainsKey(l.Id))
+                .GroupBy(l => (l.Name, l.Culture))
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key.Name),
+            StringComparer.Ordinal);
+
+        var stale = AcceptedDuplicateNames.Except(live).OrderBy(n => n, StringComparer.Ordinal).ToList();
+        Assert.AreEqual(0, stale.Count,
+            "These names are excused in AcceptedDuplicateNames but no longer collide. Remove them;\n" +
+            "the list may only ever shrink.\n  " + string.Join("\n  ", stale));
     }
 
     /// <summary>

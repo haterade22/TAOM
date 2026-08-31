@@ -1929,7 +1929,7 @@
 	<xsl:template match="Hero[@id='lord_3_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_2}A Haradrim noble lady of high standing.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_2}Khalida is wife to Khadurak, and a Haradrim noble lady of high standing.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2007,7 +2007,7 @@
 	<xsl:template match="Hero[@id='lord_3_3']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_3}Calemir is a chieftain of the eastern Haradrim, lord of the oasis settlements.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_3}Marzuk is a chieftain of the eastern Haradrim, lord of the oasis settlements.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_4</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2036,7 +2036,7 @@
 	<xsl:template match="Hero[@id='lord_3_5']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_5}Haldir commands the coastal Haradrim, allied with the Corsairs of Umbar.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_5}Akhôr commands the coastal Haradrim, allied with the Corsairs of Umbar.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_6</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2159,7 +2159,7 @@
 	<xsl:template match="Hero[@id='lord_3_16']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_16}Rúmil is a chieftain of the golden banner tribes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_16}Zafar is a chieftain of the golden banner tribes.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_16_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2177,7 +2177,7 @@
 	<xsl:template match="Hero[@id='lord_3_17']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_17}Orophin commands the serpent riders of the far south.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_17}Azrak commands the serpent riders of the far south.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_17_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2223,7 +2223,7 @@
 	<xsl:template match="Hero[@id='lord_3_18']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_18}Aranthon is a wealthy merchant prince of the south.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_18}Kareem is a wealthy merchant prince of the south.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -2267,7 +2267,7 @@
 	<xsl:template match="Hero[@id='lord_3_19']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_19}Aethirion commands a fortress on the northern frontier.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_19}Zulkhan commands a fortress on the northern frontier.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_19_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2323,7 +2323,7 @@
 	<xsl:template match="Hero[@id='lord_3_22']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_3_22}Duilin commands archers of the desert tribes.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_3_22}Namir commands archers of the desert tribes.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_3_22_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2813,7 +2813,7 @@
 	<xsl:template match="Hero[@id='lord_5_1_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_5_1_1}Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_5_1_1}Khazna is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_5_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -2885,7 +2885,7 @@
 	<xsl:template match="Hero[@id='lord_5_7']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father']"/>
-			<xsl:attribute name="text">{=TAOM_hero_5_7}Cadwyr is a Variag warrior chieftain of Khand.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_5_7}Kharzul is a Variag warrior chieftain of Khand, and a son of the High Warlord.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_5_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>

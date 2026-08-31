@@ -275,7 +275,7 @@
 		father="Hero.lord_M1_1"
 		mother="Hero.lord_M1_2"
 		faction="Faction.clan_mirkwood_1"
-		text="{=aom_lord_M1_12_bio}Faelen is a child of Nos Lasgalen, too young for the bow and kept close to the halls while the wood grows darker." />
+		text="{=aom_lord_M1_12_bio}Calenor is a child of Nos Lasgalen, too young for the bow and kept close to the halls while the wood grows darker." />
 
 	<!-- Nos Oropher -->
 	<Hero

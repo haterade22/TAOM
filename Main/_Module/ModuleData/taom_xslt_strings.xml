@@ -1672,13 +1672,13 @@
 
 	<string id="aom_lord_3_1_name" text="{=aom_lord_3_1_name}Khadurak" />
 
-	<string id="aom_lord_3_2_name" text="{=aom_lord_3_2_name}Harad Place Holder" />
+	<string id="aom_lord_3_2_name" text="{=aom_lord_3_2_name}Khalida" />
 
-	<string id="aom_lord_3_3_name" text="{=aom_lord_3_3_name}Calemir" />
+	<string id="aom_lord_3_3_name" text="{=aom_lord_3_3_name}Marzuk" />
 
 	<string id="aom_lord_3_4_name" text="{=aom_lord_3_4_name}Maraa" />
 
-	<string id="aom_lord_3_5_name" text="{=aom_lord_3_5_name}Haldir" />
+	<string id="aom_lord_3_5_name" text="{=aom_lord_3_5_name}Akhôr" />
 
 	<string id="aom_lord_3_51_name" text="{=aom_lord_3_51_name}Haqan" />
 
@@ -1702,19 +1702,19 @@
 
 	<string id="aom_lord_3_15_name" text="{=aom_lord_3_15_name}Ghuzid" />
 
-	<string id="aom_lord_3_16_name" text="{=aom_lord_3_16_name}Rúmil" />
+	<string id="aom_lord_3_16_name" text="{=aom_lord_3_16_name}Zafar" />
 
-	<string id="aom_lord_3_17_name" text="{=aom_lord_3_17_name}Orophin" />
+	<string id="aom_lord_3_17_name" text="{=aom_lord_3_17_name}Azrak" />
 
-	<string id="aom_lord_3_18_name" text="{=aom_lord_3_18_name}Aranthon" />
+	<string id="aom_lord_3_18_name" text="{=aom_lord_3_18_name}Kareem" />
 
-	<string id="aom_lord_3_19_name" text="{=aom_lord_3_19_name}Aethirion" />
+	<string id="aom_lord_3_19_name" text="{=aom_lord_3_19_name}Zulkhan" />
 
 	<string id="aom_lord_3_20_name" text="{=aom_lord_3_20_name}Karith" />
 
 	<string id="aom_lord_3_21_name" text="{=aom_lord_3_21_name}Ukhai" />
 
-	<string id="aom_lord_3_22_name" text="{=aom_lord_3_22_name}Duilin" />
+	<string id="aom_lord_3_22_name" text="{=aom_lord_3_22_name}Namir" />
 
 	<string id="aom_lord_3_23_name" text="{=aom_lord_3_23_name}Qahin" />
 
@@ -1876,7 +1876,7 @@
 
 	<string id="aom_lord_5_1_name" text="{=aom_lord_5_1_name}Vargûl, the High Warlord of Khand" />
 
-	<string id="aom_lord_5_7_name" text="{=aom_lord_5_7_name}Cadwyr" />
+	<string id="aom_lord_5_7_name" text="{=aom_lord_5_7_name}Kharzul" />
 
 	<string id="aom_lord_5_3_name" text="{=aom_lord_5_3_name}Ergeon" />
 
@@ -1920,7 +1920,7 @@
 
 	<string id="aom_lord_5_22_name" text="{=aom_lord_5_22_name}Fiarad" />
 
-	<string id="aom_lord_5_1_1_name" text="{=aom_lord_5_1_1_name}Nyveth" />
+	<string id="aom_lord_5_1_1_name" text="{=aom_lord_5_1_1_name}Khazna" />
 
 	<string id="aom_lord_5_3_1_name" text="{=aom_lord_5_3_1_name}Ranaon" />
 
@@ -2528,7 +2528,7 @@
 
 	<string id="TAOM_hero_3_1" text="{=TAOM_hero_3_1}Khadurak is the Taskral of Harad, supreme commander of the southern armies. He leads the Mumakil war elephants against the enemies of his people, allied with Mordor against Gondor." />
 
-	<string id="TAOM_hero_3_2" text="{=TAOM_hero_3_2}A Haradrim noble lady of high standing." />
+	<string id="TAOM_hero_3_2" text="{=TAOM_hero_3_2}Khalida is wife to Khadurak, and a Haradrim noble lady of high standing." />
 
 	<string id="TAOM_hero_3_7" text="{=TAOM_hero_3_7}Dhiyul is heir to the Taskral, trained in the ways of the Mumak riders." />
 
@@ -2544,13 +2544,13 @@
 
 	<string id="TAOM_hero_3_11" text="{=TAOM_hero_3_11}Arwa is a princess of the desert tribes." />
 
-	<string id="TAOM_hero_3_3" text="{=TAOM_hero_3_3}Calemir is a chieftain of the eastern Haradrim, lord of the oasis settlements." />
+	<string id="TAOM_hero_3_3" text="{=TAOM_hero_3_3}Marzuk is a chieftain of the eastern Haradrim, lord of the oasis settlements." />
 
 	<string id="TAOM_hero_3_3_1" text="{=TAOM_hero_3_3_1}Tariq is heir to the eastern oasis lords." />
 
 	<string id="TAOM_hero_3_4" text="{=TAOM_hero_3_4}Maraa is wife to Calemir, known for her wisdom." />
 
-	<string id="TAOM_hero_3_5" text="{=TAOM_hero_3_5}Haldir commands the coastal Haradrim, allied with the Corsairs of Umbar." />
+	<string id="TAOM_hero_3_5" text="{=TAOM_hero_3_5}Akhôr commands the coastal Haradrim, allied with the Corsairs of Umbar." />
 
 	<string id="TAOM_hero_3_51" text="{=TAOM_hero_3_51}Haqan is a sea captain of the coastal tribes." />
 
@@ -2576,11 +2576,11 @@
 
 	<string id="TAOM_hero_3_15_2" text="{=TAOM_hero_3_15_2}Bushila trains young Mumak riders." />
 
-	<string id="TAOM_hero_3_16" text="{=TAOM_hero_3_16}Rúmil is a chieftain of the golden banner tribes." />
+	<string id="TAOM_hero_3_16" text="{=TAOM_hero_3_16}Zafar is a chieftain of the golden banner tribes." />
 
 	<string id="TAOM_hero_3_16_1" text="{=TAOM_hero_3_16_1}Farina is wife to the golden banner chief." />
 
-	<string id="TAOM_hero_3_17" text="{=TAOM_hero_3_17}Orophin commands the serpent riders of the far south." />
+	<string id="TAOM_hero_3_17" text="{=TAOM_hero_3_17}Azrak commands the serpent riders of the far south." />
 
 	<string id="TAOM_hero_3_17_1" text="{=TAOM_hero_3_17_1}Shaima is wife to Orophin." />
 
@@ -2590,7 +2590,7 @@
 
 	<string id="TAOM_hero_3_21_1" text="{=TAOM_hero_3_21_1}Ashisa is wife to the raider captain." />
 
-	<string id="TAOM_hero_3_18" text="{=TAOM_hero_3_18}Aranthon is a wealthy merchant prince of the south." />
+	<string id="TAOM_hero_3_18" text="{=TAOM_hero_3_18}Kareem is a wealthy merchant prince of the south." />
 
 	<string id="TAOM_hero_3_18_1" text="{=TAOM_hero_3_18_1}Farzana is daughter of the merchant prince." />
 
@@ -2600,7 +2600,7 @@
 
 	<string id="TAOM_hero_3_18_4" text="{=TAOM_hero_3_18_4}Jalfar guards the trade caravans." />
 
-	<string id="TAOM_hero_3_19" text="{=TAOM_hero_3_19}Aethirion commands a fortress on the northern frontier." />
+	<string id="TAOM_hero_3_19" text="{=TAOM_hero_3_19}Zulkhan commands a fortress on the northern frontier." />
 
 	<string id="TAOM_hero_3_19_1" text="{=TAOM_hero_3_19_1}Salma is wife to the frontier commander." />
 
@@ -2612,7 +2612,7 @@
 
 	<string id="TAOM_hero_3_23_1" text="{=TAOM_hero_3_23_1}Sukayna is wife to the scout commander." />
 
-	<string id="TAOM_hero_3_22" text="{=TAOM_hero_3_22}Duilin commands archers of the desert tribes." />
+	<string id="TAOM_hero_3_22" text="{=TAOM_hero_3_22}Namir commands archers of the desert tribes." />
 
 	<string id="TAOM_hero_3_22_1" text="{=TAOM_hero_3_22_1}Yamina is wife to the archer commander." />
 
@@ -2728,7 +2728,7 @@
 
 	<string id="TAOM_hero_5_1" text="{=TAOM_hero_5_1}Vargûl, the High Warlord of Khand, leads the fierce Variag horsemen. His alliance with Mordor brings his warriors against Gondor in the war for Middle-earth." />
 
-	<string id="TAOM_hero_5_1_1" text="{=TAOM_hero_5_1_1}Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
+	<string id="TAOM_hero_5_1_1" text="{=TAOM_hero_5_1_1}Khazna is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
 
 	<string id="TAOM_hero_5_3" text="{=TAOM_hero_5_3}Ergeon is a chieftain who leads the eastern Variag clans, known for their swift cavalry tactics." />
 
@@ -2744,7 +2744,7 @@
 
 	<string id="TAOM_hero_5_6" text="{=TAOM_hero_5_6}Alcaea is wife to Melidir." />
 
-	<string id="TAOM_hero_5_7" text="{=TAOM_hero_5_7}A Variag warrior chieftain of Khand." />
+	<string id="TAOM_hero_5_7" text="{=TAOM_hero_5_7}Kharzul is a Variag warrior chieftain of Khand, and a son of the High Warlord." />
 
 	<string id="TAOM_hero_5_8" text="{=TAOM_hero_5_8}Sein commands a company of Variag cavalry." />
 
