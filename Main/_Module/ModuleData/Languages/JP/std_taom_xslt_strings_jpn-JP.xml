@@ -751,12 +751,12 @@
     <string id="aom_lord_1_52_1_name" text="アナリエル" />
     <string id="aom_lord_1_52_2_name" text="バランドール" />
     <string id="aom_lord_1_73_1_name" text="ベルウェン" />
-    <string id="aom_lord_1_62_1_name" text="Isfin" />
+    <string id="aom_lord_1_62_1_name" text="イスフィン" />
     <string id="aom_lord_1_30_1_name" text="スヴァラ・レッドファング" />
-    <string id="aom_lord_1_30_2_name" text="Mogra" />
-    <string id="aom_lord_1_30_3_name" text="Snaga" />
+    <string id="aom_lord_1_30_2_name" text="モグラ" />
+    <string id="aom_lord_1_30_3_name" text="スナガ" />
     <string id="aom_lord_1_48_1_name" text="ナズグール、穢れし者" />
-    <string id="aom_lord_1_48_2_name" text="Nazgûl, the Shadow of the Northmen" />
+    <string id="aom_lord_1_48_2_name" text="ナズグル、北方人の影" />
     <string id="aom_lord_1_48_3_name" text="ナズグール、ウンバールの影" />
     <string id="aom_lord_1_54_1_name" text="コンスタリア" />
     <string id="aom_lord_1_55_1_name" text="メゲシア" />
@@ -821,10 +821,10 @@
     <string id="aom_dead_lord_2_1_name" text="老オレク" />
     <string id="aom_dead_lord_2_2_name" text="ヴァラ" />
     <string id="aom_lord_3_1_name" text="カドゥラク" />
-    <string id="aom_lord_3_2_name" text="ハラド用プレースホルダー" />
-    <string id="aom_lord_3_3_name" text="カレミア" />
+    <string id="aom_lord_3_2_name" text="カリーダ" />
+    <string id="aom_lord_3_3_name" text="マルズク" />
     <string id="aom_lord_3_4_name" text="マラー" />
-    <string id="aom_lord_3_5_name" text="ハルディア" />
+    <string id="aom_lord_3_5_name" text="アコール" />
     <string id="aom_lord_3_51_name" text="ハカン" />
     <string id="aom_lord_3_6_name" text="ルマ" />
     <string id="aom_lord_3_7_name" text="ディユル" />
@@ -836,13 +836,13 @@
     <string id="aom_lord_3_13_name" text="ヌカル" />
     <string id="aom_lord_3_14_name" text="タムザ" />
     <string id="aom_lord_3_15_name" text="グジド" />
-    <string id="aom_lord_3_16_name" text="ルーミル" />
-    <string id="aom_lord_3_17_name" text="オロフィン" />
-    <string id="aom_lord_3_18_name" text="アランソン" />
-    <string id="aom_lord_3_19_name" text="アエシリオン" />
+    <string id="aom_lord_3_16_name" text="ザファル" />
+    <string id="aom_lord_3_17_name" text="アズラク" />
+    <string id="aom_lord_3_18_name" text="カリーム" />
+    <string id="aom_lord_3_19_name" text="ズルカーン" />
     <string id="aom_lord_3_20_name" text="カリス" />
     <string id="aom_lord_3_21_name" text="ウクハイ" />
-    <string id="aom_lord_3_22_name" text="ドゥイリン" />
+    <string id="aom_lord_3_22_name" text="ナミール" />
     <string id="aom_lord_3_23_name" text="カヒン" />
     <string id="aom_lord_3_3_1_name" text="ターリク" />
     <string id="aom_lord_3_13_1_name" text="シーラ" />
@@ -923,7 +923,7 @@
     <string id="aom_lord_V11_u_name" text="ヴォレリック" />
     <string id="aom_lord_V9_u_name" text="ウルンドゥルフ" />
     <string id="aom_lord_5_1_name" text="ヴァルグール、カンドの最高戦将" />
-    <string id="aom_lord_5_7_name" text="Cadwyr" />
+    <string id="aom_lord_5_7_name" text="カルズル" />
     <string id="aom_lord_5_3_name" text="エルゲオン" />
     <string id="aom_lord_5_4_name" text="ニウィン" />
     <string id="aom_lord_5_5_name" text="メリディル" />
@@ -945,7 +945,7 @@
     <string id="aom_lord_5_20_name" text="シアラムス" />
     <string id="aom_lord_5_21_name" text="カーフィド" />
     <string id="aom_lord_5_22_name" text="フィアラド" />
-    <string id="aom_lord_5_1_1_name" text="Nyveth" />
+    <string id="aom_lord_5_1_1_name" text="カズナ" />
     <string id="aom_lord_5_3_1_name" text="ラナオン" />
     <string id="aom_lord_5_3_2_name" text="ラドグアル" />
     <string id="aom_lord_5_5_1_name" text="エイリー" />
@@ -1028,7 +1028,7 @@
     <string id="aom_lord_S9_l_name" text="ボンブール" />
     <string id="aom_lord_S9_m_name" text="ダキラ" />
     <string id="aom_lord_S9_u_name" text="チャスティミール" />
-    <string id="aom_lord_SE8_c_name" text="Shagrala" />
+    <string id="aom_lord_SE8_c_name" text="シャグララ" />
     <string id="aom_lord_SE9_c1_name" text="パガリオス" />
     <string id="aom_lord_SE9_c2_name" text="ディアスカ" />
     <string id="aom_lord_SE9_l_name" text="ウルク隊長グリシュナーク" />
@@ -1038,13 +1038,13 @@
     <string id="aom_lord_WE9_l_name" text="ドゥインヒア" />
     <string id="aom_lord_WE9_u_name" text="ドゥイリン" />
     <string id="aom_lord_WE9_u2_name" text="ロスフィン" />
-    <string id="TAOM_hero_dead_2_1" text="Olek the Old fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom." />
-    <string id="TAOM_hero_dead_2_2" text="Varra, a noblewoman of Dale, perished in the winter plague that followed the war. She was known for her charity to the common folk." />
-    <string id="TAOM_hero_dead_3_1" text="Nimr was a Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south." />
-    <string id="TAOM_hero_dead_6_1" text="Urkhun was the great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun." />
-    <string id="TAOM_hero_dead_6_2" text="Solun was a respected noyan who fell in battle against the Free Peoples. His widow Gûrtilm now leads their clan with iron determination." />
-    <string id="TAOM_hero_dead_6_3" text="Kuyug was chief noyan of the Arkit clan. His brilliance with horse archery shaped an entire generation of Easterling warriors." />
-    <string id="TAOM_hero_dead_6_4" text="Undul was a noble of the Arkit clan and son of the great noyan. He died young but showed promise as a warrior." />
+    <string id="TAOM_hero_dead_2_1" text="老オレクは、東夷の襲撃者からデイルを守って戦死した。彼の犠牲によって山道は守られ、その名は王国中の歌に語り継がれている。" />
+    <string id="TAOM_hero_dead_2_2" text="デイルの貴婦人ヴァラは、戦後に訪れた冬の疫病で亡くなった。庶民への慈善で知られていた。" />
+    <string id="TAOM_hero_dead_3_1" text="ニムルはハラドリムの将であり、黒門の戦いで砂漠の騎兵を率いた。ゴンドールの矢に倒れたが、南方では殉教者として崇められている。" />
+    <string id="TAOM_hero_dead_6_1" text="ウルクンは東夷の諸部族をルーンの旗の下に初めて統一した偉大なるカンであった。その征服により黄金の王国の境はルーン内海の岸辺にまで広がった。" />
+    <string id="TAOM_hero_dead_6_2" text="ソルンは自由の民との戦いで討たれた尊敬すべきノヤンであった。今はその未亡人グールティルムが鉄の意志をもって一族を率いている。" />
+    <string id="TAOM_hero_dead_6_3" text="クユグはアルキト氏族の首席ノヤンであった。騎射における彼の才は東夷の戦士たちの一世代全体を形作った。" />
+    <string id="TAOM_hero_dead_6_4" text="ウンドゥルはアルキト氏族の貴族であり、偉大なるノヤンの息子であった。若くして没したが、戦士としての将来を嘱望されていた。" />
     <string id="TAOM_hero_1_1" text="ブレニン・ウルフは鉄の拳でドゥンランドの荒々しい諸部族を支配している。アイアンハンドとして知られる彼は、征服と策略によって散在する丘陵部族を統一した。彼はローハンの馬の国の王たちに奪われた土地を取り戻すことを夢見ている。" />
     <string id="TAOM_hero_1_2" text="フレイヤ・ウルフハートはブレニン・ウルフの猛々しい妻である。斧と盾の技で戦士たちの間で尊敬を集めている。" />
     <string id="TAOM_hero_1_41" text="ベレグンド・ウルフボーンはドゥンランドの信頼される隊長であり、ローハンの集落を襲撃する技で知られている。" />
@@ -1086,16 +1086,16 @@
     <string id="TAOM_hero_1_67" text="エオルウィン・フェザーボルトは刃よりも弓を好み、影から敵を射抜く。" />
     <string id="TAOM_hero_1_58" text="冷酷者ゴーヴィンは、ドゥネダインの間でさえその残虐さが伝説となっている厳格な族長である。" />
     <string id="TAOM_hero_1_70" text="影のヴェイラは敵陣営に音もなく忍び込み、夜闇で喉を掻き切る。" />
-    <string id="TAOM_hero_NE7_u" text="Haldric the Black Fang advises his clan's chieftain, and earned the name before he was twenty." />
-    <string id="TAOM_hero_NE8_l" text="Eadric the Swift is chieftain of a mountain clan, hardened young by border warfare." />
-    <string id="TAOM_hero_NE8_s" text="Aeloria is wife to the chieftain, and skilled in the healing arts and herb lore." />
-    <string id="TAOM_hero_NE8_c1" text="Cerdic, called the Anvil, is firstborn of the clan and has trained for war since childhood." />
-    <string id="TAOM_hero_NE8_c2" text="Morwen is second child of the clan leader, known already for cunning and ambition." />
+    <string id="TAOM_hero_NE7_u" text="黒き牙のハルドリックは氏族の族長に助言する者であり、その名を二十歳前に得た。" />
+    <string id="TAOM_hero_NE8_l" text="疾風のエアドリックは山の氏族の族長であり、国境の戦いで若くして鍛えられた。" />
+    <string id="TAOM_hero_NE8_s" text="アエロリアは族長の妻であり、癒しの技と薬草の知識に長けている。" />
+    <string id="TAOM_hero_NE8_c1" text="「鉄床」と呼ばれるケルディックは氏族の長子であり、幼い頃より戦の訓練を積んできた。" />
+    <string id="TAOM_hero_NE8_c2" text="モルウェンは氏族の長の第二子であり、すでにその狡知と野心で知られている。" />
     <string id="TAOM_hero_1_56" text="トルムンド・ザ・ハンマーは、戦鎚による壊滅的な突撃によってその名を得た。" />
     <string id="TAOM_hero_1_56_1" text="グウェンナはトルムンドの妻であり、彼が遠征する間、一族の領地を管理している。" />
-    <string id="TAOM_hero_NE9_l" text="Valthor Scalecleaver is a chieftain whose counsel is sought across the Dunlending clans." />
-    <string id="TAOM_hero_NE9_s" text="Rurik Fanghew is son of the old chieftain, and eager to prove himself in battle." />
-    <string id="TAOM_hero_NE9_d" text="Sylva Serpent-Strike is a daughter of the clan, trained in both combat and diplomacy." />
+    <string id="TAOM_hero_NE9_l" text="鱗断ちのヴァルソールは族長であり、その助言はドゥネランドの諸氏族から求められている。" />
+    <string id="TAOM_hero_NE9_s" text="牙削ぎのルーリックは老族長の息子であり、戦で自らを証明したいと熱望している。" />
+    <string id="TAOM_hero_NE9_d" text="蛇撃ちのシルヴァは氏族の娘であり、戦闘と外交の双方に通じている。" />
     <string id="TAOM_hero_1_7" text="デネソール二世、ゴンドールの執政、ミナス・ティリスの白の塔から統治している。かつては偉大なる智者であったが、誇り高く頑固になっている。彼は王の帰還に抵抗し、モルドールの影からゴンドールを救えるのは自分だけだと信じている。" />
     <string id="TAOM_hero_1_75" text="ボロミア、デネソールの長男、ゴンドールの将軍である。名高き偉大なる戦士であり、闇に対して民を守るためのあらゆる武器を求めている。" />
     <string id="TAOM_hero_1_8" text="フーリオネスはフーリニオナス家に仕え、ゴンドールの執政たちの伝承を守り続ける忠実な守護者である。" />
@@ -1169,8 +1169,8 @@
     <string id="TAOM_hero_1_49" text="オブロンはモルドールのオークの中隊を率いる。" />
     <string id="TAOM_hero_1_49_1" text="トリスタニアは闇の軍勢に仕える。" />
     <string id="TAOM_hero_1_49_2" text="ゴルディアナは暗黒の塔の影に住まう。" />
-    <string id="TAOM_hero_1_30_2" text="Mogra serves the dark powers of Mordor." />
-    <string id="TAOM_hero_1_30_3" text="Snaga is a servant of the Shadow." />
+    <string id="TAOM_hero_1_30_2" text="モグラはモルドールの暗き力に仕えている。" />
+    <string id="TAOM_hero_1_30_3" text="スナガは影の下僕である。" />
     <string id="TAOM_hero_1_56_2" text="ルスティカは闇の軍勢に仕える。" />
     <string id="TAOM_hero_1_63_2" text="コマタサは戦争のために生み出されたオークである。" />
     <string id="TAOM_hero_1_63_3" text="エリディレアは闇の階層に仕える。" />
@@ -1189,7 +1189,7 @@
     <string id="TAOM_hero_1_55_1" text="メゲシアは闇の力に仕える。" />
     <string id="TAOM_hero_1_72" text="ボルグは強力なオークの族長であり、汚れし者アゾグの子孫である。" />
     <string id="TAOM_hero_1_72_1" text="ヴィヴィアナは闇の階層に仕える。" />
-    <string id="TAOM_hero_SE8_c" text="Shagrala was bred in the pits of Mordor and has fought her way up to a command of her own." />
+    <string id="TAOM_hero_SE8_c" text="シャグララはモルドールの穴で生み出され、戦い抜いて自らの指揮権を手にした。" />
     <string id="TAOM_hero_SE9_l" text="モルドールの要塞を指揮する黒きヌーメノール人の領主。" />
     <string id="TAOM_hero_SE9_s" text="闇の力を持つ黒きヌーメノール人の魔女。" />
     <string id="TAOM_hero_SE9_c1" text="黒きヌーメノール人の家系の跡継ぎであり、闇の技を修めた者。" />
@@ -1242,9 +1242,9 @@
     <string id="TAOM_hero_2_19_1" text="ヴィトミラはドワーリンと共に仕えている。" />
     <string id="TAOM_hero_2_20" text="オーインはドワーフの長老であり、古の知識と治癒術の守護者である。" />
     <string id="TAOM_hero_2_20_1" text="キシャはオインの妻で、薬草の知識に長けている。" />
-    <string id="TAOM_hero_S8_u" text="Galyk is a grizzled veteran who guards the mountain halls." />
+    <string id="TAOM_hero_S8_u" text="ガリュクは山の広間を守る歴戦の古兵である。" />
     <string id="TAOM_hero_3_1" text="カドゥラクはハラドのタスクラルであり、南方軍の最高司令官である。彼はゴンドールに対抗してモルドールと同盟を結び、ムマキルの戦象を率いて民の敵と戦う。" />
-    <string id="TAOM_hero_3_2" text="高い地位を持つハラドリムの貴族女性。" />
+    <string id="TAOM_hero_3_2" text="カリーダはカドゥラクの妻であり、高い地位にあるハラドリムの貴婦人である。" />
     <string id="TAOM_hero_3_7" text="ディユルはタスクラルの後継者であり、ムマク騎乗者の道を学んでいる。" />
     <string id="TAOM_hero_3_10" text="アニダはタスクラルの娘で、宮廷政治に通じている。" />
     <string id="TAOM_hero_3_13" text="ヌカルはハラドの精鋭蛇衛兵を指揮している。" />
@@ -1252,10 +1252,10 @@
     <string id="TAOM_hero_3_13_2" text="ラザナは蛇衛兵指揮官の娘である。" />
     <string id="TAOM_hero_3_8" text="アダスはハラドリムの戦士王子である。" />
     <string id="TAOM_hero_3_11" text="アルワは砂漠部族の王女である。" />
-    <string id="TAOM_hero_3_3" text="カレミアは東ハラドリムの族長であり、オアシス集落の領主である。" />
+    <string id="TAOM_hero_3_3" text="マルズクは東方ハラドリムの族長であり、オアシスの集落を治める領主である。" />
     <string id="TAOM_hero_3_3_1" text="タリクは東のオアシス領主の後継者である。" />
     <string id="TAOM_hero_3_4" text="マラーはカレミアの妻であり、その知恵で知られている。" />
-    <string id="TAOM_hero_3_5" text="ハルディアは沿岸ハラドリムを指揮し、ウンバールの海賊と同盟を結んでいる。" />
+    <string id="TAOM_hero_3_5" text="アコールは沿岸のハラドリムを率い、ウンバールの海賊と同盟している。" />
     <string id="TAOM_hero_3_51" text="ハカンは沿岸部族の海の船長である。" />
     <string id="TAOM_hero_3_12" text="マナンはゴンドールの沿岸集落を襲撃している。" />
     <string id="TAOM_hero_3_20" text="カリスは敵地への襲撃隊を指揮している。" />
@@ -1268,25 +1268,25 @@
     <string id="TAOM_hero_3_15" text="グジドは深南部のムマク騎乗者を指揮している。" />
     <string id="TAOM_hero_3_15_1" text="シムラはムマクの領主の妻である。" />
     <string id="TAOM_hero_3_15_2" text="ブシラは若いムマク騎乗者を訓練している。" />
-    <string id="TAOM_hero_3_16" text="ルミルは黄金の旗印部族の族長である。" />
+    <string id="TAOM_hero_3_16" text="ザファルは黄金の旗を掲げる諸部族の族長である。" />
     <string id="TAOM_hero_3_16_1" text="ファリナは黄金の旗印族長の妻である。" />
-    <string id="TAOM_hero_3_17" text="オロフィンは極南の蛇騎兵を指揮している。" />
+    <string id="TAOM_hero_3_17" text="アズラクは遥かな南方の蛇騎兵を率いている。" />
     <string id="TAOM_hero_3_17_1" text="シャイマはオロフィンの妻である。" />
     <string id="TAOM_hero_3_17_2" text="サニトは蛇騎兵の後継者である。" />
     <string id="TAOM_hero_3_21" text="ウカイは北方の隊商を襲う砂漠の略奪者を率いている。" />
     <string id="TAOM_hero_3_21_1" text="アシサは略奪隊長の妻である。" />
-    <string id="TAOM_hero_3_18" text="アランソンは南方の裕福な商人王子である。" />
+    <string id="TAOM_hero_3_18" text="カリームは南方の富裕な商人の君である。" />
     <string id="TAOM_hero_3_18_1" text="ファルザナは商人王子の娘である。" />
     <string id="TAOM_hero_3_18_2" text="ハフィサは交易の繋がりを管理している。" />
     <string id="TAOM_hero_3_18_3" text="ズアドは修行中の若い商人である。" />
     <string id="TAOM_hero_3_18_4" text="ジャルファルは交易隊商を護衛している。" />
-    <string id="TAOM_hero_3_19" text="アエシリオンは北方辺境の要塞を指揮している。" />
+    <string id="TAOM_hero_3_19" text="ズルカーンは北の辺境にある砦を指揮している。" />
     <string id="TAOM_hero_3_19_1" text="サルマは辺境司令官の妻である。" />
     <string id="TAOM_hero_3_19_2" text="ズライカは辺境守備隊で訓練を受けている。" />
     <string id="TAOM_hero_3_19_3" text="スルハナは辺境の貴族である。" />
     <string id="TAOM_hero_3_23" text="カヒンは敵地への斥候を率いる。" />
     <string id="TAOM_hero_3_23_1" text="スカイナは斥候隊長の妻である。" />
-    <string id="TAOM_hero_3_22" text="ドゥイリンは砂漠の部族の弓兵を指揮する。" />
+    <string id="TAOM_hero_3_22" text="ナミールは砂漠の諸部族の弓兵を率いている。" />
     <string id="TAOM_hero_3_22_1" text="ヤミナは弓兵隊長の妻である。" />
     <string id="TAOM_hero_3_22_2" text="スナは若き弓兵たちを訓練する。" />
     <string id="TAOM_hero_3_22_3" text="ザヌワは部族の熟練した弓兵である。" />
@@ -1300,8 +1300,8 @@
     <string id="TAOM_hero_4_141" text="アモルコンは親衛隊で親族とともに仕える。" />
     <string id="TAOM_hero_4_15" text="エルドゥランドはセオデンの側近の騎士である。" />
     <string id="TAOM_hero_4_3_3" text="セオドウィンはセオデン王の妹であり、エオメルとエオウィンの母であった。夫エオムンドがオークに殺された後、悲しみのあまり世を去った。" />
-    <string id="TAOM_hero_4_3" text="Aldric holds a hall in the Eastfold and rides in the muster of Edoras. He is a plain horseman of no great house, trusted for it." />
-    <string id="TAOM_hero_rohan_10_1" text="Éomund of the Eastfold rode as Marshal of the Mark and wed Théodwyn, sister of the king. Orcs cut him down in the Emyn Muil, and his two children passed into Théoden's keeping." />
+    <string id="TAOM_hero_4_3" text="アルドリックはイーストフォールドに館を持ち、エドラスの召集に馬で加わる。名門の出ではない平凡な騎士だが、それゆえに信を得ている。" />
+    <string id="TAOM_hero_rohan_10_1" text="イーストフォールドのエオムンドはマークの元帥として馬を駆り、王の妹セオドウィンを妻とした。オークがエミュン・ムイルで彼を討ち、二人の子はセオデンの手に委ねられた。" />
     <string id="TAOM_hero_4_3_1" text="エオメル・エアディグは辺境領第三元帥であり、セオデンの甥にして王位継承者である。彼は東谷の騎士たちを激しい忠誠心をもって率いる。" />
     <string id="TAOM_hero_4_4" text="エルシルドはエオフォリングの貴婦人である。" />
     <string id="TAOM_hero_4_8" text="フルンハードはエオメルの指揮下で信頼される騎士として仕える。" />
@@ -1330,10 +1330,10 @@
     <string id="TAOM_hero_4_23_2" text="エレドゥランは王の軍のために軍馬を訓練する。" />
     <string id="TAOM_hero_4_23_3" text="若きエレドゥランは馬番として仕える。" />
     <string id="TAOM_hero_4_24" text="蛇の舌グリマはセオデンの顧問であったが、密かにサルマンのスパイであった。彼の囁く嘘は王の心を毒したが、ガンダルフがその呪縛を解いた。" />
-    <string id="TAOM_hero_4_24_1" text="Adaltrud was wed to Gríma Grimmóding before his counsel turned to Saruman. She keeps a hall at Edoras that the riders no longer visit." />
-    <string id="TAOM_hero_4_24_2" text="Gudonhelda is the eldest daughter of Gríma Grimmóding. She learned early that her father's name opens no doors in Edoras." />
-    <string id="TAOM_hero_4_24_3" text="Ingunde, second daughter of Gríma Grimmóding, tends the horses of a house nobody rides out with." />
-    <string id="TAOM_hero_4_24_4" text="Irmgard is the youngest of Gríma Grimmóding's daughters, and the only one too young to remember the hall before the whispering started." />
+    <string id="TAOM_hero_4_24_1" text="アダルトルードは、グリマ・グリムモーディングがサルマンに仕えるようになる前に彼と結ばれた。エドラスに館を守るが、騎士たちはもはやそこを訪れない。" />
+    <string id="TAOM_hero_4_24_2" text="グドンヘルダはグリマ・グリムモーディングの長女である。父の名がエドラスではいかなる扉も開かぬことを、早くから学んだ。" />
+    <string id="TAOM_hero_4_24_3" text="イングンデはグリマ・グリムモーディングの次女で、誰も共に出陣しない家の馬の世話をしている。" />
+    <string id="TAOM_hero_4_24_4" text="イルムガルドはグリマ・グリムモーディングの娘たちの末で、囁きが始まる前の館を覚えていない唯一の者である。" />
     <string id="TAOM_hero_4_3_2" text="ローハンの姫君エオウィンは、エオメルの妹でありセオデンの姪である。彼女はペレンノール野でアングマールの魔王を討ち、時代の恐怖を打ち倒した。" />
     <string id="TAOM_hero_4_6_2" text="エルフグリムは王家の騎兵として仕える。" />
     <string id="TAOM_hero_4_16_2" text="ヘルブランドは王の館を守る。" />
@@ -1342,12 +1342,12 @@
     <string id="TAOM_hero_4_26_1" text="ライインガルダは隘路の盾乙女である。" />
     <string id="TAOM_hero_4_27" text="エール・エゼルラフィングはダンランドの略奪からフォールドを守る。" />
     <string id="TAOM_hero_4_27_1" text="ワエルブルグはエールの妻である。" />
-    <string id="TAOM_hero_V9_u" text="Urundulf is a seasoned rider who advises the local thane." />
+    <string id="TAOM_hero_V9_u" text="ウルンドゥルフは熟練の騎士で、地元の領主に助言を与えている。" />
     <string id="TAOM_hero_4_28" text="ファストヘルム・モルカルガスは南の監視所を指揮する。" />
     <string id="TAOM_hero_4_28_1" text="モルカルはファストヘルムの息子である。" />
     <string id="TAOM_hero_4_28_2" text="ヘレスウィズは南の監視隊長の娘である。" />
     <string id="TAOM_hero_5_1" text="カンドの大将軍ヴァルグルは、獰猛なヴァリアグの騎馬兵を率いる。モルドールとの同盟により、彼の戦士たちは中つ国の戦いでゴンドールに立ち向かう。" />
-    <string id="TAOM_hero_5_1_1" text="Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
+    <string id="TAOM_hero_5_1_1" text="カズナは大将軍の家の娘である。彼の従士とともに馬を駆るが、まだ幼く槍を持たぬ。" />
     <string id="TAOM_hero_5_3" text="エルゲオンは東方のヴァリアグ氏族を率いる族長であり、その迅速な騎兵戦術で知られている。" />
     <string id="TAOM_hero_5_3_1" text="ラナオンはエルゲオンの戦団の後継者である。" />
     <string id="TAOM_hero_5_3_2" text="ラドグアルはエルゲオンの軍の隊長として仕える。" />
@@ -1355,7 +1355,7 @@
     <string id="TAOM_hero_5_5" text="メリディルはゴンドールの地への略奪者を率いる。" />
     <string id="TAOM_hero_5_5_1" text="エイリーは氏族の馬の群れを管理する。" />
     <string id="TAOM_hero_5_6" text="アルカエアはメリディルの妻である。" />
-    <string id="TAOM_hero_5_7" text="カンドのヴァリアグ戦士族長。" />
+    <string id="TAOM_hero_5_7" text="カルズールはカンドのヴァリアグの戦士族長であり、大将軍の息子である。" />
     <string id="TAOM_hero_5_8" text="セインはヴァリアグ騎兵隊を指揮する。" />
     <string id="TAOM_hero_5_9" text="クルハーンは名声を高めつつあるヴァリアグの戦士である。" />
     <string id="TAOM_hero_5_91" text="テガンはクルハーンと共に仕える。" />
@@ -1417,32 +1417,32 @@
     <string id="TAOM_hero_6_19_2" text="コルテはヴァケラルタンの斥候隊の後継者である。" />
     <string id="TAOM_hero_6_20" text="クルブラ・マシャキアンはルーンの北部部族を指揮する。" />
     <string id="TAOM_hero_6_20_1" text="ジグルはクルブラの妻である。" />
-    <string id="TAOM_hero_K8_u" text="Boronchar is a seasoned warrior who advises the northern chieftain." />
+    <string id="TAOM_hero_K8_u" text="ボロンチャルは熟練の戦士で、北の族長に助言を与えている。" />
     <string id="TAOM_hero_6_21" text="モッルク・イルノリアは強力な馬上戦士の一族を指揮する。" />
     <string id="TAOM_hero_6_21_1" text="エサチェイはモッルクの妻である。" />
     <string id="TAOM_hero_6_22" text="シャカル二世・シャカリアンはルーンの海沿いの裕福な交易一族を統治する。" />
     <string id="TAOM_hero_6_22_1" text="エセレンはシャカルの妻である。" />
     <string id="TAOM_hero_6_23" text="フズ=マルゴズ・フズは西部辺境沿いの要塞守備隊を指揮する。" />
     <string id="TAOM_hero_6_24" text="ニカス・アデキグはルーンへの南部峠を守る。" />
-    <string id="TAOM_hero_A9_l" text="Caradan is a Haradrim chieftain of the southern wastes, young for the office and watched closely by older men." />
-    <string id="TAOM_hero_A9_s" text="Thiqa is wife to the chieftain of the southern wastes and keeps the water tallies of his camps." />
-    <string id="TAOM_hero_A9_c" text="Dhila is heir to the chieftain of the southern wastes. She has ridden the dune tracks since she could sit a saddle." />
-    <string id="TAOM_hero_A9_u" text="Qaban is a warrior of the southern tribes and rides in the chieftain's van." />
-    <string id="TAOM_hero_V11_l" text="Léomund Deáfringas is a Rohirrim lord of the western vales." />
-    <string id="TAOM_hero_V11_u" text="Voleric is a veteran rider who advises the lord." />
-    <string id="TAOM_hero_V11_c1" text="Elendara is heir to the western vale holdings." />
-    <string id="TAOM_hero_V11_c2" text="Dagunic is the second child of the western vale lord." />
-    <string id="TAOM_hero_S9_l" text="Orvar is a noble of Dale who guards the northern approaches." />
-    <string id="TAOM_hero_S9_m" text="Dakhila is matriarch of a northern Barding clan." />
-    <string id="TAOM_hero_S9_c" text="Forim is young heir to the northern holdings." />
-    <string id="TAOM_hero_S9_u" text="Chastimir is a seasoned warrior of the northern garrison." />
-    <string id="TAOM_hero_K9_l" text="Valathmir Mashakian is a chieftain of the distant Easterling tribes, and answers to Rhun only when it suits him." />
-    <string id="TAOM_hero_K9_s" text="Sevin is wife to the distant chieftain and holds his camp while he rides." />
-    <string id="TAOM_hero_K9_c1" text="Altu is heir to the tribal holdings east of the inland sea." />
-    <string id="TAOM_hero_K9_c2" text="Mela is the second child of the distant chieftain, and rides better than her brother." />
-    <string id="TAOM_hero_B8_l" text="Maireas is a Variag warlord of the eastern hills, and has held them through three winters of raiding." />
-    <string id="TAOM_hero_B8_s" text="Rodarac is wife to the Variag warlord and speaks for him when he is away at the hosting." />
-    <string id="TAOM_hero_B8_c" text="Guaran is heir to the Variag warlord, and has waited longer for it than he likes." />
+    <string id="TAOM_hero_A9_l" text="カラダンは南の荒地のハラドリムの族長であり、その任には若く、年長者たちに厳しく見張られている。" />
+    <string id="TAOM_hero_A9_s" text="ティカは南の荒地の族長の妻であり、彼の野営地の水の記録を管理している。" />
+    <string id="TAOM_hero_A9_c" text="ディラは南の荒地の族長の後継者である。鞍にまたがれるようになった時から砂丘の道を駆ってきた。" />
+    <string id="TAOM_hero_A9_u" text="カバンは南方諸部族の戦士で、族長の先陣を駆ける。" />
+    <string id="TAOM_hero_V11_l" text="レーオムンド・デーアフリンガスは西の谷間のローヒルリムの領主である。" />
+    <string id="TAOM_hero_V11_u" text="ヴォレリックは老練な騎士で、領主に助言を与えている。" />
+    <string id="TAOM_hero_V11_c1" text="エレンダラは西の谷間の領地の後継者である。" />
+    <string id="TAOM_hero_V11_c2" text="ダグニックは西の谷間の領主の第二子である。" />
+    <string id="TAOM_hero_S9_l" text="オルヴァルは谷間の国の貴族で、北の進路を守っている。" />
+    <string id="TAOM_hero_S9_m" text="ダキラは北方のバルド人の氏族の女家長である。" />
+    <string id="TAOM_hero_S9_c" text="フォリムは北の領地の若き後継者である。" />
+    <string id="TAOM_hero_S9_u" text="チャスティミールは北の守備隊の熟練の戦士である。" />
+    <string id="TAOM_hero_K9_l" text="ヴァラスミール・マシャキアンは遠方の東夷の諸部族の族長であり、都合のよいときにのみルーンに従う。" />
+    <string id="TAOM_hero_K9_s" text="セヴィンは遠方の族長の妻で、彼が馬で出ている間、その野営地を守る。" />
+    <string id="TAOM_hero_K9_c1" text="アルトゥは内海の東にある部族領の後継者である。" />
+    <string id="TAOM_hero_K9_c2" text="メラは遠方の族長の第二子で、兄よりも巧みに馬を操る。" />
+    <string id="TAOM_hero_B8_l" text="マイレアスは東の丘陵のヴァリアグの武将であり、三度の冬の襲撃を通じてその地を保ってきた。" />
+    <string id="TAOM_hero_B8_s" text="ロダラクはヴァリアグの武将の妻で、彼が召集に出ている間、彼の代わりに語る。" />
+    <string id="TAOM_hero_B8_c" text="グアランはヴァリアグの武将の後継者であり、望むよりも長くその日を待っている。" />
     <string id="TAOM_liege_dunland" text="ダンランドのブレニン" />
     <string id="TAOM_liege_dunland_female" text="ダンランドのブレンヒネス" />
     <string id="TAOM_liege_dale" text="デイルの王" />

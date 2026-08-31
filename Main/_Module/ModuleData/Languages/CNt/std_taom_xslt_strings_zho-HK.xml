@@ -751,12 +751,12 @@
     <string id="aom_lord_1_52_1_name" text="安娜瑞兒" />
     <string id="aom_lord_1_52_2_name" text="巴蘭多" />
     <string id="aom_lord_1_73_1_name" text="貝爾溫" />
-    <string id="aom_lord_1_62_1_name" text="Isfin" />
+    <string id="aom_lord_1_62_1_name" text="伊絲芬" />
     <string id="aom_lord_1_30_1_name" text="絲瓦拉·紅牙" />
-    <string id="aom_lord_1_30_2_name" text="Mogra" />
-    <string id="aom_lord_1_30_3_name" text="Snaga" />
+    <string id="aom_lord_1_30_2_name" text="莫格拉" />
+    <string id="aom_lord_1_30_3_name" text="史那加" />
     <string id="aom_lord_1_48_1_name" text="戒靈,污穢者" />
-    <string id="aom_lord_1_48_2_name" text="Nazgûl, the Shadow of the Northmen" />
+    <string id="aom_lord_1_48_2_name" text="戒靈，北方人的陰影" />
     <string id="aom_lord_1_48_3_name" text="戒靈,昂巴之影" />
     <string id="aom_lord_1_54_1_name" text="康絲塔莉婭" />
     <string id="aom_lord_1_55_1_name" text="梅吉希婭" />
@@ -821,10 +821,10 @@
     <string id="aom_dead_lord_2_1_name" text="老奧列克" />
     <string id="aom_dead_lord_2_2_name" text="瓦拉" />
     <string id="aom_lord_3_1_name" text="卡杜拉克" />
-    <string id="aom_lord_3_2_name" text="哈拉德佔位符" />
-    <string id="aom_lord_3_3_name" text="卡勒米爾" />
+    <string id="aom_lord_3_2_name" text="卡莉妲" />
+    <string id="aom_lord_3_3_name" text="馬爾祖克" />
     <string id="aom_lord_3_4_name" text="瑪拉" />
-    <string id="aom_lord_3_5_name" text="哈爾迪爾" />
+    <string id="aom_lord_3_5_name" text="阿克霍爾" />
     <string id="aom_lord_3_51_name" text="哈坎" />
     <string id="aom_lord_3_6_name" text="魯瑪" />
     <string id="aom_lord_3_7_name" text="迪尤爾" />
@@ -836,13 +836,13 @@
     <string id="aom_lord_3_13_name" text="努卡爾" />
     <string id="aom_lord_3_14_name" text="塔姆札" />
     <string id="aom_lord_3_15_name" text="古茲德" />
-    <string id="aom_lord_3_16_name" text="魯米爾" />
-    <string id="aom_lord_3_17_name" text="歐洛芬" />
-    <string id="aom_lord_3_18_name" text="阿蘭松" />
-    <string id="aom_lord_3_19_name" text="埃西里昂" />
+    <string id="aom_lord_3_16_name" text="扎法爾" />
+    <string id="aom_lord_3_17_name" text="阿茲拉克" />
+    <string id="aom_lord_3_18_name" text="卡里姆" />
+    <string id="aom_lord_3_19_name" text="祖爾汗" />
     <string id="aom_lord_3_20_name" text="卡里斯" />
     <string id="aom_lord_3_21_name" text="烏凱" />
-    <string id="aom_lord_3_22_name" text="杜林" />
+    <string id="aom_lord_3_22_name" text="納米爾" />
     <string id="aom_lord_3_23_name" text="卡辛" />
     <string id="aom_lord_3_3_1_name" text="塔里克" />
     <string id="aom_lord_3_13_1_name" text="西拉" />
@@ -923,7 +923,7 @@
     <string id="aom_lord_V11_u_name" text="沃勒里克" />
     <string id="aom_lord_V9_u_name" text="烏倫杜爾夫" />
     <string id="aom_lord_5_1_name" text="瓦爾古爾,侃德大軍閥" />
-    <string id="aom_lord_5_7_name" text="Cadwyr" />
+    <string id="aom_lord_5_7_name" text="卡爾祖爾" />
     <string id="aom_lord_5_3_name" text="埃爾吉恩" />
     <string id="aom_lord_5_4_name" text="尼溫" />
     <string id="aom_lord_5_5_name" text="梅利迪爾" />
@@ -945,7 +945,7 @@
     <string id="aom_lord_5_20_name" text="希亞拉穆斯" />
     <string id="aom_lord_5_21_name" text="卡菲德" />
     <string id="aom_lord_5_22_name" text="菲亞拉德" />
-    <string id="aom_lord_5_1_1_name" text="Nyveth" />
+    <string id="aom_lord_5_1_1_name" text="卡茲娜" />
     <string id="aom_lord_5_3_1_name" text="拉納昂" />
     <string id="aom_lord_5_3_2_name" text="拉多古爾" />
     <string id="aom_lord_5_5_1_name" text="艾莉" />
@@ -1028,7 +1028,7 @@
     <string id="aom_lord_S9_l_name" text="龐伯" />
     <string id="aom_lord_S9_m_name" text="達基拉" />
     <string id="aom_lord_S9_u_name" text="查斯提米爾" />
-    <string id="aom_lord_SE8_c_name" text="Shagrala" />
+    <string id="aom_lord_SE8_c_name" text="夏格拉拉" />
     <string id="aom_lord_SE9_c1_name" text="帕加里奧斯" />
     <string id="aom_lord_SE9_c2_name" text="迪亞斯卡" />
     <string id="aom_lord_SE9_l_name" text="強獸人隊長葛力斯那克" />
@@ -1038,13 +1038,13 @@
     <string id="aom_lord_WE9_l_name" text="杜因希爾" />
     <string id="aom_lord_WE9_u_name" text="杜林" />
     <string id="aom_lord_WE9_u2_name" text="羅斯芬" />
-    <string id="TAOM_hero_dead_2_1" text="Olek the Old fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom." />
-    <string id="TAOM_hero_dead_2_2" text="Varra, a noblewoman of Dale, perished in the winter plague that followed the war. She was known for her charity to the common folk." />
-    <string id="TAOM_hero_dead_3_1" text="Nimr was a Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south." />
-    <string id="TAOM_hero_dead_6_1" text="Urkhun was the great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun." />
-    <string id="TAOM_hero_dead_6_2" text="Solun was a respected noyan who fell in battle against the Free Peoples. His widow Gûrtilm now leads their clan with iron determination." />
-    <string id="TAOM_hero_dead_6_3" text="Kuyug was chief noyan of the Arkit clan. His brilliance with horse archery shaped an entire generation of Easterling warriors." />
-    <string id="TAOM_hero_dead_6_4" text="Undul was a noble of the Arkit clan and son of the great noyan. He died young but showed promise as a warrior." />
+    <string id="TAOM_hero_dead_2_1" text="老者歐雷克在保衛河谷邦、抵禦東夷劫掠者時陣亡。他的犧牲確保了山道的安全，全國歌謠皆傳頌其名。" />
+    <string id="TAOM_hero_dead_2_2" text="瓦拉是河谷邦的貴族女子，死於戰後的冬季瘟疫。她以對平民的慷慨施捨而聞名。" />
+    <string id="TAOM_hero_dead_3_1" text="尼姆爾是哈拉德人的軍閥，在黑門之戰中率領沙漠騎兵。他倒在剛鐸的箭下，但在南方被尊為殉道者。" />
+    <string id="TAOM_hero_dead_6_1" text="烏爾洪是首位將東夷諸部統一於盧恩旗幟之下的偉大可汗。他的征服將黃金王國的疆界推至盧恩內海之濱。" />
+    <string id="TAOM_hero_dead_6_2" text="索倫是一位受人敬重的諾顏，在與自由人民的戰鬥中陣亡。他的遺孀古爾提爾姆如今以鐵一般的決心領導著他們的部族。" />
+    <string id="TAOM_hero_dead_6_3" text="庫尤格是阿爾基特部族的首席諾顏。他精湛的騎射造詣塑造了整整一代東夷戰士。" />
+    <string id="TAOM_hero_dead_6_4" text="溫杜爾是阿爾基特部族的貴族，偉大諾顏之子。他英年早逝，但曾展現出戰士的潛質。" />
     <string id="TAOM_hero_1_1" text="布雷寧·沃爾夫以鐵腕統治著登蘭德的野蠻氏族。他被稱為鐵手,通過征服與狡詐統一了散落的山地部落。他夢想著奪回被洛汗驃騎奪走的土地。" />
     <string id="TAOM_hero_1_2" text="芙蕾雅·狼心是布雷寧·沃爾夫的驍勇妻子。她以斧盾技藝在戰士中贏得尊敬。" />
     <string id="TAOM_hero_1_41" text="貝雷貢德·狼裔是登蘭德一位值得信賴的隊長,以襲擊洛汗定居點的技巧而聞名。" />
@@ -1086,16 +1086,16 @@
     <string id="TAOM_hero_1_67" text="艾奧溫·羽箭偏好弓而非劍,從陰影中發動攻擊。" />
     <string id="TAOM_hero_1_58" text="凶殘的戈爾文是一名陰沉的酋長,即使在登蘭德人中,他的殘酷也是傳奇。" />
     <string id="TAOM_hero_1_70" text="影子薇拉悄無聲息地潛入敵營,在夜間割喉。" />
-    <string id="TAOM_hero_NE7_u" text="Haldric the Black Fang advises his clan's chieftain, and earned the name before he was twenty." />
-    <string id="TAOM_hero_NE8_l" text="Eadric the Swift is chieftain of a mountain clan, hardened young by border warfare." />
-    <string id="TAOM_hero_NE8_s" text="Aeloria is wife to the chieftain, and skilled in the healing arts and herb lore." />
-    <string id="TAOM_hero_NE8_c1" text="Cerdic, called the Anvil, is firstborn of the clan and has trained for war since childhood." />
-    <string id="TAOM_hero_NE8_c2" text="Morwen is second child of the clan leader, known already for cunning and ambition." />
+    <string id="TAOM_hero_NE7_u" text="「黑牙」哈爾德里克輔佐其部族酋長，未滿二十歲便贏得了這個名號。" />
+    <string id="TAOM_hero_NE8_l" text="「疾風」埃德里克是一支山地部族的酋長，年輕時便被邊境戰事磨礪得堅韌無比。" />
+    <string id="TAOM_hero_NE8_s" text="艾洛莉亞是酋長之妻，精通療傷之術與草藥學識。" />
+    <string id="TAOM_hero_NE8_c1" text="人稱「鐵砧」的瑟迪克是部族的長子，自幼便習武備戰。" />
+    <string id="TAOM_hero_NE8_c2" text="莫爾雯是部族首領的次女，早已以機敏與野心聞名。" />
     <string id="TAOM_hero_1_56" text="托蒙德鐵錘以其戰錘發動毀滅性衝鋒而得名。" />
     <string id="TAOM_hero_1_56_1" text="格溫娜是托蒙德之妻,在他征戰時管理氏族領地。" />
-    <string id="TAOM_hero_NE9_l" text="Valthor Scalecleaver is a chieftain whose counsel is sought across the Dunlending clans." />
-    <string id="TAOM_hero_NE9_s" text="Rurik Fanghew is son of the old chieftain, and eager to prove himself in battle." />
-    <string id="TAOM_hero_NE9_d" text="Sylva Serpent-Strike is a daughter of the clan, trained in both combat and diplomacy." />
+    <string id="TAOM_hero_NE9_l" text="「裂鱗者」瓦爾索爾是一位酋長，其忠告為登蘭德各部族所求。" />
+    <string id="TAOM_hero_NE9_s" text="「斷牙」魯里克是老酋長之子，渴望在戰場上證明自己。" />
+    <string id="TAOM_hero_NE9_d" text="「毒蛇一擊」希爾娃是部族之女，兼習戰鬥與外交之道。" />
     <string id="TAOM_hero_1_7" text="迪耐瑟二世,剛鐸宰相,自米那斯提力斯白塔統治。他曾是位極具智慧的人,如今卻變得傲慢而頑固。他抗拒國王的歸來,深信只有他能將剛鐸從魔多的陰影中拯救。" />
     <string id="TAOM_hero_1_75" text="波羅莫,迪耐瑟長子,剛鐸將軍。他是位聲名顯赫的偉大戰士,尋求任何武器來保衛他的子民對抗黑暗。" />
     <string id="TAOM_hero_1_8" text="胡瑞昂涅絲服侍於胡瑞尼昂納斯家族,是剛鐸宰相傳承的堅定守護者。" />
@@ -1169,8 +1169,8 @@
     <string id="TAOM_hero_1_49" text="歐布朗率領一支魔多半獸人連隊。" />
     <string id="TAOM_hero_1_49_1" text="崔絲塔尼亞在黑暗勢力中服役。" />
     <string id="TAOM_hero_1_49_2" text="Gordiana居住在黑暗塔的陰影之下。" />
-    <string id="TAOM_hero_1_30_2" text="Mogra serves the dark powers of Mordor." />
-    <string id="TAOM_hero_1_30_3" text="Snaga is a servant of the Shadow." />
+    <string id="TAOM_hero_1_30_2" text="莫格拉侍奉魔多的黑暗勢力。" />
+    <string id="TAOM_hero_1_30_3" text="史那加是黑影的僕從。" />
     <string id="TAOM_hero_1_56_2" text="Rustica在黑暗軍隊中服役。" />
     <string id="TAOM_hero_1_63_2" text="Comatasa是為戰爭而培育的半獸人。" />
     <string id="TAOM_hero_1_63_3" text="Elidilea在黑暗階層中服役。" />
@@ -1189,7 +1189,7 @@
     <string id="TAOM_hero_1_55_1" text="Megethia為黑暗力量效力。" />
     <string id="TAOM_hero_1_72" text="Bolg是一位強大的半獸人酋長,是褻瀆者阿索格的後裔。" />
     <string id="TAOM_hero_1_72_1" text="Viviana在黑暗階層中服役。" />
-    <string id="TAOM_hero_SE8_c" text="Shagrala was bred in the pits of Mordor and has fought her way up to a command of her own." />
+    <string id="TAOM_hero_SE8_c" text="夏格拉拉生於魔多的深坑之中，靠廝殺一路爬到了自己的統領之位。" />
     <string id="TAOM_hero_SE9_l" text="一位在魔多指揮著要塞的黑色努曼諾爾領主。" />
     <string id="TAOM_hero_SE9_s" text="一位擁有黑暗力量的黑色努曼諾爾女巫。" />
     <string id="TAOM_hero_SE9_c1" text="黑色努曼諾爾家族的繼承人,受過黑暗術法的訓練。" />
@@ -1242,9 +1242,9 @@
     <string id="TAOM_hero_2_19_1" text="維托米拉與德瓦林並肩作戰。" />
     <string id="TAOM_hero_2_20" text="歐因是矮人長者,古老學識與醫療之術的守護者。" />
     <string id="TAOM_hero_2_20_1" text="基莎是歐因的妻子,精通草藥知識。" />
-    <string id="TAOM_hero_S8_u" text="Galyk is a grizzled veteran who guards the mountain halls." />
+    <string id="TAOM_hero_S8_u" text="加利克是一位飽經風霜的老兵，守衛著山中的殿堂。" />
     <string id="TAOM_hero_3_1" text="卡杜拉克是哈拉德的塔斯克拉爾,南方軍隊的最高統帥。他率領猛瑪象戰象對抗族人的敵人,與魔多結盟對抗剛鐸。" />
-    <string id="TAOM_hero_3_2" text="一位地位崇高的哈拉德林貴族女士。" />
+    <string id="TAOM_hero_3_2" text="卡莉妲是卡杜拉克之妻，地位崇高的哈拉德貴族夫人。" />
     <string id="TAOM_hero_3_7" text="迪尤爾是塔斯克拉爾的繼承人,接受過猛瑪象騎兵之道的訓練。" />
     <string id="TAOM_hero_3_10" text="阿尼達是塔斯克拉爾的女兒,精通宮廷政治。" />
     <string id="TAOM_hero_3_13" text="努卡爾統率哈拉德的精銳巨蛇衛隊。" />
@@ -1252,10 +1252,10 @@
     <string id="TAOM_hero_3_13_2" text="Razana是巨蛇守衛指揮官的女兒。" />
     <string id="TAOM_hero_3_8" text="Addas是哈拉德林的戰士王子。" />
     <string id="TAOM_hero_3_11" text="Arwa是沙漠部落的公主。" />
-    <string id="TAOM_hero_3_3" text="Calemir是東方哈拉德林的酋長,綠洲聚落之主。" />
+    <string id="TAOM_hero_3_3" text="馬爾祖克是東哈拉德人的酋長，綠洲聚落之主。" />
     <string id="TAOM_hero_3_3_1" text="Tariq是東方綠洲領主的繼承人。" />
     <string id="TAOM_hero_3_4" text="Maraa是Calemir的妻子,以智慧聞名。" />
-    <string id="TAOM_hero_3_5" text="Haldir統領沙岸哈拉德林,與昂巴海盜結盟。" />
+    <string id="TAOM_hero_3_5" text="阿克霍爾統領沿海的哈拉德人，與昂巴海盜結盟。" />
     <string id="TAOM_hero_3_51" text="Haqan是沙岸部落的船長。" />
     <string id="TAOM_hero_3_12" text="Manan襲擊剛鐸的沿岸聚落。" />
     <string id="TAOM_hero_3_20" text="Karith統領突襲隊深入敵境。" />
@@ -1268,25 +1268,25 @@
     <string id="TAOM_hero_3_15" text="Ghuzid統領遙遠南方的猛獁騎士。" />
     <string id="TAOM_hero_3_15_1" text="Shimra是猛獁領主的妻子。" />
     <string id="TAOM_hero_3_15_2" text="Bushila訓練年輕的猛獁騎士。" />
-    <string id="TAOM_hero_3_16" text="Rumil是金旗部落的酋長。" />
+    <string id="TAOM_hero_3_16" text="扎法爾是金旗諸部的酋長。" />
     <string id="TAOM_hero_3_16_1" text="Farina是金旗酋長的妻子。" />
-    <string id="TAOM_hero_3_17" text="Orophin統領極南方的巨蛇騎士。" />
+    <string id="TAOM_hero_3_17" text="阿茲拉克統領遙遠南方的巨蛇騎手。" />
     <string id="TAOM_hero_3_17_1" text="Shaima是Orophin的妻子。" />
     <string id="TAOM_hero_3_17_2" text="Sanit是巨蛇騎士的繼承人。" />
     <string id="TAOM_hero_3_21" text="Ukhai率領沙漠劫掠者攻擊北方商隊。" />
     <string id="TAOM_hero_3_21_1" text="Ashisa是劫掠隊長的妻子。" />
-    <string id="TAOM_hero_3_18" text="Aranthon是南方富有的商業王子。" />
+    <string id="TAOM_hero_3_18" text="卡里姆是南方富有的商賈親王。" />
     <string id="TAOM_hero_3_18_1" text="Farzana是商業王子的女兒。" />
     <string id="TAOM_hero_3_18_2" text="Hafisa管理貿易往來。" />
     <string id="TAOM_hero_3_18_3" text="Zuad是年輕的商人學徒。" />
     <string id="TAOM_hero_3_18_4" text="Jalfar護衛貿易商隊。" />
-    <string id="TAOM_hero_3_19" text="Aethirion統領北方邊境的要塞。" />
+    <string id="TAOM_hero_3_19" text="祖爾汗鎮守北方邊陲的一座要塞。" />
     <string id="TAOM_hero_3_19_1" text="Salma是邊境指揮官的妻子。" />
     <string id="TAOM_hero_3_19_2" text="Zulaika在邊境守軍中受訓。" />
     <string id="TAOM_hero_3_19_3" text="Sulhana是邊境的貴族。" />
     <string id="TAOM_hero_3_23" text="Qahin率領斥候深入敵境。" />
     <string id="TAOM_hero_3_23_1" text="Sukayna是斥候指揮官的妻子。" />
-    <string id="TAOM_hero_3_22" text="Duilin統領沙漠部落的弓箭手。" />
+    <string id="TAOM_hero_3_22" text="納米爾統領沙漠部族的弓手。" />
     <string id="TAOM_hero_3_22_1" text="Yamina是弓箭手指揮官的妻子。" />
     <string id="TAOM_hero_3_22_2" text="蘇娜訓練年輕的弓箭手。" />
     <string id="TAOM_hero_3_22_3" text="扎努瓦是部落中技藝精湛的弓箭手。" />
@@ -1300,8 +1300,8 @@
     <string id="TAOM_hero_4_141" text="阿莫肯與他的族人一同在衛隊中服役。" />
     <string id="TAOM_hero_4_15" text="厄杜蘭德是希優頓家族的騎士。" />
     <string id="TAOM_hero_4_3_3" text="希優德溫是希優頓國王的妹妹,伊歐墨與伊歐玟的母親。她在丈夫伊歐蒙德被半獸人殺害後因悲傷而逝。" />
-    <string id="TAOM_hero_4_3" text="Aldric holds a hall in the Eastfold and rides in the muster of Edoras. He is a plain horseman of no great house, trusted for it." />
-    <string id="TAOM_hero_rohan_10_1" text="Éomund of the Eastfold rode as Marshal of the Mark and wed Théodwyn, sister of the king. Orcs cut him down in the Emyn Muil, and his two children passed into Théoden's keeping." />
+    <string id="TAOM_hero_4_3" text="阿德里克在東谷擁有一座廳堂，並隨伊多拉斯的徵召出騎。他只是個出身平凡、並非顯貴之家的騎士，也正因如此而受人信賴。" />
+    <string id="TAOM_hero_rohan_10_1" text="東谷的伊歐蒙德曾任馬克的元帥，並娶了國王之妹希優德溫。半獸人在埃明穆伊將他斬殺，他的兩個孩子從此由希優頓撫養。" />
     <string id="TAOM_hero_4_3_1" text="伊歐墨·伊雅迪格,驃騎國的第三元帥,是希優頓的外甥與王位繼承人。他以赤誠忠誠統領東谷的騎士。" />
     <string id="TAOM_hero_4_4" text="艾爾希德是伊歐佛林家族的貴族女士。" />
     <string id="TAOM_hero_4_8" text="弗恩哈德是伊歐墨麾下值得信賴的騎士。" />
@@ -1330,10 +1330,10 @@
     <string id="TAOM_hero_4_23_2" text="埃勒杜蘭為國王的軍隊訓練戰馬。" />
     <string id="TAOM_hero_4_23_3" text="小埃勒杜蘭擔任馬廄管理員。" />
     <string id="TAOM_hero_4_24" text="葛力馬·巧言曾是希優頓的謀士,暗中為薩魯曼充當間諜。他的讒言毒害了國王的心智,直到甘道夫打破咒語。" />
-    <string id="TAOM_hero_4_24_1" text="Adaltrud was wed to Gríma Grimmóding before his counsel turned to Saruman. She keeps a hall at Edoras that the riders no longer visit." />
-    <string id="TAOM_hero_4_24_2" text="Gudonhelda is the eldest daughter of Gríma Grimmóding. She learned early that her father's name opens no doors in Edoras." />
-    <string id="TAOM_hero_4_24_3" text="Ingunde, second daughter of Gríma Grimmóding, tends the horses of a house nobody rides out with." />
-    <string id="TAOM_hero_4_24_4" text="Irmgard is the youngest of Gríma Grimmóding's daughters, and the only one too young to remember the hall before the whispering started." />
+    <string id="TAOM_hero_4_24_1" text="阿妲爾特露德在葛力馬·格里莫丁投向薩魯曼之前嫁予了他。她在伊多拉斯守著一座再無騎士登門的廳堂。" />
+    <string id="TAOM_hero_4_24_2" text="古東赫爾妲是葛力馬·格里莫丁的長女。她很早就明白，父親的名字在伊多拉斯打不開任何一扇門。" />
+    <string id="TAOM_hero_4_24_3" text="英貢德是葛力馬·格里莫丁的次女，照料著一戶無人願與之同行出騎的家族的馬匹。" />
+    <string id="TAOM_hero_4_24_4" text="伊姆嘉德是葛力馬·格里莫丁最小的女兒，也是唯一年幼到不記得那些低語開始之前的廳堂的人。" />
     <string id="TAOM_hero_4_3_2" text="伊歐玟,洛汗的夫人,是伊歐墨的妹妹,希優頓的姪女。她在帕蘭諾平原殺死了戒靈之王,擊倒了千古的恐怖。" />
     <string id="TAOM_hero_4_6_2" text="埃爾夫格林在王室衛隊中擔任騎士。" />
     <string id="TAOM_hero_4_16_2" text="赫魯布蘭德守衛國王的大廳。" />
@@ -1342,12 +1342,12 @@
     <string id="TAOM_hero_4_26_1" text="萊因加爾達是隘口的盾女。" />
     <string id="TAOM_hero_4_27" text="埃塞拉芬之子埃勒守衛著褶地,抵禦登蘭德人的襲擊。" />
     <string id="TAOM_hero_4_27_1" text="瓦爾堡是埃勒的妻子。" />
-    <string id="TAOM_hero_V9_u" text="Urundulf is a seasoned rider who advises the local thane." />
+    <string id="TAOM_hero_V9_u" text="烏倫多夫是位經驗豐富的騎士，為當地的鄉侯出謀劃策。" />
     <string id="TAOM_hero_4_28" text="莫卡加斯之子法斯特赫爾姆統領著南方的哨所。" />
     <string id="TAOM_hero_4_28_1" text="莫卡是法斯特赫爾姆的兒子。" />
     <string id="TAOM_hero_4_28_2" text="赫瑞斯維絲是南方哨所統領的女兒。" />
     <string id="TAOM_hero_5_1" text="瓦爾古爾,肯德的至高戰爭領主,率領著兇猛的瓦瑞亞格騎兵。他與魔多的聯盟使他的戰士在中土大戰中對抗剛鐸。" />
-    <string id="TAOM_hero_5_1_1" text="Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
+    <string id="TAOM_hero_5_1_1" text="卡茲娜是大戰帥家中的女兒。她隨他的扈從出行，儘管仍是孩童，尚不執矛。" />
     <string id="TAOM_hero_5_3" text="埃爾傑恩是一位酋長,率領東方的瓦瑞亞格部族,以其迅捷的騎兵戰術聞名。" />
     <string id="TAOM_hero_5_3_1" text="拉納翁是埃爾傑恩戰團的繼承人。" />
     <string id="TAOM_hero_5_3_2" text="拉多古爾在埃爾傑恩的軍隊中擔任隊長。" />
@@ -1355,7 +1355,7 @@
     <string id="TAOM_hero_5_5" text="梅利迪爾率領襲擊者進入剛鐸的土地。" />
     <string id="TAOM_hero_5_5_1" text="艾莉德管理部族的馬群。" />
     <string id="TAOM_hero_5_6" text="阿爾凱婭是梅利迪爾的妻子。" />
-    <string id="TAOM_hero_5_7" text="肯德的一位瓦瑞亞格戰士酋長。" />
+    <string id="TAOM_hero_5_7" text="卡爾祖爾是坎德的瓦里亞格戰士首領，也是大戰帥之子。" />
     <string id="TAOM_hero_5_8" text="塞恩統領一支瓦瑞亞格騎兵隊。" />
     <string id="TAOM_hero_5_9" text="庫爾哈恩是一位聲名鵲起的瓦瑞亞格戰士。" />
     <string id="TAOM_hero_5_91" text="特根與庫爾哈恩並肩作戰。" />
@@ -1417,32 +1417,32 @@
     <string id="TAOM_hero_6_19_2" text="科爾特是瓦克拉爾坦斥候隊的繼承人。" />
     <string id="TAOM_hero_6_20" text="庫魯布拉·瑪沙基安統率著魯恩北方的部族。" />
     <string id="TAOM_hero_6_20_1" text="吉古爾是庫魯布拉的妻子。" />
-    <string id="TAOM_hero_K8_u" text="Boronchar is a seasoned warrior who advises the northern chieftain." />
+    <string id="TAOM_hero_K8_u" text="波隆恰爾是位久歷戰陣的武士，為北方的首領出謀劃策。" />
     <string id="TAOM_hero_6_21" text="莫盧克·伊諾里亞統領著一個強大的騎兵氏族。" />
     <string id="TAOM_hero_6_21_1" text="艾薩切伊是莫盧克的妻子。" />
     <string id="TAOM_hero_6_22" text="沙哈爾二世·沙哈利安統治著魯恩海的一個富裕貿易氏族。" />
     <string id="TAOM_hero_6_22_1" text="艾瑟倫是沙哈爾的妻子。" />
     <string id="TAOM_hero_6_23" text="胡茲-馬爾戈茲·胡茲指揮著西方邊境的要塞駐軍。" />
     <string id="TAOM_hero_6_24" text="尼卡斯·阿德基格守衛著通往魯恩的南方山口。" />
-    <string id="TAOM_hero_A9_l" text="Caradan is a Haradrim chieftain of the southern wastes, young for the office and watched closely by older men." />
-    <string id="TAOM_hero_A9_s" text="Thiqa is wife to the chieftain of the southern wastes and keeps the water tallies of his camps." />
-    <string id="TAOM_hero_A9_c" text="Dhila is heir to the chieftain of the southern wastes. She has ridden the dune tracks since she could sit a saddle." />
-    <string id="TAOM_hero_A9_u" text="Qaban is a warrior of the southern tribes and rides in the chieftain's van." />
-    <string id="TAOM_hero_V11_l" text="Léomund Deáfringas is a Rohirrim lord of the western vales." />
-    <string id="TAOM_hero_V11_u" text="Voleric is a veteran rider who advises the lord." />
-    <string id="TAOM_hero_V11_c1" text="Elendara is heir to the western vale holdings." />
-    <string id="TAOM_hero_V11_c2" text="Dagunic is the second child of the western vale lord." />
-    <string id="TAOM_hero_S9_l" text="Orvar is a noble of Dale who guards the northern approaches." />
-    <string id="TAOM_hero_S9_m" text="Dakhila is matriarch of a northern Barding clan." />
-    <string id="TAOM_hero_S9_c" text="Forim is young heir to the northern holdings." />
-    <string id="TAOM_hero_S9_u" text="Chastimir is a seasoned warrior of the northern garrison." />
-    <string id="TAOM_hero_K9_l" text="Valathmir Mashakian is a chieftain of the distant Easterling tribes, and answers to Rhun only when it suits him." />
-    <string id="TAOM_hero_K9_s" text="Sevin is wife to the distant chieftain and holds his camp while he rides." />
-    <string id="TAOM_hero_K9_c1" text="Altu is heir to the tribal holdings east of the inland sea." />
-    <string id="TAOM_hero_K9_c2" text="Mela is the second child of the distant chieftain, and rides better than her brother." />
-    <string id="TAOM_hero_B8_l" text="Maireas is a Variag warlord of the eastern hills, and has held them through three winters of raiding." />
-    <string id="TAOM_hero_B8_s" text="Rodarac is wife to the Variag warlord and speaks for him when he is away at the hosting." />
-    <string id="TAOM_hero_B8_c" text="Guaran is heir to the Variag warlord, and has waited longer for it than he likes." />
+    <string id="TAOM_hero_A9_l" text="卡拉丹是南方荒原的哈拉德首領，任此職尚顯年輕，受年長者密切注視。" />
+    <string id="TAOM_hero_A9_s" text="席卡是南方荒原首領之妻，掌管他各營地的水源記錄。" />
+    <string id="TAOM_hero_A9_c" text="迪拉是南方荒原首領的繼承人。自能坐上鞍以來，她便馳騁於沙丘小徑。" />
+    <string id="TAOM_hero_A9_u" text="卡班是南方部族的武士，隨首領的前鋒出騎。" />
+    <string id="TAOM_hero_V11_l" text="里歐蒙德·迪亞夫林加斯是西方谷地的洛汗領主。" />
+    <string id="TAOM_hero_V11_u" text="沃勒里克是位老練的騎士，為領主出謀劃策。" />
+    <string id="TAOM_hero_V11_c1" text="艾倫達拉是西方谷地領地的繼承人。" />
+    <string id="TAOM_hero_V11_c2" text="達古尼克是西方谷地領主的次子。" />
+    <string id="TAOM_hero_S9_l" text="歐爾瓦是河谷邦的貴族，守衛著北方的通路。" />
+    <string id="TAOM_hero_S9_m" text="妲琪拉是北方一支巴德族氏族的女族長。" />
+    <string id="TAOM_hero_S9_c" text="佛林姆是北方領地的年輕繼承人。" />
+    <string id="TAOM_hero_S9_u" text="查斯提米爾是北方駐軍中久歷戰陣的武士。" />
+    <string id="TAOM_hero_K9_l" text="瓦拉斯米爾·馬沙基安是遠方東方人部族的首領，只在合乎己意時才聽命於魯恩。" />
+    <string id="TAOM_hero_K9_s" text="塞溫是這位遠方首領之妻，在他出騎時看守營地。" />
+    <string id="TAOM_hero_K9_c1" text="阿爾圖是內海以東部族領地的繼承人。" />
+    <string id="TAOM_hero_K9_c2" text="梅拉是這位遠方首領的次女，騎術勝過她的兄長。" />
+    <string id="TAOM_hero_B8_l" text="馬伊瑞亞斯是東方丘陵的瓦里亞格戰帥，歷經三個劫掠之冬仍守住了那片土地。" />
+    <string id="TAOM_hero_B8_s" text="羅妲拉克是瓦里亞格戰帥之妻，當他出征集會時代他發言。" />
+    <string id="TAOM_hero_B8_c" text="瓜蘭是瓦里亞格戰帥的繼承人，為此等待的時日比他所願的更久。" />
     <string id="TAOM_liege_dunland" text="登蘭德的布倫尼恩" />
     <string id="TAOM_liege_dunland_female" text="登蘭德的布倫希妮絲" />
     <string id="TAOM_liege_dale" text="河谷邦國王" />

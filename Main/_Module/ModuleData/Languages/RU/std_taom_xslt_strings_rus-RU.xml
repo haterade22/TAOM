@@ -751,12 +751,12 @@
     <string id="aom_lord_1_52_1_name" text="Анариэль" />
     <string id="aom_lord_1_52_2_name" text="Барандор" />
     <string id="aom_lord_1_73_1_name" text="Белвен" />
-    <string id="aom_lord_1_62_1_name" text="Isfin" />
+    <string id="aom_lord_1_62_1_name" text="Исфин" />
     <string id="aom_lord_1_30_1_name" text="Свала Красный Клык" />
-    <string id="aom_lord_1_30_2_name" text="Mogra" />
-    <string id="aom_lord_1_30_3_name" text="Snaga" />
+    <string id="aom_lord_1_30_2_name" text="Могра" />
+    <string id="aom_lord_1_30_3_name" text="Снага" />
     <string id="aom_lord_1_48_1_name" text="Назгул, Оскверненный" />
-    <string id="aom_lord_1_48_2_name" text="Nazgûl, the Shadow of the Northmen" />
+    <string id="aom_lord_1_48_2_name" text="Назгул, Тень северян" />
     <string id="aom_lord_1_48_3_name" text="Назгул, Тень Умбара" />
     <string id="aom_lord_1_54_1_name" text="Консталия" />
     <string id="aom_lord_1_55_1_name" text="Мегетия" />
@@ -821,10 +821,10 @@
     <string id="aom_dead_lord_2_1_name" text="Олек Старый" />
     <string id="aom_dead_lord_2_2_name" text="Варра" />
     <string id="aom_lord_3_1_name" text="Хадурак" />
-    <string id="aom_lord_3_2_name" text="Харад Заполнитель" />
-    <string id="aom_lord_3_3_name" text="Калемир" />
+    <string id="aom_lord_3_2_name" text="Халида" />
+    <string id="aom_lord_3_3_name" text="Марзук" />
     <string id="aom_lord_3_4_name" text="Мараа" />
-    <string id="aom_lord_3_5_name" text="Халдир" />
+    <string id="aom_lord_3_5_name" text="Ахор" />
     <string id="aom_lord_3_51_name" text="Хакан" />
     <string id="aom_lord_3_6_name" text="Рума" />
     <string id="aom_lord_3_7_name" text="Дхиюль" />
@@ -836,13 +836,13 @@
     <string id="aom_lord_3_13_name" text="Нукар" />
     <string id="aom_lord_3_14_name" text="Тамза" />
     <string id="aom_lord_3_15_name" text="Гузид" />
-    <string id="aom_lord_3_16_name" text="Румиль" />
-    <string id="aom_lord_3_17_name" text="Орофин" />
-    <string id="aom_lord_3_18_name" text="Арантон" />
-    <string id="aom_lord_3_19_name" text="Аэтирион" />
+    <string id="aom_lord_3_16_name" text="Зафар" />
+    <string id="aom_lord_3_17_name" text="Азрак" />
+    <string id="aom_lord_3_18_name" text="Карим" />
+    <string id="aom_lord_3_19_name" text="Зулхан" />
     <string id="aom_lord_3_20_name" text="Карит" />
     <string id="aom_lord_3_21_name" text="Укхай" />
-    <string id="aom_lord_3_22_name" text="Дуилин" />
+    <string id="aom_lord_3_22_name" text="Намир" />
     <string id="aom_lord_3_23_name" text="Кахин" />
     <string id="aom_lord_3_3_1_name" text="Тарик" />
     <string id="aom_lord_3_13_1_name" text="Сира" />
@@ -923,7 +923,7 @@
     <string id="aom_lord_V11_u_name" text="Волерик" />
     <string id="aom_lord_V9_u_name" text="Урундульф" />
     <string id="aom_lord_5_1_name" text="Варгул, Верховный Полководец Кханда" />
-    <string id="aom_lord_5_7_name" text="Cadwyr" />
+    <string id="aom_lord_5_7_name" text="Харзул" />
     <string id="aom_lord_5_3_name" text="Эргеон" />
     <string id="aom_lord_5_4_name" text="Нивин" />
     <string id="aom_lord_5_5_name" text="Мелидир" />
@@ -945,7 +945,7 @@
     <string id="aom_lord_5_20_name" text="Сиарамус" />
     <string id="aom_lord_5_21_name" text="Карфид" />
     <string id="aom_lord_5_22_name" text="Фиарад" />
-    <string id="aom_lord_5_1_1_name" text="Nyveth" />
+    <string id="aom_lord_5_1_1_name" text="Хазна" />
     <string id="aom_lord_5_3_1_name" text="Ранаон" />
     <string id="aom_lord_5_3_2_name" text="Ладогуал" />
     <string id="aom_lord_5_5_1_name" text="Эйлид" />
@@ -1028,7 +1028,7 @@
     <string id="aom_lord_S9_l_name" text="Бомбур" />
     <string id="aom_lord_S9_m_name" text="Дакхила" />
     <string id="aom_lord_S9_u_name" text="Частимир" />
-    <string id="aom_lord_SE8_c_name" text="Shagrala" />
+    <string id="aom_lord_SE8_c_name" text="Шаграла" />
     <string id="aom_lord_SE9_c1_name" text="Пагариос" />
     <string id="aom_lord_SE9_c2_name" text="Диаска" />
     <string id="aom_lord_SE9_l_name" text="Гришнак, урук-капитан" />
@@ -1038,13 +1038,13 @@
     <string id="aom_lord_WE9_l_name" text="Дуинхир" />
     <string id="aom_lord_WE9_u_name" text="Дуилин" />
     <string id="aom_lord_WE9_u2_name" text="Росфин" />
-    <string id="TAOM_hero_dead_2_1" text="Olek the Old fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom." />
-    <string id="TAOM_hero_dead_2_2" text="Varra, a noblewoman of Dale, perished in the winter plague that followed the war. She was known for her charity to the common folk." />
-    <string id="TAOM_hero_dead_3_1" text="Nimr was a Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south." />
-    <string id="TAOM_hero_dead_6_1" text="Urkhun was the great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun." />
-    <string id="TAOM_hero_dead_6_2" text="Solun was a respected noyan who fell in battle against the Free Peoples. His widow Gûrtilm now leads their clan with iron determination." />
-    <string id="TAOM_hero_dead_6_3" text="Kuyug was chief noyan of the Arkit clan. His brilliance with horse archery shaped an entire generation of Easterling warriors." />
-    <string id="TAOM_hero_dead_6_4" text="Undul was a noble of the Arkit clan and son of the great noyan. He died young but showed promise as a warrior." />
+    <string id="TAOM_hero_dead_2_1" text="Олек Старый пал, защищая Дейл от налётчиков-истерлингов. Его жертва спасла горные перевалы, и о ней поют песни по всему королевству." />
+    <string id="TAOM_hero_dead_2_2" text="Варра, знатная дама Дейла, умерла от зимнего мора, пришедшего вслед за войной. Её помнили за щедрость к простому люду." />
+    <string id="TAOM_hero_dead_3_1" text="Нимр был вождём харадрим, который вёл конницу пустыни в битве у Чёрных Врат. Он пал от гондорских стрел, но на юге его чтут как мученика." />
+    <string id="TAOM_hero_dead_6_1" text="Урхун был великим ханом, впервые объединившим племена истерлингов под знаменем Руна. Его завоевания раздвинули границы Золотого Царства до берегов моря Рун." />
+    <string id="TAOM_hero_dead_6_2" text="Солун был уважаемым нойоном, павшим в бою против Свободных народов. Его вдова Гуртилм теперь ведёт их клан с железной волей." />
+    <string id="TAOM_hero_dead_6_3" text="Куюг был главным нойоном клана Аркит. Его мастерство конной стрельбы воспитало целое поколение воинов-истерлингов." />
+    <string id="TAOM_hero_dead_6_4" text="Ундул был знатным воином клана Аркит и сыном великого нойона. Он умер молодым, но подавал большие надежды как боец." />
     <string id="TAOM_hero_1_1" text="Бренин Вульф правит дикими кланами Дунланда железной рукой. Известный как Железнорукий, он объединил разрозненные горные племена завоеванием и хитростью. Он мечтает вернуть земли, отнятые конными лордами Рохана." />
     <string id="TAOM_hero_1_2" text="Фрейя Волчье Сердце — свирепая жена Бренина Вульфа. Она пользуется уважением среди воинов за свое мастерство с топором и щитом." />
     <string id="TAOM_hero_1_41" text="Берегунд Волкорожденный — верный капитан Дунланда, известный своим умением совершать набеги на поселения рохиррим." />
@@ -1086,16 +1086,16 @@
     <string id="TAOM_hero_1_67" text="Эорвин Пернострел предпочитает лук клинку, поражая из тени." />
     <string id="TAOM_hero_1_58" text="Горвин Свирепый — мрачный вождь, чья жестокость легендарна даже среди дунландцев." />
     <string id="TAOM_hero_1_70" text="Вейра Тень незаметно проскальзывает в вражеские лагеря, чтобы перерезать глотки в ночи." />
-    <string id="TAOM_hero_NE7_u" text="Haldric the Black Fang advises his clan's chieftain, and earned the name before he was twenty." />
-    <string id="TAOM_hero_NE8_l" text="Eadric the Swift is chieftain of a mountain clan, hardened young by border warfare." />
-    <string id="TAOM_hero_NE8_s" text="Aeloria is wife to the chieftain, and skilled in the healing arts and herb lore." />
-    <string id="TAOM_hero_NE8_c1" text="Cerdic, called the Anvil, is firstborn of the clan and has trained for war since childhood." />
-    <string id="TAOM_hero_NE8_c2" text="Morwen is second child of the clan leader, known already for cunning and ambition." />
+    <string id="TAOM_hero_NE7_u" text="Халдрик Чёрный Клык — советник вождя своего клана; это имя он заслужил, не достигнув и двадцати лет." />
+    <string id="TAOM_hero_NE8_l" text="Эадрик Быстрый — вождь горного клана, рано закалённый пограничными войнами." />
+    <string id="TAOM_hero_NE8_s" text="Элория — жена вождя, искусная в целительстве и знании трав." />
+    <string id="TAOM_hero_NE8_c1" text="Кердик, прозванный Наковальней, — первенец клана, обучавшийся войне с детства." />
+    <string id="TAOM_hero_NE8_c2" text="Морвен — второе дитя главы клана, уже известная хитростью и честолюбием." />
     <string id="TAOM_hero_1_56" text="Тормунд Молот заслужил свое имя разрушительными атаками со своим боевым молотом." />
     <string id="TAOM_hero_1_56_1" text="Гвенна — жена Тормунда, управляющая владениями клана, пока он ведет войны." />
-    <string id="TAOM_hero_NE9_l" text="Valthor Scalecleaver is a chieftain whose counsel is sought across the Dunlending clans." />
-    <string id="TAOM_hero_NE9_s" text="Rurik Fanghew is son of the old chieftain, and eager to prove himself in battle." />
-    <string id="TAOM_hero_NE9_d" text="Sylva Serpent-Strike is a daughter of the clan, trained in both combat and diplomacy." />
+    <string id="TAOM_hero_NE9_l" text="Валтор Рассекающий Чешую — вождь, чьего совета ищут во всех кланах дунландцев." />
+    <string id="TAOM_hero_NE9_s" text="Рурик Клыкорез — сын старого вождя, жаждущий показать себя в бою." />
+    <string id="TAOM_hero_NE9_d" text="Сильва Змеиный Удар — дочь клана, обученная и бою, и дипломатии." />
     <string id="TAOM_hero_1_7" text="Денетор II, Наместник Гондора, правит из Белой Башни Минас Тирита. Некогда человек великой мудрости, он стал горд и непреклонен. Он противится возвращению короля, полагая, что лишь он способен спасти Гондор от тени Мордора." />
     <string id="TAOM_hero_1_75" text="Боромир, старший сын Денетора, — главнокомандующий Гондора. Великий воин, прославленный в битвах, он ищет любое оружие, чтобы защитить свой народ от тьмы." />
     <string id="TAOM_hero_1_8" text="Хурионет служит Дому Хуриниoната, стойкий хранитель знаний о наместниках Гондора." />
@@ -1169,8 +1169,8 @@
     <string id="TAOM_hero_1_49" text="Оброн возглавляет отряд мордорских орков." />
     <string id="TAOM_hero_1_49_1" text="Тристания служит в тёмных силах." />
     <string id="TAOM_hero_1_49_2" text="Гордиана обитает в тени Тёмной Башни." />
-    <string id="TAOM_hero_1_30_2" text="Mogra serves the dark powers of Mordor." />
-    <string id="TAOM_hero_1_30_3" text="Snaga is a servant of the Shadow." />
+    <string id="TAOM_hero_1_30_2" text="Могра служит тёмным силам Мордора." />
+    <string id="TAOM_hero_1_30_3" text="Снага — слуга Тени." />
     <string id="TAOM_hero_1_56_2" text="Рустика служит в армиях тьмы." />
     <string id="TAOM_hero_1_63_2" text="Коматаса — орк, рождённый для войны." />
     <string id="TAOM_hero_1_63_3" text="Элидилея служит в тёмной иерархии." />
@@ -1189,7 +1189,7 @@
     <string id="TAOM_hero_1_55_1" text="Мегетия служит тёмным силам." />
     <string id="TAOM_hero_1_72" text="Больг — могущественный вождь орков, потомок Азога Осквернителя." />
     <string id="TAOM_hero_1_72_1" text="Вивиана служит в тёмной иерархии." />
-    <string id="TAOM_hero_SE8_c" text="Shagrala was bred in the pits of Mordor and has fought her way up to a command of her own." />
+    <string id="TAOM_hero_SE8_c" text="Шаграла была выведена в ямах Мордора и пробилась наверх, добыв себе собственный отряд." />
     <string id="TAOM_hero_SE9_l" text="Чёрный нуменорец, который командует крепостью в Мордоре." />
     <string id="TAOM_hero_SE9_s" text="Чёрная нуменорская колдунья тёмной силы." />
     <string id="TAOM_hero_SE9_c1" text="Наследник дома чёрных нуменорцев, обученный тёмным искусствам." />
@@ -1242,9 +1242,9 @@
     <string id="TAOM_hero_2_19_1" text="Витомира служит вместе с Двалином." />
     <string id="TAOM_hero_2_20" text="Ойн — дворфийский старейшина, хранитель древних знаний и целительских искусств." />
     <string id="TAOM_hero_2_20_1" text="Киша — жена Ойна, искусная в траволечении." />
-    <string id="TAOM_hero_S8_u" text="Galyk is a grizzled veteran who guards the mountain halls." />
+    <string id="TAOM_hero_S8_u" text="Галик — седой ветеран, охраняющий горные чертоги." />
     <string id="TAOM_hero_3_1" text="Хадурак — Таскрал Харада, верховный командующий южными армиями. Он ведёт боевых слонов-мумакилов против врагов своего народа, выступая союзником Мордора против Гондора." />
-    <string id="TAOM_hero_3_2" text="Харадримская знатная дама высокого положения." />
+    <string id="TAOM_hero_3_2" text="Халида — жена Хадурака и знатная госпожа харадрим высокого положения." />
     <string id="TAOM_hero_3_7" text="Дийуль — наследник Таскрала, обученный искусству всадников на мумаках." />
     <string id="TAOM_hero_3_10" text="Анидха — дочь Таскрала, сведущая в придворной политике." />
     <string id="TAOM_hero_3_13" text="Нукар командует элитной Змеиной Стражей Харада." />
@@ -1252,10 +1252,10 @@
     <string id="TAOM_hero_3_13_2" text="Разана — дочь командира Змеиной Стражи." />
     <string id="TAOM_hero_3_8" text="Аддас — харадримский воин-принц." />
     <string id="TAOM_hero_3_11" text="Арва — принцесса пустынных племён." />
-    <string id="TAOM_hero_3_3" text="Калемир — вождь восточных харадримов, лорд оазисных поселений." />
+    <string id="TAOM_hero_3_3" text="Марзук — вождь восточных харадрим, властитель оазисных поселений." />
     <string id="TAOM_hero_3_3_1" text="Тарик — наследник восточных лордов оазисов." />
     <string id="TAOM_hero_3_4" text="Мараа — жена Калемира, известная своей мудростью." />
-    <string id="TAOM_hero_3_5" text="Халдир командует прибрежными харадрим, союзными с Корсарами Умбара." />
+    <string id="TAOM_hero_3_5" text="Ахор командует прибрежными харадрим и состоит в союзе с корсарами Умбара." />
     <string id="TAOM_hero_3_51" text="Хакан — морской капитан прибрежных племён." />
     <string id="TAOM_hero_3_12" text="Манан совершает набеги на прибрежные поселения Гондора." />
     <string id="TAOM_hero_3_20" text="Карит командует отрядами налётчиков во вражеских землях." />
@@ -1268,25 +1268,25 @@
     <string id="TAOM_hero_3_15" text="Гузид командует всадниками на мумаках дальнего юга." />
     <string id="TAOM_hero_3_15_1" text="Шимра — жена повелителя мумаков." />
     <string id="TAOM_hero_3_15_2" text="Бушила обучает юных всадников на мумаках." />
-    <string id="TAOM_hero_3_16" text="Румил — вождь племён золотого знамени." />
+    <string id="TAOM_hero_3_16" text="Зафар — вождь племён золотого знамени." />
     <string id="TAOM_hero_3_16_1" text="Фарина — жена вождя золотого знамени." />
-    <string id="TAOM_hero_3_17" text="Орофин командует всадниками на змеях дальнего юга." />
+    <string id="TAOM_hero_3_17" text="Азрак командует змеиными всадниками далёкого юга." />
     <string id="TAOM_hero_3_17_1" text="Шайма — жена Орофина." />
     <string id="TAOM_hero_3_17_2" text="Санит — наследник всадников на змеях." />
     <string id="TAOM_hero_3_21" text="Укхай ведёт пустынных налётчиков против северных караванов." />
     <string id="TAOM_hero_3_21_1" text="Ашиса — жена капитана налётчиков." />
-    <string id="TAOM_hero_3_18" text="Арантон — богатый князь-купец юга." />
+    <string id="TAOM_hero_3_18" text="Карим — богатый купеческий князь юга." />
     <string id="TAOM_hero_3_18_1" text="Фарзана — дочь князя-купца." />
     <string id="TAOM_hero_3_18_2" text="Хафиса управляет торговыми связями." />
     <string id="TAOM_hero_3_18_3" text="Зуад — молодой купец в обучении." />
     <string id="TAOM_hero_3_18_4" text="Джалфар охраняет торговые караваны." />
-    <string id="TAOM_hero_3_19" text="Аэтирион командует крепостью на северной границе." />
+    <string id="TAOM_hero_3_19" text="Зулхан командует крепостью на северной границе." />
     <string id="TAOM_hero_3_19_1" text="Сальма — жена командующего пограничной крепостью." />
     <string id="TAOM_hero_3_19_2" text="Зулайка тренируется с пограничным гарнизоном." />
     <string id="TAOM_hero_3_19_3" text="Сульхана — знатная дама пограничья." />
     <string id="TAOM_hero_3_23" text="Кахин ведёт разведчиков на вражескую территорию." />
     <string id="TAOM_hero_3_23_1" text="Сукайна — жена командира разведчиков." />
-    <string id="TAOM_hero_3_22" text="Дуилин командует лучниками пустынных племён." />
+    <string id="TAOM_hero_3_22" text="Намир командует лучниками пустынных племён." />
     <string id="TAOM_hero_3_22_1" text="Ямина — жена командира лучников." />
     <string id="TAOM_hero_3_22_2" text="Суна обучает юных лучников." />
     <string id="TAOM_hero_3_22_3" text="Зануа — искусная лучница племени." />
@@ -1300,8 +1300,8 @@
     <string id="TAOM_hero_4_141" text="Аморкон служит в страже рядом со своим родичем." />
     <string id="TAOM_hero_4_15" text="Эрдуранд — всадник дружины Теодена." />
     <string id="TAOM_hero_4_3_3" text="Теодвин была сестрой короля Теодена и матерью Эомера и Эовин. Она умерла от горя после того, как её муж Эомунд был убит орками." />
-    <string id="TAOM_hero_4_3" text="Aldric holds a hall in the Eastfold and rides in the muster of Edoras. He is a plain horseman of no great house, trusted for it." />
-    <string id="TAOM_hero_rohan_10_1" text="Éomund of the Eastfold rode as Marshal of the Mark and wed Théodwyn, sister of the king. Orcs cut him down in the Emyn Muil, and his two children passed into Théoden's keeping." />
+    <string id="TAOM_hero_4_3" text="Альдрик владеет залом в Восточной Марке и выезжает в ополчении Эдораса. Он простой всадник, не из великого дома, и за то ему доверяют." />
+    <string id="TAOM_hero_rohan_10_1" text="Эомунд из Восточной Марки был Маршалом Марки и взял в жёны Теодвин, сестру короля. Орки сразили его в Эмин-Муйл, и двое его детей перешли под опеку Теодена." />
     <string id="TAOM_hero_4_3_1" text="Эомер Эадиг, Третий Маршал Марки, племянник Теодена и наследник престола. Он ведёт всадников Восточной Долины с яростной преданностью." />
     <string id="TAOM_hero_4_4" text="Элтильд — благородная дама из рода Эофорингов." />
     <string id="TAOM_hero_4_8" text="Фурнхард служит надёжным всадником под командованием Эомера." />
@@ -1330,10 +1330,10 @@
     <string id="TAOM_hero_4_23_2" text="Эледуран обучает боевых коней для королевской армии." />
     <string id="TAOM_hero_4_23_3" text="Эледуран младший служит хранителем конюшен." />
     <string id="TAOM_hero_4_24" text="Грима Гнилоуст был советником Теодена, втайне шпионом Сарумана. Его лживый шёпот отравлял разум короля, пока Гэндальф не разрушил чары." />
-    <string id="TAOM_hero_4_24_1" text="Adaltrud was wed to Gríma Grimmóding before his counsel turned to Saruman. She keeps a hall at Edoras that the riders no longer visit." />
-    <string id="TAOM_hero_4_24_2" text="Gudonhelda is the eldest daughter of Gríma Grimmóding. She learned early that her father's name opens no doors in Edoras." />
-    <string id="TAOM_hero_4_24_3" text="Ingunde, second daughter of Gríma Grimmóding, tends the horses of a house nobody rides out with." />
-    <string id="TAOM_hero_4_24_4" text="Irmgard is the youngest of Gríma Grimmóding's daughters, and the only one too young to remember the hall before the whispering started." />
+    <string id="TAOM_hero_4_24_1" text="Адальтруда была женой Гримы Гриммодинга ещё до того, как его советы обратились к Саруману. Она держит зал в Эдорасе, куда всадники больше не заходят." />
+    <string id="TAOM_hero_4_24_2" text="Гудонхельда — старшая дочь Гримы Гриммодинга. Она рано усвоила, что имя её отца не открывает дверей в Эдорасе." />
+    <string id="TAOM_hero_4_24_3" text="Ингунда, вторая дочь Гримы Гриммодинга, ухаживает за конями дома, с которым никто не выезжает." />
+    <string id="TAOM_hero_4_24_4" text="Ирмгарда — младшая из дочерей Гримы Гриммодинга и единственная, кто слишком юна, чтобы помнить зал до того, как начался шёпот." />
     <string id="TAOM_hero_4_3_2" text="Эовин, Госпожа Рохана, сестра Эомера и племянница Теодена. Она убила Короля-Чародея на Пеленнорских полях, сразив ужас минувших веков." />
     <string id="TAOM_hero_4_6_2" text="Эльфгрим служит всадником королевской дружины." />
     <string id="TAOM_hero_4_16_2" text="Херубранд охраняет королевский чертог." />
@@ -1342,12 +1342,12 @@
     <string id="TAOM_hero_4_26_1" text="Рейнгарда — воительница Прохода." />
     <string id="TAOM_hero_4_27" text="Аэлле Этеллафинг охраняет Долины от набегов дунландцев." />
     <string id="TAOM_hero_4_27_1" text="Ваербург — жена Эллы." />
-    <string id="TAOM_hero_V9_u" text="Urundulf is a seasoned rider who advises the local thane." />
+    <string id="TAOM_hero_V9_u" text="Урундульф — опытный всадник, дающий советы местному тану." />
     <string id="TAOM_hero_4_28" text="Фастхельм Моркаргас командует южными дозорными постами." />
     <string id="TAOM_hero_4_28_1" text="Моркар — сын Фастхельма." />
     <string id="TAOM_hero_4_28_2" text="Хересвит — дочь командира южной стражи." />
     <string id="TAOM_hero_5_1" text="Варгул, Верховный военачальник Кханда, возглавляет свирепых всадников-вариагов. Его союз с Мордором ведёт его воинов против Гондора в войне за Средиземье." />
-    <string id="TAOM_hero_5_1_1" text="Nyveth is a daughter of the High Warlord's house. She rides with his retinue, though she is still a child and carries no spear." />
+    <string id="TAOM_hero_5_1_1" text="Хазна — дочь дома Высшего Военачальника. Она едет с его свитой, хотя ещё дитя и не носит копья." />
     <string id="TAOM_hero_5_3" text="Эргеон — вождь, который возглавляет восточные кланы вариагов, известные своей стремительной кавалерийской тактикой." />
     <string id="TAOM_hero_5_3_1" text="Ранаон — наследник боевой дружины Эргеона." />
     <string id="TAOM_hero_5_3_2" text="Ладогуал служит капитаном в войске Эргеона." />
@@ -1355,7 +1355,7 @@
     <string id="TAOM_hero_5_5" text="Мелидир возглавляет набеги на земли Гондора." />
     <string id="TAOM_hero_5_5_1" text="Эйли управляет конными табунами клана." />
     <string id="TAOM_hero_5_6" text="Алкея — жена Мелидира." />
-    <string id="TAOM_hero_5_7" text="Вождь воинов-вариагов из Кханда." />
+    <string id="TAOM_hero_5_7" text="Харзул — вождь воинов-вариагов Кханда и сын Высшего Военачальника." />
     <string id="TAOM_hero_5_8" text="Сейн командует отрядом вариагской кавалерии." />
     <string id="TAOM_hero_5_9" text="Кулхарн — воин-вариаг растущей славы." />
     <string id="TAOM_hero_5_91" text="Теган служит вместе с Кулхарном." />
@@ -1417,32 +1417,32 @@
     <string id="TAOM_hero_6_19_2" text="Корте — наследник разведчиков Вахералтана." />
     <string id="TAOM_hero_6_20" text="Хурубра Машакиан командует северными племенами Руна." />
     <string id="TAOM_hero_6_20_1" text="Джигур — жена Хурубры." />
-    <string id="TAOM_hero_K8_u" text="Boronchar is a seasoned warrior who advises the northern chieftain." />
+    <string id="TAOM_hero_K8_u" text="Борончар — закалённый воин, дающий советы северному вождю." />
     <string id="TAOM_hero_6_21" text="Моллук Иллнория командует могущественным кланом конных воинов." />
     <string id="TAOM_hero_6_21_1" text="Эсачей — жена Моллука." />
     <string id="TAOM_hero_6_22" text="Шакхал II Шакхалиан правит богатым торговым кланом у моря Рун." />
     <string id="TAOM_hero_6_22_1" text="Эселен — жена Шахаля." />
     <string id="TAOM_hero_6_23" text="Хуз-Маргоз Хуз командует гарнизонами крепостей на западной границе." />
     <string id="TAOM_hero_6_24" text="Никат Адекиг охраняет южные перевалы в Рун." />
-    <string id="TAOM_hero_A9_l" text="Caradan is a Haradrim chieftain of the southern wastes, young for the office and watched closely by older men." />
-    <string id="TAOM_hero_A9_s" text="Thiqa is wife to the chieftain of the southern wastes and keeps the water tallies of his camps." />
-    <string id="TAOM_hero_A9_c" text="Dhila is heir to the chieftain of the southern wastes. She has ridden the dune tracks since she could sit a saddle." />
-    <string id="TAOM_hero_A9_u" text="Qaban is a warrior of the southern tribes and rides in the chieftain's van." />
-    <string id="TAOM_hero_V11_l" text="Léomund Deáfringas is a Rohirrim lord of the western vales." />
-    <string id="TAOM_hero_V11_u" text="Voleric is a veteran rider who advises the lord." />
-    <string id="TAOM_hero_V11_c1" text="Elendara is heir to the western vale holdings." />
-    <string id="TAOM_hero_V11_c2" text="Dagunic is the second child of the western vale lord." />
-    <string id="TAOM_hero_S9_l" text="Orvar is a noble of Dale who guards the northern approaches." />
-    <string id="TAOM_hero_S9_m" text="Dakhila is matriarch of a northern Barding clan." />
-    <string id="TAOM_hero_S9_c" text="Forim is young heir to the northern holdings." />
-    <string id="TAOM_hero_S9_u" text="Chastimir is a seasoned warrior of the northern garrison." />
-    <string id="TAOM_hero_K9_l" text="Valathmir Mashakian is a chieftain of the distant Easterling tribes, and answers to Rhun only when it suits him." />
-    <string id="TAOM_hero_K9_s" text="Sevin is wife to the distant chieftain and holds his camp while he rides." />
-    <string id="TAOM_hero_K9_c1" text="Altu is heir to the tribal holdings east of the inland sea." />
-    <string id="TAOM_hero_K9_c2" text="Mela is the second child of the distant chieftain, and rides better than her brother." />
-    <string id="TAOM_hero_B8_l" text="Maireas is a Variag warlord of the eastern hills, and has held them through three winters of raiding." />
-    <string id="TAOM_hero_B8_s" text="Rodarac is wife to the Variag warlord and speaks for him when he is away at the hosting." />
-    <string id="TAOM_hero_B8_c" text="Guaran is heir to the Variag warlord, and has waited longer for it than he likes." />
+    <string id="TAOM_hero_A9_l" text="Карадан — вождь харадрим из южных пустошей, молодой для этого звания, и старшие мужи пристально за ним следят." />
+    <string id="TAOM_hero_A9_s" text="Тика — жена вождя южных пустошей, она ведёт счёт воде в его станах." />
+    <string id="TAOM_hero_A9_c" text="Дхила — наследница вождя южных пустошей. Она ездит по дюнным тропам с тех пор, как научилась держаться в седле." />
+    <string id="TAOM_hero_A9_u" text="Кабан — воин южных племён, едет в передовом отряде вождя." />
+    <string id="TAOM_hero_V11_l" text="Леомунд Деафрингас — лорд рохиррим из западных долов." />
+    <string id="TAOM_hero_V11_u" text="Волерик — всадник-ветеран, дающий советы лорду." />
+    <string id="TAOM_hero_V11_c1" text="Элендара — наследница владений в западных долах." />
+    <string id="TAOM_hero_V11_c2" text="Дагуник — второе дитя лорда западных долов." />
+    <string id="TAOM_hero_S9_l" text="Орвар — знатный муж Дейла, охраняющий северные подступы." />
+    <string id="TAOM_hero_S9_m" text="Дахила — матриарх северного клана бардингов." />
+    <string id="TAOM_hero_S9_c" text="Форим — юный наследник северных владений." />
+    <string id="TAOM_hero_S9_u" text="Частимир — закалённый воин северного гарнизона." />
+    <string id="TAOM_hero_K9_l" text="Валатмир Машакиан — вождь дальних истерлингских племён, и повинуется Руну лишь тогда, когда ему это выгодно." />
+    <string id="TAOM_hero_K9_s" text="Севин — жена дальнего вождя, держит его стан, пока он в походе." />
+    <string id="TAOM_hero_K9_c1" text="Алту — наследник племенных владений к востоку от внутреннего моря." />
+    <string id="TAOM_hero_K9_c2" text="Мела — второе дитя дальнего вождя, и в седле она лучше своего брата." />
+    <string id="TAOM_hero_B8_l" text="Майреас — военачальник вариагов восточных холмов, он удерживал их три зимы набегов." />
+    <string id="TAOM_hero_B8_s" text="Родарак — жена военачальника вариагов, говорит за него, когда он в сборе войска." />
+    <string id="TAOM_hero_B8_c" text="Гуаран — наследник военачальника вариагов, и ждёт этого дольше, чем ему хотелось бы." />
     <string id="TAOM_liege_dunland" text="Бренин Дунланда" />
     <string id="TAOM_liege_dunland_female" text="Бренхинес Дунланда" />
     <string id="TAOM_liege_dale" text="Король Дейла" />
