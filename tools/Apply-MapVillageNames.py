@@ -31,7 +31,9 @@ See docs/reference/taom-map-settlement-naming.md for:
   - How to add new mappings safely
   - Why the TAOM repo settlements.xml is NOT the source of truth
 
-Last bulk-applied: 2026-05-26 (345 village display names across 15 regions).
+Last bulk-applied: 2026-08-29 (423 entries). The 2026-05-26 run covered 345 village display
+names across 15 regions; 2026-08-29 added the two CASTLES that had shipped unnamed,
+castle_E9 and castle_G1, so the dict is no longer villages-only despite the file name.
 """
 import os, re
 from _gamedir import game_dir
@@ -116,6 +118,9 @@ NAMES = {
     "village_L1_6": "Anglond",
 
     # E - Erebor (Khuzdul + Old Norse)
+    "castle_E9": "Bergfast",              # shipped as "Castle E9". Old Norse berg "rock" +
+                                          # fast "stronghold", built like Jarnfast; matches its
+                                          # own villages Vanholt/Gronnar/Saevarn and clan_erebor_1
     "castle_village_E1_1": "Hammerstand",
     "castle_village_E1_2": "Cleyhold",
     "castle_village_E1_3": "Saltstead",
@@ -297,6 +302,9 @@ NAMES = {
     "castle_village_MM4_1": "Skar-gosh",  # de-duped from "Shôrd-krish" (gundabad keeps that name)
 
     # G - Gundabad (Black Speech)
+    "castle_G1": "Bagbûrz",               # shipped as "Castle G1". Stem Bag- echoes its village
+                                          # Bagmosh, per the stem convention every other Gundabad
+                                          # castle follows; -burz "dark" (cf. burzum)
     "castle_village_G1_1": "Bagmosh",
     "castle_village_G1_2": "Skarn-uruk",
     "castle_village_G2_1": "Düglar-tang",
