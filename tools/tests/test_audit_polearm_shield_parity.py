@@ -17,6 +17,12 @@ Each test maps to a way the gate could be wrong and pass anyway:
   - ranged_is_not_a_finding               -> a bow + shield is normal, not a defect
   - twohanded_is_advisory_until_strict    -> the ratchet boundary is real
   - missing_install_skips_cleanly         -> absent install exits 0, never a false PASS
+  - standalone_roster_casing_is_scanned   -> #526: the walker read one element casing and so
+                                             never opened a single equipmentsets/ file
+  - known_failure_is_held_not_failed      -> the #526 ratchet holds the pre-existing pairs
+  - stale_known_failure_entry_fails       -> a suppression that outlives its finding is caught
+  - ratchet_does_not_absorb_a_second_occurrence -> #526 multiplicity: 10 keys were hiding 13 rows
+  - ratchet_entry_that_overstates_the_debt_fails -> an inflated count absorbs a future regression
 """
 import io
 import os
@@ -115,6 +121,23 @@ def roster_xml(*item_ids: str) -> str:
     )
 
 
+def standalone_roster_xml(roster_id: str, *item_ids: str) -> str:
+    """A standalone <EquipmentRosters> file, which spells the child `<Equipment>` (capital E).
+
+    Every file under `Main/_Module/ModuleData/equipmentsets/` uses this shape, and the gate could
+    not see any of them until 2026-09-01 (#526). Deliberately NOT a copy of `roster_xml` with the
+    tag swapped: the owner id here sits on the EquipmentRoster itself rather than on a parent
+    NPCCharacter, which is the other half of what the walker has to handle.
+    """
+    equipment = "".join(f'<Equipment slot="Item{i}" id="Item.{x}"/>' for i, x in enumerate(item_ids))
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n<EquipmentRosters>\n'
+        f'  <EquipmentRoster id="{roster_id}" culture="Culture.neutral_culture"><EquipmentSet>'
+        f"{equipment}"
+        "</EquipmentSet></EquipmentRoster>\n</EquipmentRosters>\n"
+    )
+
+
 def xslt_registering(*piece_ids: str) -> str:
     """An additive override of OneHandedPolearm's AvailablePieces, shaped like the Armory's."""
     entries = "".join(f'<AvailablePiece id="{p}"/>' for p in piece_ids)
@@ -148,6 +171,10 @@ class GateContractTests(unittest.TestCase):
         write(self.modules / "TestArmory" / "ModuleData" / "items.xml", ITEMS)
         self.overlay = self.modules / "TestArmory" / "ModuleData" / "weapon_descriptions.xslt"
         self.addCleanup(self._tmp.cleanup)
+        # Empty ratchet by default. The shipped KNOWN_FAILURES names real roster ids, and every
+        # one of them is stale against this synthetic tree, which would fail every test here for
+        # a reason none of them is testing. The two ratchet tests install their own table.
+        self.ratchet({})
 
     def run_gate(self, *extra: str):
         argv = [
@@ -212,6 +239,86 @@ class GateContractTests(unittest.TestCase):
 
         code, out = self.run_gate("--strict")
         self.assertEqual(code, 1, out)
+
+    def test_standalone_roster_casing_is_scanned(self):
+        """#526: `<Equipment>` in an equipmentsets-shaped file must be read like `<equipment>`.
+
+        Before the walker matched both casings this exact input printed PASS, which is how 13
+        real shield+polearm pairs (player starting gear among them) stayed invisible.
+        """
+        write(self.rosters / "equipmentsets" / "sets.xml",
+              standalone_roster_xml("test_roster", "test_spear", "test_shield"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+        self.assertIn("test_roster", out)
+
+    def ratchet(self, table):
+        """Swap KNOWN_FAILURES wholesale for the duration of one test.
+
+        REPLACES rather than extends: the shipped table names real roster ids, none of which exist
+        in this synthetic tree, so merging would make every shipped entry read as stale and turn
+        each of these tests red for a reason it is not testing.
+        """
+        original = dict(audit.KNOWN_FAILURES)
+        audit.KNOWN_FAILURES.clear()
+        audit.KNOWN_FAILURES.update(table)
+
+        def restore():
+            audit.KNOWN_FAILURES.clear()
+            audit.KNOWN_FAILURES.update(original)
+
+        self.addCleanup(restore)
+
+    def test_known_failure_is_held_not_failed(self):
+        """A ratcheted pair reports under KNOWN and does not fail the run."""
+        write(self.rosters / "equipmentsets" / "sets.xml",
+              standalone_roster_xml("test_roster", "test_spear", "test_shield"))
+        self.ratchet({("test_roster", "test_spear"): (1, "#000 -- fixture")})
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+        self.assertIn("KNOWN", out)
+        self.assertIn("test_spear", out)
+        self.assertNotIn("FAIL:", out)
+
+    def test_stale_known_failure_entry_fails(self):
+        """An entry matching nothing is a suppression outliving its finding, and must FAIL.
+
+        Without this the ratchet decays the way `DocumentedExceptions` in
+        EnlistmentRosterCultureCoverageTests is written to prevent: silently green forever,
+        widening the blind spot for whoever inherits it.
+        """
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))  # no shield, so no finding
+        self.ratchet({("gone_troop", "gone_spear"): (1, "#000 -- fixture")})
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("stale KNOWN_FAILURES", out)
+        self.assertIn("gone_spear", out)
+
+    def test_ratchet_does_not_absorb_a_second_occurrence(self):
+        """A ratcheted pair occurring MORE often than ratcheted is new debt, and must fail.
+
+        Keying the ratchet on (roster, item) alone made it blind to multiplicity: the shipped
+        baseline had 10 keys suppressing 13 occurrences, so an already-listed roster gaining a
+        second copy of the same unusable polearm would have been filed as old debt.
+        """
+        write(self.rosters / "equipmentsets" / "sets.xml",
+              standalone_roster_xml("test_roster", "test_spear", "test_shield"))
+        write(self.rosters / "equipmentsets" / "sets2.xml",
+              standalone_roster_xml("test_roster", "test_spear", "test_shield"))
+        self.ratchet({("test_roster", "test_spear"): (1, "#000 -- fixture")})
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("FAIL", out)
+
+    def test_ratchet_entry_that_overstates_the_debt_fails(self):
+        """A count HIGHER than reality would silently absorb a future regression back up to it."""
+        write(self.rosters / "equipmentsets" / "sets.xml",
+              standalone_roster_xml("test_roster", "test_spear", "test_shield"))
+        self.ratchet({("test_roster", "test_spear"): (5, "#000 -- fixture")})
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("expects 5 occurrence(s)", out)
 
     def test_missing_install_skips_cleanly(self):
         """An absent install must SKIP at exit 0 -- never a false PASS, never a hard failure."""

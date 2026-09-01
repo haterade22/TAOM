@@ -2,6 +2,41 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-01
+
+### fix(tools): the shield gate had never opened a single standalone roster file (#526)
+
+`audit_polearm_shield_parity.py` matched `roster.iter("equipment")`, lowercase. Inline troop
+rosters spell that child `<equipment>`; every file under `equipmentsets/` spells it `<Equipment>`.
+XML is case-sensitive, so the gate had been reporting PASS while never reading any of them. This
+surfaced while adding weapons to a standalone roster file, which is precisely the data it exists to
+guard.
+
+Matching both casings turns up **13 findings across 10 rosters**, pairing a shield with a polearm
+the AI will not draw, in two items. `wm_mordor_set1_polearm_a01` sits in 8 of Mordor's 20
+player-start rosters: both sexes of the cavalry and infantry career archetypes and of the mercenary
+and retainer character-creation archetypes, which is 4 of Mordor's 10 archetypes rather than all of
+them. `isengard_pike_a` accounts for the other 5 findings, in 2 companion templates. The carrier
+holds the weapon until combat starts and then fights with the sidearm for the rest of the battle,
+with no error and no log.
+
+Those 13 are held in a dated `KNOWN_FAILURES` ratchet keyed on `(roster id, item id)` and printed
+in full on every run, so anything new still fails the build. The ratchet fails if an entry ever
+stops matching, so a fix cannot leave a dead suppression behind. Emptying it closes #526.
+
+The walker also now reads the roster's own id before walking up to a parent, so a standalone
+finding names the roster to edit (`player_career_mordor_cavalry_m`) rather than the file it sits in
+(`taom_career_starting_equipment`). Re-measured while here: the
+two-handed advisory backlog (#450) is 97 rosters over 58 troops, not the "33 rosters across 13
+troops" the tool's own comment claimed; that number was written when the walker could not open
+these files. Four of the 97 are the new Erebor and Mordor enlistment kits, inherited from donor
+troops already on that list, and unlike an AI troop the player picks their own loadout out of
+baggage.
+
+Not-tested: none, the gate is covered by 10 unit tests including the two new ratchet paths.
+
+
+
 ## 2026-08-31
 
 ### feat(fellwarg): rig inherited art onto the warg skeleton and wire it up

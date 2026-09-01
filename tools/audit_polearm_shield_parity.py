@@ -62,14 +62,47 @@ BLOCKING_FLAG = "requires_no_shield"
 # suppressed case by case.
 MELEE_TYPES = frozenset({"Polearm", "OneHandedWeapon", "TwoHandedWeapon"})
 
-# Polearms are the class this tool was written for and they are clean as of 2026-08-10, so they
-# ratchet: any new one fails the build. Two-handed swords/axes/maces hit the identical engine rule
-# and 33 rosters across 13 troops are already in that state (#450) -- pre-existing, and a roster
-# decision rather than a data registration, because a 2H axe has no one-handed mode to register.
+# Polearms are the class this tool was written for, so they ratchet: any new one fails the build,
+# and the pre-existing ones are enumerated in KNOWN_FAILURES below. Two-handed swords/axes/maces
+# hit the identical engine rule and 98 rosters across 59 troops are already in that state (#450)
+# -- pre-existing, and a roster decision rather than a data registration, because a 2H axe has no
+# one-handed mode to register. (Was "33 rosters across 13 troops" while the walker read only one
+# element casing and so never opened a standalone roster file; re-measured 2026-09-01, #526. Four
+# of the 97 are enlistment kits, inherited from donor troops already on that list.)
 # They are reported in full every run rather than filtered out, because a gate that silently drops
 # what it cannot fix reads as "all clear". Pass --strict to fail on them too; once #450 is closed,
 # move "TwoHandedWeapon" into this set so it ratchets as well.
 FAILING_TYPES = frozenset({"Polearm"})
+
+# Pre-existing (owner, item) pairs that were already in this state when the roster walker was
+# taught the second element casing on 2026-09-01 (#526). Before that fix this tool had never read
+# a single standalone roster file, so these are not new data -- they are what the gate was blind
+# to. They are held here rather than suppressed silently, printed in full every run, so that a
+# NEW pair still fails the build. Emptying this table is what closes #526.
+#
+# Keyed on (owner id, item id) and NOT on the roster index, because the index shifts whenever a
+# roster is inserted above it, which would turn a cosmetic edit into a spurious failure.
+#
+# The value carries the EXPECTED OCCURRENCE COUNT as well as the issue. Keying on the pair alone
+# made the ratchet blind to multiplicity: 10 keys were suppressing 13 occurrences, so a roster
+# already on the list gaining a SECOND copy of the same unusable polearm would have been filed as
+# old debt. A count that goes UP is new debt and fails; a count that goes DOWN means the entry is
+# partly fixed and overstates the debt, so it would absorb a future regression, and that fails too.
+KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
+    # Mordor player starting gear: a two-handed-resolving polearm beside a shield, in the kit the
+    # player is handed at character creation and career start. 8 rosters, one item.
+    ("player_career_mordor_cavalry_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_cavalry_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_infantry_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_infantry_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_mercenary_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_mercenary_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_retainer_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_retainer_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    # Companion templates: a pike, whose usage set is requires_no_shield by design.
+    ("npc_companion_equipment_template_isengard", "isengard_pike_a"): (3, "#526"),
+    ("npc_companion_equipment_template_umbar", "isengard_pike_a"): (2, "#526"),
+}
 
 
 def _parse(path: Path):
@@ -226,6 +259,14 @@ def rosters(root: Path):
     Iterates the EquipmentRoster elements themselves and walks UP for the owning id. Iterating
     candidate owners instead double-counts, because an NPCCharacter and its own <Equipments>
     child both match and each yields the same rosters.
+
+    BOTH element casings, and that is not cosmetic. Inline troop rosters in `troops_*.xml` spell
+    the child `<equipment>`; every standalone roster file under `equipmentsets/` spells it
+    `<Equipment>` (measured 2026-09-01: troops_gondor.xml 2,109 lowercase and 0 upper,
+    taom_lord_template_equipment.xml 0 lowercase and 1,918 upper). XML is case-sensitive, so matching a
+    single casing made this gate structurally blind to every standalone roster file while printing
+    PASS: the shape lessons/data-content-cultures.md calls "a gate that excludes the category the
+    bug lives in reports zero forever".
     """
     for path in sorted(root.rglob("*.xml")):
         try:
@@ -238,12 +279,17 @@ def rosters(root: Path):
         for roster in tree.iter("EquipmentRoster"):
             ids = [
                 (e.get("id") or "").split(".", 1)[-1]
-                for e in roster.iter("equipment")
+                for e in roster.iter("equipment", "Equipment")
                 if e.get("id")
             ]
             if not ids:
                 continue
-            owner, node = path.stem, roster.getparent()
+            # The roster's OWN id first, then upwards. Inline troop rosters are anonymous and
+            # take their name from the enclosing NPCCharacter, but a standalone
+            # <EquipmentRoster id="..."> in equipmentsets/ carries it directly, and walking
+            # straight past that reported the file stem for every one of them -- naming the file
+            # a finding is in rather than the roster that has to be edited.
+            owner, node = path.stem, roster
             while node is not None:
                 if node.get("id"):
                     owner = node.get("id")
@@ -302,7 +348,7 @@ def main() -> int:
         if item_type in MELEE_TYPES and BLOCKING_FLAG in flags.get(usage, set()):
             blocking[item_id] = (item_type, "<plain item_usage>", usage)
 
-    failing, advisory = [], []
+    failing, advisory, known = [], [], []
     for troop, path, index, ids in rosters(roster_root):
         if not any(i in shields for i in ids):
             continue
@@ -311,7 +357,25 @@ def main() -> int:
                 continue
             item_type, desc_id, usage = blocking[item_id]
             row = (troop, path, index, item_id, item_type, desc_id, usage)
-            (failing if item_type in FAILING_TYPES or args.strict else advisory).append(row)
+            if not (item_type in FAILING_TYPES or args.strict):
+                advisory.append(row)
+            elif (troop, item_id) in KNOWN_FAILURES:
+                known.append(row)
+            else:
+                failing.append(row)
+
+    # Multiplicity. A ratcheted pair occurring MORE often than it was ratcheted at is new debt
+    # wearing an old label, so the excess occurrences move to the failing list.
+    counted: dict[tuple[str, str], int] = {}
+    excess = []
+    for row in known:
+        key = (row[0], row[3])
+        counted[key] = counted.get(key, 0) + 1
+        if counted[key] > KNOWN_FAILURES[key][0]:
+            excess.append(row)
+    if excess:
+        known = [r for r in known if r not in excess]
+        failing.extend(excess)
 
     print(f"Modules:  {modules}")
     print(f"Rosters:  {roster_root}")
@@ -363,6 +427,32 @@ def main() -> int:
             "\nFix by registering the item's pieces under a shield-compatible description "
             "(see tools/register_one_handed_polearms.py) or by changing the roster."
         )
+
+    if known:
+        print()
+        print(f"KNOWN ({len(known)} roster(s)): pre-existing pairs held by the #526 ratchet. "
+              "Not failing the run; fixing them is what closes that issue.")
+        show(known)
+
+    # OUTSIDE the `if known` block on purpose. The worst case for a ratchet is every entry going
+    # stale at once, which produces an EMPTY `known` list -- gating the check on a non-empty one
+    # would stay silent in exactly the case that matters most. A ratchet entry matching nothing is
+    # a suppression that outlived its finding, and nothing else would ever prompt its deletion.
+    stale = sorted(set(KNOWN_FAILURES) - {(row[0], row[3]) for row in known})
+    # A pair occurring FEWER times than ratcheted is partly fixed: the entry overstates the debt
+    # and would silently absorb a future regression back up to the old count.
+    for key in sorted(k for k, n in counted.items() if n < KNOWN_FAILURES[k][0]):
+        status = 1
+        print()
+        print(f"FAIL: ratchet entry {key} expects {KNOWN_FAILURES[key][0]} occurrence(s) but "
+              f"{counted[key]} remain. Lower the count, or remove the entry if it is fixed.")
+    if stale:
+        status = 1
+        print()
+        print(f"FAIL: {len(stale)} stale KNOWN_FAILURES entr(y/ies) matched nothing. "
+              "The pair was fixed or renamed -- delete the entry:")
+        for owner, item_id in stale:
+            print(f"  ({owner}, {item_id})  [{KNOWN_FAILURES[(owner, item_id)][1]}]")
 
     if advisory:
         troops = len({row[0] for row in advisory})
