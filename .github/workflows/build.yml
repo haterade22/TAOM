@@ -31,6 +31,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Validate XML well-formedness
+        if: ${{ !cancelled() }}
         shell: pwsh
         run: |
           $errors = 0
@@ -46,6 +47,7 @@ jobs:
           Write-Host "All XML files are well-formed."
 
       - name: Validate XSLT well-formedness
+        if: ${{ !cancelled() }}
         shell: pwsh
         run: |
           $errors = 0
@@ -61,6 +63,7 @@ jobs:
           Write-Host "All XSLT files are well-formed."
 
       - name: Validate JSON
+        if: ${{ !cancelled() }}
         shell: pwsh
         run: |
           $errors = 0
@@ -76,6 +79,7 @@ jobs:
           Write-Host "All JSON files are well-formed."
 
       - name: Validate native DLL links a static CRT
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           # The vendored TAOM.NativeSkinFixes.dll must link a STATIC CRT
@@ -98,6 +102,7 @@ jobs:
           echo "Native DLL links a static CRT — no redistributable dependency."
 
       - name: Doc-graph ratchet (isolated docs must not grow)
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           # /doc-graph shipped 2026-06-08 and was then run by nothing: no hook, no
@@ -121,9 +126,13 @@ jobs:
     # Its OWN job, deliberately. It first shipped as a step inside validate-xml,
     # positioned after the doc-graph ratchet, which has been failing since 2026-08-28.
     # GitHub Actions stops a job at the first failed step, so this gate never executed
-    # once, and neither did the native-CRT check above it (silently skipped since
-    # 2026-08-18). A gate that cannot run is not a gate: the exact lesson this suite
-    # exists to enforce, reproduced by the commit that added it.
+    # once, and neither did the native-CRT check that then sat below it (silently
+    # skipped since 2026-08-18). A gate that cannot run is not a gate: the exact
+    # lesson this suite exists to enforce, reproduced by the commit that added it.
+    #
+    # The native-CRT check has since been reordered above the ratchet, so that
+    # specific hole is closed. Every step in validate-xml now also carries
+    # an always-run guard, so a future reordering cannot reopen it.
     steps:
       - uses: actions/checkout@v4
 
@@ -143,6 +152,52 @@ jobs:
           # NOT the Windows-specific alias trap itself. Check 1 of the script is a static
           # lint, so that part does carry over.
           bash tools/test_hooks.sh
+
+  python-tests:
+    name: Python Tool Tests
+    runs-on: ubuntu-latest
+    # Its OWN job, for the same reason hook-harness is one: a failure here must not
+    # hide a gate living in another job.
+    #
+    # tools/tests holds several hundred tests and until now NOTHING ran them: not CI,
+    # not a hook, not a skill, not build.ps1. That is the /doc-graph shape again
+    # (shipped, then run by nothing, while the thing it guarded drifted).
+    #
+    # Every module is stdlib unittest, zero pytest imports, and each already does its
+    # own sys.path insert. So this needs no pip install, no requirements.txt and no
+    # conftest.py. Measured 2026-09-01 on a tree with no game install: the suite runs
+    # headless in about 7 s and the 2 skips are the game-install tests, skipping
+    # cleanly. No exact count is written here on purpose: a hardcoded total is the
+    # shape that rots silently. The floor assertion below is the machine-checked part.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tools/tests
+        shell: bash
+        run: |
+          # Capture rather than stream, so the floor check below can read the count.
+          # unittest writes its summary to stderr.
+          set +e
+          OUT=$(python3 -m unittest discover -s tools/tests -t . 2>&1)
+          RC=$?
+          set -e
+          echo "$OUT"
+
+          # An empty discovery must not read as a pass. If the search root moves or a
+          # collection error quietly drops modules, "Ran 0 tests" exits 0 and this job
+          # goes green having verified nothing. That is the exact defect class this
+          # suite exists to catch, so assert a floor instead of trusting the exit code.
+          RAN=$(echo "$OUT" | grep -oE 'Ran [0-9]+ test' | tail -1 | awk '{print $2}')
+          if [ -z "$RAN" ]; then
+            echo "::error::unittest printed no summary line. Discovery did not complete, so this is not a pass."
+            exit 1
+          fi
+          if [ "$RAN" -lt 700 ]; then
+            echo "::error::Only $RAN tests discovered, expected at least 700. Collection is broken or the search root moved."
+            exit 1
+          fi
+          echo "Discovered and ran $RAN tests."
+          exit $RC
 
   build:
     name: Build & Test
