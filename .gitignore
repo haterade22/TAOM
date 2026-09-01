@@ -22,6 +22,16 @@ enc_temp_folder/
 # trailing * a `git add -A` would commit whole duplicate copies of the ModuleData
 # XML (taom_partyTemplates.xml alone is 377 KB).
 *.bak*
+# Same class, different suffixes. `*.bak*` misses all of these: `.orig` is what a
+# merge leaves behind, `~` is what most editors write, and `.backup` / `.old` are
+# what a hand-copy gets named at 2am. None of the four has ever been tracked in
+# this repo (checked 2026-09-01), so nothing is shadowed. Deliberately not adding
+# *.tmp or *.save: those are scratch rather than backups, and the block is easier
+# to reason about if it means one thing.
+*.backup
+*.orig
+*.old
+*~
 
 # DR3 (2026-05-22): exceptions for bundled BUTR runtime DLLs in
 # TAOM.Dependencies module. These are MAINTAINED-VENDOR — manually copied
