@@ -808,8 +808,11 @@
         <GameType value ="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- Enlistment service-issue armor rosters, issued to party inventory once
-         per rank (EnlistmentEquipmentService). #375 Phase 4. -->
+    <!-- Enlistment service-issue kits (armour AND weapons), issued to party inventory
+         once per rank, keyed on culture + assignment + rank
+         (EnlistmentEquipmentService). #375 Phase 4; weapons added in #525.
+         No Horse/HorseHarness and no Item4 (ExtraWeaponSlot) at any assignment
+         - see the file header. -->
     <XmlNode>
       <XmlName id="EquipmentRosters" path="equipmentsets/taom_enlistment_equipment"/>
       <IncludedGameTypes>

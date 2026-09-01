@@ -131,8 +131,11 @@ SHARED_FILES = [
     # The six stage-2 tutor templates. A culture without them CTDs when a child reaches age 8 —
     # MISSING_EDUCATION_TEMPLATES exists because that shipped once already (#354).
     ("taom_education_character_templates.xml", "</NPCCharacters>", "education_chars"),
-    # enlist_<culture>_{recruit,soldier,veteran,sergeant}. Without all four the enlisted player
-    # silently falls back to enlist_default_* and is issued another culture's kit (#431).
+    # enlist_<culture>_{infantry,archer,cavalry,support}_{recruit,soldier,veteran,sergeant} since
+    # #525, so up to 16 cells per culture rather than 4. A culture with none of them falls back to
+    # enlist_default_* and is issued another culture's kit (#431). Note that a MISSING cell is not
+    # by itself a defect any more: the generator omits a cell whose donor pool has nothing in band,
+    # and the resolver descends within the culture.
     ("equipmentsets/taom_enlistment_equipment.xml", "</EquipmentRosters>", "rosters"),
 ]
 

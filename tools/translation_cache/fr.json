@@ -11453,7 +11453,7 @@
   "taom_enlist_rank_veteran": "Vétéran",
   "taom_enlist_reassign": "Je voudrais tenir une autre place dans le rang.",
   "taom_enlist_reassign_arc": "Je tire mieux que je ne frappe.",
-  "taom_enlist_reassign_cav": "Je sais monter. Donnez-moi un cheval.",
+  "taom_enlist_reassign_cav": "Je sais monter. Mettez-moi avec les cavaliers.",
   "taom_enlist_reassign_done": "Présentez-vous donc à votre nouvelle section. Ne me faites pas le regretter.",
   "taom_enlist_reassign_inf": "Placez-moi dans la ligne de boucliers.",
   "taom_enlist_reassign_pick": "Vous marchez avec {CURRENT_SECTION} pour l'instant. Où préféreriez-vous servir ?",

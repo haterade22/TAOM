@@ -8,10 +8,13 @@ using TAOM.Features.Enlistment.Equipment;
 namespace TAOM.Features.Enlistment.Hooks;
 
 /// <summary>
-/// Thin dialog registration for drawing service-issue armor from the commander (once per
-/// rank, into party inventory). Culture is read LIVE at issuance (culture-conversion
-/// rule); rank maps ordinal-for-ordinal from the content record onto the equipment
-/// enum (both ladders are Recruit..Sergeant, pinned by test).
+/// Thin dialog registration for drawing the service kit from the commander (once per rank, into
+/// party inventory). The kit carries weapons as well as armour since #525, and the player's
+/// ASSIGNMENT selects which kit: an Archer draws a bow rather than a sword.
+///
+/// Culture and assignment are both read LIVE at issuance (culture-conversion rule) rather than
+/// cached; rank maps ordinal-for-ordinal from the content record onto the equipment enum (both
+/// ladders are Recruit..Sergeant, pinned by test).
 /// </summary>
 public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
 {
@@ -92,8 +95,10 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
 
         // Culture read at issuance time from the commander — never cached.
         var cultureId = _commander.GetCultureId(_store.Record.CommanderHeroId);
+        var assignment = _contentStore.Record.Assignment;
         var rank = (EnlistmentRank)(int)_contentStore.Record.Rank;
-        _lastResult = _equipment.IssueForRank(cultureId, rank);
-        _logger?.LogInfo($"[Enlistment] quartermaster issue: {_lastResult} (culture={cultureId}, rank={rank})");
+        _lastResult = _equipment.IssueForRank(cultureId, assignment, rank);
+        _logger?.LogInfo($"[Enlistment] quartermaster issue: {_lastResult} "
+            + $"(culture={cultureId}, assignment={assignment}, rank={rank})");
     }
 }

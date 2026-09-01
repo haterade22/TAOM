@@ -842,3 +842,65 @@ castles shipping under their own ids, one of them translated into twelve languag
   green validator proves only what that validator checks", both of which are this same error wearing
   a different hat.
 - **Source:** the 2026-08-29 lord identity and placeholder rename pass.
+
+### Narrowing a candidate set invalidates every guarantee the wider set silently provided (#525, 2026-09-01)
+
+The enlistment generator started filtering its donor pool by `default_group`. That one change broke
+three implicit guarantees the whole-culture pool had been providing, and the session noticed one:
+
+| Guarantee the wider pool provided | Outcome |
+|---|---|
+| An in-band donor almost always exists | NOTICED, became a hard level cap |
+| Some donor carries a one-handed weapon | MISSED, shipped 15 weaponless kits |
+| The next rank's donor is not worse-armoured | MISSED, shipped 17 backwards promotions |
+
+Having caught the first, the session treated the risk as discharged and moved on. It was the same
+class of consequence three times over.
+- **Why missed:** finding one invalidated invariant feels like completing the analysis. It is
+  evidence the analysis is necessary, not that it is finished.
+- **Prevent:** when a change narrows a candidate set, write down what the wider set was implicitly
+  guaranteeing and check each item separately. The prompt that works: "this pool used to be big
+  enough that X was always true by luck; what else was true by luck?"
+- **Related:** the same changeset mapped 3 of the 4 `default_group` values in the troop data, so 23
+  HorseArcher troops belonged to no pool at all. The repo already has an enum-coverage check, but
+  it is written for C# enums; nothing applied it to a Python dict keyed on engine data, and a 1:1
+  map reads as complete. Derive the key set from the data and fail on an unmapped value.
+- **Source:** #525; RCA `docs/reviews/rca-enlistment-weapons-2026-09-01.md`.
+
+### Code written to fix a review is the least-reviewed code in the changeset (#525, 2026-09-01)
+
+An 11-dimension review of the enlistment kit produced a round of fixes. The independent Codex pass
+that followed returned six findings, and TWO of them were defects in that fix round: an armour
+progression floor that scored kits by a single stat per item (a body piece contributes body AND leg
+armour, so a promotion lost protection in all four zones while the proxy rose), and a
+`--seed-missing` repair path that could no longer restore the rescue rosters it exists for.
+- **Why missed:** the fixes landed after every dimension had reported. They were verified by
+  re-running the gates, which is not the same as being reviewed: a gate confirms the symptom is
+  gone, not that the mechanism is sound. The armour floor in particular was ~40 new lines of
+  scoring logic that no reviewer of any kind ever read.
+- **Prevent:** treat the fix round as a new changeset. Either re-run the review over just the fix
+  diff, or hold the independent pass until after the fixes so it reads the tree that would ship.
+  The cheap version: for each fix, ask what NEW code it introduced and whether anything checked
+  that code rather than its effect.
+- **Corollary that caught the same bug twice:** the repo already knew the single-stat trap.
+  `rebalance_armor.py:146` carries "arm_armor on capes was invisible to every analyzer
+  (_get_primary_stat returned only body_armor), which is the blind spot that let the inversion
+  ship." Reusing a helper inherits its documented limitations; read the comment on the thing you
+  are reusing, not just its signature.
+- **Source:** #525; RCA `docs/reviews/rca-enlistment-weapons-2026-09-01.md` second-pass section.
+
+### A test that derives its own input set cannot fail on a deletion (#525, 2026-09-01)
+
+`EveryCultureWithAnyRoster_ResolvesForEveryAssignmentAndRank` parsed its list of cultures out of the
+roster file it was auditing. Deleting every `enlist_vlandia_*` row removed Rohan from the test's own
+input and the test stayed green; renaming them to `enlist_rohan_*` made it accept a culture StringId
+that does not exist, also green. Either mutation drops runtime Rohan to the neutral default kit,
+which is the #431 defect the test was written to prevent.
+- **Why missed:** the review verified the test passes and that its assertions are meaningful on the
+  current data. Nobody asked which mutation it would survive.
+- **Prevent:** a coverage test derives its expected set from an INDEPENDENT authority, never from
+  the artefact under test. Here the authority is the troop data. The review question to ask of any
+  green test: "name a one-line change to production that this test should catch, and confirm it
+  does" -- and for coverage tests specifically, "what happens if I delete a row?"
+- **Source:** #525; same RCA.
+

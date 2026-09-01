@@ -4,6 +4,108 @@
 
 ## 2026-09-01
 
+### fix(enlistment): the service kit had no weapons in it, for anyone, ever (#525)
+
+Players reported that enlisting got them armour and never a weapon. They were right, and they were
+reading the data correctly: a slot census of `taom_enlistment_equipment.xml` returned 374 armour
+elements and **zero** `Item0` to `Item3`. Not one of the 84 rosters held a weapon.
+
+This was the shipped contract rather than a regression. Three layers enforced it: the generator
+filtered every weapon slot out of the donor troops, the coverage auditor hard-failed the build on
+any non-armour slot, and four separate comments described the file as armour-only. The C# was never
+involved. `EquipmentRosterCatalogAdapter` has always read all twelve slots, so the fix is data and
+tooling, not code.
+
+**The kit is now keyed on assignment too**, `enlist_{culture}_{assignment}_{rank}`, because a
+weapon is only right if it matches the role the player picked. An Archer draws a bow and arrows, a
+Cavalry soldier a lance and shield, Support one melee sidearm and no shield. 268 rosters replace
+84: 252 culture cells of a possible 320, across 20 cultures, plus 16 culture-neutral defaults.
+
+**The fallback chain walks culture, then assignment, then rank.** Culture outranks assignment
+because issuing another faction's kit is the defect players actually report: #427 was "the
+quartermaster gives me gondor gloves and I'm enlisted under Theoden", and #431 was the same
+complaint arriving through the neutral fallback, which is tagged `Culture.neutral_culture` while
+being Rohan militia in Dunland boots. Rank is innermost, so the right role at a lower rank beats
+the wrong role at the right rank.
+
+**A cell is never emitted weaponless, and that rule had to be learned twice.** The first cut of
+this change shipped 15 rosters carrying armour and no weapon at all, every one of them a Support
+cell: `support_kit()` looked for a OneHanded sidearm, found none, and the cell was emitted anyway.
+It reproduced the reported bug inside its own fix, and every gate passed, because every gate asked
+what a kit must NOT contain and none asked what it MUST. Support now accepts any melee sidearm
+(all 15 donors carried a spear or a two-hander), a cell with no usable weapon is suppressed rather
+than emitted, and both the auditor and a shipped-data test now assert the lower bound. The
+distinction matters more than it looks: the resolver probes EXISTENCE, so an armour-only roster
+ends the fallback walk and shadows the armed kit the player would otherwise have descended to.
+
+**68 of the 320 cells are absent by design.** A cell is omitted when its donor pool holds nothing
+in band, when the kit would repeat one already drawn at a lower rank (the ledger spends a draw per
+rank, so a repeat is a wasted promotion and a pile of duplicates), or when it would hand back less
+protection than the player is already wearing. Donor trees are not monotonic in armour: without
+that last rule Erebor infantry went from 176 armour at recruit to 99 at soldier, backwards at the
+very first promotion, in 17 chains.
+
+Progression is measured per HIT ZONE, not by a single stat. The first cut scored a kit by
+`derive_armor_tiers`'s primary stat, which is one number per item, and a body piece contributes
+body AND leg armour while a cape contributes body AND arm. An Aserai cavalry promotion therefore
+lost head, body, arm and leg protection while the single-stat proxy went UP. `rebalance_armor.py`
+already carried a comment recording that exact blind spot ("arm_armor on capes was invisible to
+every analyzer, which is the blind spot that let the inversion ship") and this repeated it. The
+generator now reads all four zones off the `<Armor>` element and rejects a promotion that is either
+weaker in aggregate or strictly dominated. Where no in-cap donor clears that bar the floor yields,
+and the waiver is printed rather than taken silently.
+
+**HorseArcher donors are no longer invisible.** `default_group` has four values and the assignment
+map named three, so 23 troops belonged to no pool at all. Gundabad had no cavalry soldier while two
+of its horse archers sat comfortably under the cap, and Rohan's and Rhun's signature horse archers
+could seed neither the archer nor the cavalry kit. The map now takes tuples, and the generator
+fails the run if the troop data ever grows a fifth group rather than letting it disappear.
+
+**The rank band became a hard cap.** `OVERSHOOT_WEIGHT` only ever reordered a candidate list, which
+was safe while that list was a whole culture's troops and an in-band donor almost always existed.
+Filtering donors by `default_group` removed the guarantee: 40 of the 320 cells had donors only
+above their band, worst case a Mirkwood cavalry recruit drawing a level-41 kit. A cell with no
+in-cap donor now emits nothing and the resolver falls back inside the culture. The cap yields in
+one case only, where a culture would otherwise own no roster at that rank at all: bluecraig and
+mistymountainorcs each ship a single level-36 troop, and over-tier gear of your own people's make
+beats human militia on a goblin.
+
+**No mounts, at any assignment including cavalry.** The cavalry donor pools mount `taom_mumakil`,
+`taom_war_elephant` and `taom_chariot_a`; the roster is keyed on the commander's culture, so it
+cannot know the player is a dwarf who would spawn inside a horse; and `MOUNTED_DWARF` cannot see
+these rosters at all, since it walks data an `NPCCharacter` names and these are applied at runtime
+by id. One rule removes all three. The reassign line was reworded off "Give me a horse" and
+retranslated in all twelve languages, so the shipped text does not outlive the behaviour.
+
+**Existing saves get nothing, deliberately.** The issue ledger is monotonic and keyed on rank, so a
+character already serving at Sergeant has spent every draw and will not see weapons without a fresh
+enlistment. Swapping assignment does not re-open a spent draw either.
+
+Two gates changed alongside. The coverage auditor was rewritten: it iterated only the FIRST
+`NPCCharacter` per troop file, so it saw 16 cultures against the 20 the data carries and four
+cultures' rosters were audited by nothing at all. It now checks per-assignment CONTENT from item
+classes rather than from the generator's own heuristic, so an archer kit with no bow fails even
+though `default_group` said "Ranged". It deliberately stopped requiring a roster per cell, since
+absence is by design; that the resolver still reaches something is pinned in C# where the real
+resolver can be called.
+
+An 11-dimension deep review over 138 agents, every finding adversarially verified, found the
+weaponless-Support bug and four more the implementation had missed: HorseArcher donors mapped to no
+pool, duplicate kits across ranks, backwards armour on promotion, and a discharge path that
+reclaims looted arrows (#527, documented rather than fixed here). Root cause, and why none of it
+was visible to a green suite: `docs/reviews/rca-enlistment-weapons-2026-09-01.md`.
+
+Suite 7770 green, 767 tool tests green. `validate_moduledata.py` PASS. Both roster gates PASS.
+
+Known limitation: honourable discharge reclaims the kit by item id with no provenance, so a player
+who refilled his quiver from loot loses one of his own stacks (#527).
+
+Not-tested: the in-game draw. An edited equipment XML only registers at process launch, so a green
+suite proves nothing about what the engine loaded.
+Research: EquipmentRosterCatalogAdapter.GetBattleSetItemIds, ServiceAssignment, BattleFormationPolicy.
+Save-compat: no roster id is persisted (the ledger stores rank plus item ids), so renaming every
+roster is safe on an existing save.
+
 ### fix(tools): the shield gate had never opened a single standalone roster file (#526)
 
 `audit_polearm_shield_parity.py` matched `roster.iter("equipment")`, lowercase. Inline troop

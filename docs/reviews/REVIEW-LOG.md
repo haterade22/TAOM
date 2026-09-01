@@ -1,6 +1,6 @@
 ﻿# Codex Adversarial Review Log
 
-Running scorecard of all reviews. **Reviews 1-88, 2026-04-05 → 2026-08-18.** 82 of those numbers have an entry below; 37, 46, 48, 63, 64 and 73 do not. The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
+Running scorecard of all reviews. **Reviews 1-89, 2026-04-05 → 2026-09-01.** 83 of those numbers have an entry below; 37, 46, 48, 63, 64 and 73 do not. The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
 
 ## Summary
 
@@ -27,6 +27,7 @@ Running scorecard of all reviews. **Reviews 1-88, 2026-04-05 → 2026-08-18.** 8
 | 19 | 2026-06-25 | ShaderPrecompile Phase 0 (#287) | ship | agree | 1 LOW (doc test-name drift) — confirmed all 6 suspects + the disputed boundary-direct-read non-defect | 0 | 0 | adversarial-xhigh |
 | 20 | 2026-06-26 | Career phantom-passive wiring | clean/ship | agree | 0 — CLEAN; 7/8 suspects DISPUTED + 1 PARTIAL (Damage stage-move, non-defect); corroborated the 6-dim in-house deep-review (0 HIGH/6 MED/3 LOW, all fixed) | 0 | 0 | adversarial-xhigh |
 | 21 | 2026-07-06 | TournamentExitHang #331 (exit diagnostics + Patch60) | issues-found | agree | 1 confirmed P2 — hook-level `IsEnabled` gates bypassed the deep-review fix's unconditional window-closers (fix verified only at the service layer); S1-S6 suspects all resolved with decompiles | 0 | 0 | adversarial-xhigh |
+| 89 | 2026-09-01 | Enlistment service kit weapons (#525) + polearm/shield gate (#526) | issues-found | agree | 6 confirmed (2 HIGH: a coverage test that derived its culture list from the file it audits, so deleting a culture stayed green; a single-stat armour proxy that let a promotion lose all four hit zones while the score rose. 4 MED/LOW: seed-missing skipping rescue rows, a ratchet with no occurrence count, Umbar kits carrying Dunland/Rohan/Noldor gear (#528), Item4 misnamed "banner slot") | 0 | 0 | adversarial-xhigh |
 | 22 | 2026-07-10 | TournamentExitHang #331 ROUND 2 (ExitStallSampler + PatchShield exclusion) | issues-found | agree | 2 P2 (Timer reentrancy on Poll; no independent sampler toggle) + 4 P3 (suspended-window logging, main-thread invariant [deferred+documented], 2 drift) — all addressed; deep-review compat agent separately caught the false ctor comment + the still-shielded Patch38 hot target | 0 | 0 | adversarial-xhigh |
 
 ## Metrics
@@ -2364,6 +2365,7 @@ produced them) in the same commit that creates them.
 - [rca-enlistment-core-2026-08-04.md](rca-enlistment-core-2026-08-04.md): RCA, Enlistment core checkpoint review (2026-08-04)
 - [rca-enlistment-diagnostics-legibility-2026-08-12.md](rca-enlistment-diagnostics-legibility-2026-08-12.md): RCA: enlistment diagnostics legibility pass (2026-08-12)
 - [rca-enlistment-standing-2026-08-28.md](rca-enlistment-standing-2026-08-28.md): RCA: enlisted standing had no reachable source (#520), and the first fix paid quitters
+- [rca-enlistment-weapons-2026-09-01.md](rca-enlistment-weapons-2026-09-01.md): RCA, enlistment service kit had no weapons and the first fix reproduced the bug (#525/#526), deep-review + Codex 2026-09-01
 - [rca-enlistment-survivors-2026-08-08.md](rca-enlistment-survivors-2026-08-08.md): RCA, SAS-survivor implementations (six work items), 2026-08-08
 - [rca-equippresets-presets-button-silent-2026-05-19.md](rca-equippresets-presets-button-silent-2026-05-19.md): RCA, EquipPresets Presets button silent no-op (2026-05-19)
 - [rca-erebor-equipment-sweep-2026-07-30.md](rca-erebor-equipment-sweep-2026-07-30.md): RCA, Erebor / Iron Hills equipment sweep + noble crossbow uplift (2026-07-30)

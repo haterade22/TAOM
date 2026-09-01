@@ -10,7 +10,11 @@ namespace TAOM.Tests.Features.Enlistment;
 /// Guards the Rohan enlistment kits against Gondor item leakage (#375, reported in play
 /// 2026-08-08: "the quartermaster gives me gondor gloves and I'm enlisted under Theoden").
 /// Culture resolution was correct — the roster CONTENT carried a stray
-/// <c>sk_gd_ano_gloves_a</c> in <c>enlist_vlandia_recruit</c>.
+/// <c>sk_gd_ano_gloves_a</c> in <c>enlist_vlandia_recruit</c> (a two-token id at the time;
+/// the ids gained an assignment token in #525, and the <c>enlist_vlandia_</c> prefix this
+/// guard matches on covers both shapes). Since #525 the kits carry WEAPONS too, and the
+/// item-prefix filter picks those up for free: a Gondor sword in a Rohan kit reddens here
+/// exactly as the gloves did.
 ///
 /// Deliberately vlandia-only. Umbar's enlistment kits also carry <c>sk_gd_ano_*</c> items,
 /// and that is NOT a defect to guard against: troops_umbar.xml dresses Umbar troops in the
@@ -33,8 +37,13 @@ public class EnlistmentEquipmentCultureTests
         var vlandiaRosters = doc.Descendants("EquipmentRoster")
             .Where(r => ((string)r.Attribute("id") ?? "").StartsWith("enlist_vlandia_", StringComparison.Ordinal))
             .ToList();
+        // 16 today: 4 assignments x 4 ranks. Asserted as a floor rather than an equality
+        // because a culture may legitimately lose a cell when its troop tree has no donor of
+        // that group within a band of the rank. Dropping below the four ranks means the file
+        // layout changed and this guard needs re-aiming, not that data got thinner.
         Assert.IsTrue(vlandiaRosters.Count >= 4,
-            "Expected the four vlandia rank rosters; the file layout changed and this guard needs re-aiming.");
+            $"Expected at least the four vlandia rank rosters, found {vlandiaRosters.Count}; "
+            + "the file layout changed and this guard needs re-aiming.");
 
         var offenders = vlandiaRosters
             .SelectMany(r => r.Descendants("Equipment")

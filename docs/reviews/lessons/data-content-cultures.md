@@ -878,3 +878,41 @@ array as upgradeable, so they are real edges, not a technicality.
   filename glob with no floor assertion is the shape to distrust: it silently covers nothing when
   a file is renamed.
 - **Source:** #522 Codex review, confirmed by re-deriving the edge count from both directories.
+
+### A gate written FOR a defect must state that defect's negation as a positive requirement (#525, 2026-09-01)
+
+The enlistment kit shipped with no weapons. The fix rebuilt it and rewrote the coverage gate with
+six new rules, every one of them a prohibition: slot allowlist, no mounts, no Item4, no duplicate
+id, no empty roster, no shield on a support kit. It also gained per-assignment content rules, which
+look like requirements but are conditional ("an `_archer_` roster must carry a bow") and so are
+vacuous on a roster carrying no weapon at all. The fix then shipped 15 rosters with armour and zero
+weapons, and the suite, both gates and `validate_moduledata.py` all passed on them.
+- **Why missed:** the census run during implementation asked whether forbidden slots were present
+  (Horse, Item4: zero, correct) and never asked whether required ones were. Prohibitions cannot
+  express a feature's purpose, so a gate made only of them cannot fail on the absence of the thing
+  it exists to guarantee.
+- **Prevent:** the FIRST rule in a gate written for a defect is that defect's negation, stated
+  positively, before any refinement. Here: "every roster carries at least one weapon-classed item".
+  Pin it where `dotnet test` runs as well as in the tool, because nothing runs the Python gates
+  automatically and this repo's CI compiles no C# either (the build job is gated on an unset var).
+- **Sharper still:** a present-but-empty record can be WORSE than a missing one when a consumer
+  probes existence. `EnlistmentRosterResolver` returns the first id that exists, so a weaponless
+  roster ended the fallback walk and shadowed the armed kit the player would have descended to.
+  Suppressing the cell was a one-line change and made the whole class unreachable.
+- **Source:** #525; RCA `docs/reviews/rca-enlistment-weapons-2026-09-01.md`.
+
+### Per-roster checks cannot see a progression that does not progress (#525, 2026-09-01)
+
+Every enlistment gate and test examined one roster at a time. Nothing compared two. So 18
+(culture, assignment) chains emitted a byte-identical kit at two or more ranks (bluecraig and
+mistymountainorcs at all four), and 17 chains issued strictly WORSE armour on promotion, Erebor
+infantry dropping 176 to 99 at the very first one. The ledger spends one draw per rank, so each of
+those is a wasted promotion that hands the player duplicates of what he is already wearing.
+- **Why missed:** the artefact is per-roster, the schema is per-roster, and so every check written
+  against it was per-roster. A chain that does not progress is indistinguishable from one that does
+  unless something holds two cells side by side.
+- **Prevent:** when generated data encodes a SEQUENCE (ranks, tiers, levels), at least one gate must
+  be cross-cell. Assert the sequence's defining property directly: distinct at each step, and
+  monotonic in whatever the steps are supposed to improve. Donor trees are not monotonic in armour,
+  so the generator cannot inherit the property from its inputs.
+- **Source:** #525; same RCA.

@@ -464,3 +464,28 @@ TAOM's localization suite proves every English key has a row in all twelve langu
 - **Why missed:** the completeness checklist asks whether localization is PRESENT, never whether it is REACHABLE. Presence is what the existing tests enforce, so a dead key looks identical to a healthy one at every gate.
 - **Prevent:** for each feature strings file, assert every declared `{=key}` is referenced from C# or a prefab. A dead key is usually the fossil of a specified step that was never built, which makes this test a spec-compliance check wearing a tidiness costume.
 - **Source:** docs/reviews/rca-player-switcher-2026-08-27.md finding 2 (#514).
+
+### Rewording an English string leaves the OLD translation in the cache, keyed by id, and the next run puts it back (#525, 2026-09-01)
+
+`taom_enlist_reassign_cav` was reworded from "I can ride. Give me a horse." to something that
+does not promise a mount, because the service kit ships without one. The known trap is that
+`translate_with_claude.py` only fills rows that still contain English, so the twelve translations
+silently keep describing the old behaviour. The trap underneath it is worse: resetting each row
+to the new English does NOT re-open it, because `tools/translation_cache/<lang>.json` is keyed on
+the **string id**, not on the English text. A dry run reported the entry as resolved "from cache"
+at an estimated cost of $0.0000, and `--apply` would have written "Gebt mir ein Pferd." straight
+back over the reset row, with no warning and no API call.
+- **Why missed:** every existing note about this pipeline describes the *file* side ("the
+  translator only fills untranslated rows"). Nothing recorded that the cache is a second store
+  with its own staleness, and its behaviour on a reworded string is indistinguishable from a
+  correct cache hit: same key, plausible text, zero cost.
+- **Prevent:** editing the English text of an existing key is a THREE-file operation, not one.
+  Update the English source, reset the twelve language rows, and **evict the key from all twelve
+  caches**, then confirm the dry run reports `needs LLM: 1` rather than a cache hit. A dry run
+  that still says `$0.0000` after a reword is the tell that the eviction did not happen.
+- **Also:** `--apply` writes every cached row it finds, not just yours. On this run that was 1,103
+  unrelated entries per language, which would have buried a one-line change under a four-figure
+  diff. Check the "from cache" count before applying, and keep an edit to one string scoped to
+  that string.
+- **Source:** #525 enlistment weapons.
+

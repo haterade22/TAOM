@@ -929,15 +929,71 @@ four survivors are daily upkeep, used only by `EnlistmentDailyService`.
 Known and accepted: a save made mid-duty under the old model may leave its spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
-**Equipment.** `enlist_{runtimeCultureId}_{rank}` rosters in
-`equipmentsets/taom_enlistment_equipment.xml` (68: 16 cultures × 4 ranks + 4
-culture-neutral defaults), seeded from each culture's own troop tree by
-`tools/generate_enlistment_rosters.py`, so kit is race-correct by construction. Drawn from
-the quartermaster once per rank into party inventory (not auto-equipped). Fallback chain:
-exact → lower rank → default → nothing-and-warn.
+**Equipment.** `enlist_{runtimeCultureId}_{assignment}_{rank}` rosters in
+`equipmentsets/taom_enlistment_equipment.xml` (268: 252 culture cells out of a possible 320, over
+20 cultures × 4 assignments × 4 ranks, plus 16 culture-neutral defaults), seeded from each
+culture's own troop tree by `tools/generate_enlistment_rosters.py`, so kit is race-correct by
+construction. Drawn from the quartermaster once per rank into party inventory (not
+auto-equipped).
+
+The kit carried **no weapon at all** until 2026-09-01 (#525). That was the shipped contract, not
+a regression: the generator filtered every weapon slot out and the auditor failed the build on
+one. Players reported drawing armour and never a sword, and they were reading the data
+correctly. The C# was never involved: `EquipmentRosterCatalogAdapter` has always read all 12
+slots, so the fix was data plus tooling. The assignment entered the id at the same time, because
+a weapon is only right if it matches the role the player chose.
+
+**Fallback chain: culture, then assignment, then rank**, each descending. Culture outranks
+assignment because issuing another faction's kit is the defect players actually report: #427 was
+"the quartermaster gives me gondor gloves and I'm enlisted under Theoden", and #431 was the same
+complaint arriving through the neutral fallback, which is tagged `Culture.neutral_culture` while
+being Rohan militia in Dunland boots. Rank is innermost, so the right role at a lower rank beats
+the wrong role at the right rank. (An earlier draft justified the ordering as a *rendering*
+invariant. It is not: the roster is keyed on the commander's culture, so it cannot know the
+player's race under either ordering. See the known limitation below.)
+
+**68 of the 320 cells are absent by design.** A cell is omitted when its donor pool holds nothing
+within one band of the rank, when the resulting kit would repeat one the player already drew at a
+lower rank, or when it would give less protection than he is already wearing, measured per hit
+zone rather than by a single stat (a body piece contributes body AND leg armour, a cape body AND
+arm, so a single-stat proxy misses most of what a kit protects). The band is a hard cap, not a
+sort key: filtering donors by
+`default_group` removed the guarantee that an in-band donor exists, and without the cap a
+Mirkwood cavalry recruit drew a level-41 kit. Where a culture would otherwise own no roster at a
+rank at all (bluecraig and mistymountainorcs each ship a single level-36 troop), the cap yields
+rather than let the player fall out to human militia gear.
+
+**A cell is never emitted weaponless.** That is not a nicety: the resolver probes *existence*, so
+an armour-only roster would end the fallback walk and shadow the armed kit the player would
+otherwise descend to. The first cut of #525 shipped 15 such rosters, all Support, and reproduced
+the reported bug inside its own fix. Support now takes any melee sidearm (one weapon, still no
+shield) and a cell with no usable weapon is suppressed instead of emitted.
+
+**No mounts, at any assignment including cavalry.** The cavalry donor pools mount `taom_mumakil`,
+`taom_war_elephant` and `taom_chariot_a`; the roster is keyed on the *commander's* culture, so it
+cannot know the player is a dwarf who would spawn inside a horse; and `MOUNTED_DWARF` cannot see
+these rosters at all, because it walks data an `NPCCharacter` names and these are applied at
+runtime by id. The reassign line was reworded off "Give me a horse" in the same change so the
+shipped text does not outlive the behaviour.
+
 The issue-ledger is monotonic (covering a rank covers every rank below, so a demotion never
-re-issues) and persists in the content record, so a full game restart cannot re-allow a
-free draw.
+re-issues), keyed on **rank alone**, and persists in the content record. Two consequences worth
+stating: swapping assignment does not re-open a spent draw, and **a character already serving at
+Sergeant when #525 shipped has spent every draw and will never see weapons** without a fresh
+enlistment. There is no save migration for that, deliberately.
+
+**Known limitations.**
+
+- The kit is keyed on the commander's culture, not the player's race, so a cross-race enlistment
+  draws gear rigged for another skeleton, and cross-race armour clips or floats on a custom
+  skeleton. That predates #525 for armour; weapons make it visible in-hand as well.
+- **Honourable discharge reclaims the issued kit by item id**, one per ledger entry, and the
+  ledger has held weapons and ammunition since #525. `IPartyItemRosterAdapter.RemoveItem` drains
+  the unmodified stack with no notion of provenance, so a player who drew an archer kit, shot it
+  dry and refilled from loot has one of *his* arrow stacks taken at discharge. Arrows are the most
+  common post-battle loot in the game, so this is not hypothetical. Desertion keeps the kit and is
+  unaffected. Tracked as a follow-up rather than fixed here: excluding ammunition from the ledger
+  needs an item-class surface `IItemPoolAdapter` does not currently expose.
 
 ## The field-test arc (2026-08-11), seven reports, one root cause
 

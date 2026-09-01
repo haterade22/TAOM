@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (81 reviews, 165+ bugs found) — distilled
+### Lessons From Prior Reviews (82 reviews, 171+ bugs found), distilled
 
 Full worked-example catalog — every rolling essay + the complete "bugs Codex misses / false
 positives / what Codex does well / run-mode caveats" lists: **[`docs/reviews/codex-track-record.md`](docs/reviews/codex-track-record.md)**
@@ -53,6 +53,10 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - **Clone-leftover DISPLAY text** — a script-cloned faction keeps the SOURCE name in `name=` / `text=` / notable names / `{=key}default` strings (distinguish from intentionally-preserved technical ids).
 - **Observation-state-machine clock-source** — verify WHEN the elapsed clock starts relative to when the observed phenomenon begins, not just the count transitions.
 - **Numeric enum-cast values** — verify `(SomeEnum)1` against the actual decompiled enum, not the assumed ordering.
+- **Code written to FIX a prior review** (2026-09-01, #525). Two of Codex's six findings that day were defects in the fix round produced by an 11-dimension internal review hours earlier: a progression floor that scored armour by one stat per item (a body piece contributes body AND leg armour, so a promotion lost all four hit zones while the score rose), and a repair flag that could no longer restore the rosters it exists for. A fix is verified by re-running the gate, which proves the symptom is gone and nothing about the mechanism. When a changeset contains remediation, review the remediation as new code.
+- **A test that derives its own expected set from the artefact under test** (2026-09-01, #525). A coverage test parsed its culture list out of the roster file it was auditing, so deleting a culture's rows removed it from the test's own input and stayed green, as did renaming them to an invalid StringId. Ask of any coverage test: what happens if I DELETE a row?
+- **A gate made only of prohibitions.** #525 shipped 15 rosters with no weapon in them past four green gates, because every rule said what a kit must NOT contain and none said what it MUST. When a gate exists for a defect, look for the defect's negation stated positively; if it is absent, the gate cannot fail on the thing it was written for.
+- **A ratchet or suppression list with no multiplicity.** Keyed on `(owner, item)` alone, 10 entries were suppressing 13 occurrences, so an already-listed roster gaining a SECOND copy of the same bad item filed as old debt.
 
 **False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `ilspycmd` rather than siding with confidence.
 

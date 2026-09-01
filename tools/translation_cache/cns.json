@@ -11453,7 +11453,7 @@
   "taom_enlist_rank_veteran": "老兵",
   "taom_enlist_reassign": "我想在阵列中换个位置。",
   "taom_enlist_reassign_arc": "我射箭比刺矛在行。",
-  "taom_enlist_reassign_cav": "我会骑马。给我一匹坐骑。",
+  "taom_enlist_reassign_cav": "我会骑马。让我去骑兵队。",
   "taom_enlist_reassign_done": "那就去新的分队报到。别让我后悔。",
   "taom_enlist_reassign_inf": "把我编进盾墙。",
   "taom_enlist_reassign_pick": "你目前随{CURRENT_SECTION}行军。你更想站在哪里？",

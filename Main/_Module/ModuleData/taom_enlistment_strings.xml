@@ -20,7 +20,7 @@
 	<string id="taom_enlist_qm_request" text="{=taom_enlist_qm_request}I would draw my service kit from the quartermaster." />
 	<string id="taom_enlist_reassign" text="{=taom_enlist_reassign}I would take a different place in the line." />
 	<string id="taom_enlist_reassign_arc" text="{=taom_enlist_reassign_arc}I shoot better than I stab." />
-	<string id="taom_enlist_reassign_cav" text="{=taom_enlist_reassign_cav}I can ride. Give me a horse." />
+	<string id="taom_enlist_reassign_cav" text="{=taom_enlist_reassign_cav}I can ride. Put me with the horsemen." />
 	<string id="taom_enlist_reassign_done" text="{=taom_enlist_reassign_done}Report to your new section, then. Don&#x27;t make me regret it." />
 	<string id="taom_enlist_reassign_inf" text="{=taom_enlist_reassign_inf}Put me in the shield line." />
 	<string id="taom_enlist_reassign_sup" text="{=taom_enlist_reassign_sup}The baggage and the wounded need hands." />

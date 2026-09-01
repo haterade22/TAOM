@@ -11452,7 +11452,7 @@
   "taom_enlist_rank_veteran": "고참병",
   "taom_enlist_reassign": "전열에서 다른 자리를 맡고 싶습니다.",
   "taom_enlist_reassign_arc": "저는 찌르기보다 활을 더 잘 쏩니다.",
-  "taom_enlist_reassign_cav": "저는 말을 탈 수 있습니다. 말을 주십시오.",
+  "taom_enlist_reassign_cav": "저는 말을 탈 수 있습니다. 기병대에 넣어 주십시오.",
   "taom_enlist_reassign_done": "그럼 새 부대로 가서 보고하라. 후회하게 만들지 마라.",
   "taom_enlist_reassign_inf": "저를 방패 전열에 세워 주십시오.",
   "taom_enlist_reassign_pick": "당신은 현재 {CURRENT_SECTION}와 함께 행군한다. 어디에 서고 싶은가?",

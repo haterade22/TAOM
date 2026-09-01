@@ -66,7 +66,10 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
 
         AddOption(starter, "inf", ServiceAssignment.Infantry, "{=taom_enlist_reassign_inf}Put me in the shield line.");
         AddOption(starter, "arc", ServiceAssignment.Archer, "{=taom_enlist_reassign_arc}I shoot better than I stab.");
-        AddOption(starter, "cav", ServiceAssignment.Cavalry, "{=taom_enlist_reassign_cav}I can ride. Give me a horse.");
+        // No horse is promised: the service kit is armour and weapons only, at every assignment
+        // (see taom_enlistment_equipment.xml). The line used to read "Give me a horse." and would
+        // have become a lie the moment weapons shipped without mounts.
+        AddOption(starter, "cav", ServiceAssignment.Cavalry, "{=taom_enlist_reassign_cav}I can ride. Put me with the horsemen.");
         AddOption(starter, "sup", ServiceAssignment.Support, "{=taom_enlist_reassign_sup}The baggage and the wounded need hands.");
 
         starter.AddDialogLine(

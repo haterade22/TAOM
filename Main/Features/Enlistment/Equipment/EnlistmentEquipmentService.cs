@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.Enlistment.Content.Domain;
 
 namespace TAOM.Features.Enlistment.Equipment;
 
 /// <summary>
-/// Resolves the (culture, rank) roster via EnlistmentRosterResolver's fallback
-/// chain, guards every item id through IItemPoolAdapter (skip-and-warn — one dead
+/// Resolves the (culture, assignment, rank) roster via EnlistmentRosterResolver's
+/// fallback chain, guards every item id through IItemPoolAdapter (skip-and-warn — one dead
 /// data ref must not void the whole issue), adds surviving items to the party
 /// inventory via IPartyItemRosterAdapter, and records the issue in the ledger.
 /// Only Issued advances the ledger; every other outcome leaves it untouched so a
@@ -34,7 +35,8 @@ public sealed class EnlistmentEquipmentService : IEnlistmentEquipmentService
         _logger = logger;
     }
 
-    public EquipmentIssueResult IssueForRank(string cultureId, EnlistmentRank rank)
+    public EquipmentIssueResult IssueForRank(
+        string cultureId, ServiceAssignment assignment, EnlistmentRank rank)
     {
         if (_ledger.HasIssuedForRank(rank))
         {
@@ -43,11 +45,13 @@ public sealed class EnlistmentEquipmentService : IEnlistmentEquipmentService
             return EquipmentIssueResult.AlreadyIssuedForRank;
         }
 
-        var rosterId = EnlistmentRosterResolver.Resolve(cultureId, rank, _catalog.RosterExists);
+        var rosterId = EnlistmentRosterResolver.Resolve(
+            cultureId, assignment, rank, _catalog.RosterExists);
         if (rosterId == null)
         {
-            _logger.LogWarning($"EnlistmentEquipmentService: no roster for ({cultureId}/{rank}) "
-                + "anywhere on the fallback chain — nothing issued");
+            _logger.LogWarning("EnlistmentEquipmentService: no roster for "
+                + $"({cultureId}/{assignment}/{rank}) anywhere on the fallback chain — "
+                + "nothing issued");
             return EquipmentIssueResult.NoRosterFound;
         }
 
@@ -100,7 +104,7 @@ public sealed class EnlistmentEquipmentService : IEnlistmentEquipmentService
 
         _ledger.RecordIssue(rank, issued);
         _logger.LogInfo($"EnlistmentEquipmentService: issued {issued.Count} item(s) from roster "
-            + $"'{rosterId}' for ({cultureId}/{rank})");
+            + $"'{rosterId}' for ({cultureId}/{assignment}/{rank})");
         return EquipmentIssueResult.Issued;
     }
 }
