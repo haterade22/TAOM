@@ -20,6 +20,13 @@ Two tools came out of it:
 
 ## Why this exists: the stale-pack trap
 
+> **Superseded for this module as of 2026-09-01.** `LOTRLOME_Armory/AssetPackages/` no
+> longer exists (0 cooked packs, 4,490 loose `Assets/**/*.tpac`), so the trap described
+> here is currently unreachable in the Armory and `Assets/` is the only source of truth.
+> The section is kept because it still holds wherever a cooked tree exists, and because it
+> is the reasoning behind both tools. See [armory-guide.md](../reference/armory-guide.md)
+> "Two asset trees".
+
 `tools/validate_mesh_refs.py` resolves every mesh reference against the **cooked** packs,
 `LOTRLOME_Armory/AssetPackages/pack0-9.tpac`. Those are rebuilt only when someone
 re-cooks them. Delete art from `Assets/` or `AssetSources/` and the packs keep shipping
@@ -134,14 +141,66 @@ That fixes the invisible boot and leaves the tuning alone.
 `lossarnach_coat` (villagers, notables, headman, ransom broker) becomes
 `gondor_noble_coat_a`, 24 to 20, already worn by the rest of that file's cast.
 
+## Second wave, 2026-09-01: the orphan definitions
+
+The 2026-08-28 pass swapped consumers off the dead items but never removed the
+definitions, so 89 of them stayed in the Armoury still naming meshes that resolve
+nowhere. A player sees those as **blank icons in the item list**, which is how this
+surfaced: screenshots of roughly 70 blank rows across Mordor orc, Gondor named lords
+and the whole Rhûn Easterling range.
+
+Measured before acting: **93 bad refs / 92 unique dead meshes across 88 items, 0 missing
+collision bodies.** The inventory was trusted only after confirming it also resolved
+3,922 of 4,014 referenced meshes, so it accounted for every item that renders correctly.
+
+Disposition:
+
+| Group | Count | Action |
+|---|---|---|
+| Gondor named lords (`angbor_`, `forlong_`, `golasgil_`, `hirluin_`, `imrahil_`, `lossarnach_coat`) | 26 | deleted |
+| Moria orc `moriaorc_v{1..4}_*` | 15 | deleted |
+| Easterling armour + `rhun_tournament_sparring_shield` | 38 | deleted |
+| Black Númenórean `ar_ardunian_elite_{helmet,shoses,hand}` | 3 | deleted |
+| `ar_ardunian_elite_armour` (25 Umbar characters) | 1 | re-meshed to `sm_md_num_inf_chest_elite_a` |
+| Easterling crafting pieces | 6 | re-meshed to `sm_rh_loke_*` / `wm_harad_spear_a01_handle` |
+| `lotr_troll_armor` / `_bracers` / `_helmet` | 3 | kept, gated (see below) |
+
+**`moriaorc_v*` is a new finding.** Those 17 dead meshes appear nowhere in the
+2026-08-28 record above, so the earlier sweep did not catch them.
+
+### The trap in this wave: ORPHAN is not the same as unreferenced
+
+`audit_deleted_mesh_impact.py` reported all six Easterling crafting pieces as ORPHAN.
+They are not. It matches `Item.<id>` references and roster hops, and a crafting piece is
+named by **neither** shape: `crafting_templates.xslt` lists them as `<UsablePiece>`, and
+the CraftedItems `easterling_sword` and `easterling_spear` name them as `<Piece>`.
+`easterling_spear` is **player career starting equipment**. Acting on the clean-looking
+ORPHAN verdict would have deleted a Rhûn career start's weapon.
+
+The rule: before deleting on an ORPHAN verdict, sweep for `<UsablePiece piece_id=>` and
+`<Piece id=>` as well. `tools/tests/test_apply_dead_mesh_item_swaps.py` now pins those six
+as re-mesh-only so the mistake cannot be made again by editing the mapping.
+
+### The troll, and why it is kept rather than cleaned
+
+No troll armour art survives in either tree, and armour meshes are skinned to the human
+rig, so no donor can fit the `cave_troll` skeleton. Deleting the three items and their 18
+references would take a level-51 unit that fields up to 118 at a time from 95 armour to 0
+in every slot, which is a balance change rather than a cleanup. They are kept and recorded
+in `validate_mesh_refs.KNOWN_DEAD_MESHES`, which reports them as `KNOWN_DEAD_MESH`
+(WARNING) with the reason and the decision date instead of `MISSING_MESH` (ERROR).
+
+That allowlist is exact-name-only, never a prefix, so a *new* dead mesh in the same family
+still errors. It also audits itself: `STALE_DEAD_MESH_ALLOWLIST` fires if the art returns
+or if nothing references the entry any more, so the entry cannot quietly outlive its reason.
+
 ## Outstanding
 
 | Item | Consumers | Status |
 |---|---|---|
-| `ar_ardunian_elite_armour` | Umbar enlistment / wanderer / troop rosters | Dead mesh, still equipped. No replacement chosen. |
-| `lotr_troll_armor` / `_bracers` / `_helmet` | `troops/troops_mordor.xml` | Dead mesh, still equipped. No replacement chosen. |
-| 89 orphaned dead items | nothing | Definitions survive with dead meshes. Safe to delete whenever. |
-| 11 imported-not-cooked meshes | goat bardings, Khamûl bardings, `gondor_horse_plate_armor` | Needs a pack re-cook, not a data fix. |
+| `lotr_troll_armor` / `_bracers` / `_helmet` | `troops/troops_mordor.xml` | Dead mesh, still equipped, no donor exists. Accepted and gated, not outstanding work. Needs new art to resolve. |
+| 11 imported-not-cooked meshes | goat bardings, Khamûl bardings, `gondor_horse_plate_armor` | Was "needs a pack re-cook". The Armory no longer HAS a cooked tree, so re-check whether this still means anything. |
+| In-game verification of the 2026-09-01 wave | | Not yet done. Needs a full restart. |
 
 **Not verified in-game.** Bannerlord globs item XML once at process launch with no
 hot-reload, so this needs a build, a full restart and a new campaign before it counts as
