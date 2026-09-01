@@ -9448,9 +9448,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
                 <equipment
@@ -9470,9 +9467,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
@@ -9514,9 +9508,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
                 <equipment
@@ -9536,9 +9527,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
@@ -9580,9 +9568,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
                 <equipment
@@ -9602,9 +9587,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
@@ -9646,8 +9628,45 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
+                    slot="Head"
+                    id="Item.gf_helmet_1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.gf_pauldrons_2" />
+                <equipment
+                    slot="Body"
+                    id="Item.gf_body_3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.gf_gauntlets" />
+                <equipment
+                    slot="Leg"
+                    id="Item.gf_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.gf_helmet_1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.gf_pauldrons_2" />
+                <equipment
+                    slot="Body"
+                    id="Item.gf_body_3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.gf_gauntlets" />
+                <equipment
+                    slot="Leg"
+                    id="Item.gf_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gf_knight_longsword" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_1" />
@@ -9669,52 +9688,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
-                <equipment
-                    slot="Head"
-                    id="Item.gf_helmet_1" />
-                <equipment
-                    slot="Cape"
-                    id="Item.gf_pauldrons_2" />
-                <equipment
-                    slot="Body"
-                    id="Item.gf_body_3" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.gf_gauntlets" />
-                <equipment
-                    slot="Leg"
-                    id="Item.gf_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment
-                    slot="Item0"
-                    id="Item.wm_gf_knight_longsword" />
-                <equipment
-                    slot="Head"
-                    id="Item.gf_helmet_1" />
-                <equipment
-                    slot="Cape"
-                    id="Item.gf_pauldrons_2" />
-                <equipment
-                    slot="Body"
-                    id="Item.gf_body_3" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.gf_gauntlets" />
-                <equipment
-                    slot="Leg"
-                    id="Item.gf_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment
-                    slot="Item0"
-                    id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
                 <equipment
@@ -9734,9 +9707,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
@@ -9778,9 +9748,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
                 <equipment
@@ -9800,9 +9767,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
@@ -9844,9 +9808,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
                 <equipment
@@ -9866,9 +9827,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
@@ -9910,8 +9868,45 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
+                    slot="Head"
+                    id="Item.gf_helmet_2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.gf_pauldrons_2" />
+                <equipment
+                    slot="Body"
+                    id="Item.gf_body_3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.gf_gauntlets" />
+                <equipment
+                    slot="Leg"
+                    id="Item.gf_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.gf_helmet_2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.gf_pauldrons_2" />
+                <equipment
+                    slot="Body"
+                    id="Item.gf_body_3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.gf_gauntlets" />
+                <equipment
+                    slot="Leg"
+                    id="Item.gf_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gf_knight_longsword" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_2" />
@@ -9933,52 +9928,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
-                <equipment
-                    slot="Head"
-                    id="Item.gf_helmet_2" />
-                <equipment
-                    slot="Cape"
-                    id="Item.gf_pauldrons_2" />
-                <equipment
-                    slot="Body"
-                    id="Item.gf_body_3" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.gf_gauntlets" />
-                <equipment
-                    slot="Leg"
-                    id="Item.gf_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment
-                    slot="Item0"
-                    id="Item.wm_gf_knight_longsword" />
-                <equipment
-                    slot="Head"
-                    id="Item.gf_helmet_2" />
-                <equipment
-                    slot="Cape"
-                    id="Item.gf_pauldrons_2" />
-                <equipment
-                    slot="Body"
-                    id="Item.gf_body_3" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.gf_gauntlets" />
-                <equipment
-                    slot="Leg"
-                    id="Item.gf_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment
-                    slot="Item0"
-                    id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
                 <equipment
@@ -9998,9 +9947,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
@@ -10042,9 +9988,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
                 <equipment
@@ -10064,9 +10007,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
@@ -10108,9 +10048,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
                 <equipment
@@ -10130,9 +10067,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
@@ -10174,9 +10108,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
                 <equipment
@@ -10196,9 +10127,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_3" />
@@ -10239,9 +10167,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
@@ -10262,9 +10187,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
@@ -10306,9 +10228,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
                 <equipment
@@ -10328,9 +10247,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
@@ -10372,9 +10288,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
                 <equipment
@@ -10394,9 +10307,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
@@ -10438,9 +10348,6 @@
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield" />
-                <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />
                 <equipment
@@ -10460,9 +10367,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gf_knight_broadsword" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gf_knight_shield_cloth" />
                 <equipment
                     slot="Head"
                     id="Item.gf_helmet_4" />

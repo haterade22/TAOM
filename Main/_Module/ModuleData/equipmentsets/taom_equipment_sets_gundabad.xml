@@ -34,7 +34,6 @@
 		<EquipmentRoster id="gundabad_bat_template_medium_c" culture="Culture.gundabad">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
 			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_c" />
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_c" />
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
@@ -62,7 +61,6 @@
 		<EquipmentRoster id="gundabad_bat_template_medium_e" culture="Culture.gundabad">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b02" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
 			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_e" />
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_e" />
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
@@ -106,7 +104,6 @@
 		<EquipmentRoster id="gundabad_civ_template_default_c" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
 			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_c" />
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_c" />
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
@@ -134,7 +131,6 @@
 		<EquipmentRoster id="gundabad_civ_template_default_e" culture="Culture.gundabad">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gundabad_mace_b02" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
 			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_e" />
 			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_e" />
 			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />

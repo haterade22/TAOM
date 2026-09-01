@@ -2868,7 +2868,6 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.numenorean_sword_2h_a" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
         <equipment slot="Head" id="Item.sk_gd_dol_inf_helmet_elite_a" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_heavy_a" />
@@ -2877,7 +2876,6 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_gondorknight_spearb" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
         <equipment slot="Head" id="Item.sk_gd_dol_inf_helmet_elite_a" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_heavy_a" />
@@ -2886,7 +2884,6 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_pg_spearb" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
         <equipment slot="Head" id="Item.sk_gd_dol_inf_helmet_elite_a" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_heavy_a" />
@@ -2921,7 +2918,6 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.numenorean_sword_2h_b" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
         <equipment slot="Head" id="Item.sk_gd_dol_inf_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_elite_a" />
@@ -2930,7 +2926,6 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_gondorknight_spearb" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
         <equipment slot="Head" id="Item.sk_gd_dol_inf_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_elite_a" />
@@ -2939,7 +2934,6 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_pg_spearb" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
         <equipment slot="Head" id="Item.sk_gd_dol_inf_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_elite_a" />
@@ -5959,7 +5953,6 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
-        <equipment slot="Item1" id="Item.wm_gondor_shield_a_minas_ithil" />
         <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_cape_noble_a" />
@@ -6013,7 +6006,6 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
-        <equipment slot="Item1" id="Item.wm_gondor_shield_d_new_minas_ithil" />
         <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_cape_noble_b" />
@@ -6066,7 +6058,6 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
-        <equipment slot="Item1" id="Item.wm_gondor_shield_d_new_minas_ithil" />
         <equipment slot="Item2" id="Item.wm_gondor_spear_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_med_b" />
@@ -6118,7 +6109,6 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a10" />
-        <equipment slot="Item1" id="Item.wm_gondor_shield_d_new_minas_ithil" />
         <equipment slot="Item2" id="Item.wm_gondor_spear_b" />
         <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_ith_chest_noble_heavy_a" />

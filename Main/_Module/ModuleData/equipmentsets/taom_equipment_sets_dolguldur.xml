@@ -148,7 +148,6 @@
 	<EquipmentRoster id="dolguldur_bat_template_medium_f" culture="Culture.dolguldur">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
 			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_f" />
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_f" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_f" />
@@ -162,7 +161,6 @@
 	<EquipmentRoster id="dolguldur_civ_template_default_f" culture="Culture.dolguldur">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
 			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_f" />
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_f" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_f" />
@@ -176,7 +174,6 @@
 	<EquipmentRoster id="dolguldur_bat_template_medium_g" culture="Culture.dolguldur">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
 			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_g" />
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
@@ -190,7 +187,6 @@
 	<EquipmentRoster id="dolguldur_civ_template_default_g" culture="Culture.dolguldur">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
 			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_g" />
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />

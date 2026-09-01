@@ -2876,9 +2876,6 @@
                     slot="Item0"
                     id="Item.wm_gundabad_spear_a02" />
                 <equipment
-                    slot="Item1"
-                    id="Item.wm_gundabad_shield_a03" />
-                <equipment
                     slot="Item2"
                     id="Item.wm_gundabad_sword_a01" />
                 <equipment
@@ -2901,9 +2898,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_gundabad_spear_a02" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_gundabad_shield_a03" />
                 <equipment
                     slot="Item2"
                     id="Item.wm_gundabad_sword_a01" />

@@ -49,9 +49,6 @@
                     slot="Item0"
                     id="Item.sm_uruk_sword_a" />
                 <equipment
-                    slot="Item1"
-                    id="Item.sm_mordor_shield_small_a" />
-                <equipment
                     slot="Head"
                     id="Item.sk_uruk_mordor_helmet_medium_a1" />
                 <equipment
@@ -2070,9 +2067,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_spear_a" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_cave_troll_shield_a01" />
                 <equipment
                     slot="Head"
                     id="Item.lotr_troll_helmet" />
@@ -4271,9 +4265,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.sm_uruk_sword_a" />
-                <equipment
-                    slot="Item1"
-                    id="Item.sm_mordor_shield_small_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_mordor_helmet_medium_a1" />

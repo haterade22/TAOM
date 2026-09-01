@@ -9,7 +9,6 @@
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
-            <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
         <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
         <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>
@@ -72,7 +71,6 @@
             <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
             <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
             <Equipment slot="Item0" id="Item.dunland_caerdh_axe_2h_a" />
-            <Equipment slot="Item1" id="Item.dunland_caerdh_shield_elite_a" />
             <Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
             <Equipment slot="Horse" id="Item.charger" />
         </EquipmentSet>

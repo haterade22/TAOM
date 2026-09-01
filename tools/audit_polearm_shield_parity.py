@@ -100,8 +100,10 @@ KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
     ("player_char_creation_mordor_retainer_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
     ("player_char_creation_mordor_retainer_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
     # Companion templates: a pike, whose usage set is requires_no_shield by design.
+    # The umbar entry was retired 2026-09-01: its only shield was removed under the
+    # "a two-hander gets no shield" pass (#531), so the pair no longer exists and the
+    # ratchet failed on the stale entry, which is the behaviour working as intended.
     ("npc_companion_equipment_template_isengard", "isengard_pike_a"): (3, "#526"),
-    ("npc_companion_equipment_template_umbar", "isengard_pike_a"): (2, "#526"),
 }
 
 

@@ -30,7 +30,6 @@
 		<EquipmentRoster id="erebor_bat_template_medium_c" culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.sm_dwarf_iron_hammer_a" />
-			<Equipment slot="Item1" id="Item.sm_iron_shield_tower_c" />
 			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_b" />
 			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
@@ -91,7 +90,6 @@
 		<EquipmentRoster id="erebor_civ_template_default_c" culture="Culture.erebor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_iron_hammer_a" />
-			<Equipment slot="Item1" id="Item.sm_iron_shield_tower_c" />
 			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_b" />
 			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
@@ -185,7 +183,6 @@
 	<EquipmentRoster id="erebor_bat_template_ram_c" culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.sm_dwarf_iron_hammer_a" />
-			<Equipment slot="Item1" id="Item.sm_iron_shield_tower_c" />
 			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_b" />
 			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />

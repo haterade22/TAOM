@@ -122,6 +122,43 @@ left alone; they are records of a moment, not instructions. Six lessons appended
 Not-tested: in-game load. The spider and warg asset folders lost the most sidecars, so a custom
 battle with both is the smoke that matters.
 
+### fix(troops): a two-hander gets no shield, 115 useless shields removed (#531)
+
+Follow-on from the equipment-set work below, and the same root cause. A weapon whose primary usage
+carries `requires_no_shield` is never drawn by the AI while a shield is equipped. Nothing errors and
+nothing logs; the troop stands in the line holding a weapon it will not swing. The rule applied here
+is the blunt one: **a two-hander gets no shield.**
+
+Two passes, because the defect has two shapes.
+
+**35 sets paired a shield with a two-hander and gave no sidearm at all.** Those lost the shield.
+Worst was `dg_orc_reaver`, where four of five battle sets carried `wm_gundabad_shield_a02` against a
+`wm_dol_goldur_2h_mace_*` with nothing else in the set, so four in five Dol Guldur Orc Reavers fielded
+a mace they never swung. Also `gondor_da_swan_guard` and `gondor_da_foot_knight`, the Dunland,
+Gundabad, Erebor and Dol Guldur lord templates, and the Isengard and Umbar companion kits.
+
+**That was not enough, and the reason is worth recording.** Per-set removal left 14 troops still
+exposed, because their shield sits in one set and their two-hander in another, and each set is
+individually correct. Slots draw independently across sets, so the engine assembles the pair anyway.
+A per-set rule cannot close a cross-set defect. The second pass removed every shield from every
+battle set of those 14 troops, 80 more: both Gondolin Battlemasters (32 each), the Goblin and
+Gundabad veteran spear warriors, the four Ithilien Guard ranks, both Uruk grunt lines, the Swan
+Guard, the Foot Knight, the cave troll, and the reaver's last shield.
+
+Measured before and after as the probability that a spawn draws a shield, draws a weapon it will not
+use, and draws nothing else it will: **14 troops exposed, now 0.** Civilian sets were left alone;
+they mix only among themselves and are not combat loadouts.
+
+**Deliberately untouched:** 14 troops that pair a shield with a two-hander *and* a usable one-handed
+sidearm (the Numenorean infantry lines, the Ironpass and Oathsworn dwarves, the Dunland lizard
+riders). There the shield serves the sidearm, the troop fights normally, and removing it is a balance
+decision rather than a defect fix. They remain as #450 debt.
+
+One consequence worth knowing: `tools/audit_polearm_shield_parity.py` began failing after the first
+pass, correctly. Its `KNOWN_FAILURES` ratchet fails on a **stale** entry, and removing the Umbar
+companion's shield fixed a pair the ratchet was still holding. The entry is retired, the gate is green
+and its 12 contract tests pass.
+
 ### fix(troops): elf recruits spawned with a bow and no arrows, or arrows and no bow
 
 A player reported that Lindon and Noldor recruits reach the field carrying half a bow kit, and that

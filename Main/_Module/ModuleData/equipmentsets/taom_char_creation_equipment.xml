@@ -6951,9 +6951,6 @@
 				slot="Item2"
 				id="Item.isengard_2h_axe_a" />
 			<Equipment
-				slot="Item3"
-				id="Item.wm_isengard_shield_a03" />
-			<Equipment
 				slot="Body"
 				id="Item.sk_uruk_hai_tunic_a2" />
 			<Equipment
@@ -6989,9 +6986,6 @@
 			<Equipment
 				slot="Item2"
 				id="Item.isengard_2h_axe_a" />
-			<Equipment
-				slot="Item3"
-				id="Item.wm_isengard_shield_a03" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_uruk_hai_tunic_a2" />
