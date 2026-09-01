@@ -1806,3 +1806,87 @@ reported as alive. It still let five ordinary forms through silently: `git push 
   and `src:dst`; both were in the manual the whole time. 15 block cases and 6 allow cases are now
   pinned in the repair.
 - **Source:** 2026-08-31 audit, same RCA.
+
+### A backup convention with no sweep is a shipping defect with a long fuse
+
+Every tool under `tools/` writes a `.bak` sidecar before a destructive edit, which is the documented
+XML I/O convention working as designed. Nothing ever removed them from the live module folders, so
+they accumulated for months and shipped to players: 781 files, 937 MB across the three modules, of
+which 769 MB was a single Modding Kit `SceneObj\Backups` tree in `TAOM_Map`. The trigger for finding
+it was unrelated to correctness, it was that `.bak` breaks the Cloudflare distribution.
+- **Why missed:** the convention doc specified how to CREATE a backup and said nothing about who
+  removes it. A create-without-a-matching-destroy rule has no natural point of failure, so it never
+  produced a symptom until an external constraint made the accumulation visible.
+- **Prevent:** when a convention writes files into a shipped tree, the same doc names the sweeper
+  and a gate runs it. `tools/sweep_module_backups.ps1` now exists and `/release` Phase 2 fails unless
+  it reports zero. `docs/reference/module-backup-sweep.md`.
+- **Source:** 2026-09-01 module backup sweep.
+
+### The obvious glob for a file convention matched 3% of the files it governs
+
+Cleaning up `.bak` sidecars looks like a one-line `*.bak` glob. It matched **18 of 658**. The tools
+that write them use dated, topic-tagged suffixes (260 `.bak-armoryloc`, 85 `.bak-guidremap`, 57
+`.bak-preskel`), a shape the convention doc mentions in passing and `.gitignore` had already been
+widened to `*.bak*` to handle, years of sidecars ago.
+- **Why missed:** the canonical example in the doc is bare `.bak`, so that is the shape that comes
+  to mind. The real distribution lived only in the filesystem.
+- **Prevent:** before writing a matcher for a file convention, histogram the actual names on disk.
+  One `Group-Object` over the extension would have shown 57 distinct suffixes in a second.
+- **Source:** 2026-09-01 module backup sweep.
+
+### A backup whose live sibling is gone is not a backup, it is the only copy
+
+Sweeping every file with a backup suffix would have moved
+`sk_spider_forest_c_geo.tpac.backup` out of the spider's mesh folder, which holds no `sk_spider_forest_c_geo.tpac`
+and never did. The spider's `spider_skeleton` resource survived only in that file, as a June 2026
+entry records. Two more files were in the same state.
+- **Why missed:** "it has a backup extension" reads as "something else holds the real version". That
+  is an assumption about a sibling file, and it is checkable in one line.
+- **Prevent:** any bulk operation keyed on a naming convention should verify the thing the
+  convention implies. The sweeper strips the suffix, tests for the live sibling, reports those
+  separately, and aborts on `-Apply` if more turn up than expected.
+- **Source:** 2026-09-01 module backup sweep.
+
+### `Measure-Object` emits nothing for an empty pipeline, and StrictMode turns that into a crash
+
+`($items | Measure-Object Bytes -Sum).Sum` works for every non-empty run and throws
+`The property 'Sum' cannot be found on this object` when the collection is empty, because
+Measure-Object returns no object at all rather than one with `Sum = 0`. Under `Set-StrictMode` that
+is a terminating error. The sweeper hit it on its own success case: the clean-tree run, which is
+exactly the run the release gate performs every time.
+- **Why missed:** the empty case only becomes reachable after the tool has done its job once, so it
+  cannot appear during development against a dirty tree.
+- **Prevent:** for a tool whose whole purpose is to empty something, test the emptied state as a
+  first-class case. Guard aggregates on `.Count`, not on the aggregate's own result.
+- **Source:** 2026-09-01 module backup sweep.
+
+### Cleaning the deployed copy while the source keeps redeploying it
+
+The backup sweep emptied all three installed modules, verified zero remaining, and passed every
+gate. Twenty minutes later nine sidecars were back in `<game>\Modules\TAOM\`, carrying their
+ORIGINAL timestamps, which is the tell that they were copied rather than recreated. The source is
+`Main/_Module/ModuleData/` in the repo: `TAOM.csproj`'s `CopyModule` target "recurses `_Module`
+verbatim and deploys whatever it finds", its own comment, written directly above the guard that
+already stops a `.vs` folder reaching the install. Two mechanisms were hiding the same nine files
+in opposite directions: `.gitignore`'s `*.bak*` keeps them out of `git status`, and the build keeps
+putting them back.
+- **Why missed:** the task was framed as "clean the modules", and the modules are a place in the
+  game install. Nobody asked what writes to that place.
+- **Prevent:** before cleaning a deployed tree, find its deploy step and check whether the source
+  carries the same garbage. A preserved mtime on a file you just deleted means copy, not create.
+- **Source:** 2026-09-01 module backup sweep.
+
+### Repeating the exact flaw you just diagnosed, one scan earlier
+
+The sweep's headline finding was that a bare `*.bak` glob matches almost none of the sidecars our
+tools write, because the dated `.bak-<topic>-<date>` form dominates. The same session had already
+scanned the repo for backups using `\.bak\d*$`, reported "the repo is already clean", and put that
+in the CHANGELOG. That regex has the identical blind spot: it matches `.bak` and `.bak2` and none
+of the nine dated files sitting in `Main/_Module/ModuleData/`.
+- **Why missed:** the repo scan happened first, as a quick precondition check, and was never
+  revisited once the real suffix distribution was understood. An early cheap check gets grandfathered
+  in as established fact.
+- **Prevent:** when an investigation revises its understanding of a pattern, re-run the earlier
+  checks that used the old one. Treat a precondition established before the key insight as
+  provisional, not settled.
+- **Source:** 2026-09-01 module backup sweep.

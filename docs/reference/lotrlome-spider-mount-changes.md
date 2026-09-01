@@ -107,6 +107,13 @@ underscore). tpac filename ≠ resource name.
 
 ## Rollback / backup inventory
 
+> **Moved 2026-09-01.** Every sidecar in this table has been relocated to
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\`, at the same relative paths,
+> because `.bak` breaks the Cloudflare distribution. The routes below still work; copy the file
+> back beside its original first. **`meshes/sk_spider_forest_c_geo.tpac.backup` is the one to be
+> careful with**: it has no live `.tpac` sibling and never did, so it is the sole copy of that data,
+> not a backup of anything. See [module-backup-sweep](module-backup-sweep.md).
+
 | File | Backup |
 |---|---|
 | `action_sets.xml` | `.bak-spider-mount`, `.bak-parity-146` (pre-2026-06-12 parity round) |

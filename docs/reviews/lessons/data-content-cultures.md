@@ -916,3 +916,151 @@ those is a wasted promotion that hands the player duplicates of what he is alrea
   monotonic in whatever the steps are supposed to improve. Donor trees are not monotonic in armour,
   so the generator cannot inherit the property from its inputs.
 - **Source:** #525; same RCA.
+
+### `_slim` is the slim-BUILD suffix, not the female one, and the engine appends it for you (2026-09-01)
+
+`BasicCharacterTableau.cs:531-537` on v1.4.8 resolves an armour mesh like this:
+
+```csharp
+bool flag3 = flag && _equipmentHasGenderVariations[i];        // isFemale && has_gender_variations
+MetaMesh val4 = MetaMesh.GetCopy(flag3 ? (text + "_female") : (text + "_male"), false, true);
+if (val4 == null) {
+    text2 = ((!flag3) ? (text2 + (flag2 ? "_slim" : ""))      // flag2 = slim BUILD
+                      : (text2 + (flag2 ? "_converted_slim" : "_converted")));
+```
+
+Two consequences that are easy to get backwards, and both were got backwards on 2026-09-01:
+
+1. **`_slim` is on the NON-female branch.** It is the body-build variant. The female suffixes are
+   `_female`, `_converted` and `_converted_slim`, and only those are gated on
+   `has_gender_variations`. "This mesh ships a `_slim`, so the gender flag should be on" is a false
+   inference; acting on it set a flag that made a female fall through to the bare mesh instead of
+   the slim one, which is strictly worse.
+2. **The engine appends `_slim` itself**, so a hand-authored second item whose mesh is literally
+   `<base>_slim` duplicates what you get for free. Thirteen such items existed in the Armory and
+   were deleted; all had zero consumers, because nothing needs to equip them.
+
+Measured across all 2,938 Armory armour items: **zero** have a `_female`, `_converted` or
+`_converted_slim` mesh. TAOM has no female armour art and females are meant to wear the male art.
+That makes `has_gender_variations="true"` strictly WORSE than `"false"` here, because `true`
+sends a female down a branch with no art and she falls through to the bare mesh, while `false`
+puts her on the branch that can still find `_slim`. Males are unaffected either way.
+
+**The engine default is `true`** (`ArmorComponent.cs:159` sets it before checking for the
+attribute), so an item that merely OMITS the flag also takes the dead female path. 28 items
+declared `true` explicitly and 1,209 relied on the default. Only the 28 were changed: all 1,209
+omitted items have no `_slim` to reach, so both settings end at the same bare mesh and adding the
+attribute would be 1,209 edits for no behavioural difference. 22 of the 28 did have an
+unreachable `_slim`, which is the whole of what the flip bought. Gate:
+`tools/audit_gender_variation_flags.py`, which exits 1 while any item skips a reachable `_slim`.
+
+- **Why missed:** the mechanism was inferred from the attribute's NAME plus a neighbouring item that
+  set the flag the same way. Three plausible facts assembled into a conclusion nobody had read the
+  consuming code for, and a review agent independently made the same inference, which felt like
+  corroboration and was not.
+- **Prevent:** before trusting an attribute to carry a mesh re-point, read the engine code that
+  consumes it. A sibling row agreeing with you is not evidence; it may be repeating the same guess.
+  The `Verify Before Reference` rule already covers this, and it is easy to apply it to mesh NAMES
+  while skipping it for mesh SEMANTICS.
+- **Source:** `docs/reviews/rca-armoury-dead-mesh-wave2-2026-09-01.md`.
+
+### Re-pointing a `<CraftingPiece>` mesh without its `length` changes the weapon's REACH (2026-09-01)
+
+Six `easterling_*` crafting pieces were re-pointed at surviving meshes and kept `length` and
+`<BuildData>` tuned to the old geometry (spear handle declared 138 against a mesh whose canonical
+piece declares 203). This was first recorded as cosmetic joint-misalignment, which understated it:
+`WeaponDesign.CalculatePivotDistances` turns `length` into `CraftedWeaponLength`, and
+`CraftingStats.FillWeapon` rounds that into the weapon's live combat reach. The visible mesh extent
+and the hitbox are the same quantity, so a stale `length` produces a weapon that looks longer than
+it hits, and attacks that appear to land can whiff.
+
+No crash risk: the pivot maths is float arithmetic over a fixed-size array keyed on the piece-type
+enum, so a stale length cannot throw or index out of range.
+
+- **Why missed:** confirming the new mesh EXISTS felt like completing the re-point. It is only the
+  first half; the attributes describing the old geometry are still there afterwards.
+- **Prevent:** on a `<CraftingPiece>` re-point, treat `length` and `<BuildData>` as part of the
+  change and decide explicitly. They are simultaneously art positioning and a gameplay stat, so it
+  is a trade rather than a correction, and it belongs to whoever owns the balance.
+- **Source:** `docs/reviews/rca-armoury-dead-mesh-wave2-2026-09-01.md`.
+
+### An ORPHAN verdict is only as wide as the reference shapes the auditor knows (2026-09-01)
+
+`audit_deleted_mesh_impact.py` classified all six `easterling_*` crafting pieces as ORPHAN, meaning
+safe to delete. They are referenced by `<UsablePiece piece_id="x"/>` in `crafting_templates.xslt`
+and by `<Piece id="x"/>` inside `<CraftedItem>`, and they build `easterling_sword` and
+`easterling_spear`. `easterling_spear` is player career starting equipment, so acting on the verdict
+would have deleted a Rhun start's weapon while every validator stayed green.
+
+- **Why missed:** the matcher is documented as "attribute-agnostic by design", which reads as
+  complete. It is agnostic about the ATTRIBUTE but not about the NAMESPACE: its pattern is
+  `="Item\.(...)"`, and a crafting piece id is not an `Item.`. A tool that reports a clean negative
+  for a shape it cannot express is more dangerous than one that reports nothing.
+- **Prevent:** before trusting any "nothing references this" verdict, enumerate the reference shapes
+  the tool actually matches and confirm the entity you are deleting can even be expressed in one of
+  them. Both shapes are now a first-class `crafting_piece` ref kind with tests stating why they
+  exist. Note the consumers live in the ARMORY tree, not the consumer root, so the sweep has to
+  cover both roots.
+- **Source:** `docs/reviews/rca-armoury-dead-mesh-wave2-2026-09-01.md`.
+
+### Two agents agreeing is not corroboration when they read the same source (2026-09-01)
+
+Two independent review agents concluded that deleting item definitions silently corrupts existing
+saves, because `EquipmentElement`/`ItemRosterElement` implement `ISerializableObject.DeserializeFrom`,
+which reads a raw `MBGUID` whose `SubId` is a sequential counter assigned in XML document order.
+The reasoning was internally sound and the code they quoted is real. It is not the campaign save
+path: `TaleWorlds.SaveSystem` references `ISerializableObject` zero times and the `Saveable*`
+machinery 271 times, and `ItemObject` is registered as `AddClassDefinition(typeof(ItemObject), 32)`
+and serialised through the save's own object graph.
+
+- **Why missed:** agreement between agents was treated as evidence. It is not, when the agents read
+  the same file. `evidence-over-claims.md` §A tells you to re-run the decompiler when agents
+  DISAGREE; the mirror case, where they agree and are both wrong, has the same remedy and no rule
+  pointing at it.
+- **Prevent:** for any finding severe enough to change a decision, check whether the agents' evidence
+  is actually independent, not just their reasoning. The tell here was that both quoted the same
+  method. Independence has to be in the evidence.
+- **Source:** `docs/reviews/rca-armoury-dead-mesh-wave2-2026-09-01.md`.
+
+### A troop's equipment sets are a per-slot menu, not a set of alternatives (2026-09-01)
+
+Players reported Lindon and Noldor recruits carrying a bow with no arrows, or arrows with no bow.
+Every equipment set on those troops was individually valid. `Equipment.GetRandomEquipmentElements`
+fills each of the 12 slots from an independently chosen set, so 3 ranged sets among 13 produced a
+working archer 5% of the time and a useless half-kit 36% of the time. There is no set-count
+threshold in the method; the widely believed "more than 3 sets" trigger does not exist, and mixing
+begins at two sets.
+
+- **Why missed:** every validator TAOM owns asks "is this set valid?" and the answer was yes for all
+  13. The engine never asks that question. It asks "what is in slot 0?" thirteen times. No gate, and
+  no reviewer, was framing the invariant per slot across sets. The defect is also invisible in game
+  by construction: encyclopedia, party screen, troop tree and tournament all use whole-set selection
+  and render set #1, so the only surface that shows it is a live mission agent.
+- **Prevent:** validate a troop's battle sets as a **column-wise** family, not row by row. For each
+  slot index, the classes appearing across sets must be compatible: if any set can put a launcher in
+  a slot, all must, and the ammo needs one fixed index present in every set. At least one index must
+  hold a weapon in every set, or a draw can produce a troop with nothing. Recorded as an authoring
+  rule in `.claude/rules/troops.md`, which is path-scoped to the troop XMLs and so loads for exactly
+  the edit that would reintroduce this. Corollary caught the same day: the identical cross-set shape
+  defeats `audit_polearm_shield_parity.py`, which is per-set, so 14 troops can draw a shield against
+  a `requires_no_shield` weapon with neither set malformed and the gate exits 0 (#531).
+- **Source:** `docs/reviews/rca-troop-equipment-slot-mixing-2026-09-01.md`, #529, #531.
+
+### A "CLEAN" result describes the predicate, not the data (2026-09-01)
+
+The sweep written to prove the fix above reported CLEAN. It was checking four predicates over five
+weapon slots, and the review found it could not see Horse/harness pairing, cross-set shield
+conflicts, armour, or any roster outside its own glob. Worse, it called
+`build_item_class_registry`, which silently returns an empty dict when the game install is absent:
+with no items classified, every check finds nothing and the tool prints CLEAN and exits 0.
+Reproduced with one environment variable.
+
+- **Why missed:** the tool printed no evidence of its own reach. It reported findings but never the
+  size of the registry it classified with, so "1,463 items, genuinely clean" and "0 items, saw
+  nothing" produced identical output. `_gamedir.ensure_exists` exists precisely for this and was not
+  called.
+- **Prevent:** a gate must print what it examined, not only what it found, and must refuse to report
+  when its inputs are empty. Any tool resolving the install goes through `ensure_exists`, and any
+  registry-backed check asserts the registry is non-empty before drawing a conclusion. State a clean
+  result as "no instances of these N predicates", never as "the data is clean".
+- **Source:** `docs/reviews/rca-troop-equipment-slot-mixing-2026-09-01.md`.

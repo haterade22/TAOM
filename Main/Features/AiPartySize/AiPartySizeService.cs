@@ -23,6 +23,16 @@ public class AiPartySizeService : IAiPartySizeService
     public const float MaxFlatBonus = 100000f;
     public const float MaxRelief = 0.99f;
 
+    // Shipped defaults for the two lord knobs. These are the single source: TaomSettings uses them
+    // as its property initializers and the fallbacks below use them when MCM is absent. Before this
+    // each number was written twice and nothing would have caught the two drifting apart, because
+    // every unit test passes the values in as literal arguments.
+    // Halved 2026-09-01 from 10f/300f. Both had to move together: the flat bonus is deliberately
+    // kept out of the factor frame by AddResultFrameBonus, so halving the multiplier alone lands at
+    // 60% of the old limit rather than 50%. A tier-4 lord goes from 1560 to 780.
+    public const float DefaultLordFactor = 5f;
+    public const float DefaultLordFlatBonus = 150f;
+
     public void ApplyAiLordScaling(PartyBase party, ref ExplainedNumber limit)
     {
         if (!IsEnabled())
@@ -41,8 +51,8 @@ public class AiPartySizeService : IAiPartySizeService
         var settings = TaomSettings.Instance;
         ApplyPartySizeScaling(
             ref limit,
-            settings?.AiLordPartySizeFactor ?? 10f,
-            settings?.AiLordPartySizeFlatBonus ?? 300f,
+            settings?.AiLordPartySizeFactor ?? DefaultLordFactor,
+            settings?.AiLordPartySizeFlatBonus ?? DefaultLordFlatBonus,
             LordHostText);
     }
 

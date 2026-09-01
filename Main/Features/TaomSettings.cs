@@ -2,6 +2,7 @@ using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
 using MCM.Common;
+using TAOM.Features.AiPartySize;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -30,20 +31,26 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- AI Party Size ---
 
-    [SettingPropertyGroup("AI Party Size")]
+    // GroupOrder matters more than it looks: MCM sorts top-level groups by GroupOrder DESCENDING
+    // (MCM.Abstractions.CollectionExtensions.SortDefault), then by name descending. Without an
+    // explicit order this group sat at 0 and, starting with "A", fell to the very bottom of that
+    // bucket: 24th of 32 groups, about 150 rows down, which is why it read as missing entirely.
+    // 44 places it just under Supply Lines (45). Note the asymmetry with Order on the properties
+    // below, which MCM sorts ASCENDING.
+    [SettingPropertyGroup("AI Party Size", GroupOrder = 44)]
     [SettingPropertyBool("Enable AI Party Scaling", Order = 0,
         HintText = "Lets AI lord parties HOLD the roster their party template spawns them with. Without this they spawn at 500-3000 and are trimmed back to the vanilla 50-150 cap within a day. Also relieves AI food and wage pressure, because those drive a second, morale-based desertion path that ignores the cap entirely. Off restores the pre-feature behaviour. Note that is not the same as raw vanilla: the Troop Weight elite tax has its own toggle and still deflates a heavy party's limit when it is on.")]
     public bool EnableAiPartyScaling { get; set; } = true;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Lord Party Size Multiplier", 1.0f, 20.0f, "#0.0", Order = 1,
-        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla. Default: 10.0.")]
-    public float AiLordPartySizeFactor { get; set; } = 10f;
+        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla. Default: 5.0. Raise this and the Flat Bonus together: the bonus is added after the multiplier, so moving one alone shifts the total by less than you expect.")]
+    public float AiLordPartySizeFactor { get; set; } = AiPartySizeService.DefaultLordFactor;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Lord Party Size Flat Bonus", 0.0f, 2000.0f, "#0", Order = 2,
-        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 300.")]
-    public float AiLordPartySizeFlatBonus { get; set; } = 300f;
+        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 150.")]
+    public float AiLordPartySizeFlatBonus { get; set; } = AiPartySizeService.DefaultLordFlatBonus;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("Garrison Size Multiplier", 1.0f, 10.0f, "#0.0", Order = 3,

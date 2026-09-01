@@ -237,6 +237,11 @@ live file). The nine `<AvailablePiece>` lines sit inside `<!-- TAOM-1H-POLEARM:S
 at the end of the `OneHandedPolearm` template, so the script is idempotent and the block is
 greppable.
 
+> **The backup is not beside the live file any more.** The 2026-09-01 sweep moved it to
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\ModuleData\`. `--revert --apply`
+> does not need it (it removes the marked block), but copy it back before relying on it as a
+> restore. See [module-backup-sweep](../module-backup-sweep.md).
+
 **The block covers two fixes.** Seven entries for the four Dale spears (2026-08-10, #449) and two
 for the Black Numenorean lance `sm_md_num_lance_a` (2026-08-20). The lance is the same defect on a
 troop tree that landed eight days later, caught by this edit's own gate on its first run against
@@ -275,6 +280,11 @@ lance rosters on its own before they had ever been looked at.
 **This is a live edit to `LOTRLOME_items/isengard/` that a future Armory update WILL silently revert.**
 Re-apply with `python tools/oneoff/fix_uruk_hai_hands_teamcolor.py --apply`
 (`--revert` restores from the `.bak-teamcolor` backups beside each file).
+
+> **`--revert` will not find those backups.** All five `.bak-teamcolor` files were moved by the
+> 2026-09-01 sweep to `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\`, same
+> relative paths. Copy them back beside their live files before running `--revert`, or it has
+> nothing to restore from. See [module-backup-sweep](../module-backup-sweep.md).
 
 **Root cause.** `m_uruk_hai_hands_a1` is authored to require the shader flag
 `use_double_colormap_with_mask_texture`. The only thing that adds it is
@@ -335,6 +345,18 @@ by crafting-piece / item definitions in `ModuleData/LOTRLOME_items/` and exist n
 Long-shipping and invisible because they are warnings rather than errors.
 
 ### The dual-tree trap (applies to any binary fix)
+
+> **Corrected 2026-09-01.** The paragraph below says a player install loads
+> `AssetPackages/pack*.tpac`. For `LOTRLOME_Armory` that directory **does not exist** (0 cooked
+> packs against 4,490 loose `Assets/**/*.tpac`), and `tools/package_release.py` ships whichever of
+> the two an install actually has, so players get the loose tree. It is also contradicted by a
+> root-caused incident: the spider mount's riderless bug was traced to the engine loading loose
+> `Assets` rather than a stale baked `pack6.tpac`
+> ([lotrlome-spider-mount-changes.md](../lotrlome-spider-mount-changes.md)), and the warg absorption
+> found that a loose definition and a cooked entry claiming the same name crash at
+> `signal_package_item_change` ([lotrlome-warg-changes.md](../lotrlome-warg-changes.md)), which only
+> happens if both are read. Treat "must land in both" as still correct wherever both trees exist,
+> and "players read the packs" as not established.
 
 A dev machine with a Modding Kit `Assets/` directory loads the **loose** tree; a player install loads
 `AssetPackages/pack*.tpac`. Confirm which by grepping a session's `rgl_log` for `Loading packages`.

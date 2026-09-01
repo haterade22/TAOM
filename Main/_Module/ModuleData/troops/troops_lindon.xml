@@ -218,12 +218,6 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.highelf_longbowd" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_elven_arrow_v4_a" />
-                <equipment
-                    slot="Item2"
                     id="Item.wm_rivendell_sword_a02" />
                 <equipment
                     slot="Head"
@@ -241,12 +235,6 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.highelf_longbowc" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_elven_arrow_v4_a" />
-                <equipment
-                    slot="Item2"
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
@@ -264,12 +252,6 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.highelf_longbowd" />
-                <equipment
-                    slot="Item1"
-                    id="Item.wm_elven_arrow_q1v2" />
-                <equipment
-                    slot="Item2"
                     id="Item.wm_rivendell_sword_a02" />
                 <equipment
                     slot="Head"

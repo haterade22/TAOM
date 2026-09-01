@@ -166,6 +166,57 @@ class TestPrefixedRefs(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 # Bare item references - the C#-parsed configs                                 #
 # --------------------------------------------------------------------------- #
+class TestCraftingPieceRefs(unittest.TestCase):
+    """A crafting piece lives in a different id namespace from `Item.`, so
+    neither the prefixed-ref nor the roster shape can see it. Before these two
+    shapes existed the audit reported every crafting piece as ORPHAN.
+
+    That verdict covered all six `easterling_*` weapon pieces on 2026-09-01.
+    They build `easterling_sword` and `easterling_spear`, and `easterling_spear`
+    is player CAREER STARTING equipment, so acting on the ORPHAN verdict would
+    have deleted a Rhun start's weapon. It was caught by hand, which is not a
+    control. These tests are the control.
+    """
+
+    def test_usable_piece_in_a_crafting_template_is_a_reference(self):
+        xml = ('<CraftingTemplate id="TwoHandedPolearm">\n'
+               '  <UsablePiece piece_id="easterling_spear_blade" />\n'
+               '  <UsablePiece piece_id="easterling_spear_handle" />\n'
+               '</CraftingTemplate>\n')
+        refs = am.extract_piece_refs_from_text(xml, "crafting_templates.xslt")
+        self.assertEqual([r.item_id for r in refs],
+                         ["easterling_spear_blade", "easterling_spear_handle"])
+        self.assertTrue(all(r.shape == "crafting_piece" for r in refs))
+
+    def test_piece_inside_a_crafted_item_is_a_reference(self):
+        xml = ('<CraftedItem id="easterling_spear" crafting_template="TwoHandedPolearm">\n'
+               '  <Pieces>\n'
+               '    <Piece id="easterling_spear_blade" Type="Blade" />\n'
+               '    <Piece id="easterling_spear_handle" Type="Handle" />\n'
+               '  </Pieces>\n'
+               '</CraftedItem>\n')
+        refs = am.extract_piece_refs_from_text(xml, "LOTRAOM_weapons.xml")
+        self.assertEqual({r.item_id for r in refs},
+                         {"easterling_spear_blade", "easterling_spear_handle"})
+
+    def test_a_crafting_piece_definition_is_not_a_reference(self):
+        """`<CraftingPiece id="x">` DEFINES x. Only <Piece>/<UsablePiece> refer."""
+        xml = '<CraftingPiece id="easterling_spear_blade" mesh="m" />\n'
+        self.assertEqual(am.extract_piece_refs_from_text(xml, "x.xml"), [])
+
+    def test_comments_are_not_counted(self):
+        xml = '<!-- <Piece id="easterling_spear_blade" Type="Blade" /> -->\n'
+        self.assertEqual(am.extract_piece_refs_from_text(xml, "x.xml"), [])
+
+    def test_line_numbers_are_reported(self):
+        xml = ('<Pieces>\n'
+               '  <Piece id="a" />\n'
+               '  <Piece id="b" />\n'
+               '</Pieces>\n')
+        refs = am.extract_piece_refs_from_text(xml, "x.xml")
+        self.assertEqual([(r.item_id, r.line) for r in refs], [("a", 2), ("b", 3)])
+
+
 class TestBareRefs(unittest.TestCase):
     def test_settlement_guard_spear(self):
         xml = '<Spear culture="gondor" item="western_spear_3_t3" />'

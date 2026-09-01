@@ -37,6 +37,13 @@ action_sets merge. See "Retirement" below.
 
 ## Backups
 
+> **Moved 2026-09-01.** These eight files no longer sit beside the originals. The backup sweep
+> (`tools/sweep_module_backups.ps1`) relocated every sidecar in the three shipped modules to
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\`, preserving the relative
+> paths below, because `.bak` breaks the Cloudflare distribution. To roll this change back, copy
+> them from there. `MANIFEST.csv` in that folder carries a SHA256 for each. See
+> [module-backup-sweep](module-backup-sweep.md).
+
 Every edited file was copied to a sibling with a **non-`.xml`** extension before editing:
 
 ```
@@ -278,6 +285,15 @@ dereferences a null intrusive pointer.
 > name and no `$BASE/Modules/...` source path, so nothing can ever trigger the recompile.
 
 ### The shipped shape
+
+> **State drift, measured 2026-09-01. This table no longer describes the install.** The module has
+> no `AssetPackages` directory at all now (0 cooked packs against 4,490 loose `Assets/**/*.tpac`),
+> so `warg.tpac` is gone. `Assets/creature/warg/` is **present** again, and the parked copy at
+> `<game>/_taom_disabled/warg_loose_assets_20260828/` is **also** still there. That is the exact
+> both-trees-claim-the-same-name shape the crash rule below warns about, so the current state should
+> be established and this table rewritten before anyone acts on it. Warg meshes themselves do still
+> resolve (7 present, including `warg_low` and `sk_gd_fellwarg`), so this is a bookkeeping and
+> crash-risk question, not missing art.
 
 | Location | State | Why |
 |---|---|---|

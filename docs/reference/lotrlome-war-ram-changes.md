@@ -19,6 +19,11 @@ Issue: [#515](https://github.com/haterade22/TAOM/issues/515). Feature doc:
 
 ## Backups
 
+> **Moved 2026-09-01.** The two of these that still existed (`monsters.xml` and `LOTRAOM_horses.xml`;
+> the `SubModule.xml` copy was already gone) now live under
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\` at the same relative paths.
+> Copy one back before rolling anything back. See [module-backup-sweep](module-backup-sweep.md).
+
 Every file below was copied to a sibling with a **non-`.xml`** extension before editing:
 
 ```
@@ -178,12 +183,20 @@ assign the harness explicitly, so only the player can mix them.
 
 ## Still owed
 
-1. **Rebuild `AssetPackages`.** The eight barding meshes, their two materials and seven textures are
-   **not in any `pack*.tpac`**. Measured: the body meshes, materials and textures are packed (pack3,
-   pack5, pack7), but nothing matching `sk_eb_goat_bard` or `eb_ram_barding` is. Every creature mesh
-   known to work in game (`chariot_horse_brown`, `sk_mumakil_basemesh_a1`, `sk_spider_forest_c`,
-   `sk_elephant_armor_a`) **is** packed. The packs were last built 2026-08-25 08:29; the barding was
-   imported 2026-08-28 11:47. Until they are rebuilt, expect the barding not to render.
+1. ~~**Rebuild `AssetPackages`.**~~ **RESOLVED 2026-09-01, and the premise was wrong.** The Armory
+   has no `AssetPackages` directory at all any more (0 cooked packs against 4,490 loose
+   `Assets/**/*.tpac`), so there is nothing to rebuild and nothing for the barding to be missing
+   from. All eight barding meshes are present and resolving today: `sk_eb_goat_bard_{light,heavy,
+   elite}_{a,b}` and siblings, verified against the live tpac TOCs, and
+   `taom_ram_barding_light_a` -> `sk_eb_goat_bard_light_a` passes `validate_mesh_refs.py` with zero
+   errors.
+
+   The original measurement was correct at the time and its conclusion did not follow. "Absent from
+   `pack*.tpac`" only means "will not render" if the engine reads the packs, and for this module it
+   reads the loose tree. The spider mount hit the same trap from the other side and root-caused it:
+   the engine loads loose `Assets`, not a stale baked pack
+   ([lotrlome-spider-mount-changes.md](./lotrlome-spider-mount-changes.md)). See
+   [armory-guide.md](./armory-guide.md) "Two asset trees" for the corrected model.
 
    **Confirmed three independent ways**, which is worth recording because the failure is silent:
 
@@ -205,10 +218,17 @@ assign the harness explicitly, so only the player can mix them.
    which is always 0. Use `${PIPESTATUS[0]}`, or do not pipe. This ledger asserted the opposite until
    a second measurement caught it.
 
-   It also resolves against the **cooked packs** rather than the loose `Assets/` tree, which is
-   precisely why it catches this class while a check against `Assets/` reads clean.
-2. **The same gap affects `sk_rh_khml_barding_a` and `_b`** from commit `68fe7b5b` (2026-08-28),
-   which are likewise in no pack. That commit is marked `Not-tested: in-game`. One rebuild covers both.
+   ~~It also resolves against the **cooked packs** rather than the loose `Assets/` tree, which is
+   precisely why it catches this class while a check against `Assets/` reads clean.~~ **Not true as
+   of 2026-09-01, and it was the reasoning behind item 1's wrong conclusion.** For a module with no
+   cooked tree the tool resolves against `Assets/**` and says so, and the engine reads that same
+   tree (`rgl_log`: `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`). A check against
+   `Assets/` is the one that matches the running game here, not the one that reads falsely clean.
+2. ~~**The same gap affects `sk_rh_khml_barding_a` and `_b`**~~ **RESOLVED 2026-09-01, same reason
+   as item 1.** Both meshes are present and resolving in the live `Assets/` tree, verified against
+   the tpac TOCs. There is no pack to rebuild and no gap to cover. The commit that added them
+   (`68fe7b5b`, 2026-08-28) is still marked `Not-tested: in-game`, so an in-game look is owed, but
+   the asset side is fine.
 3. **Translate the ten item names.** The Armory's English source is the inline `{=KEY}default` in the
    item XML (see `tools/translate_with_claude.py`, which walks `LOTRLOME_Armory`), so the English
    strings already exist. The twelve per-language files need

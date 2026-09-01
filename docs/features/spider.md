@@ -112,6 +112,16 @@ the detached spawn paths that earlier testing exercised.
 | Troop weight | `TroopWeights/troop_weights.xml` | 3.0 (2 mount + 1 rider; elephant precedent 7.0) |
 | Recruitment | `VolunteerRecruitmentService` DG settlement pools | weight 1, all Dol Guldur fiefs (intentionally absent from clan pools) |
 
+> **The backup files named in this table moved on 2026-09-01.** Every `.bak*` and `.backup` sidecar
+> in the three shipped modules was relocated to
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\`, same relative paths, because `.bak` breaks
+> the Cloudflare distribution. That covers `spider_correct_geo.tpac.bak-kitbroken-20260614`,
+> `.bak-meshonly-20260614`, `.bak-bundled-crashing-20260614`, `.transplanted-20260614` and the 24
+> `an_spi_*_geo.tpac.bak-preskel` clips (30 files from the spider folder in all). **`meshes/sk_spider_forest_c_geo.tpac.backup` is the one to
+> watch**: it has no live `.tpac` sibling and never did, so it is the sole copy of the
+> `spider_skeleton` source above rather than a backup of anything. Copy it back before any restore
+> step. See [module-backup-sweep](../reference/module-backup-sweep.md).
+
 ### Registration map (the `project.mbproj` truth — load-bearing)
 
 Native animation XML loads ONLY from `LOTRLOME_Armory/ModuleData/project.mbproj` `<file>` entries

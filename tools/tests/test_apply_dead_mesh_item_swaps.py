@@ -232,6 +232,91 @@ class TestByteFaithfulIO(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 # The mapping itself                                                           #
 # --------------------------------------------------------------------------- #
+class TestRepointMeshShapes(unittest.TestCase):
+    """The <CraftingPiece> alternation and the word-boundary guard are both
+    load-bearing and were previously asserted only through mapping membership,
+    never through an actual string transform."""
+
+    def test_repoints_a_crafting_piece_not_just_an_item(self):
+        xml = (
+            '<CraftingPiece id="easterling_sword_blade" piece_type="Blade"\n'
+            '    mesh="easterling_sword_blade" length="111">\n'
+            '  <BladeData holster_mesh="" body_name="bo_sword_one_handed" />\n'
+            '</CraftingPiece>\n'
+        )
+        out, n = sw.repoint_mesh(
+            xml, {"easterling_sword_blade": "sm_rh_loke_sword_blade_a"})
+        self.assertEqual(n, 1)
+        self.assertIn('mesh="sm_rh_loke_sword_blade_a"', out)
+        # the nested BladeData must be untouched
+        self.assertIn('holster_mesh=""', out)
+
+    def test_leaves_holster_mesh_and_other_suffixed_attrs_alone(self):
+        r"""`\bmesh="` must not match `holster_mesh="`: there is no word boundary
+        after an underscore. That is the only reason the nested BladeData
+        survived the real 2026-09-01 run."""
+        xml = ('<Item id="x" mesh="dead_mesh" holster_mesh="hm_keep" '
+               'flying_mesh="fm_keep" />\n')
+        out, n = sw.repoint_mesh(xml, {"x": "new_mesh"})
+        self.assertEqual(n, 1)
+        self.assertIn('mesh="new_mesh"', out)
+        self.assertIn('holster_mesh="hm_keep"', out)
+        self.assertIn('flying_mesh="fm_keep"', out)
+
+    def test_unmapped_entry_is_untouched(self):
+        xml = '<Item id="other" mesh="keep_me" />\n'
+        out, n = sw.repoint_mesh(xml, {"x": "new_mesh"})
+        self.assertEqual(n, 0)
+        self.assertEqual(out, xml)
+
+
+class TestPreflight(unittest.TestCase):
+    """preflight() returns (problems, applied). A missing REPLACEMENT stays
+    fatal; a missing SOURCE is benign only when it was a deliberate deletion."""
+
+    def _armory(self, *ids):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        md = Path(tmp.name) / "ModuleData" / "LOTRLOME_items"
+        md.mkdir(parents=True)
+        body = "".join('  <Item id="%s" mesh="%s" />\n' % (i, i) for i in ids)
+        (md / "x.xml").write_text("<Items>\n" + body + "</Items>\n",
+                                  encoding="utf-8")
+        return Path(tmp.name)
+
+    def test_returns_a_two_tuple(self):
+        got = sw.preflight(self._armory(*sw.ITEM_SWAPS.values()))
+        self.assertIsInstance(got, tuple)
+        self.assertEqual(len(got), 2)
+
+    def test_missing_replacement_is_fatal(self):
+        problems, _ = sw.preflight(self._armory())
+        self.assertTrue(any("replacement not defined" in p for p in problems))
+
+    def test_missing_source_that_is_a_delete_target_is_benign(self):
+        problems, applied = sw.preflight(self._armory(*sw.ITEM_SWAPS.values()))
+        deleted_sources = [o for o in sw.ITEM_SWAPS if o in sw.DELETE_ITEMS]
+        self.assertTrue(deleted_sources,
+                        "fixture assumes some swap sources are deletion targets")
+        for old in deleted_sources:
+            self.assertFalse(any(old in p for p in problems),
+                             old + " should not be fatal")
+            self.assertTrue(any(old in a for a in applied))
+
+    def test_missing_source_that_is_not_a_delete_target_stays_fatal(self):
+        """The typo safety net the idempotency fix had to preserve."""
+        real = dict(sw.ITEM_SWAPS)
+        try:
+            sw.ITEM_SWAPS.clear()
+            sw.ITEM_SWAPS["typo_source_that_does_not_exist"] = "replacement_a"
+            problems, applied = sw.preflight(self._armory("replacement_a"))
+            self.assertTrue(any("typo in the mapping" in p for p in problems))
+            self.assertEqual(applied, [])
+        finally:
+            sw.ITEM_SWAPS.clear()
+            sw.ITEM_SWAPS.update(real)
+
+
 class TestMappingIntegrity(unittest.TestCase):
     def test_no_target_is_also_a_dead_source(self):
         # Swapping one dead item onto another dead item would look like a fix
@@ -271,6 +356,49 @@ class TestMappingIntegrity(unittest.TestCase):
         starters = {i for i in sw.MESH_REPOINTS if i.startswith("starter_")}
         self.assertEqual(len(starters), 3)
         for i in starters:
+            self.assertNotIn(i, sw.ITEM_SWAPS)
+
+    def test_ardunian_elite_armour_is_re_meshed_not_deleted(self):
+        """The one wave-2 repoint that is neither a starter boot nor a crafting
+        piece, and it dresses 25 Umbar characters across 3 files. The narrowed
+        starter-items test below no longer covers it, so without this the whole
+        entry could be deleted from MESH_REPOINTS and nothing would fail."""
+        self.assertIn("ar_ardunian_elite_armour", sw.MESH_REPOINTS)
+        self.assertNotIn("ar_ardunian_elite_armour", sw.DELETE_ITEMS)
+        self.assertEqual(sw.MESH_REPOINTS["ar_ardunian_elite_armour"],
+                         "sm_md_num_inf_chest_elite_a")
+
+    # The 13 items removed because the engine appends the slim-BUILD suffix
+    # itself, so a hand-authored `<mesh>_slim` item duplicates it for free.
+    _REDUNDANT_SLIM = {
+        "faramir_armor_slim", "ithilien_jerkin_long_slim",
+        "ithilien_jerkin_long_var_slim", "ithilien_jerkin_short_slim",
+        "ithilien_jerkin_short_var_slim", "gondor_noble_coat_a_slim",
+        "gondor_noble_coat_b_slim", "gondor_noble_jerkin_a_slim",
+        "gondor_noble_jerkin_b_slim", "theodred_armour_slim",
+        "m_northern_armor_a2", "m_northern_armor_b2", "m_northern_armor_b4",
+    }
+
+    def test_wave2_deletion_count_is_pinned(self):
+        """Symmetric with the Erebor-57 assertion: the wave-2 additions need
+        their own size pin, or a mapping edit silently changes the blast radius.
+
+        Pinned as two separate groups because they were decided for unrelated
+        reasons: 83 whose art is gone, 13 whose art the engine derives anyway.
+        A single total would let one group grow while the other shrank.
+        """
+        wave2 = {i for i in sw.DELETE_ITEMS if not i.startswith("sk_dwarf_erebor")}
+        self.assertEqual(len(wave2 - self._REDUNDANT_SLIM), 83, "dead-mesh deletions")
+        self.assertEqual(len(wave2 & self._REDUNDANT_SLIM), 13, "redundant slim items")
+
+    def test_redundant_slim_items_are_deleted_not_re_meshed(self):
+        """These are removed, never re-pointed: the engine already resolves
+        `<mesh>_slim` for a slim-built character (BasicCharacterTableau.cs:536),
+        so the item has nothing to contribute. Re-meshing one would recreate the
+        duplicate under a different name."""
+        for i in self._REDUNDANT_SLIM:
+            self.assertIn(i, sw.DELETE_ITEMS)
+            self.assertNotIn(i, sw.MESH_REPOINTS)
             self.assertNotIn(i, sw.ITEM_SWAPS)
 
     def test_no_id_is_both_deleted_and_re_meshed(self):

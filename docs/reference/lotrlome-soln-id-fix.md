@@ -117,6 +117,14 @@ monster table, a behaviour change to a shipping feature that nothing is asking f
 Backups use non-`.xml` extensions on purpose: these directories are globbed with `GetFiles("*.xml")`,
 so an `.xml` backup injects duplicate ids.
 
+> **Moved 2026-09-01.** All three are now under
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\` at the same relative paths,
+> because `.bak` breaks the Cloudflare distribution. That includes the retired
+> `Animations/action_types_lotr_misc.xml.bak-superseded-20260828`, which is no longer in the module
+> at all: it had no live sibling, so the sweep classified it as a sole copy rather than a backup.
+> The "nothing globs it" outcome above is unchanged and now holds for a stronger reason. See
+> [module-backup-sweep](module-backup-sweep.md).
+
 ## Verification
 
 ```

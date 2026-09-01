@@ -914,8 +914,6 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
                 <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-                <equipment slot="Item2" id="Item.hunting_bow" />
-                <equipment slot="Item3" id="Item.default_arrows" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -947,8 +945,6 @@
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
                 <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-                <equipment slot="Item2" id="Item.hunting_bow" />
-                <equipment slot="Item3" id="Item.default_arrows" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor4" />

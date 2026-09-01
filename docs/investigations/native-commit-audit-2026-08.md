@@ -61,7 +61,7 @@ Two ledgers, never conflated:
 | Parked naval art (`TAOM_Map` ships/fishing-boat sources + geo tpacs) | ~185 MB |
 | `TAOM_Map/Prefabs_Unused/` | 54.8 MB |
 | `TAOM.NativeSkinFixes.pdb` ×3 + `.exp`/`.lib` (parked feature) | ~25 MB |
-| Stale `.bak` XMLs inside ModuleData (glob-loaded → duplicate Monster registrations) | ~350 KB (load-surface hazard, not size) |
+| ~~Stale `.bak` XMLs inside ModuleData (glob-loaded → duplicate Monster registrations)~~ | **RESOLVED 2026-09-01, and the premise was half wrong.** The engine globs `GetFiles("*.xml")`, so what decides the hazard is the LAST extension, not the presence of `.bak`: a sidecar named `foo.xml.bak-topic` is never loaded (the CHANGELOG lesson at the 2026-08-10 harness entry is right), while one named `foo.bak.xml` is parsed as real data and duplicates every id in it. All 781 sidecars across the three modules were swept to quarantine by `tools/sweep_module_backups.ps1`, which asserts no swept file ends in a real game extension. 937 MB recovered, 40 MB of it `ModuleData` |
 
 No release-packaging script exists — `build.ps1` deploys everything, deletes nothing.
 

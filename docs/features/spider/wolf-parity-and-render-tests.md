@@ -32,6 +32,12 @@ Decompiled `ADOD_Beasts.dll` + `NativeHook.dll` (the wolf "has a lot of code"):
 
 The active mesh asset lives in `Assets/creature/spider/animations/spider_correct_geo.tpac` (carries the
 **split** meshes `sk_spider_forest_c` + `sk_spider_forest_c_2` + the 62-bone `spider_skeleton`).
+> **Moved 2026-09-01.** `sk_spider_forest_c_geo.tpac.backup` is no longer in the module. It is at
+> `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\Assets\creature\spider\meshes\`.
+> It never had a live `.tpac` sibling, so it is the sole copy of that data rather than a backup of
+> anything. Copy it back before any restore step below. See
+> [module-backup-sweep](../../reference/module-backup-sweep.md).
+
 The **original single mesh** is backed up at `Assets/creature/spider/meshes/sk_spider_forest_c_geo.tpac.backup`
 (7,755,375 B vs the split's 7,991,676 B — only **+3%**, which is *consistent with a real L/R partition +
 seam duplication OR a non-functional "split"* — inconclusive without a palette dump, so test empirically).

@@ -21,6 +21,37 @@ Update ALL of the following (checklist):
 | 6. NPC references | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | Check villager upgrade_targets, caravan guard references |
 | 7. CHANGELOG | `CHANGELOG.md` | Document the changes |
 
+## Equipment sets are mixed PER SLOT, not chosen whole (MANDATORY before editing any troop roster)
+
+**A non-hero troop never wears one of its equipment sets. The engine builds its kit slot by slot,
+taking each slot from a different, independently chosen set.** So a troop's battle sets are not
+alternatives; they are a menu the engine orders one item from per slot. Write every battle set of a
+troop to be **interchangeable slot by slot with every other**, or the engine will assemble a
+combination you never authored.
+
+`Equipment.GetRandomEquipmentElements` (v1.4.8, `TaleWorlds.Core.cs:6055`) loops the 12 slots and
+draws each from `list[weaponSetNo]`. There is **no set-count threshold** in the method, so this
+starts at **two** battle sets. A campaign battle always takes the seeded branch, which re-rolls the
+set index at the top of every iteration and so makes all 12 slots independent:
+`Mission.SpawnTroop` chains `AgentData.TroopOrigin`, which calls `EquipmentSeed(troopOrigin.Seed)`,
+and `CharacterHelper.GetPartyMemberFaceSeed` (`CharacterHelper.cs:589`) returns `abs(...) % 2000`,
+so the seed can never be the `-1` that would group slots. (`GuardsCampaignBehavior` does pass `-1`
+for settlement guard visuals; on that path `Weapon0` and `Weapon1` share a draw. Battle spawns never
+reach it.)
+
+| Rule | Why |
+|---|---|
+| If any battle set puts a bow in a slot, **every** battle set must put a bow in that same slot, and the arrows must sit at one fixed slot index present in every set | Slot 0 and slot 1 draw independently, so 3 ranged sets among 13 gives a working archer `(3/13)^2` = 5% of the time and a useless half-kit 36% of the time (#529) |
+| At least one slot index must hold a weapon in **every** battle set | Otherwise a draw can leave the troop with no weapon at all. Deleting a bow without promoting the sidearm into its slot is how you create this |
+| A shield in one set and a `requires_no_shield` weapon in another is the same defect as pairing them in one set | The AI will not draw the weapon. `audit_polearm_shield_parity.py` is per-set and cannot see the cross-set form (#531) |
+| `Horse` and `HorseHarness` (slots 10 and 11) also draw independently | Pair them consistently across sets |
+| Heroes are exempt | `CharacterObject` returns the single `HeroObject.BattleEquipment` when `IsHero`, and `Mission.BuildAgent` forces `FixedEquipment(true)`. Wanderer/companion templates pick a whole set once at creation (`Hero.SetInitialValuesFromCharacter` does `list.GetRandomElement().Clone()`). For those, in-set completeness is the whole requirement |
+| Civilian sets mix too, but only among themselves | Battle and civilian pools never cross. A single civilian set always resolves whole |
+
+**You cannot check this in game by looking at the troop.** The encyclopedia, party screen, troop
+tree and tournament all use whole-set selection and always render set #1, so a broken troop looks
+correct in every UI surface. Only a live mission agent mixes. Check it in the data, or in a battle.
+
 ## Troop ID Naming Convention
 
 `{culture_prefix}_{origin}_{role}` — Examples:

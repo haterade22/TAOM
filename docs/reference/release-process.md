@@ -68,7 +68,10 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 
 1. Tree clean, on `bannerlord-1.4.5`, current version already tagged.
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
-3. Bump the version fields above.
+3. `pwsh tools/sweep_module_backups.ps1` reports 0 files. If it does not, run it with `-Apply`:
+   backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
+   found 781 of them, 937 MB. See [module-backup-sweep](module-backup-sweep.md).
+4. Bump the version fields above.
 4. Write `docs/releases/vX.Y.Z-discord.md` (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
 5. CHANGELOG entry.
 6. Commit `chore(release): TAOM vX.Y.Z`, staging release paths explicitly.

@@ -272,6 +272,10 @@ class KnownDeadMeshTests(unittest.TestCase):
         codes = _codes(issues)
         self.assertIn("KNOWN_DEAD_MESH", codes)
         self.assertNotIn("MISSING_MESH", codes)
+        # check_allowlist defaults to False, so a caller passing an arbitrary
+        # subset of refs must NOT get spurious stale warnings. Without this the
+        # default could silently flip and only unrelated tests would notice.
+        self.assertNotIn("STALE_DEAD_MESH_ALLOWLIST", codes)
         known = [i for i in issues if i.code == "KNOWN_DEAD_MESH"][0]
         self.assertEqual(known.severity, vm.Severity.WARNING)
         self.assertIn("cave_troll", known.message, "the reason must reach the report")

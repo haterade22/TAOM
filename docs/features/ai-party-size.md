@@ -102,8 +102,8 @@ JSON and MCM has to enforce the same invariants at both surfaces or they drift, 
 | Setting | Default | Effect |
 |---|---|---|
 | Enable AI Party Scaling | `true` | Master toggle; off restores vanilla caps exactly |
-| AI Lord Party Size Multiplier | `10.0` | Multiplies the limit, preserving clan-tier progression |
-| AI Lord Party Size Flat Bonus | `300` | Added after the multiplier, worth exactly this many men |
+| AI Lord Party Size Multiplier | `5.0` | Multiplies the limit, preserving clan-tier progression |
+| AI Lord Party Size Flat Bonus | `150` | Added after the multiplier, worth exactly this many men |
 | Garrison Size Multiplier | `3.0` | Every garrison, player-owned included |
 | AI Food Relief | `0.90` | Fraction of consumption waived |
 | AI Wage Relief | `0.90` | Fraction of the wage bill waived |
@@ -112,19 +112,47 @@ Both knobs exist because they answer different halves of the mismatch. The multi
 meaningful; the flat bonus exists because template spawn is tier-independent, so under a multiplier
 alone the low-tier lords still shed while high-tier ones sit under their cap.
 
+**The two lord knobs move together or not at all.** `AddResultFrameBonus` divides the flat bonus by
+`1 + SumOfFactors` precisely so the multiplier does not amplify it, which means the effective limit is
+`base x multiplier + flat bonus`. Halving only the multiplier lands at 60% of the old limit, not 50%.
+Both shipped defaults live as constants on `AiPartySizeService` (`DefaultLordFactor`,
+`DefaultLordFlatBonus`); `TaomSettings` uses them as its property initializers and the service uses
+them as its MCM-absent fallbacks, so the number exists once.
+
+**Changing the compiled default does not move an existing install.** MCM applies a default only when
+the key is absent from its json, and every install that has run v2.0.23 already persists
+`AiLordPartySizeFactor` and `AiLordPartySizeFlatBonus`. Existing players keep the old values until
+they move the sliders themselves. Same persistence trap CLAUDE.md records for ShaderPrecompilation.
+
 ### What the defaults actually produce
 
 Resulting size limit, by lord:
 
-| Lord | Vanilla | Default knobs | Both sliders maxed |
-|---|---|---|---|
-| Tier-1 non-leader, Steward 20 | 40 | 700 | 1400 |
-| Tier-3 clan leader, Steward 60 | 110 | 1400 | 2100 |
-| Tier-4 Mordor non-leader, Steward 100 | 126 | 1371 | 2060 |
-| Tier-4 Goblin clan leader, Steward 100 | 203 | 1808 | 2479 |
+Resulting size limit from the two lord knobs alone, `base x multiplier + flat bonus`:
 
-And what a culture actually keeps of its spawned roster, measured from
-`taom_partyTemplates.xml` and `troop_weights.xml` against a 1371 limit (1808 for goblin):
+| Lord | Vanilla | Old defaults (10.0 / 300) | Shipped defaults (5.0 / 150) |
+|---|---|---|---|
+| Tier-1 non-leader, Steward 20 | 40 | 700 | 350 |
+| Tier-3 clan leader, Steward 60 | 110 | 1400 | 700 |
+| Tier-4 Mordor non-leader, Steward 100 | 126 | 1560 | 780 |
+| Tier-4 Goblin clan leader, Steward 100 | 203 | 2330 | 1165 |
+
+The tier-4 Mordor row is pinned by
+`AiPartySizeShippedDefaultsTests.ShippedDefaults_ProduceTheDocumentedTierFourLimit`.
+
+Two caveats on reading that table. It is the knob arithmetic only, so a culture party-size feat in the
+same `ExplainedNumber` frame pushes the real number up, and the TroopWeight elite tax pushes it back
+down where the roster is heavy. Before the 2026-09-01 halving this table's last two rows carried 1371
+and 1808 instead of 1560 and 2330, which are measurements with the elite tax already in the frame, not
+knob arithmetic; the derivation was never recorded and could not be reproduced, so they are quoted
+here as history rather than restated.
+
+**Stale, re-measure owed.** The retention table below was measured against those 1371 / 1808 limits.
+Under the halved defaults every culture's limit is roughly 45-50% of what it was, so the retained
+column and its percentages are all optimistic and the two 100% rows almost certainly are not 100% any
+more. The qualitative finding underneath it (average troop weight is far lower than an orc or elf
+roster looks) is unaffected and still holds. Re-measure from `taom_partyTemplates.xml` and
+`troop_weights.xml` before leaning on these numbers for another balance pass.
 
 | Culture template | Expected spawn | Weighted | Avg weight | Retained |
 |---|---|---|---|---|

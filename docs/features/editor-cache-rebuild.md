@@ -160,6 +160,14 @@ OR
 
 The previous cache is preserved as `settlements_distance_cache_Default.bin.prev` after every successful run. To roll back: close Bannerlord, then rename `settlements_distance_cache_Default.bin.prev` → `settlements_distance_cache_Default.bin` (overwriting the post-rebuild file). The atomic-write transaction guarantees `.prev` is always the last known-good cache.
 
+> **The backup sweep takes this file.** `.prev` is 9.9 MB and ships inside `TAOM_Map`, so
+> `tools/sweep_module_backups.ps1` moves it to the quarantine along with every other sidecar (it did
+> on 2026-09-01). That is correct before a release and wrong in the middle of cache work, because it
+> closes the rollback window described above. **Rebuild first, sweep afterwards.** If a sweep already
+> took it, the file is at
+> `E:\Bannerlord_Backups\module_bak_sweep_<date>\TAOM_Map\ModuleData\DistanceCaches\`. See
+> [module-backup-sweep](../reference/module-backup-sweep.md).
+
 ### How To Disable Entirely
 
 Edit `cache_rebuild_config.json`: `"forceVanilla": true` or `"enabled": false`. Restart Bannerlord. The MCM button is still visible but the lambda's `Trigger()` call returns false with a yellow popup. Vanilla cache loading from disk is unaffected — the game continues to use whatever `.bin` is on disk.

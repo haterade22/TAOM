@@ -4,6 +4,248 @@
 
 ## 2026-09-01
 
+### balance(ai-party-size): the two AI lord knobs halved, and the MCM group that holds them made reachable
+
+`AI Lord Party Size Multiplier` goes 10.0 to 5.0 and `AI Lord Party Size Flat Bonus` 300 to 150. A
+tier-4 lord's limit drops from 1560 to 780. Both knobs had to move together: `AddResultFrameBonus`
+divides the flat bonus by `1 + SumOfFactors` precisely so the multiplier cannot amplify it, which
+makes the effective limit `base x multiplier + flat bonus`. Halving the multiplier alone lands at
+60% of the old limit, not 50%. The other four knobs are untouched; the food and wage relief are what
+keep the cap the binding constraint instead of morale desertion, and the garrison factor is siege
+balance that also applies to player-owned garrisons.
+
+The knobs were reported missing from MCM. They were not. All six shipped in v2.0.23 (`caa8662c`) and
+decompiling the deployed `TAOM.dll` confirms they are in the installed build. MCM sorts top-level
+groups by `GroupOrder` **descending** (`MCM.Abstractions.CollectionExtensions.SortDefault`), then by
+name descending. "AI Party Size" carried no `GroupOrder`, so it defaulted to 0 and, starting with an
+"A", fell to the very bottom of that bucket: 24th of 32 groups, roughly 150 rows down, which reads as
+absent. It now carries `GroupOrder = 44` and renders 4th. Worth knowing before touching any other
+group: the `Order` on individual properties in the same file sorts ASCENDING, so the two knobs point
+opposite ways and the 22 groups with no explicit order all sit in one reverse-alphabetical heap.
+
+Each default used to be written twice, once as the `TaomSettings` property initializer and again as
+the service's `??` fallback, with nothing watching the two for drift because every unit test passes
+the numbers in as literal arguments. They are now single-sourced as
+`AiPartySizeService.DefaultLordFactor` and `DefaultLordFlatBonus`. Four new tests pin the pair, the
+slider ranges, and the tier-4 limit end to end.
+
+**Existing installs keep 10.0 and 300 until the sliders are moved by hand.** MCM applies a compiled
+default only when the key is absent from its json, and anything that has run v2.0.23 already persists
+both values. Only fresh installs pick the new numbers up on their own. Deliberately no migration
+code: rewriting a persisted value would silently override a choice the player may have made.
+
+`docs/features/ai-party-size.md`'s retention table is now marked stale. It was measured against a
+1371 limit (1808 for goblin), those being measurements with the elite tax already in frame rather
+than knob arithmetic, and the derivation was never recorded and could not be reproduced. The
+qualitative finding under it, that average troop weight is far lower than an orc or elf roster looks,
+is unaffected.
+
+Two things found while investigating and deliberately not fixed here. The clan screen that prompted
+this showed a player-clan party holding 3282 men against a limit of 338, which is **#530**:
+`IsScalableAiLordParty` excludes player-clan parties, but vanilla's new-game top-up had already
+filled those rosters at world generation against the AI-scaled limit, before Player Switcher moved
+`Clan.PlayerClan` onto that clan. Halving roughly halves that fill on a new campaign without closing
+the handover gap. The decision recorded on #530 is that the reduction itself is wanted: a player who
+takes over a lord should get that lord's honest limit, main party included, so the fix is to
+reconcile once and visibly at the handover rather than to grant the player clan AI scaling.
+Still unfiled: `PartyUpgraderUpgradeReadyTroopsHook` excludes only `PartyBase.MainParty` while
+`AiPartySizeService` excludes the whole player clan, so a player-clan companion party has its entire
+overflow deleted in one tick with none of the gradual desertion an AI party gets.
+
+### chore(modules): 781 backup sidecars swept out of the three shipped modules
+
+`.bak` breaks the Cloudflare distribution, so none of it can ship. A sweep of `LOTRLOME_Armory`,
+`TAOM_Map` and `TAOM` in the live install found **781 files, 937.3 MB**: 658 backup sidecars plus
+the 123 files in the Modding Kit's `SceneObj\Backups` and `SceneEditData\Backups` folders. By
+module and category: Armory `Assets` 232 (100.6 MB), Armory `ModuleData` 372 (21.2 MB), Armory
+`AssetSources` 4 (25.3 MB), Armory scene backups 43 (1.4 MB), `TAOM_Map` `ModuleData` 39 (17.8 MB),
+`TAOM_Map` scene backups 80 (769.4 MB), `TAOM` `ModuleData` 11 (1.6 MB).
+
+**The repo is not exempt, and the first pass wrongly said it was.** `Main/_Module/ModuleData/`
+holds 9 sidecars of its own (1.3 MB), invisible to `git status` because `.gitignore` covers
+`*.bak*`, and `TAOM.csproj`'s `CopyModule` target "recurses `_Module` verbatim and deploys whatever
+it finds" (its own comment, at the guard that already stops a `.vs` folder reaching the install).
+So sweeping the install alone reports clean and the next build puts it all back, which is exactly
+what happened: nine files reappeared in the installed `TAOM` module carrying their original
+timestamps. The sweep now covers the repo `_Module` tree as a fourth root (`-SkipRepoModule` opts
+out). The earlier claim came from a scan whose regex was `\.bak\d*$`, which is the same
+bare-`.bak` blind spot this entry diagnoses two paragraphs down; it matched none of the dated
+suffixes actually on disk.
+
+New `tools/sweep_module_backups.ps1`, dry-run by default with an `-Apply` gate. Two things it does
+that the obvious version of this script does not. First, it does not glob `*.bak`: the dated
+sidecars our tools write are the dominant shape (260 `.bak-armoryloc`, 85 `.bak-guidremap`, 57
+`.bak-preskel`), and a bare `*.bak` matched **18 of 658**. Second, it strips the suffix and tests
+for the live sibling, because a sidecar whose live counterpart no longer exists is not a backup,
+it is the sole copy. Three turned up, and `-MaxOrphans` aborts the run if a future sweep finds
+more. The largest is `Assets\creature\spider\meshes\sk_spider_forest_c_geo.tpac.backup` (7.4 MB),
+which has no `.tpac` sibling anywhere; the June 2026 entry recording the spider Skeleton resource
+surviving only in that file is still accurate. Nothing loads it today, so moving it changed no
+behaviour, but it is now recoverable only from quarantine.
+
+It moves rather than deletes. `LOTRLOME_Armory` and `TAOM_Map` are not git-tracked, so these
+sidecars were the only rollback history their live XML had. Everything went to
+`E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\<Module>\<relative path>` with a SHA256
+`MANIFEST.csv` written and flushed before the first move. That includes sidecars from work still
+in flight today (`.bak-deadmesh-*`, `.bak-enlist-*`, `.bak-gendervar-*`): they are preserved, just
+no longer beside the file, and the manifest names each one.
+
+The sweep also settles a contradiction between two of our own docs.
+`docs/investigations/native-commit-audit-2026-08.md` listed stale `.bak` XMLs as a load-surface
+hazard causing duplicate Monster registrations; a later CHANGELOG lesson found the engine never
+loads them and the grep that said otherwise was wrong. Both were half right, and the deciding
+detail is the **last** extension, not the presence of `.bak`. The engine globs `GetFiles("*.xml")`,
+so `foo.xml.bak-topic` is invisible to it while `foo.bak.xml` is parsed as real data and duplicates
+every id in the file. That is the same invariant `lotrlome-warg-changes.md` already called
+load-bearing when it chose a non-`.xml` suffix. The script asserts it: before the apply run, zero
+of the 658 matches had a real game extension last. The audit row is now marked resolved, and the
+warg doc's rollback list points at the quarantine.
+
+Verified: 0 sidecars remaining across all three modules on a re-scan; 10 sampled files re-hashed at
+the destination against the manifest, 0 mismatches; `validate_moduledata.py` **PASS** (5,919 items,
+5,289 NPCCharacters, 40 cultures, sweeping the live Armory and `TAOM_Map` ModuleData, so a live XML
+moved by mistake would have surfaced as a broken ref); `check_prefab_budget.py` **OK** (93,830 of
+131,072); `dotnet test TAOM.Tests` **7,770 passed, 0 failed, 2 skipped**.
+
+Documentation: new [`docs/reference/module-backup-sweep.md`](docs/reference/module-backup-sweep.md)
+is the canonical record (what moved, how to restore, the last-extension invariant, the recurring
+`.prev` caveat), indexed from `docs/INDEX.md`. The sweep is now a gate: `release-process.md` step 3
+and `/release` Phase 2 both require it to report zero before a version is cut, and the `tools/README.md`
+XML I/O convention that writes these sidecars finally names who removes them. Nine docs whose
+rollback route moved got a pointer rather than a rewrite: the warg, war-ram, spider-mount and
+soln-id-fix Armory ledgers, the armory snapshot README (two `--revert` instructions that would
+otherwise have nothing to restore from), `editor-cache-rebuild.md`, `spider.md` and
+`wolf-parity-and-render-tests.md`. RCA write-ups and archived Codex transcripts were deliberately
+left alone; they are records of a moment, not instructions. Six lessons appended to
+`lessons/build-tooling-workflow.md` (129 to 135, counted from `^### ` headings).
+
+Not-tested: in-game load. The spider and warg asset folders lost the most sidecars, so a custom
+battle with both is the smoke that matters.
+
+### fix(troops): elf recruits spawned with a bow and no arrows, or arrows and no bow
+
+A player reported that Lindon and Noldor recruits reach the field carrying half a bow kit, and that
+only a rare few carry both halves. The cause is an engine behaviour that is easy to read backwards.
+`Equipment.GetRandomEquipmentElements` does not pick one equipment set and apply it whole: for a
+non-hero troop it draws **every slot independently**, and a campaign battle always takes the seeded
+path, because `PartyAgentOrigin.Seed` resolves through the static `CharacterHelper.GetPartyMemberFaceSeed`
+to `[0, 1999]` and so can never be the `-1` that would group slots into three buckets. There is no
+set-count threshold anywhere in the method; mixing is live from two battle sets upward, not above
+three. The `-1` path is not dead engine-wide: `GuardsCampaignBehavior` takes it for settlement guard
+visuals, and on that path `Weapon0` and `Weapon1` do share a draw, so a bow and its quiver in those
+two slots stay together. Battle spawns never reach it.
+
+`lindon_imladris_recruit` and `imladris_recruit` are `default_group="Infantry"` with 13 battle sets,
+of which the last three carried a bow in `Item0` and arrows in `Item1` while the other ten carried a
+sword in `Item0` and nothing else. Slot 0 therefore yielded a bow 3 times in 13 and slot 1 yielded
+arrows 3 times in 13, independently, so roughly 5% of recruits got a usable bow and roughly 36% got
+exactly one useless half. Both troops are now sword-only across every battle set, with the sword
+moved up into `Item0` so all 13 share one shape. Their single civilian set keeps its bow: a one-set
+pool always resolves whole, and battle and civilian pools never cross. `caravan_guard_rohan` and
+`veteran_caravan_guard_rohan` had the same defect at one set in three and lost the bow the same way.
+
+A repo-wide sweep found the mirror defect in `taom_wanderer_equipment.xml`: 33 companion sets across
+8 cultures carried a bow with no arrows anywhere in the template. Companions are heroes, so the set
+is applied whole and no mixing is involved; those sets were simply incomplete. Each now carries the
+arrows its own culture's archers already field.
+
+Verified after the change: no troop where a launcher appears in some battle sets but not all, none
+where no slot index holds the launcher or its ammunition in every set, no set carrying a launcher
+with no ammunition, and no troop able to spawn with no weapon at all. That last check is why the elf
+fix moves the sword instead of only deleting the bow. Deleting alone would have stranded the sword in
+`Item2` and produced a weaponless recruit about 18% of the time, trading one bug for a worse one.
+
+Two things worth carrying forward. **No UI surface can show this defect:** the encyclopedia, party
+screen, troop tree and tournament all use whole-set selection and always display the first set, so
+only a live mission agent ever mixes and only a battle can confirm the fix. And **no gate landed with
+this change**, by decision, so nothing currently stops a future roster edit from reintroducing it.
+
+Filed as #529. The authoring invariant this establishes is now recorded in `.claude/rules/troops.md`
+("Equipment sets are mixed PER SLOT, not chosen whole"), which is path-scoped to the troop XMLs and
+so loads for exactly the edit that would reintroduce it. RCA:
+`docs/reviews/rca-troop-equipment-slot-mixing-2026-09-01.md`.
+
+The review of this fix found the same root cause at a larger scale, shipping today and untouched
+here: 14 troops can draw a shield against a weapon whose primary usage forbids one, with **neither
+equipment set malformed**, so `tools/audit_polearm_shield_parity.py` reports PASS. Four of them are
+`Polearm`, the type that gate ratchets on. `dg_orc_reaver` is the worst at 80% of spawns, from four
+of its five sets pairing a shield with a two-handed mace and giving it no sidearm. Measured and
+deferred to #531 rather than absorbed into this change.
+
+### fix(armoury): `_slim` is the build variant, not the female one
+
+A review pass caught that a data fix earlier the same day rested on a misread of the engine, and
+the correct reading turned out to make 13 other items deletable.
+
+**What was wrong.** `ar_ardunian_elite_armour` had `has_gender_variations="false"` while its
+re-pointed mesh ships a `_slim` variant, and the canonical item using that mesh sets the flag true,
+so the flag was flipped. That reasoning was invented from the attribute's name. The engine
+(`BasicCharacterTableau.cs:531-537`) resolves `_slim` on the NON-female branch: it is the
+slim-BUILD variant, appended for any character with a slim body slider. The female suffixes are
+`_female`, `_converted` and `_converted_slim`, and only those are gated on the flag. For that mesh
+`_slim` ships and `_female`/`_converted`/`_converted_slim` do not, so `"true"` made a female fall
+through every branch to the bare mesh while `"false"` gave her the slim one. The flip was a small
+regression and has been **reverted** in both trees.
+
+**What that made possible.** Since the engine appends `_slim` itself, a hand-authored second item
+whose mesh is literally `<base>_slim` duplicates what you already get. Thirteen existed, all with
+zero consumers across all three ModuleData trees. Deleted: nine Gondor (Faramir, four Ithilien
+jerkins, two noble coats, two noble jerkins), `theodred_armour_slim`, and three whose ids do not
+advertise it (`m_northern_armor_a2`/`_b2`/`_b4`, whose MESH is a `_slim`). Item registry 5,919 to
+5,906.
+
+**And the flag itself was pointing the wrong way, module-wide.** TAOM has no female armour art at
+all: across 2,938 Armory armour items, ZERO have a `_female` / `_converted` / `_converted_slim`
+mesh. Females are meant to wear the male art. That makes `"true"` strictly worse than `"false"`,
+since it routes a female down a branch with no art and she lands on the bare mesh, where `"false"`
+would have let her reach `_slim`. 28 items declared `true`; all 28 are now `false`, and 22 of them
+had a `_slim` they could not previously reach. Males are unaffected either way.
+
+The engine default is `true` when the attribute is absent (`ArmorComponent.cs:159`), so 1,209 more
+items take the same dead path. Those were deliberately LEFT ALONE: none has a `_slim`, so both
+settings end at the same bare mesh and writing the attribute into 1,209 items would be churn.
+New gate `tools/audit_gender_variation_flags.py` reports the split and exits 1 while any item
+skips a reachable `_slim`.
+
+Also this round: `audit_deleted_mesh_impact.py` learned `<UsablePiece piece_id=>` and `<Piece id=>`,
+the two shapes its `Item.` matcher could not express, so a live crafting piece can no longer read
+ORPHAN; the fabricated "271" in the RCA is corrected to 52 (the original grep also counted
+`AutoGenerated*`, so it did not measure what the sentence claimed); and the deferred crafting-piece
+geometry is restated as a gameplay trade rather than a cosmetic one.
+
+Not-tested: in-game appearance. Item XML loads only at process launch.
+Research: BasicCharacterTableau.cs mesh resolution, WeaponDesign.CalculatePivotDistances
+
+### docs(armoury): six docs described a cooked asset tree that does not exist
+
+The dead-mesh work turned up a shared false premise across the knowledge base: that
+`LOTRLOME_Armory` ships cooked `AssetPackages/*.tpac` that the running game loads. It has none, and
+has not for some time. Two docs were already right and were being contradicted by the rest, which is
+the part worth noticing: `black-numenorean.md` had recorded that the validator's glob "has never seen
+an Armory body", and the spider mount's riderless bug was root-caused to the engine loading loose
+`Assets` rather than a stale baked pack. A documented blind spot with no owner stays open.
+
+Corrected, each against a measurement rather than an edit-in-kind:
+
+- `lotrlome-war-ram-changes.md` listed "rebuild `AssetPackages`" as owed work. Resolved and the
+  premise refuted: all eight `sk_eb_goat_bard_*` meshes resolve today, and there is nothing to
+  rebuild.
+- `gondor-armor-revamp.md` carried the same caveat twice, blocking 117 meshes on a Modding Kit
+  recompile. All 117 resolve. No recompile was ever required.
+- `lotrlome-armory-snapshot/README.md` asserted that player installs read the packs. Flagged rather
+  than rewritten, because `package_release.py` ships whichever tree exists and two incidents point
+  the other way; the claim is not established either direction.
+- `bannerlord-animation-clip-flags.md` and `lotrlome-warg-changes.md` name a `warg.tpac` that is
+  gone. Both now say so. The warg entry also records real state drift: the loose tree and its
+  supposedly-parked copy are both present, which is the exact shape its own crash rule warns about.
+  Warg meshes still resolve, so this is bookkeeping and crash risk, not missing art.
+- `mesh-ref-validation.md` gained the two new issue codes, the fallback caveat, and one verified
+  negative worth keeping current: `Main/_Module/ModuleData` declares zero mesh refs, so scanning the
+  Armory alone is correct rather than a scope gap.
+
+Review 90 logged in `REVIEW-LOG.md`; RCA at `docs/reviews/rca-armoury-dead-mesh-wave2-2026-09-01.md`;
+three lessons appended to `docs/reviews/lessons/data-content-cultures.md`.
+
 ### fix(armoury): 83 items pointed at art that no longer exists on disk
 
 Roughly 70 items showed a blank icon in the item list: the whole Rhûn Easterling range, the Mordor
@@ -12,13 +254,13 @@ Golasgil). The mesh ids in the XML were never wrong. The art they name was delet
 both `Assets/` and `AssetSources/`, leaving empty folder shells behind. There is no local recovery
 path: the source FBX is gone too.
 
-Measured before touching anything: **93 bad refs, 92 unique dead meshes across 88 items, 0 missing
-collision bodies.** The 2026-08-28 cleanup had swapped consumers off most of these but never removed
-the definitions, which is why they were orphans rather than equipped. 17 of them, the whole
-`moriaorc_v*` family, appear in no prior cleanup record.
+Measured before touching anything: **93 bad refs, 92 unique dead meshes, across 87 `<Item>`
+definitions and 6 `<CraftingPiece>` entries, 0 missing collision bodies.** The 2026-08-28 cleanup had
+swapped consumers off most of these but never removed the definitions, which is why they were orphans
+rather than equipped. 15 of them, the whole `moriaorc_v*` family, appear in no prior cleanup record.
 
 83 definitions deleted, 7 re-pointed at surviving meshes, 3 kept and gated. Suite green at 7,770 C#
-and 765 Python; `validate_moduledata.py` PASS; item registry 6,002 to 5,919, which is exactly 83.
+and 782 Python; `validate_moduledata.py` PASS; item registry 6,002 to 5,919, which is exactly 83 (5,906 after the follow-up below).
 
 Three things worth keeping:
 
@@ -43,10 +285,21 @@ positives; `audit_deleted_mesh_impact.py` exited 2 outright. Both now degrade an
 
 Not-tested: in-game appearance. Item XML loads only at process launch, so this needs a full restart.
 Research: LOTRLOME_Armory Assets/AssetSources tpac TOCs, crafting_templates.xslt, LOTRAOM_weapons.xml
-Save-compat: PARTLY VERIFIED, needs a load test. No roster references the 83, so no troop loses
-  gear. But 82 of the 83 were `is_merchandise="true"` and reachable in the item list, so an existing
-  save can hold one in a player, companion or merchant inventory. What the engine does with an
-  unresolvable item id on load was NOT tested. Load an existing save before shipping this.
+Save-compat: no roster references the 83, so no troop loses gear. 82 of the 83 were
+  `is_merchandise="true"` and reachable in the item list, so an existing save can hold one in a
+  player, companion or merchant inventory. Campaign saves serialise an item through the
+  `[SaveableProperty]` graph (`AddClassDefinition(typeof(ItemObject), 32)`), NOT through the raw
+  positional `MBGUID` that `ISerializableObject.DeserializeFrom` reads: `TaleWorlds.SaveSystem`
+  references `ISerializableObject` zero times. So deleting items does not shift other items' saved
+  references. An unresolvable id resolves to null and empties that slot. Still worth one load test of
+  a pre-2026-09-01 save before shipping.
+Known limitation: the 6 re-pointed crafting pieces keep their original `length` and `BuildData`
+  while carrying a new mesh. This is a GAMEPLAY trade, not a cosmetic one: `length` feeds
+  `CalculatePivotDistances` -> `CraftedWeaponLength` -> the weapon's live combat reach, so the
+  visible mesh extent and the hitbox are the same quantity. `easterling_spear` therefore looks
+  longer than it hits, and attacks that appear to land can whiff. Kept deliberately: adopting the
+  donor geometry would add roughly 47% reach to a career starting weapon. No crash risk, the pivot
+  maths is float arithmetic over a fixed-size enum-keyed array.
 
 ### fix(enlistment): the service kit had no weapons in it, for anyone, ever (#525)
 
@@ -385,7 +638,7 @@ behind it now instead of a recount date.
 
 `tools/README.md` documents `test_hooks.sh` and the `taom_schema.py` regex guard (with why it
 must not be removed). `docs/reference/mcp-servers.md` documents the nine denied write tools and
-why, plus the two tool names that never existed. Four lessons appended to
+why, plus the two tool names that never existed. Six lessons appended to
 `build-tooling-workflow.md` (125 to 129, index 529 to 533, every per-category count verified
 against the files): a gate registered on one tool name has a hole the size of every other tool;
 a failing advisory step silences every real gate behind it in the same CI job; rebinding
@@ -553,7 +806,7 @@ removing it returned 174 passed / 0 failed.
 Measured per benign Bash call: 2783 ms of hook work before, 1620 ms after, 204 ms on the parallel
 critical path. `jq` was never the fix and is not required.
 
-RCA: `docs/reviews/rca-hook-harness-hang-2026-08-31.md`. Four lessons appended to
+RCA: `docs/reviews/rca-hook-harness-hang-2026-08-31.md`. Six lessons appended to
 `docs/reviews/lessons/build-tooling-workflow.md` (121 to 125). Rules added to
 `.claude/rules/hook-authoring.md`: measure the slow path, bound external work inside the script,
 never spell it `python3`, check skill frontmatter too.

@@ -34,6 +34,12 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
 `/verify` (`./build.ps1 -RunTests`). Read the exit code and the output. No release on an unrun
 build (`evidence-over-claims.md` §B). If red, stop.
 
+Then `pwsh tools/sweep_module_backups.ps1`. It must report **0 files**. Backup sidecars must not
+ship: `.bak` breaks the Cloudflare distribution. If it reports any, run it again with `-Apply`
+(it moves them to a dated quarantine with a SHA256 manifest, it does not delete). Read the orphan
+list before applying: a sidecar with no live sibling is a sole copy, not a backup, and the script
+aborts if more turn up than `-MaxOrphans`. Detail: `docs/reference/module-backup-sweep.md`.
+
 ## Phase 3 — Bump the version fields
 
 | File | Field | When |

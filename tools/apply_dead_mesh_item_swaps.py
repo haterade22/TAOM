@@ -224,7 +224,7 @@ DELETE_ITEMS = {
     "hirluin_shoulder", "imrahil_body", "imrahil_boot", "imrahil_gloves", "imrahil_helmet",
     "imrahil_shoulder", "lossarnach_coat",
 
-    # Moria orc: 17 dead meshes recorded in no prior cleanup
+    # Moria orc: 15 dead meshes recorded in no prior cleanup
     "moriaorc_v1_boots", "moriaorc_v1_bracers", "moriaorc_v1_helmet", "moriaorc_v1_shoulder",
     "moriaorc_v1_torso", "moriaorc_v2_boots", "moriaorc_v2_bracers", "moriaorc_v2_helmet",
     "moriaorc_v2_torso", "moriaorc_v3_boots", "moriaorc_v3_bracers", "moriaorc_v3_helmet",
@@ -249,6 +249,30 @@ DELETE_ITEMS = {
 
     # Rhun shield sharing the dead easterling_shield mesh
     "rhun_tournament_sparring_shield",
+
+    # --- 2026-09-01, second pass: hand-authored `_slim` items are redundant --- #
+    # The engine appends the slim-BUILD suffix itself. BasicCharacterTableau.cs:536:
+    #   text2 = ((!flag3) ? (text2 + (flag2 ? "_slim" : ""))
+    #                     : (text2 + (flag2 ? "_converted_slim" : "_converted")));
+    # where flag2 is the slim-build flag. So for any item whose mesh is `X`, a
+    # slim-built character already resolves `X_slim` with no XML involvement.
+    # Authoring a SECOND item whose mesh is literally `X_slim` duplicates what the
+    # engine does for free, and the duplicate can only be worn by being explicitly
+    # equipped, which nothing does: all 13 verified to have zero consumers across
+    # all three ModuleData trees.
+    #
+    # Note `_slim` is NOT the female variant. That is `_female`, or
+    # `_converted` / `_converted_slim`, gated on has_gender_variations. Conflating
+    # the two is what produced this session's one wrong data change.
+    "faramir_armor_slim", "ithilien_jerkin_long_slim", "ithilien_jerkin_long_var_slim",
+    "ithilien_jerkin_short_slim", "ithilien_jerkin_short_var_slim",
+    "gondor_noble_coat_a_slim", "gondor_noble_coat_b_slim",
+    "gondor_noble_jerkin_a_slim", "gondor_noble_jerkin_b_slim",
+    "theodred_armour_slim",
+    # Same redundancy, ids that do not advertise it: their MESH is a `_slim`.
+    "m_northern_armor_a2",   # mesh sk_northern_armor_light_a_slim
+    "m_northern_armor_b2",   # mesh sk_northern_armor_medium_a_slim
+    "m_northern_armor_b4",   # mesh sk_northern_armor_medium_b_slim
 }
 
 # Dead-and-equipped, but outside this decision. Reported, never touched.

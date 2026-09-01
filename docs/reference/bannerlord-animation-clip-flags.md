@@ -164,7 +164,7 @@ clamps to `0x49`, one below `rear` — proof the low byte is a priority int.)*
 Cat 2 `synch_with_movement` + Cat 3 `cyclic` on locomotion, Cat 2 `lock_movement` + Cat 3 `enforce_all` on
 attacks/death, Cat 4 `disable_hand_ik` (+ leave foot-IK on for grounded clips, `update_bounding_volume` on wide
 poses), Cat 5 `make_walk_sound`/`make_bodyfall_sound`. Everything else is humanoid/MP/cinematic and stays unset.
-**Source of truth = mirror the warg's per-clip flag set** (in `LOTRLOME_Armory/AssetPackages/warg.tpac` since the 2026-08-28 absorption), don't reconstruct from this table.
+**Source of truth = mirror the warg's per-clip flag set**, don't reconstruct from this table. The 2026-08-28 absorption note gave that source as `LOTRLOME_Armory/AssetPackages/warg.tpac`. **That path is dead as of 2026-09-01:** the module has no `AssetPackages` directory at all (0 cooked packs against 4,490 loose `Assets/**/*.tpac`). `Assets/creature/warg/` does exist, and so does the parked copy at `<game>/_taom_disabled/warg_loose_assets_20260828/` that [lotrlome-warg-changes.md](./lotrlome-warg-changes.md) describes as removed. Which of those now holds the authoritative per-clip flags is **unconfirmed**; establish it before relying on it, rather than trusting either this line or the absorption note.
 
 ## TODO — a tpac clip-flag tool (not yet built)
 

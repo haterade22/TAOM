@@ -149,9 +149,10 @@ nowhere. A player sees those as **blank icons in the item list**, which is how t
 surfaced: screenshots of roughly 70 blank rows across Mordor orc, Gondor named lords
 and the whole Rhûn Easterling range.
 
-Measured before acting: **93 bad refs / 92 unique dead meshes across 88 items, 0 missing
-collision bodies.** The inventory was trusted only after confirming it also resolved
-3,922 of 4,014 referenced meshes, so it accounted for every item that renders correctly.
+Measured before acting: **93 bad refs / 92 unique dead meshes, across 87 `<Item>` definitions
+and 6 `<CraftingPiece>` entries, 0 missing collision bodies.** The inventory was trusted only
+after confirming it also resolved 3,922 of 4,014 referenced meshes, so it accounted for every
+item that renders correctly.
 
 Disposition:
 
@@ -159,13 +160,14 @@ Disposition:
 |---|---|---|
 | Gondor named lords (`angbor_`, `forlong_`, `golasgil_`, `hirluin_`, `imrahil_`, `lossarnach_coat`) | 26 | deleted |
 | Moria orc `moriaorc_v{1..4}_*` | 15 | deleted |
-| Easterling armour + `rhun_tournament_sparring_shield` | 38 | deleted |
+| Easterling armour + `rhun_tournament_sparring_shield` | 39 | deleted |
 | Black Númenórean `ar_ardunian_elite_{helmet,shoses,hand}` | 3 | deleted |
 | `ar_ardunian_elite_armour` (25 Umbar characters) | 1 | re-meshed to `sm_md_num_inf_chest_elite_a` |
 | Easterling crafting pieces | 6 | re-meshed to `sm_rh_loke_*` / `wm_harad_spear_a01_handle` |
 | `lotr_troll_armor` / `_bracers` / `_helmet` | 3 | kept, gated (see below) |
+| Hand-authored `_slim` duplicates (9 Gondor, Theodred, 3 `m_northern_armor_*`) | 13 | deleted in a follow-up pass, see below |
 
-**`moriaorc_v*` is a new finding.** Those 17 dead meshes appear nowhere in the
+**`moriaorc_v*` is a new finding.** Those 15 dead meshes appear nowhere in the
 2026-08-28 record above, so the earlier sweep did not catch them.
 
 ### The trap in this wave: ORPHAN is not the same as unreferenced
@@ -180,6 +182,21 @@ ORPHAN verdict would have deleted a Rhûn career start's weapon.
 The rule: before deleting on an ORPHAN verdict, sweep for `<UsablePiece piece_id=>` and
 `<Piece id=>` as well. `tools/tests/test_apply_dead_mesh_item_swaps.py` now pins those six
 as re-mesh-only so the mistake cannot be made again by editing the mapping.
+
+### Follow-up: 13 hand-authored `_slim` items, and one fix that had to be reverted
+
+A round-2 review found that this page's own gender-variation finding was wrong. `_slim` is the
+slim-BUILD suffix the engine appends on its NON-female branch (`BasicCharacterTableau.cs:531-537`),
+not the female variant; the female suffixes are `_female`, `_converted` and `_converted_slim`. The
+`has_gender_variations` flip made on that misreading was reverted.
+
+The correct reading had a useful consequence: because the engine derives `<mesh>_slim` for free, a
+second item whose mesh is literally `<base>_slim` is redundant. Thirteen existed, all with zero
+consumers, and all were deleted. Registry 5,919 to 5,906.
+
+Before anyone tries to close the female-model gap in XML: 637 `_slim` meshes ship (135
+LOTR-authored) against ONE `_female` and five LOTR-authored `_converted`. The flag is close to
+inert here. The gap is missing art, not a wrong attribute.
 
 ### The troll, and why it is kept rather than cleaned
 

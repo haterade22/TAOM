@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.CampaignSystem;
+using TAOM.Features;
 using TAOM.Features.AiPartySize;
 
 namespace TAOM.Tests.Features.AiPartySize;
@@ -275,4 +276,53 @@ public class AiPartySizeGatingTests
     public void IsScalableAiLordParty_LeaderlessParty_IsNotScaled()
         => Assert.IsFalse(AiPartySizeService.IsScalableAiLordParty(
             isMainParty: false, isLordParty: true, hasLeaderHero: false, isPlayerClan: false));
+}
+
+/// <summary>
+/// Guards the shipped values of the two lord knobs. Every other test in this file passes the
+/// numbers in as literal arguments, so none of them notices what the mod actually ships, and until
+/// the constants landed each default was written twice (MCM initializer plus the service's `??`
+/// fallback) with nothing watching the two for drift. Same guard, same reasoning, as
+/// EnlistmentFeatureToggleTests.ResolveEnabled_DefaultMatchesTheCompiledSettingDefault.
+/// </summary>
+[TestClass]
+public class AiPartySizeShippedDefaultsTests
+{
+    private const float Tolerance = 0.01f;
+
+    [TestMethod]
+    public void McmFactorDefault_IsTheServiceFallback()
+        => Assert.AreEqual(AiPartySizeService.DefaultLordFactor,
+            new TaomSettings().AiLordPartySizeFactor, Tolerance);
+
+    [TestMethod]
+    public void McmFlatBonusDefault_IsTheServiceFallback()
+        => Assert.AreEqual(AiPartySizeService.DefaultLordFlatBonus,
+            new TaomSettings().AiLordPartySizeFlatBonus, Tolerance);
+
+    // Both knobs sit inside their own MCM slider range, so a default can never present as a value
+    // the player is not allowed to dial back to.
+    [TestMethod]
+    public void ShippedDefaults_SitInsideTheirSliderRanges()
+    {
+        Assert.IsTrue(AiPartySizeService.DefaultLordFactor is >= 1.0f and <= 20.0f,
+            "AI Lord Party Size Multiplier slider is [1.0, 20.0].");
+        Assert.IsTrue(AiPartySizeService.DefaultLordFlatBonus is >= 0.0f and <= 2000.0f,
+            "AI Lord Party Size Flat Bonus slider is [0, 2000].");
+    }
+
+    // Pins the shipped pair end to end rather than the two numbers separately, because the flat
+    // bonus is deliberately kept out of the factor frame and halving one knob alone lands at 60%,
+    // not 50%. 126 is the tier-4 lord base docs/features/ai-party-size.md works from: that row read
+    // 1560 until the 2026-09-01 halving.
+    [TestMethod]
+    public void ShippedDefaults_ProduceTheDocumentedTierFourLimit()
+    {
+        var limit = new ExplainedNumber(126f);
+
+        AiPartySizeService.ApplyPartySizeScaling(
+            ref limit, AiPartySizeService.DefaultLordFactor, AiPartySizeService.DefaultLordFlatBonus);
+
+        Assert.AreEqual(780f, limit.ResultNumber, Tolerance);
+    }
 }

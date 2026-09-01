@@ -37,12 +37,26 @@
 
 ## Two asset trees, and why a clean validator run can lie
 
-> **Corrected 2026-09-01: the Armory has no cooked tree any more.** As of v2.0.23 there is
-> no `LOTRLOME_Armory/AssetPackages/` directory at all: 0 cooked packs against 4,490 loose
-> `Assets/**/*.tpac`, which are what the game now loads. `SandBoxCore` and `SandBox` have
-> none either. Everything below still describes how the two trees relate wherever a cooked
-> tree exists (`Native`, `TAOM`, `TAOM_Map`), but for the Armory the stale-pack trap is
-> currently **unreachable**, and `Assets/` is the single source of truth.
+> **Corrected 2026-09-01, with engine evidence: the Armory has no cooked tree, and loose wins
+> anyway.** There is no `LOTRLOME_Armory/AssetPackages/` directory at all: 0 cooked packs against
+> 4,490 loose `Assets/**/*.tpac`. The engine's own log says which tree it took:
+>
+> ```
+> [10:26:27.435] Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...
+> [10:26:31.396] Loading packages $BASE/Modules/TAOM_Map/Assets...
+> [10:26:33.079] Loading packages $BASE/Modules/TAOM/Assets...
+> ```
+>
+> The second and third lines are the important ones. **TAOM and TAOM_Map ship BOTH trees**
+> (5 cooked vs 120 loose, and 6 vs 3,210), and the engine names `Assets` for each. So loose
+> `Assets/` does not merely fill in when packs are absent: it takes precedence over a cooked tree
+> that exists. That is stronger than what this page used to claim, and it is engine output rather
+> than inference.
+>
+> Consequences: for the Armory the stale-pack trap below is **unreachable**, and `Assets/` is the
+> single source of truth. `SandBoxCore` and `SandBox` ship no packs either. The two-tree section
+> still describes the authoring-vs-cooked distinction correctly; what it got wrong was which one
+> the running game reads.
 >
 > Two consequences, both now handled in the tools:
 > - `validate_mesh_refs.py` falls back to `Assets/**` for any module shipping no cooked

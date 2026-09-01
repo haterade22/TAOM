@@ -171,6 +171,19 @@ _ITEM_REF_RE = re.compile(r'="Item\.([A-Za-z0-9_.\-]+)"')
 # same element without an id is the definition wrapper inside an
 # <EquipmentRoster> and must not be counted.
 _ROSTER_REF_RE = re.compile(r'<EquipmentSet\b[^>]*?\bid="([^"]+)"')
+# A CRAFTING PIECE is referenced by neither of the shapes above. It lives in a
+# different id namespace from `Item.`, so `_ITEM_REF_RE` cannot see it, and it
+# is not a roster. Two shapes reach it:
+#   <UsablePiece piece_id="x"/>          in crafting_templates.xslt
+#   <CraftedItem><Pieces><Piece id="x"/> in LOTRAOM_weapons.xml
+# Without these, every crafting piece reads ORPHAN. On 2026-09-01 that verdict
+# covered all six `easterling_*` weapon pieces, which build `easterling_sword`
+# and `easterling_spear` - and `easterling_spear` is player CAREER STARTING
+# equipment, so acting on it would have deleted a Rhun start's weapon. It was
+# caught by hand, which is not a control.
+_PIECE_REF_RE = re.compile(
+    r'<UsablePiece\b[^>]*?\bpiece_id="([A-Za-z0-9_.\-]+)"'
+    r'|<Piece\b[^>]*?\bid="([A-Za-z0-9_.\-]+)"')
 _ID_RE = re.compile(r'\bid="([^"]+)"')
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 # <xsl:template match="NPCCharacter[@id='lord_1_1']"> - the owner of everything
@@ -270,6 +283,23 @@ def extract_item_refs_from_text(text: str, rel: str) -> list:
     return refs
 
 
+def extract_piece_refs_from_text(text: str, rel: str) -> list:
+    """Every crafting-piece reference in one document, with its owning entity.
+
+    Reported as ItemRefs so a piece joins the same blast-radius table as an
+    item: the question "does anything still use this" is the same question.
+    """
+    stripped = _strip_comments(text)
+    owners = _owner_id_by_line(text)
+    refs = []
+    for m in _PIECE_REF_RE.finditer(stripped):
+        piece_id = m.group(1) or m.group(2)
+        line = _lineno(stripped, m.start())
+        refs.append(ItemRef(item_id=piece_id, file=rel, line=line,
+                            shape="crafting_piece", owner=owners.get(line, "")))
+    return refs
+
+
 def extract_roster_refs_from_text(text: str, rel: str) -> list:
     stripped = _strip_comments(text)
     owners = _owner_id_by_line(text)
@@ -348,6 +378,7 @@ def sweep_consumers(root: Path) -> tuple:
             continue
         item_refs.extend(extract_item_refs_from_text(text, rel))
         item_refs.extend(extract_bare_refs(text, rel))
+        item_refs.extend(extract_piece_refs_from_text(text, rel))
         roster_refs.extend(extract_roster_refs_from_text(text, rel))
     return item_refs, roster_refs
 
@@ -790,6 +821,12 @@ def main() -> int:
         backfill_entry_ids(mesh_refs, texts)
 
     item_refs, roster_refs = sweep_consumers(consumers)
+    # Crafting-piece consumers live in the ARMORY, not the consumer root: the
+    # <UsablePiece> lists are in crafting_templates.xslt and the <Piece> lists
+    # are inside <CraftedItem> in LOTRAOM_weapons.xml. Sweeping only the
+    # consumer root leaves every crafting piece looking unreferenced.
+    armory_item_refs, _ = sweep_consumers(armory / "ModuleData")
+    item_refs.extend(r for r in armory_item_refs if r.shape == "crafting_piece")
     print(f"refs: {len(mesh_refs):,} mesh, {len(item_refs):,} item, "
           f"{len(roster_refs):,} roster")
 
