@@ -174,3 +174,48 @@ docs/reviews/raw/
 # batch render goes through tools/generate_voices.py instead. Keep the chosen voice
 # ID (in the manifest), discard the takes. See docs/features/kingdom-voices.md.
 .voice-scratch/
+
+# Secrets and credentials. Nothing of this shape has ever been committed here
+# (full history swept 2026-09-01 across every ref: the only hit was the tracked
+# tools/.env.example, which is a documented template with no values in it).
+# These rules exist so that a stray `git add -A` can never be the first time.
+#
+# .env is the one that is actually live: tools/.env.example lists the vars, and
+# the real tools/.env sits next to it holding machine-local paths. Root-level
+# patterns with no slash match at every depth, so one block covers tools/,
+# Main/, and anywhere else a script decides to drop one. The two negations keep
+# the committed template visible.
+.env
+.env.*
+*.env
+!.env.example
+!*.env.example
+
+# Private keys and certificate material. No file with any of these extensions
+# exists in the repo or its history, so the globs cost nothing today and cover
+# the day someone drops a signing key or a dev cert in the tree. Deliberately
+# NOT including *.asc / *.sig, because a detached release signature is meant
+# to be committed.
+*.pem
+*.key
+*.p12
+*.pfx
+*.ppk
+*.keystore
+*.jks
+*.crt
+*.cer
+*.der
+*.gpg
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# Tool + package-manager credential files.
+.npmrc
+.pypirc
+.netrc
+_netrc
+secrets.json
+credentials.json

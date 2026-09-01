@@ -4,6 +4,27 @@
 
 ## 2026-09-01
 
+### chore(repo): private keys and .env files were never ignored, only never committed
+
+Root `.gitignore` carried no rule for either. Nothing of that shape has ever been in the tree: a
+sweep of every ref for `*.pem`, `*.key`, `*.p12`, `id_rsa` and the rest returned exactly one hit,
+the tracked `tools/.env.example`, which is a documented template holding no values. The exposure
+was one `git add -A` away rather than already present, so this is prevention, not cleanup.
+
+The new block covers three groups. `.env` and its variants, with `!.env.example` and
+`!*.env.example` keeping the committed template visible. Private key and certificate material:
+`*.pem`, `*.key`, `*.p12`, `*.pfx`, `*.ppk`, `*.keystore`, `*.jks`, `*.crt`, `*.cer`, `*.der`,
+`*.gpg`, plus the four bare SSH names (`id_rsa`, `id_dsa`, `id_ecdsa`, `id_ed25519`). And the tool
+credential files `.npmrc`, `.pypirc`, `.netrc`, `_netrc`, `secrets.json`, `credentials.json`.
+
+Every pattern is slash-free, so it matches at any depth: `tools/.env` and `Main/Features/x/.env`
+are both caught by the single root rule and no per-directory `.gitignore` is needed. `*.asc` and
+`*.sig` are deliberately left out, because a detached release signature is meant to be committed.
+
+Verified two ways: `git check-ignore` over 22 representative paths (22 ignored, 5 control paths
+still visible, including `tools/.env.example`), and `git ls-files -z | git check-ignore -z --stdin`,
+which returned empty. No currently tracked file is shadowed by the new rules.
+
 ### balance(ai-party-size): the two AI lord knobs halved, and the MCM group that holds them made reachable
 
 `AI Lord Party Size Multiplier` goes 10.0 to 5.0 and `AI Lord Party Size Flat Bonus` 300 to 150. A
