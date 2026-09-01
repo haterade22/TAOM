@@ -252,6 +252,119 @@ class TierBTests(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------- #
+# Known-dead allowlist + the Assets/ fallback (2026-09-01)                     #
+# --------------------------------------------------------------------------- #
+class KnownDeadMeshTests(unittest.TestCase):
+    """The allowlist exists so an accepted decision stops failing the gate. It
+    must never turn into a blanket mute: exact names only, and it has to speak
+    up when its own reason expires."""
+
+    def _refs(self, mesh_name, item_id="it"):
+        xml = f'<Item id="{item_id}" mesh="{mesh_name}" />\n'
+        return vm.extract_refs_from_text(xml, "troll/body_armors.xml")
+
+    def _present(self, *names):
+        return vm.PresentSet(metameshes=set(names), tpac_paths=["fake.tpac"])
+
+    def test_allowlisted_dead_mesh_warns_instead_of_erroring(self):
+        refs = self._refs("lotr_troll_armor")
+        issues = vm.classify(refs, self._present("other"), rgl=None, scan_bodies=False)
+        codes = _codes(issues)
+        self.assertIn("KNOWN_DEAD_MESH", codes)
+        self.assertNotIn("MISSING_MESH", codes)
+        known = [i for i in issues if i.code == "KNOWN_DEAD_MESH"][0]
+        self.assertEqual(known.severity, vm.Severity.WARNING)
+        self.assertIn("cave_troll", known.message, "the reason must reach the report")
+
+    def test_every_allowlist_entry_states_a_reason_and_a_date(self):
+        self.assertTrue(vm.KNOWN_DEAD_MESHES, "allowlist should not be empty here")
+        for name, reason in vm.KNOWN_DEAD_MESHES.items():
+            self.assertRegex(reason, r"\d{4}-\d{2}-\d{2}",
+                             f"{name} needs a decision date")
+            self.assertGreater(len(reason), 40, f"{name} needs a real reason")
+
+    def test_allowlist_is_exact_names_not_prefixes(self):
+        # A NEW dead mesh in an allowlisted family must still be an error.
+        refs = self._refs("lotr_troll_greaves")
+        issues = vm.classify(refs, self._present("other"), rgl=None, scan_bodies=False)
+        codes = _codes(issues)
+        self.assertIn("MISSING_MESH", codes)
+        self.assertNotIn("KNOWN_DEAD_MESH", codes)
+
+    def test_allowlist_entry_flagged_stale_when_art_returns(self):
+        refs = self._refs("lotr_troll_armor")
+        present = self._present(*vm.KNOWN_DEAD_MESHES)   # all art back
+        issues = vm.classify(refs, present, rgl=None, scan_bodies=False,
+                             check_allowlist=True)
+        stale = [i for i in issues if i.code == "STALE_DEAD_MESH_ALLOWLIST"]
+        self.assertTrue(stale, "art returning must retire the entry")
+        self.assertIn("lotr_troll_armor", {i.entry_id for i in stale})
+
+    def test_allowlist_entry_flagged_stale_when_nothing_references_it(self):
+        refs = self._refs("something_else")
+        issues = vm.classify(refs, self._present("something_else"),
+                             rgl=None, scan_bodies=False, check_allowlist=True)
+        stale = {i.entry_id for i in issues if i.code == "STALE_DEAD_MESH_ALLOWLIST"}
+        self.assertEqual(stale, set(vm.KNOWN_DEAD_MESHES))
+
+    def test_unparsed_pack_still_wins_over_the_allowlist(self):
+        # Degraded evidence must not be dressed up as an accepted decision.
+        refs = self._refs("lotr_troll_armor")
+        present = vm.PresentSet(metameshes={"other"}, tpac_paths=["a.tpac"],
+                                unparsed=[("a.tpac", "bad seg_count")])
+        codes = _codes(vm.classify(refs, present, rgl=None, scan_bodies=False))
+        self.assertIn("UNVERIFIED_MESH", codes)
+        self.assertNotIn("KNOWN_DEAD_MESH", codes)
+
+
+class TpacModuleFallbackTests(unittest.TestCase):
+    """A module with no cooked packs must fall back to Assets/, not vanish from
+    the present-set. LOTRLOME_Armory has been in that state since v2.0.23, and
+    without the fallback every mesh it owns read as MISSING."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.game = Path(self.tmp.name)
+        self.addCleanup(self.tmp.cleanup)
+
+    def _module(self, name):
+        m = self.game / "Modules" / name
+        m.mkdir(parents=True, exist_ok=True)
+        return m
+
+    def test_cooked_packs_are_preferred_when_present(self):
+        m = self._module("Cooked")
+        (m / "AssetPackages").mkdir()
+        (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
+        (m / "Assets" / "sub").mkdir(parents=True)
+        (m / "Assets" / "sub" / "loose.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Cooked"])]
+        self.assertEqual(got, ["pack0.tpac"])
+
+    def test_falls_back_to_loose_assets_when_no_cooked_tree(self):
+        m = self._module("Loose")
+        (m / "Assets" / "sub").mkdir(parents=True)
+        (m / "Assets" / "sub" / "loose.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Loose"])]
+        self.assertEqual(got, ["loose.tpac"])
+
+    def test_empty_cooked_dir_still_falls_back(self):
+        m = self._module("EmptyCooked")
+        (m / "AssetPackages").mkdir()
+        (m / "Assets").mkdir()
+        (m / "Assets" / "loose.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["EmptyCooked"])]
+        self.assertEqual(got, ["loose.tpac"])
+
+    def test_module_with_no_tpac_at_all_contributes_nothing(self):
+        self._module("Bare")
+        self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Bare"]), [])
+
+    def test_missing_module_is_not_an_error(self):
+        self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Absent"]), [])
+
+
+# --------------------------------------------------------------------------- #
 # Tier C: collision-body raw-byte scan                                         #
 # --------------------------------------------------------------------------- #
 class TierCBodyScanTests(unittest.TestCase):

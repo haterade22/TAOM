@@ -729,11 +729,19 @@ def main() -> int:
 
     armory = ensure_exists(args.armory, "the LOTRLOME_Armory module")
     consumers = ensure_exists(args.consumers, "the consumer ModuleData root")
-    packs_dir = ensure_exists(armory / "AssetPackages", "the Armory AssetPackages")
     assets_dir = ensure_exists(armory / "Assets", "the Armory Assets tree")
 
-    pack_paths = sorted(packs_dir.glob("*.tpac"))
+    # The cooked tree is optional. A module with no AssetPackages/ is loaded
+    # from its loose Assets/ tree, which is LOTRLOME_Armory's state as of
+    # v2.0.23. Exiting 2 here (the old behaviour) made this tool unrunnable in
+    # exactly the situation it is most needed, so degrade instead: without a
+    # cooked side there is no packs-vs-assets diff to take, and the question
+    # "what art has been deleted" has to be answered from the reference side.
+    packs_dir = armory / "AssetPackages"
+    pack_paths = sorted(packs_dir.glob("*.tpac")) if packs_dir.exists() else []
     asset_paths = sorted(assets_dir.rglob("*.tpac"))
+
+    mesh_refs = vm.extract_refs(armory / "ModuleData")
     print(f"Scanning {len(pack_paths)} cooked pack(s) and "
           f"{len(asset_paths)} authoring asset(s)...")
     packs = vm.build_present_set(pack_paths)
@@ -743,12 +751,32 @@ def main() -> int:
               f"soft-failed to parse; a mesh inside one reads as absent.",
               file=sys.stderr)
 
-    delta = diff_mesh_sets(packs.metameshes, assets.metameshes)
     surviving = _normalise(assets.metameshes)
-    print(f"packs={len(packs.metameshes):,}  assets={len(assets.metameshes):,}  "
-          f"gone={len(delta.gone):,}  uncooked={len(delta.added):,}")
+    if pack_paths:
+        delta = diff_mesh_sets(packs.metameshes, assets.metameshes)
+        print(f"packs={len(packs.metameshes):,}  assets={len(assets.metameshes):,}  "
+              f"gone={len(delta.gone):,}  uncooked={len(delta.added):,}")
+    else:
+        # No cooked tree: treat Assets/ as authoritative. "Gone" becomes every
+        # mesh an item still names that resolves nowhere, unioning in the other
+        # modules' packs so shared Native meshes are not miscounted as deleted.
+        # This is a strictly narrower question than the diff: it cannot see art
+        # deleted while nothing referenced it. That is the correct trade here,
+        # because an unreferenced deletion has no blast radius to report.
+        others = vm.build_present_set(vm.tpac_paths_for_modules(
+            armory.parent.parent,   # <game>/Modules/<armory> -> <game>
+            [m for m in vm.DEFAULT_TPAC_MODULES if m != armory.name]))
+        present = _normalise(assets.metameshes | others.metameshes)
+        referenced = {_normalise({r.name}).pop()
+                      for r in mesh_refs if r.kind == "visual_mesh"}
+        delta = MeshDelta(gone=referenced - present, added=set())
+        print(f"WARNING: {armory.name} ships no cooked AssetPackages tree; "
+              f"treating Assets/ as authoritative. 'Gone' is derived from "
+              f"references, not from a pack diff.", file=sys.stderr)
+        print(f"assets={len(assets.metameshes):,}  "
+              f"other-module packs={len(others.metameshes):,}  "
+              f"referenced={len(referenced):,}  gone={len(delta.gone):,}")
 
-    mesh_refs = vm.extract_refs(armory / "ModuleData")
     unattributed = {r.file for r in mesh_refs if not r.item_id}
     if unattributed:
         module_data = armory / "ModuleData"

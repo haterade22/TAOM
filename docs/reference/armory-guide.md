@@ -37,6 +37,21 @@
 
 ## Two asset trees, and why a clean validator run can lie
 
+> **Corrected 2026-09-01: the Armory has no cooked tree any more.** As of v2.0.23 there is
+> no `LOTRLOME_Armory/AssetPackages/` directory at all: 0 cooked packs against 4,490 loose
+> `Assets/**/*.tpac`, which are what the game now loads. `SandBoxCore` and `SandBox` have
+> none either. Everything below still describes how the two trees relate wherever a cooked
+> tree exists (`Native`, `TAOM`, `TAOM_Map`), but for the Armory the stale-pack trap is
+> currently **unreachable**, and `Assets/` is the single source of truth.
+>
+> Two consequences, both now handled in the tools:
+> - `validate_mesh_refs.py` falls back to `Assets/**` for any module shipping no cooked
+>   packs, and warns when it does. Before that fix its default module list resolved to
+>   Native alone, which reported thousands of false `MISSING_MESH`.
+> - `audit_deleted_mesh_impact.py` no longer exits 2 on the absent `AssetPackages`. With no
+>   cooked side to diff against it derives "gone" from the reference side instead, which is
+>   a narrower question: it cannot see art deleted while nothing referenced it.
+
 The Armory carries the same art twice, and they can disagree:
 
 | Tree | What it is | Read by |

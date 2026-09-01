@@ -34,9 +34,29 @@ FOUR GROUPS, THREE DIFFERENT MECHANISMS
    item is 15, so a reference swap would near-triple starting leg armour.
    Re-pointing the mesh keeps the tuning and fixes the invisible-boot.
 
-WHAT THIS DOES NOT COVER, deliberately: `ar_ardunian_elite_armour` (Umbar) and
-`lotr_troll_armor` / `_bracers` / `_helmet` (Mordor) are also dead-and-equipped
-but were not part of the decision. They are reported at the end, not touched.
+SECOND WAVE, 2026-09-01: the 2026-08-28 pass swapped consumers off the dead
+Gondor and Easterling items but never removed the definitions, so 83 of them sat
+in the Armoury still naming meshes that resolve nowhere. They are what a player
+sees as a blank icon in the item list. Two mechanisms:
+
+5. 83 orphan definitions deleted. Verified consumer-free twice over: the impact
+   audit's five reference shapes, and an independent bare-id grep across all
+   three ModuleData trees plus the XSLT.
+
+6. 7 re-meshed, not deleted, because they DO still have consumers:
+   `ar_ardunian_elite_armour` (25 Umbar characters) and the six Easterling
+   crafting pieces. The pieces are the trap in this wave. The impact audit calls
+   them ORPHAN because it matches `Item.<id>` refs and rosters, and a crafting
+   piece is referenced by neither shape: it is named by `<UsablePiece>` in
+   crafting_templates.xslt and by `<Piece>` inside the CraftedItems
+   easterling_sword and easterling_spear. easterling_spear is player CAREER
+   STARTING equipment, so deleting those six would have stripped a Rhun start's
+   weapon on the strength of a clean-looking ORPHAN verdict.
+
+WHAT THIS DOES NOT COVER, deliberately: `lotr_troll_armor` / `_bracers` /
+`_helmet` (Mordor) are dead-and-equipped with no replacement chosen. No troll
+armour art survives in either tree, and armour meshes are skinned to the human
+skeleton, so no human donor can fit a cave_troll rig. Reported, never touched.
 
 Preview by default. Pass the write flag to commit the edits. Every file outside
 this repo is backed up first, to a NON-.xml extension: the engine globs `*.xml`
@@ -142,6 +162,30 @@ MESH_REPOINTS = {
     "starter_cavalry_khuzait_leg_a":  "sk_rh_loke_boots_a",
     "starter_infantry_khuzait_leg_a": "sk_rh_loke_boots_a",
     "starter_ranged_khuzait_leg_a":   "sk_rh_loke_boots_a",
+
+    # --- 2026-09-01 wave -------------------------------------------------- #
+    # Umbar equips this on 25 characters across 3 files, so it is re-pointed
+    # rather than deleted. Black Numenorean infantry elite chest is the same
+    # set at the same tier and ships a _slim variant.
+    "ar_ardunian_elite_armour": "sm_md_num_inf_chest_elite_a",
+
+    # The six Easterling crafting pieces. NOT deletable: crafting_templates.xslt
+    # lists them as <UsablePiece>, and the CraftedItems easterling_sword and
+    # easterling_spear are built from them. easterling_spear is player CAREER
+    # STARTING equipment, so deleting these would strip a Rhun start's weapon.
+    # audit_deleted_mesh_impact.py calls all six ORPHAN because it matches
+    # `Item.<id>` refs and rosters, and a crafting piece is referenced by
+    # neither shape. Loke-Rim is the same family the 2026-08-28 pass moved
+    # Easterling armour onto.
+    "easterling_sword_blade":  "sm_rh_loke_sword_blade_a",
+    "easterling_sword_guard":  "sm_rh_loke_sword_guard_a",
+    "easterling_sword_handle": "sm_rh_loke_sword_handle_a",
+    "easterling_sword_pommel": "sm_rh_loke_sword_pommel_a",
+    "easterling_spear_blade":  "sm_rh_loke_spear_blade_a",
+    # No Rhun spear handle survives. This is not a taste call: both surviving
+    # Rhun spears (sm_rh_loke_spear_a, sm_rh_drag_spear_a) already pair their
+    # blade with exactly this handle.
+    "easterling_spear_handle": "wm_harad_spear_a01_handle",
 }
 
 # Every Erebor _blue / _green / _red item. All 57 have a dead mesh.
@@ -165,11 +209,50 @@ DELETE_ITEMS = {
     "sk_dwarf_erebor_helmet_plate_lord_d2_blue", "sk_dwarf_erebor_helmet_plate_lord_d2_green", "sk_dwarf_erebor_helmet_plate_lord_d2_red",
     "sk_dwarf_erebor_pauldron_plate_cape_elite_a_blue", "sk_dwarf_erebor_pauldron_plate_cape_elite_a_green", "sk_dwarf_erebor_pauldron_plate_cape_elite_a_red",
     "sk_dwarf_erebor_pauldron_plate_cape_elite_b_blue", "sk_dwarf_erebor_pauldron_plate_cape_elite_b_green", "sk_dwarf_erebor_pauldron_plate_cape_elite_b_red",
+
+    # --- 2026-09-01 wave: 83 definitions whose art is gone from BOTH trees -- #
+    # Every one verified to have zero consumers by two independent sweeps: the
+    # audit's five reference shapes, and a bare-id grep across all three
+    # ModuleData trees plus the XSLT. The 2026-08-28 pass swapped consumers off
+    # the Gondor and Easterling items but never removed the definitions, which
+    # is why they are orphans today rather than equipped.
+    # Gondor named lords: art deleted, consumers already swapped to regional kit on 2026-08-28
+    "angbor_body", "angbor_boots", "angbor_gloves", "angbor_helmet", "angbor_shoulder",
+    "forlong_body", "forlong_boots", "forlong_gloves", "forlong_helmet", "forlong_shoulder",
+    "golasgil_body", "golasgil_boots", "golasgil_gloves", "golasgil_helment",
+    "golasgil_shoulder", "hirluin_body", "hirluin_boots", "hirluin_gloves", "hirluin_helmet",
+    "hirluin_shoulder", "imrahil_body", "imrahil_boot", "imrahil_gloves", "imrahil_helmet",
+    "imrahil_shoulder", "lossarnach_coat",
+
+    # Moria orc: 17 dead meshes recorded in no prior cleanup
+    "moriaorc_v1_boots", "moriaorc_v1_bracers", "moriaorc_v1_helmet", "moriaorc_v1_shoulder",
+    "moriaorc_v1_torso", "moriaorc_v2_boots", "moriaorc_v2_bracers", "moriaorc_v2_helmet",
+    "moriaorc_v2_torso", "moriaorc_v3_boots", "moriaorc_v3_bracers", "moriaorc_v3_helmet",
+    "moriaorc_v3_torso", "moriaorc_v4_bracers", "moriaorc_v4_torso",
+
+    # Black Numenorean: only the body is equipped (re-pointed above); these three are not
+    "ar_ardunian_elite_hand", "ar_ardunian_elite_helmet", "ar_ardunian_elite_shoses",
+
+    # Easterling armour: the whole easterlings/ folder is gone, both trees
+    "easterling02_v1_boots", "easterling02_v1_cape", "easterling02_v1_gloves",
+    "easterling02_v1_helmet", "easterling02_v1_helmet_v2", "easterling02_v1_torso",
+    "easterling_boots", "easterling_cape", "easterling_glove", "easterling_head",
+    "easterling_helmet_v1", "easterling_helmet_v10", "easterling_helmet_v11",
+    "easterling_helmet_v12", "easterling_helmet_v2", "easterling_helmet_v3",
+    "easterling_helmet_v4", "easterling_helmet_v5", "easterling_helmet_v6",
+    "easterling_helmet_v7", "easterling_helmet_v8", "easterling_helmet_v9", "easterling_shield",
+    "easterling_torso", "easterlingwarriors01_boots", "easterlingwarriors01_cape",
+    "easterlingwarriors01_gloves", "easterlingwarriors01_helmet", "easterlingwarriors01_torso",
+    "easterlingwarriors02_cape", "easterlingwarriors02_helmet", "easterlingwarriors02_torso",
+    "easterlingwarriors03_cape", "easterlingwarriors03_helmet", "easterlingwarriors03_torso",
+    "easterlingwarriors04_cape", "easterlingwarriors04_helmet", "easterlingwarriors04_torso",
+
+    # Rhun shield sharing the dead easterling_shield mesh
+    "rhun_tournament_sparring_shield",
 }
 
 # Dead-and-equipped, but outside this decision. Reported, never touched.
 NOT_COVERED = {
-    "ar_ardunian_elite_armour": "Umbar. No replacement chosen.",
     "lotr_troll_armor": "Mordor troll. No replacement chosen.",
     "lotr_troll_bracers": "Mordor troll. No replacement chosen.",
     "lotr_troll_helmet": "Mordor troll. No replacement chosen.",
@@ -249,13 +332,22 @@ def swap_item_refs(text: str, mapping: dict) -> tuple:
 
 
 def repoint_mesh(text: str, mapping: dict) -> tuple:
-    """Point a named item's `mesh=` at a different mesh, leaving all else alone."""
+    """Point a named entry's `mesh=` at a different mesh, leaving all else alone.
+
+    Covers `<CraftingPiece>` as well as `<Item>`: a piece's dead mesh makes every
+    CraftedItem built from it invisible, and `easterling_spear` is player career
+    starting equipment, so pieces are re-pointed rather than deleted.
+
+    Only the opening tag is rewritten, which is what keeps `<BladeData
+    holster_mesh="">` out of scope. The `\\b` in the mesh pattern does the same
+    job for `holster_mesh=` (no word boundary after an underscore).
+    """
     if not mapping:
         return text, 0
     masked, spans = _protect_comments(text)
     count = 0
     for item_id, new_mesh in mapping.items():
-        for m in list(re.finditer(r"<Item\b[^>]*?>", masked, re.S)):
+        for m in list(re.finditer(r"<(?:Item|CraftingPiece)\b[^>]*?>", masked, re.S)):
             block = m.group(0)
             found = re.search(r'\bid="([^"]+)"', block)
             if not found or found.group(1) != item_id:
@@ -321,24 +413,43 @@ def armory_item_ids(armory: Path) -> set:
             text = _COMMENT_RE.sub("", f.read_text(encoding="utf-8", errors="ignore"))
         except OSError:
             continue
-        ids.update(re.findall(r'<(?:Item|CraftedItem)\b[^>]*?\bid="([^"]+)"', text, re.S))
+        ids.update(re.findall(
+            r'<(?:Item|CraftedItem|CraftingPiece)\b[^>]*?\bid="([^"]+)"', text, re.S))
     return ids
 
 
-def preflight(armory: Path) -> list:
-    """Every replacement must be a real, currently-defined item. Fail closed:
-    swapping onto a non-existent id trades an invisible item for a naked troop."""
+def preflight(armory: Path) -> tuple:
+    """Check the mapping against what the Armory actually defines.
+
+    Returns (problems, applied). Only `problems` blocks.
+
+    A missing REPLACEMENT is fatal and always has been: swapping onto a
+    non-existent id trades an invisible item for a naked troop.
+
+    A missing SOURCE is not. It is the expected state after a successful run,
+    because a swapped-away item is usually deleted in the same pass. Treating it
+    as fatal made the tool fail on its own success: the 2026-08-28 run deleted
+    the 57 Erebor colour variants, 5 of which are ITEM_SWAPS sources, so every
+    later run aborted at pre-flight with nothing to fix. The rule this violated
+    is `.claude/rules/moduledata-validation.md`, which requires idempotency on
+    re-run. Report it as already-applied instead, and keep it fatal only when
+    the id was never a deletion target (which would mean a typo in the mapping).
+    """
     defined = armory_item_ids(armory)
-    problems = []
+    problems, applied = [], []
     for old, new in sorted(ITEM_SWAPS.items()):
         if new not in defined:
             problems.append(f"replacement not defined in the Armory: {old} -> {new}")
         if old not in defined:
-            problems.append(f"source item not defined (already handled?): {old}")
-    for item_id in sorted(MESH_REPOINTS):
+            if old in DELETE_ITEMS:
+                applied.append(f"swap already applied and definition removed: {old}")
+            else:
+                problems.append(f"swap source not defined and not a delete "
+                                f"target (typo in the mapping?): {old}")
+    for item_id, new_mesh in sorted(MESH_REPOINTS.items()):
         if item_id not in defined:
             problems.append(f"re-mesh target not defined: {item_id}")
-    return problems
+    return problems, applied
 
 
 # --------------------------------------------------------------------------- #
@@ -399,13 +510,15 @@ def main() -> int:
     armory = ensure_exists(args.armory, "the LOTRLOME_Armory module")
     consumers = ensure_exists(args.consumers, "the consumer ModuleData root")
 
-    problems = preflight(armory)
+    problems, applied = preflight(armory)
     if problems:
         print("PRE-FLIGHT FAILED:", file=sys.stderr)
         for p in problems:
             print(f"  {p}", file=sys.stderr)
         return 2
     print(f"Pre-flight OK: {len(ITEM_SWAPS)} replacements all defined in the Armory.")
+    if applied:
+        print(f"  ({len(applied)} swap(s) already applied in an earlier run)")
 
     tag = "deadmesh-" + datetime.now().strftime("%Y%m%d%H%M%S")
     mode = "WRITING" if args.write else "PREVIEW (pass --write to commit)"

@@ -33,6 +33,10 @@ THREE-TIER EXISTENCE CHECK
 
 ISSUE CODES
   MISSING_MESH            (ERROR,   Tier B)  visual mesh not in any .tpac TOC
+  KNOWN_DEAD_MESH         (WARNING, Tier B)  missing, but accepted by an explicit
+                                              KNOWN_DEAD_MESHES entry with a reason
+  STALE_DEAD_MESH_ALLOWLIST (WARNING)        a KNOWN_DEAD_MESHES entry stopped being
+                                              true (art returned, or no longer used)
   MISSING_BODY            (ERROR,   Tier C)  collision body not in any .tpac TOC
   RUNTIME_MISSING_BODY    (ERROR,   Tier A)  engine logged get_object failed for body
   RUNTIME_MISSING_MATERIAL(WARNING, Tier A)  engine logged missing material for mesh
@@ -88,6 +92,27 @@ DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
 # is the UNION across these modules' AssetPackages.
 DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "Native", "SandBoxCore"]
 DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
+
+# Meshes accepted as dead on purpose: the art is gone, no surviving asset can
+# stand in, and the item is kept anyway for a stated reason. Reported as
+# KNOWN_DEAD_MESH (WARNING) instead of MISSING_MESH (ERROR) so the gate can run
+# in CI without either failing on a decision already taken or going quiet about
+# it. Every entry needs a reason and a decision date.
+#
+# This is an ALLOWLIST OF EXACT NAMES, never a prefix. A new dead mesh in the
+# same family still errors, which is the point: `lotr_troll_greaves` appearing
+# tomorrow must not inherit this pass.
+KNOWN_DEAD_MESHES = {
+    "lotr_troll_armor":
+        "2026-09-01: art deleted from Assets/Mordor/troll and AssetSources, both "
+        "empty. No donor exists: armour meshes are skinned to the human rig and "
+        "cave_troll uses its own skeleton. Item kept because deleting it and its "
+        "18 refs would take the troll from 95 to 0 armour in every slot.",
+    "lotr_troll_bracers":
+        "2026-09-01: same deletion, same reasoning as lotr_troll_armor.",
+    "lotr_troll_helmet":
+        "2026-09-01: same deletion, same reasoning as lotr_troll_armor.",
+}
 
 
 # --------------------------------------------------------------------------- #
@@ -395,13 +420,43 @@ class PresentSet:
 
 
 def tpac_paths_for_modules(game_dir: Path, modules: list) -> list:
-    """All *.tpac under <game>/Modules/<m>/AssetPackages for each module m."""
+    """All *.tpac for each module m, preferring the cooked packs.
+
+    A module normally ships cooked `AssetPackages/*.tpac` and the running game
+    loads those. Some modules ship no cooked tree at all and are loaded from the
+    loose authoring tree instead: `LOTRLOME_Armory` is in that state as of
+    v2.0.23 (0 cooked packs, 4,490 loose ones), and so are `SandBoxCore` and
+    `SandBox`.
+
+    Without a fallback, a named module that contributes zero packs silently
+    drops out of the present-set and every mesh it owns reads as MISSING. With
+    the default module list that is two modules of three, which turns a real run
+    into thousands of false positives. That failure mode is indistinguishable
+    from catastrophe, so it gets ignored, which is worse than an error.
+
+    So: fall back to `Assets/**/*.tpac`, and say so loudly. Preferring the
+    cooked tree keeps the documented "art deleted from Assets/ keeps shipping
+    from a stale pack" trap observable wherever a cooked tree still exists.
+    """
     game_dir = Path(game_dir)
     out = []
     for m in modules:
-        ap = game_dir / "Modules" / m / "AssetPackages"
-        if ap.exists():
-            out.extend(sorted(ap.glob("*.tpac")))
+        mod = game_dir / "Modules" / m
+        cooked = sorted((mod / "AssetPackages").glob("*.tpac"))
+        if cooked:
+            out.extend(cooked)
+            continue
+        loose = sorted((mod / "Assets").rglob("*.tpac"))
+        if loose:
+            print(f"WARNING: module {m!r} ships no cooked AssetPackages/*.tpac. "
+                  f"Falling back to {len(loose):,} loose Assets/**/*.tpac. The "
+                  f"stale-pack trap cannot be observed for this module.",
+                  file=sys.stderr)
+            out.extend(loose)
+        elif mod.exists():
+            print(f"WARNING: module {m!r} contributes no .tpac at all (neither "
+                  f"AssetPackages/ nor Assets/), so every mesh it owns reads "
+                  f"as MISSING.", file=sys.stderr)
     return out
 
 
@@ -635,7 +690,8 @@ def classify(refs: list,
              present: PresentSet | None,
              rgl: RglFindings | None,
              scan_bodies: bool,
-             body_tpac_paths: list | None = None) -> list:
+             body_tpac_paths: list | None = None,
+             check_allowlist: bool = False) -> list:
     """Turn extracted refs + tier evidence into Issues.
 
     refs              -- from extract_refs()
@@ -644,6 +700,11 @@ def classify(refs: list,
     scan_bodies       -- run Tier C raw-byte body scan
     body_tpac_paths   -- .tpac files to byte-scan for Tier C (defaults to
                          present.tpac_paths)
+    check_allowlist   -- audit KNOWN_DEAD_MESHES for stale entries. Only valid
+                         on a FULL scan: "no item references it any more" is
+                         true of any subset of refs, so leaving this on by
+                         default made every caller passing a handful of refs
+                         emit three bogus STALE warnings. main() turns it on.
     """
     issues = []
     referenced_visual = {_base_mesh_name(r.name) for r in refs if r.kind == "visual_mesh"}
@@ -665,6 +726,12 @@ def classify(refs: list,
                     f'.tpac TOCs, but {len(present.unparsed)} pack(s) failed to parse '
                     f'— cannot confirm MISSING (verify via rgl_log)',
                 ))
+            elif base in KNOWN_DEAD_MESHES:
+                issues.append(Issue(
+                    Severity.WARNING, "KNOWN_DEAD_MESH", r.file, r.line, r.item_id,
+                    f'visual mesh "{r.name}" (attr {r.attr}) is dead by accepted '
+                    f'decision, not by accident: {KNOWN_DEAD_MESHES[base]}',
+                ))
             else:
                 issues.append(Issue(
                     Severity.ERROR, "MISSING_MESH", r.file, r.line, r.item_id,
@@ -677,6 +744,23 @@ def classify(refs: list,
                 f'.tpac could not be fully parsed ({err}); visual meshes it may '
                 f'contain are reported as UNVERIFIED_MESH, not MISSING',
             ))
+        # An allowlist that outlives its reason is worse than no allowlist: it
+        # silently downgrades a real regression. Say so when an entry stops
+        # being true, in either direction.
+        if check_allowlist and present.fully_parsed:
+            for name in sorted(KNOWN_DEAD_MESHES):
+                if name in present.metameshes:
+                    issues.append(Issue(
+                        Severity.WARNING, "STALE_DEAD_MESH_ALLOWLIST", "", 0, name,
+                        f'"{name}" is in KNOWN_DEAD_MESHES but the art is present '
+                        f'again — drop the entry so a future loss errors properly',
+                    ))
+                elif name not in referenced_visual:
+                    issues.append(Issue(
+                        Severity.WARNING, "STALE_DEAD_MESH_ALLOWLIST", "", 0, name,
+                        f'"{name}" is in KNOWN_DEAD_MESHES but no item references '
+                        f'it any more — drop the entry',
+                    ))
 
     # ---- Tier C: collision bodies vs present PhysicsShape TOC -------------- #
     if scan_bodies:
@@ -1070,7 +1154,9 @@ def main() -> int:
               "Tier C skipped", file=sys.stderr)
         scan_bodies = False
 
-    issues = classify(refs, present, rgl, scan_bodies, body_tpac_paths=tpac_paths or None)
+    # Full run over the whole scan root, so the allowlist audit is meaningful.
+    issues = classify(refs, present, rgl, scan_bodies,
+                      body_tpac_paths=tpac_paths or None, check_allowlist=True)
 
     # -- reverse audit (opt-in; needs the Tier B present-set) -- #
     reverse = None

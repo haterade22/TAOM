@@ -252,8 +252,12 @@ class TestMappingIntegrity(unittest.TestCase):
             self.assertEqual(new, old.rsplit("_", 1)[0])
 
     def test_all_57_erebor_colour_items_are_marked_for_removal(self):
-        self.assertEqual(len(sw.DELETE_ITEMS), 57)
-        for i in sw.DELETE_ITEMS:
+        # Scoped to the Erebor family rather than the whole set: the 2026-09-01
+        # wave added 83 more deletions, and pinning len(DELETE_ITEMS) would make
+        # this test fail on every later wave without saying anything true.
+        erebor = {i for i in sw.DELETE_ITEMS if i.startswith("sk_dwarf_erebor")}
+        self.assertEqual(len(erebor), 57)
+        for i in erebor:
             self.assertTrue(i.endswith(("_blue", "_green", "_red")))
 
     def test_the_five_equipped_erebor_items_are_also_removed(self):
@@ -264,8 +268,44 @@ class TestMappingIntegrity(unittest.TestCase):
     def test_starter_items_are_re_meshed_not_swapped(self):
         # Their armour is tuned to 5/7/9 for the career start; the lowest
         # surviving Loke leg item is 15, so swapping would triple it.
-        for i in sw.MESH_REPOINTS:
-            self.assertTrue(i.startswith("starter_"))
+        starters = {i for i in sw.MESH_REPOINTS if i.startswith("starter_")}
+        self.assertEqual(len(starters), 3)
+        for i in starters:
+            self.assertNotIn(i, sw.ITEM_SWAPS)
+
+    def test_no_id_is_both_deleted_and_re_meshed(self):
+        """The two mechanisms contradict each other, and the deletion would win
+        silently: remove_item_defs runs after repoint_mesh, so a contradictory
+        entry looks applied and then vanishes."""
+        self.assertEqual(set(sw.MESH_REPOINTS) & set(sw.DELETE_ITEMS), set())
+
+    def test_easterling_crafting_pieces_are_re_meshed_never_deleted(self):
+        """The trap of the 2026-09-01 wave.
+
+        audit_deleted_mesh_impact.py reports all six as ORPHAN because it matches
+        `Item.<id>` refs and rosters, and a crafting piece is named by neither: it
+        is referenced by <UsablePiece> in crafting_templates.xslt and by <Piece>
+        inside the CraftedItems easterling_sword and easterling_spear.
+        easterling_spear is player career starting equipment, so acting on that
+        ORPHAN verdict would have stripped a Rhun start's weapon.
+        """
+        pieces = {
+            "easterling_sword_blade", "easterling_sword_guard",
+            "easterling_sword_handle", "easterling_sword_pommel",
+            "easterling_spear_blade", "easterling_spear_handle",
+        }
+        for p in pieces:
+            self.assertIn(p, sw.MESH_REPOINTS, f"{p} must be re-meshed")
+            self.assertNotIn(p, sw.DELETE_ITEMS, f"{p} must never be deleted")
+
+    def test_troll_armour_is_left_alone_by_this_tool(self):
+        """No donor exists, and deleting it would take the cave_troll from 95 to
+        0 armour in every slot. It is gated in validate_mesh_refs.KNOWN_DEAD_MESHES
+        instead, so it must appear in neither mechanism here."""
+        for i in ("lotr_troll_armor", "lotr_troll_bracers", "lotr_troll_helmet"):
+            self.assertIn(i, sw.NOT_COVERED)
+            self.assertNotIn(i, sw.DELETE_ITEMS)
+            self.assertNotIn(i, sw.MESH_REPOINTS)
             self.assertNotIn(i, sw.ITEM_SWAPS)
 
 

@@ -72,6 +72,10 @@ REVIEWS_RAW_DIR = DOCS_DIR / "reviews" / "raw"
 # Architecture Decision Records: point-in-time by definition — an ADR names the versions that were
 # current when the decision was taken, and rewriting them falsifies the record.
 ADRS_DIR = DOCS_DIR / "adrs"
+# Staging for pages written to be published on someone else's documentation site. Their links are
+# absolute in THAT site's URL space (/guides/foo/, /3d/bar/), not repo-relative paths, so resolving
+# them against this repo is meaningless and reports every one as dead.
+COMMUNITY_DIR = DOCS_DIR / "community"
 MAIN_FEATURES_DIR = REPO_ROOT / "Main" / "Features"
 
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
@@ -117,6 +121,7 @@ DEAD_LINK_EXEMPT_PREFIXES = (
     str(ARCHIVE_DIR).replace("\\", "/"),
     str(CHANGELOG_ARCHIVE_DIR).replace("\\", "/"),
     str(REVIEWS_RAW_DIR).replace("\\", "/"),
+    str(COMMUNITY_DIR).replace("\\", "/"),
 )
 # Some review files document past API surface and intentionally cite 1.3.15.
 # codex-prompt-* / codex-result-* are Codex review transcripts — by design they instruct/record

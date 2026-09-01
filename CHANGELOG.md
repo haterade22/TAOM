@@ -4,6 +4,50 @@
 
 ## 2026-09-01
 
+### fix(armoury): 83 items pointed at art that no longer exists on disk
+
+Roughly 70 items showed a blank icon in the item list: the whole Rhûn Easterling range, the Mordor
+orc set, the Black Númenórean pieces, and the Gondor named lords (Imrahil, Forlong, Hirluin,
+Golasgil). The mesh ids in the XML were never wrong. The art they name was deleted from disk, from
+both `Assets/` and `AssetSources/`, leaving empty folder shells behind. There is no local recovery
+path: the source FBX is gone too.
+
+Measured before touching anything: **93 bad refs, 92 unique dead meshes across 88 items, 0 missing
+collision bodies.** The 2026-08-28 cleanup had swapped consumers off most of these but never removed
+the definitions, which is why they were orphans rather than equipped. 17 of them, the whole
+`moriaorc_v*` family, appear in no prior cleanup record.
+
+83 definitions deleted, 7 re-pointed at surviving meshes, 3 kept and gated. Suite green at 7,770 C#
+and 765 Python; `validate_moduledata.py` PASS; item registry 6,002 to 5,919, which is exactly 83.
+
+Three things worth keeping:
+
+**ORPHAN is not the same as unreferenced.** The impact audit called all six Easterling crafting
+pieces orphans. They are not: `crafting_templates.xslt` names them as `<UsablePiece>` and the
+CraftedItems `easterling_sword` and `easterling_spear` name them as `<Piece>`, neither of which is a
+shape that audit matches. `easterling_spear` is player career starting equipment, so deleting on that
+verdict would have stripped a Rhûn start's weapon. They are re-meshed instead, and a test now pins
+them as re-mesh-only.
+
+**The troll is kept on purpose.** No troll armour art survives and armour meshes are skinned to the
+human rig, so nothing can stand in for a `cave_troll` skeleton. Deleting the three items and their 18
+references would take a level-51 unit that fields up to 118 at a time from 95 armour to 0 in every
+slot. They are recorded in a new exact-name `KNOWN_DEAD_MESHES` allowlist that reports them as
+`KNOWN_DEAD_MESH` with a reason and a date, and that audits itself: a new `STALE_DEAD_MESH_ALLOWLIST`
+warning fires if the art returns or if nothing references the entry any more.
+
+**The Armory has no cooked asset tree any more,** which inverts what two docs and both audit tools
+assumed. There are 0 `AssetPackages/*.tpac` against 4,490 loose `Assets/**/*.tpac`. At its defaults
+`validate_mesh_refs.py` was resolving to Native alone and would have reported thousands of false
+positives; `audit_deleted_mesh_impact.py` exited 2 outright. Both now degrade and say so.
+
+Not-tested: in-game appearance. Item XML loads only at process launch, so this needs a full restart.
+Research: LOTRLOME_Armory Assets/AssetSources tpac TOCs, crafting_templates.xslt, LOTRAOM_weapons.xml
+Save-compat: PARTLY VERIFIED, needs a load test. No roster references the 83, so no troop loses
+  gear. But 82 of the 83 were `is_merchandise="true"` and reachable in the item list, so an existing
+  save can hold one in a player, companion or merchant inventory. What the engine does with an
+  unresolvable item id on load was NOT tested. Load an existing save before shipping this.
+
 ### fix(enlistment): the service kit had no weapons in it, for anyone, ever (#525)
 
 Players reported that enlisting got them armour and never a weapon. They were right, and they were
@@ -138,6 +182,99 @@ baggage.
 Not-tested: none, the gate is covered by 10 unit tests including the two new ratchet paths.
 
 
+### docs(release): the August monthly post, written for Discord
+
+Patreon signups are climbing and there was no single place telling a new supporter what the mod did last
+month. `docs/releases/` reached only v2.0.22 (13 August), and the 123 trunk commits after it had never
+been announced to anybody: Field Camps, Refuges, Supply Lines, the Player Switcher, the war ram, the fell
+warg, the Black Numenorean line, and the lord armour and identity pass.
+
+Two files. `2026-08-monthly-discord.md` is the post itself, 15,069 characters.
+`2026-08-monthly-discord-chunks.md` is the same content pre-split into 5 messages, largest 3,679
+characters against the 4,000 character Nitro cap, each starting on a heading so none opens mid-bullet. A
+line level diff confirms all 111 content lines survive the split.
+
+Discord is not the same target as a repo doc, and three of its constraints shaped the file: no tables, no
+masked links, and no hard wrapping, because Discord renders a wrapped line as a broken line mid-sentence.
+Every paragraph and bullet is therefore one unbroken line.
+
+Written for players, not developers, and deliberately terse: one to two sentences per item, no scene
+setting, no in-world voice. The first draft ran 27,292 characters and read like marketing copy; this is
+the same coverage at 45% of the length. The engine vocabulary is gone with it, so meshes are art, a
+`skill_template` that shadowed authored data becomes "it silently discarded the authored skills of 44
+militia troops", and `MapEvent.CanPartyJoinBattle` becomes "joining your commander's battles had never
+worked once, under any circumstance".
+
+Sourced from all 286 August CHANGELOG entries (lines 5 to 10544 of this file), the 369 trunk commits, the
+issue tracker, and a modification-timestamp sweep of the two live modules. That sweep is the only record
+those two have, because neither is in git: 292 files changed under `TAOM_Map` and 2,023 under
+`LOTRLOME_Armory`. They get their own section in the post rather than being folded away.
+
+Two counting traps the sourcing had to avoid. **180 issues closed in August is not 180 August fixes.**
+Two bulk triage sweeps (84 on the 8th, 44 on the 20th) closed work that shipped months earlier, so the
+tracker is a cross-check and never a source. And three commit pairs are the same change committed twice
+(`f9c5db05`/`05b20962`, `22af53a7`/`0be50013`, `f9a60a6f`/`af3b65a5`), while `15c3ae74` carries five
+squashed subjects in one line.
+
+A coverage pass against the raw entry headings caught four player-facing items missing from the draft,
+all now in: Sauron and the Nine never being taken prisoner, the rebindable time controls, AI armies
+fighting on their own front, and the per-race framing on the 3D character previews.
+
+Excluded by decision: the Bannerlord v1.5.0 line. v2.1.0 and v2.1.1 are tagged on `bannerlord-1.5.x`, not
+on trunk, so no player running the shipped build has any of it.
+
+### docs(community): a creature and animation guide, now live on the modding wiki
+
+Six pages written for [docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt) and **published
+the same day**. Litauen, the site maintainer, took all six verbatim and gave them their own
+top-level nav section, Custom Creatures, rather than leaving them loose in the Guides list. Source
+kept at `docs/community/bannerlordmodding-lt/`; live under `/guides/custom_creature*`.
+
+The gap is real and wide. That wiki has a page on rigging a human mesh, a page on playing a clip
+from C#, and a ten-line stub on custom mounts whose entire body is a list of seven XML filenames
+ending in "and tinker with the skeleton editor inside modding tools". Between those two there is
+nothing, and a newcomer who wants to add a creature has no path at all.
+
+What went in: the reskin versus bespoke decision (the stub jumps straight to the expensive path,
+and `base_monster` makes a whole creature seven attributes), authoring against the engine skeleton
+rather than a mesh FBX, `quad_movement` and why its absence crashes every mount context at once,
+the action-TYPE dispatch that produced the reskin trap, registration through `project.mbproj`
+standard ids, a symptom-to-cause table built from real crash signatures, and a reference appendix
+carrying the `AnimFlags` table, the action types, the `.tpac` container layout and known-good
+skeleton fingerprints. The flag reference in particular appears to exist nowhere public.
+
+Three editorial decisions worth recording. **Eight claims this repo published and later disproved
+were checked for and kept out**, and where the correction is itself useful the pages state it
+(there is no per-mesh bone limit; `_town_and_village` is not required). **Open questions are
+labelled open** rather than dressed as a recipe: the export mapping for a new clip onto a
+reskinned vanilla rig is still unresolved and the animation page says so. **The absorption
+playbook is deliberately absent.** The general lessons that apply to your own assets are in;
+the step-by-step for lifting another mod's creature is not.
+
+Artem (ADOD_Beasts) and Byak0 (Alliance, Alliance.Wargs) are credited by name per
+`.claude/rules/provenance.md`, which forbids the euphemism as much as the bare mention.
+
+Verified: both quoted Monster blocks diffed attribute by attribute against the live files, the
+elephant Horse item likewise, `dump_engine_skeleton.ps1` invocations checked against its actual
+param block (and its hardcoded machine defaults called out, since a reader would hit them), all
+21 cross-links resolved against the wiki repo through the GitHub API, and every in-page anchor
+checked against markdown slugify. That last check found two broken anchors, both from punctuation
+collapsing whitespace, and the fix was to rename the headings rather than guess the slugifier.
+
+Also `tools/lint_docs.py`: exempt `docs/community/` from the dead-link check. Those pages link
+into another site's URL space, so resolving the paths against this repo reported all 40 as dead.
+
+Confirmed after publication: all six URLs return 200, and the rendered H2 structure of every page
+matches the source here heading for heading, so nothing was edited on the way in.
+
+One operational fact worth keeping, because it will mislead the next session: **the GitHub repo is a
+daily mirror, not the live source.** It takes an automated "Daily push" at 00:00 UTC, so while the
+pages were live its newest commit was still 2026-08-27 and the six files were not in the tree at
+all. Check the live URL, not the repo, and send corrections to Litauen rather than opening a PR
+against a mirror that has not caught up.
+
+Litauen also left a standing invitation ("ask to extract the valuable knowledge for the community
+and prepare .md guides"), recorded in the directory README. Nothing is committed to.
 
 ## 2026-08-31
 
