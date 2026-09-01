@@ -21,7 +21,7 @@ jobs:
           BANNERLORD_GAME_DIR: ${{ vars.BANNERLORD_GAME_DIR }}
         run: |
           if [ -z "$BANNERLORD_GAME_DIR" ]; then
-            echo "::warning::BANNERLORD_GAME_DIR is not set — the Build & Test job will be skipped. Set this variable in repository settings to enable full CI."
+            echo "::warning::BANNERLORD_GAME_DIR is not set, so Build and Test is skipped and NO C# is compiled by this run. Enabling it takes two steps, both outside this repo: register a self-hosted Windows runner on the machine that has Bannerlord installed (Settings, Actions, Runners), then set the repository variable BANNERLORD_GAME_DIR to that install path (Settings, Secrets and variables, Actions, Variables). The variable alone is not enough, because a GitHub-hosted runner has no game for it to point at."
           fi
 
   validate-xml:
@@ -201,24 +201,42 @@ jobs:
 
   build:
     name: Build & Test
-    runs-on: windows-latest
-    # Requires Bannerlord game DLLs — runs on self-hosted runner or when BANNERLORD_GAME_DIR is set
-    if: ${{ vars.BANNERLORD_GAME_DIR != '' || github.event_name == 'workflow_dispatch' }}
+    # SELF-HOSTED, and it has to be. Every project targets net472 and resolves the
+    # engine through GameFolder/bin/Win64_Shipping_Client/TaleWorlds.*.dll HintPaths
+    # (Directory.Build.props). A GitHub-hosted runner has no Bannerlord on it, so
+    # GameBinariesFolder resolves empty and every one of those references breaks.
+    # Setting vars.BANNERLORD_GAME_DIR on its own does NOT fix that: the variable is
+    # only a path string, and aiming it at a path the runner does not have converts a
+    # silent skip into a permanent red that cannot be fixed from the cloud.
+    #
+    # There is also no Microsoft.NETFramework.ReferenceAssemblies package anywhere in
+    # this repo, so the net472 targeting pack comes from Visual Studio or Build Tools
+    # on the machine. That is why no actions/setup-dotnet step appears below: it does
+    # not supply those reference assemblies, and it can shadow the toolchain that
+    # actually works.
+    runs-on: [self-hosted, windows]
+    #
+    # Never on pull_request. This runner is a personal workstation, and contributor
+    # branches live in this repo rather than in forks, so a PR-triggered run would
+    # execute someone else's code on it. A push to the release branch and an explicit
+    # workflow_dispatch are both owner-initiated; a pull_request is not.
+    if: ${{ vars.BANNERLORD_GAME_DIR != '' && github.event_name != 'pull_request' }}
     env:
       BANNERLORD_GAME_DIR: ${{ vars.BANNERLORD_GAME_DIR }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
       - name: Restore
         run: dotnet restore TAOM.sln
 
+      # DisableModuleCopy and an empty ModuleId on BOTH build and test, and both flags
+      # are needed together. Main/TAOM.csproj's CopyModule target deploys the built
+      # module into GameFolder/Modules/ModuleId whenever ModuleId is non-empty and the
+      # game folder exists. On a self-hosted runner that game folder is the developer's
+      # real install, so without these a push would overwrite the module they are
+      # playing, mid-session.
       - name: Build
-        run: dotnet build TAOM.sln -c Release --no-restore
+        run: dotnet build TAOM.sln -c Release --no-restore -p:DisableModuleCopy=true -p:ModuleId=
 
       - name: Test
-        run: dotnet test TAOM.Tests -c Release --no-build --verbosity normal
+        run: dotnet test TAOM.Tests -c Release --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal
