@@ -2,9 +2,16 @@
 
 ## Overview
 
-Lets AI lord parties actually hold the roster their party template spawns them with, instead of
-being trimmed back to the vanilla party size limit within a day. Ships as one service consumed by
-three existing GameModels, with six MCM knobs and no new Harmony patch.
+An opt-in scaling layer, **neutral by default**, that when raised through MCM lets AI lord parties
+hold more of the roster their party template spawns them with instead of being trimmed back to the
+vanilla party size limit within a day. One service consumed by three existing GameModels, seven MCM
+knobs, no new Harmony patch.
+
+**An unconfigured install matches vanilla exactly, which means the symptom below is present by
+default.** Party templates still ship the raised maxima from the 2026-08-14 pass (goblin 4500, orc
+and uruk 3500, Erebor 2000, men 1500, elves 1000) and spawn never consults `PartySizeLimit`, so a
+lord still spawns hundreds to thousands of men and is still shed to the vanilla cap on the first
+daily tick. Raising the multiplier is what stops that.
 
 ## Why This Exists
 
@@ -34,6 +41,10 @@ Three facts explain it:
 ## Architecture
 
 ### Design Challenge
+
+This section explains the bundling (cap, relief, startup gold) that applies **once a player raises the
+sliders**. At the neutral shipped defaults none of it fires. Vanilla desertion rule A and the garrison
+dump still exist, they just rarely bite at vanilla-sized parties.
 
 Raising the cap is necessary but not sufficient. Four mechanisms shrink an over-sized party and the
 cap only governs two:
@@ -66,8 +77,12 @@ One service, `IAiPartySizeService`, consumed by three models that already existe
   the same gate, closing the morale path.
 - **Garrisons** scale through a `CalculateGarrisonPartySizeLimit` override, because lords fielding
   thousands would otherwise walk over garrisons still capped near vanilla's 200.
-- **Startup gold** was re-derived at `K = 100`, which is `targetPartySize x (1 - wageRelief)`
-  = `1000 x 0.10`.
+- **Startup gold** was re-derived at `K = 100` back when the defaults raised AI lords toward ~1,000
+  men with 90% wage relief: `targetPartySize x (1 - wageRelief) = 1000 x 0.10`. Since the knobs went
+  neutral that derivation no longer describes the shipped state. `K = 100` was left alone rather than
+  re-derived, and is probably still biased high: it sits inside the vanilla 40-203 band, but the
+  original `K = 52.5437` was a population-weighted measurement across every lord template, and
+  low-tier lords vastly outnumber tier-4 clan leaders. A proper re-derivation is still owed.
 
 ### The ordering requirement (read before editing `TaomPartySizeModel`)
 
@@ -95,18 +110,20 @@ factor could otherwise flip a wage bill into a wage rebate.
 
 ## Configuration
 
-Seven MCM knobs under "AI Party Size", no JSON file. MCM only is deliberate: a value settable from both
+Seven MCM knobs under "AI Party Size", no JSON file. **Every one ships neutral.** Out of the box
+this feature changes nothing: party sizes, garrisons, food and wages are all exactly vanilla, and a
+player opts in by raising the knobs. The sections below describe what happens when they do. MCM only is deliberate: a value settable from both
 JSON and MCM has to enforce the same invariants at both surfaces or they drift, which
 `.claude/rules/csharp-architecture.md` records as a shipped bug class. One surface, one clamp.
 
 | Setting | Default | Effect |
 |---|---|---|
 | Enable AI Party Scaling | `true` | Master toggle; off restores vanilla caps exactly |
-| AI Lord Party Size Multiplier | `5.0` | Multiplies the limit, preserving clan-tier progression |
-| AI Lord Party Size Flat Bonus | `150` | Added after the multiplier, worth exactly this many men |
-| Garrison Size Multiplier | `3.0` | Every garrison, player-owned included |
-| AI Food Relief | `0.90` | Fraction of consumption waived |
-| AI Wage Relief | `0.90` | Fraction of the wage bill waived |
+| AI Lord Party Size Multiplier | `1.0` | Multiplies the limit, preserving clan-tier progression |
+| AI Lord Party Size Flat Bonus | `0` | Added after the multiplier, worth exactly this many men |
+| Garrison Size Multiplier | `1.0` | Every garrison, player-owned included |
+| AI Food Relief | `0` | Fraction of consumption waived |
+| AI Wage Relief | `0` | Fraction of the wage bill waived |
 | Apply Party Size To Player Clan | `Taken-over lords only` | Whether your own clan gets the size scaling. See below |
 
 The group carries `GroupOrder = 44`. That is not cosmetic: MCM sorts top-level groups by `GroupOrder`
@@ -120,7 +137,8 @@ alone the low-tier lords still shed while high-tier ones sit under their cap.
 
 **The two lord knobs move together or not at all.** `AddResultFrameBonus` divides the flat bonus by
 `1 + SumOfFactors` precisely so the multiplier does not amplify it, which means the effective limit is
-`base x multiplier + flat bonus`. Halving only the multiplier lands at 60% of the old limit, not 50%.
+`base x multiplier + flat bonus`. Both knobs must move by the same proportion or the result misses
+the target: cutting only the multiplier by 75% lands at 40% of the old limit, not 25%.
 Both shipped defaults live as constants on `AiPartySizeService` (`DefaultLordFactor`,
 `DefaultLordFlatBonus`); `TaomSettings` uses them as its property initializers and the service uses
 them as its MCM-absent fallbacks, so the number exists once.
@@ -129,6 +147,37 @@ them as its MCM-absent fallbacks, so the number exists once.
 the key is absent from its json, and every install that has run v2.0.23 already persists
 `AiLordPartySizeFactor` and `AiLordPartySizeFlatBonus`. Existing players keep the old values until
 they move the sliders themselves. Same persistence trap CLAUDE.md records for ShaderPrecompilation.
+
+### Raising the knobs: the siege coupling
+
+**The lord multiplier and the garrison multiplier must move together.** Vanilla refuses outright to
+target a settlement whose defenders it cannot beat two to one. `DefaultTargetScoreCalculatingModel`:
+
+```csharp
+float num16 = ((missionType == Army.ArmyTypes.Besieger) ? 2f : 0.75f);
+if (ourStrength < num15 * num16) { return 0f; }
+```
+
+`num15` sums the `EstimatedStrength` of every party at the settlement where `IsGarrison || IsMilitia`,
+multiplied by a wall factor of up to `1 + 0.33 x 3`. A score of exactly zero means the settlement is
+never chosen as a target at all, so this is a veto and not a preference.
+
+Three consequences worth knowing before touching either knob:
+
+- **Militia never scales.** `TaomSettlementMilitiaModel` overrides exactly one method,
+  `CalculateVeteranMilitiaSpawnChance`. Headcount is pure vanilla, typically 200-320. The smaller the
+  lord multiplier, the larger militia looms in that defender estimate.
+- **A high garrison multiplier with vanilla-sized lords stops AI sieges entirely.** Garrison is
+  `vanilla base x factor` with no flat term, and the vanilla base is `200 + 200 if town + 0.2 per
+  Leadership point + buildings` (up to +240 town, +180 castle). At 3.0 that is 600 for a bare castle
+  and about 2050 for a maxed town, against four vanilla lords totalling roughly 250 men.
+- **TAOM's aggression multipliers do not rescue it.** `ArmyTargetingService` inflates `ourStrength`
+  for the SCORE only (Mordor and Isengard 2.0, Gundabad and Dol Guldur 1.75, Rhun 1.5). Those
+  factions would still pick the target and then fight the real battle with real troops, which is
+  worse than not attacking. The other cultures have no multiplier and simply stop besieging.
+
+A rough pairing that keeps sieges viable is a garrison factor near 1.2x the lord factor: 1.0/1.0 as
+shipped, 3.0 garrison alongside a 2.5 lord multiplier, and so on.
 
 ### When a change takes effect
 
@@ -184,8 +233,9 @@ was wrong, and the correction matters because it is the tradeoff a player actual
 | Wage | Yes. `ClanVariablesCampaignBehavior` guards `clan != Clan.PlayerClan` before `MakeClanFinancialEvaluation`, so no tiny auto `PaymentLimit` | **Yes.** `AddPartyExpense` also skips its cash-poor floor for the player clan, so the full bill is drawn from clan gold; when that empties, `HasUnpaidWages` drives `GetDailyNoWageMoralePenalty` as normal |
 | Food | Only for the MAIN party. `BuyFoodInternal` opens with `if (mobileParty.IsMainParty) return;` | **Yes, for companion parties.** `TryBuyingFood` has no clan gate and a player-clan companion party is not `IsMainParty`, so it auto-buys and starves exactly as an AI party does |
 
-At roughly 10 denars per head per day, a scaled 941-man companion party costs about 9,400/day. The
-three non-main parties of the clan in #530 together run past 80,000/day. Tracked as **#532**: either
+This only bites once a player has raised the multiplier. At roughly 10 denars per head per day and a
+2.5x multiplier, a scaled 401-man companion party cost about 4,000/day. The
+three non-main parties of the clan in #530 together ran past 30,000/day. Tracked as **#532**: either
 extend the relief to a scaled player clan, or keep the cost and say so in the MCM hint.
 
 ### What the defaults actually produce
@@ -194,27 +244,27 @@ Resulting size limit, by lord:
 
 Resulting size limit from the two lord knobs alone, `base x multiplier + flat bonus`:
 
-| Lord | Vanilla | Old defaults (10.0 / 300) | Shipped defaults (5.0 / 150) |
+| Lord | Vanilla | Original (10.0 / 300) | Shipped defaults (1.0 / 0) |
 |---|---|---|---|
-| Tier-1 non-leader, Steward 20 | 40 | 700 | 350 |
-| Tier-3 clan leader, Steward 60 | 110 | 1400 | 700 |
-| Tier-4 Mordor non-leader, Steward 100 | 126 | 1560 | 780 |
-| Tier-4 Goblin clan leader, Steward 100 | 203 | 2330 | 1165 |
+| Tier-1 non-leader, Steward 20 | 40 | 700 | 40 |
+| Tier-3 clan leader, Steward 60 | 110 | 1400 | 110 |
+| Tier-4 Mordor non-leader, Steward 100 | 126 | 1560 | 126 |
+| Tier-4 Goblin clan leader, Steward 100 | 203 | 2330 | 203 |
 
 The tier-4 Mordor row is pinned by
 `AiPartySizeShippedDefaultsTests.ShippedDefaults_ProduceTheDocumentedTierFourLimit`.
 
 Two caveats on reading that table. It is the knob arithmetic only, so a culture party-size feat in the
 same `ExplainedNumber` frame pushes the real number up, and the TroopWeight elite tax pushes it back
-down where the roster is heavy. Before the 2026-09-01 halving this table's last two rows carried 1371
+down where the roster is heavy. Before the 2026-09-01 cut this table's last two rows carried 1371
 and 1808 instead of 1560 and 2330, which are measurements with the elite tax already in the frame, not
 knob arithmetic; the derivation was never recorded and could not be reproduced, so they are quoted
 here as history rather than restated.
 
 **Stale, re-measure owed.** The retention table below was measured against those 1371 / 1808 limits.
-Under the halved defaults every culture's limit is roughly 45-50% of what it was, so the retained
-column and its percentages are all optimistic and the two 100% rows almost certainly are not 100% any
-more. The qualitative finding underneath it (average troop weight is far lower than an orc or elf
+All seven retained percentages are stale, not just the two 100% rows. At the neutral shipped defaults
+every culture's cap is the vanilla per-lord limit (40-203), far below every Expected spawn figure in
+the table (530-2277), so real retention is a small fraction of what is shown. The qualitative finding underneath it (average troop weight is far lower than an orc or elf
 roster looks) is unaffected and still holds. Re-measure from `taom_partyTemplates.xml` and
 `troop_weights.xml` before leaning on these numbers for another balance pass.
 

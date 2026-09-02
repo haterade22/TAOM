@@ -250,6 +250,11 @@ After any apply, run `python tools/validate_moduledata.py` (the `BROKEN_TROOP_RE
 
 ## Open questions
 
+**UPDATE 2026-09-01: the raise below is opt-in, not shipped.** The AI Party Size numeric defaults
+reset to neutral, so out of the box the cap is exactly the vanilla one this section describes as the
+problem, while the raised template maxima still ship. Read the answer that follows as design history,
+not as current behaviour.
+
 **ANSWERED 2026-08-18: the cap has now been raised.** This section predicted the behaviour
 correctly and play confirmed it, with one correction to the mechanism. The collapse was not mainly
 the quarter-of-overflow desertion described below, which takes about ten campaign days; it was

@@ -65,7 +65,13 @@
   tiers above only mean what they say when N equals K. K was 52.5437, which is roughly the
   50-150 band a vanilla PartySizeLimit actually allowed, so the arithmetic held.
 
-  Issue #461 raises AI lords toward ~1,000 men and waives 90% of their wage bill, so the burn
+  NOTE 2026-09-01: the AI Party Size knobs now ship NEUTRAL (multiplier 1.0, flat 0, relief 0), so
+  the derivation below describes an opt-in state, not the shipped one. K = 100 was left alone rather
+  than re-derived; it sits inside the vanilla 40-203 band but is probably still biased high, because
+  the original K = 52.5437 was population-weighted across every lord template and low-tier lords far
+  outnumber tier-4 clan leaders. A proper re-derivation is owed.
+
+  Issue #461 can raise AI lords toward ~1,000 men and waive 90% of their wage bill, so the burn
   the runway has to fund is N x (1 - relief) = 1000 x 0.10 = 100. Hence K = 100. Every gold
   value scaled by 100 / 52.5437 = 1.9032 and re-rounded; the world pool moved from about
   2.16M to 4.10M per-lord denars. If you retune AI Wage Relief or the party-size knobs in MCM,

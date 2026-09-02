@@ -142,3 +142,34 @@ optional-dependency attach points especially (MCM, a co-op host, an absent confi
 
 **Source:** deep review 2026-09-01, `docs/reviews/rca-ai-party-size-player-clan-2026-09-01.md`
 findings 1 and 3.
+
+
+## Third pass: neutral defaults (2026-09-01, later same day)
+
+After the knobs were reset to neutral (1.0 / 0 / 1.0 / 0 / 0) a further tailored pass asked two
+questions of the new state rather than of the diff.
+
+| # | Sev | Finding | Outcome |
+|---|---|---|---|
+| 5 | **HIGH (docs)** | Nine locations asserted scaled behaviour as shipped, including two GitHub issue comments I had written earlier the same day | FIXED across 7 files + #530 and #532 amended |
+| 6 | MED | The party templates raised on 2026-08-14 were never reverted with the knob, so the #461 symptom is back by default for every AI lord | Recorded in the feature doc Overview, the CHANGELOG and #530. A deliberate consequence, not a defect |
+| 7 | LOW | The `LeaderHero == null` guard that keeps garrisons and militia out of the one-tick shed had zero test coverage, having already regressed once (2026-08-07 militia wipe) | FIXED: `PartyUpgraderShedGuardTests`, 3 source assertions |
+| H3 | none | Hypothesis: the now-inert feature is wasteful overhead on a warm path and wants an early-out | **Rejected.** `PartySizeLimit` caches per party on `MemberRoster.VersionNo`, the player-clan work only runs for the player's own handful of parties, and the neutral guards already short-circuit. An early-out would add a second definition of "neutral" to keep in sync. Simplicity criterion says reject |
+| H4 | none | Hypothesis: dropping the garrison factor 3.0 to 1.0 mass-deletes garrison troops on an existing save | **Rejected, twice over.** `GarrisonPartyComponent` overrides `PartyOwner` but not `Leader`, so a garrison's `LeaderHero` is null and the shed's guard excludes it; vanilla desertion then drains an over-cap garrison at a throttled 25% of overflow per day. And MCM persistence means a compiled-default change does not move an existing install at all |
+
+### The lesson, and why finding 5 kept happening
+
+Findings 4 (second pass) and 5 are the same failure at different scales. Finding 4 was one unverified
+engine read copied into four artifacts. Finding 5 was one *default value* described as shipped across
+nine. In both cases the artifacts agreed with each other and none agreed with the code.
+
+The defaults moved four times in a day (10.0, 5.0, 2.5, 1.0) and each move was documented as though it
+were the last. What no pass did until the third was ask the flat question: **what does this feature
+actually do, right now, at the values it ships with?** That question found the template mismatch too,
+which no diff review could have, because the templates were not in any diff.
+
+**Prevent:** after changing a default that alters a feature's posture, re-read the feature's own
+Overview as a stranger. If it describes a capability the shipped defaults do not deliver, the doc is
+wrong rather than dated. Then sweep the data authored against the old default, the registry rows, the
+derived config, and any issue comment that asserted the previous value. Appended to
+`docs/reviews/lessons/data-content-cultures.md`.

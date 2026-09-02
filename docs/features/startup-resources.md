@@ -108,7 +108,7 @@ design-time proxy for field-party burn, not the runtime figure, and no static ta
 **`K` is the assumed sustained party size, and that is the whole point of it.** Rearranged, the
 runway a lord actually gets is `K x runwayDays / N` for a party of N men, so the tiers below only
 mean what they say when N equals K. K was **52.5437**, roughly the 50-150 band a vanilla
-`PartySizeLimit` allowed, so the arithmetic held. Issue #461 raises AI lords toward ~1,000 men and
+`PartySizeLimit` allowed, so the arithmetic held. Issue #461 CAN raise AI lords toward ~1,000 men and
 waives 90% of their wage bill, so the burn the runway has to fund is `N x (1 - relief)`, giving
 `K = 100`. Every gold value scaled by `100 / 52.5437 = 1.9032` and re-rounded, moving the per-lord
 pool from about 2.16M to 4.10M denars. **If you retune AI Wage Relief or the party-size knobs, this

@@ -463,6 +463,64 @@ public class AiPartySizeShippedDefaultsTests
             "AI Lord Party Size Multiplier slider is [1.0, 20.0].");
         Assert.IsTrue(AiPartySizeService.DefaultLordFlatBonus is >= 0.0f and <= 2000.0f,
             "AI Lord Party Size Flat Bonus slider is [0, 2000].");
+        Assert.IsTrue(AiPartySizeService.DefaultGarrisonFactor is >= 1.0f and <= 10.0f,
+            "Garrison Size Multiplier slider is [1.0, 10.0].");
+    }
+
+    // Same drift guard as the lord knobs. The garrison default used to live twice, as the MCM
+    // initializer and as a `?? 3f` fallback, with nothing watching the two.
+    [TestMethod]
+    public void McmGarrisonDefault_IsTheServiceFallback()
+        => Assert.AreEqual(AiPartySizeService.DefaultGarrisonFactor,
+            new TaomSettings().AiGarrisonSizeFactor, Tolerance);
+
+    // Ships neutral: at 1.0 and 0 the feature contributes nothing to a lord party's limit, so the
+    // out-of-box game is vanilla and a player opts in through MCM. If either of these moves off its
+    // neutral value the change is deliberate and this test should be updated with it.
+    [TestMethod]
+    public void ShippedDefaults_AreNeutral_SoTheFeatureIsOptIn()
+    {
+        Assert.AreEqual(1.0f, AiPartySizeService.DefaultLordFactor, Tolerance);
+        Assert.AreEqual(0.0f, AiPartySizeService.DefaultLordFlatBonus, Tolerance);
+        Assert.AreEqual(1.0f, AiPartySizeService.DefaultGarrisonFactor, Tolerance);
+        Assert.AreEqual(0.0f, AiPartySizeService.DefaultFoodRelief, Tolerance);
+        Assert.AreEqual(0.0f, AiPartySizeService.DefaultWageRelief, Tolerance);
+    }
+
+    [TestMethod]
+    public void McmReliefDefaults_AreTheServiceFallbacks()
+    {
+        var settings = new TaomSettings();
+
+        Assert.AreEqual(AiPartySizeService.DefaultFoodRelief, settings.AiFoodConsumptionRelief, Tolerance);
+        Assert.AreEqual(AiPartySizeService.DefaultWageRelief, settings.AiWageRelief, Tolerance);
+    }
+
+    // The whole point of shipping neutral: every knob at its default must leave the vanilla number
+    // exactly as the engine computed it. If any default drifts off neutral this fails.
+    [TestMethod]
+    public void ShippedDefaults_LeaveAVanillaLimitUntouched()
+    {
+        var limit = new ExplainedNumber(126f);
+
+        AiPartySizeService.ApplyPartySizeScaling(
+            ref limit, AiPartySizeService.DefaultLordFactor, AiPartySizeService.DefaultLordFlatBonus);
+        AiPartySizeService.ApplyPartySizeScaling(ref limit, AiPartySizeService.DefaultGarrisonFactor, 0f);
+
+        Assert.AreEqual(126f, limit.ResultNumber, Tolerance);
+    }
+
+    [TestMethod]
+    public void ShippedReliefDefaults_LeaveAVanillaWageAndFoodBillUntouched()
+    {
+        var wage = new ExplainedNumber(10000f);
+        var food = new ExplainedNumber(-100f);
+
+        AiPartySizeService.ApplyRelief(ref wage, AiPartySizeService.DefaultWageRelief);
+        AiPartySizeService.ApplyRelief(ref food, AiPartySizeService.DefaultFoodRelief);
+
+        Assert.AreEqual(10000f, wage.ResultNumber, Tolerance);
+        Assert.AreEqual(-100f, food.ResultNumber, Tolerance);
     }
 
     // Pins the shipped pair end to end rather than the two numbers separately, because the flat
@@ -477,6 +535,6 @@ public class AiPartySizeShippedDefaultsTests
         AiPartySizeService.ApplyPartySizeScaling(
             ref limit, AiPartySizeService.DefaultLordFactor, AiPartySizeService.DefaultLordFlatBonus);
 
-        Assert.AreEqual(780f, limit.ResultNumber, Tolerance);
+        Assert.AreEqual(126f, limit.ResultNumber, Tolerance);
     }
 }

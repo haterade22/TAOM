@@ -294,7 +294,10 @@ the following days. Observed on a Gondor takeover: 11,400 men against real limit
 ([#530](https://github.com/haterade22/TAOM/issues/530)).
 
 Since 2026-09-01 the `Apply Party Size To Player Clan` MCM setting defaults to `Taken-over lords only`,
-which keeps the scaling on a taken-over clan and leaves an ordinary start untouched. Food and wage
+which makes a taken-over clan **eligible** for the scaling and leaves an ordinary start untouched.
+Eligibility is not an effect: the numeric knobs also ship neutral (multiplier 1.0, flat bonus 0), so
+at stock settings a taken-over clan's inherited rosters still collapse to the vanilla cap exactly as
+#530 reported. Both sliders have to be raised for the fix to do anything. Food and wage
 relief are never granted to a player clan at any setting. Details and the engine evidence:
 [ai-party-size.md](ai-party-size.md) "Player clans". #530 stays open for the `Never` case, where the
 reduction is still silent and cache-timed rather than visible at the handover.

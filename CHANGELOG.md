@@ -152,6 +152,19 @@ transform output asserted against installed vanilla including passthrough attrib
 
 ## 2026-09-01
 
+### fix(release): v2.0.25 shipped the neutral-defaults docs without the neutral defaults
+
+The entry below landed in `HEAD` a commit before the code it describes. `v2.0.25` is tagged and
+pushed, and its `AiPartySizeService` still carries `DefaultLordFactor = 5f` and
+`DefaultLordFlatBonus = 150f`, while `CHANGELOG.md`, `feature-map.md` and the feature doc all say the
+knobs ship at 1.0 and 0. Anyone reading the v2.0.25 docs was told the mod does nothing to AI party
+sizes out of the box; the binary raised them fivefold.
+
+Nothing is wrong with v2.0.25 as a build, and the tag is not moving. v2.0.26 carries the code, which
+is what makes those documents true. Worth recording because it is the exact inverse of the tell
+CLAUDE.md names: a CHANGELOG entry in `HEAD` whose code is absent means the documentation half of a
+change committed and the code half did not.
+
 ### balance(ai-party-size): the whole feature now ships neutral, opt-in through MCM
 
 Every knob in the group defaults to its vanilla value: lord multiplier 1.0, flat bonus 0, garrison

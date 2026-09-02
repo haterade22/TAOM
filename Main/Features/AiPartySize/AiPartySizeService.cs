@@ -34,15 +34,32 @@ public class AiPartySizeService : IAiPartySizeService
     public const float MaxFlatBonus = 100000f;
     public const float MaxRelief = 0.99f;
 
-    // Shipped defaults for the two lord knobs. These are the single source: TaomSettings uses them
-    // as its property initializers and the fallbacks below use them when MCM is absent. Before this
-    // each number was written twice and nothing would have caught the two drifting apart, because
-    // every unit test passes the values in as literal arguments.
-    // Halved 2026-09-01 from 10f/300f. Both had to move together: the flat bonus is deliberately
-    // kept out of the factor frame by AddResultFrameBonus, so halving the multiplier alone lands at
-    // 60% of the old limit rather than 50%. A tier-4 lord goes from 1560 to 780.
-    public const float DefaultLordFactor = 5f;
-    public const float DefaultLordFlatBonus = 150f;
+    // Shipped defaults. These are the single source: TaomSettings uses them as its property
+    // initializers and the fallbacks below use them when MCM is absent, so each number exists once.
+    //
+    // NEUTRAL BY DEFAULT (2026-09-01). The feature ships doing nothing to party size: 1.0 applies no
+    // factor and 0 adds no men, so an out-of-box game keeps vanilla limits and a player opts in
+    // through MCM. This is the end of an arc that ran 10f/300f, then 5f/150f, then 2.5f/75f.
+    //
+    // The garrison factor is neutral for the SAME reason, and the two must be reasoned about
+    // together. Vanilla vetoes a siege outright when the attacker is under 2x the defender estimate
+    // (DefaultTargetScoreCalculatingModel: `if (ourStrength < num15 * num16) return 0f;` with
+    // num16 = 2f for a besieger), and that estimate sums garrison AND militia. Militia is pure
+    // vanilla and scales with nothing. So a raised garrison multiplier alongside vanilla-sized lord
+    // parties does not make sieges hard, it makes them impossible: the settlement scores zero and is
+    // never selected as a target at all. Raise one of these knobs and the other needs to move with
+    // it, in roughly the same proportion.
+    public const float DefaultLordFactor = 1f;
+    public const float DefaultLordFlatBonus = 0f;
+    public const float DefaultGarrisonFactor = 1f;
+
+    // Relief is neutral for the same reason. It exists ONLY to close the morale-desertion path that
+    // a RAISED cap opens: an over-sized party cannot buy 30 days of food anywhere and blows past its
+    // clan's wage budget, and both are morale inputs that shed troops the cap alone cannot stop. At
+    // vanilla party sizes neither pressure occurs, so a 0.90 relief would be pure unearned AI economy
+    // rather than a fix for anything. Raise this only alongside the lord multiplier.
+    public const float DefaultFoodRelief = 0f;
+    public const float DefaultWageRelief = 0f;
 
     // Vanilla creates exactly one clan for the player and assigns Campaign.PlayerDefaultFaction to it
     // once, by this id (Campaign.cs, `CampaignObjectManager.Find<Clan>("player_faction")`). Player
@@ -98,7 +115,7 @@ public class AiPartySizeService : IAiPartySizeService
         if (!IsEnabled())
             return;
 
-        ApplyPartySizeScaling(ref limit, TaomSettings.Instance?.AiGarrisonSizeFactor ?? 3f, 0f, GarrisonText);
+        ApplyPartySizeScaling(ref limit, TaomSettings.Instance?.AiGarrisonSizeFactor ?? DefaultGarrisonFactor, 0f, GarrisonText);
     }
 
     public void ApplyAiFoodRelief(MobileParty party, ref ExplainedNumber consumption)
@@ -109,7 +126,7 @@ public class AiPartySizeService : IAiPartySizeService
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
-        ApplyRelief(ref consumption, TaomSettings.Instance?.AiFoodConsumptionRelief ?? 0.9f, ForageText);
+        ApplyRelief(ref consumption, TaomSettings.Instance?.AiFoodConsumptionRelief ?? DefaultFoodRelief, ForageText);
     }
 
     public void ApplyAiWageRelief(MobileParty party, ref ExplainedNumber wage)
@@ -120,7 +137,7 @@ public class AiPartySizeService : IAiPartySizeService
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
-        ApplyRelief(ref wage, TaomSettings.Instance?.AiWageRelief ?? 0.9f, LevyText);
+        ApplyRelief(ref wage, TaomSettings.Instance?.AiWageRelief ?? DefaultWageRelief, LevyText);
     }
 
     private static bool IsEnabled() => TaomSettings.Instance?.EnableAiPartyScaling ?? true;

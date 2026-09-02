@@ -44,28 +44,28 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Lord Party Size Multiplier", 1.0f, 20.0f, "#0.0", Order = 1, RequireRestart = false,
-        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla. Default: 5.0. Raise this and the Flat Bonus together: the bonus is added after the multiplier, so moving one alone shifts the total by less than you expect.")]
+        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla, which is the default: this feature ships neutral and you opt in. Raise this and the Flat Bonus together: the bonus is added after the multiplier, so moving one alone shifts the total by less than you expect.")]
     public float AiLordPartySizeFactor { get; set; } = AiPartySizeService.DefaultLordFactor;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Lord Party Size Flat Bonus", 0.0f, 2000.0f, "#0", Order = 2, RequireRestart = false,
-        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 150.")]
+        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 0.")]
     public float AiLordPartySizeFlatBonus { get; set; } = AiPartySizeService.DefaultLordFlatBonus;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("Garrison Size Multiplier", 1.0f, 10.0f, "#0.0", Order = 3, RequireRestart = false,
-        HintText = "Multiplies every settlement garrison's size limit, player-owned included. Siege balance, not an AI handicap: lords fielding thousands would walk over garrisons still capped near vanilla's 200. Raising this also gives lords more room to donate troops on entering a friendly fief. 1.0 = vanilla. Default: 3.0.")]
-    public float AiGarrisonSizeFactor { get; set; } = 3f;
+        HintText = "Multiplies every settlement garrison's size limit, player-owned included. Siege balance, not an AI handicap: lords fielding thousands would walk over garrisons still capped near vanilla's 200. Raising this also gives lords more room to donate troops on entering a friendly fief. 1.0 = vanilla, which is the default. IMPORTANT: raise this only alongside the AI Lord multiplier above. Vanilla refuses to even target a settlement when the attacker is under twice the defender's strength, and that strength counts garrison AND militia, so a high garrison multiplier with vanilla-sized lord parties stops AI sieges happening at all.")]
+    public float AiGarrisonSizeFactor { get; set; } = AiPartySizeService.DefaultGarrisonFactor;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Food Relief", 0.0f, 0.95f, "#0.00", Order = 4, RequireRestart = false,
-        HintText = "Fraction of an AI lord party's food consumption waived. A large party cannot buy 30 days of food from any town, so it starves permanently, and starvation is -30 morale which opens vanilla's morale-desertion path. 0 = vanilla. Default: 0.90.")]
-    public float AiFoodConsumptionRelief { get; set; } = 0.9f;
+        HintText = "Fraction of an AI lord party's food consumption waived. A large party cannot buy 30 days of food from any town, so it starves permanently, and starvation is -30 morale which opens vanilla's morale-desertion path. 0 = vanilla, which is the default. Only worth raising if you have raised the AI Lord multiplier: at vanilla party sizes nothing starves.")]
+    public float AiFoodConsumptionRelief { get; set; } = AiPartySizeService.DefaultFoodRelief;
 
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Wage Relief", 0.0f, 0.95f, "#0.00", Order = 5, RequireRestart = false,
-        HintText = "Fraction of an AI lord party's wage bill waived. AI clan wage budgets are set from clan gold and a large party blows past them, pinning unpaid wages at -20 morale and opening the same desertion path. 0 = vanilla. Default: 0.90.")]
-    public float AiWageRelief { get; set; } = 0.9f;
+        HintText = "Fraction of an AI lord party's wage bill waived. AI clan wage budgets are set from clan gold and a large party blows past them, pinning unpaid wages at -20 morale and opening the same desertion path. 0 = vanilla, which is the default. Only worth raising if you have raised the AI Lord multiplier.")]
+    public float AiWageRelief { get; set; } = AiPartySizeService.DefaultWageRelief;
 
     // Resolved by SelectedIndex, so the option ORDER here is load-bearing and must stay in step with
     // PlayerClanScalingMode. Only party size crosses to the player: the food and wage relief stay
