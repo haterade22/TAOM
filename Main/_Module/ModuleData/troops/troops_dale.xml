@@ -1010,8 +1010,9 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_great_axe_a" />
-                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Item0" id="Item.dale_sword_a" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_b04" />
+                <equipment slot="Item2" id="Item.dale_war_axe_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b04" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b04" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b04" />

@@ -31,7 +31,13 @@ TROOPS_DIR = os.path.join(REPO_ROOT, "Main", "_Module", "ModuleData", "troops")
 # arrows, mounts) are intentionally excluded — they belong to other modules.
 # Includes ar_* (Arnor-style heroic gear), sk_* (KEYforce systematic naming),
 # and the two Uruk Scout cloth-overlay prefixes.
-ARMOR_PREFIX_RE = re.compile(r"^(sk_[a-z]+_|ar_[a-z]+_|clo_urukscout_|urukscout_)")
+# `sm_` was missing until 2026-09-01 and that was a real blind spot, not a
+# nicety: the entire Black Numenorean Body, Shoulder and Leg range is named
+# `sm_md_num_*`, so when Umbar was dressed from it this gate saw 4 of its ids
+# and reported PASS on a kit it had barely looked at. `harad*` and `haradrim*`
+# were invisible for the same reason.
+ARMOR_PREFIX_RE = re.compile(
+    r"^(sk_[a-z]+_|sm_[a-z]+_|ar_[a-z]+_|harad|clo_urukscout_|urukscout_)")
 
 
 def collect_armory_ids() -> set:
@@ -50,7 +56,10 @@ def validate_culture(culture: str, armory_ids: set) -> int:
         return 0
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
-    troops = len(re.findall(r"<NPCCharacter", text))
+    # `<NPCCharacter` also matches the `<NPCCharacters>` container, so the bare
+    # count was one too high for every culture, every run, since this tool was
+    # written. The word boundary excludes the plural.
+    troops = len(re.findall(r"<NPCCharacter\b(?!s)", text))
     refs = set(re.findall(r"Item\.([a-zA-Z][a-zA-Z0-9_]+)", text))
     armor_refs = {r for r in refs if ARMOR_PREFIX_RE.match(r)}
     missing = sorted(r for r in armor_refs if r not in armory_ids)
@@ -76,9 +85,15 @@ def main():
         # — the "underwear bug" gate (docs/ai-includes/new-culture-authoring.md Phase 4).
         #
         # bluecraig has no row: its troop file was a duplicate of goblin's and was retired, so the
-        # culture now fields troops_goblin.xml and is swept under "goblin". Same for
-        # mistymountainorcs, which was never listed here.
+        # culture now fields troops_goblin.xml. NOTE the old wording here claimed it was therefore
+        # "swept under goblin" -- it is not. `goblin` is absent from this list and validate_culture
+        # resolves troops_{culture}.xml by exact name, so troops_goblin.xml is never opened. Six
+        # files go unswept: dunland, goblin, harad, mirkwood, rivendell, rohan. The schema check
+        # MISSING_BODY_ARMOUR reads all 16 automatically; this hardcoded list is the liability.
         "lindon",
+        # Added 2026-09-01. Umbar had never been swept, which is part of why its
+        # troops sat in Gondor hand-me-downs and vanilla Calradian rags unnoticed.
+        "umbar",
     ]
     armory_ids = collect_armory_ids()
     print(f"Armory IDs (recursive): {len(armory_ids):,}\n")

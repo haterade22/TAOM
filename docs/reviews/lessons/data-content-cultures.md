@@ -1169,3 +1169,66 @@ no-match is unregistration.
   as `BROKEN_ITEM_REF` rather than anything weapon-shaped. Clean the sibling stylesheet in the same
   pass for hygiene, not for correctness.
 - **Source:** same RCA.
+
+### Reverting a balance knob does not revert the data that was tuned to it
+
+The AI Party Size feature's multiplier was walked back 10.0 to 5.0 to 2.5 to 1.0 (neutral) over one day. The party TEMPLATES raised alongside it in the 2026-08-14 pass were never walked back with it: goblin lord templates still sum to 4500, orc and uruk 3500, men 1500. Vanilla spawn never consults `PartySizeLimit`, so at the neutral default an AI lord still spawns hundreds to thousands of men and is still shed to the vanilla 40-203 cap on the first daily tick, reproducing in full the exact symptom (#461) the feature was built to remove. Every doc, registry row and issue comment still described the raised behaviour as shipped.
+- **Why missed:** the knob and the data live in different files, different formats and different features, and only the knob was in the changeset. A code review of the changeset cannot see data that did not change, and nothing links a template max to the cap model that trims it. The staleness was found only by asking "what does this feature now DO by default", not by reviewing the diff.
+- **Prevent:** when a tuning knob moves far enough to change a feature's default posture (on to off, scaled to neutral), grep for the DATA that was authored against the old value and either move it too or write down why it stays. Then re-read the feature doc's own Overview as a stranger would: if it describes a capability the shipped defaults no longer deliver, the doc is wrong, not merely dated. Extend that sweep to registry rows (`feature-map.md`, `gamemodel-registry.md`), derived config (`startup_resources_config.xml`'s K), and any GitHub issue whose resolution comment asserted the old default.
+- **Source:** docs/reviews/rca-ai-party-size-player-clan-2026-09-01.md, tailored second pass (#530, #532).
+
+### An `_a` / `_b` suffix pair is an art variant, not a tier
+
+Measured 2026-09-01 while dressing Umbar from Mordor's Black Numenorean set.
+`sm_md_num_inf_chest_heavy_b` is 85 total armour against `sm_md_num_inf_chest_heavy_a`'s
+89 (`arm_armor` 26 vs 30). Promoting `_a` to `_b` across a tier boundary therefore
+LOWERED armour on five upgrade edges, and a sixth was flat because `_med_a` and
+`_med_b` are both 69. The tree looked like a clean ladder and cost the player armour
+for a promotion.
+
+The same set has three more plateaus that defeat name-based tiering: every hood and
+helmet from `med` upward is 47, greaves are 41 at med, heavy AND elite alike, and
+pauldrons are 45 at heavy and elite alike. Only Body and Cape actually climb.
+
+- **Prevent:** sum the `<Armor>` attributes before assigning an item to a tier, and
+  walk `<upgrade_targets>` asserting the total strictly increases. Never infer rank
+  from a trailing letter or from `light/med/heavy/elite/lord` in the id. This is the
+  existing "never select a game item by what its name implies" lesson recurring on
+  a suffix rather than a display name.
+- **Source:** `docs/reviews/lessons/data-content-cultures.md` sibling entries;
+  tool `tools/apply_umbar_equipment.py`.
+
+### A donor set has a floor, and the floor decides which tiers it can dress
+
+A full five-slot Black Numenorean kit is **160 armour minimum**, because the lightest
+piece in each slot is already elite-line art (Mordor fields it at levels 26 to 46). It
+cannot dress a level-6 troop at cohort weight no matter which "light" variants are
+chosen: the first Umbar pass put a level-6 bandit at 168 against a level-6 cohort
+maximum of **71**, and landed the whole tree at the **100th percentile of its level
+cohort at every single tier**.
+
+The fix was not retuning within the set but splitting donors: Harad for the rank and
+file, Black Numenorean for the level-31 capstone, the boss and the lords. That also
+fixed a faction-identity problem for free, since 36 of 39 items had been shared with
+Mordor's own line.
+
+- **Prevent:** before adopting a donor set for a tree, sum its lightest legal kit and
+  compare against the target's LOWEST tier, not its highest. If the floor exceeds the
+  low-tier cohort median, the set cannot serve that tree alone. Check the percentile
+  against same-level troops in other cultures both ways: too high is as much a defect
+  as too low, and the too-high direction produces an early-game difficulty spike that
+  no validator can see.
+- **Source:** same session; the prior "item-tier correct and wearer-level correct are
+  two different checks" lesson is the same failure pointing the other way.
+
+### An index-keyed variant rotation is unstable and collapses variety
+
+`idx % 4` over file order dressed 26 Umbar notables from 4 kits, replacing 18
+distinct pre-existing looks with 4. Worse, the key was position, so inserting one
+`<NPCCharacter>` at the top of the file re-dressed every notable below it.
+
+- **Prevent:** key a variant rotation on a stable property of the entity, usually a
+  hash of its own id (`zlib.crc32`, not `hash()`, which is salted per process and
+  re-rolls every run). Count the DISTINCT looks before and after any bulk re-dress;
+  a pass meant to add variety that reduces it is a regression the diff will not show.
+- **Source:** same session.

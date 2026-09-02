@@ -670,7 +670,10 @@
                     id="Item.barbed_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.isengard_berserker_sword_2h" />
+                    id="Item.barbed_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_mordor_helmet_heavy_c1" />

@@ -1260,10 +1260,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -1271,10 +1274,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1282,10 +1288,13 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_hood_lord_a" />
+    			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_med_a" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -1293,10 +1302,13 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_hood_lord_a" />
+    			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_med_a" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1304,10 +1316,13 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_hood_light_a" />
+    			<Equipment slot="Body" id="Item.sm_md_num_chest_light_a" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_light_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
   </EquipmentRoster>
@@ -1315,10 +1330,13 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_hood_light_a" />
+    			<Equipment slot="Body" id="Item.sm_md_num_chest_light_a" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_light_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1326,10 +1344,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -1337,10 +1358,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1348,10 +1372,13 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_hood_lord_a" />
+    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -1359,10 +1386,13 @@
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.haradrim_head" />
-    			<Equipment slot="Body" id="Item.haradrim_torso" />
-    			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-    			<Equipment slot="Leg" id="Item.haradrim_boots" />
+    			<Equipment slot="Head" id="Item.sk_md_num_hood_lord_a" />
+    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+    			<Equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
+    			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>

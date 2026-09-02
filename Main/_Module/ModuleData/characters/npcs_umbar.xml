@@ -8,12 +8,18 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02c_toso" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.haradrim02c_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.haradrim02c_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02c_toso" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.haradrim02c_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.haradrim02c_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -23,14 +29,18 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02b_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02b_gloves" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.haradrim02b_head" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02b_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02b_gloves" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.haradrim02b_head" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -40,12 +50,18 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -55,14 +71,18 @@
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -72,12 +92,18 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -87,14 +113,18 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02_gloves" />
+				<equipment slot="Leg" id="Item.haradrim02_boots" />
+				<equipment slot="Head" id="Item.haradrim02_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02_gloves" />
+				<equipment slot="Leg" id="Item.haradrim02_boots" />
+				<equipment slot="Head" id="Item.haradrim02_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -104,12 +134,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad04_body" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.harad04_helmet" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
+				<equipment slot="Gloves" id="Item.harad04_glove" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad04_body" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.harad04_helmet" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
+				<equipment slot="Gloves" id="Item.harad04_glove" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -119,14 +155,18 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -136,12 +176,18 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad03_torso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.harad03_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad03_glove" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad03_torso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.harad03_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad03_glove" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -151,14 +197,18 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -169,12 +219,18 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02b_toso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.haradrim02b_head" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
+				<equipment slot="Gloves" id="Item.haradrim02b_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02b_toso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.haradrim02b_head" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
+				<equipment slot="Gloves" id="Item.haradrim02b_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -183,14 +239,18 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02_gloves" />
+				<equipment slot="Leg" id="Item.haradrim02_boots" />
+				<equipment slot="Head" id="Item.haradrim02_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02_gloves" />
+				<equipment slot="Leg" id="Item.haradrim02_boots" />
+				<equipment slot="Head" id="Item.haradrim02_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -199,12 +259,18 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -215,14 +281,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.harad04_body" />
+				<equipment slot="Gloves" id="Item.harad04_glove" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.harad04_helmet" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.harad04_body" />
+				<equipment slot="Gloves" id="Item.harad04_glove" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.harad04_helmet" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -231,12 +301,18 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -247,14 +323,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -263,12 +343,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.haradrim02a_toso" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim02a_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+				<equipment slot="Gloves" id="Item.haradrim02a_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -277,14 +363,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02c_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.haradrim02c_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02c_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02c_gloves" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.haradrim02c_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -293,12 +383,18 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad03_torso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.harad03_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad03_glove" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad03_torso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.harad03_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad03_glove" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -307,12 +403,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad04_body" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.harad04_helmet" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
+				<equipment slot="Gloves" id="Item.harad04_glove" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad04_body" />
+				<equipment slot="Leg" id="Item.harad04_boots" />
+				<equipment slot="Head" id="Item.harad04_helmet" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
+				<equipment slot="Gloves" id="Item.harad04_glove" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -321,14 +423,18 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim_torso" />
+				<equipment slot="Gloves" id="Item.haradrim_gloves" />
+				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.haradrim_head" />
+				<equipment slot="Cape" id="Item.haradrim02_pauldrons" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -339,12 +445,18 @@
 		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -353,12 +465,18 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad03_torso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.harad03_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad03_glove" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad03_torso" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.harad03_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad03_glove" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -369,14 +487,18 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02b_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02b_gloves" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.haradrim02b_head" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.boromir_jerkin" />
-				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+				<equipment slot="Body" id="Item.haradrim02b_toso" />
+				<equipment slot="Gloves" id="Item.haradrim02b_gloves" />
+				<equipment slot="Leg" id="Item.harad03_boots" />
+				<equipment slot="Head" id="Item.haradrim02b_head" />
+				<equipment slot="Cape" id="Item.harad04_cape" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -385,12 +507,18 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02_toso" />
+				<equipment slot="Leg" id="Item.haradrim02_boots" />
+				<equipment slot="Head" id="Item.haradrim02_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.haradrim02_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.ithilien_boots" />
+				<equipment slot="Body" id="Item.haradrim02_toso" />
+				<equipment slot="Leg" id="Item.haradrim02_boots" />
+				<equipment slot="Head" id="Item.haradrim02_head" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.haradrim02_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -399,12 +527,18 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
-				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+				<equipment slot="Body" id="Item.harad08_torso" />
+				<equipment slot="Leg" id="Item.harad08_boots" />
+				<equipment slot="Head" id="Item.harad08_helmet" />
+				<equipment slot="Cape" id="Item.harad03_cape" />
+				<equipment slot="Gloves" id="Item.harad08_gloves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

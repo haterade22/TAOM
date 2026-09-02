@@ -224,6 +224,7 @@ class Validator:
         issues += self._settlement_economy_floor()
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
+        issues += self._armour_slot_coverage()
         issues += self._upgrade_skill_regressions()
         issues.sort(key=lambda i: i.sort_key())
         return issues
@@ -790,6 +791,111 @@ class Validator:
             item = self._ITEM_REF_ATTR_RE.search(tag.group(0))
             mounts.append(item.group(1) if item else "(unnamed mount)")
         return mounts
+
+    # ----------------------------------------------------------------- #
+    # MISSING_BODY_ARMOUR / INCONSISTENT_ARMOUR_SLOT                      #
+    # ----------------------------------------------------------------- #
+    # Every gate TAOM owns asks "does this reference resolve". None asks "is
+    # there anything in the slot at all", so a troop wearing nothing passes
+    # clean: BROKEN_ITEM_REF cannot fire because there is no reference, and the
+    # mesh gate cannot fire because there is no mesh to look up. That is how 15
+    # of 16 Umbar troops shipped in peasant rags with no head, cape or gloves
+    # while every check was green (2026-09-01).
+    #
+    # Two questions, deliberately at different severities:
+    #
+    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Measured
+    #   repo-wide at exactly 3 troops, all three intentional, so the allowlist
+    #   below is the whole of the known debt and a new one is a real regression.
+    #
+    #   INCONSISTENT_ARMOUR_SLOT (warning) -- a slot filled in some battle sets
+    #   and empty in others. `.claude/rules/troops.md`: the engine draws each
+    #   slot from an INDEPENDENTLY chosen set, so this ships a combination nobody
+    #   authored. It is a warning, not an error, because 96 exist across 10
+    #   cultures today and a blocking gate on pre-existing debt gets disabled
+    #   rather than fixed.
+    _ARMOUR_SLOTS = ("Head", "Body", "Cape", "Gloves", "Leg")
+    # Inline rosters under <NPCCharacter><Equipments>. Distinct from _ROSTER_RE,
+    # which requires an id= and so matches only the STANDALONE pattern; an inline
+    # roster has no id and a civilian one is marked civilian="true" on the
+    # <EquipmentRoster> itself, not by an equipmentType on the set.
+    #
+    # The /> alternation is load-bearing. A SELF-CLOSING <EquipmentRoster /> --
+    # 326 of them across vanilla SandBox and SandBoxCore -- otherwise matches on
+    # its own ">" and then runs forward to consume the NEXT roster's close tag.
+    # That both hides a genuinely empty set and invents a MISSING_BODY_ARMOUR
+    # error on a correctly dressed troop, because the dressed set was swallowed.
+    # _NPC_BLOCK_RE already handles it this way.
+    _INLINE_ROSTER_RE = re.compile(
+        r"<EquipmentRoster\b([^>]*?)(?:/>|>(.*?)</EquipmentRoster>)", re.S)
+    # Anchored, and both quote styles. A bare `"civilian" in attrs` substring test
+    # reads civilian="false" AS civilian, and reads id="x_civilian_y" as civilian
+    # too, silently dropping a real battle set from the comparison.
+    _CIVILIAN_ATTR_RE = re.compile(r"""\bcivilian\s*=\s*["'](?:true|True)["']""")
+    # Single-quoted slot='Body' is legal XML. The double-quote-only _SLOT_ATTR_RE
+    # reads it as no slot at all, which turns a dressed troop into an ERROR.
+    _SLOT_ANY_QUOTE_RE = re.compile(r"""\bslot=["']([^"']+)["']""")
+    # Bare-chested by design, each for a stated reason. Removing an entry is what
+    # makes this check start guarding that troop.
+    _BODYLESS_BY_DESIGN = {
+        "dg_goblin_slave": "a slave in rags; bare torso is the intended look",
+        "urukhai_champion": "Uruk-hai champions fight bare-chested by design",
+        "urukhai_berserker": "Uruk-hai berserkers fight bare-chested by design",
+    }
+
+    def _armour_slot_coverage(self) -> list:
+        issues = []
+        for path in self._xml_files():
+            if not path.name.startswith("troops_"):
+                continue
+            raw = self._read(path)
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                entry_id = idm.group(1) if idm else "(unnamed)"
+                line = _lineno(text, m.start())
+
+                # Battle sets only. Civilian sets never cross-draw with them.
+                sets = []
+                for r in self._INLINE_ROSTER_RE.finditer(body):
+                    if self._CIVILIAN_ATTR_RE.search(r.group(1) or ""):
+                        continue
+                    # group(2) is None for a self-closing roster. That is an EMPTY
+                    # battle set, which is the defect itself, so it is recorded as
+                    # an empty slot-set rather than skipped.
+                    sets.append({s.group(1)
+                                 for s in self._SLOT_ANY_QUOTE_RE.finditer(r.group(2) or "")})
+                if not sets:
+                    continue
+
+                if not any("Body" in s for s in sets) and entry_id not in self._BODYLESS_BY_DESIGN:
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="MISSING_BODY_ARMOUR",
+                        file=rel, line=line, entry_id=entry_id,
+                        message=(
+                            "no battle equipment set fills the Body slot, so this troop spawns "
+                            "bare-chested. No reference is broken and no mesh is missing, which is "
+                            "why nothing else reports it. Add a Body item, or record the id in "
+                            "_BODYLESS_BY_DESIGN with the reason"
+                        ),
+                    ))
+
+                for slot in self._ARMOUR_SLOTS:
+                    filled = [slot in s for s in sets]
+                    if any(filled) and not all(filled):
+                        issues.append(Issue(
+                            severity=Severity.WARNING, code="INCONSISTENT_ARMOUR_SLOT",
+                            file=rel, line=line, entry_id=entry_id,
+                            message=(
+                                f'slot "{slot}" is filled in {sum(filled)} of {len(filled)} battle '
+                                f"sets. The engine draws each slot from an independently chosen "
+                                f"set, so this troop can spawn with that slot empty. Fill it in "
+                                f"every battle set or in none"
+                            ),
+                        ))
+        return issues
 
     def _mounted_rosters(self) -> dict:
         """Standalone EquipmentRoster id -> the mounts it equips. Footed rosters are

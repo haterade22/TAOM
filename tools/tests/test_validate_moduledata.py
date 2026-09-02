@@ -18,6 +18,7 @@ Each test maps to one recurring TAOM bug class the validator must catch:
 """
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -71,6 +72,7 @@ class ValidatorContractTests(unittest.TestCase):
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.good_sword" />
         <equipment slot="Head" id="Item.good_helm" />
+        <equipment slot="Body" id="Item.good_helm" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -1432,3 +1434,232 @@ class ArmoryStructuralAssumptionTests(unittest.TestCase):
             "civilian-equipmentType / MOUNTED_DWARF checks are repo-only, so they are "
             "silently NOT running against it. Extend the schema passes to the extra "
             f"ref roots, or update UNCHECKED_ELEMENTS with a reason. Found: {offenders}")
+
+
+class ArmourSlotCoverageTests(unittest.TestCase):
+    """MISSING_BODY_ARMOUR / INCONSISTENT_ARMOUR_SLOT.
+
+    Every other gate asks "does this reference resolve". A troop wearing nothing
+    has no reference to resolve and no mesh to look up, so it passes every one of
+    them. That is how 15 of 16 Umbar troops shipped in peasant rags with no head,
+    cape or gloves on 2026-09-01 with a fully green board.
+
+    The cross-set check exists because the engine draws each slot from an
+    INDEPENDENTLY chosen equipment set (`.claude/rules/troops.md`), so a slot
+    filled in one battle set and empty in another ships a combination nobody
+    authored -- and every UI surface renders set #1, so it looks correct.
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.registries = ts.Registries(
+            items={"None", "good_sword", "good_helm", "good_mail", "good_cape"},
+            item_def_files={},
+            npccharacters=set(),
+            cultures={"umbar", "gondor"},
+            party_templates=set(),
+        )
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _write_troop(self, troop_id: str, rosters: str) -> None:
+        _write(self.md / "troops" / "troops_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="{troop_id}" default_group="Infantry" culture="Culture.umbar">\n'
+               f"    <Equipments>{rosters}</Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+
+    def _codes(self, code):
+        issues = ts.Validator(self.md, self.schemas, self.registries).run()
+        return [i for i in issues if i.code == code]
+
+    _FULL = ('<EquipmentRoster><equipment slot="Body" id="Item.good_mail" />'
+             '<equipment slot="Head" id="Item.good_helm" /></EquipmentRoster>')
+
+    def test_troop_with_no_body_item_is_an_error(self):
+        self._write_troop("umbar_naked",
+                          '<EquipmentRoster><equipment slot="Head" id="Item.good_helm" />'
+                          "</EquipmentRoster>")
+        found = self._codes("MISSING_BODY_ARMOUR")
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "umbar_naked")
+
+    def test_troop_with_a_body_item_is_clean(self):
+        self._write_troop("umbar_dressed", self._FULL)
+        self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+    def test_bodyless_by_design_troops_are_allowlisted(self):
+        """The three bare-chested troops that ship deliberately. Removing an id
+        from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
+        self._write_troop("urukhai_berserker",
+                          '<EquipmentRoster><equipment slot="Leg" id="Item.good_mail" />'
+                          "</EquipmentRoster>")
+        self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+    def test_a_civilian_roster_does_not_satisfy_the_body_requirement(self):
+        """Battle and civilian pools never cross, so a dressed civilian set
+        cannot excuse an undressed battle set."""
+        self._write_troop("umbar_civ_only",
+                          '<EquipmentRoster civilian="true">'
+                          '<equipment slot="Body" id="Item.good_mail" /></EquipmentRoster>'
+                          '<EquipmentRoster><equipment slot="Head" id="Item.good_helm" />'
+                          "</EquipmentRoster>")
+        self.assertEqual(len(self._codes("MISSING_BODY_ARMOUR")), 1)
+
+    def test_slot_filled_in_some_battle_sets_but_not_others_warns(self):
+        self._write_troop("umbar_mixed",
+                          self._FULL
+                          + '<EquipmentRoster><equipment slot="Body" id="Item.good_mail" />'
+                            '<equipment slot="Head" id="Item.good_helm" />'
+                            '<equipment slot="Cape" id="Item.good_cape" /></EquipmentRoster>')
+        found = self._codes("INCONSISTENT_ARMOUR_SLOT")
+        self.assertEqual(len(found), 1)
+        self.assertIn("Cape", found[0].message)
+        self.assertIs(found[0].severity, ts.Severity.WARNING)
+
+    def test_identical_battle_sets_do_not_warn(self):
+        self._write_troop("umbar_consistent", self._FULL + self._FULL)
+        self.assertEqual(self._codes("INCONSISTENT_ARMOUR_SLOT"), [])
+
+    def test_a_self_closing_roster_does_not_swallow_the_next_one(self):
+        """`<EquipmentRoster />` appears 326 times in vanilla. A regex that
+        matches its own ">" then runs forward and eats the NEXT roster's close
+        tag, which BOTH hides a real defect and invents an error on a dressed
+        troop. Here the dressed set must survive, so this is clean."""
+        self._write_troop("umbar_selfclose",
+                          '<EquipmentRoster civilian="true" />' + self._FULL)
+        self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+    def test_a_self_closing_battle_roster_is_an_empty_set_not_a_skip(self):
+        """The other direction: a self-closing BATTLE roster is a set with
+        nothing in it, which is the defect, not something to pass over."""
+        self._write_troop("umbar_empty_set", "<EquipmentRoster />")
+        self.assertEqual(len(self._codes("MISSING_BODY_ARMOUR")), 1)
+
+    def test_civilian_false_is_a_battle_set(self):
+        """A substring test for "civilian" reads civilian="false" AS civilian and
+        drops a real battle set from the comparison."""
+        self._write_troop("umbar_civ_false",
+                          '<EquipmentRoster civilian="false">'
+                          '<equipment slot="Head" id="Item.good_helm" /></EquipmentRoster>')
+        self.assertEqual(len(self._codes("MISSING_BODY_ARMOUR")), 1)
+
+    def test_an_id_containing_the_word_civilian_is_not_a_civilian_roster(self):
+        self._write_troop("umbar_named",
+                          '<EquipmentRoster id="umbar_civilian_guard_battle">'
+                          '<equipment slot="Head" id="Item.good_helm" /></EquipmentRoster>')
+        self.assertEqual(len(self._codes("MISSING_BODY_ARMOUR")), 1)
+
+    def test_single_quoted_slots_are_read(self):
+        """slot='Body' is legal XML. A double-quote-only matcher reads the set as
+        empty and reports a correctly dressed troop as naked."""
+        self._write_troop("umbar_single_quotes",
+                          "<EquipmentRoster><equipment slot='Body' id='Item.good_mail' />"
+                          "</EquipmentRoster>")
+        self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+    def test_missing_body_armour_is_an_error_not_a_warning(self):
+        """Severity is load-bearing: the commit hook filters on ERROR codes, so a
+        downgrade to WARNING silently unwires the gate."""
+        self._write_troop("umbar_naked2",
+                          '<EquipmentRoster><equipment slot="Head" id="Item.good_helm" />'
+                          "</EquipmentRoster>")
+        found = self._codes("MISSING_BODY_ARMOUR")
+        self.assertEqual(len(found), 1)
+        self.assertIs(found[0].severity, ts.Severity.ERROR)
+
+    def test_every_armour_slot_is_watched(self):
+        """Pins _ARMOUR_SLOTS membership. Body and Leg produce no findings on the
+        real tree, so dropping either from the tuple is otherwise invisible."""
+        self.assertEqual(set(ts.Validator._ARMOUR_SLOTS),
+                         {"Head", "Body", "Cape", "Gloves", "Leg"})
+
+    def test_the_bodyless_allowlist_only_names_troops_that_exist(self):
+        """An allowlist entry for a renamed or deleted troop rots silently and
+        quietly widens the exemption."""
+        troops = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData" / "troops"
+        if not troops.is_dir():
+            self.skipTest("troop data not present")
+        ids = set()
+        for f in troops.glob("troops_*.xml"):
+            ids |= set(re.findall(r'<NPCCharacter[^>]*?\sid="([^"]+)"',
+                                  f.read_text(encoding="utf-8-sig", errors="ignore")))
+        # An empty or broken scan reports EVERY allowlisted id as stale, which
+        # reads exactly like a real finding. Fail on the scan first, so a bad
+        # path can never masquerade as a data defect. (It already did once: a
+        # backspace byte smuggled into this regex made it match nothing and the
+        # failure named three troops that were present all along.)
+        self.assertGreater(len(ids), 100,
+                           f"scanned {troops} and found only {len(ids)} troop ids; "
+                           "the scan is broken, not the allowlist")
+        stale = sorted(set(ts.Validator._BODYLESS_BY_DESIGN) - ids)
+        self.assertEqual(stale, [], f"allowlisted troops no longer exist: {stale}")
+
+    def test_only_troop_files_are_scanned(self):
+        """The check is about troop trees. Notables and lord rosters legitimately
+        vary, and sweeping them would bury the signal."""
+        _write(self.md / "characters" / "npcs_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="spc_notable_x" culture="Culture.umbar">\n'
+               '    <Equipments><EquipmentRoster>'
+               '<equipment slot="Head" id="Item.good_helm" />'
+               "</EquipmentRoster></Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+        self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+
+class CommitGateCoverageTests(unittest.TestCase):
+    """The commit hook filters `validate_moduledata.py` down to an explicit
+    `--code` allowlist, so an ERROR the validator can emit is only ever enforced
+    if someone remembered to add it to that list.
+
+    On 2026-09-01 four of nine ERROR codes were missing from it, including the
+    freshly added MISSING_BODY_ARMOUR. Nothing detected that, because the two
+    lists live in different files and neither refers to the other. This test is
+    the reference between them: add an ERROR code and you must wire it, or this
+    fails and tells you which one.
+    """
+
+    HOOK = Path(__file__).resolve().parents[2] / ".claude" / "hooks" / "check-moduledata-validation.sh"
+    SCHEMA = Path(ts.__file__)
+
+    def _error_codes(self):
+        """ERROR codes from BOTH shapes the module uses: an inline Issue(...) and
+        the ref-sweep table, whose rows are `(..., Severity.ERROR, "CODE", ...)`.
+        Scanning only the inline form is how the first version of this test read
+        7 live codes as non-existent."""
+        src = self.SCHEMA.read_text(encoding="utf-8")
+        return (set(re.findall(r'severity=Severity\.ERROR,\s*code="([A-Z_]+)"', src))
+                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src)))
+
+    def _hook_codes(self):
+        return set(re.findall(r"--code\s+([A-Z_]+)", self.HOOK.read_text(encoding="utf-8")))
+
+    def test_the_hook_exists_and_names_codes(self):
+        """Guards the guard: if the hook is renamed or the --code form changes,
+        the two tests below would pass vacuously on empty sets."""
+        self.assertTrue(self.HOOK.is_file(), f"missing {self.HOOK}")
+        self.assertGreaterEqual(len(self._hook_codes()), 10)
+        self.assertGreaterEqual(len(self._error_codes()), 5)
+
+    def test_every_error_code_is_enforced_by_the_commit_hook(self):
+        missing = sorted(self._error_codes() - self._hook_codes())
+        self.assertEqual(
+            missing, [],
+            "these ERROR codes can be emitted but are filtered out of the commit "
+            f"gate, so they never block a commit: {missing}. Add a --code line to "
+            f"{self.HOOK.name}")
+
+    def test_the_hook_names_no_code_the_validator_cannot_emit(self):
+        """A typo'd or retired code in the hook is a silently dead gate line."""
+        src = self.SCHEMA.read_text(encoding="utf-8")
+        emitted = (set(re.findall(r'code="([A-Z_]+)"', src))
+                   | set(re.findall(r'Severity\.(?:ERROR|WARNING),\s*"([A-Z_]+)"', src))
+                   # the duplicate-id family is built as f"DUPLICATE_{kind}_ID"
+                   | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
+        unknown = sorted(self._hook_codes() - emitted)
+        self.assertEqual(unknown, [], f"hook names codes the validator never emits: {unknown}")

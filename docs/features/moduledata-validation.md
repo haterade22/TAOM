@@ -287,6 +287,68 @@ a TAOM data defect — nothing in the files this validator owns is wrong in that
 by the presence of `settlements.xslt` and expect different sets, so they fail if the strip handling
 regresses.
 
+## Armour-slot coverage (`MISSING_BODY_ARMOUR`, `INCONSISTENT_ARMOUR_SLOT`)
+
+Added 2026-09-01. Every other check in this tool asks **"does this reference
+resolve"**. A troop wearing nothing has no reference to resolve and no mesh to look
+up, so it passes all of them. That is how 15 of 16 Umbar troops shipped in vanilla
+peasant rags, with Head, Cape and Gloves absent entirely, against a completely green
+board: `validate_moduledata.py` PASS, `validate_mesh_refs.py` 0 errors,
+`validate_all_troop_refs.py` PASS.
+
+Two questions at deliberately different severities.
+
+**`MISSING_BODY_ARMOUR` (ERROR).** No battle set of a troop fills the `Body` slot.
+Measured repo-wide at exactly three troops, all of them bare-chested on purpose, so
+`Validator._BODYLESS_BY_DESIGN` is the whole of the known debt and a fourth is a real
+regression:
+
+| troop | file | why it is exempt |
+|---|---|---|
+| `dg_goblin_slave` | `troops_dolguldur.xml` | a slave in rags; bare torso is the intended look |
+| `urukhai_champion` | `troops_isengard.xml` | Uruk-hai champions fight bare-chested by design |
+| `urukhai_berserker` | `troops_isengard.xml` | same |
+
+A test asserts all three ids still exist in the troop files. An allowlist entry for a
+renamed or deleted troop otherwise rots with no signal, quietly widening the
+exemption, which is the failure the `MOUNTED_DWARF` war-ram carve-out guards against
+the same way.
+
+**`INCONSISTENT_ARMOUR_SLOT` (WARNING).** A slot filled in some battle sets and empty
+in others. Per [`.claude/rules/troops.md`](../../.claude/rules/troops.md), the engine
+draws each of the 12 slots from an **independently chosen** set, starting at two sets,
+so this ships a combination nobody authored. It is invisible in play until a battle:
+the encyclopedia, party screen, troop tree and tournament all render set #1. 96 exist
+across 10 cultures, so it warns rather than blocks, on the reasoning that a gate which
+fails on pre-existing debt gets disabled rather than fixed.
+
+### Scope, and the parsing traps that shaped it
+
+Only files named `troops_*.xml` are scanned. Notables, lord rosters, wanderers and
+education templates legitimately vary per character, and sweeping them buries the
+signal (17 characters repo-wide have no Body item once `npcs_*.xml` is included,
+almost all of them `prison_guard_<culture>`).
+
+Three parsing details are load-bearing, each of which produced a wrong verdict in
+review before it was fixed:
+
+- **Self-closing rosters.** `<EquipmentRoster />` appears 326 times in vanilla. A
+  pattern without a `/>` alternation matches its own `>` and then runs forward to eat
+  the *next* roster's closing tag, which both hides a genuinely empty set and invents
+  an ERROR on a correctly dressed troop.
+- **Civilian detection must be anchored.** A substring test for `civilian` reads
+  `civilian="false"` as civilian, and reads `id="x_civilian_y"` as civilian too,
+  dropping a real battle set from the comparison.
+- **Both quote styles.** `slot='Body'` is legal XML; a double-quote-only matcher reads
+  the set as empty and reports a dressed troop as naked.
+
+### The gate that enforces the ERROR
+
+`check-moduledata-validation.sh` filters this tool to an explicit `--code` list. When
+these checks were added, **four of the nine error codes were absent from that list**
+and so could never block a commit. `CommitGateCoverageTests` now asserts the two sets
+agree in both directions. See [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md).
+
 ## Key Files
 
 | File | Purpose |
