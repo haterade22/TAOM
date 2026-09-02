@@ -287,7 +287,7 @@ dereferences a null intrusive pointer.
 ### The shipped shape
 
 > **State drift, measured 2026-09-01. This table no longer describes the install.** The module has
-> no `AssetPackages` directory at all now (0 cooked packs against 4,490 loose `Assets/**/*.tpac`),
+> no `AssetPackages` directory at all now (0 cooked packs against 4,364 loose `Assets/**/*.tpac`),
 > so `warg.tpac` is gone. `Assets/creature/warg/` is **present** again, and the parked copy at
 > `<game>/_taom_disabled/warg_loose_assets_20260828/` is **also** still there. That is the exact
 > both-trees-claim-the-same-name shape the crash rule below warns about, so the current state should

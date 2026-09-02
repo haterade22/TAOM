@@ -11,7 +11,7 @@
   <EquipmentRoster id="taom_gondor_lord_battle_male" culture="Culture.gondor">
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -25,7 +25,7 @@
   <EquipmentRoster id="taom_gondor_lord_battle_female" culture="Culture.gondor">
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -39,7 +39,7 @@
   <EquipmentRoster id="taom_gondor_lord_civilian_male" culture="Culture.gondor">
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -53,7 +53,7 @@
   <EquipmentRoster id="taom_gondor_lord_civilian_female" culture="Culture.gondor">
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -67,7 +67,7 @@
   <EquipmentRoster id="taom_gondor_lord_teen_male" culture="Culture.gondor">
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -81,7 +81,7 @@
   <EquipmentRoster id="taom_gondor_lord_teen_female" culture="Culture.gondor">
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -95,7 +95,7 @@
   <EquipmentRoster id="taom_gondor_ruler_battle_male" culture="Culture.gondor">
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -109,7 +109,7 @@
   <EquipmentRoster id="taom_gondor_ruler_battle_female" culture="Culture.gondor">
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -123,7 +123,7 @@
   <EquipmentRoster id="taom_gondor_ruler_civilian_male" culture="Culture.gondor">
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -137,7 +137,7 @@
   <EquipmentRoster id="taom_gondor_ruler_civilian_female" culture="Culture.gondor">
     <EquipmentSet equipmentType="Civilian">
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-    			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+    			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
     			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
     			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
     			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />

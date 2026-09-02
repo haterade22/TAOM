@@ -51,7 +51,7 @@
     <EquipmentRoster id="player_career_gondor_cavalry_m" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_gondor_leg_a" />
@@ -63,7 +63,7 @@
     <EquipmentRoster id="player_career_gondor_cavalry_f" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_gondor_leg_a" />
@@ -77,7 +77,7 @@
     <EquipmentRoster id="player_career_gondor_infantry_m" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_gondor_leg_a" />
@@ -87,7 +87,7 @@
     <EquipmentRoster id="player_career_gondor_infantry_f" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_gondor_leg_a" />

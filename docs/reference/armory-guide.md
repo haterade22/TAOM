@@ -39,7 +39,7 @@
 
 > **Corrected 2026-09-01, with engine evidence: the Armory has no cooked tree, and loose wins
 > anyway.** There is no `LOTRLOME_Armory/AssetPackages/` directory at all: 0 cooked packs against
-> 4,490 loose `Assets/**/*.tpac`. The engine's own log says which tree it took:
+> 4,364 loose `Assets/**/*.tpac`. The engine's own log says which tree it took:
 >
 > ```
 > [10:26:27.435] Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...

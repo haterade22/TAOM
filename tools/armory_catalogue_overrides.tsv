@@ -1,0 +1,21 @@
+# Armoury catalogue overrides: culture and category for names the parser cannot resolve.
+#
+# An override must record a DECISION. A row that writes back `unknown` is
+# REJECTED by the loader with a warning: seeding 206 such rows on 2026-09-01
+# satisfied the gate's predicate while recording nothing, which turned the
+# gate into a blanket waiver over 178 live, item-referenced assets.
+#
+# Keys are the ESCAPED mesh name, exactly as the catalogue stores it. The
+# NUL-bearing row below must be written by escape(), never hand-typed: a
+# hand-typed backslash-x-0-0 and a real NUL byte look identical in an editor
+# and do not match.
+#
+# The list is bounded and genuinely small: 802 unresolved on the first run,
+# 206 after the vocabulary was extracted from the live names, 3 once the
+# parser learned to split on whitespace, strip trailing indexes and read
+# Rohan's abbreviations. Two proper names and one corrupt export.
+#
+# mesh	culture	category	reason
+clo_witch_king	nazgul	chest	cloth layer over the Witch-King body; 'witch_king' is a proper name carrying no slot word
+witch_king	nazgul	body	the Witch-King body mesh itself; a proper name carrying no slot word
+sk_dwarf\x00\x00\x00\x00\x00\x00\x00\x00_10	dwarf	beard	name carries 8 embedded NUL bytes from a bad Kit export; it is a dwarf beard, per its tpac Race Test/Beards/SK_Dwarf_Beards_geo.tpac

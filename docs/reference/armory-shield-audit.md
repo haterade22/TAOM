@@ -38,6 +38,8 @@ native animation resolution, not as a managed exception.
 
 Zero exceptions in either codebase:
 
+> **Counts re-measured 2026-09-01 and they have moved.** The table below was taken before two item deletions (`easterling_shield`, `rhun_tournament_sparring_shield`, both centre-grip) and the KEYforce cleanup. Parsed today: **224** `Type="Shield"` items, **115** `item_usage="shield"`, **109** `hand_shield`, **54** kite-holstered centre-grip, still **0** rule violations. The numbers below are left as written so the earlier reconciliation still reads, but re-derive before relying on them. The two DO-NOT-FIX entries are unaffected; only one now survives, see the note above.
+
 | Source | `shield` | `hand_shield` | invariant violations |
 |---|---|---|---|
 | `LOTRAOM_shields.xml` (TAOM) | 115 | 111 | **0 / 226** |
@@ -108,6 +110,8 @@ bo_cap_wm_isengard_shield_a02_clean   present? False
 
 "Fixing" the XML converts a resolving reference into a missing collision body — the defect class
 behind the #352 infinite mission-load hang. Leave it misspelled.
+
+> **STALE as of 2026-09-01.** `gond_shld4` no longer exists: KEYforce's `5cd6115a` deleted the item definition. Nothing references it. The `wm_isengard_shield_a04` entry below is UNAFFECTED and still load-bearing: its `bo_capwm_isengard_shield_a02_clean` really does ship under that misspelling, and correcting it would break the shield.
 
 **`gond_shld4` (lines 740-741) — `body_name` == `shield_body_name` == `bo_wm_gondor_shield_a`**
 

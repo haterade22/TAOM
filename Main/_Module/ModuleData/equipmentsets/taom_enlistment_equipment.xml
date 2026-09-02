@@ -991,7 +991,7 @@
     <EquipmentRoster id="enlist_gondor_infantry_recruit" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
             <Equipment slot="Body" id="Item.sk_gd_bel_inf_chainmail_b" />
@@ -1025,7 +1025,7 @@
     <EquipmentRoster id="enlist_gondor_infantry_soldier" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
             <Equipment slot="Body" id="Item.sk_gd_bel_inf_chest_med_a" />
@@ -1050,7 +1050,7 @@
     <EquipmentRoster id="enlist_gondor_cavalry_soldier" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
@@ -1072,7 +1072,7 @@
     <EquipmentRoster id="enlist_gondor_infantry_veteran" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.sk_gd_bel_inf_chest_med_b" />
@@ -1120,7 +1120,7 @@
     <EquipmentRoster id="enlist_gondor_infantry_sergeant" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.imperial_throwing_spear_1_t4" />
             <Equipment slot="Item3" id="Item.imperial_throwing_spear_1_t4" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />

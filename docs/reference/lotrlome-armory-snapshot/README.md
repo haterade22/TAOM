@@ -348,7 +348,7 @@ Long-shipping and invisible because they are warnings rather than errors.
 
 > **Corrected 2026-09-01.** The paragraph below says a player install loads
 > `AssetPackages/pack*.tpac`. For `LOTRLOME_Armory` that directory **does not exist** (0 cooked
-> packs against 4,490 loose `Assets/**/*.tpac`), and `tools/package_release.py` ships whichever of
+> packs against 4,364 loose `Assets/**/*.tpac`), and `tools/package_release.py` ships whichever of
 > the two an install actually has, so players get the loose tree. It is also contradicted by a
 > root-caused incident: the spider mount's riderless bug was traced to the engine loading loose
 > `Assets` rather than a stale baked `pack6.tpac`

@@ -425,7 +425,7 @@ def tpac_paths_for_modules(game_dir: Path, modules: list) -> list:
     A module normally ships cooked `AssetPackages/*.tpac` and the running game
     loads those. Some modules ship no cooked tree at all and are loaded from the
     loose authoring tree instead: `LOTRLOME_Armory` is in that state as of
-    v2.0.23 (0 cooked packs, 4,490 loose ones), and so are `SandBoxCore` and
+    v2.0.23 (0 cooked packs, 4,364 loose ones), and so are `SandBoxCore` and
     `SandBox`.
 
     Without a fallback, a named module that contributes zero packs silently

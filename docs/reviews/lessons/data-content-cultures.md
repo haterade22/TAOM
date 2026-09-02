@@ -1064,3 +1064,108 @@ Reproduced with one environment variable.
   registry-backed check asserts the registry is non-empty before drawing a conclusion. State a clean
   result as "no instances of these N predicates", never as "the data is clean".
 - **Source:** `docs/reviews/rca-troop-equipment-slot-mixing-2026-09-01.md`.
+
+### Two validators see disjoint halves of an art incident, and each looks clean alone (2026-09-01)
+
+An artist reorganisation deleted both art that XML named and item definitions that troops equipped.
+`validate_mesh_refs.py` reported 63 errors. `validate_moduledata.py` reported 212. Neither number
+was the damage; the damage was 275, and the two tools cannot see each other's half by construction:
+one resolves mesh names against the asset tree, the other resolves item ids against the registry.
+An item whose ART vanished is invisible to the second; an item that vanished ENTIRELY is invisible
+to the first, because there is no longer an item to walk.
+
+- **Why missed:** the mesh gate was the one that had just been fixed and was front of mind, so its
+  63 read as the incident. The 212 were found only because a review agent ran the other tool
+  unprompted. Nothing in the repo said to run both after an art drop.
+- **Prevent:** after any change to the Armoury, run BOTH. A clean mesh gate says nothing about
+  dangling item references and vice versa. Better, run `generate_armory_catalogue.py --diff`, which
+  is the only artifact that sees the change as a change rather than as a symptom.
+- **Source:** `docs/reviews/rca-armoury-keyforce-cleanup-2026-09-01.md`.
+
+### Prove when art went missing before calling it a deletion (2026-09-01)
+
+24 Gondor sword meshes were missing and two independent review agents both attributed them to the
+artist cleanup that had just landed, one calling them a deletion and the other implicitly excluding
+them. Scanning all 4,287 tpacs at the base commit settled it: the only Gondor sword art that has
+EVER been in the assets repo is one tpac holding four variants. The cleanup moved that file and lost
+nothing. The XML had named ten variants while four shipped, for as long as the repo has existed.
+
+This matters because the remedy differs completely. Art the cleanup deleted is recoverable with
+`git cat-file --filters <base>:<path>`, one command. Art that never existed cannot be restored at
+all, and the only options are to re-author it or to rebuild the items from what survives.
+
+- **Why missed:** a mesh missing today and a commit landing today is a compelling coincidence, and
+  both agents took it. Neither checked the base commit.
+- **Prevent:** before attributing missing art to a commit, confirm it existed at that commit's
+  parent. For an LFS repo that means `git cat-file --filters`, never `git show`, which returns a
+  ~130-byte pointer that scans to zero meshes and is indistinguishable from a genuinely empty
+  result.
+- **Source:** same RCA.
+
+### Rebuild a crafted item from surviving PIECES, never by re-meshing a piece (2026-09-01)
+
+Six crafted swords had no art. They were rebuilt by changing which `<Piece>` each `<CraftedItem>`
+names, drawing from the four surviving variants: 16 parts give 256 combinations, so each rebuilt
+sword is genuinely distinct rather than a duplicate.
+
+This is the safe direction of a defect made earlier the same day, and the distinction is worth
+holding onto. Changing a PIECE's `mesh=` leaves that piece's `length` and `<BuildData>` describing
+the old geometry, and `length` becomes the weapon's live combat reach, so the weapon ends up looking
+longer than it hits. Changing which piece an ITEM names keeps every piece internally consistent and
+lets the engine recompute reach from the parts chosen. A collision body also comes from the blade
+piece, so choosing a surviving blade fixes the body for free.
+
+- **Prevent:** when art is missing under a crafted item, re-point at the item level. Re-mesh a piece
+  only when you are also willing to re-derive its geometry, and treat that as a balance decision
+  rather than a repair.
+- **Source:** same RCA.
+
+### Rebuilding a crafted weapon from surviving parts is a balance change, not just a repair
+
+Verified by decompile on 2026-09-01. Six Gondor swords were rebuilt from mixed surviving pieces
+after their art turned out never to have shipped. The repair was correct and the reach numbers were
+never stated, so a 31 cm loss on a weapon with 53 references would have shipped as a silent nerf.
+
+Three engine facts decide what mixing costs, and none is guessable from the XML:
+
+- **The pommel contributes nothing to reach.** `OneHandedSword` gives it build order `-1`, so
+  `CalculatePivotDistances` never accumulates it into the length. Reach is
+  `hilt/2 + (guard - prev_offset - next_offset) + blade`.
+- **The blade alone decides collision body and swing damage.** `InitCraftedItemObject` reads
+  `UsedPieces[0].CraftingPiece.BladeData`, and `_swingDamageFactor` comes from the same place. So a
+  hotter surviving blade raises damage whether or not you intended it, and choosing any surviving
+  blade fixes a missing collision body for free.
+- **Only the guard carries non-zero `BuildData`.** Hilts and pommels are all zeroes here, so mixing
+  is free at those seams and never free at the guard-to-blade one: each guard's `next_piece_offset`
+  was authored for its own blade, and swapping moves where the blade seats by up to 6 cm.
+
+- **Prevent:** when re-pointing an item's pieces, compute the before-and-after reach and swing
+  damage and put them in the CHANGELOG. The arithmetic is short and the alternative is a stat change
+  nobody can find later. The guard-to-blade seam is the one thing the arithmetic cannot answer;
+  check it in the model viewer.
+- **Source:** `docs/reviews/rca-armoury-keyforce-cleanup-2026-09-01.md`, engine detail in
+  `docs/features/weapon-xml-pipeline.md`.
+
+### A `<UsablePiece>` deletion unregisters the item; an `<AvailablePiece>` deletion does nothing
+
+The two crafting stylesheets look like a matched pair and behave nothing alike, which matters
+because a cleanup naturally edits one and forgets the other.
+
+`crafting_templates.xslt` feeds `CraftingTemplate.Pieces`, and `GenerateCraftedItem` returns null
+for any `<CraftedItem>` naming a piece that is not in it. `ItemObject.Deserialize` then calls
+`MBObjectManager.UnregisterObject` and **the item ceases to exist**, so every troop and roster
+naming it holds a broken reference. `weapon_descriptions.xslt` feeds `WeaponDescription.Deserialize`,
+which resolves each id through `MBObjectManager.GetObject` and skips a null. Vanilla shows the
+tolerance is real and rarely used: of 1,233 `<AvailablePiece>` ids in its `weapon_descriptions.xml`,
+all 429 `mp_*` ones resolve and exactly one id dangles.
+
+CLAUDE.md's shield trap row describes a third case, a weapon matching the *wrong* description, which
+is the only one of the three where the item survives and misbehaves. For a template declaring a
+single `<WeaponDescription>`, as `OneHandedSword` does, there is no wrong description to match: a
+no-match is unregistration.
+
+- **Prevent:** delete a piece from `crafting_templates.xslt` only together with every
+  `<CraftedItem>` naming it, and run `validate_moduledata.py` afterwards, since the failure surfaces
+  as `BROKEN_ITEM_REF` rather than anything weapon-shaped. Clean the sibling stylesheet in the same
+  pass for hygiene, not for correctness.
+- **Source:** same RCA.

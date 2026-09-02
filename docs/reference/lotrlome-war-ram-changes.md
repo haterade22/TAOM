@@ -184,7 +184,7 @@ assign the harness explicitly, so only the player can mix them.
 ## Still owed
 
 1. ~~**Rebuild `AssetPackages`.**~~ **RESOLVED 2026-09-01, and the premise was wrong.** The Armory
-   has no `AssetPackages` directory at all any more (0 cooked packs against 4,490 loose
+   has no `AssetPackages` directory at all any more (0 cooked packs against 4,364 loose
    `Assets/**/*.tpac`), so there is nothing to rebuild and nothing for the barding to be missing
    from. All eight barding meshes are present and resolving today: `sk_eb_goat_bard_{light,heavy,
    elite}_{a,b}` and siblings, verified against the live tpac TOCs, and

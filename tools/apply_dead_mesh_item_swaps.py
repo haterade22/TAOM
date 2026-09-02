@@ -143,6 +143,19 @@ ITEM_SWAPS = {
     "easterlingwarriors04_cape":   "sk_rh_loke_pauldron_scale_heavy_a",
     "easterling_shield":           "sm_rh_loke_shield_med_a",
 
+    # -- Gondor shields, 2026-09-01 second wave ------------------------------
+    # KEYforce's `5cd6115a "Cleanup Part Idk"` deleted 7 Gondor shield meshes
+    # and added 4 replacements (`sm_gd_shield_a1..a4`), re-pointing three items
+    # in the same commit. It missed the rest: 3 item DEFINITIONS went with the
+    # art while 212 references survived, leaving 159 consumers with an empty
+    # shield slot. Denethor, Forlong, Angbor and Golasgil among them, plus every
+    # Gondor character-creation preset and all four Gondor career starts.
+    #
+    # These follow the commit's own intent rather than restoring the old art.
+    "wm_gondor_shield_a02":           "sm_gd_shield_a1",   # 202 refs
+    "gond_shield_four_mustard":       "sm_gd_shield_a2",   # 6 refs
+    "wm_gondor_shield_a_cair_andros": "sm_gd_shield_a3",   # 4 refs
+
     # -- Lossarnach civilian coat (villagers, notables, headman, broker) -----
     # 24 -> 20, the closest surviving Gondor civilian body already worn by the
     # rest of that file's cast.
@@ -273,6 +286,19 @@ DELETE_ITEMS = {
     "m_northern_armor_a2",   # mesh sk_northern_armor_light_a_slim
     "m_northern_armor_b2",   # mesh sk_northern_armor_medium_a_slim
     "m_northern_armor_b4",   # mesh sk_northern_armor_medium_b_slim
+}
+
+# Swap sources that were deleted by SOMEONE ELSE before this tool ran, so they
+# are absent from the Armory but were never in DELETE_ITEMS. Without this the
+# pre-flight cannot tell them from a typo, and it correctly refuses to guess.
+#
+# 2026-09-01: KEYforce's `5cd6115a` removed these three Gondor shield
+# definitions while 212 references to them survived. We are repairing the
+# consumers, not the deletion.
+EXTERNALLY_DELETED = {
+    "wm_gondor_shield_a02",
+    "gond_shield_four_mustard",
+    "wm_gondor_shield_a_cair_andros",
 }
 
 # Dead-and-equipped, but outside this decision. Reported, never touched.
@@ -467,9 +493,12 @@ def preflight(armory: Path) -> tuple:
         if old not in defined:
             if old in DELETE_ITEMS:
                 applied.append(f"swap already applied and definition removed: {old}")
+            elif old in EXTERNALLY_DELETED:
+                applied.append(f"source deleted upstream, repairing consumers: {old}")
             else:
-                problems.append(f"swap source not defined and not a delete "
-                                f"target (typo in the mapping?): {old}")
+                problems.append(f"swap source not defined, and not a delete "
+                                f"target or a known upstream deletion "
+                                f"(typo in the mapping?): {old}")
     for item_id, new_mesh in sorted(MESH_REPOINTS.items()):
         if item_id not in defined:
             problems.append(f"re-mesh target not defined: {item_id}")

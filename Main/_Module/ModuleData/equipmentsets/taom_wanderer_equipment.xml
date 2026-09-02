@@ -5,7 +5,7 @@
 	<EquipmentRoster id="npc_companion_equipment_template_gondor" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -14,7 +14,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 			<Equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -37,7 +37,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
 			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
 			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
@@ -45,7 +45,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
 			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_b" />
 			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />

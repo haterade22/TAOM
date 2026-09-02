@@ -296,6 +296,134 @@ equipment set malformed**, so `tools/audit_polearm_shield_parity.py` reports PAS
 of its five sets pairing a shield with a two-handed mace and giving it no sidearm. Measured and
 deferred to #531 rather than absorbed into this change.
 
+### fix(armoury): an artist cleanup broke 275 refs, and two validators each saw half of it
+
+KEYforce landed 7 commits reorganising the Armoury and they synced into the live install. The sync
+was clean, 0 content drift on every tracked file. The reorganisation was not.
+
+**The headline is that the damage was 275 errors and the mesh gate reported 63.**
+`validate_mesh_refs.py` sees items whose ART vanished; `validate_moduledata.py` sees consumers
+whose ITEM vanished. Neither can see the other's half, and this incident was both. Anyone checking
+one gate and calling it clean would have shipped 212 broken references.
+
+| | before | after |
+|---|---|---|
+| `validate_mesh_refs.py --scan-bodies` | 63 (47 mesh, 16 body) | **0** |
+| `validate_moduledata.py` | 212 `BROKEN_ITEM_REF` | **PASS** |
+
+**Three things were being conflated, and only one was KEYforce's.**
+
+*Deleted by the cleanup.* `5cd6115a` removed 7 Gondor shield meshes and 3 still-referenced item
+definitions, leaving 159 consumers with an empty shield slot: Denethor, Forlong, Angbor, Golasgil,
+every Gondor character-creation preset, all four Gondor career starts. Re-pointed onto the
+`sm_gd_shield_a*` art the same commit added, 212 references in 9 files. Every replaced item was
+already `item_usage="shield"` with the off-hand SECONDARY bone, and so is every replacement, so
+no troop changes grip, block arc or bash animation.
+
+**Two of the three swaps carry a small stat change, stated here because 202 of the 212 references
+do not.** `wm_gondor_shield_a02` to `sm_gd_shield_a1` is stat-identical (520 HP, length 100), which
+covers 202 refs. The other two are not:
+
+- `gond_shield_four_mustard` to `sm_gd_shield_a2`: **400 to 520 hit points (+30%)**, length 90 to
+  100, weight 4.5 to 4.0. Six Ringló Vale lines, `gondor_ring_{peasant,militia,footman,guardsman,
+  spearman,warden}`.
+- `wm_gondor_shield_a_cair_andros` to `sm_gd_shield_a3`: length 90 to 100, HP unchanged. Four Cair
+  Andros lines.
+
+Restoring the originals instead was not a stat-neutral option: `gond_shield_four_mustard`'s two
+collision bodies (`bo_cap_wm_gondor_shield_d`, `bo_wm_gondor_shield_d`) are gone, so restoring it
+verbatim would have re-created the #352 missing-body defect it was swapped to avoid.
+
+*Not the cleanup at all.* The 24 `wm_gondor_sword_a{04,05,06,08,09,10}` meshes and their 6
+collision bodies. Scanning all 4,287 tpacs at the base commit proved the only Gondor sword art ever
+in the assets repo is one tpac holding `a01, a02, a03, a07`. KEYforce moved that file and lost
+nothing; the XML has always named ten variants while four shipped. Two separate review agents
+called this a deletion caused by the cleanup, in opposite directions, and both were wrong.
+
+*A typo.* 8 body refs in the artist's FBX casing (`bo_cap_SM_GD_Shield_A`). The art ships
+lowercase and 0 of 24,648 asset names contain uppercase. Eight values.
+
+**The six dead swords were rebuilt from mixed surviving parts rather than made duplicates.** 16
+parts give 256 combinations, so each is a distinct weapon: `a04` takes a02's blade, a01's guard,
+a03's hilt, a07's pommel, and so on. Only the CraftedItems' `<Pieces>` changed, never the piece
+definitions, so each part keeps its own `length` and `<BuildData>` and the assembly stays
+internally consistent. That is the safe direction of the easterling defect from earlier the same
+day, where a piece's mesh was changed while its geometry attributes still described the old art.
+The collision body comes from the blade piece, so all 6 missing bodies resolved as a side effect
+and the #352 infinite-mission-load-hang risk went with them. The 24 dead piece definitions and
+their `<UsablePiece>` entries were removed, or they persist as blank rows in the smithing UI.
+
+**What that costs, stated plainly, because it is a live balance change.** `a05` and `a10` were
+built on the two longest Gondor blades ever authored (101.55 cm), and both are among the art that
+never shipped. The longest surviving blade is a02's 82.96 cm, so those two lose 31 and 29 cm of
+reach (114 to 83 and 85). They are not obscure: `a05` has 53 references and `a10` has 18. Swing
+damage moves the other way on `a04`, `a06` and `a09`, up 11, 8 and 18, because the swing factor is
+read from the blade alone and the surviving blades are hotter than the deleted ones. Tier, item
+usage and hand-armour bonus are unchanged on all ten. If Gondor needs a long sword back, a02's
+blade on a02's guard is the longest reachable build at 90.4 cm.
+
+One seam cannot be checked from XML. Each guard's `next_piece_offset` was authored for the blade
+it shipped with, so mixing shifts where the blade seats by up to 6 cm on `a08` and `a09`. The
+length arithmetic already accounts for it, which is why reach is sane, but whether the join reads
+as a gap or a clip is a question only the model viewer or the game can answer.
+
+**`weapon_descriptions.xslt` kept the 24 ids after `crafting_templates.xslt` lost them.** Harmless
+by itself: `WeaponDescription.Deserialize` resolves each `<AvailablePiece>` through
+`MBObjectManager.GetObject` and skips a null. Vanilla proves the tolerance rather than the
+habit: of 1,233 `<AvailablePiece>` ids in its `weapon_descriptions.xml`, all 429 `mp_*` ones
+resolve and exactly one id dangles. It is fixed because the asymmetry was the hazard. The two files are a pair in the authoring
+workflow, so leaving one populated means a piece re-added under an old id silently becomes
+craftable again with no definition backing it.
+
+**The 22 elven arrows turned out to be a 22-value fix, not a 385-reference one.** Only the arrow
+mesh was deleted; all 16 elven quivers survive, so the visually prominent part on the character's
+back was never affected. Re-pointed onto `wm_mirkwood_arrow_a01/a02/a03`, the closest surviving
+elven art, leaving every one of the 385 references and every `holster_mesh` untouched.
+
+The first grouping of those 22 was wrong and is fixed. It split on the `_q` and `_v2` tokens in the
+item ids, which encode which quiver an arrow is drawn from, not which arrow it is. Decoding the ids
+against their own `holster_mesh` shows the original art followed one rule with no exceptions: odd
+quivers took the `v1` arrow family, even quivers took `v2`, 11 items each. The token split produced
+6/4/12 across three meshes and made "Elven Arrow II" look unlike I, III and IV for no reason a
+player can read. Regrouped to the parity rule, 11 and 11. The third surviving Mirkwood mesh is
+deliberately unused: three meshes cannot encode the original eight-way split, and a third group
+would assert a distinction the surviving art does not carry.
+
+Not-tested: in-game. Item XML is globbed once at process launch with no hot-reload.
+Research: BasicCharacterTableau mesh resolution, WeaponDesign.CalculatePivotDistances, tpac TOCs at a29f9e98
+
+### feat(tools): a generated mesh catalogue, so the next art drop is a diff and not a screenshot
+
+`tools/generate_armory_catalogue.py` writes `docs/reference/armory-catalogue/catalogue.tsv`: 4,839
+rows covering every mesh and collision body the Armoury ships, with the tpac each came from.
+
+It exists because the damage above was found from blank icons in a screenshot. There was nothing to
+diff against: every hand-maintained list had already rotted. The Dale manifest untouched since May,
+the `armory-guide.md` Gondor row carrying 5 of 17 regional tokens for months, and a `mesh-audit`
+dump 252 names out of date and gitignored so it could never diff at all.
+
+`--diff` classifies each change as RENAME / MOVE / DELETE / NEW, which matters because those need
+different responses and a raw line diff cannot tell them apart. **It deliberately does not use git**:
+`*.tpac` is LFS-tracked, so `-M --find-renames=40%` compares ~130-byte pointer files and fabricated
+37 renames between unrelated cultures on these very commits. The `tpac` column is the join key.
+
+Two things keep it honest. `--check` fails on drift. And the generator exits 1 when a mesh resolves
+to an unknown culture or category with no override row, so a new naming shape fails loudly instead
+of quietly widening an `unknown` bucket, which is how the previous lists died. That override file is
+bounded and shrinking: 802 unresolved on the first run, 206 once the vocabulary was extracted from
+the live names rather than assumed.
+
+The audit that produced it corrected several documented naming claims: `ar` is Arnor, not legacy
+armour; `eb` is creature art, not Erebor; there is no `sk_ro_` Rohan token at all; and most Dol
+Guldur art lives in the Rhun folders. It also found why this cannot be a markdown table: one shipped
+mesh carries eight embedded NUL bytes and four contain spaces.
+
+`4,490` is corrected to `4,364` in 12 places, four of which were written earlier the same day. A
+thirteenth was missed in this same file and caught only by a later audit pass, which is the
+argument for the catalogue restated in miniature. The
+CLAUDE.md row now points at the catalogue instead of restating a number that goes stale on the next
+art drop.
+
 ### fix(armoury): `_slim` is the build variant, not the female one
 
 A review pass caught that a data fix earlier the same day rested on a misread of the engine, and
@@ -403,7 +531,7 @@ slot. They are recorded in a new exact-name `KNOWN_DEAD_MESHES` allowlist that r
 warning fires if the art returns or if nothing references the entry any more.
 
 **The Armory has no cooked asset tree any more,** which inverts what two docs and both audit tools
-assumed. There are 0 `AssetPackages/*.tpac` against 4,490 loose `Assets/**/*.tpac`. At its defaults
+assumed. There are 0 `AssetPackages/*.tpac` against 4,364 loose `Assets/**/*.tpac`. At its defaults
 `validate_mesh_refs.py` was resolving to Native alone and would have reported thousands of false
 positives; `audit_deleted_mesh_impact.py` exited 2 outright. Both now degrade and say so.
 

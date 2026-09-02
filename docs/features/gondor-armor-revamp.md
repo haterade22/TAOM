@@ -168,7 +168,7 @@ Item defs (#358) and troop *equipment* wiring are separate steps. Current state:
 > **Both asset-pipeline caveats in the entries below are RESOLVED as of 2026-09-01, and their
 > shared premise was wrong.** They say these meshes render only once the runtime `AssetPackages/`
 > bundles are recompiled via the Modding Kit. There are no bundles: `LOTRLOME_Armory` has 0 cooked
-> packs against 4,490 loose `Assets/**/*.tpac`, and the loose tree is what the engine reads for
+> packs against 4,364 loose `Assets/**/*.tpac`, and the loose tree is what the engine reads for
 > this module. All 117 of the meshes those entries describe resolve today (`sk_gd_dol_` 40,
 > `sk_gd_lin_` 26, `sk_gd_vale_` 25, `sk_gd_lon_` 14, `sk_gd_pin_noble` 12), verified against the
 > live tpac TOCs. No recompile is or was required. Corrected model:

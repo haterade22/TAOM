@@ -21,7 +21,7 @@ Two tools came out of it:
 ## Why this exists: the stale-pack trap
 
 > **Superseded for this module as of 2026-09-01.** `LOTRLOME_Armory/AssetPackages/` no
-> longer exists (0 cooked packs, 4,490 loose `Assets/**/*.tpac`), so the trap described
+> longer exists (0 cooked packs, 4,364 loose `Assets/**/*.tpac`), so the trap described
 > here is currently unreachable in the Armory and `Assets/` is the only source of truth.
 > The section is kept because it still holds wherever a cooked tree exists, and because it
 > is the reasoning behind both tools. See [armory-guide.md](../reference/armory-guide.md)

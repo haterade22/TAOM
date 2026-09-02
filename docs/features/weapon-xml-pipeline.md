@@ -28,6 +28,52 @@ Adding a new sword to the Armory historically required:
 
 A typo in any one of the eight piece IDs that span those four files means the weapon silently fails to load, with no error in the game log. The Armory contains hundreds of `wm_*_blade/guard/hilt/pommel` quartets; each was hand-typed.
 
+## The two gates a piece id must clear, and what failure actually looks like
+
+Verified against v1.4.8 on 2026-09-01, while deleting 24 dead Gondor sword pieces. The section
+above says a typo means the weapon "silently fails to load". That is right about the outcome and
+thin about the mechanism, and the mechanism decides how much damage a mistake does.
+
+`CraftedItemGenerationHelper.GenerateCraftedItem` (`TaleWorlds.Core.Crafting.cs:566-610`) runs two
+independent checks, and only the second is recorded in CLAUDE.md's shield trap row.
+
+**Gate 1, membership.** Every piece a `<CraftedItem>` names must appear in the template's
+`<UsablePiece>` list, because `CraftingTemplate.Pieces` is populated from nothing else
+(`CraftingTemplate.cs:209-219`). A piece missing there fails `Template.Pieces.Contains(...)` and the
+whole call returns null. **This is the gate that `crafting_templates.xslt` sits on**, which is why
+step 3 above is not optional bookkeeping: removing a `<UsablePiece>` line while a `<CraftedItem>`
+still names that piece kills the item.
+
+**Gate 2, description match.** The surviving item must then match a `<WeaponDescription>` listing
+every piece it uses. This is the polearm-versus-shield case.
+
+The two fail differently, and the difference is worth knowing before triaging one:
+
+| | Gate 1, or Gate 2 with no match at all | Gate 2 matching the wrong description |
+|---|---|---|
+| Result | `ItemObject.Deserialize` sees a null `WeaponComponent`, calls `MBObjectManager.UnregisterObject(this)` (`ItemObject.cs:469-475`), and the item ceases to exist | the item exists and is equipped, with the wrong usage flags |
+| Symptom | every troop and roster naming it now holds a broken item reference | a troop carries the weapon and never draws it |
+| Caught by | `validate_moduledata.py` `BROKEN_ITEM_REF`, after the fact | `tools/audit_polearm_shield_parity.py` |
+
+`OneHandedSword` declares exactly one `<WeaponDescription>`, so for swords there is no second
+description to fall through to: a no-match is unregistration, not a mis-flagged weapon.
+
+`weapon_descriptions.xslt` (step 4) is the forgiving one. `WeaponDescription.Deserialize`
+(`WeaponDescription.cs:49-59`) resolves each `<AvailablePiece>` through `MBObjectManager.GetObject`
+and skips a null, so a stale id there is inert. Vanilla leans on that tolerance sparingly: of the
+1,233 `<AvailablePiece>` ids in its `weapon_descriptions.xml`, all 429 `mp_*` ones resolve and
+exactly one id (`vlandian_blade_10`) dangles. Keep
+the two stylesheets in step anyway: an id left in this file while its definition is gone means a
+piece later re-added under that id becomes craftable again with nothing backing it.
+
+**Reach comes from three pieces, not four.** `WeaponDesign.CalculatePivotDistances` walks the
+template's build orders, and for `OneHandedSword` the pommel carries order `-1`, so it never
+contributes. The length reduces to `hilt/2 + (guard - prev_offset - next_offset) + blade`. The
+collision body is blade-only: `InitCraftedItemObject` reads `UsedPieces[0].CraftingPiece.BladeData`
+and sets `CollisionBodyName` to the empty string for every crafted item (`ItemObject.cs:355-368`).
+Swing damage is blade-only too. So when parts are mixed, the blade decides body, swing damage and
+most of the reach; the pommel decides nothing but looks.
+
 ## Architecture
 
 ```
