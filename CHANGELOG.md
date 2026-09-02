@@ -4,6 +4,87 @@
 
 ## 2026-09-02
 
+### fix(career): a phantom career was eating the player's first career point
+
+Reported repeatedly: you start a campaign, you level up, and no career points ever
+arrive. Go to a lord, switch career, switch back, and there they are.
+
+Career points are not awarded by anything. They are derived on every read as
+`GetMaxChoicesForHero(level) - choicesTaken`, so the only way to see none is for
+`choicesTaken` to be too high. It was, from the first minute of every campaign.
+
+`CareerCampaignBehavior.OnSessionLaunched` carried a legacy-save fallback that
+assigned a culture-matched career whenever the hero did not have one. That gate reads
+like "this is an old save", but it is equally true on a brand-new campaign, because
+`OnSessionLaunched` fires before character creation has even started. v1.4.8
+`Campaign.DoLoadingForGameType` raises `OnSessionStart` at line 1695 and character
+creation is only pushed afterwards by `SandBoxGameManager.OnLoadFinished`. At that
+moment `Hero.MainHero` is still the vanilla template: culture `battania`, name Eren.
+`taom_careers.xml` lists `battania`, so every new player was quietly handed
+`blademaster_of_ren` and its root choice, 58 seconds before they picked anything.
+
+`CareerCreationHandler.OnCareerSelected` then set the real career with `SetCareer`,
+which overwrites the career id and never touches `ChoiceIds`. Two choices at level 1
+against a budget of 2 is zero free points, and the pair went straight into the save.
+The player saw an empty tree, "Free Points: 0", and no explanation, because the ghost
+belongs to another career's groups and never renders. Switching career worked because
+`CareerSwitchService` is the only path that calls `ClearCareer`, which clears the list.
+
+The same list also fed `CareerPassiveService.RefreshCache`, which resolves stored
+choice ids without checking they belong to the hero's career. So a Gondor Ranger was
+carrying a Khand Blademaster's melee damage bonus the whole time.
+
+Three changes. The fallback moved to `OnGameLoadedEvent`, which only loaded saves
+raise and which runs before `OnSessionStart` on that path, so the engine's own branch
+is the discriminator instead of a state test. `CareerDataService` gained
+`ResetForNewCampaign`, wired to `OnNewGameCreatedEvent` from `CareerPersistenceBehavior`
+the way `RacePersistenceBehavior` already does it: the service is a process singleton
+keyed by the engine constant `main_hero`, and `SyncData` only restores on a loading
+store, so a second campaign in one Bannerlord process used to open holding the first
+one's choices, which is the more severe form of the same bug (zero points for as many
+levels as the previous campaign had choices, because `TryAddChoice` then refuses the
+new root outright). And `OnSessionLaunched` now runs a repair pass that drops stored
+choices belonging to a different career, so saves already carrying a ghost fix
+themselves on the next load rather than needing the switch-career workaround.
+
+That repair deletes save data, so its polarity matters more than its logic. The first
+version built an allow-list from the career's own choice groups and dropped everything
+outside it. That reads identically on a healthy install and is ruinous on a broken one:
+`CareerConfigProvider` loads `taom_careers.xml` and `taom_career_choices.xml` under
+separate try/catch blocks, so a malformed choices file leaves every career resolvable
+and every group empty, the allow-list collapses to the root, and the pass deletes the
+player's entire tree on the next save. The review caught it. Deleting now requires
+positive proof of foreignness via a new `ICareerRegistry.GetOwningCareerId`, and an
+owner that cannot be resolved means keep. A partially loaded registry now repairs
+nothing instead of destroying everything.
+
+Root choices carry `group_id=""` in the data, so ownership resolves them from
+`taom_careers.xml` directly. Without that they would read as ownerless, the ghost would
+survive, and the bug would not actually be fixed. Ordinary tests missed this because
+they stubbed the registry to return a value the real one never returns; the pinning
+test now runs against a real `CareerRegistry`.
+
+The lifecycle logic moved out of `CareerCampaignBehavior` into a new
+`ICareerLifecycleService`. Deciding which career a careerless save gets, and which
+stored choices are foreign, are both business logic, and inlining them had pushed the
+behavior to 181 lines against ADR-002's 150.
+
+`CareerAutoAssignTests` had pasted a copy of the fallback algorithm into the test file
+and asserted against that, which is exactly why "should this run at all on a new
+campaign" was never a question anyone could fail. It now calls the real method.
+
+Suite 7890 green.
+
+Known limitation: `TierUnlocks` and `Flags` are stored per hero with no career
+dimension, and only `ClearCareer` clears them. A tier unlocked by one career's quest
+therefore survives a reassignment through any path that does not clear, so a later
+career can read tier 2 or 3 as unlocked ahead of its level gate. Pre-existing, not
+touched here, and tracked separately.
+
+Not-tested: the two campaign entry points themselves, which need a live `Hero.MainHero`.
+Research: `Campaign.DoLoadingForGameType`, `CampaignData.MainHeroTag`, `SandBoxGameManager.OnLoadFinished`.
+Save-compat: repairs existing saves in place on load. No new fields.
+
 ### fix(troops): two troops drew a weapon they could never use
 
 Both are the cross-set draw, which is the one troop defect that is invisible in

@@ -523,3 +523,74 @@ cap-reached warning sitting in a previous campaign's log.
   clears each field: the hook that fires on it (here `OnBeforeInitialModuleScreenSetAsRoot`, which
   re-fires on every main-menu return) and a test that a second session starts clean.
 - **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.
+
+### A "does the entity have X yet" test is not a new-game-vs-loaded-save discriminator
+A legacy-data fallback gated on `!HasCareer(hero.StringId)` reads as "this is an old save", but on a
+brand-new campaign it is equally true, because `OnSessionLaunched` fires before character creation
+has even started: v1.4.8 `Campaign.DoLoadingForGameType` raises `OnSessionStart` at line 1695 and CC
+is only pushed afterwards by `SandBoxGameManager.OnLoadFinished`. `Hero.MainHero` is still the
+vanilla `main_hero` template there, culture `battania`, name Eren. So CareerSystem handed every new
+player a Khand career plus its root choice about a minute before they picked their own, and because
+`SetCareer` overwrites the career id without touching `ChoiceIds`, the ghost survived into the save
+and permanently consumed the level-1 career point. Players reported it as "levelling grants no
+career points"; the workaround they found, switching career at a lord and back, worked only because
+`CareerSwitchService` is the single code path that calls `ClearCareer`.
+- **Why missed:** the gate encodes an inference about lifecycle rather than reading it, and the
+  comment beside it ("New games get career assigned during CC finalization") asserted the ordering
+  the code depended on without anyone checking it. The test file had pasted a private copy of the
+  fallback algorithm and asserted against that copy, so "should this run at all, and when" was not a
+  question any test could fail. Two prior fixes in this same feature, the Phase 9b #128 ability-cache
+  reset and #130 `RacePersistenceBehavior`, had already met the sibling half of this bug class.
+- **Prevent:** when a handler must distinguish a new campaign from a loaded save, subscribe the event
+  that IS that distinction. `OnGameLoadedEvent` fires only for saved campaigns and only before
+  `OnSessionStart`; `OnNewGameCreatedEvent` fires only for new ones, and only after
+  `CampaignBehaviorManager.RegisterEvents()` runs, so a listener added in `RegisterEvents` still
+  receives it (`Campaign.cs`: 1583 calls `OnNewGameCreatedInternal`, which ends with
+  `RegisterEvents()` at 1624; the dispatcher then fires at 1585). Never infer the phase from entity
+  state. Companion rule for anything a wrongly-timed write already persisted: ship a repair pass that
+  drops the bad rows on load, because the save keeps the defect long after the code stops making it.
+  And when a test extracts an algorithm into its own copy to avoid an engine dependency, that copy
+  can never cover WHEN the algorithm runs, which is the half that ships broken.
+- **Source:** the 2026-09-02 career-points investigation; player logs `taom_debug_2026-09-02_09-50-33.log`
+  and `_11-48-55.log` both show the fallback granting `blademaster_of_ren` 58 seconds before the real pick.
+
+### A destructive repair deletes only on positive proof; a lookup's fallback is never that proof
+A repair pass that prunes stored state must be written so that failing to prove an item BELONGS is
+not the same as proving it is FOREIGN. The career-points repair originally built an allow-list from
+the hero's career groups and deleted everything outside it. That reads identically on a healthy
+install and is ruinous on a broken one: `CareerConfigProvider.EnsureLoaded` loads `taom_careers.xml`
+and `taom_career_choices.xml` under SEPARATE try/catch blocks, so a malformed choices file leaves
+every career resolvable and every group empty, the allow-list collapses to the root choice, and the
+pass deletes the player's entire career tree, permanently, at the next save. Pre-fix, a broken
+choices file was survivable and self-correcting.
+- **Why missed:** the guard written was `if (career == null) return 0`, which covers the career being
+  missing, not the CHOICES being missing, and every review question asked was about the career. This
+  is a second instance of `csharp-architecture.md`'s "Lookup Functions With Fallbacks: Validate Before
+  Lookup" (`GetChoicesForGroup` returns `EmptyChoices` as a survival fallback and that fallback was
+  consumed as an acceptance criterion for a delete) and a set-shaped instance of the same file's
+  NaN-gate polarity rule, which is scoped to floats and therefore did not fire. Both rules existed.
+  An adversarial agent aimed squarely at this question read the provider, saw the collections were
+  "possibly empty, never null", and concluded a load failure "degrades to keeps-everything", true
+  only if both files fail together.
+- **Prevent:** for any operation that DELETES persisted state, require an affirmative reason per
+  item and treat every unresolvable answer as keep. Name the degenerate inputs explicitly (empty
+  collection, null id, empty-string id) and assert each keeps everything. Ask of any allow-list: what
+  does this contain when its data source failed to load, and what does the code then do? A repair
+  that repairs nothing is always recoverable; one that deletes everything is not.
+- **Source:** `docs/reviews/rca-career-points-2026-09-02.md` findings 1 and 4.
+
+### A test that stubs the collaborator it is pinning behaviour against pins nothing
+The career-points repair identified a choice's owning career through the choice's group. Every root
+choice in `taom_career_choices.xml` carries `group_id=""`, so the real registry returns no owner for
+any root, the ghost root would have survived, and the fix would not have fixed the reported bug. The
+suite was green: the lifecycle tests stubbed `GetOwningCareerId("blademaster_of_ren_root")` to return
+a career id that the real `CareerRegistry` never returns for a root choice.
+- **Why missed:** the substitute encoded the author's belief about the collaborator rather than its
+  behaviour, so the test asserted that belief back. All six review agents passed it, because the
+  fiction was internally consistent and the production code matched it exactly.
+- **Prevent:** when a test exists to pin how a collaborator RESOLVES something (ids, ownership,
+  lookup semantics) rather than how the unit reacts to a resolution, drive it with the real
+  collaborator over synthetic config. Keep substitutes for the unit's own branching. The tell:
+  a `.Returns(...)` whose value you would have to check the data files to justify.
+- **Source:** `docs/reviews/rca-career-points-2026-09-02.md` finding 2;
+  `CareerRegistryTests.GetOwningCareerId_RootChoiceWithEmptyGroupId_ResolvesToItsCareer`.

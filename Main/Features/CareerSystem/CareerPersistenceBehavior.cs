@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TAOM.Core.Logging;
@@ -19,6 +19,19 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
+        // The career book is a process singleton keyed by Hero.MainHero.StringId ("main_hero"
+        // absent a player-character swap), and SyncData only restores on a LOADING store — a
+        // brand-new campaign never syncs at all.
+        // Without this, campaign B opens holding campaign A's choices, TryAddChoice then refuses
+        // B's own root, and every derived career point is subtracted away to zero.
+        //
+        // OnNewGameCreatedEvent, not OnSessionLaunchedEvent: it is raised only for new campaigns
+        // and only after CampaignBehaviorManager.RegisterEvents() has run: v1.4.8 Campaign.cs
+        // calls OnNewGameCreatedInternal() at 1583, that method ends with RegisterEvents() at
+        // 1624, and only then does the dispatcher fire at 1585. So the listener is attached in
+        // time. Same shape as RacePersistenceBehavior.
+        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(
+            this, _ => _dataService.ResetForNewCampaign());
     }
 
     public override void SyncData(IDataStore dataStore)

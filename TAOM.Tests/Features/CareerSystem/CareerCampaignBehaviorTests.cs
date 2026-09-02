@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
@@ -119,29 +119,13 @@ public class CareerAutoAssignTests
     }
 
     /// <summary>
-    /// Extracts the auto-assign algorithm from CareerCampaignBehavior.OnSessionLaunched
-    /// so it can be tested without Hero.MainHero dependency.
-    /// Returns true if a career was assigned.
+    /// Calls the REAL fallback. It used to be a copy of the algorithm pasted into this file,
+    /// which is precisely why the "should it run at all on a new campaign" defect could ship: the
+    /// copy had no notion of WHEN the behavior invokes it.
     /// </summary>
     private bool TryAutoAssign(string heroStringId, string cultureId)
     {
-        if (_dataService.HasCareer(heroStringId)) return false;
-        if (string.IsNullOrEmpty(cultureId)) return false;
-
-        foreach (var career in _registry.GetAllCareers())
-        {
-            var eligible = false;
-            foreach (var id in career.EligibleCultureIds)
-            {
-                if (string.Equals(id, cultureId, System.StringComparison.OrdinalIgnoreCase))
-                { eligible = true; break; }
-            }
-            if (eligible)
-            {
-                _creationHandler.OnCareerSelected(heroStringId, career.Id);
-                return true;
-            }
-        }
-        return false;
+        var service = new CareerLifecycleService(_dataService, _registry, _creationHandler, _logger);
+        return service.AssignFallbackCareerIfMissing(heroStringId, cultureId);
     }
 }

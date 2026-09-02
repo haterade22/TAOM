@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
@@ -250,5 +250,38 @@ public class CareerDataServiceTests
         _service.SetFlag("hero1", "captain_proven");
         _service.ClearCareer("hero1");
         Assert.IsFalse(_service.HasFlag("hero1", "captain_proven"));
+    }
+    // -- ResetForNewCampaign / PruneChoicesNotIn (career points never appear on a new campaign) --
+    //
+    // CareerDataService is Reuse.Singleton and the container is built once per PROCESS
+    // (SubModule.OnSubModuleLoad), while the dictionary key for the player is the engine
+    // constant "main_hero" (CampaignData.MainHeroTag) in every campaign. SyncData only
+    // restores on a loading store, and a brand-new campaign never syncs at all -- so
+    // without a reset, campaign B starts holding campaign A's ChoiceIds and every derived
+    // career point is subtracted away.
+
+    [TestMethod]
+    public void ResetForNewCampaign_ClearsAllHeroData()
+    {
+        _service.SetCareer("main_hero", "warboss");
+        _service.TryAddChoice("main_hero", "wb_root", 10);
+        _service.SetCareer("hero2", "ranger");
+
+        _service.ResetForNewCampaign();
+
+        Assert.IsFalse(_service.HasCareer("main_hero"));
+        Assert.AreEqual(0, _service.GetChoiceCount("main_hero"));
+        Assert.IsFalse(_service.HasCareer("hero2"));
+        Assert.AreEqual(0, _service.GetAllData().Count);
+    }
+
+    [TestMethod]
+    public void ResetForNewCampaign_LeavesServiceUsable()
+    {
+        _service.ResetForNewCampaign();
+
+        _service.SetCareer("main_hero", "ranger");
+        Assert.IsTrue(_service.TryAddChoice("main_hero", "ranger_root", 2));
+        Assert.AreEqual(1, _service.GetChoiceCount("main_hero"));
     }
 }

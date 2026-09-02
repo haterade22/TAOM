@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TAOM.Core.Logging;
@@ -10,7 +11,7 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
     private readonly ICareerDataService _dataService;
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
-    private readonly ICareerCreationHandler _creationHandler;
+    private readonly ICareerLifecycleService _lifecycle;
     private readonly ICareerAbilityService _abilityService;
     private readonly IModLogger _logger;
 
@@ -18,20 +19,21 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
         ICareerDataService dataService,
         ICareerRegistry registry,
         ICareerPassiveService passiveService,
-        ICareerCreationHandler creationHandler,
+        ICareerLifecycleService lifecycle,
         ICareerAbilityService abilityService,
         IModLogger logger)
     {
         _dataService = dataService;
         _registry = registry;
         _passiveService = passiveService;
-        _creationHandler = creationHandler;
+        _lifecycle = lifecycle;
         _abilityService = abilityService;
         _logger = logger;
     }
 
     public override void RegisterEvents()
     {
+        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
         CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, OnHeroLeveledUp);
         CampaignEvents.HeroKilledEvent.AddNonSerializedListener(this, OnHeroKilled);
@@ -56,31 +58,14 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
             return;
         }
 
-        // Legacy save fallback: assign career if hero doesn't have one
-        // (New games get career assigned during CC finalization)
-        if (!_dataService.HasCareer(hero.StringId))
-        {
-            var cultureId = hero.Culture?.StringId;
-            _logger.LogInfo($"CareerSystem: Legacy save detected — hero '{hero.Name}' has no career (culture='{cultureId ?? "null"}')");
-            if (!string.IsNullOrEmpty(cultureId))
-            {
-                foreach (var career in _registry.GetAllCareers())
-                {
-                    var eligible = false;
-                    foreach (var id in career.EligibleCultureIds)
-                    {
-                        if (string.Equals(id, cultureId, System.StringComparison.OrdinalIgnoreCase))
-                        { eligible = true; break; }
-                    }
-                    if (eligible)
-                    {
-                        _creationHandler.OnCareerSelected(hero.StringId, career.Id);
-                        _logger.LogInfo($"CareerSystem: Legacy fallback — assigned career '{career.Id}' to {hero.Name}");
-                        break;
-                    }
-                }
-            }
-        }
+        // Repair pass. Until AssignFallbackCareerIfMissing was gated to loaded saves, every campaign
+        // was handed a placeholder-culture career plus its root choice BEFORE character
+        // creation ran, and CareerCreationHandler then set the real career without clearing
+        // that ghost. Two choices at level 1 against a budget of 2 is zero free points, and it
+        // was written into the save. Idempotent: a healthy hero has nothing to drop.
+        var pruned = _lifecycle.RepairForeignChoices(hero.StringId);
+        if (pruned > 0)
+            _logger.LogInfo($"CareerSystem: Repaired {hero.Name}'s career data — dropped {pruned} choice(s) belonging to another career");
 
         _logger.LogInfo("CareerSystem: Refreshing passive cache after session launch");
         _passiveService.RefreshCache(_dataService, _registry);
@@ -90,6 +75,24 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
             _logger.LogInfo($"CareerSystem: {hero.Name} has career '{careerId}' with {_dataService.GetChoiceCount(hero.StringId)} choices");
         else
             _logger.LogInfo("CareerSystem: Main hero has no career assigned");
+    }
+
+    /// <summary>
+    /// Legacy-save fallback, and ONLY on the loaded-save path.
+    ///
+    /// `!HasCareer` reads like "this is an old save" but is equally true on a brand-new campaign,
+    /// because OnSessionLaunched fires long before character creation: v1.4.8
+    /// Campaign.DoLoadingForGameType raises OnSessionStart at line 1695, and CC is only pushed
+    /// afterwards by SandBoxGameManager.OnLoadFinished. Hero.MainHero is still the vanilla
+    /// `main_hero` template there — culture `battania`, name "Eren" — so this granted every new
+    /// player a Khand career and its root choice, which then ate their level-1 career point
+    /// permanently. The engine's own load branch is the discriminator; a state test is not.
+    /// </summary>
+    private void OnGameLoaded(CampaignGameStarter starter)
+    {
+        var hero = Hero.MainHero;
+        if (hero == null) return;
+        _lifecycle.AssignFallbackCareerIfMissing(hero.StringId, hero.Culture?.StringId);
     }
 
     private void OnHeroLeveledUp(Hero hero, bool shouldNotify)

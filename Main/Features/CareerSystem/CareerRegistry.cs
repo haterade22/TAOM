@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -15,6 +15,8 @@ public class CareerRegistry : ICareerRegistry
     private Dictionary<string, CareerChoiceDefinition> _choices;
     private Dictionary<string, CareerChoiceGroupDefinition> _groups;
     private List<CareerDefinition> _allCareers;
+    private Dictionary<string, string> _careerIdByGroupId;
+    private Dictionary<string, string> _careerIdByRootChoiceId;
     private int _maxPerkPoints;
 
     private static readonly IReadOnlyList<CareerChoiceDefinition> EmptyChoices = new List<CareerChoiceDefinition>();
@@ -41,6 +43,20 @@ public class CareerRegistry : ICareerRegistry
     {
         EnsureLoaded();
         return _choices.TryGetValue(choiceStringId, out var choice) ? choice : null;
+    }
+
+    public string GetOwningCareerId(string choiceStringId)
+    {
+        EnsureLoaded();
+        if (string.IsNullOrEmpty(choiceStringId)) return null;
+
+        // Root first: it resolves from taom_careers.xml alone, so a ghost root is still
+        // identifiable when taom_career_choices.xml failed to load.
+        if (_careerIdByRootChoiceId.TryGetValue(choiceStringId, out var rootOwner)) return rootOwner;
+
+        if (!_choices.TryGetValue(choiceStringId, out var choice)) return null;
+        if (string.IsNullOrEmpty(choice.GroupId)) return null;
+        return _careerIdByGroupId.TryGetValue(choice.GroupId, out var careerId) ? careerId : null;
     }
 
     public CareerChoiceGroupDefinition GetGroup(string groupStringId)
@@ -157,13 +173,31 @@ public class CareerRegistry : ICareerRegistry
         _careers = new Dictionary<string, CareerDefinition>();
         _choices = new Dictionary<string, CareerChoiceDefinition>();
         _groups = new Dictionary<string, CareerChoiceGroupDefinition>();
+        _careerIdByGroupId = new Dictionary<string, string>();
+        _careerIdByRootChoiceId = new Dictionary<string, string>();
 
         _maxPerkPoints = _configProvider.GetMaxPerkPoints();
 
         var careers = _configProvider.LoadCareers();
         _allCareers = new List<CareerDefinition>(careers);
         foreach (var career in careers)
+        {
             _careers[career.Id] = career;
+            // Root choices carry group_id="" in the data, so they are unreachable through the
+            // group index and need their own. Without this a ghost root from another career
+            // resolves to no owner and survives the repair, which is the entire bug.
+            if (!string.IsNullOrEmpty(career.RootChoiceId) && !_careerIdByRootChoiceId.ContainsKey(career.RootChoiceId))
+                _careerIdByRootChoiceId[career.RootChoiceId] = career.Id;
+
+            // Reverse index for GetOwningCareerId. First writer wins: a group listed by two
+            // careers is a data error, and silently reassigning ownership to the later career
+            // would make a legitimately-held choice look foreign to the earlier one.
+            foreach (var groupId in career.ChoiceGroupIds)
+            {
+                if (!_careerIdByGroupId.ContainsKey(groupId))
+                    _careerIdByGroupId[groupId] = career.Id;
+            }
+        }
 
         foreach (var group in _configProvider.LoadChoiceGroups())
             _groups[group.Id] = group;

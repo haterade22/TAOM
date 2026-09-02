@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem;
@@ -93,6 +93,13 @@ public class CareerDataService : ICareerDataService
         data.ChoiceIds.Clear();
         data.TierUnlocks.Clear();
         data.Flags.Clear();
+    }
+
+    public void ResetForNewCampaign()
+    {
+        // Fresh dictionary rather than Clear(): SyncData's save path hands the live reference out
+        // through GetAllData(), so replacing it cannot disturb a reader mid-pass.
+        _heroData = new Dictionary<string, HeroCareerData>();
     }
 
     public Dictionary<string, HeroCareerData> GetAllData()

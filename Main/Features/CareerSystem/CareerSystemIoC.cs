@@ -24,6 +24,7 @@ public static class CareerSystemIoC
         // Phase 3: Campaign integration
         container.Register<ICareerCreationHandler, CareerCreationHandler>(Reuse.Singleton);
         container.Register<ICareerSwitchService, CareerSwitchService>(Reuse.Singleton);
+        container.Register<ICareerLifecycleService, CareerLifecycleService>(Reuse.Singleton);
 
         // Phase 4: Abilities and mutations
         container.Register<Abilities.ICareerAbilityService, Abilities.CareerAbilityService>(Reuse.Singleton);

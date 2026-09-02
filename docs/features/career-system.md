@@ -430,7 +430,68 @@ When the player picks "I wish to discuss my career path" on any companion (under
 
 **Switch contract:** `ICareerSwitchService.SwitchCareer(heroStringId, hero, newCareerId)` clears old career + choices + tier unlocks + flags, sets the new career, adds the new root choice, refreshes the passive cache. `CanSwitch` rejects same-career switches at the boundary (`hero.StringId → _dataService.GetCareerStringId → ordinal-ignore-case == newCareerStringId`).
 
+## Campaign lifecycle: when a career may be assigned, and the repair pass
+
+Three rules hold this feature's state together. Breaking any one of them shows up to the player as
+"levelling grants no career points", because points are derived (`GetMaxChoicesForHero(level) -
+choicesTaken`) rather than stored, so a `choicesTaken` that is too high silently zeroes them.
+
+**1. The legacy-career fallback belongs to loaded saves only.** `CareerCampaignBehavior` subscribes
+`OnGameLoadedEvent` for it, never `OnSessionLaunchedEvent`. A `!HasCareer(...)` test cannot tell a new
+campaign from an old save: `OnSessionLaunched` fires long before character creation, so on a new
+campaign the test is always true. v1.4.8 `Campaign.DoLoadingForGameType` raises `OnSessionStart` at
+line 1695 and CC is only pushed afterwards by `SandBoxGameManager.OnLoadFinished`, with
+`Hero.MainHero` still on the vanilla `main_hero` template (culture `battania`, name Eren). Until
+2026-09-02 this granted every new player `blademaster_of_ren` and its root choice about a minute
+before they chose their own career.
+
+**2. The career book resets on `OnNewGameCreatedEvent`.** `CareerPersistenceBehavior` wires
+`ICareerDataService.ResetForNewCampaign`. The service is `Reuse.Singleton` and the container is built
+once per process (`SubModule.OnSubModuleLoad`), while the player's dictionary key is the engine
+constant `main_hero` (`CampaignData.MainHeroTag`) in every campaign. `SyncData` restores only on a
+loading store and a brand-new campaign never syncs at all, so without the reset campaign B opens
+holding campaign A's choices, `TryAddChoice` then refuses B's own root outright, and the player gets
+zero points for as many levels as A had choices. `OnNewGameCreatedEvent` is safe to subscribe from
+`RegisterEvents`: `Campaign.cs` calls `OnNewGameCreatedInternal` at 1583, that method ends with
+`CampaignBehaviorManager.RegisterEvents()` at 1624, and the dispatcher fires afterwards at 1585.
+
+**3. `OnSessionLaunched` repairs what earlier sessions wrote.**
+`ICareerLifecycleService.RepairForeignChoices` drops stored choices that positively belong to a
+different career, before `RefreshCache` runs, so saves already carrying a ghost heal on the next load
+instead of needing the switch-career workaround. It is idempotent, so a healthy save is a no-op
+forever after.
+
+**The polarity is the safety property, not the logic.** This pass deletes save data, so it deletes
+only on proof of foreignness, via `ICareerRegistry.GetOwningCareerId`. An owner that cannot be
+resolved means keep. The inverse (an allow-list built from the career's own groups, dropping
+everything outside it) reads identically on a healthy install and destroys the player's whole tree on
+a broken one, because `CareerConfigProvider.EnsureLoaded` loads `taom_careers.xml` and
+`taom_career_choices.xml` under separate try/catch blocks: a malformed choices file leaves every
+career resolvable and every group empty, collapsing the allow-list to the root choice. If you ever
+rewrite this pass, keep the polarity.
+
+**Root choices resolve from `taom_careers.xml`, not from a group.** Every root carries `group_id=""`
+in the choices XML, so `GetOwningCareerId` indexes `CareerDefinition.RootChoiceId` directly. Without
+that, a ghost root reads as ownerless, survives the repair, and the career-point bug is not fixed.
+`CareerRegistryTests.GetOwningCareerId_RootChoiceWithEmptyGroupId_ResolvesToItsCareer` pins it against
+a real registry rather than a substitute, because a stubbed registry hid exactly this during review.
+
+**Known limitation:** `TierUnlocks` and `Flags` are stored per hero with no career dimension
+(`IsTierUnlocked(heroId, tier)`), and only `ClearCareer` clears them. A tier unlocked by one career's
+quest survives a reassignment through any path that does not clear, so a later career can read tier 2
+or 3 as unlocked ahead of its level gate. Pre-existing; the repair pass covers `ChoiceIds` only.
+
+The reason a stale entry is not merely cosmetic: `CareerPassiveService.RefreshCache` walks
+`heroData.ChoiceIds` and resolves each id through the registry without checking it belongs to the
+hero's career, so a foreign choice keeps applying its passive. A Gondor Ranger carrying a Khand
+Blademaster's melee damage bonus was the second symptom of the same defect.
+
+**`SetCareer` does not clear choices** (only `ClearCareer` does, and `CareerSwitchService` is its one
+caller). Any new code path that assigns a career to a hero who may already have one must decide
+explicitly whether the old choices should survive.
+
 ## Changelog
+- 2026-09-02: Career points never appeared on a new campaign: the legacy-save fallback ran before character creation and granted a placeholder-culture career whose root choice then ate the level-1 point permanently. Fallback moved to `OnGameLoadedEvent`, `ICareerDataService.ResetForNewCampaign` wired to `OnNewGameCreatedEvent`, and a `PruneForeignChoices` repair pass added at session launch for saves already carrying a ghost.
 
 - 2026-07-07 — All 49 enabled careers got ability icons (closes the #101 art gap): "named effect-icon" style — the ability's effect/emblem as a gritty oil painting with the name hand-lettered in the art (user-generated via Midjourney from per-ability prompts; 256x256; baked into the `ui_taom_career_system` atlas). Battle HUD compacted: panel 220x132→130x166, icon 64→110, career-name line and black backdrop removed (icon + "Press V" + charge bar only). Renamed the `cave_troll_master` ability "Troll Frenzy"→"Gundabad Berserker" (English source; the 12 translation files are stale for those 8 strings until the next `/localize` run). Battle-HUD render verified in-game; career-screen render uses the same sprite id (not separately eyeballed).
 - 2026-06-19 — Career-ability pips now visibly light up when a skill is increased: taken state uses a brighter dedicated `career_point_pip_lit` sprite (One-Ring ring whitened + glow halo) instead of a ~12% alpha bump on the shared hollow ring (#290).

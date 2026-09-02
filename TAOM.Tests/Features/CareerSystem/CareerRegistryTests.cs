@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -310,5 +310,53 @@ public class CareerRegistryTests
         var targets = _registry.GetEligibleSwitchTargets(currentCareerId: null, hero: _hero);
 
         Assert.AreEqual(2, targets.Count);
+    }
+    // -- GetOwningCareerId: the choice -> career resolution the repair pass deletes on --
+
+    [TestMethod]
+    public void GetOwningCareerId_RootChoiceWithEmptyGroupId_ResolvesToItsCareer()
+    {
+        // Every root choice in taom_career_choices.xml carries group_id="", so the group index
+        // cannot see them. If this returns null, a ghost root from another career reads as
+        // "owner unknown", survives the repair pass, and the career-point bug is NOT fixed --
+        // which is exactly what a stubbed registry hid during review.
+        Assert.AreEqual("warboss", _registry.GetOwningCareerId("wb_root"));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_ChoiceInACareersGroup_ResolvesToThatCareer()
+    {
+        Assert.AreEqual("warboss", _registry.GetOwningCareerId("wb_brut_key"));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_UnknownChoice_ReturnsNull()
+    {
+        Assert.IsNull(_registry.GetOwningCareerId("not_a_real_choice"));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_NullOrEmpty_ReturnsNull()
+    {
+        Assert.IsNull(_registry.GetOwningCareerId(null));
+        Assert.IsNull(_registry.GetOwningCareerId(""));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_ChoicesFileFailedToLoad_StillResolvesRootsAndNothingElse()
+    {
+        // CareerConfigProvider loads taom_careers.xml and taom_career_choices.xml under separate
+        // try/catch blocks, so careers can resolve while every group and choice is empty. Roots
+        // must still resolve (so a ghost is cleanable) and everything else must read as unknown
+        // (so the player's real tree is never deleted).
+        var config = Substitute.For<ICareerConfigProvider>();
+        config.GetMaxPerkPoints().Returns(30);
+        config.LoadCareers().Returns(new List<CareerDefinition> { WarbossCareer });
+        config.LoadChoiceGroups().Returns(new List<CareerChoiceGroupDefinition>());
+        config.LoadChoices().Returns(new List<CareerChoiceDefinition>());
+        var registry = new CareerRegistry(config, Substitute.For<IModLogger>());
+
+        Assert.AreEqual("warboss", registry.GetOwningCareerId("wb_root"));
+        Assert.IsNull(registry.GetOwningCareerId("wb_brut_key"));
     }
 }

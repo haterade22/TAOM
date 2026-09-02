@@ -11,6 +11,18 @@ public interface ICareerRegistry
     CareerChoiceDefinition GetChoice(string choiceStringId);
     CareerChoiceGroupDefinition GetGroup(string groupStringId);
     IReadOnlyList<CareerChoiceDefinition> GetChoicesForGroup(string groupStringId);
+
+    /// <summary>
+    /// The id of the career that owns <paramref name="choiceStringId"/>, resolved through the
+    /// choice's group, or <c>null</c> when the choice, its group, or the owning career cannot be
+    /// resolved.
+    ///
+    /// A null answer means "unknown", NEVER "belongs to nobody" — the two are indistinguishable
+    /// from the registry's point of view, and a partially-loaded registry produces null for every
+    /// choice in the game. Any caller acting destructively on the result must treat null as
+    /// "leave it alone".
+    /// </summary>
+    string GetOwningCareerId(string choiceStringId);
     bool IsEligible(string careerStringId, ICareerHeroAdapter hero);
     int GetMaxChoicesForHero(int heroLevel);
 
