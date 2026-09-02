@@ -1,12 +1,12 @@
 {
   "culture": "gondor",
-  "_note": "Per-clan Gondor heraldry + region-themed rosters. color=primary armor tint, color2=secondary. Fiefdom palettes are semi-canonical (Heraldry of Middle-earth + Edain fiefdom heraldry). Houses are mapped to Gondor regions; rosters draw from that region's troop line in troops_gondor.xml.",
+  "_note": "color=primary armor tint, color2=secondary. Both are derived from the clan's own banner_key: color is the layer-0 background palette colour, color2 is the layer-1 icon colour, resolved through <BannerColors> in banner_icons.xml. Keep them in step with the banner. WARNING: the template_id/roster half of this spec is STALE. It still holds the pre-reconciliation fief mapping for clans 2, 5, 6, 7, 8 and 9; the shipped spclans.xslt holds the correct one (see CHANGELOG-2026-H1 'fix(gondor-clans): reconcile clan to default_party_template bindings'). The theme labels below follow the SHIPPED mapping, not template_id. Do not run generate_clan_heraldry.py on this spec until template_id is reconciled: --apply would revert those six party templates. Clans 9 and 11 carry FFFEFEFE rather than the banner's exact FFFFFFFF: FFFFFFFF equals uint.MaxValue, which AgentVisuals_Create_Patch treats as 'no clan colour set', so colour randomness would stay on and the engine would override the clan colour. Do not 'correct' these two back to FFFFFFFF.",
   "clans": [
     {
       "id": "clan_empire_west_1", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_minas_tirith_template",
-      "theme": "Minas Tirith / House of Hurin (Stewards) — silver & black",
-      "color": "FFCDD2DA", "color2": "FF1A1A20",
+      "theme": "Minas Tirith / House of Hurinionath (Stewards): black & white, from the house banner",
+      "color": "FF211F1F", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_ano_peasant", "min": 3, "max": 6},
         {"troop": "gondor_ano_militia", "min": 2, "max": 4},
@@ -26,8 +26,8 @@
     {
       "id": "clan_empire_west_2", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_lossarnach_template",
-      "theme": "Lossarnach — red & white (axemen of the flowery vale)",
-      "color": "FFB02A23", "color2": "FFEDE3CF",
+      "theme": "Dol Amroth / House of Imrazorionath (Swan Knights): blue & white, from the house banner",
+      "color": "FF30336B", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_loss_lumberman", "min": 3, "max": 6},
         {"troop": "gondor_loss_woodsman", "min": 2, "max": 4},
@@ -44,8 +44,8 @@
     {
       "id": "clan_empire_west_3", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_lebennin_template",
-      "theme": "Lebennin — blue & gold (five streams, river-men)",
-      "color": "FF2C5BA0", "color2": "FFD8B048",
+      "theme": "Lebennin / House of Earnurionath (five streams, river-men): deep blue & white, from the house banner",
+      "color": "FF003A8C", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_leb_militia", "min": 3, "max": 6},
         {"troop": "gondor_leb_skirmisher", "min": 2, "max": 4},
@@ -61,8 +61,8 @@
     {
       "id": "clan_empire_west_4", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_lamedon_template",
-      "theme": "Lamedon — black & gold (hill-men, black fist on yellow)",
-      "color": "FF2A2A2A", "color2": "FFD4A82A",
+      "theme": "Lamedon / House of Barahirionath (hill-men): amber & white, from the house banner",
+      "color": "FFD48806", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_lam_clansman", "min": 3, "max": 6},
         {"troop": "gondor_lam_footman", "min": 2, "max": 4},
@@ -77,8 +77,8 @@
     {
       "id": "clan_empire_west_5", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_pinnath_gelin_template",
-      "theme": "Pinnath Gelin — green (green hills, spear & bow)",
-      "color": "FF2E7D32", "color2": "FFE6DEB8",
+      "theme": "Lossarnach / House of Ausirionath (axemen of the flowery vale): dark green & white, from the house banner",
+      "color": "FF284E19", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_pg_volunteer", "min": 3, "max": 6},
         {"troop": "gondor_pg_militia", "min": 2, "max": 4},
@@ -95,8 +95,8 @@
     {
       "id": "clan_empire_west_6", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_ithilien_template",
-      "theme": "Ithilien — forest green & silver (rangers of Ithilien)",
-      "color": "FF35513A", "color2": "FFB9C2BC",
+      "theme": "Pinnath Gelin / House of Halboronionath (green hills, spear & bow): green & white, from the house banner",
+      "color": "FF34671E", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_ith_watcher", "min": 3, "max": 5},
         {"troop": "gondor_ith_veteran", "min": 2, "max": 4},
@@ -112,8 +112,8 @@
     {
       "id": "clan_empire_west_7", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_dol_amroth_template",
-      "theme": "Dol Amroth — azure & silver (Swan Knights of Belfalas)",
-      "color": "FF1E6FA0", "color2": "FFE8EEF2",
+      "theme": "Calembel / House of Malandilionath (Ringlo vale knights): dark red & white, from the house banner",
+      "color": "FF5A1310", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_da_footman", "min": 3, "max": 5},
         {"troop": "gondor_da_squire", "min": 2, "max": 4},
@@ -131,8 +131,8 @@
     {
       "id": "clan_empire_west_8", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_belfalas_template",
-      "theme": "Belfalas — sea teal & foam-white (coast-guard & hunters)",
-      "color": "FF1C6E78", "color2": "FFD8E4E0",
+      "theme": "Anfalas / House of Olindurionath (the Langstrand levy): bronze & white, from the house banner",
+      "color": "FF874D00", "color2": "FFF5F5F5",
       "roster": [
         {"troop": "gondor_bel_recruit", "min": 3, "max": 6},
         {"troop": "gondor_bel_hunter", "min": 2, "max": 4},
@@ -149,8 +149,8 @@
     {
       "id": "clan_empire_west_9", "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_calembel_template",
-      "theme": "Calembel — vale green & bronze (Ringlo vale knights)",
-      "color": "FF3C5A34", "color2": "FFC8B27A",
+      "theme": "Blackroot Vale / House of Danuhirionath (Morthond shadow archers): white & black, from the house banner",
+      "color": "FFFEFEFE", "color2": "FF000000",
       "roster": [
         {"troop": "gondor_ano_militia", "min": 3, "max": 5},
         {"troop": "gondor_cal_swordsman", "min": 2, "max": 4},
@@ -166,8 +166,8 @@
     {
       "id": "clan_empire_west_10", "source": "xml",
       "template_id": "kingdom_hero_party_gondor_linhir_template",
-      "theme": "Linhir — royal purple & silver (House of Hyarthulionath)",
-      "color": "FF5A3A78", "color2": "FFCBB7DA",
+      "theme": "Linhir / House of Hyarthulionath: gold & navy, from the house banner",
+      "color": "FFAD8B00", "color2": "FF030852",
       "roster": [
         {"troop": "gondor_lin_footman", "min": 3, "max": 5},
         {"troop": "gondor_lin_spearman", "min": 2, "max": 4},
@@ -182,8 +182,8 @@
     {
       "id": "clan_empire_west_11", "source": "xml",
       "template_id": "kingdom_hero_party_gondor_tolfalas_template",
-      "theme": "Tolfalas — slate blue & steel (isle crossbows & marksmen)",
-      "color": "FF4A6072", "color2": "FFCBD3D8",
+      "theme": "Tolfalas / House of Caladionath (isle crossbows & marksmen): white & charcoal, from the house banner",
+      "color": "FFFEFEFE", "color2": "FF262626",
       "roster": [
         {"troop": "gondor_ano_militia", "min": 3, "max": 5},
         {"troop": "gondor_tol_crossbowman", "min": 2, "max": 4},
@@ -199,8 +199,8 @@
     {
       "id": "clan_empire_west_12", "source": "xml",
       "template_id": "kingdom_hero_party_gondor_serelond_template",
-      "theme": "Serelond — teal & bronze (coast pikemen of House Garvirionath)",
-      "color": "FF1F6E63", "color2": "FFCBA257",
+      "theme": "Serelond / House of Garvirionath (coast pikemen): slate & white, from the house banner",
+      "color": "FF515267", "color2": "FFF5F5F5",
       "roster": [
         {"troop": "gondor_ano_militia", "min": 3, "max": 5},
         {"troop": "gondor_ser_pikeman", "min": 2, "max": 4},
@@ -217,8 +217,8 @@
     {
       "id": "clan_empire_west_13", "source": "xml",
       "template_id": "kingdom_hero_party_gondor_anfalas_template",
-      "theme": "Anfalas — tan-olive & green (the Langstrand levy, House Hirilionath)",
-      "color": "FF6E5A2C", "color2": "FF9DAE78",
+      "theme": "Anfalas / House of Hirilionath (the Langstrand levy): navy & white, from the house banner",
+      "color": "FF002766", "color2": "FFF5F5F5",
       "roster": [
         {"troop": "gondor_anf_levy", "min": 3, "max": 6},
         {"troop": "gondor_anf_militia", "min": 2, "max": 4},
@@ -234,8 +234,8 @@
     {
       "id": "clan_empire_west_14", "source": "xml",
       "template_id": "kingdom_hero_party_gondor_blackroot_vale_template",
-      "theme": "Blackroot Vale (Morthond) — dark slate & moss (shadow archers, House Baranionath)",
-      "color": "FF2C3138", "color2": "FF6E7A66",
+      "theme": "Blackroot Vale / House of Baranionath (Morthond shadow archers): dark red & white, from the house banner",
+      "color": "FF570D0D", "color2": "FFFFFFFF",
       "roster": [
         {"troop": "gondor_brv_bowman", "min": 3, "max": 5},
         {"troop": "gondor_brv_scout", "min": 2, "max": 4},

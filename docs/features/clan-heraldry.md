@@ -4,27 +4,57 @@
 
 Every TAOM clan that the mod authors or renames gets a distinct `color`/`color2` (heraldry tint)
 and — where a troop pool exists — its **own** `default_party_template` pointing at a region/archetype-
-themed roster. The 8 vanilla-renamed kingdoms were also repainted to lore-accurate palettes. Net:
-**192 clans coloured**, **176 per-clan party templates**, **8 kingdoms repainted**.
+themed roster. The 8 vanilla-renamed kingdoms were also repainted to lore-accurate palettes.
+As originally shipped (2026-06-04): 192 clans coloured, 176 party templates, 8 kingdoms repainted.
+Those counts have drifted with later hand edits, so re-measure before quoting them.
 
 ## Why This Exists
 
 TAOM's armor items use **grayscale (desaturated) textures** so the engine tints them per-faction.
-The trigger was "grayscale armor reads gray/wrong in-game." Research against the installed 1.4.5 engine
-established **what actually drives the tint**:
+The trigger was "grayscale armor reads gray/wrong in-game." Two chains matter and they give different answers: what the engine does, and what TAOM ships on top.
+
+**Vanilla chain** (re-verified against installed v1.4.8):
 
 | Step | Evidence |
 |---|---|
-| Agent armor cloth tint = its Team colour | `Mission.cs:4422` → `new AgentBuildData(troop).ClothingColor1(agentTeam.Color).ClothingColor2(agentTeam.Color2)` |
+| Agent armor cloth tint = its Team colour | `Mission.cs:4434` → `new AgentBuildData(troop).ClothingColor1(agentTeam.Color).ClothingColor2(agentTeam.Color2)`, applied at `Mission.cs:4128-4129` |
 | Team colour = party's `MapFaction` colour | `PartyBase.cs:257` → `PrimaryColorPair` = `(MapFaction.Color, MapFaction.Color2)` |
 | `MapFaction` of a kingdom-bound clan = the **Kingdom** | `Clan.cs:338` → returns `Kingdom` when set, else `this` |
 | `default_party_template` optional, falls back to culture | `Clan.cs:112` → `Culture.DefaultPartyTemplate` |
 
-**Consequence:** for the ~190 kingdom-bound noble clans, **battlefield armor follows the KINGDOM colour,
-not the clan colour.** So the real "gray armor" lever is the kingdom repaint (Phase 0). Clan `color`/`color2`
-matters for: encyclopedia/UI heraldry, independent clans, and **minor/bandit factions** (whose `MapFaction`
-*is* the clan, so their troop armor does follow clan colour — which is why the 8 bandit clans were recoloured
-off their flat gray `FF8B7C73`).
+**What TAOM ships, which overrides the middle two rows.** `Mission.SpawnTroop` builds the
+`AgentBuildData` with the team (so kingdom) colours and then calls `Mission.SpawnAgent`. TAOM
+prefixes `Mission.SpawnAgent`
+(`Main/Features/BannerColorPersistence/Hooks/Mission_SpawnAgent_Patch.cs`, category
+`Patch23_BannerColorPersistence`) and rewrites `ClothingColor1/2` from the spawning party's LEADER's
+clan. The adapter it reads through (`Main/Adapters/BannerHeroAdapter.cs`) returns `clan.Color` and
+`clan.Color2` with **no `MapFaction` hop**, so a clan inside a kingdom is not redirected to the
+kingdom. The prefix runs after vanilla has already set the team colours, so the clan colour wins.
+
+**Consequence:** for every noble clan, kingdom-bound or not, **battlefield armour follows the CLAN
+colour.** A clan's `color`/`color2` is the direct lever on its troops' armour tint. Three conditions
+gate it: `EnableColorPersistence` must be on (`configs/banner_color_config.json`), both colours must
+be non-zero (`ClanColorInfo.HasCustomColors`), and the agent must carry a party origin with a
+`LeaderHero`. When any of those fails the patch falls through and vanilla's kingdom colour applies.
+That is the only path on which the older "armour follows the kingdom" claim still holds, and it is
+why a leaderless garrison or militia still fields kingdom colours.
+
+Minor and bandit factions reach the clan colour by both routes, which is why the 8 bandit clans were
+recoloured off their flat gray `FF8B7C73`.
+
+**Save-compat. Read this before concluding that a colour edit "did not work".** `Clan.Color` and
+`Clan.Color2` are `[SaveableProperty(76)]` and `(77)`, so an existing save keeps the colours it was
+created with. A recolour shows up on a **new campaign only**. Vanilla
+`Clan.UpdateBannerColorsAccordingToKingdom` recolours the `Banner` object, never `Color`/`Color2`.
+
+**Avoid a pure-white primary.** `FFFFFFFF` is `uint.MaxValue`, which is the engine's own "unset"
+value for cloth colour (`AgentVisualsData` initialises both `ClothColor1Data` and `ClothColor2Data`
+to it). `AgentVisuals_Create_Patch` therefore reads a white primary as "no clan colour set", returns
+early, and never suppresses the engine's HSB colour randomness. The blast radius is small, because
+the only shipped caller that enables randomness is the campaign-map party icon and that path reads
+`MapFaction.Color`, so it bites only when a player founds a kingdom from such a clan
+(`KingdomManager` seeds the new kingdom from `founderClan.Color`). Use `FFFEFEFE` instead, one step
+off white and visually identical. `color2` is unaffected: the guard reads `ClothColor1Data` only.
 
 ## Architecture
 
@@ -45,9 +75,20 @@ tools/generate_clan_heraldry.py   ── consume specs, idempotently edit 3 file
                                        C. taom_partyTemplates.xml   (upsert <MBPartyTemplate> rosters)
 ```
 
-**Colour sourcing.** Gondor (14 clans) is **hand-authored** by fiefdom with semi-canonical heraldry
-(Dol Amroth azure/silver Swan-Knights, Lossarnach red axemen, Lebennin blue/gold, Lamedon black/gold,
-Pinnath Gelin green, Ithilien rangers, Blackroot Vale shadow-archers, …). The other 14 troop-having
+**Colour sourcing.** Gondor (14 clans) is **hand-authored**, and since 2026-09-02 each clan's
+`color`/`color2` is derived from its own `banner_key`: `color` is the layer-0 background palette
+colour, `color2` is the layer-1 icon colour, both resolved through `<BannerColors>` in
+`banner_icons.xml`. Keep the pair in step whenever the banner changes.
+
+Resolve a palette id against **TAOM's `banner_icons.xml` first**, falling back to Native's only when
+the id is absent there. TAOM redefines 46 ids that Native already owns, and TAOM's value is the one
+that renders: the engine merges the two documents before `BannerManager` ever sees them
+(`MBObjectManager.MergeElements`, with `BannerColors` marked `AlwaysPreferMerge` and `@id` unique in
+`BannerIcons.xsd`), and that merge is last-writer-wins with TAOM loading after Native. The
+`if (!_colorPalette.ContainsKey(key))` guard in `BannerManager` looks like first-writer-wins but
+never fires, because the merged document already holds exactly one `Color` node per id. Reading
+Native's table for a colliding id is how `clan_empire_west_2` briefly got `FF2A5599` rather than
+`FF30336B`. The other 14 troop-having
 cultures are **auto-composed**: a per-culture lore base colour with deterministic per-clan hue/lightness
 variation (each clan distinct, in-family), and archetype-rotated rosters. This is the only feasible way to
 reach ~190 clans; refine any clan by editing its spec JSON and re-running the generator.
@@ -78,7 +119,11 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 
 ## Tests / Verification
 
-- `python tools/validate_moduledata.py` → **PASS** (0 broken troop/template refs; 462 party templates).
+- `python tools/validate_moduledata.py` → **PASS**, 0 errors (no broken troop/template refs).
+- `python tools/check_external_xslt.py` → **PASS** on all 17 stylesheets across the three modules.
+- Transform `spclans.xslt` over the installed `SandBox/ModuleData/spclans.xml` with lxml and assert
+  the emitted `color`/`color2` plus the passthrough attributes. Reading the stylesheet text cannot
+  prove passthrough survived, which is the failure mode `/xslt-check` alone would miss.
 - All touched XML/XSLT parse as well-formed (`xml.dom.minidom`).
 - `dotnet build Main/TAOM.csproj` → 0 errors (data-only; C# unaffected).
 - **Human seam (not automatable):** in-game render of the new clan colours, kingdom troop-armor tint,
@@ -86,6 +131,13 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
   a few battles.
 
 ## How-To
+
+> **Do not run the generator on Gondor.** `clan_heraldry/gondor.json` has drifted from the shipped
+> `spclans.xslt` on `template_id` for clans 2, 5, 6, 7, 8 and 9. The shipped XSLT holds the correct
+> mapping, from the deliberate `fix(gondor-clans): reconcile clan to default_party_template bindings`
+> pass recorded in `docs/changelog-archive/CHANGELOG-2026-H1.md`. `--all --apply` globs every spec
+> file, so it would silently revert that fix. Reconcile the spec's `template_id` half first, or edit
+> `spclans.xslt` and `characters/clans.xml` by hand. The same trap applies to `mordor.json`.
 
 **Re-colour or re-roster a clan:** edit its entry in `clan_heraldry/<culture>.json`, then
 `python tools/generate_clan_heraldry.py --spec <culture> --apply` (idempotent — replaces, never dupes).
@@ -105,6 +157,7 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 
 ## Changelog
 
+- 2026-09-02: repointed all 14 Gondor clans' `color`/`color2` to derive from their own `banner_key`, and corrected the "armour follows the kingdom" claim above: `Patch23_BannerColorPersistence` makes it follow the clan.
 - 2026-06-04 — Gave 192 clans distinct heraldry `color`/`color2`, 176 clans their own `default_party_template`, and repainted all 8 vanilla-renamed kingdoms to lore palettes via 4 new tools + per-culture spec files; `validate_moduledata` PASS (462 party templates), data-only.
 
 ---

@@ -148,7 +148,7 @@ Border proximity floor for priority-list targets
 
 **Target:** `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM`
 
-UI color persistence + 3D battle + conversation — player clan colors everywhere
+UI colour persistence, 3D battle and conversation. NOT player-only: the `Mission.SpawnAgent` prefix rewrites `ClothingColor1/2` from the spawning party's LEADER's clan for every party in the mission, reading `clan.Color`/`clan.Color2` with no `MapFaction` hop, so battlefield armour follows the CLAN and not the kingdom. It runs after `Mission.SpawnTroop` has set the team colours, so it is the last writer. See `docs/features/clan-heraldry.md`
 
 ## Patch24_BannerDriftGuard
 

@@ -108,5 +108,5 @@ Status: `banner_icons.xml` wired ✅; green material sources placed in `AssetSou
 ## Related
 
 - `docs/features/gui-sprite-system.md` — the sprite-bake pipeline in depth (bake vs render, the generator decompile, the rebake-restart gotcha).
-- `docs/features/clan-heraldry.md` — how clan colors are assigned/applied at runtime.
+- `docs/features/clan-heraldry.md`: how clan colours are authored, and why `Patch23_BannerColorPersistence` makes them (not the kingdom colour) drive battlefield armour tint.
 - `.claude/rules/gui-ui.md` — sprite reference + bake rules.

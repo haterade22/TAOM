@@ -15,8 +15,8 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		color="FF5A3A78"
-		color2="FFCBB7DA"
+		color="FFAD8B00"
+		color2="FF030852"
 		default_party_template="PartyTemplate.kingdom_hero_party_gondor_linhir_template"
 		banner_key="11.251.166.1528.1528.764.764.1.0.0.10016.303.290.600.600.764.800.0.0.0" />
 
@@ -29,8 +29,8 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		color="FF4A6072"
-		color2="FFCBD3D8"
+		color="FFFEFEFE"
+		color2="FF262626"
 		default_party_template="PartyTemplate.kingdom_hero_party_gondor_tolfalas_template"
 		banner_key="11.172.166.1528.1528.764.764.1.0.0.10012.332.171.1000.1000.764.770.0.0.0" />
 
@@ -43,8 +43,8 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		color="FF1F6E63"
-		color2="FFCBA257"
+		color="FF515267"
+		color2="FFF5F5F5"
 		default_party_template="PartyTemplate.kingdom_hero_party_gondor_serelond_template"
 		banner_key="11.101.166.1528.1528.764.764.1.0.0.10009.35.171.500.550.765.730.0.0.0" />
 
@@ -57,8 +57,8 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		color="FF6E5A2C"
-		color2="FF9DAE78"
+		color="FF002766"
+		color2="FFF5F5F5"
 		default_party_template="PartyTemplate.kingdom_hero_party_gondor_anfalas_template"
 		banner_key="11.293.203.1528.1528.764.764.1.0.0.10014.35.171.800.800.764.806.0.0.0" />
 
@@ -71,8 +71,8 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
-		color="FF2C3138"
-		color2="FF6E7A66"
+		color="FF570D0D"
+		color2="FFFFFFFF"
 		default_party_template="PartyTemplate.kingdom_hero_party_gondor_blackroot_vale_template"
 		banner_key="11.2014.262.1528.1528.764.857.1.0.0.10007.172.171.600.600.765.742.0.0.0" />
   <!-- ============================================== -->

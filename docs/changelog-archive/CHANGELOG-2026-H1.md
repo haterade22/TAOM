@@ -3260,6 +3260,12 @@ Gave **192 clans** distinct `color`/`color2` heraldry and **176 clans their own 
 
 **Why / verified mechanism:** TAOM armors use grayscale textures that tint to faction colors. Confirmed in installed 1.4.5 that a troop's battle-armor cloth tint comes from the **KINGDOM** color, not the clan color, for kingdom-bound clans: `Mission.cs:4422` → `new AgentBuildData(troop).ClothingColor1(agentTeam.Color)`; `PartyBase.PrimaryColorPair` = `(MapFaction.Color, MapFaction.Color2)`; `Clan.MapFaction` returns the Kingdom when the clan is in a kingdom (`Clan.cs:338`). So the *actual* gray-armor fix is the kingdom repaint; clan `color`/`color2` drives encyclopedia/UI heraldry + minor/independent/bandit troop tint. `default_party_template` still valid (`Clan.cs:112`, falls back to `Culture.DefaultPartyTemplate`).
 
+> **Correction (2026-09-02):** the vanilla chain above is right and still holds on v1.4.8, but the
+> conclusion was wrong for TAOM. `Patch23_BannerColorPersistence` prefixes `Mission.SpawnAgent` and
+> rewrites `ClothingColor1/2` from the party leader's CLAN, with no `MapFaction` hop, so battlefield
+> armour follows the clan colour and not the kingdom. The kingdom colour applies only where that
+> patch falls through, notably a party with no `LeaderHero`. See `docs/features/clan-heraldry.md`.
+
 **Phase 0 — kingdoms** (`spkingdoms.xslt` via `tools/repaint_kingdom_colors.py`): Dunland earth-brown, Gondor steel/black, Mordor black/red, Dale blue/gold, Harad crimson/gold, Rohan green/straw, Khand bronze/red, Rhun gold/crimson.
 
 **Phases 1-3 — clans:** `tools/clan_registry.py` (209-clan inventory) → `tools/build_clan_specs.py` (auto-composes per-culture specs: lore base color + deterministic per-clan HSL variation; archetype-driven rosters from each culture's `troops_*.xml`, comment-stripped) → `tools/generate_clan_heraldry.py` (idempotent, 3-file: clans.xml attrs / spclans.xslt per-clan overrides with passthrough preserved / new `<MBPartyTemplate>` blocks). Gondor (14 clans) hand-authored by fiefdom (Dol Amroth Swan-Knight cavalry, Lossarnach axemen, Pinnath Gelin green archers, Blackroot Vale shadow-archers, …); the other 14 troop-having cultures auto-composed. Troopless cultures: shaghana/abanissa field Harad rosters, Lothlorien fields Rivendell, **Khand colors-only** (no TAOM troop pool — flagged for a future Khand troop tree). 8 LOTR bandit clans recolored from flat gray `FF8B7C73` to faction-flavored (these DO tint raider armor — bandits have no kingdom).

@@ -18,6 +18,20 @@ Three active bugs in TAOM's banner system before this feature:
 
 Vanilla reads banner colors from `hero.MapFaction` (the kingdom), not from the player's clan. For LOTR factions where each clan has unique lore colors, this causes all characters to appear in generic kingdom colors rather than their clan's correct colors.
 
+**This is not only a UI concern.** `Hooks/Mission_SpawnAgent_Patch.cs` prefixes
+`Mission.SpawnAgent` and rewrites `AgentBuildData.ClothingColor1/2` from the spawning party's
+LEADER's clan, for every party in the mission and not only the player's. Vanilla
+`Mission.SpawnTroop` has already set those from the team (so kingdom) colour by then, and the
+prefix is the last writer, so **battlefield armour tint follows the clan.**
+`Hooks/Agent_EquipItemsFromSpawnEquipment_Patch.cs` covers hero agents only; the `SpawnAgent`
+prefix is what covers ordinary troops. Anyone editing a clan's `color`/`color2` in ModuleData is
+editing troop armour, and [clan-heraldry.md](clan-heraldry.md) is the data-side companion.
+
+One sharp edge: `FFFFFFFF` is `uint.MaxValue`, which `AgentVisualsData` uses as its own "unset"
+value for `ClothColor1Data`. `Hooks/AgentVisuals_Create_Patch.cs` therefore reads a pure-white
+primary as "no clan colour set" and skips `AddColorRandomness(false)`. Prefer `FFFEFEFE` for a
+white clan primary.
+
 ### Solution Approach
 
 ```
@@ -69,7 +83,9 @@ SubModule.OnGameInitializationFinished()
   "EnableDriftGuard": true,
   "EnableBannerPaste": true,
   "EnableUniqueSecondaryColor": true,
-  "EnableLayerLimitTranspiler": false
+  "EnableLayerLimitTranspiler": false,
+  "EnableAgentVisualColors": true,
+  "EnableConversationTableauColors": true
 }
 ```
 
@@ -97,7 +113,7 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `Hooks/MapConversationTableau_SpawnOpponentLeader_Patch.cs` | Manual patch — conversation leader clan colors |
 | `Hooks/MapConversationTableau_SpawnOpponentBodyguard_Patch.cs` | Manual patch — conversation bodyguard clan colors |
 | `Hooks/OrderOfBattleHeroItemVM_RefreshInformation_Patch.cs` | Patch23 — pre-battle deployment screen colors |
-| `TAOM.Tests/Features/BannerColorPersistence/` | 5 test files, 22 tests |
+| `TAOM.Tests/Features/BannerColorPersistence/` | 6 test files, 33 test methods |
 
 ## Dependencies
 
@@ -113,11 +129,15 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 
 | Test File | Coverage |
 |-----------|---------|
-| `BannerColorServiceTests.cs` | 14 tests — all `IBannerColorService` methods, enabled/disabled, unique icon color, agent visual + tableau flags |
-| `AgentColorStoreTests.cs` | 4 tests — register, overwrite, unregistered lookup, clear |
-| `BannerColorConfigProviderTests.cs` | 4 tests — valid JSON, missing file (defaults), invalid JSON (defaults), caching |
-| `Clan_UpdateBannerColorsAccordingToKingdom_PatchTests.cs` | 3 tests — null service, disabled, null instance guards |
-| `Clan_UpdateBannerColor_PatchTests.cs` | 3 tests — null service, disabled, null instance guards |
+| `BannerColorServiceTests.cs` | all `IBannerColorService` methods, enabled/disabled, unique icon color, agent visual + tableau flags |
+| `AgentColorStoreTests.cs` | register, overwrite, unregistered lookup, clear |
+| `BannerColorConfigProviderTests.cs` | valid JSON, missing file (defaults), invalid JSON (defaults), caching |
+| `BannerTripletOrderingTests.cs` | banner triplet ordering |
+| `Clan_UpdateBannerColorsAccordingToKingdom_PatchTests.cs` | null service, disabled, null instance guards |
+| `Clan_UpdateBannerColor_PatchTests.cs` | null service, disabled, null instance guards |
+
+6 files, 33 `[TestMethod]` as of 2026-09-02. Per-file counts are omitted deliberately: they drifted
+for three months while the table still read "22 tests". Re-measure rather than quote.
 
 Harmony patches themselves are not unit-testable (require live game) per ADR-008.
 

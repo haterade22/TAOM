@@ -7,9 +7,12 @@ Spec: Main/_Module/ModuleData/clan_heraldry/<culture>.json
     "culture": "gondor",
     "clans": [
       { "id": "clan_empire_west_1", "source": "xslt",
-        "template_id": "kingdom_hero_party_gondor_dol_amroth_template",   # optional; default kingdom_hero_party_<id>_template
-        "theme": "Dol Amroth — Swan Knights",
-        "color": "FF1E6FA0", "color2": "FFE8EEF2",
+        "template_id": "kingdom_hero_party_gondor_minas_tirith_template",   # optional; default kingdom_hero_party_<id>_template
+        "theme": "Minas Tirith / House of Hurinionath (Stewards)",
+        # Gondor colours derive from the clan's own banner_key: color = layer-0 background
+        # palette colour, color2 = layer-1 icon colour, resolved via <BannerColors> in
+        # banner_icons.xml (TAOM's file wins over Native's on a colliding id).
+        "color": "FF211F1F", "color2": "FFFFFFFF",
         "roster": [ {"troop": "gondor_da_squire", "min": 3, "max": 7}, ... ] },
       ...
     ]

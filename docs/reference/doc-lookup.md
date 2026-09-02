@@ -7,6 +7,7 @@
 
 | Need to... | Read |
 |------------|------|
+| Change a clan's colours, or work out why troop armour is the wrong colour | [features/clan-heraldry.md](../features/clan-heraldry.md) (data side) + [features/banner-color-persistence.md](../features/banner-color-persistence.md) (Patch23, the code that makes clan colour beat kingdom colour). Do NOT re-run `tools/generate_clan_heraldry.py` on Gondor or Mordor |
 | Write tests / TDD workflow | [tdd-enforcement.md](../../docs/ai-includes/tdd-enforcement.md) |
 | Research TaleWorlds mechanics | [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md) |
 | Debug / iterate on problem | [iterative-problem-solving.md](../../docs/ai-includes/iterative-problem-solving.md) |

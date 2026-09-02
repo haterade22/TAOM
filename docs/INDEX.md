@@ -108,7 +108,7 @@
 - [kingdom-creation](features/kingdom-creation.md) — TAOM kingdom + clan + lord authoring
 - [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
 - [faction-map](features/faction-map.md) — campaign map faction rendering
-- [clan-heraldry](features/clan-heraldry.md) — per-clan banner colours/sigils (192 clans, 176 party templates) via `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`
+- [clan-heraldry](features/clan-heraldry.md): per-clan `color`/`color2`, which is the battlefield armour tint via Patch23, plus per-clan party templates. `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, whose Gondor and Mordor specs have drifted and must not be re-applied
 - [minor-factions](features/minor-factions.md) — minor factions catalog + rules
 - [alignment-aware-execution](features/alignment-aware-execution.md) — race/alignment-aware execution penalties
 - [execution](features/execution.md) — TaomExecutionRelationModel + Patch14
@@ -265,7 +265,7 @@ These are recurring lessons the auto-memory system has captured. The memory file
 
 - **Kingdom/culture ID mapping** — battania = Khand, empire = Dunland. Full table in memory `kingdom-culture-mapping.md`. *Do not* assume vanilla ID names map to vanilla LOTR factions.
 - **Race system** — memory `races-system.md` (monsters.xml, skins.xml, action_sets.xml structure)
-- **Banner ruling-clan convention** — `clan_<kingdom>_1` inherits kingdom banner_key; don't override in `spclans.xslt`. Memory: `banner-ruling-clan-convention.md`
+- **Banner ruling-clan convention**: `BannerInjectionService.InjectClanBanners` skips `IsRulingClan`, so `clan_<kingdom>_1` shows the kingdom banner regardless of any `spclans.xslt` override. Its `color`/`color2` still tint its own troops, and `SyncKingdomColors` pushes a ruling clan's colours back onto the kingdom banner. See [features/clan-heraldry.md](features/clan-heraldry.md).
 - **Lord archetypes** — memory `lords-system.md` (914 lords × 12 archetypes × 13 cultures)
 
 ## Research notes

@@ -9,6 +9,9 @@
 | Mod tests | `TAOM.Tests/` (MSTest + NSubstitute) |
 | Features | `Main/Features/` |
 | Adapters | `Main/Adapters/` |
+| BannerColorPersistence | `Main/Features/BannerColorPersistence/` (Patch23 + Patch24). Patch23 makes the party leader's CLAN colours win over the kingdom colour on the UI surfaces and, via the `Mission.SpawnAgent` prefix, on battlefield armour tint; it reads `clan.Color`/`clan.Color2` with no `MapFaction` hop. Patch24 blocks vanilla kingdom-sync for the player clan and pushes a ruling clan's colours onto its kingdom banner. 7 flags in `configs/banner_color_config.json`. See [banner-color-persistence.md](../features/banner-color-persistence.md) |
+| BannerInjection | `Main/Features/BannerInjection/` re-stamps `banner_key` from XML/XSLT onto kingdoms and clans on new game and save load; skips ruling clans and player-edited banners. See [banner-injection.md](../features/banner-injection.md) |
+| Clan heraldry data | `Main/_Module/ModuleData/clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, per-clan `color`/`color2` and `default_party_template`. The Gondor and Mordor specs have drifted from shipped `spclans.xslt`; do not re-apply them. See [clan-heraldry.md](../features/clan-heraldry.md) |
 | Core | `Main/Core/` |
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
@@ -16,7 +19,7 @@
 | CombatMechanics | `Main/Features/CombatMechanics/` (combat feel pack via `TaomCombatMechanicsModel` — crush-through/cleave/unstoppable/charge-knockdown/shield-pen + race modifiers; 4 pure services + validated config `combat_mechanics/combat_mechanics_config.json`; see the GameModel table row + `docs/features/combat-mechanics.md`) |
 | DreadAura | `Main/Features/DreadAura/`: Nazgûl and Sauron drain nearby enemy morale until formations break. One `MissionLogic`, **no GameModel override**: it CALLS `BattleMoraleModel.CalculateMoraleChangeToCharacter` for tier/hero resistance rather than overriding it. Sources are keyed by hero StringId (the Nine carry no `nazghul` race) OR race (`sauron`). Config `dread_aura/dread_aura_config.json`; see [dread-aura.md](../../docs/features/dread-aura.md) |
 | CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 16 GameModel overrides) |
-| AiPartySize | `Main/Features/AiPartySize/` (#461: lets AI lord parties HOLD their spawned roster instead of being shed back to the vanilla 50-150 cap in one tick. One service consumed by three EXISTING models: `TaomPartySizeModel` (cap + garrison override), `TaomFoodConsumptionModel` and `TaomPartyWageModel` (relief, because morale desertion ignores the cap). No new patch. **Must run before the TroopWeight penalty** or the shed trims to the unscaled limit; MCM-only knobs; see [ai-party-size.md](../features/ai-party-size.md)) |
+| AiPartySize | `Main/Features/AiPartySize/` (#461: opt-in scaling, NEUTRAL by default (1.0x / +0 / garrison 1.0 / relief 0), that when raised through MCM lets AI lord parties HOLD their spawned roster instead of being shed back to the vanilla 50-150 cap in one tick. One service consumed by three EXISTING models: `TaomPartySizeModel` (cap + garrison override), `TaomFoodConsumptionModel` and `TaomPartyWageModel` (relief, because morale desertion ignores the cap). No new patch. **Must run before the TroopWeight penalty** or the shed trims to the unscaled limit; MCM-only knobs; see [ai-party-size.md](../features/ai-party-size.md)) |
 | CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Arena | `Main/Features/Arena/` (TaomTournamentModel — per-participant culture armor) |
 | MainMenuCustomizer | `Main/Features/MainMenuCustomizer/` (hide Campaign, rename Sandbox → "Enter The Age Of Men") |
