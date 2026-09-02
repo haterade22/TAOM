@@ -5,6 +5,17 @@ using TaleWorlds.Localization;
 
 namespace TAOM.Features.AiPartySize;
 
+/// <summary>
+/// Whether a PLAYER clan's lord parties collect the party size scaling, and when. Ordering matches
+/// the MCM dropdown's option order, because the setting resolves by SelectedIndex.
+/// </summary>
+public enum PlayerClanScalingMode
+{
+    Never = 0,
+    TakenOverOnly = 1,
+    Always = 2,
+}
+
 public class AiPartySizeService : IAiPartySizeService
 {
     private static readonly TextObject LordHostText = new("{=taom_ai_party_size}Warlord's host");
@@ -33,9 +44,24 @@ public class AiPartySizeService : IAiPartySizeService
     public const float DefaultLordFactor = 5f;
     public const float DefaultLordFlatBonus = 150f;
 
+    // Vanilla creates exactly one clan for the player and assigns Campaign.PlayerDefaultFaction to it
+    // once, by this id (Campaign.cs, `CampaignObjectManager.Find<Clan>("player_faction")`). Player
+    // Switcher reassigns that property to an existing lord's clan, and the property is
+    // [SaveableProperty(17)], so the id is the only marker of a takeover that survives a save/load.
+    // The switcher itself deliberately persists nothing. Pinned by AiPartySizeTakeoverDetectionTests.
+    public const string VanillaPlayerClanId = "player_faction";
+
+    public const PlayerClanScalingMode DefaultPlayerClanScaling = PlayerClanScalingMode.TakenOverOnly;
+
     public void ApplyAiLordScaling(PartyBase party, ref ExplainedNumber limit)
     {
-        if (!IsEnabled())
+        // Read the settings singleton ONCE. MCM's GlobalSettings<T>.Instance is not a cached field:
+        // each access is a ContainsKey plus an indexer on a static dictionary, then a TryGetValue in
+        // the settings provider. This method runs per party whenever a party-size limit recomputes,
+        // so three separate reads were three times that cost for one unchanging answer.
+        var settings = TaomSettings.Instance;
+
+        if (!(settings?.EnableAiPartyScaling ?? true))
             return;
 
         var mobileParty = party?.MobileParty;
@@ -44,11 +70,22 @@ public class AiPartySizeService : IAiPartySizeService
 
         // party.LeaderHero rather than MobileParty.LeaderHero for consistency with the shed hook,
         // which uses the same property to decide a party has a real size limit worth enforcing.
-        if (!IsScalableAiLordParty(
-                mobileParty.IsMainParty, mobileParty.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(mobileParty)))
+        var isLordParty = mobileParty.IsLordParty;
+        var hasLeaderHero = party.LeaderHero != null;
+
+        // Two mutually exclusive branches, deliberately kept apart. The AI predicate is unchanged and
+        // still gates the food and wage relief below; only party size may reach a player clan.
+        var scalable = IsPlayerClanParty(mobileParty)
+            ? IsScalablePlayerLordParty(
+                isPlayerClan: true, isLordParty, hasLeaderHero,
+                IsTakenOverPlayerClan(CurrentPlayerClanId()),
+                ResolvePlayerClanScaling(settings?.AiPlayerClanPartyScaling?.SelectedIndex))
+            : IsScalableAiLordParty(
+                mobileParty.IsMainParty, isLordParty, hasLeaderHero, isPlayerClan: false);
+
+        if (!scalable)
             return;
 
-        var settings = TaomSettings.Instance;
         ApplyPartySizeScaling(
             ref limit,
             settings?.AiLordPartySizeFactor ?? DefaultLordFactor,
@@ -103,6 +140,65 @@ public class AiPartySizeService : IAiPartySizeService
     public static bool IsScalableAiLordParty(
         bool isMainParty, bool isLordParty, bool hasLeaderHero, bool isPlayerClan)
         => !isMainParty && !isPlayerClan && isLordParty && hasLeaderHero;
+
+    /// <summary>
+    /// The player-clan counterpart, and deliberately a SEPARATE predicate rather than a relaxation of
+    /// the one above. A player who takes over an existing lord inherits a clan whose rosters were
+    /// filled at world generation against the AI-scaled limit, so without this the cap collapses under
+    /// them (#530). Only party size travels across: `ApplyAiFoodRelief` and `ApplyAiWageRelief` keep
+    /// calling `IsScalableAiLordParty`, so the relief stays AI-only. That split is a deliberate
+    /// balance choice, NOT a claim that the player is immune to the pressures: withholding a 90%
+    /// rebate on food and wages is judged too large a gift to hand a player clan.
+    ///
+    /// Do not restate the older, wrong justification. The AI-specific *mechanisms* do not reach a
+    /// player clan (`ClanVariablesCampaignBehavior` guards `clan != Clan.PlayerClan` before setting
+    /// the wage cap; `BuyFoodInternal` opens with `if (mobileParty.IsMainParty) return;`) but the
+    /// OUTCOMES do. `TryBuyingFood` has no clan gate and `IsMainParty` is false for a player-clan
+    /// COMPANION party, so those parties auto-buy food and starve exactly as an AI party does. On the
+    /// wage side `AddPartyExpense` skips its cash-poor floor for the player clan, so the full bill is
+    /// drawn from clan gold and `HasUnpaidWages` still drives the morale penalty once that runs out.
+    /// A scaled player-clan party is therefore expensive to sustain by design. See #532.
+    ///
+    /// The main party needs no special case: it is a `LordPartyComponent` with a leader hero, so
+    /// `isLordParty` and `hasLeaderHero` already admit it. Engine-free; unit-tested.
+    /// </summary>
+    public static bool IsScalablePlayerLordParty(
+        bool isPlayerClan, bool isLordParty, bool hasLeaderHero, bool isTakenOverClan,
+        PlayerClanScalingMode mode)
+        => isPlayerClan && isLordParty && hasLeaderHero && ModeAllows(mode, isTakenOverClan);
+
+    private static bool ModeAllows(PlayerClanScalingMode mode, bool isTakenOverClan)
+        => mode switch
+        {
+            PlayerClanScalingMode.Always => true,
+            PlayerClanScalingMode.TakenOverOnly => isTakenOverClan,
+            _ => false,
+        };
+
+    /// <summary>
+    /// Whether the player is playing an existing lord rather than a clan vanilla created for them.
+    /// An absent id means "not in a campaign yet", and the safe answer there is the one that changes
+    /// nothing. Engine-free; unit-tested.
+    /// </summary>
+    public static bool IsTakenOverPlayerClan(string playerClanStringId)
+        => !string.IsNullOrEmpty(playerClanStringId) && playerClanStringId != VanillaPlayerClanId;
+
+    /// <summary>
+    /// Resolves the MCM dropdown by index, falling through to the compiled default for anything
+    /// outside the known set, so a persisted settings file that has drifted cannot silently select a
+    /// different branch. Same shape as `CaravanTradeSettingsProvider.ResolveWarPolicy`.
+    /// </summary>
+    public static PlayerClanScalingMode ResolvePlayerClanScaling(int? selectedIndex)
+        => selectedIndex switch
+        {
+            0 => PlayerClanScalingMode.Never,
+            1 => PlayerClanScalingMode.TakenOverOnly,
+            2 => PlayerClanScalingMode.Always,
+            _ => DefaultPlayerClanScaling,
+        };
+
+    private static string CurrentPlayerClanId()
+        => Campaign.Current != null ? Clan.PlayerClan?.StringId : null;
 
     /// <summary>
     /// Whether this party belongs to the player's clan. `ActualClan` is a plain field read and is

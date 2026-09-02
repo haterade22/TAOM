@@ -38,34 +38,45 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // 44 places it just under Supply Lines (45). Note the asymmetry with Order on the properties
     // below, which MCM sorts ASCENDING.
     [SettingPropertyGroup("AI Party Size", GroupOrder = 44)]
-    [SettingPropertyBool("Enable AI Party Scaling", Order = 0,
+    [SettingPropertyBool("Enable AI Party Scaling", Order = 0, RequireRestart = false,
         HintText = "Lets AI lord parties HOLD the roster their party template spawns them with. Without this they spawn at 500-3000 and are trimmed back to the vanilla 50-150 cap within a day. Also relieves AI food and wage pressure, because those drive a second, morale-based desertion path that ignores the cap entirely. Off restores the pre-feature behaviour. Note that is not the same as raw vanilla: the Troop Weight elite tax has its own toggle and still deflates a heavy party's limit when it is on.")]
     public bool EnableAiPartyScaling { get; set; } = true;
 
     [SettingPropertyGroup("AI Party Size")]
-    [SettingPropertyFloatingInteger("AI Lord Party Size Multiplier", 1.0f, 20.0f, "#0.0", Order = 1,
+    [SettingPropertyFloatingInteger("AI Lord Party Size Multiplier", 1.0f, 20.0f, "#0.0", Order = 1, RequireRestart = false,
         HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla. Default: 5.0. Raise this and the Flat Bonus together: the bonus is added after the multiplier, so moving one alone shifts the total by less than you expect.")]
     public float AiLordPartySizeFactor { get; set; } = AiPartySizeService.DefaultLordFactor;
 
     [SettingPropertyGroup("AI Party Size")]
-    [SettingPropertyFloatingInteger("AI Lord Party Size Flat Bonus", 0.0f, 2000.0f, "#0", Order = 2,
+    [SettingPropertyFloatingInteger("AI Lord Party Size Flat Bonus", 0.0f, 2000.0f, "#0", Order = 2, RequireRestart = false,
         HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 150.")]
     public float AiLordPartySizeFlatBonus { get; set; } = AiPartySizeService.DefaultLordFlatBonus;
 
     [SettingPropertyGroup("AI Party Size")]
-    [SettingPropertyFloatingInteger("Garrison Size Multiplier", 1.0f, 10.0f, "#0.0", Order = 3,
+    [SettingPropertyFloatingInteger("Garrison Size Multiplier", 1.0f, 10.0f, "#0.0", Order = 3, RequireRestart = false,
         HintText = "Multiplies every settlement garrison's size limit, player-owned included. Siege balance, not an AI handicap: lords fielding thousands would walk over garrisons still capped near vanilla's 200. Raising this also gives lords more room to donate troops on entering a friendly fief. 1.0 = vanilla. Default: 3.0.")]
     public float AiGarrisonSizeFactor { get; set; } = 3f;
 
     [SettingPropertyGroup("AI Party Size")]
-    [SettingPropertyFloatingInteger("AI Food Relief", 0.0f, 0.95f, "#0.00", Order = 4,
+    [SettingPropertyFloatingInteger("AI Food Relief", 0.0f, 0.95f, "#0.00", Order = 4, RequireRestart = false,
         HintText = "Fraction of an AI lord party's food consumption waived. A large party cannot buy 30 days of food from any town, so it starves permanently, and starvation is -30 morale which opens vanilla's morale-desertion path. 0 = vanilla. Default: 0.90.")]
     public float AiFoodConsumptionRelief { get; set; } = 0.9f;
 
     [SettingPropertyGroup("AI Party Size")]
-    [SettingPropertyFloatingInteger("AI Wage Relief", 0.0f, 0.95f, "#0.00", Order = 5,
+    [SettingPropertyFloatingInteger("AI Wage Relief", 0.0f, 0.95f, "#0.00", Order = 5, RequireRestart = false,
         HintText = "Fraction of an AI lord party's wage bill waived. AI clan wage budgets are set from clan gold and a large party blows past them, pinning unpaid wages at -20 morale and opening the same desertion path. 0 = vanilla. Default: 0.90.")]
     public float AiWageRelief { get; set; } = 0.9f;
+
+    // Resolved by SelectedIndex, so the option ORDER here is load-bearing and must stay in step with
+    // PlayerClanScalingMode. Only party size crosses to the player: the food and wage relief stay
+    // AI-only regardless of this setting, because neither pressure they compensate for can occur for
+    // a player clan (ClanVariablesCampaignBehavior guards `clan != Clan.PlayerClan` before setting the
+    // wage cap, and BuyFoodInternal early-returns on IsMainParty).
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyDropdown("Apply Party Size To Player Clan", Order = 6, RequireRestart = false,
+        HintText = "Whether YOUR clan's lord parties get the same size scaling as AI lords. 'Taken-over lords only' (default) applies it when you started as an existing lord via Player Switcher, whose clan was given AI-sized rosters at world generation and would otherwise shed thousands of men. Detected from the player clan's id, so it survives save/load. 'Always' also applies it to an ordinary campaign start. 'Never' is the pre-2026-09-01 behaviour. Food and wage relief are never granted to your clan either way.")]
+    public Dropdown<string> AiPlayerClanPartyScaling { get; set; } = new Dropdown<string>(
+        new[] { "Never", "Taken-over lords only", "Always" }, (int)AiPartySizeService.DefaultPlayerClanScaling);
 
     // --- Settlement Food ---
 

@@ -95,7 +95,7 @@ factor could otherwise flip a wage bill into a wage rebate.
 
 ## Configuration
 
-Six MCM knobs under "AI Party Size", no JSON file. MCM only is deliberate: a value settable from both
+Seven MCM knobs under "AI Party Size", no JSON file. MCM only is deliberate: a value settable from both
 JSON and MCM has to enforce the same invariants at both surfaces or they drift, which
 `.claude/rules/csharp-architecture.md` records as a shipped bug class. One surface, one clamp.
 
@@ -107,6 +107,12 @@ JSON and MCM has to enforce the same invariants at both surfaces or they drift, 
 | Garrison Size Multiplier | `3.0` | Every garrison, player-owned included |
 | AI Food Relief | `0.90` | Fraction of consumption waived |
 | AI Wage Relief | `0.90` | Fraction of the wage bill waived |
+| Apply Party Size To Player Clan | `Taken-over lords only` | Whether your own clan gets the size scaling. See below |
+
+The group carries `GroupOrder = 44`. That is not cosmetic: MCM sorts top-level groups by `GroupOrder`
+**descending**, so a group with no explicit order defaults to 0 and, if its name starts with an early
+letter, lands at the very bottom of the list. This group sat 24th of 32 until 2026-09-01 and was
+reported as missing from MCM entirely.
 
 Both knobs exist because they answer different halves of the mismatch. The multiplier keeps clan tier
 meaningful; the flat bonus exists because template spawn is tier-independent, so under a multiplier
@@ -123,6 +129,64 @@ them as its MCM-absent fallbacks, so the number exists once.
 the key is absent from its json, and every install that has run v2.0.23 already persists
 `AiLordPartySizeFactor` and `AiLordPartySizeFlatBonus`. Existing players keep the old values until
 they move the sliders themselves. Same persistence trap CLAUDE.md records for ShaderPrecompilation.
+
+### When a change takes effect
+
+Asked often enough to belong here. **A new campaign is not needed.**
+
+| What | Updates when |
+|---|---|
+| The value in `TaomSettings.Instance` | Immediately, as the handle moves. MCM's `PropertyRef` setter writes the registered object by reflection, and that object is `TaomSettings.Instance`. There is no copy and no staging. |
+| The party tooltip (`PartySizeLimitExplainer`) | Immediately. It calls the model fresh, which is why the tooltip can disagree with the cap actually being enforced. |
+| The enforced cap, per party | On Done, now. `AiPartySizeSettingsWatcher` sweeps `MobileParty.All` and bumps each `MemberRoster.VersionNo` when MCM raises `SAVE_TRIGGERED`. |
+| Without that sweep | Whenever that party's roster next changed on its own. `PartyHealingBehavior`'s 6-hourly heal/starve tick catches most AI parties within a campaign day, but an idle, healthy, non-recruiting party could stay stale indefinitely. |
+| Save and reload | Always worked, and still does. `PartyBase.OnLoad` calls `InitCache()`, which resets every cached limit. |
+
+`PartyBase.PartySizeLimit` recalls the model only when `MemberRoster.VersionNo` changes, so the cache,
+not the setting, was the thing that lagged. `TroopRoster.UpdateVersion()` is public and is vanilla's
+own cache-busting idiom for this (it does the same after a perk change and after a building alters
+garrison capacity), so the sweep is a counter increment per party and changes nothing else.
+
+**Both halves of that fix are required.** Every attribute in the group sets `RequireRestart = false`.
+MCM's `BaseSettingPropertyAttribute` constructor defaults it to `true`, and while it is true the only
+path that reaches `SaveSettings` also offers to quit the game, so `SAVE_TRIGGERED` never arrives
+mid-session. Before 2026-09-01 all six knobs inherited that default and told the player to restart for
+values that were already live in memory.
+
+One genuine limit: raising the cap lets an existing party stop shedding and grow again. It does not
+retroactively refill it, because the roster was drawn at spawn.
+
+### Player clans
+
+`Apply Party Size To Player Clan` decides whether your own lord parties collect the multiplier and flat
+bonus. `Taken-over lords only`, the default, applies it when the player started as an existing lord
+through Player Switcher. Such a clan's parties were filled at world generation against the AI-scaled
+limit, so without this the cap collapses under them (#530); an ordinary campaign start is unaffected.
+`Always` extends it to any campaign, `Never` restores the pre-2026-09-01 behaviour.
+
+Detection is `Clan.PlayerClan.StringId != "player_faction"`. Player Switcher deliberately persists
+nothing, so there is no marker of its own to read, but `Campaign.PlayerDefaultFaction` is
+`[SaveableProperty(17)]` and vanilla assigns it exactly once, to the clan literally named
+`player_faction`. The cost is a coupling to a vanilla data id, pinned by
+`AiPartySizeTakeoverDetectionTests`.
+
+**Only party size crosses over. Food and wage relief stay AI-only at every setting,** through a
+separate predicate (`IsScalablePlayerLordParty`) rather than a relaxation of `IsScalableAiLordParty`.
+This is a balance choice: a 90% rebate on food and wages is too large a gift to hand a player clan.
+Garrison scaling already applied to player-owned garrisons and is unchanged.
+
+**A scaled player clan is expensive, and that is the accepted cost.** An earlier version of this
+section claimed the pressures the relief exists to offset could not reach a player clan at all. That
+was wrong, and the correction matters because it is the tradeoff a player actually feels:
+
+| Pressure | AI mechanism blocked for the player? | Outcome still reachable? |
+|---|---|---|
+| Wage | Yes. `ClanVariablesCampaignBehavior` guards `clan != Clan.PlayerClan` before `MakeClanFinancialEvaluation`, so no tiny auto `PaymentLimit` | **Yes.** `AddPartyExpense` also skips its cash-poor floor for the player clan, so the full bill is drawn from clan gold; when that empties, `HasUnpaidWages` drives `GetDailyNoWageMoralePenalty` as normal |
+| Food | Only for the MAIN party. `BuyFoodInternal` opens with `if (mobileParty.IsMainParty) return;` | **Yes, for companion parties.** `TryBuyingFood` has no clan gate and a player-clan companion party is not `IsMainParty`, so it auto-buys and starves exactly as an AI party does |
+
+At roughly 10 denars per head per day, a scaled 941-man companion party costs about 9,400/day. The
+three non-main parties of the clan in #530 together run past 80,000/day. Tracked as **#532**: either
+extend the relief to a scaled player clan, or keep the cost and say so in the MCM hint.
 
 ### What the defaults actually produce
 

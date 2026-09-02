@@ -279,6 +279,160 @@ public class AiPartySizeGatingTests
 }
 
 /// <summary>
+/// The player-clan branch, added 2026-09-01. A player who takes over an existing lord inherits a clan
+/// whose rosters were filled at world generation against the AI-scaled limit, so without this the
+/// limit collapses under them (#530). This is a SECOND predicate rather than a relaxation of
+/// IsScalableAiLordParty, which stays exactly as the 2026-08-18 deep review left it, because only the
+/// party size travels to the player: the food and wage relief must not.
+/// </summary>
+[TestClass]
+public class AiPartySizePlayerClanGatingTests
+{
+    private const bool TakenOver = true;
+    private const bool VanillaStart = false;
+
+    private static bool Scaled(PlayerClanScalingMode mode, bool takenOver)
+        => AiPartySizeService.IsScalablePlayerLordParty(
+            isPlayerClan: true, isLordParty: true, hasLeaderHero: true,
+            isTakenOverClan: takenOver, mode: mode);
+
+    [TestMethod]
+    public void Never_TakenOverClan_IsNotScaled()
+        => Assert.IsFalse(Scaled(PlayerClanScalingMode.Never, TakenOver));
+
+    [TestMethod]
+    public void Never_VanillaStart_IsNotScaled()
+        => Assert.IsFalse(Scaled(PlayerClanScalingMode.Never, VanillaStart));
+
+    [TestMethod]
+    public void TakenOverOnly_TakenOverClan_IsScaled()
+        => Assert.IsTrue(Scaled(PlayerClanScalingMode.TakenOverOnly, TakenOver));
+
+    // The shipped default must leave an ordinary campaign exactly as it was before this feature.
+    [TestMethod]
+    public void TakenOverOnly_VanillaStart_IsNotScaled()
+        => Assert.IsFalse(Scaled(PlayerClanScalingMode.TakenOverOnly, VanillaStart));
+
+    [TestMethod]
+    public void Always_TakenOverClan_IsScaled()
+        => Assert.IsTrue(Scaled(PlayerClanScalingMode.Always, TakenOver));
+
+    [TestMethod]
+    public void Always_VanillaStart_IsScaled()
+        => Assert.IsTrue(Scaled(PlayerClanScalingMode.Always, VanillaStart));
+
+    // An AI party must never reach the player branch, or it would collect the scaling twice.
+    [TestMethod]
+    public void AiParty_UnderAlways_IsNotScaledByThePlayerBranch()
+        => Assert.IsFalse(AiPartySizeService.IsScalablePlayerLordParty(
+            isPlayerClan: false, isLordParty: true, hasLeaderHero: true,
+            isTakenOverClan: true, mode: PlayerClanScalingMode.Always));
+
+    [TestMethod]
+    public void NonLordParty_UnderAlways_IsNotScaled()
+        => Assert.IsFalse(AiPartySizeService.IsScalablePlayerLordParty(
+            isPlayerClan: true, isLordParty: false, hasLeaderHero: true,
+            isTakenOverClan: true, mode: PlayerClanScalingMode.Always));
+
+    [TestMethod]
+    public void LeaderlessParty_UnderAlways_IsNotScaled()
+        => Assert.IsFalse(AiPartySizeService.IsScalablePlayerLordParty(
+            isPlayerClan: true, isLordParty: true, hasLeaderHero: false,
+            isTakenOverClan: true, mode: PlayerClanScalingMode.Always));
+
+    /// <summary>
+    /// The decision this whole split exists to enforce. Party size travels to the player clan; the
+    /// food and wage relief do not, because a 90% rebate is too large a gift to hand a player clan.
+    /// It is NOT because the player is immune to the pressures: a player-clan companion party is not
+    /// IsMainParty, so it runs vanilla's auto food-buy and starves like an AI party, and its full
+    /// wage bill is drawn from clan gold. See #532. If someone later "simplifies" the two predicates
+    /// into one, this test is what fails.
+    /// </summary>
+    [TestMethod]
+    public void PlayerClanParty_GetsSizeScalingButNeverTheReliefGate()
+    {
+        Assert.IsTrue(Scaled(PlayerClanScalingMode.Always, TakenOver),
+            "party size scaling should reach a player-clan lord party");
+        Assert.IsFalse(AiPartySizeService.IsScalableAiLordParty(
+            isMainParty: false, isLordParty: true, hasLeaderHero: true, isPlayerClan: true),
+            "the relief gate must still reject it: food and wage relief stay AI-only");
+    }
+}
+
+/// <summary>
+/// Player Switcher leaves NO persisted marker that it ran, by design (both its behaviors have empty
+/// SyncData). But `Campaign.PlayerDefaultFaction` IS [SaveableProperty(17)] and vanilla assigns it
+/// exactly once, to the clan literally named "player_faction", so the clan id is a durable proxy for
+/// "this player took over an existing lord". That is a coupling to a vanilla data id, which is why it
+/// is pinned here rather than left as a bare string literal in the service.
+/// </summary>
+[TestClass]
+public class AiPartySizeTakeoverDetectionTests
+{
+    [TestMethod]
+    public void VanillaPlayerClanId_IsTheEngineId()
+        => Assert.AreEqual("player_faction", AiPartySizeService.VanillaPlayerClanId);
+
+    [TestMethod]
+    public void IsTakenOverPlayerClan_VanillaClan_IsFalse()
+        => Assert.IsFalse(AiPartySizeService.IsTakenOverPlayerClan("player_faction"));
+
+    [TestMethod]
+    public void IsTakenOverPlayerClan_AnExistingLordsClan_IsTrue()
+        => Assert.IsTrue(AiPartySizeService.IsTakenOverPlayerClan("clan_empire_west_1"));
+
+    // Outside a campaign, or before the clan resolves, treat it as a vanilla start: the safe answer
+    // is the one that changes nothing.
+    [TestMethod]
+    public void IsTakenOverPlayerClan_MissingId_IsFalse()
+    {
+        Assert.IsFalse(AiPartySizeService.IsTakenOverPlayerClan(null));
+        Assert.IsFalse(AiPartySizeService.IsTakenOverPlayerClan(""));
+    }
+}
+
+/// <summary>
+/// Dropdown resolution. Mirrors CaravanTradeSettingsProvider.ResolveWarPolicy: switch on
+/// SelectedIndex, fall through to the compiled default, so a persisted json that has drifted outside
+/// the known set cannot silently select a different branch.
+/// </summary>
+[TestClass]
+public class AiPartySizeScalingModeTests
+{
+    [TestMethod]
+    public void ResolvePlayerClanScaling_KnownIndices_MapInOrder()
+    {
+        Assert.AreEqual(PlayerClanScalingMode.Never, AiPartySizeService.ResolvePlayerClanScaling(0));
+        Assert.AreEqual(PlayerClanScalingMode.TakenOverOnly, AiPartySizeService.ResolvePlayerClanScaling(1));
+        Assert.AreEqual(PlayerClanScalingMode.Always, AiPartySizeService.ResolvePlayerClanScaling(2));
+    }
+
+    [TestMethod]
+    public void ResolvePlayerClanScaling_UnknownOrMissing_FallsBackToTheCompiledDefault()
+    {
+        Assert.AreEqual(AiPartySizeService.DefaultPlayerClanScaling, AiPartySizeService.ResolvePlayerClanScaling(null));
+        Assert.AreEqual(AiPartySizeService.DefaultPlayerClanScaling, AiPartySizeService.ResolvePlayerClanScaling(99));
+        Assert.AreEqual(AiPartySizeService.DefaultPlayerClanScaling, AiPartySizeService.ResolvePlayerClanScaling(-1));
+    }
+
+    [TestMethod]
+    public void DefaultPlayerClanScaling_IsTakenOverOnly()
+        => Assert.AreEqual(PlayerClanScalingMode.TakenOverOnly, AiPartySizeService.DefaultPlayerClanScaling);
+
+    // The MCM dropdown and the compiled default are two statements of the same choice; this is the
+    // same drift guard as AiPartySizeShippedDefaultsTests.
+    [TestMethod]
+    public void McmDropdownDefault_ResolvesToTheCompiledDefault()
+    {
+        var dropdown = new TaomSettings().AiPlayerClanPartyScaling;
+
+        Assert.AreEqual(3, dropdown.Count, "three modes: Never, Taken-over lords only, Always");
+        Assert.AreEqual(AiPartySizeService.DefaultPlayerClanScaling,
+            AiPartySizeService.ResolvePlayerClanScaling(dropdown.SelectedIndex));
+    }
+}
+
+/// <summary>
 /// Guards the shipped values of the two lord knobs. Every other test in this file passes the
 /// numbers in as literal arguments, so none of them notices what the mod actually ships, and until
 /// the constants landed each default was written twice (MCM initializer plus the service's `??`

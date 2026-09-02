@@ -25,6 +25,72 @@ Verified two ways: `git check-ignore` over 22 representative paths (22 ignored, 
 still visible, including `tools/.env.example`), and `git ls-files -z | git check-ignore -z --stdin`,
 which returned empty. No currently tracked file is shadowed by the new rules.
 
+### fix(ai-party-size): the knobs were live all along, and MCM was telling players to restart
+
+Moving an AI Party Size slider already changed the value the instant the handle moved. MCM's
+`PropertyRef` setter writes the registered settings object by reflection, and that object **is**
+`TaomSettings.Instance`, so there is no copy and no staged commit. Two things hid that.
+
+First, `PartyBase.PartySizeLimit` caches per party and only recalls the model when
+`MemberRoster.VersionNo` changes. Until some unrelated roster event bumped that counter, the party
+kept enforcing its old cap while the tooltip, which is uncached, already showed the new one.
+`PartyHealingBehavior`'s 6-hourly heal/starve tick refreshed most AI parties within a campaign day,
+but an idle, healthy, non-recruiting party could stay stale indefinitely, and the only deterministic
+cure was a save and reload. New `AiPartySizeSettingsWatcher` sweeps `MobileParty.All` and bumps each
+`MemberRoster.VersionNo` when MCM raises `SAVE_TRIGGERED`. `TroopRoster.UpdateVersion()` is public and
+is vanilla's own cache-buster for exactly this, used after a perk change and after a building alters
+garrison capacity, so the sweep is one counter increment per party and changes nothing else. Garrisons
+are `MobileParty` too, so the garrison multiplier rides along.
+
+Second, and the reason the first one mattered: all six knobs were telling the player to restart.
+`BaseSettingPropertyAttribute`'s constructor takes `bool requireRestart = true` and
+`SettingPropertyFloatingIntegerAttribute` chains to it without overriding, so pressing Done offered to
+**quit the game**, and pressing Cancel left the new value live in memory but never written to json,
+where it evaporated at next launch. TAOM already knew this trap: `TaomSettings.cs:429` documents it as
+"load-bearing, not cosmetic" and 54 properties elsewhere set `RequireRestart = false`. This group had
+none. Now it does, which is also what lets `SAVE_TRIGGERED` arrive mid-session at all. The wider audit
+across the other ~230 properties is deliberately not in this change.
+
+Raising the cap still only lets an existing party stop shedding and grow again. It cannot retroactively
+refill one, because the roster was drawn at spawn. Expect that question.
+
+### feat(ai-party-size): a taken-over lord keeps the party size his clan was built for
+
+New `Apply Party Size To Player Clan` dropdown, defaulting to `Taken-over lords only`. A player who
+starts as an existing lord through Player Switcher inherits a clan whose rosters vanilla's new-game
+top-up filled at world generation against the AI-scaled limit, while the clan was still AI. The
+handover then moves `Clan.PlayerClan` onto it, the scaling stops applying, and the cap collapses under
+them: 11,400 men against real limits totalling about 1,100 in the reported case (#530). `Always`
+extends the scaling to an ordinary campaign, `Never` is the previous behaviour. An ordinary start is
+unchanged at the default.
+
+Detection is `Clan.PlayerClan.StringId != "player_faction"`. Player Switcher persists nothing of its
+own by design, both its behaviours have empty `SyncData`, so there is no marker to read; but
+`Campaign.PlayerDefaultFaction` is `[SaveableProperty(17)]` and vanilla assigns it exactly once, to the
+clan literally named `player_faction`. The cost is a coupling to a vanilla data id, so it is a named
+constant with a test pinning it rather than a bare string in a predicate.
+
+**Only party size crosses to the player. Food and wage relief stay AI-only at every setting.** That is
+enforced structurally: `IsScalableAiLordParty` is untouched and still gates the relief, and the new
+`IsScalablePlayerLordParty` sits beside it rather than relaxing it, so the five gating tests the
+2026-08-18 deep review added stay exactly as they were. The reason is a balance judgement: a 90%
+rebate on food and wages is too large a gift to hand a player clan. Garrison scaling already applied
+to player-owned garrisons, unchanged.
+
+That leaves a real cost, and the tailored review pass caught this write-up asserting otherwise before
+it shipped. The AI-specific mechanisms genuinely do not reach a player clan, but the outcomes do.
+`TryBuyingFood` carries no clan gate and a player-clan COMPANION party is not `IsMainParty`, so it
+runs the auto food-buy and starves exactly as an AI party does; the `IsMainParty` early return in
+`BuyFoodInternal` protects only the player's own party. On wages, `AddPartyExpense` skips its
+cash-poor floor for the player clan, so the whole bill comes out of clan gold and `HasUnpaidWages`
+still drives the morale penalty once it empties. A scaled 941-man companion party runs about
+9,400 gold a day; the three non-main parties of the clan in #530 together exceed 80,000. Filed as
+**#532** to decide between extending the relief and documenting the cost in the MCM hint.
+
+#530 stays open, narrowed. At the new default a taken-over clan no longer collapses, but a player who
+selects `Never` still gets the silent, cache-timed reduction the issue describes, and the visible
+reconcile at handover is still the right fix for that path.
+
 ### balance(ai-party-size): the two AI lord knobs halved, and the MCM group that holds them made reachable
 
 `AI Lord Party Size Multiplier` goes 10.0 to 5.0 and `AI Lord Party Size Flat Bonus` 300 to 150. A

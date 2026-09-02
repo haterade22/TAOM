@@ -278,6 +278,27 @@ One accepted cost: the throwaway hero's career row is left in the career store r
 because `ICareerDataService` has no `ClearCareer` and adding one would reach into another feature
 for one orphan dictionary entry.
 
+**A consequence worth knowing: nothing persists the fact that a takeover happened.** The reassigned
+`Campaign.PlayerDefaultFaction` survives, but the knowledge that TAOM moved it does not, so any rule
+that needs to distinguish "playing an existing lord" from "vanilla start" cannot key on this feature's
+own state. The durable proxy is the clan id itself: vanilla creates exactly one clan for the player and
+names it `player_faction`, so `Clan.PlayerClan.StringId != "player_faction"` means a takeover. AI party
+size scaling uses precisely that, see below.
+
+## Interaction: AI party size
+
+A taken-over clan is handed rosters that vanilla's new-game top-up filled at world generation, against
+the AI-scaled party size limit, while the clan was still AI. The handover then moves `Clan.PlayerClan`
+onto it and `AiPartySizeService` stops scaling it, so the cap collapses and thousands of men shed over
+the following days. Observed on a Gondor takeover: 11,400 men against real limits totalling ~1,100
+([#530](https://github.com/haterade22/TAOM/issues/530)).
+
+Since 2026-09-01 the `Apply Party Size To Player Clan` MCM setting defaults to `Taken-over lords only`,
+which keeps the scaling on a taken-over clan and leaves an ordinary start untouched. Food and wage
+relief are never granted to a player clan at any setting. Details and the engine evidence:
+[ai-party-size.md](ai-party-size.md) "Player clans". #530 stays open for the `Never` case, where the
+reduction is still silent and cache-timed rather than visible at the handover.
+
 ## What was dropped, and why it must stay dropped
 
 | Dropped | Reason |

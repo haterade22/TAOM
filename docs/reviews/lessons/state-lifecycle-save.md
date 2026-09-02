@@ -498,3 +498,10 @@ The handover wrapped its whole sequence in one catch that reported "continuing a
 - **Why missed:** the test covering the catch threw at the ENTRY to `ApplyPlayerCharacter`, before any mutation. It validated the one scenario where the message is accurate and looked like it validated the general case. A test proves the scenario it constructs and nothing more.
 - **Prevent:** when a sequence contains an irreversible step, track whether it ran and report post-commit failures with a distinct outcome and a distinct message. Write the failure test to throw AFTER the irreversible step, not before it.
 - **Source:** docs/reviews/rca-player-switcher-2026-08-27.md finding 6 (#514; Codex P1).
+
+### A guard that silently disables a feature needs a log line or a test that fails without it
+
+`AiPartySizeSettingsWatcher.EnsureSubscribed(null)` returned quietly when MCM had not registered its settings yet. Correct and safe, and undiagnosable: the symptom of a real occurrence (an MCM change not taking effect until a reload) is exactly the symptom of the bug the watcher exists to fix, so it would have been misdiagnosed as the original defect and the guard never suspected. The same review found the paired shape in its own test, `EnsureSubscribed_RepeatedAndNullCalls_AreSafe`, whose stated subject was idempotence and whose assertion was `Assert.IsTrue(true)`: it passed with the `ReferenceEquals` guard deleted.
+- **Why missed:** both were written as fail-safe and reviewed as correct. The question asked was "is this safe?", which they were. The question not asked was "if this safe path fires wrongly, how would anyone ever know?"
+- **Prevent:** for every early-return that turns a feature OFF rather than throwing, require one of: a warning log naming the feature, or a unit test that fails when the guard is deleted. "No exception thrown" is not a passing condition for a test about behaviour. Applies hardest at optional-dependency attach points (MCM, a co-op host, an absent config file), where the guard is expected to fire in legitimate setups and so never looks suspicious.
+- **Source:** docs/reviews/rca-ai-party-size-player-clan-2026-09-01.md findings 1 and 3.

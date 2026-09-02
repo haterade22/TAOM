@@ -788,6 +788,13 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
 
         var aiPartySize = IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeService>();
+
+        // Party size limits are cached per party on MemberRoster.VersionNo, so an MCM change would
+        // otherwise not bite until some unrelated roster event bumped that counter. Idempotent:
+        // re-attaching to the same settings object on a second campaign is a no-op.
+        IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeSettingsWatcher>()
+            .EnsureSubscribed(TaomSettings.Instance);
+
         var costService = IoC.Resolve<ITroopCostService>();
         // Phase 9b #180 / partial #148 — IWageModifierService extraction. Hoists garrison-wage
         // feat loop + Mordor/Gundabad/Umbar party-wage feats + Rohan mounted-wage scaling +
