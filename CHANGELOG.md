@@ -2,7 +2,224 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-02
+
+### fix(troops): two troops drew a weapon they could never use
+
+Both are the cross-set draw, which is the one troop defect that is invisible in
+every UI surface. The engine builds a non-hero's kit slot by slot, taking each slot
+from an independently chosen equipment set, so two sets are not alternatives: they
+are a menu it orders one item from per slot. The encyclopedia, party screen, troop
+tree and tournament all render set #1, so a troop assembled from a combination
+nobody authored still looks correct everywhere except a live battle.
+
+`dale_running_river_warden` had a shield at Item1 in one set and a two-handed axe at
+Item0 in the other, with Item1 empty there. Item0 and Item1 draw separately, so about
+a quarter of spawns got the great axe together with the shield, which is the
+"AI holds it and never draws it" trap. It is now sword-and-shield in both sets with
+the variety moved to Item2, matching what `dale_royal_guard` and its own level-31
+sibling `dale_kings_guard` already do. Dale's two-handed line carries no shield in
+any set, which is why those troops were never affected.
+
+`mordor_uruk_archer` put a two-handed sword at Item2 in one of eight sets where the
+other seven put a second quiver, and filled no Item3 where the other seven put a
+sidearm. The two slots draw independently, so roughly one archer in nine spawned
+with a bow, two quivers and no melee weapon at all. Item2 is now a quiver in all
+eight and Item3 a `sm_uruk_sword_c` in all eight, which also retires a piece of
+Isengard art that had no business on a Mordor uruk. Both bows survive, so the
+variety that was actually intended is untouched.
+
+Neither was reachable by a gate. `audit_polearm_shield_parity.py` flattens ids
+within one `<EquipmentRoster>`, and in a troop file one element is one set, so it
+cannot see the cross-set form and exits 0 on both. The new `INCONSISTENT_ARMOUR_SLOT`
+check reads the cross-set shape correctly but only for the five armour slots.
+Extending it to Item0-4 would catch this class automatically.
+
+Two more instances of it are left standing here, both found while fixing the archer
+and both the shield pairing rather than the empty-slot one:
+`mordor_uruk_vanguard` (level 31) carries `sm_mordor_shield_mid_a` at Item1 in all
+eight sets and the same Isengard two-hander at Item2 in one of them, so one vanguard
+in eight is holding a sword it cannot draw; `mordor_uruk_captain` (level 36) has the
+identical shape in one set of four, so a quarter of them. No issue is filed for
+either yet.
+
+### fix(umbar): a whole culture was wearing Calradian rags, and no gate could see it
+
+Umbar troops and lords looked unarmoured. Nothing was a broken reference: all 80
+item ids the three Umbar files name resolve, and every Armoury mesh among them is
+live. Both validators were green and both were right. The defects were absent
+slots and the wrong clothes, which nothing in the repo checks.
+
+15 of 16 troops carried a hand-rolled civilian roster holding `bandit_envelope_dress_v1`
+and `wrapped_shoes` and nothing else, with Head, Cape and Gloves absent. That item
+appears in no other troop file in the repo, and Umbar was the only culture inlining
+civilian blocks rather than naming a shared roster. Ten other files inline some too,
+so it is a spectrum rather than a unique sin, but Umbar was the extreme of it.
+
+Beyond that: 67 of 307 armour references were vanilla Calradian, all 10 named-lord
+rosters and all 10 lord templates had no mount at all while Gondor's equivalents do,
+26 of 28 notables had no headgear, and the troops wore Gondor Anorien while the
+lords wore Haradrim.
+
+Now: three authored civilian tiers, every troop filling all five armour slots in
+every battle set, mounts on all 20 lord rosters, and one palette. Harad carries the
+rank and file; Mordor's Black Numenorean set takes the level-31 capstone, the
+corsair boss and the lords, which is where descent from Black Numenoreans actually
+reads on a battlefield.
+
+**This is a buff and the numbers belong here.** Umbar's armour runs 71 at level 6 to
+194 at level 31, against a 401-troop four-culture cohort whose medians are 57 / 81 /
+106 / 131 / 149 / 169. That is the 58th to 97th percentile, under the cohort maximum
+at every tier. The first attempt was not: it dressed the whole tree in Black
+Numenorean and landed at the **100th percentile at every level**, with a level-6
+bandit at 168 against a level-6 maximum of 71. A full five-slot Black Numenorean kit
+floors at 160 armour because it is Mordor's level-26-to-46 elite art, so it cannot
+dress a low tier at cohort weight, whatever the tier label says.
+
+**`_b` is not a promotion over `_a`.** `sm_md_num_inf_chest_heavy_b` is 85 total
+armour against `_heavy_a`'s 89. The `_b` items are art variants, not a higher tier,
+and promoting one to the other cost 4 armour on five upgrade edges before a review
+measured it. Also flat in that set and worth knowing before any retune: every hood
+and helmet from `med` up is 47, and greaves are 41 at med, heavy and elite alike.
+
+### feat(validate-moduledata): two checks for the armour a troop simply does not have
+
+`MISSING_BODY_ARMOUR` (error) fires when no battle set fills the Body slot. Three
+troops repo-wide hit it, all deliberately bare-chested, so they are allowlisted with
+reasons and a test asserts those ids still exist.
+
+`INCONSISTENT_ARMOUR_SLOT` (warning) fires when a slot is filled in some battle sets
+and empty in others. The engine draws each slot from an independently chosen set, so
+that ships a combination nobody authored, and every UI surface renders set #1 and
+looks fine. 96 exist across 10 cultures today, which is why it is a warning: a
+blocking gate on pre-existing debt gets disabled rather than fixed.
+
+A third change matters more than either. The commit hook filters the validator down
+to an explicit `--code` allowlist, and **four of the nine error codes were missing
+from it**, so they could never block a commit. All four are wired now, and a test
+asserts every error code the validator can emit appears in that list, because the two
+lists live in different files and neither referred to the other.
+
+`validate_all_troop_refs.py` gained three fixes on the way: `umbar` was never in its
+culture list; its troop count matched the `<NPCCharacters>` container and so read one
+high for every culture on every run since it was written; and its prefix filter knew
+nothing of `sm_` or `harad`, so it checked 4 of Umbar's armour ids and reported PASS.
+It now checks 44.
+
+### fix(gondor-clans): every house now wears the colours on its own banner
+
+All 14 Gondor houses carried `color`/`color2` that had drifted from the heraldry they actually fly.
+Thirteen of the fourteen disagreed with their own `banner_key`, seven of them by a full hue.
+Malandilionath flew a dark red field and dressed its troops in blue. Danuhirionath flew a white
+field with a black orb and dressed them in olive green. Hyarthulionath flew gold and dressed them
+in purple.
+
+Both values now derive from each clan's own `banner_key`: `color` is the layer-0 background palette
+colour, `color2` is the layer-1 icon colour, each resolved through `<BannerColors>` in
+`banner_icons.xml`. That is 28 attribute values across `spclans.xslt` (clans 1 to 9) and
+`characters/clans.xml` (clans 10 to 14), plus the generator spec `clan_heraldry/gondor.json`.
+
+Two of them are deliberately not the literal banner colour. `clan_empire_west_9` and `_11` fly a
+white field, and `FFFFFFFF` is `uint.MaxValue`, which `AgentVisuals_Create_Patch` reads as "no clan
+colour set": it returns early and never suppresses the engine's colour randomness. Both carry
+`FFFEFEFE` instead, one step off white and visually identical.
+
+Resolving a palette id requires reading TAOM's `banner_icons.xml` first. TAOM redefines 46 ids that
+Native already owns, and TAOM's value is the one that renders, because the engine merges the module
+documents before `BannerManager` sees them and that merge is last-writer-wins. Reading Native's
+table for a colliding id is how `clan_empire_west_2` briefly got `FF2A5599` rather than `FF30336B`.
+
+The spec's theme labels also still described the pre-reconciliation fief mapping for six clans, so
+they now follow the shipped `spclans.xslt`. Its `template_id` half is still stale, and the spec now
+says so: running the generator on Gondor would revert that reconciliation.
+
+Also corrected the documentation this pass proved wrong. `docs/features/clan-heraldry.md` claimed
+battlefield armour follows the KINGDOM colour for kingdom-bound clans. It follows the CLAN:
+`Patch23_BannerColorPersistence` prefixes `Mission.SpawnAgent` and rewrites `ClothingColor1/2` from
+the party leader's clan with no `MapFaction` hop, running after vanilla has set the team colours.
+The same wrong conclusion was annotated in the archived H1 changelog and fixed in `docs/INDEX.md`
+and `docs/reference/banner-icon-generation.md`. `harmony-patch-registry.md` had Patch23 recorded as
+"player clan colors" when it applies to every party in the mission. `banner-injection.md` still
+documented three files deleted in 2026-04, and `banner-color-persistence.md` listed 5 of its 7
+config flags and a three-month-stale test count.
+
+Save-compat: `Clan.Color` and `Clan.Color2` are `[SaveableProperty(76)]` and `(77)`, so existing
+campaigns keep the colours they were created with. This lands on new campaigns only.
+
+Not-tested: the in-game render (armour tint in battle, clan screen heraldry). Suite 7866 green,
+`validate_moduledata` 0 errors, `check_external_xslt` 17 of 17 clean, and the `spclans.xslt`
+transform output asserted against installed vanilla including passthrough attributes.
+
 ## 2026-09-01
+
+### balance(ai-party-size): the whole feature now ships neutral, opt-in through MCM
+
+Every knob in the group defaults to its vanilla value: lord multiplier 1.0, flat bonus 0, garrison
+multiplier 1.0, food relief 0, wage relief 0. Out of the box the feature changes nothing at all, and
+a player who wants bigger AI armies raises the sliders themselves. This supersedes the 2.5 / 75 entry
+below, which superseded 5.0 / 150, which superseded the original 10.0 / 300.
+
+The reason it is not just the lord knob is a vanilla veto nobody had costed. Sieges are gated by
+`DefaultTargetScoreCalculatingModel`: `if (ourStrength < num15 * num16) return 0f;` with `num16 = 2f`
+for a besieger. A settlement the attacker cannot beat two to one scores exactly zero, so it is never
+selected as a target rather than merely deprioritised. `num15` sums the estimated strength of every
+party at the settlement where `IsGarrison || IsMilitia`, times a wall factor up to `1 + 0.33 x 3`.
+
+That makes the lord multiplier and the garrison multiplier a pair. Garrison is `vanilla base x
+factor` with no flat term, and the vanilla base is 200, plus 200 for a town, plus 0.2 per point of
+the owner's Leadership, plus up to 240 of buildings. At the old 3.0 that is 600 for a bare castle and
+about 2050 for a maxed town. Four vanilla-sized lords total roughly 250 men. Leaving garrisons at 3.0
+while lord parties sat at vanilla would not have made sieges hard, it would have made them
+impossible, and the AI would have stopped attacking settlements altogether.
+
+Militia is the part that made it worse and was easy to miss: `TaomSettlementMilitiaModel` overrides
+exactly one method, `CalculateVeteranMilitiaSpawnChance`. Militia headcount is pure vanilla and
+scales with nothing, so it counts fully toward that defender estimate no matter what the other knobs
+say, and looms larger the smaller the lord multiplier gets.
+
+**What neutral defaults mean in practice, and it is not nothing.** The party templates were never
+reverted: the 2026-08-14 pass still ships goblin 4500, orc and uruk 3500, Erebor 2000, men 1500,
+elves 1000, and vanilla spawn never consults `PartySizeLimit`. So out of the box an AI lord still
+spawns hundreds to thousands of men and is still shed to the vanilla 40-203 cap on the first daily
+tick, which is exactly the #461 symptom this feature was built to fix. The feature is now the opt-in
+cure rather than a default one. That is a deliberate choice, not an oversight, but it should be
+stated plainly rather than left for a player to rediscover.
+
+The relief knobs went neutral for the same coherence reason. They exist only to close the
+morale-desertion path that a RAISED cap opens, an over-sized party being unable to buy 30 days of
+food or make its wage budget. At vanilla party sizes neither pressure occurs, so a 0.90 relief would
+have been unearned AI economy rather than a fix for anything, and a feature that ships "neutral"
+while waiving 90% of every AI lord's wages is not neutral. Their defaults are now single-sourced as
+constants next to the others, closing the last two dual-default sites in this feature.
+
+`startup_resources_config.xml` derives AI startup gold as `K = targetPartySize x (1 - wageRelief)`
+and has carried `K = 100` from `1000 x 0.10`. With relief at 0 and vanilla-sized parties the correct K
+is just the target party size, and `K = 100` does sit inside the vanilla 40 to 203 band, so it is a
+real improvement on the mismatch it replaced. It is not a re-derivation and should not be read as one:
+the original `K = 52.5437` was population-weighted across every lord template, low-tier lords far
+outnumber tier-4 clan leaders, and 100 is therefore probably still biased high. The file is unchanged
+apart from a note saying so.
+
+### balance(ai-party-size): AI lord parties cut to a quarter, not a half
+
+`AI Lord Party Size Multiplier` goes 5.0 to 2.5 and `AI Lord Party Size Flat Bonus` 150 to 75, taking
+both knobs to a quarter of the values v2.0.23 shipped. A tier-4 lord's limit is now 390, down from
+780 earlier today and 1560 before that. A tier-1 lord lands at 175, a tier-3 clan leader at 350.
+
+Both knobs had to move by the same proportion. `AddResultFrameBonus` keeps the flat bonus out of the
+factor frame on purpose, so the effective limit is `base x multiplier + flat bonus` and cutting only
+the multiplier by 75% would have landed at 40% of the old number rather than 25%. The pinned tier-4
+test moved 780 to 390 first, then the constants followed it.
+
+Existing installs still keep whatever they have persisted. MCM writes a compiled default only when
+the key is absent from its json, so anyone who has run v2.0.23 or v2.0.24 needs to move the two
+sliders by hand; only a fresh install picks 2.5 / 75 up on its own.
+
+Knock-on numbers in `docs/features/ai-party-size.md` were recomputed rather than left stale: the
+limit table, the "roughly 22-25% of what it was" note on the retention table, and the worked cost of
+a scaled player-clan companion party, which drops from about 9,400 gold a day to about 4,000. That
+last figure belongs to #532, which is unchanged in kind: the cap is smaller, so the bill is smaller,
+but a scaled player clan still pays it with no relief.
 
 ### feat(crash-report): a bundle now says whether the machine had run out of memory
 

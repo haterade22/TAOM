@@ -100,6 +100,8 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code BROKEN_BODY_PROPERTY_REF --code LANDLESS_CULTURE --code MOUNTED_DWARF \
         --code SETTLEMENT_ECONOMY_FLOOR --code UPGRADE_SKILL_REGRESSION \
         --code SKILL_TEMPLATE_SHADOWS_SKILLS \
+        --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
+        --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         2>/dev/null)
 RC=$?
 
