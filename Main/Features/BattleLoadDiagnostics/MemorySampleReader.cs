@@ -71,9 +71,21 @@ internal static class MemorySampleReader
 
             if (!TryReadProcess(out long privMb, out long wsMb)) return false;
 
+            // A failed heap read is NOT a heap of zero. Keep the rest of the sample (the commit
+            // figures are the crash-relevant ones and must not be discarded over this), but record
+            // that the heap component is not a measurement so consumers can omit it.
             long heapMb;
-            try { heapMb = GC.GetTotalMemory(forceFullCollection: false) / BytesPerMb; }
-            catch { heapMb = 0; }
+            bool heapMbValid;
+            try
+            {
+                heapMb = GC.GetTotalMemory(forceFullCollection: false) / BytesPerMb;
+                heapMbValid = true;
+            }
+            catch
+            {
+                heapMb = 0;
+                heapMbValid = false;
+            }
 
             long limitMb = (long)(status.ullTotalPageFile / (ulong)BytesPerMb);
             long availPageFileMb = (long)(status.ullAvailPageFile / (ulong)BytesPerMb);
@@ -86,7 +98,8 @@ internal static class MemorySampleReader
                 sysCommitLimitMb: limitMb,
                 availPhysMb: (long)(status.ullAvailPhys / (ulong)BytesPerMb),
                 totalPhysMb: (long)(status.ullTotalPhys / (ulong)BytesPerMb),
-                memLoadPercent: (int)status.dwMemoryLoad);
+                memLoadPercent: (int)status.dwMemoryLoad,
+                heapMbValid: heapMbValid);
             return true;
         }
         catch

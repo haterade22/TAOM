@@ -158,16 +158,23 @@ public sealed class MemoryPressureSampler : IDisposable
     internal static string FormatSession(in MemorySample s)
         => $"{Tag} session totalPhysMB={s.TotalPhysMb} sysCommitLimitMB={s.SysCommitLimitMb}";
 
-    internal static string FormatSample(in MemorySample s)
-        => $"{Tag} privMB={s.PrivMb} wsMB={s.WsMb} heapMB={s.HeapMb}" +
+    /// <summary>
+    /// The shared 7-token tail. [MemStation] appends the identical block, so one `grep privMB`
+    /// over a session log hits the periodic trend and the screen anchors alike, and the Python
+    /// mirror can serve both tags from one sub-pattern. Extracted, not rewritten: FormatSample
+    /// and FormatWarn below must stay byte-identical, which their pinned literal tests enforce.
+    /// </summary>
+    internal static string FormatSampleTokens(in MemorySample s)
+        => $"privMB={s.PrivMb} wsMB={s.WsMb} heapMB={s.HeapMb}" +
            $" sysCommitUsedMB={s.SysCommitUsedMb} sysCommitLimitMB={s.SysCommitLimitMb}" +
            $" availPhysMB={s.AvailPhysMb} memLoad={s.MemLoadPercent}%";
 
+    internal static string FormatSample(in MemorySample s)
+        => $"{Tag} {FormatSampleTokens(in s)}";
+
     internal static string FormatWarn(in MemorySample s)
         => $"{Tag} WARN LOW COMMIT HEADROOM headroomMB={HeadroomMb(s.SysCommitUsedMb, s.SysCommitLimitMb)}" +
-           $" privMB={s.PrivMb} wsMB={s.WsMb} heapMB={s.HeapMb}" +
-           $" sysCommitUsedMB={s.SysCommitUsedMb} sysCommitLimitMB={s.SysCommitLimitMb}" +
-           $" availPhysMB={s.AvailPhysMb} memLoad={s.MemLoadPercent}%";
+           $" {FormatSampleTokens(in s)}";
 
     public void Dispose()
     {

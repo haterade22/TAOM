@@ -44,6 +44,12 @@ untouched. For logs without [MemSample] lines the report text is byte-identical;
 the --json payload always carries a `memory` key (null when no samples), so JSON
 output for old logs differs by exactly that one key.
 
+The same log also carries `[MemStation]` screen-transition anchors (one line per screen
+open and close) when the memory sampler is on. They give a "Memory by station" report
+section and a `stations` JSON block (null when absent), naming WHICH screen a commit
+rise happened on — the periodic samples can only say that one happened. Same additive
+contract: disjoint tag, own list, no effect on the verdict lattice, kinds, or exit codes.
+
 Since 2026-08-07 three more phase markers split the previously-dark
 MissionInitialize -> MissionAfterStartBegin window (an 11.9 s measured blind spot):
 MissionInitializeDone, FinishMissionLoadingBegin (carrying `polls=` / `waitMs=`) and
@@ -142,6 +148,23 @@ _MEMSAMPLE_RE = re.compile(
     r"sysCommitLimitMB=(-?\d+)\s+availPhysMB=(-?\d+)\s+memLoad=(-?\d+)%")
 _MEMSESSION_RE = re.compile(
     r"\[MemSample\]\s+session\s+totalPhysMB=(-?\d+)\s+sysCommitLimitMB=(-?\d+)")
+
+# [MemStation] screen-transition anchors (#386 follow-up). Same 7-token tail as
+# [MemSample] (the C# side shares one FormatSampleTokens helper), prefixed by the
+# transition kind and the screen name. Pinned twin:
+# MemoryStationSamplerTests.FormatStation_{Enter,Exit}WithKnownValues_MatchesPinnedLiteral.
+#   [MemStation] enter screen='GauntletEncyclopediaScreen' privMB=N wsMB=N heapMB=N
+#                sysCommitUsedMB=N sysCommitLimitMB=N availPhysMB=N memLoad=N%
+# The tag is DISJOINT from [MemSample] on purpose: station readings are event-driven
+# and must never enter the periodic trend, which would corrupt its first/peak/last.
+_MEMSTATION_TAG = "[MemStation]"
+# Session boundary emitted by MemoryStationSampler.FormatSessionReset. Not a measurement, so it
+# deliberately does not match _MEMSTATION_RE; it is recognised by this literal alone.
+_MEMSTATION_RESET = "session-reset"
+_MEMSTATION_RE = re.compile(
+    r"\[MemStation\]\s+(enter|exit)\s+screen='([^']*)'\s+"
+    r"privMB=(-?\d+)\s+wsMB=(-?\d+)\s+heapMB=(-?\d+)\s+sysCommitUsedMB=(-?\d+)\s+"
+    r"sysCommitLimitMB=(-?\d+)\s+availPhysMB=(-?\d+)\s+memLoad=(-?\d+)%")
 # Capture the FileLogger timestamp (same shape _PREFIX_RE strips) for sample ts.
 _TS_RE = re.compile(r"^\[(\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d)\]")
 
@@ -263,12 +286,32 @@ class MemSample:
 
 
 @dataclass
+class MemStation:
+    """One [MemStation] screen-transition anchor. kind is 'enter' or 'exit'; screen is
+    the sanitized CLR type name of the ScreenBase that was pushed or popped."""
+    ts: str | None
+    kind: str
+    screen: str
+    priv_mb: int
+    ws_mb: int
+    heap_mb: int
+    commit_used_mb: int
+    commit_limit_mb: int
+    avail_phys_mb: int
+    mem_load: int
+
+
+@dataclass
 class Timeline:
     events: list = field(default_factory=list)
     watchdog: Watchdog | None = None
     mem_samples: list = field(default_factory=list)
     mem_session: dict | None = None
     mem_warned: bool = False
+    # Kept in its OWN list, never merged into mem_samples: these are event-driven
+    # readings and would corrupt the periodic trend's first/peak/last.
+    mem_stations: list = field(default_factory=list)
+    mem_station_resets: int = 0
 
 
 @dataclass
@@ -304,6 +347,32 @@ def parse_battle_load_log(text: str) -> Timeline:
     collecting = None  # loadout id whose block is currently being read, if any
     for raw in text.splitlines():
         line = _PREFIX_RE.sub("", raw)
+        # [MemStation] screen anchors (#386 follow-up) ride the same log and are inert to
+        # the phase timeline in exactly the same way as [MemSample] below. Kept in their own
+        # list so an event-driven reading can never land in the periodic trend.
+        if _MEMSTATION_TAG in line:
+            if _MEMSTATION_RESET in line:
+                # A new measurement segment began (return to the main menu). Enters still
+                # pending from the previous segment can never be closed, so drop them rather
+                # than letting a later exit pair across the boundary and invent a delta that
+                # spans a discontinuity.
+                tl.mem_station_resets += 1
+                tl.mem_stations.append(MemStation(
+                    ts=(_TS_RE.match(raw).group(1) if _TS_RE.match(raw) else None),
+                    kind="reset", screen="", priv_mb=0, ws_mb=0, heap_mb=0,
+                    commit_used_mb=0, commit_limit_mb=0, avail_phys_mb=0, mem_load=0))
+                continue
+            m = _MEMSTATION_RE.search(line)
+            if m:
+                tm = _TS_RE.match(raw)
+                tl.mem_stations.append(MemStation(
+                    ts=tm.group(1) if tm else None,
+                    kind=m.group(1), screen=m.group(2),
+                    priv_mb=int(m.group(3)), ws_mb=int(m.group(4)),
+                    heap_mb=int(m.group(5)), commit_used_mb=int(m.group(6)),
+                    commit_limit_mb=int(m.group(7)), avail_phys_mb=int(m.group(8)),
+                    mem_load=int(m.group(9))))
+            continue
         # [MemSample] telemetry (#386) rides the same log but is inert to the phase
         # timeline: no PhaseEvent, no slot/loadout attachment, no seq/terminal impact.
         if _MEM_TAG in line:
@@ -535,6 +604,96 @@ def classify_memory(tl: Timeline, floor_mb: int = MEM_WARN_HEADROOM_FLOOR_MB,
     }
 
 
+def classify_stations(tl: Timeline) -> dict | None:
+    """Summarize the [MemStation] screen anchors. None when the log carries none (every
+    pre-feature log, and any session where the sampler was off) so the report text stays
+    byte-identical. Additive decoration only: never touches the verdict lattice.
+
+    Pairs each 'exit' with the most recent unmatched 'enter' for the SAME screen and
+    reports the privMB delta across the visit. Unmatched pairs are counted, never silently
+    dropped and never turned into a zero delta. The reason is NOT bulk teardown:
+    CleanAndPushScreen provably fires OnPopScreen once per removed screen via
+    DeactivateAndFinalizeAllScreens (verified against installed v1.4.8), so that path is
+    balanced. The real sources are an unmatched EXIT when the sampler subscribed while a screen
+    was already open, a transient reader failure dropping one line, and process death before
+    OnFinalize runs.
+
+    WINDOW SEMANTICS, and this bounds what any delta here can mean: the engine raises
+    OnPushScreen AFTER HandleInitialize/HandleActivate/HandleResume and OnPopScreen AFTER
+    HandleFinalize. So a visit delta measures growth while the screen was OPEN, and cannot see
+    allocation that happened during the screen's own construction. A screen that allocates on
+    open and retains reads as ~0; one that allocates on open and frees on close reads NEGATIVE.
+    Read a delta as "what happened while this was on screen", never as "what this screen cost".
+    """
+    if not tl.mem_stations:
+        return None
+
+    open_enters: dict = {}   # screen -> list of pending enter samples (a stack)
+    stats: dict = {}         # screen -> accumulator
+
+    def bucket(screen: str) -> dict:
+        return stats.setdefault(screen, {
+            "screen": screen, "visits": 0, "total_delta_mb": 0,
+            # None, NOT 0: seeding a running max with a value outside the data's domain lets the
+            # seed win whenever every real delta is negative, and the report then prints
+            # "(max visit +0 MB)" beside a large negative total, contradicting it.
+            "max_visit_delta_mb": None, "unmatched_enters": 0, "unmatched_exits": 0,
+            "nested_visits": 0})
+
+    events = tl.mem_stations
+    unmatched_exits = 0
+    for idx, st in enumerate(events):
+        if st.kind == "reset":
+            # Nothing pending survives a session boundary.
+            open_enters.clear()
+            continue
+        if st.kind == "enter":
+            open_enters.setdefault(st.screen, []).append((idx, st))
+            bucket(st.screen)
+            continue
+        pending = open_enters.get(st.screen)
+        if not pending:
+            # An exit with no enter (the sampler subscribed while this screen was already open,
+            # or its enter was dropped by a reader failure). Nothing to measure, but coverage is
+            # incomplete and the report must say so rather than look complete.
+            unmatched_exits += 1
+            bucket(st.screen)["unmatched_exits"] = bucket(st.screen)["unmatched_exits"] + 1
+            continue
+        opened_idx, opened = pending.pop()
+        delta = st.priv_mb - opened.priv_mb
+        b = bucket(st.screen)
+        b["visits"] += 1
+        b["total_delta_mb"] += delta
+        prev = b["max_visit_delta_mb"]
+        b["max_visit_delta_mb"] = delta if prev is None else max(prev, delta)
+        # Did another screen open INSIDE this visit? Pairing is per screen NAME with no nesting
+        # awareness, so this screen's delta re-includes whatever that inner screen grew while
+        # stacked on top of it - and the inner screen reports the same growth under its own name.
+        # Summing total_delta_mb across screens therefore double-counts it. Flag the OUTER screen,
+        # which is the one whose number is inflated; the inner screen's own delta is clean.
+        # ANY enter inside the visit counts, including one of the same type: ScreenManager
+        # permits two instances of a type stacked, and excluding same-name nesting made exactly
+        # that case invisible while still double-counting it.
+        if any(e.kind == "enter" for e in events[opened_idx + 1:idx]):
+            b["nested_visits"] += 1
+
+    for screen, pending in open_enters.items():
+        if pending:
+            bucket(screen)["unmatched_enters"] = len(pending)
+
+    by_screen = sorted(stats.values(),
+                       key=lambda b: (-b["total_delta_mb"], b["screen"]))
+    nested_any = any(b["nested_visits"] for b in by_screen)
+    return {
+        "transitions": sum(1 for e in tl.mem_stations if e.kind != "reset"),
+        "by_screen": by_screen,
+        "top": by_screen[0]["screen"] if by_screen else None,
+        "nested_overlap": nested_any,
+        "session_resets": tl.mem_station_resets,
+        "unmatched_exits": unmatched_exits,
+    }
+
+
 def _last_mission_segment(events: list) -> list:
     """Events from the LAST MissionInitialize onward — the load actually being triaged.
 
@@ -723,7 +882,7 @@ def _format_timings(t: dict) -> list:
 
 
 def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
-                  timings: dict | None = None) -> str:
+                  timings: dict | None = None, stations: dict | None = None) -> str:
     out = []
     out.append("=== BATTLE LOAD TRIAGE ===")
     out.append("")
@@ -781,6 +940,52 @@ def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
         if mem["pressure"]:
             out.append("  MEMORY PRESSURE: commit headroom was critically low — "
                        "the phase verdict above may be a symptom, not the cause.")
+
+    if stations is None:
+        stations = classify_stations(tl)
+    if stations:
+        out.append("")
+        out.append(f"Memory by station ({stations['transitions']} transitions):")
+        shown = stations["by_screen"][:8]
+        if not shown:
+            # Reachable: a log whose every station is an exit with no matching enter (the sampler
+            # subscribed while a screen was already open) yields transitions > 0 and an empty
+            # by_screen. max() over that raised ValueError and took the whole report with it: no
+            # verdict, no --json, just a traceback exiting 1, which is the same exit code as a
+            # diagnosed hang.
+            out.append("  (no completed visits - every station was an exit with no matching enter)")
+        else:
+            width = max(len(b["screen"]) for b in shown)
+            for b in shown:
+                worst = b["max_visit_delta_mb"]
+                worst_txt = f"{worst:>+6} MB" if worst is not None else "     n/a"
+                line = (f"  {b['screen']:<{width}}  {b['visits']:>3} visits  "
+                        f"{b['total_delta_mb']:>+7} MB total  "
+                        f"(max visit {worst_txt})")
+                if b["unmatched_enters"]:
+                    line += f"  [{b['unmatched_enters']} unmatched enter(s)]"
+                if b["unmatched_exits"]:
+                    line += f"  [{b['unmatched_exits']} unmatched exit(s)]"
+                if b["nested_visits"]:
+                    line += f"  [{b['nested_visits']} visit(s) overlapped another screen]"
+                out.append(line)
+            # No silent truncation: a capped list that reads as the whole list is how a
+            # report starts lying about coverage.
+            hidden = len(stations["by_screen"]) - len(shown)
+            if hidden > 0:
+                out.append(f"  ... {hidden} more screen(s) not shown (see --json)")
+            if stations.get("nested_overlap"):
+                out.append("  NOTE: screens overlapped. An outer screen's delta includes whatever "
+                           "an inner one grew while stacked on it, so do NOT sum these.")
+            if stations.get("session_resets"):
+                out.append(f"  NOTE: {stations['session_resets']} session reset(s) (return to main "
+                           "menu). Each starts a fresh emit budget; deltas do not span a reset.")
+            # The window is bounded by where the engine raises its events, and that bound decides
+            # what any of these numbers can mean.
+            out.append("  NOTE: a delta covers the time a screen was OPEN. The engine raises its "
+                       "push event AFTER HandleInitialize and its pop event AFTER HandleFinalize, "
+                       "so construction cost is NOT included; a screen that allocates on open and "
+                       "keeps it reads ~0, and one that frees on close reads negative.")
 
     if verdict.suspect_names:
         out.append("")
@@ -915,8 +1120,9 @@ def main() -> int:
                 else MEM_WARN_HEADROOM_FLOOR_MB)
     mem = classify_memory(tl, floor_mb=floor_mb)
     timings = classify_phase_timings(tl)
+    stations = classify_stations(tl)
 
-    print(format_report(verdict, tl, rgl, mem, timings))
+    print(format_report(verdict, tl, rgl, mem, timings, stations))
 
     if args.json_out:
         payload = {
@@ -930,6 +1136,7 @@ def main() -> int:
             "terminal_phase": tl.events[-1].phase if tl.events else None,
             "watchdog_fired": tl.watchdog is not None,
             "memory": mem,
+            "stations": stations,
             "timings": timings,
         }
         Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")

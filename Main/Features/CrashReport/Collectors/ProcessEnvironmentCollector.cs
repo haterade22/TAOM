@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.CrashReport.Domain;
 
 namespace TAOM.Features.CrashReport.Collectors;
@@ -25,6 +26,36 @@ public sealed class ProcessEnvironmentCollector
 
         var throwing = CollectThrowingThread();
         return new ProcessSnapshot(ws, pm, gc, g0, g1, g2, pt, managedThreads, uptime, throwing);
+    }
+
+    /// <summary>
+    /// System-wide commit + physical state (#385 follow-up). Returns null when the reader fails,
+    /// so the renderer omits the section rather than printing zeroes.
+    /// </summary>
+    /// <remarks>
+    /// Reads through <c>MemorySampleReader</c>, which lives in the BattleLoadDiagnostics
+    /// namespace but the same assembly. That cross-feature <c>internal</c> call is deliberate:
+    /// it is the single implementation of the GlobalMemoryStatusEx + GetProcessMemoryInfo pair,
+    /// it is the same reader whose output the bundled taom_debug.log already carries as
+    /// [MemSample] lines, and duplicating it here would be a second place for the P/Invoke
+    /// marshalling to drift. Note this collector's every other read is an untestable static too
+    /// (Process, GC, Environment, RuntimeInformation), so an interface over one of them would
+    /// abstract nothing; the testable logic lives in MemoryPressureVerdict instead.
+    /// </remarks>
+    public SystemMemorySnapshot? CollectSystemMemory()
+    {
+        if (!MemorySampleReader.TryRead(out var s)) return null;
+        return new SystemMemorySnapshot(
+            PrivateMb: s.PrivMb,
+            WorkingSetMb: s.WsMb,
+            // Null, not 0, when the read failed: a fabricated 0 here would read as
+            // "managed 0% of private" and falsely strengthen the native-dominance conclusion.
+            ManagedHeapMb: s.HeapMbValid ? s.HeapMb : (long?)null,
+            SysCommitUsedMb: s.SysCommitUsedMb,
+            SysCommitLimitMb: s.SysCommitLimitMb,
+            AvailPhysMb: s.AvailPhysMb,
+            TotalPhysMb: s.TotalPhysMb,
+            MemLoadPercent: s.MemLoadPercent);
     }
 
     private static ThrowingThreadSnapshot CollectThrowingThread()

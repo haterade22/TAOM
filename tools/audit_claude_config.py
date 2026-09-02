@@ -32,11 +32,19 @@ fire at full severity regardless of --external. `audit-allow: <rule>` suppresses
 a line; lines that read like documentation examples are skipped automatically.
 
 Scans (relative to --root, default = repo root):
-  .claude/{skills,agents,rules,hooks}/**, .claude/settings.json,
-  .claude/settings.local.json, .mcp.json, CLAUDE.md, AGENTS.md
+  Config surface, all layers: .claude/{skills,agents,rules,hooks}/**,
+  .claude/settings.json, .claude/settings.local.json, .mcp.json, CLAUDE.md,
+  AGENTS.md
+  Whole repo, secret rules only: every git-tracked text file under 2 MB. This
+  is the sweep that catches a key pasted into a .ps1, a C# const, or a doc, and
+  a tracked file that IS credential material by name. It needs a git work tree
+  and says so with an INFO note rather than silently doing nothing when there
+  is none. Turn it off with --no-repo-secrets.
 
 Categories:
-  secrets            committed credentials (API keys, private keys, DB URIs)
+  secrets            committed credentials (API keys, private keys, DB URIs) in
+                     any tracked file, plus tracked files that are credential
+                     material by name (*.pem, id_rsa, .env, .npmrc)
   permissions        over-broad tool grants in settings allow-lists
   hook-exfil         network exfil / reverse shells / log-tampering in hooks
   mcp-risk           hardcoded MCP secrets, auto-approve, unpinned npx -y
@@ -53,6 +61,7 @@ Categories:
 Exit codes:  2 = at least one CRITICAL finding (CI gate) · 1 = usage error · 0 = clean/non-critical
 Flags:  --json  machine output · --root PATH  scan root · --min SEV  only report >= severity
         --external  raise SkillSpector regex categories to full severity (foreign tree)
+        --no-repo-secrets  config surface only, skip the git-tracked sweep
 
 Inline suppression: put `audit-allow: <rule-id>` in a comment on the SAME line
 to suppress a known-safe match (e.g. an injection phrase quoted as an example in
@@ -64,6 +73,7 @@ import argparse
 import ast
 import json
 import re
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -161,7 +171,25 @@ _GENERIC_SECRET = re.compile(
 )
 
 
+def _has_secret_hint(text: str) -> bool:
+    """Cheap whole-text gate in front of the per-line loop.
+
+    Exact rather than heuristic: it runs the SAME compiled patterns once over
+    the whole text. None of them is anchored, so a whole-text search is a strict
+    superset of the per-line matches, and a file with no hint can skip the loop
+    without changing a single finding. This is what lets the repo-wide sweep
+    cross several thousand tracked files in seconds instead of minutes. Line
+    numbers and `audit-allow` suppression still come from the per-line pass.
+    """
+    for _rid, rx, _desc in _SECRET_COMPILED:
+        if rx.search(text):
+            return True
+    return bool(_GENERIC_SECRET.search(text))
+
+
 def scan_secrets(path: Path, rel: str, text: str, res: Result) -> None:
+    if not _has_secret_hint(text):
+        return
     for lineno, line in enumerate(text.splitlines(), 1):
         for rid, rx, desc in _SECRET_COMPILED:
             for m in rx.finditer(line):
@@ -184,6 +212,110 @@ def scan_secrets(path: Path, rel: str, text: str, res: Result) -> None:
             res.findings.append(Finding(
                 "secret-generic", "HIGH", "secrets", rel, lineno,
                 f"Hardcoded {key.lower()} literal", _mask(val)))
+
+
+# --------------------------------------------------------------------------- #
+# Repo-wide secret layer  (every git-tracked file, not just the config surface)
+# --------------------------------------------------------------------------- #
+
+# A tracked file whose NAME is credential material. .gitignore stops a NEW one
+# from being added and has no say at all over a file that is already committed,
+# which is exactly the case this catches. .crt / .cer / .der are deliberately
+# absent: a certificate is public, and an auditor that cries wolf gets ignored.
+_TRACKED_SECRET_FILES = [
+    ("secret-tracked-key", "CRITICAL",
+     r"\.(?:pem|key|p12|pfx|ppk|jks|keystore|gpg)$|(?:^|/)id_(?:rsa|dsa|ecdsa|ed25519)$",
+     "private key or keystore material"),
+    ("secret-tracked-env", "HIGH",
+     r"(?:^|/)\.env(?:\.[^/]+)?$",
+     "environment file (real values live in these)"),
+    ("secret-tracked-cred", "HIGH",
+     r"(?:^|/)(?:\.npmrc|\.pypirc|\.netrc|_netrc|credentials\.json|secrets\.json)$",
+     "tool credential file"),
+]
+_TRACKED_COMPILED = [
+    (rid, sev, re.compile(rx, re.IGNORECASE), desc)
+    for rid, sev, rx, desc in _TRACKED_SECRET_FILES
+]
+
+# .env.example and friends are templates with no values in them. They are meant
+# to be committed, so they are the one shape this layer stays quiet about.
+_ENV_TEMPLATE = re.compile(r"\.(?:example|sample|template|dist)$", re.IGNORECASE)
+
+# Both limits are about cost, not safety: the byte cap skips the handful of huge
+# ModuleData XML, and a null byte in the first 8 KB is the cheapest reliable
+# "this is a mesh, not source" test.
+_REPO_MAX_BYTES = 2_000_000
+_BINARY_SNIFF_BYTES = 8192
+
+
+def _tracked_path_rule(rel: str) -> tuple[str, str, str] | None:
+    """Return (rule, severity, description) if this path is credential-shaped."""
+    for rid, sev, rx, desc in _TRACKED_COMPILED:
+        if not rx.search(rel):
+            continue
+        if rid == "secret-tracked-env" and _ENV_TEMPLATE.search(rel):
+            return None
+        return (rid, sev, desc)
+    return None
+
+
+def collect_tracked(root: Path) -> list[str] | None:
+    """Every git-tracked path under `root`, or None if it is not a work tree.
+
+    git is the right source here rather than a tree walk: it answers precisely
+    the question this layer asks (what is committed?), skips ignored and
+    untracked junk for free, and costs one process instead of a full crawl of a
+    repo that carries thousands of art assets.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-z"],
+            capture_output=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    raw = proc.stdout.decode("utf-8", "replace")
+    return [r.replace("\\", "/") for r in raw.split("\0") if r]
+
+
+def scan_repo_secrets(root: Path, rels: list[str], res: Result,
+                      already: set[str], max_bytes: int = _REPO_MAX_BYTES) -> None:
+    """Path-shape + content secret scan over the tracked files in `rels`.
+
+    Only the secret rules run here. The permission / hook / injection /
+    SkillSpector / AST layers stay scoped to the config surface where they are
+    calibrated; turning them loose on several thousand source and data files
+    would bury a real finding under advisory noise.
+    """
+    for rel in rels:
+        hit = _tracked_path_rule(rel)
+        if hit:
+            rid, sev, desc = hit
+            res.findings.append(Finding(
+                rid, sev, "secrets", rel, 0,
+                f"Tracked {desc}: .gitignore cannot protect a file that is "
+                f"already committed, so remove it from the index and rotate"))
+        if rel in already:
+            continue
+        path = root / rel
+        try:
+            size = path.stat().st_size
+        except OSError:
+            continue  # listed by git but absent from the worktree
+        if size > max_bytes:
+            continue
+        try:
+            with path.open("rb") as fh:
+                head = fh.read(_BINARY_SNIFF_BYTES)
+        except OSError:
+            continue
+        if b"\0" in head:
+            continue
+        res.scanned_files += 1
+        scan_secrets(path, rel, _read(path), res)
 
 
 # --------------------------------------------------------------------------- #
@@ -666,6 +798,9 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--root", default=".", help="repo root to scan (default: cwd)")
     ap.add_argument("--json", action="store_true", help="machine-readable JSON output")
     ap.add_argument("--min", default="INFO", choices=SEVERITIES, help="only report findings >= this severity")
+    ap.add_argument("--no-repo-secrets", action="store_true",
+                    help="skip the repo-wide secret sweep over git-tracked files; the "
+                         ".claude config surface is still scanned")
     ap.add_argument("--external", action="store_true",
                     help="scanning an external/untrusted tree (not TAOM's own): raise the "
                          "SkillSpector regex categories from advisory INFO to full severity")
@@ -681,6 +816,20 @@ def main(argv: list[str]) -> int:
     for p in collected:
         scan_file(p, root, res, external=args.external)
     scan_yara([(p, str(p.relative_to(root)).replace("\\", "/")) for p in collected], res)
+
+    # The config surface is where a malicious skill hides; the rest of the repo
+    # is where a credential gets pasted by accident. Both are in scope, but only
+    # the secret rules run over the second one.
+    if not args.no_repo_secrets:
+        tracked = collect_tracked(root)
+        if tracked is None:
+            res.findings.append(Finding(
+                "repo-secrets-unavailable", "INFO", "secrets", ".", 0,
+                "Repo-wide secret sweep skipped: --root is not a git work tree, or git "
+                "is unavailable. The .claude config surface was still scanned."))
+        else:
+            already = {str(q.relative_to(root)).replace("\\", "/") for q in collected}
+            scan_repo_secrets(root, tracked, res, already)
 
     min_rank = SEV_RANK[args.min]
     (report_json if args.json else report_text)(res, min_rank)

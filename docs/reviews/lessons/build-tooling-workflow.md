@@ -1890,3 +1890,21 @@ of the nine dated files sitting in `Main/_Module/ModuleData/`.
   checks that used the old one. Treat a precondition established before the key insight as
   provisional, not settled.
 - **Source:** 2026-09-01 module backup sweep.
+
+
+### Mirror a validator's PREDICATE across languages, never an equivalent-looking pattern
+
+`Invoke-CommitMatrix.ps1` validated station labels with `^[A-Za-z0-9_.:-]+$`, documented as "the SAME
+grammar" as `MemoryProbeReportFormatter.IsValidLabel`. It is not: in .NET regex `$` matches at the
+end of the string *or immediately before a single trailing newline*, so `"B-menu\n"` passed the
+PowerShell check and failed the C# one. The newline then injected a physical line break into
+`stations.csv`, which any line-based reader sees as an extra row. The mirror also diverged the other
+way: `char.IsLetterOrDigit` is Unicode-aware while `[A-Za-z0-9]` is not.
+- **Why missed:** the regex encodes the same *intent* and reads as obviously equivalent. The
+  divergence lives in anchor semantics nobody re-derives when writing a character class.
+- **Prevent:** when a validator exists on both sides of a language boundary, port the predicate
+  literally (`foreach char: IsLetterOrDigit or in the allowed set`), not a pattern that means the
+  same thing to a human. Same family as the prior C#/Python integer-floor threshold drift: pin a
+  boundary INPUT on both sides, and for validators include an input that is valid-but-for-one-
+  trailing-control-character.
+- **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.

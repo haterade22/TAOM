@@ -14,9 +14,11 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// diagnostics component that suspends the main thread; disableable on its own.</summary>
     bool ExitStallSamplerEnabled { get; }
 
-    /// <summary>Independent gate for the session-wide [MemSample] telemetry (#386) —
-    /// deliberately NOT tied to the master <see cref="IsEnabled"/> toggle, so turning off
-    /// battle-load phase logging does not kill crash-forensics memory sampling.</summary>
+    /// <summary>Independent gate for ALL session-wide memory telemetry: the periodic
+    /// [MemSample] lines and low-headroom WARN (#386) AND the [MemStation] screen-transition
+    /// anchors that ride the same switch. Deliberately NOT tied to the master
+    /// <see cref="IsEnabled"/> toggle, so turning off battle-load phase logging does not kill
+    /// crash-forensics memory sampling. Turning THIS off silences both instruments.</summary>
     bool MemorySamplerEnabled { get; }
 
     /// <summary>Seconds between [MemSample] emissions (validated 10-120, default 30);

@@ -904,3 +904,20 @@ which is the #431 defect the test was written to prevent.
   does" -- and for coverage tests specifically, "what happens if I delete a row?"
 - **Source:** #525; same RCA.
 
+
+### A test fixture naming an ENGINE type is an unchecked coverage claim, so resolve the type first
+
+`MemoryStationSamplerTests` pinned `screen='GauntletEncyclopediaScreen'` as its fixture. No such type
+exists in v1.4.8: the encyclopedia is a `MapEncyclopediaView` overlay on `MapScreen`, never pushed
+through `ScreenManager`, so the feature emits no line for it at all. The name then propagated into
+the class doc, the feature doc, the CHANGELOG and the Python twin literal as a *capability claim*,
+with a fully green suite behind it.
+- **Why missed:** the tests exercise string formatting, and a formatting test cannot distinguish a
+  real engine type name from a plausible invention. Both produce the same string. Nine review agents
+  read the fixture; only the one that grepped the engine for the identifier found it.
+- **Prevent:** any fixture value that denotes an ENGINE type, method, scene, action or asset id must
+  be resolved against the installed assembly (`pwsh tools/taom-src.ps1 path <Type>`) before it is
+  pinned, and a `BindingVerification` test should name the real member. Corollary for reviewers: when
+  a doc claims coverage of N things, pick the one most load-bearing to the feature's purpose and
+  resolve it, rather than checking that the list is internally consistent.
+- **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.

@@ -201,6 +201,10 @@ public sealed class CrashReportService : ICrashReportService
         var taom = Safe(() => _taomState.Collect(), failures, "TaomState") ?? new TaomStateSnapshot(null, Array.Empty<SpecialResourceEntry>(), null, null, null);
         var mcm = Safe(() => _mcm.Collect(), failures, "Mcm") ?? new McmSettingsSnapshot(Array.Empty<McmProviderSnapshot>());
         var process = Safe(() => _process.CollectProcess(), failures, "Process") ?? new ProcessSnapshot(0, 0, 0, 0, 0, 0, 0, 0, 0, new ThrowingThreadSnapshot(0, null, false, "Unknown"));
+        // No ?? fallback: null is the honest value for a failed memory read, and the renderer
+        // prints "(unavailable)" for it. #385 was diagnosed by the commit figure the bundle
+        // never carried.
+        var systemMemory = Safe(() => _process.CollectSystemMemory(), failures, "SystemMemory");
         var gpu = Safe(() => _gpu.CollectGpu(), failures, "Gpu") ?? new GpuSnapshot(Array.Empty<GpuAdapterEntry>());
         var display = Safe(() => _gpu.CollectDisplay(), failures, "Display") ?? new DisplaySnapshot(0, 0, 0, false, 0);
         var os = Safe(() => _process.CollectOs(), failures, "Os") ?? new OsSnapshot("?", "?", false, 0, "?", "?", "?", "?");
@@ -223,6 +227,7 @@ public sealed class CrashReportService : ICrashReportService
             Taom: taom,
             Mcm: mcm,
             Process: process,
+            SystemMemory: systemMemory,
             Gpu: gpu,
             Display: display,
             Os: os,

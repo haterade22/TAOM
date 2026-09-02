@@ -6,7 +6,7 @@ allowed-tools: Bash, Read
 
 # Security Scan — audit TAOM's own Claude config
 
-A deterministic, offline security scan of TAOM's Claude Code configuration surface (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`, `AGENTS.md`). Ported as a TAOM-calibrated subset of obra-style "scan your own agent config" tooling (affaan-m/ECC AgentShield), 2026-05-29; the skill-threat categories + AST + YARA layers were added from NVIDIA SkillSpector (2026-06-22, `docs/reviews/adopt-skillspector-2026-06-22.md`). See `docs/reviews/` for the reviews that motivated it.
+A deterministic, offline security scan of TAOM's Claude Code configuration surface (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`, `AGENTS.md`), plus a repo-wide secret sweep over every git-tracked file. Ported as a TAOM-calibrated subset of obra-style "scan your own agent config" tooling (affaan-m/ECC AgentShield), 2026-05-29; the skill-threat categories + AST + YARA layers were added from NVIDIA SkillSpector (2026-06-22, `docs/reviews/adopt-skillspector-2026-06-22.md`). See `docs/reviews/` for the reviews that motivated it.
 
 ## When to use
 
@@ -22,7 +22,10 @@ python tools/audit_claude_config.py            # human report, all severities
 python tools/audit_claude_config.py --min HIGH # only HIGH+CRITICAL
 python tools/audit_claude_config.py --json      # machine output (CI)
 python tools/audit_claude_config.py --root <dir> --external   # vet an untrusted/foreign tree
+python tools/audit_claude_config.py --no-repo-secrets           # config surface only (faster)
 ```
+
+**Two scopes, one run.** Every layer runs over the config surface (about 110 files). The `secrets` rules additionally run over every git-tracked text file under 2 MB (about 4,200 files, roughly 2.5s), because a credential is far more likely to be pasted into a `.ps1`, a C# const, or a doc than into `settings.json`. The other layers stay scoped to the config surface on purpose: they are calibrated for it, and turning `excessive-agency` loose on 4,000 game-data files would bury a real finding in advisory noise. The sweep needs a git work tree; without one it reports an INFO note instead of silently passing.
 
 Exit code: **2** if any CRITICAL finding (CI gate), 1 on usage error, 0 otherwise.
 
@@ -34,7 +37,7 @@ The original 5 categories (stdlib-only):
 
 | Category | Catches |
 |----------|---------|
-| `secrets` | committed API keys / tokens / private keys / DB URIs (placeholder-suppressed) |
+| `secrets` | committed API keys / tokens / private keys / DB URIs (placeholder-suppressed), in the config surface **and in every git-tracked file**; plus `secret-tracked-key` / `-env` / `-cred` for a tracked file that IS credential material by name (`*.pem`, `id_rsa`, `.env`, `.npmrc`), which `.gitignore` is powerless to prevent once the file is committed |
 | `permissions` | over-broad grants in `settings*.json` allow-lists (`Bash(*)`, `Write(*)`, permission-bypass flags) |
 | `hook-exfil` | hook scripts that phone home, open reverse shells, read credential stores, or tamper logs |
 | `mcp-risk` | hardcoded secrets in MCP `env`, auto-approve of project servers, unpinned `npx -y` |

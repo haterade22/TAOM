@@ -505,3 +505,21 @@ The handover wrapped its whole sequence in one catch that reported "continuing a
 - **Why missed:** both were written as fail-safe and reviewed as correct. The question asked was "is this safe?", which they were. The question not asked was "if this safe path fires wrongly, how would anyone ever know?"
 - **Prevent:** for every early-return that turns a feature OFF rather than throwing, require one of: a warning log naming the feature, or a unit test that fails when the guard is deleted. "No exception thrown" is not a passing condition for a test about behaviour. Applies hardest at optional-dependency attach points (MCM, a co-op host, an absent config file), where the guard is expected to fire in legitimate setups and so never looks suspicious.
 - **Source:** docs/reviews/rca-ai-party-size-player-clan-2026-09-01.md findings 1 and 3.
+
+
+### "Same shape as the sibling" is a design statement, not a correctness one -- audit the sibling before mirroring it
+
+`MemoryStationSampler` was written as a deliberate mirror of `MemoryPressureSampler` ("Singleton like
+its sibling") and inherited its un-reset state along with its shape: `_emitted` and `_capReported`
+were never cleared, so a cap documented and named as per-SESSION was really per-PROCESS. A second
+campaign in one process would inherit an exhausted budget, emit nothing at all, and leave its only
+cap-reached warning sitting in a previous campaign's log.
+- **Why missed:** mirroring an established sibling reads as the conservative choice, and the review
+  attention went to what was NEW rather than to what was copied. The sibling's own latches
+  (`_sessionLineEmitted`, `_warnLatched`, `_readFailureWarned`) still carry the same defect, so the
+  pattern being copied was already an unfixed instance of this file's own rule.
+- **Prevent:** before mirroring a class, run this file's checklist against the CLASS BEING COPIED and
+  fix or explicitly inherit-with-reason. For any process-lifetime singleton, name the boundary that
+  clears each field: the hook that fires on it (here `OnBeforeInitialModuleScreenSetAsRoot`, which
+  re-fires on every main-menu return) and a test that a second session starts clean.
+- **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.

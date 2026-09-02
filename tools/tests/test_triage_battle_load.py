@@ -49,6 +49,17 @@ PINNED_MEM_WARN = ("[MemSample] WARN LOW COMMIT HEADROOM headroomMB=1799 "
                    "privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=29847 "
                    "sysCommitLimitMB=31646 availPhysMB=310 memLoad=97%")
 
+# The pinned [MemStation] screen-anchor contract (#386 follow-up). Cross-language twin pin:
+# MemoryStationSamplerTests.FormatStation_EnterWithKnownValues_MatchesPinnedLiteral and
+# ..._ExitWithKnownValues_... assert the C# sampler emits EXACTLY these message bodies.
+# The 7-token tail is shared with [MemSample] by construction (one C# FormatSampleTokens).
+PINNED_MEM_STATION_ENTER = ("[MemStation] enter screen='GauntletInventoryScreen' "
+                            "privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=14003 "
+                            "sysCommitLimitMB=31646 availPhysMB=6200 memLoad=61%")
+PINNED_MEM_STATION_EXIT = ("[MemStation] exit screen='GauntletInventoryScreen' "
+                           "privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=29847 "
+                           "sysCommitLimitMB=31646 availPhysMB=310 memLoad=97%")
+
 # The pinned FinishMissionLoadingBegin wait-token contract (2026-08-07). Cross-language
 # twin pin: BattleLoadDiagnosticsService.FormatFinishWaitDetail is asserted
 # character-for-character on the C# side by
@@ -1167,6 +1178,279 @@ class LoadTimingCliTests(unittest.TestCase):
             # so the loose form passed against the exact bug this test exists to catch.
             self.assertIn("VERDICT: SCENE", r.stdout)
             self.assertNotIn("VERDICT: PRE_SCENE", r.stdout)
+
+
+# --------------------------------------------------------------------------- #
+# [MemStation] screen anchors (#386 follow-up)                                  #
+# --------------------------------------------------------------------------- #
+def _station(kind="enter", screen="GauntletInventoryScreen", priv=4211, ws=3900,
+             heap=654, used=14003, limit=31646, avail=6200, load=61, prefix=True,
+             ts="2026-06-17 12:00:00"):
+    payload = (f"[MemStation] {kind} screen='{screen}' "
+               f"privMB={priv} wsMB={ws} heapMB={heap} "
+               f"sysCommitUsedMB={used} sysCommitLimitMB={limit} "
+               f"availPhysMB={avail} memLoad={load}%")
+    return _line("INFO", payload, ts=ts) if prefix else payload
+
+
+class MemStationTests(unittest.TestCase):
+    def test_pinned_station_enter_literal_parses_to_pinned_numbers(self):
+        # Cross-language twin pin — the C# side asserts it emits exactly this line
+        # (MemoryStationSamplerTests.FormatStation_EnterWithKnownValues_MatchesPinnedLiteral).
+        tl = tb.parse_battle_load_log(_log(_line("INFO", PINNED_MEM_STATION_ENTER)))
+        self.assertEqual(len(tl.mem_stations), 1)
+        s = tl.mem_stations[0]
+        self.assertEqual((s.kind, s.screen), ("enter", "GauntletInventoryScreen"))
+        self.assertEqual((s.priv_mb, s.ws_mb, s.heap_mb, s.commit_used_mb,
+                          s.commit_limit_mb, s.avail_phys_mb, s.mem_load),
+                         (4211, 3900, 654, 14003, 31646, 6200, 61))
+
+    def test_pinned_station_exit_literal_parses_to_pinned_numbers(self):
+        tl = tb.parse_battle_load_log(_log(_line("INFO", PINNED_MEM_STATION_EXIT)))
+        s = tl.mem_stations[0]
+        self.assertEqual(s.kind, "exit")
+        self.assertEqual(s.commit_used_mb, 29847)
+        self.assertEqual(s.commit_limit_mb, 31646)
+
+    def test_station_lines_do_not_enter_the_memsample_trend(self):
+        # The corruption guard. Station readings are event-driven; letting one into
+        # mem_samples would skew first/peak/last and therefore the MEMORY PRESSURE note.
+        tl = tb.parse_battle_load_log(_log(_station(), _station(kind="exit")))
+        self.assertEqual(len(tl.mem_stations), 2)
+        self.assertEqual(tl.mem_samples, [])
+        self.assertIsNone(tb.classify_memory(tl))
+
+    def test_memsample_lines_do_not_enter_the_station_series(self):
+        tl = tb.parse_battle_load_log(_log(_mem(), _mem_session()))
+        self.assertEqual(tl.mem_stations, [])
+        self.assertIsNone(tb.classify_stations(tl))
+
+    def test_station_delta_names_the_screen_with_the_largest_growth(self):
+        tl = tb.parse_battle_load_log(_log(
+            _station(kind="enter", screen="MapScreen", priv=10000),
+            _station(kind="exit", screen="MapScreen", priv=10100),
+            _station(kind="enter", screen="GauntletInventoryScreen", priv=10100),
+            _station(kind="exit", screen="GauntletInventoryScreen", priv=15500),
+        ))
+        st = tb.classify_stations(tl)
+        self.assertEqual(st["transitions"], 4)
+        self.assertEqual(st["top"], "GauntletInventoryScreen")
+        top = st["by_screen"][0]
+        self.assertEqual(top["visits"], 1)
+        self.assertEqual(top["total_delta_mb"], 5400)
+        self.assertEqual(top["max_visit_delta_mb"], 5400)
+
+    def test_repeat_visits_accumulate_and_report_the_worst_single_visit(self):
+        tl = tb.parse_battle_load_log(_log(
+            _station(kind="enter", priv=10000), _station(kind="exit", priv=13000),
+            _station(kind="enter", priv=13000), _station(kind="exit", priv=13100),
+        ))
+        b = tb.classify_stations(tl)["by_screen"][0]
+        self.assertEqual(b["visits"], 2)
+        self.assertEqual(b["total_delta_mb"], 3100)
+        self.assertEqual(b["max_visit_delta_mb"], 3000)
+
+    def test_unmatched_enter_is_counted_not_dropped_and_never_produces_a_delta(self):
+        # ScreenManager's bulk teardown is not confirmed to fire OnPopScreen per removed
+        # screen, so an orphan enter is an expected shape. It must not become a 0 delta.
+        tl = tb.parse_battle_load_log(_log(_station(kind="enter", priv=10000)))
+        b = tb.classify_stations(tl)["by_screen"][0]
+        self.assertEqual(b["unmatched_enters"], 1)
+        self.assertEqual(b["visits"], 0)
+        self.assertEqual(b["total_delta_mb"], 0)
+
+    # An exit with no enter cannot be measured, but it is COUNTED: silently discarding it made
+    # an incomplete station series look complete, which is the coverage-honesty failure this
+    # tool exists to avoid.
+    def test_exit_without_enter_is_counted_not_measured_and_not_silently_dropped(self):
+        tl = tb.parse_battle_load_log(_log(_station(kind="exit", priv=10000)))
+        st = tb.classify_stations(tl)
+        self.assertEqual(st["transitions"], 1)
+        self.assertEqual(st["unmatched_exits"], 1)
+        b = st["by_screen"][0]
+        self.assertEqual(b["visits"], 0)
+        self.assertEqual(b["total_delta_mb"], 0)
+        self.assertEqual(b["unmatched_exits"], 1)
+        self.assertIsNone(b["max_visit_delta_mb"])
+
+    def test_log_without_station_lines_produces_byte_identical_report(self):
+        # The additive-contract guard: pre-feature logs must render exactly as before.
+        text = _log(_encounter(), _open_new(), _mission_init(), _mem())
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+        self.assertNotIn("Memory by station", report)
+
+    def test_report_names_the_top_station(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="enter", priv=10000),
+            _station(kind="exit", priv=15400)))
+        report = tb.format_report(tb.classify(tl), tl, None)
+        self.assertIn("Memory by station (2 transitions):", report)
+        self.assertIn("GauntletInventoryScreen", report)
+        self.assertIn("+5400 MB total", report)
+
+    def test_station_lines_do_not_alter_the_verdict_or_terminal_phase(self):
+        without = _log(_encounter(), _open_new(), _mission_init())
+        with_st = _log(_encounter(), _open_new(), _station(), _mission_init(),
+                       _station(kind="exit"))
+        a = tb.classify(tb.parse_battle_load_log(without))
+        b = tb.classify(tb.parse_battle_load_log(with_st))
+        self.assertEqual(a.kind, b.kind)
+        self.assertEqual(a.summary, b.summary)
+
+    def test_malformed_station_line_is_skipped_without_raising(self):
+        tl = tb.parse_battle_load_log(_log("[MemStation] enter screen='X' privMB=oops"))
+        self.assertEqual(tl.mem_stations, [])
+
+    # --- Regression: the report used to CRASH on this shape --------------------------------
+    # classify_stations returns a truthy dict with an empty by_screen whenever every station is
+    # an exit with no matching enter (the sampler subscribed while a screen was already open).
+    # format_report then ran max() over an empty sequence and raised ValueError, taking the whole
+    # run with it: no verdict, no --json, a raw traceback, and exit code 1 - the same exit code a
+    # correctly diagnosed hang produces.
+    def test_exit_only_station_log_does_not_crash_the_report(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="exit", priv=10000)))
+
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("Memory by station (1 transitions):", report)
+        self.assertIn("1 unmatched exit(s)", report)
+        self.assertIn("n/a", report)   # no measurable visit, and it says so
+
+    def test_exit_only_station_log_still_produces_a_verdict(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(), _station(kind="exit")))
+        self.assertEqual(tb.classify(tl).kind, "SCENE")
+
+    # --- Regression: a screen where memory FELL --------------------------------------------
+    # The feature exists because commit and working set move independently, so a negative delta
+    # is an expected reading, not an error. max_visit_delta_mb used to be seeded at 0, which is
+    # outside the domain of an all-negative delta set, so the seed won every comparison and the
+    # report printed "(max visit +0 MB)" beside a large negative total - contradicting it.
+    def test_all_negative_deltas_report_the_least_negative_visit_not_zero(self):
+        tl = tb.parse_battle_load_log(_log(
+            _station(kind="enter", screen="ShrinkingScreen", priv=10000),
+            _station(kind="exit", screen="ShrinkingScreen", priv=9000),
+            _station(kind="enter", screen="ShrinkingScreen", priv=9000),
+            _station(kind="exit", screen="ShrinkingScreen", priv=8500)))
+
+        b = tb.classify_stations(tl)["by_screen"][0]
+
+        self.assertEqual(b["total_delta_mb"], -1500)
+        self.assertEqual(b["max_visit_delta_mb"], -500)
+        self.assertNotEqual(b["max_visit_delta_mb"], 0)
+
+    def test_negative_delta_renders_without_claiming_a_flat_visit(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="enter", screen="ShrinkingScreen", priv=10000),
+            _station(kind="exit", screen="ShrinkingScreen", priv=9550)))
+
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("-450 MB total", report)
+        self.assertIn("max visit   -450 MB", report)
+        self.assertNotIn("+0 MB", report)
+
+    def test_screen_with_only_unmatched_enters_renders_max_visit_as_not_available(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="enter", screen="NeverClosed", priv=10000)))
+
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("n/a", report)
+        self.assertIn("1 unmatched enter(s)", report)
+
+    # --- Nested screens ---------------------------------------------------------------------
+    # Pairing is per screen NAME with no nesting awareness, so an outer screen's delta includes
+    # whatever an inner screen grew while stacked on top of it. Both screens then report that
+    # growth and summing the column double-counts it. The report has to say so itself, not only
+    # in doc prose the reader may not have open.
+    def test_nested_screens_are_paired_correctly_and_flagged_as_overlapping(self):
+        tl = tb.parse_battle_load_log(_log(
+            _station(kind="enter", screen="MapScreen", priv=10000),
+            _station(kind="enter", screen="GauntletInventoryScreen", priv=10000),
+            _station(kind="exit", screen="GauntletInventoryScreen", priv=13000),
+            _station(kind="exit", screen="MapScreen", priv=13000)))
+
+        st = tb.classify_stations(tl)
+        by = {b["screen"]: b for b in st["by_screen"]}
+
+        # Each screen is paired with its OWN enter despite the interleaving.
+        self.assertEqual(by["GauntletInventoryScreen"]["total_delta_mb"], 3000)
+        self.assertEqual(by["MapScreen"]["total_delta_mb"], 3000)
+        # ...and the double-count risk is surfaced on the OUTER screen, whose delta is the
+        # inflated one. The inner screen's own delta is clean and is not flagged.
+        self.assertTrue(st["nested_overlap"])
+        self.assertEqual(by["MapScreen"]["nested_visits"], 1)
+        self.assertEqual(by["GauntletInventoryScreen"]["nested_visits"], 0)
+
+    def test_nested_overlap_note_appears_in_the_report(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="enter", screen="MapScreen", priv=10000),
+            _station(kind="enter", screen="GauntletInventoryScreen", priv=10000),
+            _station(kind="exit", screen="GauntletInventoryScreen", priv=13000),
+            _station(kind="exit", screen="MapScreen", priv=13000)))
+
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("do NOT sum these", report)
+
+    # --- Session-reset marker -----------------------------------------------------------
+    # The reset is a discontinuity in the artefact under analysis. Without segmenting on it, an
+    # enter left pending before a return to the main menu would pair with an exit after it and
+    # invent a delta spanning the boundary.
+    def test_session_reset_marker_is_counted_and_is_not_a_measurement(self):
+        tl = tb.parse_battle_load_log(_log(
+            _station(kind="enter", screen="MapScreen", priv=10000),
+            _line("INFO", "[MemStation] session-reset reason=main-menu budget=2000"),
+            _station(kind="enter", screen="MapScreen", priv=12000),
+            _station(kind="exit", screen="MapScreen", priv=12500)))
+
+        st = tb.classify_stations(tl)
+
+        self.assertEqual(st["session_resets"], 1)
+        # 3 real stations; the marker is not one of them.
+        self.assertEqual(st["transitions"], 3)
+        b = st["by_screen"][0]
+        # The post-reset pair measured 500, NOT 2500 spanning the boundary.
+        self.assertEqual(b["total_delta_mb"], 500)
+        self.assertEqual(b["unmatched_enters"], 0)
+
+    def test_session_reset_note_appears_in_the_report(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="enter", priv=10000),
+            _station(kind="exit", priv=10500),
+            _line("INFO", "[MemStation] session-reset reason=main-menu budget=2000")))
+
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("session reset(s)", report)
+
+    # The window bound decides what any delta can mean, so the report states it.
+    def test_report_states_the_window_semantics(self):
+        tl = tb.parse_battle_load_log(_log(
+            _encounter(), _open_new(), _mission_init(),
+            _station(kind="enter", priv=10000), _station(kind="exit", priv=10500)))
+
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("AFTER HandleInitialize", report)
+
+    def test_sequential_different_screens_are_not_flagged_as_overlapping(self):
+        tl = tb.parse_battle_load_log(_log(
+            _station(kind="enter", screen="MapScreen", priv=10000),
+            _station(kind="exit", screen="MapScreen", priv=10100),
+            _station(kind="enter", screen="GauntletInventoryScreen", priv=10100),
+            _station(kind="exit", screen="GauntletInventoryScreen", priv=11000)))
+
+        self.assertFalse(tb.classify_stations(tl)["nested_overlap"])
 
 
 if __name__ == "__main__":

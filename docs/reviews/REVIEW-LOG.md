@@ -2446,4 +2446,4 @@ produced them) in the same commit that creates them.
 - [sas-comparative-analysis-2026-08-08.md](sas-comparative-analysis-2026-08-08.md): Serve as Soldier (SAS) vs TAOM Enlistment, comparative analysis
 - [session-prompts-2026-08-07-perf.md](session-prompts-2026-08-07-perf.md): Handoff session prompts, performance & optimization (2026-08-07)
 - [settlement-buildings-audit-2026-07-08.md](settlement-buildings-audit-2026-07-08.md): Settlement Building Levels, Curation Audit (2026-07-08)
-
+- [rca-memory-diagnostics-2026-09-01.md](rca-memory-diagnostics-2026-09-01.md): RCA, memory diagnostics (crash-bundle verdict + [MemStation] anchors) deep review (9 agents, 19 findings) + Codex adversarial round (4 HIGH / 5 MED / 4 LOW, 0 false positives; 3 of 4 HIGH were defects in the review's own fixes) (2026-09-01)

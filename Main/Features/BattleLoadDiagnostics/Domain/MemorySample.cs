@@ -15,6 +15,17 @@ public readonly struct MemorySample
     /// <summary>GC.GetTotalMemory(false) — managed heap size (no forced collection).</summary>
     public long HeapMb { get; }
 
+    /// <summary>
+    /// False when <see cref="HeapMb"/> could not be read and is therefore not a measurement.
+    /// The [MemSample]/[MemStation] log lines still render the numeric token (the cross-language
+    /// contract with tools/triage_battle_load.py requires an integer there), but any consumer
+    /// drawing a CONCLUSION from the heap figure — notably the crash report's managed-vs-native
+    /// share — must omit it rather than treat 0 as measured. Under an OOM-shaped crash the
+    /// failing read is the reachable case, and 0 there would falsely strengthen exactly the
+    /// native-dominance reading the verdict exists to support.
+    /// </summary>
+    public bool HeapMbValid { get; }
+
     /// <summary>System-wide commit charge in use (TotalPageFile - AvailPageFile).</summary>
     public long SysCommitUsedMb { get; }
 
@@ -38,7 +49,8 @@ public readonly struct MemorySample
         long sysCommitLimitMb,
         long availPhysMb,
         long totalPhysMb,
-        int memLoadPercent)
+        int memLoadPercent,
+        bool heapMbValid = true)
     {
         PrivMb = privMb;
         WsMb = wsMb;
@@ -48,5 +60,6 @@ public readonly struct MemorySample
         AvailPhysMb = availPhysMb;
         TotalPhysMb = totalPhysMb;
         MemLoadPercent = memLoadPercent;
+        HeapMbValid = heapMbValid;
     }
 }

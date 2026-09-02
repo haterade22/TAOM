@@ -256,6 +256,138 @@ The session line is emitted once, on the first enabled poll. `privMB` is `PROCES
 
 **Triage tool.** `tools/triage_battle_load.py` reads the `[MemSample]` telemetry riding the same log and appends a **Memory trend** section whenever samples are present: the session line, sample count, and a `first → peak → last` view of commit usage with computed headroom, plus the WARN count. When pressure is detected — a WARN anywhere, or the last sample's headroom below the floor (2048 MB) or 10 % of the limit — the section ends with `MEMORY PRESSURE: … the phase verdict above may be a symptom, not the cause.` `--mem-threshold-mb <N>` overrides the floor; `--json` gains a `memory` block (`null` for pre-#386 logs). The readout is additive decoration only: verdict classes, exit codes, and behavior on old logs are unchanged, and `[MemSample]` lines are inert to the phase timeline (never phase events, never disturb slot-dump attachment).
 
+### Screen-transition anchors (`[MemStation]`, #386 follow-up)
+
+`[MemSample]` says memory rose. It cannot say *what the player opened when it did*, and reading five
+sessions of real logs showed that is the question that matters. Every session starts at ~6,600 MB
+private and reaches 12,600-19,000 MB, with `heapMB` between 400 and 1,000 MB throughout, so the
+growth is native. **Battles are not where it accumulates:** across six full mission cycles the
+`MissionInitialize` baseline held at 10,212 / 12,785 / 11,146 / 11,271 / 11,323 / 11,449 MB, each
+battle costing ~2-3 GB and returning it. In the same session, from 08:55 to 09:32 with **zero
+missions**, `privMB` went 10,646 -> 19,032 (+8.4 GB), while the working set FELL from 4,399 to
+2,861 MB: pages evicted, commit retained. The eight `MemStats()` phase lines cover the battle
+lifecycle; the map and UI path had no anchors at all.
+
+`MemoryStationSampler` writes one line per screen open and close:
+
+```
+[MemStation] enter screen='GauntletInventoryScreen' privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=14003 sysCommitLimitMB=31646 availPhysMB=6200 memLoad=61%
+[MemStation] exit screen='GauntletInventoryScreen' privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=29847 sysCommitLimitMB=31646 availPhysMB=310 memLoad=97%
+[MemStation] session-reset reason=main-menu budget=2000
+```
+
+**No Harmony patch.** `ScreenManager.OnPushScreen` / `OnPopScreen` are public static events
+(`ScreenManager.cs:114/116`, verified against installed v1.4.8). `OnPushScreen` is raised from
+`PushScreen`, `ReplaceTopScreen`, `SetAndActivateRootScreen` and `CleanAndPushScreen`;
+`OnPopScreen` from `PopScreen`, `ReplaceTopScreen`, `CleanScreens` and the
+`DeactivateAndFinalizeAllScreens` teardown loop. One subscription costs nothing per frame and
+covers these seven, whose exact type names are what the fixtures pin:
+
+| Screen | Type |
+|---|---|
+| map | `MapScreen` |
+| mission | `MissionScreen` |
+| inventory | `GauntletInventoryScreen` |
+| party | `GauntletPartyScreen` |
+| clan | `GauntletClanScreen` |
+| kingdom | `GauntletKingdomScreen` |
+| character creation | `CharacterCreationScreen` |
+
+> **KNOWN GAP, and it is the one that matters most: the encyclopedia is invisible to this
+> instrument.** It is not a `ScreenBase` and there is no `EncyclopediaState`. It is a
+> `MapEncyclopediaView` (a `MapView` overlay) added onto `MapScreen` and tracked by an
+> `IsEncyclopediaOpen` bool, so it never goes through `ScreenManager` and **no station line is ever
+> emitted when the player opens or closes it**; `TopScreen` stays `MapScreen` throughout. That
+> matters because encyclopedia browsing is the leading suspect for the growth this feature was
+> built to localise. An anchor off `MapEncyclopediaView` would close it and is not built. Until it
+> is, bracket an encyclopedia session by hand with `taom.print_memory <label>`.
+>
+> This shipped as a false claim in the first cut: the docs, the CHANGELOG and both sides of the
+> cross-language contract named `GauntletEncyclopediaScreen`, a type that exists nowhere in the
+> engine. The tests passed because they only exercise string formatting, which is exactly how a
+> fixture name becomes an unchecked coverage claim. Fixture names are now real, covered screens.
+
+`MapState.OnTick` was evaluated and **rejected on a structural ground, not a cost one**:
+`GameStateManager.OnTick` ticks only `ActiveState`, so it does not run while an inventory, party,
+clan or kingdom screen is on top. (That reasoning does not extend to the encyclopedia, where
+`MapState` stays active. Neither approach observes it, per the gap above.)
+
+**The risk the class is shaped around.** Those events are plain multicast delegates and not one of
+the raise sites is wrapped in a try/catch, so an exception from our handler skips every later
+subscriber *and* unwinds straight out of `ScreenManager.PushScreen`, breaking screen navigation for
+every mod in the process. Mitigation is try/catch at the outermost statement of both handlers
+**and** swallow-and-warn inside `NoteStation`, which is the tested path, so the guarantee is pinned
+rather than assumed (`NoteStation_ThrowingLogger_DoesNotPropagate`).
+
+**Threading is convention, not enforcement.** The sampler's counters are unsynchronised, which is
+safe only because every engine caller of these APIs is UI-thread code. The engine's own guard is
+`Debug.FailedAssert("Screen should be changed from main thread")`, which does not throw and whose
+result nothing checks, and it is absent entirely from `ReplaceTopScreen` and
+`SetAndActivateRootScreen`. Accepted because the cost of being wrong is a torn counter in a
+diagnostic rather than corrupt game state.
+
+**A cap, not a rate limit** (2,000 lines/session). Rate-limiting would drop an `exit` and orphan its
+`enter`, destroying the delta the pair exists to produce. At ~187 bytes per line that is **~365 KB
+worst case**, against the ~644 KB a normal session log already runs to. Past the cap it emits one
+WARNING whose wording refuses to let silence read as a clean result, the same discipline as
+`TableauDiagnostics`' census line.
+
+"Session" is literal: `Start()` clears the budget and the warning latch, and it runs on **every**
+return to the main menu. Without that the cap would be per-PROCESS, so a second campaign in one
+process would inherit an exhausted budget, log nothing at all, and leave its only cap-reached
+warning sitting in a previous campaign's log. That is a process-scoped-latch defect this repo has
+shipped before, and the first cut of this class walked into it by mirroring `MemoryPressureSampler`,
+whose own `_sessionLineEmitted` / `_warnLatched` still have the same gap.
+
+**Gating.** Its own `EnableMemorySampler` toggle, exactly like `MemoryPressureSampler` and for the
+same reason. **No MCM property was added**, because `SettingsFingerprintTests` asserts a hard count of 7
+reflected properties on this page, and a new one would break both it and the doc-count assertion
+beside it.
+
+The token tail comes from one extracted `MemoryPressureSampler.FormatSampleTokens`, so `[MemSample]`
+and `[MemStation]` share a vocabulary and one `grep privMB` hits both. That extraction had to change
+no byte of existing output; the four pre-existing pinned literal tests are its regression guard.
+
+> **Window: the pair does NOT include the screen's own construction.** Verified against
+> installed v1.4.8: `PushScreen` raises `OnPushScreen` *after* `HandleInitialize`,
+> `HandleActivate` and `HandleResume`, and `PopScreen` raises `OnPopScreen` *after*
+> `HandleFinalize`. So a delta measures growth while the screen was **open**, not what the screen
+> cost. A screen that allocates on open and retains reads **~0**; one that allocates on open and
+> frees on close reads **negative**. Read a delta as "what happened while this was on screen".
+> Bracketing construction itself needs a different seam (a prefix on `ScreenBase.HandleInitialize`
+> and a postfix on `HandleFinalize`), which is a Harmony patch this feature deliberately avoided
+> and is recorded as owed.
+>
+> **Resolution: screen-level, not content-level.** A station pair brackets one screen being open.
+> A player who opens a screen once and browses sixty entries inside it produces exactly **one**
+> delta, so a real player log can say "commit rose N MB while this screen was open" and cannot say
+> whether that was one pathological entry, sixty small leaks, or something else happening while
+> that screen merely sat on top. Intra-screen attribution needs the scripted open/close protocol in
+> [`native-commit-audit-2026-08.md`](../investigations/native-commit-audit-2026-08.md), which an
+> organically collected log will never contain.
+
+`tools/triage_battle_load.py` renders a **Memory by station** section and a `stations` JSON block
+(null when absent), naming the screen with the largest total delta. Stations live in their own list
+and never enter `mem_samples`: an event-driven reading in the periodic trend would corrupt its
+first/peak/last and therefore the MEMORY PRESSURE note. Guard tests run in both directions. An
+unmatched pair is **counted, never turned into a zero delta**. The reason is NOT bulk teardown:
+`CleanAndPushScreen` provably fires `OnPopScreen` once per removed screen via
+`DeactivateAndFinalizeAllScreens`, so it is balanced. The real sources are an unmatched **exit**
+when the sampler subscribes while a screen is already open, and process death before `OnFinalize`
+runs.
+
+The report also flags a visit that another screen opened and closed inside. Pairing is by screen
+name with no nesting awareness, so the outer screen's delta re-includes whatever the inner one grew,
+both screens report that growth, and summing the column double-counts it. The note appears in the
+output itself rather than only in this paragraph.
+
+> **Reading a station log.** The delta across one visit is `exit.privMB - enter.privMB`. A large
+> first visit that a *second identical visit* does not repeat is a bounded first-touch cache; a
+> large delta that repeats on every open is an unbounded per-open leak and outranks every asset-size
+> lever. A single reading cannot tell those apart, which is why the live protocol in
+> [`native-commit-audit-2026-08.md`](../investigations/native-commit-audit-2026-08.md) runs each
+> screen as pass/repeat/close-and-wait rather than as one station.
+
 ## Configuration
 
 MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`, auto-registered by MCM). Defaults are the "diagnose now" posture — everything ON.
@@ -279,6 +411,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/IBattleLoadDiagnosticsService.cs` / `BattleLoadDiagnosticsService.cs` | Phase-marker API; owns the stopwatch + seq counter + line format; swallows all exceptions |
 | `Main/Features/BattleLoadDiagnostics/IEquipmentDumpFormatter.cs` / `EquipmentDumpFormatter.cs` | Pure `EquipmentSnapshot → log lines` (the `bo=`/`shieldBo=` tokens) |
 | `Main/Features/BattleLoadDiagnostics/MemoryPressureSampler.cs` | Background `Timer` + pure `ShouldSample`/`IsLowHeadroom`/`ShouldWarn`/`ShouldRearm`/`Format*` seams; owns the `[MemSample]` contract constants (floor 2048 / 10 % / hysteresis 512 / interval 30 s, 10–120) |
+| `Main/Features/BattleLoadDiagnostics/MemoryStationSampler.cs` | `[MemStation]` screen anchors (#386 follow-up). Subscribes to `ScreenManager.OnPushScreen`/`OnPopScreen` (public static events, no Harmony); pure `ShouldEmit`/`SanitizeScreenName`/`FormatStation`/`FormatCapReached` seams; 2,000-line session cap |
 | `Main/Features/BattleLoadDiagnostics/MemorySampleReader.cs` | Direct-P/Invoke reader (`GlobalMemoryStatusEx` + `GetProcessMemoryInfo` + `GC.GetTotalMemory`); never throws, false on failure |
 | `Main/Features/BattleLoadDiagnostics/Domain/MemorySample.cs` | Point-in-time memory reading DTO (no behavior) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadLoadingWindow.cs` | Static volatile open/closed latch + `OpenedAtUtc` |
@@ -325,7 +458,7 @@ OUTERMOST gate.
 
 ## Tests
 
-`TAOM.Tests/Features/BattleLoadDiagnostics/` (182 tests, all green — 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests) — see *Crash-durability caveat*:
+`TAOM.Tests/Features/BattleLoadDiagnostics/` (211 tests, all green; 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests); see *Crash-durability caveat*:
 
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
@@ -475,6 +608,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-09-01: **Added `[MemStation]` screen-transition anchors** (#386 follow-up) after log analysis showed the commit growth is NOT in the battle lifecycle: six mission cycles held a stable `MissionInitialize` baseline while a mission-free 37-minute window added 8.4 GB. Rides `ScreenManager`'s two public static events, so no Harmony patch, no per-frame cost and no new MCM property. Extracted `FormatSampleTokens` so both memory tags share one token vocabulary (byte-identical output, guarded by the existing literal pins), and mirrored the new tag in `triage_battle_load.py` with twin literals plus both-direction guards that keep station readings out of the periodic trend.
 - 2026-08-07 — **Split the 11.9-second `MissionInitialize` → `MissionAfterStartBegin` gap into three named buckets.** Added `MissionInitializeDone` (a Postfix on the existing `Mission.Initialize` patch) plus `FinishMissionLoadingBegin`/`Done` (Prefix + Postfix on the **private** `MissionState.FinishMissionLoading`), and a `MissionState.TickLoading` prefix that is a **counter and never logs** — 720 lines in a 12-second wait at 60 fps is not an acceptable instrument, so the frame count rides one `polls=`/`waitMs=` token pair on `FinishMissionLoadingBegin`. That pair is what separates a blocking native spin (`polls=1`, large `waitMs`) from genuine async streaming (`polls ≈ waitMs/16`) — opposite diagnoses that were previously indistinguishable. All three markers carry `MemStats()`, so the `privMB` curve *across the stall* can say whether the load stall and the commit growth are one problem or two. Patch43 went 14 → 17 hooks.
   - **Fixed: the stopwatch was dead in custom battles.** `_stopwatch` was only ever started from `LogEncounterStart`/`ResetLifecycle`, both reachable only from the campaign-only `PlayerEncounter_Start_Patch` — so every `[BattleLoad]` line in a custom battle read `t=+0ms`. Added the existing `IsRunning`-guarded restart idiom to `LogMissionOpenNew` (the universal funnel) and `LogMissionInitialize`. Pre-existing defect, unrecorded anywhere, and load-bearing for the measurement work above.
   - **Fixed: `BattleLoadPhaseBehavior` was registered only while enabled.** It is the loading window's only closer and the opener is `Mission.Initialize`'s prefix, so a toggle flipped across that window (now known to span a tick boundary and ~11.9 s) latched the window open and the stall watchdog wrote a spurious bundle at 300 s. Registered unconditionally; it already self-gates its logging. The 2026-07-06 RCA had deferred this as "the same synchronous call chain" — the bucket measurement disproves that premise.

@@ -225,6 +225,11 @@ release-shape decision (a modder build would be a separate artifact) and `packag
 unchanged pending it. Folder semantics:
 [bannerlord-engine-and-toolchain.md](../reference/bannerlord-engine-and-toolchain.md) section 6.1.
 
+**Two more instruments shipped 2026-09-01, both aimed at Phase 2:**
+
+- `tools/Invoke-CommitMatrix.ps1` stamps, via `-Station <label>`, one CSV row per station, `-Vmmap` snapshots at the same instant, `-Report` prints per-station deltas with FRESH/STALE stamps against a cutoff. It **refuses to write a row when no Bannerlord process is running**, recording `UNMEASURED`, because an invented zero cannot afterwards be told from a real reading; and its label grammar mirrors `MemoryProbeReportFormatter.IsValidLabel`, so a PowerShell row and a `taom.print_memory <label>` line join on one token.
+- `[MemStation]` screen anchors (see [battle-load-diagnostics.md](../features/battle-load-diagnostics.md)): one line per screen open/close, so the UI stations below self-record without the operator stamping each one. This is what makes the pass/repeat/close-and-wait shape measurable at all.
+
 **Tooling now exists for both halves** (2026-08-10):
 
 - `tools/Invoke-RdcAbTest.ps1` — `-Status` / `-Off` / `-On` / `-Report`. Renames only, never deletes,
@@ -310,11 +315,25 @@ inside a diagnostic. Step 2.0 below settles empirically whether a numeric probe 
 
 - They contain a category breakdown ⇒ **a numeric probe is not needed. Do not build it.** Record the
   category names here.
-- They render `<unavailable>` (native reported failure) or carry no breakdown ⇒ build a *separately
-  named* opt-in `taom.print_memory_categories <n>` with **no default** (a bare invocation prints the
-  hazard and refuses), `n` clamped to `[1,64]`, and a usage string stating that `n` is a raw native
-  index. Walk `n` up from 8 and record the first index whose value stops being plausible. **That is
-  the empirical bound; it cannot be derived any other way.**
+- They render `<unavailable>` (native reported failure) or carry no breakdown ⇒ **DO NOT build the
+  numeric probe.** This branch previously prescribed an opt-in `taom.print_memory_categories <n>`
+  walking a clamped index. **Corrected 2026-09-01:** in
+  `_shipping_build_v1.4.8/TaleWorlds.Engine.cs:5760-5764`, `GetMemoryUsageOfCategory(int)` is
+  declared immediately after `RegisterGPUAllocationGroup(string name) -> int`. The index space is
+  therefore almost certainly **GPU allocation-group ids handed out by that registrar**, not a native
+  heap taxonomy, so a walk would be both an unvalidated index into native (the AV risk this document
+  already flags) *and* semantically wrong: it would attribute nothing that pre-existed our own
+  registration. Two cheaper things instead:
+    1. **Try the engine's own console command.** The shipping `TaleWorlds.Native.dll` string table
+       carries `show_memory` beside a `%s Memory Usage: %s` / `OS Free Memory: %%%.3f` formatter,
+       i.e. a name/value breakdown. Start typing `show_mem` and read what the console autocompletes.
+       **Unverified: read out of the string table, never run.** Budget 60 seconds.
+    2. **Read the GPU dump you already have.** `taom.print_memory <label> gpu` calls
+       `DumpGPUMemoryStatistics`, whose schema (`gpu_total_memory`, `gpu_texture2d_render_target_memory`,
+       `gpu_texture2d_shader_resource_memory`, `gpu_buffer_vertex_buffer_memory`, ...) *is* a real
+       category breakdown. GPU-side, so it answers a different question than commit, but if the
+       climb is GPU-resource-backed it names the class. Take it at three points, not more: it writes
+       a file and is not free.
 
 **Configs.** Everything not listed is **off** — this install also carries `ADOD_Beasts`,
 `Alliance.Wargs`, `DOTS`, `ServeAsSoldier`, `BattleLinkMPClient`, `FastMode`, `Palantir.Debugger`,

@@ -21,6 +21,11 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         sb.AppendLine(SectionRule);
         sb.AppendLine($"TAOM CrashReport — captured {c.CapturedAtUtc:yyyy-MM-dd HH:mm:ss.fff} UTC");
         sb.AppendLine($"Signature: {c.CrashSignature}");
+        // Memory verdict on the FIRST screen, not buried in a section: an OOM-shaped crash has to
+        // be obvious in a reporter's ZIP without opening a dump (#385 needed a 1.3 GB hand-parse).
+        // Omitted entirely when the reader failed — never a fabricated zero in a user's report.
+        var memoryHeadline = MemoryPressureVerdict.FormatHeadline(c.SystemMemory);
+        if (memoryHeadline != null) sb.AppendLine($"Memory:    {memoryHeadline}");
         sb.AppendLine(SectionRule);
         sb.AppendLine();
 
@@ -35,6 +40,7 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         RenderTaomState(sb, c.Taom);
         RenderMcm(sb, c.Mcm);
         RenderProcess(sb, c.Process);
+        RenderSystemMemory(sb, c.SystemMemory);
         RenderGpu(sb, c.Gpu);
         RenderDisplay(sb, c.Display);
         RenderOs(sb, c.Os);
@@ -258,6 +264,13 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         sb.AppendLine($"Uptime:        {TimeSpan.FromSeconds(p.UptimeSeconds)}");
         var t = p.ThrowingThread;
         sb.AppendLine($"Throwing thread: id={t.ManagedThreadId} name=\"{t.Name ?? ""}\" bg={t.IsBackground} apt={t.ApartmentState}");
+    }
+
+    private static void RenderSystemMemory(StringBuilder sb, SystemMemorySnapshot? m)
+    {
+        Section(sb, "System Memory");
+        sb.Append(MemoryPressureVerdict.FormatDetail(m));
+        if (m == null) sb.AppendLine();
     }
 
     private static void RenderGpu(StringBuilder sb, GpuSnapshot g)

@@ -27,6 +27,7 @@ public class PlainTextCrashReportRendererTests
         Assert.IsTrue(text.Contains("--- TAOM State ---"));
         Assert.IsTrue(text.Contains("--- MCM Settings"));
         Assert.IsTrue(text.Contains("--- Process ---"));
+        Assert.IsTrue(text.Contains("--- System Memory ---"));
         Assert.IsTrue(text.Contains("--- GPU"));
         Assert.IsTrue(text.Contains("--- Display ---"));
         Assert.IsTrue(text.Contains("--- OS ---"));
@@ -81,6 +82,55 @@ public class PlainTextCrashReportRendererTests
         Assert.IsTrue(text.Contains("Gpu: ManagementException: wmi-unavailable"));
     }
 
+    // ---- Memory verdict (#385 follow-up) --------------------------------------------------
+
+    [TestMethod]
+    public void Render_SystemMemoryPresent_HeaderCarriesMemoryVerdictLine()
+    {
+        var ctx = MakeMinimalContext() with { SystemMemory = LowHeadroomSnapshot() };
+
+        var text = new PlainTextCrashReportRenderer().Render(ctx);
+
+        StringAssert.Contains(text, "Memory:    MEMORY PRESSURE - privMB=4211");
+    }
+
+    // The whole point of the header line is that a reporter's ZIP says it on the first screen.
+    // If it renders below the exception it is just another buried number.
+    [TestMethod]
+    public void Render_LowHeadroomSnapshot_VerdictAppearsBeforeTheExceptionSection()
+    {
+        var ctx = MakeMinimalContext() with { SystemMemory = LowHeadroomSnapshot() };
+
+        var text = new PlainTextCrashReportRenderer().Render(ctx);
+
+        Assert.IsTrue(
+            text.IndexOf("Memory:    MEMORY PRESSURE", System.StringComparison.Ordinal)
+            < text.IndexOf("--- Exception ---", System.StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public void Render_SystemMemoryNull_OmitsHeaderMemoryLineEntirely()
+    {
+        var text = new PlainTextCrashReportRenderer().Render(MakeMinimalContext());
+
+        Assert.IsFalse(text.Contains("Memory:    "), text.Substring(0, 400));
+    }
+
+    [TestMethod]
+    public void Render_SystemMemoryNull_SystemMemorySectionSaysUnavailable()
+    {
+        var text = new PlainTextCrashReportRenderer().Render(MakeMinimalContext());
+
+        StringAssert.Contains(text, "--- System Memory ---");
+        StringAssert.Contains(text, "unavailable");
+        Assert.IsFalse(text.Contains("sysCommitUsedMB="), text);
+    }
+
+    private static SystemMemorySnapshot LowHeadroomSnapshot() => new SystemMemorySnapshot(
+        PrivateMb: 4211, WorkingSetMb: 3900, ManagedHeapMb: 654,
+        SysCommitUsedMb: 29847, SysCommitLimitMb: 31646,
+        AvailPhysMb: 310, TotalPhysMb: 16296, MemLoadPercent: 97);
+
     private static ExceptionContext MakeMinimalContext()
     {
         return new ExceptionContext(
@@ -97,6 +147,9 @@ public class PlainTextCrashReportRendererTests
             Taom: new TaomStateSnapshot(null, System.Array.Empty<SpecialResourceEntry>(), null, null, null),
             Mcm: new McmSettingsSnapshot(System.Array.Empty<McmProviderSnapshot>()),
             Process: new ProcessSnapshot(0, 0, 0, 0, 0, 0, 0, 0, 0d, new ThrowingThreadSnapshot(1, "test", false, "Unknown")),
+            // null by default on purpose: the unavailable path is the one a failed reader takes,
+            // so every other renderer test exercises it rather than a happy-path stub.
+            SystemMemory: null,
             Gpu: new GpuSnapshot(System.Array.Empty<GpuAdapterEntry>()),
             Display: new DisplaySnapshot(1920, 1080, 60, false, 1),
             Os: new OsSnapshot("Windows", "10.0", true, 8, "x64", "en-US", "en-US", "4.0.30319"),

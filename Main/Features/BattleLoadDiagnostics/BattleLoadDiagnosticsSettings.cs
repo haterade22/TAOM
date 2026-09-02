@@ -42,7 +42,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Memory Sampler")]
     [SettingPropertyBool("Enable Memory Sampler", Order = 0, RequireRestart = false,
-        HintText = "Writes a periodic [MemSample] line (process private/working-set MB, managed heap, system commit use/limit, available RAM) to the TAOM debug log, plus a one-shot WARN when system commit headroom runs low — the memory trajectory before an out-of-memory crash. Independent of the master Battle Load Diagnostics toggle: this is session-wide crash forensics, not battle-load phase logging. Default ON.")]
+        HintText = "Writes memory telemetry to the TAOM debug log: a periodic [MemSample] line (process private/working-set MB, managed heap, system commit use/limit, available RAM), a one-shot WARN when system commit headroom runs low, and a [MemStation] line each time a screen opens or closes so growth can be attributed to a screen. This ONE switch governs all three. Independent of the master Battle Load Diagnostics toggle: this is session-wide crash forensics, not battle-load phase logging. Default ON.")]
     public bool EnableMemorySampler { get; set; } = true;
 
     [SettingPropertyGroup("Memory Sampler")]

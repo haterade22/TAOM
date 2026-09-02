@@ -37,7 +37,17 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (82 reviews, 171+ bugs found), distilled
+### Lessons From Prior Reviews (83 reviews, 184+ bugs found), distilled
+
+**What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Reads the engine at the RAISE site, not the subscribe site.** Found that `ScreenManager` raises
+  `OnPushScreen` AFTER `HandleInitialize` and `OnPopScreen` AFTER `HandleFinalize`, so a diagnostic
+  could report `+0 MB` for the screen actually responsible. Nine Claude agents missed it.
+- **Audits whether a claimed fix was actually applied.** Given an RCA of 19 fixes it found two
+  documented-but-not-made. ALWAYS hand Codex the RCA and ask it to check the remediation too.
+- **Catches defects introduced BY fixes.** 3 of its 4 HIGHs were in code written during the
+  preceding review; fixes get no automatic scrutiny.
+- **Refuses to inflate:** disputed 2 of 6 handed suspects, with arithmetic.
 
 Full worked-example catalog — every rolling essay + the complete "bugs Codex misses / false
 positives / what Codex does well / run-mode caveats" lists: **[`docs/reviews/codex-track-record.md`](docs/reviews/codex-track-record.md)**

@@ -14,8 +14,8 @@ Claude must **NEVER** write these patterns to any file:
 |------|------------------|
 | API Keys | `sk-...`, `pk_live_...`, `AKIA...`, `ghp_...`, `xox[baprs]-...` |
 | Passwords | `password = "..."`, `pwd: "..."`, `secret: "..."` |
-| Connection Strings | `Server=...;Password=...`, `mongodb://user:pass@...`, `postgres://...` |
-| Private Keys | `-----BEGIN RSA PRIVATE KEY-----`, `-----BEGIN OPENSSH PRIVATE KEY-----` |
+| Connection Strings | `Server=...;Password=...`, `mongodb://user:pass@...`, `postgres://...` <!-- audit-allow: secret-db-uri --> |
+| Private Keys | `-----BEGIN RSA PRIVATE KEY-----`, `-----BEGIN OPENSSH PRIVATE KEY-----` <!-- audit-allow: secret-privatekey --> |
 | Tokens | `Bearer eyJ...`, `token: "..."`, JWT strings |
 | OAuth Secrets | `client_secret`, `ClientSecret`, `OAUTH_CLIENT_SECRET` hardcoded |
 | Cloud Credentials | `aws_secret_access_key`, `AZURE_CLIENT_SECRET`, `GOOGLE_APPLICATION_CREDENTIALS` inline |

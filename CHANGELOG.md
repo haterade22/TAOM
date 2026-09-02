@@ -4,6 +4,165 @@
 
 ## 2026-09-01
 
+### feat(crash-report): a bundle now says whether the machine had run out of memory
+
+#385 was diagnosed BY the commit figure (20.3 GB against a 31.6 GB limit on a 16 GB machine) and
+the bundle carried none of it. `ProcessEnvironmentCollector` captured `WorkingSet64` and
+`PrivateMemorySize64`; there was no commit, no headroom, no physical state anywhere in the ZIP, so
+an out-of-memory death was indistinguishable from a logic fault without parsing a 1.3 GB dump.
+
+`report.txt` now carries the verdict on line 4, above the exception, and `manifest.txt` repeats it
+so the ZIP self-describes without unzipping:
+
+```
+Memory:    MEMORY PRESSURE - privMB=4211 wsMB=3900 heapMB=654 (managed 15% of private), commit 29847/31646MB, headroom 1799MB (5%)
+```
+
+The verdict has **three** states, not two. A commit reading can be invalid (a non-positive limit,
+or a negative used derived from limit-minus-available), and for those it reports
+`MEMORY STATUS UNKNOWN - invalid commit reading` rather than "no memory pressure". An adversarial
+review caught the first cut doing the latter: suppressing the nonsensical derived numbers and then
+still printing a healthy label, which turns absence of evidence into evidence of health. The detail
+section says explicitly that it is not a statement that memory was healthy.
+
+Relatedly, a failed managed-heap read now renders `heapMB=<unavailable>` and omits the managed share
+instead of reporting a measured `0`. `GC.GetTotalMemory` is caught and zeroed inside the reader, and
+that catch is reachable precisely under an out-of-memory crash, where `managed 0% of private` would
+falsely strengthen the native-dominance reading the verdict exists to support. The numeric token in
+the log line is unchanged, so the pinned cross-language contract is untouched.
+
+Three deliberate choices. The threshold is **not** defined here: `MemoryPressureVerdict` calls
+`MemoryPressureSampler.IsLowHeadroom`, because a deep review already caught the C#/Python mirror of
+those constants drifting in the integer-floor band and a third copy is how that recurs (an
+anti-drift test asserts the two never fork across a table of boundary inputs). Native-vs-managed is
+reported as a measured share rather than labelled "native-dominant", since labelling it means
+inventing a ratio threshold nobody can defend; that follows `TableauDiagnostics`, which states
+observations after an earlier version asserted a conclusion later refuted. And the snapshot is a
+**nullable sibling** of `ProcessSnapshot` rather than extra fields on it, because that record has a
+`?? new ProcessSnapshot(0, ...)` fallback and widening it would force a fabricated `0` into
+`availPhysMB` on every failed read, which the renderer could not tell from a real and alarming
+reading.
+
+### feat(diagnostics): `[MemStation]` names the screen where commit actually grows
+
+Reading five sessions of `taom_debug_*.log` moved the problem. Every session starts at ~6,600 MB
+private and reaches 12,600 to 19,000 MB, and the managed heap stays between 400 and 1,000 MB
+throughout, so the growth is native. But **battles are not where it accumulates**: across six full
+mission cycles the `MissionInitialize` baseline held at 10,212 / 12,785 / 11,146 / 11,271 / 11,323 /
+11,449 MB, each battle costing roughly 2 to 3 GB and giving it back. In the same session, between
+08:55 and 09:32 with zero missions, private bytes went 10,646 to 19,032 (**+8.4 GB**), while the
+working set FELL from 4,399 to 2,861 MB: pages evicted, commit retained.
+
+The battle lifecycle already had eight `MemStats()`-bearing phase lines. The map and UI path had
+none, so the 30s `[MemSample]` series could say memory rose but never which screen was open.
+`MemoryStationSampler` writes one line per screen open and close:
+
+```
+[MemStation] enter screen='GauntletInventoryScreen' privMB=4211 wsMB=3900 heapMB=654 ...
+```
+
+`ScreenManager.OnPushScreen` / `OnPopScreen` are public static events, so this needs **no Harmony
+patch** and costs nothing per frame. It covers `MapScreen`, `MissionScreen`,
+`GauntletInventoryScreen`, `GauntletPartyScreen`, `GauntletClanScreen`, `GauntletKingdomScreen` and
+`CharacterCreationScreen`. `MapState.OnTick` would not have worked: `GameStateManager.OnTick` ticks
+only the active state, so it does not run while an inventory, party, clan or kingdom screen is on
+top, which is exactly the path in question.
+
+**Known gap, stated plainly because the first cut of this entry got it wrong: the encyclopedia is
+not covered.** It is not a screen at all. It is a `MapEncyclopediaView` overlay on `MapScreen`,
+tracked by an `IsEncyclopediaOpen` bool and never pushed through `ScreenManager`, so no station line
+is emitted when it opens or closes. That matters because encyclopedia browsing is the leading
+suspect for the growth this instrument was built to find. Closing it needs an anchor off
+`MapEncyclopediaView`, which is not built; bracket an encyclopedia session by hand with
+`taom.print_memory <label>` until it is. Related limit: a station pair brackets a screen being
+*open*, so browsing sixty entries without closing yields one aggregate delta. Screen-level
+resolution, not content-level.
+
+The token tail is shared
+with `[MemSample]` through one extracted `FormatSampleTokens`, so a single `grep privMB` hits the
+periodic trend and the anchors alike; the extraction is guarded by the four pinned literal tests
+that already existed.
+
+The risk this is shaped around: those events are plain multicast delegates, so a throw from our
+handler would skip every later subscriber and propagate into `ScreenManager.PushScreen`, a hard
+crash on every screen open for every mod in the process. Hence a guard at the outermost statement
+of both handlers and swallow-and-warn inside the tested method, pinned by
+`NoteStation_ThrowingLogger_DoesNotPropagate`. Two `BindingVerification` tests name the two events
+so an engine bump fails loudly instead of silently producing a log with no anchors, which would
+read exactly like "no growth happened". Past a 2,000-line session cap it says so once, in wording
+that refuses to let silence read as a clean result. No MCM property was added: it gates on the
+existing `EnableMemorySampler`, and `SettingsFingerprintTests` asserts a hard count of 7.
+
+**What a delta can and cannot mean.** Verified against installed v1.4.8: the engine raises
+`OnPushScreen` *after* `HandleInitialize`/`HandleActivate`/`HandleResume` and `OnPopScreen` *after*
+`HandleFinalize`. So a pair measures growth while a screen was **open**, not what the screen cost to
+build. A screen that allocates on open and keeps it reads ~0; one that allocates on open and frees
+on close reads negative. That bound is stated in the class, the feature doc and the report output
+itself. Bracketing construction needs a `ScreenBase.HandleInitialize`/`HandleFinalize` seam, which is
+a Harmony patch this design avoided and is recorded as owed.
+
+Returning to the main menu clears the emit budget, so the cap is genuinely per-session rather than
+per-process, and that reset now emits a `[MemStation] session-reset` marker. Without it the log held
+two segments that read as one series, and an enter left pending before the boundary could pair with
+an exit after it and invent a delta spanning the discontinuity.
+
+`tools/triage_battle_load.py` gains a **Memory by station** section and a `stations` JSON block,
+naming the screen with the largest total delta. Station readings are kept in their own list and
+never enter the periodic trend, which would corrupt its first/peak/last; guard tests run in both
+directions. An unmatched `enter` is counted rather than turned into a zero delta, because
+ScreenManager's bulk teardown is not confirmed to fire `OnPopScreen` per removed screen.
+
+### feat(tools): a capture harness for the commit-attribution matrix
+
+`tools/Invoke-CommitMatrix.ps1` stamps one CSV row per measurement station and optionally takes a
+VMMap snapshot at the same instant, for Phase 2 of
+[`native-commit-audit-2026-08.md`](docs/investigations/native-commit-audit-2026-08.md), whose
+results table has read `_pending_` since it was written. Capture only: the in-game window is the
+scarce resource, so nothing analyses anything until afterwards.
+
+It refuses to write a row when no Bannerlord process is running, recording `UNMEASURED` instead,
+because an invented zero in a matrix cannot afterwards be told from a real reading. Labels are
+validated against the same grammar the in-game `taom.print_memory` accepts, so the two rows join on
+one token. `-Report` stamps every row FRESH or STALE against a cutoff, copying
+`Invoke-RdcAbTest.ps1`: the 2026-08-08 Procmon run produced a confident "zero operations" verdict
+from a capture taken while the game was not running, and a stale artifact read as this run's
+evidence looks exactly like a result.
+
+### feat(security-scan): the auditor sweeps the whole repo for credentials, not just `.claude/`
+
+`/security-scan` read 109 files: `.claude/**`, `.mcp.json`, `CLAUDE.md`, `AGENTS.md`. A key pasted
+into a `.ps1`, a C# `const`, or a doc sat outside its scope, which the `/improve` audit playbook
+already carried as a known gap in its "what it does NOT cover" list. The `secrets` rules now also
+run over every git-tracked text file under 2 MB, 4,183 of them, in about 2.5 seconds.
+
+Two things make that affordable. `git ls-files` supplies the list, so ignored and untracked files
+never enter it; a null-byte sniff of the first 8 KB then drops 1,953 binary assets and the size cap
+drops 105 large ones. And `scan_secrets` now runs its patterns once over the whole text before
+entering the per-line loop. None of the patterns is anchored, so a whole-text miss is a real miss
+and the file can be skipped outright. That prefilter took the sweep from 7.1s to 2.6s and changes no
+finding, which is what the three `PrefilterEquivalenceTests` pin.
+
+The other layers stay scoped to the config surface deliberately. They are calibrated for it, and
+running `excessive-agency` or the SkillSpector regexes across 4,000 game-data files would bury a
+real finding under advisory noise.
+
+A second rule pairs with the `.gitignore` block in the entry below: a tracked file that IS
+credential material by name (`*.pem`, `id_rsa`, `.env`, `.npmrc`) is itself a finding, because
+`.gitignore` has no say over a file that is already committed. `.crt`, `.cer` and `.der` are
+deliberately absent from that list, a certificate being public, and an auditor that cries wolf gets
+ignored.
+
+On TAOM's own repo the sweep found three hits, all in `docs/ai-includes/security.md`, the doc whose
+job is to list the secret patterns Claude must never write. They now carry inline `audit-allow`
+comments inside the table cell, so they render invisibly and report as suppressions. Severity counts
+with the sweep on match the counts with it off (MED 1, INFO 6): the wider scope adds no noise. Where
+`--root` is not a git work tree the sweep reports an INFO note instead of quietly passing.
+
+22 new tests in `tools/tests/test_audit_repo_secrets.py`. They assemble secret-shaped tokens from
+fragments at runtime, because the auditor matches per line and now scans its own test suite: a
+literal token would have made the tests the loudest finding in the repo.
+
+
 ### chore(repo): private keys and .env files were never ignored, only never committed
 
 Root `.gitignore` carried no rule for either. Nothing of that shape has ever been in the tree: a

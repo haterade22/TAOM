@@ -508,6 +508,17 @@ public class SubModule : MBSubModuleBase
         try { IoC.Resolve<Features.BattleLoadDiagnostics.MemoryPressureSampler>().Start(); }
         catch { /* never block the main menu over a diagnostic */ }
 
+        // Screen-transition memory anchors (#386 follow-up). ScreenManager.OnPushScreen /
+        // OnPopScreen are public static events (verified v1.4.8, ScreenManager.cs:114/116), so this
+        // needs no Harmony patch and pays nothing per frame: one line per screen open/close. It
+        // labels the map/UI path that the periodic [MemSample] series can only trace anonymously —
+        // a measured session grew 10,646 -> 19,032 MB privMB with ZERO missions, and nothing said
+        // which screen. Same hook and same MCM toggle as the sampler above, and Start() is likewise
+        // idempotent because this hook fires on EVERY return to the main menu — pinned by
+        // MemoryStationSamplerTests.Start_CalledTwice_SubscribesOnlyOnce.
+        try { IoC.Resolve<Features.BattleLoadDiagnostics.MemoryStationSampler>().Start(); }
+        catch { /* never block the main menu over a diagnostic */ }
+
         // DevConsole discovery audit: ask the engine whether it actually registered TAOM's taom.*
         // console commands. CollectCommandLineFunctions is invoked from TaleWorlds.Native.dll, so its
         // timing relative to our assembly load is not knowable offline — but HasFunctionForCommand is

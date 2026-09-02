@@ -124,6 +124,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | TAOM State | Career, special resources, cultural feats, revolt tuning, active messengers — populated when feature adapters are wired (v1 ships with stubs; subsystems can register state providers later) |
 | MCM Settings | Reflected snapshot of every `AttributeGlobalSettings` / `AttributePerCampaignSettings` provider (TAOM + third-party) |
 | Process | Working set, private bytes, GC totals + gen 0/1/2 counts, thread count, uptime, throwing-thread id+name+bg+apartment |
+| System Memory | Process priv/ws/heap **plus** system commit used/limit, headroom + %, available/total physical, memLoad %, and a MEMORY PRESSURE verdict. Rendered `(unavailable)` wholesale when the reader fails, never as zeros |
 | GPU | Per adapter: name, driver version, driver date, VRAM, video processor (via WMI `Win32_VideoController`) |
 | Display | Resolution, refresh rate, monitor count |
 | OS | Description, version, 64-bit flag, CPU count, architecture, locale, CLR version |
@@ -131,6 +132,37 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | Performance | Last N frame deltas (ms), avg, FPS — currently empty ring buffer (v1 doesn't wire the frame-time hook; reserved for v2) |
 | Logs | TAOM debug log path + tail, RGL log path + tail (best-effort from `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\rgl_log_*.txt`) |
 | Collector failures | Per-section reason if any collector threw |
+
+### The memory verdict (#385 follow-up)
+
+**#385 was diagnosed BY a figure this bundle did not carry.** A tester's facegen CTD was attributed
+to commit exhaustion (20.3 GB against a 31.6 GB limit on a 16 GB machine, managed heap only 654 MB)
+and doing so required hand-parsing a 1.3 GB minidump. The bundle held `WorkingSet64` and
+`PrivateMemorySize64` and nothing else: no commit, no headroom, no physical state. An
+out-of-memory death and a logic fault looked identical.
+
+The verdict now sits on **line 4 of `report.txt`, above the exception**, and is repeated in
+`manifest.txt` so the ZIP self-describes without being unzipped:
+
+```
+Memory:    MEMORY PRESSURE - privMB=4211 wsMB=3900 heapMB=654 (managed 15% of private), commit 29847/31646MB, headroom 1799MB (5%)
+```
+
+Three choices worth knowing before changing any of it:
+
+| Choice | Why |
+|---|---|
+| **The threshold is not defined here.** `MemoryPressureVerdict.IsUnderPressure` calls `MemoryPressureSampler.IsLowHeadroom` | Those constants already have a C#/Python mirror, and a deep review caught that pair drifting in the integer-floor band. A third copy is how it recurs. `IsUnderPressure_AgreesWithMemoryPressureSamplerForTheSameInputs` asserts the two never fork across a boundary table |
+| **Native-vs-managed is reported, not classified** (`managed 15% of private`, no "native-dominant" label) | Labelling it means inventing a ratio threshold nobody can defend. `TableauDiagnostics.LogRenderCensus` sets the precedent: it states observations because an earlier version asserted a conclusion that the decompile later refuted. "managed 3%" reads as native-dominant to any reader and carries nothing to drift |
+| **`SystemMemorySnapshot?` is a nullable SIBLING of `ProcessSnapshot`, not extra fields on it** | `ProcessSnapshot` has a `?? new ProcessSnapshot(0, ...)` fallback, so widening it would force a fabricated `0` into `availPhysMB` on every failed read, and the renderer could not tell that from a real and alarming reading. Null renders `(unavailable)` instead, the same omit-on-failure discipline as `MemStats()` and `MemoryProbeReportFormatter` |
+
+The token names (`privMB`, `wsMB`, `heapMB`, `sysCommitUsedMB`, `sysCommitLimitMB`, `availPhysMB`,
+`memLoad`) are byte-identical to `MemoryPressureSampler.FormatSample`, so one `grep privMB` over an
+unzipped bundle hits the report, the manifest, the `[MemSample]` trajectory in the bundled
+`taom_debug.log` and the `[BattleLoad]`/`[MemStation]` lines alike. The reader is
+`MemorySampleReader` (`GlobalMemoryStatusEx` + `GetProcessMemoryInfo`), reached across the feature
+boundary on purpose rather than duplicated: see
+[battle-load-diagnostics.md](battle-load-diagnostics.md).
 
 ### Crash signature
 
@@ -140,7 +172,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 
 | File | Purpose |
 |---|---|
-| [Main/Features/CrashReport/Domain/](../../Main/Features/CrashReport/Domain) | 18 record types — pure CLR DTOs, no TaleWorlds deps (ADR-007) |
+| [Main/Features/CrashReport/Domain/](../../Main/Features/CrashReport/Domain) | 19 record types, pure CLR DTOs, no TaleWorlds deps (ADR-007) |
 | [Main/Features/CrashReport/Rendering/PlainTextCrashReportRenderer.cs](../../Main/Features/CrashReport/Rendering/PlainTextCrashReportRenderer.cs) | Sectioned text format for log + clipboard |
 | [Main/Features/CrashReport/Rendering/JsonCrashReportRenderer.cs](../../Main/Features/CrashReport/Rendering/JsonCrashReportRenderer.cs) | Newtonsoft.Json serialization for bundle |
 | [Main/Features/CrashReport/Rendering/CrashBundleWriter.cs](../../Main/Features/CrashReport/Rendering/CrashBundleWriter.cs) | ZIP via in-BCL `System.IO.Compression.ZipArchive` |
@@ -169,13 +201,13 @@ No new third-party dependencies.
 
 ## Tests
 
-[TAOM.Tests/Features/CrashReport/](../../TAOM.Tests/Features/CrashReport) — 21 tests:
+[TAOM.Tests/Features/CrashReport/](../../TAOM.Tests/Features/CrashReport): 64 tests:
 
 - `ExceptionFrameBuilderTests` — depth cap, null handling, inner-chain walking, `Data` dictionary
 - `StackFrameSnapshotBuilderTests` — null exception, real thrown exception
 - `CrashSignatureCalculatorTests` — deterministic, sensitive to exception type and origin, ignores frames beyond depth 5
 - `RingBufferTests` — push order, overflow chronological, clear, capacity, empty snapshot
-- `PlainTextCrashReportRendererTests` — all 18 sections render, signature in header, inner exception chain, collector failures
+- `PlainTextCrashReportRendererTests`: all 19 sections render, signature in header, inner exception chain, collector failures
 
 Components NOT unit-tested (per ADR-008 + the plan's "Not-tested:" trailer policy):
 
@@ -257,6 +289,8 @@ Restart the game. Patch37 won't apply; the other mod's Finalizers take over.
 - Crash signature de-dup ring buffer (suppress duplicate-signature crashes after N within a session)
 
 ## Changelog
+
+- 2026-09-01: **Added the System Memory section + the header memory verdict** (#385 follow-up). The bundle carried no commit or headroom figure, which is the exact number #385 was diagnosed by. Reuses `MemorySampleReader` and delegates the threshold to `MemoryPressureSampler.IsLowHeadroom` rather than copying its constants; the snapshot is a nullable sibling record so a failed read renders `(unavailable)` instead of zeros.
 
 - 2026-06-15 — Deduplicated crash bundle ZIPs: new session-scoped `CrashBundleThrottle` (dedup + ≤25/session cap + 30s cooldown) at the `HandleException` chokepoint so a per-tick recurring crash produces exactly one zip instead of hundreds; 10 throttle tests added.
 - 2026-05-25 — Codex adversarial review (Review 41): 8 confirmed findings fixed (2 HIGH including post-reload disposed-logger Finalizers and a decorative `EnableCrashCapture` toggle, plus 4 MED / 2 LOW such as the dead per-frame Harmony-correlation block).

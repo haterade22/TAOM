@@ -95,7 +95,8 @@ public sealed class CrashBundleWriter
         catch { }
     }
 
-    private static string BuildManifest(ExceptionContext c, string text, string json)
+    // internal (not private) for direct unit testing via InternalsVisibleTo("TAOM.Tests").
+    internal static string BuildManifest(ExceptionContext c, string text, string json)
     {
         var sb = new StringBuilder(1024);
         sb.AppendLine($"TAOM CrashReport bundle");
@@ -105,6 +106,10 @@ public sealed class CrashBundleWriter
         sb.AppendLine($"Bannerlord version: {c.Identity.BannerlordVersion}");
         sb.AppendLine($"Origin: {c.Identity.OriginatingPatchTarget}");
         sb.AppendLine($"Exception: {c.Exception?.Type ?? "(unknown)"}");
+        // So the ZIP self-describes: triage can see an OOM-shaped crash without unzipping
+        // report.txt. Omitted when the reader failed, never a fabricated zero.
+        var memoryHeadline = MemoryPressureVerdict.FormatHeadline(c.SystemMemory);
+        if (memoryHeadline != null) sb.AppendLine($"Memory: {memoryHeadline}");
         sb.AppendLine();
         sb.AppendLine("--- File inventory ---");
         sb.AppendLine($"report.txt        {text?.Length ?? 0} chars");

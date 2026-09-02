@@ -577,3 +577,20 @@ story) plus a dedicated source-fidelity dimension, which is what caught both.
 
 **Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 3; cross-ref the Patch72 lesson
 above ("treat a never-executed source as a hypothesis").
+
+
+### A guard that rejects an input class must be applied where the value is RENDERED, not only where it is DECIDED
+
+`MemoryPressureVerdict.IsUnderPressure` delegates to `MemoryPressureSampler.IsLowHeadroom`, which
+refuses to compute a verdict from a negative `sysCommitUsedMb`. `FormatHeadline` and `FormatDetail`
+applied no such guard, so a negative reading rendered `commit -1/31646MB, headroom 31647MB (100%)` --
+a headroom larger than the limit -- directly beside the "no memory pressure" label the guard had
+correctly produced. The artefact contradicted its own verdict in front of the reader.
+- **Why missed:** the guard was inherited for free by delegating the DECISION, which felt like
+  single-sourcing it. Nothing prompted the question of whether the render path shared that
+  protection; it is a separate code path that merely reads the same fields.
+- **Prevent:** when a decision function rejects an input class as garbage, enumerate every function
+  that formats, logs or displays the same input and confirm each rejects it too. A verdict and the
+  numbers printed next to it must be computed from the same admissible set. One test per render
+  path, not one per decision.
+- **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.

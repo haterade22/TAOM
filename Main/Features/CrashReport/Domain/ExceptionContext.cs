@@ -21,6 +21,9 @@ public sealed record ExceptionContext(
     TaomStateSnapshot Taom,
     McmSettingsSnapshot Mcm,
     ProcessSnapshot Process,
+    // Nullable on purpose: null means the memory reader failed, and the renderer prints
+    // "(unavailable)" rather than a fabricated 0. See SystemMemorySnapshot's remarks.
+    SystemMemorySnapshot? SystemMemory,
     GpuSnapshot Gpu,
     DisplaySnapshot Display,
     OsSnapshot Os,
