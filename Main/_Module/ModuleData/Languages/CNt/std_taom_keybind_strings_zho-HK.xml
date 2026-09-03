@@ -12,5 +12,7 @@
     <string id="taom_key_extra_fast_forward_desc" text="套用更高的 TAOM 快進倍率。預設為 E 鍵，該鍵同時也是「向右旋轉鏡頭」；請重新綁定其中之一，以避免兩者同時觸發。" />
     <string id="taom_key_turbo" text="渦輪時間，按住 Ctrl（TAOM）" />
     <string id="taom_key_turbo_desc" text="同時按住 Ctrl 與此鍵，可獲得最高的 TAOM 速度倍率。放開任一按鍵即恢復先前的速度。" />
+    <string id="taom_key_career_ability" text="Career Ability (TAOM)" />
+    <string id="taom_key_career_ability_desc" text="Activates your career ability during a battle once its energy bar is full. Defaults to V." />
   </strings>
 </base>

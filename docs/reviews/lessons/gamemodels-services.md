@@ -594,3 +594,10 @@ correctly produced. The artefact contradicted its own verdict in front of the re
   numbers printed next to it must be computed from the same admissible set. One test per render
   path, not one per decision.
 - **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.
+
+### Moving a property read to a hotter call site is a performance change, not just a correctness one
+
+The career ability key chip read `IAbilityInputAdapter.ActivationKeyName` once in the mixin constructor. Making the key rebindable meant the label had to follow a mid-mission rebind, so the read moved into `OnRefresh`. `MissionAgentStatusCareerMixin` is a `[ViewModelMixin("Tick")]`, so that is per frame, and the callee resolves localized text: `GameTextManager.TryGetText` ends in `text.CopyTextObject()` plus `AddIDToValue`, so every read allocated a fresh `TextObject` plus three strings (the enum name, its lowercase form, and the rendered result) for a value that changes only when the player rebinds.
+- **Why missed:** the move was reasoned about purely as a correctness fix (stale label after a rebind). The cost of the callee was never asked about, because in its previous home, a constructor, the cost genuinely did not matter. The diff looked like relocating one line.
+- **Prevent:** when relocating a read from a cold site to a per-frame or per-tick one, decompile the callee before the move. Anything that resolves localized text, formats a string, or returns a `TextObject` allocates. The fix is usually to cache against whatever the value actually depends on (here, the bound `InputKey`), which keeps the responsiveness the move was made for while taking the lookup off the frame budget.
+- **Source:** #533 rebindable career ability key, 2026-09-03; RCA `docs/reviews/rca-career-keybind-2026-09-03.md` finding 1.

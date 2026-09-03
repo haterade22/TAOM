@@ -489,3 +489,10 @@ back over the reset row, with no warning and no API call.
   that string.
 - **Source:** #525 enlistment weapons.
 
+
+### A fixed-size widget wrapping a bound string needs its own `IsVisible` gate for the empty case
+
+The career energy bar draws the activation key in a fixed 30x22 `Widget` carrying a `BlankWhiteSquare_9` sprite, with a `TextWidget Text="@ActivationKeyText"` inside it. Clearing the keybind in Options is a supported state and empties that string, but only the TEXT vanishes: the dark box stays on the HUD with nothing in it. The sibling career-glyph medallion three lines above in the same prefab is gated on `IsVisible="@HasCareerGlyph"`; the chip had no gate at all.
+- **Why missed:** the empty-string case was actually identified while planning and written down as an in-game smoke step ("check the empty chip does not leave a stray box, if it does add an `IsVisible` binding"), then left for the smoke run instead of being answered by opening the prefab already sitting in the repo.
+- **Prevent:** two habits. First, when adding or gating a bound string, read the sibling widgets in the same prefab: if one of them is gated and yours is not, that asymmetry is the bug. Second, and more general, never defer to an in-game smoke a question that a file in the repo can answer by being read. Deferring does not just postpone the answer, it downgrades a certainty to a maybe and puts the defect on the ship path.
+- **Source:** #533 rebindable career ability key, 2026-09-03; RCA `docs/reviews/rca-career-keybind-2026-09-03.md` finding 3.

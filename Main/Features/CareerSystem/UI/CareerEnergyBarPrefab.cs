@@ -84,7 +84,8 @@ internal class CareerEnergyBarPrefab : PrefabExtensionInsertPatch
 
     <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
             SuggestedWidth=""30"" SuggestedHeight=""22"" HorizontalAlignment=""Right"" VerticalAlignment=""Center""
-            PositionXOffset=""34"" Sprite=""BlankWhiteSquare_9"" Color=""#2B2620FF"">
+            PositionXOffset=""34"" Sprite=""BlankWhiteSquare_9"" Color=""#2B2620FF""
+            IsVisible=""@HasActivationKey"">
       <Children>
         <TextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent""
                     Text=""@ActivationKeyText"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""

@@ -106,6 +106,43 @@ but its only consumer was `TaomRaidModel.CalculateHitDamage` — vanilla's
   passive their description never mentions (they describe only their ability mutation) — those work,
   they are just undisclosed.
 
+**2026-09-03 update: the ability key is rebindable (#533).** The activation key shipped as a
+`private const InputKey ActivationKey = InputKey.V` inside `AbilityInputAdapter`, so a player could
+neither change it nor see it conflicting with anything else they had bound. It is now a native game
+key in **Options > Keybindings > Action**, following the same pattern
+`TaomTimeControlHotKeyCategory` already uses for the campaign-map time controls, and for the same
+stated reason: MCM v5 has no keybind widget, and its dropdowns persist by index so a reordered
+option list silently remaps every player's binding.
+
+- **`TaomCareerHotKeyCategory`** registers one `GameKey` (id **510**, string id `TaomCareerAbility`)
+  with `GameKeyMainCategories.ActionCategory`, defaulting to **V**, so a player who never opens
+  Options notices nothing. `Action` rather than `Campaign Map` because the key is pressed in a
+  mission. Registered from `SubModule.OnSubModuleLoad` next to the time-control category, in the
+  same try/catch, and for the same timing reason: after Native's `RegisterInitialContexts`, which
+  clears every category.
+- **The id must stay at or above 116.** `KeyOptionVM` builds its localization id from
+  `((GameKeyDefinition)Id).ToString()`, not from `StringId`, so an id inside that enum's range would
+  render as a vanilla key's name and reuse vanilla's string. The context is sized to `510 + 1` slots
+  because `RegisterGameKey` is an indexed write into a pre-nulled list.
+- **`AbilityInputAdapter` now resolves the bound key** once through
+  `HotKeyManager.GetAllCategories()` and caches the `GameKey` **reference**, never the `InputKey`
+  behind it: `LoadAsync` applies a saved binding by mutating `KeyboardKey` when one exists and by
+  replacing it when null, so only re-reading the property each poll observes both cases and lets a
+  mid-session rebind take effect. It keeps the static `Input.IsKeyPressed`, which is edge-triggered
+  as the activation state machine requires, and never registers the context on a screen layer:
+  `GameKeyContextsInputManager` sizes its slot list from the first category registered there (116
+  entries), so id 510 would throw.
+- **A cleared binding is a supported state.** `BoundKey` returns `Invalid` for both shapes an unbound
+  key takes (the ctor's null `KeyboardKey`, and Options' `ChangeKey(Invalid)` on the existing `Key`),
+  the poll returns false without reaching `Input`, and the chip label goes empty.
+- **The energy-bar key chip reads per refresh** rather than once in the mixin constructor, so
+  rebinding through the in-mission Esc menu updates it without waiting for the next mission.
+- **Strings live in `ModuleData/global_strings.xml`**, which must keep that exact name and
+  root-level path: the Options screen resolves rows through `Module.CurrentModule.GlobalTextManager`,
+  populated only by scanning modules for that literal path. A missing row renders the raw lookup id
+  in the keybinding list, so `TaomCareerHotKeyCategoryTests` asserts both `str_key_name.` and
+  `str_key_description.` exist for every registered id.
+
 ## Overview
 
 Career/class progression system where each hero can have a career that provides passive bonuses, an active ability, and a 3-tier choice tree. 50 LOTR-themed careers across 16 factions, fully XML-driven. Each career has 31 choices (1 root + 6 groups x 5 choices) with keystones, passives, and ability mutations.

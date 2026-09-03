@@ -2,6 +2,70 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-03
+
+### feat(career): the ability key is yours to choose now (#533)
+
+The career ability fired on V and only on V. That was a `private const InputKey` sitting in
+`AbilityInputAdapter`, so there was no way to change it, and no way to even see that it was
+fighting with whatever else you had bound to V in a mission.
+
+It is now a real game key. Open Options > Keybindings, look under **Action**, and "Career Ability
+(TAOM)" is a row like any other: rebind it, clear it, and the game's own conflict detection tells
+you when you have picked something already in use. The binding saves to `BannerlordGameKeys.xml`
+alongside every vanilla key. It still defaults to V, so if you never open that screen nothing has
+changed for you.
+
+The key chip on the mission energy bar follows the binding, and it re-reads on every refresh, so
+rebinding through the Esc menu mid-battle updates the chip right there instead of waiting for the
+next mission. Clearing the binding is supported too: the ability simply stops responding to the
+keyboard and the chip goes blank.
+
+This uses the plain TaleWorlds keybinding API, the same way the campaign-map time controls already
+do, and for the reason written on that category: MCM v5 has no keybind widget, and its dropdowns
+persist by index, so a reordered list would silently move everyone's binding.
+
+Implementation notes for the next person in here. `TaomCareerHotKeyCategory` gets its own category
+rather than borrowing the time-control one, because both the Options label and the saved binding key
+off the group id. Its game key id is 510, which has to stay at or above 116: `KeyOptionVM` builds
+the label lookup from `((GameKeyDefinition)Id).ToString()` rather than from `StringId`, so anything
+inside that enum's range renders as a vanilla key's name. `ActionCategory` rather than
+`CampaignMapCategory` because the key is pressed in a mission, and both are on the fixed allowlist
+`OptionsProvider.GetGameKeyCategoriesList` returns; a value off that list registers fine and then
+never renders. The adapter caches the `GameKey` reference and re-reads `KeyboardKey` each poll,
+because `HotKeyManager.LoadAsync` mutates that object when a binding exists and replaces it when it
+does not. It keeps the static `Input.IsKeyPressed`, which is edge-triggered as the activation state
+machine needs, and the context is never registered on a screen layer, where the 116-slot list sized
+from the first category would throw on id 510.
+
+A third bug came out of the same review: clearing the binding empties the chip label, but the chip
+is a fixed 30x22 sprite and had no visibility gate, so a player who cleared the key would have been
+left looking at an empty dark box on the energy bar. Its sibling glyph medallion in the same prefab
+was already gated. The chip now follows `HasActivationKey`. Write-up of all three:
+`docs/reviews/rca-career-keybind-2026-09-03.md`.
+
+Not-tested: the Options screen rendering and the live rebind (needs a running game). The category
+contracts that fail silently are pinned in `TaomCareerHotKeyCategoryTests`, including a check that
+`global_strings.xml` carries a name and description row for every registered id, since a missing one
+shows the raw lookup id in the keybinding list.
+
+Two engine traps found in review, both worth knowing next time. The chip label is read once per
+frame, and `GameTextManager.TryGetText` ends in `CopyTextObject()` plus `AddIDToValue`, so an
+uncached read cost a `TextObject` and three strings every frame for a value that changes only on a
+rebind; the label is now cached against the key it was built for. And `GameTextManager.FindText`
+never returns null or empty for a missing entry: it hands back a `TextObject` that renders as
+"ERROR: Text with id ... doesn't exist!", so the obvious null-or-empty fallback can never fire and
+the chip would have printed that sentence. Vanilla's own `GameKeyOptionVM` calls `FindText`
+unguarded and has the identical hole, invisible only because Native ships `str_game_key_text` for
+the whole standard keyboard. `InputKey.Extended` is one it does not ship. The adapter calls
+`TryGetText` instead, which reports failure honestly.
+
+Research: `GameKeyContext`, `HotKeyManager`, `GameKey`, `GameKeyMainCategories`,
+`GameKeyOptionCategoryVM`, `GameKeyOptionVM`, `OptionsProvider.GetGameKeyCategoriesList`,
+`GameKeyContextsInputManager`, `GameTextManager`, `GameKeyTextExtensions` (v1.4.8).
+
+Save-compat: no save data. An existing install picks up the default V until the player rebinds.
+
 ## 2026-09-02
 
 ### fix(career): a phantom career was eating the player's first career point

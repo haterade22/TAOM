@@ -18,4 +18,10 @@
 	<string id="str_key_name.TaomTimeControlHotKeyCategory_502" text="{=taom_key_turbo}Turbo Time, hold Ctrl (TAOM)" />
 	<string id="str_key_description.TaomTimeControlHotKeyCategory_502" text="{=taom_key_turbo_desc}Hold Ctrl together with this key for the highest TAOM speed multiplier. Releasing either key restores the previous speed." />
 
+	<!-- Career ability activation, shown under Options > Keybindings > Action because the key is
+	     pressed in a mission rather than on the campaign map. Same numbering rule as above: the
+	     trailing number is the game key id, kept in step with TaomCareerHotKeyCategory. -->
+	<string id="str_key_name.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability}Career Ability (TAOM)" />
+	<string id="str_key_description.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability_desc}Activates your career ability during a battle once its energy bar is full. Defaults to V." />
+
 </strings>

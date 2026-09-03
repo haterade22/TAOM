@@ -30,6 +30,7 @@ internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentSt
     private string _activationKeyText = "";
     private string _careerGlyphSprite = "";
     private bool _hasCareerGlyph;
+    private bool _hasActivationKey;
 
     public MissionAgentStatusCareerMixin(MissionAgentStatusVM viewModel) : base(viewModel)
     {
@@ -37,7 +38,6 @@ internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentSt
         _registry = IoC.Resolve<ICareerRegistry>();
         _abilityService = IoC.Resolve<ICareerAbilityService>();
         _input = IoC.Resolve<IAbilityInputAdapter>();
-        ActivationKeyText = _input?.ActivationKeyName ?? "";
     }
 
     public override void OnRefresh()
@@ -66,6 +66,13 @@ internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentSt
             HideBar();
             return;
         }
+
+        // Read per refresh rather than once in the ctor: the key is rebindable in
+        // Options > Keybindings, and a player can change it mid-mission through the Esc menu. The
+        // adapter caches the GameKey, so this is a field read plus a text lookup, and the setter
+        // only raises OnPropertyChanged when the label actually moves.
+        ActivationKeyText = _input?.ActivationKeyName ?? "";
+        HasActivationKey = !string.IsNullOrEmpty(ActivationKeyText);
 
         var state = CareerEnergyBarStateMapper.Map(ability);
         IsCareerBarVisible = true;
@@ -143,5 +150,15 @@ internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentSt
     {
         get => _hasCareerGlyph;
         set { if (_hasCareerGlyph != value) { _hasCareerGlyph = value; OnPropertyChanged(nameof(HasCareerGlyph)); } }
+    }
+
+    // Gates the key chip the same way HasCareerGlyph gates the medallion. Clearing the binding in
+    // Options is a supported state and empties ActivationKeyText, but the chip is a fixed 30x22
+    // sprite: without this the player would be left looking at an empty dark box on the energy bar.
+    [DataSourceProperty]
+    public bool HasActivationKey
+    {
+        get => _hasActivationKey;
+        set { if (_hasActivationKey != value) { _hasActivationKey = value; OnPropertyChanged(nameof(HasActivationKey)); } }
     }
 }

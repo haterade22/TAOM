@@ -12,5 +12,7 @@
     <string id="taom_key_extra_fast_forward_desc" text="Stosuje wyższy mnożnik przyspieszenia TAOM. Domyślnie klawisz E, który służy też do obracania kamery w prawo; zmień przypisanie jednego z nich, aby nie uruchamiały się razem." />
     <string id="taom_key_turbo" text="Czas turbo, przytrzymaj Ctrl (TAOM)" />
     <string id="taom_key_turbo_desc" text="Przytrzymaj Ctrl razem z tym klawiszem, aby uzyskać najwyższy mnożnik prędkości TAOM. Zwolnienie któregokolwiek klawisza przywraca poprzednią prędkość." />
+    <string id="taom_key_career_ability" text="Career Ability (TAOM)" />
+    <string id="taom_key_career_ability_desc" text="Activates your career ability during a battle once its energy bar is full. Defaults to V." />
   </strings>
 </base>

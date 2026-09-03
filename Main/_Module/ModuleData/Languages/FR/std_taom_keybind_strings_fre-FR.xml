@@ -12,5 +12,7 @@
     <string id="taom_key_extra_fast_forward_desc" text="Applique le multiplicateur d'avance rapide supérieur de TAOM. Par défaut sur E, qui sert aussi à faire pivoter la caméra vers la droite ; réassignez l'une des deux pour éviter qu'elles se déclenchent ensemble." />
     <string id="taom_key_turbo" text="Temps turbo, maintenir Ctrl (TAOM)" />
     <string id="taom_key_turbo_desc" text="Maintenez Ctrl avec cette touche pour le multiplicateur de vitesse le plus élevé de TAOM. Relâcher l'une des deux touches rétablit la vitesse précédente." />
+    <string id="taom_key_career_ability" text="Career Ability (TAOM)" />
+    <string id="taom_key_career_ability_desc" text="Activates your career ability during a battle once its energy bar is full. Defaults to V." />
   </strings>
 </base>

@@ -208,6 +208,20 @@ public class SubModule : MBSubModuleBase
                 $"[TimeAcceleration] hotkey registration failed, keys fall back to unbound: {ex.GetType().Name}: {ex.Message}");
         }
 
+        // Same deal for the in-mission career ability key, which shipped hardcoded to V. It lands
+        // under Options > Keybindings > Action rather than Campaign Map because that is where it is
+        // pressed. Registered separately so its Options label and its saved binding both carry the
+        // career category id.
+        try
+        {
+            Features.CareerSystem.Abilities.TaomCareerHotKeyCategory.Register();
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning(
+                $"[CareerSystem] hotkey registration failed, ability key falls back to unbound: {ex.GetType().Name}: {ex.Message}");
+        }
+
         // Must be first — intercepts GetLocalizedText before any game texts are resolved.
         // Loads English string overrides from taom_module_strings.xml (removes hardcoded "The" articles).
         _harmony.PatchCategory("Patch25_LocalizationOverride");

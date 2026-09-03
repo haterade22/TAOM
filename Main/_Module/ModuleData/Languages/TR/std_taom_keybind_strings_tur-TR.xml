@@ -12,5 +12,7 @@
     <string id="taom_key_extra_fast_forward_desc" text="Daha yüksek TAOM hızlı ileri sarma çarpanını uygular. Varsayılanı E'dir; bu tuş aynı zamanda Kamerayı Sağa Döndür tuşudur. Birlikte tetiklenmemeleri için birini yeniden atayın." />
     <string id="taom_key_turbo" text="Turbo Zaman, Ctrl basılı tut (TAOM)" />
     <string id="taom_key_turbo_desc" text="En yüksek TAOM hız çarpanı için Ctrl ile birlikte bu tuşu basılı tutun. Tuşlardan birini bıraktığınızda önceki hıza dönülür." />
+    <string id="taom_key_career_ability" text="Career Ability (TAOM)" />
+    <string id="taom_key_career_ability_desc" text="Activates your career ability during a battle once its energy bar is full. Defaults to V." />
   </strings>
 </base>

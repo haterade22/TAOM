@@ -12,5 +12,7 @@
     <string id="taom_key_extra_fast_forward_desc" text="TAOMのより高い早送り倍率を適用します。既定はEキーで、これは「カメラを右に回転」にも割り当てられています。同時に発動させたくない場合はどちらかを再割り当てしてください。" />
     <string id="taom_key_turbo" text="ターボタイム、Ctrl長押し (TAOM)" />
     <string id="taom_key_turbo_desc" text="Ctrlとこのキーを同時に長押しすると、TAOMの最高速度倍率が適用されます。どちらかのキーを離すと元の速度に戻ります。" />
+    <string id="taom_key_career_ability" text="Career Ability (TAOM)" />
+    <string id="taom_key_career_ability_desc" text="Activates your career ability during a battle once its energy bar is full. Defaults to V." />
   </strings>
 </base>
