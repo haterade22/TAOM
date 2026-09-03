@@ -223,4 +223,64 @@ public class PlayerSwitcherBindingTests
             ctor.GetParameters().Any(p => p.ParameterType.Name == "MobileParty"),
             "HeroPickItemVM must not take a MobileParty; wanderers have none and that is the point");
     }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CharacterCreationManager_KeepsTheNarrativeWalkTheCareerFastPathDrives()
+    {
+        RequireGame();
+
+        // Patch78 walks the narrative menu chain to the career menu using nothing but these public
+        // members. They are pinned together because the walk is only safe as a set: selecting is
+        // what makes advancing legal, and losing any one of them silently strands the player back
+        // in the six backstory menus the fast path exists to skip.
+        var type = Find("TaleWorlds.CampaignSystem.CharacterCreationContent.CharacterCreationManager");
+        Assert.IsNotNull(type, "CharacterCreationManager is the patch target; without it nothing binds");
+
+        var start = type!.GetMethod("StartNarrativeStage");
+        Assert.IsNotNull(start, "StartNarrativeStage is the Patch78 target method");
+        Assert.AreEqual(0, start!.GetParameters().Length,
+            "the postfix takes only __instance; a new parameter means the binding needs revisiting");
+
+        var current = type.GetProperty("CurrentMenu");
+        Assert.IsNotNull(current, "the walk reads CurrentMenu to know when it has arrived");
+        Assert.AreEqual("NarrativeMenu", current!.PropertyType.Name);
+
+        var advance = type.GetMethod("TrySwitchToNextMenu");
+        Assert.IsNotNull(advance, "the walk advances one menu at a time through this");
+        Assert.AreEqual(typeof(bool), advance!.ReturnType,
+            "the walk stops on false; a void return would make the end of the chain undetectable");
+
+        var select = type.GetMethod("OnNarrativeMenuOptionSelected");
+        Assert.IsNotNull(select, "every hop must select before advancing");
+        Assert.AreEqual(1, select!.GetParameters().Length);
+        Assert.AreEqual("NarrativeMenuOption", select.GetParameters()[0].ParameterType.Name);
+
+        var options = type.GetMethod("GetSuitableNarrativeMenuOptions");
+        Assert.IsNotNull(options, "the walk picks the first option this offers");
+        Assert.IsTrue(typeof(System.Collections.IEnumerable).IsAssignableFrom(options!.ReturnType),
+            "the walk enumerates this; a non-enumerable return breaks the first-option pick");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void NarrativeMenu_StillCarriesTheStringIdTheFastPathMatchesOn()
+    {
+        RequireGame();
+
+        // The walk stops by comparing CurrentMenu.StringId against CareerMenuService.CareerMenuId.
+        // StringId is a public readonly FIELD, not a property, so a reflection-free comparison
+        // depends on it staying exactly that.
+        var type = Find("TaleWorlds.CampaignSystem.CharacterCreationContent.NarrativeMenu");
+        Assert.IsNotNull(type, "NarrativeMenu is what the chain is made of");
+
+        var stringId = type!.GetField("StringId");
+        Assert.IsNotNull(stringId, "StringId is how the career menu is recognised");
+        Assert.AreEqual(typeof(string), stringId!.FieldType);
+
+        var inputMenuId = type.GetField("InputMenuId");
+        Assert.IsNotNull(inputMenuId,
+            "InputMenuId is how CareerMenuService chains the career menu onto age selection; " +
+            "the fast path assumes that chain still exists");
+    }
 }

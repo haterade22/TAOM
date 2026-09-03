@@ -1261,6 +1261,22 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>()
                 .DisableForSession($"Patch77 could not be applied: {ex.Message}");
         }
+
+        // Patch78 (#514) — sends a player who already picked a lord straight to the career choice,
+        // past the backstory menus their hero never keeps. Its own try/catch on purpose: the fast
+        // path is a convenience, so losing it must not disable the picker, and a Patch77 failure
+        // must not stop this binding either.
+        try
+        {
+            TAOM.Features.PlayerSwitcher.Hooks.Patch78_CharacterCreationManager_StartNarrativeStage
+                .Initialize(IoC.Resolve<IModLogger>());
+            _harmony.PatchCategory("Patch78_PlayerSwitcher_CareerFastPath");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError(
+                $"Patch78 could not be applied; the backstory questions will not be skipped: {ex.Message}");
+        }
         _harmony.PatchCategory("Patch20_NarrativeHorseGuard");
         _harmony.PatchCategory("Patch8_SiegeCampGuard");
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");

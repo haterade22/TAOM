@@ -131,6 +131,15 @@ on earlier picks, a min-max build can still pour all 5 narrative stages into one
 or one attribute (`+5`). Vanilla spreads via gating; diversifying TAOM's themes to do the same
 is the documented next lever but was out of scope for the 2026-05-30 budget cut.
 
+**The Player Switcher can walk these five stages automatically.** When the player has picked an
+existing lord at the face generator, `Patch78_PlayerSwitcher_CareerFastPath` advances the narrative
+chain to the career menu on the player's behalf, taking the first suitable option at each hop. The
+bonuses above are still granted, because the walk drives vanilla's real selection path (`OnSelect`
+on the way in, `OnConsequence` on the way out), so the budget arithmetic here is unchanged. It
+simply lands on a hero the handover deletes at finalize, which is the reason the questions were
+worth skipping. The career stage is deliberately where the walk stops: it is the only pick that
+survives onto the lord. See [player-switcher.md](player-switcher.md).
+
 **Deserialization defaults match the data (no "delete-the-keys" landmine).** The Career +
 Culture providers/models (`CareerMenuDataProvider`, `CareerMenuOptionDefinition`,
 `CultureCreationDataProvider`, `CultureCreationData`) default these bonus fields to **`0`**, so a
@@ -409,6 +418,10 @@ The Postfix's scope is deliberately limited to the age-30 code path. Vanilla ref
 
 ## Changelog
 
+- 2026-09-03, `feat(player-switcher)` #514: the five narrative stages plus age selection are now
+  walked automatically when the player has chosen a lord to take over, landing them on the career
+  stage. No file in this feature changed except making `CareerMenuService.CareerMenuId` public so
+  the walk has one source of truth for its stop condition. See [player-switcher.md](player-switcher.md).
 - 2026-08-03 — `feat(possession)`: the finalize grants are re-applied after a multiplayer join hand-off substitutes a host-authored hero for the one character creation produced. No file in this feature changed — the effective outcome of character creation under co-op did. Race, culture startup gold, career and special-resource seed are re-invoked; CC equipment and the starting-settlement teleport are not. See [player-possession.md](player-possession.md).
 - 2026-06-01 — `fix(character-creation)` #264: culture-appropriate family/clan name (assign `Hero.MainHero.Culture` before `SetSelectedCulture`; Rohan/`vlandia` "dey Corvand" override) + `Patch44_CCNameAutofill` pre-fills the blank Review-stage name field via `ExecuteRandomizeName()`.
 - 2026-05-30 — `balance(cc)`: cut the CC bonus budget back to vanilla (7→5 focus) by zeroing the two TAOM-added sources — the Career stage and the `cultures.json` culture-base bonus.

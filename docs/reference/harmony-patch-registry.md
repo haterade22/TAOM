@@ -715,6 +715,26 @@ Attaches the hero picker to the character creation face generator, so the player
 
 Applied from `SubModule.cs` inside try/catch alongside `Patch9_RaceFilter`; a failure disables the feature for the session rather than taking startup down. Full design: [player-switcher.md](../features/player-switcher.md).
 
+## Patch78_PlayerSwitcher_CareerFastPath
+
+**Target:** `CharacterCreationManager.StartNarrativeStage()` (public instance, Postfix)
+
+**Feature:** PlayerSwitcher (#514), `Main/Features/PlayerSwitcher/Hooks/Patch78_CharacterCreationManager_StartNarrativeStage.cs`. **Status:** ACTIVE.
+
+Sends a player who has already picked a lord straight to the career menu, past the six backstory menus (parent, childhood, education, youth, adulthood, age selection) whose answers that player never keeps. Those answers grant skills, attributes and traits to the character-creation hero, and Patch77's handover deletes that hero at finalize, carrying across only the career. The career menu is the one genuine choice left in the stage, which is why the walk stops there instead of running to the end.
+
+**One call site, and it is why there is no flicker.** `StartNarrativeStage` is called exactly once in the shipped game (v1.4.8): from `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`'s constructor, BEFORE it builds `CharacterCreationNarrativeStageVM` and before `LoadMovie`. The walk therefore finishes while no UI exists to render the menus it passes through. Verified by decompiling the installed `SandBox.GauntletUI.dll`; the `E:\Decompiled_Bannerlord\` dump covers only core `TaleWorlds.*` assemblies and contains no call site at all, which is a trap worth remembering when grepping for callers of a UI-adjacent method.
+
+**Postfix, not prefix.** Vanilla has to set `CurrentMenu` to the head of the chain first; the walk moves forward from wherever vanilla left it.
+
+**Selecting before advancing is mandatory, not tidiness.** `TrySwitchToNextMenu` opens with `SelectedOptions[CurrentMenu].OnConsequence(this)`, an indexer, so a menu nothing was chosen for throws `KeyNotFoundException`. The walk drives the same public transition a real click drives (`GetSuitableNarrativeMenuOptions` → `OnNarrativeMenuOptionSelected` → `TrySwitchToNextMenu`), which both avoids that throw and leaves `SelectedOptions` fully populated for the review stage and the trait XP pass. It needs no reflection: `CurrentMenu`'s private setter and `ModifyMenuCharacters()` are never touched.
+
+**A zero-option menu aborts the walk.** Vanilla's own `CanAdvanceToNextStage()` returns `true` for a menu with no options, so advancing one is the crash above waiting to happen. The walk stops and logs instead, leaving the player in the ordinary backstory flow.
+
+**Gated solely on `IPlayerSwitchSession.HasSelection`**, matching `PlayerSwitchContentHandler`. An ordinary character creation never enters the walk. The gate re-evaluates on every entry to the stage, because the view is rebuilt each time, so deselecting restores the full questionnaire and re-picking restores the fast path.
+
+Applied from `SubModule.cs` in its **own** try/catch beside Patch77's: the fast path is a convenience, so losing it must not disable the picker, and a Patch77 failure must not stop this binding. `PlayerSwitcherBindingTests` pins all five engine members the walk calls. Full design: [player-switcher.md](../features/player-switcher.md).
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

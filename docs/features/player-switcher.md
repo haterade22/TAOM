@@ -7,7 +7,8 @@ Issue [#514](https://github.com/haterade22/TAOM/issues/514). Branch `feat/player
 At the character creation face generator, a panel lists the existing lords of the culture you
 picked, in three groups: the ruling house, the clan leaders, and the wanderers. Choose one and you
 play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The
-character you built is set aside.
+character you built is set aside. The backstory questions are skipped for you, straight to the
+career choice, because they only ever applied to the character being set aside.
 
 This is a reimplementation of a feature LOTRAOM shipped on Bannerlord 1.2.12. Two of its assets
 crossed into this repo years ago and sat unused: the picker prefab
@@ -125,6 +126,44 @@ captured party id.
 player anyway, regardless of the MCM knob, because `KillCharacterAction` line 98 gives a non-leader
 clan member's gold to their clan leader on removal, and after adoption the player IS that leader.
 This is left as it is: it is your own clan's money, not a windfall on top of a stranger's treasury.
+
+## Skipping the backstory questions
+
+Picking a lord used to leave the player answering all six backstory menus (parent, childhood,
+education, youth, adulthood, age selection) before reaching the career choice. Every one of those
+answers grants skills, attributes and traits to the character-creation hero, and the handover above
+deletes that hero at finalize, carrying across only the career. So the player was filling in a
+questionnaire for a character who was about to be thrown away.
+
+`Patch78_PlayerSwitcher_CareerFastPath` postfixes `CharacterCreationManager.StartNarrativeStage()`
+and, when `IPlayerSwitchSession.HasSelection` is true, walks the menu chain forward to the career
+menu. The career menu is where the walk stops because it is the one choice in the stage that
+survives: `SwitchPlanner` reads `ICareerMenuService.SelectedCareerStringId` and `HeroSwitchService`
+re-keys it onto the lord.
+
+Three things make this safe rather than clever:
+
+- **There is exactly one caller.** `StartNarrativeStage` is called only from
+  `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`'s constructor
+  (v1.4.8), before it builds the stage ViewModel and before `LoadMovie`. The walk finishes before
+  any UI exists to render the menus it passes, so nothing flickers.
+- **The walk drives the real transition.** `GetSuitableNarrativeMenuOptions` →
+  `OnNarrativeMenuOptionSelected` → `TrySwitchToNextMenu`, all public, no reflection. This is not a
+  stylistic choice: `TrySwitchToNextMenu` opens with `SelectedOptions[CurrentMenu].OnConsequence(this)`,
+  an indexer that throws `KeyNotFoundException` on a menu nothing was selected for. Selecting each
+  hop also leaves `SelectedOptions` populated for the review stage and the trait XP pass.
+- **Every failure is soft.** A menu offering no options, a refused advance, or a chain that never
+  reaches career all abort the walk with a log line and leave the player in the ordinary backstory
+  flow. That is the pre-fast-path experience, never a broken one.
+
+The gate is re-evaluated on every entry to the stage, because the view is rebuilt each time.
+Deselecting the lord restores the full questionnaire; re-picking restores the fast path.
+
+**Two consequences worth knowing.** The six auto-picked answers still appear as rows on the review
+screen, which is cosmetic (their effects landed on the discarded hero). And pressing Back from the
+career menu walks back into those auto-answered menus one at a time rather than returning to the
+picker, because `TrySwitchToPreviousMenu` is vanilla's own one-hop reverse. Neither is a fault; both
+are the honest shape of driving vanilla's chain instead of jumping over it.
 
 ## Eligibility
 
@@ -382,6 +421,17 @@ Each step on a fresh campaign unless stated.
 11. **Barber screen.** Load the step 4 save and visit a barber. Correct: no picker panel.
 12. **Degrade path.** Force the reflection probe to fail. Correct: the panel never loads and
     character creation completes normally.
+13. **The fast path.** CONFIRMED 2026-09-03. Pick a lord and click Next. Correct: the first screen after the face
+    generator is the career menu, with no flicker of the six backstory menus. `rgl_log` shows
+    `skipped 6 backstory menus`. Pick a career and finish: the lord arrives on the map with it.
+14. **The fast path is opt-in by selection.** Repeat with NO lord picked. Correct: all six
+    backstory menus appear exactly as before. This is the regression check that matters most.
+15. **Back-navigation.** From the career menu press Back repeatedly: the auto-answered menus appear
+    in reverse order (expected, see above). Return to the face generator, deselect, go forward:
+    the full questionnaire is back. Re-pick and go forward: the fast path runs again.
+16. **A low-population culture.** Any culture whose narrative menus are sparse. Correct: either the
+    fast path runs, or it aborts with a logged warning and the player continues through the normal
+    questions. A crash here would mean the zero-option abort is missing.
 
 ## In-game verification (2026-08-28)
 
@@ -445,6 +495,7 @@ non-human preview render), [uncapturable-heroes.md](uncapturable-heroes.md),
 
 ## Referenced by
 
+- [docs/features/character-creation.md](./character-creation.md)
 - [docs/features/character-selection.md](./character-selection.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)

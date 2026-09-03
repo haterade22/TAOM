@@ -4,6 +4,40 @@
 
 ## 2026-09-03
 
+### feat(player-switcher): skip the backstory questions when you pick a lord (#536)
+
+Picking Faramir from the lord list and clicking Next walked you through all six backstory menus
+(parent, childhood, education, youth, adulthood, age selection) before the career choice. Every
+answer there grants skills, attributes and traits to the character-creation hero, and the handover
+deletes that hero at finalize, carrying across only the career. The questionnaire was being filled
+in for a character who was about to be thrown away.
+
+`Patch78_PlayerSwitcher_CareerFastPath` postfixes `CharacterCreationManager.StartNarrativeStage()`
+and, when a lord is selected, walks the menu chain straight to the career menu. An ordinary
+character creation is untouched: the walk is gated on `IPlayerSwitchSession.HasSelection`, the same
+signal the handover itself uses, and it re-evaluates on every entry to the stage, so deselecting
+brings the full questionnaire back.
+
+The walk drives vanilla's own public transition instead of jumping over it, which is load-bearing
+rather than stylistic. `TrySwitchToNextMenu` opens with `SelectedOptions[CurrentMenu].OnConsequence(this)`,
+an indexer, so advancing a menu nothing was selected for throws `KeyNotFoundException`. Selecting at
+each hop avoids that and leaves `SelectedOptions` populated for the review stage and the trait XP
+pass. A menu offering no options aborts the walk with a warning instead of advancing, because
+vanilla's `CanAdvanceToNextStage` returns true for an empty menu and would walk into that same throw.
+
+There is exactly one caller of `StartNarrativeStage` in the shipped game, and it runs before the
+stage ViewModel is built, so the skipped menus never render. Establishing that meant decompiling the
+installed `SandBox.GauntletUI.dll` directly: the `E:\Decompiled_Bannerlord\` dump covers only the
+core `TaleWorlds.*` assemblies and contains no call site at all, which is worth remembering the next
+time a caller search for a UI-adjacent method comes back empty.
+
+Eight unit tests cover the walk through a new `INarrativeStageAdapter` seam (the engine's
+`CharacterCreationManager` is sealed and cannot be substituted), and two binding tests pin the five
+engine members it calls. Confirmed in game on 2026-09-03: picking a lord lands directly on the
+career choice. Smoke steps 13 to 16 in the feature doc cover what is still unexercised, chiefly the
+no-lord-picked regression path and a sparse-culture run against the zero-option abort.
+
+
 ### feat(career): the ability key is yours to choose now (#533)
 
 The career ability fired on V and only on V. That was a `private const InputKey` sitting in

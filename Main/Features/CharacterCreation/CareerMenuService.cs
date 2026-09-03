@@ -13,7 +13,8 @@ namespace TAOM.Features.CharacterCreation;
 
 public class CareerMenuService : ICareerMenuService
 {
-    private const string CareerMenuId = "narrative_career_menu";
+    /// <summary>Public so the Player Switcher fast path can target this menu without duplicating the literal.</summary>
+    public const string CareerMenuId = "narrative_career_menu";
     private const string AgeSelectionMenuId = "narrative_age_selection_menu";
 
     private readonly ICareerRegistry _registry;
