@@ -137,6 +137,21 @@ def retarget(mins, maxes, target):
     scale = (target - min_sum) / spread
     new_maxes = [mn + int(round((mx - mn) * scale)) for mn, mx in zip(mins, maxes)]
 
+    # A stack that HAD a real spread must keep at least one of it.
+    #
+    # Without this floor a thin stack rounds to max == min, and when min is 0 that deletes the troop
+    # type from the template outright: it can never be drawn by the initial roster fill, and vanilla's
+    # new-game top-up weights each stack by `(min + max) / 2`, so a 0/0 stack is weight 0 there too.
+    # The loss is also permanent, because the next retarget scales from a spread that is now zero and
+    # `0 * anything` stays 0 no matter how high the future target.
+    #
+    # This shipped once. Going 3500 -> 260 on 2026-09-01 zeroed 45 stacks, six Black Numenorean troop
+    # types, across 14 of Mordor's 16 lord templates. Mordor is the exposure because it carries 52
+    # stacks against the same budget every other culture spends on 12 to 27, so its thinnest stacks
+    # sat at 5/3500 and rounded straight to nothing.
+    floors = [mn + 1 if mx > mn else mn for mn, mx in zip(mins, maxes)]
+    new_maxes = [max(v, f) for v, f in zip(new_maxes, floors)]
+
     # Absorb rounding drift on the widest stacks, which are least distorted by +/-1.
     drift = target - sum(new_maxes)
     order = sorted(range(len(mins)), key=lambda i: maxes[i] - mins[i], reverse=True)
@@ -144,8 +159,9 @@ def retarget(mins, maxes, target):
     idx = 0
     while drift != 0:
         i = order[idx % len(order)]
-        # Never push a max below its own min.
-        if step == -1 and new_maxes[i] <= mins[i]:
+        # Never push a max below its own floor: min for an already-pinned stack, min + 1 for one that
+        # started with a spread. Reducing past that is the silent-deletion bug above.
+        if step == -1 and new_maxes[i] <= floors[i]:
             idx += 1
             if idx > len(order) * 4:
                 break

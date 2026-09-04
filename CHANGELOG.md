@@ -4,6 +4,43 @@
 
 ## 2026-09-04
 
+### fix(templates): the retarget deleted six Mordor troop types, and nothing noticed
+
+`151b6f56` and the v2.0.27 tag it shipped in zeroed **45 stacks**. Six Black Númenórean troop types
+(`mordor_num_knight`, `_warden`, `_marksman`, `_temple_knight`, `_temple_guard`, `_shadowbow`) went to
+`min 0 / max 0`, which removes three of them from 14 of Mordor's 16 lord templates entirely.
+
+A 0/0 stack cannot spawn from either path. The initial roster fill draws `min + (max - min) * r`, and
+vanilla's new-game top-up weights each stack by `(min + max) / 2`, so the troop is unreachable both
+ways. It was also unrecoverable by the tool: the next retarget scales from the spread, and
+`0 * anything` stays 0 at any future target, so only git history held those numbers.
+
+Root cause is in `rebalance_party_template_maxes.py`, not in the target values. It scales each stack's
+spread proportionally and had no floor, so a stack at 5 of 3500 rounds to nothing at a 260 target.
+Mordor is the only culture exposed because it carries 52 stacks against the same budget every other
+culture spends on 12 to 27. `retarget()` now floors any stack that had a real spread at `min + 1`, and
+the drift-absorption pass respects that floor instead of the bare minimum. A stack authored at
+`max == min` is still left alone, since that is a deliberate fixed-size entry.
+
+The templates were regenerated from the pre-retarget file rather than patched forward, because the
+lost spreads could not be scaled back up. Result: 193 templates still land exactly on their band, the
+largest `sum(max)` is still 320, **0 stacks are zeroed and 0 troops are lost**, and the tool is
+idempotent on its own output.
+
+**Every gate passed while this was broken**, which is the part worth remembering. The tool reported
+success, the XML parsed, `validate_moduledata.py` gave 0 errors, and 8,000 unit tests passed. Nothing
+anywhere asserted that a stack which could previously spawn a troop still can.
+`tools/tests/test_rebalance_party_template_maxes.py` now does, and its first test fails against the
+pre-fix formula.
+
+Two numbers in the previous entry were also wrong and are corrected in `docs/features/ai-party-size.md`.
+The spawn ratio is `party.RandomFloat()`, uniform on (0, 1] and drawn once per party, so "a lord now
+spawns 120-240" described a single point on a wide distribution. Mean spawn is about 78 to 187 by band
+and an individual lord can land anywhere from 3 to 320. And "raise the multiplier and the templates
+become the limiting factor" is false at world generation: `HeroSpawnCampaignBehavior.SpawnLordParty`'s
+new-game top-up uses `stack.MaxValue` only as a weight, never as a ceiling, so it fills whatever gap a
+raised cap opens. The daily respawn path is bounded by the template as expected.
+
 ### balance(templates): 193 lord party templates brought back into the vanilla size band
 
 A new campaign showed a Mordor lord at **2423 men** on Summer 1 of year one, with the AI Party Size

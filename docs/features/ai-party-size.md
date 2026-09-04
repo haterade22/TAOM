@@ -11,10 +11,20 @@ knobs, no new Harmony patch.
 `FindAppropriateInitialRosterForMobileParty` fills each stack to `min + (max - min) * r` and never
 consults `PartySizeLimit`, so party templates have to be kept in the same range as the cap by hand.
 They were sized for the old 10x default, which made a Mordor lord spawn about 2,400 men and lose all
-but ~150 on his first daily tick. The maxima were retargeted on 2026-09-01 to match the neutral cap
-(goblin 320, orc and uruk 260, Erebor 220, men 200, elves 150), so a lord now spawns 120-240 against
-a 40-203 cap. **Raise the multiplier and the templates become the limiting factor instead**, since
-they no longer spawn enough men to fill a scaled cap.
+but ~150 on his first daily tick. The maxima were retargeted on 2026-09-01 to match the neutral cap:
+goblin 320, orc and uruk 260, Erebor 220, men 200, elves 150.
+
+The ratio `r` is `party.RandomFloat()`, drawn once per party and uniform on (0, 1], so a spawn is a
+distribution rather than a number. **Mean** spawn now runs about 78 to 187 by band (elf 78-104, men
+102-128, dwarf 113-161, orc 132-176, goblin 162-187) against a 40-203 cap. An individual lord can
+land anywhere between his template's `sum(min)` and `sum(max)`, so 3 to 320 across all cultures.
+
+**Raising the multiplier still produces large parties at world generation**, and not through the
+templates. Vanilla's new-game top-up in `HeroSpawnCampaignBehavior.SpawnLordParty` adds
+`(PartySizeLimit - TotalManCount) * RandomFloatRanged(0.75f, 0.9f)` troops by
+`MBRandom.ChooseWeighted` over the stack list, and it uses `stack.MaxValue` only as a WEIGHT,
+`(min + max) / 2`, never as a ceiling. So it fills whatever gap a raised cap opens. That path runs
+only on `isNewGame`; the daily respawn path is bounded by the template as you would expect.
 
 ## Why This Exists
 

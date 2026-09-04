@@ -1232,3 +1232,10 @@ distinct pre-existing looks with 4. Worse, the key was position, so inserting on
   re-rolls every run). Count the DISTINCT looks before and after any bulk re-dress;
   a pass meant to add variety that reduces it is a regression the diff will not show.
 - **Source:** same session.
+
+### A proportional rescale deletes the thinnest rows, silently and permanently
+
+`rebalance_party_template_maxes.py` scales each party-template stack's spread proportionally to hit an absolute per-culture target. Retargeting Mordor from 3500 to 260 rounded 45 stacks to `min 0 / max 0`, removing six Black Numenorean troop types from 14 of Mordor's 16 lord templates. A 0/0 stack is unreachable from both spawn paths: the initial fill draws `min + (max - min) * r`, and vanilla's new-game top-up weights each stack by `(min + max) / 2`. It is also unrecoverable by the tool, because the next retarget scales from a spread that is now zero and `0 * anything` stays 0 at any future target.
+- **Why missed:** every gate passed. The tool reported success, the XML parsed, `validate_moduledata.py` returned 0 errors, and 8000 unit tests passed, because nothing anywhere asserts that a stack which could previously spawn a troop still can. The exposure was invisible from the target number alone: Mordor carries 52 stacks against the same budget every other culture spends on 12 to 27, so only Mordor's thinnest stacks (5 of 3500) crossed the rounding floor.
+- **Prevent:** any proportional rescale of a distribution must floor every non-zero row at 1, and the tool must refuse to write a row that goes from "can occur" to "cannot occur". Then diff the SET of live entries before and after, not just the sums. A sum that lands exactly on target says nothing about what stopped existing to get there. Pinned by `tools/tests/test_rebalance_party_template_maxes.py`, whose first test fails against the pre-fix formula.
+- **Source:** deep review of `151b6f56`, fixed in the follow-up; see CHANGELOG 2026-09-04.
