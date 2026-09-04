@@ -4,6 +4,44 @@
 
 ## 2026-09-04
 
+### docs(ai-party-size): sweep the documentation the four retunes left behind
+
+The AI Party Size defaults moved four times on 2026-09-01 (10.0/300, 5.0/150, 2.5/75, neutral) and
+the party templates twice more. Several documents were updated at an intermediate step and ended up
+describing a state that never shipped. A sweep across `docs/`, `tools/README.md`, `CLAUDE.md`,
+`AGENTS.md` and `.claude/` found eight, now fixed:
+
+- `tools/README.md` told anyone adding Black Numenorean stacks to retarget against "Mordor's 3500
+  target", and listed the whole 4500/3500/2000/1500/1000 band as current. Both now read 260 and the
+  shipped band, with a pointer to the floor bug.
+- `docs/features/black-numenorean.md` gave the two Dolgubeth and Wawrim templates as 3225 / 3500, and
+  claimed the retarget tool "stays a no-op" on them. They are 241 / 260 now and the tool rescaled
+  them; the Black Numenorean share held at 93% because the scale is proportional.
+- `docs/reference/party-template-sizing.md` called the r = 0.69 worked example the "typical fill
+  ratio". It is one point on a uniform distribution, and it is the specific ratio behind the 2423-man
+  lord that started all this. The mean figures now sit beside it, and a paragraph describing the
+  August pass in present tense is marked as history.
+- `docs/features/startup-resources.md` warned that `K = 100` "goes stale" if the knobs are retuned,
+  in the future tense. They were retuned; it is stale. It now says so, along with why 100 is probably
+  still biased high.
+- `docs/reviews/lessons/data-content-cultures.md` carried the last live claim that the templates ship
+  raised and the #461 symptom is present by default. Both were true for a few hours. Marked resolved,
+  with the lesson left standing because it was found by asking what the feature does at its defaults
+  rather than by reading a diff.
+- `docs/reference/party-template-sizing.md` gained a section on the floor bug, since the doc's whole
+  subject is how to run that retarget and it did not mention the failure mode.
+- The RCA gained a fourth pass covering the retarget and its defect, including the part worth keeping:
+  the verification I ran at the time (every template lands on its band, largest sum is 320) was true
+  and useless, because a sum that lands on target says nothing about what stopped existing to get
+  there.
+
+`docs/features/ai-party-size.md` was checked end to end and needed nothing; its one stale table is
+already self-flagged. The harness memory was updated too, since its index line still described the
+August behaviour.
+
+One habit came out of this. When a value is actively being retuned, cite the constant by name rather
+than the number: `AiPartySizeService.DefaultLordFactor` does not go stale, and "10.0" did, four times.
+
 ### fix(templates): the retarget deleted six Mordor troop types, and nothing noticed
 
 `151b6f56` and the v2.0.27 tag it shipped in zeroed **45 stacks**. Six Black Númenórean troop types

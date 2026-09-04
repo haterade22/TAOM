@@ -115,6 +115,14 @@ pool from about 2.16M to 4.10M denars. **If you retune AI Wage Relief or the par
 is what goes stale:** recompute K as `targetPartySize x (1 - wageRelief)`. See
 [ai-party-size.md](ai-party-size.md).
 
+**It has already gone stale, and was not recomputed.** The AI Party Size defaults went neutral on
+2026-09-01: multiplier 1.0, flat bonus 0, and both relief knobs 0. So N is now the vanilla
+`PartySizeLimit` (40 to 203) and the relief term is 1.0, which makes the correct K simply the target
+party size. `K = 100` sits inside that band, so it is far closer than it was, but it is not a
+measurement: the original 52.5437 was population-weighted across every lord template, and low-tier
+lords far outnumber tier-4 clan leaders, so 100 is probably still biased high. A proper re-derivation
+is owed.
+
 `runwayDays` is the only judgement call: **270** for the mythic treasuries (the four elven realms
 and Erebor), **150** for the great realms (Gondor, Rhûn, Umbar, Mordor, Moria), **100** for the
 regional powers, **70** for Goblin-town and Blue Craig. `K` scales the whole table to a target pool.

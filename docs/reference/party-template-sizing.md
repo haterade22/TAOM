@@ -149,8 +149,14 @@ is its min sum, which the tool never touches.
 values shown. Those larger numbers were sized for the 10x AI party size cap that shipped alongside
 them; that cap is neutral by default now, so a 3500 template made a Mordor lord spawn about 2,400 men
 and lose all but ~150 on the first daily tick. The band ordering is preserved and compressed, because
-a 4.5:1 spread is meaningless once every culture is trimmed to the same 40-203 cap. Spawn at the
-typical fill ratio is now roughly goblin 237, orc 184, dwarf 156, men 142, elf 121.
+a 4.5:1 spread is meaningless once every culture is trimmed to the same 40-203 cap.
+
+**Use the mean, not the worked example.** At `r = 0.69`, the ratio behind the 2423-man Mordor lord
+that triggered this pass, the culture-default templates land near goblin 237, orc 184, dwarf 156,
+men 142, elf 121. That is one point on a distribution, not a typical value: `r` is
+`party.RandomFloat()`, uniform and drawn once per party. The number to use for balance work is the
+mean across every template in a band, which is lower: elf 78-104, men 102-128, dwarf 113-161,
+orc 132-176, goblin 162-187. An individual lord can land anywhere from 3 to 320.
 
 | Culture | Target | Templates in scope | Culture template: stacks | min | Old max |
 |---|---|---|---|---|---|
@@ -178,13 +184,40 @@ typical fill ratio is now roughly goblin 237, orc 184, dwarf 156, men 142, elf 1
 
 "Templates in scope" is the tool's own classification, which keys off the id prefix, so Blue Craig's
 five `goblin_bluecraig_N` clan templates count under **goblin** and Lindon's two `rivendell_lindon_N`
-count under **rivendell** (see the matcher trap at the end of this doc). `kingdom_hero_party_erebor_template`
-is the only template in the whole file whose max sum went **down** (2350 to 2000). The biggest jump
-is goblin and Blue Craig, 600 to 4500; Rhûn and Harad started from the two smallest templates in the
-set, 400 and 300.
+count under **rivendell** (see the matcher trap at the end of this doc). **Reading the 2026-08-14 pass**, whose targets were 4500 / 3500 / 2000 / 1500 / 1000 and are now
+history: `kingdom_hero_party_erebor_template` was the only template in the whole file whose max sum
+went **down** (2350 to 2000), the biggest jump was goblin and Blue Craig at 600 to 4500, and Rhûn and
+Harad started from the two smallest templates in the set, 400 and 300. The 2026-09-01 retarget then
+brought every one of them into the band in the table above.
 
 `khand` is present in `CULTURE_TARGETS` and matches nothing: no `kingdom_hero_party_khand_*`
 template exists. Leaving the key costs nothing and documents the intent if one is ever authored.
+
+### The 2026-09-04 floor bug
+
+The retarget above shipped with a defect worth knowing before you run this tool again. `retarget()`
+scaled every stack's spread with no floor, so a thin stack (5 of Mordor's old 3500) rounded to
+`min 0 / max 0` at the new 260 target. That zeroed 45 stacks and deleted six Black Numenorean troop
+types (`mordor_num_knight`, `_warden`, `_marksman`, `_temple_knight`, `_temple_guard`, `_shadowbow`)
+from 14 of Mordor's 16 lord templates.
+
+It was unrecoverable by the tool. A 0/0 stack cannot spawn from either path, and the next retarget
+scales from a spread that is already zero, so no future target restores it. Only git history held
+those numbers.
+
+**Every gate passed while it was broken:** the tool reported success, the XML parsed,
+`validate_moduledata.py` returned 0 errors, and the full suite passed, because nothing asserted that
+a stack which could previously spawn a troop still can.
+
+Fixed in `bb01b9a4` (v2.0.28). `retarget()` now floors any stack that had a real spread at `min + 1`,
+the drift-absorption pass respects that floor, and a stack authored at `max == min` is still left
+pinned. The templates were regenerated from the pre-retarget file rather than patched forward, since
+the lost spreads could not be scaled back up. `tools/tests/test_rebalance_party_template_maxes.py`
+pins the floor and its first test fails against the pre-fix formula.
+
+Mordor is the exposure because it carries 52 stacks against the same budget every other culture
+spends on 12 to 27. If you add a culture with comparable stack variety, check for zeroed stacks after
+a retarget rather than trusting the sum.
 
 ### Cultures that share another culture's templates
 

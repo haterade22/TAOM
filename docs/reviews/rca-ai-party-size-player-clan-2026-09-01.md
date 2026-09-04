@@ -173,3 +173,49 @@ Overview as a stranger. If it describes a capability the shipped defaults do not
 wrong rather than dated. Then sweep the data authored against the old default, the registry rows, the
 derived config, and any issue comment that asserted the previous value. Appended to
 `docs/reviews/lessons/data-content-cultures.md`.
+
+## Fourth pass: the template retarget, and its own defect
+
+Finding 6 of the third pass (the party templates were never reverted with the knob, so the #461
+symptom is back by default) was resolved the same day it was recorded. Resolving it introduced a
+worse bug than the one it fixed.
+
+| # | Sev | Finding | Outcome |
+|---|---|---|---|
+| 8 | resolves #6 | The 193 lord templates raised on 2026-08-14 were retargeted into the neutral cap band: goblin and bluecraig 320, mordor/isengard/gundabad/dolguldur/mistymountainorcs 260, erebor 220, the ten men cultures 200, the four elf cultures 150 | `151b6f56`, v2.0.27 |
+| 9 | **HIGH, shipped** | `rebalance_party_template_maxes.py` scaled each stack's spread with no floor. Retargeting Mordor 3500 to 260 rounded 45 stacks to `min 0 / max 0`, deleting six Black Numenorean troop types from 14 of Mordor's 16 lord templates | `bb01b9a4`, v2.0.28. Floor at `min + 1`, templates regenerated from the pre-retarget file, regression test added |
+| 10 | MED (docs) | Two claims in the v2.0.27 write-up were wrong: "a lord now spawns 120-240" quoted one point on a uniform distribution whose mean is 78-187 and whose range is 3-320, and "raise the multiplier and the templates become the limiting factor" is false at world generation | Corrected in `docs/features/ai-party-size.md` and the CHANGELOG |
+
+### Why finding 9 got through
+
+The same shape as findings 1 and 3, one level down: an operation reported success and left no trace
+of what it destroyed.
+
+- The tool printed `templates retargeted: 193, stacks changed: 2691` and applied cleanly.
+- The XML parsed. `validate_moduledata.py` returned 0 errors. The full suite returned 8000 passed.
+- Every one of those checks verifies structure or references. **None of them asks whether an entity
+  that could previously occur still can.** A stack at `min 0 / max 0` is perfectly valid XML with a
+  perfectly valid troop reference. It just never spawns.
+
+The verification I ran at the time made it worse rather than better: I checked that every template
+landed exactly on its band target and that the largest `sum(max)` was 320. Both were true. A sum that
+lands on target says nothing about what stopped existing to get there, and checking it felt like
+diligence.
+
+**Prevent:** for any transformation of a distribution, diff the SET of live entries before and after,
+not just the aggregate. And for a lossy transformation specifically, ask whether it is reversible
+before running it: this one was not, and the answer was available from reading `retarget()` for a
+minute. Recorded as `docs/reviews/lessons/data-content-cultures.md`, "A proportional rescale deletes
+the thinnest rows, silently and permanently".
+
+### Finding 10, and a pattern across all four passes
+
+Four passes, four instances of the same class: a claim published faster than it was checked. The
+false relief justification (finding 4), the nine stale default references (finding 5), the K = 100
+overstatement, and now the spawn range. Each was written while the underlying number was still
+moving. The defaults changed four times in one day and every write-up described its moment as
+settled.
+
+**Prevent:** when a value is actively being retuned, write the mechanism and cite the constant by
+name rather than quoting the number. `AiPartySizeService.DefaultLordFactor` does not go stale;
+"10.0" does, and did, four times.

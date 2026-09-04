@@ -58,8 +58,8 @@ field them, and the other thirteen were deliberately left at 4%.
 
 | Clan | House | Seat | Template BN share |
 |---|---|---|---|
-| `clan_empire_south_1` | **Dolgubeth** | `castle_ES1` The Morannon, `castle_ES2` Carach Angren | 3225 / 3500 (92%) |
-| `clan_empire_south_9` | **Wawrim** | `castle_ES6` Cirith Nargil | 3225 / 3500 (92%) |
+| `clan_empire_south_1` | **Dolgubeth** | `castle_ES1` The Morannon, `castle_ES2` Carach Angren | 241 / 260 (93%) |
+| `clan_empire_south_9` | **Wawrim** | `castle_ES6` Cirith Nargil | 241 / 260 (93%) |
 
 Wawrim was forced: all four of its lords already carried explicit Black Numenorean text. Dolgubeth
 took the second seat over Melkondili (`clan_empire_south_3`) because it has ten lord slots to
@@ -135,8 +135,12 @@ at 0. Raising the max share alone would have left the identity broken for small 
 ### The two templates are deliberately not identical
 
 Dolgubeth is infantry and archer weighted for a gate garrison; Wawrim leans cavalry for a field
-house. Both still sum to exactly 3500, which is the Mordor target in
-`tools/rebalance_party_template_maxes.py`, so that tool stays a no-op (verified: `stacks changed: 0`).
+house. Both summed to exactly 3500 at the time, which was then the Mordor target in
+`tools/rebalance_party_template_maxes.py`, so the tool stayed a no-op through 2026-08-25. That target
+dropped to 260 on 2026-09-01 and both templates were rescaled with every other Mordor template; the
+Black Numenorean share held at 93% because the retarget scales proportionally. The same pass briefly
+deleted six `mordor_num_*` troop types outright, fixed in `bb01b9a4`; see
+[party-template-sizing.md](../reference/party-template-sizing.md) "The 2026-09-04 floor bug".
 Making them identical would have reproduced the exact flaw this change was fixing.
 
 ### Expect smaller armies from these two clans
