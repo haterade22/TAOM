@@ -44,6 +44,83 @@ the AI Lord multiplier no longer produces big armies on its own, because the tem
 enough men to fill a scaled cap. The cap is now the ceiling and the template is the floor.
 
 
+### fix(ai-party-size): the food relief competed with lord perks instead of composing with them
+
+An external bug report, backed by 18,898 party-days of telemetry, said `AiFoodConsumptionRelief`
+reached only about a quarter of AI parties. The mechanism it described is real.
+
+`ApplyRelief` emitted a plain `AddFactor(-relief)`. Everything already in that frame is a native perk
+or a culture feat, both of which also use `AddFactor`, and factors SUM rather than compose, so the
+relief resolved as `1 + Sum - relief` and landed in direct competition with every ability the lord
+happened to have. At a 0.9 relief the intended residual is 0.10, which gave each ability roughly ten
+times its nominal leverage: Goblin's +20% food feat tripled consumption, and a frame at or below
+`-0.09` projected past the old gate and returned having applied nothing at all, silently. That last
+case inverted the design. Lothlorien's "Lembas Bread", a food-SAVING feat, left the party eating 0.85
+of vanilla while an unperked lord of the same culture ate 0.10.
+
+The relief now reads the ability frame, clamps it into `[0.65, 1.50]`, and lands the frame on
+`(1 - relief) x clamped`. Perks and feats become a bounded multiplier on the relieved baseline
+instead of a competitor for it, and the configured relief always applies. The clamp floor is strictly
+positive, which keeps the sign-flip protection the removed gate existed for: a wage bill can never
+reach zero and invert. The wage surface moves with the food surface because both go through the one
+helper, and the wage side is where that inversion was the real hazard.
+
+Two claims in the report did not survive checking, and both are recorded in the feature doc so the
+next reader does not re-derive them. Its build ran the old 0.9 default, which went to 0 in v2.0.26.
+And its "free food" cases (Galadriel's parties sitting on vanilla's `LimitMax(-0.01f)` floor) are a
+pre-existing elven-feat plus epic-Steward-perk interaction: at a frame below -1 the old gate skipped
+the relief entirely, so those parties would have floored with the slider at zero.
+
+Going neutral in v2.0.26 was not the fix. MCM writes a compiled default only when the key is absent,
+so every install that ran v2.0.24 or earlier still has 0.9 persisted and was running the old
+composition.
+
+Adds `taom.print_ai_food_relief`, which prints each party's consumption as a fraction of the vanilla
+`members/20` rate split by whether the party is ELIGIBLE for the relief at all. Raw `FoodChange` data
+cannot make that split, and a party failing `IsScalableAiLordParty` never reaches the relief, so its
+residual reads identically to a relief that failed. That ambiguity is the likeliest explanation for
+the one bucket in the report (mean residual 0.96 on empire and gundabad clans) that its own root
+cause cannot produce.
+
+Suite 8000 green.
+
+Research: DefaultMobilePartyFoodConsumptionModel.CalculatePerkEffects, MobileParty.FoodChange,
+  ExplainedNumber.ResultNumber
+Rejected: MCM sliders for the clamp bounds. Two more numbers nobody tunes, guarding a mechanism
+  a player never sees
+Not-tested: in-game residual distribution, which is what the new console command is for
+Save-compat: none. No persisted state, and the MCM key is untouched.
+
+### docs(map): the campaign map vista, and why the obvious backup was the wrong one to copy
+
+Clearing the vista Texture slot in the Modding Kit left the campaign map drawing correct terrain
+inside its 1600 x 1600 node rectangle and white, then checkerboard, everywhere outside it. Visible
+only when zoomed out, so nothing in a normal session showed it.
+
+The first repair read the Kit's own single-step backup, restored the two attributes it disagreed on,
+and did not fix anything. That backup was nine minutes old and already carried an unverified change
+from the same morning: `16K_Vista`, a texture imported with usage `albedo`, sitting in the Vista
+Normalmap slot. Widening the comparison to five reference maps settled it. `vista_normalmap` is empty
+in every one, vanilla and community alike, and every vista texture in TAOM's own set is an albedo.
+
+The other half is that vanilla's values are not copyable. `SandBox` and `NavalDLC` drive the vista
+from `TileSets/WorldMap.gts`, a streamed virtual texture, with every texture slot empty. `TAOM_Map`
+ships no `TileSets/` folder at all, drives the vista from one flat texture, and has to be tuned
+against the other custom-texture maps instead. Blend Mode turned out to be a dead end worth writing
+down: the two working custom-texture maps disagree on it, and the editor binary registers exactly one
+label for it.
+
+Also recorded, because it is provable rather than assumed: the Texture Inspector import flags are not
+the lever. The known-good `.tpac` and the re-imported one are the same size and differ in exactly 103
+bytes, all inside 16-byte GUID blocks, with every setting string identical. A re-import regenerates
+asset GUIDs and preserves settings, so that hypothesis costs one `cmp -l` rather than a tour of the
+checkboxes.
+
+New doc `docs/reference/main-map-vista.md`, registered in `docs/INDEX.md` and the doc-lookup table.
+
+Not-tested: the in-game zoom-out on the corrected scene.
+Save-compat: none. Scene data, no persisted campaign state.
+
 ## 2026-09-03
 
 ### fix(troops): a party-screen hover could take the game down (#537)

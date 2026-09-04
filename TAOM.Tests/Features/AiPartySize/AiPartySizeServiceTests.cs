@@ -186,29 +186,135 @@ public class AiPartySizeReliefTests
     }
 
     [TestMethod]
-    public void ApplyRelief_OnTopOfACultureWageFeat_StacksAdditivelyInTheFactorFrame()
+    public void ApplyRelief_OnTopOfACultureWageFeat_ScalesTheRelievedBaselineInsteadOfCompetingWithIt()
     {
-        // Mordor pays +20%. Factors SUM rather than compose: 1 + 0.20 - 0.90 = 0.30.
+        // Mordor pays +20%. The ability frame becomes a bounded MULTIPLIER on the relieved
+        // baseline, so the answer is 10000 * 0.10 * 1.20, not the old additive 1 + 0.20 - 0.90.
+        // Additively the feat was worth 3x the whole bill, because it leveraged a 0.10 residual.
         var wage = new ExplainedNumber(10000f);
         wage.AddFactor(0.20f);
 
         AiPartySizeService.ApplyRelief(ref wage, relief: 0.9f);
 
-        Assert.AreEqual(3000f, wage.ResultNumber, Tolerance);
+        Assert.AreEqual(1200f, wage.ResultNumber, Tolerance);
     }
 
     [TestMethod]
-    public void ApplyRelief_WouldCancelTheFactorFrame_IsSkippedRatherThanFlippingTheSign()
+    public void ApplyRelief_StronglyNegativeAbilityFrame_ClampsRatherThanFlippingTheSign()
     {
-        // An existing -0.5 factor plus a 0.9 relief projects to -0.4, which would turn a wage BILL
-        // into a wage rebate. The gate is on the PROJECTED frame for exactly this reason.
+        // The hazard the old silent skip existed for: -0.5 plus a 0.9 relief projects to -0.4
+        // additively, turning a wage BILL into a wage rebate. The clamp floor is what prevents
+        // that now, and unlike the skip it still delivers the configured relief: 10000 * 0.10 * 0.65.
         var wage = new ExplainedNumber(10000f);
         wage.AddFactor(-0.5f);
 
         AiPartySizeService.ApplyRelief(ref wage, relief: 0.9f);
 
-        Assert.AreEqual(5000f, wage.ResultNumber, Tolerance);
+        Assert.AreEqual(650f, wage.ResultNumber, Tolerance);
         Assert.IsTrue(wage.ResultNumber > 0f, "relief must never invert the sign of a wage bill");
+    }
+
+    // The report's headline defect. A Goblin party (+20% food) and a Lothlorien party (-15% food)
+    // both asked for a 90% relief used to land 10x apart, because the malus competed with the
+    // relief in one shared sum and the bonus tripped the skip and got no relief at all.
+    [TestMethod]
+    public void ApplyRelief_FoodMalusCulture_StillReceivesTheFullConfiguredRelief()
+    {
+        // Goblin "Ravenous Swarm", +0.20. Additively this was 1 + 0.20 - 0.90 = 0.30, i.e. three
+        // times the intended consumption off a single 20% feat.
+        var food = new ExplainedNumber(-100f);
+        food.AddFactor(0.20f);
+
+        AiPartySizeService.ApplyRelief(ref food, relief: 0.9f);
+
+        Assert.AreEqual(-12f, food.ResultNumber, Tolerance);
+        Assert.IsTrue(food.ResultNumber < 0f, "relief must not flip consumption into production");
+    }
+
+    [TestMethod]
+    public void ApplyRelief_FoodBonusCulture_NoLongerLosesTheReliefEntirely()
+    {
+        // Lothlorien "Lembas Bread", -0.15. The old projected-frame gate computed
+        // 1 - 0.15 - 0.90 = -0.05, failed `> 0.01`, and returned WITHOUT applying anything: the
+        // party ate at 0.85 of vanilla while an unperked lord of the same culture ate 0.10. A
+        // food-saving feat made the party eat 8.5x MORE. This is the regression test.
+        var food = new ExplainedNumber(-100f);
+        food.AddFactor(-0.15f);
+
+        AiPartySizeService.ApplyRelief(ref food, relief: 0.9f);
+
+        Assert.AreEqual(-8.5f, food.ResultNumber, Tolerance);
+        Assert.AreNotEqual(-85f, food.ResultNumber, Tolerance, "the relief must not be skipped outright");
+    }
+
+    [TestMethod]
+    public void ApplyRelief_AbilityFrameBelowTheFloor_ClampsAtTheFloorAndKeepsFoodNegative()
+    {
+        // Elven lords with epic Steward perks reached a frame at or below -1 additively, which the
+        // LimitMax(-0.01f) floor in the vanilla model then turned into near-free food. The clamp
+        // means no ability set can drive the frame to zero, with or without the relief in play.
+        var food = new ExplainedNumber(-100f);
+        food.AddFactor(-1.2f);
+
+        AiPartySizeService.ApplyRelief(ref food, relief: 0.9f);
+
+        Assert.AreEqual(-6.5f, food.ResultNumber, Tolerance);
+        Assert.IsTrue(food.ResultNumber < 0f, "the clamp floor must keep consumption strictly negative");
+    }
+
+    [TestMethod]
+    public void ApplyRelief_AbilityFrameAboveTheCeiling_ClampsAtTheCeiling()
+    {
+        var wage = new ExplainedNumber(10000f);
+        wage.AddFactor(2.0f);
+
+        AiPartySizeService.ApplyRelief(ref wage, relief: 0.9f);
+
+        Assert.AreEqual(1500f, wage.ResultNumber, Tolerance);
+    }
+
+    // The whole point of the bounds: one setting must mean roughly one outcome. Across the entire
+    // range of ability frames the engine can hand us, the spread is the clamp band and nothing more.
+    [TestMethod]
+    public void ApplyRelief_AcrossEveryAbilityFrame_TheSpreadIsBoundedByTheClampBand()
+    {
+        float worst = ReliefResidual(3.0f, relief: 0.9f);
+        float best = ReliefResidual(-3.0f, relief: 0.9f);
+
+        Assert.AreEqual((1f - 0.9f) * AiPartySizeService.MaxAbilityScale, worst, Tolerance);
+        Assert.AreEqual((1f - 0.9f) * AiPartySizeService.MinAbilityScale, best, Tolerance);
+        Assert.IsTrue(
+            worst / best <= AiPartySizeService.MaxAbilityScale / AiPartySizeService.MinAbilityScale + Tolerance,
+            $"spread {worst / best:0.00}x must not exceed the clamp band");
+    }
+
+    private static float ReliefResidual(float abilityFactor, float relief)
+    {
+        var food = new ExplainedNumber(-100f);
+        food.AddFactor(abilityFactor);
+        AiPartySizeService.ApplyRelief(ref food, relief);
+        return -food.ResultNumber / 100f;
+    }
+
+    [TestMethod]
+    public void ApplyRelief_NonFiniteAbilityFrame_LeavesTheGarbageAloneRatherThanInventingANumber()
+    {
+        // An engine-sourced NaN factor must not come back out of here as a plausible-looking bill.
+        var wage = new ExplainedNumber(10000f);
+        wage.AddFactor(float.NaN);
+
+        AiPartySizeService.ApplyRelief(ref wage, relief: 0.9f);
+
+        Assert.IsTrue(float.IsNaN(wage.ResultNumber), "a NaN frame must stay NaN, not become a number we made up");
+    }
+
+    [TestMethod]
+    public void ReliefBounds_FloorIsStrictlyPositiveAndBelowTheCeiling()
+    {
+        // The floor being > 0 is what replaces the old sign-flip guard. If it ever reaches 0 the
+        // relief can cancel a wage bill into a rebate again.
+        Assert.IsTrue(AiPartySizeService.MinAbilityScale > 0f, "the clamp floor must be strictly positive");
+        Assert.IsTrue(AiPartySizeService.MinAbilityScale < AiPartySizeService.MaxAbilityScale);
     }
 
     [TestMethod]

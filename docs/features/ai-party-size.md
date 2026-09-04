@@ -109,9 +109,52 @@ divides the factor back out so the knob means what it says. Same idiom as
 `TroopWeightService.SubtractResultFramePenalty`.
 
 Relief uses a factor, which scales magnitude and preserves sign, so one helper serves both wages
-(positive) and food consumption (negative). Its gate is on the **projected** factor frame rather than
-the incoming one: factors sum rather than compose, so a relief landing on top of an existing negative
-factor could otherwise flip a wage bill into a wage rebate.
+(positive) and food consumption (negative).
+
+**The relief composes with the lord's own abilities. It does not share a sum with them.** Everything
+already in the frame when `ApplyRelief` runs is a native perk or a culture feat, and both use
+`AddFactor`, which SUMS. So the obvious implementation, a plain `AddFactor(-relief)`, resolved as
+`1 + Sum - relief` and put the relief in direct competition with every ability the lord happened to
+have. At a 0.9 relief the intended residual is 0.10, which handed each ability roughly ten times its
+nominal leverage over the final number:
+
+| Ability sum | Old residual | What the lord actually got |
+|---|---|---|
+| `0.00` | 0.10 | the setting, as written |
+| `+0.20` (Goblin "Ravenous Swarm") | 0.30 | three times the intended consumption off one 20% feat |
+| `-0.15` (Lothlorien "Lembas Bread") | 0.85 | **no relief at all**, and 8.5x an unperked lord of the same culture |
+| `<= -1.00` (elven feat plus epic Steward perks) | floored | the vanilla `LimitMax(-0.01f)` floor, near-free food |
+
+The third row is the one that inverted the design: a frame at or below `-0.09` projected to `0.01` or
+less, failed the old gate, and returned having applied **nothing**, with no log line and no partial
+fallback. A food-saving culture therefore ate far more than a culture with no food ability whatsoever.
+Measured across a campaign, one setting produced a 9.2x spread and only about a quarter of parties
+received what the slider said.
+
+`ApplyRelief` now reads the ability frame, clamps it into `[MinAbilityScale, MaxAbilityScale]`
+(`0.65` to `1.50`), and lands the frame on `(1 - relief) x clamped`. Perks and feats stay meaningful
+as a bounded multiplier ON the relieved baseline, and the configured relief always applies. The clamp
+floor is strictly positive, which is what preserves the sign-flip protection the old gate existed for:
+a wage bill can never reach zero and invert. Non-finite frames return untouched, so an engine NaN
+stays NaN rather than coming back out as a number we invented.
+
+The bounds are compile-time constants, not MCM knobs. They guard a mechanism a player never sees, and
+two more sliders would be two more numbers nobody tunes.
+
+**An existing install does not inherit a changed default.** MCM writes a compiled default only when
+the key is absent from its settings json, so every install that ran v2.0.24 or earlier still has
+`AiFoodConsumptionRelief = 0.9` persisted and is running the pre-rework composition until this ships.
+Going neutral in v2.0.26 fixed fresh installs only. This is the reason the rework was worth doing
+rather than treating the neutral default as the fix.
+
+### Seeing it in game
+
+`taom.print_ai_food_relief [count]` prints every food-consuming party's daily consumption as a
+fraction of the vanilla `members/20` rate, split by whether the party is **eligible** for the relief
+at all. That split matters: a party failing `IsScalableAiLordParty` never reaches `ApplyRelief`, so
+its residual is pure perks plus feats and reads identically to a relief that failed. The summary
+reports the median, the range and the spread per group, and names any eligible party outside the
+expected band.
 
 ## Configuration
 

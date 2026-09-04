@@ -34,6 +34,21 @@ public class AiPartySizeService : IAiPartySizeService
     public const float MaxFlatBonus = 100000f;
     public const float MaxRelief = 0.99f;
 
+    // The band a lord's own abilities may move the relieved baseline within. Perks and culture feats
+    // stay meaningful inside it and cannot escape it, so one relief setting means roughly one
+    // outcome across every lord in the world instead of a 9x spread.
+    //
+    // The FLOOR must stay strictly above zero. It is what replaces the old sign-flip guard: at a
+    // floor of 0 an ability set could cancel a wage bill to nothing and then invert it into a
+    // rebate, which is the failure the removed skip was written to prevent. Pinned by
+    // ReliefBounds_FloorIsStrictlyPositiveAndBelowTheCeiling.
+    //
+    // Compile-time, not MCM. Two more sliders would be two more numbers nobody tunes guarding a
+    // mechanism a player never sees; the numbers come from a measured campaign distribution where
+    // the ceiling was never reached and the floor bound about 12% of party-days.
+    public const float MinAbilityScale = 0.65f;
+    public const float MaxAbilityScale = 1.50f;
+
     // Shipped defaults. These are the single source: TaomSettings uses them as its property
     // initializers and the fallbacks below use them when MCM is absent, so each number exists once.
     //
@@ -276,21 +291,50 @@ public class AiPartySizeService : IAiPartySizeService
     /// a tenth). Works for both wages (positive) and food consumption (negative), because a factor
     /// scales magnitude and preserves sign.
     ///
-    /// The gate is on the PROJECTED factor frame, not the incoming one: other factors are already in
-    /// play (culture wage feats, food feats) and factors SUM rather than compose, so a relief applied
-    /// on top of an existing negative factor could drive the frame to zero or flip its sign, turning
-    /// a wage bill into a wage rebate. Written as a positive requirement so NaN fails it.
-    /// Engine-free; unit-tested.
+    /// **The relief COMPOSES with the lord's own abilities rather than competing with them.**
+    /// Everything already in the frame when this runs is a perk or a culture feat, both of which use
+    /// `AddFactor`, and factors SUM rather than compose. Emitting a plain `AddFactor(-relief)` put
+    /// the relief in that same sum, so the result was `1 + Sum - relief`: at a 0.9 relief the
+    /// intended residual is 0.10, which handed every ability roughly 10x leverage over the final
+    /// number. A +0.20 food feat tripled consumption, and a -0.15 feat drove the projected frame
+    /// negative and tripped the old skip, so a food-SAVING culture received no relief at all and ate
+    /// 8.5x more than an unperked lord of the same culture. Measured across a campaign, one setting
+    /// produced a 9.2x spread and only about a quarter of parties got what the slider said.
+    ///
+    /// So: read the ability frame, clamp it into [MinAbilityScale, MaxAbilityScale], and land the
+    /// frame on `(1 - relief) * clamped`. Abilities become a bounded multiplier ON the relieved
+    /// baseline. The clamp floor is strictly positive, which preserves the sign-flip protection the
+    /// old skip provided (a wage bill can never reach zero and invert) without the skip's side
+    /// effect of silently dropping the relief for exactly the lords who least looked like they
+    /// needed it. Non-finite frames return untouched, so an engine NaN stays NaN rather than coming
+    /// back out as a number we invented. Engine-free; unit-tested.
     /// </summary>
     public static void ApplyRelief(ref ExplainedNumber value, float relief, TextObject? text = null)
     {
         if (!FiniteFloatValidator.IsFiniteInRange(relief, 0f, MaxRelief) || relief <= 0f)
             return;
 
-        float projectedScale = 1f + value.SumOfFactors - relief;
-        if (!(projectedScale > MinFactorScale))
+        float abilityScale = 1f + value.SumOfFactors;
+        if (!FiniteFloatValidator.IsFinite(abilityScale))
             return;
 
-        value.AddFactor(-relief, text);
+        float clamped = ClampAbilityScale(abilityScale);
+        float target = (1f - relief) * clamped;
+
+        value.AddFactor(target - abilityScale, text);
+    }
+
+    /// <summary>
+    /// Written as two explicit comparisons rather than a Clamp helper so the NaN answer is visible
+    /// at the call site: both comparisons are false for NaN and it would fall through unchanged,
+    /// which is why <see cref="ApplyRelief"/> gates finiteness before calling this.
+    /// </summary>
+    private static float ClampAbilityScale(float abilityScale)
+    {
+        if (abilityScale < MinAbilityScale)
+            return MinAbilityScale;
+        if (abilityScale > MaxAbilityScale)
+            return MaxAbilityScale;
+        return abilityScale;
     }
 }

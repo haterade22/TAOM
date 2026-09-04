@@ -689,3 +689,39 @@ symmetrical-looking read/write pair silently changes the file's first three byte
   was there. When repairing a file you already wrote, take the flag from `git show HEAD:<path>`
   rather than from the working tree, or you will faithfully preserve your own mistake.
 - **Source:** #537 review, 2026-09-03.
+
+### A guard written for ONE surface silently redefines every other surface sharing the helper
+
+`AiPartySizeService.ApplyRelief` serves both the wage bill (positive) and food consumption
+(negative). Its gate, `1 + SumOfFactors - relief > 0.01`, was reasoned about entirely in wage terms:
+a relief landing on an existing negative factor could cancel the bill and invert it into a rebate,
+so skip. That reasoning is sound and the test name says so. On the FOOD surface the same skip meant
+a culture with a food-SAVING feat received no relief at all and ate 8.5x an unperked lord of the same
+culture. Nobody chose that; it fell out of a helper being shared.
+- **Why missed:** the helper had six unit tests and every one of them was written from the wage
+  side. The food tests present (`ApplyRelief_FoodConsumption_MovesTowardZeroAndKeepsItsSign`) used a
+  BARE `ExplainedNumber` with no prior factors, which is the one input where the two surfaces agree.
+  The divergence only appears when the frame already carries something, and on the food surface it
+  always does: vanilla applies perks before we ever see the number.
+- **Prevent:** when one helper serves two surfaces, every behavioural test gets a twin on the other
+  surface, and the twin must carry that surface's REALISTIC prior state rather than a clean frame. If
+  a guard's justification comment names one surface, that is the tell: write down what the guard does
+  to the other one, in the same comment, or the answer is nobody's.
+- **Source:** external AI-food-relief bug report, verified and reworked 2026-09-04.
+
+### An `AddFactor` relief is a COMPETITOR to every perk in the frame, not a multiplier on the result
+
+`ExplainedNumber` resolves as `BaseNumber * (1 + SumOfFactors)`, so `AddFactor(-0.9)` subtracts from
+the shared sum rather than scaling the accumulated result. Vanilla perks and TAOM culture feats all
+write into that same sum. A 90% relief therefore leaves a 0.10 residual that every ability then
+leverages roughly 10x: a +0.20 feat tripled the final number, and a -0.15 feat drove the frame past
+the gate and dropped the relief entirely. One setting produced a 9.2x spread across lords.
+- **Why missed:** the arithmetic is correct and the tests asserted it correctly. The test
+  `ApplyRelief_OnTopOfACultureWageFeat_StacksAdditivelyInTheFactorFrame` documented the defect as
+  intended behaviour, in its name. Additive stacking is the right model for two peer modifiers; it is
+  the wrong model for a global override that is supposed to dominate them.
+- **Prevent:** before adding a factor, ask whether the new term is a PEER of what is already in the
+  frame or a MULTIPLIER on it. A knob a player sets to mean "this is the outcome" is the second kind:
+  read the frame, clamp it into a band, and target `(1 - knob) * clamped`. Sum-sharing is only right
+  when everything in the sum has comparable authority.
+- **Source:** external AI-food-relief bug report, verified and reworked 2026-09-04.

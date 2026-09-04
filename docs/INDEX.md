@@ -50,6 +50,7 @@
 - [battle-balance](features/battle-balance.md) — TaomMilitaryPowerModel, TaomCombatSimulationModel
 - [battle-scenes](features/battle-scenes.md) — battle scene system (Patch0, currently DISABLED)
 - [worldmap-battle-scene-grid](reference/worldmap-battle-scene-grid.md) — how field-battle terrain is chosen; the `worldmap_battle_scene_grid` texture is **baked into `Main_map`**, not loaded by filename; re-author + bake workflow
+- [main-map-vista](reference/main-map-vista.md): the distant terrain drawn beyond the 1600x1600 node bounds, i.e. what turns white or checkerboard when zoomed out. All 14 `vista_*` attributes on the live `TAOM_Map` `<terrain>` element mapped to their Modding Kit fields, plus a 5-map reference table in which **`vista_normalmap` is empty in every one**. Vanilla drives its vista from a `.gts` tileset TAOM does not ship, so vanilla's values are not copyable. Records that Texture Inspector import flags are NOT the lever (a re-import changes only 103 GUID bytes per `.tpac`, settings survive intact) and that the Kit's own single-step `SceneObj/Backups/Main_map/` is the fastest forensic anchor for any scene regression
 - [custom-battles](features/custom-battles.md) — TAOM factions/commanders/troops in custom battles (Patch19)
 
 ### Career & progression
