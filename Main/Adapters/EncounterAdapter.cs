@@ -90,6 +90,15 @@ public sealed class EncounterAdapter : IEncounterAdapter
         try { insideSettlement = MobileParty.MainParty?.CurrentSettlement != null; }
         catch (Exception ex) { readFailed = true; insideSettlement = false; _logger?.LogError($"[Enlistment] GetOwnership: CurrentSettlement threw: {ex.Message}"); }
 
+        // Read BOTH, because they clear together at the end of the aftermath and either one being
+        // set means the battle is not finished with this encounter yet. `PlayerEncounter.Battle`
+        // is the encounter's own `_mapEvent`; `IsJoinedBattle` is set in `JoinBattleInternal` and
+        // reset in the same block that nulls `_mapEvent`. Deliberately not `EncounteredBattle`,
+        // which dereferences `Current._encounteredParty` with no null guard.
+        bool isBattleEncounter;
+        try { isBattleEncounter = PlayerEncounter.Battle != null || PlayerEncounter.Current?.IsJoinedBattle == true; }
+        catch (Exception ex) { readFailed = true; isBattleEncounter = false; _logger?.LogError($"[Enlistment] GetOwnership: battle-encounter read threw: {ex.Message}"); }
+
         var encounteredId = encountered?.StringId;
         var related = !string.IsNullOrEmpty(encounteredId)
             && !string.IsNullOrEmpty(commanderPartyId)

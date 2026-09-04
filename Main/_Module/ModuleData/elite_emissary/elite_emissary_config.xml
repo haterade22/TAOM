@@ -60,6 +60,11 @@
       <Troop id="erebor_noble_shield_breaker" />
       <Troop id="erebor_noble_gate_warden" />
       <Troop id="iron_hills_noble_ironbreaker" />
+      <!-- Ironpass war-ram cavalry, 31+. The only route to a Ram Vanguard or Ram Marshal that
+           does not go through the party screen: notable promotion stops at level 31. -->
+      <Troop id="ironpass_ram_marshal" />
+      <Troop id="ironpass_ram_vanguard" />
+      <Troop id="ironpass_ram_breaker" />
     </Culture>
 
     <Culture id="dolguldur">

@@ -80,11 +80,213 @@ public class EnlistmentReconcilerTests
             exists: true, isAlive: false, name: "Lord Test"));
     }
 
-    private void PlayerPresence(bool parked = true, bool captive = false, bool inMapEvent = false)
+    private void PlayerPresence(bool parked = true, bool captive = false, bool inMapEvent = false,
+        bool hasEncounter = false, string settlementId = null)
     {
         _partyAdapter.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isCaptive: captive,
-            isActive: !parked, isVisible: !parked, isInMapEvent: inMapEvent));
+            isActive: !parked, isVisible: !parked, isInMapEvent: inMapEvent,
+            hasPlayerEncounter: hasEncounter, settlementId: settlementId));
+    }
+
+    /// <summary>
+    /// The shape a stranded settlement encounter actually has: live, no conversation, and NO
+    /// encountered mobile party, because a settlement encounter has none. `HasCurrent` is set for
+    /// the same reason it is true in game, and it matters: the reconciler's own staleness predicate
+    /// reads it, so leaving it false lets the latch break for the wrong reason and the test passes
+    /// without exercising anything.
+    /// </summary>
+    private void SettlementShapedEncounter(bool playerInsideSettlement = false, bool isBattleEncounter = false)
+    {
+        _encounter.HasCurrent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true,
+            conversationInProgress: false,
+            hasEncounteredMobileParty: false,
+            encounteredPartyId: null,
+            encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false,
+            playerInsideSettlement: playerInsideSettlement,
+            isBattleEncounter: isBattleEncounter));
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
+    }
+
+    private void CommanderInSettlement(string settlementId)
+    {
+        _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, isPrisoner: false,
+            partyId: "lord_party_1", partyIsActive: true, partyIsInMapEvent: false,
+            partyIsInSettlement: true, settlementId: settlementId, name: "Lord Test"));
+    }
+
+    /// <summary>
+    /// THE DEADLOCK, and the reason this fix exists. Two self-heals were written independently and
+    /// each is the other's precondition:
+    ///
+    ///   ServiceMaintenanceService.TryBreakBattleLatch is the only exit from EnlistedBattle when no
+    ///   battle is running, and it returns early while `presence.HasPlayerEncounter`.
+    ///
+    ///   This sweep is the only thing that closes a stranded encounter, and it used to require
+    ///   `State == EnlistedAttached`.
+    ///
+    /// So EnlistedBattle plus a stranded encounter was a permanent mutual block: the encounter
+    /// stopped the return to Attached, and not being Attached stopped the sweep. The player cannot
+    /// move (an open encounter holds the map), cannot open any other encounter, and loses the
+    /// service menu because the pump's menu work is also gated on Attached. That is the reported
+    /// "army left me behind after sieging East Osgiliath, unable to move, even the Enlist UI is
+    /// gone".
+    ///
+    /// A siege is the way in. `LeaveSettlementAction.ApplyForParty` (installed v1.4.8) calls
+    /// `PlayerEncounter.Finish()` in exactly one branch, when the LEAVING party leads its army and
+    /// the main party is attached to it. An enlisted player is the main party and leads nothing, so
+    /// the encounter TAOM opens for every settlement placement since #510 is left open, while a
+    /// siege holds the state in EnlistedBattle.
+    ///
+    /// Fixed at the sweep rather than at the latch: the latch's encounter term is load-bearing for a
+    /// battle being SET UP, and the sweep already asks EncounterOwnershipPolicy for permission.
+    /// </summary>
+    [TestMethod]
+    public void Reconcile_StrandedEncounterWhileLatchedInBattle_ClosesItSoTheLatchCanBreak()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: false, hasEncounter: true, settlementId: null);
+        SettlementShapedEncounter();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.Received(1).Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_SettlementEncounterWhileActuallyInsideTheSettlement_LeavesItAlone()
+    {
+        // The protection that must survive the fix. Since #510 every TAOM settlement placement
+        // opens an encounter deliberately, so a settlement-shaped encounter is CORRECT while the
+        // player is inside one. Closing it would take down the town menu the player is standing in,
+        // which is the failure R3 was written to prevent. "Stranded" means the encounter outlived
+        // the settlement, and the only way to know that is that the player is no longer in one.
+        //
+        // The COMMANDER is in the same settlement on purpose. An earlier version of this test left
+        // him outside, which makes Assess return SettlementExitRequired: the reconciler then walks
+        // the player out and closes the now-genuinely-stranded encounter, which is correct behaviour
+        // and not what this test is about. Same settlement is the state that reaches the sweep.
+        //
+        // The ownership snapshot must agree with presence, too. Both are one read of
+        // MainParty.CurrentSettlement in the real adapter, so a test where presence says "in a town"
+        // while ownership says "not inside a settlement" pins a state the game cannot produce.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderInSettlement("town_ES1");
+        PlayerPresence(parked: false, inMapEvent: false, hasEncounter: true, settlementId: "town_ES1");
+        SettlementShapedEncounter(playerInsideSettlement: true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_BattleAftermathEncounter_IsNeverTornDown()
+    {
+        // The regression the deep review caught, and the reason the state gate could not simply be
+        // deleted. MapEventSide.Clear() nulls MainParty.MapEvent BEFORE the encounter closes, so the
+        // loot screen after a siege reads as "no battle anywhere" to every guard in this method: the
+        // state is still EnlistedBattle, neither party is in a map event, and the encounter is open.
+        // Without R1b the sweep closes the player's own battle result, which is the exact scenario
+        // the strand fix was written for.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: false, hasEncounter: true);
+        SettlementShapedEncounter(isBattleEncounter: true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_StrandedEncounterWhileCommanderIsFighting_LeavesItAlone()
+    {
+        // The guard that actually matters, and it is NOT the state. While either party is in a map
+        // event the encounter may belong to a battle being set up, and closing it would break the
+        // join. Widening the state gate must not widen this one.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: true);
+        PlayerPresence(parked: true, inMapEvent: false, hasEncounter: true);
+        SettlementShapedEncounter();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_StrandedEncounterWhilePlayerIsInAMapEvent_LeavesItAlone()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: true, hasEncounter: true);
+        SettlementShapedEncounter();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_StrandedEncounterDuringCommanderGrace_ClosesIt()
+    {
+        // "The army left me behind" is most naturally a commander lost in the assault, which is
+        // CommanderUnavailable, not EnlistedBattle. That path never touched the encounter: it waits
+        // out a grace of up to seven campaign days and only then discharges, and discharge is the
+        // first thing that closes an encounter. So a stranded player sat unable to move for a week
+        // of campaign time before the game let them go. Bounded, unlike the battle latch, and still
+        // unacceptable.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, isPrisoner: true,
+            partyId: null, partyIsActive: false, name: "Lord Test"));
+        PlayerPresence(parked: true, inMapEvent: false, hasEncounter: true, settlementId: null);
+        SettlementShapedEncounter();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.Received(1).Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_StrandedEncounterWhileCaptive_LeavesItAlone()
+    {
+        // Vanilla captivity owns the party. Grace is already frozen for captives for exactly this
+        // reason, and the sweep must not reach around that.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        CommanderCaptured();
+        PlayerPresence(parked: true, captive: true, hasEncounter: true);
+        SettlementShapedEncounter();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Reconcile_StrandedPartyEncounterThatIsNotTheCommanders_LeavesItAlone()
+    {
+        // R4 still governs party-shaped encounters: someone else's is never ours to close, and the
+        // widened state gate grants no new authority over them.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: false, hasEncounter: true);
+        _encounter.HasCurrent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, conversationInProgress: false,
+            hasEncounteredMobileParty: true, encounteredPartyId: "some_other_party",
+            encounteredPartyIsCommanderRelated: false, playerInMapEvent: false));
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
     }
 
     [TestMethod]

@@ -25,23 +25,35 @@ public static class WarRamConfig
 
     // --- AI attack gate (elephant-like pattern; ONE kick attack, no side-attack branch is wired) ---
     /// <summary>Proximity gate: an attack only fires when a live enemy is within this distance of the ram's
-    /// CENTER and in front of it. Must stay &lt;= <see cref="AttackRadius"/>. The ram is horse-scale (it
-    /// inherits the horse's body via base_monster="horse"), so this sits a little under the base
-    /// (unscaled) war elephant's 3f rather than the Mumakil's 3x-scaled 9f. Tunable from battle feel.</summary>
-    public const float AttackTriggerRange = 2.5f;
+    /// CENTER and in front of it. Must stay &lt;= <see cref="AttackRadius"/>, and that is load-bearing
+    /// rather than advisory: ElephantLikeEngageDecorator runs ONE scan at AttackRadius and then filters
+    /// the results by this value, so a trigger range above the radius is silently dead code and the
+    /// constant would read as a number the ram never uses.
+    ///
+    /// Held at 75% of <see cref="AttackRadius"/>, the ratio the original 2.5/3.5 tuning chose. Keeping
+    /// the ram's commit point inside the circle it damages matters MORE at the current 10s cooldown
+    /// than it did at 6s: an attack committed against a target loitering on the rim is a wasted
+    /// 10-second window. Tunable from battle feel.</summary>
+    public const float AttackTriggerRange = 1.5f;
 
     /// <summary>The ram must face its nearest enemy: dot(toEnemy, lookDir) above this (elephant-like
     /// parity: 0.25f, kept identical since this gate is not scale-dependent).</summary>
     public const float AttackFacingDot = 0.25f;
 
-    /// <summary>Seconds between kick attacks. Shorter than the war elephant's 10s trample: the ram is a
-    /// lighter, faster charge-and-recover creature, not a giant that needs a long wind-down between
-    /// stomps, but still a real cooldown (not a warg-style near-continuous bite).</summary>
-    public const double AttackCooldownSeconds = 6.0;
+    /// <summary>Seconds between kick attacks. Level with the war elephant's 10s trample. It was 6s,
+    /// on the reasoning that a horse-scale creature recovers faster than a giant, and in play that
+    /// read as overpowered for a reason the per-hit numbers hide: unlike an elephant, rams arrive
+    /// fifteen at a time in a lord's party, so a short cooldown on a knockdown AoE compounds across
+    /// the stack rather than across one beast.</summary>
+    public const double AttackCooldownSeconds = 10.0;
 
-    /// <summary>Radius around the ram inside which enemies take the kick (horse-scale footprint,
-    /// also the single scan radius).</summary>
-    public const float AttackRadius = 3.5f;
+    /// <summary>Radius around the ram inside which enemies take the kick (also the single scan radius).
+    ///
+    /// This is an AoE, not a reach: ElephantLikeAttackTasks sweeps EVERY enemy inside it and knocks
+    /// down each one that is not shield-blocking. It was 3.5f, near the base war elephant's 4f, which
+    /// made a single ram's kick a formation-wide sweep. 2f keeps the kick to what the ram is actually
+    /// standing on top of.</summary>
+    public const float AttackRadius = 2f;
 
     // --- Per-hit randomized damage ---
     // A war ram is not a war elephant. The elephant's trample (50-100) represents a multi-ton beast

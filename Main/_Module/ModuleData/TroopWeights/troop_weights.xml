@@ -77,11 +77,17 @@
          escalate with tier here. 2.0 is also double their Ironpass foot peers
          (infantry/axeman/veteran_axeman/mountain_guard, all unlisted at 1.0), the same ratio
          warg riders carry over orc infantry. Erebor 3.0 stays reserved for the level-46 royal
-         tips; ironpass_ram_vanguard is a level-36 branch tip, not a culture T-max. -->
+         tips; ironpass_ram_marshal is a level-41 branch tip, not a culture T-max.
+
+         ironpass_ram_herder (16) is deliberately ABSENT and falls through to the 1.0 default.
+         It is the pooled branch root, so it is the rung a player recruits over and over from a
+         notable, and a 2.0 entry unit would deflate the party-size limit for exactly the players
+         this branch is meant to reach. The armoured rungs start paying at 21. -->
     <TroopWeight id="ironpass_ram_rider" weight="2.0" />
     <TroopWeight id="ironpass_goat_charger" weight="2.0" />
     <TroopWeight id="ironpass_ram_breaker" weight="2.0" />
     <TroopWeight id="ironpass_ram_vanguard" weight="2.0" />
+    <TroopWeight id="ironpass_ram_marshal" weight="2.0" />
 
     <!-- ===== MORDOR ===== -->
     <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />

@@ -42,6 +42,88 @@ August behaviour.
 One habit came out of this. When a value is actively being retuned, cite the constant by name rather
 than the number: `AiPartySizeService.DefaultLordFactor` does not go stale, and "10.0" did, four times.
 
+### feat(erebor): the war rams were unrecruitable, and the line stopped four tiers short
+
+Players reported barely ever seeing Ironpass ram cavalry. The branch was in **no volunteer pool at
+all**: #515 deliberately left it out, on the reasoning that a village notable handing a player an
+armoured level-21 Ram Rider would let them skip the whole Ironpass foot progression. The reasoning
+held. The consequence was that rams appeared at no notable anywhere, and the only routes to one were
+an AI lord's party template or a long upgrade walk.
+
+The branch now has a root of its own. `ironpass_ram_herder` (16) is an `is_basic_troop` root beside
+`ironpass_recruit`, pooled at weight 3 of 18 in `EreborMix` and `CultureMap["erebor"]`, and it
+upgrades into the existing `ironpass_ram_rider` (21). A player who wants rams still starts at the
+bottom of a branch, which was #515's actual objection, so this answers it rather than reversing it.
+The `ironpass_warrior -> ironpass_ram_rider` edge is untouched and the four armoured troops stay out
+of every pool, so `EreborRamCavalry_IsNotOfferedByAnyVolunteerPool` still passes.
+
+`ironpass_ram_marshal` (41) caps the line, which had dead-ended at 36 while Erebor's own infantry
+already reached 41 and 46. It is Erebor's first mounted troop above tier 7. The ladder is
+16 / 21 / 26 / 31 / 36 / 41, stepping by 5 throughout.
+
+**All six rungs were re-statted onto an explicit dwarf cavalry curve.** Athletics, OneHanded,
+Polearm, Bow and Crossbow now sit exactly on `CAVALRY_BASELINES`. Riding runs deliberately far below it
+at every rung (65/90/125/165/205/245 against 95/120/160/210/270/320), roughly a quarter down
+throughout, so dwarves are not merely the worst riders in the game but visibly so. Measured means put
+Erebor lowest at every level by a wide margin: Rohan rides 119/148/190/241/300/340, Lindon and
+Rivendell reach 300 at 36 and 360 at 41, Gundabad orcs 315 at 41. Before this pass Erebor was
+nominally lowest (120/160/200/240/300) but only by a handful of points, which read as a rounding
+difference rather than a racial trait.
+
+TwoHanded and Throwing run above baseline, and that one is forced rather than chosen.
+`ironpass_warrior` (16) carries TwoHanded 105 and Throwing 40 and upgrades into `ironpass_ram_rider`
+(21), whose baseline values are 60 and 30. Straight baseline is a skill regression across that edge
+and `TroopUpgradeSkillMonotonicityTests` fails it. Dwarves being heavy two-handed axe fighters makes
+the floor coherent, so the curve keeps it rather than weakening the warrior to fit.
+
+**Level 31 and up now costs Gems**, and that number is not a taste call. Vanilla
+`RecruitmentCampaignBehavior` only promotes a notable's volunteer slot while `Tier < MaxVolunteerTier`,
+and TAOM's `MaxVolunteerTier` is 6, which is levels 31-35. So a slot seeded with the herder climbs to
+`ironpass_ram_breaker` and stops there. Level 31 is exactly where notable promotion ends, which makes
+it the natural place for a cost to begin. Three rows in `troop_resource_costs.xml` carry
+`upgrade_cost`, `recruit_cost` and `merchant_cost`; the three ram tiers also join the Erebor emissary
+at `town_E1`. All three charges are player-only, so AI lords still field and promote rams for free.
+That is deliberate: the point is more rams in the world, not fewer.
+
+**Two shipped troops lose barding, and it lands on existing saves** because the engine re-applies
+equipment on load. Eight barding items had to cover five armoured rungs instead of four, so
+`ironpass_ram_breaker` drops from 40/44 to 34/40 and `ironpass_ram_vanguard` from 50/54 to 40/44,
+with `med_b` and `heavy_a` each serving two rungs. Average armour still climbs monotonically
+(22, 32, 37, 42, 52). Lord equipment is untouched: `erebor_bat_template_ram_a..e` still use the heavy
+pair, which is now the vanguard's grade with the marshal's elite pair as headroom above it.
+
+The herder is deliberately absent from `troop_weights.xml` and falls through to the 1.0 default. It
+is the rung a player recruits over and over, and a 2.0 entry unit would deflate the party-size limit
+for exactly the players this is meant to reach.
+
+Suite 8007, validators green (`validate_moduledata` 0 errors, `audit_item_refs` 0 broken refs,
+`audit_polearm_shield_parity` PASS, `validate_mesh_refs` exit 0). The new troops reuse the existing
+ram weapon triple verbatim, which is what keeps the polearm/shield gate green.
+
+**The kick was also overpowered in play, and the per-hit damage was not why.** `AttackMinDamage` /
+`AttackMaxDamage` are 18-28, well under the elephant's 50-100, so the numbers read as modest. But
+`ElephantLikeAttackTasks` sweeps **every** enemy inside `AttackRadius`, rolls damage independently per
+victim, and passes `knockDown: !blocking`. At 3.5f that radius sat near the base war elephant's 4f, on
+a 6s cooldown against the elephant's 10s, so one dwarf on a goat was clearing a formation faster than
+a multi-ton beast could. The multiplier is population: an elephant is a rare single unit, rams field
+fifteen to a stack in an Erebor lord's party.
+
+Cooldown is now 10s and the radius 2f. Damage, the 0.25 block multiplier and the knockdown rule are
+untouched. `AttackTriggerRange` moved 2.5f to 1.5f with it, which is forced rather than cosmetic:
+`ElephantLikeEngageDecorator` runs one scan at `AttackRadius` and filters the result by
+`AttackTriggerRange`, so a trigger above the radius is unreachable code and the constant would have
+read as a number the ram never uses. It keeps the original pair's 75% ratio, and that margin earns
+more at 10s than at 6s, since a kick committed against a target on the rim now wastes ten seconds.
+`WarRamAttackServiceTests` now reads the cooldown off `WarRamConfig.AttackCooldownSeconds` instead of
+a hard-coded 6.0, so the next retune cannot leave the tests documenting a stale number.
+
+Not-tested: in-game recruitment, the Gems gate UI, and the barding render. Translation of
+`aom_ironpass_ram_herder_name` and `aom_ironpass_ram_marshal_name` is owed, on top of the four
+existing ram troop names that were already untranslated.
+
+Also corrected while in the file: `war-ram.md` claimed the eight barding meshes were missing from the
+cooked asset packages. They are present, and `validate_mesh_refs.py` exits 0. That gap entry was stale.
+
 ### fix(templates): the retarget deleted six Mordor troop types, and nothing noticed
 
 `151b6f56` and the v2.0.27 tag it shipped in zeroed **45 stacks**. Six Black Númenórean troop types
@@ -2530,6 +2612,56 @@ Left as a decision rather than a change: `tools/package_release.py` still ships 
 release-shape call, so the packager is untouched.
 
 New reference: `docs/reference/bannerlord-engine-and-toolchain.md` section 6.1.
+
+## 2026-09-04
+### fix(enlistment): a stranded PlayerEncounter could latch service permanently (#538)
+
+Player report: the army left them behind after sieging East Osgiliath, unable to move or do
+anything, with the Enlist UI gone. No log exists for it, so this was found by reading code.
+
+Two self-heals were each other's precondition. `ServiceMaintenanceService.TryBreakBattleLatch` is the
+only exit from `EnlistedBattle` when no battle is running and returns early while
+`presence.HasPlayerEncounter`; the reconciler's stranded-encounter sweep was the only thing that
+closes a stale encounter and required `State == EnlistedAttached`. Neither side could ever move. Every
+symptom is that one flag: an open encounter holds the map, blocks every future encounter, and the
+service menu goes because the pump gates its menu work on Attached too.
+
+The encounter comes from the engine. `LeaveSettlementAction.ApplyForParty` (installed v1.4.8) calls
+`PlayerEncounter.Finish()` only when the LEAVING party leads its army and the main party is attached
+to it. An enlisted player is the main party and leads nothing, so the branch never runs, while
+`CurrentSettlement` is cleared unconditionally. Since #510 every settlement placement opens an
+encounter deliberately, so this is the ordinary path, and a siege supplies the map event that holds
+the state in `EnlistedBattle`.
+
+**The first version of the fix would have traded one bug for a worse one, and the review caught it.**
+Deleting the state gate looked safe on the reasoning that "the state was never the real guard". It
+was: `EnlistedBattle` is exactly the state the loot/aftermath window lives in. `MapEventSide.Clear()`
+nulls `MainParty.MapEvent` before the encounter closes, so the aftermath menus run inside a
+still-open encounter that reads as "no battle anywhere" to every guard in the sweep. Two other places
+in the feature already encode that belief. The sweep would have torn down the player's own siege loot
+screen, which is the very scenario being fixed.
+
+So the guard now names the condition instead of proxying it. `EncounterOwnershipSnapshot` gained
+`IsBattleEncounter` and the policy gained R1b, deferring for every intent including `Discharge`: a
+battle encounter is protected in every state rather than only while the state reads Attached. A new
+`StrandedOutsideSettlement` intent inverts R3 the way `ShoreLeaveEnd` does, from the other direction,
+and R2c checks `!PlayerInsideSettlement` **itself** rather than trusting the caller, which was the
+second review correction. The snapshot had carried that field, freshly read, all along.
+
+`SweepStrandedEncounter` is now shared by the attached path and the grace window. Grace had no sweep,
+so a player who arrived there holding an encounter waited out up to seven campaign days before
+discharge freed them.
+
+Also shipped: `taom.service_status` and `taom.rescue_service`. A code fix reaches the next campaign;
+a stranded player is stuck in the save they have, with no menu and therefore no discharge dialog.
+`PlayerEncounter.InsideSettlement` is a trap for that caller and the first version fell into it: it
+short-circuits on `MainParty.IsActive`, which is false for a parked player, so it reports false for
+someone who IS inside a settlement.
+
+The second report, the column leaving a town without you, changed nothing. The 6-hour
+`SettlementDwellHours` hold and shore leave both produce it deliberately and both self-correct.
+
+Not-tested: the in-game run. Diagnostics are already on.
 
 ## 2026-08-28
 

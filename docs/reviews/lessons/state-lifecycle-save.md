@@ -615,3 +615,25 @@ mid-iteration, and the comment would still read as true.
   across two files. Watch for the words "structurally", "cannot", and "precisely so" in a comment
   about concurrency, re-entrancy, or ownership.
 - **Source:** `docs/reviews/rca-mount-despawn-2026-09-03.md` finding 2.
+
+
+### Two independent self-heals can become each other's precondition, and neither will ever fire
+Enlistment had two recovery mechanisms written months apart. One was the only exit from a latched
+battle state and refused to act while a `PlayerEncounter` was open; the other was the only thing that
+closes a stranded `PlayerEncounter` and refused to act unless the state was already unlatched. Each
+was the other's precondition, so the pair was a permanent deadlock: the player could not move, could
+not open any encounter, and lost the feature's menu, with no path out short of a seven-day discharge
+timer on a different code path.
+- **Why missed:** each guard is locally correct and defensible, and neither file mentions the other. Unit tests covered each mechanism in isolation and both passed. The failure only exists in the product of the two, which nothing in the suite or the review checklist looked at.
+- **Prevent:** when adding a recovery path, enumerate every OTHER recovery path for the same subsystem and ask what each one waits on. If A waits on a condition that only B clears, and B waits on a condition that only A clears, that is a deadlock regardless of how reasonable each guard reads alone. Prefer guards that name the real hazard (is this encounter part of a battle?) over guards that proxy it with a state or a flag that something else owns; a proxy is what lets two mechanisms disagree about what they are protecting.
+- **Source:** docs/reviews/rca-enlistment-strand-2026-09-04.md (#538).
+
+### A guard you delete because "it was never the real guard" may be load-bearing for a case you have not named
+Removing a state gate from a self-heal, on the reasoning that the other guards expressed the real
+condition, would have let the sweep run inside the battle loot/aftermath window: `MapEventSide.Clear()`
+nulls `MainParty.MapEvent` BEFORE the encounter closes, so for a few moments every remaining guard
+reads "no battle anywhere" while the player is looking at their siege results. The deleted state gate
+had been the only thing keeping the sweep out of that window, by accident.
+- **Why missed:** the reasoning was symmetrical and sounded principled ("the state is a proxy, the map-event checks are the real condition"), and two other places in the same feature already documented the aftermath window in comments the author had read for other purposes without connecting them.
+- **Prevent:** before deleting a guard, state what it currently excludes and find at least one concrete case in that excluded set. If the codebase contains another predicate over the same subsystem, diff yours against it term by term and account for every term you do not have: here the sweep's guards were exactly `noBattleAnywhere` minus its `!HasCurrent` term, which is the whole finding in one line. Then replace the proxy with a guard that names the hazard directly, so the protection survives in states nobody enumerated.
+- **Source:** docs/reviews/rca-enlistment-strand-2026-09-04.md (#538), caught by the deep-review data-flow pass, not by the author or the tests.

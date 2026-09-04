@@ -139,9 +139,28 @@ markedly bigger animal relative to its rider than a horse does, which is the int
 | Constant | Value | Rationale |
 |---|---|---|
 | `AttackMinDamage` / `AttackMaxDamage` | 18 / 28 | Below both references: the elephant trample is 50-100 (a multi-ton beast flattening a formation) and the warg bite tops out near 60. The ram lands one headbutt as a bonus on top of its rider's own attacks |
-| `AttackCooldownSeconds` | 6.0 | Between the elephant's 10s trample and its 4s tusk fallback |
+| `AttackCooldownSeconds` | 10.0 | Level with the elephant's trample. Was 6.0 and played as overpowered, see below |
 | `AttackBlowMagnitude` | 35f | Below the elephant's 50f: a horse-scale creature should stagger, not launch |
-| `AttackTriggerRange` / `AttackRadius` | 2.5f / 3.5f | Just under the unscaled elephant's 3f / 4f, because the ram is horse-scale |
+| `AttackTriggerRange` / `AttackRadius` | 1.5f / 2f | Was 2.5f / 3.5f, near the unscaled elephant's 3f / 4f. See below |
+
+**The kick is an AoE with a knockdown, and that is what makes the per-hit numbers misleading.**
+`ElephantLikeAttackTasks` scans `GetNearbyAgents(creature.Position, AttackRadius)` and sweeps **every**
+enemy inside it, rolling damage independently per victim and passing `knockDown: !blocking`, so
+everyone caught who is not actively shield-blocking goes prone. At the original 3.5f that was close to
+the base war elephant's 4f, meaning one dwarf on a goat cleared a formation on a shorter cooldown than
+the elephant had.
+
+The compounding factor is population, not per-hit power. An elephant is a rare single unit; rams field
+**fifteen to a stack** in an Erebor lord's party, so a short cooldown on a knockdown AoE multiplies
+across the stack. Retuned 2026-09-04 to a 10s cooldown and a 2f radius, which keeps the kick to what
+the ram is standing on top of. Damage, block scaling and the knockdown rule are unchanged.
+
+`AttackTriggerRange` had to move with the radius, and the constraint is load-bearing rather than
+advisory. `ElephantLikeEngageDecorator` runs **one** scan at `AttackRadius` and then filters those
+results by `AttackTriggerRange`, so any trigger range above the radius is unreachable code and the
+constant would read as a number the ram never uses. It is held at 75% of the radius, the ratio the
+original 2.5/3.5 pair chose, and that margin matters more at 10s than it did at 6s: an attack
+committed against a target loitering on the rim now wastes a ten-second window.
 | `AttackActionName` | `act_horse_kick` | **A vanilla clip**, bound in `as_horse` and typed `actt_kick` (`ActionCodeType.Kick = 28`). All four profile slots hold this one action, so `IsAttack` means exactly "mid-kick" |
 
 **Two clips were rejected before this one, and the reasons are worth keeping.** The horse rig has no
@@ -184,25 +203,119 @@ Monsters lacked vanilla's rider-death surface. The ram inherits that surface who
 | `Main/Features/WarRam/WarRamMissionBehavior.cs` | **`: MissionLogic`**, attaches keyed on `Monster.StringId` |
 | `Main/Features/WarRam/WarRamIoC.cs` | Registration helper |
 | `Main/IoC.cs:114`, `Main/SubModule.cs:1559` | The two single-owner wiring lines |
-| `Main/_Module/ModuleData/troops/troops_erebor.xml` | The four Ironpass cavalry troops |
+| `Main/_Module/ModuleData/troops/troops_erebor.xml` | The six Ironpass ram cavalry troops (16 to 41) |
+| `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Erebor.cs` | Pools `ironpass_ram_herder` as the branch root |
+| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | The Gems gate at 31+ |
+| `Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml` | Erebor emissary offers for the three gated tiers |
+| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | 2.0 for the armoured rungs, herder left at the 1.0 default |
 | `tools/taom_schema.py` | `WAR_RAM_MOUNT_IDS` allowlist for `MOUNTED_DWARF` |
 | **`docs/reference/lotrlome-war-ram-changes.md`** | **The external-module ledger. `LOTRLOME_Armory` is not tracked by this repo and a reinstall reverts it** |
 
 ## Troop tree
 
-A third branch off `ironpass_warrior` (16), at the same depth as the axeman branch:
+Two ways in. `ironpass_ram_herder` (16) is an `is_basic_troop` root at the same depth as
+`ironpass_warrior`, and it is the one that is pooled for volunteer recruitment. The original edge off
+`ironpass_warrior` is untouched, so the foot line still reaches the rams as well:
 
 ```
-ironpass_warrior (16)
- |- ironpass_infantry (21)  [existing]
- |- ironpass_arbalest (21)  [existing]
+ironpass_recruit (11)  [pooled]
+ `- ironpass_warrior (16)
+     |- ironpass_infantry (21)  [existing]
+     |- ironpass_arbalest (21)  [existing]
+     `- ironpass_ram_rider (21) ...
+
+ironpass_ram_herder (16)  [pooled, is_basic_troop]
  `- ironpass_ram_rider (21) -> ironpass_goat_charger (26)
-                            -> ironpass_ram_breaker (31)
-                            -> ironpass_ram_vanguard (36)
+                            -> ironpass_ram_breaker (31)   [Gems]
+                            -> ironpass_ram_vanguard (36)  [Gems]
+                            -> ironpass_ram_marshal (41)   [Gems]
 ```
 
-Riding climbs 120 / 160 / 200 / 240 (the mount item's `difficulty="0"` imposes no floor). Barding grade climbs with tier: light, mail, plated, elite. Each troop carries four equipment
-rosters alternating both pelts and both barding variants, so all ten items are reachable in play.
+Every rung steps by exactly 5. That is worth stating because it was not true in the first draft: the
+herder shipped at 11 and jumped +10 into the rider. Seventeen such edges exist in the repo and none
+is an error, but 656 edges are +5, so the ladder now follows the dominant pattern.
+
+Each troop carries four equipment rosters alternating both pelts and, above the herder, both barding
+variants of its grade, so all ten items are reachable in play. The barding ladder spreads eight items
+over five armoured rungs, so `med_b` and `heavy_a` each serve two rungs. Average armour still climbs
+monotonically:
+
+| troop | level | tier | bardings | avg armour |
+|---|---|---|---|---|
+| `ironpass_ram_herder` | 16 | T3 | none, bare ram | 0 |
+| `ironpass_ram_rider` | 21 | T4 | `light_a`, `light_b` | 22 |
+| `ironpass_goat_charger` | 26 | T5 | `med_a`, `med_b` | 32 |
+| `ironpass_ram_breaker` | 31 | T6 | `med_b`, `heavy_a` | 37 |
+| `ironpass_ram_vanguard` | 36 | T7 | `heavy_a`, `heavy_b` | 42 |
+| `ironpass_ram_marshal` | 41 | T8 | `elite_a`, `elite_b` | 52 |
+
+### Skills: dwarves are the worst riders in the game
+
+Athletics, OneHanded, Polearm, Bow and Crossbow sit exactly on `CAVALRY_BASELINES` in
+`tools/rebalance_troops.py`. Two skills deviate, in opposite directions, and both deviations are
+deliberate.
+
+**Riding runs far below baseline at every rung**, by roughly a quarter throughout, so dwarves are not
+merely the worst riders in the game but visibly so. Measured mean Riding by culture and level:
+
+| culture | 16 | 21 | 26 | 31 | 36 | 41 |
+|---|---|---|---|---|---|---|
+| **Erebor (war ram)** | **65** | **90** | **125** | **165** | **205** | **245** |
+| baseline | 95 | 120 | 160 | 210 | 270 | 320 |
+| Dol Guldur | 90 | 115 | 155 | 205 | 265 | - |
+| Isengard | 100 | 125 | 165 | - | - | - |
+| Harad | 110 | 145 | 188 | 225 | - | - |
+| Gundabad | - | 145 | 195 | 205 | 265 | 315 |
+| Rohan | 119 | 148 | 190 | 241 | 300 | 340 |
+| Lindon / Rivendell | - | - | - | - | 300 | 360 |
+
+Erebor is the lowest at every level it fields a mount, and by a wide margin: at 41 the marshal rides
+245 against Gundabad's 315, Rohan's 340 and the elves' 360. It was nominally lowest before this pass
+too (120/160/200/240/300), but only by a handful of points, which read as a rounding difference
+rather than a racial trait.
+
+**TwoHanded and Throwing run above baseline**, and that is forced rather than chosen.
+`ironpass_warrior` (16) carries TwoHanded 105 and Throwing 40, and it upgrades into
+`ironpass_ram_rider` (21), whose baseline values are 60 and 30. Straight baseline would be a skill
+regression across that edge and `TroopUpgradeSkillMonotonicityTests` fails it. Dwarves being heavy
+two-handed axe fighters makes the forced floor coherent anyway, so the curve keeps it rather than
+weakening the warrior to fit.
+
+The herder's four sets fill no `HorseHarness` slot at all, which is deliberate rather than an
+omission. The engine draws each equipment slot from an independently chosen set, so what matters is
+that the four sets agree; filling the slot in three of them would ship a ram that sometimes spawns
+bare anyway.
+
+## Recruitment, and why the Gems gate starts at 31
+
+Before this, the branch was in no volunteer pool at all. #515 left it out on the reasoning that a
+village notable handing out an armoured level-21 rider would let a player skip the whole Ironpass
+foot progression. The reasoning held; the effect was that players never saw rams. The herder answers
+the objection instead of reversing it, because a player who picks the ram branch still starts at the
+bottom of a branch.
+
+The gate level is not a taste call. Vanilla `RecruitmentCampaignBehavior.UpdateVolunteersOfNotables-
+InSettlement` only promotes a notable's slot while `Tier < MaxVolunteerTier`, and TAOM's
+`VolunteerTierService.MaxVolunteerTier` is 6, which is levels 31-35. So a slot seeded with the herder
+climbs to `ironpass_ram_breaker` and stops. Level 31 is exactly where notable promotion ends, which
+makes it the natural place for the Gems cost to begin.
+
+Three routes, all data-driven through `special_resources/troop_resource_costs.xml`:
+
+| route | field | reaches |
+|---|---|---|
+| notable volunteer | `recruit_cost` | the breaker only; the two above it are unreachable by promotion |
+| party-screen upgrade | `upgrade_cost` | breaker, vanguard, marshal |
+| Erebor emissary at `town_E1` | `merchant_cost` | breaker, vanguard, marshal |
+
+`upgrade_cost` and `recruit_cost` charge the **player** only (Patch26 hooks `PartyScreenLogic`,
+Patch51 hooks `RecruitmentVM`), so AI lords still field and promote rams for free. That is the point:
+the change is meant to put more rams in the world, not fewer.
+
+`ironpass_ram_herder` is deliberately absent from `troop_weights.xml` and falls through to the 1.0
+default. It is the rung a player recruits repeatedly, and a 2.0 entry unit would deflate the
+party-size limit for exactly the players the branch is meant to reach. The five armoured rungs are
+all 2.0.
 
 Loadout is spear plus metal shield plus axe sidearm, built only from item ids already present in
 shipped Erebor rosters. That was deliberate: `sm_dwarf_erebor_spear_a` is a
@@ -241,9 +354,12 @@ wore. Their `default_group` moved Infantry to Cavalry: for a hero that only driv
 icon and tooltips, since `GetFormationClass` reads `BattleEquipment` instead, but leaving it Infantry
 would have shown a mounted lord as infantry.
 
-Lords get **heavy** barding, not elite, leaving the top of the ladder as headroom. **Dáin II Ironfoot
-stays on foot** by decision; his bespoke `dain_bat_equipment` is untouched. Civilian sets are
-untouched throughout, so no lord rides a war ram into a tavern.
+Lords get **heavy** barding, not elite, leaving the top of the ladder as headroom. The re-spread did
+not disturb that: heavy is now the `ironpass_ram_vanguard` (36) grade rather than the breaker's, and
+elite moved up to the new `ironpass_ram_marshal` (41), so the lords keep exactly the items they had
+and the headroom above them grew by a rung. `erebor_bat_template_ram_a..e` are unchanged.
+**Dáin II Ironfoot stays on foot** by decision; his bespoke `dain_bat_equipment` is untouched.
+Civilian sets are untouched throughout, so no lord rides a war ram into a tavern.
 
 ## The player: selecting the Ram Rider career
 
@@ -292,6 +408,12 @@ matters most: **a dwarf carrying both a ram and a horse still errors on the hors
 work also fixed a latent hole, since the old `_first_mount` was first-wins and a ram listed ahead of
 a horse would have masked it.
 
+`TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` pins the recruitment
+side: `EreborRamCavalry_IsNotOfferedByAnyVolunteerPool` (the five armoured ids stay upgrade-only),
+`EreborRamCavalry_IsReachableFromAPooledRoot`, the two `RollsAgainstTotalWeightEighteen` guards, and
+two `HighestRoll_ReturnsRamHerder` cases for the herder band. `TroopUpgradeSkillMonotonicityTests`
+is what pins the dwarf cavalry curve, including the forced TwoHanded and Throwing floors.
+
 Per ADR-008 the BT nodes and mission behavior are not unit-tested; they are tested in game.
 
 ## How to verify in game
@@ -316,14 +438,15 @@ Any CTD goes to `/native-crash-triage`, never a blind retry.
 
 ## Known gaps
 
-- **The eight barding meshes are not in the cooked asset packages**, so every ram currently spawns
-  with a bare body and no barding. The mounts themselves are cooked and render fine; the barding
-  items are live data pointing at meshes the shipped packs do not contain, so this is a real defect
-  rather than merely absent content. `python tools/validate_mesh_refs.py` fails on it (exit 1, 10
-  errors). Confirmed three independent ways; see the ledger.
 - **The rider seat is untuned**, pending the in-game check.
 - **`body_length="100"` was set after an in-game look**, replacing a derived 75 that read too small. The ram now ships at authored size.
 - **Item and troop names are not yet translated.** English works through the inline `{=KEY}default`.
+  This now covers six troop names, not four: `aom_ironpass_ram_herder_name` and
+  `aom_ironpass_ram_marshal_name` joined the backlog.
+
+Resolved since the first draft: the eight barding meshes are in the cooked packs.
+`python tools/validate_mesh_refs.py` exits 0 with no missing visual mesh, so the earlier
+"barding does not render" entry no longer applies.
 
 ## GitHub Issue
 

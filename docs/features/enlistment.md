@@ -1316,6 +1316,114 @@ calls `GameMenu.ExitToLast()`. Leaving them inside with no menu is the terminal 
 review pass, because `MobileParty.DoUpdatePosition` will not move a party with `CurrentSettlement`
 set. Out on the map with time stopped is merely paused.
 
+## A stranded PlayerEncounter could latch service permanently (#538, 2026-09-04)
+
+Player report: *"the army left me behind after sieging East Osgiliath making me unable to move and do
+anything, even the Enlist UI is gone."* No log exists: every enlistment-bearing log on the dev machine
+is from #520. This was found by reading code.
+
+### Two self-heals were each other's precondition
+
+`ServiceMaintenanceService.TryBreakBattleLatch` is the only exit from `EnlistedBattle` when no battle
+is running, and it returns early while `presence.HasPlayerEncounter`. The reconciler's
+stranded-encounter sweep was the only thing that closes a stale encounter, and it required
+`State == EnlistedAttached`. So `EnlistedBattle` plus a stranded encounter was a **permanent mutual
+block**: the encounter stopped the return to Attached, and not being Attached stopped the sweep.
+
+Every symptom is that one flag. An open `PlayerEncounter` holds the map ("unable to move"), blocks
+every future main-party encounter, and the service menu disappears because the pump gates its menu
+work on `EnlistedAttached` too. The reconciler's own `noBattleAnywhere` includes `!HasCurrent`, so it
+was blocked as well: three mechanisms, one cause.
+
+### Where the encounter comes from, and why it is not a corner case
+
+`LeaveSettlementAction.ApplyForParty` (installed v1.4.8) calls `PlayerEncounter.Finish()` in exactly
+one branch: when the LEAVING party leads its army **and** the main party is attached to it. An
+enlisted player is the main party and leads nothing, so the branch never runs. `CurrentSettlement` is
+cleared unconditionally at the end, so the party does leave and the encounter stays open.
+
+Since #510 every TAOM settlement placement opens an encounter deliberately, so this is the ordinary
+path. A siege supplies the long map event that holds the state in `EnlistedBattle`.
+
+### The correction that matters most: deleting the state gate alone would have been worse
+
+The first version of this fix removed the `EnlistedAttached` gate on the reasoning that "the state was
+never the real guard". **That was wrong, and a review caught it.** The state gate WAS load-bearing,
+because `EnlistedBattle` is exactly the state the loot/aftermath window lives in.
+
+`MapEventSide.Clear()` nulls `MainParty.MapEvent` **before** the encounter closes, so between those
+two moments the aftermath menus run inside a still-open encounter that reads as "no battle anywhere"
+to every guard in the sweep. This file already believed that in two other places:
+`EnlistmentReconciler.noBattleAnywhere` includes `!_encounter.HasCurrent`, and
+`ServiceBattleService.OnCommanderBattleEnded` returns early on `_encounter.HasCurrent` with the
+comment *"Loot/aftermath menus run inside the still-open encounter."* The sweep's guard set was that
+predicate minus its `!HasCurrent` term, so it was defined to operate precisely inside the window the
+rest of the feature declares off-limits. It would have torn down the player's own siege loot screen,
+and `PlayerEncounter.Finish` additionally forces `TimeControlMode.Stop` and `GameMenu.ExitToLast()`.
+
+The replacement names the real condition instead of proxying it: `EncounterOwnershipSnapshot`
+gained **`IsBattleEncounter`** (`PlayerEncounter.Battle != null || Current.IsJoinedBattle`) and the
+policy gained **R1b**, which defers for every intent. A battle encounter is now protected in every
+state rather than only while the state happens to read `EnlistedAttached`.
+
+### The rules that changed
+
+| Rule | Change |
+|---|---|
+| **R1b** (new, universal) | An encounter belonging to a battle is never finished, by any intent including `Discharge`. Handing the player back is urgent; deleting the battle result they are reading is worse, and every caller retries. |
+| **R2c** (new) | `StrandedOutsideSettlement` inverts R3 the way `ShoreLeaveEnd` does, but from the other direction: the encounter outlived the settlement. It requires `!PlayerInsideSettlement` **itself**, read fresh by the adapter, rather than trusting the caller. |
+| `ShoreLeaveEnd` | No longer the only intent that treats a settlement-shaped encounter as ours. Its doc said so and is corrected. |
+
+R2c enforcing its own precondition is the second review correction. The first version documented it as
+"the caller owes the precondition", and the caller read that fact from a snapshot captured earlier in
+the tick, while the ownership snapshot had carried a freshly-read `PlayerInsideSettlement` all along
+that the policy simply never looked at. Worse, the committed test asserted `Finish` for a snapshot
+built with `playerInsideSettlement: true`, so it encoded as correct the exact state R3 exists to
+protect.
+
+### The sweep is shared, and the grace window is why
+
+`SweepStrandedEncounter` is called from `ReconcileAttached` and `ReconcileGrace`. The grace path had
+no sweep at all, so a player who arrived in `CommanderUnavailable` holding an encounter waited out up
+to seven campaign days, unable to move, until discharge finally closed it.
+
+Precision, because a first draft of this got it wrong: a commander lost DURING an assault does not
+land in grace. `EnlistedBattle` to `CommanderUnavailable` is a deliberately illegal edge, so that
+player stays latched in `EnlistedBattle` and is freed by the sweep on the attached path. The grace
+call is an independent backstop for the states that do reach it.
+
+### `taom.service_status` / `taom.rescue_service`
+
+A code fix reaches the next campaign; a stranded player is stuck in the save they already have, with
+no menu and therefore no discharge dialog. The rescue closes the encounter, walks the party out of any
+settlement, re-parks on the commander (or restores presence and defers to the grace path if he is
+unfit), and reopens the wait menu. It refuses while a conversation or a live battle is running, which
+are the two states where the player is demonstrably not stuck.
+
+**`PlayerEncounter.InsideSettlement` is a trap for exactly this caller**, and the first version fell
+into it. It reads `if (MobileParty.MainParty.IsActive) return CurrentSettlement != null; return
+false;` and a parked enlisted player has `IsActive == false`, so it returns **false even with
+`CurrentSettlement` set**. Passing that as `forcePlayerOutFromSettlement` means the engine's own
+walk-out inside `Finish` (guarded by the same property) never runs, and the rescue leaves the party
+inside the settlement: immobile, which is the thing it promises to fix, with the #510 menu crash
+armed. Read `MainParty.CurrentSettlement` directly and call `LeaveSettlement()` explicitly, as
+`DischargeService.RestoreCampaignContext` does.
+
+### The column leaving a town without you is (probably) not a bug
+
+A second, vaguer report. Two mechanisms produce it deliberately and both self-correct by re-parking
+the player on the commander:
+
+- `ServiceAttachmentService.SettlementDwellHours` is **6 campaign hours**. It exists because following
+  an AI lord straight back out of a town produced ten transitions across three towns in three real
+  minutes (measured 2026-08-25), twice in and out within the same second. The commander can walk off
+  during that hold.
+- Shore leave (#512) suspends the exit sweep until the PLAYER leaves, so the column leaving without
+  you is the pass working.
+
+Nothing was changed for either. Recorded so the next report can be matched against them, and so any
+decision to shorten the dwell is made against a repro rather than a hunch.
+
 ### Known gap: the mask still disarms outside `EnlistedAttached` (#511)
 
 The invariant above is enforced at the two sites that hand over a vanilla menu. It does NOT cover

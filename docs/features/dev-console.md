@@ -1,6 +1,6 @@
 ﻿# Dev Console (`taom.*` commands)
 
-**Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate PASSED 2026-08-23 (log: "Console discovery PROVEN: the engine registered all 25 taom.* commands", vanilla control present); 27 commands as of 2026-08-25 with `taom.time_status` / `taom.rescue_time`. Gate mechanics: [The launch gate](#the-launch-gate).
+**Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate PASSED 2026-08-23 (log: "Console discovery PROVEN: the engine registered all 25 taom.* commands", vanilla control present); 29 commands as of 2026-09-04, adding `taom.service_status` / `taom.rescue_service` to the `taom.time_status` / `taom.rescue_time` pair. Gate mechanics: [The launch gate](#the-launch-gate).
 
 ## Overview
 
@@ -297,6 +297,8 @@ answer is conclusive and fails open in every path.
 | `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
 | `taom.time_status` | A | campaign | Dump every state that can freeze campaign time (menu context, time lock, engine pause, waiting flag, encounter) in one shot; built for the 2026-08-23 camp-menu freeze, replaces a decompile-and-guess loop |
 | `taom.rescue_time` | B | campaign | Recover a frozen session in the field: exit a stuck menu context, release the time lock, unpause the engine, force-resume time. Unstuck the first field-camp save without abandoning it |
+| `taom.service_status` | A | campaign | Dump every state that can strand an enlisted player (service state, presence, open `PlayerEncounter`, commander fitness, current menu) in one shot. The encounter line is the one that matters: an open one holds the map, blocks every future encounter, and blocks the battle-latch break |
+| `taom.rescue_service` | B | campaign | Free a stranded enlisted player: close the open encounter, re-park on the commander (or restore presence and defer to the grace path if he is unfit), reopen the service menu. Exists because a stranded player has no menu and therefore no discharge dialog either, so a code fix reaches their next campaign and not the save they are stuck in (#538) |
 | `taom.print_caravans [settlement]` | A | campaign | Which engine gate is holding each parked caravan. Every one of them is a silent early-return, and four of them have different fixes — the gate histogram is the money output |
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_memory [label] [gpu]` | A | cheat mode | Nothing — **no TAOM or vanilla surface exposed the engine's own memory accounting at all.** `[MemSample]` reports OS totals on a timer; this asks the engine what those bytes are *for*, on demand, per station. Optional `label` names the station in the log; `gpu` also writes a GPU dump. Mirrored into `taom_debug` under `[MemProbe]`. See [battle-load-diagnostics.md](battle-load-diagnostics.md) |

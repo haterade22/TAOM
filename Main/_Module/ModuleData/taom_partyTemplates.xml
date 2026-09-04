@@ -175,10 +175,12 @@
 			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.ironpass_arbalest" />
 			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.ironpass_axeman" />
 			<!-- Ironpass Ram Cavalry (#515) -->
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.ironpass_ram_herder" />
 			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.ironpass_ram_rider" />
 			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.ironpass_goat_charger" />
 			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.ironpass_ram_breaker" />
 			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.ironpass_ram_vanguard" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.ironpass_ram_marshal" />
 			<!-- Oathsworn Line (rare) -->
 			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.erebor_oathsworn" />
 			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.erebor_oathsworn_legionary" />
@@ -227,6 +229,7 @@
 			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.erebor_reg_skirmisher" />
 			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_reg_company" />
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_noble" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.ironpass_ram_herder" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -265,7 +268,7 @@
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_noble_royal_warden" />
 			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.erebor_oathsworn_legionary" />
 			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.erebor_noble_shield_breaker" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.ironpass_ram_vanguard" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.ironpass_ram_marshal" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -2587,7 +2590,7 @@
 			<PartyTemplateStack min_value="1" max_value="16" troop="NPCCharacter.iron_hills_noble_scout" />
 			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_veteran_arbalest" />
 			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_ram_breaker" />
-			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_ram_vanguard" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_ram_marshal" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -2606,7 +2609,7 @@
 			<PartyTemplateStack min_value="2" max_value="16" troop="NPCCharacter.erebor_militia_veteran_archer" />
 			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.iron_hills_noble_sharpshooter" />
 			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_ram_breaker" />
-			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_ram_vanguard" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.ironpass_ram_marshal" />
 		</stacks>
 	</MBPartyTemplate>
 

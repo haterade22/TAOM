@@ -141,7 +141,7 @@ co-op refusal was added 2026-08-03 from field testing.
 |---|---|---|---|
 | gondor | Minas Tirith (`town_EW1`) | Castar | ithilien_ranger, fountain_guard, swan_knight |
 | mordor | Barad Dûr (`town_ES1`) | War Spoils | uruk_captain, baraddurguard, spider |
-| erebor | Erebor (`town_E1`) | Gems | royal_warden, royal_legionary, ironbreaker |
+| erebor | Erebor (`town_E1`) | Gems | royal_warden, royal_legionary, ironbreaker, ram_breaker, ram_vanguard, ram_marshal |
 | dolguldur | Dol Guldur (`town_DG1`) | War Spoils | khamul_shadow_knight/reaper/bowman |
 | isengard | Orthanc (`town_isengard`) | War Spoils | orthanc_bodyguard, nazg_hai, warden |
 | gundabad | Mount Gundabad (`town_G1`) | War Spoils | dread_rider, bolgs_ironfang, berserker |

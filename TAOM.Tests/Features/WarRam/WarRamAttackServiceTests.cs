@@ -65,29 +65,29 @@ public class WarRamAttackServiceTests
 
     [TestMethod]
     public void IsOffCooldown_NeverFired_ReturnsTrue()
-        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: null, now: Now, cooldownSeconds: 6.0));
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: null, now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     [TestMethod]
     public void IsOffCooldown_JustFired_ReturnsFalse()
-        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now, now: Now, cooldownSeconds: 6.0));
+        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now, now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     [TestMethod]
     public void IsOffCooldown_PartiallyElapsed_ReturnsFalse()
-        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-3), now: Now, cooldownSeconds: 6.0));
+        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-5), now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     [TestMethod]
     public void IsOffCooldown_ExactlyAtCooldown_ReturnsTrue()
         // Inclusive ">= cooldown" -- the attack becomes available the moment the window closes.
-        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-6), now: Now, cooldownSeconds: 6.0));
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-10), now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     [TestMethod]
     public void IsOffCooldown_FullyElapsed_ReturnsTrue()
-        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-60), now: Now, cooldownSeconds: 6.0));
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-60), now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     [TestMethod]
     public void IsOffCooldown_LastFiredInFuture_ReturnsFalse()
         // Clock skew / bad stamp: a future lastFired must read as ON cooldown, not off.
-        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(30), now: Now, cooldownSeconds: 6.0));
+        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(30), now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     // ------------------------------------------------------------------ ComputeInflictedDamage
     // Per-hit randomized damage: the roll is a [0,1] float supplied by the BT node (MBRandom.RandomFloat)

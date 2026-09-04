@@ -24,6 +24,24 @@
   <Troop id="harad_mumakil_rider" resource_id="war_drums" recruit_cost="2000" daily_upkeep="500" />
   <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" merchant_cost="18" />
 
+  <!-- Ironpass war-ram cavalry, level 31 and above (Erebor -> Gems). The three rungs below 31
+       (herder 16, rider 21, goat charger 26) stay free: the branch has to be enterable.
+
+       Why the gate starts at exactly 31: vanilla RecruitmentCampaignBehavior only promotes a
+       notable's volunteer slot while Tier < MaxVolunteerTier, and TAOM's MaxVolunteerTier is 6,
+       which is levels 31-35. So a slot seeded with the pooled ironpass_ram_herder climbs to
+       ironpass_ram_breaker and stops there. That makes recruit_cost live for the breaker and
+       inert for the two above it, which can only be reached by paying upgrade_cost or by buying
+       from the Erebor emissary. The vanguard and marshal carry a recruit_cost anyway so the gate
+       is already correct if either is ever pooled.
+
+       upgrade_cost charges the PLAYER only (Patch26 hooks PartyScreenLogic), so AI lords still
+       field and promote rams for free. That is deliberate: the point of the change is more rams
+       in the world, not fewer. -->
+  <Troop id="ironpass_ram_breaker" resource_id="gems" upgrade_cost="2" recruit_cost="10" daily_upkeep="0.1" merchant_cost="10" />
+  <Troop id="ironpass_ram_vanguard" resource_id="gems" upgrade_cost="3" recruit_cost="14" daily_upkeep="0.15" merchant_cost="14" />
+  <Troop id="ironpass_ram_marshal" resource_id="gems" upgrade_cost="5" recruit_cost="18" daily_upkeep="0.25" merchant_cost="18" />
+
   <!-- ============================================================================
        Elite Emissary merchant offers (merchant_cost = one-time price the faction
        emissary charges at a key settlement, in the SETTLEMENT OWNER's special

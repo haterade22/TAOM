@@ -237,6 +237,63 @@ public class EnlistmentReconciler : IEnlistmentReconciler
             prioritize: true);
     }
 
+    /// <summary>
+    /// Close a PlayerEncounter that has outlived whatever opened it. Shared by the attached path and
+    /// the grace window because a stranded encounter is the same fault in both, and because the two
+    /// having separate copies is how the grace window came to have none at all.
+    ///
+    /// A live encounter with nobody in a map event is never legitimate: it stops map movement,
+    /// blocks every future main-party encounter for the rest of the term, survives into discharge,
+    /// and blocks <c>ServiceMaintenanceService.TryBreakBattleLatch</c>, which is what turned it into
+    /// a permanent latch after a siege.
+    ///
+    /// The caller's state is NOT a guard here, and getting to that safely took a correction worth
+    /// recording. The first version of this fix removed the old <c>EnlistedAttached</c> gate on the
+    /// grounds that "the state was never the real guard". That was wrong: the state gate WAS doing
+    /// real work, because <c>EnlistedBattle</c> is exactly the state the loot/aftermath window lives
+    /// in, and this method's guards are <c>noBattleAnywhere</c> MINUS its <c>!HasCurrent</c> term.
+    /// Removing the state gate alone would have let the sweep tear down the player's own battle
+    /// result after a siege, which is the very scenario that was being fixed.
+    ///
+    /// What replaced it is a guard that names the real condition instead of proxying it:
+    /// <see cref="EncounterOwnershipSnapshot.IsBattleEncounter"/> (policy rule R1b), so a battle
+    /// encounter is protected in EVERY state and for every intent rather than only while the state
+    /// happens to read <c>EnlistedAttached</c>. The two map-event checks and
+    /// <see cref="IEncounterOwnershipPolicy"/> carry the rest.
+    /// </summary>
+    private void SweepStrandedEncounter(
+        PlayerPresenceSnapshot presence, bool commanderInMapEvent, string commanderPartyId)
+    {
+        if (!presence.HasPlayerEncounter || presence.IsInMapEvent || commanderInMapEvent)
+            return;
+
+        // WHICH intent, decided by whether the player is actually in a settlement, because that is
+        // the whole difference between a live encounter and a stranded one. Since #510 every
+        // settlement placement opens an encounter deliberately, so a settlement-shaped encounter is
+        // CORRECT while the player is inside one and R3 must keep skipping it: closing it would take
+        // down the town menu the player is standing in. Out of the settlement there is nothing left
+        // for R3 to protect and the encounter is pure blockage, so StrandedOutsideSettlement inverts
+        // R3 exactly as ShoreLeaveEnd does.
+        //
+        // Passing StrandedOutsideSettlement while inside a settlement is the one way to misuse it,
+        // which is why the precondition is enforced here, at the only place that chooses it.
+        var sweepIntent = presence.IsHeldInsideSettlement
+            ? EncounterFinishIntent.ParkedSweep
+            : EncounterFinishIntent.StrandedOutsideSettlement;
+
+        var sweepVerdict = _ownership.Evaluate(sweepIntent, _encounter.GetOwnership(commanderPartyId));
+        if (sweepVerdict == EncounterFinishVerdict.Finish)
+        {
+            _logger?.LogWarning("[EnlistDiag] a PlayerEncounter is open with no battle in progress — closing it (it would block every future encounter)");
+            if (!_encounter.Finish(true))
+                _logger?.LogError("[EnlistDiag] failed to close the stranded PlayerEncounter — the player cannot start encounters until this clears");
+        }
+        else if (sweepVerdict != EncounterFinishVerdict.NothingToFinish)
+        {
+            _logger?.LogInfo($"[EnlistDiag] encounter sweep left the live encounter alone: {sweepVerdict}");
+        }
+    }
+
     private void ReconcileGrace(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays)
     {
         // Grace is frozen during player captivity: expiring it would discharge and
@@ -245,6 +302,22 @@ public class EnlistmentReconciler : IEnlistmentReconciler
             return;
 
         var snapshot = _commander.GetSnapshot(record.CommanderHeroId);
+
+        // The grace window needs the sweep as much as the attached path does, and used to lack it.
+        // Nothing in this method touched the encounter, so a player who arrived here holding one
+        // waited out a grace of up to seven campaign days, unable to move, until discharge finally
+        // closed it. Bounded, unlike the battle latch, and still no way to play.
+        //
+        // Precision, because the first version of this comment got it wrong: a commander lost DURING
+        // an assault does NOT land here. `EnlistedBattle -> CommanderUnavailable` is a deliberately
+        // illegal edge (EnlistmentTransitionTable, and ReconcileBlocked says so in as many words),
+        // so that player stays latched in EnlistedBattle and is freed by the sweep on the attached
+        // path instead. This call is an independent backstop for the states that DO reach grace, not
+        // the fix for the siege report.
+        //
+        // Below the captivity guard on purpose: vanilla owns the party during captivity and the
+        // sweep must not reach around that, for the same reason grace itself is frozen there.
+        SweepStrandedEncounter(presence, snapshot.PartyIsInMapEvent, snapshot.PartyId);
         if (!snapshot.Exists || !snapshot.IsAlive)
         {
             _discharge.Execute(DischargeReason.CommanderDead);
@@ -363,29 +436,32 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
                 $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner} settlement={snapshot.SettlementId ?? "-"}");
 
-        // Self-heal a stranded conversation encounter. While EnlistedAttached and out of any map
-        // event there is no legitimate reason for a live PlayerEncounter: the oath conversation's
-        // encounter should have been closed at swear-in. Left open it blocks every main-party
-        // encounter for the whole term and survives into discharge. Saves made before that fix
-        // are already in this state, so heal it here rather than only at the source.
-        if (record.State == EnlistmentState.EnlistedAttached
-            && presence.HasPlayerEncounter
-            && !presence.IsInMapEvent
-            && !snapshot.PartyIsInMapEvent)
-        {
-            var sweepVerdict = _ownership.Evaluate(
-                EncounterFinishIntent.ParkedSweep, _encounter.GetOwnership(snapshot.PartyId));
-            if (sweepVerdict == EncounterFinishVerdict.Finish)
-            {
-                _logger?.LogWarning("[EnlistDiag] a PlayerEncounter is open while parked with no battle in progress — closing it (it would block every future encounter)");
-                if (!_encounter.Finish(true))
-                    _logger?.LogError("[EnlistDiag] failed to close the stranded PlayerEncounter — the player cannot start encounters until this clears");
-            }
-            else if (sweepVerdict != EncounterFinishVerdict.NothingToFinish)
-            {
-                _logger?.LogInfo($"[EnlistDiag] parked sweep left the live encounter alone: {sweepVerdict}");
-            }
-        }
+        // Self-heal a stranded conversation encounter. Out of any map event there is no legitimate
+        // reason for a live PlayerEncounter: the oath conversation's encounter should have been
+        // closed at swear-in. Left open it blocks every main-party encounter for the whole term and
+        // survives into discharge. Saves made before that fix are already in this state, so heal it
+        // here rather than only at the source.
+        //
+        // ENLISTEDBATTLE IS INCLUDED, AND THAT IS THE WHOLE FIX FOR THE SIEGE STRAND. This used to
+        // require EnlistedAttached, which made it one half of a mutual block:
+        // ServiceMaintenanceService.TryBreakBattleLatch is the only exit from EnlistedBattle when no
+        // battle is running, and it returns early while HasPlayerEncounter — so the encounter
+        // stopped the return to Attached, and not being Attached stopped this sweep from clearing
+        // the encounter. Neither side could ever move. The player cannot move (an open encounter
+        // holds the map), cannot open any other encounter, and loses the service menu, because the
+        // pump gates its menu work on Attached too.
+        //
+        // A siege is the way in. LeaveSettlementAction.ApplyForParty (installed v1.4.8) calls
+        // PlayerEncounter.Finish() in exactly one branch, when the LEAVING party leads its army and
+        // the main party is attached to it. An enlisted player is the main party and leads nothing,
+        // so the encounter TAOM opens for every settlement placement since #510 is left open, and a
+        // siege supplies the long map event that holds the state in EnlistedBattle.
+        //
+        // The state was never the real guard. The two IsInMapEvent terms are: while either party is
+        // in a map event the encounter may belong to a battle being set up. Those stay, and the
+        // ownership policy below still decides whether the encounter is ours to close at all, so
+        // widening the state gate grants no new authority.
+        SweepStrandedEncounter(presence, snapshot.PartyIsInMapEvent, snapshot.PartyId);
 
         switch (assessment.Status)
         {
@@ -437,8 +513,36 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 // Checked, not discarded: a persistently failing LeaveSettlement would return
                 // SettlementExitRequired again every hour forever, silently, with the player
                 // stuck inside a settlement the commander has left.
-                if (!_attachment.ExitSettlementForService(record.CommanderHeroId))
-                    _logger?.LogError($"[EnlistDiag] hourly EXIT failed — the player is stuck inside a settlement '{presence.SettlementId}' the commander has left (he is in '{snapshot.SettlementId ?? "the field"}')");
+                // ONE call, TWO outcomes folded together: ExitSettlementForService returns
+                // `LeaveSettlement() && ParkNear()`, so a false can mean the player is still inside
+                // the settlement OR that they left cleanly and only the re-park failed. Treating
+                // false as "still inside" logged a message that was simply untrue in the second case
+                // — and, worse, skipped the encounter finish below for a player who HAD left and was
+                // therefore holding exactly the strand this branch exists to clear. ParkNear fails
+                // whenever the commander party cannot be found, which is the defining condition of
+                // the grace window, so that is not a rare pairing.
+                var exited = _attachment.ExitSettlementForService(record.CommanderHeroId);
+                if (!exited)
+                    _logger?.LogError($"[EnlistDiag] hourly EXIT did not complete — the player was in '{presence.SettlementId}' and the commander is in '{snapshot.SettlementId ?? "the field"}' (either the settlement exit or the re-park failed; see the adapter line above)");
+
+                // The engine will NOT close the encounter an exit leaves behind, so close it here
+                // rather than waiting up to a campaign hour for the sweep above to notice.
+                // `LeaveSettlementAction.ApplyForParty` (installed v1.4.8) calls
+                // `PlayerEncounter.Finish()` only when the LEAVING party leads its army and the main
+                // party is attached to it; an enlisted player is the main party and leads nothing,
+                // so the branch never runs and the encounter TAOM opened on entry (#510) outlives
+                // the settlement. Left open it stops map movement and blocks the battle-latch break.
+                //
+                // Attempted whether or not the re-park succeeded, and safe either way: R2c re-reads
+                // PlayerInsideSettlement itself, so if the exit genuinely failed the player is still
+                // inside, the rule declines, and nothing is destroyed. The sweep remains the backstop
+                // for every other route into the same shape, including saves already in it.
+                var exitVerdict = _ownership.Evaluate(
+                    EncounterFinishIntent.StrandedOutsideSettlement, _encounter.GetOwnership(snapshot.PartyId));
+                if (exitVerdict == EncounterFinishVerdict.Finish && !_encounter.Finish(false))
+                    _logger?.LogError("[EnlistDiag] EXIT left a PlayerEncounter open and could not close it — the player cannot start encounters until this clears");
+                else if (exitVerdict != EncounterFinishVerdict.Finish && exitVerdict != EncounterFinishVerdict.NothingToFinish)
+                    _logger?.LogInfo($"[EnlistDiag] EXIT left the live encounter alone: {exitVerdict}");
                 return;
 
             case AttachmentStatus.AttachRequired:

@@ -340,6 +340,20 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
                 return true;
 
             LeaveSettlementAction.ApplyForParty(main);
+
+            // Assert the post-condition instead of trusting the call. `ApplyForParty` clears
+            // CurrentSettlement unconditionally today (installed v1.4.8), so this should always
+            // hold — but reporting success without checking made the reconciler's "the player is
+            // stuck inside a settlement" error unreachable by construction, which is the one
+            // diagnostic that names the state a stuck player is actually in. A guard that can never
+            // fire is worse than no guard, because it reads as coverage.
+            if (main.CurrentSettlement != null)
+            {
+                _logger?.LogError(
+                    $"[Enlistment] LeaveSettlement ran but the party is still inside '{main.CurrentSettlement.StringId}'");
+                return false;
+            }
+
             return true;
         }
         catch (Exception ex)
