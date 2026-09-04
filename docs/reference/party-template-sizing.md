@@ -142,32 +142,39 @@ scaling off the player's party rather than a constant). It is not part of the lo
 
 Set by `tools/rebalance_party_template_maxes.py` (`CULTURE_TARGETS`, lines 48-76) and applied to
 `Main/_Module/ModuleData/taom_partyTemplates.xml` on 2026-08-14. **193 templates** are in scope.
-"Old max" below is the culture-level template's max sum at `HEAD` before the pass; "min" is its min
-sum, which the tool never touches.
+"Old max" below is the culture-level template's max sum at `HEAD` before the 2026-08-14 pass; "min"
+is its min sum, which the tool never touches.
+
+**The Target column was retargeted on 2026-09-01** from 4500 / 3500 / 2000 / 1500 / 1000 to the
+values shown. Those larger numbers were sized for the 10x AI party size cap that shipped alongside
+them; that cap is neutral by default now, so a 3500 template made a Mordor lord spawn about 2,400 men
+and lose all but ~150 on the first daily tick. The band ordering is preserved and compressed, because
+a 4.5:1 spread is meaningless once every culture is trimmed to the same 40-203 cap. Spawn at the
+typical fill ratio is now roughly goblin 237, orc 184, dwarf 156, men 142, elf 121.
 
 | Culture | Target | Templates in scope | Culture template: stacks | min | Old max |
 |---|---|---|---|---|---|
-| goblin | 4500 | 11 | 12 | 54 | 600 |
-| bluecraig | 4500 | 1 | 12 | 54 | 600 |
-| mordor | 3500 | 16 | 52 | 47 | 1446 |
-| isengard | 3500 | 12 | 19 | 54 | 950 |
-| gundabad | 3500 | 6 | 15 | 58 | 750 |
-| dolguldur | 3500 | 7 | 31 | 93 | 1550 |
-| mistymountainorcs | 3500 | 6 | 12 | 54 | 600 |
-| erebor | 2000 | 8 | 47 | 102 | 2350 |
-| gondor | 1500 | 15 | 14 | 10 | 700 |
-| rohan | 1500 | 23 | 10 | 37 | 500 |
-| dale | 1500 | 10 | 21 | 57 | 1050 |
-| dunland | 1500 | 10 | 10 | 33 | 500 |
-| rhun | 1500 | 20 | 8 | 30 | 400 |
-| harad | 1500 | 10 | 6 | 26 | 300 |
-| umbar | 1500 | 6 | (no culture template) | | |
-| shaghana | 1500 | 9 | (no culture template) | | |
-| abanissa | 1500 | 8 | (no culture template) | | |
-| rivendell | 1000 | 6 | 16 | 59 | 800 |
-| lothlorien | 1000 | 1 | (no culture template) | | |
-| mirkwood | 1000 | 7 | 13 | 55 | 650 |
-| lindon | 1000 | 1 | 16 | 59 | 800 |
+| goblin | 320 | 11 | 12 | 54 | 600 |
+| bluecraig | 320 | 1 | 12 | 54 | 600 |
+| mordor | 260 | 16 | 52 | 47 | 1446 |
+| isengard | 260 | 12 | 19 | 54 | 950 |
+| gundabad | 260 | 6 | 15 | 58 | 750 |
+| dolguldur | 260 | 7 | 31 | 93 | 1550 |
+| mistymountainorcs | 260 | 6 | 12 | 54 | 600 |
+| erebor | 220 | 8 | 47 | 102 | 2350 |
+| gondor | 200 | 15 | 14 | 10 | 700 |
+| rohan | 200 | 23 | 10 | 37 | 500 |
+| dale | 200 | 10 | 21 | 57 | 1050 |
+| dunland | 200 | 10 | 10 | 33 | 500 |
+| rhun | 200 | 20 | 8 | 30 | 400 |
+| harad | 200 | 10 | 6 | 26 | 300 |
+| umbar | 200 | 6 | (no culture template) | | |
+| shaghana | 200 | 9 | (no culture template) | | |
+| abanissa | 200 | 8 | (no culture template) | | |
+| rivendell | 150 | 6 | 16 | 59 | 800 |
+| lothlorien | 150 | 1 | (no culture template) | | |
+| mirkwood | 150 | 7 | 13 | 55 | 650 |
+| lindon | 150 | 1 | 16 | 59 | 800 |
 
 "Templates in scope" is the tool's own classification, which keys off the id prefix, so Blue Craig's
 five `goblin_bluecraig_N` clan templates count under **goblin** and Lindon's two `rivendell_lindon_N`
@@ -250,10 +257,11 @@ After any apply, run `python tools/validate_moduledata.py` (the `BROKEN_TROOP_RE
 
 ## Open questions
 
-**UPDATE 2026-09-01: the raise below is opt-in, not shipped.** The AI Party Size numeric defaults
-reset to neutral, so out of the box the cap is exactly the vanilla one this section describes as the
-problem, while the raised template maxima still ship. Read the answer that follows as design history,
-not as current behaviour.
+**UPDATE 2026-09-01: resolved from the other end.** The AI Party Size numeric defaults reset to
+neutral, so the cap is the vanilla one this section describes as the problem. Rather than raise the
+cap to meet the templates, the templates were brought down to meet the cap (see the retarget note
+above). Spawn and cap are now in the same range, which is what the answer below was reaching for.
+Read it as design history; the numbers in it are the 2026-08-14 ones.
 
 **ANSWERED 2026-08-18: the cap has now been raised.** This section predicted the behaviour
 correctly and play confirmed it, with one correction to the mechanism. The collapse was not mainly

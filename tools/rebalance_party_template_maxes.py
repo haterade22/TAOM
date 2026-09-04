@@ -55,34 +55,43 @@ TARGET_FILE = (
 # never `bluecraig`, because the match is on the leading token. Harmless while the two
 # targets are equal; diverge them and the five Blue Craig clan templates silently take the
 # goblin number.
+# Retargeted 2026-09-01 into the vanilla party-size band. These were 4500 / 3500 / 2000 / 1500 / 1000,
+# sized for the 10x AI party size cap that shipped at the time. That cap is now neutral by default, so
+# a lord's real limit is vanilla's 40-203, and a 3500 template made him spawn ~2,400 men and lose all
+# but ~150 of them on the first daily tick. Spawn and cap are independent in the engine:
+# FindAppropriateInitialRosterForMobileParty fills each stack to `min + (max - min) * r` and never
+# consults PartySizeLimit, so the two have to be kept in the same range by hand.
+#
+# The ordering is preserved (goblin > orc > dwarf > men > elf) but compressed, because a 4.5:1 spread
+# is meaningless once every culture is trimmed to the same 40-203 band anyway.
 CULTURE_TARGETS = {
     # Goblin realms: highest, they breed fastest
-    "goblin": 4500,
-    "bluecraig": 4500,
+    "goblin": 320,
+    "bluecraig": 320,
     # Orc / uruk kingdoms
-    "mordor": 3500,
-    "isengard": 3500,
-    "gundabad": 3500,
-    "dolguldur": 3500,
-    "mistymountainorcs": 3500,
+    "mordor": 260,
+    "isengard": 260,
+    "gundabad": 260,
+    "dolguldur": 260,
+    "mistymountainorcs": 260,
     # Dwarves: still the largest free-peoples host
-    "erebor": 2000,
+    "erebor": 220,
     # Men
-    "gondor": 1500,
-    "rohan": 1500,
-    "dale": 1500,
-    "dunland": 1500,
-    "rhun": 1500,
-    "khand": 1500,
-    "harad": 1500,
-    "umbar": 1500,
-    "shaghana": 1500,
-    "abanissa": 1500,
+    "gondor": 200,
+    "rohan": 200,
+    "dale": 200,
+    "dunland": 200,
+    "rhun": 200,
+    "khand": 200,
+    "harad": 200,
+    "umbar": 200,
+    "shaghana": 200,
+    "abanissa": 200,
     # Elves: few, and they stay few
-    "rivendell": 1000,
-    "lothlorien": 1000,
-    "mirkwood": 1000,
-    "lindon": 1000,
+    "rivendell": 150,
+    "lothlorien": 150,
+    "mirkwood": 150,
+    "lindon": 150,
 }
 
 # `kingdom_hero_party_<rest>_template`, excluding the mercenary and outlaw variants.

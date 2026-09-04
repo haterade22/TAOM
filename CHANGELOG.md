@@ -2,6 +2,48 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-04
+
+### balance(templates): 193 lord party templates brought back into the vanilla size band
+
+A new campaign showed a Mordor lord at **2423 men** on Summer 1 of year one, with the AI Party Size
+knobs already neutral. The knobs were not the cause. Spawn and cap are independent in the engine:
+`FindAppropriateInitialRosterForMobileParty` fills each stack to `min + (max - min) * r` with one
+uniform ratio per party and never consults `PartySizeLimit`. Every Mordor lord template summed to
+`max` 3500 against a `min` of 3 to 47, so 2423 is that template at ratio 0.69.
+
+The maxima were sized on 2026-08-14 for the 10x cap that shipped alongside them. That cap is neutral
+now, so the templates were the only half of the pair still scaled. `tools/rebalance_party_template_maxes.py`
+retargeted, preserving the band ordering but compressed, because a 4.5:1 spread between goblin and elf
+is meaningless once every culture is trimmed to the same 40-203 cap:
+
+| Band | Was | Now | Spawn at r = 0.69 |
+|---|---|---|---|
+| goblin, bluecraig | 4500 | 320 | ~237 |
+| mordor, isengard, gundabad, dolguldur, mistymountainorcs | 3500 | 260 | ~184 |
+| erebor | 2000 | 220 | ~156 |
+| the ten men cultures | 1500 | 200 | ~142 |
+| rivendell, lothlorien, mirkwood, lindon | 1000 | 150 | ~121 |
+
+193 templates, 2691 stacks. Verified independently of the tool's own report: every template lands
+exactly on its band, the largest `sum(max)` anywhere in scope is now 320, and 2423 is unreachable for
+any culture.
+
+**Five templates went UP, deliberately.** The `mistymountainorcs_mistymountainorcs_N` set sat at `max`
+16 to 31 while its own culture default was 3500, so those lords were spawning below the vanilla cap.
+They now match their siblings at 260. It is the one place this change raises a number, and it corrects
+a pre-existing inconsistency rather than introducing one.
+
+The shed's ordering is deliberately unchanged. `PlanShed` sorts ascending tier and strips from the
+front, keeping the elite core, which is wanted: rank-and-file is replenished through village
+recruitment. Lowering the templates is what stops the overflow being large enough for that policy to
+strip a culture down to its capstones.
+
+Note the direction this reverses for anyone who opts in. With templates at the vanilla band, raising
+the AI Lord multiplier no longer produces big armies on its own, because the template cannot spawn
+enough men to fill a scaled cap. The cap is now the ceiling and the template is the floor.
+
+
 ## 2026-09-03
 
 ### fix(troops): a party-screen hover could take the game down (#537)

@@ -7,11 +7,14 @@ hold more of the roster their party template spawns them with instead of being t
 vanilla party size limit within a day. One service consumed by three existing GameModels, seven MCM
 knobs, no new Harmony patch.
 
-**An unconfigured install matches vanilla exactly, which means the symptom below is present by
-default.** Party templates still ship the raised maxima from the 2026-08-14 pass (goblin 4500, orc
-and uruk 3500, Erebor 2000, men 1500, elves 1000) and spawn never consults `PartySizeLimit`, so a
-lord still spawns hundreds to thousands of men and is still shed to the vanilla cap on the first
-daily tick. Raising the multiplier is what stops that.
+**An unconfigured install matches vanilla exactly.** Spawn and cap are independent in the engine:
+`FindAppropriateInitialRosterForMobileParty` fills each stack to `min + (max - min) * r` and never
+consults `PartySizeLimit`, so party templates have to be kept in the same range as the cap by hand.
+They were sized for the old 10x default, which made a Mordor lord spawn about 2,400 men and lose all
+but ~150 on his first daily tick. The maxima were retargeted on 2026-09-01 to match the neutral cap
+(goblin 320, orc and uruk 260, Erebor 220, men 200, elves 150), so a lord now spawns 120-240 against
+a 40-203 cap. **Raise the multiplier and the templates become the limiting factor instead**, since
+they no longer spawn enough men to fill a scaled cap.
 
 ## Why This Exists
 
@@ -36,7 +39,9 @@ Three facts explain it:
 3. **Spawn size is unclamped.** `FindAppropriateInitialRosterForMobileParty` fills each stack to
    `min + (max - min) * r` with one uniform ratio per party and never consults `PartySizeLimit`.
    Commit `4f72e160` raised 193 lord template maxes on 2026-08-14 and deliberately left the cap
-   alone, which `docs/reference/party-template-sizing.md:250-279` recorded as an open question.
+   alone, which `docs/reference/party-template-sizing.md` recorded as an open question. That
+   question was closed on 2026-09-01 from the other end: the same 193 maxes were brought back
+   down to the vanilla cap band rather than the cap being raised to meet them.
 
 ## Architecture
 
