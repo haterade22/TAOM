@@ -205,10 +205,29 @@ public class PlayerIdentityAdapter : IPlayerIdentityAdapter
         }
     }
 
+    /// <summary>
+    /// Hides queued notifications addressed to a hero who no longer exists.
+    ///
+    /// NEVER call <c>InformationManager.Clear()</c> here, or anywhere else in TAOM. Despite the
+    /// name it does not clear notifications: it is the process-teardown routine that NULLS every
+    /// static delegate the UI subscribes to, including <c>OnShowTooltip</c>
+    /// (InformationManager.cs:149 on v1.4.8). <c>ShowTooltip</c> is nothing but
+    /// <c>OnShowTooltip?.Invoke(...)</c> (:74-77), so nulling it silently disables every tooltip in
+    /// the game, plus every inquiry popup and every on-screen message, with no exception and no log
+    /// line anywhere. It cannot recover: <c>GauntletInformationView</c> subscribes in its private
+    /// constructor and <c>Initialize()</c> is guarded by <c>if (_current == null)</c>, which stays
+    /// non-null, so nothing re-subscribes for the life of the process. Only restarting the game
+    /// brings tooltips back.
+    ///
+    /// This shipped, and it cost a long investigation because the symptom is so far from the cause:
+    /// tooltips were dead from the moment a taken-over campaign loaded, every input gate read
+    /// healthy, every widget tree was intact, and no log said anything. Reproduced 2026-09-03 for
+    /// both Faramir and Denethor; a brand new character was unaffected only because
+    /// <c>HeroSwitchService.Execute</c> returns early and never reaches this method.
+    /// </summary>
     public void ClearPendingNotifications()
     {
         MBInformationManager.HideInformations();
-        InformationManager.Clear();
     }
 
     private static Hero? FindHero(string heroId)

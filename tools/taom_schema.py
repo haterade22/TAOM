@@ -226,6 +226,7 @@ class Validator:
         issues += self._mounted_dwarves()
         issues += self._armour_slot_coverage()
         issues += self._upgrade_skill_regressions()
+        issues += self._upgrade_tier_collapse()
         issues.sort(key=lambda i: i.sort_key())
         return issues
 
@@ -952,7 +953,13 @@ class Validator:
                 bound.update(self._MILITIA_BINDING_RE.findall(text))
         return bound
 
-    def _upgrade_skill_regressions(self) -> list:
+    # The two upgrade-edge checks below read the same files and the same attributes, so the
+    # parse happens once. Memoised because SKILL_TEMPLATE_SHADOWS_SKILLS is emitted from inside
+    # it, and parsing twice would report every shadowed troop twice.
+    def _upgrade_troop_index(self):
+        cached = getattr(self, "_upgrade_index_cache", None)
+        if cached is not None:
+            return cached
         troops = {}
         issues = []
         # Sources also live OUTSIDE troops/: the 15 villager_<culture> entries in
@@ -993,11 +1000,133 @@ class Validator:
                             f"reach the game. Drop one of the two"),
                     ))
 
+                lvlm = self._LEVEL_ATTR_RE.search(attrs)
                 troops[idm.group(1)] = {
                     "file": rel, "line": line, "skills": skills, "upgrades": upgrades,
                     "templated": bool(tmpl),
+                    "level": int(lvlm.group(1)) if lvlm else None,
                 }
 
+        # A gate that silently checks nothing is worse than no gate. Both upgrade checks read two
+        # hardcoded, non-recursive globs, so a renamed folder or a file moved one level deeper
+        # drops them out of scope and every run afterwards reads exactly like a clean pass. Say so
+        # instead. Emitted from the index so ONE guard covers both checks, and emitted once because
+        # the index is memoised.
+        levelled = sum(1 for t in troops.values() if t["level"] is not None)
+        if not troops or not levelled:
+            issues.append(Issue(
+                severity=Severity.ERROR, code="UPGRADE_INDEX_EMPTY",
+                file=self._rel(self.moduledata / "troops"), line=0, entry_id="(index)",
+                message=(
+                    f"the upgrade-edge index found {len(troops)} troop(s), {levelled} of them "
+                    f"carrying a level, so UPGRADE_SKILL_REGRESSION and UPGRADE_TIER_COLLAPSE both "
+                    f"checked nothing this run. Those two gates glob troops/troops_*.xml and "
+                    f"characters/npcs_*.xml literally, without recursing, so a renamed folder or a "
+                    f"file moved one directory deeper silently empties them. Restore the layout or "
+                    f"widen the globs in _upgrade_troop_index"
+                ),
+            ))
+
+        self._upgrade_index_cache = (troops, issues)
+        return self._upgrade_index_cache
+
+    _LEVEL_ATTR_RE = re.compile(r"""(?<![A-Za-z_])level=["'](\d+)["']""")
+
+    # -- pass 4h: upgrade edges the engine prices at zero ------------------- #
+    # Vanilla DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade sums a per-tier table over
+    #     for (i = characterObject.Tier + 1; i <= upgradeTarget.Tier; i++)
+    # so an edge whose target does not reach a higher tier bracket exits the loop immediately
+    # and the method returns 0. CharacterObject.Tier is CharacterStatsModel.GetTier, which is
+    # clamp(ceil((level - 5) / 5), 0, MaxCharacterTier) -- a pure function of the level=
+    # attribute in these files. Three engine consumers then read that zero:
+    #   CampaignUIHelper.GetTroopXPTooltip   evaluates `troop.Xp % cost` and takes the game
+    #                                        down (player CTD, bundle a7dc3a20, 2026-09-03)
+    #   PartyUpgraderCampaignBehavior        gates on `cost > 0`, so AI parties promote the
+    #                                        stack instantly for gold alone
+    #   PartyBase.OnXpChanged           clamps roster XP to Number * maxCost, wiping it
+    # TaomPartyTroopUpgradeModel.GetXpCostForUpgrade now floors the cost at runtime, so a new
+    # collapse no longer crashes. This gate exists so it is still a decision someone made.
+    _TIER_BAND = 5
+    _TIER_BAND_FLOOR = 5
+    # Mirrors TaomCharacterStatsModel.MaxCharacterTier (Main/Features/TroopProgression/Models).
+    # The two must move together; vanilla's own value is 6.
+    _MAX_CHARACTER_TIER = 10
+    # Lateral by design -- a same-level branch the player chooses between rather than climbs.
+    # Adding an entry is a deliberate act: state why, and remember the runtime guard prices it
+    # off the TARGET's level, so a lateral at level 51 costs 4032 XP and one at level 1 costs 33.
+    _LATERAL_BY_DESIGN = {
+        # The uruk ranged side-branch: a veteran either climbs to swordsman (T3 -> T4) or steps
+        # sideways into the skirmisher line, which then climbs to bowman.
+        ("dg_uruk_veteran_warrior", "dg_uruk_skirmisher"):
+            "ranged side-branch; the same troop's other target crosses a bracket",
+        # troops.md "Three cultures, one goblin tree": the two borrowed-culture capstones are
+        # reachable only from the shared chosen_of_tharzog, and both sit at its own level.
+        ("goblin_chosen_of_tharzog", "goblin_bolgs_ironfang"):
+            "Goblin-town capstone; borrowed-culture signature unit at the same level",
+        ("gundabad_chosen_of_tharzog", "gundabad_bolgs_ironfang"):
+            "Gundabad capstone; borrowed-culture signature unit at the same level",
+        # The elf tier-10 capstone fan-out: one knight, three co-equal elite specialisations.
+        # They are already at MaxCharacterTier, so no level could make these edges climb.
+        ("lindon_knight_golden_flower", "lindon_gondolin_battlemaster"):
+            "tier-10 capstone fan-out; already at MaxCharacterTier",
+        ("lindon_knight_golden_flower", "lindon_warden_gondolin"):
+            "tier-10 capstone fan-out; already at MaxCharacterTier",
+        ("lindon_knight_golden_flower", "lindon_glorfindel_guard"):
+            "tier-10 capstone fan-out; already at MaxCharacterTier",
+        ("rivendell_knight_golden_flower", "rivendell_gondolin_battlemaster"):
+            "tier-10 capstone fan-out; already at MaxCharacterTier",
+        ("rivendell_knight_golden_flower", "rivendell_warden_gondolin"):
+            "tier-10 capstone fan-out; already at MaxCharacterTier",
+        ("rivendell_knight_golden_flower", "rivendell_glorfindel_guard"):
+            "tier-10 capstone fan-out; already at MaxCharacterTier",
+        # Villagers enter the tree at the bottom rung, which is also level 1 by design.
+        ("villager_dolguldur", "dg_goblin_slave"):
+            "villager entering the tree at its level-1 bottom rung",
+    }
+
+    @classmethod
+    def _troop_tier(cls, level: int) -> int:
+        """clamp(ceil((level - 5) / 5), 0, MaxCharacterTier), matching the engine exactly."""
+        raw = -((cls._TIER_BAND_FLOOR - level) // cls._TIER_BAND)  # ceil of (level - 5) / 5
+        return max(0, min(raw, cls._MAX_CHARACTER_TIER))
+
+    def _upgrade_tier_collapse(self) -> list:
+        troops, _ = self._upgrade_troop_index()
+        issues = []
+        for source_id in sorted(troops):
+            source = troops[source_id]
+            if source["level"] is None:
+                continue
+            for target_id in source["upgrades"]:
+                target = troops.get(target_id)
+                if target is None or target["level"] is None:
+                    continue  # BROKEN_TROOP_REF already owns an unresolvable target.
+                if (source_id, target_id) in self._LATERAL_BY_DESIGN:
+                    continue
+                source_tier = self._troop_tier(source["level"])
+                target_tier = self._troop_tier(target["level"])
+                if target_tier > source_tier:
+                    continue
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="UPGRADE_TIER_COLLAPSE",
+                    file=source["file"], line=source["line"], entry_id=source_id,
+                    message=(
+                        f'upgrades into "{target_id}" (level {target["level"]}, tier '
+                        f'{target_tier}) without leaving tier {source_tier}, so vanilla '
+                        f"GetXpCostForUpgrade returns 0 for this edge. The engine then divides "
+                        f"by it in CampaignUIHelper.GetTroopXPTooltip (a hover on the party "
+                        f"screen used to be a CTD), promotes the stack for free in the AI "
+                        f"upgrader, and clamps its roster XP to 0. Either move a level so the "
+                        f"edge crosses a tier bracket (they are 5 levels wide, starting at 6), "
+                        f"or add the pair to _LATERAL_BY_DESIGN with a reason if the sidestep "
+                        f"is deliberate"
+                    ),
+                ))
+        return issues
+
+    def _upgrade_skill_regressions(self) -> list:
+        troops, issues = self._upgrade_troop_index()
+        issues = list(issues)
         militia = self._militia_bound_ids()
         for source_id in sorted(troops):
             source = troops[source_id]

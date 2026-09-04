@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
@@ -5,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.SpecialResources.UI;
 
@@ -13,6 +15,17 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 {
     private readonly ISpecialResourceService _service;
     private readonly ISpecialResourceConfigProvider _config;
+    private readonly IModLogger _logger;
+
+    // One-shot latches: both members below run per map-bar refresh / per hover, so an unguarded log
+    // call would spam the file at frame rate. The FIRST failure is logged with its full stack and
+    // every later one is silent, including a second, DIFFERENT exception on the same path. That is a
+    // deliberate trade against log spam, not an oversight, and it is the known limitation of this
+    // instrumentation: if the first failure is fixed and a second remains, the log will not say so
+    // until the process restarts.
+    private bool _refreshFailureLogged;
+    private bool _tooltipFailureLogged;
+
     private MapInfoItemVM _resourceInfo;
     private bool _itemAdded;
     private bool _baseInitialized;
@@ -25,10 +38,38 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     {
         _service = IoC.Resolve<ISpecialResourceService>();
         _config = IoC.Resolve<ISpecialResourceConfigProvider>();
+        _logger = IoC.Resolve<IModLogger>();
         _resourceInfo = new MapInfoItemVM("special_resource", GetTooltipProperties);
     }
 
+    /// <summary>
+    /// Both engine entry points are wrapped because a throw from either reaches no TAOM log: these
+    /// are invoked by the engine, and nothing on either path writes to our logger, so the only
+    /// symptom would be a bar that stops producing tooltips with the log silent. Diagnosing the
+    /// 2026-09-03 "no tooltips on a pre-made hero" report cost two wrong root causes precisely
+    /// because nothing on this path could speak.
+    ///
+    /// Be clear that this CHANGES behaviour rather than only observing it. Before, an exception
+    /// unwound into the engine's own handling; now it becomes a logged no-op. That is the intended
+    /// trade for a mixin injected into a vanilla ViewModel (a mod's optional extra row should not
+    /// take the map bar down with it), but it is a behaviour change, not pure instrumentation.
+    /// </summary>
     public override void OnRefresh()
+    {
+        try
+        {
+            OnRefreshCore();
+        }
+        catch (Exception ex)
+        {
+            if (_refreshFailureLogged) return;
+            _refreshFailureLogged = true;
+            _logger?.LogError($"[SpecialResources] map-bar mixin OnRefresh threw, so the bar's refresh "
+                            + $"is being aborted by this feature every tick. Root cause: {ex}");
+        }
+    }
+
+    private void OnRefreshCore()
     {
         if (Campaign.Current == null) return;
 
@@ -71,6 +112,27 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     }
 
     private List<TooltipProperty> GetTooltipProperties()
+    {
+        try
+        {
+            return GetTooltipPropertiesCore();
+        }
+        catch (Exception ex)
+        {
+            if (!_tooltipFailureLogged)
+            {
+                _tooltipFailureLogged = true;
+                _logger?.LogError($"[SpecialResources] map-bar tooltip callback threw while building "
+                                + $"hint content. Root cause: {ex}");
+            }
+
+            // An empty list, never a rethrow: this callback is invoked from inside the engine's hover
+            // dispatch, so an escaping exception takes the hint system with it rather than this row.
+            return new List<TooltipProperty>();
+        }
+    }
+
+    private List<TooltipProperty> GetTooltipPropertiesCore()
     {
         var result = new List<TooltipProperty>(8);
 

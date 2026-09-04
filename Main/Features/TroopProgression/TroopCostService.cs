@@ -58,4 +58,40 @@ public class TroopCostService : ITroopCostService
 
         return baseCost;
     }
+
+    /// <summary>
+    /// Vanilla's own high-tier XP factor. `DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade`
+    /// falls through to `1.333f * (level + 4)^2` for every tier above its hardcoded table, which
+    /// under TAOM's MaxCharacterTier of 10 means tiers 8, 9 and 10. Reusing it here prices a
+    /// lateral upgrade by the same rule that already prices its neighbours.
+    /// </summary>
+    private const float LateralUpgradeXpFactor = 1.333f;
+
+    /// <summary>
+    /// Upper bound on the level fed to the lateral formula. No TAOM troop exceeds 51, and the tier
+    /// ladder tops out there anyway, so this only exists to keep `level + 4` away from int overflow:
+    /// that addition is integer arithmetic, so a pathological level wraps negative and the (int)
+    /// cast of the resulting float lands on int.MinValue. A guard whose whole job is to never
+    /// return zero would then return the most negative int there is.
+    /// </summary>
+    private const int MaxLateralUpgradeLevel = 1000;
+
+    // Crash bundle a7dc3a20. Vanilla sums a per-tier table over
+    // `for (i = source.Tier + 1; i <= target.Tier; i++)`, so it returns 0 for any upgrade edge
+    // whose target does not reach a higher tier bracket. `CampaignUIHelper.GetTroopXPTooltip`
+    // then evaluates `troop.Xp % cost` unguarded and takes the game down; the AI upgrader and
+    // `PartyBase.OnXpChanged` treat the same zero as "free" and "no XP worth keeping".
+    // TAOM authors deliberate same-level lateral upgrades, so the fix prices them.
+    public int GetUpgradeXpCost(int baseCost, int targetLevel)
+    {
+        if (baseCost > 0)
+            return baseCost;
+
+        int level = targetLevel < 1 ? 1
+                  : targetLevel > MaxLateralUpgradeLevel ? MaxLateralUpgradeLevel
+                  : targetLevel;
+        float span = level + 4;
+
+        return (int)(LateralUpgradeXpFactor * span * span);
+    }
 }

@@ -50,6 +50,7 @@ using TAOM.Features.SupplyLines;
 using TAOM.Features.SiegeDismount;
 using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.MixedFormations;
+using TAOM.Features.MountDespawn;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Features.QuickActions;
 using TAOM.Features.CompanionTactics;
@@ -135,6 +136,7 @@ public static class IoC
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         SiegePropDiagnosticsIoC.RegisterSiegePropDiagnosticsFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
+        MountDespawnIoC.RegisterMountDespawnFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         BannerBearersIoC.RegisterBannerBearersFeature(container);
         DreadAuraIoC.RegisterDreadAuraFeature(container);

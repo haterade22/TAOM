@@ -920,7 +920,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomCaravanModel(culturalFeats, IoC.Resolve<TAOM.Features.CaravanTrade.ICaravanTradeService>()));
         campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
-        campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopCostService>()));
         var aiPartySize = IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeService>();
         campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), aiPartySize, IoC.Resolve<IModLogger>()));
         campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats, aiPartySize));
@@ -1610,6 +1610,11 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());
         AddTaomBehavior(new MixedFormationsMissionBehavior());
         AddTaomBehavior(new SmartCavalryAIMissionBehavior());
+        // Registered unconditionally per TAOM convention; gates internally on its MCM toggle and on
+        // MountDespawnMissionGate, both re-read live so a mid-battle toggle takes effect at once.
+        AddTaomBehavior(new Features.MountDespawn.Hooks.MountDespawnMissionBehavior(
+            IoC.Resolve<Features.MountDespawn.IDeadMountDespawnService>(),
+            IoC.Resolve<IModLogger>()));
         // Registered unconditionally per TAOM convention; self-filters in AfterStart on
         // Campaign.Current + enlisted battle state (the donor's mission.Mode gate at init
         // time never fired — Mode is still StartUp there).

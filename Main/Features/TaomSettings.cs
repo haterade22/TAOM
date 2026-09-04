@@ -730,6 +730,19 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Show diagnostic [SmartCavalryAI] state-transition messages on the in-game HUD. Off = file log only.")]
     public bool SmartCavalryDebug { get; set; } = false;
 
+    // --- Performance / Dead Mount Cleanup ---
+    // GroupOrder 49: 10, 15, 20-48 and 100 were taken as of 2026-09-03.
+
+    [SettingPropertyGroup("Performance/Dead Mount Cleanup", GroupOrder = 49)]
+    [SettingPropertyBool("Despawn Dead Mounts", Order = 0,
+        HintText = "Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, arenas and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
+    public bool EnableDeadMountDespawn { get; set; } = true;
+
+    [SettingPropertyGroup("Performance/Dead Mount Cleanup")]
+    [SettingPropertyFloatingInteger("Despawn Delay (seconds)", 3f, 30f, "#0", Order = 1,
+        HintText = "Seconds between a mount's death and its fade. Default 5. Below 3 the corpse pops while the death animation is still playing, so values outside 3-30 fall back to 5.")]
+    public float DeadMountDespawnDelaySeconds { get; set; } = 5f;
+
     // --- Battle Tactics / Companion Roles ---
     // GroupOrder 22 was originally planned but SmartCavalryAI parallel port consumed it.
     // CompanionTactics settings live at GroupOrder 27/28/29.

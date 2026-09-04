@@ -2106,7 +2106,7 @@
         id="dg_uruk_warrior"
         race="dg_uruk"
         default_group="Infantry"
-        level="13"
+        level="16"
         name="{=aom_dg_uruk_warrior_name}[Dol Guldur] Uruk Fighter"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2158,7 +2158,7 @@
         id="dg_uruk_veteran_warrior"
         race="dg_uruk"
         default_group="Infantry"
-        level="16"
+        level="21"
         name="{=aom_dg_uruk_veteran_warrior_name}[Dol Guldur] Uruk Warrior"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2214,7 +2214,7 @@
         id="dg_uruk_swordsman"
         race="dg_uruk"
         default_group="Infantry"
-        level="21"
+        level="26"
         name="{=aom_dg_uruk_swordsman_name}[Dol Guldur] Uruk Swordsman"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2270,7 +2270,7 @@
         id="dg_uruk_fell_infantry"
         race="dg_uruk"
         default_group="Infantry"
-        level="26"
+        level="31"
         name="{=aom_dg_uruk_fell_infantry_name}[Dol Guldur] Uruk Fell Infantry"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2325,7 +2325,7 @@
         id="dg_uruk_black_guard"
         race="dg_uruk"
         default_group="Infantry"
-        level="31"
+        level="36"
         name="{=aom_dg_uruk_black_guard_name}[Dol Guldur] Uruk Black Guard"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2378,7 +2378,7 @@
         id="dg_uruk_fell_fang"
         race="dg_uruk"
         default_group="Infantry"
-        level="26"
+        level="31"
         name="{=aom_dg_uruk_fell_fang_name}[Dol Guldur] Uruk Fell Fang"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2432,7 +2432,7 @@
         id="dg_uruk_black_slayer"
         race="dg_uruk"
         default_group="Infantry"
-        level="31"
+        level="36"
         name="{=aom_dg_uruk_black_slayer_name}[Dol Guldur] Uruk Black Slayer"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2484,7 +2484,7 @@
         id="dg_uruk_skirmisher"
         race="dg_uruk"
         default_group="Ranged"
-        level="16"
+        level="21"
         name="{=aom_dg_uruk_skirmisher_name}[Dol Guldur] Uruk Skirmisher"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2539,7 +2539,7 @@
         id="dg_uruk_bowman"
         race="dg_uruk"
         default_group="Ranged"
-        level="21"
+        level="26"
         name="{=aom_dg_uruk_bowman_name}[Dol Guldur] Uruk Bowman"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2596,7 +2596,7 @@
         id="dg_uruk_fell_archer"
         race="dg_uruk"
         default_group="Ranged"
-        level="26"
+        level="31"
         name="{=aom_dg_uruk_fell_archer_name}[Dol Guldur] Uruk Fell Archer"
         occupation="Soldier"
         culture="Culture.dolguldur">
@@ -2653,7 +2653,7 @@
         id="dg_uruk_black_sharpshooter"
         race="dg_uruk"
         default_group="Ranged"
-        level="31"
+        level="36"
         name="{=aom_dg_uruk_black_sharpshooter_name}[Dol Guldur] Uruk Black Sharpshooter"
         occupation="Soldier"
         culture="Culture.dolguldur">

@@ -4,6 +4,189 @@
 
 ## 2026-09-03
 
+### fix(troops): a party-screen hover could take the game down (#537)
+
+A player hovering a stack of Dol Guldur Uruk Fouls on the party screen crashed to desktop. The XP
+tooltip divides by the troop's upgrade cost, and vanilla hands it a zero for any upgrade that does
+not climb a tier.
+
+`DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade` sums a per-tier table over
+`for (i = source.Tier + 1; i <= target.Tier; i++)`, so an edge whose target sits in the same tier
+exits the loop immediately and returns 0. `CampaignUIHelper.GetTroopXPTooltip` then evaluates
+`troop.Xp % cost` with no guard. Tier is `clamp(ceil((level - 5) / 5), 0, MaxCharacterTier)`, a pure
+function of the `level=` attribute, so this is a data shape and vanilla's own tree never takes it.
+`PatchShield` swallows only the three loader exceptions, so it was a real CTD.
+
+Eleven upgrade edges across the repo were priced at zero. Ten are deliberate same-level branches:
+the Lindon and Rivendell tier-10 capstone fan-outs, the two borrowed-culture Chosen of Tharzog
+capstones, the uruk skirmisher side-branch, and the Dol Guldur villager entry point. Forcing those
+to climb a bracket would mean inflating levels on units meant to be co-equal choices, so they stay
+as authored and `TaomPartyTroopUpgradeModel` prices them instead, using vanilla's own high-tier
+formula `1.333 * (level + 4)^2`. A lateral at level 1 costs 33 XP and one at level 51 costs 4032.
+
+The eleventh was a real slip, and the fix for it grew. `dg_uruk_warrior` sat at level 13, the only
+off-ladder combat-troop level in the repo, which put it in the same tier as the Uruk Foul below it.
+Dropping the Foul instead would have been one edit, but level 11 to level 6 crosses vanilla's
+`Tier < 2` gate in `DefaultPrisonerRecruitmentCalculationModel.IsPrisonerRecruitable`, so every
+captured Uruk Foul in every existing save would have become permanently unrecruitable. The whole
+uruk line moves onto the canonical ladder instead: Warrior 13 to 16, Veteran Warrior and Skirmisher
+16 to 21, Swordsman and Bowman 21 to 26, the three Fell troops 26 to 31, the three Black troops 31
+to 36. The Foul stays at 11. Every rung now climbs exactly one tier, and the Veteran-to-Skirmisher
+sidestep stays the deliberate lateral it always was.
+
+That is a real balance change and worth saying plainly: those eleven troops each move up one tier,
+so their wages and recruitment costs rise, prisoner conformity thresholds rise, and slightly fewer
+of them turn up as tavern mercenaries. Skills are authored per troop, so nothing about how any of
+them fights changed. Levels are read from XML on every boot and never persisted, so existing saves
+pick all of this up on load with no migration.
+
+Two quieter bugs went with the crash. `PartyUpgraderCampaignBehavior` gates on `cost > 0`, so AI
+parties had been promoting all eleven edges for gold alone, and `PartyBase.OnXpChanged` clamps
+roster XP to `Number * maxCost`, which wiped the banked XP of every single-target one on each tick.
+
+Two new validator checks gate the class. `UPGRADE_TIER_COLLAPSE` flags any edge that fails to climb
+a bracket, with a `_LATERAL_BY_DESIGN` allowlist carrying a reason per entry and freshness tests so
+a rename cannot leave a dead exemption behind. `UPGRADE_INDEX_EMPTY` fires when the shared troop
+index comes back empty, because both upgrade gates read two literal non-recursive globs and a
+renamed folder would have left them reading like a clean pass forever.
+
+Suite 7967 green, 897 python tests green, validator clean.
+
+Not-tested: the in-game hover itself. Research: `DefaultPartyTroopUpgradeModel`,
+`DefaultCharacterStatsModel.GetTier`, `CampaignUIHelper.GetTroopXPTooltip`, `PartyBase.OnXpChanged`,
+`PartyUpgraderCampaignBehavior`, `DefaultPrisonerRecruitmentCalculationModel`.
+
+### perf(mount-despawn): killed mounts leave the field
+
+Players reported dead horses lying on the battlefield for the rest of the fight. A mount is a full
+agent carrying a skeleton and a live ragdoll, and a horse rig is heavier than a human one, so a
+cavalry battle piles up corpse agents that cost frame time and do nothing once the rider is gone.
+Killed mounts now fade five seconds after death, with an MCM toggle and a 3 to 30 second slider
+under Performance/Dead Mount Cleanup.
+
+There is no vanilla behavior to lean on. Corpse retirement in singleplayer is entirely native,
+driven by `BannerlordConfig.NumberOfCorpses` and `Mission.SetMissionCorpseFadeOutTimeInSeconds`,
+whose only vanilla caller is the multiplayer duel mode. The closest precedent is
+`SpawningBehaviorBase`, which fades riderless LIVING mounts after 30 seconds, and it is multiplayer
+only. Its shape is what this copies: record on removal, sweep on a cadence, fade with
+`hideInstantly: false`.
+
+Fading is not hiding. Native later fires `Mission.OnAgentDeleted`, which drops the agent from
+`_allAgents`, nulls its `Team` and zeroes every native pointer. So the behavior holds the engine
+handles and drops each one the moment deletion is signalled, and the scheduling service sees nothing
+but agent indices and mission time. That split is what makes the timing rules testable with no live
+`Mission`, and it keeps the index-reuse hazard closed: deletion always precedes an index being
+handed to a new agent.
+
+Nothing in loot or rewards reads a mount agent after death. `MountAgentLogic`'s lame-horse roll and
+harness return, `CasualtyHandler`, `BattleAgentLogic` and `AgentVictoryLogic` all run inside
+`OnAgentRemoved`, and no `TaleWorlds.CampaignSystem` code touches a mount `Agent` at all. Campaign
+horse loot comes from troop equipment.
+
+One consequence is worth knowing, and the MCM hint says so: corpses occupy agent slots, and
+`DefaultBattleMissionAgentSpawnLogic` sizes reinforcement batches as
+`MaxNumberOfAgentsForMission - Mission.AllAgents.Count`. Freeing slots lets reinforcements arrive
+somewhat sooner than vanilla. The win is the saved ragdoll and skeleton cost, not a smaller agent
+count.
+
+Gated to field battles, sieges and sally-outs by an allowlist, so towns and story scenes that set
+`DisableCorpseFadeOut` keep their bodies, and arenas and tournaments are untouched. Eight fades per
+sweep at most, because retiring thirty corpses in one frame is the same stutter the feature exists
+to remove.
+
+Not tested in unit tests: the fade itself. No vanilla call site anywhere fades an agent already in
+`Killed` state, so whether native `fade_out` retires a corpse is not knowable from managed code and
+the in-game smoke is the real gate.
+
+### fix(player-switcher): starting as an existing lord killed every tooltip in the game
+
+Take over a lord and the campaign had no tooltips anywhere, from the moment it loaded. Not the
+resource bar, not parties, not Alt on the map. No error, nothing in any log, and loading another save
+did not help. Only restarting the game brought them back. A brand new character was fine.
+
+The cause was one line in TAOM. `PlayerIdentityAdapter.ClearPendingNotifications` called
+`InformationManager.Clear()`, and `HeroSwitchService` calls that method on every handover path.
+
+`InformationManager.Clear()` does not clear notifications. It is the process-teardown routine, and
+it nulls every static delegate the UI subscribes to: `OnShowTooltip`, `OnHideTooltip`, the three
+inquiry delegates and the message ones. Those statics are the transport. `ShowTooltip` is nothing but
+`OnShowTooltip?.Invoke(type, args)`, so nulling it disables every tooltip at once, and takes inquiry
+popups and on-screen messages with it. A null-conditional invoke throws nothing and logs nothing,
+which is why the failure was completely silent.
+
+It could not recover either. `GauntletInformationView` subscribes in its private constructor, and
+`Initialize()` only builds one while `_current == null`, which stays non-null. So nothing
+re-subscribes for the life of the process, which is exactly why a restart was the only cure.
+
+The call is gone; hiding queued notifications is what `MBInformationManager.HideInformations()`
+already did on the line above. An assembly-wide IL ban test now fails the build if any TAOM method
+calls `InformationManager.Clear()` again, and it was verified failing against the defect before being
+accepted.
+
+Worth recording how long this took to find, because the shape is the lesson. The symptom sat far from
+the cause, and two plausible root causes were proposed and falsified on the way: a focus-layer leak
+(the engine already releases focus on teardown, `ScreenLayer.HandleDeactivate` calls `TryLoseFocus`
+itself) and a clan-leader mismatch (falsified by playing Denethor, who already leads his clan, and
+still having no tooltips). What settled it was diagnostics that could not lie plus tracing the
+pipeline from `HintWidget` to the renderer, rather than another guess.
+
+### feat(dev-console): `taom.print_input_state`, for tooltips that stop appearing
+
+A report came in of the campaign-map resource bar showing no hover tooltips and Alt showing no party
+nameplates, both dead in the same session. Reading the engine to work out why produced a confident
+wrong answer, so this adds the command that would have settled it in one line.
+
+The two symptoms look like one bug and are not. Alt-hover nameplates read a game key, and the engine
+answers a key query only for the single layer holding `ScreenManager.FocusedLayer`. The resource
+bar's hints ride mouse hit-testing, through `IsHitThisFrame` into `UIContext.SetIsMouseEnabled`,
+which never consults focus at all. Either can be dead while the other is fine, and no log line
+distinguishes them.
+
+`taom.print_input_state [label]` prints a verdict for each path and appends the full layer table to
+`Logs\taom_input_state.log`: name, type, input order, active, focus-layer, hit-this-frame,
+keys-allowed, mouse-allowed and the input mask, with the focus holder marked. It appends rather than
+overwrites, and takes an optional label, because the useful artefact is two dumps from one session,
+one taken while tooltips work and one after they stop. The difference between them names the
+culprit.
+
+It walks `ScreenManager.SortedLayers` rather than the top screen's own layer list. That getter
+appends the global layers, and the map bar lives on one of those, so a top-screen walk would miss
+the exact layer half this diagnostic is about.
+
+The verdict logic is engine-free and unit-tested on its own, so the reading is pinned even though
+capturing the state needs a live game. That split follows `DevConsoleDiscoveryAudit`. The existing
+whole-assembly binding tests cover the new command's engine contract with no per-command wiring,
+which is what keeps a malformed console method from taking out the console at startup.
+
+`taom.print_player_state` joined it once the report narrowed to "tooltips are dead only when playing
+a pre-made hero, and fine on a brand new character". The engine keeps who the player is in four
+places, updated by different code: `Hero.MainHero`, `Clan.PlayerClan`, `MobileParty.MainParty` and
+`Game.Current.PlayerTroop`. A Player Switcher takeover repoints the player at an existing lord and
+then deletes the throwaway creation hero and clan, so a link left pointing at a deleted object is
+exactly the shape of failure to expect, and it throws nowhere the TAOM log can see it. The command
+reads all four and names every link that disagrees, not just the first, because a half-finished
+handover breaks several at once.
+
+The map-bar mixin also learned to speak. `SpecialResourceMapBarMixin.OnRefresh` and its tooltip
+callback are both invoked by the engine, and nothing on either path writes to TAOM's log, so a throw
+from either left no trace: the bar would stop producing tooltips with every log silent. Both are now
+wrapped, each logging its first failure with the full stack behind a one-shot latch, since they run
+at frame rate and an unguarded log would spam the file. The latch means a second, different
+exception on the same path stays invisible until the process restarts, which is a deliberate trade
+and worth knowing when reading the output.
+
+This changes behaviour rather than only observing it: an exception that previously unwound into the
+engine's own handling now becomes a logged no-op. For a mod's optional extra row injected into a
+vanilla ViewModel that is the right trade, but it is a behaviour change and not pure instrumentation.
+
+`taom.print_hud_layout` gained the same reach in the same pass, for the same investigation. It
+walked the top screen's own layers, which meant it could not see `Tooltip` or `MapBar` at all, since
+both are global layers. It now walks `ScreenManager.SortedLayers` and takes an optional
+case-insensitive layer-name filter, because those two sort last and a whole-stack dump can truncate
+before reaching them. It also no longer skips a layer with no widget tree in silence: a null
+`UIContext` and a null `Root` are now reported and told apart, which is what an unloaded movie looks
+like from the outside.
+
 ### feat(player-switcher): skip the backstory questions when you pick a lord (#536)
 
 Picking Faramir from the lord list and clicking Next walked you through all six backstory menus

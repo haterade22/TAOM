@@ -601,3 +601,91 @@ The career ability key chip read `IAbilityInputAdapter.ActivationKeyName` once i
 - **Why missed:** the move was reasoned about purely as a correctness fix (stale label after a rebind). The cost of the callee was never asked about, because in its previous home, a constructor, the cost genuinely did not matter. The diff looked like relocating one line.
 - **Prevent:** when relocating a read from a cold site to a per-frame or per-tick one, decompile the callee before the move. Anything that resolves localized text, formats a string, or returns a `TextObject` allocates. The fix is usually to cache against whatever the value actually depends on (here, the bound `InputKey`), which keeps the responsiveness the move was made for while taking the lookup off the frame budget.
 - **Source:** #533 rebindable career ability key, 2026-09-03; RCA `docs/reviews/rca-career-keybind-2026-09-03.md` finding 1.
+
+### Walk every numbered requirement of a multi-part rule, not the famous one
+
+`.claude/rules/csharp-architecture.md` "Config Providers MUST Validate" is six numbered
+requirements. MountDespawn's delay clamp implemented requirement 4 (reject NaN before the range
+check) correctly and shipped into review missing requirement 5, log a warning and fall back, and 6,
+report that a reversion happened. The setting fell back from an out-of-range value to 5s in silence,
+so a player who hand-edited the json2 file to 100 would have seen 5 with nothing anywhere saying
+why.
+- **Why missed:** the NaN requirement leads that rule, carries the most prose, and names five prior
+  shipped instances. That prominence consumed the attention the other five requirements needed, and
+  the validation felt finished once NaN was handled. A correct fallback VALUE looks like a completed
+  job, which is why the missing warning is the requirement that gets dropped.
+- **Prevent:** when a rule is a numbered list, enumerate the numbers against the code rather than
+  against your memory of the rule. For config validation specifically, the question that catches
+  this is "if this value is rejected, how does the player find out?" A latch reset on the session
+  boundary keeps the warning from repeating on a per-tick validator.
+- **Source:** `docs/reviews/rca-mount-despawn-2026-09-03.md` finding 1.
+
+### Ask what the engine does with every degenerate value your GameModel can return
+
+`DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade` returns 0 for any upgrade edge whose target does
+not reach a higher tier, and `CampaignUIHelper.GetTroopXPTooltip` then evaluates `troop.Xp % cost`
+with no guard. Vanilla never hits it because every Calradian upgrade climbs a tier bracket; TAOM
+ships ten deliberate same-level lateral edges plus one off-ladder level, so hovering a `dg_uruk_foul`
+stack on the party screen was a hard CTD. Two other consumers read the same zero as "free" and as "no
+XP worth keeping".
+- **Why missed:** the model was overridden for its gold cost only, and the XP method was left to
+  vanilla precisely because it looked untouched and therefore safe. Inheriting a method is not
+  neutral: it imports the base's whole return contract, including the values the base's own data can
+  never produce. Nothing in the troop-authoring tools knew that `level=` fed a divisor.
+- **Prevent:** when you subclass a `Default*Model`, list every value each inherited method can return
+  and grep the engine for what reads it. Zero, negative and sentinel returns are where the mod's data
+  differs from Calradia's. Where the degenerate value is reachable from data, override the method to
+  floor it AND gate the data, because the override alone turns a crash into a silent oddity.
+- **Source:** crash bundle a7dc3a20, 2026-09-03 (#537); `UPGRADE_TIER_COLLAPSE` validator gate; RCA `docs/reviews/rca-upgrade-tier-collapse-2026-09-03.md`.
+
+
+### A data fix that moves a tier is a gameplay change, so enumerate what reads that tier
+
+The zero-cost upgrade CTD had an obvious one-attribute data fix: drop `dg_uruk_foul` from level 11
+to level 6 so its upgrade edge crossed a tier bracket. Levels feed `Tier`, and vanilla
+`DefaultPrisonerRecruitmentCalculationModel.IsPrisonerRecruitable` opens with
+`character.Tier < 2 -> false`, so that one edit would have made every captured Uruk Foul in every
+existing save permanently unrecruitable. The line was re-laddered instead, which kept the entry
+troop at tier 2.
+- **Why missed:** the change was reasoned about entirely through the formula it was meant to
+  satisfy, `ceil((level - 5) / 5)`, and the level was picked because 6 was on the canonical ladder
+  and matched the modal basic-troop level. Both true, and neither has anything to do with what
+  consumes the resulting tier. "On-ladder" felt like the whole correctness question because the bug
+  being fixed was itself a ladder bug.
+- **Prevent:** treat `level=` as an input to a fan-out, not as a label. Before moving one, grep the
+  engine for `.Tier` comparisons and for the level brackets in TAOM's own `TroopCostService`, and
+  list what each returns on both sides of the move. The cheap tell is a threshold: any engine gate
+  written as `Tier < N` or `Tier > N` turns a one-tier move into a capability change, and prisoner
+  recruitment, volunteer eligibility, mercenary spawn counts and wage all sit behind one.
+- **Source:** #537 review, 2026-09-03; RCA `docs/reviews/rca-upgrade-tier-collapse-2026-09-03.md`.
+
+### A cross-language constant needs a test that reads the other language
+
+`taom_schema.Validator._MAX_CHARACTER_TIER = 10` mirrors `TaomCharacterStatsModel.MaxCharacterTier`,
+and it shipped into review with a test asserting `10 == Validator._MAX_CHARACTER_TIER`. Both halves
+of that comparison are python, so the test could not fail for the only reason it existed: someone
+editing the C# override.
+- **Why missed:** the test read as a pin because it named the right constant and carried a comment
+  saying the two must move together. A comment is not a mechanism, and an assertion whose two sides
+  come from the same file is a tautology no matter what it is named.
+- **Prevent:** when a value is duplicated across languages, the test must READ the far side, by
+  regex over the source file if nothing better exists, and fail loudly when the file or the pattern
+  cannot be found. `CommitGateCoverageTests` is the shape to copy: it diffs the validator's codes
+  against the hook script by parsing both. Ask of any pin: which file would I edit to break this,
+  and does the test open it?
+- **Source:** #537 review, 2026-09-03.
+
+### Write generated files with the ENCODING THE FILE ALREADY HAS, not the one your reader used
+
+Editing shipped XML and C# through `io.open(..., encoding='utf-8-sig')` added a UTF-8 BOM to five
+files that had none in `HEAD`. `utf-8-sig` strips a BOM on read and WRITES one on write, so a
+symmetrical-looking read/write pair silently changes the file's first three bytes.
+- **Why missed:** `utf-8-sig` is the correct READ encoding for this repo, because some ModuleData
+  files do carry a BOM, so reaching for it feels like following the convention rather than breaking
+  it. The diff shows nothing: the BOM is invisible in every viewer, and the file still parses,
+  builds and validates.
+- **Prevent:** `tools/README.md`'s idiom A is not optional even for a two-attribute hand edit.
+  Detect with `raw.startswith(b"\xef\xbb\xbf")` on the ORIGINAL bytes, then re-prepend only if it
+  was there. When repairing a file you already wrote, take the flag from `git show HEAD:<path>`
+  rather than from the working tree, or you will faithfully preserve your own mistake.
+- **Source:** #537 review, 2026-09-03.

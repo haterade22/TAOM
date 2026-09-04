@@ -64,7 +64,7 @@ class ValidatorContractTests(unittest.TestCase):
     def test_clean_tree_has_no_errors(self):
         _write(self.md / "troops" / "troops_test.xml", """<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
-  <NPCCharacter id="hero_a" default_group="Infantry" culture="Culture.gondor">
+  <NPCCharacter id="hero_a" level="11" default_group="Infantry" culture="Culture.gondor">
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.hero_b" />
     </upgrade_targets>
@@ -76,7 +76,7 @@ class ValidatorContractTests(unittest.TestCase):
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="hero_b" default_group="Cavalry" culture="Culture.gondor" />
+  <NPCCharacter id="hero_b" level="16" default_group="Cavalry" culture="Culture.gondor" />
 </NPCCharacters>
 """)
         errors = [i for i in self._run() if i.severity is ts.Severity.ERROR]

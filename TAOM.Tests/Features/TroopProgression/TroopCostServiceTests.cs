@@ -112,4 +112,95 @@ public class TroopCostServiceTests
 
         Assert.AreEqual(baseCost * 2, mercCost);
     }
+
+    // --- GetUpgradeXpCost: the zero-cost upgrade guard (crash bundle a7dc3a20) ---
+    //
+    // Vanilla DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade sums a per-tier table over
+    // `for (i = source.Tier + 1; i <= target.Tier; i++)`, so it returns 0 for any upgrade edge
+    // whose target does not sit in a higher tier bracket. CampaignUIHelper.GetTroopXPTooltip then
+    // does `troop.Xp % cost` with no guard and takes the game down. TAOM authors deliberate
+    // same-level lateral upgrades (the elf tier-10 capstone fan-out, the chosen_of_tharzog
+    // capstones), so the fix is to price them rather than to forbid them.
+
+    [TestMethod]
+    public void GetUpgradeXpCost_PositiveBaseCost_PassesThrough()
+    {
+        var result = _sut.GetUpgradeXpCost(baseCost: 300, targetLevel: 13);
+
+        Assert.AreEqual(300, result);
+    }
+
+    [TestMethod]
+    public void GetUpgradeXpCost_VanillaInvalidTargetSentinel_PassesThrough()
+    {
+        // Vanilla returns 100000000 when upgradeTarget is not one of the character's targets.
+        // That is already positive, so it must survive untouched.
+        var result = _sut.GetUpgradeXpCost(baseCost: 100000000, targetLevel: 13);
+
+        Assert.AreEqual(100000000, result);
+    }
+
+    [TestMethod]
+    [DataRow(1, 33)]
+    [DataRow(6, 133)]
+    [DataRow(13, 385)]
+    [DataRow(16, 533)]
+    [DataRow(36, 2132)]
+    [DataRow(51, 4032)]
+    public void GetUpgradeXpCost_ZeroBaseCost_ChargesVanillaHighTierFormula(int targetLevel, int expected)
+    {
+        // (int)(1.333f * (level + 4) * (level + 4)), vanilla's own default branch: the one it
+        // already uses for every tier above its hardcoded table (tiers 8-10 under TAOM's
+        // MaxCharacterTier of 10).
+        var result = _sut.GetUpgradeXpCost(baseCost: 0, targetLevel: targetLevel);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(-5)]
+    public void GetUpgradeXpCost_ZeroBaseCostAndNonPositiveLevel_StillReturnsPositive(int targetLevel)
+    {
+        // A null or unlevelled upgrade target must not reintroduce the divide-by-zero.
+        var result = _sut.GetUpgradeXpCost(baseCost: 0, targetLevel: targetLevel);
+
+        Assert.IsTrue(result > 0, $"expected a positive cost, got {result}");
+    }
+
+    [TestMethod]
+    public void GetUpgradeXpCost_NegativeBaseCost_ChargesFormula()
+    {
+        var result = _sut.GetUpgradeXpCost(baseCost: -10, targetLevel: 13);
+
+        Assert.AreEqual(385, result);
+    }
+
+    [TestMethod]
+    [DataRow(int.MaxValue)]
+    [DataRow(1000000)]
+    [DataRow(100000)]
+    public void GetUpgradeXpCost_ZeroBaseCostAndAbsurdLevel_StillReturnsPositive(int targetLevel)
+    {
+        // `level + 4` is integer arithmetic, so an unclamped pathological level wraps negative and
+        // the (int) cast of the resulting float lands on int.MinValue. The clamp is what keeps this
+        // guard from returning the most negative int there is.
+        var result = _sut.GetUpgradeXpCost(baseCost: 0, targetLevel: targetLevel);
+
+        Assert.IsTrue(result > 0, $"expected a positive cost for level {targetLevel}, got {result}");
+    }
+
+    [TestMethod]
+    public void GetUpgradeXpCost_ZeroBaseCost_IsMonotonicInTargetLevel()
+    {
+        // A higher-level lateral must never cost less than a lower-level one. This is the property
+        // a future change to the formula is most likely to break silently.
+        var previous = 0;
+        foreach (var level in new[] { 1, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51 })
+        {
+            var cost = _sut.GetUpgradeXpCost(baseCost: 0, targetLevel: level);
+            Assert.IsTrue(cost >= previous, $"level {level} cost {cost} is below the previous {previous}");
+            previous = cost;
+        }
+    }
 }

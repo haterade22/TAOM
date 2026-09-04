@@ -594,3 +594,24 @@ a career id that the real `CareerRegistry` never returns for a root choice.
   a `.Returns(...)` whose value you would have to check the data files to justify.
 - **Source:** `docs/reviews/rca-career-points-2026-09-02.md` finding 2;
   `CareerRegistryTests.GetOwningCareerId_RootChoiceWithEmptyGroupId_ResolvesToItsCareer`.
+
+### A comment asserting an invariant is not enforcement of it
+
+`DeadMountDespawnService.CollectDue` returns `_dueBuffer`, its own reused `List<int>`, and the
+caller's fade loop iterated it directly while calling `Agent.FadeOut`, which can drive
+`Mission.OnAgentDeleted` synchronously. The behavior carried a comment saying the loop was safe
+"precisely so" it never enumerated a mutable collection. The reasoning behind that was correct
+(`Forget` touches `_deathTimes` alone, and nothing reachable re-enters `CollectDue`), but nothing
+enforced it: a later `CollectDue` call anywhere in that call graph would hit `_dueBuffer.Clear()`
+mid-iteration, and the comment would still read as true.
+- **Why missed:** the comment recorded a conclusion the author had actually reached, so re-reading
+  it confirmed the reasoning instead of testing whether anything held it in place. Only the
+  data-flow agent, which opens both files at once and checks the identity of a returned collection,
+  could see that the safety was a property of today's call graph rather than of the code.
+- **Prevent:** when writing a comment that asserts a safety property, name what enforces it. If the
+  honest answer is "nothing, but no current caller violates it", either write it that way ("safe
+  today because X") or spend the few lines to make it structural. Here the fix was three lines: the
+  caller copies into its own scratch list, so the invariant is local to one method instead of spread
+  across two files. Watch for the words "structurally", "cannot", and "precisely so" in a comment
+  about concurrency, re-entrancy, or ownership.
+- **Source:** `docs/reviews/rca-mount-despawn-2026-09-03.md` finding 2.
