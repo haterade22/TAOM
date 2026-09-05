@@ -119,6 +119,26 @@ jobs:
           # `python tools/check_doc_graph_ratchet.py --update`, commit the drop.
           python3 tools/check_doc_graph_ratchet.py
 
+      - name: Modder handbook gates
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          # docs/modding/ states what the engine reads off each XML element, and its readers
+          # cannot check that themselves. Two read-only gates keep it true.
+          #
+          # lint_handbook.py needs nothing but the checkout: the chapter contract, dead links,
+          # long dashes, drive paths, recipe trailers, live-path warnings.
+          #
+          # check_handbook_attributes.py normally diffs every attribute table against the
+          # deserializer it cites, which needs the decompile dump. CI has no dump, so it falls
+          # back to tools/handbook_attribute_manifest.json, the committed record of what each
+          # cited method reads. That still catches the failure that matters here: a table row
+          # added or renamed without re-deriving it from the engine. Refresh the manifest with
+          # `python tools/check_handbook_attributes.py --update` on a machine that has the dump,
+          # and commit it in the same change as the table.
+          python3 tools/lint_handbook.py
+          python3 tools/check_handbook_attributes.py
+
 
   hook-harness:
     name: Hook Harness Contract

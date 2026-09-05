@@ -1,0 +1,1117 @@
+{
+  "dump_root_name": "_categories_v1.4.8",
+  "markers": {
+    "TaleWorlds.CampaignSystem.CharacterObject|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/CharacterObject.cs|Deserialize": {
+      "attributes": [
+        "battleTemplate",
+        "civilianTemplate",
+        "id",
+        "is_basic_troop",
+        "is_hidden_encyclopedia",
+        "is_template",
+        "level",
+        "occupation",
+        "upgrade_requires",
+        "voice"
+      ],
+      "calls_base": true,
+      "elements": [
+        "Traits",
+        "upgrade_target",
+        "upgrade_targets"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/CharacterObject.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.CharacterObject"
+    },
+    "TaleWorlds.CampaignSystem.Clan|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/Clan.cs|Deserialize": {
+      "attributes": [
+        "banner_key",
+        "clan",
+        "color",
+        "color2",
+        "culture",
+        "default_party_template",
+        "id",
+        "initial_home_settlement",
+        "is_bandit",
+        "is_clan_type_mercenary",
+        "is_mafia",
+        "is_minor_faction",
+        "is_noble",
+        "is_nomad",
+        "is_outlaw",
+        "is_sect",
+        "kingdom",
+        "name",
+        "owner",
+        "short_name",
+        "super_faction",
+        "text",
+        "tier",
+        "value"
+      ],
+      "calls_base": true,
+      "elements": [
+        "minor_faction_character_templates",
+        "relationship"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/Clan.cs",
+      "helpers": [
+        "UpdateBannerColorsAccordingToKingdom"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Clan"
+    },
+    "TaleWorlds.CampaignSystem.CultureObject|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/CultureObject.cs|Deserialize": {
+      "attributes": [
+        "armorer",
+        "artisan_notary",
+        "bandit_bandit",
+        "bandit_boss",
+        "bandit_boss_party_template",
+        "bandit_chief",
+        "bandit_raider",
+        "barber",
+        "basic_troop",
+        "beggar",
+        "blacksmith",
+        "board_game_type",
+        "caravan_guard",
+        "caravan_master",
+        "default_battle_equipment_roster",
+        "default_character_creation_body_property",
+        "default_civilian_equipment_roster",
+        "default_party_template",
+        "default_stealth_equipment_roster",
+        "duel_preset_equipment_roster",
+        "elite_basic_troop",
+        "female_beggar",
+        "female_dancer",
+        "fishing_party_template",
+        "gangleader_bodyguard",
+        "gear_dummy",
+        "guard",
+        "horseMerchant",
+        "id",
+        "marriage_bride_equipment_roster",
+        "melee_elite_militia_troop",
+        "melee_militia_troop",
+        "merchant",
+        "merchant_notary",
+        "militia_bonus",
+        "militia_party_template",
+        "militia_veteran_archer",
+        "musician",
+        "name",
+        "naval_factor",
+        "preacher_notary",
+        "prison_guard",
+        "prosperity_bonus",
+        "ranged_elite_militia_troop",
+        "ranged_militia_troop",
+        "ransom_broker",
+        "rebels_party_template",
+        "rural_notable_notary",
+        "settlement_patrol_template_coastal",
+        "settlement_patrol_template_level_1",
+        "settlement_patrol_template_level_2",
+        "settlement_patrol_template_level_3",
+        "shipwright",
+        "shipyard_worker",
+        "shop_worker",
+        "start_point_position_x",
+        "start_point_position_y",
+        "tavern_wench",
+        "taverngamehost",
+        "tavernkeeper",
+        "text",
+        "tournament_master",
+        "townsman",
+        "townsman_child",
+        "townsman_infant",
+        "townsman_teenager",
+        "townswoman",
+        "townswoman_child",
+        "townswoman_infant",
+        "townswoman_teenager",
+        "vassal_reward_party_template",
+        "village_woman",
+        "villager",
+        "villager_female_child",
+        "villager_female_teenager",
+        "villager_male_child",
+        "villager_male_teenager",
+        "villager_party_template",
+        "weaponsmith"
+      ],
+      "calls_base": true,
+      "elements": [
+        "available_ship_hulls",
+        "banner_bearer_replacement_weapons",
+        "basic_mercenary_troops",
+        "caravan_party_templates",
+        "clan_names",
+        "cultural_feats",
+        "default_policies",
+        "elite_caravan_party_templates",
+        "female_names",
+        "lord_templates",
+        "male_names",
+        "notable_templates",
+        "possible_clan_banner_icon_ids",
+        "rebellion_hero_templates",
+        "tournament_team_templates_four_participant",
+        "tournament_team_templates_one_participant",
+        "tournament_team_templates_two_participant",
+        "vassal_reward_items"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/CultureObject.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.CultureObject"
+    },
+    "TaleWorlds.CampaignSystem.Hero|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/Hero.cs|Deserialize": {
+      "attributes": [
+        "alive",
+        "banner_item",
+        "faction",
+        "father",
+        "mother",
+        "preferred_upgrade_formation",
+        "spouse",
+        "text"
+      ],
+      "calls_base": true,
+      "elements": [],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/Hero.cs",
+      "helpers": [
+        "SetCharacterObject",
+        "SetInitialValuesFromCharacter"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Hero"
+    },
+    "TaleWorlds.CampaignSystem.Kingdom|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/Kingdom.cs|Deserialize": {
+      "attributes": [
+        "banner_key",
+        "clan",
+        "color",
+        "color2",
+        "culture",
+        "id",
+        "initial_home_settlement",
+        "isAtWar",
+        "kingdom",
+        "name",
+        "owner",
+        "primary_banner_color",
+        "ruler_title",
+        "secondary_banner_color",
+        "short_name",
+        "text",
+        "title",
+        "value"
+      ],
+      "calls_base": true,
+      "elements": [
+        "policies",
+        "relationships"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/Kingdom.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Kingdom"
+    },
+    "TaleWorlds.CampaignSystem.Party.PartyTemplateObject|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Party/PartyTemplateObject.cs|Deserialize": {
+      "attributes": [
+        "id",
+        "max_value",
+        "min_value",
+        "troop"
+      ],
+      "calls_base": true,
+      "elements": [
+        "PartyTemplateStack",
+        "ShipTemplateStack",
+        "ship_hulls",
+        "stacks"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Party/PartyTemplateObject.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Party.PartyTemplateObject"
+    },
+    "TaleWorlds.CampaignSystem.Settlements.Hideout|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Hideout.cs|Deserialize": {
+      "attributes": [
+        "background_crop_position",
+        "background_mesh",
+        "wait_mesh"
+      ],
+      "calls_base": true,
+      "elements": [],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Hideout.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Settlements.Hideout"
+    },
+    "TaleWorlds.CampaignSystem.Settlements.Settlement|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Settlement.cs|Deserialize": {
+      "attributes": [
+        "complex_template",
+        "component_name",
+        "culture",
+        "gate_posX",
+        "gate_posY",
+        "id",
+        "max_prosperity",
+        "name",
+        "owner",
+        "port_posX",
+        "port_posY",
+        "posX",
+        "posY",
+        "text"
+      ],
+      "calls_base": true,
+      "elements": [
+        "Area",
+        "CommonAreas",
+        "Components",
+        "CustomSettlementComponent",
+        "Location",
+        "Locations"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Settlement.cs",
+      "helpers": [
+        "SetSettlementComponent"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Settlements.Settlement"
+    },
+    "TaleWorlds.CampaignSystem.Settlements.Town|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Town.cs|Deserialize": {
+      "attributes": [
+        "background_crop_position",
+        "background_mesh",
+        "id",
+        "is_castle",
+        "level",
+        "prosperity",
+        "wait_mesh"
+      ],
+      "calls_base": true,
+      "elements": [
+        "Building",
+        "Buildings"
+      ],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Town.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Settlements.Town"
+    },
+    "TaleWorlds.CampaignSystem.Settlements.Village|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Village.cs|Deserialize": {
+      "attributes": [
+        "background_crop_position",
+        "background_mesh",
+        "bound",
+        "castle_background_mesh",
+        "hearth",
+        "village_type",
+        "wait_mesh"
+      ],
+      "calls_base": true,
+      "elements": [],
+      "file": "Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Settlements/Village.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.CampaignSystem.Settlements.Village"
+    },
+    "TaleWorlds.Core.ArmorComponent|Core/TaleWorlds.Core/TaleWorlds.Core/ArmorComponent.cs|Deserialize": {
+      "attributes": [
+        "arm_armor",
+        "beard_cover_type",
+        "body_armor",
+        "body_deform_type",
+        "body_mesh_type",
+        "charge_bonus",
+        "covers_body",
+        "covers_hands",
+        "covers_head",
+        "covers_legs",
+        "family_type",
+        "hair_cover_type",
+        "has_gender_variations",
+        "head_armor",
+        "leg_armor",
+        "mane_cover_type",
+        "maneuver_bonus",
+        "material_type",
+        "no_slim",
+        "reins_mesh",
+        "speed_bonus",
+        "stealth_factor",
+        "tail_cover_type"
+      ],
+      "calls_base": true,
+      "elements": [],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/ArmorComponent.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.ArmorComponent"
+    },
+    "TaleWorlds.Core.BannerIconGroup|Core/TaleWorlds.Core/TaleWorlds.Core/BannerIconGroup.cs|Deserialize": {
+      "attributes": [
+        "id",
+        "is_base_background",
+        "is_pattern",
+        "is_reserved",
+        "material_name",
+        "mesh_name",
+        "name",
+        "texture_index"
+      ],
+      "calls_base": false,
+      "elements": [
+        "Background",
+        "Icon"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/BannerIconGroup.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.BannerIconGroup"
+    },
+    "TaleWorlds.Core.BannerManager|Core/TaleWorlds.Core/TaleWorlds.Core/BannerManager.cs|LoadBannerIconsFromXml": {
+      "attributes": [
+        "hex",
+        "id",
+        "player_can_choose_for_background",
+        "player_can_choose_for_sigil"
+      ],
+      "calls_base": false,
+      "elements": [
+        "BannerColors",
+        "BannerIconData",
+        "BannerIconGroup",
+        "Color"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/BannerManager.cs",
+      "helpers": [],
+      "method": "LoadBannerIconsFromXml",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.BannerManager"
+    },
+    "TaleWorlds.Core.BasicCharacterObject|Core/TaleWorlds.Core/TaleWorlds.Core/BasicCharacterObject.cs|Deserialize": {
+      "attributes": [
+        "age",
+        "civilian",
+        "culture",
+        "default_equipment_set",
+        "default_group",
+        "dismount",
+        "equipmentType",
+        "face_mesh_cache",
+        "formation_position_preference",
+        "id",
+        "is_female",
+        "is_hero",
+        "is_obsolete",
+        "knockback",
+        "knockdown",
+        "level",
+        "name",
+        "occupation",
+        "race",
+        "skill_template",
+        "value"
+      ],
+      "calls_base": true,
+      "elements": [
+        "BodyProperties",
+        "BodyPropertiesMax",
+        "EquipmentRoster",
+        "EquipmentSet",
+        "Equipments",
+        "Resistances",
+        "Skills",
+        "beard_tags",
+        "equipment",
+        "equipmentRoster",
+        "equipmentSet",
+        "equipments",
+        "face",
+        "face_key_template",
+        "hair_tags",
+        "resistances",
+        "skills",
+        "tattoo_tags"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/BasicCharacterObject.cs",
+      "helpers": [
+        "FetchDefaultFormationGroup",
+        "SetName"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.BasicCharacterObject"
+    },
+    "TaleWorlds.Core.BasicCultureObject|Core/TaleWorlds.Core/TaleWorlds.Core/BasicCultureObject.cs|Deserialize": {
+      "attributes": [
+        "banner_background_color1",
+        "banner_background_color2",
+        "banner_foreground_color1",
+        "banner_foreground_color2",
+        "can_have_settlement",
+        "cloth_alternative_color1",
+        "cloth_alternative_color2",
+        "color",
+        "color2",
+        "encounter_background_mesh",
+        "faction_banner_key",
+        "is_bandit",
+        "is_main_culture",
+        "name"
+      ],
+      "calls_base": true,
+      "elements": [],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/BasicCultureObject.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.BasicCultureObject"
+    },
+    "TaleWorlds.Core.BladeData|Core/TaleWorlds.Core/TaleWorlds.Core/BladeData.cs|Deserialize": {
+      "attributes": [
+        "blade_length",
+        "blade_width",
+        "body_name",
+        "damage_factor",
+        "damage_type",
+        "holster_body_name",
+        "holster_mesh",
+        "holster_mesh_length",
+        "physics_material",
+        "stack_amount"
+      ],
+      "calls_base": false,
+      "elements": [],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/BladeData.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.BladeData"
+    },
+    "TaleWorlds.Core.BodyProperties|Core/TaleWorlds.Core/TaleWorlds.Core/BodyProperties.cs|FromXmlNode": {
+      "attributes": [
+        "age",
+        "build",
+        "weight"
+      ],
+      "calls_base": false,
+      "elements": [],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/BodyProperties.cs",
+      "helpers": [
+        "BodyProperties"
+      ],
+      "method": "FromXmlNode",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.BodyProperties"
+    },
+    "TaleWorlds.Core.CraftingPiece|Core/TaleWorlds.Core/TaleWorlds.Core/CraftingPiece.cs|Deserialize": {
+      "attributes": [
+        "CraftingCost",
+        "accuracy_bonus",
+        "appearance",
+        "armor_bonus",
+        "center_of_mass",
+        "count",
+        "culture",
+        "distance_to_next_piece",
+        "distance_to_previous_piece",
+        "excluded_item_usage_features",
+        "full_scale",
+        "handling_bonus",
+        "id",
+        "is_default",
+        "is_hidden",
+        "is_unique",
+        "item_holster_pos_shift",
+        "length",
+        "mesh",
+        "name",
+        "next_piece_offset",
+        "piece_offset",
+        "piece_type",
+        "previous_piece_offset",
+        "required_skill_value",
+        "swing_damage_bonus",
+        "swing_speed_bonus",
+        "thrust_damage_bonus",
+        "thrust_speed_bonus",
+        "tier",
+        "type",
+        "weight"
+      ],
+      "calls_base": true,
+      "elements": [
+        "BladeData",
+        "BuildData",
+        "CraftingTemplates",
+        "Flags",
+        "Materials",
+        "StatContributions"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/CraftingPiece.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.CraftingPiece"
+    },
+    "TaleWorlds.Core.CraftingTemplate|Core/TaleWorlds.Core/TaleWorlds.Core/CraftingTemplate.cs|Deserialize": {
+      "attributes": [
+        "always_show_holster_with_weapon",
+        "build_order",
+        "default_item_holster_position_offset",
+        "hidden_piece_types_on_holster",
+        "id",
+        "item_holsters",
+        "item_type",
+        "max_value",
+        "modifier_group",
+        "piece_id",
+        "piece_type",
+        "piece_type_to_scale_holster_with",
+        "rotate_weapon_in_holster",
+        "stat_type",
+        "use_weapon_as_holster_mesh",
+        "weapon_description"
+      ],
+      "calls_base": true,
+      "elements": [
+        "PieceDatas",
+        "StatsData",
+        "UsablePieces",
+        "WeaponDescriptions"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/CraftingTemplate.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.CraftingTemplate"
+    },
+    "TaleWorlds.Core.GameTextManager|Core/TaleWorlds.Core/TaleWorlds.Core/GameTextManager.cs|LoadFromXML": {
+      "attributes": [
+        "id",
+        "text"
+      ],
+      "calls_base": false,
+      "elements": [
+        "string",
+        "strings",
+        "tags"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/GameTextManager.cs",
+      "helpers": [
+        "ChoiceTag"
+      ],
+      "method": "LoadFromXML",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.GameTextManager"
+    },
+    "TaleWorlds.Core.HorseComponent|Core/TaleWorlds.Core/TaleWorlds.Core/HorseComponent.cs|Deserialize": {
+      "attributes": [
+        "affected_by_cover",
+        "body_length",
+        "charge_damage",
+        "extra_health",
+        "is_mountable",
+        "is_pack_animal",
+        "maneuver",
+        "mesh_multiplier",
+        "monster",
+        "name",
+        "percentage",
+        "skeleton_scale",
+        "speed"
+      ],
+      "calls_base": true,
+      "elements": [
+        "AdditionalMeshes",
+        "Material",
+        "Materials",
+        "Mesh",
+        "MeshMultiplier",
+        "MeshMultipliers"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/HorseComponent.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.HorseComponent"
+    },
+    "TaleWorlds.Core.ItemComponent|Core/TaleWorlds.Core/TaleWorlds.Core/ItemComponent.cs|Deserialize": {
+      "attributes": [
+        "modifier_group"
+      ],
+      "calls_base": false,
+      "elements": [],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/ItemComponent.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.ItemComponent"
+    },
+    "TaleWorlds.Core.ItemObject|Core/TaleWorlds.Core/TaleWorlds.Core/ItemObject.cs|Deserialize": {
+      "attributes": [
+        "AmmoOffset",
+        "IsFood",
+        "Type",
+        "appearance",
+        "body_name",
+        "crafting_template",
+        "culture",
+        "difficulty",
+        "flying_mesh",
+        "has_lower_holster_priority",
+        "has_modifier",
+        "holster_body_name",
+        "holster_mesh",
+        "holster_mesh_with_weapon",
+        "holster_position_shift",
+        "id",
+        "is_merchandise",
+        "item_category",
+        "item_holsters",
+        "lod_atlas_index",
+        "mesh",
+        "modifier_group",
+        "multiplayer_item",
+        "name",
+        "prefab",
+        "recalculate_body",
+        "scale_factor",
+        "shield_body_name",
+        "skeleton_name",
+        "static_animation_name",
+        "tier_override",
+        "using_arm_band",
+        "using_tableau",
+        "value",
+        "weight"
+      ],
+      "calls_base": true,
+      "elements": [
+        "Armor",
+        "Banner",
+        "CraftedItem",
+        "Flags",
+        "Food",
+        "Horse",
+        "ItemComponent",
+        "Piece",
+        "Pieces",
+        "Trade",
+        "Weapon"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/ItemObject.cs",
+      "helpers": [
+        "CalculateEffectiveness",
+        "DetermineValue"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.ItemObject"
+    },
+    "TaleWorlds.Core.MBBodyProperty|Core/TaleWorlds.Core/TaleWorlds.Core/MBBodyProperty.cs|Deserialize": {
+      "attributes": [
+        "name"
+      ],
+      "calls_base": true,
+      "elements": [
+        "BodyPropertiesMax",
+        "BodyPropertiesMin",
+        "beard_tags",
+        "hair_tags",
+        "tattoo_tags"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/MBBodyProperty.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.MBBodyProperty"
+    },
+    "TaleWorlds.Core.MBEquipmentRoster|Core/TaleWorlds.Core/TaleWorlds.Core/MBEquipmentRoster.cs|Deserialize": {
+      "attributes": [
+        "civilian",
+        "culture",
+        "equipmentType"
+      ],
+      "calls_base": true,
+      "elements": [
+        "EquipmentSet",
+        "Flags"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/MBEquipmentRoster.cs",
+      "helpers": [
+        "InitEquipment"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.MBEquipmentRoster"
+    },
+    "TaleWorlds.Core.Monster|Core/TaleWorlds.Core/TaleWorlds.Core/Monster.cs|Deserialize": {
+      "attributes": [
+        "absorbed_damage_ratio",
+        "action_set",
+        "arm_length",
+        "arm_weight",
+        "back_bone_to_detect_ground_slope_index",
+        "base_monster",
+        "body_rotation_reference_bone",
+        "crouch_eye_height",
+        "crouch_walking_speed_limit",
+        "eye_offset_wrt_head",
+        "fall_blow_damage_bone",
+        "family_type",
+        "female_action_set",
+        "first_person_camera_offset_wrt_head",
+        "foot_num_bones_for_ik",
+        "front_bone_to_detect_ground_slope_index",
+        "hand_num_bones_for_ik",
+        "head_look_direction_bone",
+        "hit_points",
+        "jump_acceleration",
+        "jump_speed_limit",
+        "left_foot_ik_end_effector_bone",
+        "left_foot_ik_tip_bone",
+        "left_upper_arm_bone",
+        "main_hand_bone",
+        "main_hand_item_bone",
+        "main_hand_item_secondary_bone",
+        "monster_usage",
+        "mounted_eye_height",
+        "neck_root_bone",
+        "num_paces",
+        "off_hand_bone",
+        "off_hand_item_bone",
+        "off_hand_item_secondary_bone",
+        "off_hand_shoulder_bone",
+        "pelvis_bone",
+        "pos1",
+        "pos2",
+        "preliminary_collision_capsule_radius_multiplier",
+        "primary_foot_bone",
+        "radius",
+        "rein_collision_1_bone",
+        "rein_collision_2_bone",
+        "rein_collision_body",
+        "rein_handle_bone",
+        "rein_handle_left_local_pos",
+        "rein_handle_right_local_pos",
+        "rein_head_bone",
+        "rein_head_left_attachment_bone",
+        "rein_head_right_attachment_bone",
+        "rein_left_hand_bone",
+        "rein_right_hand_bone",
+        "rein_skeleton",
+        "relative_speed_limit_for_charge",
+        "rider_body_capsule_forward_adder",
+        "rider_body_capsule_height_adder",
+        "rider_camera_height_adder",
+        "rider_eye_height_adder",
+        "rider_preliminary_collision_capsule_height_adder",
+        "rider_preliminary_collision_capsule_height_multiplier",
+        "rider_sit_bone",
+        "right_foot_ik_end_effector_bone",
+        "right_foot_ik_tip_bone",
+        "right_upper_arm_bone",
+        "secondary_foot_bone",
+        "sound_and_collision_info_class",
+        "spine_lower_bone",
+        "spine_upper_bone",
+        "standing_chest_height",
+        "standing_eye_height",
+        "standing_pelvis_height",
+        "terrain_decal_bone_0",
+        "terrain_decal_bone_1",
+        "thorax_look_direction_bone",
+        "walking_speed_limit",
+        "weight"
+      ],
+      "calls_base": true,
+      "elements": [
+        "Capsules",
+        "Flags",
+        "body_capsule",
+        "crouched_body_capsule",
+        "preliminary_collision_capsule"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/Monster.cs",
+      "helpers": [
+        "DeserializeBoneIndex",
+        "DeserializeBoneIndexArray",
+        "ReadVec3"
+      ],
+      "method": "Deserialize",
+      "prefixes": [
+        "blood_burst_bone_",
+        "bones_to_modify_on_sloping_ground_",
+        "move_adder_bone_",
+        "ragdoll_bone_to_check_for_corpses_",
+        "ragdoll_fall_sound_bone_",
+        "ragdoll_stationary_check_bone_",
+        "splash_decal_bone_"
+      ],
+      "type": "TaleWorlds.Core.Monster"
+    },
+    "TaleWorlds.Core.StaticBodyProperties|Core/TaleWorlds.Core/TaleWorlds.Core/StaticBodyProperties.cs|FromXmlNode": {
+      "attributes": [
+        "key"
+      ],
+      "calls_base": false,
+      "elements": [],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/StaticBodyProperties.cs",
+      "helpers": [
+        "StaticBodyProperties"
+      ],
+      "method": "FromXmlNode",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.StaticBodyProperties"
+    },
+    "TaleWorlds.Core.WeaponComponentData|Core/TaleWorlds.Core/TaleWorlds.Core/WeaponComponentData.cs|Deserialize": {
+      "attributes": [
+        "accuracy",
+        "ammo_class",
+        "ammo_limit",
+        "body_armor",
+        "center_of_mass",
+        "fire_damage",
+        "flying_sound_code",
+        "hit_points",
+        "item_usage",
+        "missile_speed",
+        "passby_sound_code",
+        "physics_material",
+        "position",
+        "reload_phase_count",
+        "rotation",
+        "rotation_speed",
+        "speed_rating",
+        "stack_amount",
+        "sticking_position",
+        "sticking_rotation",
+        "swing_damage",
+        "swing_damage_type",
+        "thrust_damage",
+        "thrust_damage_type",
+        "thrust_speed",
+        "trail_particle_name",
+        "weapon_balance",
+        "weapon_class",
+        "weapon_length"
+      ],
+      "calls_base": false,
+      "elements": [
+        "WeaponFlags"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/WeaponComponentData.cs",
+      "helpers": [
+        "SetDamageFactors"
+      ],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.WeaponComponentData"
+    },
+    "TaleWorlds.Core.WeaponDescription|Core/TaleWorlds.Core/TaleWorlds.Core/WeaponDescription.cs|Deserialize": {
+      "attributes": [
+        "id",
+        "item_usage_features",
+        "rotated_in_hand",
+        "use_center_of_mass_as_hand_base",
+        "value",
+        "weapon_class"
+      ],
+      "calls_base": true,
+      "elements": [
+        "AvailablePieces",
+        "WeaponFlags"
+      ],
+      "file": "Core/TaleWorlds.Core/TaleWorlds.Core/WeaponDescription.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Core.WeaponDescription"
+    },
+    "TaleWorlds.Localization.LanguageData|Core/TaleWorlds.Localization/TaleWorlds.Localization/LanguageData.cs|Deserialize": {
+      "attributes": [
+        "name",
+        "subtitle_extension",
+        "supported_iso",
+        "text_processor",
+        "under_development",
+        "xml_path"
+      ],
+      "calls_base": false,
+      "elements": [
+        "LanguageFile",
+        "VoiceFile"
+      ],
+      "file": "Core/TaleWorlds.Localization/TaleWorlds.Localization/LanguageData.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.Localization.LanguageData"
+    },
+    "TaleWorlds.Localization.LanguageData|Core/TaleWorlds.Localization/TaleWorlds.Localization/LanguageData.cs|LoadFromXml": {
+      "attributes": [
+        "id"
+      ],
+      "calls_base": false,
+      "elements": [
+        "LanguageData"
+      ],
+      "file": "Core/TaleWorlds.Localization/TaleWorlds.Localization/LanguageData.cs",
+      "helpers": [
+        "LanguageData"
+      ],
+      "method": "LoadFromXml",
+      "prefixes": [],
+      "type": "TaleWorlds.Localization.LanguageData"
+    },
+    "TaleWorlds.Localization.LocalizedTextManager|Core/TaleWorlds.Localization/TaleWorlds.Localization/LocalizedTextManager.cs|LoadLanguage": {
+      "attributes": [
+        "functionBody",
+        "functionName",
+        "id",
+        "text"
+      ],
+      "calls_base": false,
+      "elements": [
+        "function",
+        "functions",
+        "string",
+        "strings"
+      ],
+      "file": "Core/TaleWorlds.Localization/TaleWorlds.Localization/LocalizedTextManager.cs",
+      "helpers": [
+        "DeserializeStrings",
+        "LoadXmlFile"
+      ],
+      "method": "LoadLanguage",
+      "prefixes": [],
+      "type": "TaleWorlds.Localization.LocalizedTextManager"
+    },
+    "TaleWorlds.ModuleManager.ModuleInfo|Platform/TaleWorlds.ModuleManager/TaleWorlds.ModuleManager/ModuleInfo.cs|LoadWithFullPath": {
+      "attributes": [
+        "DependentVersion",
+        "Id",
+        "Optional",
+        "value"
+      ],
+      "calls_base": false,
+      "elements": [
+        "DefaultModule",
+        "DependedModule",
+        "DependedModules",
+        "Id",
+        "IncompatibleModules",
+        "Module",
+        "ModuleCategory",
+        "ModuleType",
+        "ModulesToLoadAfterThis",
+        "Name",
+        "RequiredBaseVersion",
+        "SubModule",
+        "SubModules",
+        "Version"
+      ],
+      "file": "Platform/TaleWorlds.ModuleManager/TaleWorlds.ModuleManager/ModuleInfo.cs",
+      "helpers": [],
+      "method": "LoadWithFullPath",
+      "prefixes": [],
+      "type": "TaleWorlds.ModuleManager.ModuleInfo"
+    },
+    "TaleWorlds.ModuleManager.SubModuleInfo|Platform/TaleWorlds.ModuleManager/TaleWorlds.ModuleManager/SubModuleInfo.cs|LoadFrom": {
+      "attributes": [
+        "key",
+        "value"
+      ],
+      "calls_base": false,
+      "elements": [
+        "Assemblies",
+        "Assembly",
+        "DLLName",
+        "Name",
+        "SubModuleClassType",
+        "Tag",
+        "Tags"
+      ],
+      "file": "Platform/TaleWorlds.ModuleManager/TaleWorlds.ModuleManager/SubModuleInfo.cs",
+      "helpers": [
+        "GetIsTWCertified"
+      ],
+      "method": "LoadFrom",
+      "prefixes": [],
+      "type": "TaleWorlds.ModuleManager.SubModuleInfo"
+    },
+    "TaleWorlds.ObjectSystem.MBObjectBase|Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/MBObjectBase.cs|Deserialize": {
+      "attributes": [
+        "id"
+      ],
+      "calls_base": false,
+      "elements": [],
+      "file": "Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/MBObjectBase.cs",
+      "helpers": [],
+      "method": "Deserialize",
+      "prefixes": [],
+      "type": "TaleWorlds.ObjectSystem.MBObjectBase"
+    },
+    "TaleWorlds.ObjectSystem.XmlResource|Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/XmlResource.cs|GetMbprojxmls": {
+      "attributes": [
+        "id",
+        "name"
+      ],
+      "calls_base": false,
+      "elements": [
+        "base",
+        "file"
+      ],
+      "file": "Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/XmlResource.cs",
+      "helpers": [],
+      "method": "GetMbprojxmls",
+      "prefixes": [],
+      "type": "TaleWorlds.ObjectSystem.XmlResource"
+    },
+    "TaleWorlds.ObjectSystem.XmlResource|Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/XmlResource.cs|GetXmlListAndApply": {
+      "attributes": [
+        "id",
+        "path",
+        "value"
+      ],
+      "calls_base": false,
+      "elements": [
+        "IncludedGameTypes",
+        "Module",
+        "XmlName",
+        "XmlNode",
+        "Xmls"
+      ],
+      "file": "Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/XmlResource.cs",
+      "helpers": [],
+      "method": "GetXmlListAndApply",
+      "prefixes": [],
+      "type": "TaleWorlds.ObjectSystem.XmlResource"
+    }
+  }
+}

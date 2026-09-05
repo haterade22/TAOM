@@ -4,6 +4,16 @@
 
 ## 2026-09-05
 
+### ci(handbook): both gates now run on every push, without the decompile
+
+A gate nobody runs is not a gate, which is the lesson the doc-graph ratchet in the same job was
+added for. `lint_handbook.py` needs only the checkout. `check_handbook_attributes.py` normally
+needs the v1.4.8 dump, which CI does not have, so `tools/handbook_attribute_manifest.json` is now
+committed: the record of what each cited deserializer reads, 37 markers. The gate falls back to it
+and still catches the failure that matters, a table row added or renamed without re-deriving it
+from the engine. Refresh it with `--update` on a machine that has the dump, in the same change as
+the table.
+
 ### fix(handbook-gates): both gates were wrong in a way that only showed once the handbook existed
 
 `check_handbook_attributes.py` scanned raw text, so the hub's own explanation of the marker
