@@ -452,8 +452,8 @@ Code: No code changes needed
 - **`Patch28_SettlementGuards` registers two manual patches with no category attribute**, so
   grepping `HarmonyPatchCategory` will not show them
   ([harmony-patch-registry.md:5](../reference/harmony-patch-registry.md)).
-- **Line numbers quoted from `docs/reference/engine/` are v1.4.5.** Re-read against the current dump
-  before trusting one.
+- **Line numbers quoted from `docs/reference/engine/` were captured against an older engine dump.**
+  Re-read one against the dump this handbook cites before trusting it.
 
 ## Numbers in this chapter
 
