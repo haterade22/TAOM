@@ -196,6 +196,21 @@ User reports "Mordor armor beats Gondor" confirmed and fixed. `tools/oneoff/fix_
 
 Post-fix verification: Gondor > Mordor at every slot×tier max (uruk set judged as elite), and per-troop total armor Gondor-dominant (median AND max) at every shared level band (L6–L36). `validate_moduledata.py` PASS; analyzer still 2 errors (the pre-existing elf-shoulder flags). In-game smoke owed (restart required — armor stat changes only load at launch).
 
+## Dale ladder repair (2026-09-04, #541)
+
+Dale's four-tier per-line ladder (`a01..a04` bronze, `b01..b04` silver) had been statted on a
+different axis by `generate_dale_armor.py`, which treats the eight suffixes as one light-to-elite
+ladder. A roster-tiered restat could not repair it on its own because the tier map anchors an item
+to its LOWEST wearer, and three low troops wore the mid items (the L11 Squire in `a02`, the L16
+militia veterans in `a03`). Those rosters moved first (`a01`, and the silver `b01`), then
+`rebalance_armor.py --cultures dale --tier-source roster --no-lower-armor --keep-materials` raised
+`sk_dale_*_infrantry_a02`, `sk_dale_*_infrantry_a03` and `sk_dale_*_archer_a03` to the heavy row,
+applied to the Steam install and to `E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory`. Raise-only,
+so the over-target silver line the roster report lists was left where it is. The same pass restatted
+the two Dunland `wulf_helmet_medium_*` from 45 (the lord row) to 22: an item value that made every
+L21 Dunlending an armour downgrade from the L16 warriors. Equipment ladders are now gated per upgrade
+edge by `UPGRADE_ARMOUR_REGRESSION` (see `troop-skill-balance.md`, "Armour is a ladder too").
+
 ## Dependencies
 
 - `rebalance_armor.py` (curve) — the analyzer imports it.

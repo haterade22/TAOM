@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
@@ -17,14 +17,14 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     private readonly ISpecialResourceConfigProvider _config;
     private readonly IModLogger _logger;
 
-    // One-shot latches: both members below run per map-bar refresh / per hover, so an unguarded log
-    // call would spam the file at frame rate. The FIRST failure is logged with its full stack and
-    // every later one is silent, including a second, DIFFERENT exception on the same path. That is a
-    // deliberate trade against log spam, not an oversight, and it is the known limitation of this
-    // instrumentation: if the first failure is fixed and a second remains, the log will not say so
-    // until the process restarts.
-    private bool _refreshFailureLogged;
-    private bool _tooltipFailureLogged;
+    // Rate limiting, keyed per exception type rather than latched once. Both members below run per
+    // map-bar refresh / per hover, so an unguarded log call would spam the file at frame rate. A
+    // single bool would be worse than spam though: it logs the first failure and hides every later
+    // DIFFERENT one for the life of the process, so fixing the first failure makes a second one
+    // invisible rather than revealing it. Keying on the exception type keeps the volume bounded while
+    // still reporting a genuinely new fault.
+    private readonly HashSet<string> _refreshFailuresLogged = new HashSet<string>(StringComparer.Ordinal);
+    private readonly HashSet<string> _tooltipFailuresLogged = new HashSet<string>(StringComparer.Ordinal);
 
     private MapInfoItemVM _resourceInfo;
     private bool _itemAdded;
@@ -62,8 +62,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         }
         catch (Exception ex)
         {
-            if (_refreshFailureLogged) return;
-            _refreshFailureLogged = true;
+            if (!_refreshFailuresLogged.Add(ex.GetType().FullName ?? "(unknown)")) return;
             _logger?.LogError($"[SpecialResources] map-bar mixin OnRefresh threw, so the bar's refresh "
                             + $"is being aborted by this feature every tick. Root cause: {ex}");
         }
@@ -119,9 +118,8 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         }
         catch (Exception ex)
         {
-            if (!_tooltipFailureLogged)
+            if (_tooltipFailuresLogged.Add(ex.GetType().FullName ?? "(unknown)"))
             {
-                _tooltipFailureLogged = true;
                 _logger?.LogError($"[SpecialResources] map-bar tooltip callback threw while building "
                                 + $"hint content. Root cause: {ex}");
             }

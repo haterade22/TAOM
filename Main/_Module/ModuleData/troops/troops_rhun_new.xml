@@ -1275,8 +1275,8 @@
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.bolt_a" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
-                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_med_a" />
-                <equipment slot="Body" id="Item.sk_rh_drag_scalemail_light_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_scalemail_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
@@ -1284,8 +1284,8 @@
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.bolt_a" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
-                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_med_b" />
-                <equipment slot="Body" id="Item.sk_rh_drag_scalemail_light_b" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_scalemail_med_b" />
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
@@ -2369,30 +2369,30 @@
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cav_heavy_a" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cav_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cav_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -2428,30 +2428,30 @@
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_heavy_a" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_heavy_b" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -2483,26 +2483,26 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_2h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_heavy_a" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_2h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_2h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -2537,10 +2537,10 @@
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_hood_heavy_a" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
@@ -2548,10 +2548,10 @@
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_hood_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
@@ -2559,10 +2559,10 @@
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_hood_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_loke_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -3086,30 +3086,30 @@
                 <equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_drag_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_heavy_a" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_spear_a" />
                 <equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_drag_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_spear_a" />
                 <equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_drag_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -3145,30 +3145,30 @@
                 <equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_drag_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_heavy_a" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_b" />
                 <equipment slot="Item2" id="Item.sm_rh_drag_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_rh_drag_spear_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -3200,18 +3200,18 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_2h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_heavy_b" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_2h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_heavy_c" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -3246,10 +3246,10 @@
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_cult_elite_e" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
@@ -3257,10 +3257,10 @@
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_cult_elite_f" />
-                <equipment slot="Body" id="Item.sk_rh_drag_plate_light_a" />
-                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_light_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -4147,11 +4147,11 @@
                 <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Head" id="Item.sk_rh_drag_hood_med_a" />
-                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_c" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_light_a" />
-                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_light_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_light_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -4221,11 +4221,11 @@
                 <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
-                <equipment slot="Head" id="Item.sk_rh_drag_hood_med_b" />
-                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_d" />
+                <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chest_light_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_med_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_med_a" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_light_b" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -4558,8 +4558,10 @@
                 <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_med_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_med_a" />
-                <equipment slot="Body" id="Item.sk_dg_khml_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_hplate_light_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_light_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -4634,10 +4636,10 @@
                 <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_med_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_a" />
-                <equipment slot="Body" id="Item.sk_dg_khml_chest_light_b" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_lam_light_a" />
-                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_light_a" />
-                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_lam_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_med_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -4712,7 +4714,7 @@
                 <equipment slot="Item1" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_shield_cav_med_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_b" />
-                <equipment slot="Body" id="Item.sk_dg_khml_chest_med_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_lam_med_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_med_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />

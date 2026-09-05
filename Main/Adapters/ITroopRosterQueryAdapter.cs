@@ -6,10 +6,11 @@ namespace TAOM.Adapters;
 /// <summary>
 /// Boundary over the main party's roster + <c>CharacterObject</c> troop templates for
 /// FieldCommission (ADR-007 — keeps <c>MobileParty</c>/<c>CharacterObject</c>/<c>SkillObject</c> out
-/// of the service). Despite the "Query" name this also owns the single roster-decrement write
-/// (<see cref="RemoveOneFromRoster"/>) needed when a promotion completes — FieldCommission's scope
-/// allows exactly three named adapters, and a troop-count decrement is roster-troop data in every
-/// other sense, so a fourth adapter purely for that one write would be ceremony over substance.
+/// of the service). Despite the "Query" name this also owns the two roster-count writes: the
+/// decrement when a promotion completes (<see cref="RemoveOneFromRoster"/>) and the refund when
+/// one is dismissed (<see cref="AddOneToRoster"/>, #540). FieldCommission's scope allows exactly
+/// three named adapters, and a troop-count change is roster-troop data in every other sense, so a
+/// fourth adapter purely for those writes would be ceremony over substance.
 /// </summary>
 public interface ITroopRosterQueryAdapter
 {
@@ -31,6 +32,11 @@ public interface ITroopRosterQueryAdapter
     /// (no removal happened) when there is no main party, the troop isn't present, or the id
     /// doesn't resolve.</summary>
     bool RemoveOneFromRoster(string troopId);
+
+    /// <summary>Adds one unit of the given troop id to the main party roster, wounded when
+    /// <paramref name="wounded"/>. Returns false (nothing added) when there is no main party, the
+    /// id doesn't resolve, or it resolves to a hero template.</summary>
+    bool AddOneToRoster(string troopId, bool wounded);
 
     /// <summary>Snapshot of the troop template, or <see cref="TroopInfo.Missing"/> when the id
     /// doesn't resolve to a <c>CharacterObject</c>.</summary>

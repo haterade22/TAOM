@@ -56,6 +56,19 @@ public class TroopRosterQueryAdapter : ITroopRosterQueryAdapter
         return true;
     }
 
+    public bool AddOneToRoster(string troopId, bool wounded)
+    {
+        var roster = MainRoster;
+        var troop = ResolveTroop(troopId);
+        // A hero template must never be counted into a roster: the service refuses that case
+        // already, and this is the last line before the engine call.
+        if (roster == null || troop == null || troop.IsHero)
+            return false;
+
+        roster.AddToCounts(troop, 1, false, wounded ? 1 : 0, 0, true, -1);
+        return true;
+    }
+
     public TroopInfo GetTroopInfo(string troopId)
     {
         var troop = ResolveTroop(troopId);

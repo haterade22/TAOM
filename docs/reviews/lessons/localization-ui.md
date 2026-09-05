@@ -496,3 +496,20 @@ The career energy bar draws the activation key in a fixed 30x22 `Widget` carryin
 - **Why missed:** the empty-string case was actually identified while planning and written down as an in-game smoke step ("check the empty chip does not leave a stray box, if it does add an `IsVisible` binding"), then left for the smoke run instead of being answered by opening the prefab already sitting in the repo.
 - **Prevent:** two habits. First, when adding or gating a bound string, read the sibling widgets in the same prefab: if one of them is gated and yours is not, that asymmetry is the bug. Second, and more general, never defer to an in-game smoke a question that a file in the repo can answer by being read. Deferring does not just postpone the answer, it downgrades a certainty to a maybe and puts the defect on the ship path.
 - **Source:** #533 rebindable career ability key, 2026-09-03; RCA `docs/reviews/rca-career-keybind-2026-09-03.md` finding 3.
+
+### A game-menu option condition runs when the menu is built or refreshed, not every frame
+`GameMenuVM.OnFrameTick` calls `GameMenuItemVM.Refresh()` each frame, and that method only re-reads the
+cached `GameMenuOption.IsEnabled`, tooltip and wait state. The condition delegate itself runs from
+`GameMenuVM.Refresh(bool)` (which walks `GameMenuManager.GetVirtualMenuOptionConditionsHold`), reached on
+`OnActivate`, `OnResume`, `OnMenuContextRefreshed` (an explicit `MenuContext.Refresh`) and a menu switch
+(`UpdateMenuContext`). Verified on the installed v1.4.8 `SandBox.GauntletUI.Menu.GauntletMenuBaseView`
+plus `GameMenuVM` and `GameMenuManager`. A settlement-menu condition that scans a small list is therefore a
+per-menu-open cost, not a hot path.
+- **Why missed:** a review agent rated such a condition HIGH while stating in the same report that the
+  refresh frequency was unverified, exactly what its prompt forbids. The claim was plausible because wait
+  menus DO tick, but a wait menu re-runs only `RunWaitMenuCondition`, and town, castle and village menus are
+  not wait menus.
+- **Prevent:** before rating any `AddGameMenuOption` condition a hot path, cite the driver (`GameMenuVM.Refresh`
+  versus `OnFrameTick`). Per-frame work in a menu belongs to `GameMenuItemVM.Refresh` and progress items,
+  nowhere else.
+- **Source:** `docs/reviews/rca-field-commission-dismiss-2026-09-04.md` finding 3 (refuted HIGH, #540).

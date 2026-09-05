@@ -760,6 +760,39 @@ public class FieldCommissionMeritServiceTests
         CollectionAssert.AreEqual(new[] { "hero_alive" }, _sut.GetPromotedHeroIds().ToList());
     }
 
+    [TestMethod]
+    public void ForgetPromotedHero_KnownId_RemovesItFromExport()
+    {
+        // A dismissed companion (#540) must leave the list at once, not at the next load's prune:
+        // the persisted list and taom.fc_status both read it in between.
+        _sut.ImportPromotedHeroIds(new List<string> { "hero_1", "hero_2" });
+
+        _sut.ForgetPromotedHero("hero_1");
+
+        CollectionAssert.AreEqual(new[] { "hero_2" }, _sut.ExportPromotedHeroIds());
+    }
+
+    [TestMethod]
+    public void ForgetPromotedHero_UnknownId_IsANoOp()
+    {
+        _sut.ImportPromotedHeroIds(new List<string> { "hero_1" });
+
+        _sut.ForgetPromotedHero("hero_never_promoted");
+
+        CollectionAssert.AreEqual(new[] { "hero_1" }, _sut.ExportPromotedHeroIds());
+    }
+
+    [TestMethod]
+    public void ForgetPromotedHero_NullOrEmptyId_IsANoOp()
+    {
+        _sut.ImportPromotedHeroIds(new List<string> { "hero_1" });
+
+        _sut.ForgetPromotedHero(null);
+        _sut.ForgetPromotedHero(string.Empty);
+
+        CollectionAssert.AreEqual(new[] { "hero_1" }, _sut.ExportPromotedHeroIds());
+    }
+
     // --- SyncData round trip ---
 
     [TestMethod]

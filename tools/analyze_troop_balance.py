@@ -341,6 +341,27 @@ def check_monotonicity(all_troops, tolerance=25):
     }
 
 
+def check_armour_drops():
+    """Upgrade edges whose target has less armour than its source, or None without the install.
+
+    The equipment half of the ladder rule, computed by tools/fix_upgrade_armour_regressions.py
+    (its find_regressions is the same function the validator's UPGRADE_ARMOUR_REGRESSION mirrors).
+    Item values live in the install, so this degrades to None, reported as skipped, rather than
+    to a quiet empty list.
+    """
+    if not os.path.isdir(rb.DEFAULT_GAME_MODULES):
+        return None
+    try:
+        import fix_upgrade_armour_regressions as fx
+        items = fx.load_item_armour(rb.DEFAULT_GAME_MODULES)
+        troops = fx.load_troops()
+        return [(p, c, round(pt), round(ct))
+                for p, c, pt, ct in fx.find_regressions(troops, items, rb.militia_troop_ids())]
+    except Exception as exc:  # report-only tool: say why, never fail the overview
+        print(f'WARNING: armour-drop sweep skipped: {exc}', file=sys.stderr)
+        return None
+
+
 # =============================================================================
 # Markdown rendering
 # =============================================================================
@@ -574,6 +595,22 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
                 L.append(f"- {a['culture']}/{a['group']}: `{a['id']}` (L{a['level']}) out-totals "
                          f"`{b['id']}` (L{b['level']}) by {d}")
             L.append('')
+
+    # Armour ladder
+    drops = dq.get('armour_drops')
+    L.append('## Upgrade armour drops (equipment half of the ladder rule)\n')
+    if drops is None:
+        L.append('_Skipped: item armour values come from the game install, which was not found._\n')
+    elif not drops:
+        L.append('**No upgrade edge lowers armour.** ✅ (battle-set average over the five armour '
+                 'slots; militia-to-militia exempt; bare-chested-by-design troops judged without '
+                 'Body and Cape)\n')
+    else:
+        L.append(f'**{len(drops)} upgrade edges lower armour** (repair: '
+                 f'`python tools/fix_upgrade_armour_regressions.py --apply`):')
+        for p, c, pt, ct in drops:
+            L.append(f'- `{p}` ({pt}) → `{c}` ({ct}), drop {pt - ct}')
+        L.append('')
 
     # Parity matrix
     L.append('## Cross-culture parity matrix\n')
@@ -881,6 +918,22 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
                      f'<code>{_esc(a["id"])}</code> (L{a["level"]}) out-totals '
                      f'<code>{_esc(b["id"])}</code> (L{b["level"]}) by {d}</div>')
 
+    # Armour ladder
+    drops = dq.get('armour_drops')
+    H.append('<h2>Upgrade armour drops</h2>')
+    if drops is None:
+        H.append('<div class="callout">Skipped: item armour values come from the game install, '
+                 'which was not found.</div>')
+    elif not drops:
+        H.append('<div class="callout ok">No upgrade edge lowers armour (battle-set average over the '
+                 'five armour slots; militia-to-militia exempt).</div>')
+    else:
+        H.append(f'<div class="callout bad">{len(drops)} upgrade edges lower armour. Repair with '
+                 f'<code>python tools/fix_upgrade_armour_regressions.py --apply</code>.</div>')
+        for p, c, pt, ct in drops:
+            H.append(f'<div class="callout bad"><code>{_esc(p)}</code> ({pt}) → '
+                     f'<code>{_esc(c)}</code> ({ct}), drop {pt - ct}</div>')
+
     # Parity
     H.append('<h2>Cross-culture parity matrix</h2>')
     H.append('<p class="sub">Average total skill (sum of 8 skills) per culture at each tier, '
@@ -977,6 +1030,7 @@ def main():
     all_ids = {t['id'] for t in all_troops}
     dq = data_quality(all_troops, file_cultures)
     dq['monotonicity'] = check_monotonicity(all_troops)
+    dq['armour_drops'] = check_armour_drops()
 
     report = render_report(by_culture, all_troops, all_ids, dq, args.outlier_threshold)
     report_html = render_html(by_culture, all_troops, all_ids, dq, args.outlier_threshold)
@@ -1006,6 +1060,8 @@ def main():
         m = dq['monotonicity']
         print(f'Monotonicity ({m["militia_edges_exempt"]} militia-to-militia edges exempt): '
               f'{len(m["upgrade_violations"])} upgrade + {len(m["level_violations"])} level inversions')
+        drops = dq.get('armour_drops')
+        print('Upgrade armour drops: ' + ('skipped (no game install)' if drops is None else str(len(drops))))
 
 
 if __name__ == '__main__':

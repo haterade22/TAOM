@@ -21,6 +21,9 @@ companions. TAOM native rewrite of the `TAOM_Promoted` ("RF_Promoted") donor mod
 fixed 8 concrete bugs, and added TAOM-specific gates (race allow-list, enlisted suppression, co-op
 authority, companion-limit awareness) on top. Issue #376.
 
+A promoted companion can also be sent back to the ranks (#540): the hero is removed and one soldier of
+the troop they came from rejoins the party. See "Dismissing a promoted companion" below.
+
 ## Why This Exists
 
 - **Vanilla behavior:** troops never individually distinguish themselves — a soldier who racks up
@@ -220,19 +223,22 @@ literal, and those two must describe the same game.
 |------|---------|
 | `Main/Features/FieldCommission/FieldCommissionMeritService.cs` / `IFieldCommissionMeritService.cs` | Eligibility, kill-tracking, merit banking, orphan-merit consolidation, promotability gate, offer queue |
 | `Main/Features/FieldCommission/FieldCommissionOfferFlowService.cs` / `IFieldCommissionOfferFlowService.cs` | Inquiry chain orchestration: promote? → companion-room → rename → hero creation → completion |
+| `Main/Features/FieldCommission/FieldCommissionDismissService.cs` / `IFieldCommissionDismissService.cs` | Dismissal back to the ranks (#540): the verdict, the remove-then-refund order, the picker and confirm chain |
 | `Main/Features/FieldCommission/FieldCommissionConfigProvider.cs` / `IFieldCommissionConfigProvider.cs` | JSON config load + validation |
 | `Main/Features/FieldCommission/FieldCommissionSettingsProvider.cs` | MCM-over-JSON merge; decorates the above behind the same interface |
 | `Main/Features/FieldCommission/Domain/FieldCommissionMcmSnapshot.cs` | Value-equality read of the six MCM knobs; the merged config's cache key |
 | `Main/Features/FieldCommission/NullEnlistmentStateQuery.cs` | Null-object fallback for `IEnlistmentStateQuery` |
 | `Main/Features/FieldCommission/FieldCommissionIoC.cs` | DryIoc registration |
-| `Main/Features/FieldCommission/Domain/*.cs` | Pure POCOs + `CommissionSkillBudget` + `TroopUpgradeGraph` |
+| `Main/Features/FieldCommission/Domain/*.cs` | Pure POCOs + `CommissionSkillBudget` + `TroopUpgradeGraph` + the dismissal verdict types (`DismissOutcome`, `DismissCandidate`, `PromotedHeroSnapshot`) |
 | `Main/Features/FieldCommission/Hooks/FieldCommissionBehavior.cs` | `CampaignBehaviorBase` entry point |
 | `Main/Features/FieldCommission/Hooks/FieldCommissionMissionLogic.cs` | `MissionLogic` entry point (kill tracking) |
+| `Main/Features/FieldCommission/Hooks/FieldCommissionDismissDialogBehavior.cs` | `CampaignBehaviorBase` entry point: the dismissal dialogue line, removal armed on `ConversationEnded` (#540) |
+| `Main/Features/FieldCommission/Hooks/FieldCommissionDismissMenuBehavior.cs` | `CampaignBehaviorBase` entry point: the settlement-menu picker option (#540) |
 | `Main/Features/FieldCommission/Hooks/MapEventSideHelper.cs` | Pure `MapEventSide` boundary helper (keeps the behavior under the ADR-002 line budget) |
 | `Main/Features/FieldCommission/Cheats/FieldCommissionCheats.cs` | `taom.fc_grant_merit`, `taom.fc_status` |
-| `Main/Adapters/ITroopRosterQueryAdapter.cs` / `TroopRosterQueryAdapter.cs` | Wraps `MobileParty`/`CharacterObject`/`SkillObject` roster + troop-template queries (and the one roster-decrement write) |
-| `Main/Adapters/IHeroCommissionAdapter.cs` / `HeroCommissionAdapter.cs` | Wraps `HeroCreator`/`Hero`/`HeroDeveloper`/`AddCompanionAction`/`AddHeroToPartyAction`/`ClanTierModel` |
-| `Main/Adapters/IInquiryPresenterAdapter.cs` / `InquiryPresenterAdapter.cs` | Wraps `InformationManager`/`TextObject`/`InquiryData`/`TextInquiryData` |
+| `Main/Adapters/ITroopRosterQueryAdapter.cs` / `TroopRosterQueryAdapter.cs` | Wraps `MobileParty`/`CharacterObject`/`SkillObject` roster + troop-template queries (and the two roster-count writes: the promotion decrement, the dismissal refund) |
+| `Main/Adapters/IHeroCommissionAdapter.cs` / `HeroCommissionAdapter.cs` | Wraps `HeroCreator`/`Hero`/`HeroDeveloper`/`AddCompanionAction`/`AddHeroToPartyAction`/`ClanTierModel`; for dismissal, the hero snapshot and `KillCharacterAction.ApplyByRemove` |
+| `Main/Adapters/IInquiryPresenterAdapter.cs` / `InquiryPresenterAdapter.cs` | Wraps `InformationManager`/`TextObject`/`InquiryData`/`TextInquiryData`, and for the dismissal picker `MBInformationManager`/`MultiSelectionInquiryData` |
 | `Main/_Module/ModuleData/field_commission/field_commission_config.json` | Configuration data |
 
 ## Dependencies
@@ -249,21 +255,30 @@ literal, and those two must describe the same game.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionConfigProviderTests.cs` — valid parse, missing file, malformed JSON, every field's validation rule (incl. NaN), race-name sanitization, append-merge defense.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionMeritServiceTests.cs` — ratio/NaN gate, deduct-on-completion, decline-keeps-merit, orphan-merit consolidation, promotability gate (fail-closed), promoted-hero pruning, SyncData round-trip.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionOfferFlowServiceTests.cs` — full inquiry chain, no-room deferral + retainer allowance, hero-creation failure leaves state untouched.
+- `TAOM.Tests/Features/FieldCommission/FieldCommissionDismissServiceTests.cs`: one test per entity state in the
+  dismissal matrix, remove-before-refund ordering, nothing partially applied on any refusal, the picker and
+  confirm chain (#540).
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionSettingsProviderTests.cs` — the MCM-over-JSON
   merge (per-knob override, NaN/infinity revert, both clamp directions), snapshot value equality, the
   tick-path caching contract, and the compiled-default-vs-JSON-default pin.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionCheatsTests.cs` — pure formatter output.
 - `TAOM.Tests/Features/FieldCommission/NullEnlistmentStateQueryTests.cs` — null-object contract.
-- `TAOM.Tests/Features/FieldCommission/FieldCommissionBindingTests.cs` (`TestCategory=BindingVerification`) — every TaleWorlds signature this feature depends on, most load-bearing being the `TextInquiryData` 12-parameter ctor order (bug fix (b)).
+- `TAOM.Tests/Features/FieldCommission/FieldCommissionBindingTests.cs` (`TestCategory=BindingVerification`): every TaleWorlds signature this feature depends on, most load-bearing being the `TextInquiryData` 12-parameter ctor order (bug fix (b)). Since #540 also the
+  dismissal set: `CharacterObject.OriginalCharacter`, the seven-parameter `TroopRoster.AddToCounts`,
+  `KillCharacterAction.ApplyByRemove` and its `isForced` default, and the `MultiSelectionInquiryData`
+  parameter names, because the picker binds them by name.
 
-**194 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 194, Skipped: 0, Total: 194`). The jump from 154 came with #486: an exhaustive truth table on `EquipmentResetPlan`, behavioural tests on `Patch71.Fill`, and 19 more binding drift-guards.
+**266 tests total, all passing** (`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 266, Skipped: 0, Total: 266`, 2026-09-04). The jump from 194 came with #540: 51 dismissal tests and 21 binding drift-guards. The jump from 154 to 194 came with #486: an exhaustive truth table on `EquipmentResetPlan`, behavioural tests on `Patch71.Fill`, and 19 more binding drift-guards.
 
 **Deliberately untested:** the three guards at the top of `FieldCommissionBehavior.OnTick`
 (co-op authority / enlisted / master toggle; `PlayerEncounter.Current` and `MapEvent.PlayerMapEvent`;
 `Hero.MainHero.IsPrisoner` and `MobileParty.MainParty`). They read TaleWorlds statics that the MSTest
 host cannot construct, and ADR-008 does not require entry-point coverage for exactly this reason.
 Everything they gate is tested on the service behind them. If one of these ever needs pinning, the
-honest route is an adapter over the statics, not a mock of the engine.
+honest route is an adapter over the statics, not a mock of the engine. The two #540 entry points sit
+under the same rule (`Hero.OneToOneConversationHero`, `MBTextManager.SetTextVariable`, the
+`CampaignGameStarter` line and menu registrations, `MenuCallbackArgs`); everything they decide is tested
+on `FieldCommissionDismissService`.
 
 ## How to Add a New Config Knob
 
@@ -303,6 +318,9 @@ ever fielded — not a concern at any realistic party size.
 - 2026-08-08 — **Promotion bar raised** (`14160f0a`): `meritThreshold` 8 → 32,
   `maxOffersPerBattle` 1 → 2. Promotions were landing too easily because merit pools per troop TYPE
   rather than per soldier. See "Current Values" for what this does and does not fix.
+- 2026-09-04: **Dismissal back to the ranks** (#540). A promoted companion can be sent back through
+  their own dialogue line or a settlement-menu picker; the hero is removed and one origin soldier
+  rejoins the party. See the section below.
 
 ## Firing a promoted companion (#486)
 
@@ -341,6 +359,121 @@ Full mechanism, the campaign-wide-singleton trap in `Hero.BattleEquipment` and f
 bandit-culture stealth variant: [harmony-patch-registry.md](../reference/harmony-patch-registry.md)
 under `Patch71_HeroResetEquipmentsGuard`.
 
+## Dismissing a promoted companion (return to the ranks, #540)
+
+Nothing in the feature took a commission back until #540. Vanilla's own dismissal exists, but players
+could not find it: "I no longer have need of your services" sits under "About your position in the
+clan", and its condition (`CompanionRolesCampaignBehavior.companion_fire_condition`) hides the line
+whenever `Settlement.CurrentSettlement` is set. It is reachable only through Party screen > Talk on the
+world map. Talk to the companion inside a town and the line is absent.
+
+### Two entry points, one service
+
+- **In person.** `FieldCommissionDismissDialogBehavior` adds "Your commission is ended. Return to the
+  ranks." under `hero_main_options` for a promoted companion who qualifies, with an are-you-sure
+  exchange. No settlement gate, so it works in a keep or tavern scene as well as from the Party screen.
+  The removal runs on `ConversationEnded`, not in the farewell line's consequence: vanilla never removes
+  a conversation partner from inside a scene conversation (its fire is map-only), and this behaviour
+  does not start. The hand-off is a one-shot field consumed on every conversation end, whichever line
+  won, so it cannot leak into the next chat.
+- **From the settlement menu.** `FieldCommissionDismissMenuBehavior` adds "Discharge a promoted
+  companion" to the town, castle and village menus while at least one promoted companion qualifies. It
+  opens a picker (`MultiSelectionInquiryData`, one row per candidate, "name (was troop)"), then a
+  confirm inquiry that names the returning troop and says the gear is lost. This path needs no
+  conversation, which is the point while #415 is open. It is deliberately not gated on the MCM master
+  switch: an already-promoted companion is an ordinary companion, and turning promotions off must not
+  strand one.
+
+Both end in `FieldCommissionDismissService.DismissAndReport`, so the verdict, the ordering and the
+feedback line live in one place. Co-op clients see neither entry point; the behaviours gate on
+`ICoopSessionProvider.IsAuthority`.
+
+### What happens
+
+The hero is removed with one engine call, `KillCharacterAction.ApplyByRemove`, and one soldier of the
+troop the hero was promoted from is added to the main party roster, wounded if the companion was
+wounded. The origin troop is `Hero.Template`, which is `CharacterObject.OriginalCharacter`, a saveable
+field, so it survives a load. Merit is untouched. The companion's gear is lost, as it is when vanilla
+fires a wanderer; the confirm text says so. The 250 denar stipend goes back to the clan leader through
+the engine's own kill path (`GiveGoldAction.ApplyBetweenCharacters` for a clan member who is not the
+leader).
+
+Inside a settlement scene the hero also has a live `Agent`, and nothing on the engine's removal path
+touches it: `KillCharacterAction` only drops the `LocationCharacter`, which is the spawn list for the
+NEXT scene entry, so without more the dismissed companion keeps standing in the tavern as a ghost the
+player can still click (`MissionConversationLogic.IsThereAgentAction` never asks whether the hero is
+alive). Vanilla never meets this because its fire line is map-only. `RemoveCompanionFromGame` therefore
+removes the agent first, the way `MissionAgentHandler.FadeoutExitingLocationCharacter` removes a
+character leaving through a passage, with the same refusal on a mission that is already ending; on the
+map there is no mission and nothing to do (deep-review data-flow finding, 2026-09-04). It uses the
+instant form, `Agent.FadeOut(hideInstantly: true, hideMount: true)`, rather than the visible fade: a
+fading agent stays `Active` for the length of the fade, `IsThereAgentAction` never checks
+`IsFadingOut`, and a click in those frames would open a conversation with a hero that is already dead
+and un-clanned, which the wanderer-hire lines would treat as hireable. The instant form is what vanilla
+uses for a departing multiplayer peer (second review round, lifecycle agent). The picker path never
+meets a live agent at all: `Mission.Current` is cleared in `Mission.OnMissionStateFinalize`, called from
+`MissionState.OnFinalize` when the scene is left, and the town, castle and village menus belong to
+`MapState`, so the removal is a no-op there and only the map and scene conversation paths differ.
+
+Order inside `Dismiss`: evaluate, remove, refund, forget the promoted id. Remove first because the
+engine step is the only one with a runtime failure mode (a deferral behind a DeathMark, a throw) and
+it is detectable in-frame, so a refusal there leaves nothing to roll back. The refund's own
+preconditions were checked a moment earlier in the same paused frame; if the engine still refuses it,
+the hero is already gone, so the service logs a warning rather than pretending, and still forgets the
+id.
+
+### Why one call and not vanilla's two
+
+Vanilla's fire line runs `RemoveCompanionAction.ApplyByFire` and then `KillCharacterAction.ApplyByRemove`.
+Eight vanilla listeners subscribe to `CampaignEvents.CompanionRemoved` on the installed v1.4.8,
+enumerated by the subscription call rather than by handler name (five in
+`TaleWorlds.CampaignSystem`: `LordsNeedsTutorIssueBehavior`, `CompanionRolesCampaignBehavior`,
+`HeroSpawnCampaignBehavior`, `PartyRolesCampaignBehavior`, `PlayerTrackCompanionBehavior`; three in
+`SandBox`, which the decompile dump does not carry: `CompanionDismissCampaignBehavior`,
+`DefaultNotificationsCampaignBehavior`, `FamilyFeudIssueBehavior`). Six behave the same for the Fire
+and Death details on a wanderer in the main party; the spawn teleport skips both. Two differ, and both
+differences favour Death:
+`DefaultNotificationsCampaignBehavior` shows "left your clan" only for Fire, and this feature shows its
+own line instead; `CompanionDismissCampaignBehavior`, for Fire only and whenever the player stands in a
+settlement, dereferences `ConversationMission.OneToOneConversationAgent` with no null check to stop the
+fired companion following the player. That is a vanilla NRE for a Fire applied inside a settlement
+outside a conversation, which is exactly the picker path, and it is the likely reason vanilla's own fire
+line is map-only. The Fire path also adds a fugitive interlude, runs `Hero.ResetEquipments` (the #486
+crash site, guarded by Patch71) on a hero that is about to be removed, and cuts `CompanionOf` first,
+which is what the stipend hand-back keys on (`Hero.Clan` is `CompanionOf ?? _clan`). `ApplyByRemove`
+alone reaches `RemoveCompanionAction.ApplyByDeath` from `KillCharacterAction.ApplyInternal`, after
+`MakeDead` has taken the hero out of the roster, and is the call the Refuge warden rollback already
+ships. The first draft of this section counted four listeners because it was written from the dump,
+and the second counted seven by grepping for a handler name; the compatibility review corrected both
+against the installed DLLs, by listing subscribers to the event.
+
+### Entity state matrix
+
+| State | Verdict | Detected by |
+|---|---|---|
+| In the main party, healthy | Ok | every gate passes |
+| In the main party, wounded | Ok, the soldier comes back wounded | `PromotedHeroSnapshot.IsWounded` |
+| Main party in a field battle, assault or siege | `PartyInBattle` | `PartyBelongedTo.MapEvent` or `SiegeEvent`, the predicate `KillCharacterAction` defers on |
+| Governor, own party leader, caravan leader, refuge warden, prisoner (enemy or own party), fugitive | `NotInMainParty` | `PartyBelongedTo?.IsMainParty != true` |
+| Dead or disabled | `HeroGone` | absent from `Hero.AllAliveHeroes` |
+| Alive but no longer the clan's companion | `NotACompanion` | `Hero.IsPlayerCompanion` |
+| Ordinary (unpromoted) companion | `NotPromoted` | not in `_promotedHeroIds`; vanilla's fire line remains their path |
+| Origin troop removed from the XML, or a hero template | `TroopUnresolved` | `GetTroopInfo` missing or `IsHero` |
+| Player enlisted | `PlayerEnlisted` | `IEnlistmentStateQuery.IsEnlisted`, symmetric with the offer pump |
+| Co-op client | hidden and no-op | `ICoopSessionProvider.IsAuthority` in the behaviours |
+
+`RemovalFailed` is not a verdict of `Evaluate`; it is what `Dismiss` returns when the adapter reports the
+engine did not remove the hero, and nothing else has been touched at that point.
+
+### Owed in-game smoke
+
+None of this has run in a live game. In order: dismiss from the Party screen talk on the map; dismiss
+through the town menu picker; dismiss from a keep or tavern scene conversation (vanilla never exercises
+a removal after a scene conversation, so this is the path to watch); confirm the option and the line
+are absent while besieging; save, reload, then dismiss (the origin troop must survive the load);
+confirm the stipend returns and no death notification appears; `taom.fc_status` shows one fewer
+promoted companion.
+
 ## GitHub Issue
 
 - **#376** — Battlefield Promotions (Field Commission native rewrite). **Open**: code complete,
@@ -352,8 +485,10 @@ under `Patch71_HeroResetEquipmentsGuard`.
   `Patch71_HeroResetEquipmentsGuard`, code-verified rather than play-verified: the in-game smoke
   (fire a promoted Dale troop, then a bandit-culture one for the stealth branch) was not run.
   Reopen if it recurs. Two review passes, RCA in `docs/reviews/`.
-- **#418** — `/localize` for the 10 `taom_fc_*` strings (with #375's 66 enlistment keys, 76 total).
+- **#418**: `/localize` for the 27 `taom_fc_*` strings (17 of them from #540, with #375's 66 enlistment keys).
   **Open**, blocked on `ANTHROPIC_API_KEY` not being set in the build environment.
+- **#540**: dismiss a promoted companion back to the ranks. **Open**: code complete, wired and
+  reviewed; every in-game path is still owed (see "Owed in-game smoke" above).
 
 ---
 

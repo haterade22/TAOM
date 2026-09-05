@@ -23,6 +23,10 @@ VERDICT classes (the phase the log ENDS on discriminates the hang)
                       equipped fine but the battle never became playable; NOT an
                       equipment-resolution hang (look at non-equip spawn steps / scene /
                       script init / the first OnMissionTick).
+  RENDER_WAIT         ends at WaitingForRender — everything loaded and the mission is
+                      held at the native SceneView.ReadyToRender gate. A shaders= count
+                      that is FALLING means a cold shader cache (a slow load, not a
+                      hang); a frozen count is the wedge.
   SCENE               ends at MissionInitialize / BattleSceneSelected /
                       MissionInitializeDone / FinishMissionLoadingBegin — froze during
                       mission construction before any agent equipped; a code/scene issue.
@@ -67,7 +71,7 @@ Usage:
   python tools/triage_battle_load.py --bundle <taom_crash_*.zip>
   python tools/triage_battle_load.py <taom_debug.log> --json verdict.json
 
-Exit code: 1 if a hang was diagnosed (EQUIPMENT*/SCENE/PRE_SCENE/POST_EQUIP),
+Exit code: 1 if a hang was diagnosed (EQUIPMENT*/SCENE/PRE_SCENE/POST_EQUIP/RENDER_WAIT),
 2 if an input path is bad, else 0 (COMPLETED / UNKNOWN).
 """
 from __future__ import annotations
@@ -103,9 +107,15 @@ _PHASE_RE = re.compile(
 _SLOT_RE = re.compile(
     r"\[BattleLoad\]\s+slot=(\S+)\s+id=(\S+)\s+bo=(\S+)\s+shieldBo=(\S+)\s+"
     r"holsterBo=(\S+)\s+mesh=(\S+)\s+kind=(\S+)")
-# [BattleLoad] WATCHDOG STILL LOADING after Ns — last <statusline>   (em-dash or hyphen)
+# [BattleLoad] WATCHDOG STILL LOADING after Ns — [tokens ]last <statusline>  (em-dash or hyphen)
+# The optional token block carries `shaders=N` and `churn-capped`, which the C# side inserts
+# between the dash and the literal `last`. It was NOT optional here until 2026-09-04, so the
+# regex matched only the token-free shape and silently dropped the watchdog line for exactly
+# the bundles carrying telemetry. `(?:(.*?)\s)?` is non-greedy and stops at the FIRST
+# `last`, so a status line that itself contains the word "last" still parses.
 _WATCHDOG_RE = re.compile(
-    r"\[BattleLoad\]\s+WATCHDOG STILL LOADING after (\d+)s\s+[—-]\s+last\s+(.*)$")
+    r"\[BattleLoad\]\s+WATCHDOG STILL LOADING after (\d+)s\s+[—-]\s+"
+    r"(?:(.*?)\s)?last\s+(.*)$")
 # CurrentStatusLine: phase=PHASE seq=N <detail>. phase token is (\S+) so the initial
 # sentinel `phase=<none>` still yields a last_phase; seq is optional for the same reason.
 _STATUS_RE = re.compile(r"phase=(\S+)(?:\s+seq=(\d+))?\s*(.*)$")
@@ -176,7 +186,15 @@ MEM_WARN_HEADROOM_FLOOR_MB = 2048
 MEM_WARN_HEADROOM_PERCENT = 10
 
 NULL = "<null>"
-HANG_KINDS = {"EQUIPMENT", "EQUIPMENT_CONFIRMED", "SCENE", "PRE_SCENE", "POST_EQUIP"}
+HANG_KINDS = {"EQUIPMENT", "EQUIPMENT_CONFIRMED", "SCENE", "PRE_SCENE", "POST_EQUIP",
+              "RENDER_WAIT"}
+
+# WaitingForRender detail tokens. Twin literal of
+# BattleLoadDiagnosticsService.FormatRenderWaitDetail — both tokens are OMITTED when
+# unmeasured (never rendered as 0), so both groups are optional here and a missing one
+# means "not observed", not "zero".
+_WAITED_MS_RE = re.compile(r"\bwaitedMs=(\d+)\b")
+_SHADERS_RE = re.compile(r"\bshaders=(\d+)\b")
 
 # Terminal phases that mean "mission construction, before any agent equipped". The two
 # 2026-08-07 additions belong here and NOT in the PRE_SCENE fall-through: a log ending at
@@ -216,7 +234,7 @@ _BUCKETS = (
     ("bucket3c", "MissionAfterStartDone", "FinishMissionLoadingDone",
      "OnMissionLoadingFinished + Scene.ResumeLoadingRenderings"),
     ("bucket4", "FinishMissionLoadingDone", "BattlePlayable",
-     "first OnMissionTick — the battle became playable"),
+     "SceneView.ReadyToRender gate, then the first OnMissionTick (see WaitingForRender)"),
 )
 
 # The four markers in this window that carry MemStats(). Their privMB trajectory is what
@@ -264,6 +282,9 @@ class Watchdog:
     elapsed_seconds: int
     last_phase: str
     last_detail: str
+    # The `shaders=N` / `churn-capped` tokens the line carried, or "" for an older log that
+    # predates them. Absent is absent: never rendered as a fabricated shaders=0.
+    tokens: str = ""
 
 
 @dataclass
@@ -399,12 +420,14 @@ def parse_battle_load_log(text: str) -> Timeline:
 
         m = _WATCHDOG_RE.search(line)
         if m:
-            status = m.group(2)
+            tokens = (m.group(2) or "").strip()
+            status = m.group(3)
             sm = _STATUS_RE.search(status)
             tl.watchdog = Watchdog(
                 elapsed_seconds=int(m.group(1)),
                 last_phase=sm.group(1) if sm else "",
-                last_detail=(sm.group(3).strip() if sm else status.strip()))
+                last_detail=(sm.group(3).strip() if sm else status.strip()),
+                tokens=tokens)
             continue
 
         m = _SLOT_RE.search(line)
@@ -463,6 +486,56 @@ def _parse_scene(event: PhaseEvent) -> str | None:
     return m.group(1) if m else None
 
 
+def _classify_render_wait(terminal: PhaseEvent) -> Verdict:
+    """A log ending on WaitingForRender: the mission loaded and is waiting on
+    SceneView.ReadyToRender(). The shaders= token decides whether that is a working slow
+    load or a real wedge, and an ABSENT token is neither (unmeasured, not zero)."""
+    m = _SHADERS_RE.search(terminal.detail)
+    shaders = int(m.group(1)) if m else None
+    m = _WAITED_MS_RE.search(terminal.detail)
+    waited = int(m.group(1)) if m else None
+    waited_part = f" after {waited}ms" if waited is not None else ""
+
+    if shaders is None:
+        v = Verdict(
+            "RENDER_WAIT",
+            "The mission loaded but never reached its first tick" + waited_part
+            + ", and the shader-compilation count could NOT be read (shaders= is absent, "
+            "which is unmeasured, not zero). Treat the render gate as unexplained.")
+        v.notes.append(
+            "An absent shaders= token means the native "
+            "Utilities.GetNumberOfShaderCompilationsInProgress() call threw. Check the "
+            "top of the log for 'Patch43 diagnostics failed to apply'.")
+        return v
+
+    if shaders > 0:
+        v = Verdict(
+            "RENDER_WAIT",
+            f"The mission loaded but is held at the SceneView.ReadyToRender gate"
+            + waited_part + f" with {shaders} shader compilations still in flight — a "
+            "COLD SHADER CACHE, i.e. a slow load rather than a hang.")
+        v.notes.append(
+            "Read the WaitingForRender lines in order: a shaders= count trending DOWN is "
+            "a load that is working and will finish. A count that stops changing is the "
+            "wedge, and the stall watchdog fires its bundle on exactly that reading.")
+        v.notes.append(
+            "Cause, not symptom: every material the engine has never compiled costs one "
+            "serial compile. Cross-check the player's rgl_log for 'Missing shader from "
+            "sack' — 430 pbr_metallic misses in one load is what b18f3441 looked like.")
+        return v
+
+    v = Verdict(
+        "RENDER_WAIT",
+        "The mission loaded but never reached its first tick" + waited_part
+        + ", with NOTHING compiling (shaders=0). The render gate is stuck for some other "
+        "reason — this one is a real wedge, not a cold cache.")
+    v.notes.append(
+        "SceneView.ReadyToRender() is false with an empty compile queue, so suspect scene "
+        "resource streaming or a MissionLogic / MissionBehavior added by TAOM or another "
+        "mod — read the TaomBehaviorAdded stamps above.")
+    return v
+
+
 # --------------------------------------------------------------------------- #
 # Classification                                                               #
 # --------------------------------------------------------------------------- #
@@ -474,7 +547,17 @@ def classify(tl: Timeline) -> Verdict:
             "this is not a taom_debug.log. Enable it in MCM (TAOM — Battle Load "
             "Diagnostics, on by default) and recapture the hang.")
 
-    if any(e.phase == "BattlePlayable" for e in tl.events):
+    # Scoped to the LAST mission, not the whole log. A session holds several missions and any
+    # earlier one that completed would otherwise mask a final load that stalled: the b18f3441
+    # bundle reported COMPLETED and "the battle-load path is clean" for a log whose last
+    # mission never ticked and fired the stall watchdog.
+    #
+    # When no anchor survives at all (a truncated capture, or diagnostics enabled mid-mission)
+    # the fallback is NOT "scan the whole log" — that reproduces the same false COMPLETED.
+    # Without a segment boundary the only honest basis for calling a log clean is that it ENDS
+    # on BattlePlayable; anything after it belongs to a load we cannot see the start of.
+    scope = _last_mission_scope(tl.events)
+    if any(e.phase == "BattlePlayable" for e in scope):
         return Verdict(
             "COMPLETED",
             "Battle reached BattlePlayable — the load completed. Any hang the player "
@@ -515,6 +598,9 @@ def classify(tl: Timeline) -> Verdict:
             "steps (skin/skeleton mesh build) or scene/script post-spawn init.",
             stuck_agent=agent)
 
+    if ph == "WaitingForRender":
+        return _classify_render_wait(terminal)
+
     if ph == "FinishMissionLoadingDone":
         # Everything loaded — Mission.AfterStart returned, so the whole AgentEquip burst
         # completed — and the first OnMissionTick never arrived. There is no stuck agent
@@ -526,10 +612,17 @@ def classify(tl: Timeline) -> Verdict:
             "equipment-resolution hang: every agent equipped and Mission.AfterStart "
             "returned.")
         v.notes.append(
-            "The remaining span is OnMissionLoadingFinished -> the first "
-            "MissionLogic.OnMissionTick (BattleLoadPhaseBehavior). Suspect a MissionLogic "
-            "/ MissionBehavior added by TAOM or another mod, or Scene."
-            "ResumeLoadingRenderings — read the TaomBehaviorAdded stamps above.")
+            "The remaining span is the SceneView.ReadyToRender gate: MissionState.OnTick "
+            "reaches TickMission only through Handler.RenderIsReady(), which stays false "
+            "while the scene's shaders compile (FinishMissionLoading ends with "
+            "Scene.ResumeLoadingRenderings). Read the player's rgl_log for that window: "
+            "a wall of compile_shader lines means a COLD SHADER CACHE and a slow load, "
+            "not a hang (bundle b18f3441, 2026-09-04, 818 compiles in 290s).")
+        v.notes.append(
+            "This log predates the WaitingForRender marker, which is why the span is "
+            "unattributed here. A current build stamps it at 1 Hz with a live shaders= "
+            "count. Failing that, suspect a MissionLogic / MissionBehavior added by TAOM "
+            "or another mod — read the TaomBehaviorAdded stamps above.")
         return v
 
     if ph in SCENE_TERMINALS:
@@ -707,6 +800,46 @@ def _last_mission_segment(events: list) -> list:
     return list(events[start:]) if start is not None else []
 
 
+# Any of these starts a mission. `_last_mission_segment` deliberately anchors on
+# MissionInitialize alone because the bucket ledger's spans are defined against it; this wider
+# set exists only for VERDICT scoping, where the question is "which mission does the tail
+# belong to" rather than "where do the buckets start".
+_MISSION_START_PHASES = ("MissionInitialize", "MissionOpenNew", "EncounterStart")
+
+
+def _last_mission_start_index(events: list):
+    """Index of the last mission-start marker, or None. Shared by the verdict scope and the
+    bucket ledger so the two sections of one report cannot describe different missions."""
+    start = None
+    for i, e in enumerate(events):
+        if e.phase in _MISSION_START_PHASES:
+            start = i
+    return start
+
+
+def _last_mission_scope(events: list) -> list:
+    """Events belonging to the LAST mission in the log, for verdict classification.
+
+    Falls back, when nothing anchors a segment, to the tail from the last BattlePlayable
+    onward — so a log that ends on BattlePlayable still reads COMPLETED, while one that
+    carries a whole further load after it does not."""
+    start = _last_mission_start_index(events)
+    if start is not None:
+        return list(events[start:])
+
+    last_playable = None
+    for i, e in enumerate(events):
+        if e.phase == "BattlePlayable":
+            last_playable = i
+    if last_playable is None:
+        return list(events)
+
+    # Strictly AFTER the completed load. If nothing follows, the log ends on BattlePlayable
+    # and the BattlePlayable itself is the scope, so COMPLETED still fires.
+    tail = list(events[last_playable + 1:])
+    return tail if tail else [events[last_playable]]
+
+
 def _first_event(seg: list, phase: str):
     for e in seg:
         if e.phase == phase:
@@ -732,6 +865,18 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
     if not seg or not any(e.phase in _BUCKET_SPLIT_MARKERS for e in seg):
         return None
 
+    # The ledger anchors on MissionInitialize; the verdict anchors on any mission-start marker.
+    # When the LAST mission stalled before reaching MissionInitialize (a PRE_SCENE shape), the
+    # ledger's anchor lands in an EARLIER mission and the report would print that mission's
+    # healthy timings directly under a stall verdict for a different one. Render nothing rather
+    # than something true about the wrong mission.
+    start = _last_mission_start_index(tl.events)
+    if start is not None:
+        init_at = next((i for i, e in enumerate(tl.events) if e.phase == "MissionInitialize"
+                        and i >= start), None)
+        if init_at is None:
+            return None
+
     buckets = [{"name": name, "from": a, "to": b, "ms": _span_ms(seg, a, b), "what": what}
                for name, a, b, what in _BUCKETS]
     measured = [b for b in buckets if b["ms"] is not None and b["ms"] > 0]
@@ -751,9 +896,27 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
         m = _PRIV_MB_RE.search(e.detail) if e is not None else None
         priv_mb[phase] = int(m.group(1)) if m else None
 
+    # The render wait inside bucket4. first/last are the extremes of the shaders= series:
+    # a falling count is a working load, a flat one is the wedge. Absent when the log
+    # predates the marker or the native count could not be read (never zero-filled).
+    render = [e for e in seg if e.phase == "WaitingForRender"]
+    shader_counts = [int(m.group(1)) for m in
+                     (_SHADERS_RE.search(e.detail) for e in render) if m]
+    waited = [int(m.group(1)) for m in
+              (_WAITED_MS_RE.search(e.detail) for e in render) if m]
+    render_wait = {
+        "samples": len(render),
+        "shaders_first": shader_counts[0] if shader_counts else None,
+        "shaders_last": shader_counts[-1] if shader_counts else None,
+        "shaders_peak": max(shader_counts) if shader_counts else None,
+        "draining": (len(shader_counts) > 1 and shader_counts[-1] < shader_counts[0]) or None,
+        "waited_ms_last": waited[-1] if waited else None,
+    } if render else None
+
     return {
         "buckets": buckets,
         "dominant": dominant,
+        "render_wait": render_wait,
         "polls": polls,
         "wait_ms": wait_ms,
         # polls=0 means the MissionState.TickLoading binding FAILED — NOT "there was no
@@ -828,6 +991,15 @@ _NEXT_STEPS = {
         "and any scene/script that runs at first tick.",
         "Compare a working player's log: did theirs reach BattlePlayable on the same scene?",
     ],
+    "RENDER_WAIT": [
+        "Read the shaders= series in the WaitingForRender lines FIRST: falling means the "
+        "load was working and the player simply waited less than it needed.",
+        "Confirm against the player's rgl_log for the same window: count compile_shader "
+        "lines and 'Missing shader from sack' misses.",
+        "A cold shader cache is the cause, not the scene. It is refilled from scratch "
+        "whenever the module list changes (v1.4.8 deletes the local cache) — see "
+        "docs/features/shader-precompilation.md.",
+    ],
     "SCENE": [
         "Audit the scene ref: python tools/audit_battle_scenes.py (map_index coverage) "
         "and tools/audit_scene_names.py.",
@@ -875,6 +1047,24 @@ def _format_timings(t: dict) -> list:
         if t["wait_ms"] is None:
             out.append("  waitMs was omitted by the game (MissionInitializeDone not "
                        "observed) — it is unmeasured, not zero.")
+    r = t.get("render_wait")
+    if r:
+        waited = (f"{r['waited_ms_last']}ms" if r["waited_ms_last"] is not None
+                  else "<not observed>")
+        out.append(f"  RenderWait: {r['samples']} sample(s) over {waited} at the "
+                   "SceneView.ReadyToRender gate")
+        if r["shaders_peak"] is None:
+            out.append("  shaders= was omitted by the game (the native count could not be "
+                       "read) — it is unmeasured, not zero.")
+        elif r["draining"]:
+            out.append(f"  shaders {r['shaders_first']} -> {r['shaders_last']} (peak "
+                       f"{r['shaders_peak']}) — the compile queue is DRAINING, so this is "
+                       "a cold shader cache and a slow load, not a hang.")
+        else:
+            out.append(f"  shaders {r['shaders_first']} -> {r['shaders_last']} (peak "
+                       f"{r['shaders_peak']}) — the count is not falling. A frozen "
+                       "non-zero count is a wedge; a flat 0 means the gate is held by "
+                       "something other than shader compilation.")
     out.append("  privMB at MemStats markers: "
                + " ".join(f"{k}={'?' if v is None else v}"
                           for k, v in t["priv_mb"].items()))
@@ -918,6 +1108,12 @@ def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
         out.append("")
         out.append(f"Stall watchdog fired after {tl.watchdog.elapsed_seconds}s — "
                    f"last phase={tl.watchdog.last_phase} {tl.watchdog.last_detail}".rstrip())
+        if tl.watchdog.tokens:
+            out.append(f"  reading at fire: {tl.watchdog.tokens}")
+            if "churn-capped" in tl.watchdog.tokens:
+                out.append("  churn-capped: the compile queue was STILL MOVING when the "
+                           "watchdog fired, and was capped for never draining. Treat as a "
+                           "cold shader cache on slow hardware, not a frozen compiler.")
 
     if tl.mem_samples:
         if mem is None:  # callers that computed with a custom floor pass their own

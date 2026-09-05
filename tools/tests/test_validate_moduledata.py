@@ -1336,6 +1336,85 @@ class SettlementEconomyFloorTests(unittest.TestCase):
             spec_path.write_text(original, encoding="utf-8")
 
 
+
+class UpgradeArmourRegressionTests(unittest.TestCase):
+    """UPGRADE_ARMOUR_REGRESSION: a promotion must not lower the troop's armour total."""
+
+    TROOPS = """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="src" level="16" default_group="Infantry">
+    <upgrade_targets><upgrade_target id="NPCCharacter.{target}" /></upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Head" id="Item.helm_heavy" />
+        <equipment slot="Body" id="Item.chest_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.helm_lord" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="{target}" level="21" default_group="Infantry">
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Head" id="Item.{head}" />
+        <equipment slot="Body" id="Item.chest_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+</NPCCharacters>
+"""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.armour = {"helm_light": 10, "helm_heavy": 30, "helm_lord": 90, "chest_a": 40}
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, head, target="tgt", armour=None, cultures_xml=None):
+        _write(self.md / "troops" / "troops_x.xml",
+               self.TROOPS.format(head=head, target=target))
+        if cultures_xml:
+            _write(self.md / "taom_spcultures.xml", cultures_xml)
+        regs = ts.Registries(items=set(self.armour), item_def_files={},
+                             npccharacters={"src", target}, cultures=set(), party_templates=set(),
+                             item_armour=self.armour if armour is None else armour)
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run()
+                if i.code == "UPGRADE_ARMOUR_REGRESSION"]
+
+    def test_lower_armour_target_is_a_warning(self):
+        issues = self._run("helm_light")
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+        self.assertEqual(issues[0].entry_id, "tgt")
+        self.assertIn("Head 30->10", issues[0].message)
+
+    def test_equal_or_higher_armour_target_is_clean(self):
+        self.assertEqual(self._run("helm_heavy"), [])
+        self.assertEqual(self._run("helm_lord"), [])
+
+    def test_civilian_sets_are_not_compared(self):
+        # The source's civilian set wears the 90-armour lord helm; ignoring it is what keeps
+        # the heavy-helm target clean above.
+        self.assertEqual(self._run("helm_heavy"), [])
+
+    def test_militia_to_militia_is_exempt(self):
+        cultures = ('<SPCultures><Culture id="c" militia_troop="NPCCharacter.src" '
+                    'melee_militia_troop="NPCCharacter.tgt" /></SPCultures>')
+        self.assertEqual(self._run("helm_light", cultures_xml=cultures), [])
+
+    def test_bare_chested_by_design_target_is_judged_without_body_and_cape(self):
+        bodyless = sorted(ts.Validator._BODYLESS_BY_DESIGN)[0]
+        self.assertEqual(self._run("helm_heavy", target=bodyless), [])
+        self.assertEqual(len(self._run("helm_light", target=bodyless)), 1)
+
+    def test_check_is_skipped_without_an_armour_registry(self):
+        self.assertEqual(self._run("helm_light", armour={}), [])
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 

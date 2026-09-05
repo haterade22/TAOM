@@ -58,8 +58,22 @@ public interface IBattleLoadDiagnosticsService
     void LogFinishMissionLoadingBegin();
 
     // Phase 4e — FinishMissionLoading returned (OnMissionLoadingFinished + ResumeLoadingRenderings
-    // done). Everything from here to BattlePlayable is remaining frames, not load work.
+    // done). This is ALSO the render-wait origin: ResumeLoadingRenderings is what starts the
+    // engine's shader compilation, and the mission cannot tick until that queue drains. Arms the
+    // origin unconditionally (state, not I/O) so a mid-load toggle cannot strand it.
+    //
+    // The comment here used to read "everything from here to BattlePlayable is remaining frames,
+    // not load work". Bundle b18f3441 held 290 seconds of shader compilation in exactly that span,
+    // so it was wrong; NoteWaitingForRender is what measures it now.
     void LogFinishMissionLoadingDone();
+
+    // Phase 4f — one call per MissionState.OnTick frame while the mission has finished loading but
+    // has not yet ticked, i.e. while Handler.RenderIsReady() (SceneView.ReadyToRender) is still
+    // false. THROTTLED to 1 Hz inside the service, because this is a per-frame call and the
+    // b18f3441 window would otherwise have been ~17,000 lines. shadersInFlight is the engine's live
+    // Utilities.GetNumberOfShaderCompilationsInProgress() reading, or -1 when it could not be read
+    // (omitted from the line rather than rendered as a fabricated 0).
+    void NoteWaitingForRender(int shadersInFlight);
 
     // Phase 4b — Mission.AfterStart brackets EVERY submodule's OnMissionBehaviorInitialize, so the
     // AfterStartBegin -> TaomBehaviorsBegin gap is other mods. TaomBehaviorAdded names each TAOM

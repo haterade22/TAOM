@@ -877,4 +877,134 @@ public class BattleLoadDiagnosticsServiceTests
         Assert.IsTrue(ElapsedOf(LineFor("MissionInitializeDone")) >= 5,
             "the clock must be running after MissionInitialize");
     }
+
+    // ---- The render-wait window (bundle b18f3441, 2026-09-04) ----
+    // FinishMissionLoadingDone -> BattlePlayable held 290 s with NOTHING logged inside it. The
+    // engine's own log for that window is 818 compile_shader lines: MissionState.OnTick withholds
+    // the first Mission.Tick behind MissionScreen.RenderIsReady() -> SceneView.ReadyToRender(),
+    // which stays false while shaders compile. These pin the marker that closes that hole.
+
+    // The headline design guard, same reasoning as NoteLoadingPoll's: this is called once per FRAME
+    // of the wait. At 60 fps the b18f3441 window would have been ~17,000 lines unthrottled.
+    [TestMethod]
+    public void NoteWaitingForRender_CalledOneThousandTimesInsideOneSecond_WritesAtMostOneLine()
+    {
+        for (var i = 0; i < 1000; i++) _sut.NoteWaitingForRender(412 - (i % 7));
+
+        var lines = InfoLines().Count(s => s.Contains("phase=WaitingForRender"));
+        Assert.IsTrue(lines <= 1, $"expected at most one throttled line, got {lines}");
+    }
+
+    [TestMethod]
+    public void NoteWaitingForRender_FirstCall_EmitsImmediately()
+    {
+        _sut.NoteWaitingForRender(412);
+
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=WaitingForRender")));
+    }
+
+    [TestMethod]
+    public void NoteWaitingForRender_WhenDisabled_WritesNothing()
+    {
+        _settings.IsEnabled.Returns(false);
+        _sut.NoteWaitingForRender(412);
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void NoteWaitingForRender_IncludesShaderCountAndWaitedMs()
+    {
+        _sut.LogFinishMissionLoadingDone();
+        Thread.Sleep(30);
+        _sut.NoteWaitingForRender(412);
+
+        var line = LineFor("WaitingForRender");
+        StringAssert.Contains(line, "shaders=412");
+        StringAssert.Contains(line, "waitedMs=");
+    }
+
+    // Absent, never zero — the same contract FormatFinishWaitDetail follows for waitMs. Without a
+    // FinishMissionLoadingDone stamp there is no render-wait ORIGIN to measure from.
+    [TestMethod]
+    public void NoteWaitingForRender_WithoutFinishMissionLoadingDone_OmitsWaitedMs()
+    {
+        _sut.NoteWaitingForRender(412);
+
+        var line = LineFor("WaitingForRender");
+        Assert.IsFalse(line.Contains("waitedMs="), $"waitedMs must be omitted, not fabricated: {line}");
+    }
+
+    // -1 is the hook's "the native read threw" sentinel. A user log must not show shaders=-1 or a
+    // fabricated shaders=0, either of which reads as a real engine value.
+    [TestMethod]
+    public void NoteWaitingForRender_UnreadableShaderCount_OmitsShadersToken()
+    {
+        _sut.NoteWaitingForRender(-1);
+
+        var line = LineFor("WaitingForRender");
+        Assert.IsFalse(line.Contains("shaders="), $"shaders must be omitted when unreadable: {line}");
+    }
+
+    // The origin is STATE, not I/O: a mid-load toggle-off must not leave the next load measuring
+    // its render wait from the previous mission's stamp (latch rule 2).
+    [TestMethod]
+    public void LogFinishMissionLoadingDone_WhenDisabled_StillArmsTheRenderWaitOrigin()
+    {
+        _settings.IsEnabled.Returns(false);
+        _sut.LogFinishMissionLoadingDone();
+        _settings.IsEnabled.Returns(true);
+
+        _sut.NoteWaitingForRender(412);
+
+        StringAssert.Contains(LineFor("WaitingForRender"), "waitedMs=");
+    }
+
+    [TestMethod]
+    public void LogMissionInitialize_ResetsRenderWaitThrottle()
+    {
+        _sut.NoteWaitingForRender(412);
+        _sut.LogMissionInitialize("scene_a");
+        _sut.NoteWaitingForRender(411);
+
+        Assert.AreEqual(2, InfoLines().Count(s => s.Contains("phase=WaitingForRender")),
+            "a new load must emit its first render-wait line immediately, not wait out the previous throttle");
+    }
+
+    [TestMethod]
+    public void ShouldEmitRenderWait_FirstEverCall_ReturnsTrue()
+        => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitRenderWait(0L, -1L, 1000L));
+
+    [TestMethod]
+    public void ShouldEmitRenderWait_InsideInterval_ReturnsFalse()
+        => Assert.IsFalse(BattleLoadDiagnosticsService.ShouldEmitRenderWait(1500L, 1000L, 1000L));
+
+    [TestMethod]
+    public void ShouldEmitRenderWait_ExactlyAtInterval_ReturnsTrue()
+        => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitRenderWait(2000L, 1000L, 1000L));
+
+    // The stopwatch restarts between loads, so "now" can legitimately go BACKWARDS relative to a
+    // stale stamp. That must emit, not latch the marker off for the rest of the load.
+    [TestMethod]
+    public void ShouldEmitRenderWait_ClockWentBackwards_ReturnsTrue()
+        => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitRenderWait(10L, 9000L, 1000L));
+
+    [TestMethod]
+    public void FormatRenderWaitDetail_BothKnown_EmitsBothTokens()
+        => Assert.AreEqual("waitedMs=290000 shaders=412",
+            BattleLoadDiagnosticsService.FormatRenderWaitDetail(290000L, 412));
+
+    [TestMethod]
+    public void FormatRenderWaitDetail_NoOrigin_OmitsWaitedMs()
+        => Assert.AreEqual("shaders=412",
+            BattleLoadDiagnosticsService.FormatRenderWaitDetail(null, 412));
+
+    [TestMethod]
+    public void FormatRenderWaitDetail_UnreadableCount_OmitsShaders()
+        => Assert.AreEqual("waitedMs=290000",
+            BattleLoadDiagnosticsService.FormatRenderWaitDetail(290000L, -1));
+
+    [TestMethod]
+    public void FormatRenderWaitDetail_NeitherKnown_EmitsEmpty()
+        => Assert.AreEqual(string.Empty,
+            BattleLoadDiagnosticsService.FormatRenderWaitDetail(null, -1));
 }

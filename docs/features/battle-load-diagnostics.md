@@ -40,6 +40,7 @@ Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to
 | 4e | `FinishMissionLoadingDone` | `MissionState_FinishMissionLoading_BattleLoad_Patch` (**Postfix**) | `FinishMissionLoading` returned — `OnMissionLoadingFinished` + `Scene.ResumeLoadingRenderings` done |
 | 4c | `TaomBehaviorsBegin` / `TaomBehaviorAdded` / `TaomBehaviorsDone` | `AddTaomBehavior` helper in `SubModule.OnMissionBehaviorInitialize` (no patch) | TAOM's own behaviors, each stamped by name |
 | 5 | `AgentEquipBegin` / `AgentEquipOk` | `Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch` (Prefix + Postfix) | `Agent.EquipItemsFromSpawnEquipment(bool,bool,bool,int)` — **the money hook** |
+| 4f | `WaitingForRender` | `MissionState_OnTick_RenderWait_Patch` (**Postfix**) | `MissionState.OnTick(float)` (**protected**): one call per frame the mission is loaded but not yet ticking, i.e. while `Handler.RenderIsReady()` is false. Throttled to 1 Hz in the service; carries `waitedMs=` and the live `shaders=` count |
 | 6 | `BattlePlayable` | `BattleLoadPhaseBehavior : MissionLogic` (first `OnMissionTick`) | closes the loading window — load succeeded |
 
 All hooks share the Harmony category `Patch43_BattleLoadDiagnostics`. Phases 4 and 5 coexist with the pre-existing prefixes on the same methods (`Patch16_AtmospherePersistence` on `Mission.Initialize`, `Patch23_BannerColorPersistence` on `EquipItemsFromSpawnEquipment`) — Harmony runs all of them.
@@ -75,6 +76,11 @@ installed v1.4.7):
 | **3c** | `MissionAfterStartDone` → `FinishMissionLoadingDone` | `OnMissionLoadingFinished` + `Scene.ResumeLoadingRenderings` |
 
 There is now **no unattributed span** between `MissionInitialize` and `BattlePlayable`.
+
+> **Corrected 2026-09-04.** That sentence was false for eight months: it accounted for everything up
+> to `FinishMissionLoadingDone` and then assumed the rest was "remaining frames". Bundle b18f3441
+> spent **290 seconds** in exactly that remainder. `WaitingForRender` (phase 4f, below) is what
+> closes it; the claim holds again only with that marker present.
 
 **`TickLoading` is a counter hook that never logs, and that is the design.** It fires once per frame
 while the mission loads; at 60 fps a 12-second wait is ~720 calls, so a marker there would produce
@@ -188,6 +194,45 @@ A Musician spectator is a 1-in-10 draw. In-house repros produced `townsman_dunla
 
 `FileLogger` writes every `[BattleLoad]` line (INFO) **synchronously on the calling thread**, so the begin line is on disk the moment the call returns — before the engine can freeze *or* crash inside the equip. Until 2026-07-16 it was queued to a background writer with a 50 ms poll, which was adequate for a **hang** (main thread frozen, writer thread alive to drain) but lost the queue outright on a **hard crash**. See "Crash-durability caveat" under *Read a hang log*.
 
+### The render-ready gate, the last dark window (bundle b18f3441, 2026-09-04)
+
+A player load sat **305 s past `FinishMissionLoadingDone`** and the stall watchdog wrote a crash
+bundle for it. The TAOM phase log said nothing across those 290 seconds. The engine's own
+`rgl_log.txt` for the identical window holds **820 lines, 818 of them `compile_shader`**, plus one
+`MissionScreen-OnActivate` and one `Bake Terrain`. The load was working the whole time.
+
+`MissionState.OnTick` reaches `TickMission` through one gate (v1.4.8, `MissionState.cs:110`):
+
+```csharp
+if (!flag && (Handler == null || Handler.RenderIsReady()))
+    TickMission(realDt);
+```
+
+`Handler` is `MissionScreen`; its `IMissionSystemHandler.RenderIsReady()` returns
+`MissionStartedRendering()`, which returns the native `SceneView.ReadyToRender()`
+(`Native__TaleWorlds.MountAndBlade.View.cs:15963` / `:16584`). That stays false while the scene's
+shaders compile, and `FinishMissionLoading`'s last statement is `Scene.ResumeLoadingRenderings()`,
+which is what starts the compile flood. So on a cold shader cache the mission sits **one frame short
+of playable** until the queue drains: no first tick, no `BattlePlayable`, no window close, and the
+watchdog fired on a load that was fine.
+
+Party size is not the variable. Earlier in the same session a **421-agent** battle
+(`battle_terrain_biome_046`) logged 77 `Missing shader from sack` misses that minute and was playable
+in 11.5 s. The stalled battle was **95 agents**, but it was the session's first Dunland encounter:
+478 misses in its 14-second load window, 430 of them `pbr_metallic` (character and armor materials),
+of which only 108 had compiled by `FinishMissionLoadingDone`.
+
+Two things came out of it:
+
+- **`WaitingForRender` (phase 4f)** stamps that window at 1 Hz with `waitedMs=` and the live
+  `shaders=` count. Read the series, not one line: a count trending **down** is a working load; a
+  count that stops changing is the wedge.
+- **The watchdog now asks whether the queue is moving** before it fires (below).
+
+Cause, not symptom: the shader cache is what makes this rare or constant, and v1.4.8 deletes the
+local cache after **any** module-list change. See [shader-precompilation.md](shader-precompilation.md),
+whose PARKED rationale this bundle contradicts.
+
 ### The loading window + stall watchdog
 
 `BattleLoadLoadingWindow` is a static `volatile` latch: opened at `Mission.Initialize` (phase 4), closed at the first `OnMissionTick` (phase 6) or mission end. Phase-5 per-agent logging is gated on it, so **reinforcement waves after the battle is playable are not logged** (the symptom is the initial load only) — keeping the hot path a two-bool no-op outside the load window.
@@ -198,6 +243,49 @@ A Musician spectator is a 1-in-10 draw. In-house repros produced `townsman_dunla
 2. **Best-effort:** calls `ICrashReportService.HandleException(new BattleLoadStallException(...), "BattleLoadStallWatchdog")` to produce a full crash-bundle ZIP so the user can ship the log in one action. (Some collectors read live mission state from the background thread while the main thread is frozen and may return partial data — acceptable; the marker + flushed phase log are the primary signal.)
 
 The pure decision `BattleLoadStallWatchdog.ShouldFire(windowOpen, elapsed, threshold, alreadyFired)` is unit-tested; the timer/CrashReport plumbing is not (game-only).
+
+**Shader-compile deferral (2026-09-04).** Wall clock alone cannot separate "wedged" from "slow but
+progressing", which is how b18f3441 became a bundle. Past the threshold the watchdog asks a second
+question through `Decide(shadersInFlight, secondsSinceCountChanged, secondsCompilingContinuously, noProgressSeconds, maxContinuousCompileSeconds)`, which returns `Defer`, `FireWedge` or `FireChurnCapped`:
+a **non-zero** compile count that has **moved within the last 60 s** is progress, so it logs
+one `WATCHDOG DEFERRED` warning per window (carrying `shaders=N`, `compiling Ns`, and the cap) and
+stands down. Four properties make that safe rather than a mute button:
+
+| Property | Why |
+|---|---|
+| Deferring does **not** set `_firedForCurrentWindow` | If the queue later freezes, the same window still owes its bundle |
+| `shadersInFlight == 0` never defers | An empty queue with the window still open is a real wedge |
+| `shadersInFlight == -1` (never sampled) never defers | Absent evidence must not buy a deferral, or a broken binding would silently disable the watchdog. Same rule as `polls=0` |
+| The hold-off ends after 900 s of UNBROKEN compilation | The **churn backstop**. "Changing" is not "draining": a count thrashing among positive values refreshes the no-progress clock forever, so a hold-off gated only on that clock would suppress the bundle for the whole session. The cap is measured on continuous compile time (from the empty-to-non-empty edge, reset on every dip to zero), NOT on window time: a big siege scene can legitimately spend minutes in native setup before the first shader, and that must not be charged against the compile allowance. A fire past the cap carries a `churn-capped` token so triage can tell it from a frozen queue |
+
+The cap is not hypothetical. TAOM has already been bitten by a churning shader count in this exact
+domain: `ShaderPrecompileDecider` carries a named `ChurnTimeout` abort for "count > 0 CONTINUOUSLY,
+churns without ever settling", added after the 1.4.7 precompile hang, because a per-frame-changing
+count slips straight past a frozen-count guard. The first cut of this hold-off went into review
+without that lesson carried across, and the data-flow agent caught it as a HIGH: an oscillating queue
+would have deferred on every poll forever, turning the watchdog's false positive into permanent
+silence.
+
+A second review pass then caught the cap itself measuring the wrong thing. It ran from
+`BattleLoadLoadingWindow.OpenedAtUtc` (Mission.Initialize), so a load that spent 550 s in native
+scene setup before the first shader compiled had only 350 s of the advertised 15 minutes left. The
+decider's `ChurnTimeout` does not work that way: its clock starts at the first non-zero count and
+resets on every dip to zero, which is continuous-compile time and independent of how long the item
+took to start. `BattleLoadRenderWaitProbe.SecondsCompilingContinuously` now mirrors that, and the
+cap is measured on it.
+
+The decision itself is one method with three outcomes (`BattleLoadStallWatchdog.Decide` returning
+`Defer` / `FireWedge` / `FireChurnCapped`), not a boolean predicate plus a formatter that re-derived
+its algebra. The `churn-capped` token derives from the verdict, so the two cannot contradict each
+other; the first cut had them as separate expressions of the same three terms, which is the
+"two seams that gate the same decision must carry the SAME guards" trap.
+
+The count reaches the background thread through `BattleLoadRenderWaitProbe`, a `volatile`/`Interlocked`
+static written by the phase-4f hook. `Utilities.GetNumberOfShaderCompilationsInProgress()` is a native
+call and is read **only on the main thread**; the watchdog never calls into the engine from its
+thread-pool thread. `BattleLoadLoadingWindow.Enter()` resets the probe, so a stale reading from the
+previous mission cannot defer the next one. A fired bundle's message now carries `shaders=N`, so the
+reading the decision was made on is in the artifact.
 
 **Precompile suppression.** The watchdog honors a static `SuppressStallDetection` flag (`BattleLoadStallWatchdog.cs:38`): `Poll` early-returns while it is set (line 67), because a shader-precompile walk intentionally drives multi-minute cold-cache loads that would otherwise trip the 300 s threshold and emit a spurious crash bundle (false-positive found in a user's cold run, 2026-06-18). The flag is raised for the duration of a precompile walk; see [shader-precompilation.md](shader-precompilation.md).
 
@@ -415,7 +503,9 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/MemorySampleReader.cs` | Direct-P/Invoke reader (`GlobalMemoryStatusEx` + `GetProcessMemoryInfo` + `GC.GetTotalMemory`); never throws, false on failure |
 | `Main/Features/BattleLoadDiagnostics/Domain/MemorySample.cs` | Point-in-time memory reading DTO (no behavior) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadLoadingWindow.cs` | Static volatile open/closed latch + `OpenedAtUtc` |
-| `Main/Features/BattleLoadDiagnostics/BattleLoadStallWatchdog.cs` | Background `Timer` + pure `ShouldFire` predicate; triggers the bundle |
+| `Main/Features/BattleLoadDiagnostics/BattleLoadStallWatchdog.cs` | Background `Timer` + the pure `ShouldFire` predicate and the `Decide` verdict (`Defer` / `FireWedge` / `FireChurnCapped`); triggers the bundle |
+| `Main/Features/BattleLoadDiagnostics/BattleLoadRenderWaitProbe.cs` | Main-thread-to-watchdog-thread handoff for the live shader-compilation count (`-1` = never sampled) |
+| `Main/Features/BattleLoadDiagnostics/Hooks/MissionState_OnTick_RenderWait_Patch.cs` | Phase 4f: the `SceneView.ReadyToRender` wait, sampled per frame and stamped at 1 Hz |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
 | `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats` DTOs |
@@ -462,7 +552,8 @@ OUTERMOST gate.
 
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
-- `BattleLoadStallWatchdogTests` — `ShouldFire` at/above/below threshold, already-fired, window-closed.
+- `BattleLoadStallWatchdogTests`: `ShouldFire` at/above/below threshold, already-fired, window-closed; `Decide` moving/frozen/zero/never-sampled/NaN, the continuous-compile cap at its boundary, an oscillating series over an hour of polls, and the token composed in the order the Python parser expects.
+- `BattleLoadRenderWaitProbeTests`: the never-sampled sentinel, change-only timestamping, drain to zero, reset, and the continuous-compile clock (starts on the empty-to-non-empty edge, survives a changing count, restarts after a drain).
 - `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game). The phase-5c dedupe adds 8: body written once per distinct loadout, one `AgentEquipBegin` still emitted per agent, a differing loadout getting a new id + fresh dump, race alone forcing a new dump, cache cleared by both `Mission.Initialize` and `ResetLifecycle`, and the past-the-cap fallback to always-dump. The blind-window stamps add: enabled/disabled per phase, `LogTaomBehaviorAdded_UsesDurableLogInfo_NotLogDebug` (a "it's just noise, make it DEBUG" refactor would silently reopen the window with every test green), and `NewPhaseMethods_DoNotAlterExitWindowState` (the new stamps are pure probes, not latch closers).
 - `BattleLoadStallMarkerTests` — `Format`/`Parse` round-trip (scene + UTC + **absolute** log path), write→consume→delete lifecycle, consume-once, `ClearInflight`, missing-directory creation, and a locked/undeletable marker still surfacing its parsed info (parse-before-delete).
 - `BattleLoadDiagnosticsServiceTests`, bucket-split additions (21, 2026-08-07) — the headline guard is `NoteLoadingPoll_CalledOneThousandTimes_WritesNoLogLine`, which asserts `DidNotReceive()` on **both** `LogInfo` and `LogDebug`: it is the entire reason a per-frame hook is acceptable. Then `NoteLoadingPoll_WhenDisabled_StillCounts` (the counter is state, not I/O), one reset test per reset point (`ResetLifecycle` / `LogMissionInitialize` / `LogMissionInitializeDone`), `polls=0` emitted rather than suppressed, `waitMs` omitted rather than fabricated when the origin was never observed, `MemStats` tokens on all three new lines, and the twin literal pins `FormatFinishWaitDetail_With{,out}Wait_ProducesPinnedLiteral` (half A of the C#↔Python contract). The stopwatch blocker gets three: clock starts from `MissionOpenNew` and from `MissionInitialize`, and an already-running clock is **not** restarted.
@@ -608,6 +699,32 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-09-04 ([#539](https://github.com/haterade22/TAOM/issues/539)): **Closed the render-ready window and taught the watchdog to tell slow from wedged**
+  (bundle b18f3441). A player load fired a stall bundle after 305 s; the engine log for that window
+  holds 818 `compile_shader` lines and nothing else, so the load was working and
+  `SceneView.ReadyToRender()` was simply still false. Added phase 4f `WaitingForRender` (a Postfix on
+  the protected `MissionState.OnTick`, throttled to 1 Hz, carrying `waitedMs=` and a live `shaders=`
+  count), `BattleLoadRenderWaitProbe` for the main-thread-to-watchdog handoff, and
+  `Decide` so a moving compile queue defers the bundle while a frozen or absent one still fires it. `triage_battle_load.py` gained the `RENDER_WAIT` verdict, a RenderWait line in
+  the timings section, and a fix for a separate defect the replay exposed: the `COMPLETED` check
+  scanned the WHOLE log, so an earlier mission that finished masked a later one that stalled and the
+  tool called b18f3441 "clean". Patch43 went 18 to 19 hooks (counted: 19 files carry the category
+  attribute). Two shipped claims were false and are corrected above: the "no unattributed span"
+  line and the service comment "everything from here to BattlePlayable is remaining frames, not
+  load work".
+  - **Two review passes caught seven real defects before this shipped** (RCA:
+    [rca-battle-load-render-wait-2026-09-04.md](../reviews/rca-battle-load-render-wait-2026-09-04.md)).
+    Pass 1, HIGH: the hold-off had no upper bound, so a churning compile count would have suppressed
+    the bundle forever, a lesson `ShaderPrecompileDecider` already carried as `ChurnTimeout` and this
+    code failed to inherit. MEDIUM: the triage tool's verdict scoping still fell back to whole-log
+    scanning without an anchor, reproducing the same false COMPLETED it was written to fix. Two LOWs:
+    the watchdog MCM hints still promised "fires at N seconds", and this entry claimed the wrong hook
+    count. Pass 2, reviewing the fixes themselves, HIGH: the `shaders=` token added in pass 1 broke
+    `triage_battle_load.py`'s watchdog regex, which required whitespace where the token now sits, so
+    every future bundle carrying telemetry had its watchdog line silently dropped. HIGH: the verdict
+    and the bucket ledger anchored on different marker sets, so a report could print a stall verdict
+    above a healthy timing table belonging to a different mission. MEDIUM: the new cap measured
+    window time rather than continuous compile time.
 - 2026-09-01: **Added `[MemStation]` screen-transition anchors** (#386 follow-up) after log analysis showed the commit growth is NOT in the battle lifecycle: six mission cycles held a stable `MissionInitialize` baseline while a mission-free 37-minute window added 8.4 GB. Rides `ScreenManager`'s two public static events, so no Harmony patch, no per-frame cost and no new MCM property. Extracted `FormatSampleTokens` so both memory tags share one token vocabulary (byte-identical output, guarded by the existing literal pins), and mirrored the new tag in `triage_battle_load.py` with twin literals plus both-direction guards that keep station readings out of the periodic trend.
 - 2026-08-07 — **Split the 11.9-second `MissionInitialize` → `MissionAfterStartBegin` gap into three named buckets.** Added `MissionInitializeDone` (a Postfix on the existing `Mission.Initialize` patch) plus `FinishMissionLoadingBegin`/`Done` (Prefix + Postfix on the **private** `MissionState.FinishMissionLoading`), and a `MissionState.TickLoading` prefix that is a **counter and never logs** — 720 lines in a 12-second wait at 60 fps is not an acceptable instrument, so the frame count rides one `polls=`/`waitMs=` token pair on `FinishMissionLoadingBegin`. That pair is what separates a blocking native spin (`polls=1`, large `waitMs`) from genuine async streaming (`polls ≈ waitMs/16`) — opposite diagnoses that were previously indistinguishable. All three markers carry `MemStats()`, so the `privMB` curve *across the stall* can say whether the load stall and the commit growth are one problem or two. Patch43 went 14 → 17 hooks.
   - **Fixed: the stopwatch was dead in custom battles.** `_stopwatch` was only ever started from `LogEncounterStart`/`ResetLifecycle`, both reachable only from the campaign-only `PlayerEncounter_Start_Patch` — so every `[BattleLoad]` line in a custom battle read `t=+0ms`. Added the existing `IsRunning`-guarded restart idiom to `LogMissionOpenNew` (the universal funnel) and `LogMissionInitialize`. Pre-existing defect, unrecorded anywhere, and load-bearing for the measurement work above.

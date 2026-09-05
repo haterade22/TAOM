@@ -1,4 +1,4 @@
-# Lessons — Adapters & TaleWorlds API
+﻿# Lessons — Adapters & TaleWorlds API
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Adapters & TaleWorlds API lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -409,3 +409,10 @@ Auditing TAOM's `banner_icons.xml`, one review concluded Native's palette wins a
 - **Why missed:** the walk was designed around "select an option, then advance" as a matter of leaving `SelectedOptions` populated for the review stage, which is a data-shape argument. That framing makes selecting look like tidiness with a cosmetic downside if skipped, and hides that it is the only thing standing between a sparse culture's menu and a hard throw.
 - **Prevent:** never treat an engine `CanXxx` predicate as a safety gate for your own call. Read what the guarded method does on the state the predicate admits, and re-derive the guard from that. When walking any engine state machine, the zero-option / empty-collection hop is the case to write first, and its abort must be a tested path rather than a comment.
 - **Source:** Patch78 player-switcher career fast path, 2026-09-03; pinned by `NarrativeCareerFastPathServiceTests.SkipToCareerMenu_NoSuitableOptionMidChain_AbortsAndLogs`.
+
+### A rule written from a crash must say which engine version it was verified against, and name the mechanism rather than a precedent
+
+`.claude/rules/gui-ui.md` said adding to `MapInfoVM.SecondaryInfoItems` throws `IndexOutOfRangeException` in `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` through positional indexing. On the installed v1.4.8 that method is six `IsGameKeyReleased` branches with no collection access at all, and `SecondaryInfoItems` is referenced by `MapInfoVM` alone across every dump on the machine. The claim was read as fact on 2026-09-04 and nearly drove a rewrite of a working feature to cure a defect that does not exist. The same session justified an apply-timing decision as "the Patch62 reasoning"; Patch62 targets a root `bin` assembly and the new target lives in Native's module `bin`, so the analogy said nothing, even though the timing happened to be safe for a different reason (Native's `SubModule.xml` declares `GauntletUISubModule` from that DLL and TAOM loads Native `LoadBeforeThis`).
+- **Why missed:** the rule recorded a crash and a mechanism but not the engine version it was seen on, so nothing in the engine-bump procedure could flag it as stale: `/verify-bindings` checks code bindings, not prose claims about engine behaviour. The precedent failure is the same shape one level down: a justification that names a precedent instead of the mechanism cannot be checked against anything.
+- **Prevent:** when a rule, registry entry or comment asserts engine behaviour, name the method, cite the decompiled lines, and stamp the version and date. After an engine bump, grep `.claude/rules/` and `docs/reference/harmony-patch-registry.md` for the previous version string and re-verify each hit. Never justify by precedent name; state the mechanism the precedent relied on and confirm it holds for the new case.
+- **Source:** deep-review of Patch79 tooltip diagnostics, 2026-09-04; RCA `docs/reviews/rca-tooltip-diagnostics-2026-09-04.md` findings F4 and F5.

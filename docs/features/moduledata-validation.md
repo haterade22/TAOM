@@ -349,6 +349,19 @@ these checks were added, **four of the nine error codes were absent from that li
 and so could never block a commit. `CommitGateCoverageTests` now asserts the two sets
 agree in both directions. See [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md).
 
+## Upgrade armour regression (`UPGRADE_ARMOUR_REGRESSION`)
+
+**WARNING.** The equipment half of the ladder rule (#541). For every upgrade edge the validator
+averages, over each troop's battle sets, the `head + body + arm + leg` of the item in each of the
+five armour slots (Head, Body, Cape, Gloves, Leg; an unfilled slot is 0, because the engine draws
+each slot from an independently chosen set) and warns when the target's total is below the
+source's. Item values are `Registries.item_armour`, built from the same item roots as the
+reference registry, so without the install the table is empty and the check is skipped rather
+than run against a handful of repo items. Militia-to-militia edges are exempt, and the
+`_BODYLESS_BY_DESIGN` troops are compared without Body and Cape (their skirt fills the Cape slot
+as the chest stand-in). The repair is `tools/fix_upgrade_armour_regressions.py --apply`; the first
+run found 62 regressing edges across 13 cultures and left 0.
+
 ## Key Files
 
 | File | Purpose |

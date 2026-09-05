@@ -22,7 +22,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Stall Watchdog")]
     [SettingPropertyBool("Enable Stall Watchdog", Order = 0,
-        HintText = "A background-thread timer that detects a battle stuck on the loading screen and writes a 'STILL LOADING' marker naming the last phase reached. Runs off the main thread so it still fires when the game is frozen. Default ON.")]
+        HintText = "A background-thread timer that detects a battle stuck on the loading screen and writes a 'STILL LOADING' marker naming the last phase reached. Runs off the main thread so it still fires when the game is frozen. It does NOT fire while the engine is still compiling shaders and the count is moving (a cold shader cache is a slow load, not a hang); that hold-off ends after 15 minutes of UNBROKEN compilation, so a queue that never drains still gets reported. Default ON.")]
     public bool EnableStallWatchdog { get; set; } = true;
 
     [SettingPropertyGroup("Stall Watchdog")]
@@ -32,7 +32,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Stall Watchdog")]
     [SettingPropertyInteger("Stall Threshold (seconds)", 10, 600, Order = 2,
-        HintText = "How long a battle load may run before the watchdog flags it as stalled. Default 300s (5 min) — large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry.")]
+        HintText = "How long a battle load may run before the watchdog flags it as stalled. Default 300s (5 min): large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry. Past this threshold the watchdog still holds off while the shader-compilation count keeps moving, until the queue has been busy for 15 unbroken minutes.")]
     public int StallWatchdogSeconds { get; set; } = 300;
 
     [SettingPropertyGroup("Exit Stall Sampler")]

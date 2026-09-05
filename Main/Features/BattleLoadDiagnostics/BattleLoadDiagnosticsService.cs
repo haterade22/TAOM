@@ -26,6 +26,15 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     // Interlocked because TickLoading and the phase hooks are not guaranteed the same thread.
     private int _loadingPolls;
     private long _waitStartMs = -1L;
+
+    // Render-wait measurement (bundle b18f3441). _renderWaitStartMs is the clock reading at
+    // FinishMissionLoadingDone, i.e. the moment Scene.ResumeLoadingRenderings kicked off shader
+    // compilation; _lastRenderWaitEmitMs throttles the per-frame marker to 1 Hz. Both are -1 for
+    // "not observed", which the formatter renders as an ABSENT token rather than a zero.
+    private long _renderWaitStartMs = -1L;
+    private long _lastRenderWaitEmitMs = -1L;
+
+    internal const long RenderWaitEmitIntervalMs = 1000L;
     private int _seq;
     private volatile string _currentStatusLine = "phase=<none>";
     private volatile bool _exitWindowActive;
@@ -191,14 +200,63 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
 
     public void LogFinishMissionLoadingDone()
     {
+        // State first, gate second — the same latch rule LogMissionInitializeDone follows for the
+        // async-wait origin. FinishMissionLoading ends with Scene.ResumeLoadingRenderings(), so
+        // this instant IS the start of the render wait; a toggle-off must not strand it.
+        try { Interlocked.Exchange(ref _renderWaitStartMs, _stopwatch.ElapsedMilliseconds); }
+        catch { Interlocked.Exchange(ref _renderWaitStartMs, -1L); }
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.FinishMissionLoadingDone, MemStats());
     }
 
+    // Called once per MissionState.OnTick frame while the mission is loaded but not yet ticking.
+    // Throttled to 1 Hz here rather than in the hook so the hook stays a guard plus one call, the
+    // same division NoteLoadingPoll uses. Deliberately reads IsEnabled AFTER the throttle so a
+    // disabled feature costs one subtraction per frame instead of an MCM static resolve.
+    public void NoteWaitingForRender(int shadersInFlight)
+    {
+        long now;
+        try { now = _stopwatch.ElapsedMilliseconds; }
+        catch { return; /* clock best-effort — a diagnostic must never throw on the tick path */ }
+
+        if (!ShouldEmitRenderWait(now, Interlocked.Read(ref _lastRenderWaitEmitMs), RenderWaitEmitIntervalMs)) return;
+        Interlocked.Exchange(ref _lastRenderWaitEmitMs, now);
+        if (!IsEnabled) return;
+
+        long? waitedMs = null;
+        long startedAt = Interlocked.Read(ref _renderWaitStartMs);
+        if (startedAt >= 0 && now >= startedAt) waitedMs = now - startedAt;
+
+        var detail = FormatRenderWaitDetail(waitedMs, shadersInFlight);
+        Emit(BattleLoadPhase.WaitingForRender, detail.Length == 0 ? MemStats() : $"{detail} {MemStats()}");
+    }
+
+    // Pure seam. `lastEmitMs < 0` is the never-emitted case, so the first frame of a wait always
+    // speaks. The `now < lastEmitMs` branch matters because the stopwatch RESTARTS between loads:
+    // a stale stamp from a previous mission must not latch the marker off for this one.
+    internal static bool ShouldEmitRenderWait(long nowMs, long lastEmitMs, long intervalMs) =>
+        lastEmitMs < 0L || nowMs < lastEmitMs || nowMs - lastEmitMs >= intervalMs;
+
+    // Pure seam so both tokens can be pinned character-for-character against triage_battle_load.py.
+    // Either token is OMITTED when unmeasured, never rendered as 0 — a fabricated `shaders=0` in a
+    // user log would read as "nothing was compiling", which is the opposite of "we could not read".
+    internal static string FormatRenderWaitDetail(long? waitedMs, int shadersInFlight)
+    {
+        var wait = waitedMs.HasValue ? $"waitedMs={waitedMs.Value}" : string.Empty;
+        var shaders = shadersInFlight >= 0 ? $"shaders={shadersInFlight}" : string.Empty;
+        if (wait.Length == 0) return shaders;
+        return shaders.Length == 0 ? wait : $"{wait} {shaders}";
+    }
+
+    // Per-load measurement state, cleared by every lifecycle origin (ResetLifecycle,
+    // LogMissionInitialize, LogMissionInitializeDone). Unconditional by design: these are state,
+    // not I/O, so a mid-load toggle must not leave the next load measuring from a stale origin.
     private void ResetLoadingPollCounter()
     {
         Interlocked.Exchange(ref _loadingPolls, 0);
         Interlocked.Exchange(ref _waitStartMs, -1L);
+        Interlocked.Exchange(ref _renderWaitStartMs, -1L);
+        Interlocked.Exchange(ref _lastRenderWaitEmitMs, -1L);
     }
 
     public void LogAgentEquipBegin(EquipmentSnapshot snapshot)

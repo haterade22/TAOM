@@ -61,7 +61,7 @@
                     id="Item.empire_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.battania_civil_a" />
+                    id="Item.sleeveless_padded_coat" />
                 <equipment
                     slot="Leg"
                     id="Item.battania_leather_boots" />
@@ -3004,13 +3004,13 @@
                     id="Item.dunland_caerdh_chainmail_heavy_f" />
                 <equipment
                     slot="Leg"
-                    id="Item.dunland_caerdh_boots_light_a" />
+                    id="Item.dunland_caerdh_boots_medium_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.dunland_caerdh_bracer_medium_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.dunland_caerdh_pauldron_light_cape_a" />
+                    id="Item.dunland_caerdh_pauldron_heavy_cape_a" />
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
@@ -3081,7 +3081,7 @@
                     id="Item.dunland_caerdh_chainmail_heavy_d" />
                 <equipment
                     slot="Leg"
-                    id="Item.dunland_caerdh_boots_light_a" />
+                    id="Item.dunland_caerdh_boots_medium_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.dunland_caerdh_bracer_medium_a" />

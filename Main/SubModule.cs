@@ -328,6 +328,29 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>().LogWarning($"[Arena] Patch62 movie-release AV guard failed to apply: {ex.Message}");
         }
 
+        // Patch79_TooltipDiagnostics: SCAFFOLDING, remove once the map bar tooltip question is
+        // answered. Two probes that make silent tooltip failures visible. In v1.4.8 the bar's
+        // tooltips became list items whose ExecuteBeginHint is resolved through a binding path and
+        // invoked null-conditionally, so a failed resolution is silent; and
+        // GauntletInformationView.OnShowTooltip downgrades both of its failure exits to
+        // Debug.FailedAssert, which reaches only rgl_log. There is no rgl_log on this install, so
+        // without these probes neither failure can be observed at all. Applied here rather than in
+        // the late batch because both targets run from the main menu onward. GauntletInformationView
+        // lives in Native's module-bin TaleWorlds.MountAndBlade.GauntletUI.dll, not the root bin, so the
+        // Patch62 precedent (a root-bin assembly) does not carry; what does is that Native's
+        // SubModule.xml declares GauntletUISubModule from that very DLL and TAOM depends on Native
+        // LoadBeforeThis, so the assembly is resident before this method runs. Verified 2026-09-04.
+        try
+        {
+            Features.DevConsole.Hooks.Patch79_MapInfoItemVM_ExecuteBeginHint_Probe.Initialize(IoC.Resolve<IModLogger>());
+            Features.DevConsole.Hooks.Patch79_GauntletInformationView_OnShowTooltip_Probe.Initialize(IoC.Resolve<IModLogger>());
+            _harmony.PatchCategory("Patch79_TooltipDiagnostics");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning($"[DevConsole] Patch79 tooltip probes failed to apply: {ex.Message}");
+        }
+
         // Patch0_BattleScenes: loads TAOM's sp_battle_scenes.xml (full 0-255 map_indices coverage) so the
         // TAOM_Map Main_map grid's extended indices (158-255) resolve to real battle terrains instead of
         // FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01 (TAOM_Map ships Main_map +
@@ -1176,6 +1199,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
             IoC.Resolve<Adapters.IHeroCommissionAdapter>()));
 
+        // Dismissal back to the ranks (#540): the companion's own dialogue line and the
+        // settlement-menu picker. Both re-read the verdict per use; co-op clients see neither.
+        campaignStarter.AddBehavior(IoC.Resolve<Features.FieldCommission.Hooks.FieldCommissionDismissDialogBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.FieldCommission.Hooks.FieldCommissionDismissMenuBehavior>());
+
         // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
         // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their
         // place. New-campaign feature: a pre-suppression save keeps in-flight vanilla issues until
@@ -1456,6 +1484,11 @@ public class SubModule : MBSubModuleBase
         // a COUNTER hook only and never logs (720 lines in a 12 s wait at 60fps).
         Features.BattleLoadDiagnostics.Hooks.MissionState_FinishMissionLoading_BattleLoad_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MissionState_TickLoading_BattleLoad_Patch.Initialize(battleLoadSvc);
+        // FinishMissionLoadingDone -> BattlePlayable was the LAST dark window, and a player bundle
+        // (b18f3441) spent 290 s in it: MissionState.OnTick withholds the first Mission.Tick behind
+        // Handler.RenderIsReady() (SceneView.ReadyToRender), which stays false while a cold shader
+        // cache compiles. This marks that wait at 1 Hz and feeds the count to the stall watchdog.
+        Features.BattleLoadDiagnostics.Hooks.MissionState_OnTick_RenderWait_Patch.Initialize(battleLoadSvc);
         // Exit-phase probes (issue #331 — 30s-2min hang exiting tournaments): stamp the
         // mission end -> map resume window so the dominant phase gap names the time sink.
         Features.BattleLoadDiagnostics.Hooks.Mission_EndMission_ExitPhase_Patch.Initialize(battleLoadSvc);

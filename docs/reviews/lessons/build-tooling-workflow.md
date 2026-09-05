@@ -2,6 +2,41 @@
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Build, Tooling & Workflow lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
+### A fix verified against the artifact that motivated it cannot see the defect the fix introduces
+After changing a log line, a parser, or a data shape, re-running the ORIGINAL reproduction proves
+nothing about the new behaviour: the original evidence predates the change, so it exercises the old
+shape. The 2026-09-04 battle-load work added a `shaders=N` token to the `WATCHDOG STILL LOADING`
+line, then verified the triage tool by replaying the bundle that motivated the work. It passed every
+time, because that bundle's log predates the token. The token in fact broke
+`triage_battle_load.py`'s `_WATCHDOG_RE`, which required whitespace exactly where the token now sits,
+so every FUTURE bundle would have had its watchdog line silently dropped from the report.
+- **Why missed:** the replay felt like verification because it ran the real tool over a real log and
+  produced a correct-looking report. The test fixture had the identical blind spot: `_watchdog()`
+  emitted the pre-change shape, so the regex stayed pinned against a string the emitter no longer
+  produced, and the suite stayed green through the break.
+- **Prevent:** when a change alters an emitted shape, write the test from the NEW shape first, and
+  update every fixture that constructs the old one. Treat a fixture no emitter can produce any more
+  as a defect in its own right. Re-running the old repro is a regression check, not a verification of
+  the new path, and the two must not be confused in a completion claim.
+- **Source:** docs/reviews/rca-battle-load-render-wait-2026-09-04.md finding 5 (HIGH), issue #539.
+
+### Two summarizers over one dataset must agree on their scope, or the report contradicts itself
+When one report renders several sections computed independently from the same input, each section's
+scoping rule is a separate decision, and two rules that disagree produce an artifact that is
+internally inconsistent while every individual section is "correct". `triage_battle_load.py` scoped
+its VERDICT to the last mission (anchoring on any mission-start marker) but left the bucket LEDGER
+anchoring on `MissionInitialize` alone, so a log whose last mission stalled before reaching that
+marker printed a stall verdict directly above a healthy timing table belonging to an earlier,
+completed mission.
+- **Why missed:** the scoping bug was found and fixed in ONE consumer, and the fix never asked which
+  other consumers read the same list. The regression test asserted only the verdict, on a log with no
+  bucket markers, so the ledger returned None and the divergence could not appear.
+- **Prevent:** after changing how one section selects its data, grep for every other function reading
+  the same collection and either share the selector or make the disagreement impossible (render
+  nothing rather than something true about the wrong subject). Add at least one test asserting on the
+  WHOLE rendered artifact, since self-contradiction is only visible from the assembled output.
+- **Source:** docs/reviews/rca-battle-load-render-wait-2026-09-04.md finding 6 (HIGH), issue #539.
+
 ### Prove no engine loader reads a file before excluding it from packaging
 A `package_release.py` rule excluded `ModuleData/project.mbproj` as "editor-only, not read at runtime". Both halves were false. The SHIPPING runtime calls `XmlResource.GetMbprojxmls(module.Id)` for every module (`TaleWorlds.MountAndBlade`, `Module.LoadSubModules`), reads that file's `<file>` nodes, and registers them as native resources through `MBObjectManager.GetMergedXmlForNative`. That loader is **disjoint** from `SubModule.xml`'s `<XmlName>` glob, so anything registered there appears nowhere else: TAOM's mbproj is the only registration for four voice-definition XMLs and `module_sounds.xml`, and `LOTRLOME_Armory`'s is the only one for its monsters and action sets, whose absence is a documented native spawn CTD. The release zip would have shipped silent audio and missing monsters while the repo, the validator, and 6,454 tests all stayed green.
 - **Why missed:** the file was classified from its NAME and from three dev-path elements inside it, without decompiling the loader. "Research First" was applied to the sibling `.vs` copy mechanism in the same commit and simply not applied here. A packaging exclusion is invisible to every gate TAOM has: nothing tests the zip.
@@ -1908,3 +1943,10 @@ way: `char.IsLetterOrDigit` is Unicode-aware while `[A-Za-z0-9]` is not.
   boundary INPUT on both sides, and for validators include an input that is valid-but-for-one-
   trailing-control-character.
 - **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.
+
+### Check a name-family heuristic against the whole id inventory before it picks anything
+
+`fix_upgrade_armour_regressions.family()` strips trailing tier and variant tokens so a troop steps up its own item family. The token list was written from the Armory ids in front of the author (Rhun, Dol Guldur, Dale, Gundabad) and never run over the rest. Rivendell and Lindon name their items `rivendell_helmet_archer_tier1_silver`; `tier1` and `silver` were not tokens, the family collapsed to the whole id, no candidate matched, and the fallback dressed two archer troops in the parent's cavalry helmet. The values were right, the identity was wrong, and the dry-run table showed only values.
+- **Why missed:** the heuristic was judged on the ids it had been written from. Nothing counted how many live ids it failed to reduce, and the review table printed old and new VALUES, not whether old and new shared a family.
+- **Prevent:** before a family or prefix heuristic is allowed to choose, run it over every id in every culture it will touch and print the ids it leaves unchanged; each one is either a token to add or a mesh with no family. Print the family of old and new side by side in the plan table, so a cross-family swap is visible before `--apply`.
+- **Source:** deep review of #541, `docs/reviews/rca-troop-tier-ladders-2026-09-04.md`.

@@ -284,3 +284,24 @@ so the sentence was true of one walkout and false of every other.
 - **Why missed:** emergent guards are invisible by construction. Neither number looks load-bearing on its own, and the relationship between them lives in no file. A reviewer reading either side sees a legal value.
 - **Prevent:** when a rule matters ("leaving the field must never pay standing"), state it in code at the point of payment, not in the tuning that currently happens to satisfy it. Here that is one ternary in the payout service, independent of where any band boundary sits, plus a test pinning the shipped numbers from both directions. Treat a comment asserting a numeric ceiling as a claim owed a re-derivation, not as documentation.
 - **Source:** docs/reviews/rca-enlistment-standing-2026-08-28.md finding H1 and its root-cause section (#520).
+
+### A condition on a vanilla dialogue line is a precondition on everything its consequence does; lifting it is widening a gate
+Vanilla's companion fire line (`companion_talk_fire`) hides itself whenever `Settlement.CurrentSettlement`
+is set, so it only ever runs on the world map. The #540 dismissal registered a broader line that ends in
+the same engine call (`KillCharacterAction.ApplyByRemove`) and works inside keep and tavern scenes. What the
+vanilla gate had been protecting: inside a scene the hero has a live `Agent`, and the removal path only
+drops the `LocationCharacter` (next entry's spawn list), so the removed companion keeps standing there and
+`MissionConversationLogic.IsThereAgentAction` never asks whether the hero is alive. Fixed by removing the
+agent first (`Agent.FadeOut(hideInstantly: true, hideMount: true)`, the passage mechanism in the instant
+form vanilla uses for a departing multiplayer peer), behind the engine's own ending-state guard. The
+visible fade was tried first and rejected in the second review round: a fading agent stays `Active` for
+the length of the fade and `IsThereAgentAction` never checks `IsFadingOut`, so a click in those frames
+would open a conversation with a dead, un-clanned hero.
+- **Why missed:** the gate looked like UX (why the player could not find the line in a town) rather than
+  mechanics, so the existing widening-a-gate lesson (castle recruitment, above) was never applied to it. The
+  question was written into the smoke list as "the path to watch" and deferred to a play test, although
+  three decompiles of the installed SandBox assembly answered it.
+- **Prevent:** when registering a line that reaches the same consequence as a vanilla line with a narrower
+  condition, list the engine state the vanilla condition excluded and check each item against the
+  consequence before shipping. And never defer to a smoke run a question a decompile can answer now.
+- **Source:** `docs/reviews/rca-field-commission-dismiss-2026-09-04.md` finding 1 (#540).

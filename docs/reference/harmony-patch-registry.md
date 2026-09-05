@@ -274,7 +274,7 @@ Castle troop recruitment — AI half (player menu + notable spawn/fill + issue s
 
 ## Patch43_BattleLoadDiagnostics
 
-**Target:** 18 hooks — battle-load phase stamps: `PlayerEncounter.Start` (Postfix), `MissionState.OpenNew` (Prefix+Postfix), `DefaultSceneModel.GetBattleSceneForMapPatch` (Postfix), `MissionState.LoadMission` (private, Prefix), `Utilities.ClearOldResourcesAndObjects` (Prefix+Postfix), `Mission.Initialize` (public, **Prefix+Postfix**), `MissionState.TickLoading` (private, Prefix — **counter only, never logs**), `MissionState.FinishMissionLoading` (private, Prefix+Postfix), `Mission.AfterStart` (Prefix+Postfix), `Agent.EquipItemsFromSpawnEquipment` (Prefix+Postfix), `Mission.BuildAgent` (private, Postfix); mission-EXIT phase stamps: `Mission.EndMission` (Postfix), `Mission.EndMissionInternal` (Prefix+Postfix), `Mission.ClearUnreferencedResources` (Prefix+Postfix), `MissionState.OnFinalize` (Prefix+Postfix), `MapState.OnActivate` (Postfix), `MapState.OnTick` (Postfix); quit-to-load disarm: `SandBoxSaveHelper.TryLoadSave` (public static, Prefix — `ResetLifecycle` only, never logs)
+**Target:** 19 hooks. Battle-load phase stamps: `PlayerEncounter.Start` (Postfix), `MissionState.OpenNew` (Prefix+Postfix), `DefaultSceneModel.GetBattleSceneForMapPatch` (Postfix), `MissionState.LoadMission` (private, Prefix), `Utilities.ClearOldResourcesAndObjects` (Prefix+Postfix), `Mission.Initialize` (public, **Prefix+Postfix**), `MissionState.TickLoading` (private, Prefix, **counter only, never logs**), `MissionState.FinishMissionLoading` (private, Prefix+Postfix), `MissionState.OnTick` (protected, Postfix, the render-ready wait), `Mission.AfterStart` (Prefix+Postfix), `Agent.EquipItemsFromSpawnEquipment` (Prefix+Postfix), `Mission.BuildAgent` (private, Postfix); mission-EXIT phase stamps: `Mission.EndMission` (Postfix), `Mission.EndMissionInternal` (Prefix+Postfix), `Mission.ClearUnreferencedResources` (Prefix+Postfix), `MissionState.OnFinalize` (Prefix+Postfix), `MapState.OnActivate` (Postfix), `MapState.OnTick` (Postfix); quit-to-load disarm: `SandBoxSaveHelper.TryLoadSave` (public static, Prefix, `ResetLifecycle` only, never logs)
 
 Always-on `[BattleLoad]` diagnostics: phase-stamps the entire attack → battle-playable lifecycle (and the mission-exit phase) to `Logs/taom_debug_*.log`, paired with a background-thread stall watchdog — when a battle hangs on the loading screen (no crash, no stack trace — main thread blocked, so the CrashReport pipeline never fires), the last line before the freeze names the stuck phase. `MissionState.OpenNew` is the single funnel for every mission (scene name + attacker/defender/sizes/player side); the `Agent.EquipItemsFromSpawnEquipment` pair is the money hook — the Prefix logs the agent's full `SpawnEquipment` loadout BEFORE the engine equips, so an `AgentEquipBegin` without a matching `AgentEquipOk` names the agent + item whose `bo_` collision mesh is missing (a confirmed hang cause, #352; companion tool `docs/features/mesh-ref-validation.md`). The exit-phase stamps (EndMission → ClearUnreferencedResources → OnFinalize → MapState reactivation) fed the #331 tournament-exit RCA (see Patch60). Phases coexist with the pre-existing Patch16 / Patch23 hooks on the shared targets. See `docs/features/battle-load-diagnostics.md`.
 
@@ -283,6 +283,43 @@ Always-on `[BattleLoad]` diagnostics: phase-stamps the entire attack → battle-
 The third, `MissionState.TickLoading` (private, `(float)`), is a **counter hook that never logs** — it fires once per frame during the load, so at 60 fps a 12-second wait is ~720 calls and a marker there would be worse than the blind spot it closes. Its prefix does one `Interlocked.Increment` and deliberately does **not** read `IsEnabled` (that resolves MCM's static `Instance` every frame; the count is state, not I/O, so it must also survive a mid-load toggle). The frame count rides one `polls=`/`waitMs=` pair on `FinishMissionLoadingBegin`, and reading that pair is the point: `polls=1` with a large `waitMs` is a **blocking native spin inside one frame** (the #352 `WaitForMeshesToBeLoaded` shape), while `polls ≈ waitMs/16` is genuine async streaming — opposite diagnoses that were previously indistinguishable. **`polls=0` means the binding failed, not that there was no wait.** Inert outside a load by construction: `MissionState` only calls `TickLoading` while `CurrentMission.CurrentState` is `NewlyCreated`/`Initializing` (`MissionState.cs:88-94`).
 
 Both new targets are private and bound by string, like the sibling `LoadMission` / `BuildAgent` / `EndMissionInternal` / `OnFinalize` patches here; `AccessTools.Method` searches non-public so `HarmonyPatchBindingTests` covers them with no wiring, and `Patch43LoadPhaseBindingTests` adds named checks (plus a not-overloaded assertion on `TickLoading`) so a drift failure says *which* engine method moved. All three markers carry `MemStats()` — the `privMB` curve across the stall is the only reading that can say whether the load stall and the process-commit growth are one problem or two.
+
+**2026-09-04 (bundle b18f3441): the 19th hook closes the render-ready window.** The remaining dark
+span was `FinishMissionLoadingDone` to `BattlePlayable`, which the feature doc had asserted was "just
+remaining frames". A player load spent **290 seconds** in it and fired a stall bundle; the engine's
+`rgl_log` for that exact window holds 818 `compile_shader` lines and two other lines, so the load was
+working. `MissionState.OnTick` gates `TickMission` behind
+`!flag && (Handler == null || Handler.RenderIsReady())`, where `flag` trips only on a
+`MissionEndTime` timeout, so in practice the gate is `Handler.RenderIsReady()` =
+`MissionScreen.MissionStartedRendering()` = the native `SceneView.ReadyToRender()`
+(`TaleWorlds.MountAndBlade.View.Screens.MissionScreen`, in the module assembly
+`Modules/Native/bin/.../TaleWorlds.MountAndBlade.View.dll`, which `taom-src` does not index).
+It stays false while the scene's shaders compile, and
+`FinishMissionLoading`'s last statement (`Scene.ResumeLoadingRenderings`) is what starts them. A
+**Postfix** on `MissionState.OnTick` (protected, `(float)`, bound by string like its siblings here)
+stamps `WaitingForRender` at 1 Hz with `waitedMs=` and a live `shaders=` count. Postfix is load-bearing:
+on the frame the mission finally ticks, `TickMission` has already cleared
+`FirstMissionTickAfterLoading`, so the guard skips it and the marker only ever describes frames that
+did not tick.
+
+The same reading feeds the stall watchdog through `BattleLoadRenderWaitProbe`, a
+`volatile`/`Interlocked` static: `Utilities.GetNumberOfShaderCompilationsInProgress()` is native and is
+read only on the main thread, never from the watchdog's thread-pool thread. Past the threshold, a
+compile count that has **moved** within 60 s defers the bundle (one `WATCHDOG DEFERRED` warning per
+window) without setting the fired latch, so a queue that later freezes still gets its bundle. Both
+degenerate readings refuse to defer: `0` means nothing is compiling (a real wedge) and `-1` means
+never sampled, which must not buy a deferral, the same rule as `polls=0`. The hold-off additionally
+ends after 900 s of UNBROKEN compilation (the **churn backstop**): a count thrashing among positive
+values refreshes the no-progress clock forever, and without the cap the watchdog would never fire
+again for that load. The cap runs on continuous compile time from the probe's empty-to-non-empty
+edge, resetting on every dip to zero, NOT on window time, so a slow native scene load is not charged
+against the shader allowance. `ShaderPrecompileDecider`'s `ChurnTimeout` is the same lesson, learned
+in this codebase first and not carried across until two review passes caught first its absence and
+then its wrong clock. All three outcomes come from one `Decide` verdict so the `churn-capped` token
+cannot contradict the decision that produced it. `Patch43LoadPhaseBindingTests`
+adds the named resolve, a not-overloaded assertion, and a check that
+`MissionState.FirstMissionTickAfterLoading` is still publicly readable (it is the hook's per-frame
+guard). See `docs/features/battle-load-diagnostics.md`.
 
 **2026-08-09 (#425 / PR #440) — the 18th hook closes the quit-to-LOAD window.** `SubModule.OnGameEnd`
 already closed the exit window, but it is reached only through `Game.Destroy()`, which has exactly
@@ -734,6 +771,24 @@ Sends a player who has already picked a lord straight to the career menu, past t
 **Gated solely on `IPlayerSwitchSession.HasSelection`**, matching `PlayerSwitchContentHandler`. An ordinary character creation never enters the walk. The gate re-evaluates on every entry to the stage, because the view is rebuilt each time, so deselecting restores the full questionnaire and re-picking restores the fast path.
 
 Applied from `SubModule.cs` in its **own** try/catch beside Patch77's: the fast path is a convenience, so losing it must not disable the picker, and a Patch77 failure must not stop this binding. `PlayerSwitcherBindingTests` pins all five engine members the walk calls. Full design: [player-switcher.md](../features/player-switcher.md).
+
+## Patch79_TooltipDiagnostics
+
+**Target:** `MapInfoItemVM.ExecuteBeginHint()` (public instance, Postfix) and `GauntletInformationView.OnShowTooltip(Type, object[])` (private instance, Postfix)
+
+**Feature:** DevConsole, `Main/Features/DevConsole/Hooks/Patch79_MapInfoItemVM_ExecuteBeginHint_Probe.cs` + `Patch79_GauntletInformationView_OnShowTooltip_Probe.cs`. **Status:** ACTIVE, SCAFFOLDING (remove once the map bar tooltip question is answered).
+
+Two probes that make silent tooltip failures visible. Diagnostic only: neither changes behaviour, both swallow their own exceptions, and both rate limit per key.
+
+**Why probes and not reading a log.** Both failure paths this targets are silent by construction. In v1.4.8 the map bar's tooltips stopped being fixed properties on `MapInfoVM` and became list items (`PrimaryInfoItems` / `SecondaryInfoItems` of `MapInfoItemVM`); the `HintWidget` in the item template fires `ExecuteBeginHint` on the list element, and Gauntlet resolves that by walking the binding path and invoking it null-conditionally, so a failed resolution does nothing at all. Separately, `GauntletInformationView.OnShowTooltip` has three silent exits: a requested type missing from `RegisteredTypes`, a throw inside `Activator.CreateInstance(value.TooltipType, ...)`, and a throw inside `LoadMovie` after the view model was already constructed. The last two share one catch that downgrades to `Debug.FailedAssert`. `Debug.FailedAssert` reaches only `rgl_log`, and there is no `rgl_log` on this install, so without these probes none of the three is observable.
+
+**Probe B reads two private fields on purpose.** `OnHideTooltip()` nulls `_dataSource` and `_movie` at the top of every call; the success path assigns `_dataSource` after construction and `_movie` only after `LoadMovie` returns. So after the call, both set means built, `_dataSource` alone means the movie failed (exit three), and neither means nothing was constructed (exits one and two). The first cut read only `_dataSource` and would have reported a movie failure as success; the deep review caught it (RCA `rca-tooltip-diagnostics-2026-09-04.md`, F2). Both `FieldInfo`s resolve once in `Initialize`, never in the postfix (`harmony-patches.md` bans uncached reflection on a per-hover path), and a failed resolution logs a warning rather than leaving the probe quietly useless.
+
+**Read the two together:** Probe A silent means the hover never reached the view model, so the binding path is broken. Probe A firing plus a FAILED line from B names the failing stage: CONSTRUCTION (unregistered type, constructor threw, or not a `TooltipBaseVM`) or MOVIE (the prefab failed to load). Both quiet on a missing tooltip points past this layer, at rendering or the widget tree.
+
+**Rate limited per key, deliberately not per latch.** `TooltipProbeLog` keys hovers on `ItemId` and builds on type plus outcome (a value tuple, so the steady-state membership check allocates nothing), so hovering gold cannot silence food, and a tooltip that fails and later succeeds reports both. A single global latch is the defect already present in `SpecialResourceMapBarMixin`, where the first failure is logged and every later different failure is invisible for the life of the process.
+
+Applied from `SubModule.cs` in `OnSubModuleLoad`, in its own try/catch, for the Patch62 reason: both targets run from the main menu onward, well before any game init.
 
 ## Patch_MissionTime_SetMovementOrder
 

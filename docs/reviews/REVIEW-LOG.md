@@ -2293,6 +2293,65 @@ picking one for a behaviour tree is safe by construction. The war ram is the fir
 its vocabulary with the engine, which is where "our code does not fire this" stopped implying
 "nothing fires this". It broke that assumption twice in one review.
 
+## Review 91: dismiss a promoted companion back to the ranks (#540), 5-agent deep-review (2026-09-04)
+
+Battlefield Promotions gained its reverse: a promoted companion can be sent back through a dialogue
+line or a settlement-menu picker, the hero is removed with one `KillCharacterAction.ApplyByRemove`
+and one origin soldier rejoins the party. The design deliberately dropped the precondition on
+vanilla's own fire line, which hides itself inside settlements and is the reason the user could not
+find it in a town.
+
+**The data-flow agent found what that precondition had been protecting.** Inside a keep or tavern
+scene the hero has a live `Agent`, and the engine's removal path only drops the `LocationCharacter`,
+the spawn list for the next entry. The dismissed companion would have kept standing there, and
+`MissionConversationLogic.IsThereAgentAction` never asks whether a hero is alive, so the player could
+have opened a conversation with a removed hero. The plan had written this down as "the path to watch"
+in the smoke list and deferred it; three decompiles of the installed SandBox assembly settled it. The
+adapter now fades the agent out first, the way `MissionAgentHandler.FadeoutExitingLocationCharacter`
+makes a character leave through a passage, behind the same ending-state guard.
+
+**The same agent caught the doc claiming more than the code did.** "Co-op clients see neither entry
+point" was true of the menu and false of the dialogue, which ran its whole are-you-sure exchange on a
+client and then did nothing at `ConversationEnded`. The line is now hidden on a non-authority peer.
+
+**The efficiency agent's HIGH was refuted against the installed DLLs.** It rated the settlement-menu
+condition a per-frame hot path while stating the refresh frequency was unverified. `GameMenuVM.OnFrameTick`
+only re-reads the cached `IsEnabled`; the condition runs from `GameMenuVM.Refresh(bool)` on activate,
+resume, an explicit refresh or a menu switch. Recorded as a lesson so the cadence stops being guessed.
+
+**The compatibility agent corrected a count the docs had already published.** "The four vanilla
+`OnCompanionRemoved` listeners" was a grep of the decompile dump, which carries no SandBox assemblies;
+the installed game has eight (the round-one correction itself said seven, having grepped for a
+handler name; the second round enumerated the subscription call). The conclusion survived (the two
+that differ both favour the Death detail, and one of them is a vanilla NRE for a Fire inside a
+settlement), but a total taken from the dump, or from a name grep, is a floor. Every engine member the feature binds was verified against the installed DLLs, none
+drifted.
+
+**A second round of nine agents ran after the fixes** (the five core reviews plus scene lifecycle,
+test validity, localization data and doc accuracy). Standards, completeness, compatibility and data
+flow passed. The lifecycle agent showed the round-one fix had narrowed the ghost window rather than
+closed it: a visibly fading agent stays `Active` for the length of the fade, and
+`IsThereAgentAction` never checks `IsFadingOut`, so a click in those frames would have opened a
+conversation with a dead, un-clanned hero that the wanderer-hire lines treat as hireable. The removal
+now uses the instant form, `FadeOut(hideInstantly: true, hideMount: true)`, which is what vanilla uses
+for a departing multiplayer peer. The test-validity agent found the verdict loop exercising one
+verdict while naming seven (each arrangement leaked into the next), which an added per-iteration
+assertion confirmed; the fixture is now rebuilt per verdict and the nothing-mutated helper covers every
+mutator on every mock. The docs agent found the fire line attributed to the wrong class
+(`CompanionRolesCampaignBehavior` owns it, not `LordConversationsCampaignBehavior`) and the listener
+count still one short at seven. The localization agent caught "honour" against the file's own "honor".
+Two claims were refuted with evidence rather than acted on: the menu condition as a hot path (again),
+and a live settlement mission during the town-menu picker (`Mission.Current` is cleared in
+`Mission.OnMissionStateFinalize` when the scene is left).
+
+Suite arc: 194 -> 259 -> 261 -> 266 on the FieldCommission subset, 8150 -> 8152 -> 8157 green on the
+full suite. RCA: `docs/reviews/rca-field-commission-dismiss-2026-09-04.md` (both rounds).
+
+The generalisable lesson: **a condition on a vanilla dialogue line is a precondition on everything
+its consequence does.** Removing one to reach a broader set of situations is widening a gate, and the
+castle-recruitment rule applies: enumerate what the gate excluded and check each item against the
+consequence, before the smoke run rather than in it.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

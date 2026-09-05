@@ -40,5 +40,11 @@ internal static class FieldCommissionIoC
             Reuse.Singleton);
         container.Register<IFieldCommissionMeritService, FieldCommissionMeritService>(Reuse.Singleton);
         container.Register<IFieldCommissionOfferFlowService, FieldCommissionOfferFlowService>(Reuse.Singleton);
+
+        // Dismissal back to the ranks (#540): the stateless verdict + inquiry chain, and its two
+        // thin entry points, resolved by SubModule for AddBehavior (the Enlistment precedent).
+        container.Register<IFieldCommissionDismissService, FieldCommissionDismissService>(Reuse.Singleton);
+        container.Register<Hooks.FieldCommissionDismissDialogBehavior>(Reuse.Singleton);
+        container.Register<Hooks.FieldCommissionDismissMenuBehavior>(Reuse.Singleton);
     }
 }

@@ -5,9 +5,10 @@ namespace TAOM.Adapters;
 /// <summary>
 /// Boundary over <c>HeroCreator</c>/<c>Hero</c>/<c>HeroDeveloper</c>/<c>AddCompanionAction</c>/
 /// <c>AddHeroToPartyAction</c>/<c>ClanTierModel</c> for turning a promoted troop into a companion
-/// (ADR-007). Companion-only by design (#376): TAOM dropped the donor's Occupation.Lord/Family
-/// path, which raw-mutated <c>Clan.Heroes</c> (bug fix (e)) — this adapter never touches
-/// <c>Clan.Heroes</c> directly, only <c>AddCompanionAction.Apply</c>.
+/// (ADR-007), and over <c>KillCharacterAction</c> for turning one back (#540). Companion-only by
+/// design (#376): TAOM dropped the donor's Occupation.Lord/Family path, which raw-mutated
+/// <c>Clan.Heroes</c> (bug fix (e)) — this adapter never touches <c>Clan.Heroes</c> directly, only
+/// <c>AddCompanionAction.Apply</c>.
 /// </summary>
 public interface IHeroCommissionAdapter
 {
@@ -32,4 +33,17 @@ public interface IHeroCommissionAdapter
     /// <summary>True when the given hero StringId resolves to a hero that is currently alive.
     /// Used to prune <c>_taom_fc_promotedHeroes</c> on load.</summary>
     bool IsHeroAliveAndValid(string heroId);
+
+    /// <summary>What the dismissal verdict needs to know about the hero, or
+    /// <see cref="PromotedHeroSnapshot.Missing"/> when no living hero carries the id.</summary>
+    PromotedHeroSnapshot GetPromotedHeroSnapshot(string heroId);
+
+    /// <summary>
+    /// Removes the hero from the game with <c>KillCharacterAction.ApplyByRemove</c>: the same
+    /// single call vanilla's own fire line ends on, and the Refuge warden rollback ships. Returns
+    /// false, touching nothing, when the id resolves to no living hero or the hero's party is in a
+    /// map event or siege (there the engine would only mark the hero and defer). Returns true only
+    /// when the hero is dead on return.
+    /// </summary>
+    bool RemoveCompanionFromGame(string heroId);
 }

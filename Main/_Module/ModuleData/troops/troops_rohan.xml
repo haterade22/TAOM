@@ -476,13 +476,13 @@
                     id="Item.cts_rohan_armor1" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape2" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_royal_guard_boots" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_armguard4" />
+                    id="Item.cts_rohan_armguard3" />
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
@@ -1670,13 +1670,13 @@
                     id="Item.roh_nbl_hlm_cf" />
                 <equipment
                     slot="Body"
-                    id="Item.roh_nbl_arm_g" />
+                    id="Item.cts_rohan_royal_guard_armor" />
                 <equipment
                     slot="Cape"
                     id="Item.roh_nbl_shldr_cgs_2" />
                 <equipment
                     slot="Gloves"
-                    id="Item.roh_nbl_glv" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_royal_guard_boots" />
@@ -1969,13 +1969,13 @@
                     id="Item.sturgia_sword_2_t3" />
                 <equipment
                     slot="Head"
-                    id="Item.cts_rohan_helmet1a" />
+                    id="Item.cts_rohan_helmet1c" />
                 <equipment
                     slot="Body"
                     id="Item.cts_rohan_armor1111" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
@@ -2249,13 +2249,13 @@
                     id="Item.wm_rohan_shield_a02_rsg" />
                 <equipment
                     slot="Head"
-                    id="Item.cts_rohan_helmet4b" />
+                    id="Item.cts_rohan_helmet4c" />
                 <equipment
                     slot="Body"
                     id="Item.cts_rohan_armor1" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Gloves"
                     id="Item.cts_rohan_armguard1" />
@@ -2317,13 +2317,13 @@
                     id="Item.sturgia_2haxe_1_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.cts_rohan_helmet4b" />
+                    id="Item.cts_rohan_helmet4c" />
                 <equipment
                     slot="Body"
                     id="Item.cts_rohan_armor1" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
@@ -2385,10 +2385,10 @@
                     id="Item.wm_rohan_shield_a03_rgg" />
                 <equipment
                     slot="Head"
-                    id="Item.cts_rohan_helmet4a" />
+                    id="Item.cts_rohan_helmet4c" />
                 <equipment
                     slot="Body"
-                    id="Item.cts_rohan_armor2" />
+                    id="Item.cts_rohan_armor1" />
                 <equipment
                     slot="Cape"
                     id="Item.cts_rohan_cape2" />
@@ -2450,10 +2450,10 @@
                     id="Item.vlandia_2haxe_1_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.cts_rohan_helmet4a" />
+                    id="Item.cts_rohan_helmet4c" />
                 <equipment
                     slot="Body"
-                    id="Item.cts_rohan_armor2" />
+                    id="Item.cts_rohan_armor1" />
                 <equipment
                     slot="Cape"
                     id="Item.cts_rohan_cape2" />
@@ -2740,13 +2740,13 @@
                     id="Item.wm_rohan_ws_sword_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.cts_rohan_helmet4b" />
+                    id="Item.cts_rohan_helmet4c" />
                 <equipment
                     slot="Body"
                     id="Item.cts_rohan_armor111" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />

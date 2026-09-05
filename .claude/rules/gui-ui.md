@@ -58,7 +58,7 @@ Before injecting into ANY vanilla prefab container:
 
 If ANY of these are true: **do NOT inject children into that container**. Use bound `[DataSourceProperty]` on a ViewModel mixin + inject into a DIFFERENT container that's safe.
 
-**Why:** Adding to `SecondaryInfoItems` caused `IndexOutOfRangeException` in vanilla's `HandlePanelSwitchingInput` (hardcoded positional indexing). This pattern applies to any data-bound `ListPanel` where vanilla code indexes by position.
+**Why:** the four checks above are the general rule and they stand. Any data-bound `ListPanel` whose contents vanilla indexes by position is unsafe to grow.
 
 **Safe pattern:**
 ```
@@ -66,10 +66,15 @@ If ANY of these are true: **do NOT inject children into that container**. Use bo
 [PrefabExtension] → inject widget into a NON-data-bound container, bind to mixin properties
 ```
 
-**Unsafe pattern:**
+**Discouraged, on ownership grounds:**
 ```
-mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))  // NEVER DO THIS
+mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))
 ```
+A mod mutating a vanilla ViewModel collection it does not own can have its addition dropped without warning: `MapInfoVM.CreateItems()` calls `OnFinalize()` on every item, `Clear()`s both `PrimaryInfoItems` and `SecondaryInfoItems`, and re-adds only vanilla's nine. Anything a mixin added is gone. In v1.4.8 that method is called from exactly one site, the constructor (`MapInfoVM.cs:138`), so the hazard is real in shape but dormant in practice. `TAOM.SpecialResources` does this today and works.
+
+**Correction, 2026-09-04.** This section used to assert that adding to `SecondaryInfoItems` caused an `IndexOutOfRangeException` in vanilla's `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` via hardcoded positional indexing. **That does not reproduce against the installed v1.4.8.** The method contains no reference to `SecondaryInfoItems` and no positional indexing of anything: it is six `inputContext.IsGameKeyReleased(N)` branches dispatching to `MapNavigationExtensions.Open*`. A sweep of every 1.4.5 / 1.4.7 / 1.4.8 dump on this machine finds `SecondaryInfoItems` in `MapInfoVM` only.
+
+The claim cost a session: it was read as fact and nearly drove a full rewrite of a working feature (hand-reproducing five change-notifying properties, the `IntValue`/`FloatValue` coupling behind `MapBarCustomValueTextWidget`'s value flash, the item layout and the gamepad nav scope) to fix a defect that does not exist on this engine. The `IndexOutOfRangeException` referenced by the comment at the top of `GauntletCareerScreen.cs` was never re-verified after the engine bump and may have come from a different mechanism or an older version; run `/investigate` if that crash needs a real root cause. **State the engine version you verified against when writing a rule from a crash.**
 
 ## Custom GauntletLayer Input Wiring (MANDATORY)
 

@@ -1,4 +1,4 @@
-# Lessons — Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)
+﻿# Lessons — Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle) lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -427,3 +427,10 @@ Grepping the whole of `E:\Decompiled_Bannerlord\_shipping_build_v1.4.8\` for `Ch
 - **Why missed:** the sibling lesson above ("grep every call site of the patched method") prescribes grepping the dump, and that technique is complete for engine-internal callers, so it looks sound right up until the target is reached from module UI. `taom-src` did not cover the gap either: it failed to resolve the view type by bare name, which reads as "this type does not exist" rather than "look somewhere else".
 - **Prevent:** when a dump grep returns only the definition, treat the result as *unproven*, never as *no callers*, and decompile the module assemblies directly: `ilspycmd "<game>/Modules/SandBox/bin/Win64_Shipping_Client/SandBox.GauntletUI.dll" > out.cs`. Where the call sits inside its caller can be load-bearing, not just trivia: here it established that the call happens before the stage ViewModel and `LoadMovie`, which is the entire reason a postfix that walks six menus forward produces no visible flicker.
 - **Source:** Patch78 player-switcher career fast path, 2026-09-03.
+
+### A private field read as a success signal must be the LAST thing the success path assigns
+
+Probe B of Patch79 postfixes `GauntletInformationView.OnShowTooltip` and read `_dataSource != null` as "the tooltip was built". The method's try block assigns `_dataSource` at line 113 and then calls `LoadMovie` at line 114; a throw from `LoadMovie` lands in the same catch as a constructor throw, leaves `_dataSource` set, and was therefore reported as success. `_movie`, assigned only after `LoadMovie` returns, is the field that actually means built, and reading both names the failing stage for free.
+- **Why missed:** the try block was read as one exit ("the catch") instead of one exit per fallible statement, and "both silent exits leave it null" was written into two doc comments, the registry and the CHANGELOG before the code was reviewed. A count stated in prose is not evidence; the decompiled statement order is.
+- **Prevent:** when a postfix infers an outcome from state, list every statement inside the try that can throw and write down which fields are already assigned at each one. Read the field assigned by the LAST fallible statement, or read more than one and classify. Then check the method's own reset (here `OnHideTooltip()` at entry) to confirm every field you read starts null.
+- **Source:** deep-review of Patch79, 2026-09-04, data-flow agent trace 3; RCA `docs/reviews/rca-tooltip-diagnostics-2026-09-04.md` finding F2.

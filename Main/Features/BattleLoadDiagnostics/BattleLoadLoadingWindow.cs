@@ -32,6 +32,10 @@ public static class BattleLoadLoadingWindow
 
     public static void Enter()
     {
+        // Clear the previous load's shader reading here, so the probe's reset has exactly one call
+        // site and it is the same opener as the window it measures inside. Carrying a stale
+        // "still compiling" forward would let it defer the watchdog on a genuinely wedged load.
+        BattleLoadRenderWaitProbe.Reset();
         // Store the timestamp BEFORE flipping _isOpen; the volatile write publishes it.
         Interlocked.Exchange(ref _openedAtTicksUtc, DateTime.UtcNow.Ticks);
         _isOpen = true;

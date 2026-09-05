@@ -16,6 +16,8 @@ Contract under test (one verdict class per block):
   - SCENE              : ends at MissionInitialize / BattleSceneSelected
   - PRE_SCENE          : ends at EncounterStart / MissionOpenNew
   - POST_EQUIP         : ends at AgentEquipOk (equipped fine, froze before playable)
+  - RENDER_WAIT        : ends at WaitingForRender (held at SceneView.ReadyToRender;
+                         a falling shaders= count is a cold cache, frozen is a wedge)
   - COMPLETED          : a BattlePlayable phase is present
   - UNKNOWN            : no [BattleLoad] lines at all
   - watchdog line corroborates the terminal phase
@@ -67,6 +69,17 @@ PINNED_MEM_STATION_EXIT = ("[MemStation] exit screen='GauntletInventoryScreen' "
 # OMITTED when MissionInitializeDone was not observed, never rendered as a fabricated 0.
 PINNED_WAIT_WITH_MS = "polls=87 waitMs=1449"
 PINNED_WAIT_NO_MS = "polls=87"
+
+# The pinned WaitingForRender detail contract (bundle b18f3441, 2026-09-04). Cross-language
+# twin pin: BattleLoadDiagnosticsService.FormatRenderWaitDetail is asserted
+# character-for-character on the C# side by FormatRenderWaitDetail_BothKnown_/_NoOrigin_/
+# _UnreadableCount_/_NeitherKnown_. EITHER token is OMITTED when unmeasured, never a
+# fabricated 0 - a shaders=0 would read as "nothing was compiling", the opposite of
+# "we could not read it".
+PINNED_RENDER_WAIT_BOTH = "waitedMs=290000 shaders=412"
+PINNED_RENDER_WAIT_NO_ORIGIN = "shaders=412"
+PINNED_RENDER_WAIT_NO_SHADERS = "waitedMs=290000"
+PINNED_RENDER_WAIT_NEITHER = ""
 
 
 def _line(level, payload, ts="2026-06-17 12:00:00"):
@@ -165,9 +178,29 @@ def _after_start_done(seq=8, ms=8000):
     return _phase(seq, ms, "MissionAfterStartDone")
 
 
-def _watchdog(elapsed, last_phase, detail=""):
+def _render_wait(seq=10, ms=30000, waited_ms=10000, shaders=412, mem=None):
+    """One WaitingForRender line. waited_ms=None / shaders=None reproduce the omitted-token
+    shapes the C# formatter emits when a value was not observed."""
+    parts = []
+    if waited_ms is not None:
+        parts.append("waitedMs=%d" % waited_ms)
+    if shaders is not None:
+        parts.append("shaders=%d" % shaders)
+    if mem:
+        parts.append(mem)
+    return _phase(seq, ms, "WaitingForRender", " ".join(parts))
+
+
+def _watchdog(elapsed, last_phase, detail="", tokens=""):
+    """One WATCHDOG STILL LOADING line.
+
+    `tokens` is the block the C# side inserts between the dash and the literal `last`
+    (`shaders=N`, `churn-capped`). It defaults to empty ONLY so the pre-2026-09-04 log
+    shape stays covered; real lines from a current build always carry at least `shaders=`.
+    """
     tail = f"phase={last_phase} seq=5 {detail}".strip()
-    return _line("ERROR", f"[BattleLoad] WATCHDOG STILL LOADING after {elapsed}s — last {tail}")
+    head = f"{tokens} " if tokens else ""
+    return _line("ERROR", f"[BattleLoad] WATCHDOG STILL LOADING after {elapsed}s — {head}last {tail}")
 
 
 def _mem(priv=4211, ws=3900, heap=654, used=14003, limit=31646, avail=6200,
@@ -1451,6 +1484,283 @@ class MemStationTests(unittest.TestCase):
             _station(kind="exit", screen="GauntletInventoryScreen", priv=11000)))
 
         self.assertFalse(tb.classify_stations(tl)["nested_overlap"])
+
+
+# --------------------------------------------------------------------------- #
+# The render-wait window (bundle b18f3441, 2026-09-04)                         #
+# --------------------------------------------------------------------------- #
+class RenderWaitTests(unittest.TestCase):
+    """FinishMissionLoadingDone -> BattlePlayable is the SceneView.ReadyToRender gate. A
+    falling shaders= count is a cold shader cache (a slow load); a frozen one is a wedge."""
+
+    def test_render_wait_detail_literals_match_the_csharp_formatter(self):
+        # The whole cross-language contract in five lines: if the C# formatter changes, the
+        # regexes below stop matching real logs and this pin is what says so.
+        self.assertEqual("290000", tb._WAITED_MS_RE.search(PINNED_RENDER_WAIT_BOTH).group(1))
+        self.assertEqual("412", tb._SHADERS_RE.search(PINNED_RENDER_WAIT_BOTH).group(1))
+        self.assertIsNone(tb._WAITED_MS_RE.search(PINNED_RENDER_WAIT_NO_ORIGIN))
+        self.assertIsNone(tb._SHADERS_RE.search(PINNED_RENDER_WAIT_NO_SHADERS))
+        self.assertIsNone(tb._SHADERS_RE.search(PINNED_RENDER_WAIT_NEITHER))
+
+    def test_waited_ms_token_is_not_matched_by_the_finish_wait_regex(self):
+        # waitMs= and waitedMs= are different tokens on different phases; a sloppy regex
+        # would let bucket2's wait leak into the render-wait reading and back.
+        self.assertIsNone(tb._WAIT_MS_RE.search(PINNED_RENDER_WAIT_BOTH))
+        self.assertIsNone(tb._WAITED_MS_RE.search(PINNED_WAIT_WITH_MS))
+
+    def test_terminal_render_wait_with_shaders_in_flight_is_cold_cache(self):
+        text = _log(_init(), _init_done(), _finish_begin(), _after_start_begin(),
+                    _after_start_done(), _finish_done(),
+                    _render_wait(shaders=478), _render_wait(seq=11, ms=200000, shaders=412))
+        v = tb.triage(text)
+
+        self.assertEqual(v.kind, "RENDER_WAIT")
+        self.assertIn("COLD SHADER CACHE", v.summary)
+        self.assertIn("412", v.summary)
+
+    def test_terminal_render_wait_with_zero_shaders_is_a_real_wedge(self):
+        text = _log(_init(), _init_done(), _finish_begin(), _after_start_begin(),
+                    _after_start_done(), _finish_done(), _render_wait(shaders=0))
+        v = tb.triage(text)
+
+        self.assertEqual(v.kind, "RENDER_WAIT")
+        self.assertIn("real wedge", v.summary)
+        self.assertNotIn("COLD SHADER CACHE", v.summary)
+
+    def test_terminal_render_wait_without_shaders_token_says_unmeasured(self):
+        text = _log(_init(), _init_done(), _finish_begin(), _after_start_begin(),
+                    _after_start_done(), _finish_done(), _render_wait(shaders=None))
+        v = tb.triage(text)
+
+        self.assertEqual(v.kind, "RENDER_WAIT")
+        self.assertIn("unmeasured, not zero", v.summary)
+
+    def test_render_wait_is_a_hang_kind_so_the_cli_exits_one(self):
+        self.assertIn("RENDER_WAIT", tb.HANG_KINDS)
+
+    def test_render_wait_has_next_steps(self):
+        self.assertTrue(tb._NEXT_STEPS.get("RENDER_WAIT"))
+
+    def test_timings_report_a_draining_queue(self):
+        tl = tb.parse_battle_load_log(_log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            _render_wait(seq=10, ms=30000, waited_ms=10000, shaders=478),
+            _render_wait(seq=11, ms=200000, waited_ms=180000, shaders=120)))
+        r = tb.classify_phase_timings(tl)["render_wait"]
+
+        self.assertEqual(2, r["samples"])
+        self.assertEqual(478, r["shaders_first"])
+        self.assertEqual(120, r["shaders_last"])
+        self.assertEqual(478, r["shaders_peak"])
+        self.assertTrue(r["draining"])
+        self.assertEqual(180000, r["waited_ms_last"])
+
+    def test_timings_report_a_frozen_queue_as_not_draining(self):
+        tl = tb.parse_battle_load_log(_log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            _render_wait(seq=10, shaders=412), _render_wait(seq=11, shaders=412)))
+
+        self.assertIsNone(tb.classify_phase_timings(tl)["render_wait"]["draining"])
+
+    def test_render_wait_block_absent_for_a_log_without_the_marker(self):
+        # Old logs keep a byte-identical report: the key exists and is None, never zero-filled.
+        tl = tb.parse_battle_load_log(_log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done()))
+
+        self.assertIsNone(tb.classify_phase_timings(tl)["render_wait"])
+
+    def test_finish_done_terminal_names_the_render_gate(self):
+        # The pre-marker shape, which is what the b18f3441 bundle itself looks like.
+        text = _log(_init(), _init_done(), _finish_begin(), _after_start_begin(),
+                    _after_start_done(), _finish_done())
+        v = tb.triage(text)
+
+        self.assertEqual(v.kind, "POST_EQUIP")
+        self.assertTrue(any("ReadyToRender" in n for n in v.notes))
+        self.assertTrue(any("COLD SHADER CACHE" in n for n in v.notes))
+
+
+class MultiMissionScopeTests(unittest.TestCase):
+    """A session log holds several missions. An earlier one that completed must not mask a
+    final load that stalled: the b18f3441 bundle reported COMPLETED and "the battle-load
+    path is clean" for a log whose last mission never ticked and fired the watchdog."""
+
+    def test_earlier_completed_mission_does_not_mask_a_later_stall(self):
+        text = _log(
+            _init(seq=1, ms=1000), _playable(),
+            _init(seq=10, ms=50000), _init_done(seq=11, ms=51000),
+            _finish_begin(seq=12, ms=55000), _after_start_begin(seq=13, ms=55500),
+            _after_start_done(seq=14, ms=58000), _finish_done(seq=15, ms=58200),
+            _watchdog(305, "FinishMissionLoadingDone"))
+        v = tb.triage(text)
+
+        self.assertEqual(v.kind, "POST_EQUIP")
+
+    def test_a_single_mission_that_completed_is_still_completed(self):
+        text = _log(_encounter(), _open_new(), _scene_selected(), _mission_init(),
+                    _equip_begin(5, 0), _equip_ok(6, 0), _playable())
+
+        self.assertEqual(tb.triage(text).kind, "COMPLETED")
+
+    def test_completion_without_a_mission_init_anchor_still_reads_completed(self):
+        # Truncated log that ENDS on BattlePlayable: no segment anchor, but the log ending on
+        # a completed load is the one honest basis for calling it clean.
+        self.assertEqual(tb.triage(_log(_equip_ok(6, 0), _playable())).kind, "COMPLETED")
+
+    def test_earlier_mission_is_anchored_by_encounter_start_not_only_mission_init(self):
+        # MissionOpenNew and EncounterStart also start a mission. Anchoring on
+        # MissionInitialize alone loses the boundary whenever the later load died before
+        # reaching it, which is exactly when the verdict matters most.
+        text = _log(
+            _encounter(), _mission_init(), _playable(),
+            _open_new(),
+            _watchdog(305, "MissionOpenNew"))
+
+        self.assertNotEqual(tb.triage(text).kind, "COMPLETED")
+
+    def test_no_anchor_at_all_with_a_later_load_does_not_read_completed(self):
+        # The residual hole the first scoping pass left: a truncated capture holding an
+        # earlier completed mission AND a later stalled one, with no start marker for either
+        # (log rotated mid-file, or diagnostics enabled mid-mission). Falling back to
+        # whole-log scanning here reproduced the exact b18f3441 false COMPLETED.
+        text = _log(
+            _equip_ok(1, 0),
+            _playable(),
+            _finish_done(seq=3, ms=50000))
+        v = tb.triage(text)
+
+        self.assertNotEqual(v.kind, "COMPLETED",
+                            "a load that ran past an earlier BattlePlayable must not be "
+                            "reported as clean just because no anchor survived truncation")
+        self.assertEqual(v.kind, "POST_EQUIP")
+
+
+# --------------------------------------------------------------------------- #
+# The WATCHDOG line's token block (review pass 2, 2026-09-04)                   #
+# --------------------------------------------------------------------------- #
+class WatchdogTokenTests(unittest.TestCase):
+    """`FormatShaderToken` / `FormatChurnToken` insert text between the em-dash and the literal
+    `last`. _WATCHDOG_RE required whitespace there until 2026-09-04, so it matched ONLY the
+    token-free shape and silently dropped the watchdog line for every bundle carrying real
+    telemetry. The fixture above hid it by never emitting a token."""
+
+    def test_watchdog_line_with_shaders_token_still_parses(self):
+        tl = tb.parse_battle_load_log(_log(
+            _mission_init(), _watchdog(305, "FinishMissionLoadingDone", tokens="shaders=412")))
+
+        self.assertIsNotNone(tl.watchdog, "a watchdog line carrying shaders= must not be dropped")
+        self.assertEqual(305, tl.watchdog.elapsed_seconds)
+        self.assertEqual("FinishMissionLoadingDone", tl.watchdog.last_phase)
+        self.assertEqual("shaders=412", tl.watchdog.tokens)
+
+    def test_watchdog_line_with_shaders_and_churn_tokens_still_parses(self):
+        tl = tb.parse_battle_load_log(_log(
+            _mission_init(),
+            _watchdog(900, "WaitingForRender", tokens="shaders=412 churn-capped")))
+
+        self.assertIsNotNone(tl.watchdog)
+        self.assertEqual(900, tl.watchdog.elapsed_seconds)
+        self.assertEqual("shaders=412 churn-capped", tl.watchdog.tokens)
+
+    def test_watchdog_line_without_tokens_still_parses(self):
+        # The pre-2026-09-04 shape, which is what bundle b18f3441 itself carries.
+        tl = tb.parse_battle_load_log(_log(
+            _mission_init(), _watchdog(305, "FinishMissionLoadingDone")))
+
+        self.assertIsNotNone(tl.watchdog)
+        self.assertEqual("", tl.watchdog.tokens)
+
+    def test_status_line_containing_the_word_last_is_not_mistaken_for_the_separator(self):
+        # The token block is non-greedy, so it stops at the FIRST `last`.
+        tl = tb.parse_battle_load_log(_log(
+            _mission_init(),
+            _watchdog(305, "AgentEquipBegin", detail="note='the last one'", tokens="shaders=1")))
+
+        self.assertIsNotNone(tl.watchdog)
+        self.assertEqual("shaders=1", tl.watchdog.tokens)
+        self.assertEqual("AgentEquipBegin", tl.watchdog.last_phase)
+
+    def test_report_surfaces_the_reading_the_watchdog_fired_on(self):
+        text = _log(_mission_init(),
+                    _watchdog(900, "WaitingForRender", tokens="shaders=412 churn-capped"))
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("reading at fire: shaders=412 churn-capped", report)
+        self.assertIn("STILL MOVING", report,
+                      "a churn-capped fire must be explained, since it calls for the opposite "
+                      "response to a frozen compiler")
+
+    def test_report_omits_the_reading_line_when_the_log_carried_no_tokens(self):
+        text = _log(_mission_init(), _watchdog(305, "FinishMissionLoadingDone"))
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertNotIn("reading at fire", report)
+
+
+# --------------------------------------------------------------------------- #
+# Verdict and timings must describe the SAME mission (review pass 2)           #
+# --------------------------------------------------------------------------- #
+class VerdictTimingsAgreementTests(unittest.TestCase):
+    """`classify` anchors on any mission-start marker; `classify_phase_timings` anchors on
+    MissionInitialize alone. When the last mission stalls BEFORE MissionInitialize, the ledger's
+    anchor lands in an earlier mission and the report printed that mission's healthy bucket table
+    directly under a stall verdict for a different load."""
+
+    def _two_missions_second_stalls_early(self):
+        return _log(
+            _encounter(), _init(seq=2, ms=1000), _init_done(seq=3, ms=2000),
+            _finish_begin(seq=4, ms=5000), _after_start_begin(seq=5, ms=5500),
+            _after_start_done(seq=6, ms=8000), _finish_done(seq=7, ms=8200),
+            _playable(),
+            _line("INFO", "[BattleLoad] seq=9 t=+50000ms phase=EncounterStart mainPartySize=51"),
+            _line("INFO", "[BattleLoad] seq=10 t=+51000ms phase=MissionOpenNew "
+                          "mission='Battle' scene='battle_terrain_p'"))
+
+    def test_verdict_describes_the_last_mission(self):
+        self.assertEqual("PRE_SCENE", tb.triage(self._two_missions_second_stalls_early()).kind)
+
+    def test_timings_are_withheld_rather_than_describing_a_different_mission(self):
+        tl = tb.parse_battle_load_log(self._two_missions_second_stalls_early())
+
+        self.assertIsNone(tb.classify_phase_timings(tl),
+                          "rendering the earlier mission's buckets under a stall verdict for a "
+                          "later one is worse than rendering nothing")
+
+    def test_report_does_not_contradict_itself(self):
+        text = self._two_missions_second_stalls_early()
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None, None, tb.classify_phase_timings(tl))
+
+        self.assertIn("PRE_SCENE", report)
+        self.assertNotIn("Load timing", report)
+
+    def test_single_mission_still_renders_its_ledger(self):
+        tl = tb.parse_battle_load_log(_log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done()))
+
+        self.assertIsNotNone(tb.classify_phase_timings(tl))
+
+    def test_two_missions_both_reaching_mission_init_still_render_the_later_ledger(self):
+        tl = tb.parse_battle_load_log(_log(
+            _init(seq=1, ms=1000), _init_done(seq=2, ms=2000), _finish_begin(seq=3, ms=3000),
+            _after_start_begin(seq=4, ms=3500), _after_start_done(seq=5, ms=4000),
+            _finish_done(seq=6, ms=4200), _playable(),
+            _init(seq=8, ms=50000), _init_done(seq=9, ms=51000),
+            _finish_begin(seq=10, ms=55000), _after_start_begin(seq=11, ms=55500),
+            _after_start_done(seq=12, ms=58000), _finish_done(seq=13, ms=58200)))
+        t = tb.classify_phase_timings(tl)
+
+        self.assertIsNotNone(t)
+        # bucket2 is MissionInitializeDone -> FinishMissionLoadingBegin, i.e. 55000-51000 for the
+        # SECOND mission (the first would be 3000-2000 = 1000ms).
+        b2 = next(b for b in t["buckets"] if b["name"] == "bucket2")
+        self.assertEqual(4000, b2["ms"])
 
 
 if __name__ == "__main__":

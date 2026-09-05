@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -7,7 +8,9 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
+using TAOM.Core.Logging;
 using TAOM.Features.FieldCommission.Domain;
 
 namespace TAOM.Adapters;
@@ -18,6 +21,13 @@ public class HeroCommissionAdapter : IHeroCommissionAdapter
     // flourish; not part of the mandatory design, kept as a documented constant rather than a new
     // config knob (simplicity-criterion: tiny win, not worth another JSON field).
     private const int StartingGold = 250;
+
+    private readonly IModLogger _logger;
+
+    public HeroCommissionAdapter(IModLogger logger)
+    {
+        _logger = logger;
+    }
 
     public CompanionRoomInfo GetCompanionRoomInfo()
     {
@@ -98,18 +108,118 @@ public class HeroCommissionAdapter : IHeroCommissionAdapter
 
     public bool IsHeroAliveAndValid(string heroId)
     {
-        if (string.IsNullOrEmpty(heroId))
-            return false;
-
-        // NOT MBObjectManager.GetObject<Hero> — it cannot resolve these heroes at all.
-        // CampaignObjectManager.AddHero hand-assigns hero.Id and appends to its own alive list; it
-        // never calls MBObjectManager.RegisterObject. So every hero HeroCreator built at runtime —
-        // which is every promoted companion — looked "dead or invalid" here, and the prune on load
-        // silently emptied the promoted-hero list on the first save-load after any promotion.
-        // Same lookup the sibling NamedCompanionAdapter uses.
-        var hero = Hero.AllAliveHeroes?.FirstOrDefault(h => h != null && h.StringId == heroId);
+        var hero = FindAliveHero(heroId);
         return hero != null && hero.IsAlive;
     }
+
+    public PromotedHeroSnapshot GetPromotedHeroSnapshot(string heroId)
+    {
+        var hero = FindAliveHero(heroId);
+        if (hero == null)
+            return PromotedHeroSnapshot.Missing;
+
+        // Template => CharacterObject.OriginalCharacter, a saveable field on the character the
+        // promotion built, so the origin troop is still known after a load. PartyBelongedTo is a
+        // plain field read; null for a governor, a prisoner and a fugitive alike.
+        var party = hero.PartyBelongedTo;
+        return new PromotedHeroSnapshot(
+            hero.Name?.ToString(),
+            hero.CharacterObject?.OriginalCharacter?.StringId,
+            hero.IsPlayerCompanion,
+            party?.IsMainParty == true,
+            IsPartyInBattle(party),
+            hero.IsWounded);
+    }
+
+    public bool RemoveCompanionFromGame(string heroId)
+    {
+        var hero = FindAliveHero(heroId);
+        if (hero == null)
+            return false;
+
+        // KillCharacterAction.ApplyInternal adds a DeathMark and RETURNS while the party has a
+        // MapEvent or a SiegeEvent, so the hero would be removed later, after the fight, with no
+        // way for the caller to know. A refund against that is a soldier from nowhere. Refuse.
+        if (IsPartyInBattle(hero.PartyBelongedTo))
+            return false;
+
+        FadeOutSceneAgent(hero);
+
+        try
+        {
+            // The one call vanilla's own fire line ends on (companion_fire_on_consequence) and the
+            // Refuge warden rollback ships. isForced skips CanDie; MakeDead takes the hero out of
+            // the roster; the companion link is cut through RemoveCompanionAction.ApplyByDeath, and
+            // the Death detail skips the fugitive interlude and Hero.ResetEquipments (#486).
+            KillCharacterAction.ApplyByRemove(hero);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"[FieldCommission] removing '{heroId}' threw {ex.GetType().Name}: {ex.Message}");
+            return false;
+        }
+
+        return hero.IsDead;
+    }
+
+    /// <summary>
+    /// Inside a settlement scene the hero also has a live <c>Agent</c>, and nothing on the engine's
+    /// removal path touches it: <c>KillCharacterAction</c> only drops the <c>LocationCharacter</c>,
+    /// which is the spawn list for the NEXT entry, so the dismissed companion would keep standing in
+    /// the tavern as a ghost the player can still click (<c>MissionConversationLogic.IsThereAgentAction</c>
+    /// never asks whether the hero is alive). Vanilla never meets this because its own fire line is
+    /// map-only. Remove the agent first, the way <c>MissionAgentHandler.FadeoutExitingLocationCharacter</c>
+    /// removes a character leaving through a passage and with the same refusal on a mission that is
+    /// already ending, but with <c>hideInstantly</c> set: a visible fade keeps the agent Active for its
+    /// whole duration, and <c>IsThereAgentAction</c> would let a click in those frames open a
+    /// conversation with a hero that is already dead and un-clanned. The instant form is what vanilla
+    /// uses for a departing multiplayer peer. On the map there is no mission and nothing to do. A hide
+    /// that throws is logged and does not block the dismissal: a lingering figure is a lesser wrong
+    /// than a hero who stays.
+    /// </summary>
+    private void FadeOutSceneAgent(Hero hero)
+    {
+        try
+        {
+            var mission = Mission.Current;
+            if (mission == null || mission.CurrentState != Mission.State.Continuing)
+                return;
+
+            var character = hero.CharacterObject;
+            foreach (var agent in mission.Agents)
+            {
+                if (agent == null || !agent.IsActive() || !ReferenceEquals(agent.Character, character))
+                    continue;
+
+                agent.FadeOut(hideInstantly: true, hideMount: true);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"[FieldCommission] fading out the scene agent of '{hero.StringId}' threw {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// NOT MBObjectManager.GetObject&lt;Hero&gt; — it cannot resolve these heroes at all.
+    /// CampaignObjectManager.AddHero hand-assigns hero.Id and appends to its own alive list; it
+    /// never calls MBObjectManager.RegisterObject. So every hero HeroCreator built at runtime —
+    /// which is every promoted companion — looked "dead or invalid" to that lookup, and the prune
+    /// on load silently emptied the promoted-hero list on the first save-load after any promotion.
+    /// Same lookup the sibling NamedCompanionAdapter uses.
+    /// </summary>
+    private static Hero FindAliveHero(string heroId)
+    {
+        if (string.IsNullOrEmpty(heroId))
+            return null;
+
+        return Hero.AllAliveHeroes?.FirstOrDefault(h => h != null && h.StringId == heroId);
+    }
+
+    /// <summary>The exact predicate <c>KillCharacterAction.ApplyInternal</c> defers a removal on.</summary>
+    private static bool IsPartyInBattle(MobileParty party) =>
+        party != null && (party.MapEvent != null || party.SiegeEvent != null);
 
     /// <summary>
     /// Where this soldier is recorded as born. Restores the donor mod's three-step fallback, which

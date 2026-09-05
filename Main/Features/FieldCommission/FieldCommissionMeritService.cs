@@ -301,6 +301,12 @@ public class FieldCommissionMeritService : IFieldCommissionMeritService
         return _promotedHeroIds;
     }
 
+    public void ForgetPromotedHero(string heroId)
+    {
+        if (!string.IsNullOrEmpty(heroId))
+            _promotedHeroIds.Remove(heroId);
+    }
+
     public Dictionary<string, int> ExportMerits() => new Dictionary<string, int>(_merits, StringComparer.Ordinal);
 
     public void ImportMerits(Dictionary<string, int> merits)

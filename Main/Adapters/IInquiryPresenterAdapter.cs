@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TAOM.Features.FieldCommission.Domain;
 
 namespace TAOM.Adapters;
 
@@ -32,4 +34,20 @@ public interface IInquiryPresenterAdapter
     /// <paramref name="onConfirm"/> receives the raw entered text — the caller decides
     /// blank/whitespace fallback behavior.</summary>
     void ShowRenamePrompt(string troopName, Action<string> onConfirm, Action onSkip);
+
+    /// <summary>Single-choice picker over the dismissable promoted companions (#540); each row
+    /// reads "name (was troop)". <paramref name="onChosen"/> receives the picked hero id. Shows
+    /// nothing for an empty list.</summary>
+    void ShowDismissPicker(IReadOnlyList<DismissCandidate> candidates, Action<string> onChosen);
+
+    /// <summary>"Discharge / Cancel" confirm that names the returning troop and says the
+    /// companion's gear is lost.</summary>
+    void ShowDismissConfirm(string heroName, string troopName, Action onConfirm, Action onCancel);
+
+    /// <summary>Feedback line: the named companion has returned to the ranks as the troop.</summary>
+    void ShowDismissed(string heroName, string troopName);
+
+    /// <summary>Feedback line: the dismissal could not be carried out now. A null or blank
+    /// <paramref name="heroName"/> gets the unnamed wording.</summary>
+    void ShowDismissFailed(string heroName);
 }

@@ -390,4 +390,194 @@ public class FieldCommissionBindingTests
             AccessTools.Property(equipment, "ItemEquipmentType"),
             "Equipment.ItemEquipmentType did not resolve — Patch71FillTests reads it to prove the battle fallback does not retype a civilian kit.");
     }
+
+    // Dismissal back to the ranks (#540). Every member below is dereferenced on that path by
+    // HeroCommissionAdapter, TroopRosterQueryAdapter or InquiryPresenterAdapter, and each is a
+    // way the dismissal could silently stop working after an engine bump.
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CharacterObject_OriginalCharacter_BindingResolvesAsCharacterObject()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterObject");
+        Assert.IsNotNull(type, "CharacterObject did not resolve.");
+
+        var property = AccessTools.Property(type, "OriginalCharacter");
+        Assert.IsNotNull(property, "CharacterObject.OriginalCharacter did not resolve — the dismissal has no origin troop to refund.");
+        Assert.AreEqual(type, property.PropertyType, "OriginalCharacter no longer returns CharacterObject.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TroopRoster_AddToCounts_CharacterObjectOverload_BindingResolvesWithSevenParameters()
+    {
+        RequireGame();
+        var roster = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Roster.TroopRoster");
+        var character = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterObject");
+        Assert.IsNotNull(roster, "TroopRoster did not resolve.");
+        Assert.IsNotNull(character, "CharacterObject did not resolve.");
+
+        var method = AccessTools.Method(roster, "AddToCounts",
+            new[] { character, typeof(int), typeof(bool), typeof(int), typeof(int), typeof(bool), typeof(int) });
+        Assert.IsNotNull(method, "TroopRoster.AddToCounts(CharacterObject,int,bool,int,int,bool,int) did not resolve — both roster writes bind this overload.");
+        Assert.AreEqual("woundedCount", method.GetParameters()[3].Name, "position 3 is no longer woundedCount — the refund would flag the wrong thing.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void KillCharacterAction_ApplyByRemove_BindingResolvesWithHeroAndTwoOptionalBools()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Actions.KillCharacterAction");
+        Assert.IsNotNull(type, "KillCharacterAction did not resolve.");
+
+        var method = AccessTools.Method(type, "ApplyByRemove");
+        Assert.IsNotNull(method, "KillCharacterAction.ApplyByRemove did not resolve — the dismissal has no engine call.");
+        var p = method.GetParameters();
+        Assert.AreEqual(3, p.Length, "ApplyByRemove arity drifted.");
+        Assert.AreEqual("Hero", p[0].ParameterType.Name);
+        Assert.IsTrue(p[1].HasDefaultValue && p[2].HasDefaultValue, "showNotification/isForced must stay optional — the adapter calls the one-argument form.");
+        Assert.AreEqual(true, p[2].DefaultValue, "isForced no longer defaults to true — CanDie would start gating the removal.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void MultiSelectionInquiryData_CtorBindingResolves_WithVerifiedParameterNames()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.Core.MultiSelectionInquiryData");
+        Assert.IsNotNull(type, "MultiSelectionInquiryData did not resolve — the picker has no data type.");
+
+        var ctor = type.GetConstructors().SingleOrDefault(c => c.GetParameters().Length == 12);
+        Assert.IsNotNull(ctor, "MultiSelectionInquiryData's 12-parameter ctor did not resolve — arity drifted.");
+
+        // The picker binds by NAME, so the names are the contract.
+        var expected = new[]
+        {
+            "titleText", "descriptionText", "inquiryElements", "isExitShown", "minSelectableOptionCount",
+            "maxSelectableOptionCount", "affirmativeText", "negativeText", "affirmativeAction", "negativeAction",
+        };
+        var p = ctor.GetParameters();
+        for (var i = 0; i < expected.Length; i++)
+            Assert.AreEqual(expected[i], p[i].Name, $"MultiSelectionInquiryData ctor position {i} drifted.");
+        Assert.IsTrue(p[10].HasDefaultValue && p[11].HasDefaultValue, "the two trailing parameters must stay optional — the picker names only the first ten.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void MBInformationManager_ShowMultiSelectionInquiry_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.Core.MBInformationManager");
+        Assert.IsNotNull(type, "MBInformationManager did not resolve.");
+        Assert.IsNotNull(AccessTools.Method(type, "ShowMultiSelectionInquiry"), "ShowMultiSelectionInquiry did not resolve — the picker cannot be shown.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void InquiryElement_ThreeParameterCtor_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.Core.InquiryElement");
+        Assert.IsNotNull(type, "InquiryElement did not resolve.");
+
+        var ctor = type.GetConstructors().FirstOrDefault(c => c.GetParameters().Length == 3);
+        Assert.IsNotNull(ctor, "InquiryElement's 3-parameter ctor did not resolve.");
+        Assert.AreEqual("Object", ctor.GetParameters()[0].ParameterType.Name, "identifier must stay object — the picker stores the hero id there and reads it back with an is-string pattern.");
+    }
+
+    [DataTestMethod]
+    [TestCategory("BindingVerification")]
+    [DataRow("PartyBelongedTo", "MobileParty")]
+    [DataRow("IsPlayerCompanion", "Boolean")]
+    [DataRow("IsWounded", "Boolean")]
+    [DataRow("IsDead", "Boolean")]
+    [DataRow("Name", "TextObject")]
+    [DataRow("CharacterObject", "CharacterObject")]
+    [DataRow("StringId", "String")]
+    public void Hero_DismissalReads_BindingResolves(string propertyName, string typeName)
+    {
+        RequireGame();
+        var hero = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Hero");
+        var property = AccessTools.Property(hero, propertyName);
+        Assert.IsNotNull(property, $"Hero.{propertyName} did not resolve — the dismissal snapshot reads it.");
+        Assert.AreEqual(typeName, property.PropertyType.Name, $"Hero.{propertyName} type drifted.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Hero_AllAliveHeroes_BindingResolvesAsStatic()
+    {
+        RequireGame();
+        var hero = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Hero");
+        var property = AccessTools.Property(hero, "AllAliveHeroes");
+        Assert.IsNotNull(property, "Hero.AllAliveHeroes did not resolve — the only registry a runtime-created hero is in.");
+        Assert.IsTrue(property.GetGetMethod().IsStatic, "Hero.AllAliveHeroes is no longer static.");
+    }
+
+    [DataTestMethod]
+    [TestCategory("BindingVerification")]
+    [DataRow("MapEvent")]
+    [DataRow("SiegeEvent")]
+    [DataRow("IsMainParty")]
+    [DataRow("MainParty")]
+    public void MobileParty_DismissalReads_BindingResolves(string propertyName)
+    {
+        RequireGame();
+        var party = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Party.MobileParty");
+        Assert.IsNotNull(
+            AccessTools.Property(party, propertyName),
+            $"MobileParty.{propertyName} did not resolve — the in-battle refusal or the main-party gate reads it.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Agent_FadeOut_BindingResolvesWithTwoBools()
+    {
+        RequireGame();
+        var agent = AccessTools.TypeByName("TaleWorlds.MountAndBlade.Agent");
+        Assert.IsNotNull(agent, "Agent did not resolve.");
+        var fadeOut = AccessTools.Method(agent, "FadeOut", new[] { typeof(bool), typeof(bool) });
+        Assert.IsNotNull(fadeOut, "Agent.FadeOut(bool,bool) did not resolve — a dismissed companion would stay standing in the scene as a clickable ghost.");
+
+        // Two bools of the same type: a swapped pair would bind and silently hide the mount but
+        // not the rider, so the names are pinned as well as the arity.
+        var p = fadeOut.GetParameters();
+        Assert.AreEqual("hideInstantly", p[0].Name, "FadeOut position 0 is no longer hideInstantly.");
+        Assert.AreEqual("hideMount", p[1].Name, "FadeOut position 1 is no longer hideMount.");
+
+        Assert.IsNotNull(AccessTools.Method(agent, "IsActive", System.Type.EmptyTypes), "Agent.IsActive() did not resolve.");
+        Assert.IsNotNull(AccessTools.Property(agent, "Character"), "Agent.Character did not resolve — the scene agent is matched to the hero through it.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Mission_SceneReads_BindingResolveAndContinuingStateExists()
+    {
+        RequireGame();
+        var mission = AccessTools.TypeByName("TaleWorlds.MountAndBlade.Mission");
+        Assert.IsNotNull(mission, "Mission did not resolve.");
+        Assert.IsNotNull(AccessTools.Property(mission, "Current"), "Mission.Current did not resolve.");
+        Assert.IsNotNull(AccessTools.Property(mission, "CurrentState"), "Mission.CurrentState did not resolve.");
+        Assert.IsNotNull(AccessTools.Property(mission, "Agents"), "Mission.Agents did not resolve.");
+
+        // The fade-out refuses a mission that is already ending, the same guard the engine's own
+        // passage fade-out uses; that only works while the state the adapter tests still exists.
+        var state = AccessTools.Inner(mission, "State");
+        Assert.IsNotNull(state, "Mission.State did not resolve.");
+        Assert.IsTrue(System.Enum.IsDefined(state, "Continuing"), "Mission.State.Continuing is gone.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void InformationManager_DisplayMessage_BindingResolvesWithInformationMessage()
+    {
+        RequireGame();
+        var manager = AccessTools.TypeByName("TaleWorlds.Library.InformationManager");
+        var message = AccessTools.TypeByName("TaleWorlds.Library.InformationMessage");
+        Assert.IsNotNull(message, "InformationMessage did not resolve.");
+        Assert.IsNotNull(AccessTools.Method(manager, "DisplayMessage", new[] { message }), "InformationManager.DisplayMessage(InformationMessage) did not resolve — the result lines have no channel.");
+        Assert.IsNotNull(AccessTools.Constructor(message, new[] { typeof(string) }), "InformationMessage(string) did not resolve.");
+    }
 }

@@ -1240,3 +1240,24 @@ distinct pre-existing looks with 4. Worse, the key was position, so inserting on
 - **Why missed:** every gate passed. The tool reported success, the XML parsed, `validate_moduledata.py` returned 0 errors, and 8000 unit tests passed, because nothing anywhere asserts that a stack which could previously spawn a troop still can. The exposure was invisible from the target number alone: Mordor carries 52 stacks against the same budget every other culture spends on 12 to 27, so only Mordor's thinnest stacks (5 of 3500) crossed the rounding floor.
 - **Prevent:** any proportional rescale of a distribution must floor every non-zero row at 1, and the tool must refuse to write a row that goes from "can occur" to "cannot occur". Then diff the SET of live entries before and after, not just the sums. A sum that lands exactly on target says nothing about what stopped existing to get there. Pinned by `tools/tests/test_rebalance_party_template_maxes.py`, whose first test fails against the pre-fix formula.
 - **Source:** deep review of `151b6f56`, fixed in the follow-up; see CHANGELOG 2026-09-04.
+
+### A level shift is a restat
+
+`f9942d84` moved the ten `dg_uruk_*` troops up five levels and left their skills where they were, so every one of them carried the previous level's curve: an L36 Black Guard tied an L31 Khamul infantryman, and a L31 Khamul archer out-totalled the L36 Uruk sharpshooter by 145. Nothing on the edges went backwards, so the per-skill upgrade gate was clean, and the analyzer's within-culture sweep has a 25-point tolerance that the exact ties slipped under.
+- **Why missed:** the gates guard EDGES, and a whole line shifting together keeps every edge monotone. The line was wrong relative to the curve, not relative to itself.
+- **Prevent:** any change to a `level=` attribute is followed by `rebalance_troops.py --fix-monotonicity --restat <ids> --dry-run`, and the analyzer's outlier list (troops more than 50 off the formula) is read after a level move, not only the inversion list.
+- **Source:** #541, CHANGELOG 2026-09-04.
+
+### Equipment is a ladder the same way skills are
+
+62 upgrade edges lowered the troop's armour total when first measured, up to 74 points, and no tool said so: the skill clamp and `UPGRADE_SKILL_REGRESSION` read `<skills>` only. Three shapes produced them: a line re-dressed by name into a lighter family (`plate_light` under `hplate_heavy`), a slot simply never filled (the uruk skirmisher had no gloves or cape), and the parent being the anomaly (a recruit in a lord's torso, two "medium" helmets carrying the lord row's value).
+- **Why missed:** rosters were reviewed for looks and for broken refs, never for the number the engine adds up, and the pieces that hid longest were capes, whose body armour the primary-stat view never shows.
+- **Prevent:** `UPGRADE_ARMOUR_REGRESSION` warns on any such edge; `fix_upgrade_armour_regressions.py` repairs it by stepping the target up its own item family. When the parent is the anomaly, demote the parent (the script's `DEMOTE`) or fix the item value; raising a whole tree to hero kit is the wrong fix.
+- **Source:** #541, CHANGELOG 2026-09-04.
+
+### A generator's variant axis must match the roster generator's
+
+`generate_dale_armor.py` reads `a01..a04, b01..b04` as one eight-step tier ladder; `generate_dale_troops.py` uses `a`/`b` as the bronze/silver lines and `01..04` as the tiers. The two agreed on nothing, so the L21 Guardsman wore stats identical to the L16 Footman's and the Longbowman lost 21 armour on promotion, and a roster-anchored restat could not repair it while an L11 troop wore the mid variant.
+- **Why missed:** each generator was internally consistent and validated against its own manifest; the seam between them was never stated in either.
+- **Prevent:** when a culture's armour and troops come from two generators, write the suffix contract (which token is the line, which is the tier) once in the feature doc and point both generators at it. Before a roster-tiered restat, check who the LOWEST wearer of each mid item is: one low troop pins the whole item.
+- **Source:** #541, CHANGELOG 2026-09-04.

@@ -26,6 +26,33 @@ The existing latch rule (below, from the tournament-exit hang) is written in ter
 - **Prevent:** when folding a master toggle into a service member, trace what the CALLER does with the answer. If the caller writes state on the strength of it, the fold belongs downstream of the write, not upstream. Identity ("is this X?") and eligibility ("does this qualify?") should be toggle-independent by construction; the cleanest form is for the class to hold no settings reference at all, so it cannot consult the toggle even by accident. Gate the EFFECT instead. Where a fold is genuinely needed on a state-writing path, pair it with a re-arm on the false-to-true edge.
 - **Source:** docs/reviews/rca-dread-aura-2026-08-13.md finding 2 (MED-HIGH); first instance docs/reviews/rca-tournament-exit-hang-2026-07-06.md.
 
+### A progress-based gate needs an absolute cap, or its failure mode is unbounded silence
+A gate that suppresses an alarm "while the subsystem is still making progress" must pair its
+no-progress timeout with an ABSOLUTE cap on total suppression. Progress detected as "the counter
+changed" is not the same as "the work is finishing": a counter that thrashes among positive values
+(items completing while new ones arrive) refreshes the progress clock on every poll and suppresses
+the alarm forever. The bug is then worse than the false positive the gate was added to fix, because a
+false alarm is visible and permanent silence is not. `BattleLoadStallWatchdog.ShouldDeferForShaderCompile`
+shipped into review with only the no-progress term (2026-09-04): an oscillating shader-compile count
+would have deferred the crash bundle for the rest of the session on a load that never finished.
+- **Why missed:** the predicate was written from one artifact (player bundle b18f3441) in which the
+  queue genuinely WAS draining, so "changing" and "draining" were indistinguishable in the evidence
+  and the author never enumerated the neighbouring case. The four non-data-flow review agents all
+  passed it: standards and API compatibility do not ask liveness questions, and efficiency treats a
+  gate as a cost, not as a duration. Only the data-flow agent framed the count TEMPORALLY, asking what
+  repeated polls do rather than what one poll returns.
+- **Prevent:** whenever you write a gate as "proceed while X looks fine", add "and never for longer
+  than Y" in the same commit, and test the neighbouring case over many polls rather than one call.
+  Distinguish the two exit reasons in whatever artifact the gate eventually produces, because they
+  call for opposite responses. The canonical shape already exists in this repo:
+  `ShaderPrecompileDecider` carries THREE independent stops for the same engine counter, a
+  no-progress timeout, a `ChurnTimeout` churn backstop, and an absolute per-item cap, added after the
+  1.4.7 precompile hang. **Read the sibling that already polls your counter before writing a new
+  gate on it**. This failure was a lesson already in the codebase, in the same subsystem, about the
+  same `GetNumberOfShaderCompilationsInProgress()` call, that was simply not consulted.
+- **Source:** docs/reviews/rca-battle-load-render-wait-2026-09-04.md finding 1 (HIGH), issue #539;
+  prior art `Main/Features/ShaderPrecompilation/ShaderPrecompileDecider.cs` (`PrecompileAbortReason.ChurnTimeout`).
+
 ### Diagnostics latches: state transitions unconditional, closers enumerated per opener path
 A latch/window flag in a toggleable diagnostics feature (e.g. `BattleLoadDiagnostics._exitWindowActive`) has two failure classes the happy path hides. (1) **Toggle-gated transitions:** copying the sibling methods' `if (!IsEnabled) return;` early-out onto the method that CLOSES the latch means a mid-window MCM toggle-off latches it forever; re-enabling later emits spurious stamps with huge `t=+` values — misleading forensics from a forensics feature. (2) **Closer-path coverage:** the window opened on ANY `Mission.EndMission` but every closer was campaign-only (`FirstMapTick` needs `MapState`; `ResetLifecycle`'s sole caller was the campaign-only `PlayerEncounter_Start_Patch`), so custom-battle exits and chained missions leaked it — while the feature doc asserted the opposite, a safety claim written from intention rather than a caller trace. (Tournament-exit-hang deep review, 2026-07-06 — both caught by the Data Flow agent, invisible to the four per-file agents.)
 - **Why missed:** the `IsEnabled` gate was copied wholesale from sibling logging methods without classifying which lines are I/O (gate) vs state transitions (never gate); the closer set was designed from the one path under investigation (campaign tournament exit).

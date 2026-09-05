@@ -64,6 +64,19 @@ public enum BattleLoadPhase
     FinishMissionLoadingBegin,
     FinishMissionLoadingDone,
 
+    // FinishMissionLoadingDone -> BattlePlayable was itself a blind window, and a player bundle
+    // (b18f3441, 2026-09-04) spent 290 s inside it with nothing logged. MissionState.OnTick reaches
+    // TickMission only through `Handler.RenderIsReady()`, which is
+    // MissionScreen.MissionStartedRendering() -> the native SceneView.ReadyToRender(); that stays
+    // false while the scene's shaders compile. FinishMissionLoading ends with
+    // Scene.ResumeLoadingRenderings(), which is what starts the compile flood. So a cold shader
+    // cache holds the mission one frame short of playable for as long as the queue takes to drain,
+    // and the phase log could not tell that apart from a wedge.
+    //
+    // Emitted at 1 Hz (it is called once per FRAME of the wait) carrying `waitedMs=` and the live
+    // `shaders=` count. shaders= counting DOWN is a working load; a frozen count is the wedge.
+    WaitingForRender,
+
     // Mission-exit lifecycle (issue #331). Order mirrors the engine's teardown flow:
     // Mission.EndMission -> EndMissionInternal -> MissionState.OnFinalize -> MapState.OnActivate.
     // ResourceClear (MemoryCleanupGC + native ClearResources) runs NESTED INSIDE

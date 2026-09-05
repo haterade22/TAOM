@@ -77,6 +77,7 @@ class Registries:
     settled_cultures: set = field(default_factory=set)        # cultures owning >=1 settlement in the live world
     settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value) records
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
+    item_armour: dict = field(default_factory=dict)           # armour item id -> head+body+arm+leg (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -226,6 +227,7 @@ class Validator:
         issues += self._mounted_dwarves()
         issues += self._armour_slot_coverage()
         issues += self._upgrade_skill_regressions()
+        issues += self._upgrade_armour_regressions()
         issues += self._upgrade_tier_collapse()
         issues.sort(key=lambda i: i.sort_key())
         return issues
@@ -1001,10 +1003,26 @@ class Validator:
                     ))
 
                 lvlm = self._LEVEL_ATTR_RE.search(attrs)
+                # Battle sets as {slot: item id}, for the armour ladder. Civilian sets never
+                # cross-draw with battle sets, so they are not part of what a promotion keeps.
+                sets = []
+                for r in self._INLINE_ROSTER_RE.finditer(body):
+                    if self._CIVILIAN_ATTR_RE.search(r.group(1) or ""):
+                        continue
+                    if r.group(2) is None or not self._EQUIPMENT_ELEM_RE.search(r.group(2)):
+                        continue
+                    slots = {}
+                    for em in self._EQUIPMENT_ELEM_RE.finditer(r.group(2)):
+                        sm = self._SLOT_ANY_QUOTE_RE.search(em.group(0))
+                        im = self._ITEM_REF_ATTR_RE.search(em.group(0))
+                        if sm and im and sm.group(1) in self._ARMOUR_SLOTS:
+                            slots[sm.group(1)] = im.group(1)
+                    sets.append(slots)
                 troops[idm.group(1)] = {
                     "file": rel, "line": line, "skills": skills, "upgrades": upgrades,
                     "templated": bool(tmpl),
                     "level": int(lvlm.group(1)) if lvlm else None,
+                    "sets": sets,
                 }
 
         # A gate that silently checks nothing is worse than no gate. Both upgrade checks read two
@@ -1157,6 +1175,65 @@ class Validator:
                         f"An upgrade must never cost the player a stat. Re-run "
                         f"tools/rebalance_troops.py, whose clamp pass raises a target to its "
                         f"source rather than leaving the tree reading backwards"
+                    ),
+                ))
+        return issues
+
+    # -- UPGRADE_ARMOUR_REGRESSION ------------------------------------------ #
+    # The equipment half of the ladder rule. A troop's armour in a slot is the average over its
+    # battle sets of that slot's item armour (head + body + arm + leg of the item), an unfilled
+    # slot counting as 0 because the engine draws each slot from an independently chosen set. A
+    # promotion whose target totals less than its source over the five armour slots reads
+    # backwards to the player just as a skill drop does; 62 edges shipped that way on 2026-09-04
+    # (the Rhun ash capstones in light plate over heavy-plate parents, worst -66) and nothing
+    # reported it. tools/fix_upgrade_armour_regressions.py is the clamp that repairs the tree.
+    #
+    # Item values come from the install (Armory + vanilla), so the check is skipped, never
+    # faked, when the registry could not be built. Bare-chested-by-design troops are compared
+    # without Body and Cape (their skirt sits in the Cape slot as the chest stand-in), and
+    # militia-to-militia edges are exempt exactly as they are for skills.
+    _EQUIPMENT_ELEM_RE = re.compile(r"<equipment\b[^>]*?/>")
+
+    def _upgrade_armour_regressions(self) -> list:
+        armour = getattr(self.reg, "item_armour", None) or {}
+        if not armour:
+            return []
+        troops, _ = self._upgrade_troop_index()
+        militia = self._militia_bound_ids()
+
+        def slot_avg(rec, slot):
+            vals = [armour.get(st.get(slot), 0) if st.get(slot) else 0 for st in rec["sets"]]
+            return sum(vals) / len(vals) if vals else 0.0
+
+        issues = []
+        for source_id in sorted(troops):
+            source = troops[source_id]
+            if not source["sets"]:
+                continue
+            for target_id in source["upgrades"]:
+                target = troops.get(target_id)
+                if target is None or not target["sets"]:
+                    continue
+                if source_id in militia and target_id in militia:
+                    continue
+                slots = self._ARMOUR_SLOTS
+                if source_id in self._BODYLESS_BY_DESIGN or target_id in self._BODYLESS_BY_DESIGN:
+                    slots = tuple(s for s in slots if s not in ("Body", "Cape"))
+                pairs = [(s, slot_avg(source, s), slot_avg(target, s)) for s in slots]
+                src_total = sum(p[1] for p in pairs)
+                tgt_total = sum(p[2] for p in pairs)
+                if tgt_total + 1e-9 >= src_total:
+                    continue
+                drops = ", ".join(f"{s} {a:.0f}->{b:.0f}" for s, a, b in pairs if b + 1e-9 < a)
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="UPGRADE_ARMOUR_REGRESSION",
+                    file=target["file"], line=target["line"], entry_id=target_id,
+                    message=(
+                        f'upgrading "{source_id}" into this troop LOWERS its armour total '
+                        f"{src_total:.0f}->{tgt_total:.0f} (per-slot battle-set averages: {drops}). "
+                        f"A promotion must not make the troop easier to kill. Run "
+                        f"tools/fix_upgrade_armour_regressions.py, which steps the target up its "
+                        f"own item family or hands it the source's item"
                     ),
                 ))
         return issues
@@ -1578,6 +1655,44 @@ def build_settlement_economy(game_modules) -> list:
     return records
 
 
+_ITEM_BLOCK_RE = re.compile(r'<Item\b([^>]*?)(?:/>|>(.*?)</Item>)', re.S)
+_ARMOR_ELEM_RE = re.compile(r'<Armor\b([^>]*?)/?>')
+_ARMOUR_ATTRS = ("head_armor", "body_armor", "arm_armor", "leg_armor")
+
+
+def build_item_armour(item_roots) -> dict:
+    """armour item id -> head + body + arm + leg, over every <Item> carrying an <Armor> element.
+
+    All four stats are summed because a chest contributes arm armour and a pauldron contributes
+    body armour; the engine adds them all, so a ladder judged on the primary stat alone would
+    miss exactly the cape inversions that hid the longest.
+    """
+    armour = {}
+    for root in item_roots:
+        root = Path(root)
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            text = _read_stripped(xml)
+            if "<Armor" not in text:
+                continue
+            for m in _ITEM_BLOCK_RE.finditer(text):
+                body = m.group(2)
+                if not body:
+                    continue
+                idm = re.search(r'\bid="([^"]+)"', m.group(1))
+                am = _ARMOR_ELEM_RE.search(body)
+                if not idm or not am:
+                    continue
+                total = 0
+                for attr in _ARMOUR_ATTRS:
+                    vm = re.search(r'\b%s="(-?\d+)"' % attr, am.group(1))
+                    if vm:
+                        total += int(vm.group(1))
+                armour[idm.group(1)] = total
+    return armour
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
@@ -1635,6 +1750,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     armory_dups = {iid: fs for iid, fs in armory_dups.items() if len(set(fs)) > 1}
 
     harness_family_types, mount_family_types = build_harness_registries(item_roots)
+    item_armour = build_item_armour(item_roots)
 
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
@@ -1648,6 +1764,9 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         # from the install, so they are unavailable too.
         items, npccharacters, party_templates, armory_dups = set(), set(), set(), {}
         harness_family_types, mount_family_types = {}, {}
+        # Armour values are mostly Armory and vanilla; a TAOM-only table would judge every
+        # edge on a handful of repo items and read the rest as bare. Unavailable, not partial.
+        item_armour = {}
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
@@ -1680,6 +1799,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         settled_cultures=settled_cultures,
         settlement_economy=settlement_economy,
         suspect_registries=suspect,
+        item_armour=item_armour,
     )
 
 

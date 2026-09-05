@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29 12:32:48",
+  "generatedAt": "2026-09-04 20:43:51",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -1502,24 +1502,20 @@
       "culture": "dale",
       "slot": "head",
       "name": "[Dale] Archer Helmet A03",
-      "current": 25,
-      "weight": 2.6,
-      "anchorLevel": 16,
+      "current": 33,
+      "weight": 3.7,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 25,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 33,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "dale_royal_archer",
           "level": 26
@@ -1559,7 +1555,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 25,
@@ -1570,6 +1566,10 @@
       "wearers": [
         {
           "troop": "dale_crossbowman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -1870,24 +1870,20 @@
       "culture": "dale",
       "slot": "head",
       "name": "[Dale] Infantry Helmet A02",
-      "current": 16,
-      "weight": 1.6,
-      "anchorLevel": 11,
+      "current": 33,
+      "weight": 3.7,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 16,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 33,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_squire",
-          "level": 11
-        },
         {
           "troop": "dale_guardsman",
           "level": 21
@@ -1900,22 +1896,18 @@
       "name": "[Dale] Infantry Helmet A03",
       "current": 25,
       "weight": 2.6,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 25,
-      "delta": 0,
-      "status": "match",
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 33,
+      "delta": -8,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "dale_royal_guard",
           "level": 26
@@ -1955,7 +1947,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 25,
@@ -1970,6 +1962,10 @@
         },
         {
           "troop": "dale_riverman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
           "level": 16
         }
       ]
@@ -2306,24 +2302,20 @@
       "culture": "dale",
       "slot": "body",
       "name": "[Dale] Archer Armour A03",
-      "current": 33,
-      "weight": 13.7,
-      "anchorLevel": 16,
+      "current": 43,
+      "weight": 18.9,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "dale_royal_archer",
           "level": 26
@@ -2363,7 +2355,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 33,
@@ -2374,6 +2366,10 @@
       "wearers": [
         {
           "troop": "dale_crossbowman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -2674,24 +2670,20 @@
       "culture": "dale",
       "slot": "body",
       "name": "[Dale] Infantry Armour A02",
-      "current": 21,
-      "weight": 8.4,
-      "anchorLevel": 11,
+      "current": 43,
+      "weight": 18.9,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 21,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_squire",
-          "level": 11
-        },
         {
           "troop": "dale_guardsman",
           "level": 21
@@ -2704,22 +2696,18 @@
       "name": "[Dale] Infantry Armour A03",
       "current": 33,
       "weight": 13.7,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
-      "delta": 0,
-      "status": "match",
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 43,
+      "delta": -10,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "dale_royal_guard",
           "level": 26
@@ -2759,7 +2747,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 33,
@@ -2774,6 +2762,10 @@
         },
         {
           "troop": "dale_riverman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
           "level": 16
         }
       ]
@@ -3114,24 +3106,20 @@
       "culture": "dale",
       "slot": "arm",
       "name": "[Dale] Archer Gauntlets A03",
-      "current": 15,
-      "weight": 1.1,
-      "anchorLevel": 16,
+      "current": 21,
+      "weight": 1.6,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 15,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 21,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "dale_royal_archer",
           "level": 26
@@ -3171,7 +3159,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 15,
@@ -3182,6 +3170,10 @@
       "wearers": [
         {
           "troop": "dale_crossbowman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -3482,24 +3474,20 @@
       "culture": "dale",
       "slot": "arm",
       "name": "[Dale] Infantry Gauntlets A02",
-      "current": 9,
-      "weight": 0.6,
-      "anchorLevel": 11,
+      "current": 21,
+      "weight": 1.6,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 9,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 21,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_squire",
-          "level": 11
-        },
         {
           "troop": "dale_guardsman",
           "level": 21
@@ -3512,22 +3500,18 @@
       "name": "[Dale] Infantry Gauntlets A03",
       "current": 15,
       "weight": 1.1,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 15,
-      "delta": 0,
-      "status": "match",
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 21,
+      "delta": -6,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "dale_royal_guard",
           "level": 26
@@ -3567,7 +3551,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 15,
@@ -3582,6 +3566,10 @@
         },
         {
           "troop": "dale_riverman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
           "level": 16
         }
       ]
@@ -3918,24 +3906,20 @@
       "culture": "dale",
       "slot": "leg",
       "name": "[Dale] Archer Boots A03",
-      "current": 21,
-      "weight": 2.6,
-      "anchorLevel": 16,
+      "current": 29,
+      "weight": 3.7,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 21,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 29,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "dale_royal_archer",
           "level": 26
@@ -3975,7 +3959,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 21,
@@ -3986,6 +3970,10 @@
       "wearers": [
         {
           "troop": "dale_crossbowman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -4286,24 +4274,20 @@
       "culture": "dale",
       "slot": "leg",
       "name": "[Dale] Infantry Boots A02",
-      "current": 13,
-      "weight": 1.6,
-      "anchorLevel": 11,
+      "current": 29,
+      "weight": 3.7,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 13,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 29,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_squire",
-          "level": 11
-        },
         {
           "troop": "dale_guardsman",
           "level": 21
@@ -4316,22 +4300,18 @@
       "name": "[Dale] Infantry Boots A03",
       "current": 21,
       "weight": 2.6,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 21,
-      "delta": 0,
-      "status": "match",
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 29,
+      "delta": -8,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "dale_royal_guard",
           "level": 26
@@ -4371,7 +4351,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 21,
@@ -4386,6 +4366,10 @@
         },
         {
           "troop": "dale_riverman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
           "level": 16
         }
       ]
@@ -4706,24 +4690,20 @@
       "culture": "dale",
       "slot": "shoulder",
       "name": "[Dale] Archer Pauldron A03",
-      "current": 10,
-      "weight": 5.2,
-      "anchorLevel": 16,
+      "current": 14,
+      "weight": 7.4,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 10,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 14,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "dale_royal_archer",
           "level": 26
@@ -4763,7 +4743,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 10,
@@ -4774,6 +4754,10 @@
       "wearers": [
         {
           "troop": "dale_crossbowman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
           "level": 16
         },
         {
@@ -5054,24 +5038,20 @@
       "culture": "dale",
       "slot": "shoulder",
       "name": "[Dale] Infantry Pauldron A02",
-      "current": 6,
-      "weight": 3.2,
-      "anchorLevel": 11,
+      "current": 14,
+      "weight": 7.4,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 6,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 14,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_squire",
-          "level": 11
-        },
         {
           "troop": "dale_guardsman",
           "level": 21
@@ -5084,22 +5064,18 @@
       "name": "[Dale] Infantry Pauldron A03",
       "current": 10,
       "weight": 5.2,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 10,
-      "delta": 0,
-      "status": "match",
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 14,
+      "delta": -4,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "dale_royal_guard",
           "level": 26
@@ -5139,7 +5115,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 10,
@@ -5154,6 +5130,10 @@
         },
         {
           "troop": "dale_riverman",
+          "level": 16
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
           "level": 16
         }
       ]
@@ -5379,8 +5359,8 @@
       "name": "[Dol Guldur] Uruk Elite Helmet II",
       "current": 35,
       "weight": 5.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -5393,7 +5373,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_slayer",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -5504,8 +5484,8 @@
       "current": 25,
       "weight": 4.5,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
+      "maxLevel": 31,
+      "levelSpan": 5,
       "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -5521,11 +5501,11 @@
         },
         {
           "troop": "dg_uruk_fell_infantry",
-          "level": 26
+          "level": 31
         },
         {
           "troop": "dg_uruk_fell_fang",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -5536,8 +5516,8 @@
       "current": 25,
       "weight": 4.7,
       "anchorLevel": 26,
-      "maxLevel": 31,
-      "levelSpan": 5,
+      "maxLevel": 36,
+      "levelSpan": 10,
       "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -5553,7 +5533,7 @@
         },
         {
           "troop": "dg_uruk_black_guard",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -5612,8 +5592,8 @@
       "current": 30,
       "weight": 5.3,
       "anchorLevel": 26,
-      "maxLevel": 31,
-      "levelSpan": 5,
+      "maxLevel": 36,
+      "levelSpan": 10,
       "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -5629,7 +5609,7 @@
         },
         {
           "troop": "dg_uruk_black_sharpshooter",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -5664,8 +5644,8 @@
       "current": 20,
       "weight": 2.5,
       "anchorLevel": 11,
-      "maxLevel": 13,
-      "levelSpan": 2,
+      "maxLevel": 16,
+      "levelSpan": 5,
       "wearerCount": 6,
       "tier": "light",
       "tierSource": "id-keyword",
@@ -5697,7 +5677,7 @@
         },
         {
           "troop": "dg_uruk_warrior",
-          "level": 13
+          "level": 16
         }
       ]
     },
@@ -5744,8 +5724,8 @@
       "current": 20,
       "weight": 2.9,
       "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
+      "maxLevel": 21,
+      "levelSpan": 10,
       "wearerCount": 4,
       "tier": "light",
       "tierSource": "id-keyword",
@@ -5769,7 +5749,7 @@
         },
         {
           "troop": "dg_uruk_skirmisher",
-          "level": 16
+          "level": 21
         }
       ]
     },
@@ -5988,10 +5968,6 @@
           "level": 16
         },
         {
-          "troop": "dg_uruk_veteran_warrior",
-          "level": 16
-        },
-        {
           "troop": "dolguldur_militia_veteran_spearman",
           "level": 16
         },
@@ -6013,6 +5989,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_uruk_veteran_warrior",
           "level": 21
         },
         {
@@ -6076,15 +6056,15 @@
           "level": 21
         },
         {
-          "troop": "dg_uruk_swordsman",
-          "level": 21
-        },
-        {
           "troop": "dg_orc_scout_merc",
           "level": 21
         },
         {
           "troop": "dg_goblin_fellbow",
+          "level": 26
+        },
+        {
+          "troop": "dg_uruk_swordsman",
           "level": 26
         }
       ]
@@ -6168,8 +6148,8 @@
       "current": 25,
       "weight": 4.2,
       "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
+      "maxLevel": 26,
+      "levelSpan": 10,
       "wearerCount": 3,
       "tier": "medium",
       "tierSource": "id-keyword",
@@ -6189,7 +6169,7 @@
         },
         {
           "troop": "dg_uruk_bowman",
-          "level": 21
+          "level": 26
         }
       ]
     },
@@ -6200,8 +6180,8 @@
       "current": 25,
       "weight": 4.3,
       "anchorLevel": 21,
-      "maxLevel": 26,
-      "levelSpan": 5,
+      "maxLevel": 31,
+      "levelSpan": 10,
       "wearerCount": 5,
       "tier": "medium",
       "tierSource": "id-keyword",
@@ -6229,7 +6209,7 @@
         },
         {
           "troop": "dg_uruk_fell_archer",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -6647,8 +6627,8 @@
       "name": "[Dol Guldur] Uruk Elite Chest I",
       "current": 30,
       "weight": 9.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -6661,7 +6641,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_guard",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -6671,8 +6651,8 @@
       "name": "[Dol Guldur] Uruk Elite Chest II",
       "current": 35,
       "weight": 9.3,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -6685,7 +6665,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_slayer",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -6738,8 +6718,8 @@
       "name": "[Dol Guldur] Uruk Elite Chest V",
       "current": 35,
       "weight": 9.9,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -6752,7 +6732,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_sharpshooter",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -6782,8 +6762,8 @@
       "current": 25,
       "weight": 7.0,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
+      "maxLevel": 31,
+      "levelSpan": 5,
       "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -6799,11 +6779,11 @@
         },
         {
           "troop": "dg_uruk_fell_infantry",
-          "level": 26
+          "level": 31
         },
         {
           "troop": "dg_uruk_fell_fang",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -6890,8 +6870,8 @@
       "current": 30,
       "weight": 8.0,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
+      "maxLevel": 31,
+      "levelSpan": 5,
       "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -6907,7 +6887,7 @@
         },
         {
           "troop": "dg_uruk_fell_archer",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -6994,8 +6974,8 @@
       "current": 15,
       "weight": 3.5,
       "anchorLevel": 6,
-      "maxLevel": 13,
-      "levelSpan": 7,
+      "maxLevel": 16,
+      "levelSpan": 10,
       "wearerCount": 8,
       "tier": "light",
       "tierSource": "id-keyword",
@@ -7035,7 +7015,7 @@
         },
         {
           "troop": "dg_uruk_warrior",
-          "level": 13
+          "level": 16
         }
       ]
     },
@@ -7158,10 +7138,6 @@
           "level": 16
         },
         {
-          "troop": "dg_uruk_veteran_warrior",
-          "level": 16
-        },
-        {
           "troop": "dolguldur_militia_veteran_spearman",
           "level": 16
         },
@@ -7186,6 +7162,10 @@
           "level": 21
         },
         {
+          "troop": "dg_uruk_veteran_warrior",
+          "level": 21
+        },
+        {
           "troop": "dg_orc_scout_merc",
           "level": 21
         },
@@ -7202,8 +7182,8 @@
       "current": 20,
       "weight": 5.2,
       "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
+      "maxLevel": 26,
+      "levelSpan": 10,
       "wearerCount": 10,
       "tier": "medium",
       "tierSource": "id-keyword",
@@ -7246,12 +7226,12 @@
           "level": 21
         },
         {
-          "troop": "dg_uruk_swordsman",
+          "troop": "dg_orc_scout_merc",
           "level": 21
         },
         {
-          "troop": "dg_orc_scout_merc",
-          "level": 21
+          "troop": "dg_uruk_swordsman",
+          "level": 26
         }
       ]
     },
@@ -7394,10 +7374,6 @@
           "level": 16
         },
         {
-          "troop": "dg_uruk_skirmisher",
-          "level": 16
-        },
-        {
           "troop": "dg_goblin_archer",
           "level": 21
         },
@@ -7407,6 +7383,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_uruk_skirmisher",
           "level": 21
         },
         {
@@ -7426,8 +7406,8 @@
       "current": 25,
       "weight": 6.0,
       "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
+      "maxLevel": 26,
+      "levelSpan": 10,
       "wearerCount": 4,
       "tier": "medium",
       "tierSource": "id-keyword",
@@ -7451,7 +7431,7 @@
         },
         {
           "troop": "dg_uruk_bowman",
-          "level": 21
+          "level": 26
         }
       ]
     },
@@ -7461,8 +7441,8 @@
       "name": "[Dol Guldur] Elite Bracer I",
       "current": 40,
       "weight": 6.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -7475,7 +7455,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_guard",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -7485,8 +7465,8 @@
       "name": "[Dol Guldur] Elite Bracer II",
       "current": 40,
       "weight": 6.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -7499,7 +7479,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_slayer",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -7595,8 +7575,8 @@
       "name": "[Dol Guldur] Elite Bracer VII",
       "current": 40,
       "weight": 6.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -7609,7 +7589,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_sharpshooter",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -7657,8 +7637,8 @@
       "name": "[Dol Guldur] Heavy Bracer I",
       "current": 30,
       "weight": 5.0,
-      "anchorLevel": 21,
-      "maxLevel": 26,
+      "anchorLevel": 26,
+      "maxLevel": 31,
       "levelSpan": 5,
       "wearerCount": 3,
       "tier": "heavy",
@@ -7670,16 +7650,16 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dg_uruk_swordsman",
-          "level": 21
-        },
-        {
           "troop": "dg_orc_archer",
           "level": 26
         },
         {
-          "troop": "dg_uruk_fell_fang",
+          "troop": "dg_uruk_swordsman",
           "level": 26
+        },
+        {
+          "troop": "dg_uruk_fell_fang",
+          "level": 31
         }
       ]
     },
@@ -7690,8 +7670,8 @@
       "current": 30,
       "weight": 5.0,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
+      "maxLevel": 31,
+      "levelSpan": 5,
       "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -7707,7 +7687,7 @@
         },
         {
           "troop": "dg_uruk_fell_infantry",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -7774,8 +7754,8 @@
       "current": 35,
       "weight": 5.0,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
+      "maxLevel": 31,
+      "levelSpan": 5,
       "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -7791,7 +7771,7 @@
         },
         {
           "troop": "dg_uruk_fell_archer",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -7846,10 +7826,6 @@
           "level": 16
         },
         {
-          "troop": "dg_uruk_veteran_warrior",
-          "level": 16
-        },
-        {
           "troop": "dolguldur_militia_veteran_spearman",
           "level": 16
         },
@@ -7871,6 +7847,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_uruk_veteran_warrior",
           "level": 21
         },
         {
@@ -7998,15 +7978,15 @@
           "level": 21
         },
         {
-          "troop": "dg_uruk_bowman",
-          "level": 21
-        },
-        {
           "troop": "dg_orc_scout_merc",
           "level": 21
         },
         {
           "troop": "dg_goblin_fellbow",
+          "level": 26
+        },
+        {
+          "troop": "dg_uruk_bowman",
           "level": 26
         }
       ]
@@ -8036,8 +8016,8 @@
       "name": "[Dol Guldur] Uruk Elite Boots I",
       "current": 35,
       "weight": 4.4,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -8050,7 +8030,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_guard",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -8060,8 +8040,8 @@
       "name": "[Dol Guldur] Uruk Elite Boots II",
       "current": 35,
       "weight": 4.4,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -8074,7 +8054,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_slayer",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -8084,8 +8064,8 @@
       "name": "[Dol Guldur] Uruk Elite Boots III",
       "current": 35,
       "weight": 4.4,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -8098,7 +8078,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_sharpshooter",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -8170,8 +8150,8 @@
       "name": "[Dol Guldur] Uruk Heavy Boots I",
       "current": 35,
       "weight": 3.9,
-      "anchorLevel": 21,
-      "maxLevel": 26,
+      "anchorLevel": 26,
+      "maxLevel": 31,
       "levelSpan": 5,
       "wearerCount": 3,
       "tier": "heavy",
@@ -8183,16 +8163,16 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dg_uruk_swordsman",
-          "level": 21
-        },
-        {
           "troop": "dg_orc_archer",
           "level": 26
         },
         {
-          "troop": "dg_uruk_fell_fang",
+          "troop": "dg_uruk_swordsman",
           "level": 26
+        },
+        {
+          "troop": "dg_uruk_fell_fang",
+          "level": 31
         }
       ]
     },
@@ -8203,8 +8183,8 @@
       "current": 35,
       "weight": 3.9,
       "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
+      "maxLevel": 31,
+      "levelSpan": 5,
       "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
@@ -8220,7 +8200,7 @@
         },
         {
           "troop": "dg_uruk_fell_infantry",
-          "level": 26
+          "level": 31
         }
       ]
     },
@@ -8228,34 +8208,6 @@
       "culture": "dol_guldur",
       "slot": "leg",
       "name": "[Dol Guldur] Uruk Heavy Boots III",
-      "current": 35,
-      "weight": 3.9,
-      "anchorLevel": 21,
-      "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 28,
-      "delta": 7,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "dg_uruk_bowman",
-          "level": 21
-        },
-        {
-          "troop": "dg_orc_archer",
-          "level": 26
-        }
-      ]
-    },
-    "sk_dg_uruk_boots_heavy_d": {
-      "culture": "dol_guldur",
-      "slot": "leg",
-      "name": "[Dol Guldur] Uruk Heavy Boots IV",
       "current": 35,
       "weight": 3.9,
       "anchorLevel": 26,
@@ -8275,8 +8227,36 @@
           "level": 26
         },
         {
-          "troop": "dg_uruk_fell_archer",
+          "troop": "dg_uruk_bowman",
           "level": 26
+        }
+      ]
+    },
+    "sk_dg_uruk_boots_heavy_d": {
+      "culture": "dol_guldur",
+      "slot": "leg",
+      "name": "[Dol Guldur] Uruk Heavy Boots IV",
+      "current": 35,
+      "weight": 3.9,
+      "anchorLevel": 26,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 28,
+      "delta": 7,
+      "status": "over",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dg_orc_archer",
+          "level": 26
+        },
+        {
+          "troop": "dg_uruk_fell_archer",
+          "level": 31
         }
       ]
     },
@@ -8343,8 +8323,8 @@
       "current": 15,
       "weight": 1.7,
       "anchorLevel": 1,
-      "maxLevel": 13,
-      "levelSpan": 12,
+      "maxLevel": 16,
+      "levelSpan": 15,
       "wearerCount": 10,
       "tier": "light",
       "tierSource": "id-keyword",
@@ -8352,7 +8332,7 @@
       "delta": 3,
       "status": "over",
       "line": "a",
-      "shared": false,
+      "shared": true,
       "wearers": [
         {
           "troop": "dg_goblin_slave",
@@ -8392,7 +8372,7 @@
         },
         {
           "troop": "dg_uruk_warrior",
-          "level": 13
+          "level": 16
         }
       ]
     },
@@ -8542,10 +8522,6 @@
           "level": 16
         },
         {
-          "troop": "dg_uruk_veteran_warrior",
-          "level": 16
-        },
-        {
           "troop": "dolguldur_militia_veteran_spearman",
           "level": 16
         },
@@ -8567,6 +8543,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_uruk_veteran_warrior",
           "level": 21
         },
         {
@@ -8606,10 +8586,6 @@
           "level": 16
         },
         {
-          "troop": "dg_uruk_skirmisher",
-          "level": 16
-        },
-        {
           "troop": "dolguldur_militia_veteran_spearman",
           "level": 16
         },
@@ -8631,6 +8607,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_uruk_skirmisher",
           "level": 21
         },
         {
@@ -8713,8 +8693,8 @@
       "name": "[Dol Guldur] Elite Pauldron I",
       "current": 35,
       "weight": 9.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -8727,7 +8707,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_slayer",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -8775,8 +8755,8 @@
       "name": "[Dol Guldur] Elite Pauldron Cape I",
       "current": 35,
       "weight": 9.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "elite",
@@ -8789,7 +8769,7 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_guard",
-          "level": 31
+          "level": 36
         }
       ]
     },
@@ -8837,30 +8817,6 @@
       "name": "[Dol Guldur] Elite Pauldron Cape IV",
       "current": 35,
       "weight": 9.0,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 19,
-      "delta": 16,
-      "status": "over",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "dg_uruk_fell_archer",
-          "level": 26
-        }
-      ]
-    },
-    "sk_dg_uruk_pauldron_elite_cape_e": {
-      "culture": "dol_guldur",
-      "slot": "shoulder",
-      "name": "[Dol Guldur] Elite Pauldron Cape V",
-      "current": 35,
-      "weight": 9.0,
       "anchorLevel": 31,
       "maxLevel": 31,
       "levelSpan": 0,
@@ -8874,8 +8830,32 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dg_uruk_black_sharpshooter",
+          "troop": "dg_uruk_fell_archer",
           "level": 31
+        }
+      ]
+    },
+    "sk_dg_uruk_pauldron_elite_cape_e": {
+      "culture": "dol_guldur",
+      "slot": "shoulder",
+      "name": "[Dol Guldur] Elite Pauldron Cape V",
+      "current": 35,
+      "weight": 9.0,
+      "anchorLevel": 36,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 19,
+      "delta": 16,
+      "status": "over",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dg_uruk_black_sharpshooter",
+          "level": 36
         }
       ]
     },
@@ -8961,8 +8941,8 @@
       "name": "[Dol Guldur] Heavy Pauldron I",
       "current": 35,
       "weight": 9.0,
-      "anchorLevel": 21,
-      "maxLevel": 26,
+      "anchorLevel": 26,
+      "maxLevel": 31,
       "levelSpan": 5,
       "wearerCount": 4,
       "tier": "heavy",
@@ -8974,20 +8954,20 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dg_uruk_swordsman",
-          "level": 21
-        },
-        {
           "troop": "dg_orc_archer",
           "level": 26
         },
         {
-          "troop": "dg_uruk_fell_fang",
+          "troop": "dg_uruk_swordsman",
           "level": 26
         },
         {
           "troop": "dg_warg_skirmisher",
           "level": 26
+        },
+        {
+          "troop": "dg_uruk_fell_fang",
+          "level": 31
         }
       ]
     },
@@ -9015,7 +8995,7 @@
         },
         {
           "troop": "dg_uruk_fell_infantry",
-          "level": 26
+          "level": 31
         },
         {
           "troop": "dg_warg_red_fang",
@@ -9081,9 +9061,9 @@
       "name": "[Dol Guldur] Medium Pauldron I",
       "current": 30,
       "weight": 6.0,
-      "anchorLevel": 16,
+      "anchorLevel": 21,
       "maxLevel": 26,
-      "levelSpan": 10,
+      "levelSpan": 5,
       "wearerCount": 8,
       "tier": "medium",
       "tierSource": "id-keyword",
@@ -9093,10 +9073,6 @@
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dg_uruk_veteran_warrior",
-          "level": 16
-        },
         {
           "troop": "dg_goblin_archer",
           "level": 21
@@ -9111,6 +9087,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_uruk_veteran_warrior",
           "level": 21
         },
         {
@@ -9162,15 +9142,15 @@
           "level": 21
         },
         {
-          "troop": "dg_uruk_bowman",
-          "level": 21
-        },
-        {
           "troop": "dg_orc_scout_merc",
           "level": 21
         },
         {
           "troop": "dg_goblin_fellbow",
+          "level": 26
+        },
+        {
+          "troop": "dg_uruk_bowman",
           "level": 26
         }
       ]
@@ -9447,22 +9427,18 @@
       "name": "[Dunland] Heavy Caerdh Helmet V",
       "current": 30,
       "weight": 3.0,
-      "anchorLevel": 6,
+      "anchorLevel": 16,
       "maxLevel": 21,
-      "levelSpan": 15,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 30,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "aux_basic",
-          "level": 6
-        },
         {
           "troop": "dunland_raven_warrior",
           "level": 16
@@ -11607,7 +11583,7 @@
       "anchorLevel": 11,
       "maxLevel": 26,
       "levelSpan": 15,
-      "wearerCount": 7,
+      "wearerCount": 5,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 10,
@@ -11618,14 +11594,6 @@
       "wearers": [
         {
           "troop": "dunland_raven_noble_son",
-          "level": 11
-        },
-        {
-          "troop": "umbar_elite",
-          "level": 11
-        },
-        {
-          "troop": "umbar_elite_merc",
           "level": 11
         },
         {
@@ -13657,7 +13625,7 @@
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "lord",
       "tierSource": "id-keyword",
       "target": 52,
@@ -13668,6 +13636,10 @@
       "wearers": [
         {
           "troop": "erebor_noble_gate_warden",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         }
       ]
@@ -13762,10 +13734,10 @@
       "name": "[Erebor] Lord Plate Helmet V",
       "current": 70,
       "weight": 9.5,
-      "anchorLevel": 46,
+      "anchorLevel": 41,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "lord",
       "tierSource": "id-keyword",
       "target": 52,
@@ -13774,6 +13746,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
         {
           "troop": "erebor_noble_royal_warden",
           "level": 46
@@ -14421,7 +14397,7 @@
       "anchorLevel": 36,
       "maxLevel": 41,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 54,
@@ -14440,6 +14416,10 @@
         },
         {
           "troop": "erebor_noble_gate_warden",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         }
       ]
@@ -14801,7 +14781,7 @@
       "anchorLevel": 41,
       "maxLevel": 46,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 54,
@@ -14812,6 +14792,10 @@
       "wearers": [
         {
           "troop": "erebor_noble_shield_breaker",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         },
         {
@@ -15364,7 +15348,7 @@
       "anchorLevel": 36,
       "maxLevel": 41,
       "levelSpan": 5,
-      "wearerCount": 5,
+      "wearerCount": 6,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 30,
@@ -15392,6 +15376,10 @@
         {
           "troop": "erebor_oathsworn_legionary",
           "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
+          "level": 41
         }
       ]
     },
@@ -15404,7 +15392,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 6,
+      "wearerCount": 7,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 30,
@@ -15427,6 +15415,10 @@
         },
         {
           "troop": "erebor_noble_shield_breaker",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         },
         {
@@ -16580,7 +16572,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 9,
+      "wearerCount": 10,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 38,
@@ -16618,6 +16610,10 @@
           "level": 41
         },
         {
+          "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
+        {
           "troop": "erebor_noble_royal_warden",
           "level": 46
         },
@@ -16636,7 +16632,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 9,
+      "wearerCount": 10,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 38,
@@ -16671,6 +16667,10 @@
         },
         {
           "troop": "erebor_oathsworn_legionary",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         },
         {
@@ -16800,7 +16800,7 @@
       "anchorLevel": 41,
       "maxLevel": 46,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 23,
@@ -16811,6 +16811,10 @@
       "wearers": [
         {
           "troop": "erebor_noble_gate_warden",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         },
         {
@@ -16912,7 +16916,7 @@
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 17,
@@ -16923,6 +16927,10 @@
       "wearers": [
         {
           "troop": "erebor_noble_gate_warden",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_ram_marshal",
           "level": 41
         }
       ]
@@ -17445,22 +17453,18 @@
       "name": "[Gondor] Ithilien Hood Masked",
       "current": 20,
       "weight": 1.5,
-      "anchorLevel": 26,
+      "anchorLevel": 51,
       "maxLevel": 51,
-      "levelSpan": 25,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 33,
-      "delta": -13,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L51)",
+      "target": 41,
+      "delta": -21,
       "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "umbar_elite_root101",
-          "level": 26
-        },
         {
           "troop": "gondor_ithilien_ranger",
           "level": 51
@@ -17486,101 +17490,6 @@
       "shared": false,
       "wearers": []
     },
-    "imrahil_helmet": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Imrahil's Helmet",
-      "current": 50,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "golasgil_helment": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Golasgil's Helmet",
-      "current": 50,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "hirluin_helmet": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Hirluin's Helmet",
-      "current": 50,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "angbor_helmet": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Angbor's Helmet",
-      "current": 50,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "forlong_helmet": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Forlong's Helmet",
-      "current": 50,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_gd_ano_inf_helmet_med_a": {
       "culture": "gondor",
       "slot": "head",
@@ -17590,7 +17499,7 @@
       "anchorLevel": 6,
       "maxLevel": 21,
       "levelSpan": 15,
-      "wearerCount": 30,
+      "wearerCount": 28,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 25,
@@ -17661,14 +17570,6 @@
         },
         {
           "troop": "gondor_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "umbar_elite",
-          "level": 11
-        },
-        {
-          "troop": "umbar_elite_merc",
           "level": 11
         },
         {
@@ -18003,10 +17904,10 @@
       "name": "[Gondor] Anorien Noble Helmet",
       "current": 25,
       "weight": 2.5,
-      "anchorLevel": 21,
-      "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 10,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 25,
@@ -18016,44 +17917,8 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "umbar_elite_root01",
-          "level": 21
-        },
-        {
-          "troop": "umbar_corsairs_boss",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root00",
-          "level": 21
-        },
-        {
           "troop": "gondor_ith_watcher",
           "level": 26
-        },
-        {
-          "troop": "umbar_elite_root001",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root000",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root010",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root100",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root0001",
-          "level": 31
-        },
-        {
-          "troop": "umbar_elite_root0000",
-          "level": 31
         }
       ]
     },
@@ -20709,71 +20574,29 @@
       "shared": false,
       "wearers": []
     },
-    "faramir_armor_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Faramir's Armour - Slim",
-      "current": 35,
-      "weight": 10.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "ithilien_jerkin_long": {
       "culture": "gondor",
       "slot": "body",
       "name": "[Gondor] Ithilien Jerkin - Long",
       "current": 30,
       "weight": 8.5,
-      "anchorLevel": 26,
+      "anchorLevel": 51,
       "maxLevel": 51,
-      "levelSpan": 25,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 43,
-      "delta": -13,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L51)",
+      "target": 51,
+      "delta": -21,
       "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "umbar_elite_root101",
-          "level": 26
-        },
         {
           "troop": "gondor_ithilien_ranger",
           "level": 51
         }
       ]
-    },
-    "ithilien_jerkin_long_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Ithilien Jerkin - Long - Slim",
-      "current": 30,
-      "weight": 8.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "ithilien_jerkin_long_var": {
       "culture": "gondor",
@@ -20799,25 +20622,6 @@
         }
       ]
     },
-    "ithilien_jerkin_long_var_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Ithilien Jerkin - Long - Slim - Two",
-      "current": 25,
-      "weight": 8.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "ithilien_jerkin_short": {
       "culture": "gondor",
       "slot": "body",
@@ -20841,25 +20645,6 @@
           "level": 51
         }
       ]
-    },
-    "ithilien_jerkin_short_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Ithilien Jerkin - Short - Slim",
-      "current": 20,
-      "weight": 8.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "ithilien_jerkin_short_var": {
       "culture": "gondor",
@@ -20885,145 +20670,12 @@
         }
       ]
     },
-    "ithilien_jerkin_short_var_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Ithilien Jerkin - Short - Slim Two",
-      "current": 20,
-      "weight": 8.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "lossarnach_coat": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Lossarnach Coat I",
-      "current": 10,
-      "weight": 13.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "imrahil_body": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Imrahil's Armour",
-      "current": 50,
-      "weight": 17.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "golasgil_body": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Golasgil's Armour",
-      "current": 50,
-      "weight": 17.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "hirluin_body": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Hirluin's Armour",
-      "current": 50,
-      "weight": 15.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "angbor_body": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Angbor's Armour",
-      "current": 50,
-      "weight": 15.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "boromir_jerkin": {
       "culture": "gondor",
       "slot": "body",
       "name": "[Gondor] Boromir's Jerkin",
       "current": 20,
       "weight": 7.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "forlong_body": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Forlong's Armour",
-      "current": 50,
-      "weight": 17.5,
       "anchorLevel": null,
       "maxLevel": null,
       "levelSpan": 0,
@@ -21046,7 +20698,7 @@
       "anchorLevel": 6,
       "maxLevel": 11,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 21,
@@ -21061,10 +20713,6 @@
         },
         {
           "troop": "gondor_ano_peasant",
-          "level": 6
-        },
-        {
-          "troop": "aux_basic",
           "level": 6
         },
         {
@@ -21882,25 +21530,6 @@
       "shared": false,
       "wearers": []
     },
-    "gondor_noble_coat_a_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Noble Coat A Slim",
-      "current": 12,
-      "weight": 9.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "gondor_noble_coat_b": {
       "culture": "gondor",
       "slot": "body",
@@ -21917,25 +21546,6 @@
       "delta": null,
       "status": "unworn",
       "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "gondor_noble_coat_b_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Noble Coat B Slim",
-      "current": 12,
-      "weight": 9.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
       "shared": false,
       "wearers": []
     },
@@ -21958,25 +21568,6 @@
       "shared": false,
       "wearers": []
     },
-    "gondor_noble_jerkin_a_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Noble Jerkin A Slim",
-      "current": 10,
-      "weight": 7.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "gondor_noble_jerkin_b": {
       "culture": "gondor",
       "slot": "body",
@@ -21993,25 +21584,6 @@
       "delta": null,
       "status": "unworn",
       "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "gondor_noble_jerkin_b_slim": {
-      "culture": "gondor",
-      "slot": "body",
-      "name": "[Gondor] Noble Jerkin B Slim",
-      "current": 10,
-      "weight": 7.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
       "shared": false,
       "wearers": []
     },
@@ -23979,126 +23551,23 @@
       "name": "[Gondor] Ithilien Bracers",
       "current": 15,
       "weight": 1.5,
-      "anchorLevel": 21,
+      "anchorLevel": 51,
       "maxLevel": 51,
-      "levelSpan": 30,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 21,
-      "delta": -6,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L51)",
+      "target": 27,
+      "delta": -12,
       "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "umbar_elite_root10",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root101",
-          "level": 26
-        },
         {
           "troop": "gondor_ithilien_ranger",
           "level": 51
         }
       ]
-    },
-    "golasgil_gloves": {
-      "culture": "gondor",
-      "slot": "arm",
-      "name": "[Gondor] Golasgil's Bracers",
-      "current": 35,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "imrahil_gloves": {
-      "culture": "gondor",
-      "slot": "arm",
-      "name": "[Gondor] Imrahil's Bracers",
-      "current": 35,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "hirluin_gloves": {
-      "culture": "gondor",
-      "slot": "arm",
-      "name": "[Gondor] Hirluin's Bracers",
-      "current": 35,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "angbor_gloves": {
-      "culture": "gondor",
-      "slot": "arm",
-      "name": "[Gondor] Angbor's Bracers",
-      "current": 35,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "forlong_gloves": {
-      "culture": "gondor",
-      "slot": "arm",
-      "name": "[Gondor] Forlong's Gloves",
-      "current": 35,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "sk_gd_ano_gloves_a": {
       "culture": "gondor",
@@ -24634,10 +24103,10 @@
       "name": "[Gondor] Anorien Noble Heavy Bracer",
       "current": 21,
       "weight": 1.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 46,
-      "levelSpan": 25,
-      "wearerCount": 20,
+      "levelSpan": 20,
+      "wearerCount": 11,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 21,
@@ -24647,18 +24116,6 @@
       "shared": true,
       "wearers": [
         {
-          "troop": "umbar_elite_root01",
-          "level": 21
-        },
-        {
-          "troop": "umbar_corsairs_boss",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root00",
-          "level": 21
-        },
-        {
           "troop": "gondor_arn_cavalry",
           "level": 26
         },
@@ -24667,35 +24124,11 @@
           "level": 26
         },
         {
-          "troop": "umbar_elite_root001",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root000",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root010",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root100",
-          "level": 26
-        },
-        {
           "troop": "gondor_arn_knight",
           "level": 31
         },
         {
           "troop": "gondor_arn_vet_infantry",
-          "level": 31
-        },
-        {
-          "troop": "umbar_elite_root0001",
-          "level": 31
-        },
-        {
-          "troop": "umbar_elite_root0000",
           "level": 31
         },
         {
@@ -25353,26 +24786,18 @@
       "name": "[Gondor] Ithilien Heavy Leather Boots",
       "current": 20,
       "weight": 1.9,
-      "anchorLevel": 16,
+      "anchorLevel": 51,
       "maxLevel": 51,
-      "levelSpan": 35,
-      "wearerCount": 3,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 29,
       "delta": -9,
       "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "umbar_elite_root1",
-          "level": 16
-        },
-        {
-          "troop": "umbar_elite_root0",
-          "level": 16
-        },
         {
           "troop": "gondor_ithilien_ranger",
           "level": 51
@@ -25388,7 +24813,7 @@
       "anchorLevel": 16,
       "maxLevel": 51,
       "levelSpan": 35,
-      "wearerCount": 4,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 21,
@@ -25402,113 +24827,10 @@
           "level": 16
         },
         {
-          "troop": "umbar_elite_root10",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root101",
-          "level": 26
-        },
-        {
           "troop": "gondor_ithilien_ranger",
           "level": 51
         }
       ]
-    },
-    "imrahil_boot": {
-      "culture": "gondor",
-      "slot": "leg",
-      "name": "[Gondor] Imrahil's Boots",
-      "current": 45,
-      "weight": 3.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "golasgil_boots": {
-      "culture": "gondor",
-      "slot": "leg",
-      "name": "[Gondor]Golasgil's Boots",
-      "current": 40,
-      "weight": 3.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "hirluin_boots": {
-      "culture": "gondor",
-      "slot": "leg",
-      "name": "[Gondor] Hirluin's Boots",
-      "current": 40,
-      "weight": 3.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "angbor_boots": {
-      "culture": "gondor",
-      "slot": "leg",
-      "name": "[Gondor] Angbor's Boots",
-      "current": 40,
-      "weight": 3.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "forlong_boots": {
-      "culture": "gondor",
-      "slot": "leg",
-      "name": "[Gondor] Forlong's Boots",
-      "current": 45,
-      "weight": 3.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "sk_gd_ano_boots_a": {
       "culture": "gondor",
@@ -25517,16 +24839,16 @@
       "current": 12,
       "weight": 1.5,
       "anchorLevel": 6,
-      "maxLevel": 31,
-      "levelSpan": 25,
-      "wearerCount": 25,
+      "maxLevel": 16,
+      "levelSpan": 10,
+      "wearerCount": 16,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 13,
       "delta": -1,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "gondor_loss_lumberman",
@@ -25591,42 +24913,6 @@
         {
           "troop": "gondor_leb_skirmisher",
           "level": 16
-        },
-        {
-          "troop": "umbar_elite_root01",
-          "level": 21
-        },
-        {
-          "troop": "umbar_corsairs_boss",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root00",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root001",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root000",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root010",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root100",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root0001",
-          "level": 31
-        },
-        {
-          "troop": "umbar_elite_root0000",
-          "level": 31
         }
       ]
     },
@@ -25636,10 +24922,10 @@
       "name": "[Gondor] Anorien Infantry Light Greaves",
       "current": 13,
       "weight": 1.5,
-      "anchorLevel": 6,
+      "anchorLevel": 11,
       "maxLevel": 26,
-      "levelSpan": 20,
-      "wearerCount": 25,
+      "levelSpan": 15,
+      "wearerCount": 24,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 13,
@@ -25648,10 +24934,6 @@
       "line": "a",
       "shared": true,
       "wearers": [
-        {
-          "troop": "aux_basic",
-          "level": 6
-        },
         {
           "troop": "gondor_loss_woodsman",
           "level": 11
@@ -26745,107 +26027,12 @@
         }
       ]
     },
-    "imrahil_shoulder": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Imrahil's Pauldrons",
-      "current": 20,
-      "weight": 10.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "golasgil_shoulder": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Golasgil's Pauldrons",
-      "current": 20,
-      "weight": 10.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "hirluin_shoulder": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Hirluin's Pauldrons",
-      "current": 20,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "angbor_shoulder": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Angbor's Pauldrons",
-      "current": 25,
-      "weight": 5.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "boromir_cloak": {
       "culture": "gondor",
       "slot": "shoulder",
       "name": "[Gondor] Boromir's Cloak",
       "current": 10,
       "weight": 4.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "forlong_shoulder": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Forlong's Cloak",
-      "current": 25,
-      "weight": 5.0,
       "anchorLevel": null,
       "maxLevel": null,
       "levelSpan": 0,
@@ -26866,16 +26053,16 @@
       "current": 10,
       "weight": 5.0,
       "anchorLevel": 11,
-      "maxLevel": 31,
-      "levelSpan": 20,
-      "wearerCount": 25,
+      "maxLevel": 21,
+      "levelSpan": 10,
+      "wearerCount": 16,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 10,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "gondor_lam_footman",
@@ -26940,42 +26127,6 @@
         {
           "troop": "gondor_leb_infantry",
           "level": 21
-        },
-        {
-          "troop": "umbar_elite_root01",
-          "level": 21
-        },
-        {
-          "troop": "umbar_corsairs_boss",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root00",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root001",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root000",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root010",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root100",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root0001",
-          "level": 31
-        },
-        {
-          "troop": "umbar_elite_root0000",
-          "level": 31
         }
       ]
     },
@@ -27064,7 +26215,7 @@
       "anchorLevel": 16,
       "maxLevel": 31,
       "levelSpan": 15,
-      "wearerCount": 24,
+      "wearerCount": 23,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 14,
@@ -27103,10 +26254,6 @@
         },
         {
           "troop": "gondor_osg_skirmisher",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root10",
           "level": 21
         },
         {
@@ -27499,10 +26646,10 @@
       "name": "[Gondor] Anorien Noble Pauldron I",
       "current": 10,
       "weight": 5.0,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 10,
@@ -27510,12 +26657,7 @@
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "umbar_elite_root101",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_ano_pauld_noble_med_b": {
       "culture": "gondor",
@@ -31879,7 +31021,7 @@
       "anchorLevel": 6,
       "maxLevel": 51,
       "levelSpan": 45,
-      "wearerCount": 9,
+      "wearerCount": 12,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 12,
@@ -31890,6 +31032,10 @@
       "wearers": [
         {
           "troop": "harad_levy",
+          "level": 6
+        },
+        {
+          "troop": "aux_basic",
           "level": 6
         },
         {
@@ -31906,6 +31052,14 @@
         },
         {
           "troop": "harad_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite_merc",
           "level": 11
         },
         {
@@ -31959,7 +31113,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 21,
@@ -31974,6 +31128,10 @@
         },
         {
           "troop": "harad_archer",
+          "level": 16
+        },
+        {
+          "troop": "umbar_elite_root1",
           "level": 16
         }
       ]
@@ -32027,18 +31185,22 @@
       "name": "[Harad] Helmet III - Orange",
       "current": 15,
       "weight": 1.3,
-      "anchorLevel": 21,
+      "anchorLevel": 16,
       "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 29,
-      "delta": -14,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 21,
+      "delta": -6,
       "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root0",
+          "level": 16
+        },
         {
           "troop": "harad_spearguard",
           "level": 21
@@ -32081,7 +31243,7 @@
       "anchorLevel": 11,
       "maxLevel": 31,
       "levelSpan": 20,
-      "wearerCount": 10,
+      "wearerCount": 13,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 12,
@@ -32104,6 +31266,18 @@
         },
         {
           "troop": "harad_gildedfang",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root00",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root10",
           "level": 21
         },
         {
@@ -32139,9 +31313,9 @@
       "current": 35,
       "weight": 3.8,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 29,
@@ -32153,6 +31327,18 @@
         {
           "troop": "harad_horsearcher",
           "level": 21
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "level": 26
         }
       ]
     },
@@ -32165,7 +31351,7 @@
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 29,
@@ -32180,6 +31366,14 @@
         },
         {
           "troop": "harad_serpenthorsearcher",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root100",
           "level": 26
         }
       ]
@@ -32221,7 +31415,7 @@
       "anchorLevel": 6,
       "maxLevel": 51,
       "levelSpan": 45,
-      "wearerCount": 9,
+      "wearerCount": 10,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 17,
@@ -32232,6 +31426,10 @@
       "wearers": [
         {
           "troop": "harad_levy",
+          "level": 6
+        },
+        {
+          "troop": "aux_basic",
           "level": 6
         },
         {
@@ -32274,18 +31472,26 @@
       "name": "[Harad] Scalemail Armour - Maroon",
       "current": 20,
       "weight": 6.8,
-      "anchorLevel": 16,
+      "anchorLevel": 11,
       "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 29,
-      "delta": -9,
-      "status": "under",
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 17,
+      "delta": 3,
+      "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite_merc",
+          "level": 11
+        },
         {
           "troop": "harad_spearfighter",
           "level": 16
@@ -32301,7 +31507,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 29,
@@ -32316,6 +31522,10 @@
         },
         {
           "troop": "harad_archer",
+          "level": 16
+        },
+        {
+          "troop": "umbar_elite_root1",
           "level": 16
         }
       ]
@@ -32369,18 +31579,22 @@
       "name": "[Harad] Armour - Orange",
       "current": 22,
       "weight": 6.8,
-      "anchorLevel": 21,
+      "anchorLevel": 16,
       "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 39,
-      "delta": -17,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 29,
+      "delta": -7,
       "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root0",
+          "level": 16
+        },
         {
           "troop": "harad_spearguard",
           "level": 21
@@ -32420,18 +31634,26 @@
       "name": "[Harad] Cavalry Armour - Red",
       "current": 30,
       "weight": 11.0,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
-      "tierSource": "roster(L26)",
+      "tierSource": "roster(L21)",
       "target": 39,
       "delta": -9,
       "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root01",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root00",
+          "level": 21
+        },
         {
           "troop": "harad_camel_lancer",
           "level": 26
@@ -32444,18 +31666,22 @@
       "name": "[Harad] Cavalry Armour - Green",
       "current": 30,
       "weight": 11.0,
-      "anchorLevel": 31,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
-      "target": 47,
-      "delta": -17,
+      "levelSpan": 10,
+      "wearerCount": 2,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 39,
+      "delta": -9,
       "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root10",
+          "level": 21
+        },
         {
           "troop": "harad_champion",
           "level": 31
@@ -32540,9 +31766,9 @@
       "current": 28,
       "weight": 11.0,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 39,
@@ -32554,6 +31780,18 @@
         {
           "troop": "harad_horsearcher",
           "level": 21
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "level": 26
         }
       ]
     },
@@ -32566,7 +31804,7 @@
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 39,
@@ -32581,6 +31819,14 @@
         },
         {
           "troop": "harad_serpenthorsearcher",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root100",
           "level": 26
         }
       ]
@@ -32622,7 +31868,7 @@
       "anchorLevel": 6,
       "maxLevel": 51,
       "levelSpan": 45,
-      "wearerCount": 9,
+      "wearerCount": 12,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 5,
@@ -32633,6 +31879,10 @@
       "wearers": [
         {
           "troop": "harad_levy",
+          "level": 6
+        },
+        {
+          "troop": "aux_basic",
           "level": 6
         },
         {
@@ -32649,6 +31899,14 @@
         },
         {
           "troop": "harad_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite_merc",
           "level": 11
         },
         {
@@ -32702,7 +31960,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 11,
@@ -32717,6 +31975,10 @@
         },
         {
           "troop": "harad_archer",
+          "level": 16
+        },
+        {
+          "troop": "umbar_elite_root1",
           "level": 16
         }
       ]
@@ -32773,7 +32035,7 @@
       "anchorLevel": 11,
       "maxLevel": 31,
       "levelSpan": 20,
-      "wearerCount": 11,
+      "wearerCount": 14,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 5,
@@ -32800,6 +32062,18 @@
         },
         {
           "troop": "harad_horsearcher",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root00",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root10",
           "level": 21
         },
         {
@@ -32853,18 +32127,22 @@
       "name": "[Harad] Gloves - Tier 3 ",
       "current": 25,
       "weight": 1.7,
-      "anchorLevel": 21,
+      "anchorLevel": 16,
       "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 17,
-      "delta": 8,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 11,
+      "delta": 14,
       "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root0",
+          "level": 16
+        },
         {
           "troop": "harad_spearguard",
           "level": 21
@@ -32885,18 +32163,31 @@
       "name": "[Harad] Serpent Guard Gloves",
       "current": 28,
       "weight": 2.1,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "wearerCount": 3,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 17,
+      "delta": 11,
+      "status": "over",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "umbar_elite_root001",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "level": 26
+        }
+      ]
     },
     "harad07_glove": {
       "culture": "harad",
@@ -32907,7 +32198,7 @@
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 17,
@@ -32922,6 +32213,14 @@
         },
         {
           "troop": "harad_serpenthorsearcher",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root100",
           "level": 26
         }
       ]
@@ -32963,7 +32262,7 @@
       "anchorLevel": 6,
       "maxLevel": 51,
       "levelSpan": 45,
-      "wearerCount": 9,
+      "wearerCount": 12,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 9,
@@ -32974,6 +32273,10 @@
       "wearers": [
         {
           "troop": "harad_levy",
+          "level": 6
+        },
+        {
+          "troop": "aux_basic",
           "level": 6
         },
         {
@@ -32990,6 +32293,14 @@
         },
         {
           "troop": "harad_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite_merc",
           "level": 11
         },
         {
@@ -33019,7 +32330,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 17,
@@ -33039,6 +32350,10 @@
         {
           "troop": "harad_archer",
           "level": 16
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "level": 16
         }
       ]
     },
@@ -33048,18 +32363,22 @@
       "name": "[Harad] Boots III",
       "current": 17,
       "weight": 2.1,
-      "anchorLevel": 21,
+      "anchorLevel": 16,
       "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 25,
-      "delta": -8,
-      "status": "under",
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root0",
+          "level": 16
+        },
         {
           "troop": "harad_spearguard",
           "level": 21
@@ -33099,18 +32418,26 @@
       "name": "[Harad] Boots V - Red",
       "current": 17,
       "weight": 2.1,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
-      "tierSource": "roster(L26)",
+      "tierSource": "roster(L21)",
       "target": 25,
       "delta": -8,
       "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root01",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root00",
+          "level": 21
+        },
         {
           "troop": "harad_camel_lancer",
           "level": 26
@@ -33123,18 +32450,22 @@
       "name": "[Harad] Boots V - Green",
       "current": 17,
       "weight": 2.1,
-      "anchorLevel": 31,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
-      "target": 31,
-      "delta": -14,
+      "levelSpan": 10,
+      "wearerCount": 2,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 25,
+      "delta": -8,
       "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root10",
+          "level": 21
+        },
         {
           "troop": "harad_champion",
           "level": 31
@@ -33221,7 +32552,7 @@
       "anchorLevel": 21,
       "maxLevel": 26,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 6,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 25,
@@ -33241,6 +32572,18 @@
         {
           "troop": "harad_serpenthorsearcher",
           "level": 26
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "level": 26
         }
       ]
     },
@@ -33250,18 +32593,27 @@
       "name": "[Harad] Bone Boots",
       "current": 15,
       "weight": 2.1,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "wearerCount": 2,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 25,
+      "delta": -10,
+      "status": "under",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "umbar_elite_root101",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "level": 26
+        }
+      ]
     },
     "harad08_boots": {
       "culture": "harad",
@@ -33297,18 +32649,26 @@
       "name": "[Harad] Pauldrons - Tier 3",
       "current": 12,
       "weight": 3.0,
-      "anchorLevel": 16,
+      "anchorLevel": 11,
       "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 3,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 6,
-      "delta": 6,
+      "levelSpan": 5,
+      "wearerCount": 6,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 2,
+      "delta": 10,
       "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite",
+          "level": 11
+        },
+        {
+          "troop": "umbar_elite_merc",
+          "level": 11
+        },
         {
           "troop": "harad_spearfighter",
           "level": 16
@@ -33320,6 +32680,10 @@
         {
           "troop": "harad_archer",
           "level": 16
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "level": 16
         }
       ]
     },
@@ -33329,18 +32693,22 @@
       "name": "[Harad] Pauldrons - Tier 4",
       "current": 15,
       "weight": 3.0,
-      "anchorLevel": 21,
+      "anchorLevel": 16,
       "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 10,
-      "delta": 5,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 6,
+      "delta": 9,
       "status": "over",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_elite_root0",
+          "level": 16
+        },
         {
           "troop": "harad_spearguard",
           "level": 21
@@ -33388,7 +32756,7 @@
       "anchorLevel": 21,
       "maxLevel": 26,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 10,
@@ -33399,6 +32767,14 @@
       "wearers": [
         {
           "troop": "harad_horsearcher",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "level": 21
+        },
+        {
+          "troop": "umbar_elite_root00",
           "level": 21
         },
         {
@@ -33413,18 +32789,23 @@
       "name": "[Harad] Cavalry Pauldrons - Green",
       "current": 15,
       "weight": 4.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 10,
+      "delta": 5,
+      "status": "over",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "umbar_elite_root10",
+          "level": 21
+        }
+      ]
     },
     "harad05_v3_cape": {
       "culture": "harad",
@@ -33506,7 +32887,7 @@
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 5,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 10,
@@ -33522,6 +32903,18 @@
         {
           "troop": "harad_serpenthorsearcher",
           "level": 26
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "level": 26
         }
       ]
     },
@@ -33531,18 +32924,27 @@
       "name": "[Harad] Bone Pauldrons",
       "current": 20,
       "weight": 4.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "wearerCount": 2,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 10,
+      "delta": 10,
+      "status": "over",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "umbar_elite_root101",
+          "level": 26
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "level": 26
+        }
+      ]
     },
     "sk_dwarf_iron_helmet_elite_a1": {
       "culture": "iron_hills",
@@ -34409,7 +33811,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 20,
@@ -34428,6 +33830,10 @@
         },
         {
           "troop": "iron_hills_reg_militia",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         }
       ]
@@ -34537,7 +33943,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 20,
@@ -34552,6 +33958,10 @@
         },
         {
           "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         }
       ]
@@ -34995,7 +34405,7 @@
       "anchorLevel": 11,
       "maxLevel": 31,
       "levelSpan": 20,
-      "wearerCount": 9,
+      "wearerCount": 10,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 47,
@@ -35010,6 +34420,10 @@
         },
         {
           "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         },
         {
@@ -35051,7 +34465,7 @@
       "anchorLevel": 11,
       "maxLevel": 31,
       "levelSpan": 20,
-      "wearerCount": 6,
+      "wearerCount": 7,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 47,
@@ -35066,6 +34480,10 @@
         },
         {
           "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         },
         {
@@ -36426,7 +35844,7 @@
       "anchorLevel": 11,
       "maxLevel": 21,
       "levelSpan": 10,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 13,
@@ -36438,6 +35856,10 @@
         {
           "troop": "ironpass_recruit",
           "level": 11
+        },
+        {
+          "troop": "ironpass_ram_herder",
+          "level": 16
         },
         {
           "troop": "ironpass_infantry",
@@ -37120,7 +36542,7 @@
       "anchorLevel": 11,
       "maxLevel": 31,
       "levelSpan": 20,
-      "wearerCount": 10,
+      "wearerCount": 11,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 25,
@@ -37135,6 +36557,10 @@
         },
         {
           "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         },
         {
@@ -37264,7 +36690,7 @@
       "anchorLevel": 11,
       "maxLevel": 36,
       "levelSpan": 25,
-      "wearerCount": 17,
+      "wearerCount": 18,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 17,
@@ -37287,6 +36713,10 @@
         },
         {
           "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         },
         {
@@ -42320,25 +41750,6 @@
       "shared": false,
       "wearers": []
     },
-    "m_northern_armor_a2": {
-      "culture": "mercenary",
-      "slot": "body",
-      "name": "[Northern] Padded Armour II",
-      "current": 20,
-      "weight": 7.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": "a",
-      "shared": false,
-      "wearers": []
-    },
     "m_northern_armor_a3": {
       "culture": "mercenary",
       "slot": "body",
@@ -42377,48 +41788,10 @@
       "shared": false,
       "wearers": []
     },
-    "m_northern_armor_b2": {
-      "culture": "mercenary",
-      "slot": "body",
-      "name": "[Northern] Armour II",
-      "current": 24,
-      "weight": 9.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": "b",
-      "shared": false,
-      "wearers": []
-    },
     "m_northern_armor_b3": {
       "culture": "mercenary",
       "slot": "body",
       "name": "[Northern] Armour III",
-      "current": 24,
-      "weight": 9.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "m_northern_armor_b4": {
-      "culture": "mercenary",
-      "slot": "body",
-      "name": "[Northern] Armour IV",
       "current": 24,
       "weight": 9.5,
       "anchorLevel": null,
@@ -44868,82 +44241,6 @@
         }
       ]
     },
-    "ar_ardunian_elite_helmet": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Black N\u00famen\u00f3rean Helmet",
-      "current": 33,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 39,
-      "delta": -6,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v1_helmet": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Orc Helmet I",
-      "current": 28,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v2_helmet": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Orc Helmet II",
-      "current": 28,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v3_helmet": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Orc Helmet III",
-      "current": 20,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sauron_helmet": {
       "culture": "mordor",
       "slot": "head",
@@ -47071,7 +46368,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 14,
@@ -47087,6 +46384,10 @@
         {
           "troop": "mordor_num_archer",
           "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0000",
+          "level": 31
         }
       ]
     },
@@ -47096,10 +46397,10 @@
       "name": "[Mordor] Black Numenorean Light Hood II",
       "current": 31,
       "weight": 3.9,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 14,
@@ -47108,6 +46409,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_corsairs_boss",
+          "level": 21
+        },
         {
           "troop": "mordor_num_initiate",
           "level": 26
@@ -47567,7 +46872,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 23,
@@ -47578,6 +46883,10 @@
       "wearers": [
         {
           "troop": "mordor_num_cavalry",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0001",
           "level": 31
         },
         {
@@ -48884,128 +48193,15 @@
       "name": "[Mordor] Black N\u00famen\u00f3rean Armour",
       "current": 40,
       "weight": 9.5,
-      "anchorLevel": 21,
-      "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 9,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 49,
       "delta": -9,
       "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "umbar_elite_root01",
-          "level": 21
-        },
-        {
-          "troop": "umbar_corsairs_boss",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root00",
-          "level": 21
-        },
-        {
-          "troop": "umbar_elite_root001",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root000",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root010",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root100",
-          "level": 26
-        },
-        {
-          "troop": "umbar_elite_root0001",
-          "level": 31
-        },
-        {
-          "troop": "umbar_elite_root0000",
-          "level": 31
-        }
-      ]
-    },
-    "moriaorc_v1_torso": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Orc Armour I",
-      "current": 25,
-      "weight": 6.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v2_torso": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Orc Armour II",
-      "current": 25,
-      "weight": 6.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v3_torso": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Orc Armour III",
-      "current": 25,
-      "weight": 6.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v4_torso": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Orc Armour IV",
-      "current": 25,
-      "weight": 6.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
       "line": null,
       "shared": false,
       "wearers": []
@@ -50300,10 +49496,10 @@
       "name": "[Mordor] Black Numenorean Initiate Chest",
       "current": 41,
       "weight": 19.8,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 19,
@@ -50312,6 +49508,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_corsairs_boss",
+          "level": 21
+        },
         {
           "troop": "mordor_num_initiate",
           "level": 26
@@ -50471,7 +49671,7 @@
       "anchorLevel": 31,
       "maxLevel": 31,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
@@ -50482,6 +49682,10 @@
       "wearers": [
         {
           "troop": "mordor_num_cavalry",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0001",
           "level": 31
         }
       ]
@@ -50615,7 +49819,7 @@
       "anchorLevel": 31,
       "maxLevel": 31,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 31,
@@ -50626,6 +49830,10 @@
       "wearers": [
         {
           "troop": "mordor_num_infantry",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0000",
           "level": 31
         }
       ]
@@ -51187,82 +50395,6 @@
         }
       ]
     },
-    "moriaorc_v1_bracers": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Orc Bracers I",
-      "current": 19,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v2_bracers": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Orc Bracers II",
-      "current": 19,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v3_bracers": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Orc Bracers III",
-      "current": 19,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v4_bracers": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Orc Bracers IV",
-      "current": 19,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sauron_vambraces": {
       "culture": "mordor",
       "slot": "arm",
@@ -51628,25 +50760,6 @@
       "delta": 1,
       "status": "match",
       "line": "b",
-      "shared": false,
-      "wearers": []
-    },
-    "ar_ardunian_elite_hand": {
-      "culture": "mordor",
-      "slot": "arm",
-      "name": "[Mordor] Ardunian Elite Gauntlets",
-      "current": 26,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 25,
-      "delta": 1,
-      "status": "match",
-      "line": null,
       "shared": false,
       "wearers": []
     },
@@ -52043,24 +51156,36 @@
       "name": "[Mordor] Black Numenorean Infantry Bracer",
       "current": 25,
       "weight": 2.2,
-      "anchorLevel": 31,
+      "anchorLevel": 21,
       "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 15,
+      "wearerCount": 7,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 13,
       "delta": 12,
       "status": "over",
       "line": "a",
-      "shared": false,
+      "shared": true,
       "wearers": [
+        {
+          "troop": "umbar_corsairs_boss",
+          "level": 21
+        },
         {
           "troop": "mordor_num_cavalry",
           "level": 31
         },
         {
           "troop": "mordor_num_infantry",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0000",
           "level": 31
         },
         {
@@ -52512,63 +51637,6 @@
         }
       ]
     },
-    "moriaorc_v1_boots": {
-      "culture": "mordor",
-      "slot": "leg",
-      "name": "[Mordor] Orc Boots I",
-      "current": 25,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v2_boots": {
-      "culture": "mordor",
-      "slot": "leg",
-      "name": "[Mordor] Orc Boots II",
-      "current": 25,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "moriaorc_v3_boots": {
-      "culture": "mordor",
-      "slot": "leg",
-      "name": "[Mordor] Orc Boots III",
-      "current": 20,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "witch_king_boots": {
       "culture": "mordor",
       "slot": "leg",
@@ -52661,25 +51729,6 @@
           "level": 26
         }
       ]
-    },
-    "ar_ardunian_elite_shoses": {
-      "culture": "mordor",
-      "slot": "leg",
-      "name": "[Mordor] Black N\u00famen\u00f3rean Boots",
-      "current": 30,
-      "weight": 1.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 33,
-      "delta": -3,
-      "status": "under",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "sauron_greaves": {
       "culture": "mordor",
@@ -53310,10 +52359,10 @@
       "name": "[Mordor] Black Numenorean Light Greaves",
       "current": 27,
       "weight": 3.9,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 10,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "id-keyword",
       "target": 11,
@@ -53322,6 +52371,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "umbar_corsairs_boss",
+          "level": 21
+        },
         {
           "troop": "mordor_num_initiate",
           "level": 26
@@ -53336,6 +52389,14 @@
         },
         {
           "troop": "mordor_num_archer",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0000",
           "level": 31
         }
       ]
@@ -53827,25 +52888,6 @@
           "level": 31
         }
       ]
-    },
-    "moriaorc_v1_shoulder": {
-      "culture": "mordor",
-      "slot": "shoulder",
-      "name": "[Mordor] Orc Shoulders I",
-      "current": 15,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "witch_king_pauldrons": {
       "culture": "mordor",
@@ -54785,7 +53827,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
@@ -54796,6 +53838,10 @@
       "wearers": [
         {
           "troop": "mordor_num_cavalry",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0001",
           "level": 31
         },
         {
@@ -54858,20 +53904,28 @@
       "name": "[Mordor] Black Numenorean Infantry Pauldron I",
       "current": 18,
       "weight": 9.9,
-      "anchorLevel": 31,
+      "anchorLevel": 21,
       "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 15,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "id-keyword",
       "target": 8,
       "delta": 10,
       "status": "over",
       "line": "a",
-      "shared": false,
+      "shared": true,
       "wearers": [
         {
+          "troop": "umbar_corsairs_boss",
+          "level": 21
+        },
+        {
           "troop": "mordor_num_infantry",
+          "level": 31
+        },
+        {
+          "troop": "umbar_elite_root0000",
           "level": 31
         },
         {
@@ -55071,367 +54125,6 @@
           "level": 46
         }
       ]
-    },
-    "easterling_head": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V",
-      "current": 40,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors01_helmet": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet III",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors02_helmet": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet IV",
-      "current": 30,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors03_helmet": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet II",
-      "current": 28,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors04_helmet": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet I",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling02_v1_helmet": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Archer Helmet I",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling02_v1_helmet_v2": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Archer Helmet II",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v1": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V1",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v2": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V2",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v3": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V3",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v4": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V4",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v5": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V5",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v6": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V6",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v7": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V7",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v8": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V8",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v9": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V9",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v10": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V10",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v11": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V11",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling_helmet_v12": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Easterling Helmet V12",
-      "current": 25,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "sk_rhun_mask_a": {
       "culture": "rhun",
@@ -61934,120 +60627,6 @@
       "shared": false,
       "wearers": []
     },
-    "easterling_torso": {
-      "culture": "rhun",
-      "slot": "body",
-      "name": "[Rh\u00fbn] Easterling Armour V",
-      "current": 48,
-      "weight": 16.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors01_torso": {
-      "culture": "rhun",
-      "slot": "body",
-      "name": "[Rh\u00fbn] Easterling Armour III",
-      "current": 25,
-      "weight": 6.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors02_torso": {
-      "culture": "rhun",
-      "slot": "body",
-      "name": "[Rh\u00fbn] Easterling Armour IV",
-      "current": 25,
-      "weight": 5.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors03_torso": {
-      "culture": "rhun",
-      "slot": "body",
-      "name": "[Rh\u00fbn] Easterling Armour II",
-      "current": 20,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors04_torso": {
-      "culture": "rhun",
-      "slot": "body",
-      "name": "[Rh\u00fbn] Easterling Armour I",
-      "current": 18,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling02_v1_torso": {
-      "culture": "rhun",
-      "slot": "body",
-      "name": "[Rh\u00fbn] Easterling Archer Armour I",
-      "current": 15,
-      "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_rh_loke_tunic_a": {
       "culture": "rhun",
       "slot": "body",
@@ -65153,63 +63732,6 @@
         }
       ]
     },
-    "easterling_glove": {
-      "culture": "rhun",
-      "slot": "arm",
-      "name": "[Rh\u00fbn] Easterling Gloves I",
-      "current": 25,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors01_gloves": {
-      "culture": "rhun",
-      "slot": "arm",
-      "name": "[Rh\u00fbn] Easterling Gloves II",
-      "current": 25,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling02_v1_gloves": {
-      "culture": "rhun",
-      "slot": "arm",
-      "name": "[Rh\u00fbn] Easterling Archer Gloves I",
-      "current": 15,
-      "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_rh_loke_bracer_light_a": {
       "culture": "rhun",
       "slot": "arm",
@@ -66816,63 +65338,6 @@
         }
       ]
     },
-    "easterling_boots": {
-      "culture": "rhun",
-      "slot": "leg",
-      "name": "[Rh\u00fbn] Easterling Boots I",
-      "current": 26,
-      "weight": 2.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors01_boots": {
-      "culture": "rhun",
-      "slot": "leg",
-      "name": "[Rh\u00fbn] Easterling Boots II",
-      "current": 20,
-      "weight": 2.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling02_v1_boots": {
-      "culture": "rhun",
-      "slot": "leg",
-      "name": "[Rh\u00fbn] Easterling Archer Boots I",
-      "current": 15,
-      "weight": 2.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "sk_rh_loke_boots_a": {
       "culture": "rhun",
       "slot": "leg",
@@ -68170,120 +66635,6 @@
           "level": 46
         }
       ]
-    },
-    "easterling_cape": {
-      "culture": "rhun",
-      "slot": "shoulder",
-      "name": "[Rh\u00fbn] Easterling Cape V",
-      "current": 12,
-      "weight": 9.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors01_cape": {
-      "culture": "rhun",
-      "slot": "shoulder",
-      "name": "[Rh\u00fbn] Easterling Cape I",
-      "current": 5,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors02_cape": {
-      "culture": "rhun",
-      "slot": "shoulder",
-      "name": "[Rh\u00fbn] Easterling Cape III",
-      "current": 15,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors03_cape": {
-      "culture": "rhun",
-      "slot": "shoulder",
-      "name": "[Rh\u00fbn] Easterling Cape IV",
-      "current": 15,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterlingwarriors04_cape": {
-      "culture": "rhun",
-      "slot": "shoulder",
-      "name": "[Rh\u00fbn] Easterling Cape II",
-      "current": 15,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "easterling02_v1_cape": {
-      "culture": "rhun",
-      "slot": "shoulder",
-      "name": "[Rh\u00fbn] Easterling Pauldrons II",
-      "current": 20,
-      "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "sk_rh_loke_cape_a": {
       "culture": "rhun",
@@ -78588,26 +76939,18 @@
       "name": "[Rohan] Scalemail Armour",
       "current": 33,
       "weight": 11.7,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 5,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 30,
-      "delta": 3,
-      "status": "over",
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 40,
+      "delta": -7,
+      "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "umbar_elite_root1",
-          "level": 16
-        },
-        {
-          "troop": "umbar_elite_root0",
-          "level": 16
-        },
         {
           "troop": "rohan_westemnet_eorlingas_rider",
           "level": 26
@@ -78793,25 +77136,6 @@
           "level": 41
         }
       ]
-    },
-    "theodred_armour_slim": {
-      "culture": "rohan",
-      "slot": "body",
-      "name": "[Rohan] Theodred's Armour - Slim",
-      "current": 50,
-      "weight": 16.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
     },
     "roh_nbl_arm_1": {
       "culture": "rohan",

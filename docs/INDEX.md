@@ -285,6 +285,7 @@ engineering detail in `features/` and link outward from here.
 - [releases/v2.0.20-discord.md](releases/v2.0.20-discord.md): v2.0.20 release notes (Enlistment, Blue Craig + Lindon as real cultures, nine kingdoms fielding Calradian troops, career screen, 4.8 GB memory saving, v1.4.8 support). Covers everything since the v2.0.15 tag; condenses the enlistment post below rather than repeating it. Every number quoted from shipped config or a CHANGELOG entry, verified 2026-08-12
 - [releases/v2.0.15-discord.md](releases/v2.0.15-discord.md) — v2.0.15 release notes (Gondor overhaul, banner bearers, crash fixes, Polish first pass)
 - [releases/enlistment-discord.md](releases/enlistment-discord.md) — Enlistment + Battlefield Promotions feature announcement (#375/#376). Every number in it is quoted from the shipped config; re-verify against `enlistment_config.json` / `field_commission_config.json` before posting if either has been retuned since
+- [releases/player-switcher-discord.md](releases/player-switcher-discord.md): Play as an Existing Lord feature announcement (#514). Single player-facing message in raw Discord markdown, 3,308 characters against the 4,000 Nitro cap. Keeps the takeover path and the wanderer-adoption path as separate bullets, because the August round-up conflated them and described only the adoption path
 
 ## Community contributions (published on other sites)
 

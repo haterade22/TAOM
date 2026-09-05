@@ -4,6 +4,289 @@
 
 ## 2026-09-04
 
+### fix(troops): a promotion could lower the troop's armour, on 62 edges in 13 cultures (#541)
+
+The skill ladder has had a clamp and a gate since #522; equipment never did. Measured against the
+live Armory, 62 upgrade edges lowered the target's armour total (battle-set average over Head, Body,
+Cape, Gloves and Leg, an unfilled slot counting as 0 because the engine draws each slot from an
+independently chosen set). The worst were structural: the Rhun `loke_rim_*` L31 and
+`dragon_wrath_ash_*` L41 capstones wore `plate_light` (32 body) over parents in `hplate_heavy`
+(48 to 50), a drop of 60 to 66 with `plate_elite` (64) sitting unused in the same folder;
+`dg_khamul_shadow_archer` wore a hood and a light chest over a plated disciple (-74); the uruk
+skirmisher had no gloves or cape at all (-65). Three parents were the anomaly instead: the two
+Dunland "medium" helmets carried 45 armour (the culture's lord row is 46), so every L21 Dunlending
+read as a downgrade from the L16 warriors, and `imladris_recruit` (L21) wore a lord's circlet in 8
+of its 13 sets and a lord's torso in 7.
+
+New `tools/fix_upgrade_armour_regressions.py` is the armour clamp: topological over the whole
+upgrade DAG, per slot, in every battle set, it steps the target up its own item family (the id with
+the tier tokens stripped, so the ash knights got `sk_rh_drag_plate_heavy_a`), falls back to the
+source's item, appends a slot the target never fills, and demotes hero kit on troops below level 46
+before judging (the elf recruit's circlet and lord torsos become its own strongest ordinary items).
+Militia-to-militia edges and the bare-chested-by-design troops' Body and Cape are exempt, as they
+are for skills. Dry-run by default, byte-faithful, parse-before-write, re-checks itself from disk.
+Applied: 263 slot replacements (130 family, 85 parent, 48 demotions) across 14 troop files, and the
+two Dunland helmets restatted to the medium row (22) on both Armory copies. `validate_moduledata.py`
+now warns `UPGRADE_ARMOUR_REGRESSION` on any such edge (item values from the install; skipped, never
+faked, without it) and `analyze_troop_balance.py` lists them. 0 edges regress after the pass.
+
+The deep review (`docs/reviews/rca-troop-tier-ladders-2026-09-04.md`) fixed two things in the tool
+before anything ships: the writer's set regex had no self-closing alternation (latent, the same
+hazard the validator's sibling regex documents), and the family matcher did not know the elf
+`tierN` / `silver` vocabulary, so two archer troops had been handed a cavalry helmet instead of
+`rivendell_helmet_archer_tier3`. Both are fixed and re-picked, with tests.
+
+### fix(dale): the bronze armour ladder was generated on the wrong axis, and a level-21 Guardsman wore level-16 armour (#541)
+
+The report was that Dale looked weaker than the other Men. It is not, at equal level: all 35 troops
+sit on the skill curve to the point, and Dale's armour total beats Gondor's and Rohan's at every
+level. What Dale lacks is a ceiling (L31, engine tier 6, against Rohan L41 and Gondor L51), which
+stays as decided in May. What was wrong was the item ladder. `generate_dale_armor.py` reads
+`a01..a04, b01..b04` as one eight-step tier ladder; the troop generator uses `a` and `b` as the
+bronze and silver lines with `01..04` as the four tiers. So infantry `a01` and `a02` carried
+identical stats (the L21 Guardsman had 120 armour to the L16 Footman's 153) and archer `a02` sat
+above `a03` (Longbowman to Royal Archer dropped 21).
+
+Fixed on the roster side first, because the roster-tiered restat anchors an item to its LOWEST
+wearer: the L11 Squire wore `a02` and the L16 militia veterans wore `a03`, which pinned both items
+to light and medium whatever the L21 and L26 troops needed. The Squire now wears `a01` (identical
+stats to what it had), the two militia veterans wear the silver `b01` (a small raise), and
+`rebalance_armor.py --cultures dale --tier-source roster --no-lower-armor --keep-materials` then
+raised infantry `a02` (16/21 to 33/43), infantry `a03` and archer `a03` to the heavy row on both
+Armory copies. Nothing was lowered. Both Dale inversions are gone and every Dale line now ascends
+per slot. Dale's doc labels its tiers one above the engine's (`T7` there is L31, tier 6).
+
+### balance(troops): the Dol Guldur Uruk line sat a full tier under the curve, Mordor's archers had zeroed secondaries (#541)
+
+Commit `f9942d84` moved the ten `dg_uruk_*` troops up five levels (`dg_uruk_swordsman` 21 to 26,
+`dg_uruk_black_guard` 31 to 36) without a restat, so each carried the previous level's skills: an
+L36 Black Guard (1010) tied an L31 Khamul infantryman, and `dg_khamul_shadow_archer` at L31
+out-totalled `dg_uruk_black_sharpshooter` at L36 by 145. The per-skill upgrade gate could not see
+it because the whole line shifted together and no edge went backwards. Nine Mordor orc archer,
+scout and warg troops plus `mordor_warg_rider` were 65 to 170 under on secondary skills only, the
+ones the 2026-08-30 partial-block insertion seeded at 0 by design. All 20 restatted with
+`rebalance_troops.py --fix-monotonicity --restat`, clamp-only so nothing else rebaselined: 21
+troops moved (the skirmisher through its edge), all raises, values only. Outliers 71 to 54; the
+within-culture inversions are now exactly the four documented Gondor ranged rows. A level shift is
+a restat.
+
+### feat(field-commission): a promoted companion can be sent back to the ranks (#540)
+
+Battlefield Promotions could make a companion out of a soldier and never take one back. Vanilla's
+only dismissal, "I no longer have need of your services" under "About your position in the clan",
+is hidden by `companion_fire_condition` whenever the player stands inside a settlement, so it is
+reachable only through Party screen > Talk on the world map. Talk to the companion in a town and the
+line is simply absent, which is what was reported.
+
+Two entry points, one service (`FieldCommissionDismissService`):
+
+- A dialogue line on the promoted companion under `hero_main_options`, "Your commission is ended.
+  Return to the ranks.", with an are-you-sure exchange. No settlement gate. The removal itself runs
+  on `ConversationEnded`, not in the farewell line's consequence: the engine never removes a
+  conversation partner from inside a scene conversation, and this feature does not start.
+- "Discharge a promoted companion" on the town, castle and village menus: a picker of the
+  dismissable companions, then a confirm inquiry. It needs no conversation at all, which matters
+  while #415 (promoted companions reported without dialogue) is still open.
+
+The outcome is a return to the ranks: the hero is removed with a single
+`KillCharacterAction.ApplyByRemove` and one soldier of the origin troop
+(`CharacterObject.OriginalCharacter`, a saveable field, so it survives a load) rejoins the party,
+wounded if the companion was. Merit is untouched. Gear carried as a companion is lost, as with
+vanilla's fire, and the confirm text says so. Only companions in the main party qualify: governors,
+party and caravan leaders, refuge wardens, prisoners, fugitives, an unpromoted companion, and a hero
+whose origin troop no longer resolves are each refused with a named verdict. Removal is refused
+while the party is in a map event or siege, because there the engine only adds a DeathMark and
+defers, which would leave a refunded soldier beside an undismissed hero.
+
+Why one engine call rather than vanilla's `ApplyByFire` followed by `ApplyByRemove`: of the eight
+vanilla `CompanionRemoved` subscribers on the installed v1.4.8 (three of them in SandBox, which the
+decompile dump does not carry), six behave the same for the Fire and Death details on a wanderer in
+the main party and the two that differ favour Death. One shows "left your clan" for Fire only, and
+the feature shows its own line; the other, `CompanionDismissCampaignBehavior`, dereferences the
+conversation agent with no null check for a Fire inside a settlement, a vanilla NRE on the picker
+path. The Fire path also adds a fugitive interlude, runs `Hero.ResetEquipments` (the #486 crash
+site) on a hero about to be removed, and cuts `CompanionOf` first, which is what the stipend
+hand-back keys on. It is the same call the Refuge warden rollback already ships.
+
+The review gate found the one thing that lifting vanilla's settlement gate exposes: inside a keep or
+tavern scene the companion also has a live `Agent`, and the engine's removal path only drops the
+`LocationCharacter` (next entry's spawn list), so the dismissed companion would have kept standing
+there as a clickable ghost. The adapter now removes the agent first, the way the engine removes a
+character leaving through a passage, in the instant form: a second review round showed a visible
+fade keeps the agent clickable for its whole duration, and a click would have opened a conversation
+with a dead hero the wanderer-hire lines treat as hireable. The same passes hid the dialogue line
+from co-op clients instead of letting them walk the whole exchange for nothing.
+
+Adapters gained `GetPromotedHeroSnapshot` and `RemoveCompanionFromGame`, `AddOneToRoster`, and the
+picker, confirm and feedback prompts; the merit service gained `ForgetPromotedHero`. 51 new tests (the entity state
+matrix, remove-before-refund ordering, nothing partial on any refusal, the picker chain) plus 21
+binding guards; the FieldCommission subset is 266 green after two review rounds. 17 new `taom_fc_*` strings registered and
+seeded as English in all 12 languages; their translations join #418.
+
+Not-tested: every in-game path (map talk, town picker, keep or tavern scene conversation, refusal
+while besieging, save then reload then dismiss, stipend return). Owed before #540 closes.
+
+### feat(dev-console): probes for the two ways a tooltip fails without saying anything
+
+Two Harmony probes (`Patch79_TooltipDiagnostics`) that make silent tooltip failures visible, plus a
+correction to a rule that turned out to be wrong.
+
+v1.4.8 changed how the campaign map bar exposes its tooltips. They used to be fixed properties on
+`MapInfoVM` (`DenarTooltip`, `SpeedHint` and friends) bound directly in the prefab. They are now list
+items, `PrimaryInfoItems` and `SecondaryInfoItems` of `MapInfoItemVM`, and the `HintWidget` in the
+item template fires `ExecuteBeginHint` on the list element. Gauntlet resolves that by walking
+`MapInfo` to the collection to `[index]` to the method and invokes it null-conditionally, so a failed
+path resolution does nothing whatsoever: no exception, no log, the values on the bar keep updating,
+only the tooltip never appears. Probe A postfixes `MapInfoItemVM.ExecuteBeginHint` and records the
+`ItemId`, so the ABSENCE of a line is the finding.
+
+The second path is worse. `GauntletInformationView.OnShowTooltip` has three silent exits: a
+requested type missing from `RegisteredTypes`, a throw inside `Activator.CreateInstance(value.TooltipType,
+...)`, and a throw inside `LoadMovie` after the view model was already constructed. The last two share
+one catch that downgrades to `Debug.FailedAssert`. Probe B postfixes it and reads two private fields.
+`OnHideTooltip()` nulls `_dataSource` and `_movie` at the top of every call, and the success path
+assigns `_dataSource` after construction but `_movie` only after `LoadMovie` returns, so both set
+means built, `_dataSource` alone means the prefab failed, and neither means nothing was constructed.
+The first cut read `_dataSource` alone and would have called a movie failure a success; the deep
+review caught it.
+
+`Debug.FailedAssert` reaches only `rgl_log`. That file turns up in player crash bundles, which is how
+the battle-load work above read one, but there is none on this development install, so on this
+machine both failures were entirely unobservable before these probes.
+
+Rate limiting is per key, not a latch: hovers key on `ItemId`, builds key on type plus outcome as a
+value tuple, so the steady-state membership check allocates nothing. So hovering gold cannot silence food, and a tooltip that fails and later succeeds reports both, which is
+the most informative thing the probe can say. The same fix went into `SpecialResourceMapBarMixin`,
+whose two catch blocks used a single bool each and would have hidden every later different exception
+for the life of the process.
+
+Scaffolding, not a feature. It comes out once the question is answered.
+
+### fix(rules): gui-ui.md asserted a crash that does not exist on v1.4.8
+
+The rule said adding to `MapInfoVM.SecondaryInfoItems` causes an `IndexOutOfRangeException` in
+`GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` through hardcoded positional indexing, and
+marked the call NEVER DO THIS. That method contains no reference to `SecondaryInfoItems` and no
+positional indexing of anything. It is six `IsGameKeyReleased` branches dispatching to
+`MapNavigationExtensions.Open*`. A sweep of every 1.4.5, 1.4.7 and 1.4.8 dump on this machine finds
+`SecondaryInfoItems` in `MapInfoVM` only.
+
+Read as fact, that claim nearly drove a full rewrite of a working feature: hand-reproducing five
+change-notifying properties, the `IntValue`/`FloatValue` coupling behind
+`MapBarCustomValueTextWidget`'s value flash, the item layout and the gamepad nav scope, to fix a
+defect that does not reproduce.
+
+The four container-safety checks and the safe pattern stay, because they are sound. What changed is
+the justification: the call is now discouraged on ownership grounds, with the real and dated hazard
+recorded in its place. `MapInfoVM.CreateItems()` finalizes and clears both collections and re-adds
+only vanilla's nine items, so a mod's addition is dropped if it ever runs again. In v1.4.8 it is
+called from exactly one site, the constructor, so the hazard is real in shape and dormant in
+practice. The rule now also asks for the engine version a crash-derived rule was verified against.
+
+
+### fix(battle-load): the 305-second "stall" was the engine compiling shaders, and nothing logged it
+
+Player bundle `b18f3441` (TAOM v2.0.26, Bannerlord v1.4.8) reported
+`Mission load stalled >305s; last phase=FinishMissionLoadingDone`. It was not a stall. Every managed
+load phase finished in 19.7 seconds, and the engine's own `rgl_log` for the 290 seconds TAOM calls a
+stall holds **820 lines, 818 of them `compile_shader`**, plus one `MissionScreen-OnActivate` and one
+`Bake Terrain`. The load was working the entire time.
+
+`MissionState.OnTick` reaches `TickMission` through one gate: `Handler.RenderIsReady()`, which is
+`MissionScreen.MissionStartedRendering()`, which is the native `SceneView.ReadyToRender()`. That
+stays false while the scene's shaders compile, and `FinishMissionLoading` ends with
+`Scene.ResumeLoadingRenderings()`, which is what starts them. So a cold shader cache parks the
+mission one frame short of playable: no first tick, no `BattlePlayable`, the loading window never
+closes, and the watchdog fires on a healthy load.
+
+Agent count is not the variable. Earlier in the same session a 421-agent battle was playable in 11.5
+seconds. The one that "stalled" had 95 agents but was the session's first Dunland encounter: 478
+`Missing shader from sack` misses in its 14-second load window, 430 of them `pbr_metallic`, of which
+only 108 had compiled by the time loading "finished".
+
+Two defects, both fixed:
+
+**The window had no instrumentation.** `FinishMissionLoadingDone` to `BattlePlayable` was the last
+dark span in the lifecycle, and two shipped claims said otherwise: the feature doc's "there is now no
+unattributed span" and the service comment "everything from here to `BattlePlayable` is remaining
+frames, not load work". Phase 4f `WaitingForRender` closes it, a Postfix on the protected
+`MissionState.OnTick` throttled to 1 Hz, carrying `waitedMs=` and a live `shaders=` count. Postfix
+matters: by the frame the mission finally ticks, `FirstMissionTickAfterLoading` is already false, so
+the marker only ever describes frames that did not tick. Patch43 went 18 to 19 hooks.
+
+**The watchdog only knew wall clock.** It now asks whether the compile queue is *moving*. A non-zero
+count that changed within 60 seconds defers the bundle with one `WATCHDOG DEFERRED` warning per
+window, and deliberately does not set the fired latch, so a queue that later freezes still gets its
+bundle. Both degenerate readings refuse to defer: `0` means nothing is compiling and the window is a
+real wedge, `-1` means never sampled and absent evidence must not disable a watchdog. The reading
+crosses threads through `BattleLoadRenderWaitProbe`; the native shader count is read only on the main
+thread, never from the timer thread.
+
+`triage_battle_load.py` gained a `RENDER_WAIT` verdict that reads the `shaders=` series (falling is a
+cold cache and a slow load, frozen is the wedge), a RenderWait line in the timings section, and
+better guidance on the pre-marker `FinishMissionLoadingDone` arm, which is the shape this bundle
+itself has. Replaying the bundle also exposed a separate defect: the `COMPLETED` check scanned the
+whole log, so an earlier mission that finished masked a later one that stalled, and the tool called
+`b18f3441` "clean". It is now scoped to the last mission, with the all-events fallback kept for
+truncated logs.
+
+Not done here: `ShaderPrecompilation` stays parked. Its banner says "No longer needed"; this bundle
+is counter-evidence and now says so, but re-enabling even the safe character-only pass is a separate
+decision, and v1.4.8 deletes the local shader cache on any module-list change.
+
+Review found four more before this shipped, all fixed here (RCA
+`docs/reviews/rca-battle-load-render-wait-2026-09-04.md`). The HIGH is the interesting one: the
+deferral had no upper bound, so a compile count that thrashes among positive values without ever
+draining would have refreshed the no-progress clock on every poll and suppressed the bundle for the
+rest of the session. That inverts the bug rather than fixing it, from a false alarm on a healthy load
+into permanent silence on a broken one. TAOM already knew this: `ShaderPrecompileDecider` carries a
+named `ChurnTimeout` abort for "count > 0 CONTINUOUSLY, churns without ever settling", written after
+the 1.4.7 precompile hang, and the new code simply failed to inherit it. Deferral is now capped at 15
+minutes and a capped fire is tagged `churn-capped` so triage can tell it from a frozen queue. The
+MEDIUM: the triage tool's new verdict scoping still fell back to scanning the whole log when no
+anchor survived, reproducing the exact false COMPLETED it was written to fix; it now anchors on any
+mission-start marker and, failing that, only calls a log clean if it ENDS on BattlePlayable. Two LOWs:
+both watchdog MCM hints still promised "fires at N seconds", and the feature doc's own changelog
+entry claimed the wrong hook count.
+
+A second review pass, aimed at the fixes rather than the original code, found three more, two of
+them HIGH, and all three were introduced BY the first round of fixes. That is worth stating plainly:
+the repairs were buggier than the thing they repaired. The `shaders=` token added in round one sits
+between the em-dash and the literal `last` on the watchdog line, and `triage_battle_load.py`'s regex
+required whitespace there, so it matched only the token-free shape: every future bundle carrying
+telemetry would have had its watchdog line silently dropped from the report. I had "verified" the
+tool by replaying bundle b18f3441 after each fix, and it passed every time, because that bundle's log
+predates the token whose handling I had just broken. Second HIGH: the verdict and the bucket ledger
+anchored on different marker sets, so a log whose last mission stalled early printed a stall verdict
+directly above a healthy timing table belonging to a different mission. Third, a MEDIUM: the churn
+cap measured time since the loading window opened rather than time spent compiling, so a siege scene
+spending 550s in native setup had only 350s of its advertised 15 minutes left. The cap now runs on
+continuous compile time from the probe's empty-to-non-empty edge, resetting on every drain, which is
+what `ShaderPrecompileDecider`'s `ChurnTimeout` actually does; round one cited that precedent without
+reading it. The predicate and the token formatter, which had been two expressions of one decision,
+are now a single `Decide` returning `Defer` / `FireWedge` / `FireChurnCapped`.
+
+Suite 8070 green, triage tool 142 green. RCA covers both passes.
+
+### docs(player-switcher): a paste-ready Discord post, and the line the August round-up got backwards
+
+The Player Switcher has been on trunk since `4c710990`, but the only public writing about it was
+three bullets in the August monthly round-up, and one of them described the wrong path. It said "you
+keep your own clan and banner, so you start independent", which is true only when you adopt a
+wanderer. Take over a ruler or a clan leader and you get his clan, his fiefs and his kingdom, and the
+kingdom-join prompt is not supposed to appear at all.
+
+`docs/releases/player-switcher-discord.md` is a single player-facing message in raw Discord markdown,
+3,308 characters against the 4,000 Nitro cap. It keeps the takeover and the adoption as two separate
+bullets for exactly that reason, and it carries a caveats block naming the three rough edges a player
+would otherwise report as bugs: a player-controlled Sauron loses TAOM's capture immunity, Back from
+the career menu retraces the auto-answered backstory menus one at a time, and a taken-over clan sheds
+the parties it inherited from the AI over the following days (#530).
+
+Every claim traces to `docs/features/player-switcher.md` or to one of the four
+`[SettingPropertyBool]` hint texts in `Main/Features/TaomSettings.cs`. The August file itself is left
+alone: it is already published, so editing it changes nothing anyone has read.
+
 ### docs(ai-party-size): sweep the documentation the four retunes left behind
 
 The AI Party Size defaults moved four times on 2026-09-01 (10.0/300, 5.0/150, 2.5/75, neutral) and

@@ -443,11 +443,11 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_spear_a" />
                 <equipment slot="Item1" id="Item.wm_dale_shield_b01" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1564,11 +1564,11 @@
                 <equipment slot="Item0" id="Item.dale_winged_spear_a" />  
               <equipment slot="Item1" id="Item.wm_dale_shield_a08" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1599,11 +1599,11 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

@@ -79,6 +79,11 @@ public interface IFieldCommissionMeritService
     /// list (already applied to internal state).</summary>
     IReadOnlyList<string> PruneDeadPromotedHeroes(Func<string, bool> isAliveAndValid);
 
+    /// <summary>Drops one id after a dismissal (#540). Without it the removed hero's id lingers in
+    /// the persisted list, and in <c>taom.fc_status</c>, until the next load's prune. Unknown,
+    /// null and empty ids are no-ops.</summary>
+    void ForgetPromotedHero(string heroId);
+
     Dictionary<string, int> ExportMerits();
 
     void ImportMerits(Dictionary<string, int> merits);

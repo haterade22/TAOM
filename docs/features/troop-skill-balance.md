@@ -185,6 +185,30 @@ Ten upgrade edges end up exactly flat, which the gate allows because flat is not
 
 **Per-skill enforcement lives in two gates**, not in the analyzer: `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` (runs in CI, no game install) and the `UPGRADE_SKILL_REGRESSION` error in `tools/taom_schema.py` (so `validate_moduledata.py` fails on it). `tools/tests/test_upgrade_skill_monotonicity.py` covers the gate, the clamp and the entry insertion on synthetic data.
 
+## Armour is a ladder too
+
+The ladder rule has an equipment half since 2026-09-04 (#541). A troop's armour in a slot is the
+average over its BATTLE sets of the item's `head + body + arm + leg` (all four, because a chest
+contributes arm armour and a pauldron body armour), an unfilled slot counting as 0 since the engine
+draws each slot from an independently chosen set. The total is the sum over Head, Body, Cape, Gloves
+and Leg, and **no upgrade target may total less than its source.** 62 edges in 13 cultures did when
+first measured: the Rhun `loke_rim_*` and `dragon_wrath_ash_*` capstones in `plate_light` over
+`hplate_heavy` parents (-60 to -66), `dg_khamul_shadow_archer` in a hood over a plated disciple
+(-74), the uruk skirmisher with no gloves or cape (-65).
+
+| Piece | Where | What it does |
+|---|---|---|
+| The clamp | `tools/fix_upgrade_armour_regressions.py` | Topological over the whole upgrade DAG (villager sources in `characters/` read-only). Per regressing edge, per slot, in every battle set: an `OVERRIDES` entry, else the cheapest item in the target's own culture folder and slot file sharing the target's item FAMILY (id with the trailing tier tokens stripped) that meets the source's value, else the source's own item. A slot the target never fills is appended to every set. Dry-run default, `--apply` writes byte-faithfully and re-checks from disk. |
+| Hero-kit demotion | `DEMOTE` in the same script | The parent is sometimes the anomaly: `imladris_recruit` (L21) wore a lord's circlet in 8 of 13 sets and a lord's torso in 7, and raising the whole elf tree to lord kit would have been the wrong fix. Items matching a pattern are swapped, on troops below the listed level, for the troop's own strongest ordinary item in that slot, before the clamp judges anything. |
+| The gate | `UPGRADE_ARMOUR_REGRESSION` (WARNING) in `tools/taom_schema.py` | Same definition, item values from the install (`Registries.item_armour`); skipped, never faked, when the install is absent. Warns rather than errors because the Armory is unversioned and the commit hook cannot see it. |
+| The overview | `tools/analyze_troop_balance.py` | "Upgrade armour drops" section beside the skill monotonicity one. |
+
+Exemptions mirror the skill rule: militia-to-militia edges, and the bare-chested-by-design troops
+(`_BODYLESS_BY_DESIGN`) are compared without Body and Cape, because their 70-armour skirt sits in
+the Cape slot as the chest they never wear. When a parent out-armours its child because an ITEM is
+mis-statted, fix the item: the two Dunland `wulf_helmet_medium_*` carried 45 (the lord row) and made
+every L21 Dunlending read as a downgrade, restatted to 22.
+
 ## Key Files
 
 | File | Purpose |
@@ -194,6 +218,8 @@ Ten upgrade edges end up exactly flat, which the gate allows because flat is not
 | `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` and `SKILL_TEMPLATE_SHADOWS_SKILLS` (both ERROR), the `validate_moduledata.py` half of the gate. |
 | `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` | 4 tests: no skill drops, all 8 skills declared, no template shadowing, militia exemption pinned by identity. Fails rather than going inconclusive when it cannot find ModuleData, since a data gate that cannot read its data has checked nothing. |
 | `tools/tests/test_upgrade_skill_monotonicity.py` | 25 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, and `SKILL_TEMPLATE_SHADOWS_SKILLS`. |
+| `tools/fix_upgrade_armour_regressions.py` | The armour clamp (#541): family step-up, parent fallback, slot append, hero-kit demotion. `tools/tests/test_fix_upgrade_armour_regressions.py` covers it on synthetic data. |
+| `UPGRADE_ARMOUR_REGRESSION` in `tools/taom_schema.py` | The armour gate (WARNING), fed by `Registries.item_armour`; tests in `tools/tests/test_validate_moduledata.py`. |
 | `Main/_Module/ModuleData/troops/troops_*.xml` (×16) | The troop definitions (the data under management). |
 | `Main/_Module/ModuleData/characters/npcs_*.xml` (×22) | The 15 `villager_*` upgrade sources that feed into the tier-1 troops, read-only to the writer. |
 | `.claude/hooks/check-moduledata-validation.sh` | The commit gate. Its `--code` list is an ALLOWLIST, so a new ERROR check does not block until it is named there. |
@@ -214,6 +240,12 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
 
 ## Changelog
 
+- 2026-09-04: **The Dol Guldur Uruk line sat a tier under the curve, and equipment joined the
+  ladder rule (#541).** `f9942d84` had moved the ten `dg_uruk_*` levels up by five without a
+  restat (an L36 Black Guard tied an L31 Khamul infantryman); nine Mordor archer, scout and warg
+  troops carried the 0-seeded secondaries from the 2026-08-30 insertion. All 20 restatted with
+  `--fix-monotonicity --restat`, values only. New: the armour clamp, the `UPGRADE_ARMOUR_REGRESSION`
+  gate and the analyzer section above; 62 regressing edges repaired, 0 remain.
 - 2026-08-31: **Upgrades can no longer lower a stat (#522, #523).** Four independent causes, all
   live at once. Militia detected by name substring (one false positive in 871 troops,
   `gondor_ano_archer_militia`, worth -145 across seven of its eight skills on its own upgrade edge);

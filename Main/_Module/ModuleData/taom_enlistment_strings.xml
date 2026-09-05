@@ -45,6 +45,24 @@
 	<string id="taom_fc_offer_title" text="{=taom_fc_offer_title}Battlefield Promotion" />
 	<string id="taom_fc_rename_body" text="{=taom_fc_rename_body}Give {TROOP_NAME} a name, or keep the one they carried into battle." />
 	<string id="taom_fc_rename_title" text="{=taom_fc_rename_title}Name the New Companion" />
+	<!-- FieldCommission (#540): dismiss a promoted companion back to the ranks -->
+	<string id="taom_fc_cancel" text="{=taom_fc_cancel}Cancel" />
+	<string id="taom_fc_dismiss" text="{=taom_fc_dismiss}Your commission is ended. Return to the ranks." />
+	<string id="taom_fc_dismiss_answer" text="{=taom_fc_dismiss_answer}Back to the line, then. What I carry goes with the commission; the ranks do not hand it back. You are certain of this?" />
+	<string id="taom_fc_dismiss_cancel" text="{=taom_fc_dismiss_cancel}No. Keep your commission; forget I spoke." />
+	<string id="taom_fc_dismiss_confirm" text="{=taom_fc_dismiss_confirm}I am certain. Return to the {TROOP_NAME} ranks." />
+	<string id="taom_fc_dismiss_confirm_body" text="{=taom_fc_dismiss_confirm_body}{HERO_NAME} will be discharged and one {TROOP_NAME} added to your party in their place. Everything they carry as a companion is lost with the commission. This cannot be undone." />
+	<string id="taom_fc_dismiss_done" text="{=taom_fc_dismiss_done}Then I go back to the line. It was an honor to carry the rank." />
+	<string id="taom_fc_dismiss_entry" text="{=taom_fc_dismiss_entry}{HERO_NAME} (was {TROOP_NAME})" />
+	<string id="taom_fc_dismiss_failed" text="{=taom_fc_dismiss_failed}{HERO_NAME} could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed_unnamed" text="{=taom_fc_dismiss_failed_unnamed}That companion could not be discharged right now." />
+	<string id="taom_fc_dismiss_menu" text="{=taom_fc_dismiss_menu}Discharge a promoted companion" />
+	<string id="taom_fc_dismiss_pick" text="{=taom_fc_dismiss_pick}Choose" />
+	<string id="taom_fc_dismiss_picker_desc" text="{=taom_fc_dismiss_picker_desc}Choose who returns to the ranks. They rejoin your party as the soldier they were promoted from; the gear they carry as a companion is lost." />
+	<string id="taom_fc_dismiss_picker_title" text="{=taom_fc_dismiss_picker_title}Discharge a Promoted Companion" />
+	<string id="taom_fc_dismiss_title" text="{=taom_fc_dismiss_title}Return to the Ranks" />
+	<string id="taom_fc_dismiss_yes" text="{=taom_fc_dismiss_yes}Discharge" />
+	<string id="taom_fc_dismissed" text="{=taom_fc_dismissed}{HERO_NAME} has returned to the ranks as a {TROOP_NAME}." />
 	<string id="taom_enlist_act_battle" text="{=taom_enlist_act_battle}{COMMANDER} is engaged. Hold your place in the line." />
 	<string id="taom_enlist_act_lost" text="{=taom_enlist_act_lost}You have lost the column. Await word of your commander." />
 	<string id="taom_enlist_act_march" text="{=taom_enlist_act_march}You march with {COMMANDER}&#x27;s company, at your commander&#x27;s pace." />

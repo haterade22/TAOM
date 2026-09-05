@@ -2,6 +2,19 @@
 
 > **STATUS: PARKED 2026-08-20, DISABLED at the wiring level.** No longer needed, so the main-menu option is not registered, `Patch21_ShaderPrecompilation` is not applied, and both MCM toggles are hidden. Everything below still describes the code as written: the feature, its tests, its localization keys in all 12 languages and `precompile_scenes.txt` are all intact, and nothing was deleted. **Re-enabling** is three uncomments: the `AddInitialStateOption` block in `SubModule.cs`, the `PatchCategory("Patch21_ShaderPrecompilation")` / runner-resolve / `InitializeHooks` trio near the top of `OnSubModuleLoad`, and the `[SettingProperty*]` attributes on the two properties in `TaomSettings.cs`. The MCM master toggle could not be used to hide the option on its own: `TaomSettings` persists as `json2`, so every player who has already launched TAOM has `EnableShaderPrecompilation = true` written to disk and would never see a changed default.
 
+> **2026-09-04, the parked rationale has counter-evidence.** Player bundle b18f3441 (TAOM v2.0.26,
+> Bannerlord v1.4.8) fired a battle-load stall bundle after 305 s on a 95-agent field battle. The
+> engine log for that window holds 818 `compile_shader` lines and two others: the load was held at
+> `SceneView.ReadyToRender()` while ~700 cold character shaders compiled serially, and its 14-second
+> load window logged 478 `Missing shader from sack` misses, 430 of them `pbr_metallic`. That is the
+> exact cost this feature exists to pay up front, so "No longer needed" above is not supported by
+> field data. Nothing has been re-enabled: the 2026-09-04 change was diagnostic only (the
+> `WaitingForRender` marker plus a watchdog that defers on a draining queue, see
+> [battle-load-diagnostics.md](battle-load-diagnostics.md)). Re-enabling the character-only pass
+> (scene passes stay off, they crash some GPUs) is a live option and an open decision, weighed
+> against v1.4.8 deleting the local shader cache on any module-list change, which is what makes the
+> walk repayable rather than one-time.
+
 > **2026-06-17 re-enable + scene-walk (issue #287).** Re-enabled (was disabled 2026-05-22) and rewritten to walk the all-characters battle **then each TAOM battle scene**, so terrain + forced-atmosphere shaders compile too — not just character shaders. This targets the intermittent battle-load `d3dcompiler` CTD/hang: TAOM_Map battle scenes ship no `compressed_shader_cache.sack`, so their terrain/atmosphere shaders runtime-compile on entry. See "Scene-walk architecture" below. **Update 2026-06-19:** the open-field battle `_forceatmo` scenes were since **disabled** (Rohan `ee2cb04b`, Mordor `62470413`) — their `pbr_terrain` vista permutation hard-crashes some GPUs on scene load; the `Patch16_AtmospherePersistence` patch was audited and **exonerated** as the cause (see [atmosphere-persistence.md](atmosphere-persistence.md)), leaving the terrain shader the live but unproven culprit pending native triage. **In-game-only (ADR-008) — pending a 1-2 hr precompile test.**
 
 ## Overview
