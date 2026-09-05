@@ -89,6 +89,18 @@ class LintHandbookTests(unittest.TestCase):
         self.assertEqual(len([f for f in findings if f.code == 'RECIPE_TRAILER']), 1)
         self.assertIn('Add', findings[0].message)
 
+    def test_invented_takes_effect_value_is_reported(self):
+        self.write('x.md', '# X\n\n### Add\n1. step\nCheck: c\nTakes effect: whenever\nCode: No code changes needed\n')
+        findings = [f for f in self.lint('x.md') if f.code == 'TAKES_EFFECT_VALUE']
+        self.assertEqual(len(findings), 1)
+        self.assertIn('whenever', findings[0].message)
+
+    def test_allowed_takes_effect_value_with_a_qualifier_is_clean(self):
+        self.write('x.md', '# X\n\n### Add\n1. step\nCheck: c\n'
+                           'Takes effect: new campaign only, because Clan.Color is [SaveableProperty]\n'
+                           'Code: No code changes needed\n')
+        self.assertEqual([f for f in self.lint('x.md') if f.code == 'TAKES_EFFECT_VALUE'], [])
+
     def test_ai_vocabulary_is_reported(self):
         self.write('x.md', '# X\n\nWe delve into the landscape in order to explain.\n')
         codes = [f.code for f in self.lint('x.md')]

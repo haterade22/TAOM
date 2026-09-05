@@ -53,6 +53,12 @@ TRAILER_RE = {
     'Takes effect': re.compile(r'^\s*\**Takes effect:?\**:?\s*\S', re.M),
     'Code': re.compile(r'^\s*\**Code:?\**:?\s*\S', re.M),
 }
+# A recipe tells the reader when the edit reaches the game. There are exactly four answers, because
+# there are four ways the engine picks data up. A qualifier may follow ("new campaign only, because
+# Clan.Color is [SaveableProperty]"), but the answer itself has to be one of these, or the reader
+# cannot act on it.
+TAKES_EFFECT_RE = re.compile(r'^\s*\**Takes effect:?\**:?\s*(.+)$', re.M)
+TAKES_EFFECT_VALUES = ('full game restart', 'new campaign only', 'next save load', 'live')
 
 
 @dataclass
@@ -135,6 +141,13 @@ def lint_file(path: str, repo_root: str = REPO_ROOT) -> list[Finding]:
         missing = [k for k, rx in TRAILER_RE.items() if not rx.search(section)]
         if missing:
             findings.append(Finding(rel, i + 1, 'RECIPE_TRAILER', f'recipe "{l.strip("# ")}" lacks: {", ".join(missing)}'))
+
+    for m in TAKES_EFFECT_RE.finditer(prose):
+        value = m.group(1).strip().lstrip('*').strip()
+        if not value.lower().startswith(TAKES_EFFECT_VALUES):
+            line_no = prose.count('\n', 0, m.start()) + 1
+            findings.append(Finding(rel, line_no, 'TAKES_EFFECT_VALUE',
+                                    'not one of %s: %r' % (' / '.join(TAKES_EFFECT_VALUES), value[:60])))
 
     if any(m in text for m in LIVE_MODULES) and REINSTALL_WARNING not in text:
         first = next((i for i, l in enumerate(lines, 1) if any(m in l for m in LIVE_MODULES)), 1)
