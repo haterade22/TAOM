@@ -327,7 +327,7 @@ are optional and every shipped culture has them anyway.
 5. For an enlistment or career roster, re-run that family's own gate as well.
 
 **Check:** `python tools/validate_moduledata.py --code MISSING_CIVILIAN_TYPE --code DUPLICATE_ROSTER_ID` then `python tools/audit_enlistment_roster_coverage.py`
-**Takes effect:** new campaign only
+**Takes effect:** next save load for everything dressed from the roster after the load: troops, notables and any hero created later. `Campaign.cs:1472` calls `LoadXML("EquipmentRosters")` on a saved campaign as well as a new one. A hero who already exists in the save keeps what the save holds, because `Hero._battleEquipment` and `_civilianEquipment` are `[SaveableProperty]` (`Hero.cs:209-213`); only a new campaign redresses those.
 **Code:** No code changes needed
 
 ### Delete a roster
@@ -370,10 +370,19 @@ are optional and every shipped culture has them anyway.
 - **A character's first battle set is not the first one in the file.** Every character's sets are
   re-sorted at the end of deserialization so battle sets come before civilian and stealth ones.
   `MBEquipmentRoster.cs:138-141`, called from `BasicCharacterObject.cs:526`.
-- **A character with several rosters is mixed per slot at spawn, not picked whole.** The randomiser
-  draws three independent roster numbers: slots 0-1, slots 2-3, and slots 4-11. The sword can come
-  from one variant and the whole suit of armour from another, so design each variant to look right
-  against every other variant's armour. `Equipment.cs:549-595`.
+- **A character with several rosters is mixed per slot at spawn, not picked whole.** For an ordinary
+  mission agent the engine picks a source roster afresh for each of the twelve slots, inside the
+  loop that fills them, so the sword can come from one variant, the helmet from a second and the
+  boots from a third. Design each variant to look right against every other variant's pieces, and
+  expect a bare slot wherever the variant that won it leaves that slot out. The draw is deterministic,
+  not random: the seed is built from the party, the troop id and the rank, so the same troop at the
+  same rank in the same party is dressed the same way on every spawn. `Equipment.cs:571-591`,
+  `Mission.cs:4206`, `CharacterHelper.cs:589-593`.
+- **The three grouped picks belong to one caller, not to the campaign.** The same method does set up
+  three roster numbers before the loop, one for slots 0-1, one for 2-3 and one for 4-11, but they
+  survive only when the caller passes `seed=-1`; any real seed overwrites all three on every slot.
+  Normal spawning passes a seed, so a document that describes the grouping as what troops do is
+  describing the fallback path. `Equipment.cs:566-578`.
 - **`MISSING_CIVILIAN_TYPE` is a warning and only looks at some ids.** The rule fires only when a
   roster id contains `_civ` or `child_template_`, and it deliberately skips every
   `child_education` id. A civilian roster named some other way is never checked, and the run still

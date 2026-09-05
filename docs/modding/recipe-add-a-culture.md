@@ -56,10 +56,19 @@ that gate is `LANDLESS_CULTURE` in `tools/validate_moduledata.py`
 | 6 | Starting denars | `startup_resources/startup_resources_config.xml` ([configs-balance.md](configs-balance.md)) | Player starts with 0 gold |
 | 7 | At least one eligible career | `career_system/taom_careers.xml` plus `charactercreation/career_menu.json` | No career offered |
 | 10 | Enlistment rosters, 4 ranks | `equipmentsets/taom_enlistment_equipment.xml` | Another culture's gear is issued |
-| 12 | Volunteer recruitment pool | `Main/Features/TroopProgression/RecruitmentPools/` | Empty recruit slots in every settlement |
+| 12 | TAOM's weighted volunteer pool | `Main/Features/TroopProgression/RecruitmentPools/` | Notables fall back to the culture's `basic_troop` and `elite_basic_troop`, with no per-settlement variety |
 
-Row 12 is the one row that is C# rather than data. There are 16 partial files under
-`RecruitmentPools/` covering 22 distinct `CultureMap` keys.
+Row 12 is the one row that is C# rather than data, and its failure mode is milder than the rest of
+this table. `TaomVolunteerModel.GetBasicVolunteer` asks TAOM's service first and
+falls through to the vanilla model whenever the service has no id for that context
+(`Main/Features/TroopProgression/Models/TaomVolunteerModel.cs:55-68`). Vanilla then hands back
+`sellerHero.Culture.EliteBasicTroop` for a castle village's rural notable and
+`sellerHero.Culture.BasicTroop` for everyone else (`DefaultVolunteerModel.cs:111-118`), and AI minor
+parties recruiting off the map take `ActualClan.BasicTroop` instead
+(`RecruitmentCampaignBehavior.cs:322`). So a culture whose `basic_troop`, `elite_basic_troop` and
+clan basic troop all resolve does recruit. What the C# buys is the weighted settlement, clan and
+culture mix that makes two towns of the same culture offer different soldiers. There are 16 partial
+files under `RecruitmentPools/` covering 22 distinct `CultureMap` keys.
 <!-- measured: ls Main/Features/TroopProgression/RecruitmentPools/*.cs | wc -l 2026-09-05 -->
 <!-- measured: rg -o 'CultureMap\["[a-z]+"\] =' Main/Features/TroopProgression/RecruitmentPools/ | sort -u | wc -l 2026-09-05 -->
 
@@ -199,7 +208,8 @@ The character-creation entry, which is what makes the culture pickable:
     }
 ```
 
-And the recruitment pool, which is C# and has no data equivalent:
+And the recruitment pool. This one is C#, and unlike everything above it is an upgrade rather than a
+prerequisite: without it Lindon still recruits, it just offers the same troop everywhere.
 
 <!-- excerpt file="Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.PromotedCultures.cs" -->
 ```csharp
@@ -237,7 +247,8 @@ templates; 98 education-equipment and 13 enlistment rosters; 55 character-creati
 10. Add the culture to `charactercreation/cultures.json`, `cc_body_properties.xml`, the four
     narrative menus, `startup_resources_config.xml`, `taom_careers.xml` and
     `taom_char_creation_equipment.xml`.
-11. Add the volunteer pool partial under `RecruitmentPools/` and a test beside it.
+11. Add the volunteer pool partial under `RecruitmentPools/` and a test beside it, when you want
+    more than the culture's `basic_troop` on offer.
 12. Append the culture to the hardcoded `cultures` list in `tools/validate_all_troop_refs.py` or its
     troop file is never swept.
 13. Give the culture a settlement. Until it owns one, it is a daily-tick CTD.
@@ -245,10 +256,13 @@ templates; 98 education-equipment and 13 enlistment rosters; 55 character-creati
 
 Check: `python tools/validate_moduledata.py` then `python tools/validate_all_troop_refs.py` then
 `dotnet test TAOM.Tests --filter CulturePartyTemplate`
-Takes effect: new campaign only (a new `<XmlNode>` is null in-engine until the process restarts, and
-lords, clans and settlements seed at world generation)
-Code: Code changes required in `Main/Features/TroopProgression/RecruitmentPools/` for the volunteer
-pool, and in `Main/Features/CulturalFeats/TaomCulturalFeats.cs` for any new feat
+Takes effect: full game restart, then a new campaign. The `<XmlNode>` registry is built once per
+process (`Module.cs:246`, `:1026-1033`), so a newly registered file is invisible until Bannerlord is
+restarted; the lords, clans, kingdoms and settlements then seed at world generation, because
+`Heroes`, `Kingdoms` and `Factions` are skipped outright on a saved campaign
+(`SandBoxManager.cs:363-375`)
+Code: Code changes required in `Main/Features/CulturalFeats/TaomCulturalFeats.cs` for any new feat.
+The volunteer pool under `Main/Features/TroopProgression/RecruitmentPools/` is optional, see row 12
 
 ### Make an existing culture playable
 

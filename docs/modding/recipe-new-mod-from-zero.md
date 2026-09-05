@@ -4,8 +4,9 @@
 
 The ordered walkthrough from an empty `Modules` folder to a total conversion the size of TAOM.
 Each stage names the file you create, the registration that makes the engine read it, the command
-that proves it, and the chapter that owns the detail. It puts the other chapters in the only order
-that works; it does not restate them.
+that proves it, and the chapter that owns the detail. It puts the other chapters in a build order
+that keeps your work checkable at every stage; it does not restate them. That is an authoring
+order, not the only order the engine accepts, and the next section says why the two differ.
 
 ## Before you start
 
@@ -23,22 +24,77 @@ that works; it does not restate them.
 - **Read [modules-overview](modules-overview.md) and [editing-safely](editing-safely.md) first.**
   This chapter assumes you know what a module is and which copy of a file is the live one.
 
+## What the Check lines prove, and what they do not
+
+Every stage below ends in a `Check:` command. Those commands are TAOM's own gates, written to guard
+TAOM's files, and most of them point at TAOM by default. Read this once before you take a green run
+as proof that `<YourModule>` is sound.
+
+- `python tools/validate_moduledata.py` defaults to `--moduledata Main/_Module/ModuleData`, TAOM's
+  own folder (`tools/validate_moduledata.py:50`, `95`). Point it at yours and it does collect your
+  items, troops and party templates and check references between them. Three things stay bound to
+  TAOM's own names even then. Cultures are read from one filename, `taom_spcultures.xml`
+  (`tools/taom_schema.py:1719`), and body properties from `TAOM_bodyproperties.xml` (`:1728`). The
+  other modules it sweeps for definitions are a fixed list that does not include yours (`:1704-1711`).
+  And the three schemas that drive duplicate-id and enum checking match TAOM's path shapes,
+  `equipmentsets/*.xml`, `troops/troops_*.xml`, `characters/*.xml` and `taom_spcultures.xml`
+  (`tools/schemas/`), so a file laid out differently is swept for references but never
+  schema-checked.
+- **Nothing here checks that your XML is well formed.** The validator works on text, not a parser
+  (the only `ET.parse` in `tools/taom_schema.py` is line 1631, in the settlement-economy pass). Run
+  the parser yourself: `python -c "import xml.etree.ElementTree as ET,pathlib;[ET.parse(f) for f in pathlib.Path('<game>/Modules/<YourId>/ModuleData').rglob('*.xml')]"`
+- `python tools/check_external_xslt.py` checks the repo copy plus a hardcoded `TAOM_Map` and
+  `LOTRLOME_Armory` (`tools/check_external_xslt.py:47`). `--moduledata` swaps the repo copy for
+  yours; there is no flag that adds a third live module.
+- `python tools/validate_mesh_refs.py` defaults to the Armory's item tree and its asset packs, and
+  takes `--items` and `--tpac-modules` to look at yours instead.
+- `python tools/audit_mbproj_registration.py --module <YourId>` is the one gate that takes a module
+  id directly and needs nothing else.
+- `python tools/audit_scene_names.py` takes no arguments at all and reads four hardcoded settlement
+  files (`tools/audit_scene_names.py:25-31`). Stage 16 says what that leaves uncovered.
+
+Nothing in this repo validates a new module end to end. Where a stage's check cannot reach your
+files, the stage says so rather than implying it passed.
+
 ## Why the stages are in this order
 
-The engine loads object types in a fixed sequence, and a reference resolves only against what is
-already loaded. [load-order-and-dependencies](load-order-and-dependencies.md) owns that sequence and
-the full existence ladder. The short version, read from the v1.4.8 dump: `SPCultures` and `Concepts`
-first (`Campaign.cs:1462-1463`), then `Monsters`, `SkeletonScales`, `ItemModifiers`,
-`ItemModifierGroups`, `CraftingPieces`, `WeaponDescriptions`, `CraftingTemplates`, `BodyProperties`,
-`SkillSets` (`Game.cs:437-445`), then `Items`, `EquipmentRosters`, `partyTemplates`
-(`Campaign.cs:1471-1473`), then `NPCCharacters`, `Heroes`, `Kingdoms`, `Factions`, `WorkshopTypes`,
-`LocationComplexTemplates`, `Settlements` (`SandBoxManager.cs:362-380`). Build outward in that
-order and every `Culture.`, `NPCCharacter.` and `PartyTemplate.` reference you write has something
-real to point at.
+Two separate orders are in play, and confusing them is the usual first mistake. The engine has one
+fixed load sequence you cannot change. The stages below are an authoring order you can, and they are
+arranged so that each piece is checkable before the next one names it.
 
-Three of those loads are skipped when the player loads a save rather than starting a campaign:
-`Heroes`, `Kingdoms` and `Factions` sit behind `if (!isSavedCampaign)` (`SandBoxManager.cs:363-375`).
-New lords, clans and kingdoms therefore never appear in an existing save.
+The engine sequence, read from the v1.4.8 dump, is not the one most people guess.
+`Campaign.InitializeDefaultCampaignObjects` runs first (reached at `Campaign.cs:1398` on a loaded
+save and at `Campaign.cs:1524` on a new campaign). It loads `Monsters`, `SkeletonScales`,
+`ItemModifiers`, `ItemModifierGroups`, `CraftingPieces`, `WeaponDescriptions`, `CraftingTemplates`,
+`BodyProperties` and `SkillSets` (`Game.cs:437-445`), then `Items`, `EquipmentRosters` and
+`partyTemplates` (`Campaign.cs:1471-1473`). Only after that does `InitializeBasicObjectXmls` load
+`SPCultures` and `Concepts` (`Campaign.cs:1462-1463`, called at `Campaign.cs:1410`), and last come
+`NPCCharacters`, `Heroes`, `Kingdoms`, `Factions`, `WorkshopTypes`, `LocationComplexTemplates` and
+`Settlements` (`SandBoxManager.cs:362-380`). **Cultures load after the rosters and party templates
+that name them, not before.**
+
+That works because most references are forward-safe. A dotted attribute such as
+`culture="Culture.erebor"` is read by `ReadObjectReferenceFromXml`, which hands the id to
+`GetPresumedObject` (`MBObjectManager.cs:1497-1514`, `713-730`). If nothing has created that object
+yet, and the type was registered with auto-create (the default, `MBObjectManager.cs:376`), the engine
+makes an empty placeholder and the real file fills it in whenever it loads. Anything still empty at
+the end of the load is dropped with a `Null object reference found with ID` line
+(`MBObjectManager.cs:1437-1455`), which is a log entry rather than a crash. That is also why a typo
+in a dotted reference gives you a running game with missing content instead of an error.
+
+The exceptions are attributes read through a direct `GetObject` lookup, which simply returns null
+when the target is absent: a culture's `<default_policies>` children (`CultureObject.cs:373`), a
+troop's `<EquipmentSet id="...">` reference to a standalone roster, `base_monster` on a `<Monster>`.
+Those do need their target loaded first, and each fails differently.
+[load-order-and-dependencies](load-order-and-dependencies.md) has both tables and the full existence
+ladder.
+
+So follow the stage order for your own sake, not the engine's. What it buys you is that every stage
+leaves something you can point a validator or a game launch at before the next stage depends on it.
+
+Three loads are skipped when the player loads a save rather than starting a campaign: `Heroes`,
+`Kingdoms` and `Factions` sit behind `if (!isSavedCampaign)` (`SandBoxManager.cs:363-374`). New
+lords, clans and kingdoms therefore never appear in an existing save.
 
 ### The one engine rule that bites on day one
 
@@ -140,7 +196,10 @@ Position matters inside your own manifest. `XmlResource.GetXmlListAndApply` appe
 to one global list in document order (`XmlResource.cs:154-181`), and the merger walks that list, so a
 stylesheet registered after your own data file transforms your own data too.
 
-**Check:** `python tools/validate_moduledata.py`
+**Check:** `python tools/validate_moduledata.py --moduledata "<game>/Modules/<YourId>/ModuleData"`,
+plus the well-formedness one-liner above, since the validator never parses your XML. Neither knows
+whether the `id=` you registered is one the engine loads; a wrong id is silent, so compare it
+against the lists in [submodule-and-registration](submodule-and-registration.md).
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
@@ -154,11 +213,34 @@ so the transform sees all of it. TAOM's whole vanilla-rewrite layer is eight suc
 `comment_strings`, each present as a `.xslt` with no `.xml` and no `.xsl` sibling.
 <!-- measured: for n in spkingdoms spcultures spclans lords heroes module_strings action_strings comment_strings; do ls Main/_Module/ModuleData/$n.*; done 2026-09-05 -->
 
-Keep `<xsl:apply-templates select="@*|node()"/>` last in every template or vanilla content stops
-passing through. An unconditional empty template deletes everything it matches, which is exactly how
+Position the passthrough by hand; there is no single place it always belongs. Start with one global
+identity template that copies whatever you did not name
+(`<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>` on `match="@*|node()"`,
+`Main/_Module/ModuleData/spcultures.xslt:6-10`). Inside a template that changes something, three
+rules decide the order:
+
+- **Copy the vanilla attributes first, then write your overrides.** The last write of an attribute
+  name replaces the earlier one, so `<xsl:apply-templates select="@*"/>` goes at the top of the
+  template and your `<xsl:attribute>` rows follow it (`spcultures.xslt:14-23`). Put the copy after
+  your overrides and vanilla's value wins back. The flip side, spelled out in the file itself at
+  `spcultures.xslt:33-38`: an attribute your block never names silently keeps its Calradian value.
+- **Never emit attributes after a child element.** XSLT builds an element's attributes before its
+  content, so once the first child is written an `<xsl:attribute>` is an error: the processor either
+  reports it or silently drops the attribute, and you cannot rely on which.
+- **Pass through only the children you did not replace, in the position the schema wants them.**
+  TAOM's `empire` template emits its own caravan lists and then filters ten element names out of
+  the child passthrough so vanilla's copies do not come back alongside them
+  (`spcultures.xslt:304-317`).
+  <!-- measured: sed -n '317p' Main/_Module/ModuleData/spcultures.xslt | grep -o 'self::[a-z_]*' | wc -l 2026-09-05 -->
+  The live `LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt:672` puts its passthrough in the
+  middle of a child list, with hand-written entries on both sides.
+
+An unconditional empty template deletes everything it matches, which is exactly how
 `TAOM_Map/ModuleData/settlements.xslt` clears vanilla Calradia before its own settlements merge in.
 
-**Check:** `python tools/check_external_xslt.py`
+**Check:** `python tools/check_external_xslt.py --moduledata "<game>/Modules/<YourId>/ModuleData"`
+proves your stylesheets are well formed and compile. It cannot tell you the transform produced the
+output you meant; only reading the merged result or a test over it does that.
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
@@ -180,10 +262,10 @@ reasons and the version-pairing rules are in [module-dependencies](module-depend
 
 ## Stage 6. Register the native-side files through project.mbproj
 
-Skins, monsters, action sets, action types, sounds and voice definitions are not read through
-`<Xmls>`. They come from `ModuleData/project.mbproj`, a separate registry read one line before the
-`<Xmls>` list (`Module.cs:1031-1032`). Its `name=` attribute is module-root-relative and carries the
-`.xml` extension, the opposite convention from `<XmlName path>`.
+Skins, action sets, action types, sounds and voice definitions are not read through `<Xmls>`. They
+come from `ModuleData/project.mbproj`, a separate registry read one line before the `<Xmls>` list
+(`Module.cs:1031-1032`). Its `name=` attribute is module-root-relative and carries the `.xml`
+extension, the opposite convention from `<XmlName path>`.
 
 ```xml
 	<file id="soln_voice_definitions" name="ModuleData/lotr_uruk_voice_def.xml" type="voice_definitions" />
@@ -196,7 +278,24 @@ reached from a fixed set of call sites, so an invented `soln_*` id opens no file
 the row reads exactly like working registration. The audit prints the vanilla vocabulary, 39 ids.
 <!-- measured: python tools/audit_mbproj_registration.py 2026-09-05 -->
 
-**Check:** `python tools/audit_mbproj_registration.py --all`
+**Monsters are the exception, and they go both ways.** `Monster` is a managed object type: the
+engine registers it as `RegisterType<Monster>("Monster", "Monsters", 2u)` (`Game.cs:307`) and reads
+it with `ObjectManager.LoadXML("Monsters")` (`Game.cs:437`), so a monster meant for a race, a mount
+or any spawned agent needs an `<XmlName id="Monsters" path="..."/>` row in `SubModule.xml` like any
+other data file. That is the copy `FaceGen` looks up at runtime, through
+`Game.Current.ObjectManager.GetObject<Monster>` (`FaceGen.cs:38`, `56`). The `soln_monsters` row in
+`project.mbproj` feeds the separate native monster table instead. The live
+`LOTRLOME_Armory/SubModule.xml` carries 8 `<XmlName id="Monsters">` rows (spider, elephant, mumakil,
+chariot, warg, fell warg, war ram and the module's own `monsters.xml`) alongside 4 `soln_monsters`
+rows in its `project.mbproj`, and a comment in that file records why: a `soln_` row that was removed
+changed nothing, because the spider Monster loads the managed way.
+<!-- measured: grep -c 'XmlName id="Monsters"' "$MODULES/LOTRLOME_Armory/SubModule.xml"; grep -c 'id="soln_monsters"' "$MODULES/LOTRLOME_Armory/ModuleData/project.mbproj" 2026-09-05 -->
+Register only through `project.mbproj` and your race's monsters never become objects, which shows up
+as a null reference while a character or agent is being built rather than as a load error.
+
+**Check:** `python tools/audit_mbproj_registration.py --module <YourId>` covers the `project.mbproj`
+half for your module. Nothing audits the `<XmlName id="Monsters">` half; confirm by launching and
+spawning the creature.
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
@@ -215,17 +314,22 @@ in your data file is the English text. TAOM's root anchor is three lines and dec
 Chapter: [strings-and-localization](strings-and-localization.md); translator workflow,
 [TRANSLATOR_GUIDE](../localization/TRANSLATOR_GUIDE.md).
 
-**Check:** `python tools/validate_moduledata.py`
+**Check:** `python tools/validate_moduledata.py --moduledata "<game>/Modules/<YourId>/ModuleData"`
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
 ## Stage 8. First art, and the item files that name it
 
-Import textures before meshes in the Kit, with the editor closed, then read the authoritative mesh
-names out of the written tpac rather than trusting an editor label. Item files go in a folder and the
-folder is registered once, because the engine globs `*.xml` inside a registered directory
-(`MBObjectManager.cs:900-909`). Adding a new `.xml` to an already registered folder needs no manifest
-edit; adding a new folder does.
+Import in the Modding Kit with the editor open and otherwise idle, textures first and meshes
+second, because slots bind by name. Then read the authoritative mesh names out of the written tpac
+rather than trusting an editor label. The rule about a closed editor is a different one and does
+not apply here: the editor scans resources only at startup, so a tpac written by a script outside
+the Kit has to land while the Kit is shut
+([ue-to-bannerlord-asset-pipeline](../reference/ue-to-bannerlord-asset-pipeline.md), lines 36-37).
+
+Item files go in a folder and the folder is registered once, because the engine globs `*.xml`
+inside a registered directory (`MBObjectManager.cs:900-909`). Adding a new `.xml` to an already
+registered folder needs no manifest edit; adding a new folder does.
 
 TAOM's armour lives in 18 folders under `LOTRLOME_Armory/ModuleData/LOTRLOME_items/`, each with its
 own `<XmlName id="Items" path="LOTRLOME_items/<folder>"/>` row.
@@ -236,7 +340,8 @@ only a tool catches it. Chapters: [items-armor](items-armor.md),
 [items-weapons-and-crafting](items-weapons-and-crafting.md), [items-shields](items-shields.md),
 [items-mounts-and-harness](items-mounts-and-harness.md), [module-armory](module-armory.md).
 
-**Check:** `python tools/validate_mesh_refs.py --scan-bodies`
+**Check:** `python tools/validate_mesh_refs.py --scan-bodies --items "<game>/Modules/<YourId>/ModuleData"
+--tpac-modules <YourId> Native SandBoxCore`. Without the two flags it audits the Armory, not you.
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
@@ -248,10 +353,21 @@ next through `<upgrade_targets>`. `troops_erebor.xml` holds 67 of them.
 The tree is inert until a culture binds its root and a party template spawns it, which is stages 11
 and 12. Chapter: [troops](troops.md).
 
-**Check:** `python tools/validate_moduledata.py --code BROKEN_TROOP_REF --code UPGRADE_TIER_COLLAPSE`
+**Recruitment needs no code.** Vanilla hands out volunteers from the culture itself:
+`DefaultVolunteerModel.GetBasicVolunteer` returns `sellerHero.Culture.EliteBasicTroop` for a rural
+notable bound to a castle and `sellerHero.Culture.BasicTroop` otherwise
+(`DefaultVolunteerModel.cs:111-118`), and an AI minor faction recruits its own
+`ActualClan.BasicTroop` (`RecruitmentCampaignBehavior.cs:322`). A valid `basic_troop` and
+`elite_basic_troop` on your culture, plus a clan basic troop, are enough. TAOM's 16 partial
+`VolunteerRecruitmentService.<Culture>.cs` files exist because TAOM wanted weighted
+per-settlement, per-clan and per-culture pools, not because the engine needs them:
+`TaomVolunteerModel.GetBasicVolunteer` calls `base.GetBasicVolunteer` whenever its service
+returns nothing (`Main/Features/TroopProgression/Models/TaomVolunteerModel.cs:55-67`).
+
+**Check:** `python tools/validate_moduledata.py --code BROKEN_TROOP_REF --code UPGRADE_TIER_COLLAPSE
+--moduledata "<game>/Modules/<YourId>/ModuleData"`
 **Takes effect:** full game restart
-**Code:** Code changes required in `Main/Features/TroopProgression/RecruitmentPools/` for the
-recruitment pool of every culture except Gondor
+**Code:** No code changes needed
 
 ## Stage 10. Equipment rosters for those troops
 
@@ -262,14 +378,16 @@ each file; TAOM ships 32 files there and 27 `EquipmentRosters` registrations.
 Note the path shape: they are under `equipmentsets/`, not at the `ModuleData` root. Chapter:
 [equipment-rosters](equipment-rosters.md).
 
-**Check:** `python tools/validate_moduledata.py --code BROKEN_ITEM_REF --code DUPLICATE_ROSTER_ID`
+**Check:** `python tools/validate_moduledata.py --code BROKEN_ITEM_REF --code DUPLICATE_ROSTER_ID
+--moduledata "<game>/Modules/<YourId>/ModuleData"`
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
 ## Stage 11. The culture
 
-`SPCultures` is the first id a campaign loads, and almost everything downstream names a `Culture.`
-reference, so the culture is the hinge of the whole build. TAOM's `taom_spcultures.xml` carries 24
+Almost everything else names a `Culture.` reference, which makes the culture the hinge of the whole
+build even though `SPCultures` loads well down the engine's sequence (`Campaign.cs:1462`, after the
+items, rosters and party templates it points at). TAOM's `taom_spcultures.xml` carries 24
 `<Culture>` blocks; the `erebor` block carries 73 attributes and 18 kinds of child element.
 <!-- measured: python -c "import xml.etree.ElementTree as ET; r=ET.parse('Main/_Module/ModuleData/taom_spcultures.xml').getroot(); print(len(r)); c=[x for x in r if x.get('id')=='erebor'][0]; print(len(c.attrib), len({x.tag for x in c}))" 2026-09-05 -->
 
@@ -279,7 +397,10 @@ that decides whether it is playable at all, are in [cultures.md](cultures.md) an
 the one that catches new modders: a culture owning no settlement crashes on the daily clan tick,
 inside vanilla code with no frame of yours on the stack.
 
-**Check:** `python tools/validate_moduledata.py --code UNKNOWN_CULTURE --code LANDLESS_CULTURE`
+**Check:** `python tools/validate_moduledata.py --code UNKNOWN_CULTURE --code LANDLESS_CULTURE
+--moduledata "<game>/Modules/<YourId>/ModuleData"`. Both codes read the culture registry, which is
+the one filename-bound case from the section above: name your culture file anything but
+`taom_spcultures.xml` and the two codes have nothing to compare against.
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
@@ -297,6 +418,10 @@ binding contract and the min/max semantics are in [party-templates](party-templa
 [party-template-sizing](../reference/party-template-sizing.md).
 
 **Check:** `dotnet test TAOM.Tests --filter CulturePartyTemplate -p:DisableModuleCopy=true -p:ModuleId=`
+proves TAOM's twelve bindings, not yours: the fixture walks up the tree for `Main/_Module/ModuleData`
+and there is no way to point it elsewhere (`TAOM.Tests/Core/CultureDataFixture.cs:56-64`). For your
+module, read the twelve binding attributes off your `<Culture>` block against the list in
+[party-templates](party-templates.md) and confirm each id exists in your template file.
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
@@ -309,7 +434,9 @@ files vary in size, so do not treat any one of them as the required set; the per
 [wanderers-and-named-companions](wanderers-and-named-companions.md). Wanderer counts differ per
 culture in TAOM's own data, so trust the file rather than any doc quoting a single number.
 
-**Check:** `python tools/validate_moduledata.py --code DUPLICATE_NPC_ID --code BROKEN_BODY_PROPERTY_REF`
+**Check:** `python tools/validate_moduledata.py --code DUPLICATE_NPC_ID --code BROKEN_BODY_PROPERTY_REF
+--moduledata "<game>/Modules/<YourId>/ModuleData"`. `BROKEN_BODY_PROPERTY_REF` is the other
+filename-bound case: it reads `TAOM_bodyproperties.xml` and nothing else.
 **Takes effect:** new campaign only
 **Code:** No code changes needed
 
@@ -327,6 +454,10 @@ A `<Hero>` with no matching character entry is a documented crash class; see
 [kingdom-creation](../features/kingdom-creation.md).
 
 **Check:** `dotnet test TAOM.Tests --filter CultureLordTemplate -p:DisableModuleCopy=true -p:ModuleId=`
+reads TAOM's `Main/_Module/ModuleData` and cannot be retargeted
+(`TAOM.Tests/Core/CultureDataFixture.cs:56-64`). For your module the check that matters is the set
+comparison in the marker above, with the two paths swapped: every `id` in your `<Hero>` file must
+also appear as an `<NPCCharacter>` id.
 **Takes effect:** new campaign only
 **Code:** No code changes needed
 
@@ -342,7 +473,7 @@ character-creation JSON last, is `## Filing Order` in
 [kingdom-creation](../features/kingdom-creation.md); the id patterns are its `## Naming Conventions`
 table, distilled in [id-cheatsheet](id-cheatsheet.md).
 
-**Check:** `python tools/validate_moduledata.py`
+**Check:** `python tools/validate_moduledata.py --moduledata "<game>/Modules/<YourId>/ModuleData"`
 **Takes effect:** new campaign only
 **Code:** No code changes needed
 
@@ -361,16 +492,24 @@ Chapters: [settlements](settlements.md), [module-map](module-map.md),
 [worldmap-battle-scene-grid](../reference/worldmap-battle-scene-grid.md),
 [editor-cache-rebuild](../features/editor-cache-rebuild.md).
 
-**Check:** `python tools/audit_scene_names.py`
+**Check:** there is no gate for the crash this stage warns about, and running one that looks like
+it covers it is worse than running none. `python tools/audit_scene_names.py` takes no arguments,
+reads four hardcoded settlement files and compares their interior `scene_name` values against
+`SceneObj` folders (`tools/audit_scene_names.py:25-31`, `84-100`). It never opens your settlement
+file and it never looks at `Main_map` entities, so it can print a clean report immediately before
+the map-load crash. What actually proves this stage: extract the `id` of every `<Settlement>` in
+your file and confirm each one appears as an entity name in your `Main_map/scene.xscene`, then run
+`python tools/audit_scene_names.py` separately for the interior scenes it does cover.
 **Takes effect:** new campaign only
 **Code:** No code changes needed
 
 ## Stage 17. A new race, if you need one
 
 Three files in one order: append the `<race>` block at the end of `skins.xml` (race ints are
-merge-order indices, so inserting renumbers every hero in every save), add the five `<Monster>` rows,
-then author `as_<race>_facegen` and `as_<race>_female_facegen` by copying an existing pair verbatim
-and renaming only `id` and `base_set`. A slim facegen set renders the first character-creation menu
+merge-order indices, so inserting renumbers every hero in every save); add the five `<Monster>`
+rows and register them with an `<XmlName id="Monsters">` row, which is the managed half stage 6
+describes; then author `as_<race>_facegen` and `as_<race>_female_facegen` by copying an existing
+pair verbatim and renaming only `id` and `base_set`. A slim facegen set renders the first character-creation menu
 and breaks every later stage. `skins.xml` has no managed deserializer in the shipping-client dump,
 so its attribute meanings cannot be read from the decompile; the working blocks in the live file are
 the reference. Chapters:
@@ -391,7 +530,8 @@ non-`.xml` extension.
 The full ordered gate sequence is [validation-and-testing](validation-and-testing.md). The release
 contract is [release-process](../reference/release-process.md).
 
-**Check:** `python tools/validate_moduledata.py`, then `pwsh tools/sweep_module_backups.ps1`, then
+**Check:** `python tools/validate_moduledata.py --moduledata "<game>/Modules/<YourId>/ModuleData"`,
+then `pwsh tools/sweep_module_backups.ps1`, then
 `python tools/package_release.py --source "<game>/Modules" --dest <out> --dry-run`
 **Takes effect:** full game restart
 **Code:** No code changes needed
@@ -519,6 +659,8 @@ Measured 2026-09-05 against the installed v1.4.8 game and this repo. `$MODULES` 
 | 8 XSLT-only registrations, each a `.xslt` with no `.xml` or `.xsl` sibling | `ls Main/_Module/ModuleData/{spkingdoms,spcultures,spclans,lords,heroes,module_strings,action_strings,comment_strings}.*` |
 | 17 stylesheets across the three live modules, all clean | `python tools/check_external_xslt.py` |
 | 39 vanilla `soln_*` ids | `python tools/audit_mbproj_registration.py` |
+| Armory `<XmlName id="Monsters">` rows 8, `soln_monsters` rows 4 | `grep -c 'XmlName id="Monsters"' "$MODULES/LOTRLOME_Armory/SubModule.xml"`; `grep -c 'id="soln_monsters"' "$MODULES/LOTRLOME_Armory/ModuleData/project.mbproj"` |
+| 10 child element names filtered out of the `empire` passthrough in `spcultures.xslt` | `sed -n '317p' Main/_Module/ModuleData/spcultures.xslt \| grep -o 'self::[a-z_]*' \| wc -l` |
 | TAOM `project.mbproj`: 5 `<file>` rows | `grep -c '<file ' Main/_Module/ModuleData/project.mbproj` |
 | 12 translated language folders, a 3-line English anchor | `ls -d Main/_Module/ModuleData/Languages/*/ \| wc -l`; `wc -l < Main/_Module/ModuleData/Languages/language_data.xml` |
 | 42 subdirectories under `Main/_Module/ModuleData/`, 4 reached by a `path=` prefix, 38 not | the python one-liner in the marker beside that bullet below |

@@ -17,7 +17,7 @@ TAOM's MCM surface is 432 `[SettingProperty]` declarations in `Main/Features/Tao
 
 ## Lever 1: a troop's `level`, and the four numbers it decides
 
-`level=` is the single most load-bearing number on a troop, because four separate systems derive from it and none of them reads anything else.
+`level=` is the single most load-bearing number on a troop, because four separate systems derive from it: tier, daily wage, recruitment cost and the power a simulated battle scores it at. Nothing else on the troop feeds any of them except a single mounted flag, and that flag does not come from where most people expect.
 
 <!-- engine-ref type="TaleWorlds.CampaignSystem.GameComponents.DefaultCharacterStatsModel" file="Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.GameComponents/DefaultCharacterStatsModel.cs" lines="18-25" -->
 
@@ -27,9 +27,18 @@ TAOM's MCM surface is 432 `[SettingProperty]` declarations in `Main/Features/Tao
 | `MaxCharacterTier` | 10 in TAOM, 6 in vanilla | `Main/Features/TroopProgression/Models/TaomCharacterStatsModel.cs:23`, `DefaultCharacterStatsModel.cs:11` |
 | Daily wage | a hardcoded table keyed by **tier** | `Main/Features/TroopProgression/TroopCostService.cs:9-36` |
 | Recruitment cost | a hardcoded table keyed by **level** | `TroopCostService.cs:38-60` |
-| Auto-resolve power | `(2 + tier) * (8 + tier) * 0.02 * (mounted ? 1.2 : 1)` | `CharacterObject.cs:603-606`, `CharacterObject.cs:856-859` |
+| Auto-resolve power, tiers 0 to 6 | `(2 + tier) * (10 + tier) * 0.02`, then `* 1.2` if mounted | `Main/Features/BattleBalance/Models/TaomMilitaryPowerModel.cs:19-55`, `DefaultMilitaryPowerModel.cs:244-253` |
+| Auto-resolve power, tiers 7 to 10 | one flat MCM value per tier, 2.91 / 3.26 / 3.61 / 3.96, then the same mounted multiplier | `Main/Features/TaomSettings.cs:252-280` |
 
-The two tables are keyed differently on purpose, and that is easy to trip over. Wage reads tier, so levels 21 through 25 all pay the same. Recruitment cost reads level through a banded `switch`, so it also steps in fives, but the bands are `<= 6`, `<= 11`, `<= 16` and so on, offset by one from the tier bands.
+**Which model produces that last number.** A simulated map battle asks one model for one number per soldier. `DefaultCombatSimulationModel.SimulateHit` calls `MilitaryPowerModel.GetTroopPower` once for the striker and once for the struck, and every other term in the hit is a ratio of those two (`DefaultCombatSimulationModel.cs:18-22`). TAOM owns that model slot: `TaomMilitaryPowerModel` is registered at `Main/SubModule.cs:968` and overrides `GetDefaultTroopPower`, and it ships switched on, because `EnableCustomTroopPower` defaults to `true` (`Main/Features/TaomSettings.cs:245`). Below tier 7 it reproduces vanilla's formula exactly, so the toggle changes nothing there. Above tier 6 it substitutes four flat numbers, because vanilla's curve was written for a six-tier ladder and TAOM's runs to ten.
+
+Extending vanilla's curve to tiers 7 through 10 would give 3.06, 3.60, 4.18 and 4.80. TAOM ships 2.91, 3.26, 3.61 and 3.96, which flattens the top of the ladder: 5 percent under the formula at tier 7, rising to 18 percent at tier 10. <!-- measured: python -c "v=lambda t:(2+t)*(10+t)*0.02;sh={7:2.91,8:3.26,9:3.61,10:3.96};print([(t,round(v(t),2),sh[t],round(100*(v(t)-sh[t])/v(t),1)) for t in (7,8,9,10)])" 2026-09-05 -->
+
+Two smaller differences hide in there. Vanilla's `GetDefaultTroopPower` applies no mounted bonus at all, so the 1.2 is TAOM's, added by the override (`TaomMilitaryPowerModel.cs:31-35`); vanilla reaches mount a different way, through a terrain-and-side table that is still live because TAOM replaces only the one method (`DefaultMilitaryPowerModel.cs:159-190`). Heroes take a 1.5 multiplier instead of the 1.2 and get their tier from `level / 4 + 1` rather than the ladder above, so the whole of this section is about ordinary troops (`TaomMilitaryPowerModel.cs:25-35`).
+
+**A second power formula exists in the engine and it is not this one.** `CharacterObject.GetPower` returns `(2 + tier) * (8 + tier) * 0.02 * (hero ? 1.5 : mounted ? 1.2 : 1)` (`CharacterObject.cs:603-606`, `856-859`). Nothing in the battle simulation calls it. Its consumers are barter valuation and the influence a donated prisoner is worth (`DefaultValuationModel.cs:15`, `DefaultPrisonerDonationModel.cs:33`). Read that one as the auto-resolve number and every troop comes out low, by 14 percent at tier 4, with the mounted bonus hung on the wrong attribute. <!-- measured: python -c "print(round(100*(1-((2+4)*(8+4)*0.02)/((2+4)*(10+4)*0.02)),1))" 2026-09-05 -->
+
+The two cost tables are keyed differently on purpose, and that is easy to trip over. Wage reads tier, so levels 21 through 25 all pay the same. Recruitment cost reads level through a banded `switch`, so it also steps in fives, but the bands are `<= 6`, `<= 11`, `<= 16` and so on, offset by one from the tier bands.
 
 | Tier | Levels | Wage per day | Recruitment cost at the band top |
 |---:|---|---:|---:|
@@ -47,7 +56,9 @@ The two tables are keyed differently on purpose, and that is easy to trip over. 
 
 Two multipliers sit on top of the wage: `MountedWageMultiplier` 1.3 and `MercenaryWageMultiplier` 1.5, both `const float` at `TroopCostService.cs:5-6`, applied in that order and truncated to an int. Mercenary recruitment doubles (`MercenaryRecruitMultiplier` 2, `TroopCostService.cs:7`).
 
-`IsMounted` is read off the equipment roster's Horse slot, not off `level` or `default_group`, so giving an existing rung a horse raises both its wage and its auto-resolve power by more than the level change would suggest. The claim in [`auto-resolve-diagnostics.md:9`](../features/auto-resolve-diagnostics.md) that level is the only attribute a simulated battle scores from is too absolute: `GetPower` takes `IsMounted` as its third argument at `CharacterObject.cs:605`.
+**"Mounted" does not come from the Horse slot.** For an ordinary troop `IsMounted` is fixed at load time from `default_group`: `BasicCharacterObject.Deserialize` parses that attribute into a `FormationClass` and stores `_isMounted = DefaultFormationClass.IsMounted()` (`BasicCharacterObject.cs:489-496`), which is true only for `Cavalry` and `HorseArcher` (`TroopClassExtensions.cs:15-22`). Only a hero reads equipment instead, from slot 10 (`CharacterObject.cs:318-327`). Both the wage multiplier (`Main/Features/TroopProgression/Models/TaomPartyWageModel.cs:42`) and the auto-resolve multiplier take that flag, so a troop handed a horse and left on `default_group="Infantry"` still pays a foot wage and still fights as foot in simulation. Change the group, not just the roster. The Horse slot is not idle: vanilla's terrain modifier classifies the troop with `HasMount()`, which does read slot 10 (`DefaultMilitaryPowerModel.cs:260-275`, `BasicCharacterObject.cs:247-250`).
+
+That makes [`auto-resolve-diagnostics.md:9`](../features/auto-resolve-diagnostics.md), which says a simulated battle scores from `troop.level` alone, too absolute. Its own line 13 already carries the mounted factor, and two further inputs sit above the per-soldier number: the party leader's captain perks (`DefaultMilitaryPowerModel.cs:124-157`) and the terrain-and-side table (`:159-190`). Skills, armour and weapons still reach none of it.
 
 The levels TAOM actually uses across its 16 troop files are 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46 and 51, spread over 857 troop entries. The only off-grid one is `morannon_recruit` at level 7. <!-- measured: python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))" 2026-09-05 --> That grid matters for the skill tool as well: `rebalance_troops.py` keys its baselines on `{1, 6, 11, ... 51}` and skips any troop at a level it has no row for, so `morannon_recruit` is outside the curve entirely ([troop-skill-balance.md](../features/troop-skill-balance.md), "The formula").
 
@@ -68,7 +79,7 @@ Where they live and how they are written is [Troops](troops.md). What they buy i
 
 A separate, level-driven term is easy to mistake for a skill effect. `BasicCharacterObject.cs:74` defines `SkillFactor` as `min(Level, 32) / 32`, and `Agent.cs:5085-5086` uses it to size the random error in an agent's formation position. It saturates at level 32, so a level 36 troop and a level 51 troop hold a line equally well.
 
-**In a simulated map battle**, skills do nothing at all. The auto-resolve path scores from tier and mount only, which is why the project's main skill tool has never touched an axis auto-resolve can see ([auto-resolve-diagnostics.md:8-27](../features/auto-resolve-diagnostics.md)).
+**In a simulated map battle**, skills do nothing at all. The per-soldier number is tier and mount, and what sits above it is the party leader's captain perks and a terrain modifier. No part of that chain reads a skill, which is why the project's main skill tool has never touched an axis auto-resolve can see ([auto-resolve-diagnostics.md:8-27](../features/auto-resolve-diagnostics.md)).
 
 **Where the target numbers live.** `tools/rebalance_troops.py` holds the whole curve: `GROUP_BASELINES` at line 115 (four tables, Infantry / Ranged / Cavalry / HorseArcher, keyed by the eleven grid levels) and `CULTURAL_MODS` at line 126 (21 culture keys). <!-- measured: python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S|re.M).group(1),re.M)))" 2026-09-05 --> No doc prints the baseline tables; open the file. The per-culture deltas are printed in [troop-skill-balance.md:68-95](../features/troop-skill-balance.md). A missing `CULTURAL_MODS` key does not error, it silently rebaselines that whole faction to the bare curve, which is how a Lindon apply nearly stripped 30 troops in one run.
 
@@ -180,10 +191,10 @@ There is a second, older curve. `tools/generate_gondor_armor.py` carries `STAT_T
 1. **`level="21"`** gives tier `ceil((21 - 5) / 5) = 4`.
 2. **Tier 4** gives a wage of 8 denars per day. No Horse slot, so no 1.3 multiplier; `occupation="Soldier"` is not a mercenary occupation, so no 1.5.
 3. **Level 21** falls in the `<= 21` recruitment band, so 400 denars.
-4. **Tier 4, on foot** gives auto-resolve power `(2+4) * (8+4) * 0.02 * 1.0 = 1.44`. <!-- measured: python -c "print((2+4)*(8+4)*0.02, (2+5)*(8+5)*0.02*1.2)" 2026-09-05 -->
+4. **Tier 4, and `default_group="Infantry"` so not mounted**, gives auto-resolve power `(2+4) * (10+4) * 0.02 = 1.68`. <!-- measured: python -c "print((2+4)*(10+4)*0.02, (2+5)*(10+5)*0.02*1.2)" 2026-09-05 --> Turning "Enable Custom Troop Power" off in MCM leaves that number where it is, because TAOM only replaces the curve above tier 6.
 5. **The skills reproduce the tool exactly.** Infantry baseline at level 21 is Athletics 95, OneHanded 125, TwoHanded 110, Polearm 130, Riding 15, Bow 15, Crossbow 10, Throwing 50 (`tools/rebalance_troops.py`, `INFANTRY_BASELINES`). Gondor's deltas are +5 / +5 / +10 / +5 / +5 and Throwing -10 ([troop-skill-balance.md:68-95](../features/troop-skill-balance.md)). The name contains "spear", so the specialisation pass shifts 15 from OneHanded into Polearm. That lands on 135 - 15 = 120 OneHanded and 135 + 15 = 150 Polearm, which is what the file says.
 
-Its upgrade target `gondor_pg_cavalry` is level 26 with `slot="Horse"` filled: tier 5, wage `12 * 1.3 = 15`, power `(2+5) * (8+5) * 0.02 * 1.2 = 2.184`. One rung up the tree is worth 52 percent more auto-resolve power and 87 percent more wage, and the horse is doing most of both.
+Its upgrade target `gondor_pg_cavalry` is level 26 on `default_group="Cavalry"`: tier 5, wage `12 * 1.3 = 15`, power `(2+5) * (10+5) * 0.02 * 1.2 = 2.52`. One rung up the tree is worth 50 percent more auto-resolve power and 87 percent more wage, and the group attribute buys both. It fills `slot="Horse"` as well, which is what vanilla's terrain modifier reads, but neither the wage nor the power multiplier looks there.
 
 ### One chest, from four numbers to a price
 
@@ -265,8 +276,10 @@ Worth knowing before you go looking for a file that does not exist:
 - **Troop wages and recruitment costs.** Both tables are `switch` expressions in `Main/Features/TroopProgression/TroopCostService.cs:9-60`. Nothing in ModuleData reaches them.
 - **Culture feat magnitudes.** The XML binds a feat id; the number is the third argument to `Initialize` in `Main/Features/CulturalFeats/TaomCulturalFeats.cs`.
 - **The skill baseline curve and the armour curve.** Python constants in `tools/rebalance_troops.py` and `tools/rebalance_armor.py`. They are not read at runtime: they generate XML, and the XML is what ships.
-- **Auto-resolve power, the armour damage curve and the item value curve.** All vanilla engine models that TAOM does not override.
+- **The armour damage curve and the item value curve.** Both are vanilla engine models that TAOM does not override, so no file reaches them.
 - **The seven AI party size knobs.** MCM only, by design.
+
+One number readers expect on that list is missing on purpose. **Auto-resolve troop power is editable without a rebuild.** TAOM registers `TaomMilitaryPowerModel` (`Main/SubModule.cs:968`), so tiers 7 to 10, the mounted multiplier and the hero multiplier are all MCM knobs, and switching "Override Vanilla Tiers (T1-T6)" on moves tiers 0 to 6 into `Main/_Module/ModuleData/configs/battle_balance_config.json` as well. That file already carries the whole ladder, and its `T0` to `T6` rows are the vanilla formula written out, so the toggle on its own changes nothing until you edit them. <!-- measured: python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])" 2026-09-05 -->
 
 ## Recipes
 
@@ -319,6 +332,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 
 - **The validator does not check ranges.** `tools/validate_moduledata.py` checks references and a handful of named invariants. Only three JSON schemas exist under `tools/schemas/` (`taom_npccharacter.json`, `taom_spcultures.json`, `taom_equipmentsets.json`), and none of them covers `taom_partyTemplates.xml`, `troop_weights.xml` or any Armory item file. A body armour of 500 passes every gate in the repo. <!-- measured: ls tools/schemas/ | wc -l 2026-09-05 -->
 - **A skill above 500 buys nothing on the ranged accuracy term** and a level above 32 buys nothing on formation position error. `SandboxAgentStatCalculateModel.cs:993`, `BasicCharacterObject.cs:74`.
+- **A horse in the roster does not make a troop mounted.** For every nonhero, `IsMounted` comes from `default_group`, so a cavalry roster under `default_group="Infantry"` pays a foot wage and simulates as foot. `BasicCharacterObject.cs:489-496`.
 - **Two balance features write to one number and can cancel.** A heavy roster's elite tax can subtract more than a culture party-size feat adds, which is why the evil-culture feats carry a floor. `docs/reviews/lessons/gamemodels-services.md:408-425`.
 - **An explicit `value=` on an item silences the whole price model.** `ItemObject.cs:477-484`. A hand-set `value="6000"` on a starter weapon is invisible to any armour or tier pass.
 - **A `modifier_group` the engine does not know resolves to null with no warning**, and the item then never rolls any modifier. Two shipped examples exist: `modifier_group="mail"` and `modifier_group="false"`. The legal set is the 20 group ids listed above.
@@ -342,7 +356,10 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 | 21 troop culture keys, 20 armour culture keys | `python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S\|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S\|re.M).group(1),re.M)))"` | 2026-09-05 |
 | Damage surviving magnitude 100 at armour 0 / 33 / 43 / 60 | `python -c "bf={'Blunt':0.6,'Cut':0.1,'Pierce':0.25}; sub={'Cut':0.5,'Pierce':0.33,'Blunt':0.2}; f=lambda t,ae:(lambda n2: bf[t]*n2+(1-bf[t])*max(0.0,n2-ae*sub[t]))(100*50.0/(50.0+ae)); print([(ae,{t:round(f(t,ae),1) for t in ('Cut','Pierce','Blunt')}) for ae in (0,33,43,60)])"` | 2026-09-05 |
 | 8883 denars, tier 3.9, 51.69 tier factor; 5582 at default appearance | `python -c "print(int(120*2.75**((33+10)*0.1-0.4)*(1+0.2*(3-1))+100*(3-1)), round(2.75**((33+10)*0.1-0.4),2))"` and the same with `0.5` for appearance | 2026-09-05 |
-| Power 1.44 foot tier 4, 2.184 mounted tier 5 | `python -c "print((2+4)*(8+4)*0.02, (2+5)*(8+5)*0.02*1.2)"` | 2026-09-05 |
+| Power 1.68 on foot at tier 4, 2.52 mounted at tier 5 | `python -c "print((2+4)*(10+4)*0.02, (2+5)*(10+5)*0.02*1.2)"` | 2026-09-05 |
+| Vanilla tiers 7 to 10 at 3.06 / 3.60 / 4.18 / 4.80 against TAOM's 2.91 / 3.26 / 3.61 / 3.96, 5 to 18 percent lower | `python -c "v=lambda t:(2+t)*(10+t)*0.02;sh={7:2.91,8:3.26,9:3.61,10:3.96};print([(t,round(v(t),2),sh[t],round(100*(v(t)-sh[t])/v(t),1)) for t in (7,8,9,10)])"` | 2026-09-05 |
+| 14.3 percent, the gap between `CharacterObject.GetPower` and the real auto-resolve number at tier 4 | `python -c "print(round(100*(1-((2+4)*(8+4)*0.02)/((2+4)*(10+4)*0.02)),1))"` | 2026-09-05 |
+| `battle_balance_config.json` rows T0 to T6 equal the vanilla formula | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])"` | 2026-09-05 |
 | 383 party templates; goblin 320, mordor 260, isengard 260, erebor 225, gondor 200, rivendell 150 | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t))"` plus the per-template max sums | 2026-09-05 |
 | 105 live `<TroopWeight>` rows: 93 at 2.0, 10 at 3.0, 1 at 4.0, 1 at 10.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-09-05 |
 | 20 item modifier groups | `grep -oE 'id="[^"]+"' Native/ModuleData/item_modifiers_groups.xml \| wc -l` | 2026-09-05 |

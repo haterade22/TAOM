@@ -16,19 +16,29 @@ until a culture or a clan names it by id.
 - **Registration:** `Main/_Module/SubModule.xml:331`, `<XmlName id="partyTemplates" path="taom_partyTemplates"/>`.
   Vanilla registers the same list id at `SandBox/SubModule.xml:59` with `path="partyTemplates"`. This
   file lives in the game install, not the repo; a module reinstall reverts hand edits, so land a
-  repo-side validator gate with any fix. Both lists load, so a TAOM entry that reuses a vanilla id
-  takes vanilla's place.
+  repo-side validator gate with any fix. Both lists load into one merged document, so a TAOM entry
+  that reuses a vanilla id is folded into the vanilla one before anything is read.
 - **Root element:** `<partyTemplates>`. **Per-entry element:** `<MBPartyTemplate>`. **Engine class:**
   `TaleWorlds.CampaignSystem.Party.PartyTemplateObject`.
 - **The root tag is load-bearing and the per-entry tag is not.** `MBObjectManager.LoadXml` matches the
   document root against the registered list name (`MBObjectManager.cs:1371`), then deserializes every
   non-comment child of it whatever that child is called (`MBObjectManager.cs:1387-1395`). Write
   `<MBPartyTemplate>` because every shipped file does, not because the engine checks.
-- **A duplicate id is not an error, it is a silent replacement.** `Deserialize` re-creates the stack
-  list before it reads anything (`PartyTemplateObject.cs:28`), and `LoadXml` resolves the id to the
-  existing object first (`MBObjectManager.cs:1391-1393`), so the last module to declare an id keeps
-  its own stacks and drops the earlier ones. XML cannot append a single stack to another module's
-  template.
+- **A duplicate id across two files adds stacks, it does not replace them.** Every file registered
+  under `partyTemplates` is merged into one document before a line of it is deserialized, and the
+  schema in the game root's `XmlSchemas` folder decides how. `partyTemplates.xsd:11-16` marks
+  `<stacks>` `AlwaysPreferMerge`, so the merger walks into the earlier template's stack list
+  (`MBObjectManager.cs:851-855`), and `<PartyTemplateStack>` carries no unique key, so the later
+  file's stacks are **appended** to what is already there (`MBObjectManager.cs:867`). One merged
+  entry then reaches `Deserialize` (`MBObjectManager.cs:1387-1393`) and the template spawns both
+  modules' stacks, which is how a roster quietly doubles.
+- **`_replaceWhileMerging="true"` is how you take a template's place.** Put it on your
+  `<MBPartyTemplate>` and the merger strips the earlier entry's attributes and children before
+  yours land (`MBObjectManager.cs:804-808`, `:829-832`). TAOM does not use it anywhere today.
+- **Two entries with the same id inside one file go the other way.** The merger only folds one file
+  into another, so both rows survive it, `Deserialize` runs twice over the same template, and its
+  first line rebuilds the stack list from scratch (`PartyTemplateObject.cs:28`). There the second
+  entry wins outright.
 
 ### What binds a template
 
@@ -71,7 +81,7 @@ faction and no size field, and any attribute you invent on the element is ignore
 |---|---|---|---|---|---|
 | `troop` | dotted reference, `NPCCharacter.<id>` | in practice | null Character, which crashes at spawn instead of at load | Names the troop this stack fills with. The value must contain a dot: an undotted value throws `MBInvalidReferenceException` (`MBObjectManager.cs:1526-1527`), and an unknown id after the dot is created as a placeholder rather than rejected (`MBObjectManager.cs:713-735`). | `PartyTemplateObject.cs:39` |
 | `min_value` | int | yes | `NullReferenceException` at module load | The floor this stack fills to when the party's ratio rolls 0. | `PartyTemplateObject.cs:39` |
-| `max_value` | int | yes | `NullReferenceException` at module load | The ceiling this stack fills to when the ratio rolls 1. It is a spawn ceiling, not a party size. | `PartyTemplateObject.cs:39` |
+| `max_value` | int | yes | `NullReferenceException` at module load | The value this stack fills to when the ratio rolls 1. It caps that arithmetic, not the party: a villager stack is multiplied again afterwards, and no party size limit is involved. | `PartyTemplateObject.cs:39` |
 
 ## Child elements
 
@@ -92,6 +102,12 @@ the whole party, then fills every stack to `RoundRandomized(min + (max - min) * 
 are added (`:457`). So a party spawns somewhere between the template's min sum and its max sum, and
 the **expected** roster is the midpoint of the two.
 
+**One kind of party finishes above its own `max_value`.** If a villager party's bound town has a
+governor carrying the Village Network perk, every stack is multiplied by 1.1 after the interpolation
+and before the troops are counted in (`DefaultPartySizeLimitModel.cs:449-455`; the +10% is that
+perk's governor bonus at `DefaultPerks.cs:2149`). Read `max_value` as the top of the arithmetic
+rather than as a promise about the roster. Every other party type stays inside the band.
+
 `r` comes from `GetInitialPartySizeRatioForMobileParty` (`DefaultPartySizeLimitModel.cs:390-413`): a
 player caravan and a patrol party both get `1f` and therefore always spawn at the max sum
 (`:404-411`), a land bandit gets a player-progress term, and **everything else, every kingdom lord
@@ -108,8 +124,9 @@ size limit with `MBRandom.ChooseWeighted` over those midpoints
 
 ## Worked example
 
-`caravan_template_erebor`, complete and unedited. Three stacks, min sum 20, max sum 29, and because a
-caravan's ratio is always `1f` it spawns 29 men every time. <!-- measured: python -c "import re;s=open('Main/_Module/ModuleData/taom_partyTemplates.xml',encoding='utf-8-sig').read();b=re.search(r'id=\"caravan_template_erebor\".*?</MBPartyTemplate>',s,re.S).group(0);print(len(re.findall(r'<PartyTemplateStack',b)),sum(map(int,re.findall(r'min_value=\"(\d+)\"',b))),sum(map(int,re.findall(r'max_value=\"(\d+)\"',b))))" 2026-09-05 -->
+`caravan_template_erebor`, complete and unedited. Three stacks, min sum 20, max sum 29. A caravan the
+**player** owns draws a ratio of `1f` and spawns all 29 every time; an AI caravan rolls like any
+other party and lands anywhere in the band (`DefaultPartySizeLimitModel.cs:404-412`). <!-- measured: python -c "import re;s=open('Main/_Module/ModuleData/taom_partyTemplates.xml',encoding='utf-8-sig').read();b=re.search(r'id=\"caravan_template_erebor\".*?</MBPartyTemplate>',s,re.S).group(0);print(len(re.findall(r'<PartyTemplateStack',b)),sum(map(int,re.findall(r'min_value=\"(\d+)\"',b))),sum(map(int,re.findall(r'max_value=\"(\d+)\"',b))))" 2026-09-05 -->
 
 <!-- example file="Main/_Module/ModuleData/taom_partyTemplates.xml" id="caravan_template_erebor" -->
 
@@ -185,7 +202,7 @@ vanilla code (`CaravansCampaignBehavior.cs:498`). That exact mistake sat in
    the first entry wins a tie (`ClanVariablesCampaignBehavior.cs:499-509`).
 
 Check: `python tools/validate_moduledata.py --code BROKEN_PARTY_TEMPLATE_REF`
-Takes effect: full game restart, and only for parties spawned after it. An existing lord keeps the roster he was created with.
+Takes effect: next save load, and only for parties spawned after it. The `partyTemplates` list is re-read on every campaign load, saved games included (`Campaign.cs:1396-1399`, `:1466-1473`); an existing lord keeps the roster he was created with.
 Code: No code changes needed
 
 ### Add the twelve templates a new culture needs
@@ -233,7 +250,7 @@ Code: No code changes needed
    retargeted.
 
 Check: `python tools/rebalance_party_template_maxes.py`
-Takes effect: full game restart, and only for parties spawned after it
+Takes effect: next save load, and only for parties spawned after it
 Code: No code changes needed
 
 ### Delete a stack
@@ -250,7 +267,7 @@ Code: No code changes needed
    (`DefaultVassalRewardsModel.cs:47`).
 
 Check: `python tools/validate_moduledata.py --code BROKEN_PARTY_TEMPLATE_REF`
-Takes effect: full game restart, and only for parties spawned after it
+Takes effect: next save load, and only for parties spawned after it
 Code: No code changes needed
 
 ## Gotchas: what fails silently and what crashes
@@ -271,8 +288,9 @@ Code: No code changes needed
   [culture-playability-wiring.md](../features/culture-playability-wiring.md) is this exact surface,
   and it has shipped broken nine times.
 - **`max_value` is not the party's size, and reading it as one has already cost a balance pass.** The
-  sum is the ceiling of the roster at spawn; `PartySizeLimit` governs the steady state, and a party
-  spawned above its limit is drained by desertion within days
+  sum is where the spawn arithmetic tops out, and a villager party with a Village Network governor
+  goes 10% past even that. `PartySizeLimit` governs the steady state, and a party spawned above its
+  limit is drained by desertion within days
   ([campaign-mechanics lessons](../reviews/lessons/campaign-mechanics.md), "A ModuleData field's NAME
   is not its semantics").
 - **`GetUpperTroopLimit()` and `GetLowerTroopLimit()` look authoritative and have no caller.** The

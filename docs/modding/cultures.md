@@ -320,7 +320,7 @@ Code: Code changes required in `Main/Features/CulturalFeats/TaomCulturalFeats.cs
 4. If the target is a troop or an NPC, confirm it exists in the culture's file under `Main/_Module/ModuleData/troops/` or `Main/_Module/ModuleData/characters/`.
 
 Check: `python tools/validate_moduledata.py`
-Takes effect: full game restart
+Takes effect: next save load. `SPCultures` is re-read at the start of every campaign, saved games included (`Campaign.cs:1410`, `:1460-1464`), so a repointed binding on a culture that already exists reaches an old save. Parties already on the map keep the roster they were drawn with.
 Code: No code changes needed
 
 #### Repointing a binding on one of the six XSLT-wrapped cultures

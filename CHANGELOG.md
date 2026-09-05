@@ -4,6 +4,34 @@
 
 ## 2026-09-05
 
+### fix(modding): 42 corrections from the Codex adversarial review, each re-verified first
+
+Codex found 3 CRITICAL, 11 HIGH and 4 MEDIUM against the finished handbook, and every one of them
+lives in prose about engine behaviour, which is precisely what the two gates cannot judge. Both
+gates pass on all 18 chapters it faulted. That is the useful result: a mechanical checker and an
+adversarial reader catch disjoint classes of error, and the handbook now has both.
+
+The three CRITICAL ones were all in the from-zero walkthrough, and all three would have cost a new
+modder a day. Monsters were described as `project.mbproj` only, when `Game.cs:307` registers
+`RegisterType<Monster>` and `Game.cs:437` loads them, and the live Armory carries eight
+`<XmlName id="Monsters">` rows against four `soln_monsters`; register only the native way and the
+race has no Monster object, which surfaces as a null reference while an agent is being built. The
+XSLT rule said to keep `apply-templates` last, when TAOM's own working stylesheet copies `@*`
+first and passes through only the children it did not replace. And the `Check:` commands were
+presented as proving the reader's new module when they default to TAOM's own paths, so Stage 16
+could print clean immediately before the map-load crash the same stage warns about.
+
+The largest single correction is the auto-resolve section of `balance-levers.md`. It cited
+`CharacterObject.GetPower`, which simulated combat does not call: `DefaultCombatSimulationModel`
+asks `MilitaryPowerModel.GetTroopPower`, TAOM overrides that model, and it ships switched on. The
+chapter now names the right model and adds what the review did not ask for, the measured gap
+between vanilla's curve extended to ten tiers and the four flat numbers TAOM actually ships: 5
+percent at tier 7 rising to 18 at tier 10.
+
+One finding was rejected, with the reason recorded: a cited line had drifted since the reviewed
+commit and now sits inside a verbatim XML block. Its substance was confirmed and applied elsewhere
+in the same chapter.
+
 ### ci(handbook): both gates now run on every push, without the decompile
 
 A gate nobody runs is not a gate, which is the lesson the doc-graph ratchet in the same job was
