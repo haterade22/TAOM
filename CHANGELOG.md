@@ -4,6 +4,34 @@
 
 ## 2026-09-05
 
+### fix(handbook-gates): both gates were wrong in a way that only showed once the handbook existed
+
+`check_handbook_attributes.py` scanned raw text, so the hub's own explanation of the marker
+syntax read as a claim and failed the gate. Escaping the delimiter got past it and rendered the
+HTML entity literally to the reader, because a markdown code span does not decode entities. The
+gate now masks fenced blocks and inline code spans before scanning, so a chapter can document its
+own conventions and still be checked. Four regression tests.
+
+`lint_handbook.py` flagged CRLF line endings. This repo sets `core.autocrlf=true`, so git stores
+LF and writes CRLF into the working tree on checkout by design, which meant every chapter failed
+the moment it was committed. The check is gone and its test now asserts the opposite, with the
+reason, so nobody adds it back.
+
+Both gates now report zero findings across 40 documents, 152 markers verified against the
+decompile, and the two suites total 91 tests.
+
+### docs(modding): the two lists the research produced, kept rather than discarded
+
+`docs/modding/open-questions.md` gathers the 119 questions the chapter authors could not answer,
+each naming the file or the experiment that would settle it. A reader who hits one of them should
+find out quickly that the answer does not exist rather than hunting for it.
+
+`docs/reviews/upstream-doc-corrections-2026-09-05.md` is the other half: 43 claims in TAOM's own
+documentation that four critics checked against the files and found wrong. The handbook
+contradicts every one of them; the source docs are still stale, which is what the list is for.
+Each row carries its evidence command, and the file says to re-run it before editing, because a
+count measured in September can go stale exactly the way these did.
+
 ### docs(modding): a handbook for the people who edit the XML, not the people who wrote the code
 
 KEYforce asked for a guide he can use to add and remove content and to balance numbers himself,

@@ -83,7 +83,7 @@ link rather than acting on the phrasing.
 | "build a map from nothing" | [A new mod from zero, Stage 16](recipe-new-mod-from-zero.md#stage-16-the-map-module-and-its-settlements) |
 | "start a mod from an empty folder" | [A new mod from zero, Stage 1](recipe-new-mod-from-zero.md#stage-1-make-the-folder-and-the-manifest) |
 
-60 rows, reaching 38 of the 38 other chapters.
+60 rows, reaching every one of the other 38 chapters.
 <!-- measured: rg -c '^. "' docs/modding/README.md, and a python count of distinct .md targets in that table 2026-09-05 -->
 
 ## Reading order for a brand-new modder

@@ -140,10 +140,51 @@ def _split_inert(value: str) -> list:
     return [part.strip() for part in value.split(",") if part.strip()]
 
 
+def _masked_for_markers(text: str) -> str:
+    """Blank out fenced blocks and inline code spans, preserving offsets.
+
+    A chapter documents its own marker syntax, so a literal marker inside backticks is an
+    illustration and not a claim. Scanning raw text made the handbook's own "how to read a
+    chapter" section fail the gate, and escaping the delimiter to get past it rendered the
+    entity literally to the reader (a code span does not decode entities). Masking here is
+    the fix that keeps both the gate and the prose correct.
+    """
+    out = list(text)
+    i = 0
+    n = len(text)
+    in_fence = False
+    while i < n:
+        if text.startswith("```", i) and (i == 0 or text[i - 1] == "\n"):
+            in_fence = not in_fence
+            for j in range(i, min(i + 3, n)):
+                out[j] = " "
+            i += 3
+            continue
+        if in_fence:
+            if text[i] != "\n":
+                out[i] = " "
+            i += 1
+            continue
+        if text[i] == "`":
+            j = i + 1
+            while j < n and text[j] != "`" and text[j] != "\n":
+                j += 1
+            if j < n and text[j] == "`":
+                for k in range(i, j + 1):
+                    out[k] = " "
+                i = j + 1
+                continue
+        i += 1
+    return "".join(out)
+
+
 def parse_markers(text: str) -> list:
-    """Every engine-table / example marker in a document, with its 1-based line."""
+    """Every engine-table / example marker in a document, with its 1-based line.
+
+    Markers inside a fenced block or an inline code span are illustrations, not claims.
+    """
     markers = []
-    for m in _MARKER_RE.finditer(text):
+    for m in _MARKER_RE.finditer(_masked_for_markers(text)):
         kind, body = m.group(1), m.group(2)
         attrs = {k: v for k, v in _KV_RE.findall(body)}
         marker = {"kind": kind, "line": text.count("\n", 0, m.start()) + 1}

@@ -789,3 +789,34 @@ class CliTests(_Tree):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MarkersInsideCodeAreIllustrationsTests(unittest.TestCase):
+    """A chapter documents its own marker syntax; those literals are not claims.
+
+    Regression for 2026-09-05: the hub's "how to read a chapter" section tripped NO_TABLE and
+    MISSING_EXAMPLE on its own explanation, and escaping the delimiter to get past the gate
+    rendered the HTML entity literally to the reader, because a markdown code span does not
+    decode entities. The gate has to ignore code, so the prose can stay correct.
+    """
+
+    def test_marker_in_inline_code_span_is_ignored(self):
+        text = 'Explain `<!-- engine-table type="X" file="Y" method="Deserialize" -->` here.\n'
+        self.assertEqual(cha.parse_markers(text), [])
+
+    def test_marker_in_fenced_block_is_ignored(self):
+        text = 'Intro\n\n```\n<!-- example file="a.xml" id="b" -->\n```\n\nOutro\n'
+        self.assertEqual(cha.parse_markers(text), [])
+
+    def test_real_marker_outside_code_is_still_found(self):
+        text = ('`<!-- engine-table type="Ignored" file="i.cs" -->`\n\n'
+                '<!-- engine-table type="Real.Type" file="r.cs" method="Deserialize" -->\n\n'
+                '| Attribute |\n|---|\n| `id` |\n')
+        markers = cha.parse_markers(text)
+        self.assertEqual([m.get('type') for m in markers], ['Real.Type'])
+
+    def test_line_numbers_survive_masking(self):
+        text = 'a\n`<!-- example file="x" id="y" -->`\nb\n<!-- example file="real.xml" id="z" -->\n'
+        markers = cha.parse_markers(text)
+        self.assertEqual(len(markers), 1)
+        self.assertEqual(markers[0]['line'], 4)

@@ -104,13 +104,18 @@ class LintHandbookTests(unittest.TestCase):
         codes = [f.code for f in self.lint('x.md')]
         self.assertNotIn('LIVE_PATH_NO_WARNING', codes)
 
-    def test_crlf_or_bom_is_reported(self):
+    def test_bom_is_reported_but_crlf_is_not(self):
+        """core.autocrlf=true writes CRLF into the worktree on checkout, by design.
+
+        Flagging it failed every chapter the moment it was committed (2026-09-05). Git stores
+        LF regardless, which is what actually matters, so only the BOM is a finding.
+        """
         path = os.path.join(self.docs, 'x.md')
         with open(path, 'wb') as f:
             f.write(b'\xef\xbb\xbf# X\r\n\r\ntext\r\n')
         codes = {f.code for f in lint_handbook.lint_file(path, repo_root=self.root)}
         self.assertIn('BOM', codes)
-        self.assertIn('CRLF', codes)
+        self.assertNotIn('CRLF', codes)
 
 
 if __name__ == '__main__':

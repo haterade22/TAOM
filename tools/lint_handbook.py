@@ -2,7 +2,7 @@
 
 Read-only. Reports, per chapter: long dashes, drive-letter paths, dead relative links,
 missing skeleton headings on file chapters, recipes without the Check / Takes effect / Code
-trailer, AI vocabulary, live-module paths without the reinstall warning, BOM and CRLF.
+trailer, AI vocabulary, live-module paths without the reinstall warning, and a BOM.
 
 Usage:
     python tools/lint_handbook.py                 # every chapter under docs/modding
@@ -88,8 +88,10 @@ def lint_file(path: str, repo_root: str = REPO_ROOT) -> list[Finding]:
     findings: list[Finding] = []
     if raw.startswith(b'\xef\xbb\xbf'):
         findings.append(Finding(rel, 1, 'BOM', 'file starts with a UTF-8 BOM; the contract asks for none'))
-    if b'\r\n' in raw:
-        findings.append(Finding(rel, 1, 'CRLF', 'file has CRLF line endings; the contract asks for LF'))
+    # No CRLF check. This repo sets core.autocrlf=true, so git stores LF and writes CRLF into the
+    # working tree on checkout, by design (see .gitattributes). Flagging the worktree failed every
+    # chapter the moment it was committed (2026-09-05). The stored blob is what matters, and git
+    # guarantees that one is LF.
     text = raw.decode('utf-8-sig').replace('\r\n', '\n')
     lines = text.split('\n')
     prose, fenced = _strip_code(text)
