@@ -143,3 +143,51 @@ abanissa,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
 abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
 abanissa,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
 abanissa,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
+goblin,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
+goblin,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
+goblin,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
+goblin,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
+goblin,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+goblin,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
+goblin,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
+goblin,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
+goblin,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+goblin,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+goblin,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+goblin,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
+mistymountainorcs,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
+mistymountainorcs,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
+mistymountainorcs,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
+mistymountainorcs,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
+mistymountainorcs,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+mistymountainorcs,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
+mistymountainorcs,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
+mistymountainorcs,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
+mistymountainorcs,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+mistymountainorcs,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+mistymountainorcs,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+mistymountainorcs,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
+lindon,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
+lindon,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
+lindon,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
+lindon,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
+lindon,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+lindon,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
+lindon,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
+lindon,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
+lindon,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+lindon,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+lindon,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+lindon,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
+bluecraig,IsLordTemplate,Male lord battle,Battle,1,PASS,mandatory
+bluecraig,IsFemaleTemplate | IsLordTemplate,Female lord battle,Battle,1,PASS,mandatory
+bluecraig,IsLordTemplate,Male lord civilian,Civilian,1,PASS,mandatory
+bluecraig,IsFemaleTemplate | IsLordTemplate,Female lord civilian,Civilian,1,PASS,mandatory
+bluecraig,IsChildEquipmentTemplate | IsLordTemplate,Male lord child,Civilian,6,PASS,mandatory
+bluecraig,IsChildEquipmentTemplate | IsFemaleTemplate | IsLordTemplate,Female lord child,Civilian,6,PASS,mandatory
+bluecraig,IsLordTemplate | IsTeenagerEquipmentTemplate,Male lord teen,Civilian,1,PASS,mandatory
+bluecraig,IsFemaleTemplate | IsLordTemplate | IsTeenagerEquipmentTemplate,Female lord teen,Civilian,1,PASS,mandatory
+bluecraig,IsKingdomRulerTemplate,Male king battle,Battle,1,PASS,optional
+bluecraig,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen battle,Battle,1,PASS,optional
+bluecraig,IsKingdomRulerTemplate,Male king civilian,Civilian,1,PASS,optional
+bluecraig,IsFemaleTemplate | IsKingdomRulerTemplate,Female queen civilian,Civilian,1,PASS,optional
