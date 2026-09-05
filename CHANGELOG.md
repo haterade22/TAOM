@@ -4,6 +4,33 @@
 
 ## 2026-09-05
 
+### docs(modding): a handbook for the people who edit the XML, not the people who wrote the code
+
+KEYforce asked for a guide he can use to add and remove content and to balance numbers himself,
+and to walk a new modder from an empty folder to what TAOM is today. `docs/modding/` is that
+handbook. Eight chapters land here: the hub's concept layer (`editing-safely`,
+`submodule-and-registration`, `load-order-and-dependencies`, `id-cheatsheet`, `file-catalogue`)
+and the module anatomy (`modules-overview`, `module-taom`, `module-dependencies`). The remaining
+31 chapters are written against the same contract and the same manifest.
+
+Two things make it different from a doc someone types from memory. Every attribute table is
+generated against the v1.4.8 deserializer and then gated by `tools/check_handbook_attributes.py`,
+which opens the cited method, extracts every attribute string it actually reads, and fails on a
+documented attribute the engine never reads or a read attribute no table mentions. Every worked
+example is extracted from a shipped file and its id is checked against that file. The first run
+over the finished chapters found four real defects, including a `DependedModuleMetadatas` row
+presented as engine-parsed when `LoadWithFullPath` has no branch for it.
+
+`tools/lint_handbook.py` covers the rest of the contract: long dashes, drive-letter paths, dead
+links, the nine-heading skeleton, recipes missing their Check / Takes effect / Code trailer, AI
+vocabulary, a live game-install path with no reinstall warning, BOM and CRLF. Both tools are
+read-only and tested (78 and 9 tests).
+
+The research behind it also produced a worklist of 43 claims in existing docs that were checked
+against the files and found wrong, from `heroes.xml` holding 1001 heroes rather than 961 to the
+kingdom-id table that swaps `empire` and `vlandia`. Those corrections are tracked separately; the
+handbook contradicts them rather than inheriting them.
+
 ### chore(codex): the repo pin was inert on this machine, and stale when it did load
 
 Codex reads a repo's `.codex/config.toml` only when `~/.codex/config.toml` trusts that checkout path
