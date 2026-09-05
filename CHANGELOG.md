@@ -2,6 +2,20 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-05
+
+### chore(codex): the repo pinned gpt-5.5 and silently outranked the user's gpt-5.6-sol
+
+Codex layers config with the trusted project's `.codex/config.toml` above `~/.codex/config.toml`
+(learn.chatgpt.com/docs/config-file/config-basic, read 2026-09-05), so the repo's `model = "gpt-5.5"`
+/ `xhigh` pin was what every `/review-codex` and `/codex-verify` actually ran, whatever the user
+config said. The repo now pins `gpt-5.6-sol` at `max` (the 0.153.x CLI added first-class `max` for
+the 5.6 family), verified by `codex doctor` and a smoke `codex exec` that reported
+`model: gpt-5.6-sol`, `reasoning effort: max`. The CLI itself went 0.147.0 to 0.153.4. The
+filesystem MCP Codex reviews through now also reaches the live `TAOM_Map` and `LOTRLOME_Armory`
+ModuleData, so a data-layer review can open the files it is judging. `review-codex/SKILL.md` said
+the pin lived in the user config; corrected.
+
 ## 2026-09-04
 
 ### fix(troops): a promotion could lower the troop's armour, on 62 edges in 13 cultures (#541)

@@ -1,6 +1,6 @@
 # TAOM — Codex acts as independent reviewer/verifier
-model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "max"
 project_doc_max_bytes = 65536
 
 sandbox_mode = "workspace-write"
@@ -17,6 +17,8 @@ args = [
   "E:\\repos\\TAOM",
   "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
   "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",
+  "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM_Map\\ModuleData",
+  "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData",
   "E:\\Decompiled_Bannerlord"
 ]
 

@@ -30,8 +30,8 @@ cd "<repo-root>" && codex exec -c project_doc_max_bytes=65536 - < "<prompt-file-
 ```
 - `codex exec -` reads the prompt from stdin (avoids argv length limits for large prompts).
 - Output (stdout + stderr) goes to `docs/reviews/raw/codex-adversarial-{feature}-{date}.md`.
-- Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "xhigh"` typically runs 10-45 minutes. The harness notifies when the background job completes.
-- Model + reasoning effort come from `~/.codex/config.toml` (currently `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"`). Do NOT override unless the user asks.
+- Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "max"` typically runs 10-45 minutes. The harness notifies when the background job completes.
+- Model + reasoning effort come from the repo's `.codex/config.toml` (currently `model = "gpt-5.6-sol"`, `model_reasoning_effort = "max"`, set 2026-09-05); a trusted project config outranks `~/.codex/config.toml`, so the repo pin is the one that runs. Do NOT override unless the user asks.
 - Codex reads project rules from `AGENTS.md`, **but truncates it at `project_doc_max_bytes` (default 32768). AGENTS.md exceeds that, so the `-c project_doc_max_bytes=65536` override is REQUIRED** — without it Codex reviews without TAOM's Critical Rules, ADR rules, and commit conventions (they live past the cut). The project `.codex/config.toml` sets the key but is never loaded (`CODEX_HOME` unset → Codex reads `~/.codex/config.toml`), which is why the flag is passed explicitly. Confirm the fix is live with `codex debug prompt-input "hi"` (no API call): the rendered input must contain "Non-Negotiable ADR Rules". This is also why the project-declared `filesystem`/`git`/`ilspy` MCP servers are inert — they're only in the unloaded project config.
 
 **When the background job notifies completion:**
