@@ -638,3 +638,20 @@ All measured 2026-09-05 against the live install and, where noted, the repo.
   pattern of a bulk edit to this file, and
   [bannerlord-engine-and-toolchain.md](../reference/bannerlord-engine-and-toolchain.md) for the Kit
   build and the four asset folders.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](./settlements.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+
+<!-- backlinks-end -->

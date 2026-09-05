@@ -112,3 +112,13 @@ The Claude agents caught **1 of 4 code bugs** (Agent 2's IsFemale). Codex caught
 All 6 findings are fixed. Build green. Tests 2,323/2,325 pass.
 
 **Ready for commit.**
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

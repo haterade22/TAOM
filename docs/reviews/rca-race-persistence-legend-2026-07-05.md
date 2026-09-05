@@ -32,3 +32,13 @@ None. A single pre-existing stale doc line, caught by the existing review contro
 - Deep-review: 5 agents (standards / installed-DLL compat / efficiency / completeness / data-flow), all PASS — data-flow proved capture-before-write ordering synchronous from decompiled `SaveHandler.SaveTick`.
 - Codex: `codex-adversarial-race-persistence-legend-2026-07-05.{prompt.md,md}` (1.9MB session log discarded, final message kept).
 - Issue: #330. Feature doc: `docs/features/hero-race.md` (updated).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

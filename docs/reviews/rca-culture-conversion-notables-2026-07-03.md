@@ -20,3 +20,13 @@ Not applicable in the usual sense — the completeness agent is the one that CAU
 ## Feedback memories to codify
 
 None new. Finding 1 maps to the existing `feedback_no_write_before_reading_tool_output.md` / evidence-over-claims §C; the repeat is recorded in LESSONS-LEARNED rather than a new memory file.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

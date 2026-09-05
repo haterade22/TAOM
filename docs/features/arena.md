@@ -195,5 +195,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 - [docs/features/tournament-armor-assignment.md](./tournament-armor-assignment.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
 
 <!-- backlinks-end -->

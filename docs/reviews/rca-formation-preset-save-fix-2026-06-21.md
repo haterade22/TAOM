@@ -57,3 +57,13 @@ Manufacturing a new rule for a LOW, self-caught, already-covered pattern would b
 Both findings fixed in-session. Build clean (0/0); 84/84 CompanionTactics tests pass (the precision rewrite added 2
 test methods). Pre-existing, unrelated `GetVolunteerTroopId_DolGuldur*` failures (9) in the working tree are
 data-drift from in-flight troop WIP — out of scope for this fix (documented in the session summary).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -237,6 +237,7 @@ Each links its backing memory; the session's meta-lesson is last.
 - [docs/features/elephant.md](../features/elephant.md)
 - [docs/features/spider-skeleton-animation-pipeline.md](../features/spider-skeleton-animation-pipeline.md)
 - [docs/features/spider.md](../features/spider.md)
+- [docs/reference/bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/substance-painter-mcp-setup.md](../reference/substance-painter-mcp-setup.md)
 

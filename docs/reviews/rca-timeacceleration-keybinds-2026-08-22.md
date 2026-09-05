@@ -73,3 +73,13 @@ Both belong in `docs/reviews/lessons/`:
    touch. Before shipping, re-derive each consumer's behaviour under a value that has NEVER been used
    before, not just under the shipped default. A "no behavioural delta" verdict from a diff is
    evidence about the code, not about the system.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

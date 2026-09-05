@@ -162,3 +162,13 @@ Both FP3 and FP4 followed the same pattern: Agent 5 *inferred* the deletion list
 - `.claude/skills/deep-review/SKILL.md` (review process that surfaced the findings)
 - `feedback_root_cause_mandatory.md` (the rule requiring this RCA)
 - `feedback_dont_defer_high_review_findings.md` (the rule that prevents shipping with deferred findings — relevant context)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

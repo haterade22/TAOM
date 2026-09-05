@@ -230,6 +230,11 @@ v1.4.8 also claims to fix "Settlement Distance Cache computation failing silentl
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/module-backup-sweep.md](../reference/module-backup-sweep.md)
 
 <!-- backlinks-end -->

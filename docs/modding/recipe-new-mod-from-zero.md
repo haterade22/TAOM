@@ -546,3 +546,16 @@ Measured 2026-09-05 against the installed v1.4.8 game and this repo. `$MODULES` 
 - [kingdom-creation](../features/kingdom-creation.md),
   [culture-playability-wiring](../features/culture-playability-wiring.md),
   [new-culture-authoring](../ai-includes/new-culture-authoring.md), [tools README](../../tools/README.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+
+<!-- backlinks-end -->

@@ -48,3 +48,13 @@ data needs a test, not a doc paragraph."*
 
 The TDD/mutation point (finding 4) is appended to `docs/reviews/lessons/testing-qa.md`: *"If you didn't
 watch the test fail, mutate the code until it does."*
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

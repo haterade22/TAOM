@@ -57,3 +57,13 @@ This adds one rule for the specific class of bug; the broader principle (test cu
 ## Tests Added
 
 None — F1 and F2 are both Harmony postfixes on `OnInitialize_Postfix` / `OnFinalize_Prefix`. Per ADR-008, Harmony entry points are tested live in-game, not via unit tests. The fix was verified by the user in-game (button now opens the Save/Load/Update/Delete inquiry; vanilla Esc/hotkeys still function; inventory drag/drop unaffected).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

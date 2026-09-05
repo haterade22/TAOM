@@ -105,3 +105,13 @@ Appended to `docs/reviews/lessons/gamemodels-services.md`:
 
 Both fold into the existing category; no new feedback-memory files. Finding #2 is a discipline failure, not a
 knowledge gap — the rule was known and documented; it needs no new rule.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

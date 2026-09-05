@@ -256,6 +256,10 @@ done (`.claude/rules/moduledata-validation.md`).
 
 - [docs/features/mesh-ref-validation.md](./mesh-ref-validation.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/recipe-retire-content.md](../modding/recipe-retire-content.md)
+- [docs/reference/armory-catalogue/README.md](../reference/armory-catalogue/README.md)
 - [docs/reference/armory-guide.md](../reference/armory-guide.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 

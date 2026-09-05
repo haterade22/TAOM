@@ -240,6 +240,10 @@ kept for context.
 
 - [docs/features/battle-scenes.md](../features/battle-scenes.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/scene-reference-audit.md](./scene-reference-audit.md)
 - [docs/reviews/rca-worldmap-grid-loose-import-crash-2026-06-01.md](../reviews/rca-worldmap-grid-loose-import-crash-2026-06-01.md)
 

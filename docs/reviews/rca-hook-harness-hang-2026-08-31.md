@@ -177,3 +177,13 @@ launch command.
 judging it, so a link from outside WindowsApps pointing in is rejected. That path could NOT be tested
 here: MSYS `ln -s` copies rather than links on this machine, so the case is not constructible. The
 code is correct by inspection and unverified by execution.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

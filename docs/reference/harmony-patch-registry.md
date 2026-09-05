@@ -819,5 +819,7 @@ CharacterSelection face-generator action-set injection. The transpiler finds the
 - [docs/features/field-commission.md](../features/field-commission.md)
 - [docs/features/hero-race.md](../features/hero-race.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 
 <!-- backlinks-end -->

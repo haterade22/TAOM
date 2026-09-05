@@ -241,5 +241,8 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 
 - [docs/features/black-numenorean.md](./black-numenorean.md)
 - [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
 
 <!-- backlinks-end -->

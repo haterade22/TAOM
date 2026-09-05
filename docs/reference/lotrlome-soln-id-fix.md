@@ -163,3 +163,21 @@ tool so the gate stays green on the known set and fails on anything new.
 - [lotrlome-war-ram-changes.md](lotrlome-war-ram-changes.md), [lotrlome-warg-changes.md](lotrlome-warg-changes.md): sibling external-module ledgers.
 - [armory-guide.md](armory-guide.md): `action_sets` structure and the dedicated-server root-`<action>` trap.
 - [../features/spider.md](../features/spider.md): the 2026-06 `soln_spider_*` DivideByZero this class first produced.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/submodule-and-registration.md](../modding/submodule-and-registration.md)
+- [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
+- [docs/reference/module-backup-sweep.md](./module-backup-sweep.md)
+
+<!-- backlinks-end -->

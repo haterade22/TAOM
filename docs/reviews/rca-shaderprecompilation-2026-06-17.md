@@ -62,3 +62,13 @@ All code findings fixed; build clean; 24 shader unit tests green. The feature is
 the real validator is a 1-2 hr precompile walk, with the `[ShaderPrecompilation]` log as the instrument
 (watch the `Ending item N: Game.Current==null=.. resolved via clean-menu|timeout` lines to confirm the
 teardown path, and any scene where loading goes false but the count stays 0 past the grace).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

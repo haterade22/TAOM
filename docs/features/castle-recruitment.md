@@ -128,6 +128,8 @@ Boundary classes (`CastleRecruitmentBehavior`, `CastleNotableMaintainer`, the `P
 ## Referenced by
 
 - [docs/features/culture-conversion.md](./culture-conversion.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

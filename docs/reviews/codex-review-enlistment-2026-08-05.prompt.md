@@ -38,3 +38,13 @@ For each finding:
 - **Minimal fix**
 
 If you find nothing at a given severity, say so plainly. Finish with a one-paragraph verdict on whether this is safe to put in front of players given that NONE of it has been run in a live game yet.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -30,3 +30,13 @@ Finding 2 is a separate, pre-existing systemic gap in a shared convention — fa
 One genuine, generalizable lesson worth a memory: **a commit-gate hook that validates a file's content must inspect the staged blob (`git show :path`), not the on-disk working-tree file — they can differ, and the staged blob is what ships.** This is distinct from presence-checking hooks (which legitimately use `git diff --cached --name-only`). Candidate: `feedback_commit_hook_validate_staged_blob_not_worktree.md`.
 
 The matcher gap (finding 2) is already documented in `harness-facts.md`'s git-invocation table; the fix is to *extend* that canonical pattern, not to write a new memory.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

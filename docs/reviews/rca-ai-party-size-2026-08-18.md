@@ -122,3 +122,13 @@ predicate; only the three-line null-guarded comparison is not.
 - **No test runs the composed model chain** (feats plus garrison scaling plus career passive
   together). The 3.2-factor scenario is asserted by unit arithmetic, never by the real chain. This is
   consistent with `gamemodels.md` rule 8, so it is accepted architecture rather than a defect.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

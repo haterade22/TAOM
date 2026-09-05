@@ -46,3 +46,13 @@ One durable lesson (appended to `docs/reviews/LESSONS-LEARNED.md` → Build, Too
 in-memory apply→recompute harness costs ~20 lines and turns the docstring claim into a checked
 property. No new always-on rule warranted beyond that (the tooling-agent trigger already exists
 and worked).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

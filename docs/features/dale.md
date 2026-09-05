@@ -213,5 +213,6 @@ Cross-reference validation:
 
 - [docs/ai-includes/new-culture-authoring.md](../ai-includes/new-culture-authoring.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
 
 <!-- backlinks-end -->

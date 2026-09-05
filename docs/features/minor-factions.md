@@ -125,5 +125,6 @@ No C# code changed — no unit tests applicable. Verified via:
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](../modding/clans.md)
 
 <!-- backlinks-end -->

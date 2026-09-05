@@ -497,6 +497,8 @@ promoted companion.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)

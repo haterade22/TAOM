@@ -99,5 +99,6 @@ No anomalies detected.
 ## Referenced by
 
 - [docs/INDEX.md](./INDEX.md)
+- [docs/modding/settlements.md](modding/settlements.md)
 
 <!-- backlinks-end -->

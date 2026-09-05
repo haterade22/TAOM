@@ -131,6 +131,8 @@ Recorded so a future reader does not re-litigate the design:
 
 ## Referenced by
 
+- [docs/features/mumakil.md](../features/mumakil.md)
 - [docs/features/war-ram.md](../features/war-ram.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

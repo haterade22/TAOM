@@ -40,3 +40,13 @@ exists to catch, and did.
 
 No new feedback-memory files — both fold into existing LESSONS-LEARNED categories. #3 is a re-hit of the
 already-documented FiniteFloatValidator rule (scope gap: the loader predated it), #4 is one-off doc hygiene.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

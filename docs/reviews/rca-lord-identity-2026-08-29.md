@@ -88,3 +88,13 @@ source so it cannot be satisfied by the wrong half.
 
 `docs/reviews/lessons/data-content-cultures.md` gains the calibration lesson above and the
 localization near-miss lesson from finding 2. The three lessons written before the review stand.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/lord-identity-reconciliation.md](../features/lord-identity-reconciliation.md)
+
+<!-- backlinks-end -->

@@ -172,5 +172,7 @@ If a new gameplay rule needs to gate on alignment (e.g., "different relation rul
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
+- [docs/modding/kingdoms.md](../modding/kingdoms.md)
 
 <!-- backlinks-end -->

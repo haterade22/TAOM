@@ -115,3 +115,13 @@ v5 uses a start-of-battle snapshot, accepting the per-battle latch and handling 
 
 `docs/reviews/lessons/state-lifecycle-save.md` — the engine-lifecycle rule above.
 `docs/reviews/lessons/build-tooling-workflow.md` — the measurement-tool rule above.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

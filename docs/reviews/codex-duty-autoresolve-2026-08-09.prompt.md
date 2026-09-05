@@ -52,3 +52,13 @@ Fix: <the minimal change>
 ```
 
 End with **VERDICT: SHIP / FIX FIRST**, then separately list which of the nine hypotheses you checked and found NOT to be problems, so I know what is cleared rather than merely unexamined. If you think a premise in this prompt is wrong, say so directly.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

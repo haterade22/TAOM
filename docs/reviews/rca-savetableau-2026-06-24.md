@@ -42,3 +42,13 @@ Preventive rule wired into `/deep-review` (Agent 5 + the Harmony-category check)
 ## Status
 
 Fixed (own category, pre-menu application). Build clean, guard tests 5/5. In-game validation (load the offending custom-race save from the main menu, confirm campaign map reached) is the final boundary check (ADR-008) and is owed from the user before close-out.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

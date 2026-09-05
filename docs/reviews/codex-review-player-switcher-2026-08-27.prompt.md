@@ -51,3 +51,13 @@ The design rests on these. Each is a place where being wrong is expensive and si
 ## Output
 
 For each finding: severity (P1 blocking / P2 should fix / P3 nice to have), file and line, what is wrong, why it matters in a real campaign, and the minimal fix. Separate CONFIRMED findings (you verified against engine source) from SUSPECTED (you could not verify). If a load-bearing claim above is correct, say so explicitly; a clean bill on a specific claim is useful signal. Do not invent findings to fill the report.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

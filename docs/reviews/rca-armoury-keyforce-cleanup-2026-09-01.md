@@ -181,3 +181,21 @@ deletion sits on.
   `docs/reference/armory-catalogue/catalogue.tsv` are untracked, so the README's links to the first
   two publish dead. `lint_docs.py` reports them under "Link targets present but untracked".
 - No GitHub issue exists for this incident.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/items-shields.md](../modding/items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](../modding/items-weapons-and-crafting.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-retire-content.md](../modding/recipe-retire-content.md)
+- [docs/modding/validation-and-testing.md](../modding/validation-and-testing.md)
+
+<!-- backlinks-end -->

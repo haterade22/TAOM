@@ -166,6 +166,14 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 
 ## Referenced by
 
+- [docs/features/banner-color-persistence.md](./banner-color-persistence.md)
+- [docs/features/banner-injection.md](./banner-injection.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/modding/clans.md](../modding/clans.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

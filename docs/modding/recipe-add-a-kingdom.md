@@ -336,3 +336,19 @@ Code: No code changes needed
 - [`docs/features/faction-map.md`](../features/faction-map.md): the faction-select entry and its localization workflow.
 - [`docs/features/lord-spawn-guard.md`](../features/lord-spawn-guard.md): the landless-culture crash and the guard that covers it.
 - [`docs/features/moduledata-validation.md`](../features/moduledata-validation.md): what the validator does and does not check.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/kingdoms.md](./kingdoms.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

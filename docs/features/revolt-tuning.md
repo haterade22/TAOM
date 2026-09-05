@@ -132,5 +132,6 @@ Invalid individual fields are reverted to their compiled default; other fields i
 
 - [docs/features/culture-conversion.md](./culture-conversion.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
 
 <!-- backlinks-end -->

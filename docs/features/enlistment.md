@@ -1593,6 +1593,8 @@ Specifically owed, because each is a state a test structurally cannot reach:
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/equipment-rosters.md](../modding/equipment-rosters.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/enlistment-morning-handoff-2026-08-09.md](../reviews/enlistment-morning-handoff-2026-08-09.md)

@@ -153,3 +153,13 @@ generalises: a new assertion is not evidence until it has been observed failing 
 untestability claim is not a fact (the eye-height hook), and now: an assertion is not coverage. All
 three are the same error, which is accepting a proxy for the property you actually care about because
 the proxy is cheaper to check.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

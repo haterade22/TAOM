@@ -47,3 +47,13 @@ G. **Consumers consistency.** Shipped `taom_career_choices.xml` must reference o
 
 Output findings as: SEVERITY (P1/P2/P3) | file:line | claim | proof.
 If a suspect holds, say so explicitly per suspect. Do not propose new features.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -291,6 +291,7 @@ index with no allocation (verified by decompile).
 
 ## Referenced by
 
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

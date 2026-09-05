@@ -78,3 +78,13 @@ asserted — it never enumerated the party-type flags. Codex caught it by decomp
 
 Build green; `--filter AlignmentDesertion|AlignmentServiceTests` → **82 passed, 0 failed** (+1 rate-0 test).
 Fixes land in a follow-up commit (the original `ac20b2d7` is already pushed; not amended).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

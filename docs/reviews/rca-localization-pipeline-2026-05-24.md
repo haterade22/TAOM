@@ -52,3 +52,13 @@ If a third localization tool is added in the future and the duplicate-dict patte
 - RCA file: this file
 
 No code-architecture changes. No breaking API changes. No re-translation needed (the bug was perf-only — output was always correct).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

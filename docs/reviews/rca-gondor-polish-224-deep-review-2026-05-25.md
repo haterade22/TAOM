@@ -89,3 +89,13 @@ No new feedback-memory entry needed — this is a one-session author error, not 
 - Issue #224 — closed; will not be reopened (this is a follow-up patch, not a regression of scope)
 - Skill `.claude/skills/deep-review/SKILL.md` Phase 3e (mandatory RCA gate)
 - `.claude/rules/harness-facts.md` (Phase 3e applies to ANY confirmed finding)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

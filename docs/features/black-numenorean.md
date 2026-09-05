@@ -557,7 +557,10 @@ out-armour two under-rostered Gondor troops.
 
 ## Referenced by
 
+- [docs/features/mesh-ref-validation.md](./mesh-ref-validation.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
+- [docs/modding/troops.md](../modding/troops.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/lessons/data-content-cultures.md](../reviews/lessons/data-content-cultures.md)
 

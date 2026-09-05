@@ -91,3 +91,13 @@ Deferred items (D1-D7) are gameplay-verification or balance items — not runtim
 - `docs/reviews/rca-v1.4.5-migration-2026-05-22.md` — RCA for the 4-file C# migration deep-review + Codex findings
 - `docs/migration/TRACKING.md` — per-session migration status
 - Issue #210 — migration tracking
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

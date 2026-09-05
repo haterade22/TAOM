@@ -185,5 +185,6 @@ None — pure data lookup. `VolunteerRecruitmentService.GetVolunteerTroopId` is 
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/troops.md](../modding/troops.md)
 
 <!-- backlinks-end -->

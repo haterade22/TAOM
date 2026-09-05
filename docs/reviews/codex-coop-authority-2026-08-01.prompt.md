@@ -94,3 +94,13 @@ For **each** behaviour answer, with `file:line` and pasted code:
 
 Output: findings by severity, then a one-paragraph verdict on whether the authority layer is
 internally consistent, given that no live two-peer session has ever been run.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

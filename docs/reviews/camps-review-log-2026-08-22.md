@@ -254,3 +254,13 @@ session launch (one occurrence, busy thread not captured).
 4. DONE: RCA + lessons + rules + CHANGELOG. Still owed: final status report after round B/Codex 2.
 5. USER: in-game smoke checklists on #505/#506/#507; decide the trunk merge. (Translation
    moved to backlog issue #508, user decision 2026-08-22.)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

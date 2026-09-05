@@ -497,6 +497,7 @@ non-human preview render), [uncapturable-heroes.md](uncapturable-heroes.md),
 
 - [docs/features/character-creation.md](./character-creation.md)
 - [docs/features/character-selection.md](./character-selection.md)
+- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)
 

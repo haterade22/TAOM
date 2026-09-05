@@ -57,3 +57,13 @@ mappings complete, `horse_jump_forwards` zero live refs, both files well-formed)
 
 All in `LOTRLOME_Armory/ModuleData/`: `action_sets.xml` (+5 fall mappings, jump-clip typo fix,
 `skeleton=` on 2 derived sets), `monster_usage_sets.xml` (+2 fall rows, +1 upper-body row).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

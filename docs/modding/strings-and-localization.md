@@ -263,3 +263,32 @@ Every count below was produced on 2026-09-05 by the command beside it, run from 
 - [docs/reviews/lessons/localization-ui.md](../reviews/lessons/localization-ui.md) for the accumulated failure modes
 - [.claude/skills/localize/SKILL.md](../../.claude/skills/localize/SKILL.md) for the guided workflow
 - [tools/README.md](../../tools/README.md) for the rest of the pipeline scripts
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/configs-factions-and-world.md](./configs-factions-and-world.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/items-shields.md](./items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](./items-weapons-and-crafting.md)
+- [docs/modding/kingdoms.md](./kingdoms.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/module-map.md](./module-map.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](./recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/submodule-and-registration.md](./submodule-and-registration.md)
+- [docs/modding/troops.md](./troops.md)
+
+<!-- backlinks-end -->

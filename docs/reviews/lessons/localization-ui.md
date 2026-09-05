@@ -131,6 +131,8 @@ parent wiring said Pelendur.
 
 ## Referenced by
 
+- [docs/modding/editing-safely.md](../../modding/editing-safely.md)
+- [docs/modding/strings-and-localization.md](../../modding/strings-and-localization.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->

@@ -66,3 +66,13 @@ the reader to trust it.
 Appended to `docs/reviews/lessons/build-tooling-workflow.md`: *"Prove no loader reads a file before
 excluding it from packaging"* (#1), and *"A machine-shaped document with no machine is worse than
 prose"* (root-cause pattern).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

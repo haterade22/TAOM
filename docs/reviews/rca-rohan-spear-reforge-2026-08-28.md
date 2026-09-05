@@ -78,3 +78,13 @@ the reforge now correctly reports `+0 / -0` where it previously claimed `+4`.
 `body_name` makes `PreloadHelper.WaitForMeshesToBeLoaded` spin the main thread forever: no crash, no
 log, mission never loads (#352, field-traced via ClrMD). **These spears must not ship before the
 packs are re-cooked.**
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

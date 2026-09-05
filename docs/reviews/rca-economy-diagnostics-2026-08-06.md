@@ -92,3 +92,13 @@ Appended to `docs/reviews/lessons/build-tooling-workflow.md`:
 > and resolves each registration. **Why missed:** all six deep-review dimensions reason about code
 > that is already running; none owned "does this survive startup." **Source:**
 > `docs/reviews/rca-economy-diagnostics-2026-08-06.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

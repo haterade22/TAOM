@@ -234,6 +234,8 @@ TBD (create on ship).
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 - [docs/reference/provenance-register.md](../reference/provenance-register.md)
 
 <!-- backlinks-end -->

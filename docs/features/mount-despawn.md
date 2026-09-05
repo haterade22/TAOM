@@ -153,3 +153,13 @@ allocates nothing (the due list is a reused buffer). It never walks `Mission.All
 ## GitHub Issue
 
 Not yet filed. Owed.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

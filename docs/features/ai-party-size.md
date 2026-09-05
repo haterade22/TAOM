@@ -425,7 +425,12 @@ the gating predicate, and one non-finite case per knob per the engine-float gate
 
 ## Referenced by
 
+- [docs/features/player-switcher.md](./player-switcher.md)
 - [docs/features/startup-resources.md](./startup-resources.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/party-templates.md](../modding/party-templates.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
 

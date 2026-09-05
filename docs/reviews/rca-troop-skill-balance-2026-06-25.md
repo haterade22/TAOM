@@ -36,3 +36,13 @@ The work was incrementally verified during authoring (dry-run delta inspection, 
 4. **Design follow-up** offered: `dragon_wrath_*` / `orthanc_*` id-routing if they're meant to be distinct elite factions.
 
 **Verdict: READY (already shipped). One dead-code cleanup applied; one design recommendation surfaced.**
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -250,3 +250,22 @@ All measured 2026-09-05, from the repo at `bannerlord-1.4.5`.
 - [`docs/features/faction-map.md`](../features/faction-map.md) for the character-creation faction panel, which is culture-keyed rather than kingdom-keyed.
 - [`docs/features/new-factions-misty-mountains-lindon.md`](../features/new-factions-misty-mountains-lindon.md) for the last four kingdoms added and what the first pass missed.
 - [`docs/features/culture-playability-wiring.md`](../features/culture-playability-wiring.md) for the fatal and silent checklist a new faction's culture has to satisfy.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](./banners-and-heraldry.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](./settlements.md)
+
+<!-- backlinks-end -->

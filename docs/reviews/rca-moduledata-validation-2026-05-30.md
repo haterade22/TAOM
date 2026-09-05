@@ -69,3 +69,13 @@ A second `/deep-review` ran once the MCP server + query API + hook were added (4
 **Disputed (false positive, not fixed):** an agent rated HIGH that the hook's `Main/_Module/ModuleData/*.xml` `case` glob "misses nested files (`troops/`, `characters/`)". **Disproven empirically** — bash `case` pattern matching treats `*` as matching `/` (unlike filename globbing), so nested paths DO match; the earlier hook test had already blocked a file at `_hooktest/troops_hooktest.xml`. The haiku agent applied the filename-globbing rule to `case` pattern-matching. Recorded as an evidence-over-claims win (verified before acting).
 
 **Root-cause pattern (D1–D2):** *parallel-surface completeness* — when a capability exists in one front-end (the query API), it must be mirrored across **all** the parallel surfaces (MCP tool + test + docs) and the **naming must be consistent** across layers (`troop`/`npccharacter`). This is the same "complete the parallel surface / mirror the sibling's full convention set" lesson as the Codex NPC-file-coverage gap (C2) and the harness-facts "mirror the sibling hook's FULL convention set" rule — generalised here to: *when you add a method/front-end, enumerate every parallel surface (engine, query, MCP, CLI, hook, test, doc) and update or consciously skip each one.* No new memory file needed; this extends the existing C2 lesson.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

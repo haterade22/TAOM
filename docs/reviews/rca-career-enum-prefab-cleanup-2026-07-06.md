@@ -44,3 +44,13 @@ methodology as sufficient evidence of completeness.
 
 One systemic rule → `docs/reviews/LESSONS-LEARNED.md` "Build, Tooling & Workflow":
 *After a whole-word identifier rename sweep, run a substring sweep over tests and docs.*
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

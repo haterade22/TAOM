@@ -95,3 +95,13 @@ equivalence and index-shift safety by induction rather than asserting them.
 
 `docs/reviews/lessons/data-content-cultures.md` — "A code-side filter on an engine enum must be
 proven against TAOM's shipped data, not vanilla's."
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

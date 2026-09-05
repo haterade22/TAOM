@@ -116,7 +116,21 @@ lord-tier fallbacks are `sk_gd_sere_bracer_lord_a` and `sk_gd_sere_grvs_lord_a`.
 ## Referenced by
 
 - [docs/features/armoury-mesh-cleanup.md](../features/armoury-mesh-cleanup.md)
+- [docs/features/gondor-armor-revamp.md](../features/gondor-armor-revamp.md)
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/items-shields.md](../modding/items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](../modding/items-weapons-and-crafting.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
+- [docs/modding/recipe-retire-content.md](../modding/recipe-retire-content.md)
+- [docs/reference/armory-catalogue/README.md](armory-catalogue/README.md)
 - [docs/reference/armory-shield-audit.md](./armory-shield-audit.md)
+- [docs/reference/lotrlome-soln-id-fix.md](./lotrlome-soln-id-fix.md)
+- [docs/reference/lotrlome-war-ram-changes.md](./lotrlome-war-ram-changes.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
 
 <!-- backlinks-end -->

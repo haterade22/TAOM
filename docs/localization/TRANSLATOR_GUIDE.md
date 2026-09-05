@@ -476,6 +476,12 @@ Open an issue on GitHub or reach out on the mod's Discord channel.
 
 - [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
+- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/localization-map.md](../reference/localization-map.md)
 

@@ -30,3 +30,13 @@ Also worth recording: `CLAUDE.md` line 372-373 carries the same stale names (`El
 None beyond the LESSONS-LEARNED entry — this is a workflow-discipline lesson, not an engine/API fact. The durable artifacts are:
 1. `docs/reviews/LESSONS-LEARNED.md` → "A structural refactor's leftover-reference sweep must cover living docs, not just code" (Build, Tooling & Workflow).
 2. `.claude/agents/refactoring-specialist.md` → Method step 6 (Documentation sweep), so agent-run refactors carry the rule even without this RCA in context.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

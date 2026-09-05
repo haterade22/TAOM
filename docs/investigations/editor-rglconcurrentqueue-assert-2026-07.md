@@ -45,3 +45,13 @@ Move a file (or individual top-level `<game_entity>` nodes) from `Prefabs_Unused
 ## Lessons
 
 Distilled to `docs/reviews/lessons/data-content-cultures.md` ("prefab folders have a hard entity budget") and the assert-dialog addendum in `.claude/skills/native-crash-triage/SKILL.md` Phase 1.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/module-map.md](../modding/module-map.md)
+
+<!-- backlinks-end -->

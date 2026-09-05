@@ -572,6 +572,9 @@ Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is
 
 - [docs/features/faction-map.md](../../features/faction-map.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/modding/clans.md](../../modding/clans.md)
+- [docs/modding/editing-safely.md](../../modding/editing-safely.md)
+- [docs/modding/troubleshooting.md](../../modding/troubleshooting.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
 

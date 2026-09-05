@@ -69,3 +69,13 @@ says so" claims need a test/gate that derives its set from the authoritative fil
 - `dotnet build TAOM.sln` 0 errors; `dotnet test TAOM.Tests` 4386 passed / 0 failed.
 - Owed (user): in-game — lothlorien save with an age-8 child, click the education notification,
   confirm the screen opens with 6 clothed option previews.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

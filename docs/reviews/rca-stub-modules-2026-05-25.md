@@ -57,3 +57,13 @@ Implementation: add to deep-review Agent 1 (Standards) prompt: "For every Versio
 - Original stub work: `031283c` (feat: four stub modules)
 - Auto-enable follow-up: `8a9d18f` (fix: DefaultModule=true)
 - This RCA + fixes: see issue [#221](https://github.com/haterade22/TAOM/issues/221) — closes #221
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

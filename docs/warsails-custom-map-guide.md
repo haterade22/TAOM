@@ -56,3 +56,15 @@ This process must be done one port at a time:
 7. Add the coordinates back for your next port in `settlements.xml`
 8. Reopen the game and run the LT SDC script again to incorporate the new port's distance data
 9. Repeat until all desired ports are incorporated
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/module-map.md](modding/module-map.md)
+- [docs/modding/recipe-new-mod-from-zero.md](modding/recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](modding/settlements.md)
+
+<!-- backlinks-end -->

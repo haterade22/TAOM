@@ -170,5 +170,7 @@ the troll ever needs movement that human-skeleton overrides can't express.
 ## Referenced by
 
 - [docs/ai-includes/troll-race-arp-retargeting-workflow.md](../ai-includes/troll-race-arp-retargeting-workflow.md)
+- [docs/modding/body-properties.md](../modding/body-properties.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
 
 <!-- backlinks-end -->

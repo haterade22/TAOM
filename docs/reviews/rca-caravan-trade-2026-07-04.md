@@ -49,3 +49,13 @@ Appended to `docs/reviews/LESSONS-LEARNED.md` → "Adapters & TaleWorlds API" (s
 - C# compilation: **0 errors** (build's game-deploy step was blocked by a running-game file lock on the game-install DLLs — an environment condition, not a code error; verified via `-p:ModuleId=` to skip the deploy).
 - `dotnet test` full suite: **4086 passed, 0 failed, 2 skipped** (after all HIGH + Codex fixes).
 - CaravanTrade: 58 tests (service lever matrix, war-policy matrix incl. Neutral + player-founded-kingdom, config validation, binding drift-guards) — all pass; binding tests resolve against installed v1.4.6.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

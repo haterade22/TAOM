@@ -323,5 +323,6 @@ The NPC-lord gold and clan-influence half is unaffected: `StartupResourcesBehavi
 - [docs/features/character-creation.md](./character-creation.md)
 - [docs/features/player-possession.md](./player-possession.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
 
 <!-- backlinks-end -->

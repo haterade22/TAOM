@@ -28,3 +28,13 @@ Every campaign begins with a nobody. You name a clan nobody has heard of, design
 > Pressing **Back** from the career menu walks you back through the auto-answered backstory menus one at a time instead of returning to the picker.
 > A clan you take over is holding parties that were sized while the AI still ran it, so a large kingdom can start with far more men under arms than its own limits allow and shed the difference over the following days. Gondor sees this most.
 > This runs during character creation only. Existing saves are untouched, and a campaign started this way saves and loads like any other.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

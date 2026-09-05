@@ -163,5 +163,7 @@ C# compile: `dotnet build Main/TAOM.csproj -t:Restore,Compile` → **0 errors / 
 
 - [docs/features/character-creation.md](../features/character-creation.md)
 - [docs/features/race-age-system.md](../features/race-age-system.md)
+- [docs/modding/body-properties.md](../modding/body-properties.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
 
 <!-- backlinks-end -->

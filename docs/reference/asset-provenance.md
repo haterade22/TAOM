@@ -88,3 +88,13 @@ nothing at all. Both are real work items, and the register is where their status
 - [LICENSE-CONTENT.md](../../LICENSE-CONTENT.md), the path-by-path license split
 - [TRADEMARK.md](../../TRADEMARK.md), the name, which no license grants
 - [scene-scripts/ATTRIBUTION.md](../scene-scripts/ATTRIBUTION.md), the clean-room procedure
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+
+<!-- backlinks-end -->

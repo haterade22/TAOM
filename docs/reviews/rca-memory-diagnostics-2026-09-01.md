@@ -158,3 +158,13 @@ everywhere is what caught C11 twice.
   open (observed against a protected process from a non-elevated shell, killed at 2 minutes). Run the
   capture shell elevated and target only Bannerlord.
 - In-game smoke of both instruments.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

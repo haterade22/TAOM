@@ -316,3 +316,23 @@ Code: No code changes needed.
 - [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](../reviews/rca-elf-cc-facegen-2026-05-22.md), the write-up of the missing elf facegen pair.
 - [`tools/README.md`](../../tools/README.md), the full generator and validator index.
 - [troops](troops.md), [npcs-notables-and-townsfolk](npcs-notables-and-townsfolk.md), [wanderers-and-named-companions](wanderers-and-named-companions.md), [cultures](cultures.md), [recipe-add-a-race-or-creature](recipe-add-a-race-or-creature.md) and [validation-and-testing](validation-and-testing.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](./npcs-notables-and-townsfolk.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](./recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

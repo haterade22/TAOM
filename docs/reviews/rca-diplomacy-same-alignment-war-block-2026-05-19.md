@@ -39,3 +39,13 @@ None. No new systemic pattern emerged. The pre-commit hook + the existing `feedb
 1. Create GitHub issue: `gh issue create --title "fix(diplomacy): block war between same-alignment kingdoms" --label bug` with problem (Bard II → Erebor war against Mirkwood; Thranduil → Dale), analysis (`AllianceTier.Permanent`-only gate, missing pairs in `diplomacy.json`), solution (`IsWarAllowed` composes Permanent + same-alignment via `IAlignmentService`), and files-changed list.
 2. Update `CHANGELOG.md` with `fix(diplomacy)` entry under today's date.
 3. Commit with issue number in subject line, then `gh issue close` once verified in-game.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

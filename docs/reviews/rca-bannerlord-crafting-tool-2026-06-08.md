@@ -69,3 +69,13 @@ opposite direction). The disagreement itself was the valuable signal.
 READY. Build green (0/0). The one HIGH was a verified false positive (engine-faithful, do not change);
 the two real findings (dead field, stale text) are fixed and rebuilt. The ported assembly math is
 confirmed faithful to v1.4.5 across all 7 fidelity checks plus the 12-template build-order table.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

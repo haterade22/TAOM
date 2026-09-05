@@ -140,6 +140,9 @@ the folder loads as a duplicate item id.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

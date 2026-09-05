@@ -802,5 +802,7 @@ public static class AssertExtensions
 - [docs/ai-includes/security.md](./security.md)
 - [docs/ai-includes/tdd-enforcement.md](./tdd-enforcement.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+- [docs/modding/validation-and-testing.md](../modding/validation-and-testing.md)
 
 <!-- backlinks-end -->

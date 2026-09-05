@@ -166,5 +166,6 @@ All overrides are per-hit. Services precompute lookups at construction (monster-
 
 - [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
 
 <!-- backlinks-end -->

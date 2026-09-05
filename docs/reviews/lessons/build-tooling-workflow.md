@@ -499,6 +499,8 @@ absence, which is why `lord_4_6` and `lord_WE8_c` are listed there by id.
 
 ## Referenced by
 
+- [docs/modding/README.md](../../modding/README.md)
+- [docs/modding/validation-and-testing.md](../../modding/validation-and-testing.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/data-content-cultures.md](./data-content-cultures.md)
 - [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../rca-butr-dependency-update-2026-07-16.md)

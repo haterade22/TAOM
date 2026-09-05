@@ -132,3 +132,15 @@ both `AssetPackages/` and `EmAssetPackages/` are out of scope by construction. T
 - [mesh-ref-validation.md](../../features/mesh-ref-validation.md): the forward validator
 - [armoury-mesh-cleanup.md](../../features/armoury-mesh-cleanup.md): the 2026-08-28 and 2026-09-01 incidents
 - [armory-guide.md](../armory-guide.md): canonical folders and authoring rules
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/file-catalogue.md](../../modding/file-catalogue.md)
+- [docs/modding/items-armor.md](../../modding/items-armor.md)
+- [docs/modding/module-armory.md](../../modding/module-armory.md)
+
+<!-- backlinks-end -->

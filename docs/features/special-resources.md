@@ -309,5 +309,7 @@ ends up controlling, resolving it from the character-creation culture and the li
 - [docs/features/dev-console.md](./dev-console.md)
 - [docs/features/elite-emissary.md](./elite-emissary.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 
 <!-- backlinks-end -->

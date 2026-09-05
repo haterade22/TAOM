@@ -525,3 +525,21 @@ deserializer, so its attributes are readable only by experiment or from
 - [Items: armour](items-armor.md) for the shared `<Item>` and `<Armor>` reference, [Troops](troops.md) and [Equipment rosters](equipment-rosters.md) for the slots that consume a mount
 - [Submodule and registration](submodule-and-registration.md) for `<XmlName>` against `project.mbproj`
 - [Validation and testing](validation-and-testing.md) and [recipe: retire content](recipe-retire-content.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/items-weapons-and-crafting.md](./items-weapons-and-crafting.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](./recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

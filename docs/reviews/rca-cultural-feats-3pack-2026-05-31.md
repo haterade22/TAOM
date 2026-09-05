@@ -136,6 +136,7 @@ Nothing material this round. The "verification note" at the end noted that Codex
 
 ## Referenced by
 
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
 - [docs/reviews/rca-cultural-feats-per-occupation-2026-05-31.md](./rca-cultural-feats-per-occupation-2026-05-31.md)
 
 <!-- backlinks-end -->

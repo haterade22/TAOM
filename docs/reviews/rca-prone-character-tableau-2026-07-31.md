@@ -236,3 +236,13 @@ which is what a user log needs to confirm the fix. The rest comes out once #371 
 - `docs/reviews/lessons/harmony-il.md` — patch-category batching lesson
 - `docs/reviews/lessons/animation-skeleton.md` — the all-races-vs-one-race discriminator
 - `docs/reference/lotrlome-armory-snapshot/README.md` — snapshot re-sync 2026-07-31
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

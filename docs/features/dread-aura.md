@@ -388,6 +388,7 @@ Two consequences worth being deliberate about:
 
 ## Referenced by
 
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/roadmap.md](../roadmap.md)
 

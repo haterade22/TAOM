@@ -449,6 +449,11 @@ The Postfix's scope is deliberately limited to the age-30 code path. Vanilla ref
 - [docs/features/player-possession.md](./player-possession.md)
 - [docs/features/race-age-system.md](./race-age-system.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](../modding/body-properties.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
 - [docs/reference/armory-guide.md](../reference/armory-guide.md)
 
 <!-- backlinks-end -->

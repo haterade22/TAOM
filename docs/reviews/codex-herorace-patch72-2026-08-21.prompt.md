@@ -147,3 +147,13 @@ test; MCM naming/format/const consistency; `WeakReference` reuse; `TryGetValue` 
 For each finding: **severity (P1/P2/P3)**, file:line, what is wrong, the exact code or decompiled
 output proving it, a concrete failure scenario (inputs → wrong behaviour), and the minimal fix.
 State explicitly if you find nothing in a suspect area; a cleared suspect is useful.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -58,3 +58,13 @@ Vanilla engine source for comparison is decompiled at `E:\Decompiled_Bannerlord\
 # Output
 
 Group findings by severity: P1 (breaks or silently disables the feature, crashes, save corruption), P2 (wrong behavior in a realistic case), P3 (maintainability, style, test gaps). For each: file, line, what is wrong, the concrete scenario in which it bites, and the minimal fix. If a claim above survives your attempt to refute it, say so explicitly, because that is useful signal too.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

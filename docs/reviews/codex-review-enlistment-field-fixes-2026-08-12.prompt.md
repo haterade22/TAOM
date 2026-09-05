@@ -152,3 +152,13 @@ End with:
 If you find nothing in a section, say so explicitly rather than padding. A short honest review beats
 a long speculative one. Do not report style preferences, naming opinions, or "consider adding a
 comment" as findings.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

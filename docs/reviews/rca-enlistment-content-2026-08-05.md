@@ -87,3 +87,13 @@ knowledge of which parts had "already been reviewed."
 exposes a count/consume or read/write pair, decompile BOTH engine members and prove they
 range over the same set. A count that is a superset of what the writer can act on is a
 silent free-completion bug.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

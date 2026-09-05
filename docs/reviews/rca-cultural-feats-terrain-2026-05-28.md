@@ -43,3 +43,13 @@ One genuine systemic lesson worth a memory: **GameModel overrides that add to a 
 
 - `dotnet test TAOM.Tests` (deploy-skip flags, game running) → 2624 passed / 0 failed / 2 skipped.
 - Model fixes (#2 night-at-sea, #3 culture precedence) are boundary logic in the thin GameModel entry point — not unit-tested per the gamemodels rule (require live `MobileParty`/`PartyBase`/`Campaign`); verified by build + in-game.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

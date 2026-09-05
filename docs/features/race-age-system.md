@@ -188,6 +188,9 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](../modding/body-properties.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
 
 <!-- backlinks-end -->
 ## Changelog

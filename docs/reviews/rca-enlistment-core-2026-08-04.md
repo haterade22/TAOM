@@ -48,3 +48,13 @@ Front-loading the decompile pass measurably de-risked the patch layer.
 - Finding 4's centralization (single named fitness predicate) is queued for the content
   phase rather than done now — three call sites with pinning tests is acceptable; a
   fourth caller is the trigger.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

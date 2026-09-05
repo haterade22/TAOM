@@ -400,3 +400,36 @@ Three numbers are quoted from source files rather than counted. The wage table (
 - [`docs/features/black-numenorean.md`](../features/black-numenorean.md), a hand-authored line and its traps.
 - [`docs/features/moduledata-validation.md`](../features/moduledata-validation.md), what each gate proves and what it does not.
 - [equipment-rosters](equipment-rosters.md), [party-templates](party-templates.md), [cultures](cultures.md), [balance-levers](balance-levers.md) and [validation-and-testing](validation-and-testing.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](./balance-levers.md)
+- [docs/modding/body-properties.md](./body-properties.md)
+- [docs/modding/configs-factions-and-world.md](./configs-factions-and-world.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/editing-safely.md](./editing-safely.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/items-mounts-and-harness.md](./items-mounts-and-harness.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](./npcs-notables-and-townsfolk.md)
+- [docs/modding/party-templates.md](./party-templates.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](./recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/recipe-retire-content.md](./recipe-retire-content.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/strings-and-localization.md](./strings-and-localization.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+- [docs/modding/wanderers-and-named-companions.md](./wanderers-and-named-companions.md)
+
+<!-- backlinks-end -->

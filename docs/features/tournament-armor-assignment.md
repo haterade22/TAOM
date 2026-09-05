@@ -121,5 +121,6 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 
 - [docs/features/arena.md](./arena.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
 
 <!-- backlinks-end -->

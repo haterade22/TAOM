@@ -156,3 +156,14 @@ fixed-size array keyed on the piece-type enum, so a stale length cannot throw or
   does not exist. Predates this change, surfaced by it.
 - `LOTRAOM_shields.xml` differs between the live install and the versioned copy by 14 Gondor shield
   ids. Proven to predate this change; needs its own reconciliation.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/recipe-retire-content.md](../modding/recipe-retire-content.md)
+
+<!-- backlinks-end -->

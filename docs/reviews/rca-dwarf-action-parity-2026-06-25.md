@@ -34,3 +34,13 @@ Notably, the fix's load-bearing engine assumptions (field-merge, base_set non-tr
 ## Lesson codified
 
 `docs/reviews/LESSONS-LEARNED.md` → Animation & Skeleton: the existing standalone-set lesson's **Prevent** line now mandates *enumerating* standalone sets programmatically (not inferring from memory) to bound the blast radius, and records the corrected trolls fact. No new feature/topic memory file needed (the canonical record is LESSONS-LEARNED).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

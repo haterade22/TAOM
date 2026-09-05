@@ -31,3 +31,13 @@ Finding 1 is the only systemic one: **sibling-cohesion placement beats rule reca
 ## Feedback memories to codify
 
 None new — finding 1's rule already exists in `.claude/rules/harmony-patches.md` and `lessons/harmony-il.md` (#299), and the agent prompt already enforces it. The new lesson from the *original* crash ("a fail-safe that falls back to a path re-executing the same failed operation contains nothing") was appended to `lessons/harmony-il.md` earlier this session.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

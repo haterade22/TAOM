@@ -96,3 +96,13 @@ Nothing here has run in a live game. The fix is verified only by unit tests, whi
 evidence class that failed to catch the original bug. The four in-game cases in #406 (field solo,
 field in-army, siege assault, save-load mid-service) remain the real gate, and every distinct
 failure branch now logs a unique line so the next report is a log grep rather than a re-investigation.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

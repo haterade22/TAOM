@@ -57,3 +57,13 @@ Per finding: severity P1 (crash/corruption) / P2 (wrong behaviour) / P3 (quality
 is wrong, the exact code or decompiled evidence, a concrete failure scenario, minimal fix. State
 explicitly which probe areas came up CLEAN; a cleared area is useful. End with:
 `P1: n | P2: n | P3: n` and `VERDICT: ISSUES FOUND` or `VERDICT: CLEAN`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -42,3 +42,13 @@ Every preventive action below is now enforced by a loaded rule or review prompt,
 4. **DONE — `/deep-review` skill (Agent 5):** new rule **4b "Engine-Float Gate NaN Polarity"** (mandatory for every decision gate on an engine-sourced float — inverted early-exits flagged; `bool?` services must return null on non-finite input), and the MCM toggle-coverage rule 2b gained the **master-toggle fold check** (enumerate EVERY override incl. constant-returning getters and confirm each folds the master when the hint promises "off = vanilla").
 5. **DONE — `.claude/rules/harness-facts.md`:** new section "Parallel builder briefs: shared sub-problems get ONE prescribed solution" with the pre-dispatch checklist (list ≥2-brief sub-problems → pin one solution → cross-consistency review over the seams); **CLAUDE.md "Briefing subagents"** gained item 6 pointing at it.
 6. **DONE — process (finding 2):** issue #320 created; the existing LESSONS-LEARNED rule ("Open the GitHub issue when STARTING the work") already covered this and the deep-review completeness gate caught the violation before commit — the gate worked as designed; plan authoring must place issue creation in step 1, not close-out.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

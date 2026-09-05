@@ -485,6 +485,7 @@ Edit `KinslayingMultiplier` in `Main/Features/Execution/Hooks/ExecutionActionHoo
 - [docs/features/execution.md](./execution.md)
 - [docs/features/prisoner-recruitment.md](./prisoner-recruitment.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 
 <!-- backlinks-end -->
 ## Changelog

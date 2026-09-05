@@ -38,3 +38,13 @@ Neither finding is a runtime defect. The feature's block logic, config validatio
 - `AGENTS.md`: Codex did well here (decompiled `Hero.MapFaction` + the mercenary `ChangeKingdomAction` chain to DISPUTE the recruiter-basis suspect with evidence; caught a deep-review agent's false "zero callers"). Recorded as a "what Codex does well" datapoint.
 
 No new standalone rule file is warranted — both findings map onto existing rules that simply weren't applied to the second instance.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

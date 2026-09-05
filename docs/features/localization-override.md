@@ -137,5 +137,7 @@ _No dated entries mapped from the global `CHANGELOG.md` yet — this section is 
 
 - [docs/features/lotr-issues.md](./lotr-issues.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
 
 <!-- backlinks-end -->

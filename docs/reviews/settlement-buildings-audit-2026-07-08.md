@@ -1000,3 +1000,13 @@ Applied to LIVE `TAOM_Map/ModuleData/settlements.xml` (seeds NEW campaigns only)
 **Azruphâr** (`castle_U2`) — _standard_ — pros 610
   fortifications 1->2 · barracks 1 · training_fields 1 · guard_house 0 · siege_workshop 0->1 · castallans_office 1->2 · granary 1->2 · craftmans_quarters 0 · farmlands 1 · mason 0 · roads_and_paths 1
   → Azruphâr — corsair coastal fort.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

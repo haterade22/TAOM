@@ -238,6 +238,7 @@ Restart Bannerlord (the config is `Reuse.Singleton` and cached for the process l
 
 - [docs/features/culture-conversion.md](./culture-conversion.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

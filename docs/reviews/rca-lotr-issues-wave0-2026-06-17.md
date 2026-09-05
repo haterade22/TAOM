@@ -147,3 +147,13 @@ missed. All three findings were verified against the decompile and fixed in-sess
 ### Verification after Codex fixes
 `dotnet build Main/TAOM.csproj -p:ModuleId=` clean; `dotnet test TAOM.Tests --filter LotrIssues` **54/54 green** (3 variant
 tests added net). Full suite unchanged (the same 9 pre-existing `DolGuldur` volunteer failures, untouched by this feature).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

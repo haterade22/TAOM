@@ -624,5 +624,19 @@ There are no automated unit tests for kingdom XML data. Validation is performed 
 
 - [docs/cultures.md](../cultures.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/modding/clans.md](../modding/clans.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
+- [docs/modding/kingdoms.md](../modding/kingdoms.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
+- [docs/modding/party-templates.md](../modding/party-templates.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](../modding/recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
+- [docs/modding/submodule-and-registration.md](../modding/submodule-and-registration.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
+- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
 
 <!-- backlinks-end -->

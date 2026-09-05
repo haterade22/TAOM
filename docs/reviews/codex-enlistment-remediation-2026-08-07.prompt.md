@@ -63,3 +63,13 @@ P3 = smell). For each: file:line, what is wrong, why it is wrong (cite the decom
 source where relevant), and the minimal fix. If you cannot verify a claim, say UNVERIFIED rather
 than asserting. Do not restate what the code does correctly. Be adversarial: assume the author
 was over-confident.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

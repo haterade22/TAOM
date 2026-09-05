@@ -151,3 +151,13 @@ A kingdom owning no settlements crashing the daily tick · the Erebor tournament
 - **Install size.** A packaged build can drop about 93 GB of editor only data, 147 GB down to 55 GB in testing.
 - **Voice acting.** A recording brief, a 200 take dwarf script and a Khuzdul lexicon are ready for the voice actor.
 - **A memory crash on 16 GB machines.** The game now logs a memory reading every 30 seconds so a crash log identifies the cause itself.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

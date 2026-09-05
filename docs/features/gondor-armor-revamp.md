@@ -190,6 +190,8 @@ Item defs (#358) and troop *equipment* wiring are separate steps. Current state:
 
 - [docs/features/gondor-ithilien-ranger.md](./gondor-ithilien-ranger.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+- [docs/modding/recipe-retire-content.md](../modding/recipe-retire-content.md)
 - [docs/reviews/audit-gondor-armory-2026-08-04.md](../reviews/audit-gondor-armory-2026-08-04.md)
 
 <!-- backlinks-end -->

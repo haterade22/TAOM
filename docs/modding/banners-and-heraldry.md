@@ -267,3 +267,24 @@ All measured 2026-09-05, from the repo at `bannerlord-1.4.5` and the installed v
 - [`docs/reference/harmony-patch-registry.md`](../reference/harmony-patch-registry.md) for `Patch23_BannerColorPersistence` and the other banner patch categories.
 - [`.claude/rules/gui-ui.md`](../../.claude/rules/gui-ui.md) for the sprite reference and bake rules.
 - [Clans](clans.md), [Kingdoms](kingdoms.md) and [Cultures](cultures.md) for the entries that carry the keys.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

@@ -84,3 +84,13 @@ during load and skips it on subsequent walks.
 A findings section (0 CRITICAL / N HIGH / N MED / N LOW), a per-suspect CONFIRM/DISPUTE table with
 evidence, and a verdict (SHIP / NEEDS-FIX). The TAOM verdict is that this is a clean, well-tested guard
 mirroring a proven sibling; try hard to find a false-skip or a throw-into-the-runner path.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -492,5 +492,6 @@ delta — under an hour combined.
 
 - [docs/features/battle-load-diagnostics.md](../features/battle-load-diagnostics.md)
 - [docs/features/gui-sprite-system.md](../features/gui-sprite-system.md)
+- [docs/reference/module-backup-sweep.md](../reference/module-backup-sweep.md)
 
 <!-- backlinks-end -->

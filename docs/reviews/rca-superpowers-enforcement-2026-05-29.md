@@ -35,3 +35,13 @@ When folding `evidence-over-claims.md` into the review skills, some inserts rest
 ## What worked
 
 The adversarial-review-then-verify workflow caught all of this **before commit** — and the verify stage correctly *rejected 7* not-real findings (e.g. a reviewer's wrong claim that a `dotnet` command had touched the marker; the redundant-with-deep-review claim). That is the `evidence-over-claims.md` discipline operating on itself: a finding is a hypothesis, verified against the source before action. The lesson is not "review harder" (the review worked) but "apply the RC1/RC2 checks during *authoring* so the review has less to find."
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

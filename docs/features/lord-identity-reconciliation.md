@@ -177,3 +177,15 @@ restart and a fresh campaign, because Bannerlord globs and registers ModuleData 
 - `docs/reviews/lessons/data-content-cultures.md` for the lessons drawn from this pass.
 - Commit `a00086da` ("fix(lords): Pelendur was Icratia, and a woman") is the same defect class,
   fourteen instances earlier. It deferred three ids, all cleared here.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
+
+<!-- backlinks-end -->

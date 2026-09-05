@@ -277,6 +277,8 @@ re-deriving "which heroes can the race axis reach" from those comments gets the 
 
 - [docs/features/player-switcher.md](./player-switcher.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

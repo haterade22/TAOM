@@ -178,6 +178,7 @@ MCM knobs (merged over JSON by [`CultureConversionSettingsProvider`](../../Main/
 - [docs/features/culture-marketplace.md](./culture-marketplace.md)
 - [docs/features/revolt-tuning.md](./revolt-tuning.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

@@ -429,3 +429,18 @@ All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modu
 - [`docs/reference/lotrlome-soln-id-fix.md`](../reference/lotrlome-soln-id-fix.md): the `project.mbproj` inert-id failure and its gate.
 - [`docs/ai-includes/agent-operating-manual.md`](../ai-includes/agent-operating-manual.md): the build commands and the `DisableModuleCopy` caveat.
 - [`tools/README.md`](../../tools/README.md): the XML I/O convention and every tool named above.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-map.md](./module-map.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+
+<!-- backlinks-end -->

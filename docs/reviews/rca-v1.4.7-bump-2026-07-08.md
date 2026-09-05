@@ -30,3 +30,13 @@ Flipping a **documented** config default has up to four mirror surfaces, not two
 ## Verdict
 
 **READY FOR COMMIT** after the doc fix (applied). Offline verification green throughout: BindingVerification 50/50, full suite 4169/0/2, snapshot reproducible, creature/scene parity clean. In-game control battles remain owed to the user (per `docs/migration/v1.4.7-impact.md`).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

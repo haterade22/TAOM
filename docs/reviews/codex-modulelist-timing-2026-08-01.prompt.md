@@ -58,3 +58,13 @@ caution is warranted or superstition.
    changes the answer in a real player's install versus a vanilla launcher.
 
 Be concise. This is one question; do not review anything else.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

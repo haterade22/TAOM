@@ -203,5 +203,7 @@ The systemic lesson: **for any state-mutation hook in the CC pipeline, decompile
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](../modding/body-properties.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
 
 <!-- backlinks-end -->

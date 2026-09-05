@@ -139,3 +139,13 @@ it. What caught it was an adversary asked to break a specific named claim.
 **Lesson, appended to `docs/reviews/lessons/campaign-mechanics.md`:** when a design rests on "these
 values always tie" or "this branch is always taken", write the arithmetic for the case where it is
 not, before building on it. Name the threshold and the input that crosses it.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

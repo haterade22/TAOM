@@ -304,3 +304,12 @@ NOT A GAP — and correctly so; this entry reports the absence of a gap, so ther
 
 ---
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

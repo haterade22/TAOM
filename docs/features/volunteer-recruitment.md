@@ -230,6 +230,7 @@ Known overhead: the `LogDebug` call in `GetVolunteerTroopId` interpolates a stri
 
 - [docs/features/culture-conversion.md](./culture-conversion.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/troops.md](../modding/troops.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

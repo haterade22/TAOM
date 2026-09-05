@@ -113,3 +113,13 @@ narrative-registration guard) · `validate_moduledata.py` PASS · `lint_docs.py`
 217 enlistment localization keys, all 12 languages id-identical to English.
 
 **Not verified: any of it in a live game.** Tracked on #428 and #375.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

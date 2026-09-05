@@ -270,6 +270,10 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 - [docs/features/alignment-aware-execution.md](./alignment-aware-execution.md)
 - [docs/features/war-of-the-ring-momentum.md](./war-of-the-ring-momentum.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
+- [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
+- [docs/modding/kingdoms.md](../modding/kingdoms.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
 
 <!-- backlinks-end -->
 ## Changelog

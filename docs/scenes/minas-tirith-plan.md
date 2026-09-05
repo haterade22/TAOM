@@ -177,3 +177,13 @@ Building a full Minas Tirith scene for TAOM in the Bannerlord editor. MT has 7 l
 3. **Performance budget** — Max entity count target?
 4. **Anduin / surrounding geography** — Visible? Osgiliath ruins in distance?
 5. **Custom assets needed** — White Tree, Gondorian banners, unique architecture pieces?
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/module-map.md](../modding/module-map.md)
+
+<!-- backlinks-end -->

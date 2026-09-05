@@ -55,3 +55,13 @@ The lesson: **deep-review's data-flow agent needs explicit instructions to trace
 - `SellAllDamaged_ZeroStack_SkipsItem` — defensive against zero-stack mock VMs
 
 53/53 QuickActions tests pass after fixes.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

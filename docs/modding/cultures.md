@@ -425,3 +425,30 @@ Every count below was produced on 2026-09-05 by the command beside it, run from 
 - [`docs/reference/party-template-sizing.md`](../reference/party-template-sizing.md), what the numbers inside a template mean.
 - [`docs/features/moduledata-validation.md`](../features/moduledata-validation.md), what the validator covers and what it does not.
 - [`docs/reviews/lessons/xslt-moduledata.md`](../reviews/lessons/xslt-moduledata.md), the four shipped instances of the passthrough bug.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](./banners-and-heraldry.md)
+- [docs/modding/body-properties.md](./body-properties.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/kingdoms.md](./kingdoms.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](./npcs-notables-and-townsfolk.md)
+- [docs/modding/party-templates.md](./party-templates.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](./settlements.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

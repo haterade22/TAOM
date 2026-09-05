@@ -277,6 +277,7 @@ covered by `SettingsFingerprint`.
 
 ## Referenced by
 
+- [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)
 

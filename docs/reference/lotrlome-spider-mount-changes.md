@@ -212,5 +212,9 @@ time. After the spider ships, sweep all `.bak-*` files.
 
 - [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
 - [docs/features/spider.md](../features/spider.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/reference/lotrlome-armory-snapshot/README.md](lotrlome-armory-snapshot/README.md)
+- [docs/reference/lotrlome-war-ram-changes.md](./lotrlome-war-ram-changes.md)
+- [docs/reference/module-backup-sweep.md](./module-backup-sweep.md)
 
 <!-- backlinks-end -->

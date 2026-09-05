@@ -82,3 +82,13 @@ patching, insert-index semantics, clock unity, careers-XML integrity).
 | C2 | Overlap window recast | Logic error (latent invariant) | My own same-session invariant test summed only `CooldownReduction` mutations — one PROPERTY narrower than the mutation space (`Duration` mutations exist). The recurring "rule scoped one category narrower than the bug" motif, this time inside a freshly-written test. The Claude data-flow agent's reachability check had the identical gap. | Runtime gate replaces the data invariant entirely (structural, mutation-independent). The XML invariant test was REMOVED — extended to duration mutations it fails on shipped (valid) data; a gate that makes the state unrepresentable beats a test that constrains data. |
 
 Suite after Codex fixes: **5509 green**.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

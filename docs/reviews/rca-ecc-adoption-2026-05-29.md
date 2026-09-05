@@ -38,3 +38,13 @@ The find→verify review **rejected 12 findings** — reviewers' own "no fix nee
 ## Prevention status
 
 Already institutionalized (no new rule needed) — `external-skill-ports.md` "don't amplify" + `/skill-stocktake` "Authoring discipline" + `evidence-over-claims.md`. This RCA's contribution is the **harness-facts.md fail-open formalization** (closing RC-B's citation gap) and recording RC-A as a *repeat* so the "apply the rule to your own fresh skill" discipline is on file.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

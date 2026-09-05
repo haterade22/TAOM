@@ -54,3 +54,13 @@ The single-string transport was itself a **fix** for an earlier persistence bug 
 - Tests: `TAOM.Tests/Features/WarOfTheRingMomentum/MomentumSyncChunkerTests.cs`
 - Diagnostics: `Main/Features/SaveLoadDiagnostics/` (Patch61) — see `docs/features/save-load-diagnostics.md`
 - Engine evidence: `ArchiveSerializer.cs:27`, `ArchiveDeserializer.LoadFrom`, `BinaryReader.ReadShort/ReadBytes` (installed 1.4.6)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

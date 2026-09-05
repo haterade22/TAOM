@@ -55,3 +55,13 @@ Only finding #1 had real security impact (a wildcard grant slipping TAOM's own s
 ## Status
 
 All HIGH + MED + actionable LOW findings fixed and regression-tested (185 tests pass; self-audit exit 0). Two LOW YARA findings (#14, #15) and one LOW regex finding (#10) consciously ACCEPTED with documented rationale (narrowing trades a false-positive for a false-negative, the wrong trade for a security tool). One LOW process finding (#16, GitHub issue) deferred to the user per the outward-facing-action rule.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

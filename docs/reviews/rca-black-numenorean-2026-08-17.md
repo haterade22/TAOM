@@ -153,3 +153,13 @@ To `build-tooling-workflow.md`:
   before shipping: EOL handling, backup guards, replace counts, dry-run reporting.
 - **After editing a generated file, grep `tools/` for its generator.** A regeneration is a silent
   revert.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

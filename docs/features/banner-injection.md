@@ -104,5 +104,8 @@ Banner keys are declared in:
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/modding/clans.md](../modding/clans.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

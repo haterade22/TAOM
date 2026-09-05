@@ -374,3 +374,21 @@ All measured 2026-09-05. Live-module paths are relative to the game install's `M
 - [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md): the review lessons behind the stale-shadow and XSLT rules.
 - [tools/README.md](../../tools/README.md): the full tool registry the "Tools" columns point into.
 - [TRANSLATOR_GUIDE](../localization/TRANSLATOR_GUIDE.md): the translation pipeline that owns every `Languages/` file.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](./configs-balance.md)
+- [docs/modding/editing-safely.md](./editing-safely.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/submodule-and-registration.md](./submodule-and-registration.md)
+- [docs/modding/validation-and-testing.md](./validation-and-testing.md)
+
+<!-- backlinks-end -->

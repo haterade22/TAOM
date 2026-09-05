@@ -426,7 +426,10 @@ warrant one.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](../modding/body-properties.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
 
 <!-- backlinks-end -->

@@ -54,3 +54,13 @@ Findings 1 and 3 share one shape: **the tests asserted the state change and igno
 **When a method returns a report as well as a state change, test the report.** A test that asserts only the mutation passes while the message lies. Every branch of a user-facing result string needs a case that constructs the state it describes — including states the happy path cannot reach (here: a stored balance above a cap that was lowered after the save was written).
 
 Appended to `docs/reviews/lessons/testing-qa.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

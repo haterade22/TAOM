@@ -135,3 +135,13 @@ conversions nothing services. Writing the justification into the doc made it loo
 already-fixed, one whose proposed fix would have caused a different regression). Verifying each
 against source before implementing — per `.claude/rules/evidence-over-claims.md` — is what caught
 all three.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

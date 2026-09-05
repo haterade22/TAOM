@@ -360,3 +360,13 @@ Please include:
 6. **Save file** — if reproducible from a save
 
 Thank you for testing! :heart:
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/validation-and-testing.md](../modding/validation-and-testing.md)
+
+<!-- backlinks-end -->

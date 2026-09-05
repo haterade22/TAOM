@@ -80,3 +80,13 @@ This is the kind of nuance Codex catches because it doesn't carry the assumption
 | Total | 6 | 6/6 |
 
 Build state at commit `0acbdc4`: 0 errors, 1 warning (pre-existing in EditorCacheRebuild). 1903/1903 tests pass.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

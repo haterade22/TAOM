@@ -102,3 +102,13 @@ newly-validated rules. After the fix: 4529 passed, 0 failed, 2 skipped (pre-exis
 skips). 24 tests added — 6 covering the previously-uncovered MCM branch, 12 in the new
 `WarOfTheRingConfigProviderTests` (none existed; gap flagged in `plans/_audit/2026-06-12-harvest.md:244`),
 6 pinning the shipped JSON so doc/code drift is caught by the suite rather than by review.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

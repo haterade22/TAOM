@@ -178,5 +178,7 @@ No performance impact — translation files are loaded once at startup by the en
 
 - [docs/features/localization-override.md](./localization-override.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
 
 <!-- backlinks-end -->

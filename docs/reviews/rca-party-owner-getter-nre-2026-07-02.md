@@ -45,3 +45,13 @@ That commit's 6-dim review + Codex pass returned 0 HIGH. Per-dimension:
 ## Feedback memories to codify
 
 One LESSONS-LEARNED entry (Adapters & TaleWorlds API): computed-getter safety is classified by reading the member definition, and mechanically banning a confirmed-throwing getter at the IL level beats re-teaching the classifier per review. No new memory file — the existing adapters.md rule is correct; its enforcement gap is what this closes.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

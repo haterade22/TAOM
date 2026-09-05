@@ -204,3 +204,13 @@ wrong, why it matters at runtime, and the minimal fix. **If you cannot verify a 
 UNVERIFIED rather than guessing.** Explicitly list any claim above that you CONFIRMED, so the
 confirmations are usable as evidence. If you believe the changeset is sound, say so plainly and name
 what you checked.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

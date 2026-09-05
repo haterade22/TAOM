@@ -129,6 +129,8 @@ unification — see the RCA).
 ## Referenced by
 
 - [docs/kitbash/README.md](../kitbash/README.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
 - [docs/reference/doc-lookup.md](./doc-lookup.md)
 
 <!-- backlinks-end -->

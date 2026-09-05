@@ -227,3 +227,13 @@ classes rather than reviewer taste.
 - [x] Per-feature SessionReset tests (Class 1) - SupplyLinesCampaignBehaviorTests, FieldCampBehaviorSessionResetTests, RefugeCampaignBehaviorTests; both reset paths pinned per feature
 
 All six artifacts landed with the batch-1 integration commit; suite 7421 green at that point.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

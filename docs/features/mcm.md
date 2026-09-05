@@ -90,5 +90,8 @@ No IoC registration, service interface, or adapter — the rewriter is a static 
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
+- [docs/modding/module-dependencies.md](../modding/module-dependencies.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
 
 <!-- backlinks-end -->

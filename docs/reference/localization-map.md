@@ -20,3 +20,14 @@
 - **The cache is the SECOND of two gates, and the first one is worse (2026-08-14).** Before the cache is ever consulted, `_diff_files` (`translate_with_claude.py:296-306`) returns an entry only when the target row still literally holds the English string. An already-translated row is therefore never visited at all, so the ordinary stale case (row holds a translation, its English changed later) never reaches the cache, the overrides, or the API. `--sync-ids` does not help (`sync_missing_ids:711-754` seeds only ids the file lacks entirely), and `rebuild_translation_files.py` (`resolve:124-129`) rebuilds from the same `string_id`-keyed cache, overwriting hand corrections. Full mechanism, the two zero-cost repairs used on 2026-08-14, and the per-language percent-spacing forms a numeral substitution has to survive (TR writes `%20`, DE and FR write `20 %`, CNt puts the space before the number): [TRANSLATOR_GUIDE.md](../../docs/localization/TRANSLATOR_GUIDE.md) section "Changing English Text That Is Already Translated".
 - **New C# player-facing text:** wrap `{=KEY}default`, add to `taom_module_strings.xml`, re-run the translation tool. **New source XML text files:** SubModule GameText node + `<LanguageFile>` x12 + stubs + bump the `LanguageDataXmlTests` count. **XSLT-injected `{=KEY}` text:** harvest into `taom_xslt_strings.xml` (precedent `20713a1`), then translate. Full workflow: `/localize` + [TRANSLATOR_GUIDE.md](../../docs/localization/TRANSLATOR_GUIDE.md).
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
+
+<!-- backlinks-end -->

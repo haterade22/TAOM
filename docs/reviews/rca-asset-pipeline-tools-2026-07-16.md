@@ -48,3 +48,13 @@ Per-file review during the session caught none of findings 1/8/9 — they are cr
 ## Deferred items (recorded per "no silent deferrals")
 
 Findings 9, 11, 13, 17 deferred with rationale above; all live in the parked assembled-scene path or in currently-unreachable branches, and are recorded here + in CHANGELOG. Revisit trigger: un-parking the assembled direction, or the Wide-tents/city texture re-run (for #9).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

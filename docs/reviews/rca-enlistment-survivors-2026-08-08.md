@@ -116,3 +116,13 @@ across English and all 12 languages.
 
 **Not verified: any of it in a live game.** The six changes have never run in Bannerlord. That gate
 is unchanged by this review and is tracked on #375.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

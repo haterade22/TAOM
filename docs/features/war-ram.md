@@ -459,7 +459,14 @@ Resolved since the first draft: the eight barding meshes are in the cooked packs
 ## Referenced by
 
 - [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
+- [docs/features/moduledata-validation.md](./moduledata-validation.md)
+- [docs/features/mumakil.md](./mumakil.md)
 - [docs/features/no-mount-cultures.md](./no-mount-cultures.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
+- [docs/reference/bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/lotrlome-war-ram-changes.md](../reference/lotrlome-war-ram-changes.md)
 

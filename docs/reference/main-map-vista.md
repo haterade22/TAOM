@@ -205,3 +205,16 @@ lemmy both omit. Both predate this incident and lemmy works without the render v
 was pursued.
 
 **Verification still owed:** an in-game zoom-out on the 12:43 save.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
+
+<!-- backlinks-end -->

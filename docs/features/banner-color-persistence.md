@@ -174,5 +174,8 @@ Open the Banner Editor in-game, copy another clan's banner code from the encyclo
 
 - [docs/features/banner-bearers.md](./banner-bearers.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

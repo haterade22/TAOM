@@ -144,3 +144,13 @@ explicitly said *"verify that claim"* rather than restating it as context.
 
 **Rule:** when a design doc asserts why something is safe, the assertion is a hypothesis with a
 citation owed. Carry the *reason* into review prompts as a thing to attack, never as a premise.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

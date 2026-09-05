@@ -151,3 +151,13 @@ for those.
   seam (an injectable module-list source). Flagged by a dimension, refuted by the verifiers as
   speculative-for-now; worth revisiting if the probe grows logic.
 - The construction-failure gap behind finding #8 is now a documented limitation rather than a fix.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

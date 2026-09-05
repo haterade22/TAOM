@@ -575,3 +575,22 @@ Counting commands run from the game's `Modules` folder. Line references into the
 - [module-backup-sweep.md](../reference/module-backup-sweep.md), the backup naming rule that keeps a sidecar from loading as data.
 - [rca-armoury-keyforce-cleanup-2026-09-01.md](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md), what a deletion without a reference sweep costs.
 - [tools/README.md](../../tools/README.md), the index of the data-generation and rebalancing scripts, and [tools/BannerlordCraftingTool/](../../tools/BannerlordCraftingTool/README.md), a standalone Windows app that previews assembled crafting-piece offsets without launching the game.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/items-shields.md](./items-shields.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

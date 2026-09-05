@@ -218,6 +218,8 @@ which is a worse bug than the one being fixed and leaves no trace. Two tests pin
 
 ## Referenced by
 
+- [docs/modding/load-order-and-dependencies.md](../../modding/load-order-and-dependencies.md)
+- [docs/modding/recipe-retire-content.md](../../modding/recipe-retire-content.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->

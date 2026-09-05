@@ -38,3 +38,13 @@ default = engine constant) with *additive bonus* knobs, say so per-field; don't 
 - `docs/features/settlement-food.md` — added replacement-semantics clarification.
 - `TAOM.Tests/Features/SettlementFood/SettlementFoodServiceTests.cs` — +1 regression test (28 total, green).
 - No production-logic change (the behavior was correct; the prose was not).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

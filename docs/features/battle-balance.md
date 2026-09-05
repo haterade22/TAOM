@@ -166,5 +166,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 - [docs/features/auto-resolve-diagnostics.md](./auto-resolve-diagnostics.md)
 - [docs/features/troop-skill-balance.md](./troop-skill-balance.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
 
 <!-- backlinks-end -->

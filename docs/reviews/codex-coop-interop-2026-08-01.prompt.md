@@ -81,3 +81,13 @@ review already found that the first pass gated one call site of a rule that had 
 
 Output: findings ordered by severity, then a one-paragraph verdict on whether this is safe to
 commit given that NO live two-peer session has ever been run.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

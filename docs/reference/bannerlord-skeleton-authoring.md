@@ -180,3 +180,13 @@ is the step from those facts to a working export that remains open.
 - [../ai-includes/creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md): the Blender-MCP loop.
 - [../features/war-ram.md](../features/war-ram.md): the feature this came out of.
 - `tools/rename_anim_clip_tpac.py`: renaming a clip inside the Kit corrupts it; rename on disk instead.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
+
+<!-- backlinks-end -->

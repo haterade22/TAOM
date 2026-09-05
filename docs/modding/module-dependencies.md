@@ -917,3 +917,17 @@ All measured 2026-09-05 from the repo at its current commit and the live install
   five excluded redirect names.
 - [agent-operating-manual.md](../ai-includes/agent-operating-manual.md): the `-p:DisableModuleCopy`
   caveat.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+
+<!-- backlinks-end -->

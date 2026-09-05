@@ -151,6 +151,8 @@ Through the generator path, the attribute passes through from the manifest: put
 - [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/features/weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/items-weapons-and-crafting.md](../modding/items-weapons-and-crafting.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
 - [docs/reference/doc-lookup.md](./doc-lookup.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
 - [docs/reviews/rca-crafting-usage-features-2026-07-26.md](../reviews/rca-crafting-usage-features-2026-07-26.md)

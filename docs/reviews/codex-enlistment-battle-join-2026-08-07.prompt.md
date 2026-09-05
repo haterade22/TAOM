@@ -82,3 +82,13 @@ For each finding: **severity (P1/P2/P3)**, file:line, what breaks, the concrete 
 and the minimal fix. Cite decompiled engine source for any claim about engine behaviour. If you
 verify one of the five engine facts above and find it WRONG, that is the most valuable result you
 can return — say so loudly. If you find nothing, say so plainly rather than manufacturing findings.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

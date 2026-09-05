@@ -85,3 +85,13 @@ of the *primary* artifact, which is why none of its examples fired here.
    fourth TAOM instance of green-suite-as-false-confidence.
 4. **A subagent claim that becomes a durable repo artifact needs first-hand verification, at the
    same bar as one relayed to the user.** §A.4 currently reads as being about user-facing summaries.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -280,3 +280,23 @@ Code: No code changes needed
 - [player-switcher.md](../features/player-switcher.md), for how wanderers appear as takeover targets.
 - [moduledata-validation.md](../features/moduledata-validation.md), for what the validator does and does not cover.
 - [tools/README.md](../../tools/README.md), for the wanderer generators and every other data tool.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](./body-properties.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](./npcs-notables-and-townsfolk.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

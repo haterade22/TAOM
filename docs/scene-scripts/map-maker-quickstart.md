@@ -132,5 +132,6 @@ Save the scene. The mesh persists. On scene reload (in editor or in-game), `CS_R
 ## Referenced by
 
 - [docs/features/scene-scripts.md](../features/scene-scripts.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
 
 <!-- backlinks-end -->

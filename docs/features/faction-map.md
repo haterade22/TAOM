@@ -191,5 +191,9 @@ One entry per region id (matching faction id). Fields:
 
 - [docs/features/character-creation.md](./character-creation.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
+- [docs/modding/kingdoms.md](../modding/kingdoms.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/recipe-add-a-kingdom.md](../modding/recipe-add-a-kingdom.md)
 
 <!-- backlinks-end -->

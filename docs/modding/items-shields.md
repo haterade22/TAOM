@@ -223,3 +223,18 @@ All commands were run on 2026-09-05. The ones that name `LOTRLOME_Armory/...` or
 - [moduledata-validation.md](../features/moduledata-validation.md), the schema and cross-reference walk behind `validate_moduledata.py`.
 - [rca-armoury-keyforce-cleanup-2026-09-01.md](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md), the deletion that broke 212 references and why no gate fired.
 - [tools/README.md](../../tools/README.md), the full validator and audit catalogue.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/items-weapons-and-crafting.md](./items-weapons-and-crafting.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+
+<!-- backlinks-end -->

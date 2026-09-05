@@ -14,6 +14,7 @@
 | Adding or fixing lord skills + traits (any culture) | [ai-includes/lord-skills-authoring.md](ai-includes/lord-skills-authoring.md) |
 | Adding a rideable creature mount end-to-end (assets → XML → C# → validation) | [ai-includes/creature-mount-authoring.md](ai-includes/creature-mount-authoring.md): elephant+spider-distilled; the 1.4.6 lookup-hardening rules + 18-gotcha index. A **reskin of a vanilla skeleton skips Phases 1 to 5 entirely** (no clips, no action/usage XML, no animation data at all): worked example [features/war-ram.md](features/war-ram.md) |
 | Researching a TaleWorlds API before editing | [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) + `pwsh tools/taom-src.ps1 path <Type>` |
+| **Editing the mod data without writing C#** (balancing, adding or removing troops, armour, weapons, lords, cultures, kingdoms, settlements) | [modding/README.md](modding/README.md) and its 38 chapters |
 | Adding text the player will read | [localization/TRANSLATOR_GUIDE.md](localization/TRANSLATOR_GUIDE.md) + [features/localization.md](features/localization.md) |
 | Closing out a feature (build → review → ship) | CLAUDE.md "Completion Workflow" + [reviews/REVIEW-GUIDE.md](reviews/REVIEW-GUIDE.md) |
 | Checking what was scored on each Codex review | [reviews/REVIEW-LOG.md](reviews/REVIEW-LOG.md) |
@@ -287,6 +288,50 @@ engineering detail in `features/` and link outward from here.
 - [releases/enlistment-discord.md](releases/enlistment-discord.md) — Enlistment + Battlefield Promotions feature announcement (#375/#376). Every number in it is quoted from the shipped config; re-verify against `enlistment_config.json` / `field_commission_config.json` before posting if either has been retuned since
 - [releases/player-switcher-discord.md](releases/player-switcher-discord.md): Play as an Existing Lord feature announcement (#514). Single player-facing message in raw Discord markdown, 3,308 characters against the 4,000 Nitro cap. Keeps the takeover path and the wanderer-adoption path as separate bullets, because the August round-up conflated them and described only the adoption path
 
+## Modder handbook (ModuleData, file by file)
+
+Written for a content author editing the XML without writing C#: attribute tables generated from the v1.4.8 deserializers, worked examples lifted from shipped files, and add / modify / delete recipes that each end in a validator command, what the change needs to take effect, and whether it needs code. Two read-only gates keep it honest, `tools/check_handbook_attributes.py` (an attribute the engine never reads, or one no table documents) and `tools/lint_handbook.py` (the contract itself).
+
+- [modding/README.md](modding/README.md): the hub: an "I want to..." table, the reading order, and how to read a chapter
+- [modding/editing-safely.md](modding/editing-safely.md): hand-edit hygiene: BOM, line endings, the .xml backup that loads as a duplicate id, the parser smoke test
+- [modding/submodule-and-registration.md](modding/submodule-and-registration.md): how a file gets loaded at all: XmlName rows, project.mbproj soln ids, folder globbing, GameType filters
+- [modding/load-order-and-dependencies.md](modding/load-order-and-dependencies.md): what must exist before what, forward-safe vs must-already-be-loaded references, cross-module merge, and when an edit reaches the game
+- [modding/id-cheatsheet.md](modding/id-cheatsheet.md): culture and kingdom ids, race ids, slot names, enums, skills, traits, modifier groups, and which ids are save-bound
+- [modding/file-catalogue.md](modding/file-catalogue.md): every ModuleData file in the three modules: registration, engine type, generating tool, live vs repo
+- [modding/modules-overview.md](modding/modules-overview.md): the eight modules TAOM runs on, who owns what data, and which folder is authoritative
+- [modding/module-taom.md](modding/module-taom.md): the code and data module: folders, the two registration channels, how the build deploys it
+- [modding/module-map.md](modding/module-map.md): the campaign map module: scene, settlements, distance cache, and the prefab entity cap
+- [modding/module-armory.md](modding/module-armory.md): the art and items module: the loose asset tree the engine reads, the item folders, the XSLT layer
+- [modding/module-dependencies.md](modding/module-dependencies.md): the libraries module: Harmony, UIExtenderEx, MCM, and the version pairing that renders characters in bind pose when stale
+- [modding/items-armor.md](modding/items-armor.md): armour items: the ItemObject and ArmorComponent tables, cover flags, modifier groups, price
+- [modding/items-weapons-and-crafting.md](modding/items-weapons-and-crafting.md): crafted weapons, crafting pieces, weapon descriptions, and the first-match usage rule
+- [modding/items-shields.md](modding/items-shields.md): shields: grip, block arc, the offhand bone each grip requires, and the collision body
+- [modding/items-mounts-and-harness.md](modding/items-mounts-and-harness.md): the data side of a mount: Horse item, harness family_type, the Monster row, reskin vs bespoke
+- [modding/troops.md](modding/troops.md): troop trees: skills, equipment rosters, upgrade targets, race, and the level ladder that sets tier and wage
+- [modding/equipment-rosters.md](modding/equipment-rosters.md): the standalone roster files, the two civilian spellings, and per-slot mixing at spawn
+- [modding/npcs-notables-and-townsfolk.md](modding/npcs-notables-and-townsfolk.md): the 26 notable slots and the service NPCs, and why an unregistered notable is unreachable
+- [modding/wanderers-and-named-companions.md](modding/wanderers-and-named-companions.md): wanderer templates and the named lore companions
+- [modding/lords-and-heroes.md](modding/lords-and-heroes.md): a named lord is two records with one id: add, rename, re-culture, re-family, retire
+- [modding/skill-sets.md](modding/skill-sets.md): what a SkillSet is, the 18 skills and 25 traits, and what a number buys
+- [modding/body-properties.md](modding/body-properties.md): faces and bodies: presets, the 128-hex key, race, tags, and the character-creation defaults
+- [modding/cultures.md](modding/cultures.md): the largest element: every culture attribute, the child lists that union rather than replace, and the XSLT path
+- [modding/party-templates.md](modding/party-templates.md): what min_value and max_value really do, and why an unbound template is dead data
+- [modding/clans.md](modding/clans.md): the Faction element: tier, colours, banner, party template, home settlement
+- [modding/kingdoms.md](modding/kingdoms.md): kingdom attributes, relationships and policies, and the configs that enumerate kingdom ids
+- [modding/settlements.md](modding/settlements.md): the live map file: positions, owners, cultures, buildings, scenes, and the stale repo shadow
+- [modding/banners-and-heraldry.md](modding/banners-and-heraldry.md): icon sheets, the palette, what a banner_key encodes, and how clan colour becomes armour tint
+- [modding/strings-and-localization.md](modding/strings-and-localization.md): the {=KEY}Fallback rule, which file owns which prefix, and the cache that silently reverts an edited string
+- [modding/configs-balance.md](modding/configs-balance.md): the balance configs: troop weights, resource costs, food, economy, revolt, combat, race age
+- [modding/configs-factions-and-world.md](modding/configs-factions-and-world.md): the world configs: diplomacy, war of the ring, alignment, army targeting, guards, faction map
+- [modding/recipe-add-a-culture.md](modding/recipe-add-a-culture.md): the largest job: a culture that is defined, settled, playable and fields its own troops
+- [modding/recipe-add-a-kingdom.md](modding/recipe-add-a-kingdom.md): a new realm: filing order, relationships against every other kingdom, and the config fan-out
+- [modding/recipe-add-a-race-or-creature.md](modding/recipe-add-a-race-or-creature.md): the five data surfaces of a race, and the reskin versus bespoke decision
+- [modding/recipe-retire-content.md](modding/recipe-retire-content.md): removing things without breaking saves: what is save-bound, the obsolete stub, the reference sweep
+- [modding/recipe-new-mod-from-zero.md](modding/recipe-new-mod-from-zero.md): the whole build in order, from an empty Modules folder to where TAOM is today
+- [modding/balance-levers.md](modding/balance-levers.md): what each number changes, with the formula and the model that owns it
+- [modding/validation-and-testing.md](modding/validation-and-testing.md): every gate a modder can run, sorted by safety, and what each one cannot see
+- [modding/troubleshooting.md](modding/troubleshooting.md): one table: symptom, cause, chapter
+
 ## Community contributions (published on other sites)
 
 TAOM knowledge written up for the wider modding community and hosted elsewhere. Source of truth
@@ -313,6 +358,7 @@ lives here; the published copy is downstream.
 
 - [docs/adrs/010-knowledge-base-architecture.md](adrs/010-knowledge-base-architecture.md)
 - [docs/features/doc-graph.md](features/doc-graph.md)
+- [docs/modding/README.md](modding/README.md)
 - [docs/reference/doc-lookup.md](reference/doc-lookup.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](reviews/adopt-graphify-2026-06-08.md)
 - [docs/reviews/adopt-graphify-v8-2026-08-18.md](reviews/adopt-graphify-v8-2026-08-18.md)

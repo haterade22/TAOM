@@ -46,3 +46,13 @@ troop. #1 was my own edit (caught + fixed). #2 is a committed `TEMP-` weight tha
 2. **Grep `TEMP-` before any recruitment commit** — added to the lesson's Prevent line.
 3. **Red-baseline discipline:** when tests fail, prove the change didn't alter the failure set (stash + diff)
    before labelling them "pre-existing" — done here for the 9 Dol Guldur failures.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

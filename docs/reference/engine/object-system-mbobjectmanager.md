@@ -100,6 +100,8 @@ managed, which is why `GetObject<T>(stringId)` is a normal, safe call.
 ## Referenced by
 
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/modding/id-cheatsheet.md](../../modding/id-cheatsheet.md)
+- [docs/modding/load-order-and-dependencies.md](../../modding/load-order-and-dependencies.md)
 - [docs/reference/engine/save-system.md](./save-system.md)
 
 <!-- backlinks-end -->

@@ -232,3 +232,24 @@ All measured 2026-09-05 from the repo root (`$BANNERLORD_GAME_DIR` is the game i
 - [armory-guide](../reference/armory-guide.md): the duplicate-id shadowing rule.
 - [vanilla-data-comparison rule](../../.claude/rules/vanilla-data-comparison.md): case-insensitive scene and asset matching.
 - [rca-armoury-keyforce-cleanup-2026-09-01](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md): the untracked-Armory hook gap.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-shields.md](./items-shields.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+- [docs/modding/validation-and-testing.md](./validation-and-testing.md)
+
+<!-- backlinks-end -->

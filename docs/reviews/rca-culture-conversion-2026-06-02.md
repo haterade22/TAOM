@@ -58,3 +58,13 @@ After the deep-review fixes, Codex ran an independent adversarial pass ([codex-a
 ## Commit graph
 
 deep-review workflow → fixes (1 code + 2 docs + 3 tests) → RCA → Codex adversarial pass → Codex fixes (2 code/pool + 2 docs + 3 tests) → this RCA update → closing commit (references this path).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

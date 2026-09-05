@@ -274,6 +274,7 @@ window open in the very writer whose fix was meant to close it.
 
 ## Referenced by
 
+- [docs/modding/validation-and-testing.md](../../modding/validation-and-testing.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->

@@ -280,3 +280,12 @@ wrote.** The eligibility rules, the ordering, the domain types and the tests wer
 first pass. What broke was consistently an assumption about what an engine method does, and the only
 things that caught those were reading the decompile and running the game.
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -22,3 +22,13 @@ None. Finding 1 is already covered by `evidence-over-claims.md` §C ("state no l
 
 - The scrub loop lives in the patch body (reflection mechanics can't be unit-tested; the *decision* is service-tested). Verification of the removal mechanics is the owed in-game smoke: Mordor town/castle with a troll-carrying garrison across repeated entries, Gondor pool regression, siege defense still fields trolls.
 - `cave_troll` being a registered FaceGen race at runtime is an integration fact (Armory `skins.xml` → engine) not pinnable in unit tests; if the Armory module were absent the exclusion would no-op, but the troll troop couldn't spawn at all in that scenario either.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

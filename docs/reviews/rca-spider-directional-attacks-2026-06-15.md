@@ -102,3 +102,13 @@ above (the buffer overload was that fix; this is its completion). #4 is a one-of
 `TAOM.Dependencies\…\0Harmony.dll`, so the post-build deploy-copy failed (environment, not a compile
 error). Both fixes are trivial (a nested `for` + `TryGetValue`; a one-line `bool` assignment). Re-run
 `./build.ps1 -RunTests` once the game is closed to confirm green.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

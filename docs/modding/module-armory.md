@@ -445,3 +445,19 @@ All measured 2026-09-05 against the installed `Modules/LOTRLOME_Armory/` and the
 - [`docs/reference/module-backup-sweep.md`](../reference/module-backup-sweep.md): the backup naming rule and the release sweep.
 - [`docs/reference/provenance-register.md`](../reference/provenance-register.md) and [`docs/reference/asset-provenance.md`](../reference/asset-provenance.md): who authored what, and the outstanding Byak0 notice.
 - [`tools/README.md`](../../tools/README.md): every tool named above, with its flags.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

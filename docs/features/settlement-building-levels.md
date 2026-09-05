@@ -103,6 +103,9 @@ N/A — offline data tooling; no runtime cost. Building levels are read once at 
 
 - [docs/features/settlement-economy.md](./settlement-economy.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 
 <!-- backlinks-end -->

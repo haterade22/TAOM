@@ -552,3 +552,19 @@ All measured 2026-09-05 on this machine; the game install is referred to as `<ga
 - [worldmap-battle-scene-grid](../reference/worldmap-battle-scene-grid.md), [main-map-vista](../reference/main-map-vista.md) and [taom-map-settlement-naming](../reference/taom-map-settlement-naming.md): the map module's own references.
 - [provenance-register](../reference/provenance-register.md): what the shipped modules redistribute and under which terms.
 - [CLAUDE.md](../../CLAUDE.md) Traps ("TAOM_Map settlements", "A fix in a dependency module", "Three-module data surface", "Vendored DLLs", "Armory asset trees") and [agent-operating-manual](../ai-includes/agent-operating-manual.md) for the `-p:DisableModuleCopy=true` caveat.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/module-dependencies.md](./module-dependencies.md)
+- [docs/modding/module-map.md](./module-map.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/validation-and-testing.md](./validation-and-testing.md)
+
+<!-- backlinks-end -->

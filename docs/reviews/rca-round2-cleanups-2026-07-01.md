@@ -24,3 +24,13 @@ Same family as `feedback_no_write_before_reading_tool_output`: an artifact (comm
 ## Feedback memories to codify
 
 LESSONS-LEARNED entry only (Build, Tooling & Workflow) — this is a workflow rule, not an engine fact.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

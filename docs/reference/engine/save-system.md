@@ -91,6 +91,7 @@ may reference native resources (an `MBObjectBase`'s `MBGUID`), but the persisten
 ## Referenced by
 
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/modding/id-cheatsheet.md](../../modding/id-cheatsheet.md)
 - [docs/reference/engine/issue-and-quest-system.md](./issue-and-quest-system.md)
 
 <!-- backlinks-end -->

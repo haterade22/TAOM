@@ -146,3 +146,30 @@ run after any large scripted data pass, since those are what produce the sidecar
 - [`tools/README.md`](../../tools/README.md): the XML I/O convention that writes these files
 - [release-process.md](release-process.md): where the sweep sits in a release
 - [native-commit-audit-2026-08.md](../investigations/native-commit-audit-2026-08.md): install-weight ledger
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/editor-cache-rebuild.md](../features/editor-cache-rebuild.md)
+- [docs/features/spider.md](../features/spider.md)
+- [docs/features/spider/wolf-parity-and-render-tests.md](../features/spider/wolf-parity-and-render-tests.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/items-weapons-and-crafting.md](../modding/items-weapons-and-crafting.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/recipe-retire-content.md](../modding/recipe-retire-content.md)
+- [docs/reference/lotrlome-armory-snapshot/README.md](lotrlome-armory-snapshot/README.md)
+- [docs/reference/lotrlome-soln-id-fix.md](./lotrlome-soln-id-fix.md)
+- [docs/reference/lotrlome-spider-mount-changes.md](./lotrlome-spider-mount-changes.md)
+- [docs/reference/lotrlome-war-ram-changes.md](./lotrlome-war-ram-changes.md)
+- [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
+- [docs/reference/release-process.md](./release-process.md)
+
+<!-- backlinks-end -->

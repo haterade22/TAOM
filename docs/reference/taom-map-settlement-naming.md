@@ -250,6 +250,11 @@ Bannerlord's default font (LiberationSans-derived) supports:
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/feature-map.md](./feature-map.md)
 - [docs/reference/scene-reference-audit.md](./scene-reference-audit.md)
 - [docs/reference/worldmap-battle-scene-grid.md](./worldmap-battle-scene-grid.md)

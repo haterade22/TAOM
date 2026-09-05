@@ -145,3 +145,13 @@ was a plausible cause and none was the cause.
   file still parses.
 - **Still owed: in-game verification of both fixes.** Nothing here has been confirmed against a
   running engine.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

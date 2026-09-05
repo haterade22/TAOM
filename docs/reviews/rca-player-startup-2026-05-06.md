@@ -282,3 +282,13 @@ Each phase caught bugs the previous phase missed. Each phase pays for itself.
 3. **No build-time validation infra this session.** A test that cross-references `youth_menu.json` (culture, title_type) pairs against equipment XML rosters would prevent Bug B's class. Filing as follow-up.
 
 4. **Pre-existing tech debt noted, NOT fixed:** `CharacterCreationContentService.AssignCareer` uses `IoC.Resolve<>` at lines ~218, 235. Pre-dates this session. Out of scope; flagged in CHANGELOG and issue #110.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

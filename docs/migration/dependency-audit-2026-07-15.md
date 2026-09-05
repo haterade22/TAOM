@@ -152,6 +152,7 @@ A 6-agent `/deep-review` over the applied change. **No runtime defects; every fi
 
 - [docs/INDEX.md](../INDEX.md)
 - [docs/migration/dr3-maintenance.md](./dr3-maintenance.md)
+- [docs/modding/module-dependencies.md](../modding/module-dependencies.md)
 - [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../reviews/rca-butr-dependency-update-2026-07-16.md)
 
 <!-- backlinks-end -->

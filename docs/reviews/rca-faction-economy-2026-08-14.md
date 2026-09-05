@@ -102,3 +102,13 @@ would entangle the two changesets:
    `lessons/build-tooling-workflow.md`
 3. **Model the function, not the table it reads from** (the `GetCharacterWage` truncation) →
    `lessons/gamemodels-services.md`
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

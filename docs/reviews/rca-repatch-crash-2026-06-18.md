@@ -78,3 +78,13 @@ Both fixes applied; build 0 warnings / 0 errors; `TAOM.Tests` green except the p
 `GetVolunteerTroopId_DolGuldur*` failures (unrelated parallel work). The fix is in-game-validated by:
 (a) the shader walk advancing past item 2/9 to 9/9, and (b) loading a 2nd campaign/custom-battle in one
 session without a HarmonyException — both pending the user's re-test.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -111,3 +111,13 @@ is the single-roster `iron_hills_noble_*` line, plus `sm_iron_shield_b_gold` (no
 `sm_dwarf_iron_hammer_e` (43 units of reach against 18–24 for every other dwarf hammer — a
 weapon-balance decision, not a variety swap). Placing them needs roster structure changes or a
 deliberate authoring call, both out of scope for an automated sweep.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

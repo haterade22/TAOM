@@ -134,3 +134,13 @@ earned. Three kills would have made 61, and holding engagement above 0.5 unlocks
 fit alone. That is the intended shape, participation pays and presence does not, but it does mean the
 duty loop carries most of the standing economy, which is a second reason the duty smoke matters more
 than this one did.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

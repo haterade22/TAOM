@@ -101,5 +101,6 @@ None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `T
 - [docs/features/gondor-ithilien-ranger.md](./gondor-ithilien-ranger.md)
 - [docs/features/troop-skill-balance.md](./troop-skill-balance.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
 
 <!-- backlinks-end -->

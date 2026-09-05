@@ -77,3 +77,13 @@ The flagging agents **speculated** about vanilla gates instead of reading the de
 | Reinforce `evidence-over-claims.md` A.4 (subagent vanilla claims → verify against decompile) | ✅ Already codified; this is a second citation |
 
 No new feedback-memory entry is manufactured for the false-positives (they're a re-instance of an already-codified rule). The one durable new lesson — *enumerate-before-replace* — is captured here and proposed for `gamemodels.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

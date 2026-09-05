@@ -208,3 +208,20 @@ Say so rather than guessing, and go to the file named.
 - [war-ram](../features/war-ram.md) for a reskin end to end, and [creature-mount-authoring](../ai-includes/creature-mount-authoring.md) for the bespoke phases and the reskin price.
 - [custom_creatures](../community/bannerlordmodding-lt/guides/custom_creatures.md) and [custom_creature_troubleshooting](../community/bannerlordmodding-lt/guides/custom_creature_troubleshooting.md) for the engine-side model and the symptom index; [bannerlord-skeleton-authoring](../reference/bannerlord-skeleton-authoring.md) before authoring any clip.
 - [culture-playability-wiring](../features/culture-playability-wiring.md) row 14 and [Add a culture](recipe-add-a-culture.md) when the race arrives with a new culture; [lotrlome-armory-snapshot README](../reference/lotrlome-armory-snapshot/README.md) for the mirror checklist; [tools README](../../tools/README.md) for every validator's flags.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](./body-properties.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-armory.md](./module-armory.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

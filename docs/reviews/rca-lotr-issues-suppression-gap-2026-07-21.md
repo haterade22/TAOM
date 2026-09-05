@@ -58,3 +58,13 @@ above rather than duplicated as new rules.
    `taom_lotr_*` issues.
 3. Sweep: load any pre-fix save → `swept lingering vanilla issue` log lines; the reporting player's
    `UnstoppablePlay` autosave no longer offers the daughter quest at Varlek.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

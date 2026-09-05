@@ -365,6 +365,7 @@ the module is outside this repo, so that ledger is the only durable record of it
 - [docs/reference/bannerlord-engine-and-toolchain.md](../reference/bannerlord-engine-and-toolchain.md)
 - [docs/reference/engine/agent-spawn-and-render-pipeline.md](../reference/engine/agent-spawn-and-render-pipeline.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/lotrlome-soln-id-fix.md](../reference/lotrlome-soln-id-fix.md)
 - [docs/reference/lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md)
 - [docs/reviews/rca-spider-troop-2026-06-04.md](../reviews/rca-spider-troop-2026-06-04.md)
 

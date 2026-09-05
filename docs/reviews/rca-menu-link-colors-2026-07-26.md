@@ -122,3 +122,13 @@ explicitly" in the same block. Pin it with a test that asserts the attribute is 
 **No GitHub issue exists for this feature.** TAOM requires one created before implementation;
 this is a retroactive repair and needs the user's call, since `/issue` creates a public artifact
 and is never auto-invoked. Nothing else from this review is unresolved.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

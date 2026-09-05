@@ -92,3 +92,13 @@ Appended to `docs/reviews/lessons/harmony-il.md`:
 - **Two `[Ignore]`d tests in `WargAttackServiceTests.cs`** assert the pre-2026 bone set `{23}` and
   radii `0.4f`/`0.3f`; the source now uses the 10-bone cone and `1.0f`/`0.5f`. They would fail if
   un-ignored.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

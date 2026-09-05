@@ -113,3 +113,13 @@ The three feedback memories (`feedback_native_port_hot_path_audit.md`, `feedback
 - LOW perf (full-image scan): no fix, documented tradeoff in feature doc Performance section.
 
 C++ rebuild required for HIGH + MED fixes to take effect at runtime — the user will run `pwsh Dependencies/NativeSkinFixes.NativeHooks/Build.ps1` when ready.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

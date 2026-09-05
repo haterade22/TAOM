@@ -193,6 +193,8 @@ A memo keyed on a service method's *input* is only correct if that input determi
 
 ## Referenced by
 
+- [docs/modding/balance-levers.md](../../modding/balance-levers.md)
+- [docs/modding/troubleshooting.md](../../modding/troubleshooting.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/campaign-mechanics.md](./campaign-mechanics.md)
 

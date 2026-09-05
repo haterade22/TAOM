@@ -146,3 +146,13 @@ Support weapon policy contradicts neither `BattleFormationPolicy` nor `Assignmen
 - **Discharge reclaims fungible ammunition** (finding 6). Documented, issue filed.
 - **bluecraig and mistymountainorcs ship one troop each**, which is a content gap rather than a
   generator defect: their kits cannot progress because there is nothing to progress to.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

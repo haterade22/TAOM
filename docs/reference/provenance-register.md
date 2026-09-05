@@ -470,7 +470,11 @@ import. There is no row for it because there is nothing to declare, and that is 
 - [docs/features/refuge.md](../features/refuge.md)
 - [docs/features/supply-lines.md](../features/supply-lines.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/module-dependencies.md](../modding/module-dependencies.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
 - [docs/reference/asset-provenance.md](./asset-provenance.md)
+- [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
 - [docs/reviews/adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md)
 

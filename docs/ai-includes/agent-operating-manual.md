@@ -84,6 +84,10 @@ Don't assume these reached you — read the relevant one when your task touches 
 ## Referenced by
 
 - [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/modding/module-dependencies.md](../modding/module-dependencies.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/README.md](../modding/README.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

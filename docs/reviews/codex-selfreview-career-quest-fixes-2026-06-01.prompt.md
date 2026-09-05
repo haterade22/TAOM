@@ -27,3 +27,13 @@ F3c (LOW) -- `CareerQuest.OnStartQuest` now warns when a `GrantItem` reward's it
 
 ## Output
 FINDINGS table: # | Severity | File:line | Issue | Fix. If the fixes are correct, say so explicitly per fix (CONFIRMED CORRECT). Use installed-1.4.5 decompiles for any API claim; say UNVERIFIED rather than guess.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -210,3 +210,13 @@ Everything above sits on top of a battle-join path that **has never been verifie
 (#406). Unit tests missed the original never-joins defect four times because they mock
 `IEncounterAdapter` and cannot reach the adapter/engine seam. Build nothing further on this
 foundation until the four in-game battle cases in #406 have actually been observed.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

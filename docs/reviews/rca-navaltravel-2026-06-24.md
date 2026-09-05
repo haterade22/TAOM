@@ -27,3 +27,13 @@ Net: I anticipated #1 myself (it was Known Suspect #2 in the Codex prompt) and s
 
 1. **`feedback_gamemodel_capability_engine_propagation`** (new): overriding a per-party capability GameModel (`PartyNavigationModel.HasNavalNavigationCapability` and kin) requires mirroring the engine's cross-party propagation — `IsCurrentlyAtSea` pushes down the attachment tree and `NavigationCapability` is recomputed per party — or player-led armies desync at sea. Already-at-sea parties must retain capability to reach land. The reference donor (NavalDLC) encoded the attached-to inheritance; preserve it when you swap the gate.
 2. **Reinforces `feedback_native_port_hot_path_audit` (generalized):** when you keep N-1 limbs of a faithful port and rewrite limb N, re-audit limb N's *entire* behavior, not just the sub-change you intended. The dropped attached-to inheritance is the managed-code analog of the unaudited hot-path logging.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

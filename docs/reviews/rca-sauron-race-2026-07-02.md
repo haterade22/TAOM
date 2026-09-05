@@ -31,3 +31,13 @@ One durable lesson (appended to `docs/reviews/LESSONS-LEARNED.md` → Campaign M
 **Per-hero GameModel overrides: identify the engine's SUBJECT hero before claiming couple/group semantics.** A model that receives one `Hero` and returns a per-hero answer implements couple-level behavior ONLY for the hero the engine actually passes. Decompile the caller and check which entity is the subject (pregnancy = the female; age death = the aging hero; wages = the payer). Any rule of the form "X's flag prevents a couple/family/party outcome" must be traced to the subject-selection site, or implemented symmetrically (check both partners), before it goes in a doc or CHANGELOG.
 
 No new memory FILE needed — the lesson goes to LESSONS-LEARNED (canonical record); the corrected action-set mechanism went into the existing `topics/data-reference.md` races table.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

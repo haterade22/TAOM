@@ -129,3 +129,13 @@ all four.
   campaign boundaries; clear it at the session boundary, ahead of any load guard.
 - `lessons/testing-qa.md` — a config POCO rebuilt field-by-field in a validator needs a test that
   asserts EVERY field survives a full-file parse.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

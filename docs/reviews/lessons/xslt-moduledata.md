@@ -279,6 +279,13 @@ burying a twelve-row change in a 106,152-line diff that no reviewer can read.
 ## Referenced by
 
 - [docs/features/culture-playability-wiring.md](../../features/culture-playability-wiring.md)
+- [docs/modding/cultures.md](../../modding/cultures.md)
+- [docs/modding/editing-safely.md](../../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../../modding/file-catalogue.md)
+- [docs/modding/id-cheatsheet.md](../../modding/id-cheatsheet.md)
+- [docs/modding/load-order-and-dependencies.md](../../modding/load-order-and-dependencies.md)
+- [docs/modding/submodule-and-registration.md](../../modding/submodule-and-registration.md)
+- [docs/modding/troubleshooting.md](../../modding/troubleshooting.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/rca-dale-2026-05-26.md](../rca-dale-2026-05-26.md)
 

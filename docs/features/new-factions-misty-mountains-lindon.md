@@ -274,5 +274,9 @@ starting a campaign if `golbin` was intended.
 ## Referenced by
 
 - [docs/features/culture-playability-wiring.md](./culture-playability-wiring.md)
+- [docs/modding/equipment-rosters.md](../modding/equipment-rosters.md)
+- [docs/modding/kingdoms.md](../modding/kingdoms.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](../modding/recipe-add-a-kingdom.md)
 
 <!-- backlinks-end -->

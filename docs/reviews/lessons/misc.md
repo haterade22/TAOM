@@ -41,6 +41,8 @@ When CC/rendering breaks for one race, check XML config references before invest
 
 ## Referenced by
 
+- [docs/modding/body-properties.md](../../modding/body-properties.md)
+- [docs/modding/troubleshooting.md](../../modding/troubleshooting.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->

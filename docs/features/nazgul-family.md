@@ -170,6 +170,7 @@ roster from turn one, start a new campaign.
 ## Referenced by
 
 - [docs/features/dread-aura.md](./dread-aura.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

@@ -131,5 +131,6 @@ No runtime impact. Pure data addition. ~277 new items add ~15 KB total to per-cu
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
 
 <!-- backlinks-end -->

@@ -143,3 +143,13 @@ Appended to `docs/reviews/lessons/state-lifecycle-save.md`: "A redirect list is 
 invalid state, and every mask is one un-masking away from the crash." No new feedback memory: the
 existing `evidence-over-claims` discipline already covers the verify-before-relaying half, and the
 mask lesson belongs with the other state-lifecycle rules rather than in the harness memory.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -217,5 +217,7 @@ take effect.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
 
 <!-- backlinks-end -->

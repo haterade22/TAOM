@@ -250,6 +250,8 @@ If a culture's characters are not getting compiled, verify:
 - [docs/features/atmosphere-persistence.md](./atmosphere-persistence.md)
 - [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

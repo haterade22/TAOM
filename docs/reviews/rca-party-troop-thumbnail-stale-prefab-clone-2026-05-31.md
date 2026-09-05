@@ -85,3 +85,13 @@ After the fixes, an adapted adversarial review ran (4 dimensions — prefab corr
 - `feedback_audit_findings_not_always_correct.md` — an internal audit/review emits confident false positives (~95% not 100%); verify each load-bearing finding. The EaseIn/AutoScroll false renames are the GUI-prefab instance.
 - `feedback_xml_grep_wrapper_offset.md` — when verifying a count claim, use a STRICTER method than the claim used (attribute-name regex, not substring); the EaseIn "18×" miscount is exactly this trap.
 - `evidence-over-claims.md` §A/§C — verify a finding before acting on it; never write an unverified number as fact.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

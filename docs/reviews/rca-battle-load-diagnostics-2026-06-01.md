@@ -31,3 +31,13 @@ Changes made instead (minimal, zero-risk): (a) the watchdog's bundle exception m
 ## Feedback memory candidate
 
 Borderline. The "enumerate which invocations a universal-method patch actually fires for, when the feature is named after a subset" lesson is real but adjacent to existing rules (`feedback_substring_keyword_matches_external_data.md` = the data-matching cousin; `think-before-coding` = surface load-bearing assumptions). Given it produced only a MEDIUM that was resolved as intentional scope, this is logged here rather than promoted to a standalone feedback memory. If a *second* feature ships a universal-method patch under a subset name and hits a real bug from it, promote then.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

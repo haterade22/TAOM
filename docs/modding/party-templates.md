@@ -313,3 +313,25 @@ Code: No code changes needed
 - [party-template-sizing.md](../reference/party-template-sizing.md), [ai-party-size.md](../features/ai-party-size.md), [culture-playability-wiring.md](../features/culture-playability-wiring.md), [kingdom-creation.md](../features/kingdom-creation.md)
 - [campaign-mechanics lessons](../reviews/lessons/campaign-mechanics.md), [troops rule](../../.claude/rules/troops.md), [tools README](../../tools/README.md)
 - [Troops](troops.md), [Cultures](cultures.md), [Clans](clans.md), [Balance levers](balance-levers.md), [Validation and testing](validation-and-testing.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](./balance-levers.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](./settlements.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

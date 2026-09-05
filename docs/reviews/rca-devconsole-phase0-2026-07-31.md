@@ -169,3 +169,13 @@ the author did not.
 - `AgentDamageCheats.ApplyBlow` has no unit coverage — sealed engine types, no adapter seam. Its
   correctness rests on this review's argument-by-argument decompile diff, not on a regression test.
   Extracting a pure `ComputeInflictedDamage(float)` would close the cast half cheaply.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

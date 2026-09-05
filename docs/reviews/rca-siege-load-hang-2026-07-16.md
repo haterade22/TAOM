@@ -89,3 +89,13 @@ The corollary for a validator's UX: it must never phrase a clean result more str
 ## Not adopted
 
 The reporter's v0.5.0 also Harmony-prefixes `WaitForMeshesToBeLoaded` with a 30s-timeout wait loop that drops unresolvable shapes and continues. Reasonable resilience for a third-party submod; wrong for TAOM. It replaces an engine loop wholesale and converts a loud, findable hang into quiet missing-collision behavior — trading a bug that reports itself for one that doesn't. TAOM's answer to this class is the validator, which catches it before ship.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

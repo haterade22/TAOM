@@ -249,6 +249,14 @@ assign the harness explicitly, so only the player can mix them.
 
 ## Referenced by
 
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/reference/bannerlord-skeleton-authoring.md](./bannerlord-skeleton-authoring.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
 - [docs/reference/feature-map.md](./feature-map.md)
+- [docs/reference/lotrlome-soln-id-fix.md](./lotrlome-soln-id-fix.md)
+- [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
+- [docs/reference/module-backup-sweep.md](./module-backup-sweep.md)
 
 <!-- backlinks-end -->

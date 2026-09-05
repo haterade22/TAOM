@@ -474,3 +474,24 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
 - [moduledata validation](../features/moduledata-validation.md) for what the validator walks and what it does not.
 - [TRANSLATOR_GUIDE](../localization/TRANSLATOR_GUIDE.md) for the string schema and the `language_data.xml` registration a new key needs.
 - [tools README](../../tools/README.md) for `complete_lords_xslt.py`, `sync_lord_name_fallbacks.py`, `analyze_lord_balance.py` and `author_elf_lords.py`, the copy-me pattern for generating a culture's lords.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/kingdoms.md](./kingdoms.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

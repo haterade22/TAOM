@@ -479,6 +479,8 @@ Owed by the 2026-08-03 work specifically, none of it run:
 - [docs/features/player-switcher.md](./player-switcher.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
+- [docs/modding/module-dependencies.md](../modding/module-dependencies.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/research/bannerlordcoop-internals.md](../research/bannerlordcoop-internals.md)

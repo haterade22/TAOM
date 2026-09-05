@@ -67,3 +67,13 @@ A prior review pass found and FIXED these four. Verify the fixes are actually co
 - Do NOT modify any file. This is review only.
 
 Output a markdown report: Summary line, then P1 / P2 / P3 sections, then Design disagreements, then "What I verified and found correct" (brief).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

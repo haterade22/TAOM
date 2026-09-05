@@ -143,6 +143,7 @@ NaN/Infinity literals and the rate-0 accepted extreme).
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 
 <!-- backlinks-end -->

@@ -444,3 +444,28 @@ culture troop XMLs" is wrong on both numbers.
 - [`tools/BannerlordCraftingTool/README.md`](../../tools/BannerlordCraftingTool/README.md) for the
   standalone crafting-piece offset previewer, the one graphical tool here: it reproduces the engine's
   piece positioning, so a haft can be aligned without launching the game and with no build required.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](./body-properties.md)
+- [docs/modding/configs-balance.md](./configs-balance.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/items-mounts-and-harness.md](./items-mounts-and-harness.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/party-templates.md](./party-templates.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/recipe-retire-content.md](./recipe-retire-content.md)
+- [docs/modding/settlements.md](./settlements.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+
+<!-- backlinks-end -->

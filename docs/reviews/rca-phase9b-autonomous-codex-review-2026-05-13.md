@@ -44,3 +44,13 @@ The pattern: **multi-agent reviews can converge on the wrong answer when they al
 - `57e9d9b` (the regression-introducing commit — #179 ComputeBaseChance extraction)
 - (TBD this session — the fix commit)
 - `e7a83f8` (the team-filter commit — #149; MEDIUM finding inherent to its audit-specified scope)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -186,6 +186,11 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 - [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
 - [docs/features/doc-health-linter.md](./doc-health-linter.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/items-shields.md](../modding/items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](../modding/items-weapons-and-crafting.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
+- [docs/reference/armory-catalogue/README.md](../reference/armory-catalogue/README.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

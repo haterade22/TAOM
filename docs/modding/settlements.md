@@ -446,3 +446,26 @@ Every count was produced on 2026-09-05 by the command beside it. The live file i
 - [Cultures](cultures.md), [Clans](clans.md), [Kingdoms](kingdoms.md) and [Party templates](party-templates.md), the four things a settlement points at or is pointed at by.
 - [Module: the map](module-map.md), what else `TAOM_Map` ships.
 - [Validation and testing](validation-and-testing.md) and [Balance levers](balance-levers.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](./balance-levers.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-map.md](./module-map.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/recipe-retire-content.md](./recipe-retire-content.md)
+- [docs/modding/strings-and-localization.md](./strings-and-localization.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

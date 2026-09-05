@@ -151,3 +151,13 @@ mentioning the lessons file at all.
 That rule now leads with the lessons read. The registry tells you what a patch does; the lessons
 tell you how patches in this codebase have gone wrong before, and the second one is what this
 session needed and skipped.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

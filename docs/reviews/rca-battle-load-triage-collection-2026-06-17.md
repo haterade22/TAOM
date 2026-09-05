@@ -77,3 +77,13 @@ survives a torn read via the tolerant `Parse`.
 **Round-2 root-cause pattern.** The single material defect (R1) was a **cross-cutting path-correctness** issue — a relative path flowing unchanged from `FileLogger` through three consumers to an out-of-process `explorer.exe` call — that no single-dimension lens caught precisely because each dimension reviewed its own slice; only the completeness critic, asked "what did all 10 miss," traced the value end-to-end. Lesson reinforced: **a value that crosses a process boundary (handed to `explorer.exe`, a shell, another exe) must be absolute**; mirror the precedent's path handling (`IncompatibleModDetector` absolute), don't half-inherit it. Everything else was robustness/accuracy/test-coverage polish. Still 0 HIGH; the diagnostic log itself is always captured correctly — only the convenience of locating it from the popup was degraded, now fixed.
 
 Localization debt (R7-adjacent): the 3 new `taom_bld_stall_*` keys still owe a `tools/translate_with_claude.py` propagation run to the 11 AI-translated languages (graceful English fallback until then) — tracked, not yet run.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

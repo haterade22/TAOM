@@ -360,6 +360,10 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 
 - [docs/features/troop-weight-system.md](./troop-weight-system.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
 - [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
 - [docs/research/cultural-feats-roadmap.md](../research/cultural-feats-roadmap.md)
 - [docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md](../reviews/rca-culturefeat-partyculture-nre-2026-06-15.md)

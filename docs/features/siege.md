@@ -77,5 +77,6 @@ The patch is a safety net only; the intended fix is to add the scene entities.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
 
 <!-- backlinks-end -->

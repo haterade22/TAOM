@@ -441,3 +441,28 @@ ElementTree scans were short throwaway Python scripts over the paths named in ea
   [no-mount cultures](../features/no-mount-cultures.md),
   [new factions](../features/new-factions-misty-mountains-lindon.md),
   [ModuleData validation](../features/moduledata-validation.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-armor.md](./items-armor.md)
+- [docs/modding/items-mounts-and-harness.md](./items-mounts-and-harness.md)
+- [docs/modding/items-shields.md](./items-shields.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](./npcs-notables-and-townsfolk.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

@@ -110,3 +110,16 @@ Status: `banner_icons.xml` wired ✅; green material sources placed in `AssetSou
 - `docs/features/gui-sprite-system.md` — the sprite-bake pipeline in depth (bake vs render, the generator decompile, the rebake-restart gotcha).
 - `docs/features/clan-heraldry.md`: how clan colours are authored, and why `Patch23_BannerColorPersistence` makes them (not the kingdom colour) drive battlefield armour tint.
 - `.claude/rules/gui-ui.md` — sprite reference + bake rules.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+
+<!-- backlinks-end -->

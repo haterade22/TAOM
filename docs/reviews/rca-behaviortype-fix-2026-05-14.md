@@ -41,3 +41,13 @@ The session-level lesson is captured in this RCA file and in the CHANGELOG; the 
 2. Stage and commit the 4 working-tree changes (3 source + CHANGELOG) referencing the new issue in the commit message.
 3. Close the issue with the commit (or shortly after).
 4. F2 (stale line numbers) — fix-on-touch only; not worth its own commit.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -225,5 +225,7 @@ its `PICKS` table).
 ## Referenced by
 
 - [docs/ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md)
+- [docs/modding/id-cheatsheet.md](modding/id-cheatsheet.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](modding/npcs-notables-and-townsfolk.md)
 
 <!-- backlinks-end -->

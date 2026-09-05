@@ -26,3 +26,13 @@ A **process-level singleton holding per-campaign runtime state** has a lifecycle
 ## Verification
 
 - Build + `TAOM.Tests` green (full suite was 4223 before this fix; the fix adds one test). *(Final green re-run pending an environment file-lock on the game Modules dir at commit time — see the session log; the added code is a one-line `Dictionary.Clear()` + a subscription + a test.)*
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

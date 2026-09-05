@@ -93,5 +93,6 @@ value surfaces as wrong in-sim behavior rather than a managed exception.
 ## Referenced by
 
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/modding/balance-levers.md](../../modding/balance-levers.md)
 
 <!-- backlinks-end -->

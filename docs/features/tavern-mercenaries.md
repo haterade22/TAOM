@@ -211,6 +211,9 @@ mercenary path.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/troops.md](../modding/troops.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reviews/lessons/data-content-cultures.md](../reviews/lessons/data-content-cultures.md)
 

@@ -205,3 +205,13 @@ Tournament rosters all "all safe" across 8 towns (Patch69 guard working); Diplom
 vanilla state corruption (`empire_s <-> aserai` simultaneously allied and at war); CastleRecruitment
 transpilers landed; creature behaviour trees initialise cleanly; CultureMarketplace loaded
 (empire 443 items, aserai 272, battania 177, dolguldur 161); SpecRes earning per battle.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

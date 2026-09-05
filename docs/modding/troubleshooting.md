@@ -208,3 +208,17 @@ Say so rather than guessing, and point at where an answer would come from.
   [`docs/reviews/LESSONS-LEARNED.md`](../reviews/LESSONS-LEARNED.md).
 - [`docs/community/bannerlordmodding-lt/guides/custom_creature_troubleshooting.md`](../community/bannerlordmodding-lt/guides/custom_creature_troubleshooting.md)
   for the creature and mount table this one is shaped after.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/validation-and-testing.md](./validation-and-testing.md)
+
+<!-- backlinks-end -->

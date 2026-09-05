@@ -306,6 +306,11 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 ## Referenced by
 
+- [docs/modding/clans.md](../modding/clans.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/settlements.md](../modding/settlements.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/rca-bandit-management-2026-05-27.md](../reviews/rca-bandit-management-2026-05-27.md)
 

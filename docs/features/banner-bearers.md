@@ -268,6 +268,10 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 - [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/features/mixed-formations.md](./mixed-formations.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](../modding/banners-and-heraldry.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

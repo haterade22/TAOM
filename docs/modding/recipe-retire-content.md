@@ -298,3 +298,22 @@ Code: No code changes needed
 - Reference: [armory-guide](../reference/armory-guide.md), [module-backup-sweep](../reference/module-backup-sweep.md), [tools README](../../tools/README.md).
 - Rules: [troops](../../.claude/rules/troops.md), [xslt](../../.claude/rules/xslt.md).
 - Chapters: [Troops](troops.md), [Items: armor](items-armor.md), [Clans](clans.md), [Settlements](settlements.md), [Validation and testing](validation-and-testing.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/editing-safely.md](./editing-safely.md)
+- [docs/modding/items-mounts-and-harness.md](./items-mounts-and-harness.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/module-armory.md](./module-armory.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](./recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+
+<!-- backlinks-end -->

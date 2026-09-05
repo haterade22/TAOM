@@ -117,5 +117,6 @@ Changes take effect on the next new game. Existing saves are not affected (the b
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](../modding/configs-balance.md)
 
 <!-- backlinks-end -->

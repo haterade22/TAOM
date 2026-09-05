@@ -243,3 +243,18 @@ Two numbers this chapter deliberately does not print. The per-level, per-formati
 - [Notables and townsfolk](npcs-notables-and-townsfolk.md)
 - [Editing safely](editing-safely.md)
 - [Validation and testing](validation-and-testing.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](./npcs-notables-and-townsfolk.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+
+<!-- backlinks-end -->

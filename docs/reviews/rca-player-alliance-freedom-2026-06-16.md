@@ -110,3 +110,12 @@ Two compounding mistakes: (1) **I fixed an unconfirmed root cause** — the diag
 
 Extend `feedback_new_engine_state_audit_what_undoes_it.md` with the **exit-survival** corollary: before blocking a transition to *preserve* state, enumerate the entity's exits and confirm a deliberate one survives (don't turn protection into a soft-lock); and **don't ship a behavioral fix for an unconfirmed root cause** — diagnose first when the trigger isn't reproduced.
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

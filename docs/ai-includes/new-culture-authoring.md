@@ -446,6 +446,10 @@ If you author a sub-culture line (e.g., crossbowmen as a parallel to bowmen, or 
 - [docs/features/dale.md](../features/dale.md)
 - [docs/features/lord-skills.md](../features/lord-skills.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/cultures.md](../modding/cultures.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reviews/rca-gondor-lord-review-2026-05-26.md](../reviews/rca-gondor-lord-review-2026-05-26.md)
 

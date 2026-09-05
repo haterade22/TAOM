@@ -364,3 +364,27 @@ These come up on every armour job and no doc in the repo settles them. Say so ra
 - [module-backup-sweep](../reference/module-backup-sweep.md) for the backup-suffix rule that keeps a sidecar out of the loader.
 - [bannerlord-engine-and-toolchain](../reference/bannerlord-engine-and-toolchain.md) section 6 for the art half: FBX and textures through to a `.tpac` and the name you type into `mesh=`.
 - [author-armor skill](../../.claude/skills/author-armor/SKILL.md) for the repo's own step order, read with the cover-flag correction in this chapter.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](./balance-levers.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-mounts-and-harness.md](./items-mounts-and-harness.md)
+- [docs/modding/items-shields.md](./items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](./items-weapons-and-crafting.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-armory.md](./module-armory.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/recipe-retire-content.md](./recipe-retire-content.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

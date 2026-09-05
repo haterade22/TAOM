@@ -132,3 +132,13 @@ Adjacent improvements shipped in the same commit:
 - **Lifecycle matrix ≠ observation matrix.** "When does this entity die?" and "What are all the values this observation can take, in what order?" are different reviews. Both are needed for static-state machines driven by external polling.
 - **Reviews that walk happy-path examples are insufficient.** The bug was at frame 1 of the input space; Agent 5 walked frame 2 onward. Future review prompts must explicitly enumerate boundary states, not pick representative midpoints.
 - **In-game tests catch what process tests don't.** Even with a green build, green tests, green deep-review, green Codex, the only way to confirm a UI-text postfix is the user actually seeing the text. ADR-008's "test via game" caveat is a real gap, not a checkbox.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

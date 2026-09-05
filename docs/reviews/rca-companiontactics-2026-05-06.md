@@ -111,3 +111,13 @@ passing the prompt file path. When the resulting `docs/reviews/codex-adversarial
 | Codex review didn't finalize | DEFERRED (artifact in place for manual dispatch) |
 
 **Net outcome:** 2 real bugs caught and fixed by /deep-review. 1 false positive disposed of cheaply. 1 process failure documented with preventive action. Codex review pending out-of-session dispatch.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

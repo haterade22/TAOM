@@ -107,3 +107,13 @@ the conditional tooling agent found all five real defects.
   which the trigger's current wording ("that WRITE files") does not cover. All three findings here
   were in read-only tools.
 - **Source:** same RCA.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

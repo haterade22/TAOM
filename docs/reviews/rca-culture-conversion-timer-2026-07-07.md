@@ -23,3 +23,13 @@ Out of scope, not a review failure: #325 added notable replacement at conversion
 ## Deep-review of the fix
 
 5 agents, 0 findings. Standards PASS; engine double-fire VERIFIED + guard proven more robust than a `ChangeOwnerOfSettlementDetail` whitelist (which would break mixed-culture grants + barter/gift/rebellion and is fragile to enum growth); efficiency 0 (log calls branch-guarded); completeness COMPLETE; data-flow full 5×7 state×event trace, 0 gaps, guard provably mutually exclusive with the effective-culture cancel-branch and correctly ordered after R4/R5.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

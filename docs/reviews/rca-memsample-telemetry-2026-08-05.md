@@ -47,3 +47,13 @@ ask what TEST pins X — especially at boundaries and in the other language of a
 
 None new — both lessons fit existing category files (appended below); the parallel-lane brief
 improvement is recorded here and in the lessons entries.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

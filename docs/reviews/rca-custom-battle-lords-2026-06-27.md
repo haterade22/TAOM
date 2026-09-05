@@ -34,3 +34,13 @@ No new `.claude/rules/` file (the existing csharp-architecture "Config Providers
 - `dotnet build Main/TAOM.csproj` — clean.
 - `dotnet test --filter CustomBattles` — 65 passed / 0 failed (+4 over the pre-fix 61: 2 fallback-path tests, 2 shipped-data regression tests).
 - `python tools/validate_moduledata.py` — PASS.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

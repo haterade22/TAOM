@@ -54,3 +54,13 @@ I'll commit this memory together with the closing commit.
 - New: `docs/reviews/rca-settlement-nameplate-fade-2026-05-25.md` (this file)
 - Modified (perf fix): `Main/Features/SettlementNameplateFade/NameplateFadeSettingsProvider.cs`, `Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs`, `Main/SubModule.cs`
 - New test: `TAOM.Tests/Features/SettlementNameplateFade/NameplateFadeServiceTests.cs` — `ComputeAlphaMultiplier_InfinityNearDistance_ReturnsOne`
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

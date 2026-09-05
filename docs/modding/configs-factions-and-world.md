@@ -491,3 +491,20 @@ All measured 2026-09-05 from the repo working tree at `Main/_Module/ModuleData/`
   [dread-aura.md](../features/dread-aura.md), [messengers.md](../features/messengers.md)
 - Wiring a new faction: [culture-playability-wiring.md](../features/culture-playability-wiring.md),
   [harmony-patch-registry.md](../reference/harmony-patch-registry.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](./configs-balance.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

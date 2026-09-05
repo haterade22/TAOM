@@ -35,3 +35,13 @@ Audit-spec-vs-codebase mismatch. The audit fix-sketch in issue #127 said "subscr
 
 - (would-have-been-wrong) — never landed because Codex review preceded commit
 - Commit (TBD this session) — final fix using `OnNewGameCreatedEvent` per Codex finding
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

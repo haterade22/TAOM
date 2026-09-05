@@ -414,3 +414,20 @@ Code: No code changes needed
 - [race-age-system](../features/race-age-system.md), [initial-child-generation](../features/initial-child-generation.md), [field-commission](../features/field-commission.md), [alignment-recruitment](../features/alignment-recruitment.md), [enlistment](../features/enlistment.md), [career-system](../features/career-system.md)
 - [moduledata-validation](../features/moduledata-validation.md), [csharp-architecture rule](../../.claude/rules/csharp-architecture.md), [tools README](../../tools/README.md)
 - [Faction and world configs](configs-factions-and-world.md), [Balance levers](balance-levers.md), [Validation and testing](validation-and-testing.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](./balance-levers.md)
+- [docs/modding/configs-factions-and-world.md](./configs-factions-and-world.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

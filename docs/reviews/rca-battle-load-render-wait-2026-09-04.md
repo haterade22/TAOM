@@ -129,3 +129,13 @@ The in-game smoke is unrun and this is a player's machine, so there is no local 
 cold-cache first-encounter battle showing `WaitingForRender` lines at 1 Hz with a falling `shaders=`
 count and no bundle written, then `BattlePlayable`. Neither the deferral nor the churn cap has
 executed against a real engine.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/battle-load-diagnostics.md](../features/battle-load-diagnostics.md)
+
+<!-- backlinks-end -->

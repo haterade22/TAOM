@@ -167,3 +167,12 @@ A kingdom owning no settlements crashing the daily tick · the Erebor tournament
 - **Voice acting.** A recording brief, a 200 take dwarf script and a Khuzdul lexicon are ready for the voice actor.
 - **A memory crash on 16 GB machines.** The game now logs a memory reading every 30 seconds so a crash log identifies the cause itself.
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

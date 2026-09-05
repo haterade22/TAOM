@@ -745,3 +745,25 @@ the `Id` attribute (`TaleWorlds.ModuleManager.cs:692-699`), and the vanilla laun
 `Launcher.Library.cs:1421-1429` also deselects any module whose incompatible list names the module
 the player just clicked, so toggling `Alliance.Wargs` back on silently unchecks `LOTRLOME_Armory`.
 BUTR and BLSE launcher behaviour here is not established.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md)
+- [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
+- [docs/features/kingdom-voices.md](../features/kingdom-voices.md)
+- [docs/features/spider-skeleton-animation-pipeline.md](../features/spider-skeleton-animation-pipeline.md)
+- [docs/features/warg-combat.md](../features/warg-combat.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/submodule-and-registration.md](../modding/submodule-and-registration.md)
+- [docs/reference/bannerlord-animation-clip-flags.md](./bannerlord-animation-clip-flags.md)
+- [docs/reference/bannerlord-engine-and-toolchain.md](./bannerlord-engine-and-toolchain.md)
+- [docs/reference/lotrlome-armory-snapshot/README.md](lotrlome-armory-snapshot/README.md)
+- [docs/reference/lotrlome-soln-id-fix.md](./lotrlome-soln-id-fix.md)
+- [docs/reference/module-backup-sweep.md](./module-backup-sweep.md)
+- [docs/reviews/lessons/animation-skeleton.md](../reviews/lessons/animation-skeleton.md)
+
+<!-- backlinks-end -->

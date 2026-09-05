@@ -415,3 +415,19 @@ All measured 2026-09-05 from the repo at `bannerlord-1.4.5` and the installed mo
 - [moduledata-validation.md](../features/moduledata-validation.md) and
   [testing-guide.md](../ai-includes/testing-guide.md): what the validators and shipped-data tests
   cover. [tools README](../../tools/README.md): every script named above.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](./recipe-add-a-race-or-creature.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+
+<!-- backlinks-end -->

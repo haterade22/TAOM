@@ -162,5 +162,7 @@ Controls which companions spawn, where, and their race.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
+- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
 
 <!-- backlinks-end -->

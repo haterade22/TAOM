@@ -493,3 +493,20 @@ All measured 2026-09-05. Live-module paths are relative to the game's `Modules` 
 - [culture-playability-wiring](../features/culture-playability-wiring.md), the five monsters and the facegen action set a race needs.
 - [moduledata-validation](../features/moduledata-validation.md) and the [tools README](../../tools/README.md), what the validator reaches.
 - [troops rule](../../.claude/rules/troops.md) and the [xslt-moduledata lesson](../reviews/lessons/xslt-moduledata.md), the save-compatibility rules for troop and settlement ids.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+
+<!-- backlinks-end -->

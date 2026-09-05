@@ -163,6 +163,12 @@ the engine version, the reported date) rather than inventing a commit range.
 
 ## Referenced by
 
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/module-dependencies.md](../modding/module-dependencies.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
 - [docs/reference/doc-lookup.md](./doc-lookup.md)
+- [docs/reference/module-backup-sweep.md](./module-backup-sweep.md)
 
 <!-- backlinks-end -->

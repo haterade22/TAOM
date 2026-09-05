@@ -65,3 +65,13 @@ Meta-lesson: finding #4 is the clearest example this feature produced of an "opt
 - Localization & UI: hotkey-category / queried-key verification on ported UI.
 - GameModels & Services: master-toggle fold extends to "the disable code path must not sit behind the disable guard" (UI-layer instance).
 - Data, Content & Cultures: porting a classification with a CHANGED lookup key must re-audit the inputs the new key doesn't cover (C1).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

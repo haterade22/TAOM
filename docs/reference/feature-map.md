@@ -102,3 +102,13 @@
 | Codex config | `.codex/config.toml` |
 | Codex instructions | `AGENTS.md` (project root) |
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/README.md](../modding/README.md)
+
+<!-- backlinks-end -->

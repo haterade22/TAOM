@@ -271,3 +271,22 @@ Code: No code changes needed
 - [moduledata-validation](../features/moduledata-validation.md), what the validator walks and what it does not.
 - [rca-cultural-feats-3pack-2026-05-31](../reviews/rca-cultural-feats-3pack-2026-05-31.md) and [rca-castle-recruitment-guard-2026-07-07](../reviews/rca-castle-recruitment-guard-2026-07-07.md).
 - [tools README](../../tools/README.md), for `add_townsfolk_battle_rosters.py` and the validator family.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/body-properties.md](./body-properties.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

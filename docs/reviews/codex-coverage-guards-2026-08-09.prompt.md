@@ -88,3 +88,13 @@ whole `{=key}default`, a key assembled across two statements.
 - **Explicitly say so if a claim survives.** "Checked X, it holds, here is why" is a useful result.
 - Ignore: `Main/bin`, `Main/obj`, `TAOM.Tests/bin`, `docs/reviews/raw`.
 - Other sessions are working in this repo. Do not edit any file; report only.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

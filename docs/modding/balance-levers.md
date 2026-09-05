@@ -365,3 +365,21 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 - [settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 - [lessons: GameModels and Services](../reviews/lessons/gamemodels-services.md)
 - [tools README](../../tools/README.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-balance.md](./configs-balance.md)
+- [docs/modding/party-templates.md](./party-templates.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/settlements.md](./settlements.md)
+- [docs/modding/skill-sets.md](./skill-sets.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/validation-and-testing.md](./validation-and-testing.md)
+
+<!-- backlinks-end -->

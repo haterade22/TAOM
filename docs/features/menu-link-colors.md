@@ -227,5 +227,6 @@ glow and contrast guards.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
 
 <!-- backlinks-end -->

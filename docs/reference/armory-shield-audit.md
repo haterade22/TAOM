@@ -171,6 +171,9 @@ above has no automated check — it was verified by ad-hoc parse for this audit.
 - [docs/features/black-numenorean.md](../features/black-numenorean.md)
 - [docs/features/mesh-ref-validation.md](../features/mesh-ref-validation.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/items-shields.md](../modding/items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](../modding/items-weapons-and-crafting.md)
+- [docs/modding/module-armory.md](../modding/module-armory.md)
 - [docs/reference/armory-guide.md](./armory-guide.md)
 - [docs/reference/doc-lookup.md](./doc-lookup.md)
 

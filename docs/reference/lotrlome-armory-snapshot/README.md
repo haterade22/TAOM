@@ -407,8 +407,14 @@ If you re-snapshot later (e.g., after a LOTRLOME update we want to track), bump 
 ## Referenced by
 
 - [docs/features/character-creation.md](../../features/character-creation.md)
+- [docs/modding/body-properties.md](../../modding/body-properties.md)
+- [docs/modding/file-catalogue.md](../../modding/file-catalogue.md)
+- [docs/modding/module-armory.md](../../modding/module-armory.md)
+- [docs/modding/modules-overview.md](../../modding/modules-overview.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../../modding/recipe-add-a-race-or-creature.md)
 - [docs/reference/armory-guide.md](../armory-guide.md)
 - [docs/reference/doc-lookup.md](../doc-lookup.md)
+- [docs/reference/module-backup-sweep.md](../module-backup-sweep.md)
 - [docs/reviews/rca-isengard-black-tableau-2026-08-06.md](../../reviews/rca-isengard-black-tableau-2026-08-06.md)
 
 <!-- backlinks-end -->

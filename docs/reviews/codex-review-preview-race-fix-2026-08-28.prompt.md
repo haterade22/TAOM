@@ -31,3 +31,13 @@ The stated reasoning: `CurrentRace` was already assigned before the throw, so on
 ## Output
 
 Per finding: severity (P1 blocking / P2 should fix / P3 nice to have), file and line, what is wrong, why it matters in a real campaign, and the minimal fix. Separate CONFIRMED (verified against engine source) from SUSPECTED. If question 1 checks out, say so explicitly with the evidence: a clean bill there is the main point of this review. Do not invent findings to fill the report.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

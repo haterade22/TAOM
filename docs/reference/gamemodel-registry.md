@@ -59,5 +59,6 @@
 ## Referenced by
 
 - [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
 
 <!-- backlinks-end -->

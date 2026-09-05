@@ -169,6 +169,7 @@ crew↔mount collision fix (shared `FaceGroupId`). See [elephant.md](elephant.md
 ## Referenced by
 
 - [docs/features/elephant.md](./elephant.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

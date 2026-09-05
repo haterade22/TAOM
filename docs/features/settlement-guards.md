@@ -166,5 +166,6 @@ Fully safe. `GuardsCampaignBehavior.SyncData` is empty -- guards spawn fresh eve
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/configs-factions-and-world.md](../modding/configs-factions-and-world.md)
 
 <!-- backlinks-end -->

@@ -272,3 +272,25 @@ Every count below was produced on 2026-09-05 by the command beside it, run from 
 - [`docs/features/lord-spawn-guard.md`](../features/lord-spawn-guard.md), the landless-culture crash the `LANDLESS_CULTURE` gate exists to stop.
 - [`.claude/rules/xslt.md`](../../.claude/rules/xslt.md), the passthrough and identity-transform rules every stylesheet template obeys.
 - [`docs/reviews/lessons/data-content-cultures.md`](../reviews/lessons/data-content-cultures.md), the recorded failures behind several of the gotchas above.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/banners-and-heraldry.md](./banners-and-heraldry.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/party-templates.md](./party-templates.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-retire-content.md](./recipe-retire-content.md)
+- [docs/modding/settlements.md](./settlements.md)
+- [docs/modding/troubleshooting.md](./troubleshooting.md)
+
+<!-- backlinks-end -->

@@ -76,6 +76,12 @@
 | Understand the quest/issue system, or convert vanilla quests to LOTR | [issue-and-quest-system.md](../../docs/reference/engine/issue-and-quest-system.md) (engine A-to-Z) + [lotr-issues.md](../../docs/features/lotr-issues.md) (**IMPLEMENTED** 2026-06-20 — 43 vanilla issues suppressed + replaced via XML-config + 3 generic templates) |
 | Browse all engine process docs | [docs/reference/engine/](../../docs/reference/engine/) — full arc: campaign heartbeat → object graph → encounter seam → mission lifecycle → agent spawn → formation/team AI → mount/rider → combat stats → usable machines → UI → save/object system → GameModel → scene/script → campaign behaviors → items → module integration → settlement economy |
 
+| Edit the mod data as a non-programmer (balance numbers, add or remove content) | [modding/README.md](../modding/README.md). The handbook hub, with an "I want to..." table routing to one chapter and one heading |
+| Find every attribute the engine actually reads off `<NPCCharacter>`, `<Culture>`, `<Item>`, `<Settlement>` and the rest | the matching chapter in [docs/modding/](../modding/). Each table is generated from the v1.4.8 deserializer and gated by `python tools/check_handbook_attributes.py`, which fails on a documented attribute the engine never reads |
+| Know what must exist before adding content, and whether an edit needs a restart, a new campaign, or reaches an existing save | [modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md) |
+| Build a new mod, or a new campaign map, from an empty folder | [modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md) and [modding/module-map.md](../modding/module-map.md) |
+| Pick the right validator for an XML change, and know what it cannot see | [modding/validation-and-testing.md](../modding/validation-and-testing.md) |
+
 ---
 
 | Touch supply caravans / orders / the order screen | [supply-lines.md](../../docs/features/supply-lines.md) |
@@ -86,6 +92,7 @@
 
 ## Referenced by
 
+- [docs/modding/README.md](../modding/README.md)
 - [docs/reference/release-process.md](./release-process.md)
 - [docs/reviews/adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md)
 

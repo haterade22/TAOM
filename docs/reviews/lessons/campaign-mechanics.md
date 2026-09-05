@@ -212,6 +212,7 @@ the v1.4.8 decompile, 2026-08-14:
 
 ## Referenced by
 
+- [docs/modding/party-templates.md](../../modding/party-templates.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/gamemodels-services.md](./gamemodels-services.md)
 

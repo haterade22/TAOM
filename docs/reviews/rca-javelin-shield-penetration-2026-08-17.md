@@ -73,3 +73,13 @@ independently and reproduced the finding, which is how the claim reached CONFIRM
 The in-game A/B (#320 item 4) confirming shields stop javelins again. It must use a **hero** thrower:
 `CharacterObject.GetPerkValue` returns `false` for non-heroes, so vanilla's Impale grant never reached
 line troops, and a troop thrower would read "blocked" whether or not the change worked.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

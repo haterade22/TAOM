@@ -41,3 +41,13 @@ This is a sibling of `tests.md` "Skip-Guard Exhaustion" (write a test per guard)
 ## Note on RCA severity scope
 
 Per `.claude/rules/harness-facts.md` + `feedback_root_cause_mandatory.md`, Phase-3e RCA is mandatory for **every** confirmed finding regardless of severity — hence this file exists for a single LOW. The systemic lesson (assert the discriminating signal) is worth more than the one-line fix.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

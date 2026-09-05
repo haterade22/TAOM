@@ -134,3 +134,13 @@ the scope was wrong.
 **Preventive action:** the deep-review Data Flow prompt's NaN check should name the ENTRY POINT
 tick methods explicitly, not just services and pure helpers. `dt` is the most obviously
 engine-sourced float in any `MissionBehavior`, and it was the one float nobody examined.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

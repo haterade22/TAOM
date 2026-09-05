@@ -317,3 +317,28 @@ All measured 2026-09-05. Paths under the game install are written module-relativ
 - [state-lifecycle-save lessons](../reviews/lessons/state-lifecycle-save.md) and [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md): why the save rules and the strip rule exist.
 - [lotrlome-soln-id-fix](../reference/lotrlome-soln-id-fix.md): the `project.mbproj` id vocabulary and the backup-extension rule.
 - [moduledata-validation](../features/moduledata-validation.md) and [tools README](../../tools/README.md): the gates.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/clans.md](./clans.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/id-cheatsheet.md](./id-cheatsheet.md)
+- [docs/modding/items-weapons-and-crafting.md](./items-weapons-and-crafting.md)
+- [docs/modding/lords-and-heroes.md](./lords-and-heroes.md)
+- [docs/modding/module-dependencies.md](./module-dependencies.md)
+- [docs/modding/module-map.md](./module-map.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/submodule-and-registration.md](./submodule-and-registration.md)
+- [docs/modding/wanderers-and-named-companions.md](./wanderers-and-named-companions.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+
+<!-- backlinks-end -->

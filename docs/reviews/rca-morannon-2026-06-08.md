@@ -54,3 +54,13 @@ Only one is genuinely new and project-shaping; the others are scoped extensions 
 - One project-wide false-positive memorialized so it stops firing.
 - No game-runtime bugs introduced by the Morannon work.
 - Tooling-correctness agent earned its keep — without it, 3 of the 4 findings would not have been caught.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

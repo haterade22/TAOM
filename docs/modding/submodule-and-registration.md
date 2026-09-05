@@ -263,3 +263,33 @@ All measured 2026-09-05. Commands that start with a module name were run from th
 - [kingdom-creation](../features/kingdom-creation.md): the `SubModule.xml Registration` section a new kingdom's three rows come from.
 - [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md): the `grep -r` over backups lesson.
 - [tools README](../../tools/README.md): the `audit_mbproj_registration.py` and `validate_moduledata.py` rows.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/cultures.md](./cultures.md)
+- [docs/modding/editing-safely.md](./editing-safely.md)
+- [docs/modding/equipment-rosters.md](./equipment-rosters.md)
+- [docs/modding/file-catalogue.md](./file-catalogue.md)
+- [docs/modding/items-mounts-and-harness.md](./items-mounts-and-harness.md)
+- [docs/modding/items-shields.md](./items-shields.md)
+- [docs/modding/items-weapons-and-crafting.md](./items-weapons-and-crafting.md)
+- [docs/modding/kingdoms.md](./kingdoms.md)
+- [docs/modding/load-order-and-dependencies.md](./load-order-and-dependencies.md)
+- [docs/modding/module-dependencies.md](./module-dependencies.md)
+- [docs/modding/module-map.md](./module-map.md)
+- [docs/modding/module-taom.md](./module-taom.md)
+- [docs/modding/modules-overview.md](./modules-overview.md)
+- [docs/modding/README.md](./README.md)
+- [docs/modding/recipe-add-a-culture.md](./recipe-add-a-culture.md)
+- [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
+- [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
+- [docs/modding/strings-and-localization.md](./strings-and-localization.md)
+- [docs/modding/troops.md](./troops.md)
+- [docs/modding/wanderers-and-named-companions.md](./wanderers-and-named-companions.md)
+
+<!-- backlinks-end -->

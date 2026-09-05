@@ -28,3 +28,14 @@ Same shape as the C++-port rule (`feedback_native_port_hot_path_audit.md`: "upst
 - Null-entry gate + honest forward-guard comments in `CastleNotableMaintainer.EnsureCastleNotables` and `CultureConversionAdapter.ReplaceNotable`.
 - Suite green after fixes: 4,153 passed / 0 failed.
 - LESSONS-LEARNED "Campaign Mechanics" entry corrected: the canonical `CreateNotable` pre-check recipe now includes the null-entry gate (the entry as first written taught the gapped recipe).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

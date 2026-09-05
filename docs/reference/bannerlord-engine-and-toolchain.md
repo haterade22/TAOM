@@ -320,8 +320,16 @@ References: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanis
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/investigations/native-commit-audit-2026-08.md](../investigations/native-commit-audit-2026-08.md)
+- [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/module-map.md](../modding/module-map.md)
+- [docs/modding/module-taom.md](../modding/module-taom.md)
+- [docs/modding/modules-overview.md](../modding/modules-overview.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
 - [docs/reference/adod-beasts-architecture-and-taom-port.md](./adod-beasts-architecture-and-taom-port.md)
 - [docs/reference/engine/agent-spawn-and-render-pipeline.md](engine/agent-spawn-and-render-pipeline.md)
+- [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
 - [docs/reference/mcp-servers.md](./mcp-servers.md)
 
 <!-- backlinks-end -->

@@ -73,3 +73,13 @@ None — F1 and F2 are both overlay-attach entry points. Per ADR-008, these are 
 | (same shape in BattleActionBarMissionView Init/Finalize) | (same fix shape applied) |
 | `.claude/rules/gui-ui.md` rule scoped to "ScreenBase overlay via Harmony postfix (NOT a MissionScreen overlay)" | Scoped to "ScreenBase overlay (via Harmony postfix) OR MissionScreen overlay (via MissionView/MissionLogic attach)" with an explicit display-only exception |
 | `.claude/skills/deep-review/SKILL.md` check #10 trigger limited to ScreenBase | Broadened to any feature-overlay attach path |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

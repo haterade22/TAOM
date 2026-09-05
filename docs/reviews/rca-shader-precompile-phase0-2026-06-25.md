@@ -32,3 +32,13 @@ All 3 confirmed findings are LOW polish (two UX-wording, one doc-drift), not log
 
 1. **GameModels & Services:** A boundary class (GameModel, Harmony patch, runner/orchestrator, static IL-call target) reading `TaomSettings.Instance` directly is NOT an ADR-008 defect — the `*SettingsProvider` injection pattern is for services and unit-tested classes; don't flag a boundary's direct MCM read.
 2. **Build/Tooling/Workflow:** When renaming a test or any symbol that docs reference by name, grep `docs/` for the old name — prose caveats and Changelog get updated but enumerated symbol lists (Tests sections, Key Files tables) drift silently.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

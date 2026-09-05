@@ -428,7 +428,6 @@ Record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) sec
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
-
 ### An animation must be authored against the ENGINE skeleton, not a mesh FBX
 
 Skinning uses bind matrices and is roll-independent, so a mesh FBX can carry arbitrary bone

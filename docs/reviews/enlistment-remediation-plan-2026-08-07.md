@@ -453,3 +453,13 @@ Roughly **2,760 lines** of production code and **~255 tests**. Batches 3 and 4 t
 - **`PlayerPresenceFlags`/`PlayerPresenceSnapshot` collapse** — deferred tech debt from Batch 2, guarded by the 8-row equivalence test.
 
 **Recommended skills for the orchestrator** (I cannot invoke them): `/deep-review` before each of Batches 3, 4, 5 and 7 (each is ≥2 C# files and touches a feature module); `/verify` between every batch since the player is play-testing; `/localize` at Batch 12; `/issue` for each batch before implementation; and `/research` before Batch 8 if `CampaignMapConversation`'s two-arg overload does not resolve on the installed DLLs.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->
