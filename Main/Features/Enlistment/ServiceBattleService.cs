@@ -205,20 +205,29 @@ public class ServiceBattleService : IServiceBattleService
             return;
         }
 
-        // LEAVE THE ARMY FIRST, above every gate below, and this ordering is the whole reason the
-        // membership is transient.
+        // THE DETACH DOES NOT HAPPEN HERE ANY MORE. It used to, and that was the cause of #557.
         //
-        // PlayerEncounter.FinishEncounterInternal grants the post-defeat escape —
-        // TeleportPartyToOutSideOfEncounterRadius() + SetDoNotAttackMainParty(2) — only when
-        // MainParty.AttachedTo == null. Army.AddPartyToMergedParties sets AttachedTo. So a player
-        // still attached when the encounter finishes forfeits vanilla's escape and is re-engaged on
-        // the spot by whoever just beat him. That is the field report *"after they were defeated I
-        // immediately got jumped by the enemy army"*, and ServeAsSoldier ships with the same hole.
+        // Campaign-event listeners are LIFO: `MbEvent<T>.AddNonSerializedListener` (installed v1.4.8,
+        // :24-30) head-inserts and `Invoke` :32-35 walks from the head. TAOM registers its behaviours
+        // in SubModule.OnGameStart AFTER SandBox has registered its own, so THIS handler runs BEFORE
+        // vanilla's `SiegeAftermathCampaignBehavior.OnMapEventEnded` on the same dispatch. Clearing
+        // AttachedTo here makes `MobileParty.SetAttachedToInternal` :1780-1783 run
+        // `HandleMapEventEndForPartyInternal` + `Party.MapEventSide = null`, dropping the main party
+        // out of `MapEventSide._battleParties` — the exact list vanilla then reads through
+        // `IsMainPartyAmongParties()`. Vanilla skipped its whole assignment block, left
+        // `_besiegerParty` null, and its aftermath menu dereferenced it. Same seam as #551.
         //
-        // This runs on MapEventEnded, while the aftermath encounter is still open — so the detach
-        // lands before Finish, not after. Above the state gate too: army membership is ours to clean
-        // up whatever state we are in, and leaking it would strand the player attached indefinitely.
-        _army.LeaveArmy();
+        // The escape grant that made this urgent is unchanged and still honoured.
+        // `PlayerEncounter.Finish` runs `FinalizeBattle()` :1071 (which dispatches MapEventEnded) and
+        // `FinishEncounterInternal()` :1072 (which grants the post-defeat escape only when
+        // `MainParty.AttachedTo == null`) as CONSECUTIVE statements. Deferring the detach into that
+        // one-statement window keeps the escape and stops corrupting vanilla's read.
+        // `Patch85_EnlistedDetachDeferral` postfixes `FinalizeBattle` and calls
+        // <see cref="FlushArmyLeaveAfterBattle"/> there.
+        //
+        // If that seam is ever missed, EnlistmentReconciler's `noBattleAnywhere && IsInArmy` sweep is
+        // the standing backstop, so a missed flush degrades to "detached a tick late", never to a
+        // player stranded attached.
 
         if (_store.Record.State != EnlistmentState.EnlistedBattle)
             return;
@@ -232,6 +241,42 @@ public class ServiceBattleService : IServiceBattleService
         _machine.TryTransition(EnlistmentState.EnlistedAttached);
         _attachment.EnsureParked(_store.Record.CommanderHeroId);
         ReassertServiceMenu("battle ended");
+    }
+
+    /// <summary>
+    /// The deferred half of the battle-end detach, called from `Patch85_EnlistedDetachDeferral`'s
+    /// postfix on `PlayerEncounter.FinalizeBattle` (#557). See the long comment in
+    /// <see cref="OnCommanderBattleEnded"/> for why the detach cannot happen on MapEventEnded.
+    ///
+    /// STATELESS BY DESIGN. There is no "detach owed" flag to arm, persist, reset per session, or
+    /// leak across a save. Every term is read from live state at the moment the seam fires, so a
+    /// missed arm, a save taken mid-battle, or a co-op host handoff cannot leave this method holding
+    /// a stale intention. That also means it is safe to call on every `FinalizeBattle`, including the
+    /// legacy save-upgrade call site at :609.
+    ///
+    /// THE MAP-EVENT GATE IS THE #551 GUARD, in its cheapest form. `MainParty.MapEvent != null` means
+    /// the player is still in SOME live battle, and detaching would tear him out of it exactly as
+    /// issue #551 describes. Deferring to the reconciler in that case is correct, not a fallback.
+    /// </summary>
+    public void FlushArmyLeaveAfterBattle()
+    {
+        if (!_store.Record.IsEnlisted)
+            return;
+
+        if (_army?.IsInArmy != true)
+            return;
+
+        // #551: never detach a party that is still inside a live map event. Clearing AttachedTo
+        // would run HandleMapEventEndForPartyInternal against a battle that has not ended.
+        if (_encounter.IsMainPartyInMapEvent)
+        {
+            _logger?.LogInfo(
+                "[Enlistment] deferred army leave skipped — the player is still in a live map event. " +
+                "The reconciler's no-battle sweep will detach him once it resolves (#551).");
+            return;
+        }
+
+        _army.LeaveArmy();
     }
 
     /// <summary>

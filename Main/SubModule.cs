@@ -1394,6 +1394,25 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.Initialize(
             IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch82_MapEventObserverInvariant");
+        // Patch84 (bundle d7d9f7d3) — the siege aftermath menus dereference _besiegerParty and the
+        // settlement read off it with no null guard, and vanilla leaves that field unassigned
+        // whenever the main party is not among the ending event's parties. Both targets are game
+        // menu inits, which cannot open before the campaign exists, so the standard batch is early
+        // enough.
+        TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.Initialize(
+            IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch84_SiegeAftermathMenuGuard");
+        // Patch85 (#557) — defers the enlisted battle-end detach out of the MapEventEnded dispatch
+        // into PlayerEncounter.Finish's one-statement window between FinalizeBattle (which dispatches
+        // the event) and FinishEncounterInternal (which reads AttachedTo for the post-defeat escape).
+        // Campaign-event listeners are LIFO, so TAOM's handler runs BEFORE vanilla's and the old
+        // in-dispatch detach was corrupting vanilla's own party-list read. Resolvers, not instances:
+        // the enlistment graph must not be constructed this early.
+        TAOM.Features.Enlistment.Hooks.Patch85_EnlistedDetachDeferral.Initialize(
+            IoC.Resolve<IModLogger>(),
+            () => IoC.Resolve<Features.Enlistment.IServiceBattleService>(),
+            () => IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>());
+        _harmony.PatchCategory("Patch85_EnlistedDetachDeferral");
         // Patch66 — enlistment menu guard (SetNextMenu redirect + EnterMenuMode recovery) and,
         // as the battle layer lands, the four LordConversations condition suppressions. All
         // campaign-runtime targets; menus first open well after this batch. Fail-open prefixes
@@ -1852,6 +1871,8 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.Arena.Hooks.Patch69_TournamentEndGuard.ResetForUnload();
         TAOM.Features.FieldCommission.Hooks.Patch71_HeroResetEquipmentsGuard.ResetForUnload();
         TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.ResetForUnload();
+        TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.ResetForUnload();
+        TAOM.Features.Enlistment.Hooks.Patch85_EnlistedDetachDeferral.ResetForUnload();
         TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.Hero_CanBecomePrisoner_Patch.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.TakePrisonerAction_Apply_Patch.ResetForUnload();

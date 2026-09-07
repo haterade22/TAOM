@@ -29,4 +29,15 @@ public interface IServiceBattleService
     /// other one. Detaching against the wrong answer is issue #551, a CTD.
     /// </summary>
     void OnCommanderBattleEnded(bool mainPartyWasInEndingEvent);
+
+    /// <summary>
+    /// Detach the main party from the commander's army, deferred out of the MapEventEnded dispatch
+    /// (#557). Called from `Patch85_EnlistedDetachDeferral`'s postfix on
+    /// `PlayerEncounter.FinalizeBattle`, which is the statement immediately before
+    /// `FinishEncounterInternal` reads `AttachedTo` to grant the post-defeat escape.
+    ///
+    /// Stateless and safe to call on every battle end: it reads live state and no-ops when the
+    /// player is not enlisted, not in an army, or still inside a live map event.
+    /// </summary>
+    void FlushArmyLeaveAfterBattle();
 }

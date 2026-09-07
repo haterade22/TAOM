@@ -938,3 +938,9 @@ answer to whoever triaged the next bundle.
   parse test cannot see an inverted diagnosis. Related: a diagnostic driven BY the loop it measures
   cannot observe that loop wedging, so state the coverage boundary or absence will be read as health.
 - **Source:** docs/reviews/rca-stale-character-repair-2026-09-06.md findings 2-3.
+
+### An exclusion needs STRONGER evidence than a confirmation, because nothing downstream re-tests it
+When an investigation rules a suspect OUT, that claim is load-bearing in a way a confirming claim is not: no later step revisits an eliminated hypothesis, so a wrong exclusion silently cancels work and survives into the docs as settled fact. Hold every "X is ruled out because Y" to the same standard as a fix: decompile Y, quote it, then write it down.
+- **Why missed:** the #557 investigation decompiled five engine types to BUILD its case for a null field, and every one of them supported the conclusion it was already reaching. The one claim that ELIMINATED a competing explanation (campaign-event dispatch order) was the only load-bearing claim never checked against source, and it was wrong in the direction that cancelled a fix the user had explicitly asked for. Confirmations were verified; the exclusion was inferred.
+- **Prevent:** before closing an investigation, ask **"which claim here, if false, would change what I build?"** and verify exactly those, exclusions first. In `/deep-review`, keep at least one agent tasked with FALSIFYING the narrative rather than verifying the code. The data-flow agent caught this precisely because it was told to try to disprove the claims, and it had to decompile a type outside the changeset's own API surface to do it, which no code-scoped agent would have reached.
+- **Source:** docs/reviews/rca-siege-aftermath-menu-guard-2026-09-07.md, #557.

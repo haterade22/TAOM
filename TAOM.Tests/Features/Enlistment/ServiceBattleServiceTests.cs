@@ -40,6 +40,9 @@ public class ServiceBattleServiceTests
         _army = Substitute.For<IArmyMembershipAdapter>();
         _army.JoinCommanderArmy(Arg.Any<string>()).Returns(true);
         _army.LeaveArmy().Returns(true);
+        // Default: the player HAS the battle team-merge. FlushArmyLeaveAfterBattle gates on this,
+        // so an unstubbed (false) default would make every deferred-detach test vacuously pass.
+        _army.IsInArmy.Returns(true);
         _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, new EncounterOwnershipPolicy(), _army, _logger);
 
         _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Defender);
@@ -444,23 +447,86 @@ public class ServiceBattleServiceTests
     }
 
     [TestMethod]
-    public void BattleEnded_EncounterStillOpen_StillLeavesTheArmy()
+    public void BattleEnded_DoesNotDetachInsideTheMapEventEndedDispatch()
     {
-        // THE ordering test. PlayerEncounter.FinishEncounterInternal grants the post-defeat escape
-        // (teleport out + SetDoNotAttackMainParty(2)) only when MainParty.AttachedTo == null, and
-        // AddPartyToMergedParties sets AttachedTo. The loot-flow branch below returns EARLY while
-        // that encounter is still open — so a detach placed after the state gate would run only
-        // after Finish had already denied the escape. Hence: above every gate.
+        // ISSUE #557, and the regression this test exists to pin. This method used to call
+        // LeaveArmy() directly, and that was the bug.
         //
-        // This is the field report *"after they were defeated I immediately got jumped by the enemy
-        // army"*, and ServeAsSoldier ships with the same hole.
+        // Campaign-event listeners are LIFO (MbEvent.AddNonSerializedListener head-inserts,
+        // installed v1.4.8 :24-30), and TAOM registers after SandBox, so THIS handler runs BEFORE
+        // vanilla's SiegeAftermathCampaignBehavior.OnMapEventEnded. Clearing AttachedTo here makes
+        // SetAttachedToInternal :1780-1783 drop the main party out of MapEventSide._battleParties,
+        // so vanilla's IsMainPartyAmongParties() went false, its assignment block was skipped, and
+        // its own aftermath menu dereferenced a null _besiegerParty. Crash bundle d7d9f7d3.
+        //
+        // The detach now happens in FlushArmyLeaveAfterBattle, called from Patch85's postfix on
+        // PlayerEncounter.FinalizeBattle — after every vanilla listener has read the party list.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         _encounter.HasCurrent.Returns(true);
 
         _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
-        _army.Received(1).LeaveArmy();
+        _army.DidNotReceive().LeaveArmy();
         Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);   // loot flow preserved
+    }
+
+    [TestMethod]
+    public void FlushArmyLeaveAfterBattle_DetachesOnceTheBattleIsOver()
+    {
+        // The other half of the #557 fix, and the one that keeps the post-defeat escape working.
+        // PlayerEncounter.Finish runs FinalizeBattle() :1071 then FinishEncounterInternal() :1072 as
+        // consecutive statements, and the escape (teleport out + SetDoNotAttackMainParty(2)) is
+        // granted only when MainParty.AttachedTo == null. Patch85 postfixes the first, so the detach
+        // still lands before the second reads it. That is the field report *"after they were
+        // defeated I immediately got jumped by the enemy army"* staying fixed.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.FlushArmyLeaveAfterBattle();
+
+        _army.Received(1).LeaveArmy();
+    }
+
+    [TestMethod]
+    public void FlushArmyLeaveAfterBattle_StillInALiveMapEvent_DoesNotDetach()
+    {
+        // ISSUE #551 carried into the deferred seam. FinalizeBattle can run while the player is
+        // still inside another live map event; detaching there would pull him out of it, null that
+        // event's TroopUpgradeTracker, and hand the CTD to MapEventSide.AllocateTroops. The
+        // reconciler's no-battle sweep picks him up instead, which is correct rather than a
+        // fallback.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+
+        _service.FlushArmyLeaveAfterBattle();
+
+        _army.DidNotReceive().LeaveArmy();
+    }
+
+    [TestMethod]
+    public void FlushArmyLeaveAfterBattle_NotEnlisted_DoesNothing()
+    {
+        // Patch85's postfix fires on EVERY player battle end, enlisted or not, so the no-op path is
+        // the common one and must not touch a party this feature does not own.
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.FlushArmyLeaveAfterBattle();
+
+        _army.DidNotReceive().LeaveArmy();
+    }
+
+    [TestMethod]
+    public void FlushArmyLeaveAfterBattle_EnlistedButNotInAnArmy_DoesNothing()
+    {
+        // Stateless by design: there is no "detach owed" flag, so every call re-derives its terms
+        // from live state. A player who never got the team merge has nothing to leave.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+        _army.IsInArmy.Returns(false);
+
+        _service.FlushArmyLeaveAfterBattle();
+
+        _army.DidNotReceive().LeaveArmy();
     }
 
     [TestMethod]
@@ -486,30 +552,33 @@ public class ServiceBattleServiceTests
     }
 
     [TestMethod]
-    public void BattleEnded_OurOwnEventEnding_StillLeavesTheArmy()
+    public void BattleEnded_OurOwnEventEnding_LeavesTheDetachToTheDeferredSeam()
     {
-        // The normal path, and the one the guard above must not break. OnMapEventEnded is
-        // dispatched from MapEvent.FinalizeEventAux :2079, BEFORE the side teardown, so the main
-        // party still reads as in a map event here — the ending one. Detaching is correct.
+        // The normal path. OnMapEventEnded is dispatched from MapEvent.FinalizeEventAux :2079,
+        // BEFORE the side teardown, so the main party still reads as in a map event here — the
+        // ending one. Detaching at this instant is exactly what corrupted vanilla's own read of
+        // that side (#557), so the handler leaves it alone and Patch85 does it a statement later.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         _encounter.IsMainPartyInMapEvent.Returns(true);
 
         _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
-        _army.Received(1).LeaveArmy();
+        _army.DidNotReceive().LeaveArmy();
     }
 
     [TestMethod]
-    public void BattleEnded_NotInBattleState_StillLeavesTheArmy()
+    public void BattleEnded_NotInBattleState_StillLeavesTheDetachToTheDeferredSeam()
     {
-        // Army membership is ours to clean up whatever state we are in. Leaking it strands the
-        // player attached indefinitely, and an attached party with a null Army is also the shape
+        // Army membership is still ours to clean up whatever state we are in — leaking it strands
+        // the player attached, and an attached party with a null Army is the shape
         // DefaultEncounterGameMenuModel.GetGenericStateMenu derefs unguarded on every map frame.
+        // What changed in #557 is only WHERE it happens, never WHETHER: Patch85's postfix on
+        // FinalizeBattle, with the reconciler's no-battle sweep behind it.
         MakeEnlisted();
 
         _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
-        _army.Received(1).LeaveArmy();
+        _army.DidNotReceive().LeaveArmy();
     }
 
     [TestMethod]

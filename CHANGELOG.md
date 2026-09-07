@@ -2,6 +2,61 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-07
+
+### fix(siege): the game crashed on the way back to the map after helping take a town (#557)
+
+Crash bundle `d7d9f7d3`, reported as "loading in after battle". An enlisted soldier fought on the
+winning attacker side of the siege of East Osgiliath, the loot and inventory screens ran normally,
+and the game died returning to the campaign map with a `NullReferenceException` in
+`SiegeAftermathCampaignBehavior.menu_settlement_taken_player_participant_on_init`. No TAOM patch was
+on that method; the failing frame is pure vanilla.
+
+The menu opens with `_besiegerParty.CurrentSettlement` and then reads `currentSettlement.GetName()`,
+neither guarded, on a field vanilla assigns in exactly one place: inside a block that only runs when
+the main party is still among the ending event's parties. When it is not, the block is skipped
+entirely, so the field keeps its saved value and the flag that would have routed the player to a
+different menu is never set. On this campaign, at renown 1 with no earlier player-participating
+siege, the saved value was null.
+
+`Patch84_SiegeAftermathMenuGuard` lets vanilla run whenever its own two preconditions hold, and
+otherwise rebuilds the menu body from the engine's own localisation keys with null-safe sources. The
+army-member menu is guarded too: it carries the identical pair of dereferences and is reachable from
+the same skipped block, so fixing one alone would only move the crash. Guarding the party without the
+settlement would also only have moved it, one line down, which is why both terms are in the decision
+and a test pins that case.
+
+What takes the player out of the event is our own enlistment detach, and the campaign-event listener
+order is why. `MbEvent.AddNonSerializedListener` head-inserts and `Invoke` walks from the head, so
+listeners fire last-registered-first. We add our behaviours after SandBox adds its own, which puts
+our battle-end handler ahead of the engine's siege-aftermath handler on the same dispatch: we clear
+`AttachedTo`, the engine answers that by removing the party from the map event's side, and vanilla
+then reads a list the player is already out of. Same seam as #551, landing somewhere new.
+
+An earlier draft of this entry said the ordering ruled our detach out. That was backwards, and it was
+caught in review the same day.
+
+### fix(enlistment): stop tearing the player out of a battle the engine is still reading (#557)
+
+The root-cause half of the entry above. Leaving the commander's army at the end of a battle used to
+happen inside the `MapEventEnded` dispatch, which is the worst possible instant for it: clearing the
+attachment makes the engine drop our party from the battle's own participant list, and every vanilla
+handler that runs after ours on that dispatch then reads a list we have already emptied. The siege
+aftermath handler is the one that noticed, but it will not be the only one that could.
+
+The detach now happens a single statement later, in the gap the engine leaves between finalising the
+battle and deciding whether to grant the post-defeat escape. Both things that mattered still hold:
+vanilla reads an intact list, and a defeated player still gets teleported clear instead of being
+jumped on the spot. If that moment is ever missed, the hourly reconciler sweep already covers it, so
+the worst case is detaching a tick late rather than staying attached.
+
+The guard against being pulled out of a *different* live battle (#551) travels with the detach rather
+than being left behind at the old site.
+
+Also from that session, not a bug: bundle `b18f3441` is a stall-watchdog false positive. The player
+was sitting in the siege deployment screen, then fought the battle and exited normally. Their build
+predates the watchdog's deferral path.
+
 ## 2026-09-06
 
 ### fix(save-load): a save naming troops that no longer exist could not be loaded at all

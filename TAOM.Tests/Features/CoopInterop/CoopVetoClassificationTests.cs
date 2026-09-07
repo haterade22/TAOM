@@ -82,6 +82,17 @@ public class CoopVetoClassificationTests
             "encounter, the skipped body is presentation (conversation UI), and the condition reads " +
             "the local player's own refuge book and enlistment state. No shared campaign mutation is " +
             "skipped, so peers cannot diverge on it."),
+        ["Patch84_ParticipantMenuGuard"] = new(CoopVeto.ReviewedSafe,
+            "Crash guard over a pure-presentation method. The skipped body " +
+            "(menu_settlement_taken_player_participant_on_init) only sets menu text variables and a " +
+            "background mesh — it mutates no campaign state at all, replicated or otherwise — and it " +
+            "is skipped ONLY when vanilla would throw an NRE on its own null _besiegerParty. Each " +
+            "peer runs its own menu inits off its own behaviour instance, so there is nothing for " +
+            "two peers to disagree about. Gating it under co-op would restore the crash."),
+        ["Patch84_ArmyMemberMenuGuard"] = new(CoopVeto.ReviewedSafe,
+            "Same as its participant sibling: menu_settlement_taken_player_army_member_on_init sets " +
+            "text variables and a background mesh only, the prefix returns false solely on the null " +
+            "_besiegerParty path vanilla cannot survive, and menu text is per-peer presentation."),
         ["AllianceCampaignBehavior_AddAllianceDecision_Patch"] = new(CoopVeto.ReviewedSafe,
             "Dedup guard, not a policy veto: skips queuing a start-alliance decision for a pair that " +
             "is already allied. Condition is Kingdom.IsAllyWith — replicated vanilla state, so both " +

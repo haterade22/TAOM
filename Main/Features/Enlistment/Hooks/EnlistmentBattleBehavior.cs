@@ -192,7 +192,53 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         if (!mainPartyInvolved && FindCommanderPartyIdIn(mapEvent) == null)
             return;
 
+        LogSiegeAftermathContext(mapEvent, mainPartyInvolved);
+
         _battle.OnCommanderBattleEnded(mainPartyInvolved);
+    }
+
+    /// <summary>
+    /// Records whether the main party was still in a SIEGE event when it ended. This is the one fact
+    /// crash bundle d7d9f7d3 could not supply.
+    ///
+    /// Vanilla's <c>SiegeAftermathCampaignBehavior.OnMapEventEnded</c> assigns <c>_besiegerParty</c>
+    /// only inside <c>if (side.IsMainPartyAmongParties())</c>, so a won siege the main party has
+    /// already left leaves that field at its saved value — null on a campaign with no earlier
+    /// player-participating siege — and the aftermath menu then dereferences it on its first line.
+    /// Patch84 stops the crash. This line records the state THIS handler saw, and its value is that
+    /// it is written BEFORE <c>OnCommanderBattleEnded</c> runs on the next line: campaign-event
+    /// listeners are LIFO (<c>MbEvent.AddNonSerializedListener</c> head-inserts), so THIS handler
+    /// runs ahead of vanilla's siege-aftermath one, and the <c>LeaveArmy</c> inside
+    /// <c>OnCommanderBattleEnded</c> is what removes the main party from the event's side before
+    /// vanilla ever reads it. A `mainPartyInvolved=True` here followed by Patch84 reporting a null
+    /// besiegerParty is that sequence, captured from both ends.
+    ///
+    /// SIEGE ONLY, and cheap terms first. This method runs for EVERY map event ending anywhere in
+    /// the world while enlisted, which was several per second in the #551 session, so the diagnostic
+    /// must cost nothing on the ordinary path. A siege the player was in is rare.
+    /// </summary>
+    private void LogSiegeAftermathContext(MapEvent mapEvent, bool mainPartyInvolved)
+    {
+        try
+        {
+            if (!mapEvent.IsSiegeAssault && !mapEvent.IsSiegeOutside
+                && !mapEvent.IsSallyOut && !mapEvent.IsBlockadeSallyOut)
+                return;
+
+            var main = MobileParty.MainParty;
+            _diag?.LogInfo(
+                $"[EnlistDiag] siege map event ended: mainPartyInvolved={mainPartyInvolved} " +
+                $"settlement='{mapEvent.MapEventSettlement?.StringId}' winner={mapEvent.WinningSide} " +
+                $"mainAttachedTo={(main?.AttachedTo == null ? "NULL" : main.AttachedTo.StringId)} " +
+                $"mainArmyLeader={(main?.Army?.LeaderParty == null ? "NULL" : main.Army.LeaderParty.StringId)} " +
+                $"mainInMapEvent={(main?.MapEvent != null)}. " +
+                "mainPartyInvolved=False on a won siege is what leaves vanilla's _besiegerParty " +
+                "unassigned and sends the aftermath menu into Patch84's repair.");
+        }
+        catch
+        {
+            /* diagnostics never break a battle end */
+        }
     }
 
     /// <summary>
