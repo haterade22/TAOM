@@ -110,6 +110,7 @@
 - [kingdom-creation](features/kingdom-creation.md) — TAOM kingdom + clan + lord authoring
 - [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
 - [map-event-guard](features/map-event-guard.md): Patch82, restoring the `BattleObserver`/`TroopUpgradeTracker` pairing that four unguarded engine dereferences rely on
+- [stale-character-repair](features/stale-character-repair.md): Patch83, making a save-restored character with no ModuleData definition inert before the engine derefs its null fields
 - [faction-map](features/faction-map.md) — campaign map faction rendering
 - [clan-heraldry](features/clan-heraldry.md): per-clan `color`/`color2`, which is the battlefield armour tint via Patch23, plus per-clan party templates. `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, whose Gondor and Mordor specs have drifted and must not be re-applied
 - [minor-factions](features/minor-factions.md) — minor factions catalog + rules

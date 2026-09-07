@@ -922,3 +922,19 @@ with a fully green suite behind it.
   a doc claims coverage of N things, pick the one most load-bearing to the feature's purpose and
   resolve it, rather than checking that the list is internally consistent.
 - **Source:** deep review of the memory-diagnostics changeset, 2026-09-01; RCA `docs/reviews/rca-memory-diagnostics-2026-09-01.md`.
+
+### Reusing a log token pair across two emit sites inherits its INTERPRETATION, which may invert
+`WaitingForSceneLoad` reused `FinishMissionLoadingBegin`'s `polls=`/`waitMs=` pair so one regex
+would parse both. The tokens transferred correctly; the meaning did not. On the completed-wait line
+`polls=1` means the thread blocked INSIDE frame 1 (the #352 native-spin shape); on the heartbeat,
+which is emitted FROM inside a frame, `polls=1` means frame 1 had not arrived yet, so the block is
+BEFORE the loop. The triage tool printed the first diagnosis for the second case, handing a false
+answer to whoever triaged the next bundle.
+- **Why missed:** the reuse was justified on parser convenience and the interpretation came along
+  unexamined. The tool's tests all passed, because they tested parsing rather than the conclusion.
+- **Prevent:** when a new emit site reuses an existing token format, re-derive what each value means
+  AT THE NEW SITE and write both readings down side by side. Where a report draws a conclusion from
+  those tokens, the conclusion must branch on the source. Pin both readings with a test each; a
+  parse test cannot see an inverted diagnosis. Related: a diagnostic driven BY the loop it measures
+  cannot observe that loop wedging, so state the coverage boundary or absence will be read as health.
+- **Source:** docs/reviews/rca-stale-character-repair-2026-09-06.md findings 2-3.

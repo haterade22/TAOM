@@ -684,3 +684,24 @@ Second instance of the process-singleton lesson above, and the failure mode is a
 - **Why missed:** the field is cleared on every tick where the tracked shape is absent, which makes it look self-managing, and the author's own doc comment asserted "a save/load restarts the clock" without checking the registration lifetime. All 5 deep-review agents passed it; the Standards agent explicitly evaluated the singleton-reset rule and concluded no reset was needed, reasoning from the in-session clearing. Only the data-flow agent traced the field out of the class into `EnlistmentIoC` and the load hook.
 - **Prevent:** for any singleton field holding a campaign timestamp, ask BOTH questions separately: "is it cleared within a session?" and "what is its value on the first tick of the NEXT campaign?" Wire a reset, and add a second, self-contained guard for the path the reset does not reach. A backwards-running clock can only mean a different campaign or save, never a continuous episode, so re-anchor on it. Note that `ResetSessionCaches`-style hooks wired to `OnGameLoadedEvent` do NOT fire for a brand-new campaign; that path needs the intrinsic guard.
 - **Source:** docs/reviews/rca-map-event-observer-2026-09-06.md, #551.
+
+### Repair the OBJECT's state, not the field named in the stack trace
+A save restores objects with `FormatterServices.GetUninitializedObject`: no constructor, no field
+initializers. ModuleData XML then upgrades those registered instances in place, so an object whose
+id was removed from ModuleData keeps EVERY field that `Deserialize` would have set at default,
+including auto-property initializers. `CharacterObject` persists exactly two fields
+(`_heroObject`, `_originCharacter`), so a stale one is null in at least four places at once. The
+crash you got is simply the first null the load path reached, and repairing only that field moves
+the crash to a later, less diagnosable site.
+- **Why missed:** the crash report named `GetSkillValue`, so the repair filled the field
+  `GetSkillValue` reads. `.claude/rules/csharp-architecture.md` "Entity State Matrix" is the rule
+  that should have fired and did not, because it is scoped to `CampaignBehaviorBase` OnGameLoaded
+  handlers and this was a Harmony postfix. Third consecutive instance of a rule missing a defect by
+  one category.
+- **Prevent:** before repairing any save-restored object, enumerate its `[SaveableField]` /
+  `[SaveableProperty]` set and treat EVERY other field as suspect. For each one, grep the engine for
+  an unguarded dereference and name the next crash. If the answer is "several", the repair must
+  cover them all or the report must say plainly which crash it is deferring. Note that an
+  auto-property initializer (`public T[] X { get; private set; } = new T[0];`) is constructor state
+  and is therefore ALSO null on a save-restored object; it looks initialized in the source.
+- **Source:** docs/reviews/rca-stale-character-repair-2026-09-06.md finding 1; bundle 065939b6.

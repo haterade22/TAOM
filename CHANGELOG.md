@@ -4,14 +4,14 @@
 
 ## 2026-09-06
 
-### fix(save-load): a save naming a troop that no longer exists could not be loaded at all
+### fix(save-load): a save naming troops that no longer exist could not be loaded at all
 
 Crash bundle 065939b6: a `NullReferenceException` out of `CharacterObject.GetSkillValue` during
 `Clan.AfterLoad`, with `TaomPartyMoraleModel` on the stack at a line that is a plain `base` call.
 TAOM does not create the null. It is on the stack because it owns the registered `PartyMoraleModel`
 slot.
 
-The chain, read link by link from the decompiled v1.4.8 assemblies rather than inferred.
+The chain, read link by link from the decompiled v1.4.8 assemblies.
 `DefaultPartyMoraleModel.GetMoraleEffectsFromSkill` does null-check its character, so the character
 is not the null. `SkillHelper.GetEffectivePartyLeaderForSkill` returns
 `party.MemberRoster.GetCharacterAtIndex(0)` when a party has no leader hero, which hands a plain
@@ -20,28 +20,39 @@ troop to a model expecting a leader, and garrisons and militia are exactly the l
 `BasicCharacterObject.GetSkillValue`, which is `DefaultCharacterSkills.Skills.GetPropertyValue(skill)`
 with no guard at all. That one-liner inlines, which is why the report names the frame above it.
 
-Two candidates were ruled out by reading rather than guessing, and that is what narrowed it to one
-cause. `MBCharacterSkills.Skills` is assigned in its constructor, so the inner reference is never
-null. `BasicCharacterObject.Deserialize` always assigns `DefaultCharacterSkills`, from the referenced
-`skill_template` or from a fresh one, so a troop that came from module XML is safe either way. What
-is left is a character the save restored under an id current ModuleData no longer defines: its load
-callback runs `CharacterObject.Init()`, which sets occupation, traits, level and restriction flags
-and never touches the field. Renaming or removing a troop between mod versions produces one.
+Two rival explanations were eliminated by reading rather than guessing. `MBCharacterSkills.Skills` is
+assigned in its constructor. `PropertyOwner._attributes` survives a save round-trip despite the save
+system building objects without calling a constructor, because the field is protected and therefore
+collected as a saveable member; the bundle proves it independently, since the crash reporter printed
+a party morale on the same load and that requires the same dictionary lookup to have worked.
 
-New `Patch83_CharacterSkillsRepair` gives such a character the empty skill set vanilla's own fallback
-would have built. The seam is not a choice: `Campaign.OnGameLoaded` runs
-`base.ObjectManager.AfterLoad()`, then the crashing `CampaignObjectManager.AfterLoad()`, and only
-then dispatches its load events, so a `CampaignBehaviorBase` could never run in time and this had to
-be a postfix on the engine call immediately before. A repair rather than a guard at the read, because
-`GetSkillValue` runs per agent per hit in combat and because `SkillHelper.AddSkillBonusForCharacter`
-and `AddSkillBonusForTown` reach the same unguarded line, so fixing one game model would have left
-the rest exposed.
+What is left is a character the save restored under an id current ModuleData no longer defines. Save
+objects self-register first, then the ModuleData pass upgrades those registered instances in place,
+and an id that no longer exists is never reached by the second pass. The bundle's timestamps show
+the two passes eight seconds apart. This save was written by TAOM v2.0.18 on Bannerlord v1.4.7 and
+loaded by v2.0.27 on v1.4.8: nine versions of troop-XML churn.
 
-It is silent on a healthy load. When it finds something it warns with the ids, because the repair
-keeps the save loadable while hiding a data defect, and those ids are the actual fix.
+New `Patch83_StaleCharacterRepair` makes such a character inert. The seam is not a choice:
+`Campaign.OnGameLoaded` runs the object-manager passes, then the crashing one, and only then
+dispatches its load events, so a campaign behavior could never run in time and this had to be a
+postfix on an engine call before it.
 
-Not verified against the crashing save. The bindings and the logic are covered by 17 tests; proving
-it end to end needs the player's `saveauto2`. `docs/features/character-skills-repair.md`.
+The scope is four fields, not the one that crashed, and that was the correction that mattered.
+`CharacterObject` persists exactly two fields, so a stale object is null in several places at once
+and the skills read is merely the first one the load path reaches. `UpgradeTargets` is an
+auto-property initializer, which the save system skips, and the party screen reads its `Length` with
+no guard; `BodyPropertyRange` is read on agent spawn. Repairing only the skills would have turned a
+deterministic load-time crash into a load that succeeds and then crashes in the party screen with a
+stack naming nothing about save staleness, after the player had very likely saved over the file that
+reproduced it. `_culture` is deliberately left null (inventing one is a silent lie) and `Level`
+cannot be recovered, so the character is made inert rather than correct.
+
+There is an in-game message, not just a log line. The stale ids are written back into every future
+save while the repair is not, so a player who never opens the log would quietly overwrite their last
+recoverable file.
+
+Not verified against the crashing save. Bindings and logic are covered by 30 tests; proving it end to
+end needs the player's `saveauto2`. `docs/features/stale-character-repair.md`.
 
 ### feat(battle-load): the async scene-load wait now leaves a trail instead of going dark
 

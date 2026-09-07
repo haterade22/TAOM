@@ -486,3 +486,21 @@ snapshot mid-flight, for any executed lord with a surviving spouse, child or com
   state still produce the right answer, so nothing fails until the two guards stop agreeing.
 - **Source:** deep-review of the alignment-aware execution fall-through (#556), 2026-09-06; RCA
   `docs/reviews/rca-execution-alignment-fallthrough-2026-09-06.md` finding 1.
+
+### A patch comment's RATIONALE is prose, and prose is where unverified claims hide
+Four false statements shipped into a patch comment, a feature doc, a registry entry and a test
+docstring in one session: "it also fires on a new game and on the initial data load" (the target has
+exactly one call site, reached only on a saved-game load), "SubModule's guarded loop logs it and
+carries on" (that call site had no try/catch at all), "by then vanilla has fixed what it can" (the
+type overrides neither load hook), and "the reading rule is identical" for a reused token pair whose
+meaning inverts between emit sites. All four were falsifiable by one grep. Three separate review
+agents independently falsified the same one.
+- **Why missed:** they were written as *design reasoning* rather than as factual description, which
+  bypasses the reflex that fires on a bare claim. "This is why the seam is right" feels like
+  knowledge; it contained an empirical assertion nobody had checked.
+- **Prevent:** treat every "it also fires on X", "by then Y has happened", "the loop catches it" and
+  "the rule is the same" in a patch comment as a claim requiring the same evidence as a signature.
+  For call-site frequency specifically, enumerate callers across the installed assemblies (a
+  `MemberReference` metadata scan, not a text grep) rather than reasoning from where you found the
+  method. If a comment describes a guard, open the call site and confirm the guard exists.
+- **Source:** docs/reviews/rca-stale-character-repair-2026-09-06.md findings 3-5.

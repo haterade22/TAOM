@@ -253,16 +253,30 @@ public class SubModule : MBSubModuleBase
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch58_SkipCampaignIntro");
 
-        // Patch83_CharacterSkillsRepair — gives an empty skill set to any character restored from a
-        // save whose XML definition is gone, so vanilla's unguarded
-        // BasicCharacterObject.GetSkillValue cannot NRE on it (crash bundle 065939b6). Applied HERE
-        // for the same reason as Patch58 above, and the ordering is not negotiable: the target runs
-        // at Campaign.OnGameLoaded:687, the crash is at :688, and the OnGameLoaded event dispatch is
-        // at :692 — so the late OnGameInitializationFinished batch is far too late and a campaign
-        // behavior could never work at all. See docs/features/character-skills-repair.md.
-        Features.CharacterSkillsRepair.Hooks.Patch83_CharacterSkillsRepair.Initialize(
-            IoC.Resolve<Features.CharacterSkillsRepair.ICharacterSkillsRepairService>());
-        _harmony.PatchCategory("Patch83_CharacterSkillsRepair");
+        // Patch83_StaleCharacterRepair — makes a character restored from a save whose ModuleData
+        // definition is gone INERT, so the engine's several unguarded dereferences of its null
+        // fields cannot fire (crash bundle 065939b6). Applied HERE for the same reason as Patch58
+        // above, and the ordering is not negotiable: the target runs at Campaign.OnGameLoaded:683,
+        // the crash is at :688, and the load-event dispatch is at :691-692, so the late
+        // OnGameInitializationFinished batch is far too late and a campaign behavior could never
+        // work at all. See docs/features/stale-character-repair.md.
+        //
+        // GUARDED, unlike Patch58 above, and the guard is load-bearing: this category binds an
+        // engine method by name AND the adapter reflects four engine members. A rename would throw
+        // out of OnSubModuleLoad and take the remaining ~250 lines of module init with it — turning
+        // a crash guard into a worse crash than the one it prevents (the Patch61/Patch62 shape).
+        try
+        {
+            Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.Initialize(
+                IoC.Resolve<Features.StaleCharacterRepair.IStaleCharacterRepairService>());
+            _harmony.PatchCategory("Patch83_StaleCharacterRepair");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError(
+                "[StaleCharacterRepair] Patch83 failed to apply — a save referencing removed "
+                + $"troops will crash on load: {ex.GetType().Name}: {ex.Message}");
+        }
 
         // Patch61_SaveLoadDiagnostics — always-on [SaveLoad] lifecycle logging for the "corrupted
         // save" investigation. The engine swallows the real exception behind the generic
@@ -1838,6 +1852,7 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.Arena.Hooks.Patch69_TournamentEndGuard.ResetForUnload();
         TAOM.Features.FieldCommission.Hooks.Patch71_HeroResetEquipmentsGuard.ResetForUnload();
         TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.ResetForUnload();
+        TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.Hero_CanBecomePrisoner_Patch.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.TakePrisonerAction_Apply_Patch.ResetForUnload();
     }
