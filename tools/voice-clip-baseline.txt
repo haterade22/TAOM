@@ -1,0 +1,74 @@
+# Voice clips accepted despite failing tools/audit_voice_clip_lengths.py.
+#
+# Format: <VoiceType>|<path relative to Main/_Module/ModuleSounds/>@<seconds it was accepted at>
+#
+# The @pin is MANDATORY and is a ratchet. An entry exempts the clip only while it stays at (or
+# under) the pinned length plus 0.05s of re-encode jitter. Re-cut a baselined clip longer and it
+# comes back as a finding instead of riding the old acceptance, which is the likeliest route back
+# to the bug this file's tool exists to catch.
+#
+# A line here silences BOTH rules (category cap and per-slot bar) for that pairing. Adding to this
+# file is a decision, not a fix: say why, and link the issue that will retire the entry.
+#
+# Everything below predates the rule. The dwarf Grunt/Yell/Focus/Death defect that motivated the
+# tool was fixed outright and is deliberately NOT baselined.
+
+
+# dwarf_01 (#548) -- Stage 2, splitting the compilations into single utterances, retires these.
+#   Pain: the two remaining takes are the SHORTEST dwarf pain clips that exist. There is nothing
+#   shorter to substitute, and dropping them would leave Pain silent, so they stay until the
+#   source audio is cut up.
+#   Fear: 0.82s over its category cap, and the slot fires at 2% per dread pulse
+#   (DreadAuraConfig.FearVoiceChancePerPulse), so it is inaudible as a frequency problem.
+Pain|LOTR/Dwarf/D1_Pain1.wav@4.15
+Pain|LOTR/Dwarf/D1_Pain2.wav@3.33
+Fear|LOTR/Dwarf/D1_Fear.wav@4.82
+
+
+# uruk_hai_01 -- the same defect class as the dwarves, milder, and its own follow-up (see #548).
+#   Yell and Charge both point at the Charges bank, so the intended-rare line and the
+#   fires-constantly line are literally the same audio; Stun is aliased onto the oversized Grunts
+#   bank. The three Yell entries below were INVISIBLE until the per-slot Yell bar was added on
+#   2026-09-06; the shout category's 8s cap had been admitting them. Left unfixed deliberately:
+#   the reported bug was dwarves, and fixing two voice sets in one change makes the in-game A/B
+#   impossible to attribute.
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/Grunt1_Isengard.wav@4.11
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/Grunt2_Isengard.wav@5.95
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/Grunt3_Isengard.wav@5.65
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/Grunt5_Isengard.wav@6.81
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/Grunt6_Isengard.wav@2.13
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/grunt7_Isengard.wav@2.37
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/grunt8_Isengard.wav@3.37
+Grunt|LOTR/Isengard/Voice/Uruk-Hai/Grunt9_Isengard.wav@6.21
+Jump|LOTR/Isengard/Voice/Uruk-Hai/Grunt1_Isengard.wav@4.11
+Jump|LOTR/Isengard/Voice/Uruk-Hai/Grunt2_Isengard.wav@5.95
+Jump|LOTR/Isengard/Voice/Uruk-Hai/Grunt3_Isengard.wav@5.65
+Jump|LOTR/Isengard/Voice/Uruk-Hai/Grunt5_Isengard.wav@6.81
+Jump|LOTR/Isengard/Voice/Uruk-Hai/Grunt9_Isengard.wav@6.21
+Yell|LOTR/Isengard/Voice/Uruk-Hai/U_Charge2_Isengard_Charge.wav@4.31
+Yell|LOTR/Isengard/Voice/Uruk-Hai/U_Charge3_Isengard_Charge.wav@5.18
+Yell|LOTR/Isengard/Voice/Uruk-Hai/U_Charge4_Isengard_Charge.wav@4.43
+Death|LOTR/Isengard/Voice/Uruk-Hai/Death5_Isengard.wav@9.90
+Stun|LOTR/Isengard/Voice/Uruk-Hai/Grunt1_Isengard.wav@4.11
+Stun|LOTR/Isengard/Voice/Uruk-Hai/Grunt2_Isengard.wav@5.95
+Stun|LOTR/Isengard/Voice/Uruk-Hai/Grunt3_Isengard.wav@5.65
+Stun|LOTR/Isengard/Voice/Uruk-Hai/Grunt5_Isengard.wav@6.81
+Stun|LOTR/Isengard/Voice/Uruk-Hai/Grunt6_Isengard.wav@2.13
+Stun|LOTR/Isengard/Voice/Uruk-Hai/grunt7_Isengard.wav@2.37
+Stun|LOTR/Isengard/Voice/Uruk-Hai/grunt8_Isengard.wav@3.37
+Stun|LOTR/Isengard/Voice/Uruk-Hai/Grunt9_Isengard.wav@6.21
+Climb|LOTR/Isengard/Voice/Uruk-Hai/Grunt1_Isengard.wav@4.11
+Climb|LOTR/Isengard/Voice/Uruk-Hai/Grunt2_Isengard.wav@5.95
+Climb|LOTR/Isengard/Voice/Uruk-Hai/Grunt3_Isengard.wav@5.65
+Climb|LOTR/Isengard/Voice/Uruk-Hai/Grunt5_Isengard.wav@6.81
+Climb|LOTR/Isengard/Voice/Uruk-Hai/Grunt9_Isengard.wav@6.21
+Focus|LOTR/Isengard/Voice/Uruk-Hai/Grunt1_Isengard.wav@4.11
+Focus|LOTR/Isengard/Voice/Uruk-Hai/Grunt2_Isengard.wav@5.95
+Focus|LOTR/Isengard/Voice/Uruk-Hai/Grunt3_Isengard.wav@5.65
+Focus|LOTR/Isengard/Voice/Uruk-Hai/Grunt5_Isengard.wav@6.81
+Focus|LOTR/Isengard/Voice/Uruk-Hai/Grunt9_Isengard.wav@6.21
+MpHelp|LOTR/Isengard/Voice/Uruk-Hai/Grunt1_Isengard.wav@4.11
+MpHelp|LOTR/Isengard/Voice/Uruk-Hai/Grunt2_Isengard.wav@5.95
+MpHelp|LOTR/Isengard/Voice/Uruk-Hai/Grunt3_Isengard.wav@5.65
+MpHelp|LOTR/Isengard/Voice/Uruk-Hai/Grunt5_Isengard.wav@6.81
+MpHelp|LOTR/Isengard/Voice/Uruk-Hai/Grunt9_Isengard.wav@6.21

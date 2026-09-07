@@ -59,9 +59,10 @@ and is an inflow).
 
 **The prime suspect.** `SellGoodsForTradeAction.ApplyInternal` (:52-57) walks a villager's entire
 roster buying `min(qty, town.Gold / itemPrice)` of each, with **no reserve and no floor**. One
-convoy can legally spend a town to zero every day. TAOM towns average 2.78 bound villages (vs
-vanilla's 2.27), and #318 (LOTRLOME items compute ~2.2× vanilla value, still open) scales every
-drain because every drain is bounded by goods value.
+convoy can legally spend a town to zero every day. TAOM fiefs average 2.74 bound villages (vs
+vanilla's 2.26; town-only it is 3.14 vs 2.61, re-measured 2026-09-06), and #318 (LOTRLOME items
+compute ~2.2× vanilla value, still open) scales every drain because every drain is bounded by goods
+value.
 
 **Not a suspect, despite appearances.** Caravans are two-way: selling *to* a town pays out
 (`SellItemsAction` :60) but buying *from* one credits the town the **full** price (:75) and only

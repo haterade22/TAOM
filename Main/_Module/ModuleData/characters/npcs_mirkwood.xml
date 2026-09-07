@@ -317,7 +317,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_mirkwood" race="elf" default_group="Infantry" is_hero="false" name="{=aom_mk_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_mirkwood" is_female="true" race="elf" default_group="Infantry" is_hero="false" name="{=aom_mk_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -403,7 +403,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_mirkwood_0" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_0}Wary woodland merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_mirkwood_0" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_0}Wary woodland merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -420,7 +420,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mirkwood_0b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_0b}Silvan vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_mirkwood_0b" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_0b}Silvan vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -435,7 +435,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mirkwood_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_1}Stern woodland trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_mirkwood_1" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mirkwood" name="{=aom_mk_notable_1}Stern woodland trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -575,7 +575,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Preachers (3) -->
-	<NPCCharacter id="spc_notable_mirkwood_5" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mirkwood" name="{=aom_mk_notable_5}Zealous woodland loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_mirkwood_5" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mirkwood" name="{=aom_mk_notable_5}Zealous woodland loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -659,7 +659,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_mirkwood_gl1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_gl1}Protective woodland ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_mirkwood_gl1" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mirkwood" name="{=aom_mk_notable_gl1}Protective woodland ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -675,7 +675,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mirkwood_10" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_10}Sardonic forest outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_mirkwood_10" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mirkwood" name="{=aom_mk_notable_10}Sardonic forest outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -850,7 +850,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_mirkwood" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_mirkwood" is_female="true" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -865,7 +865,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_mirkwood" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_mirkwood" is_female="true" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mirkwood" name="{=aom_mk_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -939,7 +939,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -954,7 +954,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -967,7 +967,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -982,7 +982,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -998,7 +998,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1013,7 +1013,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1026,7 +1026,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_mirkwood" race="elf" default_group="Infantry" name="{=aom_mk_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_mirkwood" is_female="true" race="elf" default_group="Infantry" name="{=aom_mk_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mirkwood" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>

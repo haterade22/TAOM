@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "applyToAi": true,
+  "applyToPlayer": true,
+  "steerAiPartnerSearch": true
+}

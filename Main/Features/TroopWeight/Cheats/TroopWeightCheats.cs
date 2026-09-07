@@ -69,8 +69,15 @@ public static class TroopWeightCheats
         else
             note = " (party under weight — nothing to tax)";
 
+        // Both frames, side by side. They are the same cap stated two ways, and the whole point of the
+        // 2026-09-06 reframe is that the player only ever sees the second one — so a report that showed
+        // only the enforcement frame could not answer "does the screen agree with the model?".
+        int shownUsed = TroopWeightDisplay.DisplayUsed(rawCount, weightedCount);
+        int shownLimit = TroopWeightDisplay.DisplayLimit(finalLimit, trueBaseLimit);
+
         return $"[TroopWeight] {partyName}: raw={rawCount} weighted={weightedCount} "
              + $"trueBase={trueBaseLimit} penalty={penalty} finalLimit={finalLimit}{note}\n"
+             + $"[TroopWeight] enforced {rawCount}/{finalLimit} == displayed {shownUsed}/{shownLimit}\n"
              + $"[TroopWeight] EnableTroopWeight={weightEnabled}";
     }
 }

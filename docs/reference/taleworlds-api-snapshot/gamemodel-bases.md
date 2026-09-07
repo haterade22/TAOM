@@ -76,6 +76,8 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 ## TaomClanFinanceModel : DefaultClanFinanceModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultClanFinanceModel`
 
+- `ExplainedNumber CalculateClanGoldChange(Clan clan, Boolean includeDescriptions, Boolean applyWithdrawals, Boolean includeDetails)`
+- `ExplainedNumber CalculateClanIncome(Clan clan, Boolean includeDescriptions, Boolean applyWithdrawals, Boolean includeDetails)`
 - `ExplainedNumber CalculateTownIncomeFromTariffs(Clan clan, Town town, Boolean applyWithdrawals)`
 
 ## TaomClanTierModel : DefaultClanTierModel
@@ -86,6 +88,7 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 ## TaomCombatMechanicsModel : TaomAgentApplyDamageModel
 `Base: TAOM.Features.CareerSystem.Models.TaomAgentApplyDamageModel`
 
+- `Single ApplyDamageReductions(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single CalculateRemainingMomentum(Single originalMomentum, ref Blow b, ref AttackCollisionData collisionData, Agent attacker, Agent victim, ref MissionWeapon attackerWeapon, Boolean isCrushThrough)`
 - `Single CalculateShieldDamage(ref AttackInformation attackInformation, Single baseDamage)`
 - `Single CalculateStaggerThresholdDamage(Agent defenderAgent, ref Blow blow)`
@@ -100,6 +103,7 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultCombatSimulationModel`
 
 - `Single GetBluntDamageChance(CharacterObject strikerTroop, CharacterObject strikedTroop, PartyBase strikerParty, PartyBase strikedParty, MapEvent battle)`
+- `ExplainedNumber SimulateHit(CharacterObject strikerTroop, CharacterObject struckTroop, PartyBase strikerParty, PartyBase struckParty, Single strikerAdvantage, MapEvent battle, Single strikerSideMorale, Single struckSideMorale)`
 
 ## TaomDiplomacyModel : DefaultDiplomacyModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultDiplomacyModel`
@@ -184,6 +188,7 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 ## TaomPartySizeModel : DefaultPartySizeLimitModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultPartySizeLimitModel`
 
+- `ExplainedNumber CalculateGarrisonPartySizeLimit(Settlement settlement, Boolean includeDescriptions)`
 - `ExplainedNumber GetPartyMemberSizeLimit(PartyBase party, Boolean includeDescriptions)`
 
 ## TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
@@ -195,6 +200,7 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultPartyTroopUpgradeModel`
 
 - `ExplainedNumber GetGoldCostForUpgrade(PartyBase party, CharacterObject characterObject, CharacterObject upgradeTarget)`
+- `Int32 GetXpCostForUpgrade(PartyBase party, CharacterObject characterObject, CharacterObject upgradeTarget)`
 
 ## TaomPartyWageModel : DefaultPartyWageModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel`
@@ -291,12 +297,3 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 - `Single GetDailyVolunteerProductionProbability(Hero hero, Int32 index, Settlement settlement)`
 - `Int32 MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, Int32 useValueAsRelation)`
 
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
-## Referenced by
-
-- [docs/reference/taleworlds-api-snapshot/README.md](./README.md)
-
-<!-- backlinks-end -->

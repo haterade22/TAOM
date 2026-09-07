@@ -46,6 +46,8 @@ Defaults (`curve = 1.5`) give:
 
 A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** become weaker than vanilla through this feature.
 
+> **The ceiling this scales toward moved on 2026-09-06 (#543).** The raider and boss templates carried a flat `max_value="50"` from #315, so a four-stack raider template topped out at exactly 200 troops and `Patch39` drove most endgame parties there. They are now retuned to a troop-POWER budget (~78 power for raiders, ~105 for bosses), which lands at 56-80 bodies for a raider warband depending on the culture's tier mix. Two consequences for this feature: **`Party Size Curve`'s useful range is now much shorter** (the roster clamps at `stack.MaxValue` around a quarter of the way through a campaign, after which raising the slider does nothing), and early-game parties are smaller and more varied (12-32 bodies, against 31-75 before). Retune with `tools/rebalance_template_power.py`, never by hand; reasoning in [caravan-bandit-parity.md](caravan-bandit-parity.md).
+
 ### What gets scaled
 
 | Surface | Vanilla | TAOM scaling target |

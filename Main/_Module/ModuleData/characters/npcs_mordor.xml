@@ -73,7 +73,7 @@
 	</NPCCharacter>
 
 	<!-- Village Woman -->
-	<NPCCharacter id="village_woman_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_village_woman}Village Woman" occupation="Villager" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_village_woman}Village Woman" occupation="Villager" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -371,7 +371,7 @@
 	</NPCCharacter>
 
 	<!-- Town Population -->
-	<NPCCharacter id="townswoman_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -394,7 +394,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -413,7 +413,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -436,7 +436,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -548,7 +548,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_child_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -567,7 +567,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_mordor" race="uruk" default_group="Infantry" name="{=aom_mr_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_mordor" is_female="true" race="uruk" default_group="Infantry" name="{=aom_mr_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -696,7 +696,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_mordor_0" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_0}Cunning Mordor slave trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_mordor_0" is_female="true" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_0}Cunning Mordor slave trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -713,7 +713,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mordor_0b" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_0b}Mordor pit provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_mordor_0b" is_female="true" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_0b}Mordor pit provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -730,7 +730,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mordor_1" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_1}Ruthless Mordor arms dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_mordor_1" is_female="true" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_1}Ruthless Mordor arms dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -898,7 +898,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mordor_7" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_7}Keeper of the dark rites" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_mordor_7" is_female="true" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_7}Keeper of the dark rites" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -970,7 +970,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mordor_10" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_10}Mordor pit boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_mordor_10" is_female="true" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_10}Mordor pit boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -988,7 +988,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_mordor_11" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_11}Intimidating Mordor taskmaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_mordor_11" is_female="true" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_11}Intimidating Mordor taskmaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
@@ -1243,7 +1243,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_mordor" race="uruk" default_group="Infantry" is_hero="false" name="{=aom_mr_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_mordor" is_female="true" race="uruk" default_group="Infantry" is_hero="false" name="{=aom_mr_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.mordor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1362,7 +1362,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_mordor" is_female="true" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1383,7 +1383,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_mordor" is_female="true" race="uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mordor" name="{=aom_mr_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1408,6 +1408,7 @@
 
 	<!-- Practice Dummies (no face, Soldier occupation) -->
 	<NPCCharacter id="gear_practice_dummy_mordor" race="uruk" default_group="Infantry" level="15" name="{=aom_mr_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.mordor">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1422,6 +1423,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_1_mordor" race="uruk" default_group="Infantry" level="15" name="{=aom_mr_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.mordor">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1438,6 +1440,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_2_mordor" race="uruk" default_group="Infantry" level="25" name="{=aom_mr_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.mordor">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1456,6 +1459,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_3_mordor" race="uruk" default_group="Infantry" level="35" name="{=aom_mr_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.mordor">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1478,6 +1482,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="gear_dummy_mordor" race="uruk" default_group="Infantry" level="15" name="{=aom_mr_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.mordor">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">

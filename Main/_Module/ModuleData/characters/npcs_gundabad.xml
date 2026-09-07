@@ -319,7 +319,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_gundabad" race="pale_uruk" default_group="Infantry" is_hero="false" name="{=aom_gb_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" is_hero="false" name="{=aom_gb_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -407,7 +407,7 @@
 	<!-- Notables -->
 
 	<!-- Merchant 1: Cautious pale orc trader -->
-	<NPCCharacter id="spc_notable_gundabad_0" name="{=aom_gb_notable_0}Cautious pale orc trader" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
+	<NPCCharacter id="spc_notable_gundabad_0" is_female="true" name="{=aom_gb_notable_0}Cautious pale orc trader" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -431,7 +431,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 2: Cunning Gundabad haggler -->
-	<NPCCharacter id="spc_notable_gundabad_0b" name="{=aom_gb_notable_0b}Cunning Gundabad haggler" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
+	<NPCCharacter id="spc_notable_gundabad_0b" is_female="true" name="{=aom_gb_notable_0b}Cunning Gundabad haggler" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -453,7 +453,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 3: Ruthless orc provisioner -->
-	<NPCCharacter id="spc_notable_gundabad_1" name="{=aom_gb_notable_1}Ruthless orc provisioner" race="pale_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
+	<NPCCharacter id="spc_notable_gundabad_1" is_female="true" name="{=aom_gb_notable_1}Ruthless orc provisioner" race="pale_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -617,7 +617,7 @@
 	</NPCCharacter>
 
 	<!-- Preacher 1: Fanatical Gundabad war-chanter -->
-	<NPCCharacter id="spc_notable_gundabad_5" name="{=aom_gb_notable_5}Fanatical Gundabad war-chanter" race="pale_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Preacher">
+	<NPCCharacter id="spc_notable_gundabad_5" is_female="true" name="{=aom_gb_notable_5}Fanatical Gundabad war-chanter" race="pale_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -743,7 +743,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 2: Snarling orc enforcer -->
-	<NPCCharacter id="spc_notable_gundabad_10" name="{=aom_gb_notable_10}Snarling orc enforcer" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_gundabad_10" is_female="true" name="{=aom_gb_notable_10}Snarling orc enforcer" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -766,7 +766,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 3: Intimidating pale orc brute -->
-	<NPCCharacter id="spc_notable_gundabad_11" name="{=aom_gb_notable_11}Intimidating pale orc brute" race="pale_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_gundabad_11" is_female="true" name="{=aom_gb_notable_11}Intimidating pale orc brute" race="pale_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -987,7 +987,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_gundabad" race="pale_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gundabad" name="{=aom_gb_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gundabad" name="{=aom_gb_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1002,7 +1002,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_gundabad" race="pale_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gundabad" name="{=aom_gb_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gundabad" name="{=aom_gb_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1076,7 +1076,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1091,7 +1091,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1104,7 +1104,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1119,7 +1119,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1135,7 +1135,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1150,7 +1150,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1163,7 +1163,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_gundabad" race="pale_uruk" default_group="Infantry" name="{=aom_gb_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_gundabad" is_female="true" race="pale_uruk" default_group="Infantry" name="{=aom_gb_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.gundabad" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>

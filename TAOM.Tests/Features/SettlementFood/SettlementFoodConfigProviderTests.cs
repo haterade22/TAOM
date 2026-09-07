@@ -190,6 +190,128 @@ public class SettlementFoodConfigProviderTests
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("castleFoodStockUpperLimitBonus=-50")));
     }
 
+    // --- Hinterland rate: must stay STRICTLY below 1 / prosperityFoodDivisor ---
+    //
+    // At or above that value the net food balance stops falling as prosperity rises, so a surplus
+    // fief overflows its store forever, vanilla turns the overflow into prosperity (+0.1/point), and
+    // prosperity, town gold and garrison caps inflate without limit. This is the ordering-invariant
+    // case in csharp-architecture.md: two individually-valid fields that are invalid together.
+
+    [TestMethod]
+    public void GetConfig_ValidHinterlandRate_ParsesThrough()
+    {
+        // 0.02 is strictly below 1/45 = 0.0222…
+        WriteConfig(@"{ ""prosperityFoodDivisor"": 45, ""hinterlandFoodPerProsperity"": 0.02 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(0.02f, c.HinterlandFoodPerProsperity, 0.000001f);
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded")));
+    }
+
+    [TestMethod]
+    public void GetConfig_HinterlandRateEqualToInverseDivisor_RevertsToZeroAndWarns()
+    {
+        // The exact boundary: 1/40 = 0.025 cancels the consumption term outright, making net food
+        // prosperity-INDEPENDENT. That is the runaway case, so the bound is strict, not inclusive.
+        WriteConfig(@"{ ""prosperityFoodDivisor"": 40, ""hinterlandFoodPerProsperity"": 0.025 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("hinterlandFoodPerProsperity")));
+    }
+
+    [TestMethod]
+    public void GetConfig_HinterlandRateAboveInverseDivisor_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"{ ""prosperityFoodDivisor"": 40, ""hinterlandFoodPerProsperity"": 0.05 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("hinterlandFoodPerProsperity")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NegativeHinterlandRate_RevertsToZeroAndWarns()
+    {
+        WriteConfig(@"{ ""hinterlandFoodPerProsperity"": -0.01 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("hinterlandFoodPerProsperity")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NaNHinterlandRate_RevertsToZero()
+    {
+        // Asserts the finiteness check runs BEFORE the ratio comparison: NaN < 1/40 is false, so a
+        // bare ordering check alone would pass NaN straight through into the food formula.
+        WriteConfig(@"{ ""hinterlandFoodPerProsperity"": NaN }");
+
+        var c = _sut.GetConfig();
+
+        Assert.IsTrue(FiniteFloatValidator.IsFinite(c.HinterlandFoodPerProsperity),
+            "NaN hinterlandFoodPerProsperity must be rejected, never surfaced");
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f);
+    }
+
+    [TestMethod]
+    public void GetConfig_InfiniteHinterlandRate_RevertsToZero()
+    {
+        WriteConfig(@"{ ""hinterlandFoodPerProsperity"": Infinity }");
+
+        var c = _sut.GetConfig();
+
+        Assert.IsTrue(FiniteFloatValidator.IsFinite(c.HinterlandFoodPerProsperity));
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f);
+    }
+
+    [TestMethod]
+    public void GetConfig_HinterlandRateValidatedAgainstTheSanitizedDivisor_NotTheRawOne()
+    {
+        // A rejected divisor reverts to vanilla 40, so the ratio bound must be computed from the
+        // SANITIZED divisor. Checking against the raw 0 would divide by zero; checking against a
+        // raw absurd value would wave through a rate the surviving config cannot support.
+        WriteConfig(@"{ ""prosperityFoodDivisor"": 0, ""hinterlandFoodPerProsperity"": 0.03 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(40, c.ProsperityFoodDivisor, "invalid divisor reverts to vanilla");
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f,
+            "0.03 exceeds 1/40, so it must be rejected against the reverted divisor");
+    }
+
+    [TestMethod]
+    public void GetConfig_HinterlandRateAtDivisorLowerBound_UsesTheWiderBound()
+    {
+        // prosperityFoodDivisor = 1 is the lowest valid divisor, so the hinterland bound widens to
+        // 1/1 = 1.0. A rate that would be rejected at divisor 45 must be accepted here, proving the
+        // bound tracks the divisor rather than being a hardcoded constant.
+        WriteConfig(@"{ ""prosperityFoodDivisor"": 1, ""hinterlandFoodPerProsperity"": 0.5 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(1, c.ProsperityFoodDivisor);
+        Assert.AreEqual(0.5f, c.HinterlandFoodPerProsperity, 0.000001f);
+    }
+
+    [TestMethod]
+    public void GetConfig_HinterlandRateAtDivisorUpperBound_UsesTheTighterBound()
+    {
+        // prosperityFoodDivisor = 10000 is the highest valid divisor, so the bound tightens to
+        // 1/10000 = 0.0001. The shipped 0.02 would be far too large here and must be rejected.
+        WriteConfig(@"{ ""prosperityFoodDivisor"": 10000, ""hinterlandFoodPerProsperity"": 0.02 }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(10000, c.ProsperityFoodDivisor);
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f,
+            "0.02 exceeds 1/10000, so it must be rejected at this divisor");
+    }
+
     [TestMethod]
     public void GetConfig_ValidValues_LogsInfoNotWarning()
     {

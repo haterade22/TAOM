@@ -17,7 +17,7 @@
 			face_anim="scream" />
 		<voice
 			type="Yell"
-			path="LOTR/Dwarf/Warcries"
+			path="LOTR/Dwarf/Battlecries"
 			face_anim="yell" />
 		<voice
 			type="Pain"
@@ -86,7 +86,7 @@
 			face_anim="everyone" />
 		<voice
 			type="Charge"
-			path="LOTR/Dwarf/Dwarven_Charge"
+			path="LOTR/Dwarf/Warcries"
 			face_anim="attack" />
 		<voice
 			type="Move"

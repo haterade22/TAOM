@@ -727,3 +727,27 @@ the gate and dropped the relief entirely. One setting produced a 9.2x spread acr
   read the frame, clamp it into a band, and target `(1 - knob) * clamped`. Sum-sharing is only right
   when everything in the sum has comparable authority.
 - **Source:** external AI-food-relief bug report, verified and reworked 2026-09-04.
+
+### A new input can invalidate an existing gate without touching the gate's line
+
+`SettlementFoodService.ApplyFoodAdjustment` gated on `if (delta == 0f) return;`. That was correct when
+written: every input to the delta was an int or a config float the provider had already validated
+finite. Adding a prosperity-scaled production term introduced the first ENGINE-sourced float into the
+calculation, and `NaN == 0f` is false, so a NaN delta would flow into `ExplainedNumber.Add`. The
+consequence is not a wrong number for a day: `Town.Prosperity`'s setter only floors at zero (`NaN < 0f`
+is false, so NaN is storable), `Town.DailyTick`'s `< 0f` and `> cap` clamps are BOTH false for NaN, and
+`FoodStocks` is a `[SaveableProperty]`, so the settlement's food stock stays NaN permanently and is
+written into the save.
+- **Why missed:** the author reasoned about the float being ADDED (the config knob, validated finite by
+  the provider) and not about the float being READ (`Town.Prosperity`, validated by nobody). The
+  defective line was pre-existing and unmodified, so it never appeared in the diff under review. The
+  rule as written says "when you write a gate on an engine float, make it a positive requirement"; it
+  does not say "when you add an input, re-audit the gates downstream of it."
+- **Prevent:** when introducing a new value into an existing calculation, ask what validation the OLD
+  inputs enjoyed that the new one does not, and re-audit every downstream gate against the new
+  provenance, not just the lines you wrote. Gate engine floats as a positive requirement
+  (`if (FiniteFloatValidator.IsFinite(x))`), never as an equality or an inverted early-exit, and make
+  the service refuse a non-finite result at its own exit so no future input can poison the engine's
+  number. Note `float.IsFinite` does NOT exist on net472; use `TAOM.Core.Validation.FiniteFloatValidator`.
+- **Source:** instance #6 of the NaN-gate class, deep-review of SettlementFood #546, 2026-09-06.
+  `docs/reviews/rca-settlement-food-2026-09-06.md`.

@@ -18,8 +18,12 @@ player loot. Verified root cause (no single bug — an equilibrium mismatch):
 - TAOM's drains run ~2× vanilla: LOTRLOME loot computes to ~2.2× vanilla item values (no explicit
   `value=`; the engine's `2.75^tier` exponential on high armor stats — #318), constant large
   battles mean player + AI lords (`PartiesSellLootCampaignBehavior`) dump that loot into towns,
-  and TAOM towns average 2.78 bound villages vs 2.27 vanilla (+22% villager deliveries —
-  `SellGoodsForTradeAction` legally spends a town to ~0, capped only by `town.Gold/price`).
+  and TAOM fiefs average 2.74 bound villages vs vanilla's 2.26, so +21% villager deliveries
+  (`SellGoodsForTradeAction` legally spends a town to ~0, capped only by `town.Gold/price`).
+  Re-measured 2026-09-06: TAOM 559 villages over 204 fortifications (72 towns mean 3.14, 132 castles
+  mean 2.52); vanilla 274 over 121 (54 towns mean 2.61, 67 castles mean 1.97). Earlier revisions
+  quoted 2.78 vs 2.27 and called them *town* means; they were fief-wide means, and the town-only
+  comparison is 3.14 vs 2.61.
 - In-play prosperity decay (war, raids) shrinks both the regen target and the prosperity-scaled
   resident-consumption inflow, so broke towns stay broke.
 

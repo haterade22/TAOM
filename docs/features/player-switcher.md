@@ -341,6 +341,34 @@ relief are never granted to a player clan at any setting. Details and the engine
 [ai-party-size.md](ai-party-size.md) "Player clans". #530 stays open for the `Never` case, where the
 reduction is still silent and cache-timed rather than visible at the handover.
 
+## Interaction: kingdom votes, when the player is not their clan's leader
+
+The picker offers a king's spouse or child as its `RulingHouse` group, checked BEFORE `IsClanLeader`
+([HeroPickerService.cs:59](../../Main/Features/PlayerSwitcher/HeroPickerService.cs#L59)). Those heroes
+have a clan, so [SwitchPlanner.cs:17](../../Main/Features/PlayerSwitcher/SwitchPlanner.cs#L17) routes
+them down `AssumeIdentity`, which sets `Hero.MainHero` and reassigns `Clan.PlayerClan` but never
+reassigns clan leadership. `Clan.SetLeader` is called in exactly one place,
+`PlayerIdentityAdapter.AdoptIntoPlayerClan` (:105), and that is the clanless path.
+
+So after taking over a queen or a non-heir prince, **`Clan.PlayerClan.Leader` is still the AI king**,
+a different `Hero` from `Hero.MainHero`. That is not cosmetic. Vanilla keys player identity in a
+kingdom election off the CLAN LEADER, not off the player's clan:
+`Supporter.IsPlayer => Clan.Leader.IsHumanPlayerCharacter`. For such a player `IsPlayerSupporter` is
+false for every decision, permanently, so `KingdomElection.StartElection()` takes the
+`ReadyToAiChoose()` branch and resolves each decision synchronously inside
+`DecisionItemBaseVM.InitValues()`, before the view model has ever been bound to a widget. The window
+then renders for a vote that is already over, and the popup's auto-close edge can be missed, leaving
+it unclosable with map navigation locked.
+
+Tracked as [#550](https://github.com/haterade22/TAOM/issues/550). **`Patch80_KingdomVoteDeadlock`
+(#547) does NOT cover this**: all three of its seams gate on `ShouldBeCancelled()` / `IsCancelled`, and
+`ReadyToAiChoose()` never sets `IsCancelled`. Two candidate fixes are laid out in the issue; the
+root fix (make the player their own clan's leader on takeover) would also correct every other vanilla
+path keyed on `Clan.Leader.IsHumanPlayerCharacter`, of which there are many.
+
+Anything else that reads `Clan.Leader.IsHumanPlayerCharacter` rather than `Clan == Clan.PlayerClan` is
+suspect for these players and has not been swept.
+
 ## What was dropped, and why it must stay dropped
 
 | Dropped | Reason |

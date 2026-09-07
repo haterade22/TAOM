@@ -666,3 +666,15 @@ had been the only thing keeping the sweep out of that window, by accident.
 - **Why missed:** the reasoning was symmetrical and sounded principled ("the state is a proxy, the map-event checks are the real condition"), and two other places in the same feature already documented the aftermath window in comments the author had read for other purposes without connecting them.
 - **Prevent:** before deleting a guard, state what it currently excludes and find at least one concrete case in that excluded set. If the codebase contains another predicate over the same subsystem, diff yours against it term by term and account for every term you do not have: here the sweep's guards were exactly `noBattleAnywhere` minus its `!HasCurrent` term, which is the whole finding in one line. Then replace the proxy with a guard that names the hazard directly, so the protection survives in states nobody enumerated.
 - **Source:** docs/reviews/rca-enlistment-strand-2026-09-04.md (#538), caught by the deep-review data-flow pass, not by the author or the tests.
+
+### A cross-campaign identity guard must key on a VALUE, not on the campaign object
+
+`Patch81_MarriageClanDraw`'s pool cache proved it was not serving campaign A's data to campaign B by
+holding `Campaign.Current` in a static field and comparing with `ReferenceEquals`. That is a correct
+staleness check and a memory leak at the same time: the static field pins the finished campaign's
+entire object graph until the next campaign's first daily clan tick replaces it. Keying on
+`Campaign.UniqueGameId` (a string, generated once per campaign by `MiscHelper.GenerateCampaignId`)
+gives the identical discrimination and retains nothing.
+- **Why missed:** every rule we had about cross-campaign statics, including `plans/001-cross-campaign-singleton-resets.md` and the architecture rule's "Session-Reset Story", is phrased as a CORRECTNESS question: does stale state leak forward. The field passes that question. All five deep-review agents ran it and agreed; the data-flow agent explicitly traced the reset and marked it CONNECTED. Nothing asked what the guard itself keeps alive, and the efficiency agent's remit is allocation and GC pressure, not retention, so a single long-lived reference is invisible to it.
+- **Prevent:** when a static field exists to distinguish "which campaign/session/mission is this", store a value that identifies it (a string id, an int counter, a `CampaignTime`), never the engine object. If only the object will do, hold it in a `WeakReference`. Ask the retention question explicitly for every static that survives a campaign: not "does it reset?" but "what does it keep alive until it does?"
+- **Source:** deep-review of MarriageAlignment (#542), 2026-09-06; found during triage of an unrelated finding, reported by no agent. RCA `docs/reviews/rca-marriage-alignment-2026-09-06.md` finding 2.

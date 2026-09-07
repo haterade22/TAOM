@@ -668,6 +668,7 @@
     <string id="taom_player_alliance_formed" text="Zawarto przymierze między {PLAYER_KINGDOM} a {TARGET_KINGDOM}." />
     <string id="taom_alliance_blocked" text="Te królestwa nigdy nie mogą być sprzymierzone." />
     <string id="taom_war_blocked" text="Te królestwa łączy nierozerwalne przymierze." />
+    <string id="taom_vote_lapsed" text="Głosowanie nad &quot;{VOTE}&quot; straciło znaczenie i zostało wycofane." />
     <string id="taom_wotr_no_peace" text="Wojna o Pierścień szaleje. Nie może być pokoju." />
     <string id="taom_precompile_shaders" text="Wstępna kompilacja shaderów" />
     <string id="taom_precompile_hint" text="Wstępnie kompiluje shadery, by wyeliminować przycięcia w grze. Uruchom raz po instalacji TAOM." />
@@ -2098,6 +2099,7 @@
     <string id="l4pRw7pO" text="Zbrojna karawana {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} żołnierzy zdezerterowało — odmawiają służby panu o przeciwnym opowiedzeniu się." />
     <string id="taom_troop_weight_size" text="Ciężkie oddziały" />
+    <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
     <string id="taom_ai_party_size" text="Zastęp wodza wojennego (Warlord's host)" />
     <string id="taom_ai_garrison_size" text="Warowne królestwo" />
     <string id="taom_ai_forage" text="Furażowanie w kampanii" />
@@ -2606,5 +2608,6 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} wysyła posiłki, są już w drodze." />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} nie da się pojmać. Wymyka się z pola bitwy, zanim zdołano go schwytać." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} nie da się pojmać. Znika, zanim twoi ludzie do niego dotarli." />
+    <string id="taom_caravan_escort" text="Caravan escort" />
   </strings>
 </base>

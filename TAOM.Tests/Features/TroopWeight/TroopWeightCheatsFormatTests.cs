@@ -102,4 +102,32 @@ public class TroopWeightCheatsFormatTests
 
         StringAssert.Contains(report, "Warband of Dain");
     }
+
+    /// <summary>
+    /// The player only ever sees the DISPLAYED frame (2026-09-06 reframe), so the report has to print both
+    /// or it cannot answer "does the party screen agree with the model?". The reported case: Amras plus
+    /// nine weight-2 Noldorin Lancers, base 20 -> enforced 10/11, displayed 19/20.
+    /// </summary>
+    [TestMethod]
+    public void FormatPartySize_PrintsTheEnforcedAndDisplayedFramesSideBySide()
+    {
+        var report = TroopWeightCheats.FormatPartySize(
+            partyName: "Amras Party", rawCount: 10, weightedCount: 19,
+            trueBaseLimit: 20, finalLimit: 11, weightEnabled: true);
+
+        StringAssert.Contains(report, "enforced 10/11");
+        StringAssert.Contains(report, "displayed 19/20");
+    }
+
+    [TestMethod]
+    public void FormatPartySize_LightParty_BothFramesReadTheSame()
+    {
+        // No surplus and no deflation, so the reframe is invisible — the two frames must not diverge.
+        var report = TroopWeightCheats.FormatPartySize(
+            partyName: "Militia", rawCount: 30, weightedCount: 30,
+            trueBaseLimit: 80, finalLimit: 80, weightEnabled: true);
+
+        StringAssert.Contains(report, "enforced 30/80");
+        StringAssert.Contains(report, "displayed 30/80");
+    }
 }

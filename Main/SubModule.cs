@@ -375,9 +375,17 @@ public class SubModule : MBSubModuleBase
         var executionHook = IoC.Resolve<IOnExecutionAction>();
         ExecutionIoC.InitializeHooks(executionHook);
 
-        // Only the shed-on-upgrade hook survives the 2026-07-11 count->limit rework; the weight penalty
-        // itself is applied by TaomPartySizeModel (registered in CreateGameModels), not a Harmony patch.
-        TroopWeightIoC.InitializeHooks(IoC.Resolve<IOnPartyUpgraderUpgradeReadyTroops>());
+        // The weight penalty itself is applied by TaomPartySizeModel (registered in CreateGameModels), not a
+        // Harmony patch. Shed-on-upgrade enforces it for AI parties; the five display hooks restate the cap
+        // as capacity USED ("19 / 20") rather than a deflated limit ("10 / 11") — 2026-09-06 usage-frame
+        // reframe, see docs/features/troop-weight-system.md.
+        TroopWeightIoC.InitializeHooks(
+            IoC.Resolve<IOnPartyUpgraderUpgradeReadyTroops>(),
+            IoC.Resolve<IOnPartyVMRefreshPartyInformation>(),
+            IoC.Resolve<IOnClanPartyItemUpdateProperties>(),
+            IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
+            IoC.Resolve<IOnCampaignUIHelperGetPartyHealthTooltip>(),
+            IoC.Resolve<IOnPartyCharacterVMRefreshValues>());
 
         CustomBattlesIoC.InitializeHooks(
             IoC.Resolve<IOnGetCustomBattleCommanders>(),
@@ -408,6 +416,12 @@ public class SubModule : MBSubModuleBase
         // range past the local town cluster instead of shuttling. Campaign-behavior target, so applied
         // in this campaign-phase block alongside the other AI patches.
         _harmony.PatchCategory("Patch59_CaravanTrade");
+        // Patch81 (#542): MarriageAlignment — transpiler narrowing the AI's partner-clan draw in
+        // RomanceCampaignBehavior.CheckNpcMarriages to alignment-compatible clans. The Free/Evil
+        // BLOCK lives in TaomMarriageModel, not here; this only stops a blocked Free lord from
+        // wasting the day's uniform draw on a clan he can never marry into. Campaign-behavior
+        // target, so this block alongside Patch59. Self-bails to vanilla IL if the anchor moves.
+        _harmony.PatchCategory("Patch81_MarriageAlignment");
         // Patch68: EconomyDiagnostics — read-only town-gold telemetry. One prefix/postfix recorder on
         // SettlementComponent.ChangeGold (the pool's sole mutator, so no flow site can be missed)
         // plus four flow-tag pairs naming the caller. Answers "where does a town's daily mint go",
@@ -884,10 +898,14 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
         campaignStarter.AddModel(new TaomHeroCreationModel());
 
-        // Ringwraiths (Witch-King + Nazgûl) take no spouse/parents/children: block their marriage
-        // (so no spouse ⇒ no children) + a defensive clear-on-load for pre-feature saves.
+        // TaomMarriageModel is the mod's ONLY MarriageModel and carries two rules, because the
+        // engine resolves exactly one model per type — a second AddModel would silently shadow one
+        // of them. (1) Ringwraiths (Witch-King + Nazgûl) take no spouse/parents/children: block
+        // their marriage (so no spouse ⇒ no children) + a defensive clear-on-load for pre-feature
+        // saves. (2) #542 — a Free-aligned hero may not marry an Evil-aligned one.
         var nazgulRegistry = IoC.Resolve<INazgulRegistry>();
-        campaignStarter.AddModel(new TaomMarriageModel(nazgulRegistry));
+        campaignStarter.AddModel(new TaomMarriageModel(
+            nazgulRegistry, IoC.Resolve<Features.MarriageAlignment.IMarriageAlignmentService>()));
         campaignStarter.AddBehavior(new NazgulFamilyBehavior(nazgulRegistry, IoC.Resolve<IModLogger>()));
     }
 
@@ -1310,6 +1328,18 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
         _harmony.PatchCategory("Patch11_Diplomacy");
         _harmony.PatchCategory("Patch12_WarOfTheRing");
+
+        // Patch80 (#547) — stops a kingdom decision window that can never be closed. Vanilla builds
+        // the popup without checking ShouldBeCancelled(), and KingdomElection.ApplySelection() is a
+        // silent no-op on a cancelled election, so the popup's auto-close never fires and its only
+        // button is already disabled. The kingdom screen is only reachable inside a campaign, so the
+        // standard OnGameInitializationFinished batch is early enough.
+        TAOM.Features.Diplomacy.Hooks.KingdomVoteDeadlockBinding.Initialize(
+            IoC.Resolve<TAOM.Features.Diplomacy.IKingdomVoteDeadlockService>(), IoC.Resolve<IModLogger>());
+        TAOM.Features.Diplomacy.Hooks.KingdomDecisionsVM_RefreshWith_Patch.Initialize(IoC.Resolve<IModLogger>());
+        TAOM.Features.Diplomacy.Hooks.KingdomDecisionsVM_HandleDecision_Patch.Initialize(IoC.Resolve<IModLogger>());
+        TAOM.Features.Diplomacy.Hooks.DecisionItemBaseVM_ExecuteFinalSelection_Patch.Initialize(IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch80_KingdomVoteDeadlock");
 
         _harmony.PatchCategory("Patch14_Execution");
         _harmony.PatchCategory("Patch15_BannerLayerLimit");

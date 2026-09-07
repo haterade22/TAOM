@@ -203,7 +203,6 @@
 			sound_category="mission_voice_shout"
 			min_pitch_multiplier="0.8"
 			max_pitch_multiplier="1.0">
-			<variation path="LOTR/Dwarf/D1_Death.wav" weight="1" />
 			<variation path="LOTR/Dwarf/D1_Death1.wav" weight="1" />
 			<variation path="LOTR/Dwarf/D1_Death2.wav" weight="1" />
 			<variation path="LOTR/Dwarf/dwarf_deaths.mp3" weight="0.5" />
@@ -215,17 +214,12 @@
 			max_pitch_multiplier="1.1">
 			<variation path="LOTR/Dwarf/D1_Pain1.wav" weight="1" />
 			<variation path="LOTR/Dwarf/D1_Pain2.wav" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Pain3.wav" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Grunts1.wav" weight="0.5" />
-			<variation path="LOTR/Dwarf/D1_Grunts2.wav" weight="0.5" />
 		</module_sound>
 		<module_sound
 			name="LOTR/Dwarf/Grunts"
 			sound_category="mission_voice"
 			min_pitch_multiplier="0.8"
 			max_pitch_multiplier="1.2">
-			<variation path="LOTR/Dwarf/D1_Grunts1.wav" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Grunts2.wav" weight="1" />
 			<variation path="LOTR/Dwarf/dwarf_grunt.mp3" weight="1" />
 		</module_sound>
 		<module_sound
@@ -237,7 +231,6 @@
 			<variation path="LOTR/Dwarf/D1_Warcry2.wav" weight="1" />
 			<variation path="LOTR/Dwarf/D1_Warcry3.wav" weight="1" />
 			<variation path="LOTR/Dwarf/D1_Warcry4.wav" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Warcry5.wav" weight="1" />
 		</module_sound>
 		<module_sound
 			name="LOTR/Dwarf/Battlecries"
@@ -255,8 +248,6 @@
 			max_pitch_multiplier="1.1">
 			<variation path="LOTR/Dwarf/victory_1.mp3" weight="1" />
 			<variation path="LOTR/Dwarf/victory_2.mp3" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Warcry1.wav" weight="0.5" />
-			<variation path="LOTR/Dwarf/D1_Warcry2.wav" weight="0.5" />
 		</module_sound>
 		<module_sound
 			name="LOTR/Dwarf/climb_sounds"
@@ -273,8 +264,6 @@
 			min_pitch_multiplier="0.9"
 			max_pitch_multiplier="1.1">
 			<variation path="LOTR/Dwarf/focus_1.mp3" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Grunts1.wav" weight="1" />
-			<variation path="LOTR/Dwarf/D1_Grunts2.wav" weight="1" />
 		</module_sound>
 		<!-- Individual dwarf command sounds -->
 		<module_sound name="LOTR/Dwarf/D1_Jumping.wav" sound_category="mission_voice" path="LOTR/Dwarf/D1_Jumping.wav" />

@@ -16,8 +16,21 @@ The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtim
 |------|------------|
 | [`reflection-sites.md`](./reflection-sites.md) | Authoritative catalogue of every reflection touchpoint, grouped by gated / runtime-dynamic / internal. Data source for `ReflectionSiteBindingTests`. |
 | [`gamemodel-bases.md`](./gamemodel-bases.md) | Auto-generated: each `Taom*Model`, its `Default*Model` base, and the exact v1.4.8 signature of every overridden method. |
-| [`patch-targets.md`](./patch-targets.md) | Auto-generated: each of the 110 `[HarmonyPatch]` / `TargetMethod` classes and the engine method it patches, resolved as Harmony resolves it. |
+| [`patch-targets.md`](./patch-targets.md) | Auto-generated: each of the 220 `[HarmonyPatch]` / `TargetMethod` classes and the engine method it patches, resolved as Harmony resolves it. |
 | [`../../../tools/snapshot_api_surface.ps1`](../../../tools/snapshot_api_surface.ps1) | Regenerates the two auto-generated files from the installed DLLs. Auto-derives the type list from `TAOM.dll`. |
+
+> **The generator is PowerShell 7 only, and now says so.** It uses the null-coalescing `??` operator
+> and an em dash inside a double-quoted `throw`, both of which Windows PowerShell 5.1 rejects at PARSE
+> time. Without a version declaration it failed with ten cascading parser errors naming neither the
+> version nor the cause (observed 2026-09-06 on a machine with no `pwsh`). A `#requires -Version 7.0`
+> line was added that day, so 5.1 now reports one clear message instead. The shebang alone does not
+> cover this: on Windows the script runs under whichever host invoked it, and 5.1 is still the default.
+>
+> **Regenerating is the only way to keep these files honest.** On 2026-09-06 `patch-targets.md` was
+> found **21 rows stale** (194 committed against 220 real) because patches had been added across
+> several features without a regeneration. Hand-editing a row works and is format-checkable, but it
+> cannot find rows nobody knew were missing. Run the generator after any patch or GameModel change,
+> not only after an engine bump.
 
 ## The gate (`TAOM.Tests/Migration/`)
 
@@ -25,8 +38,8 @@ Runs under `dotnet test` — no game launch. TAOM.Tests references the installed
 
 | Test class | Covers | Granularity |
 |------------|--------|-------------|
-| `HarmonyPatchBindingTests` | All 110 `[HarmonyPatch]` / `TargetMethod` targets, resolved as Harmony does at `PatchAll`. | one assertion accumulating all failures |
-| `GameModelOverrideBindingTests` | All 39 GameModels: registered in `SubModule.cs`, override ≥1 base virtual, no shadow-without-`override`. | 2 tests |
+| `HarmonyPatchBindingTests` | All 220 `[HarmonyPatch]` / `TargetMethod` targets, resolved as Harmony does at `PatchAll`. | one assertion accumulating all failures |
+| `GameModelOverrideBindingTests` | All 46 GameModels: registered in `SubModule.cs`, override ≥1 base virtual, no shadow-without-`override`. | 2 tests |
 | `ReflectionSiteBindingTests` | The 32 auxiliary static-engine reflection members from `reflection-sites.md` Category B. | one `[DataRow]` per site |
 
 ```bash

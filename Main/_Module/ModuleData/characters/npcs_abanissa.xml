@@ -5,7 +5,7 @@
   <!-- Âbanissa uses harad face templates and aserai civilian equipment -->
 
   <!-- Notables: Merchants (10) -->
-  <NPCCharacter id="spc_notable_abanissa_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.abanissa" name="{=aom_ab_notable_0}Far Harad dynasty broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+  <NPCCharacter id="spc_notable_abanissa_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.abanissa" name="{=aom_ab_notable_0}Far Harad dynasty broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -20,7 +20,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_abanissa_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.abanissa" name="{=aom_ab_notable_0b}Âbanissa ivory trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+  <NPCCharacter id="spc_notable_abanissa_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.abanissa" name="{=aom_ab_notable_0b}Âbanissa ivory trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -50,7 +50,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_abanissa_1b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.abanissa" name="{=aom_ab_notable_1b}Far Harad spice merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+  <NPCCharacter id="spc_notable_abanissa_1b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.abanissa" name="{=aom_ab_notable_1b}Far Harad spice merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
@@ -172,7 +172,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_abanissa_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.abanissa" name="{=aom_ab_notable_6}Âbanissa temple keeper" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+  <NPCCharacter id="spc_notable_abanissa_6" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.abanissa" name="{=aom_ab_notable_6}Âbanissa temple keeper" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
@@ -238,7 +238,7 @@
   </NPCCharacter>
 
   <!-- Notables: Gang Leaders (6) -->
-  <NPCCharacter id="spc_notable_abanissa_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.abanissa" name="{=aom_ab_notable_gl1}Âbanissa house enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+  <NPCCharacter id="spc_notable_abanissa_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.abanissa" name="{=aom_ab_notable_gl1}Âbanissa house enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="2" /><Trait id="Mercy" value="-2" /></Traits>
@@ -274,7 +274,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_abanissa_11" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.abanissa" name="{=aom_ab_notable_11}Far Harad warband leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+  <NPCCharacter id="spc_notable_abanissa_11" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.abanissa" name="{=aom_ab_notable_11}Far Harad warband leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="2" /><Trait id="Calculating" value="1" /></Traits>

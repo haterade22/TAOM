@@ -11,17 +11,17 @@
 
 	<MBPartyTemplate id="caravan_template_gundabad">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_gundabad" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_gundabad" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_gundabad" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_gundabad" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_gundabad" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_gundabad" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_gundabad">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_gundabad" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_gundabad" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_gundabad" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_gundabad" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_gundabad" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_gundabad" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -122,17 +122,17 @@
 
 	<MBPartyTemplate id="caravan_template_erebor">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_erebor" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_erebor" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_erebor" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_erebor" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_erebor" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_erebor" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_erebor">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_erebor" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_erebor" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_erebor" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_erebor" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_erebor" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_erebor" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -282,17 +282,17 @@
 
 	<MBPartyTemplate id="caravan_template_dolguldur">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_dolguldur" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_dolguldur" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_dolguldur" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_dolguldur" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_dolguldur" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_dolguldur" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_dolguldur">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_dolguldur" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_dolguldur" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_dolguldur" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_dolguldur" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_dolguldur" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_dolguldur" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -414,17 +414,17 @@
 
 	<MBPartyTemplate id="caravan_template_mirkwood">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_mirkwood" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_mirkwood" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_mirkwood" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_mirkwood" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_mirkwood" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_mirkwood" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_mirkwood">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_mirkwood" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_mirkwood" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_mirkwood" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_mirkwood" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_mirkwood" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_mirkwood" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -523,17 +523,17 @@
 
 	<MBPartyTemplate id="caravan_template_rivendell">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_rivendell" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_rivendell" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_rivendell" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_rivendell" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_rivendell" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_rivendell" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_rivendell">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_rivendell" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_rivendell" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_rivendell" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_rivendell" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_rivendell" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_rivendell" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -635,17 +635,17 @@
 
 	<MBPartyTemplate id="caravan_template_gondor">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_gondor" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_gondor" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_gondor" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_gondor" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_gondor" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_gondor" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_gondor">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_gondor" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_gondor" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_gondor" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_gondor" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_gondor" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_gondor" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -745,17 +745,17 @@
 
 	<MBPartyTemplate id="caravan_template_mordor">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_mordor" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_mordor" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_mordor" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_mordor" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_mordor" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_mordor" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_mordor">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_mordor" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_mordor" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_mordor" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_mordor" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_mordor" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_mordor" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -903,17 +903,17 @@
 
 	<MBPartyTemplate id="caravan_template_rohan">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_rohan" />
-			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.caravan_guard_rohan" />
-			<PartyTemplateStack min_value="1" max_value="5" troop="NPCCharacter.veteran_caravan_guard_rohan" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_rohan" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_rohan" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_rohan" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_rohan">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_rohan" />
-			<PartyTemplateStack min_value="10" max_value="20" troop="NPCCharacter.caravan_guard_rohan" />
-			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.veteran_caravan_guard_rohan" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_rohan" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_rohan" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_rohan" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1006,17 +1006,17 @@
 
 	<MBPartyTemplate id="caravan_template_dale">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_dale" />
-			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.caravan_guard_dale" />
-			<PartyTemplateStack min_value="1" max_value="5" troop="NPCCharacter.veteran_caravan_guard_dale" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_dale" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_dale" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_dale" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_dale">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_dale" />
-			<PartyTemplateStack min_value="10" max_value="20" troop="NPCCharacter.caravan_guard_dale" />
-			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.veteran_caravan_guard_dale" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_dale" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_dale" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_dale" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1124,17 +1124,17 @@
 
 	<MBPartyTemplate id="caravan_template_dunland">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_dunland" />
-			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.caravan_guard_dunland" />
-			<PartyTemplateStack min_value="1" max_value="5" troop="NPCCharacter.veteran_caravan_guard_dunland" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_dunland" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_dunland" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_dunland" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_dunland">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_dunland" />
-			<PartyTemplateStack min_value="10" max_value="20" troop="NPCCharacter.caravan_guard_dunland" />
-			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.veteran_caravan_guard_dunland" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_dunland" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_dunland" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_dunland" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1228,17 +1228,17 @@
 
 	<MBPartyTemplate id="caravan_template_harad">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_harad" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_harad" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_harad" />
+			<PartyTemplateStack min_value="36" max_value="41" troop="NPCCharacter.armed_trader_harad" />
+			<PartyTemplateStack min_value="21" max_value="25" troop="NPCCharacter.caravan_guard_harad" />
+			<PartyTemplateStack min_value="12" max_value="14" troop="NPCCharacter.veteran_caravan_guard_harad" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_harad">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_harad" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_harad" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_harad" />
+			<PartyTemplateStack min_value="28" max_value="32" troop="NPCCharacter.armed_trader_harad" />
+			<PartyTemplateStack min_value="22" max_value="25" troop="NPCCharacter.caravan_guard_harad" />
+			<PartyTemplateStack min_value="27" max_value="31" troop="NPCCharacter.veteran_caravan_guard_harad" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1335,17 +1335,17 @@
 
 	<MBPartyTemplate id="caravan_template_rhun">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_rhun" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_rhun" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_rhun" />
+			<PartyTemplateStack min_value="36" max_value="41" troop="NPCCharacter.armed_trader_rhun" />
+			<PartyTemplateStack min_value="21" max_value="25" troop="NPCCharacter.caravan_guard_rhun" />
+			<PartyTemplateStack min_value="12" max_value="14" troop="NPCCharacter.veteran_caravan_guard_rhun" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_rhun">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_rhun" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_rhun" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_rhun" />
+			<PartyTemplateStack min_value="28" max_value="32" troop="NPCCharacter.armed_trader_rhun" />
+			<PartyTemplateStack min_value="22" max_value="25" troop="NPCCharacter.caravan_guard_rhun" />
+			<PartyTemplateStack min_value="27" max_value="31" troop="NPCCharacter.veteran_caravan_guard_rhun" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1437,17 +1437,17 @@
 
 	<MBPartyTemplate id="caravan_template_isengard">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_isengard" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_isengard" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_isengard" />
+			<PartyTemplateStack min_value="36" max_value="41" troop="NPCCharacter.armed_trader_isengard" />
+			<PartyTemplateStack min_value="21" max_value="25" troop="NPCCharacter.caravan_guard_isengard" />
+			<PartyTemplateStack min_value="12" max_value="14" troop="NPCCharacter.veteran_caravan_guard_isengard" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="elite_caravan_template_isengard">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_isengard" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_isengard" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_isengard" />
+			<PartyTemplateStack min_value="28" max_value="32" troop="NPCCharacter.armed_trader_isengard" />
+			<PartyTemplateStack min_value="22" max_value="25" troop="NPCCharacter.caravan_guard_isengard" />
+			<PartyTemplateStack min_value="27" max_value="31" troop="NPCCharacter.veteran_caravan_guard_isengard" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1555,91 +1555,91 @@
 	<!-- Dunland Raiders (replaces forest_bandits) -->
 	<MBPartyTemplate id="dunland_raiders_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.dunland_peasant" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.dunland_raider" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.dunland_hunter" />
-			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.dunland_clan_warrior" />
+			<PartyTemplateStack min_value="5" max_value="20" troop="NPCCharacter.dunland_peasant" />
+			<PartyTemplateStack min_value="2" max_value="20" troop="NPCCharacter.dunland_raider" />
+			<PartyTemplateStack min_value="2" max_value="20" troop="NPCCharacter.dunland_hunter" />
+			<PartyTemplateStack min_value="1" max_value="20" troop="NPCCharacter.dunland_clan_warrior" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="dunland_raiders_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_raiders_boss" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.dunland_clan_warrior" />
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.dunland_raider" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.dunland_hunter" />
+			<PartyTemplateStack min_value="4" max_value="32" troop="NPCCharacter.dunland_clan_warrior" />
+			<PartyTemplateStack min_value="5" max_value="32" troop="NPCCharacter.dunland_raider" />
+			<PartyTemplateStack min_value="2" max_value="32" troop="NPCCharacter.dunland_hunter" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<!-- Rhûn Raiders (replaces steppe_bandits) -->
 	<MBPartyTemplate id="rhun_raiders_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.balcoth_volunteer" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.balcoth_footman" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.kharaghul_rider" />
-			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.balcoth_archer" />
+			<PartyTemplateStack min_value="3" max_value="14" troop="NPCCharacter.balcoth_volunteer" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.balcoth_footman" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.kharaghul_rider" />
+			<PartyTemplateStack min_value="1" max_value="14" troop="NPCCharacter.balcoth_archer" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="rhun_raiders_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rhun_raiders_boss" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.balcoth_archer" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.balcoth_footman" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.kharaghul_rider" />
+			<PartyTemplateStack min_value="3" max_value="23" troop="NPCCharacter.balcoth_archer" />
+			<PartyTemplateStack min_value="3" max_value="23" troop="NPCCharacter.balcoth_footman" />
+			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.kharaghul_rider" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<!-- Haradrim Raiders (replaces desert_bandits) -->
 	<MBPartyTemplate id="harad_raiders_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.harad_levy" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.harad_skirmisher" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.harad_archer" />
-			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.harad_footman" />
+			<PartyTemplateStack min_value="4" max_value="17" troop="NPCCharacter.harad_levy" />
+			<PartyTemplateStack min_value="2" max_value="17" troop="NPCCharacter.harad_skirmisher" />
+			<PartyTemplateStack min_value="2" max_value="17" troop="NPCCharacter.harad_archer" />
+			<PartyTemplateStack min_value="1" max_value="17" troop="NPCCharacter.harad_footman" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="harad_raiders_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_raiders_boss" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.harad_footman" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.harad_archer" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.harad_camelscout" />
+			<PartyTemplateStack min_value="3" max_value="23" troop="NPCCharacter.harad_footman" />
+			<PartyTemplateStack min_value="3" max_value="23" troop="NPCCharacter.harad_archer" />
+			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.harad_camelscout" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<!-- Gundabad Orc Raiders (replaces mountain_bandits) -->
 	<MBPartyTemplate id="gundabad_raiders_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.gundabad_snaga" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.gundabad_hunter" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.gundabad_grunt" />
-			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.gundabad_lurker" />
+			<PartyTemplateStack min_value="4" max_value="17" troop="NPCCharacter.gundabad_snaga" />
+			<PartyTemplateStack min_value="2" max_value="17" troop="NPCCharacter.gundabad_hunter" />
+			<PartyTemplateStack min_value="2" max_value="17" troop="NPCCharacter.gundabad_grunt" />
+			<PartyTemplateStack min_value="1" max_value="17" troop="NPCCharacter.gundabad_lurker" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="gundabad_raiders_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_raiders_boss" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.gundabad_scout" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.gundabad_grunt" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.gundabad_lurker" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.gundabad_hunter" />
+			<PartyTemplateStack min_value="2" max_value="18" troop="NPCCharacter.gundabad_scout" />
+			<PartyTemplateStack min_value="3" max_value="18" troop="NPCCharacter.gundabad_grunt" />
+			<PartyTemplateStack min_value="2" max_value="18" troop="NPCCharacter.gundabad_lurker" />
+			<PartyTemplateStack min_value="1" max_value="18" troop="NPCCharacter.gundabad_hunter" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<!-- Umbar Corsairs (replaces sea_raiders) -->
 	<MBPartyTemplate id="umbar_corsairs_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.aux_basic" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.umbar_elite" />
-			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.umbar_elite_root1" />
-			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.umbar_elite_root0" />
+			<PartyTemplateStack min_value="5" max_value="18" troop="NPCCharacter.aux_basic" />
+			<PartyTemplateStack min_value="2" max_value="18" troop="NPCCharacter.umbar_elite" />
+			<PartyTemplateStack min_value="1" max_value="18" troop="NPCCharacter.umbar_elite_root1" />
+			<PartyTemplateStack min_value="1" max_value="18" troop="NPCCharacter.umbar_elite_root0" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="umbar_corsairs_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.umbar_corsairs_boss" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.umbar_elite_root0" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.umbar_elite" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.umbar_elite_root1" />
+			<PartyTemplateStack min_value="3" max_value="29" troop="NPCCharacter.umbar_elite_root0" />
+			<PartyTemplateStack min_value="4" max_value="29" troop="NPCCharacter.umbar_elite" />
+			<PartyTemplateStack min_value="3" max_value="29" troop="NPCCharacter.umbar_elite_root1" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1650,53 +1650,53 @@
 	<!-- Gondor Soldiers -->
 	<MBPartyTemplate id="gondor_soldiers_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.gondor_ano_peasant" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.gondor_ano_militia" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.gondor_ano_archer_militia" />
-			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="5" max_value="20" troop="NPCCharacter.gondor_ano_peasant" />
+			<PartyTemplateStack min_value="2" max_value="20" troop="NPCCharacter.gondor_ano_militia" />
+			<PartyTemplateStack min_value="2" max_value="20" troop="NPCCharacter.gondor_ano_archer_militia" />
+			<PartyTemplateStack min_value="1" max_value="20" troop="NPCCharacter.gondor_ano_footman" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="gondor_soldiers_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_soldiers_boss" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.gondor_ano_footman" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.gondor_ano_militia" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.gondor_ano_archer_militia" />
+			<PartyTemplateStack min_value="4" max_value="32" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="4" max_value="32" troop="NPCCharacter.gondor_ano_militia" />
+			<PartyTemplateStack min_value="3" max_value="32" troop="NPCCharacter.gondor_ano_archer_militia" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<!-- Erebor Warriors -->
 	<MBPartyTemplate id="erebor_warriors_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.erebor_reg_miner" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.erebor_reg_militia" />
-			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.erebor_reg_skirmisher" />
-			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.erebor_reg_company" />
+			<PartyTemplateStack min_value="4" max_value="14" troop="NPCCharacter.erebor_reg_miner" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.erebor_reg_militia" />
+			<PartyTemplateStack min_value="1" max_value="14" troop="NPCCharacter.erebor_reg_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="14" troop="NPCCharacter.erebor_reg_company" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="erebor_warriors_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_warriors_boss" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.erebor_reg_company" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.erebor_reg_militia" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.erebor_reg_skirmisher" />
+			<PartyTemplateStack min_value="2" max_value="22" troop="NPCCharacter.erebor_reg_company" />
+			<PartyTemplateStack min_value="3" max_value="22" troop="NPCCharacter.erebor_reg_militia" />
+			<PartyTemplateStack min_value="2" max_value="22" troop="NPCCharacter.erebor_reg_skirmisher" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<!-- Mirkwood Stalkers -->
 	<MBPartyTemplate id="mirkwood_stalkers_raider_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.mirkwood_militia_spearman" />
-			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.mirkwood_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="5" max_value="24" troop="NPCCharacter.mirkwood_militia_spearman" />
+			<PartyTemplateStack min_value="3" max_value="24" troop="NPCCharacter.mirkwood_militia_archer" />
+			<PartyTemplateStack min_value="1" max_value="24" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="mirkwood_stalkers_boss_party_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_stalkers_boss" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.mirkwood_militia_archer" />
-			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.mirkwood_militia_spearman" />
+			<PartyTemplateStack min_value="4" max_value="32" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="4" max_value="32" troop="NPCCharacter.mirkwood_militia_archer" />
+			<PartyTemplateStack min_value="3" max_value="32" troop="NPCCharacter.mirkwood_militia_spearman" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1708,16 +1708,16 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="caravan_template_goblin">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_goblin" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_goblin" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_goblin" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_goblin" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_goblin" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_goblin" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="elite_caravan_template_goblin">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_goblin" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_goblin" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_goblin" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_goblin" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_goblin" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_goblin" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="kingdom_hero_party_goblin_template">
@@ -1803,16 +1803,16 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="caravan_template_mistymountainorcs">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_mistymountainorcs" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_mistymountainorcs" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_mistymountainorcs" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_mistymountainorcs" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_mistymountainorcs" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_mistymountainorcs" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="elite_caravan_template_mistymountainorcs">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_mistymountainorcs" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_mistymountainorcs" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_mistymountainorcs" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_mistymountainorcs" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_mistymountainorcs" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_mistymountainorcs" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="kingdom_hero_party_mistymountainorcs_template">
@@ -5106,16 +5106,16 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="caravan_template_lindon">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_lindon" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_lindon" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_lindon" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_lindon" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_lindon" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_lindon" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="elite_caravan_template_lindon">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_lindon" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_lindon" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_lindon" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_lindon" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_lindon" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_lindon" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="kingdom_hero_party_lindon_template">
@@ -5207,16 +5207,16 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="caravan_template_bluecraig">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_bluecraig" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_bluecraig" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_bluecraig" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_bluecraig" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_bluecraig" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_bluecraig" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="elite_caravan_template_bluecraig">
 		<stacks>
-			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_bluecraig" />
-			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_bluecraig" />
-			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_bluecraig" />
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_bluecraig" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_bluecraig" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_bluecraig" />
 		</stacks>
 	</MBPartyTemplate>
 	<MBPartyTemplate id="kingdom_hero_party_bluecraig_template">
@@ -5243,4 +5243,108 @@
 	</MBPartyTemplate>
 
   <!-- TAOM-NEWCULTURE:bluecraig:END -->
+	<!-- ==== SupplyLines crew templates (generated: tools/generate_supply_caravan_templates.py) ==== -->
+	<MBPartyTemplate id="supply_caravan_template_bluecraig">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_bluecraig" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_bluecraig" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_dale">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_dale" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_dale" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_dolguldur">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_dolguldur" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_dolguldur" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_dunland">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_dunland" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_dunland" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_erebor">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_erebor" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_erebor" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_goblin">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_goblin" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_goblin" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_gondor">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_gondor" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_gondor" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_gundabad">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_gundabad" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_gundabad" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_harad">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_harad" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_harad" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_isengard">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_isengard" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_isengard" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_lindon">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_lindon" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_lindon" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_mirkwood">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_mirkwood" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_mirkwood" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_mistymountainorcs">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_mistymountainorcs" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_mistymountainorcs" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_mordor">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_mordor" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_mordor" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_rhun">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_rhun" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_rhun" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_rivendell">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_rivendell" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_rivendell" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_rohan">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_rohan" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_rohan" />
+		</stacks>
+	</MBPartyTemplate>
+	<!-- ==== end SupplyLines crew templates ==== -->
 </partyTemplates>

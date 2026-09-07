@@ -57,6 +57,7 @@ public class SettlementFoodConfigProvider : ISettlementFoodConfigProvider
             CastleBaseFood = parsed.CastleBaseFood,
             VillageFoodMultiplier = parsed.VillageFoodMultiplier,
             FlatFoodBonus = parsed.FlatFoodBonus,
+            HinterlandFoodPerProsperity = parsed.HinterlandFoodPerProsperity,
             FoodStocksUpperLimit = parsed.FoodStocksUpperLimit,
             CastleFoodStockUpperLimitBonus = parsed.CastleFoodStockUpperLimitBonus,
         };
@@ -105,6 +106,25 @@ public class SettlementFoodConfigProvider : ISettlementFoodConfigProvider
         {
             _logger.LogWarning($"SettlementFoodConfigProvider: flatFoodBonus={sanitized.FlatFoodBonus} must be a finite value in [0,100000], reverting to default {defaults.FlatFoodBonus}");
             sanitized.FlatFoodBonus = defaults.FlatFoodBonus;
+            rejected = true;
+        }
+
+        // Hinterland rate: finite, non-negative, and STRICTLY below 1 / prosperityFoodDivisor.
+        //
+        // The strict bound is the load-bearing part. At or above it the prosperity-scaled production
+        // term cancels (or outruns) vanilla's Prosperity/divisor consumption, so net food stops
+        // falling as a fief grows. A surplus fief then overflows its store every day forever, vanilla
+        // converts the overflow into prosperity (+0.1 per point), and prosperity, town gold
+        // (10000 + Prosperity*12) and garrison caps inflate map-wide with nothing to arrest them.
+        //
+        // Validated against the SANITIZED divisor, not the parsed one: a rejected divisor has already
+        // reverted to vanilla above, and a raw 0 would divide by zero here.
+        var maxHinterlandRate = 1f / sanitized.ProsperityFoodDivisor;
+        if (!FiniteFloatValidator.IsFiniteInRange(sanitized.HinterlandFoodPerProsperity, 0f, 10000f)
+            || sanitized.HinterlandFoodPerProsperity >= maxHinterlandRate)
+        {
+            _logger.LogWarning($"SettlementFoodConfigProvider: hinterlandFoodPerProsperity={sanitized.HinterlandFoodPerProsperity} must be a finite value in [0,{maxHinterlandRate}), strictly below 1/prosperityFoodDivisor ({sanitized.ProsperityFoodDivisor}) so food still tightens as prosperity rises. Reverting to default {defaults.HinterlandFoodPerProsperity}");
+            sanitized.HinterlandFoodPerProsperity = defaults.HinterlandFoodPerProsperity;
             rejected = true;
         }
 

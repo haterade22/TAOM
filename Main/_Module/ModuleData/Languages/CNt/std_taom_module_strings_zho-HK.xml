@@ -668,6 +668,7 @@
     <string id="taom_player_alliance_formed" text="{PLAYER_KINGDOM}與{TARGET_KINGDOM}之間已締結同盟。" />
     <string id="taom_alliance_blocked" text="這些王國永不能結盟。" />
     <string id="taom_war_blocked" text="這些王國受不可破的同盟約束。" />
+    <string id="taom_vote_lapsed" text="關於「{VOTE}」的表決已不再適用，因此被撤回。" />
     <string id="taom_wotr_no_peace" text="魔戒聖戰正熾。無法和平。" />
     <string id="taom_precompile_shaders" text="預編譯著色器" />
     <string id="taom_precompile_hint" text="預編譯著色器以消除遊戲內卡頓。安裝TAOM後運行一次。" />
@@ -2098,6 +2099,7 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}的武裝商隊" />
     <string id="taom_align_desertion" text="{COUNT}名士兵逃走了——他們拒絕侍奉立場對立的領主。" />
     <string id="taom_troop_weight_size" text="重裝部隊" />
+    <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
     <string id="taom_ai_party_size" text="軍閥麾下" />
     <string id="taom_ai_garrison_size" text="堅壁之邦" />
     <string id="taom_ai_forage" text="隨軍徵糧" />
@@ -2606,5 +2608,6 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} 派出了援軍，他們正在路上。" />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} 無法被擒。在被捉住之前，他已悄然離開戰場。" />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} 無法被擒。你的人尚未趕到，他便已不見蹤影。" />
+    <string id="taom_caravan_escort" text="Caravan escort" />
   </strings>
 </base>

@@ -53,7 +53,7 @@
 	</NPCCharacter>
 
 	<!-- Village Woman -->
-	<NPCCharacter id="village_woman_gondor" default_group="Infantry" name="{=aom_gd_village_woman}Village Woman" occupation="Villager" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_village_woman}Village Woman" occupation="Villager" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -236,7 +236,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_gondor" default_group="Infantry" name="{=aom_gd_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -302,7 +302,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_gondor" default_group="Infantry" name="{=aom_gd_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -315,7 +315,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_gondor" default_group="Infantry" name="{=aom_gd_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -330,7 +330,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_gondor" default_group="Infantry" name="{=aom_gd_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -346,7 +346,7 @@
 	</NPCCharacter>
 
 	<!-- Village Children/Teenagers -->
-	<NPCCharacter id="village_woman_child_gondor" default_group="Infantry" name="{=aom_gd_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -359,7 +359,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_gondor" default_group="Infantry" name="{=aom_gd_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_gondor" is_female="true" default_group="Infantry" name="{=aom_gd_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -582,7 +582,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_gondor" default_group="Infantry" is_hero="false" name="{=aom_gd_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_gondor" is_female="true" default_group="Infantry" is_hero="false" name="{=aom_gd_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.gondor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -734,7 +734,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_gondor" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_gondor" is_female="true" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -749,7 +749,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_gondor" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_gondor" is_female="true" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.gondor" name="{=aom_gd_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -773,7 +773,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_gondor_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0}Prudent Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_gondor_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0}Prudent Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -788,7 +788,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_gondor_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0b}Gondorian vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_gondor_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0b}Gondorian vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -803,7 +803,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_gondor_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_1}Ruthless Gondorian trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_gondor_1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.gondor" name="{=aom_gd_notable_1}Ruthless Gondorian trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -933,7 +933,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Preachers (3) -->
-	<NPCCharacter id="spc_notable_gondor_5" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.gondor" name="{=aom_gd_notable_5}Zealous Gondorian loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_gondor_5" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.gondor" name="{=aom_gd_notable_5}Zealous Gondorian loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -1011,7 +1011,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_gondor_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_gl1}Protective Gondorian ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_gondor_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.gondor" name="{=aom_gd_notable_gl1}Protective Gondorian ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -1027,7 +1027,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_gondor_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_10}Sardonic Gondorian outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_gondor_10" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_10}Sardonic Gondorian outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -1178,6 +1178,7 @@
 
 	<!-- Practice Dummies -->
 	<NPCCharacter id="gear_practice_dummy_gondor" default_group="Infantry" level="15" is_hero="false" name="{=aom_gd_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.gondor">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1188,6 +1189,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_1_gondor" default_group="Infantry" level="15" is_hero="false" name="{=aom_gd_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.gondor">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1199,6 +1201,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_2_gondor" default_group="Infantry" level="25" is_hero="false" name="{=aom_gd_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.gondor">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1210,6 +1213,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_3_gondor" default_group="Infantry" level="35" is_hero="false" name="{=aom_gd_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.gondor">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1222,6 +1226,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="gear_dummy_gondor" default_group="Infantry" level="15" is_hero="false" name="{=aom_gd_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.gondor">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">

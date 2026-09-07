@@ -319,7 +319,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_goblin" race="goblin" default_group="Infantry" is_hero="false" name="{=aom_gob_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_goblin" is_female="true" race="goblin" default_group="Infantry" is_hero="false" name="{=aom_gob_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -407,7 +407,7 @@
 	<!-- Notables -->
 
 	<!-- Merchant 1: Cautious goblin trader -->
-	<NPCCharacter id="spc_notable_goblin_0" name="{=aom_gob_notable_0}Cautious goblin trader" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Merchant">
+	<NPCCharacter id="spc_notable_goblin_0" is_female="true" name="{=aom_gob_notable_0}Cautious goblin trader" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -431,7 +431,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 2: Cunning Goblin haggler -->
-	<NPCCharacter id="spc_notable_goblin_0b" name="{=aom_gob_notable_0b}Cunning Goblin haggler" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Merchant">
+	<NPCCharacter id="spc_notable_goblin_0b" is_female="true" name="{=aom_gob_notable_0b}Cunning Goblin haggler" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -453,7 +453,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 3: Ruthless goblin provisioner -->
-	<NPCCharacter id="spc_notable_goblin_1" name="{=aom_gob_notable_1}Ruthless goblin provisioner" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Merchant">
+	<NPCCharacter id="spc_notable_goblin_1" is_female="true" name="{=aom_gob_notable_1}Ruthless goblin provisioner" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -617,7 +617,7 @@
 	</NPCCharacter>
 
 	<!-- Preacher 1: Fanatical Goblin war-chanter -->
-	<NPCCharacter id="spc_notable_goblin_5" name="{=aom_gob_notable_5}Fanatical Goblin war-chanter" race="goblin" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Preacher">
+	<NPCCharacter id="spc_notable_goblin_5" is_female="true" name="{=aom_gob_notable_5}Fanatical Goblin war-chanter" race="goblin" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -743,7 +743,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 2: Snarling goblin enforcer -->
-	<NPCCharacter id="spc_notable_goblin_10" name="{=aom_gob_notable_10}Snarling goblin enforcer" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_goblin_10" is_female="true" name="{=aom_gob_notable_10}Snarling goblin enforcer" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -766,7 +766,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 3: Intimidating goblin brute -->
-	<NPCCharacter id="spc_notable_goblin_11" name="{=aom_gob_notable_11}Intimidating goblin brute" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_goblin_11" is_female="true" name="{=aom_gob_notable_11}Intimidating goblin brute" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.goblin" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>
@@ -987,7 +987,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_goblin" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.goblin" name="{=aom_gob_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_goblin" is_female="true" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.goblin" name="{=aom_gob_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1002,7 +1002,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_goblin" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.goblin" name="{=aom_gob_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_goblin" is_female="true" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.goblin" name="{=aom_gob_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1076,7 +1076,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1091,7 +1091,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1104,7 +1104,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1119,7 +1119,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1135,7 +1135,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1150,7 +1150,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1163,7 +1163,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_goblin" race="goblin" default_group="Infantry" name="{=aom_gob_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_goblin" is_female="true" race="goblin" default_group="Infantry" name="{=aom_gob_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.goblin" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>

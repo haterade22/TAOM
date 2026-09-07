@@ -53,13 +53,25 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // so scaling applied after it would leave the shed trimming to the UNSCALED limit and this
         // whole feature would silently no-op. Pinned by AiPartySizeOrderingTests.
         _aiPartySize.ApplyAiLordScaling(party, ref result);
+        // Caravan escort cap. Vanilla's caravan branch is 20 + (10 | 20 | 30) and its clan-tier and
+        // Steward branch is guarded !party.IsCaravan, so a caravan is capped far below the roster
+        // TAOM's parity templates spawn. MUST run before the TroopWeight line below for the same
+        // reason ApplyAiLordScaling does: that call snapshots (int)result.ResultNumber as the "true
+        // base" the daily shed later trims to, so a bonus applied after it would leave the shed
+        // trimming to the unscaled cap and the caravan would bleed back to 30 men over a week with
+        // every unit test still green. Pinned by AiPartySizeOrderingTests.
+        _aiPartySize.ApplyCaravanScaling(party, ref result);
         // TroopWeight "elite tax" (2026-07-11 rework): shrink the limit by the party's weight surplus so
         // heavy troops fill the cap at 2× while every COUNT reads raw. No-op when EnableTroopWeight is off.
         // Call position is irrelevant to the arithmetic — ExplainedNumber sums factors and applies them to
         // BaseNumber, so an Add lands in the base frame whenever it runs. The surplus is a result-frame body
         // count, so the service divides the factors back out (SubtractResultFramePenalty); it must run after
         // the feats above only so it reads the boosted ResultNumber as its base.
-        _troopWeight.ApplyPartySizeWeightPenalty(party, ref result);
+        // includeDescriptions is passed straight through: the service skips the penalty on the display
+        // (tooltip) path so the breakdown shows the honest base instead of a "Heavy troops -N" line, while
+        // the enforcement path (PartyBase.PartySizeLimit, includeDescriptions: false) still deflates. The
+        // branch lives in the service, not here — gamemodels.md rule 4 keeps this override branch-free.
+        _troopWeight.ApplyPartySizeWeightPenalty(party, ref result, includeDescriptions);
         // TEMPORARY (2026-07-17) — one-shot load-order probe for the "max troop goes over after loading"
         // report; self-guards to the first main-party computation. Strip with the diagnostic class.
         PartySizeLoadOrderDiagnostic.RecordFirstMainPartyLimit(party, result.ResultNumber, _careerPassives, _logger);

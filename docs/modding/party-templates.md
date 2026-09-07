@@ -124,18 +124,21 @@ size limit with `MBRandom.ChooseWeighted` over those midpoints
 
 ## Worked example
 
-`caravan_template_erebor`, complete and unedited. Three stacks, min sum 20, max sum 29. A caravan the
-**player** owns draws a ratio of `1f` and spawns all 29 every time; an AI caravan rolls like any
-other party and lands anywhere in the band (`DefaultPartySizeLimitModel.cs:404-412`). <!-- measured: python -c "import re;s=open('Main/_Module/ModuleData/taom_partyTemplates.xml',encoding='utf-8-sig').read();b=re.search(r'id=\"caravan_template_erebor\".*?</MBPartyTemplate>',s,re.S).group(0);print(len(re.findall(r'<PartyTemplateStack',b)),sum(map(int,re.findall(r'min_value=\"(\d+)\"',b))),sum(map(int,re.findall(r'max_value=\"(\d+)\"',b))))" 2026-09-05 -->
+`caravan_template_erebor`, complete and unedited. 3 stacks, min sum 60, max sum 70. A caravan the
+**player** owns draws a ratio of `1f` and spawns all 70 every time; an AI caravan rolls like any
+other party and lands anywhere in the band (`DefaultPartySizeLimitModel.cs:404-412`). These sums
+are deliberately close together: the caravan templates are solved for a power FLOOR so that even
+an unlucky draw out-powers a bandit warband, which is what stops caravans fleeing and parking
+([caravan-bandit-parity.md](../features/caravan-bandit-parity.md)). <!-- measured: python -c "import re;s=open('Main/_Module/ModuleData/taom_partyTemplates.xml',encoding='utf-8-sig').read();b=re.search(r'id=\"caravan_template_erebor\".*?</MBPartyTemplate>',s,re.S).group(0);print(len(re.findall(r'<PartyTemplateStack',b)),sum(map(int,re.findall(r'min_value=\"(\d+)\"',b))),sum(map(int,re.findall(r'max_value=\"(\d+)\"',b))))" 2026-09-05 -->
 
 <!-- example file="Main/_Module/ModuleData/taom_partyTemplates.xml" id="caravan_template_erebor" -->
 
 ```xml
 	<MBPartyTemplate id="caravan_template_erebor">
 		<stacks>
-			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_erebor" />
-			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_erebor" />
-			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_erebor" />
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_erebor" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_erebor" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_erebor" />
 		</stacks>
 	</MBPartyTemplate>
 ```
@@ -315,9 +318,10 @@ Code: No code changes needed
 
 | Number | Command | Date |
 |---|---|---|
-| 383 templates, 3,295 stacks | `rg -c '<MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -c '<PartyTemplateStack' Main/_Module/ModuleData/taom_partyTemplates.xml` | 2026-09-05 |
+| 17 `supply_caravan_template_*` crew templates, separate from the caravan ones | `python tools/generate_supply_caravan_templates.py` | 2026-09-06 |
+| 400 templates, 3,329 stacks | `rg -c '<MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -c '<PartyTemplateStack' Main/_Module/ModuleData/taom_partyTemplates.xml` | 2026-09-05 |
 | 193 lord templates in the tool's scope, 2 of them bound by nothing | the unbound-template one-liner in the Gotchas bullet above | 2026-09-05 |
-| `kingdom_hero_party_erebor_template`: 53 stacks, min 103, max 225; `caravan_template_erebor`: 3 stacks, min 20, max 29 | the per-template one-liner in the Worked example above, once per id | 2026-09-05 |
+| `kingdom_hero_party_erebor_template`: 53 stacks, min 103, max 225; `caravan_template_erebor`: 3 stacks, min 60, max 70 | the per-template one-liner in the Worked example above, once per id | 2026-09-05 |
 | Erebor culture: 10 `PartyTemplate.` references, 8 attributes and 2 caravan children | the culture-block one-liner in the Worked example above | 2026-09-05 |
 | Current max sums: goblin and bluecraig 320, mordor / isengard / gundabad / dolguldur / mistymountainorcs 260, erebor 225 against a 220 target, gondor / rohan / dale / dunland / rhun / harad 200, rivendell / mirkwood / lindon 150 | `python tools/rebalance_party_template_maxes.py` | 2026-09-05 |
 | 193 templates in scope, 5 stacks would change on a re-run | `python tools/rebalance_party_template_maxes.py` | 2026-09-05 |

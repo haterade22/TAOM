@@ -668,6 +668,7 @@
     <string id="taom_player_alliance_formed" text="Союз заключён между {PLAYER_KINGDOM} и {TARGET_KINGDOM}." />
     <string id="taom_alliance_blocked" text="Эти королевства никогда не могут быть союзниками." />
     <string id="taom_war_blocked" text="Эти королевства связаны нерушимым союзом." />
+    <string id="taom_vote_lapsed" text="Голосование по вопросу «{VOTE}» утратило смысл и было отозвано." />
     <string id="taom_wotr_no_peace" text="Бушует Война Кольца. Мира быть не может." />
     <string id="taom_precompile_shaders" text="Предкомпиляция шейдеров" />
     <string id="taom_precompile_hint" text="Предкомпилирует шейдеры для устранения подвисаний в игре. Запустите один раз после установки TAOM." />
@@ -2098,6 +2099,7 @@
     <string id="l4pRw7pO" text="Вооружённый караван {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} воинов дезертировало — они отказываются служить лорду противоположной стороны." />
     <string id="taom_troop_weight_size" text="Тяжёлые воины" />
+    <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
     <string id="taom_ai_party_size" text="Войско вождя" />
     <string id="taom_ai_garrison_size" text="Укреплённые владения" />
     <string id="taom_ai_forage" text="Походный фураж" />
@@ -2606,5 +2608,6 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} шлёт подкрепление, оно уже в пути." />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} не может быть пленён. Он покидает поле боя прежде, чем его успевают схватить." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} не может быть пленён. Он исчезает прежде, чем ваши люди добираются до него." />
+    <string id="taom_caravan_escort" text="Caravan escort" />
   </strings>
 </base>

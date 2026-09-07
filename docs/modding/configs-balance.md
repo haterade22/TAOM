@@ -93,20 +93,27 @@ A culture with no row gets nothing. There is no fallback culture.
 
 ### settlement_food_config.json
 
-<!-- engine-ref type="TAOM.Features.SettlementFood.SettlementFoodConfigProvider" file="Main/Features/SettlementFood/SettlementFoodConfigProvider.cs" lines="50-127" -->
+<!-- engine-ref type="TAOM.Features.SettlementFood.SettlementFoodConfigProvider" file="Main/Features/SettlementFood/SettlementFoodConfigProvider.cs" lines="50-153" -->
 
-| Field | Type | Required | Shipped | Legal range | What it does | Read at (file:line) |
-|---|---|---|---|---|---|---|
-| `garrisonFoodDivisor` | int | no | 20 | `[1, 10000]` | Higher makes garrisons cheaper to feed | `SettlementFoodConfigProvider.cs:70` |
-| `prosperityFoodDivisor` | int | no | 40 | `[1, 10000]` | Higher relieves the civilian term | `SettlementFoodConfigProvider.cs:77` |
-| `townBaseFood` | float | no | 15 | `[0, 10000]` | Replaces vanilla's flat town production | `SettlementFoodConfigProvider.cs:83` |
-| `castleBaseFood` | float | no | 10 | `[0, 10000]` | Replaces vanilla's flat castle production | `SettlementFoodConfigProvider.cs:90` |
-| `villageFoodMultiplier` | float | no | 6 | `[0, 10000]` | Scales `(hearthLevel + 1) * mult` per bound village | `SettlementFoodConfigProvider.cs:97` |
-| `flatFoodBonus` | float | no | 0 | `[0, 100000]` | Purely additive daily production | `SettlementFoodConfigProvider.cs:104` |
-| `foodStocksUpperLimit` | int | no | 300 | `[1, 1000000]` | Storage cap | `SettlementFoodConfigProvider.cs:114` |
-| `castleFoodStockUpperLimitBonus` | int | no | 150 | `[0, 1000000]` | Extra storage for castles | `SettlementFoodConfigProvider.cs:121` |
+**Shipped is not the compiled default here.** Every compiled default equals the vanilla engine constant, and until 2026-09-06 the JSON shipped those same values, so the file changed nothing. It now ships tuned (#546), because 70 of 72 towns started food-negative. Both columns are given below; a missing key falls back to the compiled default, not to the shipped value.
+
+| Field | Type | Required | Shipped | Compiled default | Legal range | What it does | Read at (file:line) |
+|---|---|---|---|---|---|---|---|
+| `garrisonFoodDivisor` | int | no | 20 | 20 | `[1, 10000]` | Higher makes garrisons cheaper to feed | `SettlementFoodConfigProvider.cs:69` |
+| `prosperityFoodDivisor` | int | no | **45** | 40 | `[1, 10000]` | Higher relieves the civilian term | `SettlementFoodConfigProvider.cs:76` |
+| `townBaseFood` | float | no | **30** | 15 | `[0, 10000]` | Replaces vanilla's flat town production | `SettlementFoodConfigProvider.cs:84` |
+| `castleBaseFood` | float | no | 10 | 10 | `[0, 10000]` | Replaces vanilla's flat castle production | `SettlementFoodConfigProvider.cs:91` |
+| `villageFoodMultiplier` | float | no | **8** | 6 | `[0, 10000]` | Scales `(hearthLevel + 1) * mult` per bound village | `SettlementFoodConfigProvider.cs:98` |
+| `flatFoodBonus` | float | no | **5** | 0 | `[0, 100000]` | Purely additive daily production | `SettlementFoodConfigProvider.cs:105` |
+| `hinterlandFoodPerProsperity` | float | no | **0.02** | 0 | `[0, 10000]` AND **strictly** `< 1 / prosperityFoodDivisor` | Adds `prosperity * rate` to production. No vanilla equivalent | `SettlementFoodConfigProvider.cs:123` |
+| `foodStocksUpperLimit` | int | no | 300 | 300 | `[1, 1000000]` | Storage cap before buildings | `SettlementFoodConfigProvider.cs:132` |
+| `castleFoodStockUpperLimitBonus` | int | no | 150 | 150 | `[0, 1000000]` | Extra storage for castles | `SettlementFoodConfigProvider.cs:139` |
 
 The four base and multiplier knobs are **absolute replacements**, not bonuses, so a value below the shipped one lowers production. Validation never enforces "at least vanilla" ([settlement-food](../features/settlement-food.md)). A divisor of 0 is rejected because it would put `Infinity` into the formula.
+
+`hinterlandFoodPerProsperity` is the only field in this chapter with a **cross-field** invariant, and it is the one to be careful with. It must stay strictly below `1 / prosperityFoodDivisor`, checked against the already-sanitized divisor so a rejected divisor cannot poison the bound. At or above it, net food stops falling as a fief grows, so the store overflows daily, vanilla converts overflow to prosperity at `+0.1` per point, and prosperity, town gold and garrison caps inflate map-wide. Raising `prosperityFoodDivisor` tightens this bound, so the two knobs cannot be tuned independently: at divisor 45 the ceiling is 0.0222, at divisor 100 it is 0.01. The provider reverts a violating value to 0 with a warning, and `SettlementFoodShippedConfigTests` fails the build so a bad edit cannot ship on a log line nobody reads.
+
+The storage caps are pre-building figures. `Town.FoodStocksUpperLimit()` adds the `FoodStock` building effect on top, so a fully upgraded town reaches 800 (Warehouse `+100/300/500`) and a castle 750 (Granary `+100/200/300`).
 
 ### settlement_economy_config.json
 

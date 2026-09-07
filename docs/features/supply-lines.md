@@ -204,6 +204,11 @@ plus the shipped-config and localization-key sweeps that gate every feature.
 
 ## Traps
 
+**The crew comes from SupplyLines' own template, never the AI caravan one.**
+`PickCaravanTemplate` used to return `culture.CaravanPartyTemplates[0]`, which quietly tied the player's logistics escort to AI caravan balance. When those templates were resized for bandit parity (#543) this feature's escort went from 20-29 troops to 60-70, and the provisioning cost, which is linear in headcount via `ComputeProvisionCount`, went with it (#549). It now resolves `supply_caravan_template_<family>`, derived from the culture's own caravan binding so a shared roster (Lothlorien fields Rivendell's) follows automatically with no mapping table to go stale. Templates are authored by `tools/generate_supply_caravan_templates.py` and every binding is required to have one by `SupplyCaravanTemplateTests`.
+
+**A supply caravan's member cap is a flat 20 and nothing can raise it.** It reaches none of `DefaultPartySizeLimitModel.CalculateMobilePartyMemberSizeLimit`'s bonus branches: it has no `LeaderHero`, and `SupplyCaravanComponent` derives from `PartyComponent`, so it is neither `IsCaravan` nor `IsVillager`. The crew templates are sized 4-8 so that crew plus the default 10-man escort still fits. A player who raises `SupplyMercenaryGuardCount` toward its 40 maximum will exceed the cap; that is vanilla's number and predates this feature. Note the two mechanisms an over-cap party normally suffers do NOT apply here, which is why it went unnoticed for so long: `DesertionCampaignBehavior` gates on `IsLordParty || IsCaravan || IsGarrison`, and the party is position-assigned each tick (`SupplyCaravanService.cs`) rather than driven by map speed.
+
 - The caravan party is **teleported**; anything else that moves that party fights the service.
   While the caravan is in a MapEvent its position is left alone.
 - `MobileParty.CreateParty` may uniquify the requested StringId: the order records

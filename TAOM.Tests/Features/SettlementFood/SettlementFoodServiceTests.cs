@@ -18,9 +18,10 @@ public class SettlementFoodServiceTests
         bool isUnderSiege = false,
         int rawGarrison = 0,
         int weightedGarrison = 0,
+        float prosperity = 0f,
         params int[] normalVillageHearthLevels) =>
         new TownFoodSnapshot(isTown, isUnderSiege, rawGarrison, weightedGarrison,
-            new List<int>(normalVillageHearthLevels));
+            new List<int>(normalVillageHearthLevels), prosperity);
 
     private static SettlementFoodConfig Vanilla() => new SettlementFoodConfig();
 
@@ -140,6 +141,136 @@ public class SettlementFoodServiceTests
         Assert.AreEqual(19f, _sut.ComputeFoodDelta(snapshot, config, enabled: true), 0.001f);
     }
 
+    // --- Hinterland production term (prosperity-scaled) ---
+
+    [TestMethod]
+    public void ComputeFoodDelta_HinterlandTerm_AddsProsperityTimesRate()
+    {
+        // The whole point: production now scales with prosperity, which vanilla only ever consumes by.
+        var snapshot = Snapshot(isTown: true, prosperity: 4000f);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+
+        Assert.AreEqual(80f, _sut.ComputeFoodDelta(snapshot, config, enabled: true), 0.001f); // 4000 * 0.02
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_HinterlandTerm_DefaultConfigIsVanilla()
+    {
+        // Default rate is 0, so an unedited config adds nothing however prosperous the fief is.
+        var snapshot = Snapshot(isTown: true, prosperity: 5100f);
+
+        Assert.AreEqual(0f, _sut.ComputeFoodDelta(snapshot, Vanilla(), enabled: true), 0.001f);
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_HinterlandTerm_SuppressedUnderSiege()
+    {
+        // Vanilla drops ALL production while besieged; the hinterland term must not smuggle any back
+        // in, or a besieged high-prosperity town would be MORE food-secure than a peaceful one.
+        var snapshot = Snapshot(isTown: true, isUnderSiege: true, prosperity: 4000f);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+
+        Assert.AreEqual(0f, _sut.ComputeFoodDelta(snapshot, config, enabled: true), 0.001f);
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_HinterlandTerm_AppliesToCastlesToo()
+    {
+        var snapshot = Snapshot(isTown: false, prosperity: 950f);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+
+        Assert.AreEqual(19f, _sut.ComputeFoodDelta(snapshot, config, enabled: true), 0.001f); // 950 * 0.02
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_HinterlandTerm_ComposesWithBaseVillageAndFlat()
+    {
+        // Orthanc under the shipped tuning: 1 village at hearth level 1, prosperity 4000.
+        var snapshot = Snapshot(isTown: true, prosperity: 4000f, normalVillageHearthLevels: new[] { 1 });
+        var config = new SettlementFoodConfig
+        {
+            TownBaseFood = 30f,
+            VillageFoodMultiplier = 8f,
+            FlatFoodBonus = 5f,
+            HinterlandFoodPerProsperity = 0.02f,
+        };
+
+        // base (30-15)=15; village (1+1)*(8-6)=4; flat 5; hinterland 4000*0.02=80 => 104
+        Assert.AreEqual(104f, _sut.ComputeFoodDelta(snapshot, config, enabled: true), 0.001f);
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_HinterlandTerm_Disabled_ReturnsZero()
+    {
+        var snapshot = Snapshot(isTown: true, prosperity: 4000f);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+
+        Assert.AreEqual(0f, _sut.ComputeFoodDelta(snapshot, config, enabled: false), 0.001f);
+    }
+
+    // --- Engine-float safety on the prosperity input ---
+    //
+    // Town.Prosperity is engine-sourced and its setter only floors at 0 (`if (_prosperity < 0f)`),
+    // which NaN passes, so a NaN is storable. If one reached the food delta it would poison the
+    // ExplainedNumber, and Town.DailyTick's clamps (`< 0f`, `> cap`) are BOTH false for NaN, so
+    // FoodStocks would stay NaN forever in a [SaveableProperty]. csharp-architecture.md
+    // "Engine-Float Decision Gates" makes gating this mandatory.
+
+    [TestMethod]
+    public void ComputeFoodDelta_NaNProsperity_SkipsHinterlandAndStaysFinite()
+    {
+        var snapshot = Snapshot(isTown: true, prosperity: float.NaN);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+
+        var delta = _sut.ComputeFoodDelta(snapshot, config, enabled: true);
+
+        Assert.IsFalse(float.IsNaN(delta), "a NaN prosperity must never produce a NaN food delta");
+        Assert.AreEqual(0f, delta, 0.001f);
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_InfiniteProsperity_SkipsHinterlandAndStaysFinite()
+    {
+        var snapshot = Snapshot(isTown: true, prosperity: float.PositiveInfinity);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+
+        var delta = _sut.ComputeFoodDelta(snapshot, config, enabled: true);
+
+        Assert.IsFalse(float.IsInfinity(delta), "an infinite prosperity must never produce an infinite delta");
+        Assert.AreEqual(0f, delta, 0.001f);
+    }
+
+    [TestMethod]
+    public void ComputeFoodDelta_NaNProsperity_OtherKnobsStillApply()
+    {
+        // Only the prosperity-dependent term is dropped; the rest of the tuning survives, so a
+        // garbage prosperity degrades the feature rather than disabling it.
+        var snapshot = Snapshot(isTown: true, prosperity: float.NaN, normalVillageHearthLevels: new[] { 1 });
+        var config = new SettlementFoodConfig
+        {
+            TownBaseFood = 30f,
+            VillageFoodMultiplier = 8f,
+            FlatFoodBonus = 5f,
+            HinterlandFoodPerProsperity = 0.02f,
+        };
+
+        // base (30-15)=15; village (1+1)*(8-6)=4; flat 5; hinterland skipped => 24
+        Assert.AreEqual(24f, _sut.ComputeFoodDelta(snapshot, config, enabled: true), 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyFoodAdjustment_NaNProsperity_LeavesResultFiniteAndUnchanged()
+    {
+        var snapshot = Snapshot(isTown: true, prosperity: float.NaN);
+        var config = new SettlementFoodConfig { HinterlandFoodPerProsperity = 0.02f };
+        var result = new ExplainedNumber(100f);
+
+        _sut.ApplyFoodAdjustment(snapshot, config, enabled: true, ref result, includeDescriptions: false);
+
+        Assert.IsFalse(float.IsNaN(result.ResultNumber), "a NaN must never reach the engine's ExplainedNumber");
+        Assert.AreEqual(100f, result.ResultNumber, 0.001f);
+    }
+
     // --- ApplyFoodAdjustment (ExplainedNumber integration) ---
 
     [TestMethod]
@@ -187,6 +318,7 @@ public class SettlementFoodServiceTests
         Assert.AreEqual(10f, c.CastleBaseFood, 0.001f, "vanilla castle lands-around food");
         Assert.AreEqual(6f, c.VillageFoodMultiplier, 0.001f, "vanilla (hearthLevel+1)*6");
         Assert.AreEqual(0f, c.FlatFoodBonus, 0.001f);
+        Assert.AreEqual(0f, c.HinterlandFoodPerProsperity, 0.000001f, "vanilla has no hinterland term");
         Assert.AreEqual(300, c.FoodStocksUpperLimit, "vanilla FoodStocksUpperLimit");
         Assert.AreEqual(150, c.CastleFoodStockUpperLimitBonus, "vanilla CastleFoodStockUpperLimitBonus");
     }

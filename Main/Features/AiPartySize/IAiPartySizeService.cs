@@ -35,6 +35,23 @@ public interface IAiPartySizeService
     /// this is siege balance, not an AI handicap. Without it, lords fielding thousands walk over
     /// garrisons still capped near vanilla's 200.
     /// </summary>
+    /// <summary>
+    /// Raises a caravan's member cap so it can hold the roster its party template spawns.
+    ///
+    /// Vanilla caps a caravan at 20 + (10 | 20 | 30) by notable Power, and its clan-tier and
+    /// Steward branch is guarded <c>!party.IsCaravan</c>, so nothing else moves the number. TAOM's
+    /// caravan templates are sized for parity with a bandit warband, which is well above that, and
+    /// an over-cap caravan is actively drained: <c>DesertionCampaignBehavior</c> accepts
+    /// <c>IsCaravan</c> and sheds a quarter of the excess daily with no morale condition, while
+    /// <c>GetOverPartySizeEffect</c> costs it half its speed at twice the cap.
+    ///
+    /// Unlike every other member of this interface this is NOT gated by the feature toggle, and has
+    /// no MCM knob. The cap and the shipped template maxima are two halves of one balance change, so
+    /// a switch that reverted one while the other stayed put would ship precisely the shed and the
+    /// speed penalty it exists to prevent. Pinned by CaravanPartySizeTests.
+    /// </summary>
+    void ApplyCaravanScaling(PartyBase party, ref ExplainedNumber limit);
+
     void ApplyGarrisonScaling(ref ExplainedNumber limit);
 
     /// <summary>

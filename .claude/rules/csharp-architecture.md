@@ -152,7 +152,27 @@ if (baseLimit < 2) return 0;          // subtraction unreachable for degenerate 
 
 **Rule:** for every decision gate on an engine-sourced float, write the gate as a **positive requirement** to proceed (or add an explicit `float.IsNaN` guard), and for `bool?` fall-through services return `null` on non-finite input so vanilla decides instead of an owned true/false computed from garbage. Add one NaN unit test per gate.
 
-**Why:** the NaN-gate bug class has now shipped FIVE times (Career cooldown #31, EditorCacheRebuild #38, CS_Road 2026-05-13 — all CONFIG floats, which produced the loader rule; CombatMechanics 2026-07-02 — ENGINE floats: `momentumRemaining <= 0f` passed NaN and could force cleave chains, a NaN charge velocity became an owned `false` suppressing knockdowns vanilla would grant; TroopWeight 2026-07-17 — a float→int CAST, the third category above). Each recurrence happened because the rule's scope was one category narrower than the bug. Three categories are now named: config floats at load, engine floats at runtime decision gates, and float→int casts feeding integer guards. **If a 6th instance appears in a category this section doesn't name, widen the scope again rather than patching the instance.** Enforced at review time by `/deep-review` Agent 5 rule 4b. RCAs: `docs/reviews/rca-combat-mechanics-2026-07-02.md`, `docs/reviews/rca-troopweight-result-frame-2026-07-17.md`.
+**Fourth category, a NEW INPUT invalidating an EXISTING gate (provenance change).** The three
+categories above all ask what you do when you *write* a gate. This one fires when you write no gate at
+all. A gate can be correct when authored and become unsafe later because the set of values reaching it
+changed, and the defective line never appears in your diff:
+
+```csharp
+// Correct for years: every input was an int or a provider-validated finite config float.
+if (delta == 0f) return;
+
+// Then a change adds ONE new term sourced from the ENGINE, validated by nobody:
+delta += snapshot.Prosperity * config.HinterlandFoodPerProsperity;   // Town.Prosperity can be NaN
+// `NaN == 0f` is false, so the untouched gate now forwards NaN into the engine's ExplainedNumber.
+```
+
+**Rule:** when you introduce a new value into an existing calculation, ask *what validation the old
+inputs enjoyed that this one does not*, and re-audit every gate downstream of it against the new
+provenance. Reviewing only the lines you wrote is structurally insufficient here, because the bug is in
+a line you did not write. Also gate the service's own EXIT (`if (!FiniteFloatValidator.IsFinite(result))`)
+so no future input can poison an engine number regardless of which term produced it.
+
+**Why:** the NaN-gate bug class has now shipped SIX times. Career cooldown #31, EditorCacheRebuild #38 and CS_Road 2026-05-13 were all CONFIG floats, which produced the loader rule. CombatMechanics 2026-07-02 was ENGINE floats: `momentumRemaining <= 0f` passed NaN and could force cleave chains, and a NaN charge velocity became an owned `false` suppressing knockdowns vanilla would grant. TroopWeight 2026-07-17 was a float→int CAST, the third category above. SettlementFood #546 (2026-09-06) was a PROVENANCE CHANGE, the fourth: an engine-sourced `Town.Prosperity` added to a calculation whose pre-existing `delta == 0f` gate had only ever seen validated inputs, and whose NaN would have left `Town.FoodStocks` permanently NaN inside a `[SaveableProperty]`, because vanilla's own `< 0f` and `> cap` clamps are both false for NaN. Each recurrence happened because the rule's scope was one category narrower than the bug. Four categories are now named: config floats at load, engine floats at runtime decision gates, float→int casts feeding integer guards, and a new input changing the provenance reaching an existing gate. **If a 7th instance appears in a category this section doesn't name, widen the scope again rather than patching the instance.** Enforced at review time by `/deep-review` Agent 5 rule 4b. RCAs: `docs/reviews/rca-combat-mechanics-2026-07-02.md`, `docs/reviews/rca-troopweight-result-frame-2026-07-17.md`, `docs/reviews/rca-settlement-food-2026-09-06.md`. Note `float.IsFinite` does NOT exist on .NET Framework 4.7.2; use `TAOM.Core.Validation.FiniteFloatValidator`.
 
 ## Lookup Functions With Fallbacks: Validate Before Lookup (MANDATORY)
 

@@ -165,12 +165,53 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 
 The `Patch46` postfix and the model methods that touch `Game.Current.ObjectManager` / `Items.All` are game-only (not unit-tested per ADR-008). The testable decision logic lives in `TournamentService`.
 
+## An arena character with no `<face>` fights as a toddler
+
+Players reported the arena's "Practice Fighter" and "Gear Dummy" spawning waist-high next to a normal
+troop. The cause was entirely in the data, and it is worth knowing because nothing anywhere reports it.
+
+`BasicCharacterObject.Deserialize` (v1.4.8) declares two local `BodyProperties` initialised to
+`default`, fills them from the `<face>` node, and then, if no `face_key_template` was read, registers
+the character's `MBBodyProperty` from those two locals. With no `<face>` element at all they stay
+all-zero, so the character's body-properties age is 0, and `skins.xml` maps age 0 to
+`mesh_maturity_type="toddler"`: `min_scale` 0.52 against the adult 1.07. Every race in the merged
+`skins.xml` has a toddler skin, so this is not a human-only failure.
+
+The two guards in `Mission.SpawnAgent` both miss it, because they read a different age. That method
+takes `agentCharacter.Age`, forces 29 when it is exactly 0, and forces 27 for a sub-teenager in a
+battle-like mission mode. But `Age` is a separate property, clamped at deserialisation to
+`max(20, BodyPropertyMax.Age)`, so a faceless character reports 20 and sails through both guards
+while its visual age stays 0. The campaign age and the visual age are different numbers, and only the
+visual one is wrong.
+
+Ten cultures shipped this way: dale, dunland, gondor, harad, isengard, khand, lothlorien, mordor,
+rhun, rohan, 46 characters in total. Only four of those ten can actually be reached in game
+(gondor, isengard, mordor, lothlorien); the other six are vanilla-id reskins whose practice entries
+never resolve at all, for the separate reason in
+[tournament-armor-assignment.md](tournament-armor-assignment.md) "Six of those entries never
+resolve". The player report came from a Gondor arena, which is one of the four. The nine cultures authored later already carried
+`<face><face_key_template value="BodyProperty.fighter_<culture>" /></face>`, which is also what
+vanilla's own `gear_practice_dummy_empire` does (`BodyProperty.guard`).
+[CharacterFaceCoverageTests](../../TAOM.Tests/Core/CharacterFaceCoverageTests.cs) is the gate: every
+`NPCCharacter` under `Main/_Module/ModuleData` must declare a `<face>`.
+
+One thing this did **not** explain: how a practice character reaches the arena roster in the first
+place. In stock 1.4.8 these entries are equipment donors only. `weapon_practice_stage_N_<culture>` is
+read for `.BattleEquipments` (`ArenaPracticeFightMissionController.AddRandomWeapons`),
+`gear_practice_dummy_<culture>` for `.RandomBattleEquipment` (`DefaultTournamentModel`, and TAOM's
+override), and `CultureObject.GearDummy` is parsed from XML and then used by no shipped code at all.
+Both roster builders draw from the town garrison and the culture's basic-troop upgrade tree, and a
+sweep of the whole install found no upgrade edge, party-template stack or recruitment pool that
+reaches one. The screenshot proves they do spawn; the path is still open. Fixing the face makes them
+render correctly wherever that path is.
+
 ## How to Add a Tournament Armor Set for a New Culture
 
 1. Open `Main/_Module/ModuleData/characters/npcs_<culture>.xml`.
 2. Add/edit a `<NPCCharacter id="gear_practice_dummy_<culture>" …>` with an equipment block using skeleton-appropriate items.
-3. Verify item IDs exist in `LOTRLOME_Armory` (missing items → underwear). Run `python tools/validate_moduledata.py`.
-4. No code changes — the model resolves the new dummy via `ResolveDummyId` on the next tournament.
+3. Give it a `<face>` block, normally `<face><face_key_template value="BodyProperty.fighter_<culture>" /></face>` to match its siblings. Skipping it is the toddler bug above.
+4. Verify item IDs exist in `LOTRLOME_Armory` (missing items → underwear). Run `python tools/validate_moduledata.py`.
+5. No code changes: the model resolves the new dummy via `ResolveDummyId` on the next tournament.
 
 ## How to Add a New Race to the Dwarf-Dismount Set
 
@@ -178,6 +219,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## Changelog
 
+- 2026-09-06: Arena practice characters rendered as toddlers. 46 `NPCCharacter` entries across ten cultures had no `<face>`, so the engine gave them body properties with age 0 and picked the toddler skin. Added the missing `face_key_template` to each and `CharacterFaceCoverageTests` as the gate. Data only, no code change.
 - 2026-06-09 — Patch46 dwarf dismount added (`fix(arena)`, #277): postfix on `PrepareForMatch` clears Horse/HorseHarness for dwarf participants so they never spawn inside the mount; same-day hotfix corrected the injected `_match` field from three underscores to four (`____match`) after it crashed every campaign load.
 - 2026-05-14 — Phase 9b: decision logic extracted from `TaomTournamentModel` into `ITournamentService` (`CalculateStartChance`/`CalculateEndChance`/`BuildPrizePool`/`ResolveDummyId`), registered via new `ArenaIoC`; model is now a thin boundary (#137).
 - 2026-03-31 — Tournament model overhaul (#52): increased tournament frequency (lord-count step curve, 20-day end grace), culture-specific prize pools scanned from `Items.All` by culture + Tierf, and per-participant culture armor via `GetParticipantArmor`; the `gear_practice_dummy_<culture>` rosters that feed it had `civilian="true"` removed and a missing Lothlórien entry added (#51).

@@ -668,6 +668,7 @@
     <string id="taom_player_alliance_formed" text="{PLAYER_KINGDOM} ve {TARGET_KINGDOM} arasında bir ittifak kuruldu." />
     <string id="taom_alliance_blocked" text="Bu krallıklar asla müttefik olamaz." />
     <string id="taom_war_blocked" text="Bu krallıklar bozulamaz bir ittifakla bağlıdır." />
+    <string id="taom_vote_lapsed" text="&quot;{VOTE}&quot; oylaması artık geçerli değil ve geri çekildi." />
     <string id="taom_wotr_no_peace" text="Yüzük Savaşı kızışıyor. Barış mümkün değil." />
     <string id="taom_precompile_shaders" text="Gölgelendiricileri Ön-Derle" />
     <string id="taom_precompile_hint" text="Oyun içi takılmaları ortadan kaldırmak için gölgelendiricileri ön-derler. TAOM'u yükledikten sonra bir kez çalıştırın." />
@@ -2098,6 +2099,7 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}'in Silahlı Kervanı" />
     <string id="taom_align_desertion" text="{COUNT} asker firar etti — karşıt taraftaki bir lorda hizmet etmeyi reddediyorlar." />
     <string id="taom_troop_weight_size" text="Ağır askerler" />
+    <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
     <string id="taom_ai_party_size" text="Savaş beyinin ordusu" />
     <string id="taom_ai_garrison_size" text="Tahkim edilmiş diyar" />
     <string id="taom_ai_forage" text="Sefer yemlemesi" />
@@ -2606,5 +2608,6 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} takviye gönderiyor, yoldalar." />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} tutulamaz. Ele geçirilmeden önce meydandan sıyrılıp gider." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} tutulamaz. Adamların ona ulaşmadan çoktan gitmiştir." />
+    <string id="taom_caravan_escort" text="Caravan escort" />
   </strings>
 </base>

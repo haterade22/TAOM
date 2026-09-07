@@ -7,6 +7,8 @@
 > after the in-game smoke test.
 
 **The short version:** a template's max sum is the ceiling on the roster a party is handed
+
+> **Bandit and caravan templates are retuned by a different tool.** They sit outside this tool's `kingdom_hero_party_*` scope and are solved for a troop-POWER budget rather than a headcount sum, because the AI compares `EstimatedStrength` and the raider cultures differ by tier: `python tools/rebalance_template_power.py`. See [caravan-bandit-parity.md](../features/caravan-bandit-parity.md).
 **at spawn**, not the size that party settles at. Steady state belongs to `PartySizeLimit`, which is
 a completely separate model, and the two have never been reconciled.
 
@@ -95,7 +97,8 @@ registered at `Main/SubModule.cs:827`). It layers three things onto the same `Ex
 2. **Career passives** via `ICareerPassiveService.ApplyFlat` (flat counts, not factors).
 3. **The TroopWeight elite tax** via `ITroopWeightService.ApplyPartySizeWeightPenalty`, which
    subtracts the party's weight surplus (`TroopWeightService.ComputeSizePenalty`,
-   `Main/Features/TroopWeight/TroopWeightService.cs:172`).
+   `Main/Features/TroopWeight/TroopWeightService.cs:181`). Since 2026-09-06 the UI shows that tax as
+   capacity *used* (`19 / 20`) rather than as a shrunken limit. The enforced number is unchanged.
 
 Item 3 is why a small culture bonus can read as absent in play: evil rosters are precisely the
 weight-2.0 ones, so the tax can subtract more than a small percentage adds. That interaction is the

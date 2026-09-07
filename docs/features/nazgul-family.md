@@ -49,6 +49,13 @@ SubModule (registers model + behavior)
   - `IsSuitableForMarriage(hero)` → false for a wraith. Reached via `Hero.CanMarry()` (Hero.cs:1942),
     the per-hero gate in the NPC marriage loop and the offer loop.
 
+  **Since #542 this class is shared.** `TaomMarriageModel` is the mod's ONLY `MarriageModel`, and
+  `AddModel` does not compose (the engine's backwards scan resolves exactly one), so a second
+  marriage model would silently shadow the wraith block. The Free/Evil marriage rule therefore lives
+  in the same class, on the same `IsCoupleSuitableForMarriage` chokepoint, and the constructor takes
+  an `IMarriageAlignmentService` alongside `INazgulRegistry`. Any future marriage rule goes here too.
+  See [marriage-alignment.md](marriage-alignment.md).
+
   Everything non-wraith falls through to vanilla `DefaultMarriageModel`. Clan-level members
   (`IsClanSuitableForMarriage`, `ShouldNpcMarriageBetweenClansBeAllowed`) are deliberately **not**
   overridden — wraiths share the Mordor clan with non-wraith lords, so the per-hero/per-couple gates

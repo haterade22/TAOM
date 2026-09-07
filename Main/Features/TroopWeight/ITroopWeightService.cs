@@ -22,7 +22,17 @@ public interface ITroopWeightService
     /// engine-touching (mirrors <see cref="CalculateWeightedMemberCount"/>); the clamp math is the pure,
     /// unit-tested <see cref="TroopWeightService.ComputeSizePenalty"/>.
     /// </summary>
-    void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit);
+    /// <para>
+    /// <paramref name="includeDescriptions"/> is vanilla's display/enforcement discriminator, and this
+    /// method skips the penalty entirely when it is <c>true</c> (2026-09-06 usage-frame reframe), so the
+    /// tooltip no longer renders a "Heavy troops −N" line. Verified against v1.4.8: only
+    /// <c>PartyBase.PartySizeLimit</c> (which passes <c>false</c>) feeds gameplay;
+    /// <c>PartyBase.PartySizeLimitExplainer</c> (<c>true</c>) is consumed solely by
+    /// <c>CampaignUIHelper.GetPartyTroopSizeLimitTooltip</c> and <c>RecruitmentVM</c>'s capacity hint.
+    /// The cap is unchanged — the weight cost is shown on the USED side instead
+    /// (see <see cref="TroopWeightDisplay"/>).
+    /// </para>
+    void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit, bool includeDescriptions);
 
     /// <summary>
     /// The party's TRUE (pre-weight-penalty) size limit — what the limit would be without the elite-tax

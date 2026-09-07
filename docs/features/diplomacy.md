@@ -84,6 +84,32 @@ Vanilla Kingdom->Diplomacy "Propose/Enact Alliance" button (receive/initiate)
   StartAllianceDecision.CanMakeDecision -> TaomAllianceModel score (+1000 player bonus clears 50f gate)
 ```
 
+### Kingdom vote deadlock guard (`Patch80`)
+
+Vanilla can open a kingdom decision window that afterwards cannot be closed by any means, which
+players report as a frozen game. The window's normal exit is a five-second timer inside
+`KingdomDecisionPopupWidget` that starts only when `IsKingsDecisionOver` flips true, and that flip
+only happens if the election concludes. On a cancelled election `KingdomElection.ApplySelection()` is
+a silent no-op, so the flip never comes, the timer never starts, and `ExecuteFinalSelection` has
+already disabled the popup's only button. Full mechanism, every call site and the reasoning behind
+each seam: [`harmony-patch-registry.md` § Patch80_KingdomVoteDeadlock](../reference/harmony-patch-registry.md).
+
+TAOM does not cause it but does raise how often it fires. `TaomAllianceModel.MaxNumberOfAlliances`
+is `int.MaxValue`, and vanilla `AllianceCampaignBehavior.OnWarDeclared` queues one
+`ProposeCallToWarAgreementDecision` per allied kingdom, so a single war declaration can produce a run
+of back-to-back ballots. Each yes vote declares its war synchronously, which can invalidate the next
+ballot in the same run. **If the number of votes is itself the complaint, the alliance cap is the
+knob, not this guard.**
+
+```
+KingdomDecisionsVM.RefreshWith           -> Prefix: a stale ballot never builds a window
+KingdomDecisionsVM.HandleDecision        -> Postfix: re-arm the queue vanilla left switched off
+DecisionItemBaseVM.ExecuteFinalSelection -> Postfix: force-close a cancelled election's window
+                                            (via _onDecisionOver, never ExecuteDone)
+        all three -> IKingdomVoteDeadlockService.ShouldSuppressBallot / AnnounceLapsedBallot
+                  -> IKingdomBallotAdapter (ADR-007 boundary over KingdomDecision)
+```
+
 ## Configuration
 
 ### `Main/_Module/ModuleData/diplomacy/diplomacy.json`
@@ -130,6 +156,13 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_StartAlliance_Patch.cs` | Harmony Postfix — **TEMPORARY diagnostic** (`Patch11_Diplomacy`): logs `[Diplomacy][diag] Player alliance FORMED` on any path (kingdom-screen button + dialog). Strip after in-game durability sign-off. |
 | `Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventWarDeclaration` (→ `IsWarAllowed`: blocks war on Permanent allies + same-alignment pairs) |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnPeaceAction.ShouldPreventPeace` |
+| `Main/Features/Diplomacy/IKingdomVoteDeadlockService.cs` | Service interface: is this ballot stale, and has the player been told |
+| `Main/Features/Diplomacy/KingdomVoteDeadlockService.cs` | Implementation: staleness verdict + one announce per ballot, bounded dedupe |
+| `Main/Features/Diplomacy/Hooks/KingdomVoteDeadlockBinding.cs` | Cached reflection + the shared queue repair both `KingdomDecisionsVM` seams call |
+| `Main/Features/Diplomacy/Hooks/KingdomDecisionsVM_RefreshWith_Patch.cs` | Harmony Prefix (`Patch80`): never build a decision window for a stale ballot |
+| `Main/Features/Diplomacy/Hooks/KingdomDecisionsVM_HandleDecision_Patch.cs` | Harmony Postfix (`Patch80`): re-arm the ballot queue vanilla leaves switched off |
+| `Main/Features/Diplomacy/Hooks/DecisionItemBaseVM_ExecuteFinalSelection_Patch.cs` | Harmony Postfix (`Patch80`, `Priority.Last`): force-close a window whose election is cancelled |
+| `Main/Adapters/KingdomBallotAdapter.cs` | ADR-007 boundary over one `KingdomDecision` (staleness, identity, title) |
 | `Main/Features/Diplomacy/Models/TaomAllianceModel.cs` | `DefaultAllianceModel` override: adds lore score modifier to alliance scoring |
 | `Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs` | `DefaultKingdomDecisionPermissionModel` override: blocks lore-Hostile alliance decisions (AI pairs) but allows any decision involving the player's kingdom (full freedom); also blocks war on permanent allies + peace during full War of the Ring |
 | `Main/Features/Diplomacy/Models/TaomDiplomacyModel.cs` | Additional diplomacy model override |
@@ -146,6 +179,8 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 - `IDiplomacyConfigProvider` — loads diplomacy.json
 - `IWarOfTheRingConfigProvider` — loads war_of_the_ring.json
 - `ITaomSettingsProvider` — wraps `TaomSettings` MCM
+- `IKingdomBallotAdapter`: ADR-007 boundary over one vanilla `KingdomDecision` (staleness, identity, title), constructed at the Patch80 seams rather than resolved from IoC
+- `IInquiryAdapter`: the withdrawn-ballot toast; registered by `EnlistmentIoC`, not here (see the ordering note in `DiplomacyIoC`)
 - `IModLogger` — logging
 
 ## Tests
@@ -156,6 +191,8 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `TAOM.Tests/Features/Diplomacy/DiplomacyConfigProviderTests.cs` | JSON parsing, missing file handling |
 | `TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs` | `ShouldPreventAllianceEnd` and `ShouldPreventWarDeclaration` for permanent vs non-permanent tiers |
 | `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs` | `ShouldPreventPeace` during active vs inactive War of the Ring |
+| `TAOM.Tests/Features/Diplomacy/KingdomVoteDeadlockServiceTests.cs` | Patch80 staleness verdict, null ballot, throwing staleness check (suppresses, does not defer), announce path, per-ballot dedupe, throwing presenter, bounded dedupe set |
+| `TAOM.Tests/Features/Diplomacy/Patch80KingdomVoteDeadlockBindingTests.cs` | Patch80 engine drift: the three patch targets and their parameter NAMES (Harmony binds by name), the four private members reached by reflection, the public members the bodies read, the category literal, `SubModule` applying it, and IL call-presence guards for the service calls, the listener clear and the fault-path withdraw |
 
 ## How to Add a New Kingdom Relationship
 
@@ -172,6 +209,8 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-09-06: `Patch80_KingdomVoteDeadlock` (#547), three seams so a vanilla kingdom decision popup can never become unclosable. Deep review found and fixed two HIGH defects in the first cut (a leaked `KingdomDecisionConcluded` listener, and a fault path that deferred to a vanilla branch which throws); RCA at [rca-kingdom-vote-deadlock-2026-09-06.md](../reviews/rca-kingdom-vote-deadlock-2026-09-06.md). Vote VOLUME is unchanged: `TaomAllianceModel.MaxNumberOfAlliances` is what turns one war declaration into a run of ballots.
+
 - 2026-06-17 — Instrumented player-alliance loss with `[Diplomacy][diag]` logging only; the durability war-block (`DiplomacyService.IsWarAllowed` branch) was reverted after review (it soft-locked the player out of the only alliance-exit path).
 - 2026-06-16 — Let player-founded kingdoms form alliances: player-aware service overloads unblock the vanilla Kingdom→Diplomacy button (Part A) and a new `PlayerAllianceProposalBehavior` dialog lets a kingdom-ruler initiate (Part B); full freedom, AI-vs-AI diplomacy unchanged.
 - 2026-07-30 — Phase days retuned to Day 30 (Phase 1) / Day 44 (Phase 2) across all four sources, and `WarOfTheRingService.GetEffectivePhaseDays` now clamps `phase2 > phase1 >= 1` for every source. Previously only the JSON pair was validated (with a strictly-`<` check that let equal days through) while the MCM sliders — the live in-game path — were unvalidated, so an equal or inverted pair ran both transitions in one tick and the Isengard war was never observable.
@@ -184,7 +223,9 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 - 2026-03-27 — Added diagnostic/initialization logging to diplomacy enforcement hooks, behaviors, and the 3 diplomacy Harmony patches.
 
 ## GitHub Issue
-- **Issue:** Unknown (commits reference `16f7f4e` for initial implementation; no issue number in messages)
+- **Issue:** Unknown for the original feature (commits reference `16f7f4e` for initial implementation; no issue number in messages)
+- **Kingdom vote deadlock guard (Patch80):** [#547](https://github.com/haterade22/TAOM/issues/547)
+- **Related, NOT covered by Patch80:** [#550](https://github.com/haterade22/TAOM/issues/550), the Player Switcher route to the same symptom. See [player-switcher.md](player-switcher.md).
 - **Status:** Active
 
 ---

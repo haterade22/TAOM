@@ -515,3 +515,48 @@ per-menu-open cost, not a hot path.
   versus `OnFrameTick`). Per-frame work in a menu belongs to `GameMenuItemVM.Refresh` and progress items,
   nowhere else.
 - **Source:** `docs/reviews/rca-field-commission-dismiss-2026-09-04.md` finding 3 (refuted HIGH, #540).
+
+### When you change what a displayed number means, grep every consumer of the value it was paired with
+A UI number rarely travels alone. Vanilla keeps a label and its red over-capacity tint coherent by feeding
+both from ONE source; redefining what one half means silently breaks that, and the break lives in the
+consumer you did not open, never in the file you edited. The 2026-09-06 TroopWeight usage-frame reframe
+gave the party-screen header a new denominator (the true base) and left vanilla's tint on the old one
+(`RightPartyMembersSizeLimit`, frozen at screen-open by `PartyScreenLogic.cs:491`). For a party whose
+weight penalty had been clamped, dragging the heavy troops off then rendered a comfortable `30 / 100`
+directly beside a red over-capacity warning, reachable by the exact remediation workflow the feature
+exists to prompt. Fix shape: return the over-capacity verdict alongside the label and let the caller CLEAR
+a stale tint, downgrade-only, so no vanilla mode gate can be bypassed and no warning fabricated.
+- **Why missed:** the label assignment and the tint assignment are two lines apart in the same method
+  (`PartyVM.RefreshPartyInformation`, `PartyVM.cs:3069`). Reading far enough to find what to change is not
+  the same as reading far enough to find what else consumes it. Four of five deep-review agents passed;
+  only the cross-system data-flow agent, which opens engine consumers, caught it.
+- **Prevent:** after changing a displayed value's meaning, list every OTHER property assigned from the same
+  source in the same method and confirm each still agrees. The existing "Parallel Method Consistency" check
+  covers method families (CanAfford/Spend/Display); this is its display-value sibling and was uncovered.
+- **Source:** #545 TroopWeight usage frame, 2026-09-06; RCA `docs/reviews/rca-troopweight-usage-frame-2026-09-06.md` finding 1.
+
+### A ViewModel property is not display-only because its name looks like a label
+`CurrentPartySize`, `PartyCapacity` and `IsMainTroopsLimitWarningEnabled` all read like presentation state.
+All three gate vanilla confirmation dialogs: `RecruitmentVM.ExecuteDone` shows its "Over Limit" inquiry when
+`CurrentPartySize > PartyCapacity`, and the party screen's done-path branches on the troop-limit warning
+flags. A hook that rewrites them is changing when a player gets prompted, not just what they read.
+- **Why missed:** the properties were classified from their names and the change was documented in its own
+  docstring as "nothing here may feed a gameplay decision": an invariant asserted, never grepped.
+- **Prevent:** before writing "display-only" or "cosmetic" in a comment, grep the property's consumers. If
+  the rewrite is intended, pin the equivalence with a test rather than a claim, `WeightedFrameIdentityTests`
+  reads the real `troop_weights.xml` so a weight-table change cannot silently move a confirmation threshold.
+- **Source:** #545 TroopWeight usage frame, 2026-09-06; same RCA, finding 2.
+
+### Recovering a patch target from git history is not evidence the patch does what you now want
+Reinstating a target deleted in an earlier rework proves the METHOD still exists. It does not prove the
+method produces the thing your new hook consumes. `CampaignUIHelper.GetPartyHealthTooltip(PartyBase)` was
+recovered from the 2026-07-11 deletion set, where it had rewritten Battle Ready / Wounded rows, which that
+method does emit. The new hook wanted the `{=ZgYAGfbD}Land Troop Capacity` row, which exists only in the
+parameterless `GetMainPartyHealthTooltip()`. The patch shipped into review looping for a label that could
+never be present, on a method with no caller in any shipped client assembly, while the feature doc,
+CHANGELOG and issue all advertised the any-party rewrite as working.
+- **Why missed:** "it was a live TAOM patch until commit X" was treated as verification. It verifies the
+  signature, nothing else.
+- **Prevent:** re-read the target body for the SPECIFIC row/field/property your hook consumes, and confirm
+  the method has a caller, before reinstating a recovered patch.
+- **Source:** #545 TroopWeight usage frame, 2026-09-06; same RCA, finding 3.

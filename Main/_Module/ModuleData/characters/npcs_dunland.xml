@@ -29,7 +29,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_dunland" default_group="Infantry" name="{=aom_dn_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -67,7 +67,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_dunland" default_group="Infantry" name="{=aom_dn_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -95,7 +95,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_dunland" default_group="Infantry" name="{=aom_dn_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -125,7 +125,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_dunland" default_group="Infantry" name="{=aom_dn_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -175,7 +175,7 @@
 	</NPCCharacter>
 
 	<!-- Village Woman -->
-	<NPCCharacter id="village_woman_dunland" default_group="Infantry" name="{=aom_dn_village_woman}Village Woman" occupation="Villager" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_village_woman}Village Woman" occupation="Villager" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -214,7 +214,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_dunland" default_group="Infantry" name="{=aom_dn_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -242,7 +242,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_dunland" default_group="Infantry" name="{=aom_dn_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_dunland" is_female="true" default_group="Infantry" name="{=aom_dn_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -451,7 +451,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_dunland" default_group="Infantry" is_hero="false" name="{=aom_dn_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_dunland" is_female="true" default_group="Infantry" is_hero="false" name="{=aom_dn_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.empire" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -734,7 +734,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_dunland_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_0b}Wily dunlending peddler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_dunland_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_0b}Wily dunlending peddler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -749,7 +749,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_dunland_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_1}Fierce clan merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_dunland_1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_1}Fierce clan merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -764,7 +764,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_dunland_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_1b}Cold-eyed hill trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_dunland_1b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_1b}Cold-eyed hill trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -879,7 +879,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Preachers (3) -->
-	<NPCCharacter id="spc_notable_dunland_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_5}Wild hill preacher" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_dunland_5" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.empire" name="{=aom_dn_notable_5}Wild hill preacher" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -963,7 +963,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_dunland_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_gl1}Cunning clan ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dunland_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.empire" name="{=aom_dn_notable_gl1}Cunning clan ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -997,7 +997,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_dunland_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_11}Brutal dunlending enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dunland_11" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.empire" name="{=aom_dn_notable_11}Brutal dunlending enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
@@ -1194,7 +1194,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_dunland" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_dunland" is_female="true" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1209,7 +1209,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_dunland" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_dunland" is_female="true" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.empire" name="{=aom_dn_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1236,6 +1236,7 @@
 
 	<!-- Practice Dummies -->
 	<NPCCharacter id="gear_practice_dummy_dunland" default_group="Infantry" level="15" is_hero="false" name="{=aom_dn_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.empire">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1246,6 +1247,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_1_dunland" default_group="Infantry" level="15" is_hero="false" name="{=aom_dn_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.empire">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1257,6 +1259,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_2_dunland" default_group="Infantry" level="25" is_hero="false" name="{=aom_dn_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.empire">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1268,6 +1271,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_3_dunland" default_group="Infantry" level="35" is_hero="false" name="{=aom_dn_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.empire">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1280,6 +1284,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="gear_dummy_dunland" default_group="Infantry" level="15" is_hero="false" name="{=aom_dn_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.empire">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">

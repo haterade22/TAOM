@@ -1,4 +1,11 @@
 #!/usr/bin/env pwsh
+#requires -Version 7.0
+# PowerShell 7+ only. The shebang above is advisory on Windows, where `.\snapshot_api_surface.ps1`
+# runs under whatever host invoked it, and Windows PowerShell 5.1 is still the default there. This
+# script uses the null-coalescing operator (`??`, :195) and an em dash inside a double-quoted string
+# (:65), both of which 5.1 rejects at PARSE time, so without this line it fails with ten cascading
+# parser errors that name neither the version nor the real cause. Verified 2026-09-06: that is exactly
+# how it failed on a machine with no `pwsh`. The #requires turns it into one clear message.
 <#
 .SYNOPSIS
     Generates a committed snapshot of the TaleWorlds engine signatures that TAOM's GameModel

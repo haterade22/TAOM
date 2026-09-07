@@ -52,6 +52,29 @@ public class AiPartySizeOrderingTests
     }
 
     [TestMethod]
+    public void PartySizeModel_AppliesTheCaravanCapBeforeTheTroopWeightEliteTax()
+    {
+        // Same trap as the lord scaling above, same consequence. ApplyPartySizeWeightPenalty
+        // snapshots (int)limit.ResultNumber as the party's true base, so a caravan bonus applied
+        // after it would leave the daily shed trimming to vanilla's 30-50 and the caravan would
+        // bleed back down over a week. Both orderings produce an identical ExplainedNumber, so
+        // nothing but a source-order assertion catches it.
+        var src = ReadPartySizeModel();
+
+        int caravan = src.IndexOf("_aiPartySize.ApplyCaravanScaling", System.StringComparison.Ordinal);
+        int weightPenalty = src.IndexOf(
+            "_troopWeight.ApplyPartySizeWeightPenalty", System.StringComparison.Ordinal);
+
+        Assert.AreNotEqual(-1, caravan, "TaomPartySizeModel must call ApplyCaravanScaling");
+        Assert.AreNotEqual(-1, weightPenalty, "TaomPartySizeModel must call ApplyPartySizeWeightPenalty");
+        Assert.IsTrue(
+            caravan < weightPenalty,
+            "ApplyCaravanScaling must run BEFORE ApplyPartySizeWeightPenalty, or the daily shed "
+            + "trims caravans back to the vanilla 30-50 cap and the parity templates spawn rosters "
+            + "that bleed away with every unit test still green.");
+    }
+
+    [TestMethod]
     public void PartySizeModel_ScalesGarrisonsThroughTheGarrisonOverride()
     {
         var src = ReadPartySizeModel();

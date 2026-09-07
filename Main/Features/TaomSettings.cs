@@ -862,6 +862,28 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), AI lords are also blocked from recruiting in opposed-alignment settlements. When OFF, AI recruits freely (you are still gated if 'Apply To Player' is on).")]
     public bool EnableAlignmentRecruitmentAi { get; set; } = true;
 
+    // --- World / Marriage Alignment ---
+
+    [SettingPropertyGroup("World/Marriage Alignment", GroupOrder = 50)]
+    [SettingPropertyBool("Enable Marriage Alignment Block", Order = 0,
+        HintText = "When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Umbar, Shaghana, Abanissa, Dunland) marry anyone. When off, marriage is vanilla.")]
+    public bool EnableMarriageAlignment { get; set; } = true;
+
+    [SettingPropertyGroup("World/Marriage Alignment")]
+    [SettingPropertyBool("Apply To Player", Order = 1,
+        HintText = "When ON (default), YOUR clan is also held to the rule — you and your siblings/children cannot marry across the Free/Evil line. When OFF, the player clan marries freely (AI lords are still gated if 'Apply To AI Lords' is on).")]
+    public bool EnableMarriageAlignmentPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("World/Marriage Alignment")]
+    [SettingPropertyBool("Apply To AI Lords", Order = 2,
+        HintText = "When ON (default), AI lords are blocked from marrying across the Free/Evil line. When OFF, AI marries freely (you are still gated if 'Apply To Player' is on).")]
+    public bool EnableMarriageAlignmentAi { get; set; } = true;
+
+    [SettingPropertyGroup("World/Marriage Alignment")]
+    [SettingPropertyBool("Steer AI Partner Search", Order = 3,
+        HintText = "When ON (default), AI lords look for a partner among compatible clans instead of drawing uniformly from every clan in the world. Vanilla's draw wastes the day whenever it lands on a blocked clan, which would make Free factions (Gondor, Rohan, Dale) marry far less often and run short of heirs. Turn OFF to keep the block but restore vanilla's draw.")]
+    public bool MarriageAlignmentSteerAiSearch { get; set; } = true;
+
     // --- Prisoner Recruitment ---
 
     [SettingPropertyGroup("World/Prisoner Recruitment", GroupOrder = 39)]

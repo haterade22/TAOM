@@ -1952,3 +1952,44 @@ way: `char.IsLetterOrDigit` is Unicode-aware while `[A-Za-z0-9]` is not.
 - **Why missed:** the heuristic was judged on the ids it had been written from. Nothing counted how many live ids it failed to reduce, and the review table printed old and new VALUES, not whether old and new shared a family.
 - **Prevent:** before a family or prefix heuristic is allowed to choose, run it over every id in every culture it will touch and print the ids it leaves unchanged; each one is either a token to add or a mesh with no family. Print the family of old and new side by side in the plan table, so a cross-family swap is visible before `--apply`.
 - **Source:** deep review of #541, `docs/reviews/rca-troop-tier-ladders-2026-09-04.md`.
+
+### A ratchet entry must pin the measured VALUE, and a gate that inspected nothing must fail
+Two defects in one new validator, both found by the tooling-correctness agent with working
+reproductions. (1) The baseline suppressed by identity (`slot|path`) and not by measurement, so
+re-cutting a baselined audio clip from 4.11 s to 8.77 s kept the gate green: an exemption granted
+for a specific measured state silently covered every future state of that file. (2) File discovery
+was a glob and there was no floor on how much got inspected, so renaming three of four input files
+took the run from 379 checks to 53 with no signal, and a structurally empty input reported
+"OK". Pin the value the exemption was granted at and re-verify it every run; drive discovery off
+the authoritative registration (here `project.mbproj`) rather than a glob; and make a
+zero-measurement run a hard failure.
+- **Why missed:** the gate was written to catch the bug that had just been fixed, so it was only
+  ever tested against that bug. Every hole appears the moment the question changes from "does this
+  catch my bug?" to "what input passes this check while still being broken?". `UPGRADE_INDEX_EMPTY`
+  in `.claude/rules/moduledata-validation.md` had already recorded the zero-coverage half of this
+  after the identical mistake elsewhere, and was not consulted when writing a new gate.
+- **Prevent:** when adding a validator, write its tests as adversarial inputs BEFORE calling it
+  done, and name each test for the false PASS it closes. Doing that here immediately caught a
+  fourth defect: the new zero-coverage floor returned exit 2 before findings were printed, so a
+  file whose every binding was a finding reported as "bad input" and hid them. Findings must take
+  precedence over a coverage floor. Read the sibling gates' rules before writing a new one; this
+  repo has already paid for most of these lessons.
+- **Source:** docs/reviews/rca-dwarf-voices-2026-09-06.md (2026-09-06 deep review, 4 demonstrated false PASSes)
+
+### Fixing a convergence bug in one solver means re-asking the question of its siblings
+When a data-mutating tool computes a value from the value already on disk, it is only idempotent if
+the computation is a fixed point. Fixing that in one function does not fix it in the function next to
+it, and a test named `test_is_idempotent` can pass on a fixture that never triggers the drift.
+- **Why missed:** `rebalance_template_power.py` shipped with `solve_flat` deliberately rewritten to
+  converge from any starting value, after `gundabad_raiders_boss_party_template` oscillated between
+  18 and 19 troops per stack on alternate runs. Its sibling `solve_band` was never re-examined. It is
+  genuinely not a fixed point (feeding its output back as `shape` drifts the mins by one), and is safe
+  in production only because `rewrite_text` always hands it a constant lookup table keyed on troop
+  role. The existing test asserted the general property using numbers that happen not to expose it.
+- **Prevent:** after fixing a fixed-point bug, run every sibling solver's output back through itself
+  at production budgets and assert equality. Where a caller-side invariant is what makes an unsafe
+  function safe, pin the INVARIANT (the shape never comes from the file) rather than the symptom, and
+  add a test asserting the warning docstring still says so, so the warning cannot be tidied away.
+  Related: a tool that skips work must not exit 0, or a harness reads "silently skipped N templates"
+  as a clean run.
+- **Source:** docs/reviews/rca-caravan-bandit-parity-2026-09-06.md findings 5 and 6.

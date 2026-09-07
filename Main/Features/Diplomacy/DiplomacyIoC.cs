@@ -16,6 +16,12 @@ public static class DiplomacyIoC
         container.Register<ITaomSettingsProvider, TaomSettingsProvider>(Reuse.Singleton);
         container.Register<IWarOfTheRingService, WarOfTheRingService>(Reuse.Singleton);
         container.Register<IOnPeaceAction, PeaceActionHook>(Reuse.Singleton);
+
+        // Takes IInquiryAdapter, which EnlistmentIoC registers later in the IoC.cs sequence. Safe
+        // because DryIoc resolves constructor dependencies lazily and nothing resolves this service
+        // until SubModule applies Patch80, long after every registration has run. Do NOT add an
+        // eager Resolve of it inside this method.
+        container.Register<IKingdomVoteDeadlockService, KingdomVoteDeadlockService>(Reuse.Singleton);
     }
 
     public static void InitializeHooks(IOnAllianceAction allianceHook, IOnPeaceAction peaceHook)

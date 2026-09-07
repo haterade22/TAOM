@@ -241,7 +241,7 @@ A lord's roster at spawn and the cap he settles at are separate systems, and con
 
 The 12 cultures at contributor 1 are Mordor, Gundabad, Goblin, Blue Craig, Misty Mountain Orcs, Dol Guldur, Isengard, Gondor, Dunland, Rhun, Harad and Khand (`Main/Features/CulturalFeats/CulturalFeatsService.cs:245-273`). Their magnitudes are C#, not XML: `taom_spcultures.xml` only binds the feat id, and the number is the third argument to `FeatObject.Initialize` (Mordor's party size feat is `0.2f` at `Main/Features/CulturalFeats/TaomCulturalFeats.cs:912-915`). Changing a feat's strength is a code change.
 
-Contributor 4 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - rawCount`, clamped at 0 below and at `baseLimit - 1` above (`Main/Features/TroopWeight/TroopWeightService.cs:172-187`). Weights come from `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, which holds **105 live `<TroopWeight>` rows: 93 at weight 2.0, 10 at 3.0, one at 4.0 and one at 10.0**. A raw grep returns 106 because one `cave_troll` row sits inside a comment block. <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-09-05 --> [`troop-weight-system.md:339`](../features/troop-weight-system.md) says "~80 entries" and [`gamemodels-services.md:418`](../reviews/lessons/gamemodels-services.md) says "87 live weighted ids, 75 at 2.0". Both are stale; the file above is the count. An unlisted troop weighs 1.0, stated in the file's own header comment on line 3, and there is no other default anywhere.
+Contributor 4 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - rawCount`, clamped at 0 below and at `baseLimit - 1` above (`Main/Features/TroopWeight/TroopWeightService.cs:181-196`). Weights come from `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, which holds **105 live `<TroopWeight>` rows: 93 at weight 2.0, 10 at 3.0, one at 4.0 and one at 10.0**. A raw grep returns 106 because one `cave_troll` row sits inside a comment block. <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" re-measured 2026-09-06, unchanged --> [`troop-weight-system.md`](../features/troop-weight-system.md) now carries the same measured breakdown (corrected 2026-09-06); [`gamemodels-services.md:418`](../reviews/lessons/gamemodels-services.md) still says "87 live weighted ids, 75 at 2.0" and remains stale. An unlisted troop weighs 1.0, stated in the file's own header comment on line 3, and there is no other default anywhere.
 
 The 4.0 and 10.0 tiers are undocumented in every feature doc. They exist, and nothing says what they were sized against.
 
@@ -249,7 +249,7 @@ The 4.0 and 10.0 tiers are undocumented in every feature doc. They exist, and no
 
 ## Lever 5: settlement economy
 
-The engine numbers a balancer needs, re-read from the v1.4.8 dump because the line numbers in [`settlement-economy-food-prosperity.md`](../reference/engine/settlement-economy-food-prosperity.md) were taken against v1.4.5:
+The engine numbers a balancer needs, verified against the installed v1.4.8 DLL. The food half of [`settlement-economy-food-prosperity.md`](../reference/engine/settlement-economy-food-prosperity.md) was re-verified against 1.4.8 on 2026-09-06 and agrees with this table; its prosperity half is still v1.4.5 and unrefreshed:
 
 <!-- engine-ref type="TaleWorlds.CampaignSystem.GameComponents.DefaultSettlementFoodModel" file="Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.GameComponents/DefaultSettlementFoodModel.cs" lines="28-78" -->
 
@@ -257,13 +257,18 @@ The engine numbers a balancer needs, re-read from the v1.4.8 dump because the li
 |---|---|---|
 | Prosperity eaten per food | 40 | `DefaultSettlementFoodModel.cs:32`, used at `:47` |
 | Garrison men per food | 20 | `:34`, used at `:48` |
-| Food stock cap | 300 town, plus 150 for a castle | `:30`, `:36` |
+| Food stock cap | 300 town, plus 150 for a castle, **before buildings** | `:30`, `:36` |
+| Food stock cap, fully built | 800 town (Warehouse `+100/300/500`), 750 castle (Granary `+100/200/300`) | `Town.cs:460-469`, `DefaultBuildingTypes.cs:220-222,275-277` |
 | Base production | 15 town, 10 castle | `:65` |
 | Per village production | `(hearthLevel + 1) * 6` | `:72` |
 | Village hearth level | 2 at hearth 600, 1 at 200, else 0 | `Village.cs:320-331` |
 | Town prosperity level | High at 5000, Mid at 2000, else Low | `Town.cs:738-749` |
 
-The first five rows above are exposed as knobs in `Main/_Module/ModuleData/settlement_food/settlement_food_config.json`, seven of them once the town and castle variants are counted separately, plus a `flatFoodBonus` with no vanilla equivalent: eight keys in all, and TAOM ships every one at the vanilla value, so the file changes nothing until you edit it. <!-- measured: python -c "import json;print(sorted(json.load(open('Main/_Module/ModuleData/settlement_food/settlement_food_config.json'))))" 2026-09-05 --> The last two rows, hearth level and prosperity level, are engine thresholds with no knob. The knob names and shapes are in [Balance configs](configs-balance.md).
+The first five rows above are exposed as knobs in `Main/_Module/ModuleData/settlement_food/settlement_food_config.json`, seven of them once the town and castle variants are counted separately, plus `flatFoodBonus` and `hinterlandFoodPerProsperity` with no vanilla equivalent: **nine keys in all**. <!-- measured: grep -o '"[a-zA-Z]*"' Main/_Module/ModuleData/settlement_food/settlement_food_config.json | sort -u | wc -l 2026-09-06 --> The last two rows, hearth level and prosperity level, are engine thresholds with no knob. The knob names and shapes are in [Balance configs](configs-balance.md).
+
+**This file no longer ships at vanilla, and that reversal is the point of the 2026-09-06 pass (#546).** It shipped fully vanilla until then, which meant the knobs existed and relieved nothing while 70 of 72 towns started food-negative. Shipped now: `prosperityFoodDivisor` 45, `townBaseFood` 30, `villageFoodMultiplier` 8, `flatFoodBonus` 5, `hinterlandFoodPerProsperity` 0.02; `garrisonFoodDivisor` and both storage caps stay vanilla. Any doc or comment still saying the food config is vanilla-by-default is stale.
+
+`hinterlandFoodPerProsperity` is the one knob with no vanilla counterpart and the one with a hard constraint: it adds `prosperity * rate` to production, and it **must stay strictly below `1 / prosperityFoodDivisor`**. At or above that, net food stops falling as a fief grows, the store overflows every day, vanilla converts overflow to prosperity at `+0.1` per point, and prosperity, town gold and garrison caps inflate map-wide with nothing to arrest them. The provider rejects a violating value and `SettlementFoodShippedConfigTests` fails the build. Rationale and the measured before/after: [settlement-food](../features/settlement-food.md).
 
 Prosperity and hearth themselves are per-settlement values in the live map module, retuned with `tools/rebalance_settlement_prosperity.py`. Its floor table is `tools/settlement_economy_floor.json`: town 4800, castle 950, village hearth 500, applied to eight cultures (bluecraig, dolguldur, goblin, gundabad, isengard, lindon, mirkwood, mistymountainorcs). Note where those floors sit against the engine thresholds above. A town at 4800 is just under the 5000 High band, and a village at hearth 500 is level 1, not level 2, so it produces 12 food per day rather than 18. Whether that is deliberate headroom or an accident is not written down anywhere.
 
@@ -364,7 +369,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 | 105 live `<TroopWeight>` rows: 93 at 2.0, 10 at 3.0, 1 at 4.0, 1 at 10.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-09-05 |
 | 20 item modifier groups | `grep -oE 'id="[^"]+"' Native/ModuleData/item_modifiers_groups.xml \| wc -l` | 2026-09-05 |
 | 3 validator schemas | `ls tools/schemas/ \| wc -l` | 2026-09-05 |
-| 8 keys in `settlement_food_config.json` | `python -c "import json;print(sorted(json.load(open('Main/_Module/ModuleData/settlement_food/settlement_food_config.json'))))"` | 2026-09-05 |
+| 9 keys in `settlement_food_config.json` | `grep -o '"[a-zA-Z]*"' Main/_Module/ModuleData/settlement_food/settlement_food_config.json \| sort -u \| wc -l` | 2026-09-06 |
 | No `StrikeMagnitudeModel` or `ItemValueModel` override in TAOM | `grep -rn "StrikeMagnitudeModel" Main/` and `grep -rn "ItemValueModel" Main/`, both empty | 2026-09-05 |
 
 ## Read next

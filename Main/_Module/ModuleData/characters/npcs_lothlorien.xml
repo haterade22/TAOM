@@ -2,7 +2,7 @@
 <NPCCharacters>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_lothlorien_0" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0}Cautious Golden Wood merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_lothlorien_0" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0}Cautious Golden Wood merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -17,7 +17,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_lothlorien_0b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0b}Galadhrim vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_lothlorien_0b" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0b}Galadhrim vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -34,7 +34,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_lothlorien_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_1}Shrewd Lorien silk trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_lothlorien_1" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lothlorien" name="{=aom_lt_notable_1}Shrewd Lorien silk trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -166,7 +166,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Preachers (3) -->
-	<NPCCharacter id="spc_notable_lothlorien_5" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lothlorien" name="{=aom_lt_notable_5}Wise elf of Caras Galadhon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_lothlorien_5" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lothlorien" name="{=aom_lt_notable_5}Wise elf of Caras Galadhon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -246,7 +246,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_lothlorien_gl1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_gl1}Protective Galadhrim warden" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_lothlorien_gl1" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lothlorien" name="{=aom_lt_notable_gl1}Protective Galadhrim warden" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -262,7 +262,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_lothlorien_10" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_10}Ironic Lorien border guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_lothlorien_10" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_10}Ironic Lorien border guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -421,6 +421,7 @@
 
 	<!-- Practice Dummies -->
 	<NPCCharacter id="gear_practice_dummy_lothlorien" race="elf" default_group="Infantry" level="15" is_hero="false" name="{=aom_lt_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.lothlorien">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>

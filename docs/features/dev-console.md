@@ -1,6 +1,6 @@
 ﻿# Dev Console (`taom.*` commands)
 
-**Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate PASSED 2026-08-23 (log: "Console discovery PROVEN: the engine registered all 25 taom.* commands", vanilla control present); 29 commands as of 2026-09-04, adding `taom.service_status` / `taom.rescue_service` to the `taom.time_status` / `taom.rescue_time` pair. Gate mechanics: [The launch gate](#the-launch-gate).
+**Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate PASSED 2026-08-23 (log: "Console discovery PROVEN: the engine registered all 25 taom.* commands", vanilla control present); 29 commands as of 2026-09-04, adding `taom.service_status` / `taom.rescue_service` to the `taom.time_status` / `taom.rescue_time` pair; **33 as of 2026-09-06**, one of them `taom.print_marriages` (#542). Recount with `grep -rhoE 'CommandLineArgumentFunction\("[a-z_]+", ?"taom"\)' --include=*.cs Main | sort -u | wc -l` rather than by hand. Gate mechanics: [The launch gate](#the-launch-gate).
 
 ## Overview
 
@@ -292,7 +292,7 @@ answer is conclusive and fails open in every path.
 | `taom.add_special_resources [amount]` | B | campaign | — (see [special-resources.md](special-resources.md)) |
 | `taom.print_special_resources` | A | campaign | Read-only balance/cap/tier. **Not** `GrantAmount(…, 0f)` — that clamps and writes back |
 | `taom.print_momentum [keys]` | A | campaign | ~50 in-game days of play to reach the 32 KB save-corruption threshold |
-| `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit |
+| `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit, and since #545 prints the ENFORCED frame (`raw/deflated`) beside the DISPLAYED one (`weighted/true-base`) so the two can be compared in one line |
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
 | `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
 | `taom.time_status` | A | campaign | Dump every state that can freeze campaign time (menu context, time lock, engine pause, waiting flag, encounter) in one shot; built for the 2026-08-23 camp-menu freeze, replaces a decompile-and-guess loop |
@@ -300,6 +300,7 @@ answer is conclusive and fails open in every path.
 | `taom.service_status` | A | campaign | Dump every state that can strand an enlisted player (service state, presence, open `PlayerEncounter`, commander fitness, current menu) in one shot. The encounter line is the one that matters: an open one holds the map, blocks every future encounter, and blocks the battle-latch break |
 | `taom.rescue_service` | B | campaign | Free a stranded enlisted player: close the open encounter, re-park on the commander (or restore presence and defer to the grace path if he is unfit), reopen the service menu. Exists because a stranded player has no menu and therefore no discharge dialog either, so a code fix reaches their next campaign and not the save they are stuck in (#538) |
 | `taom.print_caravans [settlement]` | A | campaign | Which engine gate is holding each parked caravan. Every one of them is a silent early-return, and four of them have different fixes — the gate histogram is the money output |
+| `taom.print_marriages` | A | campaign | Every married couple whose cultures sit on opposite sides of the Free/Evil line, with child counts. The #542 marriage block covers FUTURE marriages only, so the fix working looks like nothing happening: this is the measurement. Take a count, run the campaign forward, confirm it has not grown. The header reports the current toggle state, so a count taken with the feature off is not misread as the fix having broken. Read-only, annuls nothing. See [marriage-alignment.md](marriage-alignment.md) |
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_memory [label] [gpu]` | A | cheat mode | Nothing — **no TAOM or vanilla surface exposed the engine's own memory accounting at all.** `[MemSample]` reports OS totals on a timer; this asks the engine what those bytes are *for*, on demand, per station. Optional `label` names the station in the log; `gpu` also writes a GPU dump. Mirrored into `taom_debug` under `[MemProbe]`. See [battle-load-diagnostics.md](battle-load-diagnostics.md) |
 | `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
@@ -370,6 +371,7 @@ shadow, which the command's own output says. The three destinations reported as 
 | `Main/Features/DevConsole/Cheats/InputStateDumpCheats.cs` | `print_input_state`: captures `ScreenManager.FocusedLayer` plus `SortedLayers` and appends the layer table. Walks `SortedLayers` rather than the top screen's own layers because its getter appends the global layers, and the campaign-map resource bar lives on one of those |
 | `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `print_memory` — thin entry point over `IEngineMemoryStatsReader` + `MemoryProbeReportFormatter`. No static fields at all, deliberately: a `.cctor` touching engine or IoC state runs during the engine's own discovery pass |
 | `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs` | `audit_settlement_entrances` — navmesh-island check over every settlement entrance. DevConsole-owned because no feature owns settlement navmesh |
+| `Main/Features/MarriageAlignment/Cheats/MarriageAlignmentCheats.cs` | `print_marriages`: cross-alignment married couples, with the feature's toggle state in the header. Feature-owned. Exists because the #542 block covers FUTURE marriages only, so the fix working looks like nothing happening and needs a measurement rather than an observation |
 | `Main/Features/<X>/Cheats/` | Feature-owned commands (momentum, party size, town economy, special resources) |
 | `Main/SubModule.cs` | Calls the audit from `OnBeforeInitialModuleScreenSetAsRoot`, fail-open |
 

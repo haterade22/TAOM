@@ -128,6 +128,16 @@ public class CoopVetoClassificationTests
             "Player-local inventory UI action."),
         ["Patch36_GameStateScreenManager"] = new(CoopVeto.ReviewedSafe,
             "Screen routing for TAOM's fief-management state. UI only."),
+        ["KingdomDecisionsVM_RefreshWith_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Declines to BUILD a kingdom decision window for a ballot vanilla has already " +
+            "invalidated. RefreshWith is a view model, and its one campaign-mutating branch " +
+            "(IsSingleClanDecision, which runs StartElection then ApplySelection) mutates nothing " +
+            "on the ballots this skips: StartElection sets IsCancelled for exactly the ShouldBeCancelled " +
+            "case the prefix keys on, and ApplySelection is a no-op when IsCancelled. So the skipped " +
+            "vanilla work is popup construction plus an election that applies nothing. The verdict " +
+            "can differ between peers (ShouldBeCancelled short-circuits on ProposerClan == PlayerClan, " +
+            "which is peer-local), but each peer already owns its own Kingdom screen and the outcome " +
+            "is only whether that peer sees a dead window it could never close."),
         ["Patch58_SkipCampaignIntro"] = new(CoopVeto.ReviewedSafe,
             "New-game intro skip, before any session exists."),
         ["Campaign_InitializeScenes_Patch"] = new(CoopVeto.ReviewedSafe,

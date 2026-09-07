@@ -100,7 +100,12 @@ validator catches a typo'd id, the test catches a real id that belongs to the wr
 
 A fourth boundary is semantic rather than structural: **the validator models ids and enums, so a
 field whose correct value depends on who the character IS is invisible to it.** `is_female` has no
-rule at all, and a lord's name is free text behind a localization key. `lord_WE8_c` therefore passed
+rule at all, and a lord's name is free text behind a localization key. The `is_female` gap cost us
+twice. `TAOM.Tests/Core/TownsfolkAndNotableSexConsistencyTests.cs` now owns the townsfolk half,
+after 166 female-role entries across 17 cultures shipped with no `is_female="true"` and rendered as
+men, and after all 596 notable templates turned out to be male ([rca-townsfolk-sex-2026-09-06](../reviews/rca-townsfolk-sex-2026-09-06.md)).
+Both remain invisible to the validator: adding a rule would mean teaching it that an id prefix
+implies a sex, which is exactly the semantic judgement this boundary describes. `lord_WE8_c` therefore passed
 every run while shipping as vanilla's female "Icratia" long after TAOM had renamed him to Pelendur,
 son of Golasgil, and `lord_1_46_1` passed while shipping Malrior's wife as a bearded man. Nor does
 `BROKEN_BODY_PROPERTY_REF` help: it fires only on a `BodyProperty.*` reference, and every Gondor lord
@@ -109,6 +114,17 @@ nothing to check. `TAOM.Tests/Core/LordNameAndSexConsistencyTests.cs` owns this 
 every inline English name fallback matches `taom_xslt_strings.xml` and that no `is_female="true"` lord
 carries `<beard_tags>`. Same complementary split as above: the validator catches a bad id, the test
 catches a good id describing the wrong person.
+
+A fifth boundary is an element that is simply **absent**: `BROKEN_BODY_PROPERTY_REF` fires on a
+`BodyProperty.*` reference that resolves to nothing, so it has plenty to say about a typo'd
+`face_key_template` and nothing at all to say about an `NPCCharacter` with no `<face>` element. That
+is not cosmetic. `BasicCharacterObject.Deserialize` then builds the character's `MBBodyProperty` from
+`default(BodyProperties)`, whose age is 0, and the engine renders it on the toddler skin: TAOM's arena
+practice set shipped that way for ten cultures, 46 characters, and players reported the arena fighters
+as children (2026-09-06). `TAOM.Tests/Core/CharacterFaceCoverageTests.cs` owns it, asserting that every
+`NPCCharacter` under `Main/_Module/ModuleData` declares a `<face>`. The mechanism, and why
+`Mission.SpawnAgent`'s two age guards read a different age and miss it, is in
+[body-properties.md](../modding/body-properties.md) "Gotchas".
 
 ## Landless-culture check (`LANDLESS_CULTURE`)
 

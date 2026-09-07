@@ -43,7 +43,7 @@ No configuration. Purely data-driven via the `gear_practice_dummy_*` NPCCharacte
 
 ### gear_practice_dummy_* coverage
 
-Every TAOM culture has a `gear_practice_dummy_<culture>` entry. A grep of `id="gear_practice_dummy_` across `npcs_*.xml` (2026-06-09) finds **17** (coverage filled in session 2026-03-31). Representative sample below — `rohan`, `mistymountainorcs`, and `goblin` also have entries but are not tabulated here:
+Every TAOM culture has a `gear_practice_dummy_<culture>` entry. Counting `id="gear_practice_dummy_` across `npcs_*.xml` (2026-09-06) finds **19**, one per culture (coverage filled in session 2026-03-31). Eighteen of those cultures also carry the rest of the arena set (`weapon_practice_stage_1/2/3_*` and `gear_dummy_*`); Lothlórien has only the gear dummy. Representative sample below (`rohan`, `mistymountainorcs`, and `goblin` also have entries but are not tabulated here):
 
 | Culture | File | Body item |
 |---------|------|-----------|
@@ -61,6 +61,26 @@ Every TAOM culture has a `gear_practice_dummy_<culture>` entry. A grep of `id="g
 | dale | `npcs_dale.xml` | `nordic_padded_cloth` |
 | khand | `npcs_khand.xml` | `dunland_caerdh_chainmail_light_a` |
 | lothlorien | `npcs_lothlorien.xml` | `rivendell_torso_light_light_tier1` |
+
+### Six of those entries never resolve, because the culture's StringId is the vanilla one
+
+Both lookups build a string from `Culture.StringId`, so an entry only works when its name suffix IS
+that id. TAOM reskins six vanilla cultures through `spcultures.xslt` rather than declaring new ones,
+and those keep the vanilla id: `empire` is Dunland, `aserai` Harad, `vlandia` Rohan, `khuzait` Rhûn,
+`sturgia` Dale, `battania` Khand. Their troops carry `culture="Culture.vlandia"` and the like. So
+`ResolveDummyId` asks for `gear_practice_dummy_vlandia`, TAOM's entry is named
+`gear_practice_dummy_rohan`, and the id that does resolve is SandBoxCore's Calradian one. The same
+applies to `weapon_practice_stage_N_*`, which `ArenaPracticeFightMissionController.AddRandomWeapons`
+resolves the same way.
+
+Net effect: in a Dunland, Harad, Rohan, Rhûn, Dale or Khand town the arena fighters wear vanilla
+Calradian kit and the TAOM sets authored for those six cultures are dead data. The rows for `harad`,
+`dunland`, `rhun`, `dale` and `khand` in the table above are authored but unreachable. Only the 18
+cultures that declare their own id in `taom_spcultures.xml` (plus `lothlorien`) actually resolve.
+Fixing it means renaming those six sets to the vanilla-id suffix, which changes the armour six
+cultures fight in, so it is a deliberate content decision rather than a typo repair. Not done.
+<!-- measured: culture ids from taom_spcultures.xml and spcultures.xslt template matches, checked
+     against the gear_practice_dummy_/weapon_practice_stage_1_ id set of the merged install, 2026-09-06 -->
 
 ## Prize Item Selection
 
@@ -97,10 +117,12 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 ## How to Add a New Culture
 
 1. Add `gear_practice_dummy_{culture_string_id}` to `npcs_{culture}.xml` with a non-civilian `EquipmentRoster` using skeleton-appropriate items from that culture's armory
-2. No code changes needed — `TaomTournamentModel` picks it up automatically via the culture StringId lookup
+2. **Give it a `<face>` block**, normally `<face><face_key_template value="BodyProperty.fighter_{culture}" /></face>`, matching the sibling characters in the same file. An `NPCCharacter` with no `<face>` gets `BodyProperties` with age 0 and renders on the toddler skin if anything ever spawns it. Ten cultures shipped without one and their arena fighters appeared as children (2026-09-06; see [body-properties.md](../modding/body-properties.md) "Gotchas"). `CharacterFaceCoverageTests` now fails the build if a faceless character lands again.
+3. No code changes needed: `TaomTournamentModel` picks it up automatically via the culture StringId lookup
 
 ## Changelog
 
+- 2026-09-06: Gave all 46 faceless arena practice characters a `<face>` block across ten cultures (dale, dunland, gondor, harad, isengard, khand, lothlorien, mordor, rhun, rohan). Without one the engine builds their `MBBodyProperty` from `default(BodyProperties)`, whose age is 0, and renders them on the toddler skin: players reported "Practice Fighter" and "Gear Dummy" fighting in the arena as children. Added `CharacterFaceCoverageTests` as the gate.
 - 2026-06-09 — Fixed the Patch46 dwarf-dismount postfix crashing every campaign load (`____match` underscore-count fix for the private `_match` field); corrected the stale Phase-9b-#137 architecture notes in this doc + `arena.md`.
 - 2026-06-09 — Added `Patch46_TournamentDwarfDismount` postfix on `PrepareForMatch` to clear the Horse/HorseHarness slots for dwarf participants (mount comes from the culture weapon template, not `GetParticipantArmor`) so dwarves no longer spawn inside the horse mesh (#277).
 - 2026-05-14 — Extracted the decision logic (`ResolveDummyId`, `BuildPrizePool`, start/end-chance) from `TaomTournamentModel` into the new `ITournamentService`, leaving the model a thin boundary delegate (#137).

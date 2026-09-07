@@ -827,6 +827,7 @@
 
     <NPCCharacter
         id="armed_trader_rohan"
+        level="16"
         name="{=aom_roh_armed_trader}Armed Trader"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
@@ -834,6 +835,11 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="Athletics" value="40" />
+            <skill id="OneHanded" value="80" />
+            <skill id="Polearm" value="60" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
@@ -853,6 +859,7 @@
 
     <NPCCharacter
         id="caravan_master_rohan"
+        level="26"
         name="{=aom_roh_caravan_master}Caravan Master"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
@@ -860,6 +867,12 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="Athletics" value="60" />
+            <skill id="OneHanded" value="120" />
+            <skill id="Polearm" value="80" />
+            <skill id="Trade" value="100" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_b" />
@@ -883,6 +896,7 @@
 
     <NPCCharacter
         id="caravan_guard_rohan"
+        level="21"
         name="{=aom_roh_caravan_guard}Caravan Guard"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
@@ -890,6 +904,12 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="Athletics" value="50" />
+            <skill id="OneHanded" value="100" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="40" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
@@ -920,6 +940,7 @@
 
     <NPCCharacter
         id="veteran_caravan_guard_rohan"
+        level="26"
         name="{=aom_roh_vet_caravan_guard}Veteran Caravan Guard"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
@@ -927,6 +948,12 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="Athletics" value="60" />
+            <skill id="OneHanded" value="130" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="50" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor1" />
@@ -1031,7 +1058,7 @@
     </NPCCharacter>
 
     <!-- Notables: Merchants (10) -->
-    <NPCCharacter id="spc_notable_rohan_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_0}Cautious Riddermark trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <NPCCharacter id="spc_notable_rohan_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_0}Cautious Riddermark trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <skills></skills>
         <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -1046,7 +1073,7 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="spc_notable_rohan_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_0b}Rohirric vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <NPCCharacter id="spc_notable_rohan_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_0b}Rohirric vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <skills></skills>
         <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -1076,7 +1103,7 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="spc_notable_rohan_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_1b}Cold Rohirric dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+    <NPCCharacter id="spc_notable_rohan_1b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_1b}Cold Rohirric dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <skills></skills>
         <Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -1191,7 +1218,7 @@
     </NPCCharacter>
 
     <!-- Notables: Preachers (3) -->
-    <NPCCharacter id="spc_notable_rohan_5" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_5}Devout Rohirric elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+    <NPCCharacter id="spc_notable_rohan_5" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_5}Devout Rohirric elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
         <Equipments>
@@ -1275,7 +1302,7 @@
     </NPCCharacter>
 
     <!-- Notables: Gang Leaders (6) -->
-    <NPCCharacter id="spc_notable_rohan_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_gl1}Bold Riddermark ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <NPCCharacter id="spc_notable_rohan_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_gl1}Bold Riddermark ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
         <Equipments>
@@ -1309,7 +1336,7 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="spc_notable_rohan_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_11}Brutal Riddermark enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+    <NPCCharacter id="spc_notable_rohan_11" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_11}Brutal Riddermark enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
         <Equipments>
@@ -1566,7 +1593,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <!-- ==================== PRACTICE DUMMIES (no face) ==================== -->
+    <!-- ==================== PRACTICE DUMMIES ==================== -->
 
     <NPCCharacter
         id="gear_practice_dummy_rohan"
@@ -1575,6 +1602,7 @@
         level="15"
         culture="Culture.vlandia"
         default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
@@ -1590,6 +1618,7 @@
         level="15"
         culture="Culture.vlandia"
         default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
@@ -1605,6 +1634,7 @@
         level="25"
         culture="Culture.vlandia"
         default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_b" />
@@ -1622,6 +1652,7 @@
         level="35"
         culture="Culture.vlandia"
         default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />
@@ -1640,6 +1671,7 @@
         level="15"
         culture="Culture.vlandia"
         default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_armour_c" />

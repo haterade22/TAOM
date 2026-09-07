@@ -22,6 +22,7 @@ public class AiPartySizeService : IAiPartySizeService
     private static readonly TextObject GarrisonText = new("{=taom_ai_garrison_size}Fortified realm");
     private static readonly TextObject ForageText = new("{=taom_ai_forage}Campaign foraging");
     private static readonly TextObject LevyText = new("{=taom_ai_levy}Levied service");
+    private static readonly TextObject CaravanEscortText = new("{=taom_caravan_escort}Caravan escort");
 
     // Below this the accumulated factor frame has cancelled the value to nothing (or flipped its
     // sign) and scaling it is meaningless. Same gate, same reasoning, as
@@ -67,6 +68,17 @@ public class AiPartySizeService : IAiPartySizeService
     public const float DefaultLordFactor = 1f;
     public const float DefaultLordFlatBonus = 0f;
     public const float DefaultGarrisonFactor = 1f;
+
+    // Caravan escort cap. Vanilla hands a caravan 20 + (10 | 20 | 30) by its notable owner's Power
+    // and nothing else, because the clan-tier and Steward branch is guarded !party.IsCaravan. The
+    // parity templates spawn up to 88 bodies, and CaravanPartyComponent adds one CaravanMaster on
+    // top, so 89 is the roster the smallest of those three bands has to cover: 30 + 70 = 100 clears
+    // it with room for the hourly recruitment vanilla already allows a caravan.
+    //
+    // Flat rather than a multiplier, so vanilla's 10-man steps between the Power bands survive
+    // instead of being stretched. Unconditional and un-knobbed, because it is one half of a change
+    // whose other half is XML: see IAiPartySizeService.ApplyCaravanScaling.
+    public const float DefaultCaravanFlatBonus = 70f;
 
     // Relief is neutral for the same reason. It exists ONLY to close the morale-desertion path that
     // a RAISED cap opens: an over-sized party cannot buy 30 days of food anywhere and blows past its
@@ -124,6 +136,21 @@ public class AiPartySizeService : IAiPartySizeService
             settings?.AiLordPartySizeFlatBonus ?? DefaultLordFlatBonus,
             LordHostText);
     }
+
+    public void ApplyCaravanScaling(PartyBase party, ref ExplainedNumber limit)
+    {
+        // Deliberately no IsEnabled() gate: see the interface doc. The template data and this
+        // constant have to move together, so there is nothing here for a player to turn off.
+        if (party?.MobileParty?.IsCaravan == true)
+            ApplyCaravanCapBonus(ref limit);
+    }
+
+    /// <summary>
+    /// The pure half of <see cref="ApplyCaravanScaling"/>, split out because <c>PartyBase</c> is
+    /// sealed and cannot be constructed in a test. Engine-free; unit-tested.
+    /// </summary>
+    public static void ApplyCaravanCapBonus(ref ExplainedNumber limit)
+        => AddResultFrameBonus(ref limit, DefaultCaravanFlatBonus, CaravanEscortText);
 
     public void ApplyGarrisonScaling(ref ExplainedNumber limit)
     {

@@ -28,6 +28,24 @@ public class SettlementFoodConfig
     // Flat daily food added to every fortification (vanilla: 0). Siege-gated like all production.
     public float FlatFoodBonus { get; set; } = 0f;
 
+    /// <summary>
+    /// Food produced per point of prosperity ("hinterland"), added to production and siege-gated
+    /// like every other production knob. Vanilla has no such term (default 0 = off).
+    ///
+    /// <para>Why it exists: vanilla consumption is LINEAR in prosperity (<c>Prosperity/divisor</c>)
+    /// while production is flat, so every fief above roughly <c>production × divisor</c> prosperity
+    /// is guaranteed to starve, and a fief that grows during play starves later even if it was tuned
+    /// to break even. Scaling production with prosperity too makes the balance hold at any size.</para>
+    ///
+    /// <para><b>Invariant, enforced by <see cref="SettlementFoodConfigProvider"/>:</b> this must be
+    /// STRICTLY less than <c>1 / <see cref="ProsperityFoodDivisor"/></c>. At or above that value the
+    /// net food balance stops falling as prosperity rises, so a surplus fief overflows its store
+    /// forever, vanilla converts the overflow to prosperity (<c>+0.1</c> per point) and prosperity,
+    /// town gold and garrison caps inflate without limit. Staying strictly below keeps vanilla's
+    /// restoring force intact.</para>
+    /// </summary>
+    public float HinterlandFoodPerProsperity { get; set; } = 0f;
+
     // Storage caps (vanilla: town limit 300, castle +150 bonus).
     public int FoodStocksUpperLimit { get; set; } = 300;
     public int CastleFoodStockUpperLimitBonus { get; set; } = 150;

@@ -2,6 +2,493 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-06
+
+### fix(townsfolk): the women of every culture but Rohan had men's bodies
+
+Reported from play: Townswomen, Tavern Wenches and female notables render male in Gondor, Rhun,
+Harad, Dale, Erebor, the Silvan elves and Rivendell. The report ends "only rohan is normal", which
+turned out to be the entire diagnosis.
+
+`is_female` defaults to false, so an `<NPCCharacter>` named `townswoman_gondor` that never declares
+it gets the male skin, the male face range and the male action set. 166 female-role entries across
+17 of the 22 `npcs_<culture>.xml` files were missing the attribute: every Townswoman and her infant,
+child and teenager variants, every village woman, every Tavern Wench, every beggar and dancer. Rohan
+was right only because `f3dbbfe6` added the attribute there; `git log -S` shows it was never removed
+elsewhere, the other cultures were simply never back-filled. All 180 female-role entries now carry
+it.
+
+Measuring that turned up a second defect underneath. All 596 notable templates were male, in every
+culture including Rohan, against vanilla's 28 female out of 128. A notable's sex is its template's
+sex: `HeroCreator.CreateNotable` builds the hero with `CharacterObject.CreateFrom(template)` and
+`HeroInitializationArgs` reads `IsFemale` back off it, and nothing randomises that. So there were no
+female merchants, gang leaders or preachers anywhere, and since `GenerateFirstAndFullName` draws
+from `<male_names>` for a male template, no woman was ever named as a notable either. 139 templates
+are now female (23%, vanilla is 22%): Merchant 66, GangLeader 51, Preacher 22, chosen from the
+entries whose descriptive name is already gender-neutral. Rural notables and headmen stay all male,
+matching vanilla. Pool sizes are unchanged, so every `<template>` row still resolves and no
+occupation can empty out.
+
+The two female barbers, `barber_harad` and `barber_rhun`, were made male so all 18 agree.
+
+Nothing here is reachable from C#. No patch, GameModel or service writes gender onto townsfolk, and
+no XSLT strips it. `validate_moduledata.py` has no `is_female` rule and cannot get one cheaply,
+because knowing that `townswoman_gondor` implies a woman is a semantic judgement rather than a
+reference check, so `TAOM.Tests/Core/TownsfolkAndNotableSexConsistencyTests.cs` owns the invariant
+instead: every female role marked, no male role marked, and a woman in every mixed-sex notable pool.
+
+Known limit, unchanged by this: for the ten non-human cultures the Armory's `skins.xml` gives the
+female skin the same `body_meta_mesh` as the male one. Dwarf and elf women get the right face,
+animations, name and `_fem` garment variants, but the silhouette underneath stays male until someone
+authors female base meshes in `LOTRLOME_Armory`, which is a game-install asset outside this repo.
+
+Not-tested: in-game appearance, which needs a new campaign and a full restart.
+Research: `HeroCreator.CreateNotable`, `HeroInitializationArgs`, `LOTRLOME_Armory/ModuleData/skins.xml`.
+Save-compat: existing notables keep the sex they were created with; the new pool applies to notables created after loading.
+
+### fix(arena): the practice fighters and gear dummies were rendering as toddlers
+
+Reported from play, with a screenshot: in a Gondor arena an agent named "Practice Fighter" fights
+waist-high beside a normal troop. The cause is entirely in the data and nothing anywhere reports it.
+
+`BasicCharacterObject.Deserialize` (v1.4.8) declares two local `BodyProperties` initialised to
+`default`, fills them from the `<face>` node, then registers the character's `MBBodyProperty` from
+those two locals when no `face_key_template` was read (`:346-347`, `:472-475`). With no `<face>`
+element at all they stay all-zero, so the body-properties age is 0, and `skins.xml` maps age 0 to
+`mesh_maturity_type="toddler"`: `min_scale` 0.52 against the adult 1.07. Every race in the merged
+`skins.xml` has a toddler skin, so no race is exempt.
+
+**The engine's two age guards do not catch it, because they read a different age.**
+`Mission.SpawnAgent` takes `agentCharacter.Age`, forces 29 when it is exactly 0, and forces 27 for a
+sub-teenager in a battle-like mission mode (`Mission.cs:4101-4122`). `Age` is a separate property,
+clamped at deserialisation to `max(20f, BodyPropertyMax.Age)` when the XML has no `age=` attribute
+(`BasicCharacterObject.cs:486`), so a faceless character reports a healthy 20, passes both guards,
+and keeps a visual age of 0. The campaign age and the visual age are different numbers and only one
+of them is wrong.
+
+**46 characters across ten cultures** (dale, dunland, gondor, harad, isengard, khand, lothlorien,
+mordor, rhun, rohan) had no `<face>`: the whole arena practice set, `gear_practice_dummy_*`,
+`weapon_practice_stage_1/2/3_*` and `gear_dummy_*`. They were the only faceless `NPCCharacter`
+entries in the entire install, out of 3,774 in TAOM and none in any other module. The nine cultures
+authored later already carried `<face><face_key_template value="BodyProperty.fighter_<culture>" /></face>`,
+which is also what vanilla's own `gear_practice_dummy_empire` does with `BodyProperty.guard`. Each of
+the 46 now gets its file's own fighter template; all ten targets were checked to exist with adult age
+ranges before use.
+
+`TAOM.Tests/Core/CharacterFaceCoverageTests.cs` is the gate: every `NPCCharacter` under
+`Main/_Module/ModuleData` must declare a `<face>`. It fails with the 46 named and passes after.
+`BROKEN_BODY_PROPERTY_REF` could never have caught this, because it fires on a reference that fails
+to resolve and there was no reference at all.
+
+**Two things this did not settle, both recorded rather than guessed at.** First, how a practice
+character reaches an arena roster: in stock 1.4.8 these entries are equipment donors only
+(`weapon_practice_stage_N_*` read for `.BattleEquipments`, `gear_practice_dummy_*` for
+`.RandomBattleEquipment`, and `CultureObject.GearDummy` parsed and then used by no shipped code),
+both roster builders draw from the town garrison and the basic-troop upgrade tree, and a sweep of the
+install found no upgrade edge, party-template stack or recruitment pool that reaches one. The
+screenshot proves they spawn; the path is open. Fixing the face makes them render correctly wherever
+it is. Second, and separately: six of the ten cultures are vanilla-id reskins (`empire` is Dunland,
+`aserai` Harad, `vlandia` Rohan, `khuzait` Rhûn, `sturgia` Dale, `battania` Khand), and both lookups
+build their id from `Culture.StringId`, so `gear_practice_dummy_rohan` is never asked for and
+SandBoxCore's Calradian entry answers instead. Those six sets are authored but unreachable, which is
+a content decision to make deliberately rather than a typo to repair. Written up in
+`docs/features/tournament-armor-assignment.md`.
+
+Data only, no code change. Docs: `docs/features/arena.md`,
+`docs/features/tournament-armor-assignment.md`, `docs/features/moduledata-validation.md`,
+`docs/modding/body-properties.md`, `docs/modding/npcs-notables-and-townsfolk.md`.
+
+### balance(party-templates): bandits and caravans sized against each other, not separately (#543, #544)
+
+Reported from play: bandit warbands reaching 200 men while caravans field 20 to 36, so caravans
+spend the campaign running away. Both halves were true, and the consequence is worse than the
+flight. Fleeing sets `IsAlerted`, and `CaravansCampaignBehavior.HourlyTickParty` will not choose a
+new destination while a caravan is alerted or fleeing, so a threatened caravan does not merely
+run: it parks and stops trading. That makes this upstream of #396, which treats permanently
+parked caravans and assumes `Alerted` is transient. At 200-man density it was not.
+
+**Growing caravans a bit would have achieved nothing.** The flee decision is a step function. In
+`DefaultMobilePartyAIModel.CalculateInitiativeScoresForEnemy` the avoid term is
+`ClampFloat((L < 1) ? ClampFloat(1/L, 0.05, 3) : 0, 0.05, 3)`, so at `L >= 1` it collapses to its
+0.05 floor and the score can never reach the 1.0 the engine needs, while below 1 it saturates at 3
+almost at once. A caravan eight times outmatched flees exactly as hard as one twice outmatched.
+Only crossing 1.0 changes anything, which is what this does.
+
+The 200 was deliberate (#315, 2026-07-02, `max_value="50"` on four stacks) and two later changes
+removed what had masked it: the 2026-09-01 lord-template walk-back excludes bandit templates by
+regex, and the 2026-08-07 TroopWeight leaderless-shed fix stopped the daily trim.
+
+**Sized by power, not headcount.** The AI compares `EstimatedStrength`, which is
+`sum(healthy x tierPower) x moraleFactor`. The eight raider cultures run from T1,T2,T2,T3 to
+T2,T3,T4,T4, so at a flat `max_value` their warbands spanned 64 to 112 power, a 1.75x spread that
+no single caravan number can sit above. `tools/rebalance_template_power.py` solves each of the 50
+templates for a power budget instead: raiders land at 76 to 79 power (56 to 80 bodies), caravans at
+93 or better against the strongest warband's 78.7, an `L` of 1.18. The surplus is headroom for the
+morale term, which ranges 0.7 to 1.0 per side.
+
+**The cap is the other half, and is not optional.** `CalculateMobilePartyMemberSizeLimit` guards its
+clan-tier and Steward branch `!party.IsCaravan`, so every caravan is capped at 20 to 50. An
+over-cap caravan is drained, not held: `DesertionCampaignBehavior` accepts `IsCaravan` and sheds a
+quarter of the excess daily with no morale condition, and `GetOverPartySizeEffect` costs half the
+party's speed at twice the cap. Raising the templates alone would have shipped a strictly worse
+game. `AiPartySizeService.ApplyCaravanScaling` adds a flat 70, deliberately ungated and without an
+MCM knob, because a switch that reverted the cap while the XML stayed large would ship exactly the
+shed it exists to prevent.
+
+Caravans do not become hunters: `CaravanPartyComponent` pins `Aggressiveness = 0f`, so the attack
+score is zero at any strength. Packs of bandits still take caravans, because the threat term sums
+nearby hostiles. Villagers are untouched and still flee, which is correct and was true in vanilla.
+
+Found on the way: `armed_trader_rohan`, `caravan_master_rohan`, `caravan_guard_rohan` and
+`veteran_caravan_guard_rohan` shipped with **no `level=` attribute and no skills at all**, the only
+four `CaravanGuard` NPCs in the repo in that state. The engine reads that as level 1, tier 0, 0.40
+power, so a Rohan caravan was as strong as a villager party and its troops had no weapon
+proficiency. No reference was broken and no file failed to parse, so every validator and test
+passed. Levels and skills now match the convention the other cultures use, and a shipped-data test
+is the sentinel.
+
+Docs: [docs/features/caravan-bandit-parity.md](docs/features/caravan-bandit-parity.md).
+62 new tests (47 tool, 9 shipped-data, 6 service) plus a source-order pin. Full suite green.
+
+A six-agent `/deep-review` followed, with the RCA at
+[docs/reviews/rca-caravan-bandit-parity-2026-09-06.md](docs/reviews/rca-caravan-bandit-parity-2026-09-06.md).
+Standards, engine compatibility (13 claims re-verified against the installed v1.4.8 DLLs),
+efficiency and completeness all passed. Eleven findings, all recorded: six in the new tool
+were fixed here, including two factual errors in the prose above (tiers 7-10 come from the
+MCM-settable `TaomSettings.Tier7Power..Tier10Power`, not the JSON) and a latent hazard where a
+hero-flagged troop would have been costed on the wrong curve.
+
+The review's one cross-feature finding is **fixed, not deferred** (#549). `SupplyLines` built
+the player's supply caravans from the same `culture.CaravanPartyTemplates[0]` this retune
+resized, so its escort went from 20-29 to 60-70 troops and its provisioning cost, linear in
+headcount, with it. It was never an `IsCaravan` party, so the paired cap raise could not reach
+it, and it had in fact been over its flat 20-man cap for 14 of 17 cultures since long before
+this change. It now has its own `supply_caravan_template_*` crew templates, 4-8 men sized to
+fit under that cap alongside the default 10-man escort, authored by
+`tools/generate_supply_caravan_templates.py`. The old fallback was worse than the bug: a
+culture with no caravan templates got `culture.DefaultPartyTemplate`, a LORD template.
+
+The review also measured two things this work had asserted without checking. Early-game raider
+spawns had been squeezed to 20-33 bodies with almost no spread, because the early ratio spans
+only 0.08 to 0.32 and `max` had moved close to `min`; the bandit floor is now 12.5% of the
+ceiling, putting them at 12-32 with the spread restored as far as the lower ceiling allows.
+And `BanditPartySizeCurve` now clamps out around a quarter of the way through a campaign,
+which is documented in its own feature doc rather than left to surprise someone.
+
+### feat(settlement-food): towns can feed themselves, and therefore hold a garrison (#546)
+
+Players reported cities running permanently out of food and being unable to support their lords,
+with Isengard's Orthanc as the example. Orthanc is not the bug. Measuring the LIVE
+`TAOM_Map/settlements.xml` against the vanilla formula, **70 of 72 towns start with a negative daily
+food balance, mean -38.0/day, before garrison consumption is counted at all**. Orthanc is 6th worst
+at -73.0/day.
+
+Vanilla consumption is linear in prosperity (`Prosperity/40`); production is flat (base 15, plus at
+most 18 per bound village). So every town above roughly `production × 40` prosperity is
+arithmetically guaranteed to starve. Vanilla Calradia sits right at that line: 54 towns, 2 to 3
+villages, break-even around 1,500 to 2,000 prosperity. TAOM ships 64 towns above 3,000 and two at
+5,100. The map moved prosperity far past vanilla's design centre and left production alone, and the
+2026-08-14 economy floor pass (eight cultures lifted to 4,800 for income reasons) made it worse.
+
+`TaomSettlementFoodModel` has had knobs for this since #289, but every one of them shipped at its
+vanilla value, so the feature relieved nothing. Its original Troop-Weight garrison correction also
+became an inert no-op in the 2026-07-11 rework. The mod was running vanilla food math.
+
+The fix adds one term vanilla has no equivalent of: `hinterlandFoodPerProsperity`, production scaled
+by prosperity, siege-gated like every other production knob and defaulting to 0. Flat knobs cannot
+hold a balance across a 600 to 5,100 prosperity range, and prosperity moves during play, so a town
+tuned to break even today starves once it grows. Scaling production with prosperity makes the shape
+stable at any size.
+
+One invariant carries the whole design: the rate must stay **strictly** below
+`1 / prosperityFoodDivisor`. At or above it, net food stops responding to prosperity, a surplus fief
+overflows its store forever, vanilla turns the overflow into prosperity (+0.1 per point), and
+prosperity, town gold and garrison caps inflate map-wide with nothing to stop them. The provider
+rejects a violating value against the sanitized divisor, and `SettlementFoodShippedConfigTests` fails
+the build rather than trusting a runtime warning nobody reads.
+
+Shipped: divisor 45, town base 30, village multiplier 8, flat 5, hinterland 0.02 (below 1/45).
+Across the 72 towns, before garrison: negative towns 70 → 0, mean -38.0 → +75.1/day, worst -88.5 →
++27.2/day, Orthanc -73.0 → +42.1/day. Net still declines as a fief grows (Orthanc +42.1 at
+prosperity 4,000, +24.3 at 12,000), so vanilla's self-limiter survives.
+
+This is also why fiefs could not support lords, and that half was documented backwards.
+`docs/reference/engine/settlement-economy-food-prosperity.md` claimed garrison troops never starve to
+death. Verified against the installed 1.4.8 DLL, `DefaultPartyHealingModel.GetDailyHealingForRegulars`
+kills **10% of garrison regulars per day** when the settlement is starving and
+`SettlementHelper.IsGarrisonStarving` holds, which reduces to `production < garrison / 20`. Before
+this change 17 of 72 towns could not hold 800 men and Orthanc capped at 540; after it the lowest
+threshold on the map is 1,860. The doc is corrected, and its food section is now re-verified against
+1.4.8 rather than 1.4.5.
+
+Deliberately not done: no map edits. Orthanc holds one village while Isengard's two 600-prosperity
+castles hold three each, and `town_EW10` / `town_EW11` hold none, so the villages are misallocated
+rather than scarce. That is a `bound=` change in the unversioned LIVE map and wants an in-repo
+validator gate beside it.
+
+The deep review then found one HIGH on the fix itself, and it is worth recording because the
+defective line was not one this change wrote. `ApplyFoodAdjustment` gated on `if (delta == 0f)`,
+which was correct while every input was an int or a provider-validated config float. The new term
+feeds `Town.Prosperity`, an engine float validated by nobody, and `NaN == 0f` is false. The
+consequence is not a bad number for a day: `Town.Prosperity`'s setter only floors at zero, so NaN is
+storable, and `Town.DailyTick`'s `< 0f` and `> cap` clamps are both false for NaN, so `FoodStocks`
+would stay NaN permanently inside a `[SaveableProperty]` and persist into the save. Fixed with a
+positive-requirement gate on the input plus a finiteness refusal at the service exit, and 4
+regression tests that all fail without the gates. This is instance six of the NaN-gate class, so
+`csharp-architecture.md` gains a fourth named category (a new input changing the provenance reaching
+an existing gate) per its own widen-rather-than-patch instruction. RCA:
+`docs/reviews/rca-settlement-food-2026-09-06.md`.
+
+51 SettlementFood tests green; full suite 8175 passed. Four failures on this branch are pre-existing
+and unrelated, confirmed by running them against a pristine `HEAD`.
+
+Research: DefaultSettlementFoodModel, DefaultPartyHealingModel, SettlementHelper.IsGarrisonStarving,
+Village.GetHearthLevel (all installed v1.4.8 via ilspycmd)
+Not-tested: in-game food tooltip and the deployed-ModuleData path (needs a running campaign)
+Save-compat: config-only, no new saved state; prosperity and food stocks are existing saved fields
+
+### fix(diplomacy): the kingdom vote window that could never be closed (#547)
+
+Players in a kingdom reported that a decision popup sometimes locks the game: the vote resolves, the
+verdict is shown, and the window will not go away. It is not a crash and not a freeze. The campaign
+keeps running, the portraits still open the encyclopedia, and the only way out is Task Manager. One
+player pinned the trigger exactly: it is not the faction, it is one vote following another. Playing
+Rohan, the ballot to call Gondor to war against Isengard resolves fine, then the same ballot for Dale
+sticks. Their workaround was to back fully out of one decision before starting the next.
+
+This is a vanilla 1.4.8 bug. TAOM has no patch, mixin or prefab override anywhere on the kingdom
+decision UI. What TAOM contributes is frequency: `TaomAllianceModel` allows unlimited alliances, and
+vanilla `AllianceCampaignBehavior.OnWarDeclared` queues one `ProposeCallToWarAgreementDecision` per
+allied kingdom, so a single war declaration can produce a run of back-to-back ballots.
+
+`KingdomDecisionsVM.RefreshWith` builds the popup without ever calling `ShouldBeCancelled()`, so it
+will happily open a window on an election that `StartElection` has already marked cancelled. Clicking
+Done then reaches `KingdomElection.ApplySelection()`, which is `if (!IsCancelled) { ... }`: a silent
+no-op. `KingdomDecisionConcluded` never fires, `IsKingsDecisionOver` stays false, and
+`KingdomDecisionPopupWidget` never gets the edge that starts its five-second auto-close timer. That
+timer, not a click, is what normally dismisses the popup, which is why players noticed it is "not
+always necessary to click Done". Meanwhile `ExecuteFinalSelection` has already set
+`_finalSelectionDone`, which disables the popup's only button. The window is left with nothing to
+press and no timer running, and the kingdom screen holds map navigation locked while it is up.
+
+A ballot goes stale mid-run because voting yes declares its war synchronously
+(`StartCallToWarAgreement` to `DeclareWarAction.ApplyByCallToWarAgreement`), which re-enters
+`OnWarDeclared` and can drag the next ballot's target kingdom into the same war.
+
+Three seams, because there are three separate holes. A prefix on `RefreshWith` refuses to build a
+window for a stale ballot, which also closes `KingdomManagementVM.ForceDecideDecision`: the
+Settlement, Clan, Policy and Diplomacy tabs reach the popup through it and check nothing at all. A
+postfix on `ExecuteFinalSelection` force-closes any window whose election turns out cancelled.
+That one is a backstop rather than a race guard: `IsCancelled` is fixed when the window is built,
+so it covers the cases where the prefix never got to judge the ballot at all. A postfix on
+`HandleDecision` re-arms the ballot queue: vanilla's own bail-out switches the check off without
+recording the ballot, so every later decision that session is silently never offered, and reopening
+the Kingdom screen is the only reset. That last one is exactly the workaround players found, which is
+good confirmation the model is right.
+
+Suppressing a stale ballot is safe rather than a judgement call: vanilla's hourly
+`KingdomDecisionProposalBehavior.UpdateKingdomDecisions` already deletes every decision whose
+`ShouldBeCancelled()` is true. TAOM only declines to display what the engine is about to discard, and
+deliberately does not remove it, so the pruner keeps ownership and the cancellation event still fires
+once. A withdrawn ballot now names itself in a one-line notice instead of vanishing silently.
+
+The guard closes through the view model's own `_onDecisionOver` callback rather than `ExecuteDone`,
+because `ExecuteDone` opens with `GetChosenOutcomeText()`, which dereferences the election's
+`_chosenOutcome`, which is null on a cancelled election. Calling it would have traded the hang for
+an NRE.
+
+Vote volume is unchanged. If the number of prompts is itself the complaint, the alliance cap is the
+knob, not this guard.
+
+Constraint: KingdomDecisionsVM builds the popup with no staleness check and ApplySelection reports
+nothing when it declines, so there is no seam that both prevents and reports; the guard needs one
+patch per hole.
+Rejected: closing via ExecuteDone; it NREs on a cancelled election's null _chosenOutcome.
+Rejected: removing the stale decision ourselves; vanilla's hourly pruner already owns removal and
+raises KingdomDecisionCancelled; doing it here would double-fire the event.
+Research: KingdomDecisionsVM, DecisionItemBaseVM, KingdomElection, KingdomDecisionPopupWidget,
+KingdomManagementVM, GauntletKingdomScreen, AllianceCampaignBehavior, ProposeCallToWarAgreementDecision,
+KingdomDecisionProposalBehavior (all installed v1.4.8 via ilspycmd)
+Not-tested: the three patch bodies (Harmony patches need a live campaign; covered by binding and IL
+call-presence tests instead)
+Save-compat: no new saved state; unresolved decisions are an existing saved field and are left alone
+
+### fix(troop-weight): heavy troops take more party space instead of shrinking the party
+
+Players reported that recruiting troops *reduces* their party size limit. They were reading the
+feature correctly. A ten-body party: a lord plus nine weight-2.0 Nöldorin Lancers, showed
+`Troops (10 / 11)`, and its header tooltip showed `Base size +20 / Heavy troops −9 / Total +11`.
+That `Heavy troops` line is TAOM's own, subtracted by `SubtractResultFramePenalty`.
+
+The 2026-07-11 rework put the elite tax on the denominator because that was the only place left once
+the `PartyBase.NumberOfAllMembers` patches came out. It is arithmetically correct and reads exactly
+backwards: the design intent is "an elite troop costs more party space", and the screen said
+"recruiting elites takes party space away from you."
+
+Enforcement did not change. `PartyBase.PartySizeLimit` still resolves through
+`GetPartyMemberSizeLimit(party)` with `includeDescriptions: false`, still deflates by the weight
+surplus, still clamps at ≥ 1. What moved is which side of the fraction carries the cost: capacity
+readouts now show weighted-used over the true base, `19 / 20`. The two frames are the same cap:
+`raw > deflated ⟺ raw > base − surplus ⟺ weighted > base`, which is why every vanilla
+over-capacity warning flips at the identical moment and none of them needed rewriting, and why the
+recruit cap, the shed planner's budget, AI behaviour and save compatibility are all untouched.
+
+The tooltip line is gone because `ApplyPartySizeWeightPenalty` now takes `includeDescriptions` and
+returns early on the display path. That is safe on evidence rather than assumption:
+`GetPartyMemberSizeLimit` has exactly two call sites in the v1.4.8 engine, and the
+`includeDescriptions: true` one, `PartyBase.PartySizeLimitExplainer`, has exactly two consumers,
+both tooltips. No mod DLL in the install references it either.
+
+Five display postfixes join `Patch17_TroopWeight`, all delegating to one `TroopWeightDisplayHook`:
+the party-screen header, the main-party health tooltip's `Land Troop Capacity` row, the clan-screen
+party row, the recruitment screen (which weights the pending cart too), and a `×N` tag on heavy
+roster rows. That last one is not decoration: a header reading `19 / 20` above ten visible bodies is
+a miscount to anyone who has not read the feature doc, and without it this change would relocate the
+confusion rather than end it.
+
+Deep review caught three things worth recording. The party-screen header had taken a new denominator
+while vanilla's red over-capacity tint kept the old one, so a party whose penalty had been clamped
+showed a comfortable `30 / 100` beside a red warning, reachable by the exact workflow of dragging
+the heavy troops off. `BuildLabel` now returns an over-capacity verdict with the label and the caller
+clears a stale tint, downgrade only, so it can never fabricate a warning vanilla did not raise. A
+sixth postfix on `CampaignUIHelper.GetPartyHealthTooltip` was deleted as dead code: that method emits
+no capacity row at all and has no caller in any shipped client assembly, so there is no any-party
+capacity rewrite and this entry no longer claims one. And the hook's own docstring wrongly called the
+change cosmetic, `RecruitmentVM.ExecuteDone` and the party screen's done-path both gate confirmation
+prompts on properties it rewrites, so those prompts now fire in the weighted frame. That is intended,
+and `WeightedFrameIdentityTests` sweeps `raw > deflated ⟺ weighted > base` over every weight in
+`troop_weights.xml` so a new tier cannot silently move a threshold. RCA:
+`docs/reviews/rca-troopweight-usage-frame-2026-09-06.md`.
+
+Known limitations: a party nothing has ever queried renders the vanilla fraction for one frame until
+its size limit is first read; toggling `EnableTroopWeight` off mid-session leaves an already-open
+screen stale until its next refresh; and when `WoundedCount > Number` the header counts the entry as
+wounded where vanilla drops it entirely. All three are self-healing or unreachable under normal
+roster invariants.
+
+Headcounts still read raw everywhere: map nameplate, the "X vs Y" encounter menu, battle, and
+specifically the `Battle Ready` / `Wounded` rows sitting directly above the capacity row in the same
+tooltip. Weighting those is what manufactured the phantom-wounded bug in June, and
+`DisplayHook_DoesNotRewriteHeadcountRows` now pins that they are left alone.
+
+The header patch targets `PartyVM.RefreshPartyInformation`, not the `PopulatePartyListLabel` prefix
+the 2026-07-11 deletion set had used. That builder is `private static`, is handed no party, and
+produces the **prisoner** headers from the same code path, so reinstating it would have weighted
+`Prisoners (0 / 15)` as well. Postfixing the caller reaches `__instance` and only the two troop
+labels, suppresses no vanilla code, and retires that prefix's outstanding Cluster-A audit flag.
+
+New pure `TroopWeightDisplay` (`DisplayUsed` / `DisplayLimit` / `FormatWeightMultiplier`, all
+one-way fallbacks so a failed roster walk renders the raw count rather than `0 / 20`), new
+`{=taom_troop_weight_tag}` across 12 languages, and `taom.print_party_size` now prints the enforced
+and displayed frames side by side so the two can be compared in one line. `docs/features/troop-weight-system.md`
+also had its Key Files, Tests, UI-displays and Performance sections corrected: they had been
+describing the architecture the 2026-07-11 rework deleted.
+
+Not-tested: the six Harmony postfixes (sealed view models, verified in-game). The arithmetic they
+call is fully unit-tested, and `EveryHarmonyPatch_ResolvesTargetMethod_AgainstInstalledEngine`
+confirms all seven targets resolve against the installed v1.4.8 engine.
+
+### feat(marriage): the free peoples no longer marry orcs
+
+Boromir, Noble of Gondor, was married to Nurzga, a Misty Mountain orc, with two children by her.
+The marriage was dated Spring 1086, so it happened in play rather than being seeded. Nothing was
+broken: TAOM had never had a cross-alignment marriage rule at all. The only `MarriageModel` the mod
+shipped blocked the nine Ringwraiths and handed everyone else to vanilla, and vanilla has no notion
+of Free and Evil. `RomanceCampaignBehavior.CheckNpcMarriages` picks the partner clan with
+`Clan.All[MBRandom.RandomInt(Clan.All.Count)]`, one uniform draw over every clan in the world, with
+kingdom acting only as a halving of the odds. The single hard cross-faction filter is "not at war
+and clan relation at least -50", so the match opened up the moment Gondor stopped fighting the
+Misty Mountain Orcs. There are 149 unmarried orc-culture female lords in the day-zero pool.
+
+The block is one overridden method. `IsCoupleSuitableForMarriage` is where every path meets: the AI
+daily tick reaches it through `NpcCoupleMarriageChance`, player courtship and the marriage barter
+through `MarriageCourtshipPossibility`, `MarriageOfferCampaignBehavior` directly, and
+`MarriageAction.ApplyInternal` re-checks it before assigning the spouse. It goes in
+`TaomMarriageModel` rather than a new model because `AddModel` does not compose: the engine's
+backwards scan resolves exactly one model per type, so a second marriage model would have silently
+shadowed the Ringwraith block.
+
+The rule keys on culture, not kingdom. Culture is stable across a lord's career, survives on a
+clanless hero, and is not the thing marriage itself changes (`GetClanAfterMarriage` moves the bride
+into the groom's clan and kingdom). All 1,184 lords in `lords.xml` use 22 cultures and every one is
+classified in `execution/alignment.json`. An unclassified culture would resolve Neutral, which
+means "may marry anyone", so the gap would be a silent permit rather than a visible failure; rather
+than a runtime kingdom fallback carrying its own defection semantics,
+`ShippedCultureAlignmentCoverageTests` makes the gap fail the build.
+
+Blocking alone would have been a slow demographic bug. The clan pool is 53% Evil, 25% Free and 16%
+Neutral, so a Free lord's one draw a day would have landed on a usable clan about 41% of the time
+and Gondor, Rohan and Dale would have quietly run short of heirs. `Patch81_MarriageAlignment` is a
+transpiler that swaps both `Clan.All` reads in `CheckNpcMarriages` for an alignment-filtered pool,
+leaving vanilla's `.Count`, indexer and every filter after the draw untouched. `Clan.All` appears on
+exactly one source line in that class, so the anchor is unambiguous, and the transpiler self-bails
+to vanilla IL if it does not find exactly two reads. `MarriageAlignmentBindingTests` pins both that
+count and the instance-method-taking-a-Clan assumption the emitted `Ldarg_1` depends on. The
+candidate pools themselves live in `MarriageClanPoolCache`, and `MarriageClanPoolStamp` decides when
+they go stale: it keys on `Campaign.UniqueGameId` rather than the `Campaign` object, so a finished
+campaign's object graph is not held alive by a static field.
+
+Neutral cultures marry anyone, matching how `AlignmentRecruitment` and three other features read the
+same table. The service deliberately avoids `IAlignmentService.AreEnemyAlignments`, whose Neutral
+handling is inverted and would have barred every Umbar, Shaghana, Abanissa and Dunland hero from
+marrying at all.
+
+Existing marriages are left alone. The rule applies to new ones only, so Boromir stays married in a
+save where it already happened. That makes the fix look like nothing happening, so
+`taom.print_marriages` reports every cross-alignment couple with child counts, read-only: take a
+count, run the campaign forward, confirm it has not grown.
+
+Four MCM knobs under World/Marriage Alignment (master, apply to player, apply to AI, steer the AI
+search) over `marriage_alignment/marriage_alignment_config.json`. Issue #542.
+
+### fix(voices): dwarf battle lines fired constantly because long clips sat on native-fired slots
+
+Closes #548.
+
+Players reported dwarves shouting in battle every two to four seconds, "For the King Under the
+Mountain" among them. There is no rate to turn down, because no such control exists. A
+`<voice_definition>` carries `type`, `path` and `face_anim` and nothing else, and the `weight` in
+`module_sounds.xml` picks between takes inside one bark rather than how often the bark happens.
+Frequency is a fixed property of the `VoiceType` slot, so choosing the slot is choosing the
+frequency.
+
+`D1_Grunts1.wav` and `D1_Grunts2.wav` run 7.93 and 8.77 seconds and were bound to `Grunt`, `Pain`
+and `Focus`. `Grunt` has zero managed call sites anywhere in the shipping client, so native fires
+it per melee exertion. The warcries, 5.41 to 11.81 seconds, sat on `Yell`. Those files are
+sound-set compilations holding several complete spoken lines, so where vanilla plays a short
+exertion a dwarf delivered a speech, and a formation of them overlapped into continuous talking.
+`D1_Death.wav` was a 20.6 second death.
+
+`Yell` now points at the existing `Battlecries` bank, three barks of 1.8 to 3.1 seconds that were
+reachable only from multiplayer slots and so were silent in singleplayer. The warcries moved to
+`Charge`, which `OrderController.PlayOrderGestures` fires once per order and hands the order
+controller's `Owner` rather than the formation, so exactly one dwarf says the line. They also came
+off `Victory`, which repeats per cheering agent on a one to eight second timer and would have been
+nearly as bad as the original bug.
+
+This shipped because nothing measured a clip against the slot it sits on, and both an over-long
+clip and an unresolvable path fail silently at every layer. `tools/audit_voice_clip_lengths.py`
+now resolves every path in every voice definition, enforces the documented category caps, and
+holds each frequently-fired slot to its own bar, two seconds for the wordless ones and three
+and a half for `Yell`, calibrated against `uruk_01`, the one custom voice
+set that never drew a complaint. Reintroducing the defect fails the gate. Older violations,
+including the same defect in `uruk_hai_01`, sit in `tools/voice-clip-baseline.txt` with a stated
+reason each instead of being tolerated silently, and each entry pins the duration it was accepted
+at, so re-cutting a baselined clip longer resurfaces it rather than riding the old exemption.
+
+The adversarial review of that gate is the more useful half of this change. It found three
+demonstrated false PASSes on exactly the defect class the gate exists to catch: an unrecognised
+`type=` string such as `grunt` escaped every length rule, a baseline entry suppressed by identity
+rather than by measurement, and a run that inspected nothing reported success. A validator that
+passes the bug it was written for is worse than none, because it turns an open question into a
+false assurance. All three are fixed and each is now pinned by a test named for the hole it
+closes. Writing those tests immediately caught a fourth defect introduced while fixing the third.
+Full write-up, including two claims that went into code comments without being run:
+`docs/reviews/rca-dwarf-voices-2026-09-06.md`.
+
+Only the dwarves changed. Splitting the compilations into single utterances, and the `uruk_hai_01`
+case where `Yell` and `Charge` point at the same bank, are follow-ups.
+
 ## 2026-09-05
 
 ### fix(modding): 42 corrections from the Codex adversarial review, each re-verified first

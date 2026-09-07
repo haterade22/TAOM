@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 47 GameModel overrides. All follow the same pattern.
+TAOM has 46 GameModel overrides. All follow the same pattern.
 
 ## Pattern
 
@@ -59,7 +59,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (47 total)
+## Existing Overrides (46 total)
 
 | Model | Base | Feature |
 |-------|------|---------|
@@ -69,7 +69,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | `CareerSystem` |
 | `TaomBanditDensityModel` | `DefaultBanditDensityModel` | `BanditManagement` |
 | `TaomNotableSpawnModel` | `DefaultNotableSpawnModel` | `CulturalFeats` |
-| `TaomMarriageModel` | `DefaultMarriageModel` | `NazgulFamily` |
+| `TaomMarriageModel` | `DefaultMarriageModel` | `NazgulFamily` + `MarriageAlignment` (one slot, two rules) |
 | `TaomSettlementEconomyModel` | `DefaultSettlementEconomyModel` | `SettlementEconomy` |
 | `TaomSettlementFoodModel` | `DefaultSettlementFoodModel` | `SettlementFood` |
 | `TaomSiegeEventModel` | `DefaultSiegeEventModel` | `Siege` |

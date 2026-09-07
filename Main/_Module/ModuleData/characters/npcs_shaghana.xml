@@ -5,7 +5,7 @@
   <!-- Shaghâna uses harad face templates and aserai civilian equipment -->
 
   <!-- Notables: Merchants (10) -->
-  <NPCCharacter id="spc_notable_shaghana_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_0}Shrewd Shaghâna trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+  <NPCCharacter id="spc_notable_shaghana_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_0}Shrewd Shaghâna trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -20,7 +20,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_shaghana_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_0b}Shaghâna spice dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+  <NPCCharacter id="spc_notable_shaghana_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_0b}Shaghâna spice dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -35,7 +35,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_shaghana_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_1}Shaghâna caravan owner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+  <NPCCharacter id="spc_notable_shaghana_1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_1}Shaghâna caravan owner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Calculating" value="2" /></Traits>
@@ -172,7 +172,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_shaghana_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_6}Shaghâna tribal elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+  <NPCCharacter id="spc_notable_shaghana_6" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.shaghana" name="{=aom_sh_notable_6}Shaghâna tribal elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
@@ -238,7 +238,7 @@
   </NPCCharacter>
 
   <!-- Notables: Gang Leaders (6) -->
-  <NPCCharacter id="spc_notable_shaghana_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_gl1}Shaghâna enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+  <NPCCharacter id="spc_notable_shaghana_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.shaghana" name="{=aom_sh_notable_gl1}Shaghâna enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="2" /><Trait id="Mercy" value="-2" /></Traits>
@@ -274,7 +274,7 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
-  <NPCCharacter id="spc_notable_shaghana_11" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_11}Shaghâna raiders' boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+  <NPCCharacter id="spc_notable_shaghana_11" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.shaghana" name="{=aom_sh_notable_11}Shaghâna raiders' boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
     <face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
     <skills></skills>
     <Traits><Trait id="Valor" value="2" /><Trait id="Calculating" value="1" /></Traits>

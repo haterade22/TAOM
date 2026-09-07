@@ -53,7 +53,7 @@
 	</NPCCharacter>
 
 	<!-- Village Woman -->
-	<NPCCharacter id="village_woman_rhun" default_group="Infantry" name="{=aom_rh_village_woman}Village Woman" occupation="Villager" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_village_woman}Village Woman" occupation="Villager" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -229,7 +229,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_rhun" default_group="Infantry" name="{=aom_rh_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -295,7 +295,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_rhun" default_group="Infantry" name="{=aom_rh_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -308,7 +308,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_rhun" default_group="Infantry" name="{=aom_rh_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -323,7 +323,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_rhun" default_group="Infantry" name="{=aom_rh_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -367,7 +367,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="villager_female_child_rhun" default_group="Infantry" name="{=aom_rh_villager_f_child}Village Child" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_female_child_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_villager_f_child}Village Child" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -380,7 +380,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="villager_female_teenager_rhun" default_group="Infantry" name="{=aom_rh_villager_f_teen}Village Teenager" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_female_teenager_rhun" is_female="true" default_group="Infantry" name="{=aom_rh_villager_f_teen}Village Teenager" occupation="Townsfolk" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -575,7 +575,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_rhun" default_group="Infantry" is_hero="false" name="{=aom_rh_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_rhun" is_female="true" default_group="Infantry" is_hero="false" name="{=aom_rh_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.khuzait" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -645,7 +645,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="barber_rhun" default_group="Infantry" is_hero="false" is_female="true" occupation="Townsfolk" culture="Culture.khuzait" name="{=aom_rh_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="barber_rhun" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.khuzait" name="{=aom_rh_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
@@ -766,7 +766,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_rhun_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0}Crafty eastern trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rhun_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0}Crafty eastern trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -781,7 +781,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rhun_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0b}Easterling wine merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rhun_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0b}Easterling wine merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -796,7 +796,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rhun_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_1}Proud Easterling merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_rhun_1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.khuzait" name="{=aom_rh_notable_1}Proud Easterling merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -942,7 +942,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rhun_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_6}Stern Easterling elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_rhun_6" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_6}Stern Easterling elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
@@ -1010,7 +1010,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_rhun_gl1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_gl1}Fierce Easterling ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rhun_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.khuzait" name="{=aom_rh_notable_gl1}Fierce Easterling ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -1026,7 +1026,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_rhun_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_10}Ruthless Easterling smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_rhun_10" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_10}Ruthless Easterling smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -1183,6 +1183,7 @@
 
 	<!-- Practice Dummies -->
 	<NPCCharacter id="gear_practice_dummy_rhun" default_group="Infantry" level="15" is_hero="false" name="{=aom_rh_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.khuzait">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1193,6 +1194,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_1_rhun" default_group="Infantry" level="15" is_hero="false" name="{=aom_rh_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.khuzait">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1204,6 +1206,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_2_rhun" default_group="Infantry" level="25" is_hero="false" name="{=aom_rh_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.khuzait">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1215,6 +1218,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_3_rhun" default_group="Infantry" level="35" is_hero="false" name="{=aom_rh_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.khuzait">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1227,6 +1231,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="gear_dummy_rhun" default_group="Infantry" level="15" is_hero="false" name="{=aom_rh_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.khuzait">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">

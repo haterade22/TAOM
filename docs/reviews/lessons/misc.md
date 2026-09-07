@@ -91,3 +91,22 @@ enumerate what the buggy behaviour was incidentally providing before removing it
 and "the behaviour is YAGNI" are different claims and need separate answers.
 
 **Source:** `docs/reviews/rca-field-commission-2026-08-07.md` findings 1, 3, 6, 10.
+
+### Never promote a subagent's factual detail into a durable artifact without running the check yourself
+A research subagent reported that Python's `wave` module "misreports IMA ADPCM by roughly 10x". The
+surrounding argument was sound and its conclusion was right, so the detail was written verbatim into
+a code comment justifying a design choice. It is false: `wave` does not misreport ADPCM, it raises
+`wave.Error: unknown format: 17`. The command that settles it is two seconds long. In the same
+changeset a docstring asserted "every mp3 in this tree is CBR" (38 carry a Xing/Info VBR frame, and
+a VBR clip can measure SHORT, the unsafe direction for a length gate) and a doc table asserted a
+`VoiceType` had exactly one call site (a second exists in the character-creation facegen preview).
+- **Why missed:** all three claims were specific, checkable, and felt settled, so the seconds were
+  not spent. The subagent one is the sharpest: `evidence-over-claims.md` §A.4 already names exactly
+  this failure, and a persuasive report made its incidental details feel verified by association.
+  A confident subagent report is a claim, not evidence, and its supporting details are separate
+  claims from its conclusion: adopting the conclusion does not adopt the reasons.
+- **Prevent:** before a subagent-sourced fact goes into a code comment, doc table, CHANGELOG or
+  commit message, run the one command that proves it. If the claim is not worth the seconds, it is
+  not worth stating: cut it, or attribute it as unverified. Comments that justify a design choice
+  are load-bearing precisely because the next reader will not re-derive them.
+- **Source:** docs/reviews/rca-dwarf-voices-2026-09-06.md (2026-09-06 deep review)

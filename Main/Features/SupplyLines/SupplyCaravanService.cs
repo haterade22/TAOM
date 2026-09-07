@@ -478,15 +478,52 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
 
     // --- spawn helpers ---
 
+    /// <summary>
+    /// The crew template a supply caravan spawns from: SupplyLines' own, never the AI caravan one.
+    ///
+    /// Until #549 this returned <c>culture.CaravanPartyTemplates[0]</c> directly, which coupled the
+    /// player's logistics escort to AI caravan balance. The #543 parity retune resized those
+    /// templates for bandit parity and the supply escort went from 20-29 troops to 60-70, taking
+    /// the provisioning cost (linear in headcount) with it. The two answer different questions: an
+    /// AI caravan must survive a warband alone, a supply caravan carries whatever escort the player
+    /// paid for.
+    ///
+    /// The id is DERIVED from the culture's own caravan binding rather than from its StringId, so a
+    /// shared roster resolves correctly with no mapping table to go stale: Lothlorien binds
+    /// Rivendell's caravan template and therefore gets Rivendell's supply crew. Templates are
+    /// authored by <c>tools/generate_supply_caravan_templates.py</c> and every binding is required
+    /// to have one by <c>SupplyCaravanTemplateTests</c>.
+    ///
+    /// Returns null when nothing resolves, which the caller already handles by spawning with no
+    /// template. That is deliberately NOT a fallback to <c>culture.DefaultPartyTemplate</c> as
+    /// before: that is a LORD party template running to hundreds of troops, a far worse answer than
+    /// an unescorted caravan.
+    /// </summary>
     private static PartyTemplateObject PickCaravanTemplate(CultureObject culture)
     {
-        if (culture == null)
+        var templates = culture?.CaravanPartyTemplates;
+        if (templates == null || templates.Count == 0)
             return null;
-        var templates = culture.CaravanPartyTemplates;
-        if (templates != null && templates.Count > 0)
-            return templates[0];
-        return culture.DefaultPartyTemplate;
+
+        var supplyId = SupplyTemplateIdFor(templates[0]?.StringId);
+        return supplyId == null
+            ? null
+            : MBObjectManager.Instance.GetObject<PartyTemplateObject>(supplyId);
     }
+
+    /// <summary>
+    /// `caravan_template_rivendell` becomes `supply_caravan_template_rivendell`. Anything that is
+    /// not a caravan template id returns null rather than a plausible-looking id that resolves to
+    /// nothing. Engine-free; unit-tested.
+    /// </summary>
+    internal static string SupplyTemplateIdFor(string caravanTemplateId)
+        => string.IsNullOrWhiteSpace(caravanTemplateId)
+           || !caravanTemplateId.StartsWith(CaravanTemplatePrefix, StringComparison.Ordinal)
+            ? null
+            : SupplyTemplatePrefix + caravanTemplateId.Substring(CaravanTemplatePrefix.Length);
+
+    private const string CaravanTemplatePrefix = "caravan_template_";
+    private const string SupplyTemplatePrefix = "supply_caravan_template_";
 
     private void FillCargo(MobileParty party, SupplyOrder order)
     {

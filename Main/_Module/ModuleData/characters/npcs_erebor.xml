@@ -147,7 +147,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -199,7 +199,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_village_woman}Village Woman" occupation="Villager" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_village_woman}Village Woman" occupation="Villager" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -382,7 +382,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_erebor" race="dwarf" default_group="Infantry" is_hero="false" name="{=aom_er_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_erebor" is_female="true" race="dwarf" default_group="Infantry" is_hero="false" name="{=aom_er_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -554,7 +554,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_erebor" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_erebor" is_female="true" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -569,7 +569,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_erebor" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_erebor" is_female="true" race="dwarf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.erebor" name="{=aom_er_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -585,7 +585,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Merchants (10) -->
-	<NPCCharacter id="spc_notable_erebor_0" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0}Cautious dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_erebor_0" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0}Cautious dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -600,7 +600,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_erebor_0b" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0b}Dwarven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_erebor_0b" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0b}Dwarven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
@@ -615,7 +615,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_erebor_1" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_1}Ruthless dwarven trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+	<NPCCharacter id="spc_notable_erebor_1" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_er_notable_1}Ruthless dwarven trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
@@ -747,7 +747,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Preachers (3) -->
-	<NPCCharacter id="spc_notable_erebor_5" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_er_notable_5}Zealous dwarven loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+	<NPCCharacter id="spc_notable_erebor_5" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_er_notable_5}Zealous dwarven loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -827,7 +827,7 @@
 	</NPCCharacter>
 
 	<!-- Notables: Gang Leaders (6) -->
-	<NPCCharacter id="spc_notable_erebor_gl1" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_gl1}Protective dwarven ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_erebor_gl1" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.erebor" name="{=aom_er_notable_gl1}Protective dwarven ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
@@ -843,7 +843,7 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
-	<NPCCharacter id="spc_notable_erebor_10" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_10}Ironic dwarven gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_erebor_10" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_10}Ironic dwarven gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
@@ -1106,7 +1106,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1119,7 +1119,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1134,7 +1134,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1149,7 +1149,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1162,7 +1162,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_erebor" race="dwarf" default_group="Infantry" name="{=aom_er_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_erebor" is_female="true" race="dwarf" default_group="Infantry" name="{=aom_er_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.erebor" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>

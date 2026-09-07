@@ -319,7 +319,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" name="{=aom_dg_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" is_hero="false" name="{=aom_dg_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -407,7 +407,7 @@
 	<!-- Notables -->
 
 	<!-- Merchant 1: Cautious Dol Guldur merchant -->
-	<NPCCharacter id="spc_notable_dolguldur_0" name="{=aom_dg_notable_0}Cautious Dol Guldur merchant" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+	<NPCCharacter id="spc_notable_dolguldur_0" is_female="true" name="{=aom_dg_notable_0}Cautious Dol Guldur merchant" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -431,7 +431,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 2: Shadowy Dol Guldur haggler -->
-	<NPCCharacter id="spc_notable_dolguldur_0b" name="{=aom_dg_notable_0b}Shadowy Dol Guldur haggler" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+	<NPCCharacter id="spc_notable_dolguldur_0b" is_female="true" name="{=aom_dg_notable_0b}Shadowy Dol Guldur haggler" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -453,7 +453,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 3: Ruthless dark orc provisioner -->
-	<NPCCharacter id="spc_notable_dolguldur_1" name="{=aom_dg_notable_1}Ruthless dark orc provisioner" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
+	<NPCCharacter id="spc_notable_dolguldur_1" is_female="true" name="{=aom_dg_notable_1}Ruthless dark orc provisioner" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -617,7 +617,7 @@
 	</NPCCharacter>
 
 	<!-- Preacher 1: Fanatical Dol Guldur war-chanter -->
-	<NPCCharacter id="spc_notable_dolguldur_5" name="{=aom_dg_notable_5}Fanatical Dol Guldur war-chanter" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Preacher">
+	<NPCCharacter id="spc_notable_dolguldur_5" is_female="true" name="{=aom_dg_notable_5}Fanatical Dol Guldur war-chanter" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -720,7 +720,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 1: Protective Dol Guldur enforcer -->
-	<NPCCharacter id="spc_notable_dolguldur_gl1" name="{=aom_dg_notable_gl1}Protective Dol Guldur enforcer" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dolguldur_gl1" is_female="true" name="{=aom_dg_notable_gl1}Protective Dol Guldur enforcer" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -743,7 +743,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 2: Grim orc enforcer -->
-	<NPCCharacter id="spc_notable_dolguldur_10" name="{=aom_dg_notable_10}Grim orc enforcer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dolguldur_10" is_female="true" name="{=aom_dg_notable_10}Grim orc enforcer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -766,7 +766,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 3: Intimidating dark orc brute -->
-	<NPCCharacter id="spc_notable_dolguldur_11" name="{=aom_dg_notable_11}Intimidating dark orc brute" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dolguldur_11" is_female="true" name="{=aom_dg_notable_11}Intimidating dark orc brute" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -789,7 +789,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 4: Bestial Dol Guldur thug -->
-	<NPCCharacter id="spc_notable_dolguldur_gl4" name="{=aom_dg_notable_gl4}Bestial Dol Guldur thug" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dolguldur_gl4" is_female="true" name="{=aom_dg_notable_gl4}Bestial Dol Guldur thug" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -810,7 +810,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 5: Scheming dark orc racketeer -->
-	<NPCCharacter id="spc_notable_dolguldur_12" name="{=aom_dg_notable_12}Scheming dark orc racketeer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dolguldur_12" is_female="true" name="{=aom_dg_notable_12}Scheming dark orc racketeer" race="dg_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -830,7 +830,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 6: Menacing Dol Guldur cutthroat -->
-	<NPCCharacter id="spc_notable_dolguldur_13" name="{=aom_dg_notable_13}Menacing Dol Guldur cutthroat" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_dolguldur_13" is_female="true" name="{=aom_dg_notable_13}Menacing Dol Guldur cutthroat" race="dg_uruk" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Traits>
@@ -1132,7 +1132,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1147,7 +1147,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.dolguldur" name="{=aom_dg_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1221,7 +1221,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1236,7 +1236,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1249,7 +1249,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1264,7 +1264,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1280,7 +1280,7 @@
 	</NPCCharacter>
 
 	<!-- Village Population -->
-	<NPCCharacter id="village_woman_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1295,7 +1295,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_child_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_child_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1308,7 +1308,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="village_woman_teenager_dolguldur" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_teenager_dolguldur" is_female="true" race="dg_uruk" default_group="Infantry" name="{=aom_dg_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.dolguldur" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>

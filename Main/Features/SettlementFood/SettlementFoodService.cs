@@ -1,5 +1,6 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
+using TAOM.Core.Validation;
 
 namespace TAOM.Features.SettlementFood;
 
@@ -44,6 +45,24 @@ public class SettlementFoodService : ISettlementFoodService
             }
 
             delta += config.FlatFoodBonus;
+
+            // Hinterland: production scaled by prosperity. Vanilla reads prosperity ONLY as a
+            // consumer (Prosperity/divisor) against flat production, so every fief above roughly
+            // (production × divisor) prosperity is guaranteed to starve, and one that grows during
+            // play starves later even if it broke even at start. Feeding prosperity back into
+            // production makes the balance hold at any size. The provider keeps the rate strictly
+            // below 1/ProsperityFoodDivisor so net food still FALLS as prosperity rises, preserving
+            // vanilla's self-limiter.
+            //
+            // Prosperity is ENGINE-sourced, so it is gated as a POSITIVE requirement rather than by
+            // an early-exit: every NaN comparison is false, so `if (bad) skip` would let NaN through.
+            // Town.Prosperity's setter only floors at 0 (`if (_prosperity < 0f)`), which NaN passes,
+            // so a NaN is storable. It would poison this ExplainedNumber, and Town.DailyTick's
+            // `FoodStocks += FoodChange` clamps (`< 0f`, `> cap`) are BOTH false for NaN, leaving
+            // FoodStocks permanently NaN in a [SaveableProperty]. See csharp-architecture.md
+            // "Engine-Float Decision Gates".
+            if (FiniteFloatValidator.IsFinite(snapshot.Prosperity))
+                delta += snapshot.Prosperity * config.HinterlandFoodPerProsperity;
         }
 
         return delta;
@@ -57,7 +76,12 @@ public class SettlementFoodService : ISettlementFoodService
         bool includeDescriptions)
     {
         float delta = ComputeFoodDelta(snapshot, config, enabled);
-        if (delta == 0f)
+
+        // Positive requirement, not `if (delta == 0f) return;`: NaN == 0f is false, so a bare
+        // zero-check forwards a poisoned delta into the engine's ExplainedNumber. This is the last
+        // gate before TAOM's number reaches vanilla, so it refuses anything non-finite outright
+        // regardless of which input produced it.
+        if (!FiniteFloatValidator.IsFinite(delta) || delta == 0f)
             return;
 
         result.Add(delta, includeDescriptions ? AdjustmentText : null);

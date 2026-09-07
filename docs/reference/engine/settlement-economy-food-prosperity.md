@@ -4,11 +4,14 @@ How a town/castle's food balance, prosperity, hearth, market gold and caravan mo
 compute, what feeds each into the others, and where TAOM intervenes. Every formula below is read
 from a decompile with the file:line cited, never inferred.
 
-**Verification baseline per section** — the food, prosperity and hearth math was read from the
-**v1.4.5** decompile and has not been re-verified since; the town-gold and caravan sections were read
-from installed **v1.4.6** (#317) and **v1.4.7** (#391) and are marked as such inline. Treat the
-older sections as accurate-but-unrefreshed: re-verify with `taom-src` before relying on an exact
-constant after an engine bump.
+**Verification baseline per section.** The food section (constants, production terms, hearth
+thresholds, the storage cap, and the garrison-starvation path) was re-read from the **installed
+v1.4.8** `TaleWorlds.CampaignSystem.dll` on 2026-09-06 and every constant still held; the prosperity
+section is still **v1.4.5** and unrefreshed; the town-gold and caravan sections were read from
+installed **v1.4.6** (#317) and **v1.4.7** (#391) and are marked as such inline. Treat the older
+sections as accurate-but-unrefreshed: re-verify before relying on an exact constant after an engine
+bump. Note `taom-src.ps1` needs PowerShell 7, which is not installed everywhere; `ilspycmd -t <Type>`
+against the installed DLL is the fallback and is equally authoritative.
 
 Companion feature docs: [settlement-food.md](../../features/settlement-food.md),
 [settlement-economy.md](../../features/settlement-economy.md),
@@ -16,17 +19,23 @@ Companion feature docs: [settlement-food.md](../../features/settlement-food.md),
 
 ## TL;DR
 
-- A fief's daily food = **production − consumption** on the `Town.FoodStocks` pool (cap 300 town / 450 castle).
+- A fief's daily food = **production − consumption** on the `Town.FoodStocks` pool (cap 300 town / 450 castle before buildings; 800 / 750 fully built).
 - **Consumption** is dominated by `Prosperity / 40`; the garrison adds `NumberOfAllMembers / 20`.
 - **Production** is small: base +15 town / +10 castle, plus only `(hearthLevel+1) × 6` per village
   where `hearthLevel ∈ {0,1,2}` — so **≤18 food/day per village**.
 - High prosperity is *designed* to outrun production and push food to a deficit — that's vanilla's
   negative feedback that caps town growth. Starvation then bleeds prosperity (`foodChange × 0.5`).
-- **Garrison troops never starve to death** — they eat from the town pool, not the mobile-party path.
+- **Garrison troops eat from the town pool, not the mobile-party path, and they DO starve to death**:
+  10%/day once production drops below `garrison / 20` (see below; this bullet said the opposite until
+  2026-09-06).
 - **Caravans do not feed towns.** They are trade parties; food only enters a town via marketplace sales.
-- **TAOM-specific:** the Troop Weight feature inflates the garrison's `NumberOfAllMembers`, so elite
-  garrisons ate 2–3× the food vanilla intends. `TaomSettlementFoodModel` corrects this and exposes
-  vanilla's hardcoded constants as tunable knobs.
+- **TAOM-specific:** vanilla's flat production cannot support TAOM's map. Consumption is linear in
+  prosperity while production is flat, so any fief above roughly `production * 40` prosperity starves
+  by arithmetic; vanilla is tuned right at that line and TAOM ships 64 towns above 3,000. Measured
+  2026-09-06: **70 of 72 towns started food-negative before garrison**. `TaomSettlementFoodModel`
+  exposes vanilla's constants as knobs, adds a prosperity-scaled production term vanilla has no
+  equivalent of, and since #546 ships tuned values rather than vanilla ones.
+  (The historical Troop Weight garrison inflation described below is an inert no-op today.)
 
 ## Food — `DefaultSettlementFoodModel`
 
@@ -64,8 +73,15 @@ This is the intended siege-starvation pressure.
 
 ### Storage & the daily update
 
-- `FoodStocksUpperLimit` = **300** (town); castles add `CastleFoodStockUpperLimitBonus` = **150** → 450;
-  building effects can raise it (`Town.cs:460-467`).
+- `FoodStocksUpperLimit` = **300** (town); castles add `CastleFoodStockUpperLimitBonus` = **150** → 450.
+  Building effects raise it on top (`Town.cs:460-469`): `FoodStock` is granted by exactly two
+  buildings, Warehouse `+100/300/500` and Castle Granary `+100/200/300`
+  (`DefaultBuildingTypes.cs:220-222,275-277`), so a fully upgraded town caps at **800** and a castle
+  at **750**. Building levels therefore decide how long a fief survives a deficit, which is why
+  [settlement-building-levels.md](../../features/settlement-building-levels.md) is part of this story.
+- New campaigns start every town at **full** stocks
+  (`FoodConsumptionBehavior.OnNewGameCreatedPartialFollowUpEnd`), so a structural deficit presents as
+  a slow slide over the first weeks rather than an immediate failure.
 - Daily (`Town.cs:600-616`): `FoodStocks += FoodChange`, clamped to `[0, cap]`. At 0 →
   `Owner.RemainingFoodPercentage = -100` (the `IsStarving` flag); above 0 → `RemainingFoodPercentage = 0`.
 
@@ -110,9 +126,31 @@ is slow to move, so the village-food term is effectively fixed in the short term
 runs `PartyConsumeFood` when `MobilePartyFoodConsumptionModel.DoesPartyConsumeFood(party)` is true —
 which **excludes garrisons, militia, caravans, villagers, bandits**. Consequences:
 
-- **Garrison troops do not die from starvation.** They consume from the town `FoodStocks` pool via the
-  food model above; a starving fief damages *prosperity* (and indirectly recruitment/militia), not the
-  garrison roster directly.
+- **Garrison troops eat from the town pool, not the mobile-party path.** They consume from
+  `FoodStocks` via the food model above rather than through `FoodConsumptionBehavior`.
+- **But they DO die from starvation, through a different route.** (Corrected 2026-09-06 against
+  installed v1.4.8; this section previously claimed they never do, which sent at least one
+  investigation down the wrong path.) `DefaultPartyHealingModel.GetDailyHealingForRegulars:132-141`
+  applies a negative "healing" of `TotalRegulars * 0.1` to a garrison whose settlement is starving,
+  so **10% of garrison regulars die per day**. Two gates must both hold:
+
+  | Gate | Source | Meaning |
+  |---|---|---|
+  | `settlement.IsStarving` | `Settlement.IsStarving => Town.FoodStocks <= 0f` | the store is actually empty |
+  | `SettlementHelper.IsGarrisonStarving` (:549-557) | `Town.FoodChange < -Town.Prosperity / NumberOfProsperityToEatOneFood` | see below |
+
+  Substituting the food formula into the second gate, the `Prosperity/40` terms cancel and it reduces
+  to **`production < garrison / 20`**: the bleed starts once a fief's food production falls below its
+  garrison's own consumption. So a deficit driven purely by civilians never kills troops, however
+  deep it gets; a deficit where the garrison alone outweighs production does. The threshold garrison
+  size is therefore `production * 20`, which is why a village-poor high-prosperity town cannot hold
+  troops. Field parties are hit far harder, losing 25%/day (:144-145).
+
+  **TAOM does not modify this path, despite appearances.** `TaomPartyHealingModel` (BattleBalance) is
+  in the GameModel registry against `DefaultPartyHealingModel`, so it looks like a TAOM-owned
+  mechanic. It overrides only `GetSurvivalChance` and `GetDailyHealingHpForHeroes`; the regulars
+  path that carries the starvation kill is untouched, so the 10%/day above is pure vanilla behaviour
+  (verified 2026-09-06).
 - **The cultural food-consumption feats do not touch garrisons.** `TaomFoodConsumptionModel` extends
   `DefaultMobilePartyFoodConsumptionModel`; its Goblin +20% / Dol Guldur +10% etc. apply only to
   **mobile field parties**. A "ravenous orc garrison eating its town dry" is not a real mechanic.
@@ -189,44 +227,74 @@ phantom-wounded UI leak).
    back `(weighted − raw) / garrisonDivisor` so the garrison term uses the **raw body count**. This is
    a no-op when Troop Weight is off (weighted == raw). The global getter stays weighted, so AI strength
    reads and garrison-capacity (`DefaultSettlementGarrisonModel`) are unchanged.
-2. **Tunable knobs** — vanilla's hardcoded constants become config values
-   (`settlement_food/settlement_food_config.json`), so the high-prosperity squeeze can be dialed out:
+2. **Tunable knobs, shipping NON-vanilla since #546** (`settlement_food/settlement_food_config.json`).
+   The compiled defaults all equal the vanilla constant, but the shipped JSON does not, and that
+   reversal is the fix: it shipped fully vanilla from #289 until 2026-09-06, which is why the knobs
+   existed while every town still starved.
 
-   | Knob | Vanilla | Effect |
-   |------|---------|--------|
-   | `garrisonFoodDivisor` | 20 | ↑ = garrisons cheaper to feed |
-   | `prosperityFoodDivisor` | 40 | ↑ = relieves the dominant civilian-consumption term |
-   | `townBaseFood` / `castleBaseFood` | 15 / 10 | flat production floor |
-   | `villageFoodMultiplier` | 6 | scales `(hearthLevel+1) × mult` per village |
-   | `flatFoodBonus` | 0 | flat daily production add |
-   | `foodStocksUpperLimit` / `castleFoodStockUpperLimitBonus` | 300 / 150 | storage caps |
+   | Knob | Vanilla | Shipped | Effect |
+   |------|---------|---------|--------|
+   | `garrisonFoodDivisor` | 20 | 20 | ↑ = garrisons cheaper to feed |
+   | `prosperityFoodDivisor` | 40 | **45** | ↑ = relieves the dominant civilian-consumption term |
+   | `townBaseFood` / `castleBaseFood` | 15 / 10 | **30** / 10 | flat production floor |
+   | `villageFoodMultiplier` | 6 | **8** | scales `(hearthLevel+1) × mult` per village |
+   | `flatFoodBonus` | 0 | **5** | flat daily production add |
+   | `hinterlandFoodPerProsperity` | none | **0.02** | adds `prosperity × rate` to production |
+   | `foodStocksUpperLimit` / `castleFoodStockUpperLimitBonus` | 300 / 150 | 300 / 150 | storage caps |
 
-   Production knobs (base/village/flat) are **siege-gated** — they never apply under siege, preserving
-   the siege-starvation mechanic. Divisor and storage-cap knobs flow through the model's overridden
-   virtual constants (so vanilla's own formula uses them); the garrison correction + production knobs
-   are added on top of `base.CalculateTownFoodStocksChange`.
+   Production knobs (base/village/flat/hinterland) are **siege-gated**: they never apply under siege,
+   preserving the siege-starvation mechanic. Divisor and storage-cap knobs flow through the model's
+   overridden virtual constants (so vanilla's own formula uses them); the garrison correction +
+   production knobs are added on top of `base.CalculateTownFoodStocksChange`.
+
+3. **The hinterland term (new in #546), and why it exists.** Every other knob is flat, and flat knobs
+   cannot hold a balance across a 600 to 5,100 prosperity range because consumption scales with
+   prosperity and production does not. Worse, prosperity MOVES during play, so a town tuned to break
+   even starves again once it grows. `hinterlandFoodPerProsperity` adds `prosperity × rate` to
+   production, making the balance shape stable at any size.
+
+   **It must stay strictly below `1 / prosperityFoodDivisor`.** At or above that the two terms cancel,
+   net food stops falling as prosperity rises, the store overflows daily, and vanilla's surplus rule
+   (`prosperity += overflow × 0.1`, above) inflates prosperity without limit, dragging town gold
+   (`10000 + Prosperity×12`) and garrison caps up with it. The provider enforces this against the
+   sanitized divisor; `SettlementFoodShippedConfigTests` fails the build if the shipped file violates it.
+   `Town.Prosperity` is engine-sourced, so the multiply is gated on `FiniteFloatValidator.IsFinite`:
+   a NaN would otherwise leave `FoodStocks` permanently NaN (both `Town.DailyTick` clamps are false for
+   NaN) inside a `[SaveableProperty]`. See [rca-settlement-food-2026-09-06.md](../../reviews/rca-settlement-food-2026-09-06.md).
 
 The pure math lives in `SettlementFoodService.ComputeFoodDelta` (100% unit-tested); the JSON is
-validated by `SettlementFoodConfigProvider` (divisors must be ≥ 1; floats finite ≥ 0; invalid → revert
-to the vanilla default with a warning). Master toggle: MCM **Settlement Food → Enable Settlement Food
-Tuning** (on by default; off = vanilla engine math, garrison food stays weighted). JSON is loaded once
-(`Reuse.Singleton`) → **editing it requires an app restart**, not a save reload.
+validated by `SettlementFoodConfigProvider` (divisors must be ≥ 1; floats finite ≥ 0; the hinterland
+rate strictly below `1/divisor`; invalid → revert to the compiled default with a warning). Master
+toggle: MCM **Settlement Food → Enable Settlement Food Tuning** (on by default; off = vanilla engine
+math). JSON is loaded once (`Reuse.Singleton`) → **editing it requires an app restart**, not a save
+reload. Note the config only reaches the game if `Modules/TAOM/ModuleData/settlement_food/` exists in
+the DEPLOYED module; if it is absent the provider silently falls back to the vanilla compiled defaults
+and logs a "not found" warning.
 
 ### Worked example (high-prosperity Gondor city)
 
-Prosperity 3000, a 500-man elite garrison (avg troop weight ~1.5 → reads 750), 3 villages at hearth
-level 1:
+Prosperity 3000, a 500-man garrison, 3 villages at hearth level 1:
 
-| | Vanilla | TAOM (defaults, garrison fix only) |
+| | Vanilla | TAOM shipped (#546) |
 |---|---|---|
-| Production | 15 + 3×12 = **+51** | +51 |
-| Civilian consumption | 3000/40 = −75 | −75 |
-| Garrison consumption | 750/20 = **−37.5** (weighted) | 500/20 = **−25** (raw) |
-| **Net** | **−61.5/day** | **−49/day** |
+| Base production | 15 | 30 |
+| Village production | 3×12 = +36 | 3×(1+1)×8 = **+48** |
+| Flat | 0 | **+5** |
+| Hinterland | none | 3000×0.02 = **+60** |
+| **Production total** | **+51** | **+143** |
+| Civilian consumption | 3000/40 = −75 | 3000/45 = **−66.7** |
+| Garrison consumption | 500/20 = −25 | −25 |
+| **Net** | **−49/day** | **+51.3/day** |
 
-The fix recovers ~12.5 food/day here; raising `prosperityFoodDivisor` to 60 would cut the civilian
-term to −50 and bring the example net positive. The prosperity term is the bigger absolute lever — the
-knobs exist for exactly that.
+The hinterland term is doing most of the work (+60 of the +92 production swing), and it is the only
+one that keeps working as the town grows: at prosperity 6,000 the same town nets +44/day rather than
+sliding further negative, because the rate sits below `1/45`. Raising `prosperityFoodDivisor` alone
+was the pre-#546 advice and it does not scale, since it shifts the break-even prosperity without
+changing the fact that consumption grows and flat production does not.
+
+(An older version of this example modelled a Troop-Weight-inflated garrison reading 750 instead of
+500. That inflation ended with the 2026-07-11 count-to-limit rework, so the garrison term is the raw
+body count in both columns now.)
 
 ## Town gold — the market wallet (`Town.Gold`)
 

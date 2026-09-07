@@ -1,10 +1,11 @@
 {
   "garrisonFoodDivisor": 20,
-  "prosperityFoodDivisor": 40,
-  "townBaseFood": 15,
+  "prosperityFoodDivisor": 45,
+  "townBaseFood": 30,
   "castleBaseFood": 10,
-  "villageFoodMultiplier": 6,
-  "flatFoodBonus": 0,
+  "villageFoodMultiplier": 8,
+  "flatFoodBonus": 5,
+  "hinterlandFoodPerProsperity": 0.02,
   "foodStocksUpperLimit": 300,
   "castleFoodStockUpperLimitBonus": 150
 }

@@ -139,6 +139,22 @@ jobs:
           python3 tools/lint_handbook.py
           python3 tools/check_handbook_attributes.py
 
+      - name: Voice clip length gate
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          # Bannerlord has no voice-frequency knob: how often a clip plays is decided entirely by
+          # which VoiceType slot it is bound to. Binding a long take to a slot the engine fires
+          # per melee exertion is heard as constant chatter, and nothing in the engine reports it
+          # (an over-long clip, an unresolvable path and an invalid sound_category all fail
+          # silently). That shipped for the dwarves in 2026-09.
+          #
+          # Needs nothing but the checkout: pure stdlib, reads the repo's own ModuleData and
+          # ModuleSounds. Pre-existing violations are pinned in tools/voice-clip-baseline.txt,
+          # each with the duration it was accepted at, so re-cutting a baselined clip longer
+          # resurfaces it instead of riding the old exemption.
+          python3 tools/audit_voice_clip_lengths.py
+
 
   hook-harness:
     name: Hook Harness Contract

@@ -100,11 +100,20 @@ public class TroopWeightService : ITroopWeightService
     // + GC-evicting like _healthCache.
     private readonly ConditionalWeakTable<PartyBase, StrongBox<int>> _lastBaseLimit = new();
 
-    public void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit)
+    public void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit, bool includeDescriptions)
     {
         if (!(TaomSettings.Instance?.EnableTroopWeight ?? true))
             return;
         if (party?.MemberRoster == null)
+            return;
+
+        // The descriptions variant is display-only (PartyBase.PartySizeLimitExplainer -> the party-screen
+        // size tooltip + RecruitmentVM's capacity hint; v1.4.8-verified, no gameplay consumer). Deflating it
+        // is what produced the user-visible "Base size +20 / Heavy troops -9 / Total +11" the 2026-09-06
+        // reframe removes: the tax now reads as capacity USED, so the tooltip shows the honest base and the
+        // weight cost appears in the numerator (TroopWeightDisplay). Enforcement takes the false path below
+        // and is untouched.
+        if (includeDescriptions)
             return;
 
         // Guard the CAST, not just the arithmetic after it: a non-finite ResultNumber (another mod's

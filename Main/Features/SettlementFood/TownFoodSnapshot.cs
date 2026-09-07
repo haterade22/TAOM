@@ -24,18 +24,27 @@ public sealed class TownFoodSnapshot
     /// <summary>Hearth levels (0/1/2) of every bound village currently in the Normal state.</summary>
     public IReadOnlyList<int> NormalVillageHearthLevels { get; }
 
+    /// <summary>
+    /// The fief's current prosperity, the input to the hinterland production term. Vanilla reads
+    /// prosperity only as a CONSUMER (<c>Prosperity / 40</c>); TAOM also feeds it back into
+    /// production so the food balance holds as a settlement grows.
+    /// </summary>
+    public float Prosperity { get; }
+
     public TownFoodSnapshot(
         bool isTown,
         bool isUnderSiege,
         int rawGarrisonCount,
         int weightedGarrisonCount,
-        IReadOnlyList<int> normalVillageHearthLevels)
+        IReadOnlyList<int> normalVillageHearthLevels,
+        float prosperity = 0f)
     {
         IsTown = isTown;
         IsUnderSiege = isUnderSiege;
         RawGarrisonCount = rawGarrisonCount;
         WeightedGarrisonCount = weightedGarrisonCount;
         NormalVillageHearthLevels = normalVillageHearthLevels ?? new List<int>();
+        Prosperity = prosperity;
     }
 
     /// <summary>
@@ -64,6 +73,7 @@ public sealed class TownFoodSnapshot
             isUnderSiege: town?.IsUnderSiege ?? false,
             rawGarrisonCount: raw,
             weightedGarrisonCount: weighted,
-            normalVillageHearthLevels: hearthLevels);
+            normalVillageHearthLevels: hearthLevels,
+            prosperity: town?.Prosperity ?? 0f);
     }
 }

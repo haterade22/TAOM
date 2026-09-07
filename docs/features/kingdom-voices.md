@@ -64,7 +64,7 @@ which is why a dangling mbproj entry produces no error of any kind.
 ModuleSounds/LOTR/<Race>/Voice/*.wav      (loose audio, no FMOD bank)
         |
   module_sounds.xml   <module_sound name="LOTR/Dwarf/Grunts" sound_category="mission_voice">
-        |                 <variation path="D1_Grunts1.wav" weight="1"/>
+        |                 <variation path="dwarf_grunt.mp3" weight="1"/>
         |
   lotr_<race>_voice_def.xml   <voice type="Grunt" path="LOTR/Dwarf/Grunts" face_anim="grunt"/>
         |
@@ -116,14 +116,15 @@ attribute gotcha recorded under Gotchas below.
 | Artifact | Count |
 |----------|-------|
 | Audio files under `Main/_Module/ModuleSounds/` | 436 (342 `.wav`, 93 `.mp3`, 1 `.ogg`) |
-| `<module_sound>` entries in `module_sounds.xml` | 231 |
+| `<module_sound>` entries in `module_sounds.xml` | 249 |
 | Voice slots per TAOM voice definition | 56, all distinct types |
-| Distinct audio paths referenced (dwarf / uruk / uruk_hai) | 48 / 35 / 35 |
+| Distinct audio paths referenced (dwarf / uruk / uruk_hai) | 47 / 35 / 35 |
 
 ### Known defects
 
 | Defect | Detail |
 |--------|--------|
+| ~~**Long clips on frequently-fired slots**~~ | FIXED 2026-09-06 for `dwarf_01`. `D1_Grunts1/2.wav` (7.93 / 8.77 s) sat on `Grunt`, `Pain` and `Focus`, and the warcries (up to 11.81 s) on `Yell`. Those files are sound-set compilations holding several complete spoken lines, so players heard a full line every 2 to 4 seconds. `Yell` now points at the short `Battlecries` bank and the warcries moved to `Charge`, which fires once per order on one agent. Gated by `tools/audit_voice_clip_lengths.py`. `uruk_hai_01` has the same defect and is still open, baselined in `tools/voice-clip-baseline.txt` |
 | **Unbound adult female skins** | `uruk_hai` and `berserker` have a custom voice on the adult male skin and vanilla `female_*` on the adult female one. Narrow, since female troops are rare, but it is a real hole. Corrected 2026-08-25 from an earlier and wrong "diluted skins" reading |
 | **Seven unbound races** | `elf`, `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice |
 | **Orphaned Théoden set** | 83 clips under `ModuleSounds/LOTR/Rohan/Voice/Theoden` are registered in `module_sounds.xml` and reachable by nothing: no Rohan voice definition exists, and Rohan is the vanilla human race anyway |
@@ -177,6 +178,29 @@ to fire it.
 | MP barks | `MpDefend`, `MpAttack`, `MpHelp`, `MpSpot`, `MpThanks`, `MpSorry`, `MpAffirmative`, `MpNegative`, `MpRegroup` |
 | Mount | `Idle`, `Neigh`, `Collide` |
 
+### Which slots the engine fires (and how often)
+
+There is no frequency, cooldown, weight or probability knob anywhere in the voice data. The `weight`
+in `module_sounds.xml` picks between takes inside one bark, not how often the bark happens. **Choosing
+the slot is choosing the frequency**, so this table is the whole design surface. `Agent.MakeVoice` is
+a thin passthrough to native, so a slot with no managed call site is fired by the engine itself.
+
+| Slot | Fired by | Rate |
+|------|----------|------|
+| `Grunt`, `Stun` | native only, zero managed call sites. Searched the 98-assembly decompile **plus** the three `NavalDLC` assemblies, which that dump omits entirely | highest, per melee exertion and per stagger |
+| `Pain` | native, plus one narrow managed call in `Mission.cs` (a shield-penetrating missile that does not break the shield) | per hit taken; the general case is native |
+| `Yell` | native, plus `Agent.cs` `_wantsToYell` (set only by `HideoutMissionController`) and a retreat cheer-cancel | frequent in melee |
+| `Victory` | `AgentVictoryLogic`, per cheering agent, `resetTimer = true` | repeats per agent: 1 to 8 s for the first cheer, widening to 6 to 12 s after one has played |
+| `Charge`, `Move`, `Follow`, `Retreat`, `Advance`, all `Form*` | `OrderController.PlayOrderGestures` in combat; `Charge` also appears in `AgentVisuals.MakeRandomVoiceForFacegen` | once per player order, **on a single agent**. The facegen path is a character-creation preview that picks randomly from 12 types, not a battle path |
+| `Infantry`, `Archers`, `Cavalry`, `HorseArchers`, `Everyone`, `Mixed` | `OrderController` | once per formation select |
+| `Mp*` | `Agent.HandleBark` | player keypress, dead in singleplayer |
+| `Fear` | no vanilla caller; only TAOM's `DreadPulseRunner` | 2% per dread pulse |
+
+`PlayOrderGestures(orderType, Owner, _selectedFormations)` is handed the order controller's `Owner`,
+not the formation, which is why an order slot is the right home for a long scripted line: exactly one
+agent says it. A long clip on `Victory` is nearly as bad as one on `Grunt`, because every cheering
+agent repeats it.
+
 ### Sound categories
 
 `sound_category` is mandatory on `<module_sound>`, and **sounds with an invalid category are
@@ -189,6 +213,17 @@ header:
 | `mission_voice` | 4 s | grunts, exertions, pain |
 | `mission_voice_trivial` | 4 s | incidental |
 | `alert` | 10 s | alert stingers |
+
+These caps are authoring guidance from a comment, not observed behaviour: no enforcement was
+found anywhere readable in the shipping-client decompile, and what FMOD does with an over-cap
+clip was not determined. **They are also too loose to be useful on their own.** A 3.9 s clip
+is legal `mission_voice` and still unbearable on `Grunt`, which native fires per melee
+exertion. `tools/audit_voice_clip_lengths.py` therefore enforces both the caps and a tighter
+per-slot bar on the frequently-fired slots (`Grunt`/`Stun`/`Pain` 2.0 s, `Yell` 3.5 s),
+calibrated against `uruk_01` and the dwarf Battlecries. It is per slot because one shared
+constant let the defect back in: with only `Grunt`/`Stun`/`Pain` barred, the 5.4 to 7.1 s
+warcries passed on `Yell`, which the 8 s shout cap admits. That is the one custom
+definition that never drew a complaint.
 
 ### Key engine types
 

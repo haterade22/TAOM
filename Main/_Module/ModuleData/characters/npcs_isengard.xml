@@ -65,7 +65,7 @@
 	</NPCCharacter>
 
 	<!-- Village Woman -->
-	<NPCCharacter id="village_woman_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_village_woman}Village Woman" occupation="Villager" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="village_woman_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_village_woman}Village Woman" occupation="Villager" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -355,7 +355,7 @@
 	</NPCCharacter>
 
 	<!-- Town Population -->
-	<NPCCharacter id="townswoman_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -378,7 +378,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_infant_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_infant_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -397,7 +397,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_child_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_child_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -420,7 +420,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="townswoman_teenager_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="townswoman_teenager_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -574,7 +574,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="villager_female_child_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_f_child}Village Child" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_female_child_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_f_child}Village Child" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -593,7 +593,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="villager_female_teenager_isengard" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_f_teen}Village Teenager" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="villager_female_teenager_isengard" is_female="true" race="uruk_hai" default_group="Infantry" name="{=aom_ig_villager_f_teen}Village Teenager" occupation="Townsfolk" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -680,7 +680,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 1: Cautious Uruk trader -->
-	<NPCCharacter id="spc_notable_isengard_0" name="{=aom_ig_notable_0}Cautious Uruk trader" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+	<NPCCharacter id="spc_notable_isengard_0" is_female="true" name="{=aom_ig_notable_0}Cautious Uruk trader" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -702,7 +702,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 2: Cunning Uruk overseer -->
-	<NPCCharacter id="spc_notable_isengard_0b" name="{=aom_ig_notable_0b}Cunning Uruk overseer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+	<NPCCharacter id="spc_notable_isengard_0b" is_female="true" name="{=aom_ig_notable_0b}Cunning Uruk overseer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -724,7 +724,7 @@
 	</NPCCharacter>
 
 	<!-- Merchant 3: Ruthless Uruk provisioner -->
-	<NPCCharacter id="spc_notable_isengard_1" name="{=aom_ig_notable_1}Ruthless Uruk provisioner" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+	<NPCCharacter id="spc_notable_isengard_1" is_female="true" name="{=aom_ig_notable_1}Ruthless Uruk provisioner" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -892,7 +892,7 @@
 	</NPCCharacter>
 
 	<!-- Preacher 1: Fanatical Uruk war-chanter -->
-	<NPCCharacter id="spc_notable_isengard_5" name="{=aom_ig_notable_5}Fanatical Uruk war-chanter" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Preacher">
+	<NPCCharacter id="spc_notable_isengard_5" is_female="true" name="{=aom_ig_notable_5}Fanatical Uruk war-chanter" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Preacher">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -997,7 +997,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 1: Protective Uruk pit boss -->
-	<NPCCharacter id="spc_notable_isengard_gl1" name="{=aom_ig_notable_gl1}Protective Uruk pit boss" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_isengard_gl1" is_female="true" name="{=aom_ig_notable_gl1}Protective Uruk pit boss" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -1020,7 +1020,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 2: Ironic Uruk racketeer -->
-	<NPCCharacter id="spc_notable_isengard_10" name="{=aom_ig_notable_10}Ironic Uruk racketeer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_isengard_10" is_female="true" name="{=aom_ig_notable_10}Ironic Uruk racketeer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -1043,7 +1043,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 3: Intimidating Uruk enforcer -->
-	<NPCCharacter id="spc_notable_isengard_11" name="{=aom_ig_notable_11}Intimidating Uruk enforcer" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_isengard_11" is_female="true" name="{=aom_ig_notable_11}Intimidating Uruk enforcer" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -1066,7 +1066,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 4: Bestial Uruk brute -->
-	<NPCCharacter id="spc_notable_isengard_gl4" name="{=aom_ig_notable_gl4}Bestial Uruk brute" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_isengard_gl4" is_female="true" name="{=aom_ig_notable_gl4}Bestial Uruk brute" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -1089,7 +1089,7 @@
 	</NPCCharacter>
 
 	<!-- GangLeader 5: Scheming Isengard thug -->
-	<NPCCharacter id="spc_notable_isengard_12" name="{=aom_ig_notable_12}Scheming Isengard thug" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+	<NPCCharacter id="spc_notable_isengard_12" is_female="true" name="{=aom_ig_notable_12}Scheming Isengard thug" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>
@@ -1487,7 +1487,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="tavern_wench_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" name="{=aom_ig_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="tavern_wench_isengard" is_female="true" race="uruk_hai" default_group="Infantry" is_hero="false" name="{=aom_ig_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.isengard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1606,7 +1606,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_beggar_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_beggar_isengard" is_female="true" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1627,7 +1627,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="female_dancer_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+	<NPCCharacter id="female_dancer_isengard" is_female="true" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.isengard" name="{=aom_ig_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -1652,6 +1652,7 @@
 
 	<!-- Practice Dummies (no face, Soldier occupation) -->
 	<NPCCharacter id="gear_practice_dummy_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_uruk_hai" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1666,6 +1667,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_1_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_uruk_hai" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1682,6 +1684,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_2_isengard" race="uruk_hai" default_group="Infantry" level="25" name="{=aom_ig_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_uruk_hai" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1700,6 +1703,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="weapon_practice_stage_3_isengard" race="uruk_hai" default_group="Infantry" level="35" name="{=aom_ig_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_uruk_hai" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
@@ -1720,6 +1724,7 @@
 	</NPCCharacter>
 
 	<NPCCharacter id="gear_dummy_isengard" race="uruk_hai" default_group="Infantry" level="15" name="{=aom_ig_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.isengard">
+		<face><face_key_template value="BodyProperty.fighter_uruk_hai" /></face>
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">

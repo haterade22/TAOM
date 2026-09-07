@@ -1264,3 +1264,74 @@ distinct pre-existing looks with 4. Worse, the key was position, so inserting on
 - **Why missed:** each generator was internally consistent and validated against its own manifest; the seam between them was never stated in either.
 - **Prevent:** when a culture's armour and troops come from two generators, write the suffix contract (which token is the line, which is the tier) once in the feature doc and point both generators at it. Before a roster-tiered restat, check who the LOWEST wearer of each mid item is: one low troop pins the whole item.
 - **Source:** #541, CHANGELOG 2026-09-04.
+
+### Retuning shared ModuleData: enumerate its CONSUMERS before you enumerate its values
+A party template, equipment roster or culture list is a shared surface. Before changing the numbers
+in one, grep every reader of the binding it hangs off (here `CultureObject.CaravanPartyTemplates`),
+not just the reader the change is about. A size change is invisible to every existing gate: no
+reference breaks, no file fails to parse, `validate_moduledata.py` stays clean, and the second
+consumer simply starts behaving differently.
+- **Why missed:** the changeset's own framing was "two halves of one change", the XML template maxima
+  plus a paired C# member-cap raise. That phrasing asserts a closed system, and it was wrong.
+  `SupplyLines` builds its player supply caravans from `culture.CaravanPartyTemplates[0]` but its
+  `SupplyCaravanComponent` derives from `PartyComponent`, not `CaravanPartyComponent`, so
+  `MobileParty.IsCaravan` is false and the paired cap raise could not reach it. Its escort went from
+  20-29 to 60-70 troops and its provisioning cost, which is linear in headcount, went up with it.
+  Five of the six review agents saw only correct files; the three files involved sit in two unrelated
+  features. It surfaced only because the data-flow agent's prompt named SupplyLines as a suspicion.
+- **Prevent:** for any `ModuleData` retune, list the entity's binding attribute, grep the whole repo
+  for readers of that binding, and state what each one does with the value. Two readers is the normal
+  case, not the exception. Also check the inverse: a consumer that is *not* the party type you think
+  it is. `IsCaravan` is `_partyComponent is CaravanPartyComponent`, so a lookalike component built on
+  the base class silently fails every `IsCaravan` gate, including the ones you are relying on to
+  reach it.
+- **Source:** docs/reviews/rca-caravan-bandit-parity-2026-09-06.md finding 1; issue #549.
+
+### An ABSENT element has no reference to break, so every reference-based gate is blind to it
+`validate_moduledata.py` is a cross-reference validator: it proves that `Item.x`, `NPCCharacter.y`,
+`BodyProperty.z` resolve. That model can only see a reference that is present and wrong. An element
+that was never written has no id to fail, so it passes every sweep, and if the engine's own XSD
+declares that element optional, the editor passes it too. Whenever a required-in-practice child
+element carries meaning, the gate has to be a test that asserts PRESENCE, not a validator rule that
+asserts resolution.
+- **Why missed:** 46 `NPCCharacter` entries across ten cultures shipped with no `<face>` block, the
+  whole arena practice set. `BasicCharacterObject.Deserialize` then builds their `MBBodyProperty`
+  from `default(BodyProperties)`, whose age is 0, and `skins.xml` maps age 0 to the toddler skin, so
+  arena fighters spawned waist-high. `BROKEN_BODY_PROPERTY_REF` would have caught a typo'd
+  `face_key_template` and had nothing to say about a missing one. `NPCCharacters.xsd` makes `<face>`
+  optional, correctly, because vanilla has characters without one. And the engine's two age guards in
+  `Mission.SpawnAgent` (force 29 at age 0, force 27 for a sub-teenager in a battle-like mission) read
+  `CharacterObject.Age`, a different property clamped at deserialisation to `max(20f, ...)`, so a
+  faceless character reports 20 and passes both while its visual age stays 0. Three guards, all
+  keyed on something other than presence.
+- **Prevent:** `TAOM.Tests/Core/CharacterFaceCoverageTests.cs` asserts every `NPCCharacter` under
+  `Main/_Module/ModuleData` declares a `<face>`, with a floor assertion so a changed layout fails
+  loudly rather than vacuously. More generally: when an authoring recipe produces the omission, fix
+  the recipe in the same pass. All three "add a culture's practice dummy" recipes listed the id, the
+  equipment roster and the item-id check and none listed the face, so ten cultures were authored
+  correctly against an incomplete recipe while nine later ones happened to copy a good sibling.
+- **Source:** docs/reviews/rca-arena-toddler-fighters-2026-09-06.md
+
+### A documented gate limitation is a backlog item, not a disclaimer
+`docs/features/moduledata-validation.md` carried the sentence "`is_female` has no rule at all" from
+the 2026-08-29 lord RCA onward. It was accurate, it was prominent, and it was read as a description
+of where the validator stops rather than as a list of what to go and check by hand. Nine days later
+the same gap surfaced again, one directory over: 166 female-role entries across 17 cultures had no
+`is_female="true"` at all and rendered as men, and all 596 notable templates were male. When you
+write down that a gate cannot see something, you have just written a to-do; either close it or say
+which unchecked files it leaves exposed.
+- **Why missed:** the lord pass fixed `characters/lords.xml` and built
+  `LordNameAndSexConsistencyTests` scoped to that one file. Nobody re-ran the question against the
+  sibling `npcs_*.xml`, where the same class was present in the opposite direction: lords carried
+  the wrong sex, townsfolk carried none. Nothing could catch it automatically, because
+  `tools/schemas/taom_npccharacter.json` enumerates `default_group` and nothing else, and a missing
+  `is_female` is a semantic defect: it needs a gate that knows the id `townswoman_gondor` implies a
+  woman. Three things also made it look deliberate rather than broken. It fails silently with no
+  log line; the clothing had already been made female by an earlier pass, so outfits said "woman"
+  while bodies said "man"; and the culture wiring in `taom_spcultures.xml` was correct throughout,
+  so auditing that layer found nothing.
+- **Prevent:** `TAOM.Tests/Core/TownsfolkAndNotableSexConsistencyTests.cs`. More generally, when you
+  fix a defect class in one file, enumerate that file's siblings and re-run the same question before
+  closing the issue. One culture behaving correctly, as Rohan did here, reads as "the others need
+  art" and hides the fact that one file got an attribute the other seventeen never did.
+- **Source:** docs/reviews/rca-townsfolk-sex-2026-09-06.md
