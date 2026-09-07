@@ -1691,6 +1691,146 @@ class ArmourSlotCoverageTests(unittest.TestCase):
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
 
 
+class MountWithoutHarnessTests(unittest.TestCase):
+    """MOUNT_WITHOUT_HARNESS. A Horse slot requires a HorseHarness slot in the same
+    equipment set. The harness is not only armour: on some mounts it carries the
+    rider's SEAT, and nothing in the XML says which, because where the saddle is
+    modelled is a property of a mesh this validator cannot see. The war ram proved
+    it. `sk_eb_goat_a` and `_b` are bare pelts and every saddle lives on one of the
+    eight `sk_eb_goat_bard_*` harness meshes, so `ironpass_ram_herder` shipped four
+    sets riding bareback and players reported it.
+
+    Exemptions are named in `_HARNESSLESS_BY_DESIGN`, each with a reason."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.registries = ts.Registries(
+            items={"None", "good_axe", "charger", "chain_horse_harness",
+                   "taom_war_ram_a", "taom_war_ram_b", "taom_ram_barding_light_a"},
+            item_def_files={},
+            npccharacters=set(),
+            cultures={"erebor", "vlandia"},
+            party_templates=set(),
+        )
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, registries=None):
+        reg = registries if registries is not None else self.registries
+        issues = ts.Validator(self.md, self.schemas, reg).run()
+        return [i for i in issues if i.code == "MOUNT_WITHOUT_HARNESS"]
+
+    def _write_troop(self, *sets, troop_id="ironpass_ram_herder"):
+        """One NPCCharacter carrying `sets` EquipmentRosters. Each set is a list of
+        (slot, item) pairs, matching the lowercase <equipment> the troops files use."""
+        rosters = ""
+        for pairs in sets:
+            rosters += "      <EquipmentRoster>" + "\n"
+            for slot, item in pairs:
+                rosters += f'        <equipment slot="{slot}" id="Item.{item}" />' + "\n"
+            rosters += "      </EquipmentRoster>" + "\n"
+        _write(self.md / "troops" / "troops_erebor.xml",
+               '<?xml version="1.0"?>' + "\n" + "<NPCCharacters>" + "\n"
+               + f'  <NPCCharacter id="{troop_id}" race="dwarf" occupation="Soldier" '
+               + 'culture="Culture.erebor" default_group="Cavalry">' + "\n"
+               + "    <Equipments>" + "\n" + rosters + "    </Equipments>" + "\n"
+               + "  </NPCCharacter>" + "\n" + "</NPCCharacters>" + "\n")
+
+    def test_a_bare_ram_is_reported(self):
+        self._write_troop([("Item0", "good_axe"), ("Horse", "taom_war_ram_a")])
+        found = self._found()
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].severity, ts.Severity.ERROR)
+        self.assertIn("taom_war_ram_a", found[0].message)
+
+    def test_a_barded_ram_is_clean(self):
+        self._write_troop([("Horse", "taom_war_ram_a"),
+                           ("HorseHarness", "taom_ram_barding_light_a")])
+        self.assertEqual(self._found(), [])
+
+    def test_an_ordinary_horse_without_a_harness_is_also_reported(self):
+        """The rule is universal, not ram-only. A vanilla horse renders its own
+        saddle, so this rider is not bareback, but an unbarded mount is still a
+        decision to make on purpose rather than by omission. Eomer reached players
+        wearing the full Theoden kit on a bare charger while all fourteen of his
+        Rohan siblings carried a harness."""
+        self._write_troop([("Horse", "charger")], troop_id="rohan_lord")
+        found = self._found()
+        self.assertEqual(len(found), 1)
+        self.assertIn("charger", found[0].message)
+
+    def test_a_harnessed_horse_is_clean(self):
+        self._write_troop([("Horse", "charger"), ("HorseHarness", "chain_horse_harness")],
+                          troop_id="rohan_lord")
+        self.assertEqual(self._found(), [])
+
+    def test_a_footed_troop_is_clean(self):
+        self._write_troop([("Item0", "good_axe")], troop_id="ironpass_warrior")
+        self.assertEqual(self._found(), [])
+
+    def test_the_finding_names_the_troop_not_just_the_mount(self):
+        self._write_troop([("Horse", "taom_war_ram_b")])
+        self.assertEqual(self._found()[0].entry_id, "ironpass_ram_herder")
+
+    def test_each_set_is_judged_on_its_own(self):
+        # The engine draws every slot from an independently chosen set, so barding
+        # three sets of four still spawns bare rams. Exactly one finding, not zero.
+        self._write_troop(
+            [("Horse", "taom_war_ram_a"), ("HorseHarness", "taom_ram_barding_light_a")],
+            [("Horse", "taom_war_ram_b"), ("HorseHarness", "taom_ram_barding_light_a")],
+            [("Horse", "taom_war_ram_b"), ("HorseHarness", "taom_ram_barding_light_a")],
+            [("Horse", "taom_war_ram_a")],
+        )
+        self.assertEqual(len(self._found()), 1)
+
+    def test_a_by_design_owner_is_exempt(self):
+        self._write_troop([("Horse", "taom_war_ram_a")], troop_id="harad_mumakil_rider")
+        self.assertEqual(self._found(), [])
+
+    def test_every_by_design_entry_states_a_reason(self):
+        """An exemption with no reason is just a silenced finding."""
+        self.assertTrue(ts.Validator._HARNESSLESS_BY_DESIGN)
+        for owner, reason in ts.Validator._HARNESSLESS_BY_DESIGN.items():
+            self.assertGreater(len(reason), 40, f"{owner} records no real reason")
+
+    def test_the_by_design_allowlist_only_names_owners_that_exist(self):
+        """An allowlist entry for a renamed or deleted owner rots silently and
+        quietly widens the exemption."""
+        md = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData"
+        if not md.is_dir():
+            self.skipTest("ModuleData not present")
+        ids = set()
+        for f in md.rglob("*.xml"):
+            ids |= set(re.findall(r'<NPCCharacter[^>]*?\sid="([^"]+)"',
+                                  f.read_text(encoding="utf-8-sig", errors="ignore")))
+        # A broken scan reports every allowlisted id as stale, which reads exactly
+        # like a real finding. Fail on the scan first, so a bad path can never
+        # masquerade as a data defect.
+        self.assertGreater(len(ids), 100,
+                           f"scanned {md} and found only {len(ids)} ids; the scan is broken")
+        stale = sorted(set(ts.Validator._HARNESSLESS_BY_DESIGN) - ids)
+        self.assertEqual(stale, [], f"allowlisted owners no longer exist: {stale}")
+
+    def test_it_still_reports_without_an_installed_game(self):
+        """The reason this check must not sit behind the mount_family_types guard.
+
+        That registry comes from the INSTALLED modules, and LOTRLOME_Armory (which
+        defines the ram and its bardings) is untracked and reverts on a reinstall.
+        Gating on it would silence the check in exactly the situation where the data
+        is most likely broken, while the validator still printed PASS."""
+        self._write_troop([("Horse", "taom_war_ram_a")])
+        degraded = ts.Registries(
+            items=set(), item_def_files={}, npccharacters=set(),
+            cultures={"erebor"}, party_templates=set(),
+        )
+        self.assertEqual(degraded.mount_family_types, {})
+        self.assertEqual(len(self._found(registries=degraded)), 1)
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced

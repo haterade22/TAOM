@@ -136,6 +136,25 @@ in this rig against vanilla horse's declared `standing_pelvis_height="1.40"`. At
 Horse item's `<AdditionalMeshes>`** (native compositing). That is exactly how the chariot lost its
 cart the moment Rhun barding was worn.
 
+**The mount meshes carry no saddle, so a barding is not optional dressing.**
+`sk_eb_goat_a` and `sk_eb_goat_b` are bare pelts. The rider's seat is modelled on the eight
+`sk_eb_goat_bard_*` meshes below and nowhere else, so a ram roster that leaves `HorseHarness`
+empty puts the dwarf on bare hide.
+
+The vanilla horse hides this, and so does the warg: it carries a seat on the mount body via
+`warg_low_fur_with_saddle` AND ships a separate `warg_saddle` harness (`orc_rider_saddle`) on top.
+The spider is the opposite case and is still open: `spider_saddle` exists as a mesh in
+`docs/reference/armory-catalogue/catalogue.tsv` but was never wired into a `HorseHarness` item, so
+that rider sits on bare carapace.
+
+It shipped as a bug once here. `ironpass_ram_herder` was authored with no harness on all four of
+its sets, deliberately, on the reading that a bare ram was merely unarmoured; players reported the
+missing saddle and it was corrected on 2026-09-06. The gate that resulted,
+`MOUNT_WITHOUT_HARNESS`, **requires a harness beside every `Horse` slot rather than only on rams**,
+because nothing in the XML records which mounts carry their own seat. If a future ram is authored
+WITH a baked saddle, that is an argument for an `_HARNESSLESS_BY_DESIGN` entry in
+`tools/taom_schema.py`, with the reason written down.
+
 ### Eight bardings
 
 `family_type="1"`, inherited from the horse family through the Monster.

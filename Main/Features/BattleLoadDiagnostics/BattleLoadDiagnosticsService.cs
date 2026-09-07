@@ -35,6 +35,23 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     private long _lastRenderWaitEmitMs = -1L;
 
     internal const long RenderWaitEmitIntervalMs = 1000L;
+
+    // Scene-load heartbeat throttle (the bucket-2 blind spot). -1 = never emitted this load.
+    private long _lastSceneLoadWaitEmitMs = -1L;
+
+    // 3000 sits well clear of the healthy range measured on this very player's machine — three
+    // successful loads cleared bucket 2 in 383, 457 and 933 ms — so a normal battle never emits.
+    // 5000 keeps a pathological load to ~6 lines per 30 s while still bounding a death to one
+    // interval; the render-wait marker can afford 1 Hz because it also carries a falling
+    // shaders= count worth sampling, and this one carries no such series.
+    internal const long SceneLoadWaitWarnAfterMs = 3000L;
+    internal const long SceneLoadWaitEmitIntervalMs = 5000L;
+
+    // The scene the current load is streaming, carried so the heartbeat line names it the way
+    // every other scene-bearing phase line does. NoteLoadingPoll is called from the TickLoading
+    // hook, which has no scene argument, and a triage reader must not have to walk backwards
+    // through the log to find out which scene the last line before a CTD belonged to.
+    private volatile string _currentSceneName = string.Empty;
     private int _seq;
     private volatile string _currentStatusLine = "phase=<none>";
     private volatile bool _exitWindowActive;
@@ -160,6 +177,12 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // measurement's origin: if a toggle-off skipped them, the next FinishMissionLoadingBegin
         // would report a wait spanning the previous load.
         ResetLoadingPollCounter();
+        // Name BEFORE origin, deliberately. The heartbeat can only emit once the origin is armed,
+        // so arming the origin first would leave a window in which a poll reads the new origin
+        // beside the PREVIOUS load's scene name. The 3-second threshold makes that window
+        // unreachable in practice, but ordering makes it unreachable by construction, which is
+        // the property that survives someone lowering the threshold for a debug run.
+        _currentSceneName = sceneName ?? string.Empty;
         try { Interlocked.Exchange(ref _waitStartMs, _stopwatch.ElapsedMilliseconds); }
         catch { Interlocked.Exchange(ref _waitStartMs, -1L); }
         if (!IsEnabled) return;
@@ -170,7 +193,53 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     // wait is 720 frames, so a log line here would be worse than the blind spot it closes. Also
     // deliberately does NOT read IsEnabled: that would hit MCM's static Instance every frame, and
     // the count is state rather than I/O so it must survive a mid-load toggle.
-    public void NoteLoadingPoll() => Interlocked.Increment(ref _loadingPolls);
+    public void NoteLoadingPoll()
+    {
+        var polls = Interlocked.Increment(ref _loadingPolls);
+
+        // The counter itself stays the cheap, unconditional part above. Everything below is the
+        // heartbeat, and it is written to cost a Stopwatch read plus two Interlocked reads on the
+        // frames that do NOT emit — the same budget NoteWaitingForRender already pays per frame.
+        long now;
+        try { now = _stopwatch.ElapsedMilliseconds; }
+        catch { return; /* clock best-effort — a diagnostic must never throw on the tick path */ }
+
+        EmitSceneLoadWaitIfDue(polls, now);
+    }
+
+    // Clock-injected seam. The emit only happens once a load has been waiting for SECONDS, so the
+    // only way to test the positive path against the real stopwatch is to sleep for that long in
+    // the suite. Taking `nowMs` instead keeps the whole decision, the throttle latch and the
+    // rendered line under test at zero wall-clock cost.
+    internal void EmitSceneLoadWaitIfDue(int polls, long nowMs)
+    {
+        var startedAt = Interlocked.Read(ref _waitStartMs);
+        if (!ShouldEmitSceneLoadWait(
+                nowMs, startedAt, Interlocked.Read(ref _lastSceneLoadWaitEmitMs),
+                SceneLoadWaitWarnAfterMs, SceneLoadWaitEmitIntervalMs)) return;
+
+        Interlocked.Exchange(ref _lastSceneLoadWaitEmitMs, nowMs);
+        // Gate AFTER the throttle, like NoteWaitingForRender: a disabled feature pays a
+        // subtraction per frame rather than an MCM static resolve per frame.
+        if (!IsEnabled) return;
+
+        Emit(BattleLoadPhase.WaitingForSceneLoad,
+            $"scene='{_currentSceneName}' {FormatFinishWaitDetail(polls, nowMs - startedAt)} {MemStats()}");
+    }
+
+    // Pure seam. Three conditions, all required:
+    //   - the origin was observed (startedAtMs >= 0) and has not gone backwards. The stopwatch
+    //     RESTARTS between loads, so a stale origin must not be read as a huge wait.
+    //   - the wait has actually exceeded warnAfterMs, which is what keeps a healthy load silent.
+    //   - either nothing has been emitted this load (lastEmitMs < 0), or the stopwatch was
+    //     restarted under us (nowMs < lastEmitMs), or the interval has elapsed.
+    internal static bool ShouldEmitSceneLoadWait(
+        long nowMs, long startedAtMs, long lastEmitMs, long warnAfterMs, long intervalMs)
+    {
+        if (startedAtMs < 0L || nowMs < startedAtMs) return false;
+        if (nowMs - startedAtMs < warnAfterMs) return false;
+        return lastEmitMs < 0L || nowMs < lastEmitMs || nowMs - lastEmitMs >= intervalMs;
+    }
 
     public void LogFinishMissionLoadingBegin()
     {
@@ -257,6 +326,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         Interlocked.Exchange(ref _waitStartMs, -1L);
         Interlocked.Exchange(ref _renderWaitStartMs, -1L);
         Interlocked.Exchange(ref _lastRenderWaitEmitMs, -1L);
+        Interlocked.Exchange(ref _lastSceneLoadWaitEmitMs, -1L);
     }
 
     public void LogAgentEquipBegin(EquipmentSnapshot snapshot)

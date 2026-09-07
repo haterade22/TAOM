@@ -253,6 +253,17 @@ public class SubModule : MBSubModuleBase
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch58_SkipCampaignIntro");
 
+        // Patch83_CharacterSkillsRepair — gives an empty skill set to any character restored from a
+        // save whose XML definition is gone, so vanilla's unguarded
+        // BasicCharacterObject.GetSkillValue cannot NRE on it (crash bundle 065939b6). Applied HERE
+        // for the same reason as Patch58 above, and the ordering is not negotiable: the target runs
+        // at Campaign.OnGameLoaded:687, the crash is at :688, and the OnGameLoaded event dispatch is
+        // at :692 — so the late OnGameInitializationFinished batch is far too late and a campaign
+        // behavior could never work at all. See docs/features/character-skills-repair.md.
+        Features.CharacterSkillsRepair.Hooks.Patch83_CharacterSkillsRepair.Initialize(
+            IoC.Resolve<Features.CharacterSkillsRepair.ICharacterSkillsRepairService>());
+        _harmony.PatchCategory("Patch83_CharacterSkillsRepair");
+
         // Patch61_SaveLoadDiagnostics — always-on [SaveLoad] lifecycle logging for the "corrupted
         // save" investigation. The engine swallows the real exception behind the generic
         // "A problem occured while trying to load the saved game." dialog (LoadContext.Load catches
@@ -1362,6 +1373,13 @@ public class SubModule : MBSubModuleBase
         // strength of "it only fires on the daily tick": the new-game path would then be
         // unguarded.
         _harmony.PatchCategory("Patch65_LandlessCultureSpawnGuard");
+        // Patch82 (#551) — restores the engine's own BattleObserver/TroopUpgradeTracker pairing
+        // before MapEventSide.AllocateTroops dereferences the tracker unguarded. The target runs off
+        // each map event's simulation timer under MapEventManager.Tick, which Campaign.Tick drives,
+        // so the standard batch is early enough: no map event can tick before the campaign exists.
+        TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.Initialize(
+            IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch82_MapEventObserverInvariant");
         // Patch66 — enlistment menu guard (SetNextMenu redirect + EnterMenuMode recovery) and,
         // as the battle layer lands, the four LordConversations condition suppressions. All
         // campaign-runtime targets; menus first open well after this batch. Fail-open prefixes
@@ -1819,6 +1837,7 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.Arena.Hooks.Patch69_TournamentRosterGuard.ResetForUnload();
         TAOM.Features.Arena.Hooks.Patch69_TournamentEndGuard.ResetForUnload();
         TAOM.Features.FieldCommission.Hooks.Patch71_HeroResetEquipmentsGuard.ResetForUnload();
+        TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.Hero_CanBecomePrisoner_Patch.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.TakePrisonerAction_Apply_Patch.ResetForUnload();
     }

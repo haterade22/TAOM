@@ -99,8 +99,11 @@ public sealed class CrashReportService : ICrashReportService
             // throttle decide. On suppression: one log line, no ComposeContext / bundle /
             // notify — this kills both the disk spam and the growing-log feedback loop.
             var earlyStack = StackFrameSnapshotBuilder.FromException(exception);
+            // The Exception overload, matching ComposeContext below. Both sites MUST derive the
+            // identity the same way or a bundle is admitted under one signature and filed under
+            // another. Still cheap: it reads already-materialised managed state, no collectors.
             string earlySignature = CrashSignatureCalculator.Compute(
-                exception?.GetType().FullName ?? "(unknown)", originatingPatchTarget, earlyStack);
+                exception, originatingPatchTarget, earlyStack);
             var admission = _throttle.Admit(earlySignature);
             if (admission.Decision != CrashBundleDecision.WriteBundle)
             {
@@ -172,7 +175,7 @@ public sealed class CrashReportService : ICrashReportService
         var stack = StackFrameSnapshotBuilder.FromException(exception);
         var ex = ExceptionFrameBuilder.Build(exception);
         string signature = CrashSignatureCalculator.Compute(
-            exception?.GetType().FullName ?? "(unknown)",
+            exception,
             originatingPatchTarget,
             stack);
 

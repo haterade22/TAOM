@@ -22,6 +22,17 @@ public sealed class EnlistmentCoreConfig
     public double CommanderGraceDays { get; set; } = 7.0;
 
     /// <summary>
+    /// How long the player may sit in <c>EnlistedBattle</c> with an open battle-shaped encounter and
+    /// no map event of his own before the reconciler treats it as a stuck latch and breaks it
+    /// (issue #551). One in-game hour: long enough that no loot or aftermath screen is still in
+    /// scope, short enough that a stuck player is not left there.
+    ///
+    /// A degenerate value (NaN, infinity, negative) falls back to the same default at the point of
+    /// use rather than arming the recovery instantly.
+    /// </summary>
+    public double StaleBattleLatchDays { get; set; } = 1.0 / 24.0;
+
+    /// <summary>
     /// Native menu ids rewritten to the service wait menu while EnlistedAttached. Seeded
     /// from the v1.4.7 EncounterGameMenuBehavior sweep (incl. the 1.4.x naval ids);
     /// fail-open — unknown menus flow through and are logged once per id instead.

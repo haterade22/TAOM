@@ -195,7 +195,7 @@ All 104 files here are `Items` rows, read as `ItemObject` (`Game.cs:309`, loaded
 
 | File or folder | Row | What it is for | Tools |
 |---|---|---|---|
-| `LOTRLOME_items/LOTRAOM_horses.xml` | `LOTRLOME_Armory/SubModule.xml:304` | every `Horse` and `HorseHarness` item | hand |
+| `LOTRLOME_items/LOTRAOM_horses.xml` | `LOTRLOME_Armory/SubModule.xml:304` | every `Horse` and `HorseHarness` item, including the eight `taom_ram_barding_*` entries that carry the war ram's only saddle geometry | hand |
 | `LOTRLOME_items/LOTRAOM_weapons.xml` | `LOTRLOME_Armory/SubModule.xml:313` | bows, arrows, crossbows and bolts as `<Item>`, and every melee weapon and lance as a `<CraftedItem>` whose stats come from the pieces file | `tools/generate_black_numenorean_weapons.py` in part, `tools/build_weapon_xml.py`; otherwise hand; three `.bak-*-20260901` siblings |
 | `LOTRLOME_items/LOTRAOM_shields.xml` | `LOTRLOME_Armory/SubModule.xml:323` | every shield of every faction, in one file ([items-shields](items-shields.md)) | `tools/generate_black_numenorean_weapons.py` in part; otherwise hand; a `.bak-shieldcase-20260901` sibling |
 | `LOTRLOME_items/arnor/` (5 files: `arm_armors`, `body_armors`, `head_armors`, `leg_armors`, `shoulder_armors`) | `:175` | Arnor armour | hand |

@@ -6104,6 +6104,9 @@
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -6130,6 +6133,9 @@
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -6156,6 +6162,9 @@
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_b" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -6182,6 +6191,9 @@
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_ram_barding_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

@@ -18,6 +18,15 @@ public interface IServiceBattleService
     /// </summary>
     void TryJoinCommanderBattle(string commanderPartyId);
 
-    /// <summary>A map event involving the commander ended. Returns to parked-attached unless the loot/aftermath encounter is still open.</summary>
-    void OnCommanderBattleEnded();
+    /// <summary>
+    /// A map event involving the commander OR the player ended. Returns to parked-attached unless
+    /// the loot/aftermath encounter is still open.
+    ///
+    /// <paramref name="mainPartyWasInEndingEvent"/> is the boundary's answer to "is the event that
+    /// just ended the one the player is in?", and it gates the army detach. It cannot be inferred
+    /// in here: <c>IEncounterAdapter.IsMainPartyInMapEvent</c> reads whether the player is in SOME
+    /// map event, and at <c>MapEventEnded</c> time that is true for both the event ending and any
+    /// other one. Detaching against the wrong answer is issue #551, a CTD.
+    /// </summary>
+    void OnCommanderBattleEnded(bool mainPartyWasInEndingEvent);
 }

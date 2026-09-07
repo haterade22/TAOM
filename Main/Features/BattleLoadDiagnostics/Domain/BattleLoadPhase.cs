@@ -64,6 +64,35 @@ public enum BattleLoadPhase
     FinishMissionLoadingBegin,
     FinishMissionLoadingDone,
 
+    // Bucket 2's own heartbeat. TickLoading is a COUNTER that never logs (720 frames per 12 s
+    // load), so a process that DIES inside the async wait and one that HANGS there produce the
+    // identical log tail: seq=7 MissionInitializeDone and nothing after it. Two player CTDs on
+    // battle_terrain_biome_094 (2026-09-06) were bounded only to "somewhere in a 30-second
+    // window" for that reason, while three healthy loads in the same session cleared the same
+    // bucket in 383-933 ms.
+    //
+    // Emitted only once the wait passes SceneLoadWaitWarnAfterMs, then at
+    // SceneLoadWaitEmitIntervalMs — so a healthy load stays completely silent and a pathological
+    // one leaves a trail whose LAST line bounds the fault to one interval. Carries the same
+    // `polls=` / `waitMs=` pair FinishMissionLoadingBegin does so triage_battle_load.py parses
+    // both with one regex.
+    //
+    // THE TOKENS ARE THE SAME; THE READING IS NOT. FinishMissionLoadingBegin is written after
+    // the wait ENDED, so polls=1 there means the thread blocked INSIDE frame 1 — the #352
+    // WaitForMeshesToBeLoaded shape. This line is emitted FROM INSIDE a TickLoading frame, so
+    // polls=1 here means frame 1 had not even arrived when the threshold elapsed: the block is
+    // BEFORE the loop, not inside it. Opposite locations. triage_battle_load.py branches on its
+    // `wait_incomplete` flag to keep them apart; a reader must too.
+    //
+    // COVERAGE BOUNDARY, and it is the counter-intuitive half. This marker is driven BY the loop
+    // it measures: NoteLoadingPoll runs from the TickLoading prefix. So a main thread wedged
+    // inside one native frame emits nothing further, and the #352 shape produces SILENCE here
+    // rather than a trail. That is not a blind spot once it is written down, it is the second
+    // reading: on a load known to have run for many seconds, ABSENCE of this phase is itself the
+    // blocking-spin signal, and presence rules that shape out. Silence on a SHORT load just means
+    // it ended before SceneLoadWaitWarnAfterMs.
+    WaitingForSceneLoad,
+
     // FinishMissionLoadingDone -> BattlePlayable was itself a blind window, and a player bundle
     // (b18f3441, 2026-09-04) spent 290 s inside it with nothing logged. MissionState.OnTick reaches
     // TickMission only through `Handler.RenderIsReady()`, which is

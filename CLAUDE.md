@@ -24,7 +24,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts (v1.4.8 as of 2026-08-10, matching installed), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs** — the dump can lag after an engine bump; the installed DLLs are always authoritative |
+| **Research First** | Never guess TaleWorlds behavior - check the decompile dump for concepts (v1.4.8, matching installed; its path is per-[machine](docs/reference/development-machines.md)), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs**: the dump can lag after an engine bump, the installed DLLs are always authoritative |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
 | **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.4 incompatibilities, missing tests, data flow gaps |
 
@@ -39,7 +39,7 @@ RCA: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
 
 ## Skills (Slash Commands)
 
-40 of the 42 skill **descriptions load eagerly** into every conversation (that is the
+41 of the 43 skill **descriptions load eagerly** into every conversation (that is the
 skill-listing you see; 2 are `disable-model-invocation: true`) — so a table of them here is a
 second, drifting copy. Invoke a skill with `/name`; the routing table below ("Skill Routing")
 says *when*. Full per-skill workflow lives in each `SKILL.md`.
@@ -141,7 +141,7 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 ## Doc Lookup
 
 **Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
-to… / Read" lookup (all 63 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+to… / Read" lookup (all 77 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
 subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
@@ -158,7 +158,7 @@ Full file/path map (source XMLs, per-language files, tools, cache, validation te
 
 ## Key Paths
 
-Full feature/component map (74 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
+Full feature/component map (99 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
 Layout: `Main/` (.NET Framework 4.7.2) · `Main/Features/<Name>/` · `TAOM.Tests/` ·
 `Main/_Module/ModuleData/<feature>/` · adapters `Main/Adapters/` · core `Main/Core/`.
 `.claude/` tree: `skills/`, `rules/`, `agents/`, `hooks/`; Codex config `.codex/config.toml`,
@@ -171,6 +171,7 @@ instructions `AGENTS.md`.
 | **TAOM_Map settlements** | `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` is LIVE; the repo's `Main/_Module/ModuleData/settlements.xml` is a **STALE SHADOW** (edits don't reach the game). Live renames: `tools/Apply-MapVillageNames.py`. |
 | **Prefab entity cap** | The engine's `rglConcurrentQueue` assert (131,072) is a **global** queue across every loaded module, but `tools/check_prefab_budget.py` counts only `TAOM_Map/Prefabs` — so it prints `OK` at 99% of the cap. Measured 2026-08-08: 130,151 total, ~921 spare (#359). Sum all modules before trusting it. |
 | **A fix in a dependency module** | `LOTRLOME_Armory` / `TAOM_Map` fixes are real but **unversioned** — a module reinstall silently reverts them, and "untracked here" is not "unfixed" (7 issues closed on this in the 2026-08-08 triage). Always land an in-repo validator gate alongside the external edit. |
+| **Two machines; the laptop is incomplete** | Every `E:\` path in these docs is the DESKTOP. A partial `TAOM_Map`/`LOTRLOME_Armory` fails every reference into it: 6,894 broken items, 414 landless cultures (2026-09-06), none a repo defect. Never "fix" the repo to quiet one. [machines](docs/reference/development-machines.md) |
 | **Three-module data surface** | Data spans this repo plus the LIVE `TAOM_Map` and `LOTRLOME_Armory` installs: 1,057 XML, 16 XSLT. `validate_moduledata.py` ref-sweeps all 382 Armory ModuleData XML and none of TAOM_Map's 44, leaving its 1,012 `Culture.` refs unchecked; CI's well-formedness gate reaches 8 of the 16 XSLT, all in-repo. Matrix: `docs/features/moduledata-validation.md`. |
 | **NavalTravel** | PARKED 2026-06-26, DISABLED at the wiring level (#120/#296). Re-enable = 3 `SubModule.cs` blocks. |
 | **NativeSkinFixes** | PARKED 2026-07-08, DISABLED at the wiring level. |
@@ -186,6 +187,7 @@ instructions `AGENTS.md`.
 | **Culture party templates** | An XSLT `Culture[@id=]` block inherits vanilla for every attribute it never names, so the culture silently fields Calradians. Caravans come only from the CHILD lists, which UNION: emit AND exclude vanilla's. A null binding CTDs vanilla `SpawnPatrolParty`/`SpawnCaravan`. `CulturePartyTemplateTests` gates it. `docs/features/culture-playability-wiring.md`. |
 | **An `NPCCharacter` with no `<face>`** | `Deserialize` builds its `MBBodyProperty` from `default(BodyProperties)`, age 0, so the engine renders the toddler skin. Silent: `Mission.SpawnAgent`'s age guards read `CharacterObject.Age`, clamped to `max(20,…)`, so they never fire. 46 arena practice characters shipped as children. Gate: `CharacterFaceCoverageTests`. `docs/modding/body-properties.md`. |
 | **Enlisted service** | Parked hidden+inactive is legitimate, so is ACTIVE+VISIBLE in the commander's settlement. Only `DischargeService` ends service. Duties never detach (#428). For ONE battle both share `PlayerTeam`; outside it `Army` is null (#443). `docs/features/enlistment.md`. |
+| **Pulling the main party out of a live map event** | Clearing `MainParty.AttachedTo` runs `Party.MapEventSide = null`: that nulls `MapEvent.TroopUpgradeTracker` for good and re-exposes the event to `MapEventManager.Tick`. `AllocateTroops` derefs the tracker unguarded whenever `BattleObserver != null`, so the CTD lands later on a pure-vanilla stack. `Patch82`; #551. |
 | **Game menus stop time** | A standard `GameMenu` stops campaign time with dead time controls, and `MapState` saves the open menu id, so a player left in a menu after starting a timed process sees a "frozen" game that survives load. Land on the map (or use a wait menu) after starting anything timed. `taom.time_status` / `taom.rescue_time` diagnose and recover. |
 | **A "frozen game" may be a stuck kingdom vote** | The popup's exit is a 5s timer needing an `IsKingsDecisionOver` false->true edge, not a click. No edge, no close: navigation stays locked, Escape is dead, no crash. TWO causes: a cancelled election (`Patch80`, #547) and a player who is not their clan's leader (#550, NOT covered). `docs/features/diplomacy.md` |
 | **Hero capture** | `Hero.CanBecomePrisoner()` returns `true` unconditionally for every non-`MainHero`, so `CanHeroBecomePrisonerEvent` NEVER fires for an AI lord: patch the method. Denying capture IS granting escape (`MapEvent.cs:2004-2008` falls through to `MakeHeroFugitiveAction`). Both `Patch76` seams must carry the SAME `DeathMark` guard. `docs/features/uncapturable-heroes.md`. |
@@ -194,6 +196,7 @@ instructions `AGENTS.md`.
 | **Armory asset trees** | No cooked tree: 0 `AssetPackages/*.tpac`, the engine loads loose `Assets/**` and loose WINS where both exist (TAOM/TAOM_Map ship both; `rgl_log` names `Assets` for each). The old stale-pack trap is unreachable here. Current inventory is GENERATED, never counted by hand: `docs/reference/armory-catalogue/`. |
 | **Settlement menus need an encounter** | Inside a settlement with no `PlayerEncounter`, every vanilla settlement menu CTDs: `game_menu_settlement_wait_on_init` derefs `EncounterSettlement`, the rest deref `LocationEncounter`. Only `IEncounterAdapter.EnsureSettlementEncounter` may place the player there; an IL ban test enforces it (#510). |
 | **Horse-skeleton reskins** | A reskin shares its action vocabulary with the ENGINE, so "our code never fires this" stops meaning "nothing fires this". The vanilla horse rig has NO attack clip (`monster_usage_strikes` is a hit-REACTION table); its only attack is `act_horse_kick`. `act_horse_rear` blocks `Agent.Mount`; `act_horse_strike_*` reads as being-struck. `docs/features/war-ram.md` |
+| **A HorseHarness is REQUIRED beside every Horse slot** | Not always armour: on the ram it is the SEAT (`sk_eb_goat_a/_b` are bare pelts), so an empty slot renders a rider on bare hide. No XML says which mounts carry their own saddle, so the rule is universal; exemptions go in `_HARNESSLESS_BY_DESIGN` with a reason. Gate: `MOUNT_WITHOUT_HARNESS`. `docs/features/war-ram.md` |
 | **Animation must be authored on the ENGINE skeleton** | Skinning is roll-independent, so a mesh FBX can carry wrong bone orientations and still deform correctly in game; rotations are not. A clip authored on a mesh rig looks perfect in Blender and twisted in game. Dump the real rig first: `pwsh tools/dump_engine_skeleton.ps1 -Skeleton <name>`. `docs/reference/bannerlord-skeleton-authoring.md` |
 | **Renaming a Kit animation clip corrupts it** | The Kit keeps resolving the old name: `Size in KB = 0`, Save refused, scrambled model viewer, and the renamed file can vanish. Only a full Kit restart clears it, every time. Leave the clip on `new_animation_clip`, close the Kit, then `python tools/rename_anim_clip_tpac.py <file> <name> --apply` |
 
@@ -212,7 +215,7 @@ Override pattern + base-class + registration rules: `.claude/rules/gamemodels.md
 
 ## Harmony Patch Categories
 
-85 categories mapping a stack trace to its owning feature -> exact target -> status.
+86 categories mapping a stack trace to its owning feature -> exact target -> status.
 **Full table (category -> feature -> target -> status) + rationale / history / RCAs:
 [`docs/reference/harmony-patch-registry.md`](docs/reference/harmony-patch-registry.md)** — grep the
 failing type there. This is the crash-triage lookup; `/investigate` + `/native-crash-triage`
@@ -310,7 +313,7 @@ documentation half of a change committed and the code half did not.
 
 ## MCP Servers
 
-9 servers (7 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,
+10 servers (8 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,
 and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md)**.
 
 ### MCP Usage Guide

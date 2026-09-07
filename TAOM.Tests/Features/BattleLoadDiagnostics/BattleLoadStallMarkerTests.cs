@@ -144,6 +144,64 @@ public class BattleLoadStallMarkerTests
         }
     }
 
+    // ---- log visibility (2026-09-06) ---- //
+    // Before these, the whole marker path wrote files and showed an in-game inquiry but logged
+    // NOTHING. Two player CTDs on battle_terrain_biome_094 left three sessions of taom_debug.log
+    // in which it was impossible to tell whether the marker was ever written or whether the
+    // next-session notice fired. The scene name is the load-bearing token in both lines.
+    [TestMethod]
+    public void MarkInflight_LogsTheSceneItRecorded()
+    {
+        _sut.MarkInflight("battle_terrain_biome_094");
+
+        _logger.Received().LogDebug(Arg.Is<string>(m =>
+            m.Contains("battle_terrain_biome_094") && m.Contains("[BattleLoad]")));
+    }
+
+    [TestMethod]
+    public void TryConsumeStaleMarker_WarnsNamingTheSceneAndThePriorLog()
+    {
+        _sut.MarkInflight("battle_terrain_biome_094");
+
+        var info = _sut.TryConsumeStaleMarker();
+
+        Assert.IsNotNull(info);
+        _logger.Received().LogWarning(Arg.Is<string>(m =>
+            m.Contains("battle_terrain_biome_094") && m.Contains("taom_debug_2026-06-17_12-00-00.log")));
+    }
+
+    [TestMethod]
+    public void TryConsumeStaleMarker_NoMarker_LogsNothing()
+    {
+        // A clean session must stay silent: a warning on every launch trains players to ignore it.
+        var info = _sut.TryConsumeStaleMarker();
+
+        Assert.IsNull(info);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void TryConsumeStaleMarker_UnparseableMarker_StillWarnsWithoutInventingValues()
+    {
+        // A truncated marker (the process died mid-write) must not produce a fabricated scene
+        // or timestamp — the same never-invent-a-value rule the phase log's omitted tokens follow.
+        File.WriteAllText(_markerPath, "garbage line\n");
+
+        var info = _sut.TryConsumeStaleMarker();
+
+        Assert.IsNotNull(info);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("<unrecorded>")));
+    }
+
+    [TestMethod]
+    public void FormatUtc_MissingTimestamp_RendersTheAbsenceRatherThanADefaultDate()
+    {
+        Assert.AreEqual("<unrecorded>", BattleLoadStallMarker.FormatUtc(null));
+        Assert.AreEqual(
+            "2026-06-17T12:00:00.0000000Z",
+            BattleLoadStallMarker.FormatUtc(new DateTime(2026, 6, 17, 12, 0, 0, DateTimeKind.Utc)));
+    }
+
     // ---- DI-registration guard ---- //
     [TestMethod]
     public void BattleLoadStallMarker_HasSinglePublicConstructor_ForDryIocResolution()

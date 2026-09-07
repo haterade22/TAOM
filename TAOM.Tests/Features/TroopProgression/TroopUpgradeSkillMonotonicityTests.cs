@@ -46,6 +46,27 @@ public class TroopUpgradeSkillMonotonicityTests
     };
 
     /// <summary>
+    /// Upgrade edges where a child deliberately re-specialises OFF a skill its parent carried
+    /// for REAL, per skill. Not the ordinary inert baseline noise this gate protects: the parent
+    /// actually carries the weapon, so raising the child back to it would undo the
+    /// specialisation. MIRRORED in <c>rebalance_troops.py</c>'s
+    /// <c>RESPECIALIZATION_EXEMPT_EDGES</c> and <c>taom_schema.py</c>'s
+    /// <c>_RESPECIALIZATION_EXEMPT_EDGES</c>. All three must agree, exactly as the militia
+    /// binding regex below is kept in lockstep: otherwise the writer floors a value, this gate
+    /// calls it a regression, and the clamp puts it straight back. Adding an entry is a
+    /// deliberate act, so state why.
+    /// </summary>
+    private static readonly Dictionary<(string Source, string Target), HashSet<string>>
+        RespecializationExemptEdges = new Dictionary<(string, string), HashSet<string>>
+    {
+        // sagarun_crossbowman carries a real crossbow at 160. Its naffatun child throws
+        // javelins and carries neither bow nor crossbow, so both are floored rather than
+        // inherited (#554); Throwing takes the ranged curve in their place.
+        [("sagarun_crossbowman", "sagarun_naffatun")] =
+            new HashSet<string>(StringComparer.Ordinal) { "Bow", "Crossbow" },
+    };
+
+    /// <summary>
     /// Troops bound to a culture militia slot. Pinned by id, not just by count: asserting only the
     /// count let the exemption be swapped back to the name-substring rule that caused the bug
     /// without the suite noticing, because both sets happen to be the same size minus one.
@@ -207,8 +228,13 @@ public class TroopUpgradeSkillMonotonicityTests
                 // owns that case; judging the edge here would compare the wrong numbers.
                 if (source.Templated || target.Templated) continue;
 
+                HashSet<string> exempt;
+                if (!RespecializationExemptEdges.TryGetValue((source.Id, target.Id), out exempt))
+                    exempt = null;
+
                 var drops = CombatSkills
-                    .Where(s => SkillOf(target, s) < SkillOf(source, s))
+                    .Where(s => (exempt == null || !exempt.Contains(s))
+                                && SkillOf(target, s) < SkillOf(source, s))
                     .Select(s => s + " " + SkillOf(source, s) + " to " + SkillOf(target, s))
                     .ToList();
 

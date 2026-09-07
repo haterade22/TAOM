@@ -166,13 +166,54 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         if (!_coopSession.IsAuthority || !_store.Record.IsEnlisted || mapEvent == null)
             return;
 
-        // Either the commander was in it, or we are in battle state (our own event ends
-        // count too — e.g. the commander's party was wiped mid-event).
-        if (_store.Record.State == Domain.EnlistmentState.EnlistedBattle
-            || FindCommanderPartyIdIn(mapEvent) != null)
+        // THE GATE IS THE ENDING EVENT'S IDENTITY, NEVER OUR STATE (issue #551).
+        //
+        // This used to read `State == EnlistedBattle || commander-in-event`. The state disjunct
+        // alone was enough, so while the player sat in EnlistedBattle EVERY map event resolving
+        // anywhere in the world was treated as "the commander's battle ended". In the crash session
+        // that was ~650 AI battles, several per second: TryJoin set EnlistedBattle at 20:23:57, a
+        // sturgia-vs-corsairs field battle on the far side of the map finished in the same second,
+        // and the teardown below pulled the player straight back out of the battle he had joined
+        // 0.3s earlier. Crash bundle 31942985.
+        //
+        // The main-party disjunct is what the old state clause was reaching for. When the commander
+        // is wiped mid-event his party is gone from InvolvedParties, but the player is still in it,
+        // and that end is genuinely ours. `CampaignEventDispatcher.OnMapEventEnded` is dispatched
+        // from `MapEvent.FinalizeEventAux` :2079, BEFORE the side teardown, so InvolvedParties is
+        // still populated here — FindCommanderPartyIdIn already depends on that.
+        // ORDERING IS DELIBERATE: the cheap walk gates the expensive one. `IsMainPartyIn` is a
+        // reference comparison per involved party; `FindCommanderPartyIdIn` resolves two party ids
+        // through the commander adapter and then compares strings per party. Both answers are needed
+        // whenever we proceed — `mainPartyInvolved` gates the detach downstream, so it cannot be
+        // short-circuited away — but putting it first skips the expensive walk entirely on our own
+        // battles. This runs for every map event ending anywhere in the world while enlisted, which
+        // was several per second in the #551 session, so do not "tidy" the operands back.
+        var mainPartyInvolved = IsMainPartyIn(mapEvent);
+        if (!mainPartyInvolved && FindCommanderPartyIdIn(mapEvent) == null)
+            return;
+
+        _battle.OnCommanderBattleEnded(mainPartyInvolved);
+    }
+
+    /// <summary>
+    /// Reference comparison against <c>PartyBase.MainParty</c> rather than a StringId match: the
+    /// enumeration is a boundary read of a sealed engine type (ADR-007), and identity is exactly
+    /// the question. A settlement <c>PartyBase</c> has no MobileParty, so an id-based check would
+    /// have to special-case it.
+    /// </summary>
+    private static bool IsMainPartyIn(MapEvent mapEvent)
+    {
+        var main = PartyBase.MainParty;
+        if (main == null)
+            return false;
+
+        foreach (var involved in mapEvent.InvolvedParties)
         {
-            _battle.OnCommanderBattleEnded();
+            if (involved == main)
+                return true;
         }
+
+        return false;
     }
 
     private static int CountInvolved(MapEvent mapEvent)

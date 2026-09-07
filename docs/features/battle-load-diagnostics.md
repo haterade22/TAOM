@@ -99,6 +99,59 @@ on the `FinishMissionLoadingBegin` line. Reading that pair is the whole point:
 `waitMs` is **omitted entirely** — never a fabricated `0` — when `MissionInitializeDone` was not
 observed, the same never-invent-a-zero rule the `MemStats()` process tokens follow.
 
+### `WaitingForSceneLoad`: bucket 2's heartbeat (2026-09-06)
+
+The counter design above has one cost, and a player CTD found it: **that pair only exists on the
+`FinishMissionLoadingBegin` line, which a load that never finishes never writes.** A process that
+DIES inside the async wait and one that HANGS there produce the identical log tail (`seq=7
+MissionInitializeDone` and nothing after it), so the guidance in the triage table below could only
+say "read `polls=` on a run that got further".
+
+Two reproducible CTDs on `battle_terrain_biome_094` (2026-09-06, RX 7900 XTX) landed exactly there.
+Three healthy loads in the same session cleared bucket 2 in **383, 457 and 933 ms**; the two crash
+runs were still alive 7 s in and gone before the next 35 s `[MemSample]`, so the fault was bounded
+only to "somewhere in a 30-second window".
+
+`WaitingForSceneLoad` closes it without giving up the no-noise rule:
+
+- silent below `SceneLoadWaitWarnAfterMs` (**3000 ms**), which sits well clear of the slowest healthy
+  bucket 2 on record, so an ordinary battle emits nothing at all;
+- past it, one line every `SceneLoadWaitEmitIntervalMs` (**5000 ms**), so a 30-second stall costs
+  about six lines and the **last** one bounds the fault to a 5-second window;
+- carries `scene='…'` plus the **same** `polls=` / `waitMs=` pair, so `triage_battle_load.py`
+  parses both lines with one regex.
+
+**The tokens are the same; the reading is not.** `FinishMissionLoadingBegin` is written after the
+wait ENDED, so `polls=1` there means the thread blocked INSIDE frame 1, the #352 shape. The
+heartbeat is emitted FROM INSIDE a `TickLoading` frame, so `polls=1` there means frame 1 had not
+arrived when the threshold elapsed: the block is BEFORE the loop. Opposite locations, and the first
+cut of this feature printed the wrong one. `triage_battle_load.py` branches on its
+`wait_incomplete` flag to keep them apart, pinned by
+`LoadTimingReportTests.test_heartbeat_polls_one_is_not_reported_as_the_352_native_spin`.
+
+**Coverage boundary, and it is the counter-intuitive half.** The marker is driven BY the loop it
+measures: `NoteLoadingPoll` runs from the `TickLoading` prefix. A main thread wedged inside one
+native frame therefore emits nothing further, so the #352 shape produces **silence** here rather
+than a trail. Written down, that is not a blind spot but the second reading:
+
+| On a load known to have run for many seconds | Means |
+|---|---|
+| heartbeats present | frames were still running; a single-frame native spin is ruled OUT |
+| no heartbeat at all | the main thread wedged inside one frame, or the load ended under 3 s |
+
+Both `_SCENE_HINTS` entries in the triage tool say so, so a triager reading the report gets the
+distinction without having to know the implementation.
+
+The throttle latch resets with the wait origin, so a chained second mission speaks immediately
+rather than waiting out the first mission's interval. Nothing is emitted before the origin is armed
+at `MissionInitializeDone`: `TickLoading` can run earlier, and a line there would be a fabricated
+measurement rather than a short one.
+
+Triage-side, `WaitingForSceneLoad` is a `SCENE` terminal, and the timing ledger falls back to the
+**last** heartbeat when `FinishMissionLoadingBegin` is absent, which is what lets the `polls=1`
+native-spin rule fire on a crash log at all. Those numbers are reported as a **lower bound**, since
+the wait was still running when the log stopped.
+
 All three new markers carry `MemStats()`, which is what makes them answer a question no other
 instrument can: whether the load stall and the process-commit growth are **one** problem. A `privMB`
 curve that rises steeply across the dominant bucket means the stall *is* resource residency; a flat
@@ -615,7 +668,8 @@ Within the OpenNew→Initialize window, the last stamp names the segment:
 | `ResourceClearOldBegin` (no `Done`) | **native** resource teardown — suspect heap corruption inherited from the previous mission's exit (cf. Patch62 / #339) |
 | `ResourceClearOldDone` (no `MissionInitialize`) | between the clear and `Mission.Initialize` |
 | `MissionInitialize` (no `MissionInitializeDone`) | the native `MBAPI.IMBMission.InitializeMission` — scene / physics / terrain construction |
-| `MissionInitializeDone` (no `FinishMissionLoadingBegin`) | the async load wait never completed — native `Mission.IsLoadingFinished` never returned true. Read `polls=` on the *next* run to tell a spin from genuine streaming |
+| `MissionInitializeDone` (no `FinishMissionLoadingBegin`) | the async load wait never completed: native `Mission.IsLoadingFinished` never returned true. On a log predating `WaitingForSceneLoad`, read `polls=` on the *next* run to tell a spin from genuine streaming. On a current build this row means the load died or froze in **under 3 seconds**, because a longer one would have left heartbeats |
+| `WaitingForSceneLoad` | same window, but the wait had already run past 3 s and the heartbeat carries `polls=`/`waitMs=` from inside it. The fault lands within 5 s of the last line's `t=+` stamp. Apply the reading table above directly; no second run needed |
 | `FinishMissionLoadingBegin` (no `MissionAfterStartBegin`) | `Scene.SetOwnerThread`, one of the two warm-up `Mission.Tick(0.001f)` calls, or `OnMissionAfterStarting` |
 | `MissionAfterStartBegin` (no `TaomBehaviorsBegin`) | **another mod's** `OnMissionBehaviorInitialize` — not TAOM |
 | `TaomBehaviorAdded behavior='X'` (no further stamp) | registering TAOM's `X` |

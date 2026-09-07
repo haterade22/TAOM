@@ -8,6 +8,12 @@ namespace TAOM.Tests.Features.Execution;
 [TestClass]
 public class ExecutionActionHookTests
 {
+    private const string PlayerKingdom = "empire_w";   // Gondor
+    private const string AllyKingdom = "vlandia";      // Rohan
+    private const string VictimKingdom = "empire_s";   // Mordor
+    private const string FreeCulture = "gondor";
+    private const string EvilCulture = "mordor";
+
     private IAlignmentService _alignmentService;
     private ExecutionActionHook _sut;
 
@@ -15,106 +21,62 @@ public class ExecutionActionHookTests
     public void Setup()
     {
         _alignmentService = Substitute.For<IAlignmentService>();
+
+        Side(PlayerKingdom, null, FactionSide.Free);
+        Side(AllyKingdom, null, FactionSide.Free);
+        Side(VictimKingdom, null, FactionSide.Evil);
+        Side("", FreeCulture, FactionSide.Free);
+        Side(null, FreeCulture, FactionSide.Free);
+        Side(VictimKingdom, EvilCulture, FactionSide.Evil);
+        Side(AllyKingdom, FreeCulture, FactionSide.Free);
+
+        _alignmentService
+            .AreEnemyAlignments(Arg.Any<FactionSide>(), Arg.Any<FactionSide>())
+            .Returns(ci => IsEnemy(ci.ArgAt<FactionSide>(0), ci.ArgAt<FactionSide>(1)));
+
         _sut = new ExecutionActionHook(_alignmentService);
     }
+
+    private void Side(string kingdomId, string cultureId, FactionSide side)
+        => _alignmentService.ResolveSide(kingdomId, cultureId).Returns(side);
+
+    private static bool IsEnemy(FactionSide a, FactionSide b)
+        => a == FactionSide.Neutral || b == FactionSide.Neutral || a != b;
+
+    private static ExecutionParticipant P(string kingdomId, string cultureId = null)
+        => new ExecutionParticipant(kingdomId, cultureId);
 
     [TestMethod]
     public void ShouldApplyHonorPenalty_CrossAlignment_ReturnsFalse()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-
-        Assert.IsFalse(_sut.ShouldApplyHonorPenalty("empire_s", "empire_w"));
+        Assert.IsFalse(_sut.ShouldApplyHonorPenalty(P(VictimKingdom), P(PlayerKingdom)));
     }
 
     [TestMethod]
     public void ShouldApplyHonorPenalty_SameAlignment_ReturnsTrue()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-
-        Assert.IsTrue(_sut.ShouldApplyHonorPenalty("vlandia", "empire_w"));
+        Assert.IsTrue(_sut.ShouldApplyHonorPenalty(P(AllyKingdom), P(PlayerKingdom)));
     }
 
     [TestMethod]
-    public void IsKinslaying_SameAlignment_ReturnsTrue()
+    public void ShouldApplyHonorPenalty_KingdomlessExecutorWithFreeCulture_ReturnsFalse()
     {
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(true);
-
-        Assert.IsTrue(_sut.IsKinslaying("vlandia", "empire_w"));
+        // An independent, mercenary or enlisted player executing a Mordor lord used to eat the full
+        // vanilla -1000 Honor XP because the empty kingdom id bailed out before the alignment check.
+        Assert.IsFalse(_sut.ShouldApplyHonorPenalty(P(VictimKingdom, EvilCulture), P("", FreeCulture)));
     }
 
     [TestMethod]
-    public void IsKinslaying_CrossAlignment_ReturnsFalse()
+    public void ShouldApplyHonorPenalty_KingdomlessExecutorKinslaying_StillReturnsTrue()
     {
-        _alignmentService.AreSameAlignment("empire_w", "empire_s").Returns(false);
-
-        Assert.IsFalse(_sut.IsKinslaying("empire_s", "empire_w"));
+        Assert.IsTrue(_sut.ShouldApplyHonorPenalty(P(AllyKingdom, FreeCulture), P(null, FreeCulture)));
     }
 
     [TestMethod]
-    public void GetRelationModifier_CrossAlignment_EvaluatorSameAsExecutor_ReturnsZero()
+    public void ShouldApplyHonorPenalty_VictimKingdomNulledByClanDestruction_ReturnsFalse()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-        _alignmentService.AreSameAlignment("vlandia", "empire_w").Returns(true);
+        _alignmentService.ResolveSide(null, EvilCulture).Returns(FactionSide.Evil);
 
-        int result = _sut.GetRelationModifier("empire_w", "empire_s", "vlandia", -60);
-
-        Assert.AreEqual(0, result);
-    }
-
-    [TestMethod]
-    public void GetRelationModifier_CrossAlignment_EvaluatorSameAsVictim_ReturnsVanillaPenalty()
-    {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-        _alignmentService.AreSameAlignment("isengard", "empire_w").Returns(false);
-        _alignmentService.AreSameAlignment("isengard", "empire_s").Returns(true);
-
-        int result = _sut.GetRelationModifier("empire_w", "empire_s", "isengard", -60);
-
-        Assert.AreEqual(-60, result);
-    }
-
-    [TestMethod]
-    public void GetRelationModifier_CrossAlignment_EvaluatorNeutral_ReturnsZero()
-    {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-        _alignmentService.AreSameAlignment("umbar", "empire_w").Returns(false);
-        _alignmentService.AreSameAlignment("umbar", "empire_s").Returns(false);
-
-        int result = _sut.GetRelationModifier("empire_w", "empire_s", "umbar", -60);
-
-        Assert.AreEqual(0, result);
-    }
-
-    [TestMethod]
-    public void GetRelationModifier_Kinslaying_Returns150PercentPenalty()
-    {
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(true);
-
-        int result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", -60);
-
-        Assert.AreEqual(-90, result);
-    }
-
-    [TestMethod]
-    public void GetRelationModifier_Kinslaying_SmallerPenalty_RoundsCorrectly()
-    {
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(true);
-
-        int result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", -10);
-
-        Assert.AreEqual(-15, result);
-    }
-
-    [TestMethod]
-    public void GetRelationModifier_Kinslaying_FriendPenalty()
-    {
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(true);
-
-        int result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", -30);
-
-        Assert.AreEqual(-45, result);
+        Assert.IsFalse(_sut.ShouldApplyHonorPenalty(P(null, EvilCulture), P(PlayerKingdom, FreeCulture)));
     }
 }

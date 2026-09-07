@@ -23,6 +23,7 @@ public class ServiceMaintenanceServiceTests
     private IServiceStatusService _status = null!;
     private IArmyMembershipAdapter _army = null!;
     private IEncounterAdapter _encounter = null!;
+    private IEnlistmentReconciler _reconciler = null!;
     private ServiceMaintenanceService _pump = null!;
 
     [TestInitialize]
@@ -40,13 +41,15 @@ public class ServiceMaintenanceServiceTests
 
         _status = Substitute.For<IServiceStatusService>();
         _army = Substitute.For<IArmyMembershipAdapter>();
+        _reconciler = Substitute.For<IEnlistmentReconciler>();
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         Encounter(none: true);
 
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, _gameMenu, _menuService,
-            _status, _army, _encounter, new EncounterOwnershipPolicy(), _logger);
+            _status, _army, _encounter, new EncounterOwnershipPolicy(),
+            _reconciler, _logger);
 
         Commander(followable: true);
         Presence(parked: true);
@@ -117,6 +120,35 @@ public class ServiceMaintenanceServiceTests
         _army.Received(1).ResetSessionCaches();
         _attachment.Received(1).InvalidateCommanderCache();
         _status.Received(1).Invalidate();
+        _reconciler.Received(1).ResetForNewSession();
+    }
+
+    [TestMethod]
+    public void ResetSessionCaches_AlsoDropsTheReconcilersStaleBattleLatchAnchor()
+    {
+        // Issue #551. The reconciler is Reuse.Singleton and its latch anchor is an ABSOLUTE campaign
+        // day, so a campaign that ended while latched leaves it behind. Load a later save and the
+        // elapsed time is enormous: the recovery fires on the first latched tick and finishes what
+        // may be a live loot screen with no real waiting, which is the destructive Finish that R1b
+        // exists to prevent, committed by the safety net itself.
+        //
+        // Asserted separately from the army handle above so that deleting either wiring names which
+        // one broke.
+        _pump.ResetSessionCaches();
+
+        _reconciler.Received(1).ResetForNewSession();
+    }
+
+    [TestMethod]
+    public void Pump_DoesNotResetTheReconcilerAnchor()
+    {
+        // Same reasoning as the army handle: this is a LOAD-time action. Clearing the anchor on an
+        // ordinary pump would restart the clock every tick and the recovery could never elapse.
+        MakeEnlisted();
+
+        PumpExpensive();
+
+        _reconciler.DidNotReceive().ResetForNewSession();
     }
 
     [TestMethod]

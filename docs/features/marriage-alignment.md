@@ -247,3 +247,16 @@ per ADR-008.
   object graph alive), an unreachable `Campaign.Current` guard was removed, and
   `taom.print_marriages` gained the toggle-state header. RCA:
   [rca-marriage-alignment-2026-09-06.md](../reviews/rca-marriage-alignment-2026-09-06.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/dev-console.md](./dev-console.md)
+- [docs/features/nazgul-family.md](./nazgul-family.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

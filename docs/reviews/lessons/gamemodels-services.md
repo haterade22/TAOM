@@ -659,7 +659,19 @@ troop at tier 2.
   list what each returns on both sides of the move. The cheap tell is a threshold: any engine gate
   written as `Tier < N` or `Tier > N` turns a one-tier move into a capability change, and prisoner
   recruitment, volunteer eligibility, mercenary spawn counts and wage all sit behind one.
-- **Source:** #537 review, 2026-09-03; RCA `docs/reviews/rca-upgrade-tier-collapse-2026-09-03.md`.
+- **Generalised 2026-09-06 (#554): the rule is not about `level` or `Tier`, it is about any troop
+  attribute the ENGINE reads.** Five troops had `default_group` corrected from `Ranged` to
+  `Infantry`, planned as "this fixes which line they stand in" with wage and auto-resolve asserted
+  unaffected. Both halves of that were asserted from a plausible reading of one engine property
+  rather than from an enumeration, and the deep review refuted them by decompiling:
+  `DefaultMilitaryPowerModel.GetTroopPowerContext` turns `IsRanged` into a `PowerFlags` value that
+  indexes a terrain-and-side modifier table applied to auto-resolve power, and TAOM's own
+  `TaomMilitaryPowerModel` overrides only `GetDefaultTroopPower`, so it inherits that path. TAOM's
+  `WageModifierService` and `BannerBearerService` read formation class too, the latter meaning the
+  five troops silently became eligible to carry banners. The tell is identical to the tier case: the
+  attribute was reasoned about through the one consumer the change was aimed at.
+- **Source:** #537 review, 2026-09-03; RCA `docs/reviews/rca-upgrade-tier-collapse-2026-09-03.md`;
+  generalised by #554, RCA `docs/reviews/rca-javelin-troop-misclassification-2026-09-06.md`.
 
 ### A cross-language constant needs a test that reads the other language
 
@@ -675,7 +687,19 @@ editing the C# override.
   cannot be found. `CommitGateCoverageTests` is the shape to copy: it diffs the validator's codes
   against the hook script by parsing both. Ask of any pin: which file would I edit to break this,
   and does the test open it?
-- **Source:** #537 review, 2026-09-03.
+- **Recurred 2026-09-06, three days later (#554).** `RESPECIALIZATION_EXEMPT_EDGES` shipped into
+  review hand-copied into `rebalance_troops.py`, `taom_schema.py` and
+  `TroopUpgradeSkillMonotonicityTests.cs`, with a comment in all three saying they must agree and
+  nothing reading any of the others. The comment was more emphatic than last time ("all three must
+  agree or the writer, the validator and the C# gate judge the same edge differently") which if
+  anything made it easier to mistake for a mechanism. **A stronger form of the rule: writing the
+  words "must be kept in sync" is the trigger to write the test, in the same commit.** Note the
+  drift is not symmetrical and the loud direction is the safe one: a Python-only addition gets
+  blocked by the hook, while a C#-only addition just makes two gates disagree quietly. Fix:
+  `RespecializationExemptionMirrorTests` in `tools/tests/test_rebalance_equipment.py`, which regexes
+  the `.cs` dictionary and diffs it against both Python copies, asserts the file exists, and is
+  proven against three simulated drifts rather than assumed to work.
+- **Source:** #537 review, 2026-09-03; recurrence #554 deep review, 2026-09-06.
 
 ### Write generated files with the ENCODING THE FILE ALREADY HAS, not the one your reader used
 

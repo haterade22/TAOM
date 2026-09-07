@@ -425,6 +425,7 @@ the gating predicate, and one non-finite case per knob per the engine-float gate
 
 ## Referenced by
 
+- [docs/features/caravan-bandit-parity.md](./caravan-bandit-parity.md)
 - [docs/features/player-switcher.md](./player-switcher.md)
 - [docs/features/startup-resources.md](./startup-resources.md)
 - [docs/modding/balance-levers.md](../modding/balance-levers.md)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment;
@@ -31,6 +32,26 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
     /// <summary>Fallback when the configured grace window is unusable. Matches EnlistmentCoreConfig.</summary>
     private const double DefaultGraceDays = 7.0;
+
+    /// <summary>Fallback when the configured latch window is unusable. Matches EnlistmentCoreConfig.</summary>
+    private const double DefaultStaleBattleLatchDays = 1.0 / 24.0;
+
+    /// <summary>
+    /// Campaign day the current stale-battle-latch episode was first observed, or NaN when the
+    /// player is not in that shape (issue #551). One CONTINUOUS episode: any tick where the shape
+    /// is absent clears it, so two unrelated loot windows an hour apart never add up to a recovery.
+    ///
+    /// NOT PERSISTED, AND THAT IS NOT THE SAME AS SAFE. This class is <c>Reuse.Singleton</c>, so it
+    /// outlives the campaign: a campaign that ends WHILE latched leaves a finite anchor behind, and
+    /// campaign days are absolute. Load a later save and <c>elapsed</c> is enormous, so the recovery
+    /// fires on the very first latched tick and finishes what may be a genuine loot screen with no
+    /// real waiting at all: exactly the destructive <c>Finish</c> R1b exists to prevent, committed by
+    /// the code meant to be the safety net. Two independent guards, because they cover different
+    /// paths: <see cref="ResetForNewSession"/> handles the load path, and the backwards-clock
+    /// re-anchor in <see cref="BreakStaleBattleLatch"/> handles a brand-new campaign, which never
+    /// reaches <c>ResetSessionCaches</c> at all.
+    /// </summary>
+    private double _staleBattleLatchSinceDays = double.NaN;
 
     private readonly IInquiryAdapter _inquiry;
 
@@ -75,6 +96,9 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     public event Action<string> BattleJoinRequested;
 
     public void ReconcileHourly(double nowDays) => Reconcile(nowDays, "hourly");
+
+    /// <inheritdoc/>
+    public void ResetForNewSession() => _staleBattleLatchSinceDays = double.NaN;
 
     /// <summary>
     /// Run a full reconcile now, off an edge rather than the hourly tick. The trigger string is
@@ -373,9 +397,104 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _machine.TryTransition(EnlistmentState.EnlistedAttached);
     }
 
+    /// <summary>
+    /// Release a player latched in <c>EnlistedBattle</c> behind an encounter that has outlived the
+    /// battle it belonged to (issue #551). Returns true when it actually recovered, so the caller
+    /// knows the presence snapshot it is holding has gone stale.
+    ///
+    /// THE SHAPE: <c>EnlistedBattle</c>, an open <c>PlayerEncounter</c>, and the player in no map
+    /// event. A join that lands and is torn down in the same second produces it, and nothing else
+    /// in this feature can move it. <c>ServiceMaintenanceService.TryBreakBattleLatch</c> returns on
+    /// <c>HasPlayerEncounter</c>; <c>SweepStrandedEncounter</c> returns while the commander is in a
+    /// map event; the ownership policy's R1b defers every intent, discharge included, because the
+    /// encounter reads as a battle; and <c>ServiceBattleService.TryJoin</c> refuses every rejoin
+    /// because the state is not <c>EnlistedAttached</c>. Four correct guards, no exit between them.
+    ///
+    /// THE DISCRIMINATOR IS TIME, and only time. R1b protects the loot and aftermath window, which
+    /// has this exact shape and is legitimate, so the recovery may not act on the shape alone. It
+    /// waits out <c>StaleBattleLatchDays</c> of continuous latching first, which no loot screen
+    /// survives. That is also why it hands R1c the decision rather than calling
+    /// <c>_encounter.Finish</c> itself: the policy owns whether an encounter is ours to close, and
+    /// R1 still refuses outright if the player turns out to be in a map event after all.
+    /// </summary>
+    private bool BreakStaleBattleLatch(
+        EnlistmentRecord record, PlayerPresenceSnapshot presence, string commanderPartyId, double nowDays)
+    {
+        var latched = record.State == EnlistmentState.EnlistedBattle
+            && presence != null
+            && presence.HasPlayerEncounter
+            && !presence.IsInMapEvent;
+
+        if (!latched || !FiniteFloatValidator.IsFinite(nowDays))
+        {
+            _staleBattleLatchSinceDays = double.NaN;
+            return false;
+        }
+
+        // Re-anchor on no anchor, and equally on an anchor in the FUTURE. A clock that ran backwards
+        // cannot be a continuous episode; it means a different campaign or an earlier save, and the
+        // anchor belongs to a world this one has nothing to do with. This is the guard for the path
+        // ResetForNewSession does not reach: ResetSessionCaches is wired to OnGameLoaded only, so a
+        // brand-new campaign in the same process never calls it, and a new campaign's low day count
+        // puts the leftover anchor ahead of it.
+        if (!FiniteFloatValidator.IsFinite(_staleBattleLatchSinceDays) || nowDays < _staleBattleLatchSinceDays)
+        {
+            _staleBattleLatchSinceDays = nowDays;
+            return false;
+        }
+
+        var thresholdDays = _config?.GetConfig()?.StaleBattleLatchDays ?? DefaultStaleBattleLatchDays;
+        if (!FiniteFloatValidator.IsFiniteAtLeast(thresholdDays, 0.0))
+            thresholdDays = DefaultStaleBattleLatchDays;
+
+        // POSITIVE REQUIREMENT rather than an inverted early exit: every comparison against NaN is
+        // false, so `if (elapsed < threshold) return;` would let a poisoned clock through into the
+        // recovery instead of holding it back.
+        var elapsedDays = nowDays - _staleBattleLatchSinceDays;
+        if (!(elapsedDays >= thresholdDays))
+            return false;
+
+        var verdict = _ownership.Evaluate(
+            EncounterFinishIntent.StaleBattleLatch, _encounter.GetOwnership(commanderPartyId));
+        if (verdict != EncounterFinishVerdict.Finish)
+        {
+            // A skip is not a reset. Whatever caused it (a conversation, a settlement) will pass,
+            // and it is still the same episode, so the next tick retries against the same clock.
+            _logger?.LogInfo($"[Enlistment] stale battle latch not cleared this tick: {verdict}");
+            return false;
+        }
+
+        _logger?.LogWarning(
+            $"[Enlistment] breaking a stale EnlistedBattle latch after {elapsedDays * 24.0:F1} in-game hours: " +
+            "an encounter is open, the player is in no map event, and nothing else can release him (#551)");
+
+        if (!_encounter.Finish(true))
+        {
+            _logger?.LogError("[Enlistment] could not close the latched encounter — the player is still stuck");
+            return false;
+        }
+
+        _staleBattleLatchSinceDays = double.NaN;
+
+        // The transition is what unblocks everything else: the maintenance pump gates its menu work
+        // on EnlistedAttached, and ServiceBattleService refuses every join from any other state.
+        if (!_machine.TryTransition(EnlistmentState.EnlistedAttached))
+            return false;
+
+        _attachment.EnsureParked(record.CommanderHeroId);
+        return true;
+    }
+
     private void ReconcileAttached(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays, string trigger)
     {
         var snapshot = _commander.GetSnapshot(record.CommanderHeroId);
+
+        // BEFORE the assessment, not after, so a recovery lands in the same pass that noticed it.
+        // Everything downstream reads `record.State` and `presence`, and the whole point of the
+        // recovery is to change both. Running it after the assessment would leave the player one
+        // more in-game hour without a menu for no reason.
+        if (BreakStaleBattleLatch(record, presence, snapshot.PartyId, nowDays))
+            presence = _attachment.GetPresence(record.CommanderHeroId);
 
         // No map event on either side and no open encounter — there is no battle anywhere. An OPEN
         // encounter means the battle is still live (loot/aftermath runs inside it, and the map event

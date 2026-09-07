@@ -9,6 +9,12 @@ Everything else on the javelin path was already stock vanilla: no `Items` XML no
 no `StrikeMagnitudeCalculationModel` override, no Harmony patch touching damage, and `Throwing` is
 the lowest-ceilinged skill in the mod. The shipped mechanic was the whole story.
 
+**Update 2026-09-06 (#554).** That last clause is still true of the curve: `Throwing` tops out at 100
+in `GROUP_BASELINES` against `Bow`'s 320. It now has one documented exception. A troop whose only
+ranged option is a thrown weapon takes the Ranged Bow curve on `Throwing` instead, so five javelin
+skirmishers sit between 85 and 235. If a javelin damage report arrives for one of those troops, the
+skill is no longer the part that can be ruled out on sight.
+
 ## Findings
 
 | # | Sev | Bug | Category | Why missed | Preventive action |

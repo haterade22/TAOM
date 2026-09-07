@@ -1340,7 +1340,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="sagarun_naffatun"
-        default_group="Ranged"
+        default_group="Infantry"
         level="31"
         name="{=aom_sagarun_naffatun_name}[Rhûn] Sagarûn Naffatun"
         occupation="Soldier"
@@ -1349,14 +1349,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
+            <skill id="Athletics" value="125" />
             <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="195" />
-            <skill id="Crossbow" value="160" />
-            <skill id="Throwing" value="55" />
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="250" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="195" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_storm_helmed_naffatun" />
@@ -1481,7 +1481,7 @@
     </NPCCharacter>
     <NPCCharacter
         id="sagarun_storm_helmed_naffatun"
-        default_group="Ranged"
+        default_group="Infantry"
         level="36"
         name="{=aom_sagarun_storm_helmed_naffatun_name}[Rhûn] Sagarûn Storm Helmed Naffatun"
         occupation="Soldier"
@@ -1490,14 +1490,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
+            <skill id="Athletics" value="145" />
             <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="195" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="135" />
-            <skill id="Bow" value="235" />
-            <skill id="Crossbow" value="160" />
-            <skill id="Throwing" value="65" />
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="250" />
+            <skill id="Polearm" value="290" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="235" />
         </skills>
         <upgrade_targets />
         <Equipments>

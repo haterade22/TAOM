@@ -322,6 +322,21 @@ Its barding, the third record:
 2. **`body_armor="20"`** is the protection number and the only armour value a harness uses, and
    **`mane_cover_type="all"`** hides the mane meshes the barding covers.
 
+**A harness is REQUIRED beside every Horse slot, and on this mount it is the saddle itself.**
+`sk_eb_goat_a` and `sk_eb_goat_b` are bare pelts, and the rider's seat is modelled on the eight
+`sk_eb_goat_bard_*` meshes. Leave `HorseHarness` empty on a ram and the dwarf sits on hide.
+
+The reason the rule is universal rather than ram-only is that **the data cannot tell you which
+mounts are safe bare.** Where a saddle is modelled is a property of a mesh, and no attribute
+records it. The vanilla horse carries one on the mount body; so does the warg, via
+`warg_low_fur_with_saddle`, with a separate `warg_saddle` harness on top. The spider carries none,
+and no spider harness item was ever authored, so its rider sits on bare carapace to this day.
+
+It has shipped wrong twice. `ironpass_ram_herder` was authored with no harness on all four of its
+sets and [war-ram](../features/war-ram.md) called it deliberate, until players reported dwarves
+riding bareback; the spider rider is the same defect, still open. `MOUNT_WITHOUT_HARNESS` now
+requires the slot everywhere, with exceptions argued in `_HARNESSLESS_BY_DESIGN`.
+
 ## Recipes: Add / Modify / Delete
 
 ### Add
@@ -340,7 +355,7 @@ Its barding, the third record:
    row in the roster, never on its own: a harness with no mount in the same set is unequipped on the
    next inventory transfer (`SPInventoryVM.cs:3919-3922`).
 
-Check: `python tools/validate_moduledata.py --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH`
+Check: `python tools/validate_moduledata.py --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH --code MOUNT_WITHOUT_HARNESS`
 Takes effect: full game restart
 Code: No code changes needed
 
@@ -512,7 +527,7 @@ deserializer, so its attributes are readable only by experiment or from
 | war ram against vanilla horse: hit points 160 vs 200, weight 320 vs 400, jump acceleration 7.5 vs 6.5, charge speed limit 4.0 vs 4.3; the horse declares `num_paces="6"`, which the ram inherits | reading those attributes off `Monster` `taom_war_ram` and `Monster` `horse` in `Native/ModuleData/monsters.xml` with ElementTree | 2026-09-05 |
 | 8 ram bardings, values 20 to 54 | `rg -c 'id="taom_ram_barding' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml`, values from [lotrlome-war-ram-changes](../reference/lotrlome-war-ram-changes.md) lines 143-152 | 2026-09-05 |
 | `subtype` is read nowhere in the managed engine | `grep -rn '"subtype"' ` over the v1.4.8 `Core` decompile tree, zero hits | 2026-09-05 |
-| the three harness and dwarf codes pass today | `python tools/validate_moduledata.py --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH --code MOUNTED_DWARF`, `PASS: no validation issues found`, exit 0 | 2026-09-05 |
+| the four harness and dwarf codes pass today | `python tools/validate_moduledata.py --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH --code MOUNT_WITHOUT_HARNESS --code MOUNTED_DWARF`, `PASS: no validation issues found`, exit 0 | 2026-09-06 |
 | `audit_mount_parity.py` prints 431 lines and exits 0; `audit_mbproj_registration.py --all` audits 7 modules with 0 errors and 5 warnings | `python tools/audit_mount_parity.py > out.txt` then `wc -l out.txt`, and `python tools/audit_mbproj_registration.py --all` | 2026-09-05 |
 
 ## Read next

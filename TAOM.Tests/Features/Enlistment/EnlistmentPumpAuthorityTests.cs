@@ -49,7 +49,8 @@ public class EnlistmentPumpAuthorityTests
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, menu, menuService,
             Substitute.For<IServiceStatusService>(), Substitute.For<IArmyMembershipAdapter>(),
-            _encounter, new EncounterOwnershipPolicy(), _logger);
+            _encounter, new EncounterOwnershipPolicy(),
+            Substitute.For<IEnlistmentReconciler>(), _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";

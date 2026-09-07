@@ -316,7 +316,7 @@ public class ServiceBattleServiceTests
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         _encounter.HasCurrent.Returns(false);
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _partyAdapter.Received(1).ParkNear("lord_1_1");
@@ -333,7 +333,7 @@ public class ServiceBattleServiceTests
         _encounter.HasCurrent.Returns(false);
         _gameMenu.CurrentMenuId.Returns("encounter");
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
@@ -346,7 +346,7 @@ public class ServiceBattleServiceTests
         _encounter.HasCurrent.Returns(false);
         _gameMenu.CurrentMenuId.Returns(EnlistmentMenuService.ServiceWaitMenuId);
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
     }
@@ -372,7 +372,7 @@ public class ServiceBattleServiceTests
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         _encounter.HasCurrent.Returns(true);
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
         _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
@@ -383,7 +383,7 @@ public class ServiceBattleServiceTests
     {
         MakeEnlisted();
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
@@ -457,10 +457,46 @@ public class ServiceBattleServiceTests
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         _encounter.HasCurrent.Returns(true);
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         _army.Received(1).LeaveArmy();
         Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);   // loot flow preserved
+    }
+
+    [TestMethod]
+    public void BattleEnded_ForeignEventWhileInAnotherLiveBattle_DoesNotLeaveTheArmy()
+    {
+        // ISSUE #551, the crash. The detach below is `MobileParty.MainParty.AttachedTo = null`, and
+        // the engine's SetAttachedToInternal answers that with
+        // `Party.MapEventSide.HandleMapEventEndForPartyInternal(Party); Party.MapEventSide = null;`
+        // — it pulls the main party OUT of whatever map event it is in. Doing that to a battle the
+        // player has just joined nulls MapEvent.TroopUpgradeTracker (RemoveInvolvedPartyInternal
+        // :855-858) while MapEvent.BattleObserver stays attached, and MapEventSide.AllocateTroops
+        // :552 derefs that tracker unguarded on the next simulation tick. Straight CTD.
+        //
+        // The gate in EnlistmentBattleBehavior is the primary fix; this is the floor beneath it,
+        // because the operation is silently destructive whenever it reaches a foreign event.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: false);
+
+        _army.DidNotReceive().LeaveArmy();
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void BattleEnded_OurOwnEventEnding_StillLeavesTheArmy()
+    {
+        // The normal path, and the one the guard above must not break. OnMapEventEnded is
+        // dispatched from MapEvent.FinalizeEventAux :2079, BEFORE the side teardown, so the main
+        // party still reads as in a map event here — the ending one. Detaching is correct.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
+
+        _army.Received(1).LeaveArmy();
     }
 
     [TestMethod]
@@ -471,7 +507,7 @@ public class ServiceBattleServiceTests
         // DefaultEncounterGameMenuModel.GetGenericStateMenu derefs unguarded on every map frame.
         MakeEnlisted();
 
-        _service.OnCommanderBattleEnded();
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
 
         _army.Received(1).LeaveArmy();
     }

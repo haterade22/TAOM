@@ -30,10 +30,15 @@ from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import taom_schema as ts  # noqa: E402  build_item_class_registry
+from _gamedir import game_modules as _resolve_game_modules  # noqa: E402
 
 TROOPS_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData', 'troops')
 MODULEDATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData')
-DEFAULT_GAME_MODULES = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules"
+# $BANNERLORD_GAME_DIR wins over the literal (#404). The bare E: path was one machine's and
+# errors out at startup anywhere else. analyze_troop_balance.py reads this same constant
+# rather than holding its own copy, so both tools move together.
+DEFAULT_GAME_MODULES = str(_resolve_game_modules(
+    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"))
 SKILL_NAMES = ['Athletics', 'Riding', 'OneHanded', 'TwoHanded', 'Polearm', 'Bow', 'Crossbow', 'Throwing']
 
 SKIP_FILES = set()
@@ -54,6 +59,31 @@ SKIP_TROOP_IDS = {
     'iron_hills_noble_scout',
     'iron_hills_noble_sharpshooter',
     'iron_hills_noble_veteran_sharpshooter',
+}
+
+# Troops whose ONLY ranged option is a thrown weapon, so Throwing rather than Bow is their
+# ranged identity (#554). Hardcoded rather than derived from equipment because
+# LOTRLOME_Armory's ModuleData is empty on the reference install and 247 of the 315 weapon
+# ids the troop files reference cannot be classified: a "carries no bow" predicate would
+# read an invisible Armory bow as no bow and hand a real archer the throwing curve.
+# Replace with the equipment predicate once the Armory install is restored (#555).
+THROWN_PRIMARY_TROOP_IDS = frozenset({
+    'gondor_har_skirmisher', 'gondor_har_vet_skirmisher', 'gondor_har_javelineer',
+    'sagarun_naffatun', 'sagarun_storm_helmed_naffatun',
+})
+
+# Upgrade edges where a child deliberately re-specialises OFF a skill its parent carried for
+# REAL, so the usual raise-to-parent clamp would undo the specialisation. Distinct from the
+# ordinary inert baseline noise the clamp exists to protect: the parent here actually carries
+# the weapon. Adding an entry is a deliberate act, so state why. MIRRORED in
+# taom_schema.py's _upgrade_skill_regressions and in TroopUpgradeSkillMonotonicityTests.cs;
+# all three must agree or the writer, the validator and the C# gate judge the same edge
+# differently, and the clamp silently re-inflates what the writer just floored.
+RESPECIALIZATION_EXEMPT_EDGES = {
+    # sagarun_crossbowman carries a real crossbow at 160. Its naffatun child throws javelins
+    # and carries neither bow nor crossbow, so both values are floored rather than inherited
+    # (#554). Throwing takes the ranged curve in their place.
+    ('sagarun_crossbowman', 'sagarun_naffatun'): {'Bow', 'Crossbow'},
 }
 
 # =============================================================================
@@ -291,6 +321,14 @@ def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None):
     elif any(kw in name_lower for kw in ['crossbow', 'arbalest']):
         swaps['_swap_bow_crossbow'] = True
 
+    # Thrown-primary troops: give Throwing the Bow curve, exactly as the swap above hands a
+    # crossbowman the Bow value. The weapon_classes conjunct is a sanity check that the
+    # javelin really did classify, so a run against a registry too broken to see it does
+    # nothing instead of writing a number derived from nothing.
+    if (troop_id in THROWN_PRIMARY_TROOP_IDS
+            and weapon_classes and 'Throwing' in weapon_classes):
+        swaps['_throwing_archer_parity'] = True
+
     # Pike/Halberd/Spear specialists: boost Polearm, reduce OneHanded
     if any(kw in name_lower for kw in ['pike', 'halberd', 'spear', 'lance', 'glaive', 'mattock']):
         swaps['_boost_polearm'] = True
@@ -310,7 +348,7 @@ def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None):
     return swaps
 
 
-def apply_specialization(skills, specialization):
+def apply_specialization(skills, specialization, level=None, culture=None):
     """Apply weapon specialization swaps to calculated skills."""
     s = dict(skills)
     swap_amount = 15  # How much to shift between primary/secondary
@@ -318,6 +356,18 @@ def apply_specialization(skills, specialization):
     if specialization.get('_swap_bow_crossbow'):
         # Swap Bow and Crossbow values
         s['Bow'], s['Crossbow'] = s['Crossbow'], s['Bow']
+
+    if specialization.get('_throwing_archer_parity') and level is not None:
+        ranged = RANGED_BASELINES.get(level)
+        if ranged:
+            # Reaches into RANGED_BASELINES rather than using s['Bow']: these troops sit on the
+            # Infantry table, whose Bow column is 15 to 25, so there is no ranged number here to
+            # swap. The borrowed value carries the SOURCE skill's cultural modifier (Bow), not
+            # Throwing's, for the same reason the swap above does not re-apply the Crossbow
+            # modifier to a value already carrying Bow's. Throwing's modifiers were calibrated
+            # against a ceiling of 100, not against numbers reaching 320.
+            mods = CULTURAL_MODS.get(culture, {})
+            s['Throwing'] = max(0, ranged['Bow'] + mods.get('Bow', 0))
 
     if specialization.get('_boost_polearm'):
         shift = min(swap_amount, s['OneHanded'])
@@ -443,7 +493,7 @@ def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes
     # Apply weapon specialization
     specialization = detect_weapon_specialization(troop_id, troop_name, weapon_classes)
     if specialization:
-        skills = apply_specialization(skills, specialization)
+        skills = apply_specialization(skills, specialization, level=level, culture=culture)
 
     # Equipment sanity swap: a troop whose only heavy melee weapon is a
     # two-hander must not have Polearm as its top melee skill (the Cavalry/
@@ -630,8 +680,10 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
     they can lift a child, and they can be lifted, but a clamp only ever raises, so a hand-tune is
     never reverted.
 
-    The one exemption is militia to militia. Militia are pinned to the level-21 baseline regardless
+    Two exemptions. Militia to militia: militia are pinned to the level-21 baseline regardless
     of level so village defence stays costly, which makes a militia promotion flat by design.
+    And RESPECIALIZATION_EXEMPT_EDGES, per skill, for a child that drops a weapon its parent
+    genuinely carried; without it the clamp puts back exactly what the writer just floored.
     """
     by_id = {c['id']: c for c in all_changes}
     restat_ids = set(restat_ids)
@@ -682,7 +734,10 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
         for child in children[parent]:
             if is_militia(parent) and is_militia(child):
                 continue
+            exempt = RESPECIALIZATION_EXEMPT_EDGES.get((parent, child), ())
             for skill in SKILL_NAMES:
+                if skill in exempt:
+                    continue
                 if base[child][skill] < base[parent][skill]:
                     base[child][skill] = base[parent][skill]
     raised = sum(1 for tid, vals in base.items() for s in SKILL_NAMES

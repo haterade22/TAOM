@@ -81,3 +81,13 @@ Appended to `docs/reviews/lessons/localization-ui.md`:
 
 No new feedback memory: these are subsystem lessons about UI coupling, not facts about how the user
 wants work done.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
+
+<!-- backlinks-end -->

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <EquipmentRosters>
 
 	<!-- ==================== ROHAN LORD BATTLE EQUIPMENT ==================== -->
@@ -176,6 +176,7 @@
 			<Equipment slot="Gloves" id="Item.theoden_glove" />
 			<Equipment slot="Leg" id="Item.theoden_boots" />
 			<Equipment slot="Cape" id="Item.theoden_shoulder" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>

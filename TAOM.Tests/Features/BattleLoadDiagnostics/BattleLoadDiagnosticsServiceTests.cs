@@ -988,6 +988,150 @@ public class BattleLoadDiagnosticsServiceTests
     public void ShouldEmitRenderWait_ClockWentBackwards_ReturnsTrue()
         => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitRenderWait(10L, 9000L, 1000L));
 
+    // ---- WaitingForSceneLoad: the bucket-2 heartbeat (2026-09-06) ---- //
+    // TickLoading is a non-logging counter, so a process that DIES in the async wait and one that
+    // HANGS there produced the identical log tail. These pin the gate that keeps a healthy load
+    // silent while still speaking for a pathological one.
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_OriginNotObserved_ReturnsFalse()
+        => Assert.IsFalse(BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(
+            9000L, -1L, -1L, 3000L, 5000L));
+
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_StaleOriginFromAPreviousLoad_ReturnsFalse()
+        // The stopwatch restarts between loads. A "now" BEFORE the recorded origin means the
+        // origin belongs to the previous mission; reading it would report a huge phantom wait.
+        => Assert.IsFalse(BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(
+            10L, 9000L, -1L, 3000L, 5000L));
+
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_HealthyLoadUnderTheThreshold_StaysSilent()
+    {
+        // The three successful loads in the 2026-09-06 player session cleared bucket 2 in 383,
+        // 457 and 933 ms. None of them may produce a line.
+        foreach (var waited in new[] { 383L, 457L, 933L, 2999L })
+        {
+            Assert.IsFalse(
+                BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(waited, 0L, -1L, 3000L, 5000L),
+                $"a {waited}ms wait is healthy and must not emit");
+        }
+    }
+
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_FirstCallPastTheThreshold_Emits()
+        => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(
+            3000L, 0L, -1L, 3000L, 5000L));
+
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_InsideTheInterval_ReturnsFalse()
+        => Assert.IsFalse(BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(
+            7000L, 0L, 3000L, 3000L, 5000L));
+
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_ExactlyAtTheInterval_Emits()
+        => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(
+            8000L, 0L, 3000L, 3000L, 5000L));
+
+    // Parity with ShouldEmitRenderWait_ClockWentBackwards_ReturnsTrue, which pins the identical
+    // arm on the sibling seam. Without this, deleting `|| nowMs < lastEmitMs` leaves the whole
+    // suite green. The stopwatch restarts between loads, so a stale emit stamp must not latch
+    // the marker off for the rest of the next one.
+    [TestMethod]
+    public void ShouldEmitSceneLoadWait_ClockWentBackwardsVsTheLastEmit_Emits()
+        => Assert.IsTrue(BattleLoadDiagnosticsService.ShouldEmitSceneLoadWait(
+            4000L, 0L, 9000L, 3000L, 5000L));
+
+    [TestMethod]
+    public void LogMissionInitializeDone_WhenDisabled_StillArmsTheOriginAndTheSceneName()
+    {
+        // Latch rule: state transitions are unconditional, the toggle gates only I/O. A load
+        // that begins while disabled and is re-enabled mid-flight must still be measurable.
+        _settings.IsEnabled.Returns(false);
+        _sut.LogMissionInitialize("battle_terrain_biome_094");
+        _sut.LogMissionInitializeDone("battle_terrain_biome_094");
+        _settings.IsEnabled.Returns(true);
+
+        _sut.EmitSceneLoadWaitIfDue(200, 9000L);
+
+        var line = InfoLines().Single(s => s.Contains("phase=WaitingForSceneLoad"));
+        StringAssert.Contains(line, "scene='battle_terrain_biome_094'");
+    }
+
+    [TestMethod]
+    public void SceneLoadWaitThreshold_SitsClearOfTheMeasuredHealthyRange()
+        // Guards the constant itself: 933 ms is the slowest healthy bucket-2 on record, so a
+        // future trim below it would spam every normal battle load.
+        => Assert.IsTrue(BattleLoadDiagnosticsService.SceneLoadWaitWarnAfterMs > 933L,
+            "the warn threshold must stay above the slowest measured healthy async wait");
+
+    [TestMethod]
+    public void NoteLoadingPoll_HealthyLoad_EmitsNoSceneLoadWaitLine()
+    {
+        _sut.LogMissionInitialize("battle_terrain_biome_093b");
+        _sut.LogMissionInitializeDone("battle_terrain_biome_093b");
+        for (var i = 0; i < 30; i++) _sut.NoteLoadingPoll();
+
+        Assert.AreEqual(0, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")),
+            "a fast load must leave the heartbeat completely silent");
+    }
+
+    [TestMethod]
+    public void NoteLoadingPoll_BeforeTheOriginIsArmed_EmitsNothing()
+    {
+        // TickLoading can run before Mission.Initialize returns. With no origin there is no wait
+        // to report, and a line there would be a fabricated measurement.
+        _sut.LogMissionInitialize("battle_terrain_biome_094");
+        for (var i = 0; i < 30; i++) _sut.NoteLoadingPoll();
+
+        Assert.AreEqual(0, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")));
+    }
+
+    [TestMethod]
+    public void EmitSceneLoadWaitIfDue_PastTheThreshold_NamesTheSceneAndCarriesTheWaitPair()
+    {
+        _sut.LogMissionInitialize("battle_terrain_biome_094");
+        _sut.LogMissionInitializeDone("battle_terrain_biome_094");
+
+        _sut.EmitSceneLoadWaitIfDue(487, 9000L);
+
+        var line = InfoLines().Single(s => s.Contains("phase=WaitingForSceneLoad"));
+        StringAssert.Contains(line, "scene='battle_terrain_biome_094'");
+        StringAssert.Contains(line, "polls=487");
+        // waitMs is the gap from the armed origin, which LogMissionInitializeDone set from the
+        // real stopwatch a moment ago, so assert the token exists rather than an exact figure.
+        StringAssert.Contains(line, "waitMs=");
+    }
+
+    [TestMethod]
+    public void EmitSceneLoadWaitIfDue_RepeatedCalls_ThrottleToTheInterval()
+    {
+        _sut.LogMissionInitialize("battle_terrain_biome_094");
+        _sut.LogMissionInitializeDone("battle_terrain_biome_094");
+
+        _sut.EmitSceneLoadWaitIfDue(200, 4000L);   // first past the threshold — emits
+        _sut.EmitSceneLoadWaitIfDue(300, 6000L);   // inside the interval — silent
+        _sut.EmitSceneLoadWaitIfDue(400, 9000L);   // interval elapsed — emits
+
+        Assert.AreEqual(2, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")),
+            "a 30-second stall must leave a bounded trail, not one line per frame");
+    }
+
+    [TestMethod]
+    public void EmitSceneLoadWaitIfDue_NewLoad_EmitsImmediatelyRatherThanWaitingOutTheOldThrottle()
+    {
+        _sut.LogMissionInitialize("battle_terrain_biome_094");
+        _sut.LogMissionInitializeDone("battle_terrain_biome_094");
+        _sut.EmitSceneLoadWaitIfDue(200, 9000L);
+
+        // A second mission inherits the running stopwatch but re-arms the origin. The throttle
+        // latch must reset with it, or the new load's first heartbeat is swallowed.
+        _sut.LogMissionInitialize("battle_terrain_biome_093b");
+        _sut.LogMissionInitializeDone("battle_terrain_biome_093b");
+        _sut.EmitSceneLoadWaitIfDue(200, 12000L);
+
+        Assert.AreEqual(2, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")));
+    }
+
     [TestMethod]
     public void FormatRenderWaitDetail_BothKnown_EmitsBothTokens()
         => Assert.AreEqual("waitedMs=290000 shaders=412",

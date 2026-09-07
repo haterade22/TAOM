@@ -20,6 +20,15 @@ public interface IEnlistmentReconciler
     /// </summary>
     void ReconcileNow(double nowDays, string trigger);
 
+    /// <summary>
+    /// Drop per-campaign state that must not survive into another campaign in the same process.
+    /// The implementation is <c>Reuse.Singleton</c>, so it outlives every campaign the process runs.
+    ///
+    /// Called from <c>ServiceMaintenanceService.ResetSessionCaches</c>, which is the feature's one
+    /// place that knows this lifetime, rather than being wired separately into the load hook.
+    /// </summary>
+    void ResetForNewSession();
+
     /// <summary>Raised when the commander is fighting a map event the player has not joined. The battle layer subscribes.</summary>
     event Action<string> BattleJoinRequested;
 }

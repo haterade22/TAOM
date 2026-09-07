@@ -483,6 +483,15 @@ Each item names the same base mesh and a different fur mesh:
 | `warg_dark` | `warg_low` | `warg_low_fur_with_saddle_2` | `warg_skin_2` |
 | `warg_albino` | `warg_low` | `warg_low_fur_with_saddle_3` | `warg_skin_3` |
 
+**The warg carries its saddle on the MOUNT, and that is why it is safe unbarded.** The seat is in the
+`warg_low_fur_with_saddle*` fur mesh hanging off each Horse item, so a warg rider looks right with an
+empty `HorseHarness` slot; `warg_saddle` (`mesh="orc_rider_saddle"`) is a separate harness item on top
+of that, not the thing the rider sits on. Both readings above are correct and neither should be
+"corrected" into the other. The war ram is the opposite case and the contrast is worth knowing before
+authoring any mount: `sk_eb_goat_a`/`_b` are bare pelts and the seat exists only on the eight
+`sk_eb_goat_bard_*` harness meshes, so an unharnessed ram puts the dwarf on bare hide. See
+[lotrlome-war-ram-changes](lotrlome-war-ram-changes.md) and the `MOUNT_WITHOUT_HARNESS` gate.
+
 The colour lives in the fur mesh's own material, not in the item XML. All twelve materials were
 present the whole time and resolved to distinct textures (`warg_fur_2` to `warg_fur_2_d/_n/_s`,
 `warg_fur_3` to `warg_fur_3_d/_n/_s`), so the assets were never the problem. With every fur mesh

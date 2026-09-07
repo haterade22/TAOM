@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -254,9 +254,12 @@ public class CareerCultureCoverageTests
     [TestMethod]
     public void EreborCavalryCareerRoster_GrantsTheLightRamBarding()
     {
-        // A bare ram is legal data and renders fine, so nothing above would notice the harness
-        // going missing. Starting the ram_rider barded is a deliberate design call, so it gets its
-        // own pin rather than riding along on the mount assertion.
+        // Nothing above would notice the harness going missing: the mount assertion passes
+        // just fine on a bare ram. And a bare ram is not merely under-armoured, it is
+        // UNSADDLED. The rider's seat is modelled on the barding mesh and never on
+        // sk_eb_goat_a / _b, so this pin guards how the mount looks, not only what it is
+        // worth in armour. Starting the ram_rider barded is also a deliberate design call,
+        // so it gets its own pin rather than riding along on the mount assertion.
         //
         // The id must be the LIGHT barding specifically: the eight bardings are a progression
         // ladder (body_armor 20 to 54) and starting on anything above the bottom rung hands a new
@@ -279,6 +282,56 @@ public class CareerCultureCoverageTests
             Assert.AreEqual(ExpectedBarding, harness.Attribute("id")?.Value,
                 $"{rosterId} must start the player on the light ram barding");
         }
+    }
+
+
+    [TestMethod]
+    public void EveryWarRamRoster_InTroopsErebor_FillsTheHarnessSlot()
+    {
+        // The two ram mounts use the meshes sk_eb_goat_a / sk_eb_goat_b, and those are BARE PELTS.
+        // The rider's seat geometry lives only on the eight sk_eb_goat_bard_* harness meshes, so a
+        // ram with an empty HorseHarness slot is not an unarmoured styling choice: it is a dwarf
+        // sitting directly on goat fur. This is exactly where the ram differs from every other TAOM
+        // mount. The warg bakes its saddle into the mount body (warg_low_fur_with_saddle) and the
+        // spider has spider_saddle, so both look right bareback; the ram has no saddle mesh at all.
+        //
+        // ironpass_ram_herder shipped bare on all four of its sets and players reported it.
+        //
+        // The check is per set, not per troop, because the engine draws each equipment slot from an
+        // independently chosen set. Filling the slot in three sets of four still spawns bare rams.
+        var path = Path.Combine(ModuleDataPath, "troops", "troops_erebor.xml");
+        Assert.IsTrue(File.Exists(path), $"troops_erebor.xml not found at {path}");
+
+        var offenders = new List<string>();
+        foreach (var troop in XDocument.Load(path).Descendants("NPCCharacter"))
+        {
+            var troopId = troop.Attribute("id")?.Value ?? "(unnamed)";
+            var rosters = troop.Descendants("EquipmentRoster").ToList();
+            for (var i = 0; i < rosters.Count; i++)
+            {
+                // troops_*.xml writes <equipment>, the equipmentsets files write <Equipment>.
+                // Match either, so this cannot pass vacuously if the casing is ever normalised.
+                var entries = rosters[i].Descendants()
+                    .Where(e => string.Equals(e.Name.LocalName, "equipment", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                var mount = entries.FirstOrDefault(e =>
+                    string.Equals(e.Attribute("slot")?.Value, "Horse", StringComparison.OrdinalIgnoreCase));
+                var mountId = mount?.Attribute("id")?.Value ?? string.Empty;
+                if (mountId.IndexOf("taom_war_ram", StringComparison.OrdinalIgnoreCase) < 0)
+                    continue;
+
+                var harness = entries.FirstOrDefault(e =>
+                    string.Equals(e.Attribute("slot")?.Value, "HorseHarness", StringComparison.OrdinalIgnoreCase));
+                if (harness is null)
+                    offenders.Add($"{troopId} set #{i} ({mountId})");
+            }
+        }
+
+        Assert.AreEqual(0, offenders.Count,
+            "A war-ram equipment set leaves HorseHarness empty, so that troop spawns riding a bare "
+            + "ram: the saddle is part of the barding mesh, not the mount body. Offenders: "
+            + string.Join(", ", offenders));
     }
 
 }

@@ -242,7 +242,7 @@ monotonically:
 
 | troop | level | tier | bardings | avg armour |
 |---|---|---|---|---|
-| `ironpass_ram_herder` | 16 | T3 | none, bare ram | 0 |
+| `ironpass_ram_herder` | 16 | T3 | `light_a` on all four sets | 20 |
 | `ironpass_ram_rider` | 21 | T4 | `light_a`, `light_b` | 22 |
 | `ironpass_goat_charger` | 26 | T5 | `med_a`, `med_b` | 32 |
 | `ironpass_ram_breaker` | 31 | T6 | `med_b`, `heavy_a` | 37 |
@@ -281,10 +281,34 @@ regression across that edge and `TroopUpgradeSkillMonotonicityTests` fails it. D
 two-handed axe fighters makes the forced floor coherent anyway, so the curve keeps it rather than
 weakening the warrior to fit.
 
-The herder's four sets fill no `HorseHarness` slot at all, which is deliberate rather than an
-omission. The engine draws each equipment slot from an independently chosen set, so what matters is
-that the four sets agree; filling the slot in three of them would ship a ram that sometimes spawns
-bare anyway.
+The herder originally filled no `HorseHarness` slot at all, and this doc called that deliberate.
+It was a defect, corrected on 2026-09-06 after players reported dwarves riding bareback.
+
+The reasoning was half right. The engine does draw each equipment slot from an independently
+chosen set, so what matters is that all four sets agree: filling three of them would ship a ram
+that sometimes spawns bare anyway. That constraint still holds, and the fix respects it by putting
+`taom_ram_barding_light_a` in all four.
+
+What the reasoning missed is that for this mount the harness is not only armour. `sk_eb_goat_a`
+and `sk_eb_goat_b` are bare pelts, and the rider's seat is modelled on the eight
+`sk_eb_goat_bard_*` meshes instead. So an unharnessed ram is not an unarmoured ram, it is an
+unsaddled one.
+
+The vanilla horse hides this, and so does the warg, which carries a seat on the mount body
+(`warg_low_fur_with_saddle`) and ships a separate `warg_saddle` harness on top. Nothing in the
+data distinguishes those from the ram, which is why review read the empty slot as a styling
+choice. **So the rule is now universal: a `HorseHarness` is required beside every `Horse` slot,
+and an exception has to be argued in `_HARNESSLESS_BY_DESIGN` rather than assumed.** A first
+attempt scoped the check to a pinned set of mounts believed saddleless, which repeated the
+original mistake by deciding from a desk which mounts were fine bare; it also rested on the false
+belief that the spider carries its own seat, when in fact no spider harness item has ever been
+authored and that rider is still unsaddled today.
+
+Two gates hold it: `MOUNT_WITHOUT_HARNESS` in `tools/taom_schema.py` and
+`EveryWarRamRoster_InTroopsErebor_FillsTheHarnessSlot` in `CareerCultureCoverageTests`. The
+universal form immediately found a second case the scoped form would have missed:
+`eomer_bat_equipment` carried the full Theoden kit on a bare `Item.charger` while all fourteen of
+its Rohan siblings had a harness.
 
 ## Recruitment, and why the Gems gate starts at 31
 
@@ -315,7 +339,8 @@ the change is meant to put more rams in the world, not fewer.
 `ironpass_ram_herder` is deliberately absent from `troop_weights.xml` and falls through to the 1.0
 default. It is the rung a player recruits repeatedly, and a 2.0 entry unit would deflate the
 party-size limit for exactly the players the branch is meant to reach. The five armoured rungs are
-all 2.0.
+all 2.0. It stays at 1.0 now that it carries light barding too: the justification was always
+recruitment economics, not how much armour the troop wears.
 
 Loadout is spear plus metal shield plus axe sidearm, built only from item ids already present in
 shipped Erebor rosters. That was deliberate: `sm_dwarf_erebor_spear_a` is a

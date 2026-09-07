@@ -395,6 +395,17 @@ weight, unreachable while `DefaultPartySizeLimitModel`'s leaderless floor is 20 
   `ConditionalWeakTable`, so a `PartyBase` nothing has ever read `PartySizeLimit` on has no cached true
   base and `GetTrueBaseSizeLimit` falls back to the deflated limit. Self-healing, and `DisplayLimit`'s
   fallback is one-way so it can never invent a larger limit.
+- **The MCM toggle did not really turn the feature off (fixed 2026-09-06, player-reported).** The gates
+  always worked: every one reads `TaomSettings.Instance` live, so flipping the switch stopped the penalty
+  and all six display patches at once. The engine did not follow. `PartyBase.PartySizeLimit` caches the
+  already-deflated number keyed on `MemberRoster.VersionNo` (`PartyBase.cs:343-355`), and changing a
+  setting does not bump that counter, so the counts reverted to vanilla while the enforced cap stayed
+  reduced. That reads as "the option does nothing", and it is the sharper form of the re-render note
+  below, which understated it as cosmetic. `AiPartySizeSettingsWatcher` already flushes precisely this,
+  sweeping `MobileParty.All` with `MemberRoster.UpdateVersion()`; it is wired unconditionally and fires
+  on any `SaveTriggered`, so it covers this toggle too. It never ran, because `EnableTroopWeight` was one
+  of the settings that omitted `RequireRestart = false`, and with MCM's default of `true` the only path
+  reaching `SaveSettings` also quits the game. One-line fix; the flag is now set.
 - **Toggling `EnableTroopWeight` off mid-session does not force a re-render.** An already-open screen can
   keep a rewritten label or a `×N` suffix until its next natural refresh. Self-healing on any interaction.
 - **The boundary is off by one, and always was.** At `10 / 11` the game offers one free slot; adding a

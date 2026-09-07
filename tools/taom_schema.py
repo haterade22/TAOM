@@ -664,8 +664,11 @@ class Validator:
     _ITEM_REF_ATTR_RE = re.compile(r'\bid="Item\.([A-Za-z0-9_.\-]+)"')
 
     def _harness_family_types(self) -> list:
-        if not self.reg.harness_family_types:
-            return []  # degraded mode (no game install): registry unavailable
+        # No early return on an empty registry. The loop below no-ops on one
+        # anyway, and returning here would also skip _harness_pairings, whose
+        # MOUNT_WITHOUT_HARNESS check reads repo XML and must survive a missing
+        # game install. That early return is what made the first version of the
+        # check silently dead.
         issues = []
         for item_id, (family_type, def_file) in sorted(self.reg.harness_family_types.items()):
             if family_type is not None:
@@ -681,12 +684,33 @@ class Validator:
             ))
         return issues + self._harness_pairings()
 
+    def _owner_id(self, text: str, pos: int) -> str:
+        """Nearest enclosing NPCCharacter id, else the standalone EquipmentRoster
+        that contains pos. Names a finding, and keys _HARNESSLESS_BY_DESIGN, so an
+        exemption survives its block moving within the file. Called only when a
+        finding is about to be raised, which keeps _ROSTER_RE off the hot path."""
+        owner = ""
+        for m in _NPC_DEF_RE.finditer(text, 0, pos + 1):
+            owner = m.group(1)
+        if owner:
+            return owner
+        if "</EquipmentRoster>" in text:
+            for m in self._ROSTER_RE.finditer(text):
+                if m.start() <= pos < m.end():
+                    return m.group(1)
+        return ""
+
     def _harness_pairings(self) -> list:
         """Every Horse + HorseHarness pair inside one EquipmentSet (or one troop
         EquipmentRoster) must agree on family type, or the engine strips the
-        harness the first time the player touches the inventory."""
-        if not self.reg.mount_family_types:
-            return []
+        harness the first time the player touches the inventory.
+
+        Also reports MOUNT_WITHOUT_HARNESS for a saddleless mount left unharnessed.
+        That check is deliberately NOT gated on self.reg.mount_family_types: the
+        registry is built from the INSTALLED modules, so gating it would switch the
+        check off in exactly the situation where LOTRLOME_Armory is missing or
+        mid-reinstall, and the validator would still print PASS. Slot presence is
+        answerable from the repo XML alone, so it stays answerable."""
         issues = []
         for path in self._xml_files():
             raw = self._read(path)
@@ -720,7 +744,30 @@ class Validator:
                     if ms and mi and ms.group(1) in ("Horse", "HorseHarness"):
                         slots[ms.group(1)] = mi.group(1)
                 mount_id, harness_id = slots.get("Horse"), slots.get("HorseHarness")
-                if not mount_id or not harness_id:
+                if not mount_id:
+                    continue
+                if not harness_id:
+                    owner = self._owner_id(text, start)
+                    if owner not in self._HARNESSLESS_BY_DESIGN:
+                        issues.append(Issue(
+                            severity=Severity.ERROR, code="MOUNT_WITHOUT_HARNESS",
+                            file=rel, line=_lineno(text, start),
+                            entry_id=owner or mount_id,
+                            message=(
+                                f'mount "{mount_id}" is equipped with no HorseHarness in this set. '
+                                f"A harness is required beside every Horse slot: on some mounts it "
+                                f"carries the rider's seat and not just armour, so an empty slot can "
+                                f"leave the rider on bare hide. Fill it in EVERY set of this troop, "
+                                f"because the engine draws each slot from an independently chosen "
+                                f"set. If this mount genuinely must not carry one, add the owner to "
+                                f"_HARNESSLESS_BY_DESIGN with the reason"
+                            ),
+                        ))
+                    continue
+                # Past here the check needs the installed-game registry. Without it
+                # family types are unknowable, and the slot-presence pass above is
+                # all that can honestly be asserted.
+                if not self.reg.mount_family_types:
                     continue
                 mount_ft = self.reg.mount_family_types.get(mount_id)
                 harness_ft = (self.reg.harness_family_types.get(harness_id) or (None, ""))[0]
@@ -840,6 +887,34 @@ class Validator:
     _SLOT_ANY_QUOTE_RE = re.compile(r"""\bslot=["']([^"']+)["']""")
     # Bare-chested by design, each for a stated reason. Removing an entry is what
     # makes this check start guarding that troop.
+    # A Horse slot REQUIRES a HorseHarness slot in the same equipment set.
+    #
+    # The harness is not decoration and it is not only armour: on some mounts it
+    # carries the rider's SEAT. Nothing in the XML says which, because where the
+    # saddle is modelled is a property of a mesh nobody can see from here. The war
+    # ram proved it. `sk_eb_goat_a` / `_b` are bare pelts and every saddle lives on
+    # one of the eight `sk_eb_goat_bard_*` harness meshes, so `ironpass_ram_herder`
+    # shipped four sets with an empty slot and players saw dwarves on bare hide.
+    #
+    # So the rule is universal and the exemptions are named here with a reason, in
+    # the style of _BODYLESS_BY_DESIGN. Keyed by the owning NPCCharacter id, or by
+    # the standalone EquipmentRoster id when there is no NPCCharacter above it. An
+    # entry is a claim someone has to defend, which is the whole point: the ram's
+    # empty slot was defended in a feature doc for nine days.
+    _HARNESSLESS_BY_DESIGN = {
+        "harad_mumakil_rider": (
+            "a HorseHarness suppresses the Horse item's <AdditionalMeshes> (native mount "
+            "compositing), and taom_mumakil carries its war-platform there, so equipping "
+            "one would delete the howdah"
+        ),
+        "taom_spider_creature": (
+            "OPEN GAP rather than a design choice: no spider HorseHarness item has ever "
+            "been authored, so there is nothing to equip. The rider sits on the spider "
+            "with no saddle geometry, the same defect class as the war ram. Delete this "
+            "entry when a spider_saddle harness item lands"
+        ),
+    }
+
     _BODYLESS_BY_DESIGN = {
         "dg_goblin_slave": "a slave in rags; bare torso is the intended look",
         "urukhai_champion": "Uruk-hai champions fight bare-chested by design",
@@ -1142,6 +1217,19 @@ class Validator:
                 ))
         return issues
 
+    # Upgrade edges where a child deliberately re-specialises OFF a skill its parent carried
+    # for REAL, per skill. Not the ordinary inert baseline noise the ladder rule protects: the
+    # parent actually carries the weapon. MIRRORED in rebalance_troops.py's
+    # RESPECIALIZATION_EXEMPT_EDGES and in TroopUpgradeSkillMonotonicityTests.cs. All three
+    # must agree, or the writer floors a value, this gate calls it a regression, and the clamp
+    # puts it back. Adding an entry is a deliberate act, so state why.
+    _RESPECIALIZATION_EXEMPT_EDGES = {
+        # sagarun_crossbowman carries a real crossbow at 160. Its naffatun child throws
+        # javelins and carries neither bow nor crossbow, so both are floored rather than
+        # inherited (#554); Throwing takes the ranged curve in their place.
+        ("sagarun_crossbowman", "sagarun_naffatun"): {"Bow", "Crossbow"},
+    }
+
     def _upgrade_skill_regressions(self) -> list:
         troops, issues = self._upgrade_troop_index()
         issues = list(issues)
@@ -1159,11 +1247,14 @@ class Validator:
                 # case where both are declared; here we simply refuse to judge the edge.
                 if source["templated"] or target["templated"]:
                     continue
+                exempt = self._RESPECIALIZATION_EXEMPT_EDGES.get(
+                    (source_id, target_id), ())
                 drops = [
                     f"{s} {source['skills'].get(s, 0)}->{target['skills'].get(s, 0)}"
                     f"{' (undeclared, reads as 0)' if s not in target['skills'] else ''}"
                     for s in self._COMBAT_SKILLS
-                    if target["skills"].get(s, 0) < source["skills"].get(s, 0)
+                    if s not in exempt
+                    and target["skills"].get(s, 0) < source["skills"].get(s, 0)
                 ]
                 if not drops:
                     continue

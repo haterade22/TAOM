@@ -14,6 +14,23 @@ public interface IAlignmentService
     /// </summary>
     FactionSide GetCultureSide(string cultureId);
 
+    /// <summary>
+    /// Side of a participant identified by kingdom id first, falling back to culture id when the
+    /// kingdom does not classify. Catches the cases where <see cref="GetKingdomSide"/> alone reads
+    /// Neutral and would silently disable alignment logic: a kingdom-less hero (independent or
+    /// enlisted player, minor/mercenary clan leader, a victim whose clan was destroyed by the kill
+    /// that is being evaluated) and a player-founded kingdom whose id is absent from alignment.json.
+    /// Mirrors the private <c>ResolveSide</c> helpers in CaravanTrade, WarOfTheRingMomentum and
+    /// PrisonerRecruitment.
+    /// </summary>
+    FactionSide ResolveSide(string kingdomId, string cultureId);
+
     bool AreEnemyAlignments(string kingdomIdA, string kingdomIdB);
     bool AreSameAlignment(string kingdomIdA, string kingdomIdB);
+
+    /// <summary>Same semantics as the string overload, for sides already resolved via <see cref="ResolveSide"/>.</summary>
+    bool AreEnemyAlignments(FactionSide sideA, FactionSide sideB);
+
+    /// <summary>Same semantics as the string overload, for sides already resolved via <see cref="ResolveSide"/>.</summary>
+    bool AreSameAlignment(FactionSide sideA, FactionSide sideB);
 }

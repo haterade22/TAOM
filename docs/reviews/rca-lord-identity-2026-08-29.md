@@ -96,5 +96,6 @@ localization near-miss lesson from finding 2. The three lessons written before t
 ## Referenced by
 
 - [docs/features/lord-identity-reconciliation.md](../features/lord-identity-reconciliation.md)
+- [docs/reviews/rca-townsfolk-sex-2026-09-06.md](./rca-townsfolk-sex-2026-09-06.md)
 
 <!-- backlinks-end -->

@@ -7,6 +7,14 @@ namespace TAOM.Tests.Features.Execution;
 [TestClass]
 public class ExecutionRelationServiceTests
 {
+    private const string PlayerKingdom = "empire_w";   // Gondor
+    private const string AllyKingdom = "vlandia";      // Rohan
+    private const string VictimKingdom = "empire_s";   // Mordor
+    private const string VictimAllyKingdom = "isengard";
+    private const string NeutralKingdom = "umbar";
+    private const string FreeCulture = "gondor";
+    private const string EvilCulture = "mordor";
+
     private IAlignmentService _alignmentService;
     private ExecutionRelationService _sut;
 
@@ -14,57 +22,143 @@ public class ExecutionRelationServiceTests
     public void Setup()
     {
         _alignmentService = Substitute.For<IAlignmentService>();
+
+        // Side resolution mirrors the shipped alignment.json: by kingdom id, by culture id, and for
+        // the kingdom-less combinations the fix has to survive.
+        Side(PlayerKingdom, null, FactionSide.Free);
+        Side(AllyKingdom, null, FactionSide.Free);
+        Side("erebor", null, FactionSide.Free);
+        Side(VictimKingdom, null, FactionSide.Evil);
+        Side(VictimAllyKingdom, null, FactionSide.Evil);
+        Side(NeutralKingdom, null, FactionSide.Neutral);
+        Side(null, FreeCulture, FactionSide.Free);
+        Side("", FreeCulture, FactionSide.Free);
+        Side(null, EvilCulture, FactionSide.Evil);
+        Side(PlayerKingdom, FreeCulture, FactionSide.Free);
+        Side(AllyKingdom, FreeCulture, FactionSide.Free);
+        Side("erebor", FreeCulture, FactionSide.Free);
+        Side(VictimKingdom, EvilCulture, FactionSide.Evil);
+        Side(VictimAllyKingdom, EvilCulture, FactionSide.Evil);
+
+        // The two side predicates are pure, so use the real semantics rather than stubbing every pair.
+        _alignmentService
+            .AreEnemyAlignments(Arg.Any<FactionSide>(), Arg.Any<FactionSide>())
+            .Returns(ci => IsEnemy(ci.ArgAt<FactionSide>(0), ci.ArgAt<FactionSide>(1)));
+        _alignmentService
+            .AreSameAlignment(Arg.Any<FactionSide>(), Arg.Any<FactionSide>())
+            .Returns(ci => IsSame(ci.ArgAt<FactionSide>(0), ci.ArgAt<FactionSide>(1)));
+
         _sut = new ExecutionRelationService(_alignmentService);
     }
 
-    // ----- Null kingdom fall-through (vanilla pass-through) -----
+    private void Side(string kingdomId, string cultureId, FactionSide side)
+        => _alignmentService.ResolveSide(kingdomId, cultureId).Returns(side);
+
+    private static bool IsEnemy(FactionSide a, FactionSide b)
+        => a == FactionSide.Neutral || b == FactionSide.Neutral || a != b;
+
+    private static bool IsSame(FactionSide a, FactionSide b)
+        => a != FactionSide.Neutral && b != FactionSide.Neutral && a == b;
+
+    private static ExecutionParticipant P(string kingdomId, string cultureId = null)
+        => new ExecutionParticipant(kingdomId, cultureId);
+
+    // ----- The player report: a kingdom-less executor must not cost his allies anything -----
 
     [TestMethod]
-    public void GetRelationModifier_NullExecutorKingdom_ReturnsBaseAndPreservesNotification()
+    public void GetRelationModifier_EmptyExecutorKingdomButFreeCulture_AllyEvaluatorTakesNoPenalty()
     {
-        var result = _sut.GetRelationModifier(null, "empire_s", "vlandia", -60, true);
+        // GetPlayerKingdomId() returns "" for an independent, mercenary or enlisted player. Before
+        // the culture fallback this fell through to the full vanilla penalty for every clan leader
+        // in the world, which is what bottomed allied Free Peoples lords out at the -100 clamp.
+        var result = _sut.GetRelationModifier(
+            P("", FreeCulture), P(VictimKingdom, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
+
+        Assert.AreEqual(0, result.RelationDelta);
+        Assert.IsFalse(result.ShowNotification);
+    }
+
+    [TestMethod]
+    public void GetRelationModifier_NullExecutorKingdomButFreeCulture_AllyEvaluatorTakesNoPenalty()
+    {
+        var result = _sut.GetRelationModifier(
+            P(null, FreeCulture), P(VictimKingdom, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
+
+        Assert.AreEqual(0, result.RelationDelta);
+    }
+
+    [TestMethod]
+    public void GetRelationModifier_EmptyExecutorKingdom_VictimsOwnSideStillTakesVanillaPenalty()
+    {
+        var result = _sut.GetRelationModifier(
+            P("", FreeCulture), P(VictimKingdom, EvilCulture), P(VictimAllyKingdom, EvilCulture), -60, true);
 
         Assert.AreEqual(-60, result.RelationDelta);
         Assert.IsTrue(result.ShowNotification);
     }
 
-    [TestMethod]
-    public void GetRelationModifier_NullVictimKingdom_ReturnsBaseAndPreservesNotification()
-    {
-        var result = _sut.GetRelationModifier("empire_w", null, "vlandia", -60, true);
+    // ----- The victim's clan is destroyed by the kill, nulling Clan.Kingdom before the relation pass -----
 
-        Assert.AreEqual(-60, result.RelationDelta);
-        Assert.IsTrue(result.ShowNotification);
+    [TestMethod]
+    public void GetRelationModifier_VictimKingdomNulledByClanDestruction_AllyEvaluatorTakesNoPenalty()
+    {
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom, FreeCulture), P(null, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
+
+        Assert.AreEqual(0, result.RelationDelta);
     }
 
     [TestMethod]
-    public void GetRelationModifier_NullEvaluatorKingdom_ReturnsBaseAndPreservesNotification()
+    public void GetRelationModifier_VictimKingdomNulledByClanDestruction_VictimsOwnSideStillPenalised()
     {
-        var result = _sut.GetRelationModifier("empire_w", "empire_s", null, -60, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom, FreeCulture), P(null, EvilCulture), P(VictimAllyKingdom, EvilCulture), -60, true);
 
         Assert.AreEqual(-60, result.RelationDelta);
-        Assert.IsTrue(result.ShowNotification);
+    }
+
+    // ----- A minor or mercenary clan leader has no kingdom of his own -----
+
+    [TestMethod]
+    public void GetRelationModifier_EvaluatorHasNoKingdomButFreeCulture_TakesNoPenalty()
+    {
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom, FreeCulture), P(VictimKingdom, EvilCulture), P(null, FreeCulture), -60, true);
+
+        Assert.AreEqual(0, result.RelationDelta);
     }
 
     [TestMethod]
-    public void GetRelationModifier_EmptyExecutorKingdom_ReturnsBaseAndPreservesNotification()
+    public void GetRelationModifier_EvaluatorHasNoKingdomButEvilCulture_TakesVanillaPenalty()
     {
-        // Boundary returns "" when player has no kingdom — must be treated as null
-        var result = _sut.GetRelationModifier("", "empire_s", "vlandia", -60, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom, FreeCulture), P(VictimKingdom, EvilCulture), P(null, EvilCulture), -60, true);
 
         Assert.AreEqual(-60, result.RelationDelta);
-        Assert.IsTrue(result.ShowNotification);
     }
 
-    // ----- showQuickNotification suppression on zero-modified -----
+    // ----- Unclassified on both ids stays Neutral, preserving the pre-fix meaning -----
+
+    [TestMethod]
+    public void GetRelationModifier_ParticipantsUnclassifiedOnBothIds_ResolveNeutralAndCostNothing()
+    {
+        _alignmentService.ResolveSide("new_kingdom", "made_up").Returns(FactionSide.Neutral);
+
+        var result = _sut.GetRelationModifier(
+            P("new_kingdom", "made_up"), P(VictimKingdom, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
+
+        // Neutral executor against an Evil victim is cross-alignment, and the evaluator sides with
+        // neither of them, so nothing is applied.
+        Assert.AreEqual(0, result.RelationDelta);
+    }
+
+    // ----- Cross-alignment: established behaviour, unchanged -----
 
     [TestMethod]
     public void GetRelationModifier_CrossAlignmentEvaluatorSameAsExecutor_ZerosNotification()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-        _alignmentService.AreSameAlignment("vlandia", "empire_w").Returns(true);
-
-        var result = _sut.GetRelationModifier("empire_w", "empire_s", "vlandia", -60, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(VictimKingdom), P(AllyKingdom), -60, true);
 
         Assert.AreEqual(0, result.RelationDelta);
         Assert.IsFalse(result.ShowNotification, "Notification must be suppressed when modifier zeroes the delta");
@@ -73,81 +167,90 @@ public class ExecutionRelationServiceTests
     [TestMethod]
     public void GetRelationModifier_CrossAlignmentEvaluatorNeutral_ZerosNotification()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-        _alignmentService.AreSameAlignment("umbar", "empire_w").Returns(false);
-        _alignmentService.AreSameAlignment("umbar", "empire_s").Returns(false);
-
-        var result = _sut.GetRelationModifier("empire_w", "empire_s", "umbar", -60, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(VictimKingdom), P(NeutralKingdom), -60, true);
 
         Assert.AreEqual(0, result.RelationDelta);
         Assert.IsFalse(result.ShowNotification);
     }
 
-    // ----- non-zero modified preserves base notification -----
-
     [TestMethod]
     public void GetRelationModifier_CrossAlignmentEvaluatorSameAsVictim_PreservesBaseNotificationTrue()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "empire_s").Returns(true);
-        _alignmentService.AreSameAlignment("isengard", "empire_w").Returns(false);
-        _alignmentService.AreSameAlignment("isengard", "empire_s").Returns(true);
-
-        var result = _sut.GetRelationModifier("empire_w", "empire_s", "isengard", -60, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(VictimKingdom), P(VictimAllyKingdom), -60, true);
 
         Assert.AreEqual(-60, result.RelationDelta);
         Assert.IsTrue(result.ShowNotification);
     }
 
     [TestMethod]
+    public void GetRelationModifier_NeutralVictim_CostsTheExecutorsAlliesNothing()
+    {
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(NeutralKingdom), P(AllyKingdom), -60, true);
+
+        Assert.AreEqual(0, result.RelationDelta);
+    }
+
+    // ----- Kinslaying: same side, 1.5x -----
+
+    [TestMethod]
     public void GetRelationModifier_KinslayingApplies150PercentMultiplier()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(true);
-
-        var result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", -60, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(AllyKingdom), P("erebor"), -60, true);
 
         Assert.AreEqual(-90, result.RelationDelta);
         Assert.IsTrue(result.ShowNotification);
     }
 
     [TestMethod]
-    public void GetRelationModifier_SameAlignmentNotKinslaying_ReturnsBaseUnchanged()
+    public void GetRelationModifier_KinslayingFriendPenalty()
     {
-        // executor & victim different sides per AreSameAlignment? -> no kinslaying, no cross-alignment -> base
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(false);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(AllyKingdom), P("erebor"), -30, true);
 
-        var result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", -30, true);
-
-        Assert.AreEqual(-30, result.RelationDelta);
-        Assert.IsTrue(result.ShowNotification);
+        Assert.AreEqual(-45, result.RelationDelta);
     }
 
-    // ----- ZeroBase remains zero, but notification is suppressed (modified == 0 from base) -----
+    [TestMethod]
+    public void GetRelationModifier_KinslayingSmallerPenalty()
+    {
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(AllyKingdom), P("erebor"), -10, true);
+
+        Assert.AreEqual(-15, result.RelationDelta);
+    }
+
+    [TestMethod]
+    public void GetRelationModifier_KinslayingByAKingdomlessPlayerStillBites()
+    {
+        // The culture fallback must not become a loophole: an independent Gondor-cultured player
+        // executing a Rohan lord is still kinslaying.
+        var result = _sut.GetRelationModifier(
+            P("", FreeCulture), P(AllyKingdom, FreeCulture), P("erebor", FreeCulture), -60, true);
+
+        Assert.AreEqual(-90, result.RelationDelta);
+    }
+
+    // ----- Notification flag -----
 
     [TestMethod]
     public void GetRelationModifier_ZeroBaseRelation_SuppressesNotificationEvenIfBaseTrue()
     {
-        // If vanilla returned 0 but baseShowNotification was true (it shouldn't, but be defensive),
-        // service still suppresses since modified == 0.
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(false);
-
-        var result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", 0, true);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(AllyKingdom), P("erebor"), 0, true);
 
         Assert.AreEqual(0, result.RelationDelta);
         Assert.IsFalse(result.ShowNotification);
     }
 
-    // ----- baseShowNotification = false stays false on non-zero modifier -----
-
     [TestMethod]
     public void GetRelationModifier_BaseNotificationFalse_StaysFalse()
     {
-        _alignmentService.AreEnemyAlignments("empire_w", "vlandia").Returns(false);
-        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(true);
-
-        var result = _sut.GetRelationModifier("empire_w", "vlandia", "erebor", -60, false);
+        var result = _sut.GetRelationModifier(
+            P(PlayerKingdom), P(AllyKingdom), P("erebor"), -60, false);
 
         Assert.AreEqual(-90, result.RelationDelta);
         Assert.IsFalse(result.ShowNotification);

@@ -18,6 +18,10 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **Duplicate item id across Armory folders** — engine silently shadows one. (`DUPLICATE_ITEM_DEF`)
 - **Missing civilian `equipmentType`** — Faramir/Boromir wrong-outfit bug. (`MISSING_CIVILIAN_TYPE`)
 - **Harness with no `family_type`** — defaults to 0 (human family), so the inventory screen refuses it on every mount with no message → "this item is not equipable". (`MISSING_HARNESS_FAMILY_TYPE`, `HARNESS_FAMILY_MISMATCH`)
+- **A Horse slot with an empty `HorseHarness` slot.** A harness is required, not optional: on some
+  mounts it carries the rider's seat rather than armour, and the war ram's body meshes are bare
+  pelts, so the troop spawns sitting on hide. No reference is broken and no mesh is missing, which
+  is why every other gate passes it. (`MOUNT_WITHOUT_HARNESS`)
 - Duplicate NPC/culture/roster ids; invalid `default_group`; broken party-template refs.
 - **`face_key_template` pointing at an undefined `BodyProperty`** — not an XML error: the engine
   registers a placeholder, `MBObjectManager.UnregisterNonReadyObjects` drops it, and the character
@@ -257,6 +261,63 @@ Re-measured 2026-08-28 after the war ram landed: **191** `race="dwarf"` characte
 16 Ranged, 16 Cavalry) and a full-run `PASS`. All 16 Cavalry dwarves carry a ram: 12 Erebor lords via
 the `erebor_bat_template_ram_a..e` rosters, and the 4 Ironpass troops inline. No dwarf anywhere in
 TAOM's ModuleData reaches a non-ram mount.
+
+Re-measured 2026-09-06: **193** `race="dwarf"` characters (159 Infantry, 16 Ranged, **18** Cavalry).
+The Cavalry figure moved because the ram branch is six rungs, not the four counted above: the 18 are
+the same 12 Erebor lords plus all six `ironpass_*` ram troops. Still a full-run `PASS`, and still no
+dwarf anywhere in TAOM's ModuleData reaching a non-ram mount.
+
+### A harness is required, not optional (`MOUNT_WITHOUT_HARNESS`)
+
+Every `slot="Horse"` entry must have a `slot="HorseHarness"` entry beside it in the same equipment
+set. This is a different question from the carve-out above: `WAR_RAM_MOUNT_IDS` asks *may a dwarf
+ride this*, and this rule asks *does the rider have something to sit on*.
+
+The rule is universal because **the data cannot answer the question it depends on.** Whether a
+mount carries its own saddle is a property of a mesh, and no attribute in any XML records it. The
+war ram is the proof: `sk_eb_goat_a` and `sk_eb_goat_b` are bare pelts, and every saddle lives on
+one of the eight `sk_eb_goat_bard_*` harness meshes, so an empty slot there is not an unarmoured
+mount but an unsaddled rider.
+
+The first version of this check tried to be clever about it, scoping itself to a pinned set of
+mounts believed to be saddleless. That was wrong twice over. It rested on a survey claim that the
+spider carries a seat on its body, which is false (see the allowlist below), and more importantly
+it repeated the mistake it existed to catch: it decided from a desk which mounts were fine bare.
+Requiring the harness and forcing every exception to be argued is the only version that does not
+depend on a belief about a mesh.
+
+Two properties worth knowing when reading a result:
+
+- **Judged per equipment set, not per troop.** The engine draws each slot from an independently
+  chosen set, so filling the harness in three sets of four still spawns bare rams a quarter of the
+  time. Four bad sets are four findings.
+- **It does not need the game install, and that is deliberate.** The sibling harness passes
+  (`MISSING_HARNESS_FAMILY_TYPE`, `HARNESS_FAMILY_MISMATCH`) compare family types read from the
+  INSTALLED modules and go quiet when that registry is empty. Slot presence is answerable from repo
+  XML alone, so this check stays live on a machine with a partial `LOTRLOME_Armory`. Landing it
+  meant deleting the early returns in `_harness_family_types` and `_harness_pairings` that returned
+  `[]` on an empty registry, or the check would have switched itself off in exactly the situation
+  where the ram data is least trustworthy while the validator still printed `PASS`.
+  `test_it_still_reports_without_an_installed_game` pins that.
+
+#### The exemptions (`_HARNESSLESS_BY_DESIGN`)
+
+Keyed by the owning `NPCCharacter` id, or by the standalone `EquipmentRoster` id where there is no
+character above it, in the `_BODYLESS_BY_DESIGN` style. Each entry carries its reason, and a test
+asserts both that the reason is real and that the id still exists, because an allowlist entry for a
+renamed troop rots silently.
+
+| Owner | Why |
+|---|---|
+| `harad_mumakil_rider` | A `HorseHarness` **suppresses the Horse item's `<AdditionalMeshes>`** (native mount compositing), and `taom_mumakil` keeps its war-platform there. Equipping one would delete the howdah. This is an engine constraint, not a preference |
+| `taom_spider_creature` | **An open gap, not a design choice.** No spider `HorseHarness` item has ever been authored, so there is nothing to equip and the rider sits on the spider with no saddle geometry: the same defect class as the ram, recorded as a known limitation when the troop landed and still open. Delete this entry when a `spider_saddle` harness item lands |
+
+Shipped twice, which is why the rule is not scoped. `ironpass_ram_herder` was authored with no
+harness on all four sets, on purpose, on the reading that a bare ram was merely unarmoured, and
+[war-ram.md](./war-ram.md) recorded that as deliberate until players reported dwarves riding
+bareback (2026-09-06). `eomer_bat_equipment` carried the full Theoden kit on a bare charger while
+all fourteen of its Rohan siblings had a harness; the universal rule is what surfaced it.
+
 
 ### The `settled_cultures` registry (`build_settled_cultures`)
 
@@ -651,5 +712,6 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 - [docs/reference/engine/formations-and-team-ai.md](../reference/engine/formations-and-team-ai.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../reviews/rca-tournament-dwarf-dismount-2026-06-09.md)
+- [docs/reviews/rca-townsfolk-sex-2026-09-06.md](../reviews/rca-townsfolk-sex-2026-09-06.md)
 
 <!-- backlinks-end -->

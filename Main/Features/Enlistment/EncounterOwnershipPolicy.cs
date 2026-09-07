@@ -29,6 +29,22 @@ public sealed class EncounterOwnershipPolicy : IEncounterOwnershipPolicy
         if (snapshot.PlayerInMapEvent)
             return EncounterFinishVerdict.DeferPlayerOwnBattle;
 
+        // R1c — the stale battle latch, and the ONLY inversion of R1b (issue #551). It sits below
+        // R1, which still makes a battle the player is actually fighting untouchable, and above R1b,
+        // which is the rule being inverted. The caller has already established that this shape has
+        // outlasted any loot screen; the settlement precondition is checked here rather than trusted
+        // from the caller, exactly as R2c does, because the caller reads that fact from a snapshot
+        // taken earlier in the same tick.
+        //
+        // Conversation still wins: finishing mid-dialogue drops the player out of their own
+        // conversation, and the next tick retries.
+        if (intent == EncounterFinishIntent.StaleBattleLatch && !snapshot.PlayerInsideSettlement)
+        {
+            return snapshot.ConversationInProgress
+                ? EncounterFinishVerdict.SkipConversationInProgress
+                : EncounterFinishVerdict.Finish;
+        }
+
         // R1b — the same protection, one moment later, and R1 alone does not give it.
         // `MapEventSide.Clear()` nulls `MainParty.MapEvent` BEFORE the encounter closes, so the loot
         // and aftermath menus run inside a still-open encounter that reads as "no battle anywhere".

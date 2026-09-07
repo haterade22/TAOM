@@ -4,6 +4,323 @@
 
 ## 2026-09-06
 
+### fix(save-load): a save naming a troop that no longer exists could not be loaded at all
+
+Crash bundle 065939b6: a `NullReferenceException` out of `CharacterObject.GetSkillValue` during
+`Clan.AfterLoad`, with `TaomPartyMoraleModel` on the stack at a line that is a plain `base` call.
+TAOM does not create the null. It is on the stack because it owns the registered `PartyMoraleModel`
+slot.
+
+The chain, read link by link from the decompiled v1.4.8 assemblies rather than inferred.
+`DefaultPartyMoraleModel.GetMoraleEffectsFromSkill` does null-check its character, so the character
+is not the null. `SkillHelper.GetEffectivePartyLeaderForSkill` returns
+`party.MemberRoster.GetCharacterAtIndex(0)` when a party has no leader hero, which hands a plain
+troop to a model expecting a leader, and garrisons and militia are exactly the leaderless parties
+`Clan.UpdateCurrentStrength` walks. `CharacterObject.GetSkillValue` routes a non-hero to
+`BasicCharacterObject.GetSkillValue`, which is `DefaultCharacterSkills.Skills.GetPropertyValue(skill)`
+with no guard at all. That one-liner inlines, which is why the report names the frame above it.
+
+Two candidates were ruled out by reading rather than guessing, and that is what narrowed it to one
+cause. `MBCharacterSkills.Skills` is assigned in its constructor, so the inner reference is never
+null. `BasicCharacterObject.Deserialize` always assigns `DefaultCharacterSkills`, from the referenced
+`skill_template` or from a fresh one, so a troop that came from module XML is safe either way. What
+is left is a character the save restored under an id current ModuleData no longer defines: its load
+callback runs `CharacterObject.Init()`, which sets occupation, traits, level and restriction flags
+and never touches the field. Renaming or removing a troop between mod versions produces one.
+
+New `Patch83_CharacterSkillsRepair` gives such a character the empty skill set vanilla's own fallback
+would have built. The seam is not a choice: `Campaign.OnGameLoaded` runs
+`base.ObjectManager.AfterLoad()`, then the crashing `CampaignObjectManager.AfterLoad()`, and only
+then dispatches its load events, so a `CampaignBehaviorBase` could never run in time and this had to
+be a postfix on the engine call immediately before. A repair rather than a guard at the read, because
+`GetSkillValue` runs per agent per hit in combat and because `SkillHelper.AddSkillBonusForCharacter`
+and `AddSkillBonusForTown` reach the same unguarded line, so fixing one game model would have left
+the rest exposed.
+
+It is silent on a healthy load. When it finds something it warns with the ids, because the repair
+keeps the save loadable while hiding a data defect, and those ids are the actual fix.
+
+Not verified against the crashing save. The bindings and the logic are covered by 17 tests; proving
+it end to end needs the player's `saveauto2`. `docs/features/character-skills-repair.md`.
+
+### feat(battle-load): the async scene-load wait now leaves a trail instead of going dark
+
+A player hit two reproducible CTDs on `battle_terrain_biome_094` while enlisted. Both logs end on
+`seq=7 phase=MissionInitializeDone` with nothing after them, which is bucket 2: N `TickLoading`
+frames polling the native `Mission.IsLoadingFinished`. Three healthy loads in the same session
+cleared that bucket in 383, 457 and 933 ms, and the same army loaded `battle_terrain_biome_085`
+against 187 enemies minutes later, so the scene is the only variable that moves with the outcome.
+
+`TickLoading` is a counter that never logs, by design: 720 lines per 12-second load is not an
+instrument. The cost of that design is that its `polls=` and `waitMs=` pair rides only on
+`FinishMissionLoadingBegin`, a line a load that never finishes never writes. So a process that dies
+in the wait and one that hangs in it produce byte-identical tails, and the triage tool could only
+suggest reading a different run.
+
+`WaitingForSceneLoad` keeps the no-noise rule and closes the gap. Nothing at all below 3 seconds,
+which sits clear of the slowest healthy wait on record; past that, one line every 5 seconds carrying
+the scene plus the same token pair, so a 30-second stall costs about six lines and the last one
+bounds the fault to a 5-second window. `triage_battle_load.py` treats it as a SCENE terminal and
+falls back to the last heartbeat for the timing ledger, which is what lets the `polls=1` native-spin
+rule fire on a crash log at all; those numbers are reported as a lower bound, since the wait was
+still running when the log stopped.
+
+The stall marker also stopped being invisible. `BattleLoadStallMarker` and `StallReportNotifier`
+wrote a file and showed an in-game popup but logged nothing, so across three sessions of this
+player's logs there was no way to tell whether the marker was written or whether the next-session
+notice fired. Writing one now logs at debug; finding a stale one warns with the scene and the prior
+session's log path, so a player who only sends the newest log still hands over the scene name.
+
+The crash itself is not fixed and its root cause is not proven. `battle_terrain_biome_094` carries
+the largest flora of any vanilla biome battle scene, 16x the scene that loaded fine either side of
+it, and TAOM already disabled eight of its own scenes in June for GPU-specific native access
+violations during scene load under #287. Deciding between those needs the player's `rgl_log`.
+
+
+### fix(troops): javelin skirmishers fought as archers with their skill on a bow they do not carry (#554)
+
+A screenshot of the Gondor troop tree showed the Harondor skirmisher line. All three rungs carry a
+javelin and a sword, no bow, and were tagged `default_group="Ranged"`. `gondor_har_javelineer`
+shipped Bow 170 and Throwing 40, so every point of its ranged budget sat on a weapon it cannot use.
+`IsRanged` comes from `default_group` alone and never from equipment, so the engine also placed and
+commanded it as a backline archer while it held a frontline kit. Two Rhûn troops,
+`sagarun_naffatun` and `sagarun_storm_helmed_naffatun`, had the same shape at Bow 195 and 235.
+
+Across the whole roster 92 troops carry a thrown weapon, and not one of them also carries a bow or a
+crossbow. Five were tagged Ranged; all five also carried a melee weapon. Those five are now Infantry,
+their Throwing takes the Ranged Bow curve for their level (85 / 130 / 170 for Harondor, 195 / 235 for
+the Naffatun), and the inert Bow and Crossbow drop to the Infantry floor.
+
+The generator gap is the interesting half. `detect_weapon_specialization` has had a rule since #340
+that hands a crossbowman the Bow value, and no throwing equivalent. The `naffatun` name keyword that
+used to fire a swap on these very troops was removed in #340 as a false positive, correctly, and
+nothing replaced it. `docs/features/troop-skill-balance.md` then recorded the leftover Crossbow 160 as
+an accepted cost because it was inert, which is what stopped anyone re-asking. Inert is only harmless
+if the weapon the troop does carry is served.
+
+Flooring the Rhûn pair is a real regression across a real edge, because their parent
+`sagarun_crossbowman` genuinely carries a crossbow at 160. That edge is now named in
+`RESPECIALIZATION_EXEMPT_EDGES`, mirrored in `rebalance_troops.py`, `taom_schema.py` and
+`TroopUpgradeSkillMonotonicityTests.cs`; without the entry in the writer's own clamp the run floors
+the value and the clamp puts it straight back.
+
+Scope is deliberately five troops, not all 92. The reference `LOTRLOME_Armory` install is a shell
+(every `ModuleData` subfolder empty, no `SubModule.xml`, no `Assets`), so 247 of the 315 weapon ids
+the troop files reference do not classify, bows included. The honest predicate would read an
+invisible Armory bow as no bow and hand real archers the throwing curve, so the trigger is a
+hardcoded id set until the install is repaired. Restoring it and finishing the other 87 carriers is
+#555, along with the `THROWN_MELEE_MISGROUPED` gate and a coverage guard so the writer refuses a run
+it cannot classify.
+
+Also moved `rebalance_troops.py` onto `tools/_gamedir.py` (#404), which its read-only sibling reads
+too: the hardcoded `E:` path was one machine's and errored out at startup everywhere else.
+
+The deep review then found two things worth recording. The exemption table was hand-copied into three
+files with a comment saying they must agree and nothing checking it, which repeats a lesson written
+three days earlier for #537; there is now a test that regexes the C# dictionary and diffs it against
+both Python copies, proven against three simulated drifts rather than assumed to work. And the
+reclassification's blast radius was understated: `default_group` also feeds auto-resolve battle power
+through `DefaultMilitaryPowerModel`, TAOM's own `WageModifierService` perk category, and
+`BannerBearerService`, whose allowlist is Infantry-only, so these five troops became eligible to
+carry banners. The verdict does not change, since a javelin-and-sword skirmisher belongs in the
+infantry line, but the claim did. Ten tests added covering the throwing rule and the mirror.
+
+RCA: `docs/reviews/rca-javelin-troop-misclassification-2026-09-06.md`.
+
+### fix(execution): killing Sauron's servants turned the Free Peoples against you (#556)
+
+A player executing lords of Rhun, Mordor, Isengard, Umbar and Harad watched his relation with every
+allied faction fall to -100 while his own faction stayed friendly. Alignment-aware execution has
+existed since March precisely to make that kill free: no relation loss from anyone on the executor's
+side, no Honor penalty. The feature was there, registered, and being skipped.
+
+`ExecutionRelationService` handed the whole calculation back to vanilla whenever any one of the three
+kingdom ids came back null or empty. Vanilla charges -10 to every clan leader in the world whose
+Honor is above 0, regardless of faction or war state, and in TAOM that set is the Free Peoples.
+Relation clamps at -100, so a handful of executions bottomed the allies out.
+
+Two ways that guard fired in ordinary play. `KillCharacterAction.ApplyInternal` destroys the victim's
+clan, which nulls `Clan.Kingdom`, at L133-143, and only fires `OnHeroKilled` at L144, so any executed
+lord who was the last adult of his clan reached the relation pass with no kingdom at all. The
+diagnostic tell was that the pre-execution preview showed a correct 0 while the applied result did
+not, because the preview runs the same model before the kill. Separately, `GetPlayerKingdomId()`
+returns `""` for an independent, mercenary or enlisted player, and enlistment deliberately does not
+join the commander's kingdom.
+
+The fix is the one every other alignment-aware feature already had. CaravanTrade,
+WarOfTheRingMomentum and PrisonerRecruitment each resolve a side by kingdom id and fall back to
+culture id when the kingdom does not classify; Momentum's copy cites Codex #327 for the same class of
+bug. Execution, the feature that introduced the alignment system, was the only one without it.
+`IAlignmentService.ResolveSide(kingdomId, cultureId)` now does that centrally, the null bail is gone,
+and `ExecutionContext` snapshots both ids for victim and executor in the `ApplyInternal` prefix,
+before the engine can destroy anything. The honor patch resolves sides the same way, so a
+kingdom-less player no longer eats the -1000 Honor XP for killing an orc.
+
+Kinslaying is unchanged and still bites at 1.5x, including for a kingdom-less player: the culture
+fallback is not a loophole. Alignment classifications are untouched, so Umbar, Khand, Shaghana and
+Abanissa stay neutral. `ExecutionActionHook.GetRelationModifier` and `IsKinslaying`, a second copy of
+the relation logic that nothing called any more, are deleted so a future fix cannot land on the wrong
+one. New gate `ShippedMainCultureAlignmentCoverageTests` fails the build if a playable culture is
+ever added without an alignment entry, since that would silently disable the executor fallback again.
+
+Verified against the v1.4.8 decompile rather than assumed: `ApplyByDeathMark` re-enters
+`ApplyInternal` with `victim.DeathMarkKillerHero` and `victim.DeathMark`, so the snapshot is taken
+correctly on the deferred post-battle execution path too.
+
+The deep review then caught a second defect in the fix itself. `ApplyInternal` re-enters itself:
+destroying the victim's clan kills that clan's other heroes (`DestroyClanAction.cs:43`), and each
+nested kill ran the same Harmony finalizer, which cleared the snapshot unconditionally and so wiped
+it before the outer call reached the relation pass. The culture fallback happened to produce the
+right answer anyway, which is a coincidence rather than safety. Ownership now runs through
+`ExecutionContext.TrySet` / `ClearIfOwned` and Harmony's per-invocation `__state`, so only the frame
+that took the snapshot clears it. Seven `ExecutionContextTests` pin the nesting contract, and the
+regression test was confirmed to fail with the ownership gate removed. RCA:
+`docs/reviews/rca-execution-alignment-fallthrough-2026-09-06.md`.
+
+Live-save effective. Existing relation damage is not rolled back.
+
+### fix(erebor): the ram herders rode bareback, because the ram's saddle is on the barding
+
+Players reported dwarf ram riders with no saddle. One troop is responsible. `ironpass_ram_herder`,
+the level-16 root of the Ironpass war-ram branch, filled `slot="Horse"` on all four of its
+equipment sets and `HorseHarness` on none of them. Every other ram consumer was already paired:
+the five armoured rungs, the five `erebor_bat_template_ram_*` lord templates behind 12 mounted
+lords, and both `player_career_erebor_cavalry_*` rosters.
+
+It was authored that way on purpose, and `war-ram.md` said so. The argument was that the four sets
+have to agree, since the engine draws each slot from an independently chosen set, so barding three
+of four would ship a ram that sometimes spawned bare anyway. The constraint is real. The
+conclusion was not, because for this mount a harness is not only armour: `sk_eb_goat_a` and
+`sk_eb_goat_b` are bare pelts and the rider's seat is modelled on the eight `sk_eb_goat_bard_*`
+meshes. An unharnessed ram is not an unarmoured ram, it is an unsaddled one.
+
+Nothing in the data distinguished those two readings, and every other mount hides the difference.
+The vanilla horse, the warg (`warg_low_fur_with_saddle`) and the spider (`spider_saddle`) all
+carry a seat on the mount body and look right unbarded. Grepping the Armory mesh catalogue for
+`saddle` returns only those warg and spider meshes, so there is no ram saddle mesh and no
+saddle-only ram item to reach for.
+
+All four herder sets now carry `taom_ram_barding_light_a`, the bottom rung of the eight-barding
+ladder, honouring the all-four-sets constraint the old note got right. Average battle armour goes
+0 to 20, so the upgrade edge into `ironpass_ram_rider` (22) stays monotonic. `troop_weights.xml`
+still leaves the herder at the 1.0 default, because that entry was justified by recruitment
+economics rather than by how much armour the troop wears.
+
+**The gate requires a harness, it does not merely suspect one is missing.**
+`MOUNT_WITHOUT_HARNESS` (ERROR, `tools/taom_schema.py`) reports any `slot="Horse"` with no
+`slot="HorseHarness"` beside it in the same set, judged per set because the engine draws each slot
+from an independently chosen one.
+
+The first version was scoped to a pinned set of mounts believed saddleless, on the argument that a
+universal rule would flag every plain horse. That was the same error one level up: it decided from a
+desk which mounts were fine bare, which is exactly how the herder shipped. It also rested on a claim
+that the spider carries its own seat, and that claim is false. Requiring the harness and forcing each
+exception to be argued in `_HARNESSLESS_BY_DESIGN`, with a reason recorded, is the only version that
+does not depend on a belief about a mesh nobody checked.
+
+Two exemptions, both stated. `harad_mumakil_rider`, because a harness suppresses the Horse item's
+`<AdditionalMeshes>` and that is where the war-platform lives, so equipping one would delete the
+howdah. And `taom_spider_creature`, which is an **open gap rather than a design choice**: no spider
+`HorseHarness` item has ever been authored, so its rider has sat on bare carapace since the troop
+landed. It was recorded as a known limitation at the time and never closed. Same defect as the ram,
+still open, and the entry says so.
+
+Making the rule universal paid for itself immediately. `eomer_bat_equipment` carried the full
+Theoden kit on a bare `Item.charger` while all fourteen of its Rohan siblings had a harness, which
+the scoped version would have passed. He now wears `Item.chain_horse_harness`, matching Eowyn.
+
+Both gates were mutation-tested, on the ram and again on Eomer: delete a line, confirm the check
+names the offender, restore. `MOUNT_WITHOUT_HARNESS` is wired into
+`check-moduledata-validation.sh`, which `CommitGateCoverageTests` already enforces, with eleven
+cases in `MountWithoutHarnessTests` including one asserting every exemption states a reason and one
+asserting the exempted ids still exist. On the C# side,
+`EveryWarRamRoster_InTroopsErebor_FillsTheHarnessSlot` joins the three existing ram gates.
+
+Landing it meant deleting two early returns, in `_harness_family_types` and `_harness_pairings`,
+that bailed out when the game-install registry was empty. Both had to go. That registry is built
+from the INSTALLED modules, so keeping them would have switched the new check off on precisely the
+machine where `LOTRLOME_Armory` is partial, while the validator still printed PASS. Slot presence
+is answerable from repo XML alone, and `test_it_still_reports_without_an_installed_game` pins
+that. The family-type comparison stays guarded, since it genuinely does need the registry.
+
+Also corrected the comment in `CareerCultureCoverageTests` that read "a bare ram is legal data and
+renders fine". That belief is what shipped this.
+
+Not-verified: the in-game look. This is the laptop, whose Armory carries no `LOTRLOME_items` XML,
+so the ram and its bardings do not resolve here and a visual check could not mean anything.
+
+
+### docs(machines): write down that there are two of them, and that the laptop is incomplete
+
+Every absolute path in `docs/` was written on the desktop, so `E:\Decompiled_Bannerlord\` and
+`E:\repos\TAOM` read as facts about the project when they are facts about one machine. The laptop
+is a `C:\` box that deliberately does not carry the full content set, and nothing said so.
+
+That gap has a sharp edge. TAOM's data spans this repo plus the live `TAOM_Map` and
+`LOTRLOME_Armory` installs, which are unversioned and absent from git, so on a machine where those
+are partial every reference into them fails and the report is indistinguishable from a repo defect.
+Measured on the laptop today: 6,894 `BROKEN_ITEM_REF`, 414 `LANDLESS_CULTURE`, 90
+`SETTLEMENT_ECONOMY_FLOOR`, with `TAOM_Map\ModuleData` holding no `settlements.xml` at all. None of
+it was real. The same applies to looking at the game: a townswoman on a partial Armory renders with
+missing armour whatever her XML says, so that machine can neither confirm nor refute an appearance
+fix.
+
+New `docs/reference/development-machines.md` carries the path register, the three environment
+variables that absorb the difference (`BANNERLORD_GAME_DIR`, `TAOM_DECOMPILE_ROOT`, `TAOM_PYBIN`),
+and the three things that ignore them: both decompile scripts take the destination as a parameter,
+`.mcp.json` is committed with the desktop's paths hardcoded, and `.claude/settings.local.json` is
+tracked despite its name, so it is not a machine-local slot either. Machine-specific values belong
+in Windows user environment variables. Pointers added to CLAUDE.md (a Traps row and the Research
+First rule), README, `docs/INDEX.md` and the engine/toolchain reference.
+
+Also provisioned the laptop, which had no Python at all: 3.14.7 at `C:\Python314`, which is what
+`TAOM_PYBIN` already named, so the pin needed no edit and still works on both machines. Plus jq, the
+packages the repo's tools import, and a local decompile dump. `bash tools/test_hooks.sh` went from
+refusing to run to 183 passed, and the five python-only gates are live again. `yara-python` has no
+3.14 wheel and needs MSVC Build Tools; `audit_claude_config.py` already treats that scan as optional
+and notes the skip, so it was left out.
+
+### fix(enlistment): a battle ending anywhere in the world tore the player out of his own (#551, #552)
+
+Crash bundle `31942985`, from a live game. The stack is pure vanilla with no TAOM frame on it, which
+is the interesting part: `MapEventSide.AllocateTroops` throws an NRE under `MapEventManager.Tick`,
+four and a half minutes and one feature away from the cause.
+
+`EnlistmentBattleBehavior.OnMapEventEnded` gated on `State == EnlistedBattle || commander-in-event`.
+The state disjunct alone was enough, so while the player sat in `EnlistedBattle` every map event
+resolving anywhere counted as "the commander's battle ended", and the reporting session logged around
+650 AI battles, several per second. At 20:23:57 a verified join set that state; in the same second a
+sturgia-vs-corsairs field battle finished on the far side of the map and the teardown ran, disbanding
+the army it had raised 0.3 seconds earlier. The gate is now the ending event's identity: the commander
+is in it, or the main party is. The second disjunct keeps the case the old state clause was reaching
+for, a commander wiped mid-event, where his party is gone from the event but the player is still in it.
+
+The teardown is fatal rather than merely wrong because clearing `AttachedTo` does more than detach.
+`MobileParty.SetAttachedToInternal` answers it with `Party.MapEventSide = null`, which nulls
+`MapEvent.TroopUpgradeTracker` permanently when the removed party is the main one, and simultaneously
+puts the event back in reach of `MapEventManager.Tick` (which skips only the player's own event).
+`AllocateTroops` then dereferences that tracker with no null check, gated only on a `BattleObserver`
+that a `BattleSimulation` constructor had attached one line before throwing. `OnCommanderBattleEnded`
+now refuses the detach when the main party is in a map event other than the one ending.
+
+The player was also stuck for those four and a half minutes behind a dead encounter menu, and nothing
+in the mod could release him: four guards each refused, each correctly, and #538's sweep does not
+cover this shape because its gate is `!commanderInMapEvent`. What separates it from the loot window it
+resembles is duration, so the reconciler now times one continuous episode and, past an in-game hour,
+takes a new `StaleBattleLatch` intent that R1c lets through. That anchor is an absolute campaign day
+on a singleton, so it gets two guards: a session reset dropped from `ServiceMaintenanceService`, and a
+backwards-clock re-anchor for the brand-new-campaign path the reset never reaches. Without them a
+campaign that ended while latched would make the recovery fire instantly on the next later save,
+finishing a live loot screen: the review caught that, not the tests.
+
+`Patch82_MapEventObserverInvariant` restores the engine's `BattleObserver`/`TroopUpgradeTracker`
+pairing before `SimulateBattleSetup` reads it, for paths that do not exist yet.
+
+Separately (#552), this was nearly unsolvable. Every Gauntlet-dispatched crash arrives as
+`TargetInvocationException @ ScreenManager.Update` over the same eight frames, and the crash signature
+hashed only the outer type, so the bundle that would have named the corruption was suppressed as a
+duplicate. The signature now includes the inner chain, depth-capped at three.
+
 ### fix(townsfolk): the women of every culture but Rohan had men's bodies
 
 Reported from play: Townswomen, Tavern Wenches and female notables render male in Gondor, Rhun,
@@ -312,6 +629,28 @@ KingdomDecisionProposalBehavior (all installed v1.4.8 via ilspycmd)
 Not-tested: the three patch bodies (Harmony patches need a live campaign; covered by binding and IL
 call-presence tests instead)
 Save-compat: no new saved state; unresolved decisions are an existing saved field and are left alone
+
+### fix(troop-weight): the MCM toggle now actually turns the feature off
+
+Players reported that switching Troop Weight off in MCM did not turn it off. True, and the gates were
+never the problem: every one reads `TaomSettings.Instance` live, so the switch stopped the penalty and
+all six display patches immediately. The engine did not follow. `PartyBase.PartySizeLimit` caches the
+already-deflated number keyed on `MemberRoster.VersionNo`, and changing a setting does not bump that
+counter, so troop counts reverted to vanilla while the enforced cap stayed reduced. The switch looked
+inert because the number the player cares about did not move.
+
+TAOM already had the flush. `AiPartySizeSettingsWatcher` sweeps `MobileParty.All` calling
+`MemberRoster.UpdateVersion()`, is wired unconditionally at campaign start, and fires on any
+`SaveTriggered`, so it covers this toggle as much as the AI ones. It never ran, because
+`EnableTroopWeight` was one of the settings that omitted `RequireRestart = false`. MCM defaults that to
+`true`, and with it true the only path reaching `SaveSettings` also quits the game, so `SaveTriggered`
+never arrives mid-session. That reasoning was already written down in the watcher and beside the
+diagnostics settings; the Troop Weight attribute just never got the flag.
+
+One line. A sweep of every `[SettingProperty*]`-declared setting found 158 others without the flag, but
+`EnableTroopWeight` is the only remaining one that feeds the engine's *cached* party-size limit, so it
+is the only one where the omission broke behavior rather than merely showing a spurious restart prompt.
+For the rest the value is still read live, so the change applies; only the prompt is misleading.
 
 ### fix(troop-weight): heavy troops take more party space instead of shrinking the party
 

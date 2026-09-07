@@ -296,5 +296,6 @@ Code: No code changes needed
 - [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
 - [docs/modding/skill-sets.md](./skill-sets.md)
 - [docs/modding/troubleshooting.md](./troubleshooting.md)
+- [docs/reviews/rca-townsfolk-sex-2026-09-06.md](../reviews/rca-townsfolk-sex-2026-09-06.md)
 
 <!-- backlinks-end -->

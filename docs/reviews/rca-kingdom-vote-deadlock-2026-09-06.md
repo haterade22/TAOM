@@ -53,3 +53,13 @@ Finding 3 needs no new rule: `lessons/harmony-il.md` already carries "Before doc
 - Service test updated for the changed catch semantics (`ShouldSuppressBallot_StalenessCheckThrows_SuppressesAndWarns`).
 - Full suite: 8288 passed, 0 failed, 3 skipped.
 - **In-game verification is still owed for both issues** and is the only thing that can confirm the fix end to end, since Harmony patches are not applied in the MSTest host.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/diplomacy.md](../features/diplomacy.md)
+
+<!-- backlinks-end -->

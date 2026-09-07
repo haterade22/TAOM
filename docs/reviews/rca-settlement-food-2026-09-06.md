@@ -105,3 +105,15 @@ Per `simplicity-criterion.md`: tiny win, added complexity, plus a correctness ri
 
 Appended to `docs/reviews/lessons/gamemodels-services.md` (the cross-feature record; this file is the
 incident report).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/settlement-food.md](../features/settlement-food.md)
+- [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -39,7 +39,22 @@ Weapon detection was originally **name-keyword-only** (`crossbow`/`arbalest`/`na
 - `rebalance_troops.troop_weapon_classes(npc, item_classes)` collects the classes actually carried (weapon slots Item0–3).
 - The Bow↔Crossbow swap fires iff crossbow-carried-and-no-bow (unambiguous: no troop carries both). The `naffatun` keyword is gone — it had wrongly swapped two javelin throwers.
 - A total-preserving sanity post-pass swaps Polearm↔TwoHanded when a troop carries a two-hander, no polearm, and Polearm > TwoHanded. Idempotent; mixed carriers untouched; monotonicity unaffected (totals preserved).
-- **The writer hard-fails without the game install** (`--game-modules`, default = the standard Steam path) rather than silently degrading to the name heuristic. The read-only analyzer degrades to name-only with a loud warning instead.
+- **Thrown-primary troops take the Bow curve on Throwing (#554, 2026-09-06).** A troop whose only
+  ranged option is a javelin gets `Throwing = RANGED_BASELINES[level]['Bow']` plus the culture's
+  **Bow** modifier, the same borrow the Bow↔Crossbow swap performs. It reaches into the Ranged table
+  rather than using the troop's own `Bow`, because these troops sit on the Infantry table whose Bow
+  column is 15 to 25: there is no ranged number there to swap. It carries the source skill's modifier
+  rather than Throwing's because Throwing's modifiers were calibrated against a ceiling of 100, not
+  against numbers reaching 320.
+- **The trigger is `THROWN_PRIMARY_TROOP_IDS`, a hardcoded set, not a predicate.** The honest rule is
+  "carries a thrown weapon and neither bow nor crossbow", and that is what it should become. It cannot
+  be that yet: `LOTRLOME_Armory`'s ModuleData is empty on the reference install, so 247 of the 315
+  weapon ids the troop files reference do not classify, and a "carries no bow" test reads an invisible
+  Armory bow as no bow and hands a real archer the throwing curve. Restoring the install and swapping
+  the set for the predicate is #555. The `'Throwing' in weapon_classes` conjunct on the trigger is a
+  sanity check: a run against a registry too broken to see the javelin does nothing rather than writing
+  a number derived from nothing.
+- **The writer hard-fails without the game install** (`--game-modules`, default resolved through `tools/_gamedir.py`, so `$BANNERLORD_GAME_DIR` wins over the literal) rather than silently degrading to the name heuristic. The read-only analyzer degrades to name-only with a loud warning instead.
 - Contract tests: `tools/tests/test_rebalance_equipment.py`.
 
 **Known off-formula residuals** a `--dry-run` will always report: the hand-tuned `gondor_loss_noble{,_veteran,_sergeant,_warden,_captain}` line (5 troops, intentional; do not `--apply` over them without deciding their fate, tracked in #343).
@@ -126,7 +141,21 @@ Verification: `validate_moduledata` PASS (zero broken refs); diff perfectly bala
 
 `--fix-monotonicity` exists because `--apply` on this roster sweeps up 23 deliberately off-curve troops: the `gondor_loss_noble` line (#343, documented do-not-apply-over), the hand-authored Black Numenorean `mordor_num_*` line, the dwarf ram riders, and `mistymountainorcs_bolgs_ironfang` (which sits in the goblin file and has no `detect_culture` route, so it takes goblin modifiers). None of that belongs in a monotonicity fix. The tell during the 2026-08-30 pass was a per-file diff size: `troops_lindon.xml` came out at 478 lines where the clamp accounted for 30.
 
-The cost is deliberate. A Ranged troop branching off an Infantry parent keeps the parent's Polearm, so group specialization blurs on branch upgrades. Two clamps produce a proficiency the troop cannot use (`mordor_uruk_crossbow` inherits Bow 130 from its bowman parent, which is exactly what vanilla does for `imperial_trained_archer -> imperial_crossbowman`; `sagarun_naffatun` inherits Crossbow 160 though it throws javelins). Both are inert on weapons the troop does not carry.
+The cost is deliberate. A Ranged troop branching off an Infantry parent keeps the parent's Polearm, so
+group specialization blurs on branch upgrades. A clamp can produce a proficiency the troop cannot use:
+`mordor_uruk_crossbow` inherits Bow 130 from its bowman parent, which is exactly what vanilla does for
+`imperial_trained_archer -> imperial_crossbowman`, and it is inert on a weapon the troop does not carry.
+
+**One inherited value is no longer accepted (#554, 2026-09-06).** This paragraph used to list
+`sagarun_naffatun` inheriting Crossbow 160 as the same benign case. It was not. Inert stops being
+harmless when the troop also has no skill in the weapon it actually throws: that troop carries two
+javelins and an axe, no bow and no crossbow, and shipped with Bow 195 / Crossbow 160 / Throwing 55.
+Its Bow and Crossbow are now floored to the Infantry baseline and Throwing takes the ranged curve.
+Because its parent `sagarun_crossbowman` genuinely carries a crossbow at 160, flooring the child is a
+real regression across a real edge, so the pair is named in `RESPECIALIZATION_EXEMPT_EDGES`, mirrored
+in `rebalance_troops.py`, `taom_schema.py` and `TroopUpgradeSkillMonotonicityTests.cs`. All three must
+agree: without the entry in the writer's own clamp, the run floors the value and the clamp puts it
+straight back, and the pass reads as having done nothing.
 
 ### `skill_template` beats an inline `<skills>` block outright
 

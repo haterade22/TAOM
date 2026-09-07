@@ -166,7 +166,13 @@ boundary on purpose rather than duplicated: see
 
 ### Crash signature
 
-`CrashSignatureCalculator.Compute(exceptionType, originatingPatchTarget, topFiveStackFrameNames)` produces a SHA1 hash. Lets us dedup crash reports — multiple players hitting the same bug produce the same signature even with totally different game state. Short prefix (8 chars) goes into the bundle filename for quick visual matching.
+`CrashSignatureCalculator.Compute(exception, originatingPatchTarget, topFiveStackFrameNames)` produces a SHA1 hash over the exception's IDENTITY, the originating patch target, and the top five frame names. Lets us dedup crash reports: multiple players hitting the same bug produce the same signature even with totally different game state. Short prefix (8 chars) goes into the bundle filename for quick visual matching.
+
+**The identity is the whole inner chain, not just the outer type** (#552, added 2026-09-06). `DescribeIdentity` walks `InnerException` to `InnerChainDepth` (3), appending each inner type and its `TargetSite`, and stops early on a self-referential chain. An exception with no inner chain still yields exactly its type name, so signatures already in the wild keep pointing at the same crash.
+
+Hashing the outer type alone was a real failure, not a theoretical one. Every crash dispatched through the Gauntlet UI arrives as `TargetInvocationException @ ScreenManager.Update` over the same eight frames, so the outer identity is a constant and any two such crashes collided. In bundle `31942985` two clicks in one broken menu produced a `NullReferenceException` and then an `IndexOutOfRangeException`; the throttle suppressed the second as a duplicate, and it was the one that named the state corruption behind a fatal CTD three seconds later. The chain was only reconstructable because the raw `rgl_log.txt` rode along in the surviving bundle.
+
+Both `CrashReportService` call sites use the same overload, the cheap early one that feeds `CrashBundleThrottle` and the one inside `ComposeContext`. They MUST agree: deriving the identity two different ways would admit a bundle under one signature and file it under another. The walk stays cheap enough for the early path because it reads only already-materialised managed state, no collectors.
 
 ## Key Files
 
@@ -205,7 +211,7 @@ No new third-party dependencies.
 
 - `ExceptionFrameBuilderTests` — depth cap, null handling, inner-chain walking, `Data` dictionary
 - `StackFrameSnapshotBuilderTests` — null exception, real thrown exception
-- `CrashSignatureCalculatorTests` — deterministic, sensitive to exception type and origin, ignores frames beyond depth 5
+- `CrashSignatureCalculatorTests`: deterministic, sensitive to exception type and origin, ignores frames beyond depth 5, separates two crashes that differ only in their INNER exception while still deduplicating identical ones (#552), keeps an inner-less exception's signature identical to the old plain-type hash, and caps the inner-chain walk
 - `RingBufferTests` — push order, overflow chronological, clear, capacity, empty snapshot
 - `PlainTextCrashReportRendererTests`: all 19 sections render, signature in header, inner exception chain, collector failures
 

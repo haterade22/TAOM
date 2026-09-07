@@ -84,6 +84,17 @@ Two more reskin-specific notes:
   `IsMount` guard, and `BuildAgent` runs for the rider as well as the mount with the Horse item still
   in the rider's spawn equipment. Any value other than 100 scales the RIDER too. This is pre-existing
   engine behaviour, not reskin-specific, but a reskin is where you are most likely to reach for it.
+- **You inherit the donor's SKELETON, not the donor's SADDLE.** Where the seat is modelled is a
+  property of the mesh you authored, not of the mount system, and the two vary independently. The
+  vanilla horse carries a saddle on the mount body, and so does the warg
+  (`warg_low_fur_with_saddle`, with a separate `warg_saddle` harness on top). The war ram does not:
+  `sk_eb_goat_a` and `sk_eb_goat_b` are bare pelts and every seat lives on one of the eight
+  `sk_eb_goat_bard_*` harness meshes. The spider has no seat either way, because no spider harness
+  item was ever authored and its rider still sits on bare carapace.
+  **So do not reason about this from the donor rig: ship a harness and fill the slot in every
+  roster.** `MOUNT_WITHOUT_HARNESS` requires it. Getting it wrong is silent, and it has shipped
+  twice: `ironpass_ram_herder` bareback with the omission written up as deliberate, and the spider
+  rider, still open (2026-09-06, gotcha 19).
 - **The campaign-map variant comes free.** The map mount visual resolves
   `monster.ActionSetCode + "_map"` (`SandBox.View`, three call sites), so a creature reusing `as_horse`
   gets `as_horse_map` without authoring it. A custom skeleton must author its own `_map` child.
@@ -378,8 +389,11 @@ monster leaves null native entries → spawn AV.
 
 - Horse-slot ITEM (`ItemType.Horse`) with `HorseComponent monster="<monster_id>"`; keep the body in
   ONE mesh (no bone-count split — see Phase-4 row 4); `<AdditionalMeshes>` only for genuinely separate
-  sub-meshes (accessories, or a cloth-sim mesh like the warg's fur); `horse_harness` optional (family-1
-  fits horse harnesses — the player-side mount-lock prevents abuse, Phase 7).
+  sub-meshes (accessories, or a cloth-sim mesh like the warg's fur); **`horse_harness` is REQUIRED,
+  not optional** (family-1 fits horse harnesses, and the player-side mount-lock prevents abuse,
+  Phase 7). It is not always armour: on some mounts it carries the rider's SEAT, and nothing in the
+  XML records which, so `MOUNT_WITHOUT_HARNESS` requires one beside every Horse slot and exceptions
+  are argued in `_HARNESSLESS_BY_DESIGN`. See the third reskin note under "Is this a RESKIN".
 - Rider TROOP equips the item in the Horse slot → vanilla cavalry spawn does everything else.
 - Recruitment via the standard pools (`VolunteerRecruitmentService`) or clan-restricted
   (`harad_elephant_rider` precedent).
@@ -455,6 +469,14 @@ invariant under Phase 2, still unverified). Keep the previous decompile as
     declare zero and the spider and warg five. v1.4.8 changed the native rein path that runs on
     mounted-agent death. **UNVERIFIED — a ridden-death in-game test is owed, and no tool gates it**
     (2026-08-10). See "The rein-attribute invariant" under Phase 2.
+19. **A `HorseHarness` is REQUIRED beside every Horse slot, because it may be the rider's seat.**
+    On some mounts the harness is load-bearing geometry rather than armour, and "unbarded looks
+    fine" is a property of the horse and warg meshes rather than of the mount system. Nothing in
+    the XML records which mounts carry their own saddle, so the rule is universal and exceptions
+    are argued in `_HARNESSLESS_BY_DESIGN` (`tools/taom_schema.py`) with a reason each. Gated by
+    `MOUNT_WITHOUT_HARNESS`, judged per equipment set since the engine draws each slot from an
+    independently chosen set. Shipped twice: the war ram and the still-open spider rider
+    (2026-09-06).
 
 ---
 

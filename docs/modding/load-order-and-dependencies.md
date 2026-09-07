@@ -338,6 +338,7 @@ All measured 2026-09-05. Paths under the game install are written module-relativ
 - [docs/modding/recipe-add-a-kingdom.md](./recipe-add-a-kingdom.md)
 - [docs/modding/recipe-new-mod-from-zero.md](./recipe-new-mod-from-zero.md)
 - [docs/modding/submodule-and-registration.md](./submodule-and-registration.md)
+- [docs/modding/troops.md](./troops.md)
 - [docs/modding/wanderers-and-named-companions.md](./wanderers-and-named-companions.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 

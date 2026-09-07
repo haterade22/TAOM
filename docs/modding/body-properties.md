@@ -327,6 +327,8 @@ Code: No code changes needed.
 
 ## Referenced by
 
+- [docs/features/moduledata-validation.md](../features/moduledata-validation.md)
+- [docs/features/tournament-armor-assignment.md](../features/tournament-armor-assignment.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/cultures.md](./cultures.md)
 - [docs/modding/file-catalogue.md](./file-catalogue.md)

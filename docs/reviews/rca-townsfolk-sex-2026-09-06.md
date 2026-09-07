@@ -86,3 +86,14 @@ issue is closed.
   the measured numbers
 - [moduledata-validation](../features/moduledata-validation.md), the semantic-boundary section
 - `TAOM.Tests/Core/TownsfolkAndNotableSexConsistencyTests.cs`, the gate this produced
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/moduledata-validation.md](../features/moduledata-validation.md)
+- [docs/modding/npcs-notables-and-townsfolk.md](../modding/npcs-notables-and-townsfolk.md)
+
+<!-- backlinks-end -->

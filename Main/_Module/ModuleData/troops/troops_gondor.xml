@@ -5509,7 +5509,7 @@
 
   <NPCCharacter
       id="gondor_har_skirmisher"
-      default_group="Ranged"
+      default_group="Infantry"
       level="16"
       name="{=aom_gondor_har_skirmisher_name}[Gondor] Harondor Skirmisher"
       occupation="Soldier"
@@ -5518,14 +5518,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
+      <skill id="Athletics" value="85" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="80" />
-      <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
-      <skill id="Bow" value="85" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="20" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="100" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gondor_har_vet_skirmisher" />
@@ -5546,7 +5546,7 @@
 
   <NPCCharacter
       id="gondor_har_vet_skirmisher"
-      default_group="Ranged"
+      default_group="Infantry"
       level="21"
       name="{=aom_gondor_har_vet_skirmisher_name}[Gondor] Harondor Veteran Skirmisher"
       occupation="Soldier"
@@ -5557,12 +5557,12 @@
     <skills>
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="110" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Polearm" value="75" />
-      <skill id="Bow" value="130" />
-      <skill id="Crossbow" value="30" />
-      <skill id="Throwing" value="30" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="115" />
+      <skill id="Polearm" value="135" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="130" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gondor_har_javelineer" />
@@ -5585,7 +5585,7 @@
 
   <NPCCharacter
       id="gondor_har_javelineer"
-      default_group="Ranged"
+      default_group="Infantry"
       level="26"
       name="{=aom_gondor_har_javelineer_name}[Gondor] Harondor Javelineer"
       occupation="Soldier"
@@ -5594,14 +5594,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="110" />
+      <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="150" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="95" />
-      <skill id="Bow" value="170" />
-      <skill id="Crossbow" value="35" />
-      <skill id="Throwing" value="40" />
+      <skill id="OneHanded" value="185" />
+      <skill id="TwoHanded" value="160" />
+      <skill id="Polearm" value="175" />
+      <skill id="Bow" value="20" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="170" />
     </skills>
     <upgrade_targets />
     <Equipments>

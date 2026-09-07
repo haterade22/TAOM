@@ -178,8 +178,33 @@ public class ServiceBattleService : IServiceBattleService
         ReassertServiceMenu("a failed join");
     }
 
-    public void OnCommanderBattleEnded()
+    public void OnCommanderBattleEnded(bool mainPartyWasInEndingEvent)
     {
+        // ISSUE #551. The detach below is destructive in one specific shape, and silently so: if the
+        // player is in a map event that is NOT the one ending, `MobileParty.AttachedTo = null` tears
+        // him out of it. `MobileParty.SetAttachedToInternal` (installed v1.4.8, :1780-1783) answers a
+        // cleared AttachedTo with `Party.MapEventSide.HandleMapEventEndForPartyInternal(Party);
+        // Party.MapEventSide = null;`, which runs `MapEvent.RemoveInvolvedPartyInternal` — and that
+        // sets `TroopUpgradeTracker = null` for good when the removed party is the MAIN party
+        // (:855-858). `MapEventSide.AllocateTroops` :552 then derefs that tracker with no null check
+        // on the next simulation tick, gated only on `BattleObserver != null`. Crash bundle
+        // 31942985 is that NRE.
+        //
+        // Removing the main party ALSO makes the event engine-tickable again — `MapEventManager.Tick`
+        // :59 skips only `MobileParty.MainParty.MapEvent` — so the same detach supplies both halves
+        // of the crash: the null tracker and the tick that reads it.
+        //
+        // EnlistmentBattleBehavior's gate is what should stop a foreign event reaching this method at
+        // all. This is the floor beneath that gate, and it is ERROR rather than a quiet skip because
+        // reaching it means the gate leaked.
+        if (!mainPartyWasInEndingEvent && _encounter.IsMainPartyInMapEvent)
+        {
+            _logger?.LogError(
+                "[Enlistment] refusing to leave the army: a map event ended that the player is not in, " +
+                "while the player IS in another one. Detaching here would pull him out of a live battle (#551).");
+            return;
+        }
+
         // LEAVE THE ARMY FIRST, above every gate below, and this ordering is the whole reason the
         // membership is transient.
         //

@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 46 GameModel overrides. All follow the same pattern.
+TAOM has 47 GameModel overrides (46 registered + 1 abstract base). All follow the same pattern.
 
 ## Pattern
 
@@ -59,7 +59,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (46 total)
+## Existing Overrides (47 total: 46 registered + 1 abstract base)
 
 | Model | Base | Feature |
 |-------|------|---------|

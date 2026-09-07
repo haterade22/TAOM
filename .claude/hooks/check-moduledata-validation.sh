@@ -102,6 +102,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code SKILL_TEMPLATE_SHADOWS_SKILLS --code UPGRADE_TIER_COLLAPSE --code UPGRADE_INDEX_EMPTY \
         --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
+        --code MOUNT_WITHOUT_HARNESS \
         2>/dev/null)
 RC=$?
 

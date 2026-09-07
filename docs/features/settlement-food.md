@@ -215,6 +215,7 @@ bound villages once; the service is O(villages). Config is cached at first acces
 
 - [docs/features/settlement-economy.md](./settlement-economy.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/modding/balance-levers.md](../modding/balance-levers.md)
 - [docs/modding/configs-balance.md](../modding/configs-balance.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)

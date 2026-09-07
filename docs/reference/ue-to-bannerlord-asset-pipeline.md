@@ -131,6 +131,7 @@ unification — see the RCA).
 - [docs/kitbash/README.md](../kitbash/README.md)
 - [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
 - [docs/modding/module-armory.md](../modding/module-armory.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
 - [docs/reference/doc-lookup.md](./doc-lookup.md)
 
 <!-- backlinks-end -->

@@ -25,7 +25,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // --- Troop Weight ---
 
     [SettingPropertyGroup("Troop Weight")]
-    [SettingPropertyBool("Enable Troop Weight", Order = 0,
+    // RequireRestart = false is load-bearing here, exactly as it is for the AI Party Size group.
+    // Every gate reads TaomSettings.Instance live, so flipping this DOES stop the six display patches
+    // and the penalty immediately. What does not stop is the engine: PartyBase.PartySizeLimit caches
+    // the already-deflated number keyed on MemberRoster.VersionNo (PartyBase.cs:343-355, v1.4.8), and
+    // changing a setting does not bump that counter. So the counts revert while the enforced cap stays
+    // reduced, which reads as "the toggle does nothing". AiPartySizeSettingsWatcher already flushes
+    // exactly this (it sweeps MobileParty.All calling MemberRoster.UpdateVersion(), is wired
+    // unconditionally in SubModule.cs, and fires on ANY SaveTriggered, so it covers this toggle too),
+    // but MCM's BaseSettingPropertyAttribute defaults RequireRestart to TRUE, and with it true the only
+    // path reaching SaveSettings also quits the game, so SaveTriggered never arrives mid-session and the
+    // watcher never runs. Player-reported 2026-09-06.
+    [SettingPropertyBool("Enable Troop Weight", Order = 0, RequireRestart = false,
         HintText = "Weighted party size — elite units consume more party capacity. Cave trolls (4x), elves (2x), warg riders (2x).")]
     public bool EnableTroopWeight { get; set; } = true;
 

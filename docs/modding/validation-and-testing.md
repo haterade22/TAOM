@@ -30,7 +30,7 @@ rebalancer, covered in [balance-levers](balance-levers.md)) or is developer-only
 
 | Command | Proves | Cannot see |
 |---|---|---|
-| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse | engine XSD required attributes; whether an id points at the *right* thing |
+| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | engine XSD required attributes; whether an id points at the *right* thing |
 | `python tools/validate_all_troop_refs.py` | armour ids in ten troop files resolve against the Armory | six troop files, and weapons, arrows, mounts, harnesses (it says so in its own PASS banner) |
 | `python tools/validate_gondor_refs.py` | the Gondor-only ancestor of the above | superseded; prefer `validate_moduledata.py` |
 | `python tools/audit_item_refs.py` | every `Item.X` reference in TAOM ModuleData against the multi-module item registry | armour-only scope is gone here, but rosters applied at runtime are still invisible |
@@ -116,7 +116,7 @@ Three consequences the table cannot show on its own.
   untracked, so the commit hook that would have caught it never fires"
   ([rca-armoury-keyforce-cleanup-2026-09-01.md](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md)).
 - **The Armory gets reference checks, not structure checks.** Duplicate ids, enums, the civilian
-  rule and `MOUNTED_DWARF` apply to repo files only. That is free today because the Armory defines
+  rule, `MOUNTED_DWARF` and `MOUNT_WITHOUT_HARNESS` apply to repo files only. That is free today because the Armory defines
   items and monsters and nothing else; author a troop or an equipment roster there and it is
   entirely unvalidated ([moduledata-validation rule](../../.claude/rules/moduledata-validation.md)).
 - **No tool models XSLT.** `check_external_xslt.py` proves 17 stylesheets are well formed and
@@ -130,8 +130,8 @@ Three consequences the table cannot show on its own.
 `check-moduledata-validation.sh` runs the error-severity checks before a `git commit` and blocks on
 failure. Four limits, all of them load-bearing.
 
-1. **It is an explicit `--code` allowlist, not "all errors".** The hook names 18 codes.
-   <!-- measured: grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh | wc -l 2026-09-05 -->
+1. **It is an explicit `--code` allowlist, not "all errors".** The hook names 19 codes.
+   <!-- measured: grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh | wc -l 2026-09-06 -->
    A new error check is silently non-blocking until it is added there. On 2026-08-31 five live error
    checks were missing from that list; `CommitGateCoverageTests` in
    `tools/tests/test_validate_moduledata.py` is now the reference between the two files.
@@ -411,7 +411,7 @@ All measured 2026-09-05 from the repo root.
 | 5,910 item ids, 2,955 referenced, 0 broken | `python tools/audit_item_refs.py` |
 | 3 `KNOWN_DEAD_MESH` warnings | `python tools/validate_mesh_refs.py` |
 | 4,839 catalogue rows | `python tools/generate_armory_catalogue.py --check` |
-| 18 `--code` entries in the commit hook | `grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh \| wc -l` |
+| 19 `--code` entries in the commit hook | `grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh \| wc -l` |
 | 16 troop files on disk, 16 registered, 10 swept, 6 unswept | `ls Main/_Module/ModuleData/troops/troops_*.xml \| wc -l`; `rg -c 'XmlName id="NPCCharacters" path="troops/' Main/_Module/SubModule.xml`; the `cultures` list at `tools/validate_all_troop_refs.py:80-97` |
 | 21 Armory `<XmlName id="Items">` rows | `rg -c 'XmlName id="Items"' <install>/Modules/LOTRLOME_Armory/SubModule.xml` |
 | 286 deployed XML against 284 in the repo, 2 orphans | `diff` of `find . -name '*.xml' \| sort` under both trees |

@@ -82,7 +82,10 @@
          ironpass_ram_herder (16) is deliberately ABSENT and falls through to the 1.0 default.
          It is the pooled branch root, so it is the rung a player recruits over and over from a
          notable, and a 2.0 entry unit would deflate the party-size limit for exactly the players
-         this branch is meant to reach. The armoured rungs start paying at 21. -->
+         this branch is meant to reach. It carries the light barding from 2026-09-06 (the ram's
+         saddle is part of that mesh, so an unharnessed ram rides bareback), but the reason
+         for the 1.0 is recruitment economics rather than armour, so the entry stays out.
+         The 2.0 rungs start paying at 21. -->
     <TroopWeight id="ironpass_ram_rider" weight="2.0" />
     <TroopWeight id="ironpass_goat_charger" weight="2.0" />
     <TroopWeight id="ironpass_ram_breaker" weight="2.0" />

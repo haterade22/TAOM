@@ -832,6 +832,46 @@ Narrows the AI's random partner-clan draw to alignment-compatible clans. **This 
 
 Applied from `SubModule.cs` in `OnSubModuleLoad` alongside `Patch59_CaravanTrade`, the nearest precedent (also a private `CampaignBehavior` method). Once per process, which is what a transpiler wants. See `docs/features/marriage-alignment.md`.
 
+## Patch82_MapEventObserverInvariant
+
+**Target:** `MapEvent.SimulateBattleSetup(FlattenedTroopRoster[])` (public instance, Prefix)
+
+**Feature:** MapEventGuard, `Main/Features/MapEventGuard/Hooks/Patch82_MapEventObserverInvariant.cs`. **Status:** ACTIVE (#551).
+
+Restores the engine's own pairing of `MapEvent.BattleObserver` with `MapEvent.TroopUpgradeTracker` before the simulation dereferences the tracker. This is a backstop, not the fix: the path that reached it was TAOM's enlistment battle-end gate, corrected in the same change.
+
+**The invariant, and why the engine never re-checks it** (verified against installed v1.4.8). `MapEventSide.AllocateTroops` :552 and `AllocateTroop` :590 both call `_mapEvent.TroopUpgradeTracker.AddTrackedTroop(...)` with no null check, gated only on `BattleObserver != null`; `ApplySimulatedHitRewardToSelectedTroop` :1050 and :1056 do the same behind an early `if (BattleObserver == null) return;` at :1040. Four unguarded dereferences across three methods, leaning on one pairing.
+
+**How the pairing breaks.** `MapEvent.RemoveInvolvedPartyInternal` :855-858 nulls the tracker outright whenever the removed party is `PartyBase.MainParty`, and only a rejoin (`AddInvolvedPartyInternal` :636) or a save reload (`OnAfterLoad` :530) rebuilds it. The observer has exactly one writer in the whole game, the `BattleSimulation` constructor, which assigns it and only then indexes `SelectedTroops[(int)_mapEvent.PlayerSide]`. `BattleSideEnum.None` is `-1`, so a main party with no `MapEventSide` makes that line throw `IndexOutOfRangeException` with the observer already attached, and its one clearer (`PlayerEncounter.LeaveBattle` :1990) never runs on that path.
+
+**Removing the main party is also what puts the event back in reach of the tick.** `MapEventManager.Tick` :59 skips only `MobileParty.MainParty.MapEvent`, so one detach supplies both halves: the null tracker and the tick that dereferences it. That is why crash bundle 31942985 shows a pure-vanilla stack with no TAOM frame anywhere on it.
+
+**The repair clears the observer rather than rebuilding the tracker.** The observer is a `BattleSimulation` whose constructor threw, so `PlayerEncounter.Current.BattleSimulation` was never assigned and nothing else holds it: there is no scoreboard left to feed. Rebuilding the tracker would invent state for a battle the player is provably not in, since the tracker is null precisely because the main party was removed. The prefix tests the tracker first (non-null for every ordinary AI battle, so it returns immediately in the common case), reads and writes `BattleObserver` through reflection cached in `Initialize`, and no throttle is needed because the repair makes its own condition false.
+
+**Fail-quiet by construction.** `IsReady` is false when `BattleObserver` does not resolve, and the prefix then does nothing at all, so an engine rename degrades to "the guard is not installed" rather than throwing inside every simulated battle in the world. The body is wrapped anyway, because this runs ahead of vanilla simulation for every live map event.
+
+Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch beside `Patch65`: the target runs off each map event's simulation timer under `MapEventManager.Tick`, which `Campaign.Tick` drives, so no map event can tick before the campaign exists. `Patch82MapEventObserverInvariantBindingTests` pins the target, both accessors of the internal `BattleObserver`, the public reference-typed `TroopUpgradeTracker`, the continued existence of `MapEventSide.AllocateTroops`, and all three registrations. See `docs/features/enlistment.md` for the chain that produced it.
+
+## Patch83_CharacterSkillsRepair
+
+**Target:** `MBObjectManager.AfterLoad()` (public instance, parameterless, Postfix)
+
+**Feature:** CharacterSkillsRepair, `Main/Features/CharacterSkillsRepair/Hooks/Patch83_CharacterSkillsRepair.cs`. **Status:** ACTIVE (crash bundle 065939b6, 2026-09-05).
+
+Gives an empty `MBCharacterSkills` to any registered character whose `DefaultCharacterSkills` is null, before anything can read a skill off one. Without it, loading such a save is a hard `NullReferenceException` inside `Campaign.OnGameLoaded` that the player sees as a failed load.
+
+**The unguarded line.** `BasicCharacterObject.GetSkillValue` :292-295 (v1.4.8) is `return DefaultCharacterSkills.Skills.GetPropertyValue(skill);` with no null check at all. `CharacterObject.GetSkillValue` :791-798 routes every non-hero there. The inner `.Skills` is never the null (`MBCharacterSkills`' ctor assigns it), and a troop from module XML always has a skill set (`Deserialize` :337-345 assigns one either way), so the null is `DefaultCharacterSkills` itself, on a character the save restored under an id current ModuleData no longer defines: `CharacterObject`'s `[LoadInitializationCallback]` runs `Init()` :402-414, which never touches the field.
+
+**How a leaderless party reaches it.** `SkillHelper.GetEffectivePartyLeaderForSkill` :78-94 returns `party.MemberRoster.GetCharacterAtIndex(0)` when a party has no leader hero, so garrisons and militia hand a plain TROOP to models that expect a leader. `DefaultPartyMoraleModel.GetMoraleEffectsFromSkill` :206-213 does null-check the character, which is why the crash is not a null character but a null field inside it, and why the report names the inlined `CharacterObject.GetSkillValue` frame.
+
+**The seam is forced by ordering, and this cannot be a campaign behavior.** `Campaign.OnGameLoaded` :679-695 runs `base.ObjectManager.AfterLoad()` at :687, the crashing `CampaignObjectManager.AfterLoad()` at :688, and dispatches `OnGameEarlyLoaded` / `OnGameLoaded` only at :691 / :692. Both load events are after the crash. The postfix on :687 is the last point before it, and every object's `AfterLoadInternal` has already run by then.
+
+Applied from `SubModule.cs` in `OnSubModuleLoad` beside `Patch58_SkipCampaignIntro`, for the same reason: the target fires during the load sequence, so the late `OnGameInitializationFinished` batch would never attach in time. It also fires on a new game and the initial data load, where the sweep finds nothing and returns silently.
+
+**Repair, not a read guard.** `GetSkillValue` is called per agent per hit in combat, so a prefix there would tax the hottest path in the game for a load-time data defect; and `SkillHelper.AddSkillBonusForCharacter` / `AddSkillBonusForTown` :22-47 reach the same line, so guarding one game model would leave the rest exposed. Idempotent and broken-only: a healthy character fails the null test, and `TryGiveEmptySkillSet` re-checks the field before writing so a character another mod repaired in between is left alone.
+
+**Both bindings fail quietly, which is what the tests are for.** A renamed target means Harmony throws at category-apply time, `SubModule`'s guarded loop logs it and carries on, and the repair never runs; a renamed `DefaultCharacterSkills` means `AccessTools.Field` returns null and every repair returns false. `Patch83CharacterSkillsRepairBindingTests` pins the target and its arity, the reflected field and its type, the public `GetDefaultCharacterSkills`, `MBCharacterSkills`' ctor and `Skills` property, and the category string. See `docs/features/character-skills-repair.md`.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)
@@ -858,6 +898,8 @@ CharacterSelection face-generator action-set injection. The transpiler finds the
 
 - [docs/features/arena.md](../features/arena.md)
 - [docs/features/banner-bearers.md](../features/banner-bearers.md)
+- [docs/features/diplomacy.md](../features/diplomacy.md)
+- [docs/features/enlistment.md](../features/enlistment.md)
 - [docs/features/field-commission.md](../features/field-commission.md)
 - [docs/features/hero-race.md](../features/hero-race.md)
 - [docs/INDEX.md](../INDEX.md)

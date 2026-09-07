@@ -33,6 +33,15 @@ public class AlignmentService : IAlignmentService
 
     public FactionSide GetCultureSide(string cultureId) => GetSide(cultureId);
 
+    public FactionSide ResolveSide(string kingdomId, string cultureId)
+    {
+        var side = GetKingdomSide(kingdomId);
+        if (side != FactionSide.Neutral)
+            return side;
+
+        return string.IsNullOrEmpty(cultureId) ? FactionSide.Neutral : GetCultureSide(cultureId);
+    }
+
     private FactionSide GetSide(string id)
     {
         if (string.IsNullOrEmpty(id))
@@ -42,24 +51,16 @@ public class AlignmentService : IAlignmentService
     }
 
     public bool AreEnemyAlignments(string kingdomIdA, string kingdomIdB)
-    {
-        var sideA = GetKingdomSide(kingdomIdA);
-        var sideB = GetKingdomSide(kingdomIdB);
-
-        if (sideA == FactionSide.Neutral || sideB == FactionSide.Neutral)
-            return true;
-
-        return sideA != sideB;
-    }
+        => AreEnemyAlignments(GetKingdomSide(kingdomIdA), GetKingdomSide(kingdomIdB));
 
     public bool AreSameAlignment(string kingdomIdA, string kingdomIdB)
-    {
-        var sideA = GetKingdomSide(kingdomIdA);
-        var sideB = GetKingdomSide(kingdomIdB);
+        => AreSameAlignment(GetKingdomSide(kingdomIdA), GetKingdomSide(kingdomIdB));
 
-        if (sideA == FactionSide.Neutral || sideB == FactionSide.Neutral)
-            return false;
+    // Neutral is nobody's ally and everybody's enemy, including another Neutral. Both predicates
+    // are therefore stricter than plain (in)equality, and neither is the negation of the other.
+    public bool AreEnemyAlignments(FactionSide sideA, FactionSide sideB)
+        => sideA == FactionSide.Neutral || sideB == FactionSide.Neutral || sideA != sideB;
 
-        return sideA == sideB;
-    }
+    public bool AreSameAlignment(FactionSide sideA, FactionSide sideB)
+        => sideA != FactionSide.Neutral && sideB != FactionSide.Neutral && sideA == sideB;
 }

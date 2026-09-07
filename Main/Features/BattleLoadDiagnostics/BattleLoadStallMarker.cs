@@ -17,6 +17,9 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
 {
     private const string MarkerFileName = "battle-load-inflight.marker";
 
+    // Same prefix the phase log uses, so a reader greps one token for the whole battle-load story.
+    private const string Tag = "[BattleLoad]";
+
     private readonly IModLogger _logger;
     private readonly string _markerPath;
 
@@ -44,6 +47,13 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
             // relative path against the game's cwd. Resolve here, in the hung session whose cwd
             // is the game dir, so the marker + notice + button all point at the real file.
             File.WriteAllText(_markerPath, Format(sceneName, DateTime.UtcNow, AbsoluteLogPath()));
+            // Without this line the whole marker path is invisible in taom_debug.log: a player
+            // whose process DIED mid-load (rather than hanging) sends the log, and nothing in it
+            // says whether the marker was ever written or whether the next-session notice fired.
+            // Two 2026-09-06 CTDs on battle_terrain_biome_094 were unanswerable for exactly that
+            // reason. Debug, not Info: one line per battle load, and the phase log already
+            // carries the load itself.
+            _logger?.LogDebug($"{Tag} inflight marker written for scene '{sceneName}'.");
         }
         catch { /* a diagnostic must never break the load */ }
     }
@@ -68,6 +78,15 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
             if (!File.Exists(_markerPath)) return null;
             var text = File.ReadAllText(_markerPath);
             var info = Parse(text, _markerPath);   // parse the already-read content FIRST
+            // The counterpart to MarkInflight's line, and the more valuable of the two: it puts
+            // "the PREVIOUS session died loading scene X" into THIS session's log, so a player who
+            // only ever sends the newest log still hands over the scene name. Warning level
+            // because a surviving marker always means a load that never finished.
+            _logger?.LogWarning(
+                $"{Tag} stale inflight marker found: the previous session's load of scene " +
+                $"'{(string.IsNullOrEmpty(info.SceneName) ? "<unrecorded>" : info.SceneName)}' " +
+                $"never reached playable (marker written {FormatUtc(info.WrittenUtc)}). " +
+                $"Prior log: {(string.IsNullOrEmpty(info.LogFilePath) ? "<unrecorded>" : info.LogFilePath)}");
             // Best-effort consume. If the delete fails (read-only Logs, AV lock), surfacing the
             // stall still matters more than the at-most-once guarantee — a duplicate soft notice
             // next session beats silently dropping a real hang report.
@@ -78,6 +97,12 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
     }
 
     // ---- pure, unit-tested ---- //
+    // A marker whose utc= line was missing or unparseable still deserves a notice, so this renders
+    // the absence rather than fabricating a timestamp — the same never-invent-a-value rule the
+    // phase log's omitted tokens follow.
+    internal static string FormatUtc(DateTime? utc) =>
+        utc.HasValue ? utc.Value.ToString("o", CultureInfo.InvariantCulture) : "<unrecorded>";
+
     // Three key=value lines; tolerant of a missing scene / log path on read.
     public static string Format(string sceneName, DateTime utc, string? logFilePath)
     {

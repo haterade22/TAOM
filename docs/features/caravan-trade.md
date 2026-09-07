@@ -121,6 +121,7 @@ All 4 hooks lazy-cache their `IoC.Resolve` (`??=`); the `CanTradeWith` hook lazy
 
 ## Referenced by
 
+- [docs/features/caravan-bandit-parity.md](./caravan-bandit-parity.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)

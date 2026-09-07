@@ -577,6 +577,7 @@ Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is
 - [docs/modding/troubleshooting.md](../../modding/troubleshooting.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
+- [docs/reviews/rca-townsfolk-sex-2026-09-06.md](../rca-townsfolk-sex-2026-09-06.md)
 
 <!-- backlinks-end -->
 ### A mesh validator that resolves against cooked packs cannot see art deleted after the last cook
@@ -1335,3 +1336,30 @@ which unchecked files it leaves exposed.
   closing the issue. One culture behaving correctly, as Rohan did here, reads as "the others need
   art" and hides the fact that one file got an attribute the other seventeen never did.
 - **Source:** docs/reviews/rca-townsfolk-sex-2026-09-06.md
+### Deleting a false positive is not the same as meeting the need it was faking
+`rebalance_troops.py` once fired its Bow/Crossbow swap on the name keyword `naffatun`. That was wrong,
+so #340 removed it, and the removal is recorded two entries above as part of a clean fix. Nothing
+replaced it. The two Rhûn troops the keyword had been mis-serving carry two javelins and an axe, no bow
+and no crossbow, and they spent the next two months with Bow 195 / Crossbow 160 / Throwing 55: every
+ranged point on weapons they do not own, and almost none on the one they throw. Three Gondor Harondor
+skirmishers sat in the same shape, and all five were additionally tagged `default_group="Ranged"`, so
+the engine also fought them as backline archers while they held a javelin and a sword (#554).
+- **Why missed:** three independent silencers, and it takes all three to hide something this visible on
+  a troop card. `default_group` fails soft: `FetchDefaultFormationGroup` returns -1 rather than throwing,
+  so a wrong value produces no log line. The wrong skill values were **inert**, which reads as harmless,
+  and `docs/features/troop-skill-balance.md` had written the Rhûn case down as an accepted cost, which
+  converts a defect into documentation and stops anyone re-asking. And `analyze_troop_balance.py`
+  imports the same curve it audits, so a troop that is on-curve but wrong is invisible to it by
+  construction, which is the SAME blindness the entry two above this one already recorded and fixed for
+  a different symptom.
+- **Prevent:** when you delete a heuristic for firing on the wrong rows, name the rows it was firing on
+  correctly and say what now serves them. If the answer is "nothing", that is a backlog item, not a
+  completed fix, exactly as "A documented gate limitation is a backlog item, not a disclaimer" says for
+  gates. Second, treat "inert" as a description of a value, never as a verdict on a defect: a skill on a
+  weapon the troop does not carry is only harmless if the weapon it DOES carry is served, and here the
+  same sentence that called it inert was the evidence it was not. Third, a `default_group` that
+  contradicts the carried equipment now has a written convention in `docs/modding/troops.md` and a
+  planned gate (`THROWN_MELEE_MISGROUPED`, #555), because a soft-failing enum needs an explicit check or
+  it has none at all.
+- **Source:** #554; docs/reviews/rca-javelin-troop-misclassification-2026-09-06.md; #555 for the blocked
+  systematic half.

@@ -37,6 +37,68 @@ public class EncounterOwnershipPolicyTests
         new EncounterOwnershipSnapshot(hasEncounter: true, hasEncounteredMobileParty: true,
             encounteredPartyId: "some_other_lord", encounteredPartyIsCommanderRelated: false);
 
+    /// <summary>Exactly the crash state: a battle-shaped encounter with the player in no map event.</summary>
+    private static EncounterOwnershipSnapshot LatchedBattleEncounter(
+        bool insideSettlement = false, bool inConversation = false) =>
+        new EncounterOwnershipSnapshot(hasEncounter: true, conversationInProgress: inConversation,
+            hasEncounteredMobileParty: true, encounteredPartyId: "enemy_lord_party",
+            encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false, playerInsideSettlement: insideSettlement, isBattleEncounter: true);
+
+    // ---- R1c: the stale battle latch (issue #551) ------------------------------------------
+
+    [TestMethod]
+    public void StaleBattleLatch_FinishesABattleEncounterNoOtherIntentMay()
+    {
+        // R1b defers every other intent here, Discharge included, and it is right to: this is the
+        // shape of the loot window. What separates the loot window from the #551 latch is DURATION,
+        // which is why the caller only reaches for this intent after the state has persisted, and
+        // why R1b's own reasoning ("the window is short and every caller retries") is what licenses
+        // the inversion rather than contradicting it.
+        Assert.AreEqual(EncounterFinishVerdict.Finish,
+            _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch, LatchedBattleEncounter()));
+
+        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
+            _policy.Evaluate(EncounterFinishIntent.Discharge, LatchedBattleEncounter()));
+        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
+            _policy.Evaluate(EncounterFinishIntent.ParkedSweep, LatchedBattleEncounter()));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_NeverTearsDownABattleThePlayerIsActuallyIn()
+    {
+        // R1 outranks it, and must. The whole point of the recovery is that the player is NOT in a
+        // map event; if he is, there is a battle to fight and nothing to recover.
+        var inHisOwnBattle = new EncounterOwnershipSnapshot(hasEncounter: true,
+            hasEncounteredMobileParty: true, encounteredPartyId: "enemy_lord_party",
+            playerInMapEvent: true, isBattleEncounter: true);
+
+        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
+            _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch, inHisOwnBattle));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_SkipsUnderAConversation()
+        => Assert.AreEqual(EncounterFinishVerdict.SkipConversationInProgress,
+            _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch,
+                LatchedBattleEncounter(inConversation: true)));
+
+    [TestMethod]
+    public void StaleBattleLatch_InsideASettlement_DefersRatherThanDestroyingTheVisit()
+    {
+        // The precondition is enforced HERE rather than owed by the caller, the same correction
+        // StrandedOutsideSettlement already carries: a caller reading "outside a settlement" from an
+        // earlier snapshot in the same tick is how R3 got bypassed the first time.
+        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
+            _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch,
+                LatchedBattleEncounter(insideSettlement: true)));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_NothingLive_IsStillNothingToFinish()
+        => Assert.AreEqual(EncounterFinishVerdict.NothingToFinish,
+            _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch, EncounterOwnershipSnapshot.None));
+
     // ---- R0: nothing live -----------------------------------------------------------------
 
     [DataTestMethod]
@@ -240,8 +302,16 @@ public class EncounterOwnershipPolicyTests
         // treat an open encounter as "battle still live" for exactly this reason. Finishing here
         // tears down the player's own loot screen, and PlayerEncounter.Finish also forces
         // TimeControlMode.Stop and GameMenu.ExitToLast().
+        //
+        // ONE NAMED EXCEPTION, and it stays named rather than dropping the enum sweep: R1c
+        // (StaleBattleLatch, issue #551) inverts R1b deliberately, because a caller that has already
+        // waited out an hour of this shape is not looking at a loot screen. Every other intent, and
+        // every intent added later, still has to defer here.
         foreach (EncounterFinishIntent intent in System.Enum.GetValues(typeof(EncounterFinishIntent)))
         {
+            if (intent == EncounterFinishIntent.StaleBattleLatch)
+                continue;
+
             Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
                 _policy.Evaluate(intent, BattleAftermath()),
                 $"intent {intent} tore down a battle encounter");

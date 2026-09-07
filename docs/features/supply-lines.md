@@ -252,6 +252,7 @@ prefab in the module so the class cannot ship again.
 
 ## Referenced by
 
+- [docs/features/caravan-bandit-parity.md](./caravan-bandit-parity.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)

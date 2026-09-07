@@ -27,6 +27,13 @@ troop has been replaced or rewritten to fit Tolkien's world.
 - `BANNERLORD_GAME_DIR` environment variable pointing at your game install
   (the `setup-dev-env.ps1` script configures this)
 
+> **Two machines.** Development happens on a desktop that holds the full content set and a laptop
+> that deliberately does not. Absolute paths in `docs/` are the desktop's `E:\` layout; the laptop
+> resolves its own through `BANNERLORD_GAME_DIR` and `TAOM_DECOMPILE_ROOT`. A machine without the
+> complete `TAOM_Map` and `LOTRLOME_Armory` installs will report thousands of broken content
+> references that are not repo defects, so check which machine you are on before believing one.
+> See [docs/reference/development-machines.md](docs/reference/development-machines.md).
+
 **Build & test**
 
 ```powershell

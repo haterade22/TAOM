@@ -62,3 +62,14 @@ The generalisable gap: every existing rule about cross-campaign statics is phras
   value, not the campaign object.
 - `docs/reviews/lessons/harmony-il.md`: static cache state inside a Harmony patch is untestable by
   construction; extract the invalidation decision.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/marriage-alignment.md](../features/marriage-alignment.md)
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

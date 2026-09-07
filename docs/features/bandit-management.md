@@ -308,6 +308,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 ## Referenced by
 
+- [docs/features/caravan-bandit-parity.md](./caravan-bandit-parity.md)
 - [docs/modding/clans.md](../modding/clans.md)
 - [docs/modding/cultures.md](../modding/cultures.md)
 - [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)

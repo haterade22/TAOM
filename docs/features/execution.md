@@ -32,30 +32,41 @@ That breaks LOTR immersion. Aragorn executing the Mouth of Sauron should not mak
 
 ### Solution Approach
 
-A two-pronged hook: thread-local context for the trait-penalty patch, and a GameModel override for the relation calculations. Both reuse a single `IOnExecutionAction` decision hook that wraps the `IAlignmentService`.
+A two-pronged hook: thread-local context for the trait-penalty patch, and a GameModel override for the relation calculations. Both resolve their participants through the same `IAlignmentService`, the honor patch via `IOnExecutionAction` and the model via `IExecutionRelationService`.
 
 ```
 Main/_Module/ModuleData/execution/alignment.json
         |
   AlignmentConfigProvider (loads kingdomId -> "free"/"evil"/"neutral")
         |
-  AlignmentService (decides AreEnemyAlignments / AreSameAlignment / GetKingdomSide)
+  AlignmentService (ResolveSide, GetKingdomSide / GetCultureSide,
+                    AreEnemyAlignments / AreSameAlignment)
         |
-  ExecutionActionHook : IOnExecutionAction
-        / \
-       /   \
-KillCharacterAction_ApplyInternal_Patch        TaomExecutionRelationModel
-  (Prefix sets ExecutionContext;                 (override of vanilla
-   Finalizer clears it)                          GetRelationChangeForExecutingHero)
-       |
-  TraitLevelingHelper_OnLordExecuted_Patch
-  (Prefix reads ExecutionContext;
-   skips vanilla Honor penalty when cross-alignment)
+        +---------------------------+
+        |                           |
+  ExecutionActionHook         ExecutionRelationService
+  : IOnExecutionAction        : IExecutionRelationService
+        |                           |
+        |                    TaomExecutionRelationModel
+        |                     (override of vanilla
+        |                      GetRelationChangeForExecutingHero)
+        |                           |
+        +----- ExecutionContext ----+
+                    |
+      KillCharacterAction_ApplyInternal_Patch
+        (Prefix snapshots victim + executor,
+         kingdom AND culture; Finalizer clears)
+                    |
+      TraitLevelingHelper_OnLordExecuted_Patch
+        (Prefix reads the snapshot; skips the
+         vanilla Honor penalty when cross-alignment)
 ```
 
-`ExecutionContext` is a `ThreadLocal<string>` pair. The outer Prefix on `ApplyInternal` populates it with the victim + executor kingdom IDs; the Finalizer clears it. Inside that scope, the inner Prefix on `OnLordExecuted` reads the context and consults `IOnExecutionAction.ShouldApplyHonorPenalty(...)`. Returning `false` from the inner Prefix skips the vanilla Honor-XP loss.
+`ExecutionContext` holds thread-local kingdom **and** culture ids for both victim and executor, plus an explicit active flag (a hero legitimately has no kingdom, so the flag cannot be inferred from a null id). The outer Prefix on `ApplyInternal` populates it; the Finalizer clears it. Inside that scope, the inner Prefix on `OnLordExecuted` reads the snapshot and consults `IOnExecutionAction.ShouldApplyHonorPenalty(...)`. Returning `false` skips the vanilla Honor-XP loss.
 
-`TaomExecutionRelationModel` overrides `GetRelationChangeForExecutingHero` and routes through `IOnExecutionAction.GetRelationModifier(executorKingdomId, victimKingdomId, evaluatorKingdomId, baseRelationChange)`. The model returns:
+The snapshot is taken at the top of `ApplyInternal` for a reason: the method destroys the victim's clan, which nulls `Clan.Kingdom`, before it fires the event that drives the relation pass. Full ordering in `alignment-aware-execution.md` (#556).
+
+`TaomExecutionRelationModel` overrides `GetRelationChangeForExecutingHero` and routes through `IExecutionRelationService.GetRelationModifier(executor, victim, evaluator, baseRelationChange, baseShowNotification)`, passing an `ExecutionParticipant` (kingdom id plus culture id) for each. Executor and victim come from the snapshot when a kill is in flight, live otherwise; the evaluator is always live. The service returns:
 - `0` for cross-alignment evaluators who share the executor's alignment
 - `baseRelationChange` for evaluators who share the victim's alignment
 - `baseRelationChange × 1.5` (kinslaying) when executor and victim share the same alignment
@@ -64,34 +75,54 @@ KillCharacterAction_ApplyInternal_Patch        TaomExecutionRelationModel
 
 ### Config File: `Main/_Module/ModuleData/execution/alignment.json`
 
-A flat JSON object mapping kingdom `StringId` to alignment string.
+A flat JSON object mapping a `StringId` to an alignment string. Keys are read as **both** kingdom ids
+and culture ids: `AlignmentService` uses one table for `GetKingdomSide` and `GetCultureSide`, and
+`ResolveSide(kingdomId, cultureId)` tries the kingdom first and falls back to the culture. An id that
+appears in neither role resolves Neutral, which is nobody's ally and everybody's enemy.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `<kingdom_id>` | `"free"` \| `"evil"` \| `"neutral"` | Alignment of that kingdom. Unknown kingdoms default to enemy-of-everyone via the lookup fallback (handled by `IAlignmentConfigProvider`). |
+| `<kingdom_or_culture_id>` | `"free"` \| `"evil"` \| `"neutral"` | Alignment of that faction. An unlisted id resolves Neutral, which is indistinguishable from an explicit `"neutral"` at runtime. That is why the coverage gaps are closed by build-time gates rather than at runtime: `ShippedMainCultureAlignmentCoverageTests` (playable cultures) and `ShippedCultureAlignmentCoverageTests` (cultures used by `lords.xml`). |
 
 ### Current Values
 
-| Kingdom | Alignment | LOTR rationale |
+Kingdom ids are what `Hero.Clan.Kingdom.StringId` returns at runtime, so most of them are the vanilla
+ids that `Main/_Module/ModuleData/spkingdoms.xslt` renames rather than replaces. The in-game names
+below are taken from that XSLT, not from the id.
+
+| Kingdom id | In-game name | Alignment | Rationale |
+|---|---|---|---|
+| `empire_w` | Gondor | free | |
+| `vlandia` | Rohan | free | |
+| `sturgia` | Dale / the North | free | |
+| `erebor` | Erebor | free | |
+| `rivendell` | Rivendell | free | |
+| `lothlorien` | Lothlorien | free | |
+| `mirkwood` | Mirkwood | free | |
+| `lindon` | Lindon | free | |
+| `empire` | Dunland | evil | sided with Saruman in the books. Counter-intuitive id, see memory entry `kingdom-culture-mapping` |
+| `empire_s` | Mordor | evil | |
+| `aserai` | Harad | evil | |
+| `khuzait` | Rhun (Easterlings) | evil | |
+| `isengard` | Isengard | evil | |
+| `gundabad` | Gundabad | evil | |
+| `dolguldur` | Dol Guldur | evil | |
+| `goblin` | Goblin-town | evil | |
+| `mistymountainorcs` | Misty Mountain orcs | evil | |
+| `bluecraig` | Blue Craig | evil | |
+| `battania` | Khand | neutral | tribal and mercenary, so both sides can target it |
+| `umbar` | Umbar | neutral | corsair and mercenary, so both sides can target it |
+| `shaghana` | Shaghana | neutral | tribal, so both sides can target it |
+| `abanissa` | Abanissa | neutral | tribal, so both sides can target it |
+
+Two further keys are **culture** ids, not kingdom ids. Every other playable culture shares its id
+with its kingdom, but Gondor and Mordor do not, so they need their own entries for the culture
+fallback to place a kingdom-less hero:
+
+| Culture id | Kingdom | Alignment |
 |---|---|---|
-| `empire_w` (Rohan) | free | — |
-| `vlandia` (Gondor) | free | — |
-| `erebor` | free | — |
-| `sturgia` (Dale / North) | free | — |
-| `rivendell` | free | — |
-| `lothlorien` | free | — |
-| `mirkwood` | free | — |
-| `empire` (Dunland — note: counter-intuitive ID, see memory entry `kingdom-culture-mapping`) | evil | sided with Saruman in the books |
-| `empire_s` (Mordor) | evil | — |
-| `isengard` | evil | — |
-| `gundabad` | evil | — |
-| `dolguldur` | evil | — |
-| `khuzait` (Easterlings) | evil | — |
-| `battania` (Khand) | neutral | tribal / mercenary — both sides can target |
-| `aserai` (Harad) | evil | — |
-| `umbar` | neutral | corsair / mercenary — both sides can target |
-| `shaghana` | neutral | tribal — both sides can target |
-| `abanissa` | neutral | tribal — both sides can target |
+| `gondor` | `empire_w` | free |
+| `mordor` | `empire_s` | evil |
 
 ## Key Files
 
@@ -102,19 +133,22 @@ A flat JSON object mapping kingdom `StringId` to alignment string.
 | `Main/Features/Execution/AlignmentConfigProvider.cs` | Loads + parses `alignment.json`; `Reuse.Singleton` (cached for process lifetime) |
 | `Main/Features/Execution/IAlignmentConfigProvider.cs` | Config provider interface |
 | `Main/Features/Execution/FactionSide.cs` | Enum: `Free`, `Evil`, `Neutral` |
-| `Main/Features/Execution/Hooks/IOnExecutionAction.cs` | Decision hook interface — `ShouldApplyHonorPenalty`, `IsKinslaying`, `GetRelationModifier` |
+| `Main/Features/Execution/Hooks/IOnExecutionAction.cs` | Honor-penalty decision hook: `ShouldApplyHonorPenalty` only |
+| `Main/Features/Execution/IExecutionRelationService.cs` | `ExecutionParticipant`, `ExecutionRelationResult`, relation contract |
+| `Main/Features/Execution/ExecutionRelationService.cs` | Relation decision: side resolution, kinslaying, notification suppression |
 | `Main/Features/Execution/Hooks/ExecutionActionHook.cs` | `IOnExecutionAction` implementation; consults `IAlignmentService` |
 | `Main/Features/Execution/Hooks/ExecutionContext.cs` | `ThreadLocal<string>` victim/executor kingdom-ID pair; bridges the outer-Prefix to the inner-Prefix |
 | `Main/Features/Execution/Hooks/KillCharacterAction_ApplyInternal_Patch.cs` | Outer Harmony Prefix + Finalizer; sets / clears `ExecutionContext` |
 | `Main/Features/Execution/Hooks/TraitLevelingHelper_OnLordExecuted_Patch.cs` | Inner Harmony Prefix; skips vanilla Honor penalty when cross-alignment |
-| `Main/Features/Execution/Models/TaomExecutionRelationModel.cs` | `DefaultExecutionRelationModel` override; routes relation deltas through `IOnExecutionAction.GetRelationModifier` |
+| `Main/Features/Execution/Models/TaomExecutionRelationModel.cs` | `DefaultExecutionRelationModel` override; routes relation deltas through `IExecutionRelationService` |
 | `Main/Features/Execution/ExecutionIoC.cs` | DryIoc registrations (singletons for all 3 services); `InitializeHooks` wires the manual-patch's hook reference |
 | `Main/_Module/ModuleData/execution/alignment.json` | Kingdom → alignment data |
 
 ## Dependencies
 
 - `IAlignmentService` (Execution feature) — public alignment-query API; consumed by `ExecutionActionHook` and (indirectly) by anyone needing alignment context
-- `IOnExecutionAction` (Execution feature) — decision hook; consumed by both Harmony patches and `TaomExecutionRelationModel`
+- `IOnExecutionAction` (Execution feature): honor-penalty decision, consumed by `TraitLevelingHelper_OnLordExecuted_Patch`
+- `IExecutionRelationService` (Execution feature): relation decision, consumed by `TaomExecutionRelationModel`
 - `IPathService` (Core) — resolves the alignment.json path during config load
 - `IModLogger` (Core) — used by `AlignmentConfigProvider` for load diagnostics
 
@@ -122,8 +156,10 @@ No `Adapter` interfaces — the feature operates entirely on kingdom `StringId` 
 
 ## Tests
 
-- `TAOM.Tests/Features/Execution/AlignmentServiceTests.cs` — **18 tests**: kingdom-to-side mapping (free/evil/neutral coverage), `AreEnemyAlignments` truth table (incl. neutral-vs-both), `AreSameAlignment` truth table, unknown-kingdom fallback behavior.
-- `TAOM.Tests/Features/Execution/ExecutionActionHookTests.cs` — **10 tests**: `ShouldApplyHonorPenalty` per alignment pairing, `IsKinslaying` per alignment pairing, `GetRelationModifier` four-way branching (cross-alignment-aligned, cross-alignment-against, same-alignment kinslaying, fallback path).
+- `TAOM.Tests/Features/Execution/AlignmentServiceTests.cs`: **35 tests**, kingdom- and culture-to-side mapping, `ResolveSide` precedence and fallback, both truth tables in their string and `FactionSide` forms, unknown-id behavior.
+- `TAOM.Tests/Features/Execution/ExecutionActionHookTests.cs`: **5 tests**, `ShouldApplyHonorPenalty` per alignment pairing, plus the kingdom-less executor and destroyed-victim-clan paths.
+- `TAOM.Tests/Features/Execution/ExecutionRelationServiceTests.cs`: **18 tests**, cross-alignment branching, kinslaying multiplier, notification suppression, and a kingdom-less participant in each of the three positions.
+- `TAOM.Tests/Features/Execution/ShippedMainCultureAlignmentCoverageTests.cs`: **3 tests**, every playable TAOM culture has an alignment entry and resolves to its declared side through the kingdom-less path.
 
 Manual Harmony Prefix + Finalizer wiring on `KillCharacterAction_ApplyInternal_Patch` and `TraitLevelingHelper_OnLordExecuted_Patch` is exercised via the live game; no unit-test coverage for the patch binding itself today. (Audit gap class — see issue #192 / #193 for the analogous wiring-regression-test pattern.)
 
@@ -140,9 +176,9 @@ Editing `alignment.json` is the only required change:
 
 If a new gameplay rule needs to gate on alignment (e.g., "different relation rules for prisoner negotiation"):
 
-1. Add a method to `IOnExecutionAction.cs` (e.g., `int GetPrisonerExchangeRelationChange(...)`).
+1. Add a method to the relevant interface: `IExecutionRelationService.cs` for a relation decision, `IOnExecutionAction.cs` for a trait or penalty decision.
 2. Implement it in `ExecutionActionHook.cs`, consulting `_alignmentService` as the existing methods do.
-3. Where the new decision applies, route through `IoC.Resolve<IOnExecutionAction>()` from a single entry point (patch, GameModel, or behavior), the same pattern used by `TaomExecutionRelationModel`.
+3. Where the new decision applies, inject the interface into a single entry point (patch, GameModel, or behavior), the same pattern used by `TaomExecutionRelationModel`. Resolve sides via `IAlignmentService.ResolveSide`, never `GetKingdomSide` alone.
 4. Add `ExecutionActionHookTests.cs` coverage for the new method's branches.
 
 ## Performance

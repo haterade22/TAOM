@@ -631,5 +631,128 @@ public class EnlistmentReconcilerTests
         Assert.AreEqual("lord_1_1", requestedFor);
     }
 
+    // ---- The stale EnlistedBattle latch (issue #551) ---------------------------------------
 
+    /// <summary>
+    /// The crash state: EnlistedBattle, an encounter still open, the player in no map event, and
+    /// the commander still fighting. Three guards each refuse to move it and each is individually
+    /// right: TryBreakBattleLatch returns on HasPlayerEncounter, SweepStrandedEncounter returns on
+    /// commanderInMapEvent, and R1b defers every intent because the encounter reads as a battle.
+    /// </summary>
+    private void LatchedInBattleState()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: true);
+        PlayerPresence(parked: false, inMapEvent: false, hasEncounter: true);
+        _encounter.HasCurrent.Returns(true);
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false, playerInsideSettlement: false, isBattleEncounter: true));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_FirstTickOnly_LeavesItAlone()
+    {
+        // The loot and aftermath window has exactly this shape. Recovering on sight would tear down
+        // the battle result the player is reading, which is what R1b exists to prevent.
+        LatchedInBattleState();
+
+        _reconciler.ReconcileHourly(Now);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_PersistsPastTheWindow_ClosesTheEncounterAndReturnsToService()
+    {
+        // Issue #551. The player sat here for four and a half minutes of real time with a dead
+        // encounter menu, no way to act, and no path in TAOM that could move him. An hour of
+        // campaign time in this shape is not a loot screen.
+        LatchedInBattleState();
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        _encounter.Received(1).Finish(true);
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_ClearsWhenTheStateResolvesItself()
+    {
+        // The timer measures one CONTINUOUS episode. A tick in which the shape is gone must reset
+        // it, or two unrelated loot windows an hour apart would add up to a recovery.
+        LatchedInBattleState();
+        _reconciler.ReconcileHourly(Now);
+
+        PlayerPresence(parked: false, inMapEvent: false, hasEncounter: false);
+        _encounter.HasCurrent.Returns(false);
+        _reconciler.ReconcileHourly(Now + 0.01);
+
+        LatchedInBattleState();
+        _reconciler.ReconcileHourly(Now + 0.02);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_PlayerInHisOwnMapEvent_IsNotALatch()
+    {
+        // Being in a map event is a battle to fight, not a latch. R1 would refuse anyway; the timer
+        // must never even start, or the recovery would be armed the moment the battle ends.
+        LatchedInBattleState();
+        PlayerPresence(parked: false, inMapEvent: true, hasEncounter: true);
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_ResetForNewSession_DropsTheAnchor()
+    {
+        // The reconciler is Reuse.Singleton, so it outlives the campaign. An anchor left behind by a
+        // campaign that ended while latched is a LIVE HAZARD, not dead weight: campaign days are
+        // absolute, so loading a later save makes `elapsed` enormous and the recovery fires on the
+        // very first latched tick, tearing down what may be a genuine loot screen with no real wait.
+        // That is precisely the destructive Finish that R1b exists to prevent, on the recovery path.
+        LatchedInBattleState();
+        _reconciler.ReconcileHourly(Now);          // anchors here
+
+        _reconciler.ResetForNewSession();
+
+        // A day later, and it must STILL be re-anchoring rather than recovering.
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_ClockRanBackwards_ReAnchorsInsteadOfRecovering()
+    {
+        // Belt and braces for the path the reset does not reach: ResetSessionCaches is wired to
+        // OnGameLoaded only, so a brand-new campaign in the same process never calls it. A new
+        // campaign starts at a low day count, so the leftover anchor is in the FUTURE — and a clock
+        // that ran backwards can only mean a different campaign or save, never a continuous episode.
+        LatchedInBattleState();
+        _reconciler.ReconcileHourly(Now);          // anchors at 200
+
+        _reconciler.ReconcileHourly(Now - 100.0);  // a fresh campaign, day 100
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+
+        // Re-anchored, so the ordinary wait still works from the new clock.
+        _reconciler.ReconcileHourly(Now - 100.0 + 1.0);
+
+        _encounter.Received(1).Finish(true);
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
 }

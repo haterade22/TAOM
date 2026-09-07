@@ -18,20 +18,19 @@ public static class TraitLevelingHelper_OnLordExecuted_Patch
     public static bool Prefix()
     {
         if (_hook == null) return true;
+
+        // No execution in flight on this thread means something other than our patched path called
+        // OnLordExecuted — leave vanilla alone rather than guess at the participants.
         if (!ExecutionContext.HasContext) return true;
 
-        var victimKingdomId = ExecutionContext.GetVictimKingdomId();
-        var executorKingdomId = ExecutionContext.GetExecutorKingdomId();
+        var victim = new ExecutionParticipant(
+            ExecutionContext.GetVictimKingdomId(),
+            ExecutionContext.GetVictimCultureId());
+        var executor = new ExecutionParticipant(
+            ExecutionContext.GetExecutorKingdomId(),
+            ExecutionContext.GetExecutorCultureId());
 
-        // Fall through to vanilla when either kingdom is null/unknown
-        // (e.g., independent player) — only apply alignment logic when both
-        // kingdoms are known
-        if (string.IsNullOrEmpty(victimKingdomId) || string.IsNullOrEmpty(executorKingdomId))
-            return true;
-
-        if (!_hook.ShouldApplyHonorPenalty(victimKingdomId, executorKingdomId))
-            return false;
-
-        return true;
+        // Skip the vanilla -1000 Honor XP when this was a cross-alignment kill.
+        return _hook.ShouldApplyHonorPenalty(victim, executor);
     }
 }

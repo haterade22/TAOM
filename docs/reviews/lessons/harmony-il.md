@@ -461,3 +461,28 @@ line count was the symptom, not the reason.
 - **Why missed:** the cache was written where it was used, and ADR-002's line ceiling did not read as a signal because most TAOM `Hooks/` files are far larger (445, 358, 354). "Under 150" is a proxy; "no algorithms in an entry point" is the rule, and a cache with an invalidation policy is an algorithm.
 - **Prevent:** when a patch needs state that outlives one call, name the invalidation policy and give it its own file before writing the dictionary. If you cannot write a test that makes the policy return true and then false, it is in the wrong class. Writing the extracted type's doc comment is itself worth the move: doing so here exposed a comment claiming the stamp caught `CultureConversion` re-cultures, when that feature converts SETTLEMENT cultures and never touches `Clan.Culture`.
 - **Source:** deep-review of MarriageAlignment (#542), 2026-09-06; RCA `docs/reviews/rca-marriage-alignment-2026-09-06.md` findings 1 and 5.
+
+### If a prefix writes shared state conditionally, the finalizer must clear it conditionally too
+
+`KillCharacterAction_ApplyInternal_Patch` snapshots the victim and executor into a thread-local
+`ExecutionContext` so the relation pass can read identity the engine is about to destroy. The prefix
+was written re-entrancy-aware: it branches on `actionDetail` and only sets the snapshot for a real
+execution. The finalizer was not, and cleared unconditionally. `ApplyInternal` re-enters itself,
+because destroying the victim's clan calls `KillCharacterAction.ApplyByRemove` for every other living
+hero in it (`DestroyClanAction.cs:43`), and clan destruction happens at `KillCharacterAction.cs:137`,
+before `OnHeroKilled` fires at line 144. So a nested kill's finalizer wiped the outer execution's
+snapshot mid-flight, for any executed lord with a surviving spouse, child or companion.
+- **Why missed:** a prefix looks like a decision and gets asked "is this call one of mine?"; a
+  finalizer looks like cleanup, answers no question, and never gets asked. The asymmetry is invisible
+  because the two halves read as different kinds of code. The order-of-operations hazard inside
+  `ApplyInternal` was studied closely (it was the bug being fixed) without ever asking whether
+  `ApplyInternal` could appear on its own stack twice.
+- **Prevent:** before writing shared state from a patch, establish whether the target can re-enter,
+  and make the write and the clear agree on ownership. Harmony's `__state` is per-invocation and is
+  the right tool; a depth counter is not needed. `KillCharacterAction`, `DestroyClanAction`,
+  `ChangeKingdomAction` and `DestroyKingdomAction` are a mutually recursive cluster, so assume
+  re-entrancy for any of them. Beware the near-miss that hides this: a second, independent guard in
+  the same changeset (here a culture fallback that survives clan destruction) can make the wiped
+  state still produce the right answer, so nothing fails until the two guards stop agreeing.
+- **Source:** deep-review of the alignment-aware execution fall-through (#556), 2026-09-06; RCA
+  `docs/reviews/rca-execution-alignment-fallthrough-2026-09-06.md` finding 1.

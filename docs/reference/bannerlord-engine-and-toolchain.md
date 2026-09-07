@@ -82,6 +82,12 @@ server-capable.
 
 ## 2. Decompiled-source layout (`E:\Decompiled_Bannerlord\`)
 
+> **That path is the desktop's.** The dump lives wherever the machine put it, and
+> `TAOM_DECOMPILE_ROOT` names the category tree on machines that are not the desktop (on the laptop,
+> `C:\Decompiled_Bannerlord\_categories_v1.4.8`). The layout below is the same everywhere; only the
+> root differs. Both decompile scripts take the destination as a parameter and read no environment
+> variable. See [development-machines](development-machines.md).
+
 | Path | Build | Form | Use |
 |---|---|---|---|
 | `Campaign\`, `MountAndBlade\`, `Core\`, `Engine\`, `UI\`, … (category folders) | shipping | curated, by namespace | **browse** patterns/namespaces (the long-standing reference) |

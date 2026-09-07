@@ -37,6 +37,13 @@ Self-healing infra silently masks the real problem, then breaks differently next
 
 The line: anything inside the TAOM repo's tracked files is in scope. Anything outside (tools on PATH, env vars, Steam install, MCP servers, OS config) is the user's domain.
 
+**Before treating a content failure as a repo bug, check which machine you are on.** Development
+spans a desktop holding the full content set and a laptop that deliberately does not, and the live
+`TAOM_Map` / `LOTRLOME_Armory` installs are unversioned and absent from git. On the incomplete
+machine every reference into them fails and reads exactly like a repo defect: 6,894 broken items
+and 414 landless cultures, measured 2026-09-06, none of it real. That is an environment gap, so
+report it; never edit the repo to quiet it. [`development-machines.md`](../../docs/reference/development-machines.md)
+
 ## Tone when reporting
 
 State the facts:

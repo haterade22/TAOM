@@ -179,4 +179,83 @@ public class AlignmentServiceTests
         Assert.IsFalse(_sut.AreSameAlignment(null, "empire_w"));
         Assert.IsFalse(_sut.AreSameAlignment("empire_w", null));
     }
+
+    // ----- ResolveSide: kingdom first, culture as the fallback -----
+
+    [TestMethod]
+    public void ResolveSide_ClassifiedKingdom_UsesKingdomAndIgnoresCulture()
+    {
+        Assert.AreEqual(FactionSide.Free, _sut.ResolveSide("empire_w", "mordor"));
+    }
+
+    [TestMethod]
+    public void ResolveSide_NullKingdom_FallsBackToCulture()
+    {
+        Assert.AreEqual(FactionSide.Free, _sut.ResolveSide(null, "gondor"));
+    }
+
+    [TestMethod]
+    public void ResolveSide_EmptyKingdom_FallsBackToCulture()
+    {
+        // GetPlayerKingdomId() returns "" for a player whose clan has no kingdom.
+        Assert.AreEqual(FactionSide.Evil, _sut.ResolveSide("", "mordor"));
+    }
+
+    [TestMethod]
+    public void ResolveSide_UnclassifiedKingdom_FallsBackToCulture()
+    {
+        // A player-founded kingdom gets a generated id that is absent from alignment.json.
+        Assert.AreEqual(FactionSide.Free, _sut.ResolveSide("new_kingdom", "gondor"));
+    }
+
+    [TestMethod]
+    public void ResolveSide_NeutralKingdomWithClassifiedCulture_FallsBackToCulture()
+    {
+        // Neutral is indistinguishable from unclassified in the id table, so the culture wins.
+        Assert.AreEqual(FactionSide.Evil, _sut.ResolveSide("umbar", "mordor"));
+    }
+
+    [TestMethod]
+    public void ResolveSide_NeitherIdClassified_ReturnsNeutral()
+    {
+        Assert.AreEqual(FactionSide.Neutral, _sut.ResolveSide("new_kingdom", "made_up_culture"));
+    }
+
+    [TestMethod]
+    public void ResolveSide_BothIdsNull_ReturnsNeutral()
+    {
+        Assert.AreEqual(FactionSide.Neutral, _sut.ResolveSide(null, null));
+    }
+
+    // ----- Side-based predicate overloads carry the same Neutral semantics as the string ones -----
+
+    [TestMethod]
+    public void AreEnemyAlignments_Sides_FreeVsEvil_ReturnsTrue()
+    {
+        Assert.IsTrue(_sut.AreEnemyAlignments(FactionSide.Free, FactionSide.Evil));
+    }
+
+    [TestMethod]
+    public void AreEnemyAlignments_Sides_FreeVsFree_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.AreEnemyAlignments(FactionSide.Free, FactionSide.Free));
+    }
+
+    [TestMethod]
+    public void AreEnemyAlignments_Sides_NeutralVsNeutral_ReturnsTrue()
+    {
+        Assert.IsTrue(_sut.AreEnemyAlignments(FactionSide.Neutral, FactionSide.Neutral));
+    }
+
+    [TestMethod]
+    public void AreSameAlignment_Sides_EvilVsEvil_ReturnsTrue()
+    {
+        Assert.IsTrue(_sut.AreSameAlignment(FactionSide.Evil, FactionSide.Evil));
+    }
+
+    [TestMethod]
+    public void AreSameAlignment_Sides_NeutralVsNeutral_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.AreSameAlignment(FactionSide.Neutral, FactionSide.Neutral));
+    }
 }

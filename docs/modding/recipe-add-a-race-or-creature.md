@@ -124,8 +124,9 @@ Both are Monster naming mistakes, and both are invisible until a settlement scen
 
 1. Skin the mesh to a skeleton the engine already ships, bone for bone. `horse_skeleton` for anything horse shaped.
 2. Write one `<Monster>` with `base_monster=` naming the donor. Everything you do not name is inherited.
-3. If it is rideable, author the mount item in the harness files and leave `body_length="100"` unless you have read the scaling warning below. See [Mounts and harness](items-mounts-and-harness.md).
+3. If it is rideable, author the mount item in the harness files and leave `body_length="100"` unless you have read the scaling warning below. Check whether your body mesh carries the rider's seat; if it does not, ship a barding and fill `HorseHarness` in every roster that uses the mount. See [Mounts and harness](items-mounts-and-harness.md).
 4. Do not bind an attack action without first establishing its type in `action_types.xml`, whether the inherited `monster_usage` set names it in a verb slot or table, and whether the engine branches on that type anywhere.
+5. Do not assume an empty `HorseHarness` slot is inert. Open the body mesh and confirm where the saddle is before you decide a bare mount is acceptable.
 
 TAOM's war ram is the whole reskin, seven attributes:
 
@@ -169,6 +170,7 @@ TAOM has never written a deletion checklist for a race, and deletion is the oper
 - **A misspelled Monster variant id returns null and says nothing.** `GetMonsterWithSuffix` concatenates and looks up, `FaceGen.cs:44-47`. This is exactly what `beserker_child` and the `troll_*` block do today.
 - **A missing or slim `as_<race>_facegen` pair renders the character creation parent and child agents contorted or lying down.** The parent menu working does not mean the later stages work, they are separate failure modes from one cause ([character-creation](../features/character-creation.md) "LOTRLOME `as_<race>_facegen` action_set requirement").
 - **A standalone action set that drifts behind Native crashes on the first action it lacks.** The dwarf set was 423 action types short between Native 1.3 and 1.4.6 ([race-age-system](../features/race-age-system.md) step 5). Fixer: `python tools/patch_dwarf_action_parity.py --target <action_sets.xml> --set-id as_<race>_warrior --apply`.
+- **A reskin inherits the donor's skeleton, not its saddle, so a `HorseHarness` is REQUIRED.** The horse and warg model the rider's seat on the mount BODY and look right unbarded; the war ram's `sk_eb_goat_a`/`_b` are bare pelts with the seat on the eight `sk_eb_goat_bard_*` harness meshes, and the spider has no seat at all because no spider harness item was ever authored. Nothing in the XML says which is which, so fill the slot everywhere and argue any exception in `_HARNESSLESS_BY_DESIGN`. Gated by `MOUNT_WITHOUT_HARNESS` ([war-ram](../features/war-ram.md)).
 - **`body_length` on a mount item scales the RIDER too.** `EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same value and the scale block in `Mission.BuildAgent` has no `IsMount` guard. 100 is identity ([creature-mount-authoring](../ai-includes/creature-mount-authoring.md)).
 - **A root level `<action>`, one parented by `<action_sets>` instead of an `<action_set>`, loads fine on the client and kills a dedicated server at boot with a `KeyNotFoundException`.** No single player run reproduces it; `audit_action_set_parity.py` is the only gate ([tools README](../../tools/README.md)).
 - **Three races write `mesh_maturity_type ="adult"` with a space before the `=`.** A grep for the unspaced form silently skips them and returns a confident partial answer. Match on `mesh_maturity_type\s*=\s*"adult"` ([kingdom-voices](../features/kingdom-voices.md) "Correction, 2026-08-25").

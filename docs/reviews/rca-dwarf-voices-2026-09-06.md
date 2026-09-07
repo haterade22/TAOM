@@ -108,3 +108,13 @@ them. Findings now take precedence over the floor.
   load, the fix is silently undone. `Main/_Module/SubModule.xml` declares no `<IncompatibleModules>`.
 - **`uruk_hai_01` has the same defect**, baselined with a stated reason rather than fixed, so the
   in-game A/B on the dwarves stays attributable.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

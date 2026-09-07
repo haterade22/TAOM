@@ -25,6 +25,8 @@ Contract under test (one verdict class per block):
   - CLI exit codes (0 completed / 1 hang / 2 bad path)
 """
 import json
+import re
+import pathlib
 import os
 import subprocess
 import sys
@@ -164,6 +166,15 @@ def _finish_begin(seq=6, ms=5000, polls=87, wait_ms=1449, mem=None):
     """FinishMissionLoadingBegin. wait_ms=None reproduces the omitted-waitMs shape."""
     detail = f"polls={polls}" if wait_ms is None else f"polls={polls} waitMs={wait_ms}"
     return _phase(seq, ms, "FinishMissionLoadingBegin", detail + (f" {mem}" if mem else ""))
+
+
+def _scene_load_wait(seq=6, ms=8000, scene="battle_terrain_biome_094", polls=487,
+                     wait_ms=8000, mem=None):
+    """WaitingForSceneLoad — the bucket-2 heartbeat. Reuses FinishMissionLoadingBegin's
+    polls=/waitMs= token pair verbatim (that reuse is the point: one regex reads both)."""
+    detail = f"scene='{scene}' " + (
+        f"polls={polls}" if wait_ms is None else f"polls={polls} waitMs={wait_ms}")
+    return _phase(seq, ms, "WaitingForSceneLoad", detail + (f" {mem}" if mem else ""))
 
 
 def _finish_done(seq=9, ms=8200, mem=None):
@@ -911,6 +922,48 @@ class NewLoadPhaseVerdictTests(unittest.TestCase):
         self.assertEqual(plain.scene, "battle_terrain_158")
         self.assertEqual(suffixed.scene, "battle_terrain_158")
 
+    # --- WaitingForSceneLoad: died INSIDE the async wait (2026-09-06) -------------- #
+    # Two player CTDs on battle_terrain_biome_094 ended on MissionInitializeDone with
+    # nothing after it, so a death inside the wait and a hang inside it read identically
+    # and the fault was bounded only to "somewhere in ~30 s". The heartbeat closes that.
+    def test_scene_load_wait_is_scene_with_and_without_memstats(self):
+        plain = tb.triage(_log(*self._head(), _init_done(), _scene_load_wait()))
+        suffixed = tb.triage(_log(*self._head(), _init_done(mem=self.MEM),
+                                  _scene_load_wait(mem=self.MEM)))
+        self.assertEqual(plain.kind, "SCENE")
+        self.assertEqual(suffixed.kind, "SCENE")
+
+    def test_scene_load_wait_names_its_scene_through_the_memstats_suffix(self):
+        suffixed = tb.triage(_log(*self._head(), _init_done(mem=self.MEM),
+                                  _scene_load_wait(mem=self.MEM)))
+        self.assertEqual(suffixed.scene, "battle_terrain_biome_094")
+
+    def test_scene_load_wait_supplies_the_wait_pair_without_finish_begin(self):
+        # The whole payoff: polls=/waitMs= now reach the timing ledger on a log that
+        # never reached FinishMissionLoadingBegin, so the polls=1 native-spin rule can
+        # fire on a crash log instead of only on "a run that got further".
+        t = tb.classify_phase_timings(tb.parse_battle_load_log(
+            _log(*self._head(), _init_done(), _scene_load_wait(polls=1, wait_ms=9000))))
+        self.assertEqual(t["polls"], 1)
+        self.assertEqual(t["wait_ms"], 9000)
+        self.assertTrue(t["wait_incomplete"])
+
+    def test_finish_begin_wins_over_a_heartbeat_and_is_marked_complete(self):
+        t = tb.classify_phase_timings(tb.parse_battle_load_log(_log(
+            *self._head(), _init_done(), _scene_load_wait(polls=1, wait_ms=9000),
+            _finish_begin(seq=7, ms=9200, polls=87, wait_ms=1449))))
+        self.assertEqual(t["polls"], 87)
+        self.assertEqual(t["wait_ms"], 1449)
+        self.assertFalse(t["wait_incomplete"])
+
+    def test_last_heartbeat_wins_over_earlier_ones(self):
+        t = tb.classify_phase_timings(tb.parse_battle_load_log(_log(
+            *self._head(), _init_done(),
+            _scene_load_wait(seq=6, ms=8000, polls=100, wait_ms=5000),
+            _scene_load_wait(seq=7, ms=13000, polls=400, wait_ms=10000))))
+        self.assertEqual(t["polls"], 400)
+        self.assertEqual(t["wait_ms"], 10000)
+
     # --- FinishMissionLoadingBegin: froze in the warm-up ticks, pre-equip ---------- #
     def test_finish_begin_is_scene_with_and_without_memstats(self):
         plain = tb.triage(_log(*self._head(), _init_done(), _finish_begin()))
@@ -1131,6 +1184,39 @@ class LoadTimingReportTests(unittest.TestCase):
         tl = tb.parse_battle_load_log(_log(*lines))
         return tb.format_report(tb.classify(tl), tl, None)
 
+    # --- heartbeat-sourced timings (2026-09-06 deep review) ------------------------ #
+    # The polls=1 reading INVERTS between the two sources and the first cut printed the
+    # FinishMissionLoadingBegin diagnosis for heartbeat data, sending a triager to #352 for
+    # a stall nowhere near WaitForMeshesToBeLoaded.
+    def _heartbeat_report(self, polls=1, wait_ms=8001):
+        return self._report(
+            _init(ms=1000), _init_done(ms=2000),
+            _scene_load_wait(seq=8, ms=10000, polls=polls, wait_ms=wait_ms))
+
+    def test_heartbeat_polls_one_is_not_reported_as_the_352_native_spin(self):
+        r = self._heartbeat_report()
+        self.assertIn("the block is BEFORE the loop", r)
+        self.assertNotIn("BLOCKED inside one frame", r)
+        self.assertNotIn("#352 WaitForMeshesToBeLoaded shape", r)
+
+    def test_completed_wait_polls_one_still_reports_the_352_native_spin(self):
+        # The original reading must survive for the source it was written for.
+        r = self._report(_init(ms=1000), _init_done(ms=2000),
+                         _finish_begin(ms=12000, polls=1, wait_ms=10000))
+        self.assertIn("BLOCKED inside one frame", r)
+        self.assertNotIn("the block is BEFORE the loop", r)
+
+    def test_heartbeat_gives_bucket2_a_lower_bound_instead_of_a_question_mark(self):
+        r = self._heartbeat_report()
+        self.assertIn(">=8001ms", r)
+
+    def test_heartbeat_names_bucket2_dominant_not_a_closed_bucket(self):
+        # bucket1 is measurable here and bucket2 is not, so the old code named bucket1 as
+        # dominant on precisely the logs where bucket2 is the whole story.
+        r = self._heartbeat_report()
+        self.assertIn("dominant: bucket2", r)
+        self.assertNotIn("dominant: bucket1", r)
+
     def test_report_renders_the_bucket_table_and_dominant(self):
         r = self._report(_init(ms=1000, mem=_memstats(priv=9331)),
                          _init_done(ms=2000, mem=_memstats(priv=9400)),
@@ -1160,6 +1246,24 @@ class LoadTimingReportTests(unittest.TestCase):
     def test_report_omits_load_timing_for_old_logs(self):
         r = self._report(_mission_init(), _equip_begin(5, 0), _equip_ok(6, 0), _playable())
         self.assertNotIn("Load timing", r)
+
+
+class CrossLanguageContractTests(unittest.TestCase):
+    """The C# emitter and this parser are twin literals. Nothing but a test keeps them equal."""
+
+    def test_every_scene_terminal_has_a_hint(self):
+        # classify() indexes _SCENE_HINTS[ph] unguarded, so a terminal with no hint is a
+        # KeyError on exactly the log its phase was added for.
+        self.assertEqual(set(tb.SCENE_TERMINALS) - set(tb._SCENE_HINTS), set())
+
+    def test_scene_load_wait_interval_matches_the_csharp_constant(self):
+        # SCENE_LOAD_WAIT_INTERVAL_MS is interpolated into player-facing prose ("within Ns of
+        # the t=+ stamp"), so if the C# side is retuned and this is not, the tool states a
+        # fault window that is simply wrong, with a green build on both sides.
+        src = pathlib.Path(__file__).resolve().parents[2] / "Main" / "Features" /             "BattleLoadDiagnostics" / "BattleLoadDiagnosticsService.cs"
+        m = re.search(r"SceneLoadWaitEmitIntervalMs\s*=\s*(\d+)L", src.read_text(encoding="utf-8"))
+        self.assertIsNotNone(m, "SceneLoadWaitEmitIntervalMs not found in the C# service")
+        self.assertEqual(int(m.group(1)), tb.SCENE_LOAD_WAIT_INTERVAL_MS)
 
 
 class LoadTimingCliTests(unittest.TestCase):

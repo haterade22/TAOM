@@ -46,6 +46,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly IArmyMembershipAdapter _army;
     private readonly IEncounterAdapter _encounter;
     private readonly IEncounterOwnershipPolicy _ownership;
+    private readonly IEnlistmentReconciler _reconciler;
     private readonly IModLogger _logger;
 
     private float _budget;
@@ -65,6 +66,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         IArmyMembershipAdapter army,
         IEncounterAdapter encounter,
         IEncounterOwnershipPolicy ownership,
+        IEnlistmentReconciler reconciler,
         IModLogger logger)
     {
         _store = store;
@@ -77,6 +79,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _army = army;
         _encounter = encounter;
         _ownership = ownership;
+        _reconciler = reconciler;
         _logger = logger;
     }
 
@@ -228,6 +231,13 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // bare-ctor army carries a null AiBehaviorObject that crashes the map UI. See
         // IArmyMembershipAdapter.ResetSessionCaches.
         _army?.ResetSessionCaches();
+
+        // The reconciler is a singleton too, and its stale-battle-latch anchor is an absolute
+        // campaign day (#551). A campaign that ended WHILE latched leaves that anchor behind; load a
+        // later save and the elapsed time is enormous, so the recovery fires on the first latched
+        // tick and finishes a live loot screen with no real waiting. Dropped here for the same
+        // reason the army handle is, rather than being wired separately into the load hook.
+        _reconciler?.ResetForNewSession();
     }
 
     public void OnPartyJoinedRunningMapEvent(string partyId)

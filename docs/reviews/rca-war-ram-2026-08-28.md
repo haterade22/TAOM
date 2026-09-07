@@ -13,6 +13,25 @@ The feature is otherwise clean. Standards, efficiency, tooling and 9 of 11 data-
 with no findings, and 7 of the 8 engine claims the design rests on were confirmed against the
 installed v1.4.8 DLLs.
 
+**Correction, 2026-09-06.** "Otherwise clean" did not hold. A tenth defect shipped in the rosters
+this review passed: `ironpass_ram_herder` filled `slot="Horse"` in all four of its equipment sets
+and `HorseHarness` in none, and players reported dwarves riding bareback. The empty slot was not
+merely unnoticed, it was written up as deliberate in [war-ram.md](../features/war-ram.md) and as
+"legal data" in a test comment, so the review's silence was later hardened into a documented
+decision.
+
+No agent asked what the mount's mesh actually contains. `sk_eb_goat_a` and `sk_eb_goat_b` are bare
+pelts and the rider's seat is modelled only on the eight `sk_eb_goat_bard_*` harness meshes, so for
+this mount the harness is geometry rather than armour. The vanilla horse hides that, and so does the
+warg, which carries a seat on the mount body and ships a separate harness on top.
+
+Gate added: `MOUNT_WITHOUT_HARNESS`, which REQUIRES a harness beside every `Horse` slot with
+exceptions argued in `_HARNESSLESS_BY_DESIGN`, plus
+`EveryWarRamRoster_InTroopsErebor_FillsTheHarnessSlot`. The first version of the gate was scoped to
+mounts believed saddleless, which repeated this review's own error in miniature by ruling from a
+desk on which mounts were fine bare. The universal form then found a second case immediately:
+`eomer_bat_equipment` on a bare charger while all fourteen of its Rohan siblings had a harness.
+
 ## Findings
 
 | # | Sev | Bug | Category | Why missed | Preventive action |
@@ -114,7 +133,10 @@ Recorded so a future reader does not re-litigate the design:
   This entry is left struck through rather than deleted: it was published as verified in three docs
   before the refutation, and finding 7 below is about exactly this failure mode.
 - Harness fit compares `HorseComponent.Monster.FamilyType`, and `SPInventoryVM` is its only managed
-  enforcement.
+  enforcement. **Still true, and still incomplete (2026-09-06):** fit is not the only question a
+  harness answers. On the ram it also carries the rider's seat, so an empty slot is a rendering
+  defect rather than a fit question, and framing the harness as armour is what made "optional" look
+  reasonable. See the correction above.
 - `as_dwarf_warrior` carries 203 `act_horse_*`/`act_ride*` rows, set-for-set identical to vanilla
   `as_human_warrior`. Of the 80 action references in the `horse` usage set, the 4 absent from
   `as_dwarf_warrior` are equally absent from `as_human_warrior`, so they are mount-side-only by design.

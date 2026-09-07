@@ -331,3 +331,16 @@ Re-running `python tools/rebalance_template_power.py` with no `--apply` prints t
 - [../reference/party-template-sizing.md](../reference/party-template-sizing.md) : what `max_value` controls
 - [#396](https://github.com/haterade22/TAOM/issues/396) : permanently parked caravans, of which this removes a major driver
 - [#315](https://github.com/haterade22/TAOM/issues/315) : the closed issue this partially reverses
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/bandit-management.md](./bandit-management.md)
+- [docs/modding/party-templates.md](../modding/party-templates.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
+
+<!-- backlinks-end -->

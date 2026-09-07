@@ -28,8 +28,12 @@ VERDICT classes (the phase the log ENDS on discriminates the hang)
                       that is FALLING means a cold shader cache (a slow load, not a
                       hang); a frozen count is the wedge.
   SCENE               ends at MissionInitialize / BattleSceneSelected /
-                      MissionInitializeDone / FinishMissionLoadingBegin — froze during
-                      mission construction before any agent equipped; a code/scene issue.
+                      MissionInitializeDone / FinishMissionLoadingBegin /
+                      WaitingForSceneLoad — froze during mission construction before any
+                      agent equipped; a code/scene issue. Ending on WaitingForSceneLoad is
+                      the most informative of the five: that marker only appears once the
+                      async wait has already run long, and it carries polls=/waitMs= from
+                      inside the wait, so the fault is bounded to the interval after it.
   PRE_SCENE           ends at EncounterStart / MissionOpenNew — froze in mission setup.
   COMPLETED           a BattlePlayable phase exists — the load finished; the hang (if
                       any) is not in the battle-load path.
@@ -201,7 +205,12 @@ _SHADERS_RE = re.compile(r"\bshaders=(\d+)\b")
 # MissionInitializeDone died in the native async load wait, which is the opposite end of
 # the lifecycle from "froze before scene selection".
 SCENE_TERMINALS = {"MissionInitialize", "BattleSceneSelected",
-                   "MissionInitializeDone", "FinishMissionLoadingBegin"}
+                   "MissionInitializeDone", "FinishMissionLoadingBegin",
+                   "WaitingForSceneLoad"}
+
+# Twin literal of BattleLoadDiagnosticsService.SceneLoadWaitEmitIntervalMs. It bounds how
+# far past the last heartbeat the fault can be, which is the whole point of the marker.
+SCENE_LOAD_WAIT_INTERVAL_MS = 5000
 
 # Per-phase tail of the SCENE summary. The first two keep the original wording verbatim.
 _SCENE_HINTS = {
@@ -210,13 +219,26 @@ _SCENE_HINTS = {
     "BattleSceneSelected":
         "Audit the scene ref with tools/audit_battle_scenes.py / tools/audit_scene_names.py.",
     "MissionInitializeDone":
-        "Mission.Initialize returned, so the native InitializeMission survived — the "
+        "Mission.Initialize returned, so the native InitializeMission survived: the "
         "async load wait never completed (native Mission.IsLoadingFinished never returned "
-        "true). Read polls=/waitMs= on the FinishMissionLoadingBegin line of a run that "
-        "got further to tell a blocking native spin from genuine streaming.",
+        "true). On a build carrying WaitingForSceneLoad, the ABSENCE of any heartbeat here "
+        "is itself a reading. The heartbeat is driven BY the TickLoading loop, so it cannot "
+        "fire once the main thread wedges inside one native frame: silence on a load known "
+        "to have run for many seconds IS the blocking-spin shape (#352), while silence on a "
+        "short load just means it died before the 3s threshold. On an older log, read "
+        "polls=/waitMs= on the FinishMissionLoadingBegin line of a run that got further.",
     "FinishMissionLoadingBegin":
         "The load wait completed; the freeze is in Scene.SetOwnerThread, one of the two "
         "warm-up Mission.Tick(0.001f) calls, or Handler.OnMissionAfterStarting.",
+    # Unlike the MissionInitializeDone arm above, this one does NOT have to send the reader
+    # off to another run: the heartbeat carries polls=/waitMs= from inside the wait itself,
+    # so _scene_load_wait_notes() below reads them directly off this line.
+    "WaitingForSceneLoad":
+        "The async load wait was still running when the process stopped, and this line is "
+        "the last heartbeat before it, so the fault lands within "
+        f"{SCENE_LOAD_WAIT_INTERVAL_MS // 1000}s of the t=+ stamp above. Frames were still "
+        "running right up to that point: the heartbeat is emitted FROM a TickLoading frame, "
+        "so its presence rules OUT a main thread wedged inside one native frame.",
 }
 
 # The bucket ledger the Phase-2 runbook records (native-commit-audit-2026-08.md). Spans
@@ -847,6 +869,15 @@ def _first_event(seg: list, phase: str):
     return None
 
 
+def _last_event(seg: list, phase: str):
+    """Newest occurrence of a phase. The scene-load heartbeat repeats every few seconds, and
+    only its LAST line carries the wait as it stood when the process stopped."""
+    for e in reversed(seg):
+        if e.phase == phase:
+            return e
+    return None
+
+
 def _span_ms(seg: list, start_phase: str, end_phase: str):
     """Gap between two markers, or None when either is missing / the clock went backwards.
     None means "not measured" and must never be rendered as 0."""
@@ -883,7 +914,11 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
     dominant = max(measured, key=lambda b: b["ms"])["name"] if measured else None
 
     polls = wait_ms = None
-    begin = _first_event(seg, "FinishMissionLoadingBegin")
+    # FinishMissionLoadingBegin is the completed-wait source and stays preferred. When the load
+    # never got there — the CTD/hang case this whole section exists for — fall back to the LAST
+    # WaitingForSceneLoad heartbeat, which carries the same two tokens from inside the wait. That
+    # is what lets the polls=1 native-spin rule below fire on a log that never reached seq=8.
+    begin = _first_event(seg, "FinishMissionLoadingBegin") or _last_event(seg, "WaitingForSceneLoad")
     if begin is not None:
         m = _POLLS_RE.search(begin.detail)
         polls = int(m.group(1)) if m else None
@@ -922,6 +957,10 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
         # polls=0 means the MissionState.TickLoading binding FAILED — NOT "there was no
         # wait". Distinguishing those two is the whole reason the counter exists.
         "tick_binding_failed": polls == 0,
+        # True when the pair came from a heartbeat rather than FinishMissionLoadingBegin, i.e.
+        # the wait was still RUNNING when the log stopped. The numbers are then a lower bound
+        # on the real wait, and reporting them as a completed duration would understate it.
+        "wait_incomplete": begin is not None and begin.phase == "WaitingForSceneLoad",
         "priv_mb": priv_mb,
     }
 
@@ -1025,25 +1064,54 @@ def _format_timings(t: dict) -> list:
     out = ["",
            "Load timing (GAPS between markers — t=+ is absolute and a chained mission "
            "inherits the clock):"]
+    # bucket2's own span needs BOTH its markers, and FinishMissionLoadingBegin is exactly the
+    # one a stalled load never writes — so on the logs this section matters most for, bucket2
+    # printed "?" while a heartbeat one function away already held a lower bound for it.
+    incomplete_wait = t["wait_ms"] if t.get("wait_incomplete") else None
     for b in t["buckets"]:
         ms = f"{b['ms']}ms" if b["ms"] is not None else "?"
+        if b["ms"] is None and b["name"] == "bucket2" and incomplete_wait is not None:
+            ms = f">={incomplete_wait}ms"
         out.append(f"  {b['name']:<8} {b['from']:<25} -> {b['to']:<25} "
                    f"{ms:>9}  {b['what']}")
-    if t["dominant"]:
+    if t["dominant"] and incomplete_wait is None:
         dom = next(b for b in t["buckets"] if b["name"] == t["dominant"])
         out.append(f"  dominant: {dom['name']} ({dom['ms']}ms) — {dom['what']}")
+    elif incomplete_wait is not None:
+        # Naming a "dominant" bucket from the CLOSED buckets alone is actively misleading here:
+        # the open one is unbounded and is the whole reason this log exists.
+        out.append(f"  dominant: bucket2 (>={incomplete_wait}ms, still running when the log "
+                   "stopped) — the closed buckets above cannot outrank an unbounded one.")
     if t["polls"] is not None:
         wait = (f"waitMs={t['wait_ms']}" if t["wait_ms"] is not None
                 else "waitMs=<not observed>")
         out.append(f"  TickLoading: polls={t['polls']} {wait}")
+        if t.get("wait_incomplete"):
+            out.append("  These came from the LAST WaitingForSceneLoad heartbeat, not from a "
+                       "completed wait: the load was still streaming when the log stopped, so "
+                       "both numbers are a LOWER BOUND on the real wait.")
         if t["tick_binding_failed"]:
             out.append("  polls=0 — the MissionState.TickLoading binding FAILED. This is "
                        "NOT 'there was no wait': check the top of the log for "
                        "'Patch43 diagnostics failed to apply'.")
         elif t["polls"] == 1 and (t["wait_ms"] or 0) > 1000:
-            out.append("  polls=1 with a large wait — the main thread BLOCKED inside one "
-                       "frame (a native spin, the #352 WaitForMeshesToBeLoaded shape), "
-                       "not async streaming.")
+            # The polls=1 reading INVERTS between the two sources, so this note must know
+            # which one it got. FinishMissionLoadingBegin is written after the wait ended, so
+            # polls=1 there means the thread was blocked INSIDE frame 1. A heartbeat is
+            # emitted FROM INSIDE a TickLoading frame, so polls=1 there means frame 1 had not
+            # even arrived yet when the threshold elapsed: the block was BEFORE the frame.
+            # Printing the first reading for the second case sends the reader to #352 for a
+            # stall that is nowhere near WaitForMeshesToBeLoaded.
+            if t.get("wait_incomplete"):
+                out.append("  polls=1 on a heartbeat — the FIRST TickLoading frame had not "
+                           "arrived yet when the threshold elapsed, so the block is BEFORE "
+                           "the loop, not inside it. This is NOT the #352 shape: look at "
+                           "what runs between Mission.Initialize returning and the first "
+                           "TickLoading frame.")
+            else:
+                out.append("  polls=1 with a large wait — the main thread BLOCKED inside one "
+                           "frame (a native spin, the #352 WaitForMeshesToBeLoaded shape), "
+                           "not async streaming.")
         if t["wait_ms"] is None:
             out.append("  waitMs was omitted by the game (MissionInitializeDone not "
                        "observed) — it is unmeasured, not zero.")

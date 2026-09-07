@@ -1009,7 +1009,7 @@ was kept permanently null (`ClearArmyAttachment()` in both `ParkNear` and `Resto
 | 5. Clan declares war individually | Already happening via `BeHostileAction` on the vanilla `encounter` menu | Mirror the commander's wars; unwind only what the mirror created |
 | 6. Commands show wrong | **Vanilla bug** at `BehaviorComponent.cs:107` | One-instruction transpiler |
 | 7a. Lord's army fought without me | `FindCommanderPartyIdIn` matched only his OWN party; an army-attached lord never enters the `MapEvent` himself | Match the army leader too |
-| 7b. Jumped immediately after defeat | Still `AttachedTo` when the encounter finished → forfeits vanilla's escape | Detach above every gate in `OnCommanderBattleEnded` |
+| 7b. Jumped immediately after defeat | Still `AttachedTo` when the encounter finished → forfeits vanilla's escape | Detach above every gate in `OnCommanderBattleEnded` (one precondition now sits above it, see #551) |
 
 ### The three engine facts this rests on (installed v1.4.8)
 
@@ -1026,6 +1026,17 @@ Either call alone leaves the property false and the player back on his own team.
 the state gate AND above the loot-flow `HasCurrent` gate in `OnCommanderBattleEnded`; that gate
 returns early while the aftermath encounter is still open. ServeAsSoldier ships with this hole.
 `BattleEnded_EncounterStillOpen_StillLeavesTheArmy` fails if the call is moved below it.
+
+**Exactly one precondition sits ABOVE the leave, and it is not a relaxation of the rule** (#551).
+The detach is destructive when the ending event is not the player's: clearing `AttachedTo` runs
+`Party.MapEventSide = null`, which pulls him out of whatever map event he IS in. So the leave is
+skipped when `!mainPartyWasInEndingEvent && _encounter.IsMainPartyInMapEvent`, and logs at ERROR when
+it fires, because reaching that state means the behaviour's gate leaked. The escape ordering is
+untouched: that condition can only hold for a FOREIGN event, and the player's own event reaches this
+method with `mainPartyWasInEndingEvent` true, where the leave runs exactly as before.
+`BattleEnded_ForeignEventWhileInAnotherLiveBattle_DoesNotLeaveTheArmy` and
+`BattleEnded_OurOwnEventEnding_StillLeavesTheArmy` pin both halves. Do not "simplify" this to an
+unconditional detach.
 
 **`Kingdom.CreateArmy` moves the commander.** It calls `army.Gather()`, whose non-player branch runs
 `FindBestGatheringSettlementAndMoveTheLeader` and dispatches `OnArmyCreated`. So
@@ -1128,6 +1139,9 @@ so whatever it holds survives every reload.
 - `ServiceMaintenanceService.ResetSessionCaches` drops the adapter's `_createdArmy` handle. That
   handle is a live `Army` reference on a `Reuse.Singleton` whose container is process-scoped, so
   after a reload it names a dead object and the identity test in `LeaveArmy` could never match again.
+  It also drops `IEnlistmentReconciler`'s stale-battle-latch anchor for the same reason (#551): an
+  absolute campaign day left behind by a campaign that ended while latched makes the recovery fire
+  instantly on the next later save.
   It lives there, not in `EnlistmentBehavior`, because that method is the one place that knows the
  lifetime of the feature's per-session state, the same reason `InvalidateCommanderCache` is called
   from it.
@@ -1451,6 +1465,112 @@ case of a vanilla `SwitchToMenu` swapping it, which needs no `AtMenu == false` a
 Tracked in #511 rather than fixed here because both candidate fixes need an in-game smoke, and the
 first collides with the battle path's R3 handling.
 
+## A battle ending on the far side of the map tore the player out of his own (#551, 2026-09-06)
+
+Crash bundle `31942985`, from a live game on v2.0.27.0. The stack is pure vanilla with no TAOM frame
+on it, which is why this one is worth reading in full: the crash is four and a half minutes and one
+feature away from where it surfaces.
+
+```
+System.NullReferenceException @ MapEventSide.AllocateTroops
+  <- MapEventSide.MakeReadyForSimulation  <- MapEvent.SimulateBattleSetup
+  <- MapEvent.SimulateBattleSessionForMapEvent  <- MapEvent.Update
+  <- MapEventManager.Tick  <- Campaign.Tick
+```
+
+### The gate was our state, and it should have been the event's identity
+
+`EnlistmentBattleBehavior.OnMapEventEnded` read `State == EnlistedBattle || commander-in-event`. The
+state disjunct alone was enough, so while the player sat in `EnlistedBattle` **every** map event
+resolving anywhere in the world counted as "the commander's battle ended". The reporting session
+logged around 650 AI battles, several per second.
+
+At 20:23:57 `TryJoin` set `EnlistedBattle` and landed a verified join. In the same second a
+`sturgia lord_2_1` against `umbar_corsairs` field battle finished on the far side of the map (id
+`91082.413`, read from the `[AutoResolve]` record emitted by the same dispatch), and
+`OnCommanderBattleEnded` tore down the army it had raised 0.3 seconds earlier.
+
+The gate is now `commander-in-event || main-party-in-event`. The main-party disjunct is what the
+state clause was reaching for: when the commander is wiped mid-event his party is gone from
+`InvolvedParties` but the player is still in it, and that end is genuinely ours.
+`CampaignEventDispatcher.OnMapEventEnded` is dispatched from `MapEvent.FinalizeEventAux` :2079,
+**before** the side teardown, so `InvolvedParties` is still populated at that point;
+`FindCommanderPartyIdIn` already depended on that fact.
+
+### Why the teardown is fatal rather than merely wrong
+
+`ArmyMembershipAdapter.LeaveArmy` clears `MobileParty.MainParty.AttachedTo`, and the engine answers
+that with more than a detach. `MobileParty.SetAttachedToInternal` :1780-1783 runs
+`Party.MapEventSide.HandleMapEventEndForPartyInternal(Party); Party.MapEventSide = null;`, so the
+main party is pulled out of whatever map event it is in. Two things follow, and the crash needs both:
+
+| Consequence | Engine site |
+|---|---|
+| `MapEvent.TroopUpgradeTracker` is nulled permanently, because the removed party is the MAIN party | `RemoveInvolvedPartyInternal` :855-858 |
+| The event becomes engine-tickable again, because `MapEventManager.Tick` skips only `MobileParty.MainParty.MapEvent` | `MapEventManager.Tick` :59 |
+
+`MapEventSide.AllocateTroops` :552 then dereferences that tracker with no null check, gated only on
+`BattleObserver != null`. The observer was attached at 20:28:25 by a `BattleSimulation` constructor
+that assigned it and then threw `IndexOutOfRangeException` on
+`SelectedTroops[(int)_mapEvent.PlayerSide]`, because `BattleSideEnum.None` is `-1` and the player had
+no `MapEventSide` any more. Its one clearer, `PlayerEncounter.LeaveBattle` :1990, never ran.
+`ServiceBattleService.OnCommanderBattleEnded` now refuses the detach outright when the main party is
+in a map event other than the one ending, and logs at ERROR when it does, because reaching that state
+means the gate leaked.
+
+### The four and a half minutes before the crash
+
+The teardown returned early at `if (_encounter.HasCurrent) return;`, leaving `EnlistedBattle` with a
+live `PlayerEncounter` and the commander still fighting. Nothing in the feature could move it:
+
+| Guard | Why it held |
+|---|---|
+| `TryBreakBattleLatch` returns on `HasPlayerEncounter` or `commander.PartyIsInMapEvent` | Both true |
+| `SweepStrandedEncounter` returns on `commanderInMapEvent` | The commander was still fighting |
+| R1b defers for every intent, `Discharge` included | `PlayerEncounter.Battle != null`, so it reads as the player's own loot screen |
+| `ServiceBattleService.TryJoin` refuses every rejoin | The state is not `EnlistedAttached` |
+
+**#538's fix does not cover this shape.** Its sweep is gated on `!commanderInMapEvent`, which is
+exactly the leg this crash sets, and R1b, added by that same fix, is what makes the encounter
+untouchable. Four correct guards with no exit between them.
+
+The discriminator is **time**, and only time: R1b justifies itself on the loot window being short and
+every caller retrying. `EnlistmentReconciler.BreakStaleBattleLatch` times one continuous episode of
+(`EnlistedBattle`, encounter open, player in no map event) and, past
+`EnlistmentCoreConfig.StaleBattleLatchDays` (one in-game hour), takes the new `StaleBattleLatch`
+intent that R1c lets through. It runs before the assessment so the recovery lands in the same pass,
+and it hands R1c the decision rather than calling `Finish` itself, so R1 still refuses outright if the
+player turns out to be in a map event after all. Like R2c, R1c enforces its own
+`!PlayerInsideSettlement` precondition rather than trusting the caller.
+
+**The anchor is not persisted, and that is not the same as safe.** The reconciler is
+`Reuse.Singleton`, so it outlives the campaign, and the anchor is an ABSOLUTE campaign day. A campaign
+that ends while latched leaves a finite value behind; load a later save and the elapsed time is
+enormous, so the recovery fires on the very first latched tick and finishes what may be a genuine loot
+screen with no real waiting at all. That is the destructive `Finish` R1b exists to prevent, committed
+by the safety net written to prevent it. Two guards, because they cover different paths.
+`IEnlistmentReconciler.ResetForNewSession` covers the load path, dropped from
+`ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this lifetime,
+which is also why the army handle is dropped there rather than from the load hook). A backwards-clock
+re-anchor inside `BreakStaleBattleLatch` covers a brand-new campaign, which never reaches
+`ResetSessionCaches` at all because it is wired to `OnGameLoaded` only: a new campaign starts at a low
+day count, so the leftover anchor sits in its future, and a clock that ran backwards cannot be one
+continuous episode. Found by the `/deep-review` data-flow agent, not by the tests, which all passed.
+
+### The engine backstop, and the bundle that was suppressed
+
+`Patch82_MapEventObserverInvariant` restores the `BattleObserver`/`TroopUpgradeTracker` pairing before
+`SimulateBattleSetup` reads it, for every path including ones that do not exist yet:
+[map-event-guard.md](map-event-guard.md), registry entry in
+[harmony-patch-registry.md](../reference/harmony-patch-registry.md).
+
+Separately, this crash was nearly unsolvable. `CrashSignatureCalculator` hashed only the outer
+exception type, and every Gauntlet-dispatched crash arrives as `TargetInvocationException @
+ScreenManager.Update` over the same eight frames — so the 20:28:25 `IndexOutOfRangeException`, the
+bundle that would have named the corruption, was suppressed as a duplicate of the 20:23:58
+`NullReferenceException`. The chain was reconstructable only because the raw `rgl_log.txt` rode along
+in the surviving bundle. The signature now includes the inner chain (#552).
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
@@ -1473,7 +1593,7 @@ consequence* is a world-mutating entry point even though it doesn't pattern-matc
 
 ## Testing
 
-The Enlistment suite (`TAOM.Tests/Features/Enlistment/`, 668 enlistment tests; full repo suite 6052 green): transition-table
+The Enlistment suite (`TAOM.Tests/Features/Enlistment/`, 1,042 tests as of 2026-09-06, measured with `--filter FullyQualifiedName~TAOM.Tests.Features.Enlistment`; the repo-wide total is not quoted here because it moves with every other feature): transition-table
 matrix, discharge invariants, Entity-State-Matrix load rows, reconciler policy (grace,
 captivity, prisoner-commander-with-live-party), record round-trip incl. NaN/forward-compat,
 menu redirect policy + cap, battle ordering/rollback/loot-guard, binding pins, config
@@ -1482,7 +1602,7 @@ incl. regression tests for the mint-mode double-payment and shortfall-overcount 
 promotion thresholds at both evaluation points, merit scoring/bands incl. NaN ratios, duty
 gating/rotation/lifecycle per mechanic, equipment resolver fallback + payoff math, the persisted
 issue-ledger across a save round-trip, role-fit bands per assignment, and one regression test per
-Codex finding (`CodexFindingRegressionTests`).
+Codex finding (`CodexFindingRegressionTests`). Since #551 the suite also pins the battle-end gate's event identity, the detach precondition, R1c and the stale-latch timer, and the cross-campaign reset of that timer's anchor.
 
 **Verified in live play (2026-08-07):** field-battle join with the commander solo (instant, via
 `MapEventStarted`); siege-assault join; hourly-recovery join when the immediate edge is missed;
@@ -1592,11 +1712,13 @@ Specifically owed, because each is a state a test structurally cannot reach:
 
 ## Referenced by
 
+- [docs/features/map-event-guard.md](./map-event-guard.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/configs-balance.md](../modding/configs-balance.md)
 - [docs/modding/equipment-rosters.md](../modding/equipment-rosters.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/enlistment-morning-handoff-2026-08-09.md](../reviews/enlistment-morning-handoff-2026-08-09.md)
+- [docs/reviews/rca-map-event-observer-2026-09-06.md](../reviews/rca-map-event-observer-2026-09-06.md)
 
 <!-- backlinks-end -->

@@ -55,6 +55,32 @@ public enum EncounterFinishIntent
     /// than the destroyed town visit R3 was written to prevent.
     /// </summary>
     StrandedOutsideSettlement,
+
+    /// <summary>
+    /// The player has been latched in <c>EnlistedBattle</c> with an open battle-shaped encounter and
+    /// no map event of his own for longer than any loot screen lasts. The ONLY intent that gets past
+    /// R1b, and the reason it can is duration.
+    ///
+    /// Issue #551. A join that lands and is then torn down in the same second leaves exactly this
+    /// shape, and three guards each refuse to move it, each of them correctly:
+    /// <c>ServiceMaintenanceService.TryBreakBattleLatch</c> returns on <c>HasPlayerEncounter</c>,
+    /// <c>EnlistmentReconciler.SweepStrandedEncounter</c> returns on <c>commanderInMapEvent</c>, and
+    /// R1b defers every intent, <see cref="Discharge"/> included, because the encounter reads as a
+    /// battle. The player cannot move, cannot open any encounter, has no service menu, and nothing
+    /// in the mod will ever release him. In the reported session that ended in a CTD when the map
+    /// event he had been pulled out of ticked its own simulation.
+    ///
+    /// R1b justifies itself on the loot window being short and every caller retrying. That is what
+    /// licenses this intent rather than contradicting it: the caller only reaches for it once the
+    /// shape has persisted past <c>EnlistmentCoreConfig.StaleBattleLatchDays</c>, so a real loot
+    /// screen is never in scope.
+    ///
+    /// Like <see cref="StrandedOutsideSettlement"/>, its preconditions are ENFORCED BY THE POLICY
+    /// rather than owed by the caller: R1 still outranks it, so a player genuinely in a map event is
+    /// untouchable, and R1c additionally requires <c>!snapshot.PlayerInsideSettlement</c> so a town
+    /// visit cannot be destroyed by a latch that resolved into one.
+    /// </summary>
+    StaleBattleLatch,
 }
 
 /// <summary>The decision, and the reason, so the log says which rule fired.</summary>

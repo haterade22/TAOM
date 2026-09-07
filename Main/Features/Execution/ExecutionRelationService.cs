@@ -2,8 +2,6 @@ namespace TAOM.Features.Execution;
 
 /// <summary>
 /// Default implementation of <see cref="IExecutionRelationService"/>.
-/// Replicates the alignment-aware logic that previously lived inline in
-/// <see cref="Models.TaomExecutionRelationModel"/> + <see cref="Hooks.ExecutionActionHook"/>.
 /// </summary>
 public class ExecutionRelationService : IExecutionRelationService
 {
@@ -17,22 +15,22 @@ public class ExecutionRelationService : IExecutionRelationService
     }
 
     public ExecutionRelationResult GetRelationModifier(
-        string executorKingdomId,
-        string victimKingdomId,
-        string evaluatorKingdomId,
+        ExecutionParticipant executor,
+        ExecutionParticipant victim,
+        ExecutionParticipant evaluator,
         int baseRelationDelta,
         bool baseShowNotification)
     {
-        // Fall through to vanilla when any kingdom is null/empty (independent player, no-faction
-        // victim, no-faction evaluator). Mirrors the prior model-body null guard.
-        if (string.IsNullOrEmpty(executorKingdomId)
-            || string.IsNullOrEmpty(victimKingdomId)
-            || string.IsNullOrEmpty(evaluatorKingdomId))
-        {
-            return new ExecutionRelationResult(baseRelationDelta, baseShowNotification);
-        }
+        // Every participant is placed on a side by kingdom id with a culture-id fallback. There is
+        // deliberately no "unknown, defer to vanilla" escape: a single unresolved id used to hand the
+        // whole calculation back to vanilla, and vanilla charges -10 to every honourable clan leader
+        // in the world, which is exactly the Free Peoples. A participant that classifies on neither
+        // id resolves Neutral, which is nobody's ally and everybody's enemy.
+        var executorSide = Resolve(executor);
+        var victimSide = Resolve(victim);
+        var evaluatorSide = Resolve(evaluator);
 
-        int modifiedDelta = CalculateModifiedDelta(executorKingdomId, victimKingdomId, evaluatorKingdomId, baseRelationDelta);
+        int modifiedDelta = CalculateModifiedDelta(executorSide, victimSide, evaluatorSide, baseRelationDelta);
 
         // Suppress notification when the modifier zeroes the delta — otherwise the player sees
         // a notification claiming a relation change that did not occur.
@@ -41,33 +39,24 @@ public class ExecutionRelationService : IExecutionRelationService
         return new ExecutionRelationResult(modifiedDelta, showNotification);
     }
 
+    private FactionSide Resolve(ExecutionParticipant participant)
+        => _alignmentService.ResolveSide(participant.KingdomId, participant.CultureId);
+
     private int CalculateModifiedDelta(
-        string executorKingdomId,
-        string victimKingdomId,
-        string evaluatorKingdomId,
+        FactionSide executorSide,
+        FactionSide victimSide,
+        FactionSide evaluatorSide,
         int baseRelationDelta)
     {
-        bool crossAlignment = _alignmentService.AreEnemyAlignments(executorKingdomId, victimKingdomId);
-
-        if (crossAlignment)
+        if (_alignmentService.AreEnemyAlignments(executorSide, victimSide))
         {
-            // Executor's side cheers — no penalty among allies.
-            if (_alignmentService.AreSameAlignment(evaluatorKingdomId, executorKingdomId))
-                return 0;
-
-            // Victim's side feels the full vanilla penalty.
-            if (_alignmentService.AreSameAlignment(evaluatorKingdomId, victimKingdomId))
-                return baseRelationDelta;
-
-            // Neutral / third-side observer — no opinion.
-            return 0;
+            // Killing your enemy: only the victim's own side mourns him. The executor's allies
+            // approve, and a third party has no opinion.
+            return _alignmentService.AreSameAlignment(evaluatorSide, victimSide) ? baseRelationDelta : 0;
         }
 
-        // Same-alignment kill — kinslaying multiplier hardens the penalty.
-        if (_alignmentService.AreSameAlignment(executorKingdomId, victimKingdomId))
-            return (int)(baseRelationDelta * KinslayingMultiplier);
-
-        // Same alignment but not strictly same-side (e.g. both Neutral) — vanilla.
-        return baseRelationDelta;
+        // Not enemies means both sides resolved to the same non-Neutral side, so this is kinslaying
+        // and every evaluator feels it harder than vanilla.
+        return (int)(baseRelationDelta * KinslayingMultiplier);
     }
 }
