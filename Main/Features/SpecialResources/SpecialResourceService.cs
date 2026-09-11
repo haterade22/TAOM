@@ -237,9 +237,16 @@ public class SpecialResourceService : ISpecialResourceService
         if (cost == null || cost.RecruitCost <= 0) return 0f;
 
         var totalCost = cost.RecruitCost * count;
+        // Return what LEFT the wallet, not the nominal cost: the volunteer screen is gated, the party
+        // screen's prisoner recruit is not (#563), so the charge can land on a smaller balance and the
+        // storage floors at zero. A toast built from the nominal cost would announce currency that was
+        // never there (Codex, review 95, F1).
+        var before = _storage.Get(heroId, resource.Id);
         _storage.Add(heroId, resource.Id, -totalCost);
-        _logger.LogInfo($"[SpecRes] RECRUIT: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
-        return totalCost;
+        var debited = before - _storage.Get(heroId, resource.Id);
+        _logger.LogInfo($"[SpecRes] RECRUIT: -{debited:0.##} {resource.DisplayName} for {troopId} x{count}"
+                        + (debited < totalCost ? $" (cost {totalCost}, balance floored at 0)" : ""));
+        return debited;
     }
 
     public RecruitGateResult CanAffordRecruit(string heroId, string kingdomId, string cultureId, IReadOnlyList<RecruitCartEntry> cart)
@@ -364,9 +371,14 @@ public class SpecialResourceService : ISpecialResourceService
             var resource = ResolveResource(kingdomId, cultureId);
             if (resource != null)
             {
+                // Measured, not nominal: a prisoner recruited in the same party screen is charged before
+                // Done commits this queue, so the balance can be below the pending amount and the storage
+                // floors at zero (Codex, review 95, F1).
+                var before = _storage.Get(heroId, resource.Id);
                 _storage.Add(heroId, resource.Id, -_pendingSpend);
-                debited = _pendingSpend;
-                _logger.LogInfo($"[SpecRes] PartyScreen COMMITTED: -{_pendingSpend:F0} {resource.DisplayName}");
+                debited = before - _storage.Get(heroId, resource.Id);
+                _logger.LogInfo($"[SpecRes] PartyScreen COMMITTED: -{debited:0.##} {resource.DisplayName}"
+                                + (debited < _pendingSpend ? $" (pending {_pendingSpend:0.##}, balance floored at 0)" : ""));
             }
         }
         else

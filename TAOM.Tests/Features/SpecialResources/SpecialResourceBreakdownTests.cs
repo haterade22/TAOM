@@ -179,6 +179,9 @@ public class SpecialResourceBreakdownTests
         var breakdown = _service.GetDailyBreakdown("hero1", "empire_s", null, 4, troops);
         var projected = _service.GetProjectedDailyNet("hero1", "empire_s", null, 4, troops);
 
+        // An independent expected value, not only the two reads against each other: 4 towns * 0.5
+        // = 2.0, +20% = 2.4 earning; 10 * 0.3 = 3.0, -50% = 1.5 upkeep; net 0.9 (Codex, review 95).
+        Assert.AreEqual(0.9f, breakdown.Net, 0.001f);
         Assert.AreEqual(projected, breakdown.Net, 0.0001f);
         Assert.AreEqual(breakdown.Earning - breakdown.Upkeep, breakdown.Net, 0.0001f);
     }
@@ -209,12 +212,49 @@ public class SpecialResourceBreakdownTests
     }
 
     [TestMethod]
-    public void DaysUntilDepleted_NonNegativeNet_ReturnsNull()
+    public void DaysUntilDepleted_PositiveNet_ReturnsNull()
     {
         var breakdown = _service.GetDailyBreakdown("hero1", "empire_s", null, 4, NoTroops);
 
         Assert.IsTrue(breakdown.Net > 0f);
         Assert.IsNull(breakdown.DaysUntilDepleted(10f));
+    }
+
+    [TestMethod]
+    public void DaysUntilDepleted_ZeroNet_ReturnsNull()
+    {
+        var breakdown = _service.GetDailyBreakdown("hero1", "empire_s", null, 0, NoTroops);
+
+        Assert.AreEqual(0f, breakdown.Net);
+        Assert.IsNull(breakdown.DaysUntilDepleted(10f));
+    }
+
+    [TestMethod]
+    public void DaysUntilDepleted_NetBelowTheBalanceFloatResolution_ReturnsNull()
+    {
+        // Codex (review 95) reproduced this on the CLR with shipped data: a Dale player with one town
+        // (+0.7) and two captains plus one Bara-dur guard (0.2 * 2 + 0.3) has a float net of about
+        // -6e-8. The stored balance never moves, yet ceil(1000 / 6e-8) is 1.7e10 and the unchecked
+        // cast made the tooltip say "Depleted in -2147483648 days". No countdown when the next tick
+        // would not lower the stored float, and no cast without a range check.
+        var dale = new SpecialResource(
+            id: "lake_fish", kingdomIds: new[] { "sturgia" }, cultureIds: new[] { "sturgia" },
+            displayName: "Lake Fish", iconSpriteName: "taom_lake_fish_icon", cap: 10000f, startingAmount: 0f,
+            dailyPerTown: 0.7f, perBattleVictoryBase: 7f, perRaid: 5f, perSiegeVictory: 10f, perPrisoner: 1f);
+        _config.GetByKingdomId("sturgia").Returns(dale);
+        CostRow("mordor_uruk_captain", dailyUpkeep: 0.2f);
+        CostRow("mordor_uruk_baraddurguard", dailyUpkeep: 0.3f);
+        var troops = new List<TroopUpkeepInfo>
+        {
+            new("mordor_uruk_captain", 2),
+            new("mordor_uruk_baraddurguard", 1),
+        };
+
+        var breakdown = _service.GetDailyBreakdown("hero1", "sturgia", null, 1, troops);
+
+        Assert.IsTrue(breakdown.Net < 0f, $"the fixture must produce a tiny negative net, got {breakdown.Net:R}");
+        Assert.AreEqual(1000f, 1000f + breakdown.Net, "the fixture must not move the stored float");
+        Assert.IsNull(breakdown.DaysUntilDepleted(1000f));
     }
 
     // ── Desertion only for troops that actually cost upkeep (#558 finding 5) ──
@@ -270,14 +310,19 @@ public class SpecialResourceBreakdownTests
     [TestMethod]
     public void CommitSession_PendingSpend_ReturnsAmountDebited()
     {
+        // Real storage: the return value is the measured debit, so a substitute whose Get returns 0
+        // would read as "nothing left the wallet" (Codex, review 95).
+        var storage = new SpecialResourceStorageService();
+        var service = new SpecialResourceService(_config, storage, Substitute.For<IModLogger>(), _passiveService);
+        storage.Set("hero1", "war_spoils", 100f);
         CostRow("mordor_uruk_captain", dailyUpkeep: 0.2f, upgradeCost: 4);
-        _service.BeginPartyScreenSession();
-        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        service.BeginPartyScreenSession();
+        service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
 
-        var spent = _service.CommitSession("hero1", "empire_s", null);
+        var spent = service.CommitSession("hero1", "empire_s", null);
 
         Assert.AreEqual(12f, spent, 0.001f);
-        _storage.Received(1).Add("hero1", "war_spoils", -12f);
+        Assert.AreEqual(88f, storage.Get("hero1", "war_spoils"), 0.001f);
     }
 
     [TestMethod]
@@ -297,12 +342,54 @@ public class SpecialResourceBreakdownTests
     [TestMethod]
     public void ChargeRecruitCost_TroopWithRecruitCost_ReturnsAmountCharged()
     {
+        var storage = new SpecialResourceStorageService();
+        var service = new SpecialResourceService(_config, storage, Substitute.For<IModLogger>(), _passiveService);
+        storage.Set("hero1", "war_spoils", 250f);
         CostRow("harad_elephant_rider", dailyUpkeep: 10f, upgradeCost: 0, recruitCost: 50);
 
-        var charged = _service.ChargeRecruitCost("hero1", "empire_s", null, "harad_elephant_rider", 2);
+        var charged = service.ChargeRecruitCost("hero1", "empire_s", null, "harad_elephant_rider", 2);
 
         Assert.AreEqual(100f, charged, 0.001f);
-        _storage.Received(1).Add("hero1", "war_spoils", -100f);
+        Assert.AreEqual(150f, storage.Get("hero1", "war_spoils"), 0.001f);
+    }
+
+    // Real storage below: the substitute never floors, so a return-value test against it can only
+    // prove what was REQUESTED, never what left the wallet (Codex, review 95, F1).
+
+    [TestMethod]
+    public void ChargeRecruitCost_BalanceBelowCost_ReturnsOnlyTheAmountDebited()
+    {
+        // A captured spider recruited in the party screen: Patch51 gates the volunteer screen only, so
+        // the charge lands on a balance of 2 for a cost of 5 and the storage floors at 0. The toast
+        // must say -2, not -5.
+        var storage = new SpecialResourceStorageService();
+        var service = new SpecialResourceService(_config, storage, Substitute.For<IModLogger>(), _passiveService);
+        storage.Set("hero1", "war_spoils", 2f);
+        CostRow("taom_spider_creature", dailyUpkeep: 1f, upgradeCost: 0, recruitCost: 5);
+
+        var debited = service.ChargeRecruitCost("hero1", "empire_s", null, "taom_spider_creature", 1);
+
+        Assert.AreEqual(2f, debited, 0.001f);
+        Assert.AreEqual(0f, storage.Get("hero1", "war_spoils"));
+    }
+
+    [TestMethod]
+    public void CommitSession_BalanceFellBelowPending_ReturnsOnlyTheAmountDebited()
+    {
+        // Ten affordable upgrades queued at balance 10, then a prisoner recruit inside the same party
+        // screen takes 5 before Done commits the queue: 5 leaves the wallet, not 10.
+        var storage = new SpecialResourceStorageService();
+        var service = new SpecialResourceService(_config, storage, Substitute.For<IModLogger>(), _passiveService);
+        storage.Set("hero1", "war_spoils", 10f);
+        CostRow("mordor_uruk_captain", dailyUpkeep: 0.2f, upgradeCost: 1);
+        service.BeginPartyScreenSession();
+        service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 10);
+        storage.Add("hero1", "war_spoils", -5f);
+
+        var debited = service.CommitSession("hero1", "empire_s", null);
+
+        Assert.AreEqual(5f, debited, 0.001f);
+        Assert.AreEqual(0f, storage.Get("hero1", "war_spoils"));
     }
 
     [TestMethod]

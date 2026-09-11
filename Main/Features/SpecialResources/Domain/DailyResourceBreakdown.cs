@@ -67,6 +67,15 @@ public sealed class DailyResourceBreakdown
     public int? DaysUntilDepleted(float balance)
     {
         if (!(Net < 0f) || !(balance > 0f)) return null;
-        return (int)Math.Ceiling(balance / -Net);
+
+        // A net below the balance's float resolution never moves the stored value (the tick adds the
+        // same two floats), and dividing by it gives a day count past int.MaxValue that the unchecked
+        // cast turned into "Depleted in -2147483648 days". Shipped data reaches it: a Dale player with
+        // one town (+0.7) against 0.2 + 0.2 + 0.3 of upkeep nets about -6e-8 (Codex, review 95, F2).
+        if (!(balance + Net < balance)) return null;
+
+        var days = Math.Ceiling(balance / (double)-Net);
+        if (!(days <= int.MaxValue)) return null;
+        return (int)days;
     }
 }

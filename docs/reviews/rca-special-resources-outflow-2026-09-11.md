@@ -48,3 +48,31 @@ in the installed decompile.
 None new. The lesson appended to `docs/reviews/lessons/gamemodels-services.md` this session covers the
 shape of findings 1 and 2; `evidence-over-claims.md` A.4 already covers finding 6, and the
 special-resources feature memory now carries the corrected fact.
+
+## Codex pass (GPT-6-Astra at ultra, review 95)
+
+Dispatched after the five agents and the fix-loop re-check, on the committed 9e78afd2 / e80949b7, the
+first TAOM review on that model. Verdict ISSUES FOUND: 0 CRITICAL, 0 HIGH, 3 MEDIUM, 0 LOW, and no
+false positive. Each was verified against the source before it was implemented; F2's arithmetic was
+reproduced independently in float32 before the fix.
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|-----|---------|----------|------------|-------------------|
+| F1 | MED | `ChargeRecruitCost` returned the nominal cost and `CommitSession` the pending amount, after a storage write that floors at zero. The volunteer screen is gated (Patch51); the party screen's prisoner recruit is not, so a spider recruited at a balance of 2 would have toasted a debit of 5. The same interleaving reaches the upgrade toast when a prisoner recruit inside the same screen lowers the balance before Done commits the queue. | Return value as receipt | The value was correct as a request and never followed into the store that clamps it. The two return-value tests used a substitute storage whose `Get` returns 0, so they proved a requested `Add`, never a debit. | Fixed: both paths measure before and after and return the difference; both tests moved to real storage and two new ones pin the floored cases. Follow-up #563 for the ungated prisoner path. |
+| F2 | MED | `DaysUntilDepleted` cast `Math.Ceiling(balance / -Net)` to int unchecked. A net below the balance's float resolution (a Dale player with one town, +0.7, against 0.2 + 0.2 + 0.3 of upkeep nets minus 5.96e-8) gives 1.68e10 days, and the cast is int.MinValue: "Depleted in -2147483648 days" for a balance that never moves. Codex compiled the domain type and ran the shipped data through the CLR. | Float-to-int cast, finite overflow | The cast rule in `csharp-architecture.md` names NaN and infinity; every input here was finite. The test covered two ordinary countdowns. | Fixed: no countdown when `balance + Net` does not lower the stored float, the division in double, a range check before the cast; regression test with the reproduced fixture. Rule widened to finite overflow. |
+| F3 | MED | The zero-balance notice ("troops are deserting") showed whenever the balance was zero and upkeep troops were present, but the tick applies the net before testing the balance, so with income covering upkeep nothing deserts. | Gate written from a different predicate than the event | The notice was written from the balance alone; the flag next to it already carried the net. Third gate on the same event, and the one the fix-loop re-check did not lay beside the others. | Fixed: the notice requires `Net <= 0` (the flag's own term at zero) and states the rule ("desert each day while you have no X") instead of a loss in progress. |
+
+Observations Codex recorded that are not findings: the extended tooltip rows are reachable (it traced
+the renderer that honours `OnlyShowWhenExtended`); `TroopRoster.AddToCounts` handles a wounded majority
+safely; the storage repair has no enumeration hazard; all 77 cost rows resolve at runtime (the spider
+lives in `characters/spider_creature.xml`); the declined refresh cache is defensible; string variables
+are not universally verbatim in Bannerlord's substitution engine, so "cannot be double-processed" is
+not a general API guarantee, only true for the numeric values and rendered names used here; the
+Mumakil's 500 a day is authored creature pricing and a balance question, not a defect of these commits.
+Its test-sensitivity table classed 21 of the new tests as unable to compile against the pre-change API,
+7 as behavioural regressions, 1 as passing either way, and flagged `GetDailyBreakdown_Net_MatchesGetProjectedDailyNet`
+as comparing a helper with its own wrapper; it now asserts the independent 0.9.
+
+Root cause shared by F1 and F3: a value or a message written from the point where it is decided, not
+from the point where its truth is settled (the store's floor, the tick's order). F2 is the float-cast
+class again, one category wider than the rule described it.

@@ -2873,7 +2873,7 @@
 	<string id="taom_res_tt_net" text="{=taom_res_tt_net}Net" />
 	<string id="taom_res_tt_depleted_in" text="{=taom_res_tt_depleted_in}Depleted in" />
 	<string id="taom_res_tt_days" text="{=taom_res_tt_days}{DAYS} days" />
-	<string id="taom_res_tt_deserting" text="{=taom_res_tt_deserting}Elite troops are deserting: no {RESOURCE} left" />
+	<string id="taom_res_tt_deserting" text="{=taom_res_tt_deserting}Elite troops desert each day while you have no {RESOURCE}" />
 	<string id="taom_res_tt_per_battle" text="{=taom_res_tt_per_battle}Per battle" />
 	<string id="taom_res_tt_per_raid" text="{=taom_res_tt_per_raid}Per raid" />
 	<string id="taom_res_tt_per_siege" text="{=taom_res_tt_per_siege}Per siege" />

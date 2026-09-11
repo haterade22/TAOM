@@ -792,3 +792,32 @@ a table instead of a float: the defective line predates the change and never app
   never on the presence of the row, and put that predicate in the tested service rather than the
   engine-facing collector so the regression test needs no campaign.
 - **Source:** #558 finding 5, 2026-09-11; `docs/features/special-resources.md` "Desertion Mechanics".
+
+### A return value that names a request is not a receipt: measure a debit through the store that floors it
+
+`ChargeRecruitCost` returned `recruit_cost * count` and `CommitSession` returned the pending amount,
+both after a `_storage.Add` whose `Set` floors at zero. Behind a gate the two are equal; the party
+screen's prisoner recruit has no gate, so a spider recruited at a balance of 2 debited 2 and the new
+toast said 5. The value was right as a request and wrong as a receipt.
+- **Why missed:** the return was added so the behavior could "say what was spent", and the author read
+  the spend line, not the store below it. The tests used a substitute storage whose `Get` returns 0
+  and asserted a `Received(Add, -12)`, which proves the request and nothing about the balance.
+- **Prevent:** when a method reports an amount that went through a clamping store, return
+  `before - after` read from that store, and test it against the REAL store with a balance below the
+  nominal cost. A `Received(Add, x)` assertion is a request assertion; name it as one.
+- **Source:** Codex review 95 (GPT-6-Astra, ultra) F1, 2026-09-11; follow-up #563 for the ungated path.
+
+### A float-to-int cast overflows on FINITE input too: a divisor below the dividend's float resolution is the NaN of division
+
+`DaysUntilDepleted` did `(int)Math.Ceiling(balance / -Net)`. Shipped data produces a net of minus
+5.96e-8 (one town at +0.7 against 0.2 + 0.2 + 0.3), which never moves the stored float, and the
+quotient is 1.68e10, so the unchecked cast rendered "Depleted in -2147483648 days". Every input was
+finite; the finiteness gate the cast rule prescribes would have passed it.
+- **Why missed:** the cast rule was read as a NaN rule. The two tests covered countdowns of 2 and 3
+  days and never a net that the balance cannot feel.
+- **Prevent:** before any float-to-int cast, ask what the largest FINITE value the expression can take
+  is, not only whether it can be NaN. Refuse the calculation when its input could not change the stored
+  value (`balance + net < balance` in the same precision the store uses), compute in double, and
+  range-check against the target type before the cast. One test with a tiny divisor per cast.
+- **Source:** Codex review 95 F2, 2026-09-11, reproduced on the CLR with the shipped cost rows;
+  `csharp-architecture.md` "Engine-Float Decision Gates", third category, widened the same day.

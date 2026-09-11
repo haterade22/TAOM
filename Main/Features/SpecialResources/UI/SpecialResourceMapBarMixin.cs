@@ -223,10 +223,13 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             result.Add(new TooltipProperty(Label("{=taom_res_tt_depleted_in}Depleted in"),
                 new TextObject("{=taom_res_tt_days}{DAYS} days").SetTextVariable("DAYS", daysLeft.Value).ToString(), 0));
         }
-        else if (amount <= 0f && breakdown.UpkeepLines.Count > 0)
+        else if (amount <= 0f && breakdown.UpkeepLines.Count > 0 && breakdown.Net <= 0f)
         {
+            // The tick adds the net BEFORE it tests the balance, so at zero with income covering upkeep
+            // nothing deserts; the notice shows only when the icon is red for the same reason, and it
+            // states the rule rather than claiming a loss in progress (Codex, review 95, F3).
             result.Add(new TooltipProperty("",
-                new TextObject("{=taom_res_tt_deserting}Elite troops are deserting: no {RESOURCE} left")
+                new TextObject("{=taom_res_tt_deserting}Elite troops desert each day while you have no {RESOURCE}")
                     .SetTextVariable("RESOURCE", resource.DisplayName).ToString(),
                 0, onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.MultiLine));
         }

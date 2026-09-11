@@ -1,6 +1,6 @@
 ﻿# Codex Adversarial Review Log
 
-Running scorecard of all reviews. **Reviews 1-94, 2026-04-05 to 2026-09-02.** 90 of those numbers have an entry below, as a summary-table row or a `## Review N` section or both; 37, 63, 64 and 73 do not. (Counted 2026-09-01. The previous "83 ... 37, 46, 48, 63, 64 and 73" was low and wrongly listed 46 and 48, which do have sections.) The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
+Running scorecard of all reviews. **Reviews 1-95, 2026-04-05 to 2026-09-11.** 90 of those numbers have an entry below, as a summary-table row or a `## Review N` section or both; 37, 63, 64 and 73 do not. (Counted 2026-09-01. The previous "83 ... 37, 46, 48, 63, 64 and 73" was low and wrongly listed 46 and 48, which do have sections.) The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
 
 ## Summary
 
@@ -29,6 +29,7 @@ Running scorecard of all reviews. **Reviews 1-94, 2026-04-05 to 2026-09-02.** 90
 | 21 | 2026-07-06 | TournamentExitHang #331 (exit diagnostics + Patch60) | issues-found | agree | 1 confirmed P2 — hook-level `IsEnabled` gates bypassed the deep-review fix's unconditional window-closers (fix verified only at the service layer); S1-S6 suspects all resolved with decompiles | 0 | 0 | adversarial-xhigh |
 | 89 | 2026-09-01 | Enlistment service kit weapons (#525) + polearm/shield gate (#526) | issues-found | agree | 6 confirmed (2 HIGH: a coverage test that derived its culture list from the file it audits, so deleting a culture stayed green; a single-stat armour proxy that let a promotion lose all four hit zones while the score rose. 4 MED/LOW: seed-missing skipping rescue rows, a ratchet with no occurrence count, Umbar kits carrying Dunland/Rohan/Noldor gear (#528), Item4 misnamed "banner slot") | 0 | 0 | adversarial-xhigh |
 | 22 | 2026-07-10 | TournamentExitHang #331 ROUND 2 (ExitStallSampler + PatchShield exclusion) | issues-found | agree | 2 P2 (Timer reentrancy on Poll; no independent sampler toggle) + 4 P3 (suspended-window logging, main-thread invariant [deferred+documented], 2 drift) — all addressed; deep-review compat agent separately caught the false ctor comment + the still-shielded Patch38 hot target | 0 | 0 | adversarial-xhigh |
+| 95 | 2026-09-11 | SpecialResources outflow visibility (#558) | issues-found | agree | 3 confirmed MED (spend and recruit toasts reported the nominal cost through a store that floors at zero; the countdown cast overflowed on FINITE input to int.MinValue with shipped data; the zero-balance notice ignored the sign of the net) | 0 | 0 | adversarial-ultra (gpt-6-astra, first run) |
 
 ## Metrics
 
@@ -2351,6 +2352,54 @@ The generalisable lesson: **a condition on a vanilla dialogue line is a precondi
 its consequence does.** Removing one to reach a broader set of situations is widening a gate, and the
 castle-recruitment rule applies: enumerate what the gate excluded and check each item against the
 consequence, before the smoke run rather than in it.
+
+## Review 95: Special Resources outflow visibility (#558), 5-agent deep-review, a fix-loop re-check and the first Codex pass on GPT-6-Astra at ultra (2026-09-11)
+
+Players could not see what upkeep cost and reported balances "wiped after every battle". The
+change made one `GetDailyBreakdown` the source for the tick, the tooltip, the daily toast, the
+map-bar flag and the console dump, added four outflow toasts, stopped merchant-only troops from
+deserting, and rescaled the Black Numenorean cost rows.
+
+**The five agents.** Standards and compatibility clean (20 of 20 engine members verified against the
+installed DLLs). Data flow found the two real defects: the one-day-ahead warning fired without
+upkeep troops while the flag and desertion required them, and the storage floor `Math.Max(0f, x)` kept
+a NaN, which the save round trip preserved and the map bar would have rendered as int.MinValue. Both
+fixed with tests; a focused re-check of the fixes came back with no new findings. Completeness caught a
+stale test count. Efficiency rated the per-refresh breakdown MEDIUM and equal in cost class to
+vanilla's own gold rundown; the roster-version cache it proposed was declined under the simplicity
+criterion and the decision recorded.
+
+**Codex, GPT-6-Astra at ultra: 0 CRITICAL / 0 HIGH / 3 MEDIUM / 0 LOW, zero false positives, every
+finding verified before it was implemented.** F1: the spend and recruit toasts reported the nominal
+cost, but `Set` floors at zero and the party screen's prisoner recruit has no `recruit_cost` gate, so a
+spider recruited at a balance of 2 would have toasted 5; both paths now return `before - after` read
+from the store, the two return-value tests moved from a substitute storage (whose `Get` returns 0, so
+they proved a request and never a debit) to the real one, and #563 tracks the ungated path. F2: it
+compiled the committed domain type and ran shipped data through the CLR to show
+`(int)Math.Ceiling(balance / -Net)` overflowing to int.MinValue for a FINITE net of minus 5.96e-8, a
+Dale player with one town against 0.2 + 0.2 + 0.3 of upkeep, "Depleted in -2147483648 days" for a
+balance that never moves; the countdown now refuses a net the stored float cannot feel and
+range-checks the cast, and the float-cast rule is widened from NaN to finite overflow. F3: the
+zero-balance notice claimed a loss in progress whenever upkeep troops were present, but the tick adds
+the net before it tests the balance; the notice now requires a non-positive net and states the rule.
+
+**What Codex did well this time.** It executed the arithmetic instead of estimating it. Its
+test-sensitivity table separated 21 tests that cannot compile against the old API from 7 behavioural
+regressions and 1 that passes either way, and named the tautological `Net_MatchesGetProjectedDailyNet`
+(now pinned to an independent 0.9). It traced the tooltip renderer to prove the extended rows are
+reachable, `TroopRoster.AddToCounts` to clear the wounded-majority worry, and the spider's home in
+`characters/spider_creature.xml` rather than reporting it missing. It declined to inflate the Mumakil's
+500 a day into a defect and called it the balance question it is.
+
+**Two process lessons on our side.** An Explore agent's "not found" over the dump was relayed into the
+issue body as "prisoners never reach OnUnitRecruitedEvent"; the installed
+`RecruitPrisonersCampaignBehavior` dispatches it per unit, which is what makes F1 reachable. And a
+return value added so that a message could be honest was itself tested only as a request. Both are in
+the RCA.
+
+Suite: 256 green across the affected suites, 8449 of 8450 on the full suite (the one failure,
+`ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, predates the work). RCA:
+`docs/reviews/rca-special-resources-outflow-2026-09-11.md` (deep-review table plus the Codex section).
 
 ## Unlinked review artefacts (index)
 

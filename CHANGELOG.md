@@ -48,6 +48,18 @@ round trip, and rendered as int.MinValue on the map bar; `Set` now refuses a non
 balance with a negative net, upkeep troops or not, while the map-bar flag and desertion both require
 them; the three now key on the same terms.
 
+A Codex pass on GPT-6-Astra at ultra (review 95, the first on that model) found three more, all
+MEDIUM, all fixed the same day. The spend and recruit toasts reported the nominal cost, but the
+storage floors at zero and the party screen's prisoner recruit is not gated by `recruit_cost` (#563),
+so a spider recruited at a balance of 2 would have announced a debit of 5; both paths now return what
+actually left the wallet, measured through the store. `DaysUntilDepleted` divided by a net that can be
+smaller than the balance's float resolution (a Dale player with one town against 0.7 of upkeep nets
+about minus 6e-8), and the unchecked cast showed "Depleted in -2147483648 days"; it now returns no
+countdown when the next tick would not move the stored balance and range-checks the cast. And the
+zero-balance notice said troops were deserting even when income covered upkeep, which the tick
+applies before it tests the balance; it now shows only when the net is at or below zero and states
+the rule.
+
 Not tested in-game yet: the tooltip rows, the four toasts, the warning colour and `PartyUpkeepReader`
 against a live party. 24 new unit tests and 4 retargeted; the SpecialResource, EliteEmissary,
 JoinReconciliation and Localization suites are green (247 tests).
