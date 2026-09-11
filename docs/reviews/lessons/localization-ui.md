@@ -560,3 +560,50 @@ CHANGELOG and issue all advertised the any-party rewrite as working.
 - **Prevent:** re-read the target body for the SPECIFIC row/field/property your hook consumes, and confirm
   the method has a caller, before reinstating a recovered patch.
 - **Source:** #545 TroopWeight usage frame, 2026-09-06; same RCA, finding 3.
+
+### A UI prompt that gates persistence has two branches; "cosmetic" is a verdict on both
+The 2026-09-06 sweep found 158 settings without `RequireRestart = false` and ruled them cosmetic:
+the value is read live, so only the prompt misleads. That read one branch of MCM's "Game Needs to
+Restart" inquiry. `ModOptionsVM.ExecuteDone` (decompiled MBOptionScreen v1.4.5) saves and quits on
+Yes; on Cancel it runs an empty delegate and `return`s past the save loop, so nothing reaches
+`TAOM.json`. The change still holds for the session because `UndoRedoStack.Do` writes through to the
+live instance as the slider moves, which is what made "read live" look like the whole story. Five days
+later a player reported bandit settings that "never applied on disk", with 166 settings in that state.
+- **Why missed:** the sweep verified the consumer side (every read is live) and inferred the producer
+  side (MCM persists on Done) from the affirmative path only. A prompt with a Cancel button is a
+  branch, and the branch that does nothing is the one that loses data.
+- **Prevent:** before ruling a UI flag harmless, decompile the handler and read every delegate the
+  inquiry takes, including the empty ones. Then pin the posture with a test that fails on the next
+  omission (`SettingRequireRestartPostureTests` reflects over all four settings classes) rather than
+  with a sweep that is stale the day after it runs.
+- **Source:** #559 bandit scaling MCM, 2026-09-11.
+
+### A shipped config file that MCM shadows is a document players will read as the truth
+`bandit_scaling_config.json` shipped for 107 days with values MCM overrode on every install
+(`SettingClamp.Clamp(TaomSettings.Instance?.Knob, json, ...)` is `value ?? default`, and
+`GlobalSettings<T>.Instance` is non-null whenever MCM is loaded). Nothing read it; nothing pinned it to
+the C# defaults; the docs called it the fallback for corrupted MCM values, which `SettingClamp` does only
+for non-finite floats. A player opened it, saw 1.5 everywhere, and reported that TAOM ignores MCM.
+Twelve more features ship the same shape.
+- **Why missed:** the JSON-first pattern was copied from features that predate their MCM knobs, and the
+  no-MCM fallback it serves does not exist for a mod that ships MCM as a hard dependency. Each copy
+  looked like validated config; none was ever on a read path.
+- **Prevent:** when a knob is exposed in MCM, the compiled default is the only fallback that runs. Keep
+  it as a constant in the settings provider and pin it against `new TaomSettings()`
+  (`AutoResolveDiagnosticsSettingsProviderTests` is the pattern). A JSON earns its place only for
+  fields MCM does not expose, and the doc for it must say which those are.
+- **Source:** #559 bandit scaling MCM, 2026-09-11.
+
+### A changed MCM default is announced in the HintText, because the tooltip is what the player reads
+MCM writes every property to the player's `TAOM.json` on first save and loads that over the compiled
+default from then on, so a moved default reaches fresh installs only. Twice on the same group
+(2026-05-29 caps and initial hideouts, 2026-09-11 `BanditInitialHideoutsPerFaction` 14 to 7 and
+`BanditMaxPartiesPerHideout` 3 to 6) the caveat went into the feature doc and the CHANGELOG and not
+into the setting's own tooltip, and the second time the CHANGELOG even said the hints carried it.
+- **Why missed:** the caveat was written where the author reads (docs, CHANGELOG) and the claim
+  about the hints was written from intent, not from re-reading the attribute. The completeness
+  check confirmed the docs agreed with each other and never opened the third surface.
+- **Prevent:** when a compiled MCM default changes, the `HintText` says so in one sentence
+  ("played an earlier build? MCM saved the old value; reset this group to pick up the new one").
+  A claim of the form "X and Y both say Z" is verified by opening X and Y, not by confirming Z.
+- **Source:** #559 bandit scaling MCM, deep-review 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`.

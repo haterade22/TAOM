@@ -91,7 +91,7 @@ Any provider or boundary class that exposes user-editable values must validate s
 
 **Test requirement:** Tests must cover semantically-invalid-but-parseable values for every validated field — not just missing-file and malformed-JSON cases. One test per validation rule.
 
-**Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process — changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime.
+**Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process: changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime. When a compiled MCM default CHANGES, the setting's own `HintText` says that an existing `TAOM.json` keeps the old value until the group is reset: MCM persists per property, so the new default reaches fresh installs only, and the tooltip is the surface the player reads (RCA `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`, second occurrence on one group).
 
 ## Singleton Services Holding Per-Campaign State MUST Have a Session-Reset Story (MANDATORY)
 

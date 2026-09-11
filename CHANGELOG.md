@@ -2,6 +2,79 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-11
+
+### fix(mcm): 166 settings told players to restart, and Cancel on that prompt threw the change away (#559)
+
+A player switched Bandit Scaling off in MCM, set the curves to 0.127, watched those values land in
+`Configs/ModSettings/Global/TAOM/TAOM.json`, and still had bandits everywhere. They found
+`ModuleData/bandit_management/bandit_scaling_config.json` at 1.5 across the board and concluded the
+game reads that file instead of MCM. Several other players report the same. They were wrong about
+the mechanism and right about the symptom, and the trail led to three defects.
+
+**The settings were wired. The restart flag was not.** MCM's `BaseSettingPropertyAttribute`
+constructor defaults `requireRestart` to true, and 157 of the 218 value settings in `TaomSettings.cs`
+omitted `RequireRestart = false`, plus 12 across the three smaller settings classes. The 2026-09-06
+Troop Weight entry below swept the same list and called the rest cosmetic: the value is still read
+live, only the prompt misleads. That reading stopped one branch short. In the decompiled
+`ModOptionsVM.ExecuteDone` (MBOptionScreen v1.4.5) the "Game Needs to Restart" prompt's Yes branch
+saves and quits; its Cancel branch is an empty delegate followed by `return`, which skips the save
+loop. Press Cancel and nothing is written to `TAOM.json`. The change still works for the rest of the
+session, because MCM's undo stack writes through to the live instance as the slider moves, which is
+exactly what makes it look like it took, until the next launch reverts it. That is a concrete
+mechanism for "I set it and it never applied."
+
+Every setting has a live read site and no Harmony category is gated on one at apply time, so the fix
+is the flag on all 166. Three keep `RequireRestart = true`, each with a reason in the new
+`SettingRequireRestartPostureTests`: `EnableNativeSkinFixes` (parked, its consumer is commented out,
+so neither value of the flag is honest) and `CrashReportSettings.EnableCrashCapture` /
+`EnableNativeToManagedCapture` (they gate `PatchCategory(Patch37_CrashReport)` and the native attach
+inside `OnSubModuleLoad`, so switching them ON genuinely needs a launch; their hints now say so). The
+two ShaderPrecompilation properties turned out not to be settings at all: their attributes are
+commented out, and an unanchored regex had been counting them. That test reflects over all four
+settings classes and fails on any new setting that omits the flag.
+
+**The JSON was dead.** `BanditScalingSettingsProvider` read every knob as
+`SettingClamp.Clamp(TaomSettings.Instance?.Knob, json, min, max)`, and `SettingClamp` is
+`value ?? default`, so the file was reachable only with `TaomSettings.Instance` null. Decompiled
+MCMv5: `GlobalSettings<T>.Instance` resolves through `BaseSettingsProvider.Instance`, populated
+whenever MCM is loaded whether or not the player ever opens the UI, and MCM is a hard dependency. On
+every real install the six MCM-backed fields never touched the file, nothing pinned it to the C#
+defaults it duplicated, and it looked authoritative to anyone who opened it. Deleted, with
+`BanditScalingConfig`, `IBanditScalingConfigProvider`, `BanditScalingConfigProvider` and their 18
+tests. The defaults are constants in the provider now, `MinPartiesToInfest` is a constant (1), and
+`BanditScalingSettingsProviderTests` pins each against `new TaomSettings()`. Twelve other features
+ship the same shape of shadowed JSON (`alignment_desertion`, `recruitment_alignment`,
+`marriage_alignment`, `caravan_trade`, `castle_recruitment`, `combat_mechanics`,
+`culture_conversion`, `naval_travel`, `dread_aura`, `uncapturable_heroes`, `momentum`,
+`field_commission`; `elite_emissary` also wraps one). Not a mechanical delete, since some carry
+JSON-only fields; separate issue.
+
+**Why switching it off did not rescue their campaign.** `InitialHideoutsPerFaction` is consumed
+once, at world-gen (`BanditSpawnCampaignBehavior.InitializeInitialHideouts`, v1.4.8 line 143). TAOM
+has 8 bandit factions, and at the shipped 14 that put 112 hideouts on a fresh map against vanilla's
+6 x 7 = 42. Vanilla only adds hideouts while a faction is below the max (line 283); nothing ever
+removes one. So the player's change almost certainly applied, and it could not undo world-gen; the
+hideouts leave as they are cleared. Default lowered to 7 (vanilla per faction, 56 in total). Found
+on the way: `Max Parties Per Hideout Cap` shipped at 3, equal to vanilla's base, and
+`TaomBanditDensityModel.Cap()` takes `max(base, cap)` as the ceiling, so the value was pinned at 3
+for every PlayerProgress and Density Curve never moved it. Default raised to 6. **Both reach fresh
+`TAOM.json` files only.** MCM persists per property, so an existing install keeps 14 / 3 until the
+World / Bandit Scaling group is reset; the hints and the feature doc say so.
+
+Verified: BanditManagement + Mcm filtered run 105/105 in an isolated worktree (the shared tree
+carried another session's mid-TDD SpecialResources tests that do not yet compile); `Main` builds
+clean; `lint_handbook.py` 40 chapters 0 findings; `check_handbook_attributes.py` 152 markers 0
+findings.
+
+Not-tested: in-game. Owed: change a bandit curve in MCM, press Done, confirm no restart prompt and
+`TAOM.json` updates without quitting; a fresh campaign shows 7 infested hideouts per faction on day
+one; an existing save with scaling off spawns nothing above vanilla's 9 and keeps what it had.
+
+Research: MCMv5 `BaseSettingPropertyAttribute`, `GlobalSettings<T>.Instance`; MBOptionScreen v1.4.5
+`ModOptionsVM.ExecuteDone`, `SettingsVM.RestartRequired`, `UndoRedoStack.Do`; v1.4.8
+`BanditSpawnCampaignBehavior` lines 143 and 283.
+
 ## 2026-09-07
 
 ### fix(siege): the game crashed on the way back to the map after helping take a town (#557)

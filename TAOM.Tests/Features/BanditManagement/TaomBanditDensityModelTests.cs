@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features;
 using TAOM.Features.BanditManagement.Models;
 
 namespace TAOM.Tests.Features.BanditManagement;
@@ -47,6 +48,25 @@ public class TaomBanditDensityModelTests
     {
         // base=9, mult=2.0 => 18, cap=100 => 18 (cap not binding).
         Assert.AreEqual(18, TaomBanditDensityModel.Cap(9, 2.0f, 100));
+    }
+
+    [TestMethod]
+    public void Cap_ShippedPartiesPerHideoutCap_LetsTheDensityCurveMoveTheValue()
+    {
+        // #559: the cap shipped at 3, equal to vanilla's base, and Cap() takes max(base, cap) as the
+        // ceiling, so parties-per-hideout was pinned at 3 for every PlayerProgress and Density Curve
+        // did nothing there. Pin the SHIPPED default, not a literal, so a future default of 3 fails.
+        var shippedCap = new TaomSettings().BanditMaxPartiesPerHideout;
+        var endgame = TaomBanditDensityModel.Cap(3, 2.5f, shippedCap);
+        Assert.IsTrue(endgame > 3, $"endgame parties/hideout is {endgame}: the shipped cap {shippedCap} pins it at vanilla");
+        Assert.AreEqual(shippedCap, endgame, "the 1.5 curve reaches 2.5x at endgame, which the cap should bind");
+    }
+
+    [TestMethod]
+    public void Cap_ShippedPartiesPerHideoutCap_StillFloorsAtVanillaOnDayOne()
+    {
+        // PlayerProgress 0 => multiplier 1.0 => vanilla 3, whatever the cap is.
+        Assert.AreEqual(3, TaomBanditDensityModel.Cap(3, 1.0f, new TaomSettings().BanditMaxPartiesPerHideout));
     }
 
     [TestMethod]

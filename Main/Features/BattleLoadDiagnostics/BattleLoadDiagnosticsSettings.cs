@@ -16,27 +16,27 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     public override string FormatType => "json2";
 
     [SettingPropertyGroup("Master")]
-    [SettingPropertyBool("Enable Battle Load Diagnostics", Order = 0,
+    [SettingPropertyBool("Enable Battle Load Diagnostics", Order = 0, RequireRestart = false,
         HintText = "Logs the full attack->battle-playable lifecycle (encounter, scene selection, Mission.Initialize, every initial-spawn agent's equipment + collision-mesh names) to the TAOM debug log. Leave ON while diagnosing the intermittent battle-load hang — the LAST line in the log names the stuck phase / agent.")]
     public bool EnableBattleLoadDiagnostics { get; set; } = true;
 
     [SettingPropertyGroup("Stall Watchdog")]
-    [SettingPropertyBool("Enable Stall Watchdog", Order = 0,
+    [SettingPropertyBool("Enable Stall Watchdog", Order = 0, RequireRestart = false,
         HintText = "A background-thread timer that detects a battle stuck on the loading screen and writes a 'STILL LOADING' marker naming the last phase reached. Runs off the main thread so it still fires when the game is frozen. It does NOT fire while the engine is still compiling shaders and the count is moving (a cold shader cache is a slow load, not a hang); that hold-off ends after 15 minutes of UNBROKEN compilation, so a queue that never drains still gets reported. Default ON.")]
     public bool EnableStallWatchdog { get; set; } = true;
 
     [SettingPropertyGroup("Stall Watchdog")]
-    [SettingPropertyBool("Auto-Write Crash Bundle On Stall", Order = 1,
+    [SettingPropertyBool("Auto-Write Crash Bundle On Stall", Order = 1, RequireRestart = false,
         HintText = "When the watchdog fires, also write a crash-report ZIP (under Logs/) so you can send it in one action. Requires Crash Report capture enabled. Default ON.")]
     public bool EnableStallWatchdogBundle { get; set; } = true;
 
     [SettingPropertyGroup("Stall Watchdog")]
-    [SettingPropertyInteger("Stall Threshold (seconds)", 10, 600, Order = 2,
+    [SettingPropertyInteger("Stall Threshold (seconds)", 10, 600, Order = 2, RequireRestart = false,
         HintText = "How long a battle load may run before the watchdog flags it as stalled. Default 300s (5 min): large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry. Past this threshold the watchdog still holds off while the shader-compilation count keeps moving, until the queue has been busy for 15 unbroken minutes.")]
     public int StallWatchdogSeconds { get; set; } = 300;
 
     [SettingPropertyGroup("Exit Stall Sampler")]
-    [SettingPropertyBool("Enable Exit Stall Sampler", Order = 0,
+    [SettingPropertyBool("Enable Exit Stall Sampler", Order = 0, RequireRestart = false,
         HintText = "If a mission exit stalls past 15s, briefly suspends the game's main thread (at +15/+30/+60s) to photograph its call stack into the TAOM debug log — this is what root-caused the tournament-exit freeze (#331). Tiny residual risk: a suspension landing mid-GC can freeze the game harder than the stall itself. Turn OFF to keep the other diagnostics without any thread suspension. Default ON.")]
     public bool EnableExitStallSampler { get; set; } = true;
 

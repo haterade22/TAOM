@@ -175,7 +175,6 @@ Of the 42 subfolders under `ModuleData/`, 4 are reached through `<XmlNode>` rows
 |---|---|
 | `TroopWeights/` | `TroopWeight/TroopWeightXmlLoader.cs` |
 | `alignment_desertion/` | `AlignmentDesertion/AlignmentDesertionConfigProvider.cs` |
-| `bandit_management/` | `BanditManagement/BanditScalingConfigProvider.cs` |
 | `banner_bearers/` | `BannerBearers/BannerBearerConfigProvider.cs` |
 | `caravan_trade/` | `CaravanTrade/CaravanTradeConfigProvider.cs` |
 | `career_system/` | `CareerSystem/CareerConfigProvider.cs`, `CareerSystem/CareerQuestConfigProvider.cs` |

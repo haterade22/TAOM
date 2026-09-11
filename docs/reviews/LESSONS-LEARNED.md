@@ -25,7 +25,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 - [State, Lifecycle & Save](lessons/state-lifecycle-save.md), 48 lessons
 - [XSLT & ModuleData](lessons/xslt-moduledata.md), 28 lessons
 - [Campaign Mechanics](lessons/campaign-mechanics.md), 19 lessons
-- [Localization & UI](lessons/localization-ui.md), 36 lessons
+- [Localization & UI](lessons/localization-ui.md), 39 lessons
 - [Native C++ Port](lessons/native-cpp-port.md), 3 lessons
 
 ---

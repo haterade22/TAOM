@@ -252,7 +252,6 @@ Precedence values in the table: **MCM wins on exposed knobs** (a wrapping settin
 | File | Loader | Reload | MCM precedence | Notes |
 |---|---|---|---|---|
 | `alignment_desertion/alignment_desertion_config.json` | `AlignmentDesertion/AlignmentDesertionConfigProvider.cs` | full game restart | MCM wins on exposed knobs (`AlignmentDesertionSettingsProvider.cs:19-29`) | desertion of opposed-alignment troops |
-| `bandit_management/bandit_scaling_config.json` | `BanditManagement/BanditScalingConfigProvider.cs` | full game restart | MCM wins on exposed knobs (`BanditScalingSettingsProvider.cs:15-33`); `MinPartiesToInfest` is JSON-only (`:35-37`) | bandit density, party size, hideout caps |
 | `banner_bearers/banner_bearers_config.json` | `BannerBearers/BannerBearerConfigProvider.cs` | full game restart | none | which formations carry banners |
 | `caravan_trade/caravan_trade_config.json` | `CaravanTrade/CaravanTradeConfigProvider.cs` | full game restart | MCM wins on exposed knobs (`CaravanTradeSettingsProvider.cs:21-33`); the curve knobs are JSON-only (`:25`) | caravan range and budget |
 | `castle_recruitment/castle_recruitment_config.json` | `CastleRecruitment/CastleRecruitmentConfigProvider.cs` | full game restart | MCM wins on exposed knobs (`CastleRecruitmentSettingsProvider.cs:20-25`) | notables at castles |

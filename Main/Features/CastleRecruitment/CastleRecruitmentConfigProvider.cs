@@ -7,8 +7,8 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.CastleRecruitment;
 
 /// <summary>
-/// Loads <c>castle_recruitment/castle_recruitment_config.json</c> with semantic validation. Mirrors
-/// <c>BanditScalingConfigProvider</c>: missing/malformed file falls back to compiled defaults; an
+/// Loads <c>castle_recruitment/castle_recruitment_config.json</c> with semantic validation. Same
+/// shape as <c>CultureConversionConfigProvider</c>: missing/malformed file falls back to compiled defaults; an
 /// out-of-range <c>NotablesPerCastle</c> reverts to default with a logged warning (parse success is
 /// not validation success).
 /// </summary>
