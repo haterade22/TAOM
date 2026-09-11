@@ -62,9 +62,9 @@ A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** beco
 
 ### Early-game density ("early burst then settle", 2026-05-29)
 
-`NumberOfInitialHideoutsAtEachBanditFaction` (vanilla 7) is the actual early-game lever: `BanditSpawnCampaignBehavior.SpawnHideoutsAndBanditsPartiallyOnNewGame` fills this many hideouts per faction at new-game init, and each infested hideout drives the hourly roaming-bandit spawn (`SpawnBanditsAroundHideout` scales with infested-hideout count). Raising the *max* cap alone does **not** add early bandits: at `PlayerProgress = 0` the multiplier is `1.0`, so the max stays at vanilla 9. The override shipped this at 14 from 2026-05-29 to 2026-09-11. With 8 bandit factions that is 112 hideouts on a fresh map against vanilla's 42, and players reported a map swamped with bandits (#559). It is 7 now, vanilla per faction, 56 in total. The dynamics are unchanged: `AddNewHideouts` only grows a faction while its infested count is below the max, so initial > max means no growth until attrition drops the count under the max, then refills, and the max itself grows with `PlayerProgress` toward the 100 cap. Combined with `MinPartiesToInfest = 1`, hideouts become active/visible with a single party.
+`NumberOfInitialHideoutsAtEachBanditFaction` (vanilla 7) is the actual early-game lever: `BanditSpawnCampaignBehavior.SpawnHideoutsAndBanditsPartiallyOnNewGame` fills this many hideouts per faction at new-game init, and each infested hideout drives the hourly roaming-bandit spawn (`SpawnBanditsAroundHideout` scales with infested-hideout count). Raising the *max* cap alone does **not** add early bandits: at `PlayerProgress = 0` the multiplier is `1.0`, so the max stays at vanilla 9. The override shipped this at 14 from 2026-05-29 to 2026-09-11. It is a per-faction TARGET bounded by each faction's physical hideout locations (`FillANewHideoutWithBandits` no-ops when none is left): three of TAOM's 8 bandit factions own only 10, so 14 filled at most 5 x 14 + 3 x 10 = 100 on a fresh map, against vanilla's 5 x 7 = 35 (five settlement-capable bandit factions; looters have no hideouts), and players reported a map swamped with bandits (#559). It is 7 now, vanilla per faction, 56 in total; the live map holds 159 locations. The dynamics are unchanged: `AddNewHideouts` only grows a faction while its infested count is below the max, so initial > max means no growth until attrition drops the count under the max, then refills, and the max itself grows with `PlayerProgress` toward the 100 cap. Combined with `MinPartiesToInfest = 1`, hideouts become active/visible with a single party.
 
-**This value is read once, at world-gen, and nothing ever removes a hideout above the max** (`BanditSpawnCampaignBehavior:283` only adds while below it). Lowering the slider, or switching scaling off, changes nothing about a campaign already in progress; the hideouts it started with stay until the player clears them. That is what the #559 reporter saw: the setting had applied, and could not undo world-gen.
+**This value is read once, at world-gen, and nothing culls a hideout above the max** (`BanditSpawnCampaignBehavior:283` only adds while below it). Lowering the slider changes nothing about a campaign already in progress. Switching scaling off restores vanilla's live calculations at once (`Hideout.IsInfested` is computed from the parties present against the model's minimum, so with vanilla's 2 back in force a one-party camp stops counting as infested) and stops scaling future spawns; it deletes no party and culls no hideout, so the ones the campaign started with thin only as they are cleared. That is what the #559 reporter saw: the setting had applied, and could not undo world-gen.
 
 ## Configuration
 
@@ -87,12 +87,13 @@ property get and each `Patch39` spawn, and every attribute carries `RequireResta
 flag is load-bearing, not cosmetic: MCM's `BaseSettingPropertyAttribute` defaults it to TRUE, and
 with it true, pressing Done raises "Game Needs to Restart" whose Cancel branch is an empty delegate
 followed by `return` (decompiled `ModOptionsVM.ExecuteDone`), so the change is never written to
-`TAOM.json`. It still applies for the rest of the session, because MCM's undo stack writes through
-to the live instance as the slider moves, which is what made it look like it had taken. The bandit
+`TAOM.json`. It still applies in-session (until the options page's own Cancel or Close undoes it, or
+the process ends), because MCM's undo stack writes through to the live instance as the slider moves,
+which is what made it look like it had taken. The bandit
 group shipped without the flag from 2026-05-27 to 2026-09-11.
 `SettingRequireRestartPostureTests` now asserts the flag on every TAOM setting.
 
-> **Upgrade caveat (MCM persists per-property).** MCM stores every setting in `Configs/ModSettings/Global/TAOM/TAOM.json` and, on load, overrides the C# default for any property already present. A player who launched a build *before* the 2026-05-29 default change keeps their persisted `Max Hideouts Per Faction Cap = 15` / `Max Parties Per Hideout Cap = 5`; only the brand-new `Initial Hideouts Per Faction` picks up its default (14). To get the new "early burst then settle" tuning on an upgraded install, reset the **World / Bandit Scaling** group to defaults in MCM (or edit `TAOM.json`). Fresh installs get the new defaults automatically. This is inherent MCM behaviour, not a bug — there is no per-property migration hook.
+> **Upgrade caveat (MCM persists per-property).** _The figures in this paragraph are the 2026-05-29 change's; the current defaults are in the table above and the same caveat applies to the #559 move to 7 / 6._ MCM stores every setting in `Configs/ModSettings/Global/TAOM/TAOM.json` and, on load, overrides the C# default for any property already present. A player who launched a build *before* the 2026-05-29 default change keeps their persisted `Max Hideouts Per Faction Cap = 15` / `Max Parties Per Hideout Cap = 5`; only the brand-new `Initial Hideouts Per Faction` picks up its default (14). To get the new "early burst then settle" tuning on an upgraded install, reset the **World / Bandit Scaling** group to defaults in MCM (or edit `TAOM.json`). Fresh installs get the new defaults automatically. This is inherent MCM behaviour, not a bug — there is no per-property migration hook.
 
 `MinPartiesToInfest` (1, vanilla 2) has no MCM knob. It is a constant in `BanditScalingSettingsProvider`, bounded at runtime by `[1, live MaxPartiesPerHideoutCap]`.
 
@@ -102,8 +103,10 @@ group shipped without the flag from 2026-05-27 to 2026-09-11.
 MCM defaults. It was the `??` fallback in `SettingClamp.Clamp(TaomSettings.Instance?.Knob, json, min, max)`,
 reachable only when `TaomSettings.Instance` is null, and `GlobalSettings<T>.Instance` is populated
 whenever MCM is loaded whether or not the player ever opens the UI. MCM is a hard dependency. So on
-every real install the file was never read, nothing pinned it to the C# defaults, and a player who
-found it at 1.5 across the board concluded (reasonably) that it was what the game obeyed. The
+every real install those six values were never read. The file itself was loaded, and its one
+JSON-only field, `MinPartiesToInfest`, did apply; that override is retired and the value is a constant
+1. Nothing pinned the six to the C# defaults, and a player who found the file at 1.5 across the board
+concluded (reasonably) that it was what the game obeyed. The
 constants now live in the provider and `BanditScalingSettingsProviderTests` pins them to
 `new TaomSettings()`. Twelve other features still ship the same shape of shadowed JSON; that is a
 separate issue.
@@ -294,7 +297,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 ## Changelog
 
-- 2026-09-11, `fix` (#559): `RequireRestart = false` on all 7 settings (MCM was prompting for a restart and discarding the change on Cancel); `bandit_scaling_config.json` and its config provider deleted (never read while MCM is loaded); defaults initial hideouts 14→7 and parties-per-hideout cap 3→6 (the cap equalled vanilla's floor, so Density Curve could not move it). Existing `TAOM.json` files keep 14 / 3 until the group is reset.
+- 2026-09-11, `fix` (#559): `RequireRestart = false` on all 7 settings (MCM was prompting for a restart and discarding the change on Cancel); `bandit_scaling_config.json` and its config provider deleted (its six MCM-backed values were never read while MCM is loaded; the JSON-only `MinPartiesToInfest` override is retired); defaults initial hideouts 14→7 and parties-per-hideout cap 3→6 (the cap equalled vanilla's floor, so Density Curve could not move it). Existing `TAOM.json` files keep 14 / 3 until the group is reset.
 - 2026-05-31 — `fix`: hideout boss fight spawned every bandit friendly (forced retreat) — added 8 dedicated `{culture}_boss` troops with `occupation="Bandit"` + matching bandit culture so the guard dialog no longer hijacks the boss conversation.
 - 2026-05-29 — `feat`: Patch40 themed LOTR hideout encounter descriptions replace vanilla's "(Undefined hideout type)" placeholder for the 5 TAOM bandit cultures.
 - 2026-05-29 — `feat`: early-game density boost + cap tuning — initial hideouts 7→14, min-parties-to-infest 2→1, max caps set to 100 hideouts/3 parties; added the "Initial Hideouts Per Faction" MCM slider and the `Cap()` vanilla-floor fix.

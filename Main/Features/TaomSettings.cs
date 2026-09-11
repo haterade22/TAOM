@@ -818,7 +818,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Bandit Scaling", GroupOrder = 35)]
     [SettingPropertyBool("Enable Bandit Scaling", Order = 0, RequireRestart = false,
-        HintText = "Master toggle. When off, hideout density + bandit party sizes use vanilla values. When on, both scale with PlayerProgress (0.0 new campaign -> 1.0 endgame) per the curves below. Turning it off stops NEW scaling only: hideouts already on the map stay until you clear them, because neither vanilla nor TAOM removes a hideout above the cap.")]
+        HintText = "Master toggle. When off, hideout density + bandit party sizes use vanilla values. When on, both scale with PlayerProgress (0.0 new campaign -> 1.0 endgame) per the curves below. Turning it off restores vanilla's live numbers at once (including its 2-party minimum for a camp to count as infested) and stops scaling future spawns; it deletes no bandit party already on the map and culls no hideout above the cap, so a swamped campaign thins only as they are cleared.")]
     public bool EnableBanditScaling { get; set; } = true;
 
     [SettingPropertyGroup("World/Bandit Scaling")]
@@ -848,7 +848,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyInteger("Initial Hideouts Per Faction", 1, 30, Order = 6, RequireRestart = false,
-        HintText = "Hideouts each bandit faction starts with on a NEW campaign; read once at world-gen, so changing it does nothing to a campaign already in progress. TAOM has 8 bandit factions, so this is x8 on the map. Vanilla = 7. Default: 7. Earlier builds shipped 14, which put 112 hideouts on a fresh map; if you played one, MCM has already saved 14 in your TAOM.json and only a reset of this group to defaults picks up 7.")]
+        HintText = "Hideouts each bandit faction starts with on a NEW campaign; read once at world-gen, so changing it does nothing to a campaign already in progress. TAOM has 8 bandit factions, so this is a per-faction target, x8 on the map, bounded by each faction's physical hideout count (three have only 10). Vanilla = 7. Default: 7. Earlier builds shipped 14, up to 100 hideouts on a fresh map against vanilla's 35; if you played one, MCM has already saved 14 in your TAOM.json and only a reset of this group to defaults picks up 7.")]
     public int BanditInitialHideoutsPerFaction { get; set; } = 7;
 
     // --- World / Recruitment Alignment ---

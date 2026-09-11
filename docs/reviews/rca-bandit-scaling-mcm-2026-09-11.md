@@ -63,3 +63,36 @@ commit except the first, which would need a history rewrite across two other ses
 **Disputed, not a finding.** Standards flagged the committed `.cs` blobs as LF rather than CRLF. `git cat-file` shows 0 CR bytes in both the pre- and post-commit blobs: the repository normalises to LF on commit under `core.autocrlf = true`, and the diff is the 162 edited lines, not the file. The agent measured the blob against the worktree's checkout form.
 
 **Root-cause pattern, second pass.** Three of the six (3, 4, 5) are the same shape as the first pass's one finding: a number or a default written into prose from something other than a fresh measurement of the artifact being described, and then repeated into sibling artifacts. The first pass's lesson ("open X and Y, do not confirm Z somewhere") covered the "the hints say so" claim; these show the same reflex with counts and with a second copy of a value in one file. The single rule under all four: before a number or a default goes into prose, measure it from the committed artifact with the definition the prose uses, and grep every artifact that will carry it.
+
+## Codex pass (GPT-6-Astra at ultra, same day, on `2652fe2f` + `37411388`)
+
+Prompt: `docs/reviews/codex-adversarial-bandit-scaling-mcm-2026-09-11.prompt.md`; raw output:
+`docs/reviews/raw/codex-adversarial-bandit-scaling-mcm-2026-09-11.md`. Verdict P1 0 / P2 0 / P3 3,
+every claim carrying a pasted decompile or a listed grep. It confirmed S1 (the empty Cancel delegate
+and the write-through undo stack, with the qualification that the options page's own Cancel undoes
+the live edit) and S4 (the 3 / 5 / 6 table is one property, not the clan's party budget, which it
+derived as `H x (3 + inside)` per infested hideout), and disputed S2, S3, S5 and S6 with evidence,
+including an independent inventory of all 231 value attributes that matches ours (166 flips, 3 kept).
+Each P3 was re-verified here against the live map and the committed prose before being accepted.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 8 | P3 | The feature doc said the JSON "was never read" on a real install. The old provider constructor always loaded it, and its one JSON-only field, `MinPartiesToInfest`, was honoured; only the six MCM-backed values were dead. Retiring that override (constant 1 now) was a deliberate decision that the prose did not state. The CHANGELOG had the narrower, true sentence; the doc and the doc's changelog line had the absolute one. | Prose: an absolute where a qualifier was owed | The sentence was written from the MCM-shadowing finding and generalised to the whole file. The exception was in the same class, read that session, and not re-checked when the word "never" went in. | Rule in the lessons: an absolute (never, nothing, all, every) is a claim about every path; name the exception before writing it. |
+| 9 | P3 | "112 hideouts on a fresh map against vanilla's 42." Both are formula products, not data. Three TAOM bandit factions own only 10 hideout locations (the doc's own wave-2 section says so), so 14 per faction fills at most 5 x 14 + 3 x 10 = 100; vanilla has five settlement-capable bandit factions (looters have no hideouts), so 5 x 7 = 35. Live map: 159 locations in all. Copied into the hint, the doc and the CHANGELOG. | Data: a per-faction target multiplied without the bound | `InitializeInitialHideouts` calls `FillANewHideoutWithBandits` 14 times and that method no-ops when no candidate remains; the multiplication assumed unlimited candidates. Vanilla's 6 came from counting `is_bandit` rows, not `can_have_settlement`. | Count the data, not the formula: enumerate the hideout locations per culture in the live `settlements.xml` and the settlement-capable factions in `spcultures.xml` before multiplying. Lesson in `data-content-cultures.md`. |
+| 10 | P3 | "Turning it off stops NEW scaling only: hideouts already on the map stay until you clear them" (hint) and "switching scaling off changes nothing about a campaign already in progress" (doc). Toggling off also restores vanilla's 2-party minimum for `Hideout.IsInfested`, which is computed live, so a one-party camp stops counting as infested at once. What is true: nothing deletes a party or culls a hideout above the cap. | Prose: an absolute where a qualifier was owed | Same reflex as #8. The first review pass asked whether vanilla removes hideouts and got the right answer (it does not), and the sentence then claimed more than that answer supports. | Same lesson as #8. Hint and doc reworded to say what is restored live and what is not touched. |
+
+Two observations, both fixed with the above: the doc's "applies for the rest of the session" is now
+"in-session, until the options page's own Cancel undoes it"; and the 2026-05-29 "Upgrade caveat"
+paragraph is labelled historical, since it still recommended the old 14.
+
+**Not done, and why.** `/review-codex` Phase 3h updates `AGENTS.md`'s prior-review lessons. Another
+session has that file mid-rewrite in the working tree (620 lines to 40, unstaged), so editing it now
+would collide with their work. The entries to add when it settles: Codex did well to enumerate the
+live map before accepting a multiplied total and to dispute the "natural attrition" hypothesis the
+prompt offered rather than accept it; no false positive this pass.
+
+**Root-cause pattern, Codex pass.** Two of three are absolutes written past their evidence (#8, #10);
+the third is a total computed from a per-faction target without the physical bound (#9). All three
+sit in prose, none in code, and all three survived two six-agent passes because every agent checked
+the sentence against the mechanism the sentence was about and none asked what else the sentence
+excluded. Codex found them by starting from the engine and the map and reading the prose last.

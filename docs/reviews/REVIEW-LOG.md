@@ -2401,6 +2401,54 @@ Suite: 256 green across the affected suites, 8449 of 8450 on the full suite (the
 `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, predates the work). RCA:
 `docs/reviews/rca-special-resources-outflow-2026-09-11.md` (deep-review table plus the Codex section).
 
+## Review 96: bandit scaling MCM (#559), two 5/6-agent deep-review passes and a Codex pass on GPT-6-Astra at ultra (2026-09-11)
+
+A player switched Bandit Scaling off, saw the value land in `TAOM.json`, still had bandits everywhere,
+and concluded TAOM reads `bandit_scaling_config.json` instead. The change flagged 166 settings
+`RequireRestart = false` (MCM's restart prompt discards the change on Cancel; the value still applies
+in-session through the undo stack, which is what made it look applied), deleted the shadowed JSON and
+its provider, moved two defaults (initial hideouts 14 to 7, parties-per-hideout cap 3 to 6), and added a
+reflection test that fails on any setting without the flag.
+
+**First pass, five agents.** Standards, compatibility (MCMv5 and MBOptionScreen decompiled; the empty
+Cancel delegate confirmed independently), efficiency and completeness clean. Data flow: 27 flows, one
+MED, the two moved defaults' hints did not say an existing `TAOM.json` keeps the old value. Fixed
+before commit.
+
+**Second pass, six agents on the commit.** Compatibility re-verified every engine claim against the
+installed 1.4.8 DLLs including both cited line numbers. A numeric-claims agent re-derived every count
+from the committed files and reproduced the suite on a clean checkout (8406 / 1 / 2): "218 value
+settings" was 217 (the count had included the Button attribute the test skips) and "18 tests deleted"
+was 16 (relayed from an agent's report). Data flow found a stale defaults row in the doc, a hint
+without the `stack.MaxValue` caveat, and an allowlist keyed on bare property names. One dispute:
+"LF endings" was the repository's normal blob storage. Five fixed in `37411388`; the 68-character
+subject of `2652fe2f` stays because two other sessions had committed on top.
+
+**Codex, GPT-6-Astra at ultra: P1 0 / P2 0 / P3 3, zero false positives, every finding verified before
+it was applied.** It confirmed the load-bearing MCM claim with the decompiled handlers and qualified
+it (the options page's own Cancel undoes the live edit), derived the per-hideout party budget the
+3 / 5 / 6 table does not show, inventoried all 231 value attributes independently (matching ours),
+and disputed four of the six suspects with grep and decompile evidence, including the "natural
+attrition" hypothesis the prompt offered. Its three P3s were all prose past its evidence: the doc's
+"the file was never read" (the old constructor loaded it and the JSON-only `MinPartiesToInfest` did
+apply; that override is retired, which the prose now says), "112 hideouts against vanilla's 42" (three
+factions own only 10 locations and vanilla has five settlement-capable bandit factions, so 100 against
+35; it enumerated the live map to show it), and "turning it off changes nothing about a campaign in
+progress" (vanilla's 2-party infestation minimum is restored live, so one-party camps stop counting;
+what holds is that nothing deletes a party or culls a hideout). All reworded.
+
+**What Codex did well this time.** It started from the engine and the map and read the prose last,
+which is the one order none of the twelve Claude agents took. It refused a hypothesis its prompt
+handed it. Its total for the live map (169) was an addition slip over correct per-row numbers (159).
+
+**Not done.** The `AGENTS.md` lessons update is deferred: another session has that file mid-rewrite
+in the working tree. Recorded in the RCA with the two entries to add.
+
+Suite: 105/105 on the BanditManagement + Mcm filter for every commit; 8406 of 8409 on the full suite
+at `2652fe2f` (the one failure, `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`,
+is `wm_gondor_sword_a04` missing from the live Armory since 2026-09-01, unrelated). RCA:
+`docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` (first pass, second pass, Codex pass).
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

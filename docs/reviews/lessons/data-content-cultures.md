@@ -1363,3 +1363,17 @@ the engine also fought them as backline archers while they held a javelin and a 
   it has none at all.
 - **Source:** #554; docs/reviews/rca-javelin-troop-misclassification-2026-09-06.md; #555 for the blocked
   systematic half.
+
+### A per-faction target multiplied by the faction count is not a hideout count; enumerate the map
+"14 initial hideouts x 8 bandit factions = 112" and "vanilla 7 x 6 = 42" both shipped in a hint, a doc
+and a CHANGELOG. Three TAOM bandit factions own only 10 hideout locations (the doc's own wave-2 section
+says so), and `FillANewHideoutWithBandits` no-ops when a faction has no candidate left, so the real
+ceiling was 5 x 14 + 3 x 10 = 100. Vanilla has five settlement-capable bandit factions (looters have
+none), so 35. The live map holds 159 locations in all.
+- **Why missed:** the target was read off the model property and multiplied; the bound lives in the
+  map data and in a no-op branch of the engine method, neither of which the multiplication consulted.
+  Vanilla's 6 came from counting `is_bandit` rows instead of `can_have_settlement`.
+- **Prevent:** before multiplying a per-faction number, count the physical rows: hideout
+  `<Settlement>`s per culture in the live `TAOM_Map/ModuleData/settlements.xml` and bandit cultures
+  with `can_have_settlement="true"` in `spcultures.xml`. Report the smaller of target and supply.
+- **Source:** #559 Codex pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` finding 9.

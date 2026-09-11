@@ -129,8 +129,9 @@ JSON-only fields; separate issue.
 
 **Why switching it off did not rescue their campaign.** `InitialHideoutsPerFaction` is consumed
 once, at world-gen (`BanditSpawnCampaignBehavior.InitializeInitialHideouts`, v1.4.8 line 143). TAOM
-has 8 bandit factions, and at the shipped 14 that put 112 hideouts on a fresh map against vanilla's
-6 x 7 = 42. Vanilla only adds hideouts while a faction is below the max (line 283); nothing ever
+has 8 bandit factions, and at the shipped 14 that put up to 100 hideouts on a fresh map (three
+factions own only 10 locations) against vanilla's 5 x 7 = 35 (five settlement-capable bandit
+factions; looters have none). Vanilla only adds hideouts while a faction is below the max (line 283); nothing ever
 removes one. So the player's change almost certainly applied, and it could not undo world-gen; the
 hideouts leave as they are cleared. Default lowered to 7 (vanilla per faction, 56 in total). Found
 on the way: `Max Parties Per Hideout Cap` shipped at 3, equal to vanilla's base, and

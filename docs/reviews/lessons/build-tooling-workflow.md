@@ -2009,3 +2009,18 @@ number from the committed files caught them in one pass.
   artifact that will carry it for the OLD value. A subagent's number is a claim; count it yourself.
   When a review matters, add a numeric-claims agent whose brief is only "re-derive every number".
 - **Source:** #559 deep-review second pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` findings 3 to 5.
+
+### An absolute in prose (never, nothing, all, every) is a claim about every path; name the exception first
+Two shipped in one doc: "on every real install the file was never read" (the old provider constructor
+loaded it, and its one JSON-only field applied; only the six MCM-shadowed values were dead) and
+"switching scaling off changes nothing about a campaign already in progress" (vanilla's 2-party
+infestation minimum comes back live, so one-party camps stop counting; what holds is that nothing
+deletes a party or culls a hideout). Both survived two six-agent passes; Codex found both by starting
+from the engine and reading the prose last.
+- **Why missed:** each sentence was written from one true finding and generalised to the whole
+  mechanism. Every reviewer checked the sentence against the mechanism it named and nobody asked what
+  else the word "never" or "nothing" was excluding.
+- **Prevent:** before writing an absolute, list the paths it covers and check the one you did not
+  test. If an exception exists, write the qualified sentence; "X is dead, Y still applies, Y is retired
+  by decision" is longer and true.
+- **Source:** #559 Codex pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` findings 8 and 10.
