@@ -19,12 +19,12 @@ public interface ISpecialResourceService
 
     /// <summary>
     /// Deducts the one-time recruit cost (<c>recruit_cost</c>) for <paramref name="troopId"/> ×
-    /// <paramref name="count"/> from the player's resolved resource. No-op when the troop has no
-    /// recruit cost or the hero's kingdom/culture maps to no resource. Charged from
-    /// <c>OnUnitRecruitedEvent</c> (player-only) for the elephant/spider volunteers; the
-    /// RecruitmentVM gate guarantees affordability before this fires.
+    /// <paramref name="count"/> from the player's resolved resource and returns the amount charged
+    /// (0 when the troop has no recruit cost or the hero's kingdom/culture maps to no resource), so
+    /// the caller can tell the player. Charged from <c>OnUnitRecruitedEvent</c> (player-only) for the
+    /// elephant/spider volunteers; the RecruitmentVM gate guarantees affordability before this fires.
     /// </summary>
-    void ChargeRecruitCost(string heroId, string kingdomId, string cultureId, string troopId, int count);
+    float ChargeRecruitCost(string heroId, string kingdomId, string cultureId, string troopId, int count);
 
     /// <summary>
     /// Decides whether the recruit-volunteers cart can be confirmed: sums <c>recruit_cost × count</c>
@@ -56,17 +56,27 @@ public interface ISpecialResourceService
     void QueueUpgradeSpend(string heroId, string troopId, int count);
     float GetAvailableAfterPending(string heroId, string kingdomId, string cultureId);
     int ClampUpgradeCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount);
-    void CommitSession(string heroId, string kingdomId, string cultureId);
+    /// <summary>
+    /// Debits the spend queued during the party-screen session and returns the amount debited
+    /// (0 when no session is open, nothing was queued, or the hero maps to no resource).
+    /// </summary>
+    float CommitSession(string heroId, string kingdomId, string cultureId);
     void CancelSession();
     void InitializeHero(string heroId, string kingdomId, string cultureId);
-    float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount);
-    float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep, string heroId = null);
 
     /// <summary>
-    /// Projected net resource change (earning − upkeep) for one daily tick, including career
-    /// passive modifiers — same math as <see cref="ApplyDailyTick"/>. Returns 0 when the hero's
-    /// kingdom/culture maps to no resource. Used to warn the player one tick before a deficit
-    /// (and the troop desertion it triggers).
+    /// The daily change for one tick: earning (career gain applied), upkeep (career upkeep modifier
+    /// applied) and the per-troop upkeep lines behind it, limited to troops whose cost row carries a
+    /// <c>daily_upkeep</c>. This is the ONE calculation <see cref="ApplyDailyTick"/> applies and the
+    /// tooltip, the daily message and the console dump render; there is no second path to drift
+    /// from it (#558). Returns <see cref="DailyResourceBreakdown.Empty"/> when the hero's
+    /// kingdom/culture maps to no resource.
+    /// </summary>
+    DailyResourceBreakdown GetDailyBreakdown(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
+
+    /// <summary>
+    /// <see cref="GetDailyBreakdown"/>'s <c>Net</c>, kept as a convenience for callers that need
+    /// only the sign. Returns 0 when the hero's kingdom/culture maps to no resource.
     /// </summary>
     float GetProjectedDailyNet(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
     IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);

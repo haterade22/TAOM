@@ -2609,5 +2609,25 @@
     <string id="taom_uncapturable_escapes_battle" text="{HERO} não pode ser detido. Ele escapa do campo antes que possa ser capturado." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} não pode ser detido. Ele desaparece antes que seus homens o alcancem." />
     <string id="taom_caravan_escort" text="Caravan escort" />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} income, -{UPKEEP} upkeep ({BALANCE} left)" />
+    <string id="taom_res_upkeep_overdraft" text="Upkeep of {UPKEEP} {RESOURCE} exceeded your {BALANCE}; none is left" />
+    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spent on upgrades ({BALANCE} left)" />
+    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} for {COUNT} {TROOP}" />
+    <string id="taom_res_tt_tier" text="Tier" />
+    <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
+    <string id="taom_res_tt_next_tier" text="Next tier at" />
+    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
+    <string id="taom_res_tt_daily_change" text="Daily change" />
+    <string id="taom_res_tt_income" text="Income ({TOWNS} towns)" />
+    <string id="taom_res_tt_upkeep" text="Elite upkeep ({TYPES} troop types)" />
+    <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
+    <string id="taom_res_tt_net" text="Net" />
+    <string id="taom_res_tt_depleted_in" text="Depleted in" />
+    <string id="taom_res_tt_days" text="{DAYS} days" />
+    <string id="taom_res_tt_deserting" text="Elite troops are deserting: no {RESOURCE} left" />
+    <string id="taom_res_tt_per_battle" text="Per battle" />
+    <string id="taom_res_tt_per_raid" text="Per raid" />
+    <string id="taom_res_tt_per_siege" text="Per siege" />
+    <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
   </strings>
 </base>

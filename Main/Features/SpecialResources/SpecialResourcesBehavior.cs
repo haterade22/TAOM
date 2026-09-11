@@ -189,13 +189,40 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             return;
         }
 
-        var ownedTowns = CountOwnedTowns(hero);
-        var troopUpkeep = GetTroopUpkeepFromParty(hero.PartyBelongedTo);
+        var ownedTowns = PartyUpkeepReader.CountOwnedTowns(hero);
+        var troopUpkeep = PartyUpkeepReader.Collect(hero.PartyBelongedTo, _config);
+
+        // The same breakdown the tick applies is what the player is told about, so the message and
+        // the deduction cannot disagree (#558). Balance is read before AND after, the idiom
+        // OnMapEventEnded already uses, because Add floors at 0: a bill larger than the balance is
+        // absorbed silently unless the caller compares the two.
+        var breakdown = _service.GetDailyBreakdown(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
+        var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
 
         _service.ApplyDailyTick(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
 
-        // Check balance for warnings and desertion
         var balance = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
+        // Only troops whose row carries a daily_upkeep count: a merchant-only row is not an upkeep
+        // troop and must neither desert nor trigger the warnings (#558 finding 5).
+        var hasUpkeepTroops = breakdown.UpkeepLines.Count > 0;
+
+        // The daily line and the overdraft line show on the grace tick too: the deduction happened,
+        // only the desertion below is deferred by one day, and a line that goes quiet on the tick the
+        // player loads into would hide the one deduction they most want explained.
+        if (hasUpkeepTroops)
+        {
+            var daily = SpecialResourceMessages.DailyUpkeep(resource.DisplayName, breakdown.Earning, breakdown.Upkeep, balance).ToString();
+            InformationManager.DisplayMessage(breakdown.Net < 0f
+                ? new InformationMessage(daily, Colors.Yellow)
+                : new InformationMessage(daily));
+
+            if (before + breakdown.Net < 0f)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    SpecialResourceMessages.UpkeepOverdraft(resource.DisplayName, breakdown.Upkeep, before).ToString(),
+                    Colors.Red));
+            }
+        }
 
         // Phase 9b deferred #133 P2 — desertion grace. On the FIRST daily tick after a save
         // load (or new-game start), suppress desertion. This protects a player who saved at
@@ -204,7 +231,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // SECOND daily tick (one in-game day later) applies desertion as normal.
         var inGracePeriod = _isFirstTickAfterLoad;
 
-        if (balance <= 0f && troopUpkeep.Count > 0 && !inGracePeriod)
+        if (balance <= 0f && hasUpkeepTroops && !inGracePeriod)
         {
             // Desertion: remove troops from roster
             var desertions = _service.CalculateDesertion(hero.StringId, kingdomId, cultureId, troopUpkeep);
@@ -224,21 +251,21 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
                     extraTimeInMs: 3000);
             }
         }
-        else if (balance <= 0f && troopUpkeep.Count > 0 && inGracePeriod)
+        else if (balance <= 0f && hasUpkeepTroops && inGracePeriod)
         {
-            _logger.LogInfo($"[SpecRes] DailyTick: desertion grace active (first tick after load) — {troopUpkeep.Count} upkeep troop types spared this tick");
+            _logger.LogInfo($"[SpecRes] DailyTick: desertion grace active (first tick after load) — {breakdown.UpkeepLines.Count} upkeep troop types spared this tick");
         }
-        else if (balance > 0f)
+        else if (balance > 0f && hasUpkeepTroops)
         {
-            // Warn only when heading into a deficit: project the next daily tick (steady-state — same
-            // towns/party as this tick) and alert if it would push the balance to zero or below, which
-            // is exactly the threshold that triggers troop desertion. A low-but-stable balance (income
-            // covers upkeep) needs no warning.
-            var projectedNet = _service.GetProjectedDailyNet(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
-            if (balance + projectedNet <= 0f)
+            // Warn only when heading into a deficit: the next daily tick (steady-state — same
+            // towns/party as this tick) would push the balance to zero or below, which is exactly the
+            // threshold that triggers troop desertion. A low-but-stable balance (income covers
+            // upkeep) needs no warning, and neither does a party with no upkeep troops: nothing can
+            // desert, and the map-bar flag (SpecialResourceMapBarMixin) keys on the same three terms.
+            if (balance + breakdown.Net <= 0f)
             {
                 InformationManager.DisplayMessage(new InformationMessage(
-                    $"{resource.DisplayName} running out: {balance:F0} left, losing {-projectedNet:F0}/day",
+                    $"{resource.DisplayName} running out: {balance:F0} left, losing {-breakdown.Net:F0}/day",
                     Colors.Yellow));
             }
         }
@@ -360,7 +387,14 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (hero == null) return;
 
         GetHeroIds(hero, out var kingdomId, out var cultureId);
-        _service.ChargeRecruitCost(hero.StringId, kingdomId, cultureId, character.StringId, count);
+        var charged = _service.ChargeRecruitCost(hero.StringId, kingdomId, cultureId, character.StringId, count);
+        if (charged > 0f)
+        {
+            var resource = _service.ResolveResource(kingdomId, cultureId);
+            InformationManager.DisplayMessage(new InformationMessage(
+                SpecialResourceMessages.RecruitCharge(resource?.DisplayName, charged, count, character.Name?.ToString()).ToString(),
+                Colors.Yellow));
+        }
     }
 
     // Unified earning toast (round-4 O1 — was NotifyEarning + NotifyEarningDelta + an inline copy in
@@ -452,7 +486,17 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         {
             var hero = Hero.MainHero;
             GetHeroIds(hero, out var kingdomId, out var cultureId);
-            _service.CommitSession(hero?.StringId, kingdomId, cultureId);
+            var spent = _service.CommitSession(hero?.StringId, kingdomId, cultureId);
+            if (spent > 0f && hero != null)
+            {
+                // The one outflow a player triggers by hand, and until #558 the only feedback was a
+                // log line: upgrade twenty troops after a battle and the balance was simply gone.
+                var resource = _service.ResolveResource(kingdomId, cultureId);
+                var balance = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
+                InformationManager.DisplayMessage(new InformationMessage(
+                    SpecialResourceMessages.UpgradeSpend(resource?.DisplayName, spent, balance).ToString(),
+                    Colors.Yellow));
+            }
         }
     }
 
@@ -496,31 +540,4 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         cultureId = hero?.Culture?.StringId;
     }
 
-    private static int CountOwnedTowns(Hero hero)
-    {
-        var settlements = hero.Clan?.Settlements;
-        if (settlements == null) return 0;
-
-        var count = 0;
-        foreach (var settlement in settlements)
-            if (settlement.IsTown)
-                count++;
-        return count;
-    }
-
-    private List<TroopUpkeepInfo> GetTroopUpkeepFromParty(MobileParty party)
-    {
-        if (party?.MemberRoster == null) return _emptyUpkeep;
-
-        var result = new List<TroopUpkeepInfo>(8);
-        foreach (var element in party.MemberRoster.GetTroopRoster())
-        {
-            if (element.Character != null && _config.GetTroopCost(element.Character.StringId) != null)
-                result.Add(new TroopUpkeepInfo(element.Character.StringId, element.Number));
-        }
-
-        return result;
-    }
-
-    private static readonly List<TroopUpkeepInfo> _emptyUpkeep = new();
 }

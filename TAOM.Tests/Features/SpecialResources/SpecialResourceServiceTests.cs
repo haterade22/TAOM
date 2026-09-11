@@ -526,9 +526,10 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
-    public void GetDailyEarning_ReturnsPerTownTimesCount()
+    public void GetDailyBreakdown_Earning_ReturnsPerTownTimesCount()
     {
-        Assert.AreEqual(1.5f, _service.GetDailyEarning("empire_s", null, 3));
+        var breakdown = _service.GetDailyBreakdown("hero1", "empire_s", null, 3, new List<TroopUpkeepInfo>());
+        Assert.AreEqual(1.5f, breakdown.Earning, 0.001f);
     }
 
     // ── Projected Daily Net (deficit warning) ──
@@ -739,7 +740,10 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void CalculateDesertion_BalanceZero_Deserts10Percent()
     {
+        // Desertion is the consequence of UNPAID UPKEEP, so the fixture must carry an upkeep row: a
+        // troop with no daily_upkeep never walks (#558 finding 5, SpecialResourceBreakdownTests).
         _storage.Get("hero1", "war_spoils").Returns(0f);
+        _config.GetTroopCost("mordor_uruk_darkblade").Returns(new TroopResourceCostEntry("mordor_uruk_darkblade", "war_spoils", 2, 0.1f));
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 20) };
 
         var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
@@ -753,6 +757,7 @@ public class SpecialResourceServiceTests
     public void CalculateDesertion_BalanceZero_MinimumOnePerType()
     {
         _storage.Get("hero1", "war_spoils").Returns(0f);
+        _config.GetTroopCost("mordor_uruk_darkblade").Returns(new TroopResourceCostEntry("mordor_uruk_darkblade", "war_spoils", 2, 0.1f));
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 3) };
 
         var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
@@ -788,6 +793,8 @@ public class SpecialResourceServiceTests
     public void CalculateDesertion_MultipleTroopTypes_DesertsEach()
     {
         _storage.Get("hero1", "war_spoils").Returns(0f);
+        _config.GetTroopCost("mordor_uruk_darkblade").Returns(new TroopResourceCostEntry("mordor_uruk_darkblade", "war_spoils", 2, 0.1f));
+        _config.GetTroopCost("mordor_uruk_deathwarden").Returns(new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f));
         var troops = new List<TroopUpkeepInfo>
         {
             new("mordor_uruk_darkblade", 10),
@@ -829,7 +836,7 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
-    public void GetDailyUpkeep_SpecialResourceUpkeepModifier_ReducesUpkeep()
+    public void GetDailyBreakdown_SpecialResourceUpkeepModifier_ReducesUpkeep()
     {
         // -0.25 = 25% upkeep reduction
         _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(-0.25f);
@@ -837,33 +844,33 @@ public class SpecialResourceServiceTests
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
 
-        var result = _service.GetDailyUpkeep(troops, "hero1");
+        var result = _service.GetDailyBreakdown("hero1", "empire_s", null, 0, troops).Upkeep;
 
         // Base upkeep = 0.3 * 10 = 3.0, with -25% modifier = 2.25
         Assert.AreEqual(2.25f, result, 0.001f);
     }
 
     [TestMethod]
-    public void GetDailyUpkeep_NoCareerPassive_UpkeepUnchanged()
+    public void GetDailyBreakdown_NoCareerPassive_UpkeepUnchanged()
     {
         _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(0f);
         var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
 
-        var result = _service.GetDailyUpkeep(troops, "hero1");
+        var result = _service.GetDailyBreakdown("hero1", "empire_s", null, 0, troops).Upkeep;
 
         Assert.AreEqual(3.0f, result, 0.001f);
     }
 
     [TestMethod]
-    public void GetDailyUpkeep_NullHeroId_UpkeepUnmodified()
+    public void GetDailyBreakdown_NullHeroId_UpkeepUnmodified()
     {
         var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
 
-        var result = _service.GetDailyUpkeep(troops, null);
+        var result = _service.GetDailyBreakdown(null, "empire_s", null, 0, troops).Upkeep;
 
         Assert.AreEqual(3.0f, result, 0.001f);
     }

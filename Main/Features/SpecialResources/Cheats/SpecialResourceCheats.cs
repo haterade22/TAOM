@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TAOM.Features.DevConsole;
+using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Features.SpecialResources.Cheats;
 
@@ -89,6 +91,11 @@ public static class SpecialResourceCheats
             if (resource == null)
                 return FormatDump(null, null, 0f, 0f, 0, 0, 0f);
 
+            // The same breakdown the daily tick applies, so a player's "it vanished" report is
+            // answered from one paste: income, each troop type's upkeep, net (#558).
+            var ownedTowns = PartyUpkeepReader.CountOwnedTowns(hero);
+            var troops = PartyUpkeepReader.Collect(hero.PartyBelongedTo, IoC.Resolve<ISpecialResourceConfigProvider>());
+
             return FormatDump(
                 resource.DisplayName,
                 resource.Id,
@@ -96,16 +103,20 @@ public static class SpecialResourceCheats
                 resource.Cap,
                 service.GetCurrentTierLevel(hero.StringId, kingdomId, cultureId),
                 resource.TierThresholds?.Count ?? 0,
-                service.GetAvailableAfterPending(hero.StringId, kingdomId, cultureId));
+                service.GetAvailableAfterPending(hero.StringId, kingdomId, cultureId),
+                service.GetDailyBreakdown(hero.StringId, kingdomId, cultureId, ownedTowns, troops),
+                ownedTowns);
         });
 
     /// <summary>
     /// Pure. Tier and pending clauses are omitted rather than rendered as zeroes — "tier 0 of 3" and
-    /// a pending figure equal to the balance both read as information when they are noise.
+    /// a pending figure equal to the balance both read as information when they are noise. With a
+    /// <paramref name="breakdown"/> the daily lines follow, one per upkeep troop type.
     /// </summary>
     internal static string FormatDump(
         string displayName, string resourceId, float amount, float cap,
-        int tierLevel, int tierCount, float availableAfterPending)
+        int tierLevel, int tierCount, float availableAfterPending,
+        DailyResourceBreakdown breakdown = null, int ownedTowns = 0)
     {
         if (string.IsNullOrEmpty(resourceId))
             return NoResourceMessage + ".";
@@ -119,7 +130,17 @@ public static class SpecialResourceCheats
         if (Math.Abs(availableAfterPending - amount) > 0.005f)
             line += $"  (spendable after pending: {availableAfterPending:0.##})";
 
-        return line;
+        if (breakdown == null)
+            return line;
+
+        var report = new StringBuilder(line);
+        report.Append($"\n  income: +{SpecialResourceMessages.FormatAmount(breakdown.Earning)}/day ({ownedTowns} towns)");
+        report.Append($"\n  upkeep: -{SpecialResourceMessages.FormatAmount(breakdown.Upkeep)}/day");
+        foreach (var upkeepLine in breakdown.UpkeepLines)
+            report.Append($"\n    {upkeepLine.TroopId} x{upkeepLine.Count} = -{SpecialResourceMessages.FormatAmount(upkeepLine.Total)}/day");
+        var net = SpecialResourceMessages.FormatAmount(breakdown.Net);
+        report.Append($"\n  net: {(breakdown.Net >= 0f ? "+" + net : net)}/day");
+        return report.ToString();
     }
 
     /// <summary>

@@ -140,7 +140,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var net = ComputeDailyNet(heroId, resource, ownedTownCount, troopsWithUpkeep);
+        var net = ComputeBreakdown(heroId, resource, ownedTownCount, troopsWithUpkeep).Net;
 
         if (net >= 0)
             AddCapped(heroId, resource, net);
@@ -148,25 +148,55 @@ public class SpecialResourceService : ISpecialResourceService
             _storage.Add(heroId, resource.Id, net);
     }
 
-    public float GetProjectedDailyNet(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+    public DailyResourceBreakdown GetDailyBreakdown(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
     {
         var resource = ResolveResource(kingdomId, cultureId);
-        if (resource == null) return 0f;
-        return ComputeDailyNet(heroId, resource, ownedTownCount, troopsWithUpkeep);
+        if (resource == null) return DailyResourceBreakdown.Empty;
+        return ComputeBreakdown(heroId, resource, ownedTownCount, troopsWithUpkeep);
     }
 
-    // Single source of truth for the daily earning(+SpecialResourceGain) − upkeep(+SpecialResourceUpkeepModifier)
-    // math, shared by ApplyDailyTick (which applies it) and GetProjectedDailyNet (which projects the next tick).
-    private float ComputeDailyNet(string heroId, SpecialResource resource, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+    public float GetProjectedDailyNet(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+        => GetDailyBreakdown(heroId, kingdomId, cultureId, ownedTownCount, troopsWithUpkeep).Net;
+
+    // The single daily calculation: earning (+SpecialResourceGain) and one upkeep line per troop type
+    // that carries a daily_upkeep (each line already scaled by SpecialResourceUpkeepModifier, so the
+    // lines sum to the total). ApplyDailyTick applies its Net; every display reads the same object.
+    private DailyResourceBreakdown ComputeBreakdown(string heroId, SpecialResource resource, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
     {
         var earning = resource.DailyPerTown * ownedTownCount;
         var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceGain);
         if (gainModifier != 0f)
             earning *= (1f + gainModifier);
 
-        var upkeep = GetDailyUpkeep(troopsWithUpkeep, heroId);
-        return earning - upkeep;
+        var lines = new List<TroopUpkeepLine>();
+        if (troopsWithUpkeep != null)
+        {
+            var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceUpkeepModifier);
+            foreach (var troop in troopsWithUpkeep)
+            {
+                if (troop == null || troop.Count <= 0) continue;
+                var perUnit = DailyUpkeepPerUnit(troop.TroopId);
+                if (!(perUnit > 0f)) continue;
+
+                // Total is scaled after the multiply, the order the old single-total math used, so a
+                // one-type party debits the same float it always did.
+                var total = perUnit * troop.Count;
+                if (upkeepModifier != 0f)
+                {
+                    perUnit = Math.Max(0f, perUnit * (1f + upkeepModifier));
+                    total = Math.Max(0f, total * (1f + upkeepModifier));
+                }
+                lines.Add(new TroopUpkeepLine(troop.TroopId, troop.Count, perUnit, total));
+            }
+        }
+
+        return new DailyResourceBreakdown(earning, lines);
     }
+
+    // A cost row is not an upkeep row: the Elite Emissary's merchant-only rows and any row without a
+    // daily_upkeep return 0 here, which keeps them out of the upkeep lines AND out of desertion.
+    private float DailyUpkeepPerUnit(string troopId)
+        => _config.GetTroopCost(troopId)?.DailyUpkeep ?? 0f;
 
     public bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count)
     {
@@ -196,19 +226,20 @@ public class SpecialResourceService : ISpecialResourceService
         _logger.LogInfo($"[SpecRes] SPEND: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
     }
 
-    public void ChargeRecruitCost(string heroId, string kingdomId, string cultureId, string troopId, int count)
+    public float ChargeRecruitCost(string heroId, string kingdomId, string cultureId, string troopId, int count)
     {
-        if (count <= 0) return;
+        if (count <= 0) return 0f;
 
         var resource = ResolveResource(kingdomId, cultureId);
-        if (resource == null) return;
+        if (resource == null) return 0f;
 
         var cost = _config.GetTroopCost(troopId);
-        if (cost == null || cost.RecruitCost <= 0) return;
+        if (cost == null || cost.RecruitCost <= 0) return 0f;
 
         var totalCost = cost.RecruitCost * count;
         _storage.Add(heroId, resource.Id, -totalCost);
         _logger.LogInfo($"[SpecRes] RECRUIT: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
+        return totalCost;
     }
 
     public RecruitGateResult CanAffordRecruit(string heroId, string kingdomId, string cultureId, IReadOnlyList<RecruitCartEntry> cart)
@@ -323,16 +354,18 @@ public class SpecialResourceService : ISpecialResourceService
         return clamped;
     }
 
-    public void CommitSession(string heroId, string kingdomId, string cultureId)
+    public float CommitSession(string heroId, string kingdomId, string cultureId)
     {
-        if (!_inSession) return;
+        if (!_inSession) return 0f;
 
+        var debited = 0f;
         if (_pendingSpend > 0f)
         {
             var resource = ResolveResource(kingdomId, cultureId);
             if (resource != null)
             {
                 _storage.Add(heroId, resource.Id, -_pendingSpend);
+                debited = _pendingSpend;
                 _logger.LogInfo($"[SpecRes] PartyScreen COMMITTED: -{_pendingSpend:F0} {resource.DisplayName}");
             }
         }
@@ -343,6 +376,7 @@ public class SpecialResourceService : ISpecialResourceService
 
         _pendingSpend = 0f;
         _inSession = false;
+        return debited;
     }
 
     public void CancelSession()
@@ -383,33 +417,6 @@ public class SpecialResourceService : ISpecialResourceService
         _logger.LogInfo($"[SpecRes] InitializeHero: {heroId} → {resource.DisplayName} = {resource.StartingAmount}");
     }
 
-    public float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount)
-    {
-        var resource = ResolveResource(kingdomId, cultureId);
-        if (resource == null) return 0f;
-
-        return resource.DailyPerTown * ownedTownCount;
-    }
-
-    public float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep, string heroId = null)
-    {
-        var total = 0f;
-        if (troopsWithUpkeep == null) return total;
-
-        foreach (var troop in troopsWithUpkeep)
-        {
-            var cost = _config.GetTroopCost(troop.TroopId);
-            if (cost != null)
-                total += cost.DailyUpkeep * troop.Count;
-        }
-
-        var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceUpkeepModifier);
-        if (upkeepModifier != 0f)
-            total *= (1f + upkeepModifier);
-
-        return Math.Max(0f, total);
-    }
-
     public IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
     {
         var result = new List<TroopDesertionEntry>();
@@ -422,9 +429,13 @@ public class SpecialResourceService : ISpecialResourceService
         if (balance > 0f)
             return result;
 
-        // At 0 resources: 10% of each upkeep troop type deserts per day (min 1)
+        // At 0 resources: 10% of each upkeep troop type deserts per day (min 1). Desertion is the
+        // consequence of UNPAID UPKEEP, so a troop whose row carries none (the Elite Emissary's
+        // merchant-only rows: 50 normal tree troops) is not in arrears and stays (#558 finding 5).
         foreach (var troop in troopsWithUpkeep)
         {
+            if (troop == null || troop.Count <= 0 || !(DailyUpkeepPerUnit(troop.TroopId) > 0f)) continue;
+
             var desertCount = Math.Max(1, (int)(troop.Count * 0.1f));
             desertCount = Math.Min(desertCount, troop.Count);
             result.Add(new TroopDesertionEntry(troop.TroopId, desertCount));

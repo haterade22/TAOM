@@ -104,6 +104,55 @@ public class SpecialResourceStorageServiceTests
         Assert.AreEqual(0f, _storage.Get("hero1", "scraps"));
     }
 
+    // ── Non-finite writes (#558 deep review) ──
+    //
+    // `Math.Max(0f, NaN)` is NaN, so the floor in Set never stopped a NaN from being stored, and
+    // once stored it survived every later Add/AddCapped and the save round trip (SyncData restores
+    // the dictionary as-is; ClampAll is no longer called on load). A NaN balance renders as
+    // int.MinValue on the map bar. The storage is the last gate before the save, so it refuses.
+
+    [TestMethod]
+    public void Set_NaN_KeepsThePreviousValue()
+    {
+        _storage.Set("hero1", "scraps", 50f);
+        _storage.Set("hero1", "scraps", float.NaN);
+        Assert.AreEqual(50f, _storage.Get("hero1", "scraps"));
+    }
+
+    [TestMethod]
+    public void Set_Infinity_KeepsThePreviousValue()
+    {
+        _storage.Set("hero1", "scraps", 50f);
+        _storage.Set("hero1", "scraps", float.PositiveInfinity);
+        Assert.AreEqual(50f, _storage.Get("hero1", "scraps"));
+    }
+
+    [TestMethod]
+    public void Add_NaNDelta_LeavesTheBalanceUnchanged()
+    {
+        _storage.Set("hero1", "scraps", 50f);
+        _storage.Add("hero1", "scraps", float.NaN);
+        Assert.AreEqual(50f, _storage.Get("hero1", "scraps"));
+    }
+
+    [TestMethod]
+    public void RestoreData_NonFiniteEntries_BecomeZero_OthersUntouched()
+    {
+        var data = new System.Collections.Generic.Dictionary<string, float>
+        {
+            ["hero1:scraps"] = float.NaN,
+            ["hero1:gems"] = float.NegativeInfinity,
+            ["hero2:scraps"] = 10f,
+        };
+
+        _storage.RestoreData(data);
+
+        Assert.AreEqual(0f, _storage.Get("hero1", "scraps"));
+        Assert.AreEqual(0f, _storage.Get("hero1", "gems"));
+        Assert.AreEqual(10f, _storage.Get("hero2", "scraps"));
+        Assert.IsTrue(_storage.Contains("hero1", "scraps"), "a repaired entry stays tracked, so the legacy seed does not re-fire");
+    }
+
     // ── Contains (Phase 9b deferred #133 P2 legacy-seed gate) ──
     //
     // Distinguishes "never seeded this resource for this hero" from "seeded and then

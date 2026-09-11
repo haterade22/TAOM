@@ -4,6 +4,64 @@
 
 ## 2026-09-11
 
+### fix(specres): every special-resource outflow is visible now, and troops that cost nothing no longer desert (#558)
+
+Two player reports: nobody could see what upkeep was costing, and balances were "wiped after every
+battle". Reading the feature explained both. The map-bar tooltip had passed an EMPTY troop list into
+the upkeep calculation since the feature's first commit, so "Elite upkeep" could never render and
+"Net" was always just income. And no outflow anywhere produced a message: the daily upkeep deduction,
+the party-screen upgrade commit, the recruit charge and the floor at zero all wrote only to the log,
+while every earning got a green toast. A balance earned in a battle and zeroed at the next daily tick
+looked like a bug in the battle.
+
+One calculation now feeds every surface. `GetDailyBreakdown` returns earning (career gain applied),
+upkeep (career upkeep modifier applied per troop line, so the lines sum to the total) and one line
+per troop type; the daily tick applies its net, and the tooltip, the daily message and
+`taom.print_special_resources` render the same object. `GetDailyEarning` and the list-taking
+`GetDailyUpkeep` left the interface: the tooltip's income had skipped the career passive the tick
+applied, which is what a second path to the same number does given time.
+
+What the player sees: the tooltip lists income with the town count, elite upkeep with the troop-type
+count, one row per troop type in the extended (Alt) view, net, "Depleted in N days" while the balance
+shrinks, and a deserting notice at zero; the map-bar icon goes red when balance plus net is at or
+below zero with upkeep troops in the party, which is the desertion trigger one day ahead (vanilla
+lights gold the same way). In the chat log: a daily income, upkeep and balance line on any day the
+party holds upkeep troops (yellow when the net is negative), a red line when the bill exceeded the
+balance, a yellow line when a party-screen session commits upgrades, a yellow line on a recruit
+charge. Twenty new `taom_res_*` keys, every number in a slot, seeded as English in all twelve
+language files; the translator run is owed because no API key was available in this session.
+
+The third defect was real damage. `troop_resource_costs.xml` began as the list of troops that cost
+upkeep, and desertion keyed on "has a row". The Elite Emissary added 50 merchant-only rows for
+ordinary tree troops, so an Erebor player at 0 Gems lost 10% of their Royal Wardens a day to "your
+Gems are depleted" though they cost nothing to keep. Desertion, the upkeep lines and both warnings
+now key on `daily_upkeep > 0`. Lesson appended to `docs/reviews/lessons/gamemodels-services.md`.
+
+Ruled out against the v1.4.8 dump: the post-battle party screen. There is no bulk upgrade command,
+every upgrade passes through the patched `AddCommand` to `UpgradeTroop` window, and every party-screen
+mode closes through the event we hook.
+
+Two more from the deep review. The storage floor was `Math.Max(0f, amount)`, and `Math.Max(0f, NaN)`
+is NaN, so a non-finite write would have been stored, survived every later deduction and the save
+round trip, and rendered as int.MinValue on the map bar; `Set` now refuses a non-finite value and
+`RestoreData` repairs one to zero. And the one-day-ahead deficit warning fired for any positive
+balance with a negative net, upkeep troops or not, while the map-bar flag and desertion both require
+them; the three now key on the same terms.
+
+Not tested in-game yet: the tooltip rows, the four toasts, the warning colour and `PartyUpkeepReader`
+against a live party. 24 new unit tests and 4 retargeted; the SpecialResource, EliteEmissary,
+JoinReconciliation and Localization suites are green (247 tests).
+
+### balance(mordor): Black Numenorean upkeep rescaled to the Mordor line (#558)
+
+The 13 Black Numenorean rows carried `daily_upkeep` 1.0 to 3.0 per troop against 0.05 to 0.3 for
+every other Mordor elite, and `merchant_cost` 1 to 5 against the file's own 10 to 45 band. They reach
+any faction's player through prisoner recruitment and the vassal reward, and upkeep is charged in the
+player's own resource, so forty of them cost 60 a day against a top battle payout of 28. That is the
+likeliest single source of the "wiped after every battle" reports. Now 0.05 / 0.1 / 0.15 / 0.2 / 0.3
+by rung and 6 / 8 / 12 / 18 / 28 for the emissary, matching the uruk line's ratio; the two rungs under
+the documented band are an extrapolation. Data only; existing saves pick it up at the next daily tick.
+
 ### fix(mcm): 166 settings told players to restart, and Cancel on that prompt threw the change away (#559)
 
 A player switched Bandit Scaling off in MCM, set the curves to 0.127, watched those values land in

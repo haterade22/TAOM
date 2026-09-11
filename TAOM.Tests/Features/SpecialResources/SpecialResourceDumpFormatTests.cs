@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.SpecialResources.Cheats;
+using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Tests.Features.SpecialResources;
 
@@ -89,5 +91,46 @@ public class SpecialResourceDumpFormatTests
             amount: 412f, cap: 500f, tierLevel: 2, tierCount: 3, availableAfterPending: 412f);
 
         Assert.IsFalse(report.Contains("pending"), report);
+    }
+
+    /// <summary>
+    /// A player report of "my War Spoils vanished" is answered from one console paste when the dump
+    /// carries the same breakdown the daily tick applies: income, each troop type's upkeep, net (#558).
+    /// </summary>
+    [TestMethod]
+    public void FormatDump_WithBreakdown_ListsIncomeEachUpkeepLineAndNet()
+    {
+        var breakdown = new DailyResourceBreakdown(
+            earning: 1.2f,
+            upkeepLines: new List<TroopUpkeepLine>
+            {
+                new("mordor_uruk_darkblade", count: 10, perUnit: 0.3f),
+                new("mordor_num_knight", count: 4, perUnit: 0.2f),
+            });
+
+        var report = SpecialResourceCheats.FormatDump(
+            displayName: "War Spoils", resourceId: "war_spoils",
+            amount: 12f, cap: 500f, tierLevel: 0, tierCount: 0, availableAfterPending: 12f,
+            breakdown: breakdown, ownedTowns: 2);
+
+        StringAssert.Contains(report, "income");
+        StringAssert.Contains(report, "2 towns");
+        StringAssert.Contains(report, "mordor_uruk_darkblade x10");
+        StringAssert.Contains(report, "mordor_num_knight x4");
+        StringAssert.Contains(report, "upkeep");
+        StringAssert.Contains(report, "3.8");   // 3.0 + 0.8
+        StringAssert.Contains(report, "net");
+        StringAssert.Contains(report, "-2.6");  // 1.2 - 3.8
+    }
+
+    [TestMethod]
+    public void FormatDump_WithoutBreakdown_OmitsTheDailyLines()
+    {
+        var report = SpecialResourceCheats.FormatDump(
+            displayName: "War Spoils", resourceId: "war_spoils",
+            amount: 412f, cap: 500f, tierLevel: 2, tierCount: 3, availableAfterPending: 412f);
+
+        Assert.IsFalse(report.Contains("income"), report);
+        Assert.IsFalse(report.Contains("upkeep"), report);
     }
 }

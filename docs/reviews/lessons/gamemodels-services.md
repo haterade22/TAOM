@@ -775,3 +775,20 @@ written into the save.
   number. Note `float.IsFinite` does NOT exist on net472; use `TAOM.Core.Validation.FiniteFloatValidator`.
 - **Source:** instance #6 of the NaN-gate class, deep-review of SettlementFood #546, 2026-09-06.
   `docs/reviews/rca-settlement-food-2026-09-06.md`.
+
+### A cost row is not an upkeep row: when a table gains a new KIND of row, every reader that keyed on "has a row" is now wrong
+
+`troop_resource_costs.xml` began as the list of troops that cost upkeep, and `GetTroopUpkeepFromParty`
+collected every troop with a row, which was then the same set. The Elite Emissary added 50 merchant-only
+rows (`merchant_cost`, no `daily_upkeep`) for ordinary tree troops, and `CalculateDesertion`, which
+never read `DailyUpkeep`, began deserting Erebor Royal Wardens at 0 Gems though they cost nothing to
+keep. The emissary diff touched no desertion line. Same shape as the NaN-provenance lesson above, with
+a table instead of a float: the defective line predates the change and never appears in its review.
+- **Why missed:** the row's meaning drifted from "costs upkeep" to "has some cost", and the consumers
+  that assumed the old meaning were outside the diff that changed it. A presence check (`!= null`) reads
+  as a type check when every row happens to carry the field.
+- **Prevent:** when a config table gains a new kind of row, grep every reader of that table and ask
+  what each one assumed a row MEANT. Gate on the field the consumer actually spends (`DailyUpkeep > 0`),
+  never on the presence of the row, and put that predicate in the tested service rather than the
+  engine-facing collector so the regression test needs no campaign.
+- **Source:** #558 finding 5, 2026-09-11; `docs/features/special-resources.md` "Desertion Mechanics".

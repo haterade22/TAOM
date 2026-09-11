@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.SpecialResources.UI;
@@ -103,12 +104,26 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         {
             _resourceInfo.Value = intAmount.ToString();
             _resourceInfo.IntValue = intAmount;
-            _resourceInfo.HasWarning = amount <= 0f;
             _lastAmount = intAmount;
+        }
+
+        // Red the day BEFORE troops walk, not after: vanilla lights the gold item on
+        // `Gold + projected daily change < 0` (MapInfoVM.UpdatePlayerInfo), and the equivalent here is
+        // the desertion trigger itself, balance + net <= 0 with upkeep troops in the party. Same cost
+        // class as vanilla's per-refresh CalculateClanGoldChange: one roster walk of dictionary lookups.
+        var breakdown = _service.GetDailyBreakdown(hero.StringId, kingdomId, cultureId,
+            PartyUpkeepReader.CountOwnedTowns(hero), PartyUpkeepReader.Collect(hero.PartyBelongedTo, _config));
+        var warning = breakdown.UpkeepLines.Count > 0 && amount + breakdown.Net <= 0f;
+        if (warning != _lastWarning)
+        {
+            _resourceInfo.HasWarning = warning;
+            _lastWarning = warning;
         }
 
         _baseInitialized = true;
     }
+
+    private bool _lastWarning;
 
     private List<TooltipProperty> GetTooltipProperties()
     {
@@ -143,11 +158,12 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         if (resource == null) return result;
 
         var amount = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
-        var ownedTowns = CountOwnedTowns(hero);
-        var dailyEarning = _service.GetDailyEarning(kingdomId, cultureId, ownedTowns);
-        var upkeepTroops = new List<TroopUpkeepInfo>();
-        // Upkeep calculation deferred to tooltip — no hot-path cost
-        var dailyUpkeep = _service.GetDailyUpkeep(upkeepTroops, hero.StringId);
+        var ownedTowns = PartyUpkeepReader.CountOwnedTowns(hero);
+        // The SAME breakdown the daily tick applies. The first version of this tooltip built its own
+        // EMPTY troop list here, so "Elite upkeep" could never render and "Net" was always just income;
+        // players read that as "no upkeep" while the tick drained them every day (#558).
+        var breakdown = _service.GetDailyBreakdown(hero.StringId, kingdomId, cultureId, ownedTowns,
+            PartyUpkeepReader.Collect(hero.PartyBelongedTo, _config));
 
         result.Add(new TooltipProperty(resource.DisplayName, $"{amount:F0} / {resource.Cap:F0}", 0,
             onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.Title));
@@ -155,46 +171,84 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         var currentTier = _service.GetCurrentTier(hero.StringId, kingdomId, cultureId);
         if (currentTier != null)
         {
-            result.Add(new TooltipProperty("Tier", $"{currentTier.Level} — {currentTier.Name}", 0));
+            result.Add(new TooltipProperty(Label("{=taom_res_tt_tier}Tier"),
+                new TextObject("{=taom_res_tt_tier_value}{LEVEL} ({NAME})")
+                    .SetTextVariable("LEVEL", currentTier.Level)
+                    .SetTextVariable("NAME", currentTier.Name).ToString(), 0));
             result.Add(new TooltipProperty("", currentTier.Description, 0,
                 onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.MultiLine));
         }
         else if (resource.TierThresholds.Count > 0)
         {
             var nextTier = resource.TierThresholds[0];
-            result.Add(new TooltipProperty("Next tier at", $"{nextTier.Threshold:F0} ({nextTier.Name})", 0));
+            result.Add(new TooltipProperty(Label("{=taom_res_tt_next_tier}Next tier at"),
+                new TextObject("{=taom_res_tt_next_tier_value}{THRESHOLD} ({NAME})")
+                    .SetTextVariable("THRESHOLD", Amount(nextTier.Threshold))
+                    .SetTextVariable("NAME", nextTier.Name).ToString(), 0));
         }
 
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false,
             TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
 
-        var net = dailyEarning - dailyUpkeep;
-        result.Add(new TooltipProperty("Daily Change", "", 0,
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_daily_change}Daily change"), "", 0,
             onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.RundownSeperator));
-        result.Add(new TooltipProperty($"Income ({ownedTowns} towns)", $"+{dailyEarning:F1}", 0));
-        if (dailyUpkeep > 0)
-            result.Add(new TooltipProperty("Elite upkeep", $"-{dailyUpkeep:F1}", 0));
-        result.Add(new TooltipProperty("Net", net >= 0 ? $"+{net:F1}" : $"{net:F1}", 0));
+        result.Add(new TooltipProperty(
+            new TextObject("{=taom_res_tt_income}Income ({TOWNS} towns)").SetTextVariable("TOWNS", ownedTowns).ToString(),
+            "+" + Amount(breakdown.Earning), 0));
+
+        if (breakdown.UpkeepLines.Count > 0)
+        {
+            result.Add(new TooltipProperty(
+                new TextObject("{=taom_res_tt_upkeep}Elite upkeep ({TYPES} troop types)")
+                    .SetTextVariable("TYPES", breakdown.UpkeepLines.Count).ToString(),
+                "-" + Amount(breakdown.Upkeep), 0));
+
+            // One row per troop type, in the extended (Alt) view: this is the answer to "how much
+            // is going out to upkeep", and it is what the whole feature had no way to show.
+            foreach (var line in breakdown.UpkeepLines)
+            {
+                result.Add(new TooltipProperty(
+                    new TextObject("{=taom_res_tt_troop_line}{TROOP} x{COUNT}")
+                        .SetTextVariable("TROOP", TroopName(line.TroopId))
+                        .SetTextVariable("COUNT", line.Count).ToString(),
+                    "-" + Amount(line.Total), 0, onlyShowWhenExtended: true));
+            }
+        }
+
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_net}Net"), Signed(breakdown.Net), 0));
+
+        var daysLeft = breakdown.DaysUntilDepleted(amount);
+        if (daysLeft != null)
+        {
+            result.Add(new TooltipProperty(Label("{=taom_res_tt_depleted_in}Depleted in"),
+                new TextObject("{=taom_res_tt_days}{DAYS} days").SetTextVariable("DAYS", daysLeft.Value).ToString(), 0));
+        }
+        else if (amount <= 0f && breakdown.UpkeepLines.Count > 0)
+        {
+            result.Add(new TooltipProperty("",
+                new TextObject("{=taom_res_tt_deserting}Elite troops are deserting: no {RESOURCE} left")
+                    .SetTextVariable("RESOURCE", resource.DisplayName).ToString(),
+                0, onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.MultiLine));
+        }
 
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false,
             TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
-        result.Add(new TooltipProperty("Per battle", $"+{resource.PerBattleVictoryBase:F0}", 0));
-        result.Add(new TooltipProperty("Per raid", $"+{resource.PerRaid:F0}", 0));
-        result.Add(new TooltipProperty("Per siege", $"+{resource.PerSiegeVictory:F0}", 0));
-        result.Add(new TooltipProperty("Per prisoner", $"+{resource.PerPrisoner:F0}", 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_battle}Per battle"), "+" + Amount(resource.PerBattleVictoryBase), 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_raid}Per raid"), "+" + Amount(resource.PerRaid), 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_siege}Per siege"), "+" + Amount(resource.PerSiegeVictory), 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_prisoner}Per prisoner"), "+" + Amount(resource.PerPrisoner), 0));
 
         return result;
     }
 
-    private static int CountOwnedTowns(Hero hero)
-    {
-        var settlements = hero.Clan?.Settlements;
-        if (settlements == null) return 0;
+    // TooltipProperty takes strings only (no TextObject overload in v1.4.8), so every label is
+    // rendered here; the {=key} tag is what makes the row translatable, TextWidget never parses it.
+    private static string Label(string template) => new TextObject(template).ToString();
 
-        var count = 0;
-        foreach (var settlement in settlements)
-            if (settlement.IsTown)
-                count++;
-        return count;
-    }
+    private static string Amount(float value) => SpecialResourceMessages.FormatAmount(value);
+
+    private static string Signed(float value) => value >= 0f ? "+" + Amount(value) : Amount(value);
+
+    private static string TroopName(string troopId) =>
+        CharacterObject.Find(troopId)?.Name?.ToString() ?? troopId;
 }
