@@ -74,6 +74,13 @@ likeliest single source of the "wiped after every battle" reports. Now 0.05 / 0.
 by rung and 6 / 8 / 12 / 18 / 28 for the emissary, matching the uruk line's ratio; the two rungs under
 the documented band are an extrapolation. Data only; existing saves pick it up at the next daily tick.
 
+### chore(codex): the reviewer pin moves to GPT-6-Astra at ultra
+
+`.codex/config.toml` had pinned `gpt-5.6-sol` at `max` since 2026-09-05. The local model cache now
+lists `gpt-6-astra` with a ladder of low, medium, high, xhigh, max and ultra, so the pin is
+`gpt-6-astra` at `ultra` and the review-codex skill's note says so. First run: review 95 above,
+3 MEDIUM, 0 false positives.
+
 ### fix(mcm): 166 settings told players to restart, and Cancel on that prompt threw the change away (#559)
 
 A player switched Bandit Scaling off in MCM, set the curves to 0.127, watched those values land in
