@@ -71,7 +71,7 @@ game reads that file instead of MCM. Several other players report the same. They
 the mechanism and right about the symptom, and the trail led to three defects.
 
 **The settings were wired. The restart flag was not.** MCM's `BaseSettingPropertyAttribute`
-constructor defaults `requireRestart` to true, and 157 of the 218 value settings in `TaomSettings.cs`
+constructor defaults `requireRestart` to true, and 157 of the 217 value settings in `TaomSettings.cs`
 omitted `RequireRestart = false`, plus 12 across the three smaller settings classes. The 2026-09-06
 Troop Weight entry below swept the same list and called the rest cosmetic: the value is still read
 live, only the prompt misleads. That reading stopped one branch short. In the decompiled
@@ -99,7 +99,7 @@ MCMv5: `GlobalSettings<T>.Instance` resolves through `BaseSettingsProvider.Insta
 whenever MCM is loaded whether or not the player ever opens the UI, and MCM is a hard dependency. On
 every real install the six MCM-backed fields never touched the file, nothing pinned it to the C#
 defaults it duplicated, and it looked authoritative to anyone who opened it. Deleted, with
-`BanditScalingConfig`, `IBanditScalingConfigProvider`, `BanditScalingConfigProvider` and their 18
+`BanditScalingConfig`, `IBanditScalingConfigProvider`, `BanditScalingConfigProvider` and their 16
 tests. The defaults are constants in the provider now, `MinPartiesToInfest` is a constant (1), and
 `BanditScalingSettingsProviderTests` pins each against `new TaomSettings()`. Twelve other features
 ship the same shape of shadowed JSON (`alignment_desertion`, `recruitment_alignment`,

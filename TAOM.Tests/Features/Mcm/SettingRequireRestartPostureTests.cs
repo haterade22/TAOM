@@ -36,9 +36,9 @@ public class SettingRequireRestartPostureTests
 {
     private static readonly IReadOnlyDictionary<string, string> RestartAllowlist = new Dictionary<string, string>
     {
-        [nameof(TaomSettings.EnableNativeSkinFixes)] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
-        [nameof(CrashReportSettings.EnableCrashCapture)] = "gates PatchCategory(Patch37_CrashReport) in OnSubModuleLoad: off is live, on needs a launch",
-        [nameof(CrashReportSettings.EnableNativeToManagedCapture)] = "gates Native2ManagedPatcher.AttachAll in OnSubModuleLoad: installed once at launch",
+        [$"{nameof(TaomSettings)}.{nameof(TaomSettings.EnableNativeSkinFixes)}"] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
+        [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.EnableCrashCapture)}"] = "gates PatchCategory(Patch37_CrashReport) in OnSubModuleLoad: off is live, on needs a launch",
+        [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.EnableNativeToManagedCapture)}"] = "gates Native2ManagedPatcher.AttachAll in OnSubModuleLoad: installed once at launch",
     };
 
     private static readonly Type[] SettingsClasses =
@@ -61,7 +61,7 @@ public class SettingRequireRestartPostureTests
             seen++;
             var requireRestart = ReadRequireRestart(attribute);
             if (!requireRestart) continue;
-            if (RestartAllowlist.ContainsKey(property.Name)) continue;
+            if (RestartAllowlist.ContainsKey($"{type.Name}.{property.Name}")) continue;
             offenders.Add($"{type.Name}.{property.Name}");
         }
 
@@ -74,9 +74,11 @@ public class SettingRequireRestartPostureTests
     [TestMethod]
     public void RestartAllowlist_NamesOnlyRealSettings_ThatStillRequireRestart()
     {
+        // Keyed by "Class.Property": a same-named property on another class must not inherit an
+        // exemption (the first cut keyed on the bare name; deep-review 2026-09-11, second pass).
         var all = SettingsClasses
-            .SelectMany(ValueSettingAttributes)
-            .ToDictionary(pair => pair.Item1.Name, pair => pair.Item2);
+            .SelectMany(type => ValueSettingAttributes(type).Select(pair => ($"{type.Name}.{pair.Item1.Name}", pair.Item2)))
+            .ToDictionary(pair => pair.Item1, pair => pair.Item2);
 
         foreach (var entry in RestartAllowlist)
         {

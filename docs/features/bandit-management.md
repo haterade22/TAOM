@@ -53,9 +53,9 @@ A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** beco
 | Surface | Vanilla | TAOM scaling target |
 |---|---|---|
 | Hideouts per bandit faction (max) | 9 max | Up to `BanditMaxHideoutsPerFaction` (default 100 → physical hideout count binds first) |
-| **Initial hideouts per faction (new game)** | 7 | `BanditInitialHideoutsPerFaction` (default 14) — the early-game density lever |
-| Bandit parties per hideout | 3 max | Up to `BanditMaxPartiesPerHideout` (default 3 = pinned at vanilla) |
-| Min parties to infest a hideout | 2 | `MinPartiesToInfest` (default 1 — hideouts go active/visible sooner) |
+| **Initial hideouts per faction (new game)** | 7 | `BanditInitialHideoutsPerFaction` (default 7 since #559; 14 before) |
+| Bandit parties per hideout | 3 max | Up to `BanditMaxPartiesPerHideout` (default 6 since #559; the old default of 3 equalled vanilla and pinned it there) |
+| Min parties to infest a hideout | 2 | `MinPartiesToInfest` (constant 1: hideouts go active/visible sooner) |
 | Troops in hideout first fight | `11 × (2 + PlayerProgress)` | × `BossFightCurve` |
 | Troops in hideout boss fight | `1 + 5 × (1 + PlayerProgress)` | × `BossFightCurve` |
 | Bandit party troops on map | `min + (max-min) × (0.4 + 0.8 × PlayerProgress)` × random(0.2..0.8) | × `PartySizeCurve`, capped at stack `MaxValue` |

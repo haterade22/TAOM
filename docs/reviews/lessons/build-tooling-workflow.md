@@ -1993,3 +1993,19 @@ it, and a test named `test_is_idempotent` can pass on a fixture that never trigg
   Related: a tool that skips work must not exit 0, or a harness reads "silently skipped N templates"
   as a clean run.
 - **Source:** docs/reviews/rca-caravan-bandit-parity-2026-09-06.md findings 5 and 6.
+
+### A number in prose is measured from the artifact it describes, with the definition the prose uses
+Three counts shipped wrong in one commit and its issue: "218 value settings" (217; the regex that
+produced it included the one `[SettingPropertyButton]`, which the test being described skips),
+"18 tests deleted" (16; relayed from an exploration agent's report, never counted), and a doc table
+that still said `default 14` fifteen lines above the table the same commit updated to 7. None changed
+behaviour. All three passed five review agents; a sixth agent whose only job was re-deriving every
+number from the committed files caught them in one pass.
+- **Why missed:** each number was produced once, from a source other than the artifact the sentence
+  described (a looser regex, a subagent, the section being rewritten rather than the whole file), and
+  then copied into sibling artifacts, so the copies agreed with each other and looked verified.
+- **Prevent:** before a count or a default goes into a CHANGELOG, doc, issue or commit message,
+  measure it from the committed artifact using the same filter the code or test uses, and grep every
+  artifact that will carry it for the OLD value. A subagent's number is a claim; count it yourself.
+  When a review matters, add a numeric-claims agent whose brief is only "re-derive every number".
+- **Source:** #559 deep-review second pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` findings 3 to 5.

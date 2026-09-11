@@ -828,7 +828,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyFloatingInteger("Party Size Curve", 0.0f, 5.0f, "#0.0", Order = 2, RequireRestart = false,
-        HintText = "Multiplier on bandit party troop counts at PlayerProgress=1.0. Vanilla already scales 0.4 -> 1.2; this is a final multiplier on top. 1.5 (default) = up to 2.5x bandit party sizes in endgame.")]
+        HintText = "Multiplier on bandit party troop counts at PlayerProgress=1.0. Vanilla already scales 0.4 -> 1.2; this is a final multiplier on top. 1.5 (default) = up to 2.5x bandit party sizes in endgame. Each troop stack is capped at its party template's max_value, which binds before 2.5x is reached.")]
     public float BanditPartySizeCurve { get; set; } = 1.5f;
 
     [SettingPropertyGroup("World/Bandit Scaling")]
