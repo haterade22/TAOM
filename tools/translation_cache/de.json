@@ -13529,7 +13529,6 @@
   "taom_pj_t3b_p3": "+7% Truppenschaden.",
   "taom_pj_t3b_p4": "+15% Späher-Reichweite der Gruppe.",
   "taom_player_alliance_formed": "Ein Bündnis wurde zwischen {PLAYER_KINGDOM} und {TARGET_KINGDOM} geschmiedet.",
-  "taom_precompile_hint": "Kompiliert Shader vor, um Ruckeln im Spiel zu vermeiden. Einmal nach der Installation von TAOM ausführen.",
   "taom_precompile_shaders": "Shader vorkompilieren",
   "taom_propose_call": "{CALLED_KINGDOM} aufrufen, {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg zu erklären",
   "taom_ps_failed": "Ihr konntet nicht die Stelle von {HERO} einnehmen. Ihr spielt weiter als Euer eigener Charakter.",

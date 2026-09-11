@@ -13529,7 +13529,6 @@
   "taom_pj_t3b_p3": "部隊ダメージ+7%。",
   "taom_pj_t3b_p4": "部隊索敵範囲+15%。",
   "taom_player_alliance_formed": "{PLAYER_KINGDOM}と{TARGET_KINGDOM}の間に同盟が結ばれた。",
-  "taom_precompile_hint": "シェーダーをプリコンパイルして、ゲーム内のカクつきを排除します。TAOMインストール後に一度実行してください。",
   "taom_precompile_shaders": "シェーダーをプリコンパイル",
   "taom_propose_call": "{CALLED_KINGDOM}に{KINGDOM_TO_CALL_TO_WAR_AGAINST}への宣戦布告を呼びかける",
   "taom_ps_failed": "{HERO}に成り代わることができませんでした。元のキャラクターのまま続行します。",

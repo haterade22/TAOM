@@ -107,7 +107,7 @@ These bypass the `_harmony.PatchCategory("...")` mechanism — they call `_harmo
 ### Feature → MCM mapping (sanity check)
 
 These features have logic but no MCM toggle:
-- BannerInjection, BannerColorPersistence, CharacterCreation, Diplomacy, HeroRace, InitialChildGeneration, LocalizationOverride, MainMenuCustomizer, NamedCompanions, RaceAge, RevoltTuning, SettlementGuards, ShaderPrecompilation (shipped on by default), SpecialResources, StartupResources, TroopProgression, Warg — most are intentionally "always on."
+- BannerInjection, BannerColorPersistence, CharacterCreation, Diplomacy, HeroRace, InitialChildGeneration, LocalizationOverride, MainMenuCustomizer, NamedCompanions, RaceAge, RevoltTuning, SettlementGuards, SpecialResources, StartupResources, TroopProgression, Warg, most are intentionally "always on."
 
 Cross-direction: every MCM section in the audit maps to a feature directory ✅.
 

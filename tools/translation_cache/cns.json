@@ -13529,7 +13529,6 @@
   "taom_pj_t3b_p3": "+7% 部队伤害。",
   "taom_pj_t3b_p4": "+15% 队伍侦察范围。",
   "taom_player_alliance_formed": "{PLAYER_KINGDOM}与{TARGET_KINGDOM}之间结成了同盟。",
-  "taom_precompile_hint": "预编译着色器以消除游戏内卡顿。安装TAOM后运行一次。",
   "taom_precompile_shaders": "预编译着色器",
   "taom_propose_call": "呼吁{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战",
   "taom_ps_failed": "你无法取代{HERO}的位置。将继续以你自己的角色进行游戏。",

@@ -1,6 +1,6 @@
 ﻿# Codex Adversarial Review Log
 
-Running scorecard of all reviews. **Reviews 1-95, 2026-04-05 to 2026-09-11.** 90 of those numbers have an entry below, as a summary-table row or a `## Review N` section or both; 37, 63, 64 and 73 do not. (Counted 2026-09-01. The previous "83 ... 37, 46, 48, 63, 64 and 73" was low and wrongly listed 46 and 48, which do have sections.) The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
+Running scorecard of all reviews. **Reviews 1-96, 2026-04-05 to 2026-09-11.** 91 of those numbers have an entry below, as a summary-table row or a `## Review N` section or both; 37, 63, 64 and 73 do not. (Counted 2026-09-01. The previous "83 ... 37, 46, 48, 63, 64 and 73" was low and wrongly listed 46 and 48, which do have sections.) The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
 
 ## Summary
 
@@ -29,6 +29,7 @@ Running scorecard of all reviews. **Reviews 1-95, 2026-04-05 to 2026-09-11.** 90
 | 21 | 2026-07-06 | TournamentExitHang #331 (exit diagnostics + Patch60) | issues-found | agree | 1 confirmed P2 — hook-level `IsEnabled` gates bypassed the deep-review fix's unconditional window-closers (fix verified only at the service layer); S1-S6 suspects all resolved with decompiles | 0 | 0 | adversarial-xhigh |
 | 89 | 2026-09-01 | Enlistment service kit weapons (#525) + polearm/shield gate (#526) | issues-found | agree | 6 confirmed (2 HIGH: a coverage test that derived its culture list from the file it audits, so deleting a culture stayed green; a single-stat armour proxy that let a promotion lose all four hit zones while the score rose. 4 MED/LOW: seed-missing skipping rescue rows, a ratchet with no occurrence count, Umbar kits carrying Dunland/Rohan/Noldor gear (#528), Item4 misnamed "banner slot") | 0 | 0 | adversarial-xhigh |
 | 22 | 2026-07-10 | TournamentExitHang #331 ROUND 2 (ExitStallSampler + PatchShield exclusion) | issues-found | agree | 2 P2 (Timer reentrancy on Poll; no independent sampler toggle) + 4 P3 (suspended-window logging, main-thread invariant [deferred+documented], 2 drift) — all addressed; deep-review compat agent separately caught the false ctor comment + the still-shielded Patch38 hot target | 0 | 0 | adversarial-xhigh |
+| 96 | 2026-09-11 | ShaderPrecompilation re-enable for 1.4.8 (#560) | no-ship | agree | 7 confirmed (2 P1: `EndGame()` callable with no game from a cancel, an `async void` crash past the catch; the inquiry over-promised coverage. 2 P2: a teardown timeout stacked a second game on a still-loading one; a player-started custom battle mid-walk received the guard and was ended by the runner. 3 P3: `{newline}` empty at the cold main menu; the OoB profile-write rationale was false for the custom-battle VM; the MCM load-path wording) | 0 | 0 | adversarial-ultra (gpt-6-astra) |
 | 95 | 2026-09-11 | SpecialResources outflow visibility (#558) | issues-found | agree | 3 confirmed MED (spend and recruit toasts reported the nominal cost through a store that floors at zero; the countdown cast overflowed on FINITE input to int.MinValue with shipped data; the zero-balance notice ignored the sign of the net) | 0 | 0 | adversarial-ultra (gpt-6-astra, first run) |
 
 ## Metrics
@@ -2448,6 +2449,55 @@ Suite: 105/105 on the BanditManagement + Mcm filter for every commit; 8406 of 84
 at `2652fe2f` (the one failure, `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`,
 is `wm_gondor_sword_a04` missing from the live Armory since 2026-09-01, unrelated). RCA:
 `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` (first pass, second pass, Codex pass).
+
+## Review 96: Shader pre-compilation re-enable for 1.4.8 (#560), 5-agent deep-review and a Codex pass on GPT-6-Astra at ultra (2026-09-11)
+
+The parked "Pre-compile Shaders" walk came back for a public build after player bundle b18f3441
+showed a 305-second render-ready wait compiling cold character shaders. The change batches the
+roster (1,000 characters per custom battle, discovered inside the first battle because the object
+manager does not exist at the main menu), gives each battle the vanilla shape (one-character player
+party, the batch as the enemy) so the engine sets the player agent itself and deployment
+auto-finishes, renames the scene-pass MCM property so its off default reaches existing installs, and
+rewrites the text for 1.4.8's cache deletion.
+
+**The five agents.** Standards: the game manager over the 150-line ceiling (trimmed). Compatibility:
+29 engine members verified on the installed 1.4.8, 0 incompatible, both load-bearing claims held
+(preload covers both rosters; the one-troop side always spawns and the OoB gate stays false).
+Efficiency: index slicing instead of `Skip/Take`, no per-frame cost. Completeness: a Traps row over
+budget. Data flow found the two real defects: a 120-second start timeout in front of a load that now
+pays the full module-data pass would have discarded the whole character phase and reported
+COMPLETE (now a 10-minute bound and an INCOMPLETE terminal state), and one of four skip paths did
+not count as aborted.
+
+**Codex, GPT-6-Astra at ultra: 2 P1 / 2 P2 / 3 P3, DO NOT SHIP, zero false positives, every finding
+verified before it was implemented.** C1: `MBGameManager.EndGame()` is `async void` and dereferences
+`Game.Current` once no manager is current, so a cancel in the settle window after the game had gone,
+or an end after `StartNewGame` threw, would have crashed the process past the runner's catch; the
+runner never calls it without a game now, and cancellation is a request that finishes through the
+teardown state. C2: "every troop, lord and piece of equipment" over-promised (Campaign-only companion
+node, civilian sets, race skins); the wording and a coverage-boundary paragraph fix it. C3: the
+teardown timeout advanced and stacked a second game on one still loading; it now stops the walk.
+C4: a player exiting the shader battle from the scoreboard could start a normal battle that received
+the guard and was ended by the runner; the runner now claims one mission per item and stands down for
+any other. C5: `{newline}` is bound by `Game.Initialize`, absent at the cold main menu, now bound on
+the `TextObject`. C6: our own "junk Order of Battle profile write" rationale was false (the
+custom-battle VM's `SaveConfiguration()` is empty), withdrawn everywhere. C7: MCM load-path wording.
+
+**What Codex did well this time.** It opened the engine bodies the runner's comments described
+(`EndGame`, `GameLoadingState.OnTick`, the scoreboard exit path) instead of the runner; it reproduced
+the `{newline}` behaviour in a fresh process; and it disputed a claim made in its own favour (C6) with
+the concrete subclass the mission constructs.
+
+**Process lesson on our side.** C6 was relayed from a pre-implementation research agent without
+reading the callee's body in the concrete VM (`evidence-over-claims.md` A.4), then propagated into two
+comments, the feature doc, the CHANGELOG and a lessons entry before the review caught it. The lesson
+is in `lessons/adapters-taleworlds-api.md`.
+
+Suite: 253 green across the affected suites, 8453 of 8456 on the full suite (2 skipped; the one
+failure, `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, predates the work). RCA:
+`docs/reviews/rca-shader-precompile-reenable-2026-09-11.md` (deep-review table plus the Codex section).
+Cold in-game walk still owed. `AGENTS.md` was mid-rewrite by another session, so the Codex lessons
+went to `docs/reviews/codex-track-record.md`.
 
 ## Unlinked review artefacts (index)
 

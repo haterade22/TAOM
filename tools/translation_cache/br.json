@@ -13529,7 +13529,6 @@
   "taom_pj_t3b_p3": "+7% dano das tropas.",
   "taom_pj_t3b_p4": "+15% alcance de detecção do grupo.",
   "taom_player_alliance_formed": "Uma aliança foi selada entre {PLAYER_KINGDOM} e {TARGET_KINGDOM}.",
-  "taom_precompile_hint": "Pré-compila shaders para eliminar travamentos no jogo. Execute uma vez após instalar TAOM.",
   "taom_precompile_shaders": "Pré-compilar Shaders",
   "taom_propose_call": "Convocar {CALLED_KINGDOM} para Declarar Guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}",
   "taom_ps_failed": "Você não pôde tomar o lugar de {HERO}. Continuando com seu próprio personagem.",

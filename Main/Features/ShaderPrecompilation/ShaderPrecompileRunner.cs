@@ -12,7 +12,8 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.ShaderPrecompilation;
 
-// Orchestrates the shader walk: item 0 = all-characters battle, then one pass per battle scene.
+// Orchestrates the shader walk: the character batches (item 0 discovers the roster and re-plans the
+// rest, see OnRosterDiscovered), then one pass per battle scene.
 // Driven once per frame from SubModule.OnApplicationTick (the global heartbeat that survives the
 // menu<->battle transitions). Per-item compile detection uses the unit-tested ShaderPrecompileDecider;
 // this class owns the OUTER state machine + the engine calls (StartNewGame / EndGame / shader count)
@@ -22,7 +23,12 @@ public sealed class ShaderPrecompileRunner
     private enum RunState { Idle, Starting, Running, Ending, Complete }
 
     // Safety bounds (ms).
-    private const long StartTimeoutMs = 120_000;  // item never reached "rendering" — abort it
+    // An item that never reaches "rendering" is abandoned after this long. Every item pays a full
+    // CustomGame module-data load (TAOM's ~5,000 characters and ~6,000 items) before its manager can
+    // report, and batch 1 also discovers the roster, so this is bounded by the slowest disk, not by
+    // the scene. A premature abort on batch 1 would discard the whole character phase (only batch 1
+    // can re-plan), so the bound is deliberately generous; Ctrl+Shift+K remains the human escape.
+    private const long StartTimeoutMs = 600_000;  // 10 min
     private const long EndSettleMs    = 1_500;    // after EndGame, wait for the menu to stabilize
     // EndGame() is async; on the clean path the engine cleans the state stack and Game.Current goes
     // null (Codex traced EndGame -> Mission.EndMission -> MissionState CleanStates -> Game destroyed),
@@ -32,14 +38,17 @@ public sealed class ShaderPrecompileRunner
     // at 1 Hz so the first real walk confirms the clean path fires well before this (issue #287).
     private const long EndTimeoutMs   = 90_000;
 
-    // Per-item-kind decider caps. The all-characters battle legitimately compiles for 20-70 min so it
-    // keeps the generous defaults (churn backstop OFF — it can compile continuously for a long stretch);
-    // a single scene pass should never take minutes, so it gets tight caps + the churn backstop. This is
-    // the 1.4.7 stall bound: when the native shader counter churns without ever settling to zero, a scene
-    // pass can no longer trap the walk for the full 90 min default (the "stuck for hours" report).
-    private const long CharBattlePerItemMs    = 5_400_000;     // 90 min absolute
+    // Per-item-kind decider caps. A character batch legitimately compiles for many minutes on a cold
+    // cache, so it keeps generous caps (churn backstop OFF: it can compile continuously for a long
+    // stretch). The frozen-count guard is the real stuck detector and does not scale with batch size
+    // (one shader hung is one shader hung); the absolute cap is only a backstop, and a tight one on a
+    // slow HDD machine would recreate silent under-coverage, the defect #560 removes. A single scene
+    // pass should never take minutes, so it gets tight caps + the churn backstop. This is the 1.4.7
+    // stall bound: when the native shader counter churns without ever settling to zero, a scene pass
+    // can no longer trap the walk for the full default (the "stuck for hours" report).
+    private const long CharBattlePerItemMs    = 3_600_000;     // 60 min absolute per batch
     private const long CharBattleNoProgressMs = 900_000;       // 15 min frozen-count
-    private const long CharBattleMaxActiveMs  = long.MaxValue; // churn backstop disabled for the long battle
+    private const long CharBattleMaxActiveMs  = long.MaxValue; // churn backstop disabled for the batches
     private const long ScenePerItemMs         = 480_000;       // 8 min absolute
     private const long SceneNoProgressMs      = 180_000;       // 3 min frozen-count
     private const long SceneMaxActiveMs       = 360_000;       // 6 min continuous-nonzero (churn)
@@ -65,6 +74,21 @@ public sealed class ShaderPrecompileRunner
     // Monotonic id per started item. A game manager captures it and echoes it in its callback, so a
     // late callback from a previously-started (timed-out) item cannot flip the CURRENT item to Running.
     private int _generation;
+    // The scene passes kept after the crash-guard filter, held so the roster re-plan (below) can
+    // rebuild the full plan without re-reading the config or the MCM toggle mid-walk.
+    private IReadOnlyList<string> _scenes = Array.Empty<string>();
+    // Items that timed out, failed to start or were aborted by the decider. Reported on completion so
+    // a partial walk never reads as full coverage.
+    private int _abortedItems;
+    // Set once batch 1 has handed the roster over and the batches are planned. A walk that ends without
+    // it compiled no troop shaders at all, and Finish() must say so instead of "COMPLETE".
+    private bool _rosterDiscovered;
+    // The shader battle this item opened, claimed by SubModule.OnMissionBehaviorInitialize through
+    // TryClaimMission. Only that mission gets the deployment guard, and only its exit is ours to act on.
+    private Mission _ownedMission;
+    // Ctrl+Shift+K sets this; the teardown then runs through the normal Ending state and TickEnding
+    // finishes the walk as cancelled once the game is really gone. Never a second EndGame().
+    private bool _cancelRequested;
 
     public ShaderPrecompileRunner(IShaderPrecompilationService service, IPrecompileSceneProvider sceneProvider,
         IShaderPrecompileCrashGuard crashGuard, IModLogger logger)
@@ -77,10 +101,28 @@ public sealed class ShaderPrecompileRunner
 
     public bool IsActive => _state != RunState.Idle && _state != RunState.Complete;
 
-    // True while a walk is in flight (any item, including between-item teardown). SubModule
-    // .OnMissionBehaviorInitialize reads this to add the 1.4.7 deployment-NRE guard ONLY to the shader
-    // battles — a normal battle (no walk running) never gets it.
-    public static bool IsWalkInProgress => _active != null && _active.IsActive;
+    // SubModule.OnMissionBehaviorInitialize asks this for EVERY mission that initializes. True only for
+    // the walk's own battle: the first mission initialized while an item is Starting or Running (never
+    // during the between-item teardown, when the main menu can already be interactive). A second,
+    // different mission during the same item means the player left the shader battle and started their
+    // own from the custom-battle screen; the walk stands down without touching it (no EndGame), so that
+    // battle never receives the guard and is never ended by the runner (Codex review 2026-09-11, F4).
+    // True while a shader battle can be initializing or running. BannerBearerAssignmentMissionLogic
+    // reads it to skip banner assignment inside the walk's battles; mission-scoped decisions use
+    // TryClaimMission instead.
+    public static bool IsWalkInProgress =>
+        _active != null && (_active._state == RunState.Starting || _active._state == RunState.Running);
+
+    public static bool TryClaimMission(Mission mission)
+    {
+        var r = _active;
+        if (r == null || mission == null) return false;
+        if (r._state != RunState.Starting && r._state != RunState.Running) return false;
+        if (r._ownedMission == null) { r._ownedMission = mission; return true; }
+        if (ReferenceEquals(r._ownedMission, mission)) return true;
+        r.Abandon($"another mission started while item {r._index + 1} was running");
+        return false;
+    }
 
     // Single-line status for the loading-screen patch + the in-menu/in-mission reporter.
     public string StatusLine { get; private set; } = string.Empty;
@@ -101,16 +143,25 @@ public sealed class ShaderPrecompileRunner
         // Passes" toggle lets an affected user run only the safe all-characters pass without editing files
         // or waiting for the native shader-compile guard — off => empty scene list => character battle only.
         // We still consume the crash guard's inflight marker above so a prior crash is recorded regardless.
-        bool includeScenePasses = TAOM.Features.TaomSettings.Instance?.EnableScenePassPrecompilation ?? true;
+        // Off by default (#560): the property was renamed so the json2-persisted `true` of the old
+        // toggle cannot reach it, and an unreadable settings page reads as off, never on.
+        bool includeScenePasses = TAOM.Features.TaomSettings.Instance?.EnableShaderPrecompileScenePasses ?? false;
         IReadOnlyList<string> scenes = includeScenePasses ? _sceneProvider.GetScenes() : Array.Empty<string>();
         if (!includeScenePasses)
-            _logger?.LogInfo("[ShaderPrecompilation] scene passes disabled in MCM (Graphics/Shader Precompilation) — running the all-characters pass only");
+            _logger?.LogInfo("[ShaderPrecompilation] scene passes are off (MCM Graphics/Shader Precompilation, default off): running the character batches only");
         if (skip.Count > 0)
             scenes = scenes.Where(s => !skip.Contains(s)).ToList();
-        _plan = ShaderPrecompilePlanner.BuildPlan(scenes);
+        _scenes = scenes;
+        // The roster is not readable here: MBObjectManager exists only inside a Game, and the walk
+        // starts at the main menu. Item 0 discovers it and NotifyRosterDiscovered re-plans the batches.
+        _plan = ShaderPrecompilePlanner.BuildBootstrapPlan(_scenes);
         _index = 0;
+        _abortedItems = 0;
+        _rosterDiscovered = false;
+        _ownedMission = null;
+        _cancelRequested = false;
         _walkStartedMs = NowMs();
-        _logger?.LogInfo($"[ShaderPrecompilation] === WALK START — {_plan.Count} items ({_plan.Count - 1} scenes + 1 character battle) ===");
+        _logger?.LogInfo($"[ShaderPrecompilation] === WALK START: character batches (roster discovered on first load) + {_scenes.Count} scene passes ===");
         StartCurrentItem();
     }
 
@@ -122,13 +173,15 @@ public sealed class ShaderPrecompileRunner
         else
             _decider.ResetForItem(ScenePerItemMs, SceneNoProgressMs, SceneMaxActiveMs);
         _lastRemaining = -1;
+        _ownedMission = null;
         int gen = ++_generation;
         EnterState(RunState.Starting);
         UpdateStatus(item, -1, NowMs());
         _logger?.LogInfo($"[ShaderPrecompilation] --- item {_index + 1}/{_plan.Count}: {item.Description} ---");
         // Record the scene we're about to load so a hard process crash during its load leaves a survivor
-        // marker the next walk records + skips. Scene passes only — the character battle is essential and
-        // not part of the skippable scene list.
+        // marker the next walk records + skips. Scene passes ONLY: a character batch is never marked and
+        // never auto-skipped, so a hard crash inside one restarts the walk from batch 1 next time rather
+        // than silently dropping coverage (the skip list is for GPU-specific scene crashes, #287).
         if (item.Kind == PrecompileItemKind.ScenePass) _crashGuard.MarkLoading(item.SceneId);
         try
         {
@@ -137,6 +190,7 @@ public sealed class ShaderPrecompileRunner
         catch (Exception ex)
         {
             _logger?.LogError($"[ShaderPrecompilation] StartNewGame threw for item {_index + 1}: {ex.Message} — skipping");
+            _abortedItems++;
             BeginEnd();
         }
     }
@@ -144,6 +198,7 @@ public sealed class ShaderPrecompileRunner
     // ---- static callbacks from the per-item game manager (carry the item generation) ---- //
     public static void NotifyItemRendering(int generation) => _active?.OnItemRendering(generation);
     public static void NotifyItemFailed(int generation) => _active?.OnItemFailed(generation);
+    public static void NotifyRosterDiscovered(int generation, IReadOnlyList<string> roster) => _active?.OnRosterDiscovered(generation, roster);
 
     private void OnItemRendering(int generation)
     {
@@ -165,7 +220,27 @@ public sealed class ShaderPrecompileRunner
         // (deep-review 2026-06-18 Agent 5; same stale-callback class as the generation tag).
         if (generation != _generation || _state != RunState.Starting) return;
         _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} failed to start — advancing");
+        _abortedItems++;
         BeginEnd();
+    }
+
+    // The bootstrap batch (item 0) is the first place the roster can be read. Re-plan the remaining
+    // batches from it; the scene passes stay where they were. Same stale-callback guard as the two
+    // notifies above, plus `_index == 0`: only the bootstrap item, while it is still Starting, may re-plan.
+    private void OnRosterDiscovered(int generation, IReadOnlyList<string> roster)
+    {
+        if (generation != _generation || _state != RunState.Starting || _index != 0) return;
+        var plan = ShaderPrecompilePlanner.BuildPlan(roster, _scenes);
+        if (plan.Count == 0 || plan[0].Kind != PrecompileItemKind.CharacterBattle)
+        {
+            _logger?.LogError($"[ShaderPrecompilation] roster discovery returned {roster?.Count ?? 0} usable characters; keeping the bootstrap plan (the batch will fail and the walk advances to the scene passes)");
+            return;
+        }
+        _plan = plan;
+        _rosterDiscovered = true;
+        int batches = plan.Count(p => p.Kind == PrecompileItemKind.CharacterBattle);
+        _logger?.LogInfo($"[ShaderPrecompilation] roster: {roster.Count} characters, {batches} batches of up to {ShaderPrecompilePlanner.DefaultCharacterBatchSize}; plan now {plan.Count} items");
+        UpdateStatus(_plan[_index], -1, NowMs());
     }
 
     // ---- per-frame driver (SubModule.OnApplicationTick) ---- //
@@ -175,7 +250,7 @@ public sealed class ShaderPrecompileRunner
         // IMMEDIATE key state (not the buffered poll) because this runs from OnApplicationTick, outside
         // the map input layer (the NavalTravel precedent). Checked before the state switch so it fires
         // in any state (loading or rendering).
-        if (IsActive && IsCancelHotkeyDown()) { Cancel(); return; }
+        if (IsActive && !_cancelRequested && IsCancelHotkeyDown()) Cancel();
         try
         {
             switch (_state)
@@ -197,6 +272,7 @@ public sealed class ShaderPrecompileRunner
         if (now - _stateEnteredMs >= StartTimeoutMs)
         {
             _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} never started rendering in {StartTimeoutMs / 1000}s — advancing");
+            _abortedItems++;
             BeginEnd();
             return;
         }
@@ -207,6 +283,15 @@ public sealed class ShaderPrecompileRunner
     private void TickRunning()
     {
         long now = NowMs();
+        // The player left the shader battle (Esc, retreat, scoreboard exit): Mission.Current is null or no
+        // longer ours. The item is over; tear the game down so the walk continues from the main menu.
+        if (_ownedMission != null && !ReferenceEquals(Mission.Current, _ownedMission))
+        {
+            _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1}: the shader battle ended outside the walk; advancing");
+            _abortedItems++;
+            BeginEnd();
+            return;
+        }
         int remaining = Utilities.GetNumberOfShaderCompilationsInProgress();
         long itemElapsed = now - _itemStartedMs;
         // Refresh on a shader-count change OR a ~1s tick so the item/total clocks advance smoothly.
@@ -223,6 +308,7 @@ public sealed class ShaderPrecompileRunner
         else if (action == PrecompileAction.AbortItem)
         {
             _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} aborted ({_decider.LastAbortReason}) after {Sec(itemElapsed)}s, remaining={remaining} — advancing");
+            _abortedItems++;
             BeginEnd();
         }
     }
@@ -230,6 +316,10 @@ public sealed class ShaderPrecompileRunner
     private void BeginEnd()
     {
         EnterState(RunState.Ending);
+        // MBGameManager.EndGame() is async void and dereferences Game.Current once no manager is
+        // current; with no game there is nothing to end and the call would crash the process past the
+        // caller's catch (Codex review 2026-09-11, F1). TickEnding sees the menu and advances.
+        if (Game.Current == null) { _logger?.LogInfo($"[ShaderPrecompilation] item {_index + 1}: no game to end, already at the menu"); return; }
         try { MBGameManager.EndGame(); }
         catch (Exception ex) { _logger?.LogWarning($"[ShaderPrecompilation] EndGame threw: {ex.Message}"); }
     }
@@ -250,16 +340,26 @@ public sealed class ShaderPrecompileRunner
             _logger?.LogInfo($"[ShaderPrecompilation] Ending item {_index + 1}: Game.Current==null={gameNull}, loading={loading}, sinceEnd={Sec(sinceEnd)}s");
         }
 
-        if ((atMenu && sinceEnd >= EndSettleMs) || sinceEnd >= EndTimeoutMs)
+        if (atMenu && sinceEnd >= EndSettleMs)
         {
             // Item fully resolved (load + compile + teardown) without crashing the process — clear the
             // inflight marker so this scene is NOT recorded as crashed. A hard crash anywhere earlier in
             // the item's lifecycle never reaches here, leaving the marker for the crash guard to find.
             _crashGuard.ClearLoading();
-            _logger?.LogInfo($"[ShaderPrecompilation] Ending item {_index + 1} resolved via {(atMenu ? "clean-menu" : "timeout")} at {Sec(sinceEnd)}s");
+            _ownedMission = null;
+            _logger?.LogInfo($"[ShaderPrecompilation] Ending item {_index + 1} resolved via clean-menu at {Sec(sinceEnd)}s");
+            if (_cancelRequested) { FinishCancelled(); return; }
             _index++;
             if (_index < _plan.Count) StartCurrentItem();
             else Finish();
+        }
+        else if (sinceEnd >= EndTimeoutMs)
+        {
+            // The game did not go away. Starting another item here would push a second game onto a
+            // state stack that still holds the first one, whose loading callbacks can still fire
+            // (Codex review 2026-09-11, F3). Stop the walk and tell the player instead.
+            _crashGuard.ClearLoading();
+            StopWalk($"the previous battle did not shut down within {EndTimeoutMs / 1000}s (Game.Current==null={gameNull}, loading={loading})");
         }
     }
 
@@ -267,28 +367,68 @@ public sealed class ShaderPrecompileRunner
     {
         _crashGuard.ClearLoading();  // belt-and-suspenders — the last item's resolution already cleared it
         BattleLoadStallWatchdog.SuppressStallDetection = false;  // walk over — re-arm the stall watchdog for real battles
+        _ownedMission = null;
         EnterState(RunState.Complete);
         long total = NowMs() - _walkStartedMs;
-        StatusLine = $"Shader pre-compilation COMPLETE — {_plan.Count} items in {FormatElapsed(Sec(total))}. You can play now.";
-        _logger?.LogInfo($"[ShaderPrecompilation] === WALK COMPLETE — {_plan.Count} items in {FormatElapsed(Sec(total))} ===");
+        string aborted = _abortedItems == 0 ? "0 aborted" : $"{_abortedItems} aborted, see the log";
+        if (_rosterDiscovered)
+        {
+            StatusLine = $"Shader pre-compilation COMPLETE: {_plan.Count} items, {aborted}, in {FormatElapsed(Sec(total))}. You can play now.";
+            _logger?.LogInfo($"[ShaderPrecompilation] === WALK COMPLETE: {_plan.Count} items, {_abortedItems} aborted in {FormatElapsed(Sec(total))} ===");
+        }
+        else
+        {
+            // Batch 1 never handed the roster over (it timed out, failed to start, or found no
+            // characters), so no troop shader was compiled and nothing was re-planned. Say so: the
+            // whole point of the walk is the troop pass, and "COMPLETE" here would be a lie.
+            StatusLine = $"Shader pre-compilation INCOMPLETE: no troop shaders were compiled because the first batch never loaded ({aborted}, {FormatElapsed(Sec(total))}). Check the log and run it again.";
+            _logger?.LogError($"[ShaderPrecompilation] === WALK INCOMPLETE: the roster was never discovered, no troop shaders compiled; {_plan.Count} items, {_abortedItems} aborted in {FormatElapsed(Sec(total))} ===");
+        }
         // IsActive flips false here, so show the completion line directly (the tick won't fire again).
         try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
         _active = null;
     }
 
-    // User-triggered escape hatch (Ctrl+Shift+K) for a walk that's taking too long — tears the current
-    // game down (the same MBGameManager.EndGame the per-item teardown uses, so it's proven safe from any
-    // active state) and returns to the main menu, re-arming everything the walk suppressed. No-op if idle.
+    // User-triggered escape hatch (Ctrl+Shift+K) for a walk that's taking too long. A cancellation is a
+    // REQUEST: it enters the same Ending state the per-item teardown uses, and TickEnding finishes the
+    // walk as cancelled once the game is really gone. Idempotent, never a second EndGame(), and never
+    // an EndGame() with no game (Codex review 2026-09-11, F1); the runner stays active until then, so a
+    // fresh Begin() cannot start a game on top of one still tearing down.
     public void Cancel()
     {
-        if (!IsActive) return;
-        _logger?.LogWarning($"[ShaderPrecompilation] walk CANCELLED by user at item {_index + 1}/{_plan.Count} (state {_state})");
-        try { MBGameManager.EndGame(); }
-        catch (Exception ex) { _logger?.LogWarning($"[ShaderPrecompilation] EndGame threw on cancel: {ex.Message}"); }
+        if (!IsActive || _cancelRequested) return;
+        _cancelRequested = true;
+        _logger?.LogWarning($"[ShaderPrecompilation] walk CANCELLED by user at item {_index + 1}/{_plan.Count} (state {_state}); tearing down");
+        StatusLine = "Shader pre-compilation cancelling...";
+        if (_state == RunState.Ending) return;   // teardown already requested; TickEnding will finish as cancelled
+        BeginEnd();
+    }
+
+    private void FinishCancelled()
+    {
         _crashGuard.ClearLoading();                              // don't record the in-flight scene as a crash
         BattleLoadStallWatchdog.SuppressStallDetection = false;  // re-arm the stall watchdog for real battles
+        _ownedMission = null;
+        _cancelRequested = false;
         EnterState(RunState.Idle);                               // IsActive -> false; a fresh Begin() may run later
         StatusLine = "Shader pre-compilation cancelled.";
+        _logger?.LogInfo("[ShaderPrecompilation] === WALK CANCELLED ===");
+        try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
+        _active = null;
+    }
+
+    // The walk stops without touching the current game: the player took over (another mission started)
+    // or the game refused to shut down. Nothing is torn down and nothing else is started.
+    private void Abandon(string reason) => StopWalk(reason, "Shader pre-compilation stopped: another battle was started. Run it again from the main menu.");
+
+    private void StopWalk(string reason, string status = null)
+    {
+        _logger?.LogError($"[ShaderPrecompilation] === WALK STOPPED at item {_index + 1}/{_plan.Count}: {reason} ===");
+        BattleLoadStallWatchdog.SuppressStallDetection = false;
+        _ownedMission = null;
+        _cancelRequested = false;
+        EnterState(RunState.Idle);
+        StatusLine = status ?? $"Shader pre-compilation stopped: {reason}. Quit to the main menu and run it again.";
         try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
         _active = null;
     }

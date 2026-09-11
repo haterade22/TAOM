@@ -13529,7 +13529,6 @@
   "taom_pj_t3b_p3": "+7% 部隊傷害。",
   "taom_pj_t3b_p4": "+15% 隊伍偵查範圍。",
   "taom_player_alliance_formed": "{PLAYER_KINGDOM}與{TARGET_KINGDOM}之間已締結同盟。",
-  "taom_precompile_hint": "預編譯著色器以消除遊戲內卡頓。安裝TAOM後運行一次。",
   "taom_precompile_shaders": "預編譯著色器",
   "taom_propose_call": "召喚{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰",
   "taom_ps_failed": "你無法取代 {HERO} 的身分。將繼續使用你原本的角色。",

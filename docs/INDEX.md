@@ -138,7 +138,7 @@
 - [fief-management](features/fief-management.md) — custom GameState for fief management
 - [arena](features/arena.md) — TaomTournamentModel with culture armor + prize pools
 - [messengers](features/messengers.md) — paid messenger dispatch + travel arrival inquiry
-- [shader-precompilation](features/shader-precompilation.md) — pre-compile shaders menu option (Patch21)
+- [shader-precompilation](features/shader-precompilation.md): pre-compile shaders menu option (Patch21): every character in batches, scene passes an MCM opt-in
 - [time-acceleration](features/time-acceleration.md) — campaign time scale knobs
 - [atmosphere-persistence](features/atmosphere-persistence.md) — forced-atmosphere scenes (Patch16); exonerated as the `_forceatmo` battle-load crash cause (2026-06-19)
 - [weather-bounds-guard](features/weather-bounds-guard.md) — weather bounds clamp (Patch10)

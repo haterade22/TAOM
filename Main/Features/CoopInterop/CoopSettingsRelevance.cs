@@ -103,7 +103,7 @@ public static class CoopSettingsRelevance
         "ShowAllEncyclopediaCharacters", "EnableNameplateFade", "MapFigureScale",
         "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
-        "EnableScenePassPrecompilation", "EnableShaderPrecompilation",
+        "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
         "EnableNativeSkinFixes",
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].

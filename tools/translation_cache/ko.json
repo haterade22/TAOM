@@ -13528,7 +13528,6 @@
   "taom_pj_t3b_p3": "부대 피해량 +7%.",
   "taom_pj_t3b_p4": "부대 탐지 범위 +15%.",
   "taom_player_alliance_formed": "{PLAYER_KINGDOM}과(와) {TARGET_KINGDOM} 간에 동맹이 맺어졌습니다.",
-  "taom_precompile_hint": "게임 내 끊김 현상을 제거하기 위해 셰이더를 사전 컴파일합니다. TAOM 설치 후 한 번 실행하세요.",
   "taom_precompile_shaders": "셰이더 사전 컴파일",
   "taom_propose_call": "{CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고할 것을 요청",
   "taom_ps_failed": "{HERO}의 자리를 대신할 수 없었습니다. 기존 캐릭터로 계속합니다.",

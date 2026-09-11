@@ -7,37 +7,37 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.ShaderPrecompilation;
 
-// 1.4.7 headless-deployment guard, scoped to the shader-precompile battle. Added ONLY while a walk is
-// in flight (SubModule.OnMissionBehaviorInitialize, gated on ShaderPrecompileRunner.IsWalkInProgress),
-// so it can NEVER affect a real battle. Two jobs, both because the precompile battle has NO human
-// player and so takes the engine's deployment path with a null InitialPlayerAgent:
+// Deployment fallback guard for the shader-precompile battles. Added ONLY while a walk is in flight
+// (SubModule.OnMissionBehaviorInitialize, gated on ShaderPrecompileRunner.TryClaimMission), so it can
+// NEVER affect a real battle.
 //
-// 1. SEED InitialPlayerAgent (OnAgentBuild). 1.4.7 added an unconditional deref of
-//    Mission.InitialPlayerAgent to DeploymentMissionController.SetupTeams() and .FinishDeployment()
-//    (the new AgentControllerType hand-control lines). That field (Mission._initialPlayerAgent) is set
-//    ONLY when an agent builds with Controller==Player (Mission.cs:4024); a headless battle spawns no
-//    player-controlled agent, so it stays null and SetupTeams NREs every tick (the "stuck on 1.4.7"
-//    crash; 1.4.6 didn't touch the field). The first agent build happens synchronously inside
-//    SetupTeams (OnSetupTeamsOfSide -> SetSpawnTroops(enforceSpawning:true) -> CheckDeployment) BEFORE
-//    the deref, so seeding the field there makes the deref find a non-null agent and harmlessly
-//    reconfigure it in the throwaway battle. Reflection because the field is private with no setter;
-//    drift-guarded by ReflectionSiteBindingTests.
+// The engine dereferences Mission.InitialPlayerAgent unconditionally in DeploymentMissionController
+// .SetupTeams and .FinishDeployment (1.4.7 added the AgentControllerType hand-control lines; 1.4.8
+// still has them). That field is written in exactly one place, Mission.BuildAgent, when an agent builds
+// with Controller == Player, which Mission.SpawnTroop requests for the troop equal to
+// Game.Current.PlayerTroop spawning on the player side. Since #560 every shader battle takes that
+// vanilla shape (a one-entry player party holding the designated PlayerCharacter, which always gets an
+// initial spawn slot), so on the normal path the engine sets the field itself and this guard does
+// nothing. Two fallbacks remain, for a walk that did not take that shape (a future roster edit, an
+// engine change to the spawn split):
 //
-// 2. FORCE-FINISH deployment (OnMissionTick). The all-characters battle has >=20 player troops, so
-//    CanPlayerSideDeployWithOrderOfBattle() is true and the engine opens the Order-of-Battle deployment
-//    VIEW and waits for the player to click "Deploy". Headless, nobody clicks -> the game hangs at the
-//    deployment screen forever (confirmed in-game 2026-07-11: after the NRE was fixed, the walk froze at
-//    the OoB view for hours, tick dead). Once SetupTeams has run (TeamSetupOver), we call the controller's
-//    public FinishDeployment() ourselves so the battle proceeds straight to rendering + shader compile —
-//    exactly what a <20-troop scene pass gets automatically via SetupTeams' auto-finish. FinishDeployment
-//    also derefs InitialPlayerAgent, but job (1) has already seeded it. A scene pass whose deployment
-//    already auto-finished has no controller left, so this is a no-op there.
+// 1. SEED InitialPlayerAgent (OnAgentBuild): the first PLAYER-TEAM agent built while the field is still
+//    null is written into it by reflection (private field, no setter; drift-guarded by
+//    ReflectionSiteBindingTests). Player team only: SetupTeams spawns the ENEMY side first, so "the first
+//    agent built" is an enemy agent, and seeding that one would make it the player team's general
+//    (GeneralsAndCaptainsAssignmentLogic reads InitialPlayerAgent for the player team) and later the
+//    player-controlled MainAgent. OnSetupTeamsOfSide(PlayerSide) runs before the deref, so a player-team
+//    seed still lands in time.
+// 2. FORCE-FINISH deployment (OnMissionTick): if the player party ever holds 20 or more entries again,
+//    CanPlayerSideDeployWithOrderOfBattle() opens the Order of Battle view and waits for a click nobody
+//    makes. Once SetupTeams has run (TeamSetupOver) the controller's public FinishDeployment() is called.
+//    (In Custom Battle the base OrderOfBattleVM's SaveConfiguration() is empty, so nothing is written to
+//    the player's profile either way; the one-entry party is the shape because it keeps the view from
+//    opening at all.) A battle whose deployment auto-finished has no controller left, so this is a no-op.
 //
-// Fail-safe throughout: any failure logs once and latches so it never retry-spams. The one residual is
-// engine drift — if the private field is renamed (AccessTools.Field returns null) or SetValue throws, the
-// seed can't happen and the engine's own deref still NREs. That drift is caught at TEST time by
-// ReflectionSiteBindingTests (the real guard against it) — this runtime catch only keeps the walk from
-// spamming logs, it does not make a drifted field safe.
+// Fail-safe throughout: any failure logs once and latches so it never retry-spams. The residual is
+// engine drift (field renamed, SetValue throws): the binding test catches it at test time; the runtime
+// catch only keeps the walk from spamming logs.
 public sealed class ShaderPrecompilePlayerAgentGuard : MissionLogic
 {
     private static readonly FieldInfo InitialPlayerAgentField =
@@ -55,16 +55,20 @@ public sealed class ShaderPrecompilePlayerAgentGuard : MissionLogic
         try
         {
             var mission = Mission.Current;
-            if (mission == null || mission.InitialPlayerAgent != null) { _seeded = true; return; }
+            if (mission == null) return;
+            if (mission.InitialPlayerAgent != null) { _seeded = true; return; }   // the engine did it: the normal path
+            // The enemy side spawns first; only a player-team agent may stand in for the player.
+            if (agent.Team == null || mission.PlayerTeam == null || agent.Team != mission.PlayerTeam) return;
             if (InitialPlayerAgentField == null)
             {
-                _logger?.LogWarning("[ShaderPrecompilation] Mission._initialPlayerAgent field not found — 1.4.7 deployment NRE guard inactive");
+                _logger?.LogWarning("[ShaderPrecompilation] Mission._initialPlayerAgent field not found; the deployment fallback seed is inactive");
                 _seeded = true;
                 return;
             }
             InitialPlayerAgentField.SetValue(mission, agent);
             _seeded = true;
-            _logger?.LogInfo($"[ShaderPrecompilation] seeded InitialPlayerAgent (agent index {agent.Index}) so 1.4.7 deployment SetupTeams won't NRE on the headless battle");
+            _logger?.LogWarning($"[ShaderPrecompilation] FALLBACK: seeded InitialPlayerAgent with player-team agent {agent.Index}; " +
+                                "the engine did not flag the designated player character, check the item's player party");
         }
         catch (Exception ex)
         {
@@ -81,14 +85,14 @@ public sealed class ShaderPrecompilePlayerAgentGuard : MissionLogic
             var mission = Mission.Current;
             if (mission == null) return;
             var deployment = mission.GetMissionBehavior<DeploymentMissionController>();
-            // No controller (a scene pass whose SetupTeams already auto-finished, or a non-deployment
-            // mission) — nothing to force. Wait until SetupTeams has run (troops spawned + seed done)
-            // before finishing, so we don't cut in ahead of the engine's own setup.
+            // No controller (deployment already auto-finished, the normal path, or a non-deployment
+            // mission): nothing to force. Otherwise wait until SetupTeams has run before finishing, so
+            // we never cut in ahead of the engine's own setup.
             if (deployment == null) { _deploymentHandled = true; return; }
             if (!deployment.TeamSetupOver) return;
             _deploymentHandled = true;
             deployment.FinishDeployment();
-            _logger?.LogInfo("[ShaderPrecompilation] force-finished deployment (headless battle — no player to click Deploy) so the item can render + compile");
+            _logger?.LogWarning("[ShaderPrecompilation] FALLBACK: force-finished deployment (the player party reached the Order of Battle threshold; nobody can click Deploy in this battle)");
         }
         catch (Exception ex)
         {

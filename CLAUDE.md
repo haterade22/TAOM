@@ -175,7 +175,7 @@ instructions `AGENTS.md`.
 | **Three-module data surface** | Data spans this repo plus the LIVE `TAOM_Map` and `LOTRLOME_Armory` installs: 1,057 XML, 16 XSLT. `validate_moduledata.py` ref-sweeps all 382 Armory ModuleData XML and none of TAOM_Map's 44, leaving its 1,012 `Culture.` refs unchecked; CI's well-formedness gate reaches 8 of the 16 XSLT, all in-repo. Matrix: `docs/features/moduledata-validation.md`. |
 | **NavalTravel** | PARKED 2026-06-26, DISABLED at the wiring level (#120/#296). Re-enable = 3 `SubModule.cs` blocks. |
 | **NativeSkinFixes** | PARKED 2026-07-08, DISABLED at the wiring level. |
-| **ShaderPrecompilation** | PARKED 2026-08-20, DISABLED at the wiring level. The main-menu option was the feature's only entry point, so nothing can start a walk. Re-enable = 2 `SubModule.cs` blocks + the 2 MCM attributes in `TaomSettings.cs`. Flipping the MCM default instead does NOT work: json2 persists `true` on every existing install. |
+| **ShaderPrecompilation** | ACTIVE again 2026-09-11 (#560). Roster walks in batches of 1,000 (preload compiles every ROSTER character's equipment; the old 3,000/side cap with soldiers x2 dropped TAOM's troops). Scene passes OFF via a RENAMED property (`EnableShaderPrecompileScenePasses`): json2 persists the old `true`, so a flipped default never reaches existing installs. Rename, never flip. |
 | **Elephant howdah / bone-tracking** | DEFERRED-disabled (slide sources). |
 | **Vendored DLLs** | `Main/_Module/bin/Win64_Shipping_Client/` = allowlist (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`). Do NOT vendor `MCMv5.dll`. |
 | **BehaviorTreeMissionLogic** | `: MissionLogic`, NOT `MissionBehavior` — regression rule, `docs/reviews/rca-looter-battle-nre-2026-05-24.md`. |
@@ -228,7 +228,7 @@ Non-obvious statuses worth knowing without opening the registry:
 |----------|--------|
 | `Patch15_BannerLayerLimit` | DISABLED (engine-native since v1.4.7; the transpiler self-bails) |
 | `Patch63` | Used by TWO categories — `Patch63_BannerBearerSpawnGuard` + `Patch63_BlowDiagnostics`. Distinct strings, so Harmony is fine; the number is not a unique key |
-| `Patch21_ShaderPrecompilation` | PARKED 2026-08-20 with the main-menu option (never registered with Harmony) |
+| `Patch21_ShaderPrecompilation` | ACTIVE again 2026-09-11 (#560); the postfix returns unless a walk is running |
 | `Patch54_NavalTravelBoatVisual`, `Patch57_NavalAtSeaLandRescueGuard` | PARKED 2026-06-26 (#120/#296) |
 | `Patch_MissionTime_SetMovementOrder` | **Shared deferred category — ANY postfix with `MovementOrder` in its signature MUST route through it** |
 

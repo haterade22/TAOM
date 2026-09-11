@@ -607,3 +607,9 @@ into the setting's own tooltip, and the second time the CHANGELOG even said the 
   ("played an earlier build? MCM saved the old value; reset this group to pick up the new one").
   A claim of the form "X and Y both say Z" is verified by opening X and Y, not by confirming Z.
 - **Source:** #559 bandit scaling MCM, deep-review 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`.
+
+### `{newline}` is a GameTexts variable that exists only once a Game has initialized
+`{newline}` is not a localization token; it is a text variable that `GameTexts.InitializeGlobalTags()` registers from `Game.Initialize`. A `TextObject` rendered at the cold main menu (before any campaign or custom game exists) evaluates it to an empty string, so a multi-paragraph inquiry body runs together with no error. Vanilla menu code binds the variable locally for that reason.
+- **Why missed:** the review traced `{newline}` to `InitializeGlobalTags` and reported it "bound at early bootstrap" without checking the caller, and the text was only ever exercised in a running game.
+- **Prevent:** for any player-facing text built before a `Game` exists (main-menu options, inquiries, launcher-time messages), call `SetTextVariable("newline", "\n")` on the `TextObject` before `ToString()`, or avoid the token. In-game text needs nothing.
+- **Source:** Codex adversarial pass on #560 (GPT-6-Astra, ultra), finding 5, reproduced in a fresh process against the installed localization assemblies; `docs/reviews/rca-shader-precompile-reenable-2026-09-11.md`.

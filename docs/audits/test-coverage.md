@@ -50,7 +50,7 @@ Scope: 44 features × test directory presence + test depth analysis (manifest cl
 | 21 | P3 | Encyclopedia | 2 tests cover 2 code paths; no boundary cases | — | `TaomInformationRestrictionModelTests.cs` | doc only |
 | 22 | P3 | EquipPresets | Adapter mocked; `InventoryLogic.TransferCommand` path not exercised (Codex review #5 CRITICAL risk class) | — | 4 test files | doc only |
 | 23 | P3 | MainMenuCustomizer | 5 happy-path tests; no error / null-adapter / exception paths | — | `MainMenuCustomizerServiceTests.cs` | doc only |
-| 24 | P3 | ShaderPrecompilation | 7 happy-path retrieval tests; no error / fallback / missing-adapter paths | — | `ShaderPrecompilationServiceTests.cs` | doc only |
+| 24 | P3 | ShaderPrecompilation | 56 tests: decider state machine (17), crash-guard file lifecycle (10), planner batching and scene parsing (22), service retrieval including adapter-throws paths (7); the runner, game manager, guard and patch are engine boundaries (ADR-008) | — | `TAOM.Tests/Features/ShaderPrecompilation/` | doc only |
 | 25 | P3 | CustomBattles | `TaomFactionSelectionVM` nav methods untested (low complexity) | `Main/Features/CustomBattles/TaomFactionSelectionVM.cs:14` | 5 test files | doc only |
 | 26 | P3 | LocalizationOverride | Loader exhaustively tested; no malformed-XML / large-file boundary | — | 2 test files | doc only |
 | 27 | P3 | CareerSystem | `CareerPassiveHelper.ApplyFactor` multi-passive composition (decimal truncation, race override precedence) untested in integration fixture (Phase 6 #173) | `Main/Features/CareerSystem/CareerPassiveHelper.cs` | 19 test files | doc only (refs #173) |

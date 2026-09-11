@@ -671,7 +671,9 @@
     <string id="taom_vote_lapsed" text="关于“{VOTE}”的表决已不再适用，因此被撤回。" />
     <string id="taom_wotr_no_peace" text="魔戒圣战正在肆虐。此时不可能有和平。" />
     <string id="taom_precompile_shaders" text="预编译着色器" />
-    <string id="taom_precompile_hint" text="预编译着色器以消除游戏内卡顿。安装TAOM后运行一次。" />
+    <string id="taom_precompile_hint" text="Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes." />
+    <string id="taom_precompile_inquiry_title" text="Shader Pre-compilation" />
+    <string id="taom_precompile_inquiry_body" text="Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play." />
     <string id="taom_main_menu_new_game" text="进入人类纪元" />
     <string id="taom_career_screen_title" text="职业" />
     <string id="taom_career_done" text="完成" />

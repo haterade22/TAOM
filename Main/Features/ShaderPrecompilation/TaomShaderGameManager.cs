@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Features.ShaderPrecompilation.Domain;
@@ -12,24 +13,30 @@ using TaleWorlds.ObjectSystem;
 
 namespace TAOM.Features.ShaderPrecompilation;
 
-// Loads ONE precompile item's custom battle so its shaders compile:
-//   - CharacterBattle: all TAOM/vanilla troops split across both sides on the default scene
-//     (compiles character + equipment material shaders).
-//   - ScenePass: a minimal battle on the item's actual battle scene (compiles that scene's
-//     terrain + forced-atmosphere shaders — the #287 class).
-// The ShaderPrecompileRunner chains these: when an item's shaders settle, it EndGame()s and
-// StartNewGame()s the next item. Extends CustomGameManager so CustomBattle module data loads.
+// Loads ONE precompile item's custom battle so its shaders compile. A CharacterBattle is one batch of
+// the roster: the engine's CustomBattle preload view hands every character of BOTH combatants to
+// PreloadHelper, which compiles every equipment mesh's shaders before the first frame, so coverage is
+// roster membership and each character is added exactly once (copies only cost slots; they overflowed
+// the old 6,000-slot budget and dropped TAOM's own troops, #560). The player party is the ONE
+// designated character and the batch is the enemy: Mission.SpawnTroop flags Game.Current.PlayerTroop
+// as the player agent when it spawns on the player side (the engine's own writer of
+// Mission.InitialPlayerAgent, dereferenced unconditionally by DeploymentMissionController), and a
+// party under 20 entries keeps deployment on the auto-finish path (no Order of Battle screen waiting
+// for a click nobody makes). A ScenePass is a minimal battle on the item's real scene (terrain + atmosphere
+// shaders, the #287 class). The runner chains the items; this extends CustomGameManager so the
+// CustomBattle module data loads.
 public class TaomShaderGameManager : CustomGameManager
 {
-    private const int MaxTroopsPerSide = 3000;
-    private const int SoldierCopies = 2;
-    private const int HeroCopies = 1;
+    // Ceiling on the enemy roster. Unreachable at ShaderPrecompilePlanner.DefaultCharacterBatchSize;
+    // kept so a future batch-size change cannot silently overflow a combatant.
+    private const int MaxEnemyRoster = 3000;
+    private const int ScenePassEnemyTroops = 5;
 
     private readonly PrecompileItem _item;
     private readonly int _generation;  // echoed back to the runner so a late callback is matched to its item
     private readonly IShaderPrecompilationService _service;
     private readonly IModLogger _logger;
-
+    private string _batchLabel = "?";
     public TaomShaderGameManager(PrecompileItem item, int generation, IShaderPrecompilationService service, IModLogger logger)
     {
         _item = item;
@@ -45,14 +52,13 @@ public class TaomShaderGameManager : CustomGameManager
         {
             _logger.LogInfo($"[ShaderPrecompilation] Starting item: {_item.Description} (scene={_item.SceneId})");
             var data = _item.Kind == PrecompileItemKind.CharacterBattle
-                ? BuildCharacterBattleData()
+                ? BuildCharacterBattleData(ResolveBatchIds())
                 : BuildScenePassData(_item.SceneId);
             CustomBattleHelper.StartGame(data);
-            // The 1.4.7 deployment-NRE guard (ShaderPrecompilePlayerAgentGuard) is added from
-            // SubModule.OnMissionBehaviorInitialize (gated on ShaderPrecompileRunner.IsWalkInProgress) —
+            // The deployment fallback guard (ShaderPrecompilePlayerAgentGuard) is added from
+            // SubModule.OnMissionBehaviorInitialize (gated on ShaderPrecompileRunner.TryClaimMission),
             // NOT here: at this point Mission.Current is not yet the battle mission, so an
-            // AddMissionBehavior call silently no-ops (confirmed in-game 2026-07-10 — the guard never
-            // registered and the deployment NRE still fired).
+            // AddMissionBehavior call silently no-ops (confirmed in-game 2026-07-10).
             ShaderPrecompileRunner.NotifyItemRendering(_generation);
         }
         catch (Exception ex)
@@ -62,91 +68,81 @@ public class TaomShaderGameManager : CustomGameManager
         }
     }
 
-    // ---- CharacterBattle: all troops (the original feature's data) ---- //
-    private CustomBattleData BuildCharacterBattleData()
+    // Batches 2..B carry their ids. The bootstrap batch (no ids) is the first custom game of the walk
+    // and so the first place MBObjectManager exists: it discovers the roster, hands it to the runner
+    // (which re-plans the remaining batches) and takes batch 0's share itself.
+    private IReadOnlyList<string> ResolveBatchIds()
     {
-        var characterIds = _service.GetCharacterIdsForShaderBattle();
-        var cultureIds = _service.GetCultureIdsForShaderBattle();
-        _logger.LogInfo($"[ShaderPrecompilation] {characterIds.Count} characters from {cultureIds.Count} cultures");
-
-        var firstCulture = ResolveFirstCulture(cultureIds);
-        var playerChar = characterIds
-            .Select(id => MBObjectManager.Instance?.GetObject<BasicCharacterObject>(id))
-            .FirstOrDefault(c => c != null)
-            ?? throw new InvalidOperationException("[ShaderPrecompilation] No player character resolved");
-
-        var banner = Banner.CreateRandomBanner();
-        var playerParty = new CustomBattleCombatant(new TextObject("{=!}TAOM Shader Player"), firstCulture, banner) { Side = BattleSideEnum.Attacker };
-        playerParty.SetGeneral(playerChar);
-        var enemyParty = new CustomBattleCombatant(new TextObject("{=!}TAOM Shader Enemy"), firstCulture, banner) { Side = BattleSideEnum.Defender };
-
-        int addedToPlayer = 0, addedToEnemy = 0, charactersLoaded = 0;
-        foreach (var id in characterIds)
+        if (_item.CharacterIds.Count > 0)
         {
-            var obj = MBObjectManager.Instance?.GetObject<BasicCharacterObject>(id);
-            if (obj == null) continue;
-            int copies = obj.IsSoldier ? SoldierCopies : HeroCopies;
-            if (addedToPlayer <= addedToEnemy && addedToPlayer + copies <= MaxTroopsPerSide)
-            { playerParty.AddCharacter(obj, copies); addedToPlayer += copies; charactersLoaded++; }
-            else if (addedToEnemy + copies <= MaxTroopsPerSide)
-            { enemyParty.AddCharacter(obj, copies); addedToEnemy += copies; charactersLoaded++; }
+            _batchLabel = $"{_item.BatchIndex + 1}/{_item.BatchCount}";
+            return _item.CharacterIds;
         }
-        if (enemyParty.NumberOfAllMembers == 0) enemyParty.AddCharacter(playerChar, 1);
-
-        int dropped = characterIds.Count - charactersLoaded;
-        _logger.LogInfo($"[ShaderPrecompilation] Loaded {charactersLoaded} characters — player: {addedToPlayer}, enemy: {addedToEnemy}");
-        if (dropped > 0) _logger.LogWarning($"[ShaderPrecompilation] {dropped} characters skipped (both sides full at {MaxTroopsPerSide})");
-
-        return MakeBattleData(ShaderPrecompilePlanner.CharacterBattleScene, playerChar, firstCulture, playerParty, enemyParty);
+        var roster = _service.GetCharacterIdsForShaderBattle();
+        ShaderPrecompileRunner.NotifyRosterDiscovered(_generation, roster);
+        var slice = ShaderPrecompilePlanner.SliceBatch(roster, 0);
+        if (slice.Count == 0) throw new InvalidOperationException("[ShaderPrecompilation] roster discovery returned no characters");
+        _batchLabel = $"1/{ShaderPrecompilePlanner.CountBatches(roster.Count)}";
+        return slice;
     }
 
-    // ---- ScenePass: minimal battle on the real scene so its terrain/atmosphere shaders compile ---- //
+    private CustomBattleData BuildCharacterBattleData(IReadOnlyList<string> ids)
+    {
+        var resolved = ids.Select(Resolve).Where(c => c != null).ToList();
+        var playerChar = resolved.FirstOrDefault(c => c.IsHero) ?? resolved.FirstOrDefault()
+            ?? throw new InvalidOperationException($"[ShaderPrecompilation] batch {_batchLabel}: none of its {ids.Count} ids resolved");
+        var data = BuildBattle(ShaderPrecompilePlanner.CharacterBattleScene, playerChar, resolved, out int dropped);
+        int unresolved = ids.Count - resolved.Count;
+        var line = $"[ShaderPrecompilation] batch {_batchLabel}: loaded {resolved.Count} of {ids.Count} ids, player 1, " +
+                   $"enemy {data.EnemyParty.NumberOfAllMembers}, {unresolved} unresolved, {dropped} skipped";
+        if (unresolved > 0 || dropped > 0) _logger.LogWarning(line); else _logger.LogInfo(line);
+        return data;
+    }
+
+    // A handful of troops: enough to render agents, but the point of a scene pass is the scene's own
+    // terrain/atmosphere shaders, so it stays light to move through scenes fast.
     private CustomBattleData BuildScenePassData(string sceneId)
     {
-        var cultureIds = _service.GetCultureIdsForShaderBattle();
-        var firstCulture = ResolveFirstCulture(cultureIds);
-        var playerChar = _service.GetCharacterIdsForShaderBattle()
-            .Select(id => MBObjectManager.Instance?.GetObject<BasicCharacterObject>(id))
-            .FirstOrDefault(c => c != null)
+        var playerChar = _service.GetCharacterIdsForShaderBattle().Select(Resolve).FirstOrDefault(c => c != null)
             ?? throw new InvalidOperationException("[ShaderPrecompilation] No player character for scene pass");
-
-        var banner = Banner.CreateRandomBanner();
-        // A handful of troops per side — enough to render agents, but the point of a scene pass is
-        // the scene's own terrain/atmosphere shaders, so we keep it light to move through scenes fast.
-        var playerParty = new CustomBattleCombatant(new TextObject("{=!}TAOM Scene Player"), firstCulture, banner) { Side = BattleSideEnum.Attacker };
-        playerParty.SetGeneral(playerChar);
-        playerParty.AddCharacter(playerChar, 5);
-        var enemyParty = new CustomBattleCombatant(new TextObject("{=!}TAOM Scene Enemy"), firstCulture, banner) { Side = BattleSideEnum.Defender };
-        enemyParty.AddCharacter(playerChar, 5);
-
-        return MakeBattleData(sceneId, playerChar, firstCulture, playerParty, enemyParty);
+        return BuildBattle(sceneId, playerChar, Enumerable.Repeat(playerChar, ScenePassEnemyTroops).ToList(), out _);
     }
 
-    private BasicCultureObject ResolveFirstCulture(System.Collections.Generic.IReadOnlyList<string> cultureIds)
+    // Player party = the one designated character; enemy party = `enemies`, each entry once.
+    private CustomBattleData BuildBattle(string sceneId, BasicCharacterObject playerChar,
+        IReadOnlyList<BasicCharacterObject> enemies, out int dropped)
     {
-        var c = cultureIds
-            .Select(id => MBObjectManager.Instance?.GetObject<BasicCultureObject>(id))
-            .FirstOrDefault(x => x != null);
+        var culture = ResolveFirstCulture(_service.GetCultureIdsForShaderBattle());
+        var banner = Banner.CreateRandomBanner();
+        var playerParty = new CustomBattleCombatant(new TextObject("{=!}TAOM Shader Player"), culture, banner) { Side = BattleSideEnum.Attacker };
+        playerParty.SetGeneral(playerChar);
+        playerParty.AddCharacter(playerChar, 1);
+        var enemyParty = new CustomBattleCombatant(new TextObject("{=!}TAOM Shader Enemy"), culture, banner) { Side = BattleSideEnum.Defender };
+        dropped = 0;
+        foreach (var c in enemies)
+        {
+            if (enemyParty.NumberOfAllMembers >= MaxEnemyRoster) { dropped++; continue; }
+            enemyParty.AddCharacter(c, 1);
+        }
+        // CustomBattleCombatant.IsUnderPlayersCommand dereferences General; give the enemy one (a
+        // different character when the batch has one) so no engine path finds it null.
+        enemyParty.SetGeneral(enemies.FirstOrDefault(c => c != playerChar) ?? playerChar);
+        return new CustomBattleData
+        {
+            GameTypeStringId = "Battle", SceneId = sceneId, SeasonId = "spring", SceneLevel = "", TimeOfDay = 6f,
+            PlayerCharacter = playerChar, PlayerSideGeneralCharacter = playerChar,
+            PlayerParty = playerParty, EnemyParty = enemyParty,
+            IsPlayerGeneral = true, IsPlayerAttacker = true,
+        };
+    }
+
+    private static BasicCharacterObject Resolve(string id) => MBObjectManager.Instance?.GetObject<BasicCharacterObject>(id);
+    private BasicCultureObject ResolveFirstCulture(IReadOnlyList<string> cultureIds)
+    {
+        var c = cultureIds.Select(id => MBObjectManager.Instance?.GetObject<BasicCultureObject>(id)).FirstOrDefault(x => x != null);
         if (c != null) return c;
-        _logger.LogWarning("[ShaderPrecompilation] No valid culture — falling back to 'empire'");
+        _logger.LogWarning("[ShaderPrecompilation] No valid culture, falling back to 'empire'");
         return MBObjectManager.Instance?.GetObject<BasicCultureObject>("empire")
                ?? throw new InvalidOperationException("No fallback culture available");
     }
-
-    private static CustomBattleData MakeBattleData(string sceneId, BasicCharacterObject playerChar,
-        BasicCultureObject culture, CustomBattleCombatant player, CustomBattleCombatant enemy)
-        => new CustomBattleData
-        {
-            GameTypeStringId = "Battle",
-            SceneId = sceneId,
-            SeasonId = "spring",
-            PlayerCharacter = playerChar,
-            PlayerSideGeneralCharacter = playerChar,
-            PlayerParty = player,
-            EnemyParty = enemy,
-            IsPlayerGeneral = true,
-            IsPlayerAttacker = true,
-            SceneLevel = "",
-            TimeOfDay = 6f,
-        };
 }

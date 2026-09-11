@@ -140,7 +140,7 @@ Suppress CC narrative horse crashes for no-mount cultures
 
 **Target:** `LoadingWindowViewModel`
 
-**Status: PARKED 2026-08-20** with the main-menu "Pre-compile Shaders" option. The `_harmony.PatchCategory` call in `SubModule.cs` is commented out, so this category is never registered and the postfix never runs. Parked rather than left applied because the postfix only mirrors a walk's status line, and no walk can start once the menu option is gone.
+**Status: ACTIVE again since 2026-09-11 (#560)**, parked 2026-08-20 to 2026-09-11. `SubModule.OnSubModuleLoad` applies the category; the single postfix mirrors `ShaderPrecompileRunner.StatusLine` onto `LoadingWindowViewModel.DescriptionText` and returns immediately unless a walk is active, so outside a walk it costs one null check per loading-screen frame. Target verified on the installed 1.4.8: `internal void Update()` is bound by string through `AccessTools.Method`, and `DescriptionText` has a public setter.
 
 Loading screen shader progress text
 

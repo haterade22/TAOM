@@ -4,6 +4,129 @@
 
 ## 2026-09-11
 
+### feat(shaders): Pre-compile Shaders is back, covers the custom-battle roster, scene passes off for everyone (#560)
+
+The main-menu "Pre-compile Shaders" option returns after the 2026-08-20 park. The park's "no longer
+needed" was contradicted by player bundle b18f3441 (TAOM v2.0.26, Bannerlord 1.4.8): a 95-agent
+field battle sat 305 seconds one frame short of playable while the engine compiled cold character
+shaders (478 `Missing shader from sack` misses, 430 of them `pbr_metallic`). That is the cost this
+walk prepays, and the public build needs it for armour, weapons, lords and troops; scene passes are
+a bonus that crashes some GPUs.
+
+Re-wiring was three uncomments. The review against the installed 1.4.8 engine found zero signature
+drift (`Patch21`'s string-bound `LoadingWindowViewModel.Update`, the `InitialStateOption`
+constructor, `InquiryData`, `CustomBattleData`, `Mission._initialPlayerAgent`,
+`DeploymentMissionController.FinishDeployment` and `TeamSetupOver` all unchanged) and four real
+defects, all fixed here.
+
+**The character pass silently dropped TAOM's own troops.** On 1.4.8 the custom battle's
+`MissionCustomBattlePreloadView` hands every roster character of every combatant to
+`PreloadHelper.PreloadCharacters`, which walks every battle equipment set and calls
+`MetaMesh.PreloadShaders` per unique mesh. Coverage is roster membership, not the Battle Size spawn
+cap. The walk capped the roster at 3,000 per side and added every soldier twice; the roster that
+loads under the CustomGame type is roughly 4,600 to 5,300 characters, so the 6,000 slots overflowed
+by thousands, and because vanilla modules enumerate first the dropped tail was TAOM's. The 2026-06-17
+RCA had recorded this as "iteration 2, roster batching" and it was never built. Now
+`ShaderPrecompilePlanner` slices the roster into batches of 1,000, each its own custom battle, every
+character exactly once. The roster cannot be read at the main menu (`MBObjectManager.Instance`
+exists only inside a `Game`), so the walk starts with a bootstrap plan, the first battle discovers
+the roster through the service and the runner re-plans (`NotifyRosterDiscovered`, generation-guarded
+like the two existing callbacks). The copies are gone: the preload dedupes meshes, so a second copy
+bought nothing and only cost slots.
+
+**Each battle now takes the vanilla shape instead of a headless one.** `CustomBattleHelper.StartGame`
+sets `Game.Current.PlayerTroop`, and `Mission.SpawnTroop` flags that troop player-controlled when it
+spawns on the player side, which is the one writer of the private `Mission._initialPlayerAgent` that
+`SetupTeams` and `FinishDeployment` dereference unconditionally (still true on 1.4.8). So the player
+party is exactly one character (a hero when the batch has one) and the batch is the enemy; the
+smaller side always gets an initial spawn slot, so the engine sets the field itself. A one-entry
+player party also keeps `CanPlayerSideDeployWithOrderOfBattle()` false, so deployment auto-finishes:
+no Order of Battle screen, no hang. The 1.4.7 guard stays as a fallback and now seeds only a player-team agent: `SetupTeams`
+spawns the enemy side first, so "the first agent built" was an enemy agent, and seeding it made it
+the player team's general. Neither old path had ever run in-game; the 2026-07-11 run was warm-cache
+and advanced before deployment mattered.
+
+**Scene passes are off by default for every install, not just fresh ones.** `TaomSettings` persists
+as json2 and MCM loads that file over the compiled default, so flipping
+`EnableScenePassPrecompilation` to false would have reached nobody who launched TAOM while the
+attribute was live. The property is renamed to `EnableShaderPrecompileScenePasses` (default off, the
+hint names the GPU crash); the orphaned key in players' `TAOM.json` is ignored on load. The co-op
+exclusion list follows the rename and the pinned settable-property count stays 220. Both restored
+attributes carry `RequireRestart = false`, the posture #559 enforces, and the new rule about a
+changed default's hint text does not bite here because the key is new: nothing persisted can
+shadow it.
+
+**The shipped text was wrong on 1.4.8.** The engine deletes the local shader cache after any
+module-list change and TAOM's scenes ship header-only, so the walk's product lives only in that
+cache. The hint and the inquiry no longer say "run once": they say to re-run after adding, removing
+or reordering mods, give the character-only expectation (20 to 70 minutes cold, Ctrl+Shift+K
+cancels) and point at the MCM opt-in for scenes. The hint key is reworded and two keys are new
+(`taom_precompile_inquiry_title`, `taom_precompile_inquiry_body`); all 12 language files carry the
+English rows and the stale hint was dropped from the translation cache, but the translation itself
+is owed: no API key was available in this session, so `tools/translate_with_claude.py --lang <L>
+--module TAOM --sync-ids --apply` still has to run per language.
+
+Runner details: per-batch caps are 60 minutes absolute and 15 minutes frozen-count (the frozen-count
+guard is the real stuck detector and does not scale with batch size); the completion line and toast
+carry an aborted-items count so a partial walk never reads as full coverage; the crash skip list
+stays scene-only, a character batch is never auto-skipped. Planner tests grew from 8 to 22 (batch
+sizing, partition, bootstrap plan, `SliceBatch` parity); the runner, game manager and guard stay
+engine boundaries (ADR-008).
+
+The deep review caught the shape's own new failure mode before the first run: batch 1 is the only item
+that can re-plan, and its start timeout (120 seconds, inherited from the scene-pass era) sat in front of
+a load that now pays TAOM's full module-data pass. On that timeout the runner advanced past the one-item
+bootstrap plan straight to a "COMPLETE, you can play now" toast having compiled nothing. The start bound
+is 10 minutes now, a walk whose roster was never discovered reports INCOMPLETE at error level, the
+`StartNewGame` throw path counts as an aborted item like the other three, the fallback guard is added
+only while a shader battle can be initializing or running (not during the between-item teardown), the
+planner slices by index, and the game manager is back under the 150-line entry-point ceiling. RCA:
+`docs/reviews/rca-shader-precompile-reenable-2026-09-11.md`.
+
+Codex (GPT-6-Astra at ultra, the model pinned in `.codex/config.toml`) then returned DO NOT SHIP with
+two P1, two P2 and three P3, every one verified on the source and the installed engine before it was
+acted on, and every one fixed here. `MBGameManager.EndGame()` is `async void` and dereferences
+`Game.Current` once no manager is current, so a Ctrl+Shift+K in the 1.5-second window after a game
+had already gone would have crashed the process past the runner's catch: the runner now never calls
+it without a game, and cancellation is a request that finishes through the normal teardown state,
+idempotent, never a second `EndGame()`. A teardown that does not resolve within 90 seconds now stops
+the walk with an error instead of starting the next game on top of one whose loading callbacks can
+still fire. The runner owns exactly one mission per item (`TryClaimMission` from
+`OnMissionBehaviorInitialize`): a battle the player starts from the custom-battle screen mid-walk
+makes the walk stand down, so it never receives the fallback guard and is never ended by the runner.
+`{newline}` is a `GameTexts` variable that exists only after `Game.Initialize`, so the main-menu
+inquiry now binds it before rendering. The coverage wording is honest: the walk preloads the battle
+equipment of every character that loads under the CustomGame type; named companions
+(Campaign-only XML node), civilian sets and race skins are outside it, so the text says "the troops,
+lords and battle equipment", not "every". And one claim of ours was withdrawn: Custom Battle
+constructs the base `OrderOfBattleVM`, whose `SaveConfiguration()` is empty, so the "junk Order of
+Battle profile write" that the earlier draft used to justify the one-entry party never happens; the
+shape stands on the deployment hang alone. Codex's own `PopulateObject` correction on the MCM path is
+in the docs too: the json2 converter fills only declared properties and the next save drops the
+orphan. Verification of every finding, and why five review agents missed the engine-teardown ones,
+is in the RCA.
+
+Build clean. Filtered suite (shader, settings fingerprint, localization, binding, posture, banner
+bearers) 253 passed plus the one pre-existing failure below.
+Full suite 8453 passed, 2 skipped, 1 failed: `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`
+(Expected 0, Actual 2), a live-Armory drift a peer session reported before these edits:
+`wm_gondor_sword_a04` now exists only in the Armory's backup XML, so the #360 invariant test's
+"not defined" branch fires. Nothing in this change touches rosters or weapons.
+
+Not-tested: the cold in-game walk on 1.4.8, the only proof for the boundary code (the `roster:` line,
+the cancel-during-teardown, stop-on-teardown-timeout and player-started-battle paths,
+`loaded k of k ids ... 0 unresolved, 0 skipped` per batch, no `FALLBACK:` lines, `WALK COMPLETE: B
+items, 0 aborted`), the persisted-toggle check on a `TAOM.json` that still holds the old key, and a
+campaign battle against an unfought culture afterwards.
+Rejected: raising the roster cap alone (keeps every Armory item resident at once; unproven on 8 GB
+GPUs, #385 history); flipping the scene-pass default (reaches no existing install); deleting scene
+passes (the only path to terrain coverage until per-scene sacks ship, #448).
+Research: `PreloadHelper.PreloadCharacters`, `MissionCustomBattlePreloadView`,
+`CustomBattleHelper.StartGame`, `Mission.SpawnTroop`, `DeploymentMissionController.SetupTeams` and
+`FinishDeployment`, `DefaultBattleMissionAgentSpawnLogic`'s initial spawn split,
+`OrderOfBattleVM.OnDeploymentFinalized`, `BattleEndLogic`, MCMv5 `JsonSettingsFormat`, all on the
+installed 1.4.8.
+
 ### fix(specres): every special-resource outflow is visible now, and troops that cost nothing no longer desert (#558)
 
 Two player reports: nobody could see what upkeep was costing, and balances were "wiped after every
