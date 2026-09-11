@@ -120,18 +120,24 @@
   <Troop id="wainrider_warlord_chariot" resource_id="war_banners" merchant_cost="28" />
   <Troop id="dragon_wrath_ash_knight" resource_id="war_banners" merchant_cost="18" />
   <Troop id="loke_rim_gilded_champion" resource_id="war_banners" merchant_cost="12" />
-  <!-- Black Numenorean line -->
-  <Troop id="mordor_num_initiate" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="1" merchant_cost="1" />
-  <Troop id="mordor_num_cavalry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="1.5" merchant_cost="2" />
-  <Troop id="mordor_num_infantry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="1.5" merchant_cost="2" />
-  <Troop id="mordor_num_archer" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="1.5" merchant_cost="2" />
-  <Troop id="mordor_num_vet_cavalry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="2" merchant_cost="3" />
-  <Troop id="mordor_num_vet_infantry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="2" merchant_cost="3" />
-  <Troop id="mordor_num_vet_archer" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="2" merchant_cost="3" />
-  <Troop id="mordor_num_knight" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="2.5" merchant_cost="4" />
-  <Troop id="mordor_num_warden" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="2.5" merchant_cost="4" />
-  <Troop id="mordor_num_marksman" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="2.5" merchant_cost="4" />
-  <Troop id="mordor_num_temple_knight" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="3" merchant_cost="5" />
-  <Troop id="mordor_num_temple_guard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="3" merchant_cost="5" />
-  <Troop id="mordor_num_shadowbow" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="3" merchant_cost="5" />
+  <!-- Black Numenorean line (levels 26 / 31 / 36 / 41 / 46). daily_upkeep follows the Mordor uruk
+       line's ratio above (upgrade_cost 1 -> 0.05, 2 -> 0.1, 3 -> 0.15, 4 -> 0.2, 5 -> 0.3) and
+       merchant_cost the band documented below (L36 12, L41 18, L46 28; the two rungs under the
+       band at 6 and 8). Until 2026-09-11 these rows carried daily_upkeep 1.0 to 3.0 and
+       merchant_cost 1 to 5: ten to twenty times the ratio of every other Mordor elite, reached by
+       any faction's player through prisoner recruitment and charged in that player's own resource,
+       so forty of them drained 60 a day against a top battle payout of 28 (#558). -->
+  <Troop id="mordor_num_initiate" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="0.05" merchant_cost="6" />
+  <Troop id="mordor_num_cavalry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" merchant_cost="8" />
+  <Troop id="mordor_num_infantry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" merchant_cost="8" />
+  <Troop id="mordor_num_archer" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" merchant_cost="8" />
+  <Troop id="mordor_num_vet_cavalry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" merchant_cost="12" />
+  <Troop id="mordor_num_vet_infantry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" merchant_cost="12" />
+  <Troop id="mordor_num_vet_archer" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" merchant_cost="12" />
+  <Troop id="mordor_num_knight" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="mordor_num_warden" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="mordor_num_marksman" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="mordor_num_temple_knight" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
+  <Troop id="mordor_num_temple_guard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
+  <Troop id="mordor_num_shadowbow" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
 </TroopResourceCosts>
