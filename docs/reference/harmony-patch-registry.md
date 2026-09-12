@@ -262,7 +262,7 @@ PlayerProgress-scaled bandit party sizes (the roster half of BanditManagement �
 
 **Target:** `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix)
 
-Themed LOTR hideout encounter descriptions — Postfix re-sets the `HIDEOUT_DESCRIPTION` GameText var for TAOM's 5 bandit cultures, replacing vanilla's hardcoded-culture default "(Undefined hideout type)". Delegates to `IHideoutDescriptionService` (string→string, ADR-007 clean); runs before menu render so the lazy `{HIDEOUT_DESCRIPTION}` substitution picks up the override. Only `hideout_place` shows the var; `hideout_after_wait` needs no patch.
+Themed LOTR hideout encounter descriptions: Postfix re-sets the `HIDEOUT_DESCRIPTION` GameText var for 6 of TAOM's 8 bandit cultures (`gondor_soldiers` and `mirkwood_stalkers` have no string yet and keep the placeholder; measured 2026-09-11), replacing vanilla's hardcoded-culture default "(Undefined hideout type)". Delegates to `IHideoutDescriptionService` (string→string, ADR-007 clean); runs before menu render so the lazy `{HIDEOUT_DESCRIPTION}` substitution picks up the override. Only `hideout_place` shows the var; `hideout_after_wait` needs no patch.
 
 ## Patch41_McmLayoutFix
 

@@ -13,7 +13,7 @@ Four surfaces carry balance values, and which one a number sits on decides who c
 | C# constant | the wage table, a culture feat's magnitude | needs a code change and a rebuild |
 | MCM setting, in game | AI lord party size multiplier | the player, at runtime, no file |
 
-TAOM's MCM surface is 432 `[SettingProperty]` declarations in `Main/Features/TaomSettings.cs`. <!-- measured: grep -c "\[SettingProperty" Main/Features/TaomSettings.cs 2026-09-05 --> Nothing in the repo catalogues them: [`docs/features/mcm.md`](../features/mcm.md) is a layout fix for one patch, not a settings list. If you need to know whether a knob exists, read `TaomSettings.cs` directly. That is the honest answer, and it has been the honest answer for as long as the file has existed.
+TAOM's MCM surface in `Main/Features/TaomSettings.cs`: 440 lines carry a `[SettingProperty` attribute: 220 group labels, 219 value knobs and 1 button, in 56 groups. <!-- measured: grep -c "\[SettingProperty" Main/Features/TaomSettings.cs; grep -cE "^\s*\[SettingProperty(Bool|Integer|FloatingInteger|Dropdown|Text)\b" ...; grep -o 'SettingPropertyGroup("[^"]*"' ... | sort -u | wc -l 2026-09-11 --> Nothing in the repo catalogues them: [`docs/features/mcm.md`](../features/mcm.md) is a layout fix for one patch plus, since #559, the settings-posture rules (every value knob is read live and carries `RequireRestart = false`; a test enforces it), not a settings list. If you need to know whether a knob exists, read `TaomSettings.cs` directly. That is the honest answer, and it has been the honest answer for as long as the file has existed.
 
 ## Lever 1: a troop's `level`, and the four numbers it decides
 
@@ -356,7 +356,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 
 | Number | Command | Date |
 |---|---|---|
-| 432 `[SettingProperty]` declarations | `grep -c "\[SettingProperty" Main/Features/TaomSettings.cs` | 2026-09-05 |
+| 440 `[SettingProperty` lines (220 group, 219 value, 1 button) | `grep -c "\[SettingProperty" Main/Features/TaomSettings.cs` and the value-attribute grep in the paragraph above | 2026-09-11 |
 | 857 troop levels across 16 files; levels 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46, 51 | `python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))"` | 2026-09-05 |
 | 21 troop culture keys, 20 armour culture keys | `python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S\|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S\|re.M).group(1),re.M)))"` | 2026-09-05 |
 | Damage surviving magnitude 100 at armour 0 / 33 / 43 / 60 | `python -c "bf={'Blunt':0.6,'Cut':0.1,'Pierce':0.25}; sub={'Cut':0.5,'Pierce':0.33,'Blunt':0.2}; f=lambda t,ae:(lambda n2: bf[t]*n2+(1-bf[t])*max(0.0,n2-ae*sub[t]))(100*50.0/(50.0+ae)); print([(ae,{t:round(f(t,ae),1) for t in ('Cut','Pierce','Blunt')}) for ae in (0,33,43,60)])"` | 2026-09-05 |
@@ -394,6 +394,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 
 ## Referenced by
 
+- [docs/features/mcm.md](../features/mcm.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/configs-balance.md](./configs-balance.md)
 - [docs/modding/party-templates.md](./party-templates.md)

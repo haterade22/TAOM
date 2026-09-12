@@ -204,8 +204,8 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 | [`Main/Features/BanditManagement/Models/TaomBanditDensityModel.cs`](../../Main/Features/BanditManagement/Models/TaomBanditDensityModel.cs) | GameModel override (hideout count, parties/hideout, fight troops) |
 | [`Main/Features/BanditManagement/Hooks/Patch39_BanditPartySize.cs`](../../Main/Features/BanditManagement/Hooks/Patch39_BanditPartySize.cs) | Postfix scaling bandit party rosters toward stack MaxValue |
 | [`Main/Features/BanditManagement/BanditManagementIoC.cs`](../../Main/Features/BanditManagement/BanditManagementIoC.cs) | DryIoc registration |
-| [`Main/_Module/ModuleData/taom_spcultures.xml`](../../Main/_Module/ModuleData/taom_spcultures.xml) | 5 LOTR bandit culture entries (appended) |
-| [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 10 raider + boss party templates (appended) |
+| [`Main/_Module/ModuleData/taom_spcultures.xml`](../../Main/_Module/ModuleData/taom_spcultures.xml) | 8 LOTR bandit culture entries (5 on 2026-05-27, 3 wave-2 offshoots on 2026-05-28) |
+| [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 16 party templates: one raider and one boss per bandit culture |
 | [`Main/_Module/ModuleData/taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml) | Culture display names + male/female names (~80 keys) |
 | [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
 | [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | unit tests (service, settings provider, density-model helpers, hideout descriptions) |
@@ -216,7 +216,7 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 - `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` — Harmony Postfix. Coexists peacefully with [TaomPartySizeModel](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs) (which overrides `GetPartyMemberSizeLimit` only).
 - `TaomSettings` (MCM) — 7 properties in the `World/Bandit Scaling` group (added `BanditInitialHideoutsPerFaction`).
 - Existing TAOM culture troop XMLs — pulls raider-tier T1–T4 troops by ID; no new troop authoring.
-- `taom_partyTemplates.xml` — 10 new templates (5 raider + 5 boss).
+- `taom_partyTemplates.xml`: 16 templates (8 raider + 8 boss, one pair per bandit culture).
 
 ## Tests
 
@@ -235,7 +235,7 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 
 [`TAOM.Tests/Features/Mcm/SettingRequireRestartPostureTests.cs`](../../TAOM.Tests/Features/Mcm/SettingRequireRestartPostureTests.cs): every value setting in the four settings classes carries `RequireRestart = false` unless allowlisted with a reason.
 
-[`TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs) — 9 tests: each of the 5 cultures returns its expected `{=key}`, and unknown / vanilla-bandit / empty / null culture IDs return `null`.
+[`TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs) : 10 tests. Each of the 6 cultures with a description returns its expected `{=key}`; unknown, vanilla-bandit, empty and null culture ids return `null`. `gondor_soldiers` and `mirkwood_stalkers` have no description and fall through to `null` (see Localization).
 
 BanditManagement + Mcm filtered run: 105/105 (2026-09-11).
 
@@ -251,7 +251,7 @@ BanditManagement + Mcm filtered run: 105/105 (2026-09-11).
 
 1. Edit `E:\Steam\...\Modules\TAOM_Map\ModuleData\settlements.xml`.
 2. Copy an existing `<Settlement type="Hideout">` block.
-3. Change `id` (must be unique), `posX`/`posY`, `culture=` (use one of the 5 LOTR bandit cultures).
+3. Change `id` (must be unique), `posX`/`posY`, `culture=` (use one of the 8 LOTR bandit cultures).
 4. Rename `name=` text to a unique camp name.
 5. Add a `<string>` entry in `taom_module_strings.xml` for the new name key.
 6. Rebuild the settlement distance cache via MCM → Map Tools → Rebuild Settlement Distance Cache.
@@ -279,7 +279,7 @@ The GameModel properties (`NumberOfMaximumHideoutsAtEachBanditFaction` etc.) are
 
 ## Localization
 
-Culture display names, male/female names, and the 5 hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically.
+Culture display names, male/female names, and the hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically. **Coverage gap (measured 2026-09-11):** `HideoutDescriptionService` maps 6 of the 8 bandit cultures (the five originals plus `erebor_warriors`); `gondor_soldiers` and `mirkwood_stalkers` have no `taom_hideout_desc_*` string, so their hideouts still show vanilla's "(Undefined hideout type)" placeholder. Two strings and two dictionary rows close it.
 
 The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
 
@@ -310,7 +310,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 - **`TaomBanditDensityModel` overrides 6 properties** (source-verified): `NumberOfMinimumBanditPartiesInAHideoutToInfestIt`, `NumberOfMaximumHideoutsAtEachBanditFaction`, `NumberOfInitialHideoutsAtEachBanditFaction` (the early-game density lever, vanilla 7 → default 14), `NumberOfMaximumBanditPartiesInEachHideout`, `NumberOfMaximumTroopCountForFirstFightInHideout`, `NumberOfMaximumTroopCountForBossFightInHideout`. (The Architecture diagram's "4 properties" count predates the 2026-05-29 initial-hideouts + min-to-infest additions.)
 - The `Cap`/`Scale` helpers are `internal static` and unit-tested **directly via `InternalsVisibleTo("TAOM.Tests")`**; `Cap` floors at vanilla even when an MCM cap is set below the vanilla base.
-- The 5 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (5 rows, one `<Faction is_bandit="true">` per culture).
+- The 8 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (8 rows, one `<Faction is_bandit="true">` per culture; verified 2026-09-11).
 - The vanilla `looters` clan is **kept** because its `StringId == "looters"` is hardcoded in `DefaultBanditDensityModel`, and looter spawning runs on a separate code path from hideout bandits.
 - `TAOM_Map/SubModule.xml` declares `<DependedModule Id="TAOM"/>` (the external map module now depends on TAOM, so the LOTR bandit cultures its hideouts reference are guaranteed loaded).
 
@@ -321,11 +321,14 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 ## Referenced by
 
 - [docs/features/caravan-bandit-parity.md](./caravan-bandit-parity.md)
+- [docs/features/mcm.md](./mcm.md)
+- [docs/INDEX.md](../INDEX.md)
 - [docs/modding/clans.md](../modding/clans.md)
 - [docs/modding/cultures.md](../modding/cultures.md)
 - [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
 - [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/rca-bandit-management-2026-05-27.md](../reviews/rca-bandit-management-2026-05-27.md)
 

@@ -141,7 +141,7 @@ hand edits, so land a repo-side validator gate with any fix.
 
 ## configs-balance.md
 
-- No catalogue exists of the MCM-only balance knobs, their defaults or their legal ranges. Main/Features/TaomSettings.cs (432 [SettingProperty declarations across 55 groups) is the only source, and docs/features/mcm.md is the Patch41 layout fix, not a settings list. The chapter says so and points at the file.
+- No catalogue exists of the MCM-only balance knobs, their defaults or their legal ranges. Main/Features/TaomSettings.cs (219 value knobs across 56 groups, measured 2026-09-11) is the only source; docs/features/mcm.md is the Patch41 layout fix plus the settings-posture rules from #559, not a settings list. The chapter says so and points at the file.
 - Nothing measures which troops have no troop_weights.xml row or no troop_resource_costs.xml row. The fallbacks are documented (weight 1.0 at TroopWeightService.cs:43-45; no cost charged), but the coverage gap itself is unmeasured anywhere in the repo.
 - There is no external validation of any balance config: tools/validate_moduledata.py and tools/taom_schema.py contain zero references to all fifteen filenames, and tools/schemas/ holds only three schemas (taom_npccharacter.json, taom_spcultures.json, taom_equipmentsets.json). The only value check is the provider's own warning lines in Logs/taom_debug_*.log at launch.
 
