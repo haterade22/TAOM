@@ -374,12 +374,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Time Acceleration", GroupOrder = 10)]
     [SettingPropertyInteger("Fast Forward Multiplier", 1, 128, Order = 0, RequireRestart = false,
-        HintText = "Speed multiplier applied when pressing the fast-forward key (Space by default; rebind under Options > Keybindings > Campaign Map). Default: 4.")]
+        HintText = "Speed multiplier for fast-forward: the map bar fast-forward button, and the fast-forward key (Space by default; rebind under Options > Keybindings > Campaign Map). Default: 4.")]
     public int FastForwardMultiplier { get; set; } = 4;
 
     [SettingPropertyGroup("Time Acceleration")]
     [SettingPropertyInteger("Extra Fast Forward Multiplier", 1, 128, Order = 1, RequireRestart = false,
-        HintText = "Speed multiplier applied with the extra fast-forward key (E by default, which is also Rotate Camera Right; rebind either under Options > Keybindings > Campaign Map). Default: 8.")]
+        HintText = "Speed multiplier for extra fast-forward: the map bar Extra Fast Forward button (the fourth time button), and the extra fast-forward key (E by default, which is also Rotate Camera Right; rebind either under Options > Keybindings > Campaign Map). Never below the Fast Forward Multiplier. Default: 8.")]
     public int ExtraFastForwardMultiplier { get; set; } = 8;
 
     [SettingPropertyGroup("Time Acceleration")]
