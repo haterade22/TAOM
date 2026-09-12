@@ -284,6 +284,15 @@ public sealed class RefugeMenuController
 
         Info(new TextObject("{=taom_rf_founded}Refuge founded - garrison it, then it will be raised."));
 
+        // Leave the camp menu FIRST. Found broke the camp, and this flow started from FieldCamp's
+        // WAIT sub-menu through a non-isLeave option, so the menu is still open underneath. A wait
+        // menu's condition delegate gates every option's visibility (GameMenu
+        // .GetMenuOptionConditionsHold, 1.4.8), and returning to a camp menu whose camp is gone
+        // stranded players in a panel with no options and no exit, persisted into the save (#567).
+        // The map is the honest landing: the same one Establish and Break camp use, and the
+        // hold-nearby pin in RefugeService.FrameTick keeps the company here while the raise runs.
+        _menus.ExitToLast();
+
         // Deposit screen straight after founding (source flow). The service already started the
         // raise; the party screen pauses campaign time, so the build clock does not run while the
         // player deposits - behaviourally identical to the source's build-starts-on-close

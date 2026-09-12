@@ -155,6 +155,12 @@ disagrees.
   comes from the pinned AI, its defense from the model-chain damage reduction.
 - `RefugePartyComponent` overrides `OnChangePartyLeader` to keep `_warden` in sync; without it a
   dead or dismissed warden stays cached as Leader while vanilla disband flows move the party.
+- Founding lands on the map BEFORE the deposit screen opens (`OnWardenChosen`, #567). The option
+  lives on FieldCamp's WAIT sub-menu and is not isLeave, and a wait menu's condition delegate
+  gates every option's visibility (`GameMenu.GetMenuOptionConditionsHold`, 1.4.8). Returning to a
+  camp menu whose camp `Found` had just broken rendered a panel with no options and no exit,
+  persisted into the save (v2.0.24 to v2.0.28). Keep the `ExitToLast` ahead of
+  `OpenScreenAsManageTroopsAndPrisoners`; `RefugeWiringTests` pins the order.
 
 ## Known limitations
 

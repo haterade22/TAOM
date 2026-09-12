@@ -96,11 +96,19 @@ public sealed class FieldCampMenuController
         // tick re-renders the status each pass. Enlistment's service wait menu is the precedent
         // (EnlistmentMenuBehavior + EnlistmentWaitMenuOptions): Leave is the only isLeave option,
         // because RunMenuOptionConsequence calls EndWait BEFORE an isLeave consequence.
+        //
+        // The condition delegate is TRUE on purpose. GameMenu.GetMenuOptionConditionsHold (1.4.8)
+        // ANDs it with every option's own condition, Leave included: it is a visibility gate over
+        // the whole panel, not a menu-validity hook, and nothing exits the menu when it turns
+        // false. Gating it on PlayerCamp (the first version) left a panel with zero options and
+        // no exit once refuge founding broke the camp and the deposit screen returned here, and
+        // MapState persisted that into the save (#567). Vanilla wait conditions return true; the
+        // options below gate themselves.
         starter.AddWaitGameMenu(
             FieldCampCampaignBehavior.CampSubMenuId,
             "{=!}{TAOM_FC_STATUS}",
             new OnInitDelegate(OnMenuInit),
-            args => _camps.PlayerCamp != null,
+            args => true,
             null,
             new OnTickDelegate(OnSubMenuTick),
             GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption,

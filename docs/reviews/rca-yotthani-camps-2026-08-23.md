@@ -206,6 +206,35 @@ missed: the keys were registered, so every localization gate passed; no gate loo
 prefab consumes a key. Prevent: the module-wide prefab sweep test (no literal {= in any prefab)
 and the localization-ui lesson.
 
+### Class 12 (new, 2026-09-12): the Class 9 fix re-created the class one feature over
+
+The wait-menu fix (811a3429) registered the camp sub-menu with the condition
+`args => _camps.PlayerCamp != null`. In 1.4.8 a wait menu's condition delegate is ANDed with every
+option's own condition (`GameMenu.GetMenuOptionConditionsHold`), Leave included, and nothing exits
+the menu when it turns false. Refuge founding lives on that menu, breaks the camp, opens the
+garrison deposit screen and returns, so players got a panel reading "Choose how to make camp here."
+with zero options and no exit, saved into the campaign (#567, every release from v2.0.24 to
+v2.0.28). Why missed: the fix was verified against the two paths named in the field report (forage,
+break camp) and against the source module, which had a standard menu here; the third option on the
+same panel is inserted by another feature at the reserved index and was never walked, and no
+in-game smoke of the founding flow had run since the merge. The delegate's parameter name
+(condition) read as a validity hook, and the Enlistment precedent uses the same shape, so it looked
+idiomatic. Prevent: (1) the wait condition is `true` and a wiring test forbids gating it on the
+camp; (2) founding exits the menu before the deposit screen, pinned by a second wiring test; (3)
+the campaign-mechanics lesson names the engine rule; (4) a menu-shape change is verified by walking
+EVERY option registered on that menu id, including insertions from other features, not only the
+options in the file being edited.
+
+Review pass on the fix (2026-09-12): five deep-review agents, no code findings; the data-flow
+agent traced every enlistment-ending path to `DischargeService.ExitServiceMenuIfOpen`, so the
+same-shape Enlistment wait menu is covered by a different mechanism (a pinning test is the
+follow-up). One process finding from the completeness agent: `git add` of
+`docs/reviews/lessons/campaign-mechanics.md` swept in a lesson another session had appended to
+the same file between this session's status check and its add. Repaired by rebuilding the index
+entry from HEAD plus this session's lesson only. Rule reinforced: before `git add` on any
+append-shared file (lessons, CHANGELOG, CLAUDE.md, registries), run `git diff -- <file>` and stage
+through the index when it shows a hunk that is not yours.
+
 ## Where each class was caught, honestly
 
 Round A's no-narrative design earned its cost: Classes 3 and 6 are structurally invisible to a

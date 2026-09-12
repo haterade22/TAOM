@@ -140,4 +140,33 @@ public class RefugeWiringTests
             $"The '{optionId}' insertion drifted off the reserved index 4; FieldCamp deliberately "
             + "leaves index 4 unassigned on both menus and any other index collides with its options.");
     }
+
+    // ---- Founding flow: leave the camp wait menu BEFORE the garrison deposit screen ----
+
+    [TestMethod]
+    public void MenuController_FoundingExitsTheCampMenuBeforeTheDepositScreen()
+    {
+        // Found breaks the camp. The option that starts it lives on FieldCamp's WAIT sub-menu and
+        // is not isLeave, so without an explicit exit the deposit screen returns the player to a
+        // menu whose camp is gone. A wait menu's condition delegate gates every option's
+        // visibility (GameMenu.GetMenuOptionConditionsHold, 1.4.8), so that panel had no options
+        // and no exit, and MapState persisted it into the save (player reports, v2.0.24 to
+        // v2.0.28). Establish and Break camp land on the map for the same reason.
+        var src = ReadSource("Main", "Features", "Refuge", "Hooks", "RefugeMenuController.cs");
+
+        int start = src.IndexOf("private void OnWardenChosen(", StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "RefugeMenuController lost OnWardenChosen");
+        int end = src.IndexOf("private ", start + 1, StringComparison.Ordinal);
+        if (end < 0)
+            end = src.Length;
+        var body = src.Substring(start, end - start);
+
+        int deposit = body.IndexOf("PartyScreenHelper.OpenScreenAsManageTroopsAndPrisoners", StringComparison.Ordinal);
+        Assert.IsTrue(deposit >= 0,
+            "OnWardenChosen no longer opens the garrison deposit screen after founding");
+        int exit = body.IndexOf("_menus.ExitToLast()", StringComparison.Ordinal);
+        Assert.IsTrue(exit >= 0 && exit < deposit,
+            "OnWardenChosen must exit the camp menu BEFORE opening the deposit screen; otherwise the "
+            + "player returns to a wait menu whose camp is gone and cannot leave it");
+    }
 }

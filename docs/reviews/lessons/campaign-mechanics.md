@@ -374,3 +374,28 @@ unrelated election later because nothing expired it.
   invariants as untrusted: duplicates, signs and magnitudes are validated on restore, not assumed.
 - **Source:** `docs/reviews/rca-fiefgranting-participation-2026-09-11.md`, #565 diagnosis and Codex
   F2 and F3.
+
+### A wait menu's condition delegate hides EVERY option, Leave included, and nothing exits the menu when it turns false
+
+`GameMenu.GetMenuOptionConditionsHold` (1.4.8) evaluates a wait-menu option as
+`option.condition && menu.OnCondition`. The delegate passed to `AddWaitGameMenu` is therefore not
+"is this menu still valid"; it is a visibility gate over the whole panel, and the engine neither
+ends the wait nor leaves the menu when it returns false. The camp sub-menu registered
+`args => _camps.PlayerCamp != null`. Refuge founding, an option on that same menu, breaks the camp,
+opens the garrison deposit screen, and returns: the player got "Choose how to make camp here." with
+zero options, time controls alive, and `MapState` saved the open menu id, so every load resumed
+there (#567, every release from v2.0.24 to v2.0.28).
+
+- **Why missed:** the fix that introduced it (811a3429) closed the Class 9 freeze one option over
+  and was reviewed against the forage and break paths on the sub-menu; the refuge option on the
+  same menu belongs to another feature and was not walked. The parameter name (condition) read as
+  a validity hook, and the Enlistment precedent uses the same shape with `IsEnlisted`, so it looked
+  idiomatic. No test opened the menu with the guarded state absent.
+- **Prevent:** pass `args => true` (vanilla's shape) unless the panel genuinely must hide every
+  option; options gate themselves. When an action on a wait menu can remove the state the menu
+  describes, that action lands on the map, and a wiring test pins the exit before any screen it
+  opens. Before calling a menu-shape change verified, walk every option registered on that menu
+  id, including options other features insert at reserved indexes. Enlistment's wait menu carries
+  the same `IsEnlisted` delegate and is on the audit list.
+- **Source:** #567, `docs/features/field-camp.md` "Menus and time", `docs/features/refuge.md`
+  Traps, `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 12.

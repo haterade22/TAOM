@@ -132,6 +132,32 @@ public class FieldCampWiringTests
     }
 
     [TestMethod]
+    public void CampSubMenu_WaitCondition_NeverGatesOnTheCamp()
+    {
+        // GameMenu.GetMenuOptionConditionsHold (installed 1.4.8) ANDs a wait menu's condition
+        // delegate with EVERY option's own condition, Leave included: it is a visibility gate over
+        // the whole panel, not a menu-validity hook, and nothing exits the menu when it turns
+        // false. The first wait-menu version gated it on PlayerCamp, so founding a refuge (which
+        // breaks the camp and returns to this menu from the deposit screen) left a panel with zero
+        // options and no exit, persisted into the save (player reports, v2.0.24 to v2.0.28).
+        // Vanilla wait conditions return true; the options gate themselves.
+        var src = ReadSource("Main", "Features", "FieldCamp", "Hooks", "FieldCampMenuController.cs");
+
+        int start = src.IndexOf("starter.AddWaitGameMenu(", StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "the camp sub-menu is no longer registered with AddWaitGameMenu");
+        int end = src.IndexOf(");", start, StringComparison.Ordinal);
+        Assert.IsTrue(end > start, "could not find the end of the AddWaitGameMenu call");
+        var call = src.Substring(start, end - start);
+
+        StringAssert.Contains(call, "args => true",
+            "the wait-menu condition must be unconditionally true; anything else hides every option "
+            + "(Leave included) the moment it turns false");
+        Assert.IsFalse(call.Contains("PlayerCamp"),
+            "the wait-menu condition gates on the camp again; breaking the camp while the sub-menu "
+            + "is open (refuge founding does exactly that) strands the player with no options and no exit");
+    }
+
+    [TestMethod]
     public void SubModule_AddsTheFieldCampBehavior()
     {
         var src = ReadSource("Main", "SubModule.cs");

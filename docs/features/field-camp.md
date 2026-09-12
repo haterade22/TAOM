@@ -139,6 +139,16 @@ from the source close that class:
   `IGameMenuAdapter.RefreshCurrent()` (MenuContext.Refresh) instead of SwitchTo(same id), which
   would re-initialise the wait. Break camp exits to the map. Leave stays the only isLeave option
   because the engine calls EndWait BEFORE an isLeave consequence (the Enlistment trap).
+- **The wait menu's condition delegate is `true`** (#567, 2026-09-12).
+  `GameMenu.GetMenuOptionConditionsHold` ANDs that delegate with every option's own condition,
+  Leave included: it is a visibility gate over the whole panel, not a menu-validity hook, and
+  nothing exits the menu when it turns false. The first wait-menu version gated it on
+  `PlayerCamp`. Founding a refuge (an option inserted on this same menu) breaks the camp and
+  returns here from the garrison deposit screen, so the panel rendered zero options and no exit,
+  and `MapState` persisted the open menu into the save (every release from v2.0.24 to v2.0.28).
+  Any action that removes the camp from inside the sub-menu must also land on the map, as Break
+  camp and refuge founding now do; the `true` condition is the belt that keeps Leave visible if
+  one ever does not. `FieldCampWiringTests` forbids gating the condition on the camp.
 
 Field diagnostics that came out of the incident (DevConsole feature, taom.* commands):
 `taom.time_status` dumps every state that can freeze campaign time (menu context, time lock,

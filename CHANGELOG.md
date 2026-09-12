@@ -2,6 +2,45 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-12
+
+### fix(camps): refuge founding no longer strands the player in a dead camp wait menu (#567)
+
+Players who founded a refuge and deposited troops into its garrison came back to a camp menu that
+read "Choose how to make camp here." with no options at all: time could be paused and unpaused,
+the party could not move, and a save written there loaded straight back into it. The cause is an
+engine rule the wait-menu fix of 2026-08-25 (811a3429) did not know. `GameMenu
+.GetMenuOptionConditionsHold` (installed 1.4.8) ANDs a wait menu's condition delegate with every
+option's own condition, Leave included: it is a visibility gate over the whole panel, not a
+menu-validity hook, and nothing exits the menu when it turns false. The camp sub-menu registered
+that delegate as `PlayerCamp != null`, and refuge founding is the one option on that menu that
+removes the camp and stays. `Found` breaks the camp, the garrison deposit screen opens over the
+still-open menu, and closing it refreshes a panel whose every option now fails the gate. Every
+release from v2.0.24 to v2.0.28 has it; v2.0.22 and older had a standard sub-menu with a working
+Leave. The earlier freeze fixes (4ed42d04, 811a3429) were the same class; the second one created
+this instance one option over.
+
+Two edits. The wait-menu condition is `true` (vanilla's shape; the options gate themselves), which
+also rescues saves written in the stuck state: on load the panel renders Leave again. And
+`OnWardenChosen` exits the camp menu before opening the deposit screen, the same landing Establish
+and Break camp use, so after the deposit the player is on the map with the hold-nearby pin keeping
+the company there while the raise runs. Both are pinned by wiring tests that were red on HEAD
+(`FieldCampWiringTests.CampSubMenu_WaitCondition_NeverGatesOnTheCamp`,
+`RefugeWiringTests.MenuController_FoundingExitsTheCampMenuBeforeTheDepositScreen`). Players stuck
+on a current build can run `taom.rescue_time` from the console (Alt+~).
+
+Docs: field-camp.md "Menus and time" gains the engine rule, refuge.md Traps gains the exit order,
+Class 12 in rca-yotthani-camps-2026-08-23.md, a campaign-mechanics lesson, and the CLAUDE.md trap
+row. Not walked in this change: `EnlistmentMenuBehavior` registers its service wait menu with the
+same `IsEnlisted` shape; the review traced every path that ends service to
+`DischargeService.ExitServiceMenuIfOpen`, so the remaining follow-up there is a test pinning that
+exit. Owed: the in-game founding walk, a stuck player save loaded on the fix build, and a release so
+players get it.
+
+Suite: 8597 passed / 2 skipped / 1 failed. The failure is
+`ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded` (`wm_gondor_sword_a04` missing from
+the live Armory, noted 2026-09-11), a data test this change does not touch.
+
 ## 2026-09-11
 
 ### fix(fiefs): siege participation replaces the capturer stamp, and the player is scored like any clan (#565)
