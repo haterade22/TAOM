@@ -91,14 +91,14 @@ FAILING_TYPES = frozenset({"Polearm"})
 KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
     # Mordor player starting gear: a two-handed-resolving polearm beside a shield, in the kit the
     # player is handed at character creation and career start. 8 rosters, one item.
-    ("player_career_mordor_cavalry_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_career_mordor_cavalry_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_career_mordor_infantry_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_career_mordor_infantry_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_char_creation_mordor_mercenary_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_char_creation_mordor_mercenary_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_char_creation_mordor_retainer_f", "wm_mordor_set1_polearm_a01"): (1, "#526"),
-    ("player_char_creation_mordor_retainer_m", "wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_cavalry_f", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_cavalry_m", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_infantry_f", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_career_mordor_infantry_m", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_mercenary_f", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_mercenary_m", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_retainer_f", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
+    ("player_char_creation_mordor_retainer_m", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
     # Companion templates: a pike, whose usage set is requires_no_shield by design.
     # The umbar entry was retired 2026-09-01: its only shield was removed under the
     # "a two-hander gets no shield" pass (#531), so the pair no longer exists and the

@@ -28,9 +28,9 @@
 
     <EquipmentRoster id="player_career_gondor_ranged_m" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_gondor_leg_a" />
         </EquipmentSet>
@@ -38,9 +38,9 @@
 
     <EquipmentRoster id="player_career_gondor_ranged_f" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_gondor_leg_a" />
         </EquipmentSet>
@@ -50,9 +50,9 @@
 
     <EquipmentRoster id="player_career_gondor_cavalry_m" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gondor_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.starter_wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_gondor_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -62,9 +62,9 @@
 
     <EquipmentRoster id="player_career_gondor_cavalry_f" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gondor_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.starter_wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_gondor_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -76,9 +76,9 @@
 
     <EquipmentRoster id="player_career_gondor_infantry_m" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-            <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_wm_gondor_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.starter_wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_gondor_leg_a" />
         </EquipmentSet>
@@ -86,9 +86,9 @@
 
     <EquipmentRoster id="player_career_gondor_infantry_f" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-            <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_wm_gondor_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.starter_wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_gondor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_gondor_leg_a" />
         </EquipmentSet>
@@ -100,9 +100,9 @@
 
     <EquipmentRoster id="player_career_mordor_ranged_m" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_mordor_set1_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_mordor_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_mordor_leg_a" />
         </EquipmentSet>
@@ -110,9 +110,9 @@
 
     <EquipmentRoster id="player_career_mordor_ranged_f" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_mordor_set1_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_mordor_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_mordor_leg_a" />
         </EquipmentSet>
@@ -120,9 +120,9 @@
 
     <EquipmentRoster id="player_career_mordor_cavalry_m" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mordor_set1_polearm_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_mordor_set1_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_mordor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_mordor_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -132,9 +132,9 @@
 
     <EquipmentRoster id="player_career_mordor_cavalry_f" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mordor_set1_polearm_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_mordor_set1_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_mordor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_mordor_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -144,9 +144,9 @@
 
     <EquipmentRoster id="player_career_mordor_infantry_m" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_polearm_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mordor_set1_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_mordor_set1_polearm_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_mordor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_mordor_leg_a" />
         </EquipmentSet>
@@ -154,9 +154,9 @@
 
     <EquipmentRoster id="player_career_mordor_infantry_f" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_polearm_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mordor_set1_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_mordor_set1_polearm_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_mordor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_mordor_leg_a" />
         </EquipmentSet>
@@ -168,9 +168,9 @@
 
     <EquipmentRoster id="player_career_isengard_ranged_m" culture="Culture.isengard">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_isengard_bow_a01" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_wm_isengard_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_isengard_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_isengard_leg_a" />
         </EquipmentSet>
@@ -178,9 +178,9 @@
 
     <EquipmentRoster id="player_career_isengard_ranged_f" culture="Culture.isengard">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_isengard_bow_a01" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_wm_isengard_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_isengard_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_isengard_leg_a" />
         </EquipmentSet>
@@ -188,9 +188,9 @@
 
     <EquipmentRoster id="player_career_isengard_cavalry_m" culture="Culture.isengard">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_wm_gundabad_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_isengard_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_isengard_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_isengard_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -200,9 +200,9 @@
 
     <EquipmentRoster id="player_career_isengard_cavalry_f" culture="Culture.isengard">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_wm_gundabad_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_isengard_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_isengard_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_isengard_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -212,9 +212,9 @@
 
     <EquipmentRoster id="player_career_isengard_infantry_m" culture="Culture.isengard">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_wm_isengard_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_isengard_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_isengard_leg_a" />
         </EquipmentSet>
@@ -222,9 +222,9 @@
 
     <EquipmentRoster id="player_career_isengard_infantry_f" culture="Culture.isengard">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_wm_isengard_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_isengard_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_isengard_leg_a" />
         </EquipmentSet>
@@ -236,9 +236,9 @@
 
     <EquipmentRoster id="player_career_gundabad_ranged_m" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_gundabad_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_gundabad_leg_a" />
         </EquipmentSet>
@@ -246,9 +246,9 @@
 
     <EquipmentRoster id="player_career_gundabad_ranged_f" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_gundabad_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_gundabad_leg_a" />
         </EquipmentSet>
@@ -256,9 +256,9 @@
 
     <EquipmentRoster id="player_career_gundabad_cavalry_m" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gundabad_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_gundabad_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_gundabad_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -268,9 +268,9 @@
 
     <EquipmentRoster id="player_career_gundabad_cavalry_f" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gundabad_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_gundabad_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_gundabad_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -280,9 +280,9 @@
 
     <EquipmentRoster id="player_career_gundabad_infantry_m" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gundabad_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_gundabad_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_gundabad_leg_a" />
         </EquipmentSet>
@@ -290,9 +290,9 @@
 
     <EquipmentRoster id="player_career_gundabad_infantry_f" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_gundabad_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_gundabad_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_gundabad_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_gundabad_leg_a" />
         </EquipmentSet>
@@ -304,9 +304,9 @@
 
     <EquipmentRoster id="player_career_dolguldur_ranged_m" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_dolguldur_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_dolguldur_leg_a" />
         </EquipmentSet>
@@ -314,9 +314,9 @@
 
     <EquipmentRoster id="player_career_dolguldur_ranged_f" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_dolguldur_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_dolguldur_leg_a" />
         </EquipmentSet>
@@ -324,9 +324,9 @@
 
     <EquipmentRoster id="player_career_dolguldur_cavalry_m" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_dol_goldur_halberd_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_dolguldur_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_dolguldur_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -336,9 +336,9 @@
 
     <EquipmentRoster id="player_career_dolguldur_cavalry_f" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_dol_goldur_halberd_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_dolguldur_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_dolguldur_leg_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -348,9 +348,9 @@
 
     <EquipmentRoster id="player_career_dolguldur_infantry_m" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_axe_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_dol_goldur_1h_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_dol_goldur_axe_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_dolguldur_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_dolguldur_leg_a" />
         </EquipmentSet>
@@ -358,9 +358,9 @@
 
     <EquipmentRoster id="player_career_dolguldur_infantry_f" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_axe_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_dol_goldur_1h_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_dol_goldur_axe_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_dolguldur_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_dolguldur_leg_a" />
         </EquipmentSet>
@@ -372,9 +372,9 @@
 
     <EquipmentRoster id="player_career_erebor_ranged_m" culture="Culture.erebor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
-            <Equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-            <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+            <Equipment slot="Item0" id="Item.starter_sm_dwarf_erebor_bow_a" />
+            <Equipment slot="Item1" id="Item.starter_sk_dwarf_erebor_arrow_a" />
+            <Equipment slot="Item2" id="Item.starter_sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Body" id="Item.starter_ranged_erebor_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_erebor_leg_a" />
         </EquipmentSet>
@@ -382,9 +382,9 @@
 
     <EquipmentRoster id="player_career_erebor_ranged_f" culture="Culture.erebor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
-            <Equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-            <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+            <Equipment slot="Item0" id="Item.starter_sm_dwarf_erebor_bow_a" />
+            <Equipment slot="Item1" id="Item.starter_sk_dwarf_erebor_arrow_a" />
+            <Equipment slot="Item2" id="Item.starter_sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Body" id="Item.starter_ranged_erebor_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_erebor_leg_a" />
         </EquipmentSet>
@@ -397,9 +397,9 @@
          CareerStartingEquipmentService rather than sitting on an NPCCharacter. Issue #515. -->
     <EquipmentRoster id="player_career_erebor_cavalry_m" culture="Culture.erebor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+            <Equipment slot="Item0" id="Item.starter_sm_dwarf_erebor_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Body" id="Item.starter_cavalry_erebor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_erebor_leg_a" />
             <Equipment slot="Horse" id="Item.taom_war_ram_a" />
@@ -409,9 +409,9 @@
 
     <EquipmentRoster id="player_career_erebor_cavalry_f" culture="Culture.erebor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+            <Equipment slot="Item0" id="Item.starter_sm_dwarf_erebor_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Body" id="Item.starter_cavalry_erebor_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_erebor_leg_a" />
             <Equipment slot="Horse" id="Item.taom_war_ram_a" />
@@ -421,9 +421,9 @@
 
     <EquipmentRoster id="player_career_erebor_infantry_m" culture="Culture.erebor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.sm_dwarf_erebor_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_sm_dwarf_erebor_1h_axe_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_sm_dwarf_erebor_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_erebor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_erebor_leg_a" />
         </EquipmentSet>
@@ -431,9 +431,9 @@
 
     <EquipmentRoster id="player_career_erebor_infantry_f" culture="Culture.erebor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.sm_dwarf_erebor_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_sm_dwarf_erebor_1h_axe_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_sm_dwarf_erebor_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_erebor_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_erebor_leg_a" />
         </EquipmentSet>
@@ -445,9 +445,9 @@
 
     <EquipmentRoster id="player_career_rivendell_ranged_m" culture="Culture.rivendell">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mirkwood_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_elven_arrow_v1_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_rivendell_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_rivendell_leg_a" />
         </EquipmentSet>
@@ -455,9 +455,9 @@
 
     <EquipmentRoster id="player_career_rivendell_ranged_f" culture="Culture.rivendell">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mirkwood_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_elven_arrow_v1_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_rivendell_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_rivendell_leg_a" />
         </EquipmentSet>
@@ -465,9 +465,9 @@
 
     <EquipmentRoster id="player_career_rivendell_cavalry_m" culture="Culture.rivendell">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_rivendell_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_rivendell_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -477,9 +477,9 @@
 
     <EquipmentRoster id="player_career_rivendell_cavalry_f" culture="Culture.rivendell">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_rivendell_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_rivendell_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -489,9 +489,9 @@
 
     <EquipmentRoster id="player_career_rivendell_infantry_m" culture="Culture.rivendell">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_rivendell_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_rivendell_leg_a" />
         </EquipmentSet>
@@ -499,9 +499,9 @@
 
     <EquipmentRoster id="player_career_rivendell_infantry_f" culture="Culture.rivendell">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_rivendell_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_rivendell_leg_a" />
         </EquipmentSet>
@@ -513,9 +513,9 @@
 
     <EquipmentRoster id="player_career_mirkwood_ranged_m" culture="Culture.mirkwood">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mirkwood_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_elven_arrow_v1_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_mirkwood_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_mirkwood_leg_a" />
         </EquipmentSet>
@@ -523,9 +523,9 @@
 
     <EquipmentRoster id="player_career_mirkwood_ranged_f" culture="Culture.mirkwood">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_mirkwood_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_elven_arrow_v1_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_mirkwood_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_mirkwood_leg_a" />
         </EquipmentSet>
@@ -533,9 +533,9 @@
 
     <EquipmentRoster id="player_career_mirkwood_cavalry_m" culture="Culture.mirkwood">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_mirkwood_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_mirkwood_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_mirkwood_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -545,9 +545,9 @@
 
     <EquipmentRoster id="player_career_mirkwood_cavalry_f" culture="Culture.mirkwood">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_mirkwood_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_mirkwood_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_mirkwood_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -557,9 +557,9 @@
 
     <EquipmentRoster id="player_career_mirkwood_infantry_m" culture="Culture.mirkwood">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_mirkwood_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_mirkwood_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_mirkwood_leg_a" />
         </EquipmentSet>
@@ -567,9 +567,9 @@
 
     <EquipmentRoster id="player_career_mirkwood_infantry_f" culture="Culture.mirkwood">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rivendell_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_wm_mirkwood_shield_a01" />
+            <Equipment slot="Item2" id="Item.starter_wm_rivendell_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_mirkwood_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_mirkwood_leg_a" />
         </EquipmentSet>
@@ -581,9 +581,9 @@
 
     <EquipmentRoster id="player_career_vlandia_ranged_m" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_bow_starter" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
         </EquipmentSet>
@@ -591,9 +591,9 @@
 
     <EquipmentRoster id="player_career_vlandia_ranged_f" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_bow_starter" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
         </EquipmentSet>
@@ -601,9 +601,9 @@
 
     <EquipmentRoster id="player_career_vlandia_cavalry_m" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -613,9 +613,9 @@
 
     <EquipmentRoster id="player_career_vlandia_cavalry_f" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -625,9 +625,9 @@
 
     <EquipmentRoster id="player_career_vlandia_infantry_m" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
         </EquipmentSet>
@@ -635,9 +635,9 @@
 
     <EquipmentRoster id="player_career_vlandia_infantry_f" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
         </EquipmentSet>
@@ -649,9 +649,9 @@
 
     <EquipmentRoster id="player_career_empire_ranged_m" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
         </EquipmentSet>
@@ -659,9 +659,9 @@
 
     <EquipmentRoster id="player_career_empire_ranged_f" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
         </EquipmentSet>
@@ -669,9 +669,9 @@
 
     <EquipmentRoster id="player_career_empire_cavalry_m" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_dunland_caerdh_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -681,9 +681,9 @@
 
     <EquipmentRoster id="player_career_empire_cavalry_f" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_dunland_caerdh_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -693,9 +693,9 @@
 
     <EquipmentRoster id="player_career_empire_infantry_m" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_dunland_caerdh_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
         </EquipmentSet>
@@ -703,9 +703,9 @@
 
     <EquipmentRoster id="player_career_empire_infantry_f" culture="Culture.empire">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_dunland_caerdh_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
         </EquipmentSet>
@@ -717,9 +717,9 @@
 
     <EquipmentRoster id="player_career_aserai_ranged_m" culture="Culture.aserai">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
         </EquipmentSet>
@@ -727,9 +727,9 @@
 
     <EquipmentRoster id="player_career_aserai_ranged_f" culture="Culture.aserai">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
         </EquipmentSet>
@@ -737,9 +737,9 @@
 
     <EquipmentRoster id="player_career_aserai_cavalry_m" culture="Culture.aserai">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_harad_spear_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_harad_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -749,9 +749,9 @@
 
     <EquipmentRoster id="player_career_aserai_cavalry_f" culture="Culture.aserai">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_harad_spear_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_harad_spear_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
             <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -761,9 +761,9 @@
 
     <EquipmentRoster id="player_career_aserai_infantry_m" culture="Culture.aserai">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_harad_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_harad_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_harad_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
         </EquipmentSet>
@@ -771,9 +771,9 @@
 
     <EquipmentRoster id="player_career_aserai_infantry_f" culture="Culture.aserai">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_harad_sword_a01" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.wm_harad_spear_a01" />
+            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_wm_harad_spear_a01" />
             <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
         </EquipmentSet>
@@ -785,9 +785,9 @@
 
     <EquipmentRoster id="player_career_khuzait_ranged_m" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.composite_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_composite_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
         </EquipmentSet>
@@ -795,9 +795,9 @@
 
     <EquipmentRoster id="player_career_khuzait_ranged_f" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.composite_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_composite_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
         </EquipmentSet>
@@ -805,9 +805,9 @@
 
     <EquipmentRoster id="player_career_khuzait_cavalry_m" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_sm_rh_loke_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -817,9 +817,9 @@
 
     <EquipmentRoster id="player_career_khuzait_cavalry_f" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_sm_rh_loke_spear_a" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -829,9 +829,9 @@
 
     <EquipmentRoster id="player_career_khuzait_infantry_m" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
         </EquipmentSet>
@@ -839,9 +839,9 @@
 
     <EquipmentRoster id="player_career_khuzait_infantry_f" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
         </EquipmentSet>
@@ -853,9 +853,9 @@
 
     <EquipmentRoster id="player_career_sturgia_ranged_m" culture="Culture.sturgia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
         </EquipmentSet>
@@ -863,9 +863,9 @@
 
     <EquipmentRoster id="player_career_sturgia_ranged_f" culture="Culture.sturgia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.hunting_bow" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
+            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
             <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
         </EquipmentSet>
@@ -873,9 +873,9 @@
 
     <EquipmentRoster id="player_career_sturgia_cavalry_m" culture="Culture.sturgia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.northern_spear_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_northern_spear_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_sturgia_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_sturgia_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -885,9 +885,9 @@
 
     <EquipmentRoster id="player_career_sturgia_cavalry_f" culture="Culture.sturgia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.northern_spear_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_northern_spear_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_sturgia_body_a" />
             <Equipment slot="Leg" id="Item.starter_cavalry_sturgia_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -897,9 +897,9 @@
 
     <EquipmentRoster id="player_career_sturgia_infantry_m" culture="Culture.sturgia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.northern_spear_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_northern_spear_1_t2" />
             <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
         </EquipmentSet>
@@ -907,9 +907,9 @@
 
     <EquipmentRoster id="player_career_sturgia_infantry_f" culture="Culture.sturgia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.northern_spear_1_t2" />
+            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
+            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
+            <Equipment slot="Item2" id="Item.starter_northern_spear_1_t2" />
             <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
         </EquipmentSet>

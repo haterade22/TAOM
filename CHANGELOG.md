@@ -4,6 +4,39 @@
 
 ## 2026-09-12
 
+### feat(cc): the player start hands out the starter kit, and the six vanilla-mapped cultures start in their own gear (#569)
+
+Every player-start roster now names the `starter_` twin instead of the culture's real item:
+2,230 ids across the 256 `player_char_creation` rosters (battle and civilian sets, the civilian
+set being the civilian kit for every culture since the career layer carries none) and 234
+across the 78 `player_career` rosters, by `tools/wire_starter_kit_rosters.py`, an in-place
+id substitution that shares its naming rule with the generator. Horse and HorseHarness, the
+childhood, education and show stages and the parents' rosters are untouched, and
+`StarterKitCoverageTests` pins all of that with no allowlist. The starter items themselves
+were authored in the previous entry; a green board here means every one of the 2,464
+references resolves in the live Armory.
+
+vlandia (Rohan), empire (Dunland), sturgia (Dale), aserai (Harad), khuzait (Rhun) and
+battania (Khand) had no TAOM culture-default rosters, so their careerless start read vanilla
+SandBox's rosters and handed a Rohan player a Calradian sword in a hemp tunic. The new
+`equipmentsets/taom_player_start_vanilla_override.xml` (70 rosters, registered in
+SubModule.xml) carries the same ids as vanilla's with `_replaceWhileMerging="true"` on each
+roster element. That placement is deliberate: MBObjectManager.MergeElements (1.4.8, lines
+799-875) merges a later module's same-id element into the earlier one, and
+EquipmentRosters.xsd keys only `EquipmentRoster/@id`, so a plain same-id roster, or the
+attribute on the sets, would append rather than replace and the adapter would keep taking
+vanilla's first battle set. Each roster is the mapped culture's career kit by title
+(hunter, skirmisher and bard ranged; guard and infantry infantry; retainer cavalry with its
+mount) plus a civilian set of sword, body and legs; Khand borrows Rhun's until it has a kit
+(#571). `PlayerStartCoverageTests` no longer excludes the six. The parity ratchet's eight
+Mordor entries move to the starter polearm id.
+
+Gates: validate_moduledata 0 errors, audit_polearm_shield_parity PASS, Python tools 1284
+OK (48 new), the C# CharacterCreation, BannerBearers, Equipment and Troop tests 1208
+passed. Owed: a full game restart and four new campaigns (a career culture, a careerless
+culture, Rohan for the override, one cavalry pick), the assets-repo commit of the mirror,
+`/localize` for about 127 `{=starter_*}` names.
+
 ### feat(tools): generate_starter_kit.py authors a weak starter_ twin of every player-start item (#569)
 
 The player's kit named the culture's real weapons: the Gondor starter sword swung at damage
