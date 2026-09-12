@@ -277,5 +277,6 @@ assign the harness explicitly, so only the player can mix them.
 - [docs/reference/lotrlome-soln-id-fix.md](./lotrlome-soln-id-fix.md)
 - [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
 - [docs/reference/module-backup-sweep.md](./module-backup-sweep.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
 
 <!-- backlinks-end -->

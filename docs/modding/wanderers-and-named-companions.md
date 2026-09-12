@@ -268,7 +268,7 @@ Code: No code changes needed
 | 40 wanderers with no backstory strings, all in goblin, mistymountainorcs, lindon, bluecraig | python pass diffing the wanderer ids against the string-file suffixes | 2026-09-05 |
 | 17 named companions in the XML, 17 config rows, 17 `<Hero>` rows, 119 strings | `grep -oE '<NPCCharacter[[:space:]]' .../named_companions.xml \| wc -l`; `grep -c '"character_id"' .../named_companion_config.json`; `grep -c 'id="named_companion_' Main/_Module/ModuleData/characters/heroes.xml`; `grep -o '<string id=' .../named_companion_strings.xml \| wc -l` | 2026-09-05 |
 | 1001 `<Hero>` rows in `characters/heroes.xml` | `grep -o '<Hero\b' Main/_Module/ModuleData/characters/heroes.xml \| wc -l` | 2026-09-05 |
-| 78 towns (and 143 castles, 607 villages, 159 hideouts) in the live map, giving a live wanderer ceiling of 46.8 | python pass over the live `TAOM_Map/ModuleData/settlements.xml` counting `Components/Town` with and without `is_castle` | 2026-09-05 |
+| 78 towns (and 143 castles, 616 villages, 159 hideouts) in the live map, giving a live wanderer ceiling of 46.8 | python pass over the live `TAOM_Map/ModuleData/settlements.xml` counting `Components/Town` with and without `is_castle` | 2026-09-05 |
 | 15 legal race ids | python pass counting `<race id=` across every `Modules/*/ModuleData/skins.xml` | 2026-09-05 |
 | 14 face templates in use, 13 of them TAOM's and `fighter_battania` vanilla's | python pass collecting `face_key_template` values and resolving them against every `<BodyProperty id=` in the repo and the game install | 2026-09-05 |
 

@@ -34,6 +34,8 @@ See docs/reference/taom-map-settlement-naming.md for:
 Last bulk-applied: 2026-08-29 (423 entries). The 2026-05-26 run covered 345 village display
 names across 15 regions; 2026-08-29 added the two CASTLES that had shipped unnamed,
 castle_E9 and castle_G1, so the dict is no longer villages-only despite the file name.
+2026-09-11: nine Isengard rows registered (432 entries) for the villages tools/add_map_villages.py
+added (#562); that tool writes the names itself, so no run of this script was needed.
 """
 import os, re
 from _gamedir import game_dir
@@ -193,6 +195,15 @@ NAMES = {
     "castle_village_I2_1": "Galadbost",
     "castle_village_I2_2": "Sornhirost",
     "castle_village_I2_3": "Bar-noss",
+    "castle_village_isengard_b": "Parth Angren", # wheat farm; parth = field (2026-09-11 batch, tools/add_map_villages.py)
+    "castle_village_isengard_c": "Tawarlad",    # swine farm; tawar+lad = forest plain (2026-09-11 batch, tools/add_map_villages.py)
+    "castle_village_isengard_d": "Eryn Methed", # lumberjack; end-wood, under Methedras (2026-09-11 batch, tools/add_map_villages.py)
+    "village_isengard_b": "Talath Curunír",     # wheat farm; the flats of Nan Curunír (2026-09-11 batch, tools/add_map_villages.py)
+    "village_isengard_c": "Athrad Angren",      # fisherman; the Fords of Isen (2026-09-11 batch, tools/add_map_villages.py)
+    "village_isengard_d": "Amon Thôn",          # sheep farm; pine hill (2026-09-11 batch, tools/add_map_villages.py)
+    "village_isengard_e": "Nan Gwath",          # swine farm; shadow-vale (2026-09-11 batch, tools/add_map_villages.py)
+    "village_isengard_f": "Groth Morn",         # iron mine; dark delving (2026-09-11 batch, tools/add_map_villages.py)
+    "castle_village_I2_4": "Angroth",           # iron mine; iron-delving (2026-09-11 batch, tools/add_map_villages.py)
 
     # ES - Mordor (Black Speech + Sindarin)
     "castle_village_ES1_1": "Dûrthrak",   # Mordor from vanilla "Odrysa" (lumberjack; dark-haul)

@@ -216,7 +216,7 @@ Four things to know:
    The repo's `Main/_Module/ModuleData/settlements.xml` is the stale shadow (863 settlements against
    the live file's 988) and editing it does nothing.
 2. **New campaigns only.** Settlement ownership is engine-saved, unlike `Settlement.Culture`.
-3. **Villages are untouched.** None of the 607 villages carries an explicit `owner`; each follows its
+3. **Villages are untouched.** None of the 616 villages carries an explicit `owner`; each follows its
    bound fortification.
 4. **Lindon and Goblins are still at 100%** because each holds exactly one fortification. That is
    arithmetic, not concentration, and redistribution cannot fix it.

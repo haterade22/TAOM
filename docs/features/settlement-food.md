@@ -20,6 +20,8 @@ Measuring the LIVE `TAOM_Map/ModuleData/settlements.xml` against the vanilla for
 consumption is counted at all.** Isengard's Orthanc (prosperity 4000, one bound village) sits at
 -73.0/day and is only the 6th worst.
 
+Both Orthanc inputs have moved since that measurement: the 2026-08-14 floor took its prosperity to 4,800 and #562 (2026-09-11) bound five more villages to it, six in all, with four each on Orthanc Gate and Forthbrond. The -73.0 and the +42.1 quoted below are the pre-change figures; nothing has re-measured Orthanc since. <!-- measured: bound="Settlement.town_isengard" count and the town's prosperity attribute in the live settlements.xml 2026-09-11 -->
+
 The structural cause: vanilla consumption is **linear in prosperity** (`Prosperity/40`) while
 production is **flat** (base 15, plus at most 18 per bound village). Any town above roughly
 `production * 40` prosperity is arithmetically guaranteed to starve. Vanilla Calradia is tuned right

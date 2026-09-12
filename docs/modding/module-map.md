@@ -2,7 +2,7 @@
 
 ## What this module is
 
-`TAOM_Map` supplies Middle-earth itself: one baked campaign-map scene, the 988 settlements that sit
+`TAOM_Map` supplies Middle-earth itself: one baked campaign-map scene, the 997 settlements that sit
 on it, and the art the two of them need. It ships no C# at all, so everything inside it is authored
 either in the Bannerlord Modding Kit or typed into XML. It is also the one TAOM module that is not in
 the git repo, which changes how you edit it, how you back it up, and what happens when the module is
@@ -50,7 +50,7 @@ Sizes and counts measured on 2026-09-05 against the live install.
 |---|---|---|---|
 | `TAOM_Map/SubModule.xml` | The manifest: ids, version, dependencies, an empty `<SubModules/>`, 8 `<XmlNode>` rows | yes | 81 lines |
 | `TAOM_Map/ModuleData/` | All XML data | yes | 23 entries |
-| `TAOM_Map/ModuleData/settlements.xml` | The 988 settlements. UTF-8 **with BOM**, CRLF | yes | 1,153,217 bytes, 15,472 lines |
+| `TAOM_Map/ModuleData/settlements.xml` | The 997 settlements. UTF-8 **with BOM**, CRLF | yes | 1,161,107 bytes, 15,589 lines (2026-09-11, after #562) |
 | `TAOM_Map/ModuleData/settlements.xslt` | Deletes vanilla Calradia from the merge buffer | yes | 15 lines |
 | `TAOM_Map/ModuleData/DistanceCaches/` | `settlements_distance_cache_Default.bin`, `settlements_snapshot.json`, `last_rebuild_report.json` | no (but see below) | 3 files, 10.4 MB |
 | `TAOM_Map/ModuleData/Languages/` | Root `language_data.xml` plus 12 language folders, each with `loc_settlements.xml` | no | 13 entries, 25 XML |
@@ -541,11 +541,12 @@ Code: No code changes needed
   `settlements.xml` also use `{==` where the other 3,269 keys use `{=`; what that does to the resolved
   key is not determined here, see [strings-and-localization.md](strings-and-localization.md).
   <!-- measured: grep -o '{==' ModuleData/settlements.xml | wc -l 2026-09-05 -->
-- **Two TAOM docs are stale about this folder.** `docs/scene-entities.md` was extracted from a
-  different asset tree and its 72 towns do not match the live scene's 78 `town` tags, so regenerate it
-  with `tools/Generate-SceneEntitiesDoc.ps1` before citing it; and
+- **One TAOM doc is stale about this folder.**
   [main-map-vista.md](../reference/main-map-vista.md) says this module ships no `AssetPackages/`,
-  which stopped being true on 2026-09-04.
+  which stopped being true on 2026-09-04. `docs/scene-entities.md` used to be the second: it was
+  regenerated from the live scene on 2026-09-11 (78 towns, 143 castles, 618 village entities) and
+  now names its source file and date in its header. Regenerate it with
+  `tools/Generate-SceneEntitiesDoc.ps1 -SceneFile <live scene.xscene>` after any scene edit.
 
 ## What TAOM has never written down
 
@@ -595,8 +596,8 @@ All measured 2026-09-05 against the live install and, where noted, the repo.
 
 | Number | Command |
 |---|---|
-| 988 settlements | `grep -c '<Settlement id=' TAOM_Map/ModuleData/settlements.xml` |
-| 78 towns, 143 castles, 607 villages, 159 hideouts | `grep -c 'is_castle="false"'`, `grep -c 'is_castle="true"'`, `grep -c '<Village '`, `grep -c '<Hideout '` on the same file |
+| 997 settlements | `grep -c '<Settlement id=' TAOM_Map/ModuleData/settlements.xml`, 2026-09-11 |
+| 78 towns, 143 castles, 616 villages, 159 hideouts | `grep -c 'is_castle="false"'`, `grep -c 'is_castle="true"'`, `grep -c '<Village '`, `grep -c '<Hideout '` on the same file |
 | 221 settlements with `gate_posX` | `grep -c 'gate_posX=' TAOM_Map/ModuleData/settlements.xml` |
 | `gate_rotation` on 221 `<Town>`, 159 `<Hideout>`, 131 `<Village>`; `type="Hideout"` on 159 | `grep -o '<Town [^>]*gate_rotation=' <file> \| wc -l` and its siblings |
 | Terrain node 16 by 16 at `node_size="100.000"` here, `53.000` in SandBox | `grep -o '<terrain [^>]*>' <scene> \| head -1` |

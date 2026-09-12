@@ -99,7 +99,7 @@ simply raises no party that day. It covers a faction the prefix could not anchor
 faction type with no writable setter.
 
 **Gate ordering matters.** `FactionHasInitialHomeSettlement` is one property read and clears every
-healthy faction; the culture check walks all 988 settlements. The service checks the anchor first,
+healthy faction; the culture check walks all 997 settlements. The service checks the anchor first,
 and `EnsureSpawnAnchor_HealthyFaction_DoesNotScanSettlementsForTheCulture` pins that ordering.
 
 ### Component diagram

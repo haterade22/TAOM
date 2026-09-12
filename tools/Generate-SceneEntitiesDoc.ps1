@@ -45,8 +45,9 @@ foreach ($m in $allMatches) {
         $isValid = $false
         if ($rest -cmatch '^[A-Z]+\d+$') { $isValid = $true }                          # town_A1, castle_EW10
         if ($rest -cmatch '^[A-Z]+\d+_\d+[a-z]?$') { $isValid = $true }                # village_RU3_4, village_U2_3a
+        if ($rest -cmatch '^isengard_[a-z]$') { $isValid = $true }                     # village_isengard_a..f, castle_village_isengard_a..d (#562)
         # Explicit special-named settlements only
-        $specialNames = @('town_isengard','castle_orthanc_gate','village_isengard_a','castle_village_isengard_a')
+        $specialNames = @('town_isengard','castle_orthanc_gate')
         if ($specialNames -contains $name) { $isValid = $true }
         if (-not $isValid) { continue }
 
@@ -134,7 +135,7 @@ function Get-Anomalies($allEntities) {
 $sb = [System.Text.StringBuilder]::new()
 [void]$sb.AppendLine('# Scene Entity Reference')
 [void]$sb.AppendLine('')
-[void]$sb.AppendLine('Extracted from `E:\LOTRAOMAssets\scene.xscene`')
+[void]$sb.AppendLine('Extracted from `' + $SceneFile + '` on ' + (Get-Date -Format 'yyyy-MM-dd') + ' by `tools/Generate-SceneEntitiesDoc.ps1`. Regenerate, do not hand-edit.')
 [void]$sb.AppendLine('')
 
 Write-Section $sb 'town_' 'settlements' $entities['town_']

@@ -2025,6 +2025,31 @@ from the engine and reading the prose last.
   by decision" is longer and true.
 - **Source:** #559 Codex pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` findings 8 and 10.
 
+### A parser window is bounded by the element it parses, not by the next thing that usually follows
+`scene_position` in `tools/add_map_villages.py` matched `<game_entity name="X"[^>]*>.*?<transform` under
+`re.DOTALL`. Every entity in today's 12 MB scene carries a transform right after its tags, so the nine
+villages resolved correctly and the tool shipped; an entity saved without one would have taken its
+neighbour's coordinates silently.
+- **Why missed:** the "missing entity" test used an entity absent from the whole snippet. The adjacent
+  case, present but incomplete, was never written because the author reasoned from the file's observed
+  shape rather than from what the regex permits.
+- **Prevent:** cut the window first (`find("<game_entity", open_tag.end())` or the element's close
+  tag), then search inside it. Pin with two tests: the element present without the field, followed by a
+  neighbour that has it; and the field before a child that also has it.
+- **Source:** #562 deep-review, 2026-09-11, `docs/reviews/rca-map-villages-tool-2026-09-11.md` finding 1.
+
+### A repair tool's "nothing to do" is computed over every file it writes, and idempotency is tested with the secondary file broken
+`add_map_villages.py --apply` planned its 12 loc rows from the ids missing in the master and returned
+"already present" on that list alone, so a master-present/loc-missing state (a run that died on
+language 7 of 12, a reverted file) was unrepairable by re-run while `--check` kept failing on it.
+- **Why missed:** idempotency was tested per master id; the precedent tool had no secondary files, so
+  the copied shape had no place for the question.
+- **Prevent:** when a tool writes N files, derive each file's own to-do list from the full table and
+  short-circuit only when all N are complete. Test it by breaking a secondary file on a scratch copy
+  (`BANNERLORD_GAME_DIR` pointed at a copied module tree) and asserting the re-run writes exactly that
+  file, with an honest per-file count in the summary.
+- **Source:** #562 deep-review, 2026-09-11, `docs/reviews/rca-map-villages-tool-2026-09-11.md` findings 2 and 3.
+
 ### A worktree-sourced blob is whatever the worktree holds at commit time, not at the time you checked it
 
 Three sessions in one tree. I ran `git status --porcelain` on two shared docs, saw them clean, edited

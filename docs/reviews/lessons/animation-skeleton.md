@@ -426,6 +426,7 @@ Record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) sec
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
 
 <!-- backlinks-end -->
 ### An animation must be authored against the ENGINE skeleton, not a mesh FBX

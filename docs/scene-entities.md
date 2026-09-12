@@ -1,8 +1,8 @@
 ﻿# Scene Entity Reference
 
-Extracted from `E:\LOTRAOMAssets\scene.xscene`
+Extracted from `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\SceneObj\Main_map\scene.xscene` on 2026-09-11 by `tools/Generate-SceneEntitiesDoc.ps1`. Regenerate, do not hand-edit.
 
-## town_ (72 settlements)
+## town_ (78 settlements)
 
 | Region | Entities |
 |--------|----------|
@@ -22,8 +22,12 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | S (5) | town_S1, town_S2, town_S3, town_S4, town_S5 |
 | U (2) | town_U1, town_U2 |
 | V (7) | town_V1, town_V2, town_V3, town_V4, town_V5, town_V6, town_V7 |
+| GBC (1) | town_GBC1 |
+| GT (1) | town_GT1 |
+| LN (1) | town_LN1 |
+| MM (3) | town_MM1, town_MM2, town_MM3 |
 
-## castle_ (132 castles)
+## castle_ (143 castles)
 
 | Region | Entities |
 |--------|----------|
@@ -44,8 +48,10 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | S (7) | castle_S1, castle_S2, castle_S3, castle_S4, castle_S5, castle_S6, castle_S7 |
 | U (8) | castle_U1, castle_U2, castle_U3, castle_U4, castle_U5, castle_U6, castle_U7, castle_U8 |
 | V (7) | castle_V1, castle_V2, castle_V3, castle_V4, castle_V5, castle_V6, castle_V7 |
+| GBC (4) | castle_GBC1, castle_GBC2, castle_GBC3, castle_GBC4 |
+| MM (7) | castle_MM1, castle_MM2, castle_MM3, castle_MM4, castle_MM5, castle_MM6, castle_MM7 |
 
-## village_ (226 villages)
+## village_ (253 villages)
 
 | Region | Entities |
 |--------|----------|
@@ -56,7 +62,7 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | ES (19) | village_ES1_1, village_ES1_2, village_ES1_3, village_ES1_4, village_ES2_1, village_ES2_2, village_ES2_3, village_ES3_1, village_ES3_2, village_ES4_1, village_ES4_2, village_ES4_3, village_ES5_1, village_ES5_2, village_ES5_3, village_ES6_1, village_ES6_2, village_ES6_3, village_ES6_4 |
 | EW (27) | village_EW1_1, village_EW1_2, village_EW1_3, village_EW2_2, village_EW2_3, village_EW2_4, village_EW3_2, village_EW3_3, village_EW3_4, village_EW4_1, village_EW4_3, village_EW4_4, village_EW5_1, village_EW5_2, village_EW5_3, village_EW6_1, village_EW6_3, village_EW6_4, village_EW7_1, village_EW7_2, village_EW7_3, village_EW8_1, village_EW8_2, village_EW8_3, village_EW9_1, village_EW9_2, village_EW9_3 |
 | G (8) | village_G1_1, village_G1_2, village_G1_3, village_G1_4, village_G2_1, village_G2_2, village_G2_3, village_G2_4 |
-| I (1) | village_isengard_a |
+| I (6) | village_isengard_a, village_isengard_b, village_isengard_c, village_isengard_d, village_isengard_e, village_isengard_f |
 | K (16) | village_K1_1, village_K1_2, village_K1_3, village_K1_4, village_K2_1, village_K2_2, village_K2_3, village_K2_4, village_K3_1, village_K3_2, village_K3_3, village_K3_4, village_K4_1, village_K4_2, village_K4_3, village_K4_4 |
 | L (6) | village_L1_1, village_L1_2, village_L1_3, village_L1_4, village_L1_5, village_L1_6 |
 | M (7) | village_M1_1, village_M1_2, village_M1_3, village_M1_4, village_M2_1, village_M2_2, village_M2_3 |
@@ -65,8 +71,12 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | S (11) | village_S1_1, village_S1_3, village_S2_1, village_S2_2, village_S3_1, village_S3_2, village_S4_1, village_S4_3, village_S4_4, village_S5_1, village_S5_2 |
 | U (8) | village_U1_1, village_U1_2, village_U1_3, village_U1_4, village_U2_1, village_U2_2, village_U2_3, village_U2_4 |
 | V (19) | village_V1_1, village_V1_2, village_V1_3, village_V2_1, village_V2_2, village_V3_1, village_V3_2, village_V3_3, village_V4_1, village_V4_2, village_V4_3, village_V5_1, village_V5_2, village_V6_1, village_V6_2, village_V6_3, village_V7_1, village_V7_2, village_V7_3 |
+| GBC (3) | village_GBC1_1, village_GBC1_2, village_GBC1_3 |
+| GT (7) | village_GT1_1, village_GT1_2, village_GT1_3, village_GT1_4, village_GT1_5, village_GT1_6, village_GT1_7 |
+| LN (4) | village_LN1_1, village_LN1_2, village_LN1_3, village_LN1_4 |
+| MM (8) | village_MM1_1, village_MM1_2, village_MM1_3, village_MM2_1, village_MM2_2, village_MM3_1, village_MM3_2, village_MM3_3 |
 
-## castle_village_ (333 castle villages)
+## castle_village_ (365 castle villages)
 
 | Region | Entities |
 |--------|----------|
@@ -78,7 +88,7 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | ES (23) | castle_village_ES1_1, castle_village_ES1_2, castle_village_ES2_1, castle_village_ES2_2, castle_village_ES3_1, castle_village_ES3_2, castle_village_ES3_3, castle_village_ES4_1, castle_village_ES4_2, castle_village_ES4_3, castle_village_ES5_1, castle_village_ES5_2, castle_village_ES5_3, castle_village_ES5_4, castle_village_ES6_1, castle_village_ES6_2, castle_village_ES7_1, castle_village_ES7_2, castle_village_ES7_3, castle_village_ES8_1, castle_village_ES8_2, castle_village_ES8_3, castle_village_ES8_4 |
 | EW (39) | castle_village_EW1_1, castle_village_EW1_2, castle_village_EW10_1, castle_village_EW10_2, castle_village_EW11_1, castle_village_EW11_2, castle_village_EW12_1, castle_village_EW12_2, castle_village_EW13_1, castle_village_EW13_2, castle_village_EW14_1, castle_village_EW15_1, castle_village_EW15_2, castle_village_EW15_3, castle_village_EW16_1, castle_village_EW16_2, castle_village_EW16_3, castle_village_EW2_1, castle_village_EW2_2, castle_village_EW3_1, castle_village_EW3_2, castle_village_EW3_3, castle_village_EW4_1, castle_village_EW5_1, castle_village_EW5_2, castle_village_EW6_1, castle_village_EW6_2, castle_village_EW6_3, castle_village_EW6_4, castle_village_EW7_1, castle_village_EW7_2, castle_village_EW7_3, castle_village_EW7_4, castle_village_EW8_1, castle_village_EW8_2, castle_village_EW9_1, castle_village_EW9_2, castle_village_EW9_3, castle_village_EW9_4 |
 | G (12) | castle_village_G1_1, castle_village_G1_2, castle_village_G2_1, castle_village_G2_2, castle_village_G2_3, castle_village_G3_1, castle_village_G3_2, castle_village_G3_4, castle_village_G5_1, castle_village_G5_2, castle_village_G5_3, castle_village_G5_4 |
-| I (7) | castle_village_I1_1, castle_village_I1_2, castle_village_I1_3, castle_village_I2_1, castle_village_I2_2, castle_village_I2_3, castle_village_isengard_a |
+| I (11) | castle_village_I1_1, castle_village_I1_2, castle_village_I1_3, castle_village_I2_1, castle_village_I2_2, castle_village_I2_3, castle_village_I2_4, castle_village_isengard_a, castle_village_isengard_b, castle_village_isengard_c, castle_village_isengard_d |
 | K (21) | castle_village_K1_1, castle_village_K1_2, castle_village_K1_3, castle_village_K2_1, castle_village_K2_2, castle_village_K2_3, castle_village_K3_1, castle_village_K3_2, castle_village_K3_3, castle_village_K4_1, castle_village_K4_2, castle_village_K4_3, castle_village_K5_1, castle_village_K5_2, castle_village_K5_3, castle_village_K6_1, castle_village_K6_2, castle_village_K6_3, castle_village_K7_1, castle_village_K7_2, castle_village_K7_3 |
 | L (9) | castle_village_L1_1, castle_village_L1_2, castle_village_L1_3, castle_village_L2_1, castle_village_L2_2, castle_village_L2_3, castle_village_L3_1, castle_village_L3_2, castle_village_L3_3 |
 | M (10) | castle_village_M1_1, castle_village_M1_2, castle_village_M2_1, castle_village_M2_2, castle_village_M3_1, castle_village_M3_2, castle_village_M4_1, castle_village_M4_2, castle_village_M5_1, castle_village_M5_2 |
@@ -87,6 +97,8 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 | S (14) | castle_village_S1_1, castle_village_S1_2, castle_village_S2_1, castle_village_S2_2, castle_village_S3_1, castle_village_S3_2, castle_village_S4_1, castle_village_S4_2, castle_village_S5_1, castle_village_S5_2, castle_village_S6_1, castle_village_S6_2, castle_village_S7_1, castle_village_S7_2 |
 | U (22) | castle_village_U1_1, castle_village_U1_2, castle_village_U1_3, castle_village_U2_1, castle_village_U2_2, castle_village_U3_1, castle_village_U3_2, castle_village_U4_1, castle_village_U4_2, castle_village_U4_3, castle_village_U5_1, castle_village_U5_2, castle_village_U5_3, castle_village_U6_1, castle_village_U6_2, castle_village_U6_3, castle_village_U7_1, castle_village_U7_2, castle_village_U7_3, castle_village_U8_1, castle_village_U8_2, castle_village_U8_3 |
 | V (15) | castle_village_V1_1, castle_village_V1_2, castle_village_V2_1, castle_village_V2_2, castle_village_V3_1, castle_village_V3_2, castle_village_V4_1, castle_village_V4_2, castle_village_V4_3, castle_village_V5_1, castle_village_V5_2, castle_village_V6_1, castle_village_V6_2, castle_village_V7_1, castle_village_V7_2 |
+| GBC (12) | castle_village_GBC1_1, castle_village_GBC1_2, castle_village_GBC2_1, castle_village_GBC2_2, castle_village_GBC3_1, castle_village_GBC3_2, castle_village_GBC3_3, castle_village_GBC3_4, castle_village_GBC4_1, castle_village_GBC4_2, castle_village_GBC4_3, castle_village_GBC4_4 |
+| MM (16) | castle_village_MM1_1, castle_village_MM1_2, castle_village_MM1_3, castle_village_MM1_4, castle_village_MM2_1, castle_village_MM2_2, castle_village_MM2_3, castle_village_MM2_4, castle_village_MM3_1, castle_village_MM4_1, castle_village_MM5_1, castle_village_MM5_2, castle_village_MM6_1, castle_village_MM7_1, castle_village_MM7_2, castle_village_MM7_3 |
 
 ## Anomalies
 

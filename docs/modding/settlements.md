@@ -21,7 +21,7 @@ This file lives in the game install, not the repo; a module reinstall reverts ha
 
 The three PowerShell scripts named for this file, [`tools/Apply-SettlementNames.ps1`](../../tools/Apply-SettlementNames.ps1), [`tools/Generate-Settlements.ps1`](../../tools/Generate-Settlements.ps1) and [`tools/Settlement-Breakdown.ps1`](../../tools/Settlement-Breakdown.ps1), all target that shadow. Do not reach for them expecting an in-game change ([taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md)).
 
-**What is in the live file.** 988 settlements: 221 fortifications (78 towns and 143 castles), 607 villages, 159 hideouts and 1 `CustomSettlementComponent` (the retirement retreat). Under them sit 2,509 `<Building>` rows, 1,898 `<Location>` rows and 2,055 `<Area>` rows. Every settlement carries a `culture=`, 235 carry `text=`, and exactly the 221 fortifications carry `gate_posX`. No settlement carries `port_posX`. <!-- measured: rg -oF on each element and attribute name against the live settlements.xml, and a python regex pass over the 988 <Settlement> open tags 2026-09-05 -->
+**What is in the live file.** 997 settlements: 221 fortifications (78 towns and 143 castles), 616 villages, 159 hideouts and 1 `CustomSettlementComponent` (the retirement retreat). Under them sit 2,509 `<Building>` rows, 1,907 `<Location>` rows and 2,082 `<Area>` rows. Every settlement carries a `culture=`, 235 carry `text=`, and exactly the 221 fortifications carry `gate_posX`. No settlement carries `port_posX`. <!-- measured: rg -oF on each element and attribute name against the live settlements.xml, and a python regex pass over the 997 <Settlement> open tags 2026-09-11, after the nine Isengard villages of #562 -->
 
 ## Attributes
 
@@ -101,7 +101,7 @@ The scene-file attributes are read through a name the engine builds in a loop, `
 | `scene_name_2` | Slot 2. Fortification level 2. |
 | `scene_name_3` | Slot 3. Fortification level 3, the fully walled version. |
 
-**The trap.** The loop runs all four slots unconditionally and writes an empty string into every slot whose attribute is missing (`Settlement.cs:1003-1009`). Writing a `<Location>` element therefore blanks all four scene names the template supplied and refills only the ones you list. In the live file, 221 `<Location>` rows set slots 1 to 3 and leave slot 0 empty, and 78 set no scene name at all. Those work because fortification levels floor at 1 and because those rooms are never asked for at level 0, not because the template's names survived. <!-- measured: python regex pass over the 1,898 <Location> nodes in the live settlements.xml, counting slot presence 2026-09-05 -->
+**The trap.** The loop runs all four slots unconditionally and writes an empty string into every slot whose attribute is missing (`Settlement.cs:1003-1009`). Writing a `<Location>` element therefore blanks all four scene names the template supplied and refills only the ones you list. In the live file, 221 `<Location>` rows set slots 1 to 3 and leave slot 0 empty, and 78 set no scene name at all. Those work because fortification levels floor at 1 and because those rooms are never asked for at level 0, not because the template's names survived. <!-- measured: python regex pass over the 1,907 <Location> nodes in the live settlements.xml, counting slot presence 2026-09-11 -->
 
 ### Attributes the engine never reads
 
@@ -114,7 +114,7 @@ Present in shipped data, read by nothing in the v1.4.8 managed code. They are sa
 | `gate_rotation` | `<Settlement>`, `<Town>`, `<Village>`, `<Hideout>` | 511 |
 | `map_icon` | `<Hideout>` and the `CustomSettlementComponent` | 160 |
 | `type="Hideout"` | `<Settlement>` | 159. What makes a settlement a hideout is the `<Hideout>` component, not this. |
-| `type` | `<Area>` | 2,055, in six values: `Pasture`, `Thicket` and `Bog` 607 each, `Backstreet`, `Clearing` and `Waterfront` 78 each. What identifies an area is its position in the list, not this attribute. |
+| `type` | `<Area>` | 2,082, in six values: `Pasture`, `Thicket` and `Bog` 616 each, `Backstreet`, `Clearing` and `Waterfront` 78 each. What identifies an area is its position in the list, not this attribute. |
 | `trade_bound` | nowhere | 0. There is no such attribute in the engine. A village bound to a town trades with that town; a village bound to a castle has its market chosen at runtime. |
 
 <!-- measured: rg -oF for each attribute name against the live settlements.xml, and rg -o '<Area type="[A-Za-z]+"' piped through sort and uniq -c 2026-09-05 -->
@@ -294,16 +294,16 @@ The `id` is the key from the `{=KEY}` in `name=`, without the braces. There is n
 
 Adding a settlement is the one operation in this file with a prerequisite outside the file: the map scene must already contain an entity with the same id.
 
-1. **Find or place the scene entity.** Open `TAOM_Map/SceneObj/Main_map/scene.xscene` and search for the id. A settlement entity looks like `<game_entity name="castle_GBC1" old_prefab_name="map_icon_castle_empire" mobility="1">` with a `<tag name="castle"/>` and a `<transform position="250.684, 1200.344, 79.999" .../>`. The naming convention per region is in [`docs/scene-entities.md`](../scene-entities.md); note that its counts are stale against the live map (it lists 72 town and 132 castle entities, 204 total, while the live file now has 221 fortifications), so use it for the id shapes and re-derive counts yourself.
+1. **Find or place the scene entity.** Open `TAOM_Map/SceneObj/Main_map/scene.xscene` and search for the id. A settlement entity looks like `<game_entity name="castle_GBC1" old_prefab_name="map_icon_castle_empire" mobility="1">` with a `<tag name="castle"/>` and a `<transform position="250.684, 1200.344, 79.999" .../>`. The naming convention per region is in [`docs/scene-entities.md`](../scene-entities.md); regenerated from the live scene on 2026-09-11 (`pwsh tools/Generate-SceneEntitiesDoc.ps1 -SceneFile <live scene.xscene>`): 78 towns, 143 castles, 253 villages, 365 castle-villages, which is every fortification row and two village entities more than the data file has (`castle_village_MM2_4` and `village_GT1_4` are placed icons with no `<Settlement>` row, inert rather than a crash). Regenerate it after any scene edit; hand edits are overwritten.
 2. **Take `posX` and `posY` from that transform**, first two numbers, dropping the third. This is not a convention, it is how the shipped tool did it: `tools/add_bluecraig_castles.py` lists `castle_GBC1` at `250.684, 1200.344`, which is the scene transform above, character for character. Adding settlement data for an id with no scene entity crashes the map load in `SettlementVisual.OnStartup` ([`tools/add_bluecraig_castles.py`](../../tools/add_bluecraig_castles.py) lines 5 to 9).
-3. **Copy a whole sibling entry** of the shape you want from the live file. Copy the `<Locations>` block from that sibling too, unchanged, unless you have a scene of your own.
+3. **Copy a whole sibling entry** of the shape you want from the live file. For a village, [`tools/add_map_villages.py`](../../tools/add_map_villages.py) does steps 2 to 6 from one table row (dry run by default, `--apply` writes, `--check` proves the row, the 12 loc rows and the scene entity all exist and agree on position); it is how the nine Isengard villages landed on 2026-09-11. Copy the `<Locations>` block from that sibling too, unchanged, unless you have a scene of your own.
 4. **Change the ids** (`<Settlement id>`, the component `id`), the name key, `posX`, `posY`, `culture`, and for a fortification `owner`, `prosperity` and the `<Building>` levels. For a village change `bound`, `village_type` and `hearth`.
 5. **Set `gate_posX` and `gate_posY`** on a fortification. The shipped tool sets them equal to `posX` and `posY`, which is safe; a hand-picked value is not, see the entrance gotcha below.
 6. **Add a row per language.** 12 rows, one in each `TAOM_Map/ModuleData/Languages/<LANG>/loc_settlements.xml`, using the key from step 4. Tolkien proper nouns take the same spelling in every language.
 7. **Rebuild the settlement distance cache**: in game, Options, Mod Options, TAOM, Map Tools, Rebuild Now, then reload ([editor-cache-rebuild.md](../features/editor-cache-rebuild.md)). The cache is `TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin`, 10,205,146 bytes, and it is keyed by settlement id.
 
 Check: `python tools/validate_moduledata.py` then `python tools/audit_scene_names.py`
-Takes effect: new campaign only
+Takes effect: new campaign only. A save made before the settlement existed does not merely miss it: `Settlement.Deserialize` keys on the campaign-wide `CampaignGameLoadingType`, and on a `SavedCampaign` load it runs `Alleys[num].Initialize` against the new object's still-empty `Alleys` list (`Settlement.cs:1024-1031`, `:771`), so the load is expected to throw. Verified in the v1.4.8 decompile, not yet reproduced on a live save.
 Code: No code changes needed
 
 ### Add a hideout
@@ -411,7 +411,7 @@ Every count was produced on 2026-09-05 by the command beside it. The live file i
 |---|---|
 | 988 `<Settlement>` live, 863 in the repo shadow | `rg -oF '<Settlement ' <file>` piped to `wc -l`, on each copy |
 | 221 `<Town>`, of which 143 `is_castle="true"` and 78 towns; 607 `<Village>`; 159 `<Hideout>`; 1 `<CustomSettlementComponent>` | `rg -oF` for each element name, and `rg -oF 'is_castle="true"'`, piped to `wc -l` |
-| 2,509 `<Building>`, 1,898 `<Location>`, 2,055 `<Area>` | the same `rg -oF` count per element name |
+| 2,509 `<Building>`, 1,907 `<Location>`, 2,082 `<Area>` | the same `rg -oF` count per element name, re-measured 2026-09-11 |
 | 988 with `culture=`, 235 with `text=`, 221 with `gate_posX`, 221 with `owner=`, 0 with `port_posX` | a python regex pass over the 988 `<Settlement>` open tags |
 | Live file 1,153,217 bytes dated 2026-09-04; shadow 1,023,041 bytes dated 2026-05-26; the deployed copy at `TAOM/ModuleData/settlements.xml` matches the shadow byte for byte | `ls -l` on all three |
 | 100 `<XmlName>` rows in `Main/_Module/SubModule.xml`, none of them `Settlements` | `rg -c '<XmlName' Main/_Module/SubModule.xml` and `rg -n 'Settlements'` on it |
@@ -419,8 +419,8 @@ Every count was produced on 2026-09-05 by the command beside it. The live file i
 | Town prosperity 1,700 to 5,600, median 4,000 (n=78); castle 420 to 1,100, median 810 (n=143); village hearth 100 to 722, median 350 (n=607) | a python regex and `statistics.median` pass over the live file |
 | 6 towns at or above the 5,000 crowd band, 67 between 2,000 and 5,000, 5 below; 18 villages at or above hearth 600 | the same pass, bucketed at the thresholds in `Town.cs:738-749` and `Village.cs:320-331` |
 | 30 distinct cultures on settlements; 22 own fortifications; 8 appear on hideouts, matching the 8 `is_bandit="true"` cultures in `taom_spcultures.xml` | a python `collections.Counter` over `culture="Culture.X"` per settlement block, and `rg -c 'is_bandit="true"'` on `taom_spcultures.xml` |
-| 511 `gate_rotation`, 160 `map_icon`, 159 `type="Hideout"`, 2,055 `<Area type=` in six values | `rg -oF` per attribute, and `rg -o '<Area type="[A-Za-z]+"'` piped through `sort` and `uniq -c` |
-| 221 `<Location>` rows set slots 1 to 3 with no slot 0; 78 set no scene name at all | a python regex pass over the 1,898 `<Location>` nodes |
+| 511 `gate_rotation`, 160 `map_icon`, 159 `type="Hideout"`, 2,082 `<Area type=` in six values | `rg -oF` per attribute, and `rg -o '<Area type="[A-Za-z]+"'` piped through `sort` and `uniq -c` |
+| 221 `<Location>` rows set slots 1 to 3 with no slot 0; 78 set no scene name at all | a python regex pass over the 1,907 `<Location>` nodes, re-measured 2026-09-11 |
 | 9 name keys written `{==` | `rg -oF '{==' <live file>` piped to `wc -l` |
 | 81 settlement ids hard-coded in `Main/Features/TroopProgression/` | `rg -o '"(town\|castle\|village\|castle_village\|hideout)_[A-Za-z0-9_]+"' Main/Features/TroopProgression/ -g'*.cs'` piped through `sort -u` and `wc -l` |
 | 6 location complex templates with 9, 1, 3, 1, 1 and 1 rooms | a python ElementTree pass over `SandBox/ModuleData/location_complex_templates.xml` |

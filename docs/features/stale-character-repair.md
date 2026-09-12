@@ -232,3 +232,14 @@ Confirming it end to end needs the player's `saveauto2` (or any save reproducing
 `[StaleCharacterRepair] made N stale character(s) inert` line naming the stale ids. Those ids are
 then the data fix. Open the party screen with the affected garrison afterwards, since that is the
 crash site the widened scope exists to prevent.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

@@ -494,5 +494,7 @@ Resolved since the first draft: the eight barding meshes are in the cooked packs
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/lotrlome-war-ram-changes.md](../reference/lotrlome-war-ram-changes.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+- [docs/reviews/rca-war-ram-2026-08-28.md](../reviews/rca-war-ram-2026-08-28.md)
 
 <!-- backlinks-end -->
