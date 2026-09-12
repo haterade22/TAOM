@@ -235,7 +235,7 @@ The roster that puts the helmet on a soldier lives in the repo, not the armoury:
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-        <equipment slot="Item1" id="Item.gond_shield_two_swan" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
         <equipment slot="Head" id="Item.sk_gd_dol_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_dol_chainmail_a" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_noble_med_a" />

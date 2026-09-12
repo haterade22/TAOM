@@ -204,9 +204,29 @@ def target_roster_ids(root: ET.Element) -> list[str]:
     return ids
 
 
-def collect_donors(roots: list[ET.Element]) -> "OrderedDict[str, set[str]]":
+def resolve_donor(starter: str, items: dict) -> str | None:
+    """The donor a `starter_` id was cloned from, or None for a hand-authored starter item
+    (the older `starter_{archetype}_{culture}_{slot}_a` armour) that has no donor to re-clone.
+    `starter_id` strips a trailing `_starter`, so both spellings are tried."""
+    base = starter[len(STARTER_PREFIX):]
+    # the `_starter` spelling first: `starter_gondor_steel_bow` was cloned from the Armory's
+    # own `gondor_steel_bow_starter`, and the full `gondor_steel_bow` also exists
+    if base + "_starter" in items:
+        return base + "_starter"
+    if base in items:
+        return base
+    return None
+
+
+def collect_donors(roots: list[ET.Element], items: dict | None = None) -> "OrderedDict[str, set[str]]":
     """donor item id -> the slots it fills, over EVERY equipment set of every target roster.
-    The civilian set is applied independently of the battle set, so it is rewired too."""
+    The civilian set is applied independently of the battle set, so it is rewired too.
+
+    After `wire_starter_kit_rosters.py` has run, the rosters name the `starter_` twins, not
+    the donors. With an item index those ids are mapped back to their donors in place, so a
+    re-run plans the same clones in the same order; without one (the pure roster scan) they
+    are skipped. A generator that could not see its donors after its own wiring step would
+    plan nothing and shrink every marker block on the next apply (deep review, 2026-09-12)."""
     donors: "OrderedDict[str, set[str]]" = OrderedDict()
     for root in roots:
         wanted = set(target_roster_ids(root))
@@ -218,8 +238,14 @@ def collect_donors(roots: list[ET.Element]) -> "OrderedDict[str, set[str]]":
                 if slot not in PLAYER_SLOTS:
                     continue
                 iid = (eq.get("id") or "").replace("Item.", "", 1)
-                if not iid or iid.startswith(STARTER_PREFIX):
+                if not iid:
                     continue
+                if iid.startswith(STARTER_PREFIX):
+                    if items is None:
+                        continue
+                    iid = resolve_donor(iid, items)
+                    if iid is None:
+                        continue
                 donors.setdefault(iid, set()).add(slot)
     return donors
 
@@ -593,9 +619,11 @@ class ItemRec:
     own_folder: str | None
 
 
-def index_items(files: list[Path], items_root: Path | None = None) -> dict[str, ItemRec]:
+def index_items(files: list[Path], items_root: Path | None = None,
+                failures: list[str] | None = None) -> dict[str, ItemRec]:
     """id -> definition over every item file. Our own generated files are skipped so a re-run
-    does not see its previous output as a collision."""
+    does not see its previous output as a collision. A file that does not parse is recorded
+    in `failures` (never silently dropped: its items would then read as missing donors)."""
     index: dict[str, ItemRec] = {}
     for path in files:
         path = Path(path)
@@ -603,7 +631,9 @@ def index_items(files: list[Path], items_root: Path | None = None) -> dict[str, 
             continue
         try:
             root = ET.parse(path).getroot()
-        except ET.ParseError:
+        except ET.ParseError as exc:
+            if failures is not None:
+                failures.append(f"{path}: not well-formed, its items are invisible to this run ({exc})")
             continue
         own_folder = None
         if items_root is not None:
@@ -754,11 +784,13 @@ def expected_roster_gaps(menus_dir: Path, present: set[str]) -> list[str]:
 def build_plan(sources: Sources) -> Plan:
     armory_md = Path(sources.armory) / "ModuleData"
     roots = [ET.parse(p).getroot() for p in sources.rosters]
-    donors = collect_donors(roots)
     present = {rid for root in roots for rid in target_roster_ids(root)}
 
     items_root = armory_md / "LOTRLOME_items"
-    items = index_items(_armory_item_files(armory_md) + [Path(p) for p in sources.vanilla_item_files], items_root)
+    notes: list[str] = []
+    items = index_items(_armory_item_files(armory_md) + [Path(p) for p in sources.vanilla_item_files],
+                        items_root, failures=notes)
+    donors = collect_donors(roots, items)
     pieces = index_pieces([armory_md / PIECES_FILE, sources.native_pieces])
     submodule = Path(sources.armory) / "SubModule.xml"
     registered = registered_item_folders(submodule.read_text(encoding="utf-8-sig")) if submodule.exists() else set()
@@ -780,7 +812,6 @@ def build_plan(sources: Sources) -> Plan:
     clones: list[Clone] = []
     blades: "OrderedDict[str, ET.Element]" = OrderedDict()
     registrations: dict[str, dict[str, list[str]]] = {kind: OrderedDict() for kind in XSLT_FILES}
-    notes: list[str] = []
 
     for donor_id, slots in donors.items():
         rec = items.get(donor_id)
@@ -854,13 +885,53 @@ def _items_path(md: Path, folder: str) -> Path:
     return md / "LOTRLOME_items" / folder / ITEMS_FILE_NAME
 
 
-def apply_plan(plan: Plan, md: Path, write: bool, backups: bool = True) -> list[str]:
-    """Write the plan into one ModuleData tree. Returns log lines; raises on malformed output.
+_ID_RE = re.compile(r'<(?:Item|CraftedItem|CraftingPiece|AvailablePiece|UsablePiece)\b[^>]*?\b(?:id|piece_id)="(starter_[^"]+)"')
+
+
+def _starter_ids_in(text: str) -> set[str]:
+    return set(_ID_RE.findall(text))
+
+
+def _refuse_shrink(what: str, on_disk: set[str], planned: set[str], allow: bool) -> None:
+    """A plan that drops starter ids already on disk is almost always a run that could not
+    see its donors, not a decision; make it say so explicitly."""
+    lost = sorted(on_disk - planned)
+    if lost and not allow:
+        raise StarterKitError(
+            f"{what}: applying would shrink the starter set by {len(lost)} id(s) already on disk "
+            f"({', '.join(lost[:5])}{', ...' if len(lost) > 5 else ''}). If that is intended, re-run with "
+            "--allow-shrink; if not, the rosters this run read do not name every donor")
+
+
+def apply_plan(plan: Plan, md: Path, write: bool, backups: bool = True, allow_shrink: bool = False) -> list[str]:
+    """Write the plan into one ModuleData tree. Returns log lines; raises on malformed output
+    and on a plan that would drop starter content already on disk (unless `allow_shrink`).
     The generated item files never get a sidecar (they are ours to regenerate); the three
     shared files get one when `backups` is set, which main() reserves for the live install
     (the asset-repo mirror has git)."""
     log: list[str] = []
-    for folder, clones in plan.by_folder().items():
+    planned_by_folder = plan.by_folder()
+    for existing in sorted((md / "LOTRLOME_items").glob(f"*/{ITEMS_FILE_NAME}")) if (md / "LOTRLOME_items").exists() else []:
+        folder = existing.parent.name
+        planned = {c.new_id for c in planned_by_folder.get(folder, [])}
+        _refuse_shrink(f"{existing}", _starter_ids_in(read_xml(existing)[0]), planned, allow_shrink)
+    pieces_path = md / PIECES_FILE
+    if pieces_path.exists():
+        block = block_re().search(read_xml(pieces_path)[0])
+        _refuse_shrink(str(pieces_path), _starter_ids_in(block.group(0)) if block else set(),
+                       {p.get("id") for p in plan.pieces}, allow_shrink)
+    for kind, name in XSLT_FILES.items():
+        path = md / name
+        if path.exists():
+            # per template, not per file: a blade that stays registered under one description
+            # but loses another would otherwise pass a whole-file comparison
+            text = read_xml(path)[0]
+            for match in _template_re(kind).finditer(text):
+                target = match.group(2)
+                _refuse_shrink(f"{path} {kind}[{target}]", _starter_ids_in(match.group(3)),
+                               set(plan.registrations[kind].get(target, [])), allow_shrink)
+
+    for folder, clones in planned_by_folder.items():
         path = _items_path(md, folder)
         text = render_items_file(clones, folder)
         if path.exists() and path.read_bytes() == text.encode("utf-8"):
@@ -1018,6 +1089,8 @@ def main() -> int:
     ap.add_argument("--quiet", action="store_true", help="skip the per-clone report")
     ap.add_argument("--crafted-value", type=int, default=CRAFTED_STARTER_VALUE,
                     help="explicit value= on crafted starter clones; 0 lets the engine price them")
+    ap.add_argument("--allow-shrink", action="store_true",
+                    help="let --apply drop starter ids already on disk (a roster stopped naming a donor)")
     args = ap.parse_args()
 
     sources = default_sources(args)
@@ -1055,7 +1128,7 @@ def main() -> int:
                 print("OK: no drift" if not drift else f"FAIL: {len(drift)} drift line(s)")
                 rc = rc or (1 if drift else 0)
             else:
-                for line in apply_plan(plan, md, write=args.apply, backups=backups):
+                for line in apply_plan(plan, md, write=args.apply, backups=backups, allow_shrink=args.allow_shrink):
                     print(line)
         except StarterKitError as exc:
             print(f"ERROR: {exc}")

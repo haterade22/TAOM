@@ -34,7 +34,10 @@ until a culture or a clan names it by id.
   modules' stacks, which is how a roster quietly doubles.
 - **`_replaceWhileMerging="true"` is how you take a template's place.** Put it on your
   `<MBPartyTemplate>` and the merger strips the earlier entry's attributes and children before
-  yours land (`MBObjectManager.cs:804-808`, `:829-832`). TAOM does not use it anywhere today.
+  yours land (`MBObjectManager.cs:804-808`, `:829-832`). No TAOM party template uses it; the one
+  TAOM file that does is the player-start override for the six vanilla-mapped cultures
+  ([starting-equipment-tuning](../features/starting-equipment-tuning.md)), and it puts the attribute
+  on the schema-keyed element only, because a keyless child resolves to the wrong sibling.
 - **Two entries with the same id inside one file go the other way.** The merger only folds one file
   into another, so both rows survive it, `Deserialize` runs twice over the same template, and its
   first line rebuilds the stack list from scratch (`PartyTemplateObject.cs:28`). There the second

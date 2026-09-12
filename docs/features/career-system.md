@@ -351,18 +351,11 @@ After the culture-default starting roster is applied at `OnCharacterCreationFina
 
 Same fallback policy as the runtime grant: missing roster → log + leave the youth/culture-default preview in place.
 
-**Critical: `FillFrom` does NOT clear unspecified slots.** `Equipment.FillFrom(source)` copies only the slots that are present in the source roster — it does not zero-clear the target's other slots first. This means if your culture-default roster sets a Horse and your career roster does not mention Horse, the horse persists. For archetypes that should be on foot (ranged, infantry), include explicit empty overrides:
-
-```xml
-<Equipment slot="Horse" id="" />
-<Equipment slot="HorseHarness" id="" />
-```
-
-The empty `id=""` resolves to a null `ItemObject`, which `Equipment.DeserializeNode` accepts as an empty slot.
+**`FillFrom` is a full replacement, not an overlay.** `Equipment.FillFrom(source)` (Equipment.cs:184-194, installed 1.4.8) copies all 12 slots unconditionally, so a slot the career roster omits is EMPTIED on the player; it does not inherit the culture-default value. That is why a careered player has no Head, Cape or Gloves (the career rosters set none) and why a ranged or infantry career roster needs no empty `<Equipment slot="Horse" id="" />` override to stay on foot. An earlier version of this paragraph said the opposite; `tools/wire_career_starter_armor.py`'s header and [starting-equipment-tuning.md](starting-equipment-tuning.md) had it right, and `docs/modding/open-questions.md` recorded the contradiction until it was corrected on 2026-09-12. The one thing the career layer does NOT replace is the civilian set: the adapter applies battle and civilian sets independently, and the career rosters carry no civilian set, so the culture-default civilian set is the civilian kit for every culture.
 
 ### How to add a new culture's career rosters
 
-1. Create starter armor items in LOTRLOME_Armory at `LOTRLOME_items/<culture>/starter_armors.xml` — 15 items total (3 archetypes × 5 slots: head/body/leg/cape/gloves). Reuse existing meshes; vary weight + armor stats per archetype (ranged ≈ 0.5× source weight, cavalry ≈ 0.75×, infantry ≈ 1.0×). Use the `starter_{archetype}_{culture}_{slot}_a` naming convention — see Gondor [`starter_armors.xml`](file:///E:/Steam/steamapps/common/Mount%20%26%20Blade%20II%20Bannerlord/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor/starter_armors.xml) as the template.
+1. Create starter armor items in LOTRLOME_Armory at `LOTRLOME_items/<culture>/starter_armors.xml`: 6 items (3 archetypes x 2 slots, body and leg; the kit is chest, legs and weapons by design). `tools/generate_starter_armor.py` does this from the culture's own chest and boots (add the culture to its `CULTURES` table), at the anchors Ranged 5, Cavalry 7, Infantry 9, naming them `starter_{archetype}_{culture}_{slot}_a`; Gondor's [`starter_armors.xml`](file:///E:/Steam/steamapps/common/Mount%20%26%20Blade%20II%20Bannerlord/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor/starter_armors.xml) is the hand-tuned template. The weapons the roster names are then cloned by `tools/generate_starter_kit.py` and the roster repointed by `tools/wire_starter_kit_rosters.py` ([starting-equipment-tuning.md](starting-equipment-tuning.md)); a real item left in a player roster fails `StarterKitCoverageTests`.
 2. **Required cover attributes** — LOTRLOME armor items render their mesh only when the `Armor` element declares it covers the slot:
    - Head items: `hair_cover_type="..."` + `beard_cover_type="..."` (cloth → `type1`/`type2`, plate → `type1`/`all`)
    - Body items: `covers_body="true"` (required) plus optionally `covers_legs="true"` for long robes / `covers_hands="true"` for full gauntlets that extend past the arm

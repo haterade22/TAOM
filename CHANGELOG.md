@@ -4,6 +4,36 @@
 
 ## 2026-09-12
 
+### test(cc), docs: the starter-kit invariant is pinned, the generator survives its own rewiring, and every stale start-kit statement is corrected (#569)
+
+`StarterKitCoverageTests` pins, with no allowlist, that every weapon and armour slot in all three
+player roster files is a `starter_` item, that both the battle and the civilian set are rewired,
+that the childhood, education, show and parent rosters are not, that every vanilla-mapped title
+has an override roster, and that every override roster carries `_replaceWhileMerging="true"` on the
+roster element. `PlayerStartCoverageTests` reads the override file too and no longer excludes the
+six vanilla-mapped cultures.
+
+The deep review (six agents, RCA `docs/reviews/rca-starter-kit-2026-09-12.md`) found one HIGH in
+the generator, reproduced live: it derived its donors from the roster files, and the wiring step
+rewrites those to the `starter_` ids, so a re-run after wiring planned nothing and `--apply` would
+have emptied the 39-blade marker block and every generated file, with `--verify` reporting no
+drift. Now each `starter_` id maps back to its donor in place (the `_starter` spelling first: the
+Armory already had six such bows), a re-run over the wired rosters plans the same 127 clones and
+is a byte-for-byte no-op, and every writer refuses to drop a starter id already on disk, per
+template for the stylesheets, unless `--allow-shrink` is passed. A file that fails to parse is
+reported instead of silently skipped. Fifteen new tool tests; 53 in the file.
+
+Docs: `starting-equipment-tuning.md` rewritten around the per-donor scheme, the damage and price
+formulas, the three roster layers and the merge rule; `career-system.md` no longer claims
+`FillFrom` leaves unspecified slots alone (it copies all 12; `open-questions.md` had recorded the
+contradiction); `character-creation.md` step 4, the file catalogue (new row, folder counts, the
+SubModule line numbers past the new node), the quoted Gondor troop excerpt in `items-armor.md`,
+the `_replaceWhileMerging` notes in `load-order-and-dependencies.md`, `party-templates.md` and
+`lord-identity-reconciliation.md`, the feature map, INDEX, doc-lookup and a CLAUDE.md trap row.
+Lessons appended for the merge-key placement, the crafted price formula, the assets-repo mirror
+drift and the generator-after-wiring trap. Owed: the four in-game smokes after a full restart,
+the assets-repo commit, `/localize`.
+
 ### feat(cc): the player start hands out the starter kit, and the six vanilla-mapped cultures start in their own gear (#569)
 
 Every player-start roster now names the `starter_` twin instead of the culture's real item:

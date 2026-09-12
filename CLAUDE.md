@@ -215,6 +215,7 @@ instructions `AGENTS.md`.
 | **A HorseHarness is REQUIRED beside every Horse slot** | Not always armour: on the ram it is the SEAT (`sk_eb_goat_a/_b` are bare pelts), so an empty slot renders a rider on bare hide. No XML says which mounts carry their own saddle, so the rule is universal; exemptions go in `_HARNESSLESS_BY_DESIGN` with a reason. Gate: `MOUNT_WITHOUT_HARNESS`. `docs/features/war-ram.md` |
 | **Animation must be authored on the ENGINE skeleton** | Skinning is roll-independent, so a mesh FBX can carry wrong bone orientations and still deform correctly in game; rotations are not. A clip authored on a mesh rig looks perfect in Blender and twisted in game. Dump the real rig first: `pwsh tools/dump_engine_skeleton.ps1 -Skeleton <name>`. `docs/reference/bannerlord-skeleton-authoring.md` |
 | **Renaming a Kit animation clip corrupts it** | The Kit keeps resolving the old name: `Size in KB = 0`, Save refused, scrambled model viewer, and the renamed file can vanish. Only a full Kit restart clears it, every time. Leave the clip on `new_animation_clip`, close the Kit, then `python tools/rename_anim_clip_tpac.py <file> <name> --apply` |
+| **Player start items are `starter_` twins** | Every id a `player_char_creation_*` or `player_career_*` roster hands out is a `starter_<donor>` clone; `StarterKitCoverageTests` fails on a real item. The vanilla-six override puts `_replaceWhileMerging="true"` on the ROSTER, never a set: `EquipmentSet` has no schema key. `docs/features/starting-equipment-tuning.md` |
 
 ## Architecture (One-liner)
 

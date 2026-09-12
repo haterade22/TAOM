@@ -1377,3 +1377,21 @@ none), so 35. The live map holds 159 locations in all.
   `<Settlement>`s per culture in the live `TAOM_Map/ModuleData/settlements.xml` and bandit cultures
   with `can_have_settlement="true"` in `spcultures.xml`. Report the smaller of target and supply.
 - **Source:** #559 Codex pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` finding 9.
+
+### `_replaceWhileMerging` belongs on the element the schema keys, never on a keyless child
+A later module's same-id element is MERGED into the earlier one (`MBObjectManager.MergeElements`, 1.4.8 lines 799-875): children are matched by the XSD's unique attributes, and a child with no key (an `EquipmentSet`) makes every sibling resolve to the LAST one. So `_replaceWhileMerging="true"` on a set replaces vanilla's last set with each of ours in turn and leaves vanilla's first battle set in place, which is the one the adapter reads; on the `EquipmentRoster` (keyed by `@id`) the engine drops every vanilla attribute and child and takes ours whole.
+- **Why missed:** the plan for the vanilla-six player-start override (#569) put the attribute on the sets, following the shape the handbook shows for party templates. Reading `EquipmentRosters.xsd` (its only `xs:unique` is `EquipmentRoster/@id`) and the merge loop before writing the tool caught it; nothing at file level could have, since both shapes validate and both look identical in the merged XML until the engine picks a set.
+- **Prevent:** before overriding a vanilla element from a later module, read the XSD's `xs:unique`/`xs:key` rows for that file and put the attribute on the keyed level. `StarterKitCoverageTests.EveryVanillaOverrideRoster_CarriesReplaceWhileMerging` pins the roster-level placement.
+- **Source:** #569, 2026-09-12; `docs/features/starting-equipment-tuning.md`.
+
+### A crafted weapon's price is 40% its fittings, so flooring the blade does not make it cheap
+`DefaultItemValueModel` prices a crafted weapon at 100 x 2.75^Tierf with Tierf = 0.6 x a stats tier + 0.4 x a crafted tier, and the crafted tier is the mean of the fitted pieces' tiers plus their iron grades (`DefaultItemValueModel.cs:41-49, 171-215`). A starter twin that reuses the donor's tier-5 elven guard, handle and pommel therefore still prices in the thousands after its blade is floored. `<CraftedItem>` honours an explicit `value=` (`ItemObject.cs:476-482`), which is the only lever short of cloning all four pieces.
+- **Why missed:** the earlier tuning pass had removed hand-set `value=` from three starter weapons so they would "compute from tier", which reads as the cheap option until the formula is read.
+- **Prevent:** when cloning a crafted item for a lower tier, print the resulting weapon tier (`generate_starter_kit.py` does) and pin `value=` on the clone; do not expect a stats change alone to move the price.
+- **Source:** #569, 2026-09-12.
+
+### The assets-repo mirror of TAOM's own ModuleData drifts; port artist commits per file, three-way
+`E:epos\lotraom-assets1.4\TAOM\ModuleData` is a copy of `Main/_Module/ModuleData` the artist works from. On 2026-09-12 six of the ten files his commit d7d5f75b touched sat on a base identical to HEAD and four were older (skill_template and face edits, a comment), so a blind copy of the four would have reverted repo work; `git merge-file` on `git show` extracts merged all four without conflict. His commit was also the repair for the 238 references the 2026-09-01 sword rebuild broke, which the validator had been reporting since.
+- **Why missed:** nothing syncs the mirror from the repo, and the artist's mapping was context dependent (one dead sword id became three different ids across rosters), so no swap script could reproduce it.
+- **Prevent:** diff each artist-touched file's BASE against HEAD before copying; copy verbatim only where the base equals HEAD, otherwise three-way merge. Re-sync the mirror from the repo after landing so his next base is current.
+- **Source:** #568, 2026-09-12.

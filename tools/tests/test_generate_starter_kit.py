@@ -553,5 +553,87 @@ class TestPlan(unittest.TestCase):
             self.assertEqual(after, before)
 
 
+class TestRerunAfterWiring(unittest.TestCase):
+    """The rosters are rewired to the starter_ ids after the first apply, so a later run sees
+    no donor by name. It must map each starter_ id back to its donor and plan the SAME clones,
+    or a re-run would shrink every marker block and file to nothing (deep review, 2026-09-12)."""
+
+    def test_rewired_rosters_plan_the_same_clones(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            before = _plan_in(tmp)
+            roster = tmp / "rosters.xml"
+            rewired = ROSTERS
+            for c in before.clones:
+                rewired = rewired.replace(f"Item.{c.donor_id}\"", f"Item.{c.new_id}\"")
+            self.assertNotIn("Item.wm_gondor_sword_a01\"", rewired)
+            roster.write_text(rewired, encoding="utf-8")
+            sources = gk.Sources(rosters=[roster], armory=tmp / "LOTRLOME_Armory", vanilla_item_files=[],
+                                 native_pieces=None, native_descriptions=tmp / "native_wd.xml",
+                                 native_templates=tmp / "native_ct.xml")
+            after = gk.build_plan(sources)
+        self.assertEqual(sorted(c.new_id for c in after.clones), sorted(c.new_id for c in before.clones))
+        self.assertEqual([p.get("id") for p in after.pieces], [p.get("id") for p in before.pieces])
+        self.assertEqual(after.registrations, before.registrations)
+
+    def test_resolve_donor_prefers_the_starter_spelling_when_both_exist(self):
+        items = {"gondor_steel_bow": object(), "gondor_steel_bow_starter": object(), "wm_gondor_bow": object()}
+        self.assertEqual(gk.resolve_donor("starter_gondor_steel_bow", items), "gondor_steel_bow_starter")
+        self.assertEqual(gk.resolve_donor("starter_wm_gondor_bow", items), "wm_gondor_bow")
+        self.assertIsNone(gk.resolve_donor("starter_infantry_gondor_leg_a", items))
+
+    def test_pre_existing_starter_items_without_a_donor_are_skipped(self):
+        # starter_infantry_gondor_leg_a is a hand-authored starter armour item: no donor named
+        # infantry_gondor_leg_a exists, so it is neither cloned nor an error
+        with tempfile.TemporaryDirectory() as tmp:
+            plan = _plan_in(Path(tmp))
+        self.assertNotIn("starter_infantry_gondor_leg_a", [c.new_id for c in plan.clones])
+
+    def test_apply_refuses_to_shrink_a_marker_block(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            plan = _plan_in(tmp)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(plan, md, write=True)
+            smaller = gk.Plan(clones=[c for c in plan.clones if c.kind != "crafted"], pieces=[],
+                              registrations={k: {} for k in gk.XSLT_FILES})
+            with self.assertRaises(gk.StarterKitError) as ctx:
+                gk.apply_plan(smaller, md, write=True)
+            self.assertIn("shrink", str(ctx.exception))
+            self.assertIn('id="starter_wm_gondor_sword_a01_blade"', gk.read_xml(md / gk.PIECES_FILE)[0])
+            # explicit permission is the only way through
+            gk.apply_plan(smaller, md, write=True, allow_shrink=True)
+            self.assertNotIn('id="starter_wm_gondor_sword_a01_blade"', gk.read_xml(md / gk.PIECES_FILE)[0])
+
+    def test_apply_refuses_to_drop_one_registration_target(self):
+        # the blade stays registered under OneHandedSword but the plan lost TwoHandedSwordAlt:
+        # a per-file comparison would pass, a per-template one must not
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            plan = _plan_in(tmp)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(plan, md, write=True)
+            narrower = gk.Plan(clones=plan.clones, pieces=plan.pieces,
+                               registrations={k: {t: r for t, r in v.items() if t != "TwoHandedSwordAlt"}
+                                              for k, v in plan.registrations.items()})
+            with self.assertRaises(gk.StarterKitError) as ctx:
+                gk.apply_plan(narrower, md, write=True)
+            self.assertIn("TwoHandedSwordAlt", str(ctx.exception))
+            self.assertIn("starter_wm_gondor_sword_a01_blade", gk.read_xml(md / "weapon_descriptions.xslt")[0]
+                          .split("TwoHandedSwordAlt")[1])
+
+    def test_unparsable_item_file_is_reported_not_silently_skipped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            _plan_in(tmp)
+            bad = tmp / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "gondor" / "broken.xml"
+            bad.write_text("<Items><Item id='x'></Items>", encoding="utf-8")
+            sources = gk.Sources(rosters=[tmp / "rosters.xml"], armory=tmp / "LOTRLOME_Armory", vanilla_item_files=[],
+                                 native_pieces=None, native_descriptions=tmp / "native_wd.xml",
+                                 native_templates=tmp / "native_ct.xml")
+            plan = gk.build_plan(sources)
+        self.assertTrue(any("broken.xml" in n for n in plan.notes), plan.notes)
+
+
 if __name__ == "__main__":
     unittest.main()

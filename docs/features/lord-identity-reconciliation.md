@@ -30,8 +30,10 @@ foreach (XAttribute item in element2.Attributes())
 ```
 
 So an attribute `characters/lords.xml` omits survives from the stylesheet's output rather than
-being cleared. Only `_replaceWhileMerging="true"` wipes the element first, and TAOM does not use
-it. Seventeen ids take their `is_female` from `lords.xslt` because the plain XML never states one;
+being cleared. Only `_replaceWhileMerging="true"` wipes the element first, and the lords pipeline
+does not use it (the one TAOM file that does is the player-start override,
+[starting-equipment-tuning.md](starting-equipment-tuning.md)). Seventeen ids take their
+`is_female` from `lords.xslt` because the plain XML never states one;
 all seventeen read `false` on both sides today. Both new tests model the merge this way, because a
 whole-node model reads the eighteenth one wrong.
 

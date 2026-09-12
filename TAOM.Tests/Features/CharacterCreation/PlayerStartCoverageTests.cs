@@ -35,16 +35,14 @@ public class PlayerStartCoverageTests
             "Main", "_Module", "ModuleData"));
 
     /// <summary>
-    /// TAOM repurposes the six vanilla cultures (vlandia=Rohan, empire=Dunland, and so on) rather
-    /// than redefining them, so their CC rosters still ship in the game's own
-    /// <c>SandBox/ModuleData/sandbox_equipment_sets.xml</c> — outside this repository and not
-    /// present on a clean checkout. Verified 2026-08-10: that file carries exactly these six.
-    /// They are excluded from the equipment check only; the gold check still covers them, because
-    /// <c>startup_resources_config.xml</c> is ours.
+    /// The two files TAOM authors player rosters in. The six vanilla-mapped cultures (vlandia=Rohan,
+    /// empire=Dunland, and so on) used to be excluded here because their rosters shipped only in
+    /// the game's own <c>SandBox/ModuleData/sandbox_equipment_sets.xml</c>; since #569 TAOM overrides
+    /// those rosters in <c>taom_player_start_vanilla_override.xml</c>, so every selectable culture is
+    /// checked and <see cref="StarterKitCoverageTests"/> pins what those overrides contain.
     /// </summary>
-    private static readonly HashSet<string> CulturesWithVanillaRosters =
-        new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        { "empire", "vlandia", "sturgia", "aserai", "battania", "khuzait" };
+    private static readonly string[] PlayerRosterFiles =
+        { "taom_char_creation_equipment.xml", "taom_player_start_vanilla_override.xml" };
 
     private static List<string> LoadSelectableCultures()
     {
@@ -79,14 +77,17 @@ public class PlayerStartCoverageTests
 
     private static HashSet<string> LoadTaomRosterIds()
     {
-        var path = Path.Combine(ModuleDataPath, "equipmentsets", "taom_char_creation_equipment.xml");
-        Assert.IsTrue(File.Exists(path), $"taom_char_creation_equipment.xml not found at {path}");
-
-        return new HashSet<string>(
-            XDocument.Load(path).Descendants("EquipmentRoster")
-                .Select(e => (string?)e.Attribute("id"))
-                .Where(id => !string.IsNullOrEmpty(id))!,
-            StringComparer.OrdinalIgnoreCase);
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var file in PlayerRosterFiles)
+        {
+            var path = Path.Combine(ModuleDataPath, "equipmentsets", file);
+            Assert.IsTrue(File.Exists(path), $"{file} not found at {path}");
+            ids.UnionWith(
+                XDocument.Load(path).Descendants("EquipmentRoster")
+                    .Select(e => (string?)e.Attribute("id"))
+                    .Where(id => !string.IsNullOrEmpty(id))!);
+        }
+        return ids;
     }
 
     [TestMethod]
@@ -98,7 +99,6 @@ public class PlayerStartCoverageTests
         var gaps = new List<string>();
         foreach (var culture in LoadSelectableCultures())
         {
-            if (CulturesWithVanillaRosters.Contains(culture)) continue;
             if (!titlesByCulture.TryGetValue(culture, out var titles)) continue;
 
             foreach (var title in titles)
@@ -114,7 +114,8 @@ public class PlayerStartCoverageTests
             + "own youth_menu offers. PlayerEquipmentRosterIds builds this id unconditionally, so "
             + "the player finishes character creation with no equipment at all — silently, with "
             + "only a RosterNotFound log line. Author these rosters in "
-            + "equipmentsets/taom_char_creation_equipment.xml:\n  " + string.Join("\n  ", gaps));
+            + "equipmentsets/taom_char_creation_equipment.xml (or, for a vanilla-mapped culture, "
+            + "re-run tools/wire_starter_kit_rosters.py --apply):\n  " + string.Join("\n  ", gaps));
     }
 
     [TestMethod]
