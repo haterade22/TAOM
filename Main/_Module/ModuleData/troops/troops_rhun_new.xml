@@ -1815,7 +1815,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.easterling_spear" />
+                <equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
                 <equipment slot="Item1" id="Item.aserai_sword_5_t4" />
                 <equipment slot="Item2" id="Item.desert_round_shield" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />

@@ -805,7 +805,7 @@
 
     <EquipmentRoster id="player_career_khuzait_cavalry_m" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.easterling_spear" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
@@ -817,7 +817,7 @@
 
     <EquipmentRoster id="player_career_khuzait_cavalry_f" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.easterling_spear" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
             <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
@@ -831,7 +831,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.easterling_spear" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
         </EquipmentSet>
@@ -841,7 +841,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.easterling_spear" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
             <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
             <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
         </EquipmentSet>

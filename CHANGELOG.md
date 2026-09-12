@@ -4,6 +4,29 @@
 
 ## 2026-09-12
 
+### fix(data): the 238 references the Gondor sword rebuild broke are repointed, via Erkam's assets-repo fix (#568)
+
+The 2026-09-01 sword rebuild removed 26 item ids from the live Armory (`wm_gondor_sword_a04` to
+`a10`, `wm_gondor_spear`, `easterling_spear`, the Lossarnach axes, the Numenorean two-handers, the
+Lamedon sword) and nothing repointed the ten ModuleData files that name them: 238 dangling
+references, every one an empty slot in game, and the ModuleData commit gate red since. Erkam
+repaired them in the assets-repo mirror of this module (`lotraom-assets` d7d5f75b; 66ac53be was
+the first attempt and c89bc6d3 its revert), so this is a port, not a fresh fix: eight files copied
+verbatim, `npcs_gondor.xml` and `taom_spcultures.xml` three-way merged because HEAD had gained
+skill_template, face and comment edits after his snapshot (git merge-file, zero conflicts). All
+119 replacement ids exist. The same commit carries his Gondor troop re-roster (Cair Andros, Minas
+Tirith and Pinnath Gelin armour sets, green shields, crossbows, Numenorean bastard swords, skill
+tweaks) and Rhun light-to-heavy plate swaps that already matched the #541 fix here, so
+`troops_rhun_new.xml` changes by one line.
+
+Gates: `validate_moduledata.py` 0 errors (from 238), 94 warnings unchanged;
+`audit_polearm_shield_parity.py` PASS; Python tools 1236 OK; `dotnet test` filtered to
+CharacterCreation, BannerBearers, CulturePartyTemplate, CharacterFaceCoverage, Troop and Equipment
+1210 passed, which includes the BannerBearers test that was red on HEAD over `wm_gondor_sword_a04`.
+Not run in game. Two Gondor troop names changed under existing loc keys and leave 12 stale
+translations (#572). The assets-repo mirror of this module should be re-synced from here; his base
+had drifted on four files.
+
 ### fix(camps): refuge founding no longer strands the player in a dead camp wait menu (#567)
 
 Players who founded a refuge and deposited troops into its garrison came back to a camp menu that

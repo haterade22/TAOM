@@ -1049,7 +1049,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_gondor_cavalry_soldier" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
@@ -1071,7 +1071,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_gondor_infantry_veteran" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
@@ -1086,7 +1086,7 @@
             <Equipment slot="Item0" id="Item.wm_gondor_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item3" id="Item.wm_gondor_sword_a04" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -1097,7 +1097,7 @@
     <EquipmentRoster id="enlist_gondor_cavalry_veteran" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
-            <Equipment slot="Item1" id="Item.wm_gondor_sword_a05" />
+            <Equipment slot="Item1" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item2" id="Item.gond_shield_three_green" />
             <Equipment slot="Item3" id="Item.western_javelin_2_t3" />
             <Equipment slot="Head" id="Item.sk_gd_pin_inf_helmet_med_a" />
@@ -1109,7 +1109,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_gondor_support_veteran" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.sk_gd_bel_inf_chest_med_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -1135,7 +1135,7 @@
             <Equipment slot="Item0" id="Item.wm_gondor_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item3" id="Item.wm_gondor_sword_a08" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
             <Equipment slot="Head" id="Item.sk_gd_vale_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.sk_gd_vale_chest_heavy_a" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -1146,7 +1146,7 @@
     <EquipmentRoster id="enlist_gondor_cavalry_sergeant" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_pg_spearb" />
-            <Equipment slot="Item1" id="Item.wm_gondor_sword_a06" />
+            <Equipment slot="Item1" id="Item.wm_gondor_sword_a03" />
             <Equipment slot="Item2" id="Item.gond_shield_three_green" />
             <Equipment slot="Item3" id="Item.western_javelin_3_t4" />
             <Equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
@@ -2647,7 +2647,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_umbar_infantry_veteran" culture="Culture.umbar">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
             <Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
@@ -2661,7 +2661,7 @@
             <Equipment slot="Item0" id="Item.highelf_longbowc" />
             <Equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
             <Equipment slot="Item2" id="Item.wm_elven_arrow_v4_a" />
-            <Equipment slot="Item3" id="Item.wm_gondor_sword_a06" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
             <Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
             <Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
@@ -2683,7 +2683,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_umbar_support_veteran" culture="Culture.umbar">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
             <Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
@@ -2693,7 +2693,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_umbar_infantry_sergeant" culture="Culture.umbar">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Item1" id="Item.viking_round_shield" />
             <Equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
             <Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />

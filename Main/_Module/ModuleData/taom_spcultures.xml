@@ -2791,13 +2791,12 @@
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items>
-      <item id="Item.wm_gondor_sword_a05" />
+      <item id="Item.wm_gondor_sword_a01" />
     </vassal_reward_items>
     <banner_bearer_replacement_weapons>
       <item id="Item.wm_gondor_sword_a01" />
       <item id="Item.wm_gondor_sword_a02" />
       <item id="Item.wm_gondor_sword_a03" />
-      <item id="Item.wm_gondor_sword_a04" />
     </banner_bearer_replacement_weapons>
     <default_policies>
       <policy id="policy_senate" />
@@ -4173,7 +4172,6 @@
     <item id="Item.wm_gondor_sword_a01" />
     <item id="Item.wm_gondor_sword_a02" />
     <item id="Item.wm_gondor_sword_a03" />
-    <item id="Item.wm_gondor_sword_a04" />
   </banner_bearer_replacement_weapons>
   </Culture>
 

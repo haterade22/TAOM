@@ -145,7 +145,7 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
 				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-				<equipment slot="Item2" id="Item.wm_gondor_spear" />
+				<equipment slot="Item2" id="Item.wm_gondor_spear_b" />
 				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
 				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />

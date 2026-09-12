@@ -507,7 +507,7 @@
 				id="Item.sm_gd_shield_a1" />
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -549,7 +549,7 @@
 				id="Item.sm_gd_shield_a1" />
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -591,7 +591,7 @@
 				id="Item.sm_gd_shield_a1" />
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -633,7 +633,7 @@
 				id="Item.sm_gd_shield_a1" />
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -846,7 +846,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -885,7 +885,7 @@
 				id="Item.wm_gondor_sword_a01" />
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_jerkin_a" />
@@ -1005,7 +1005,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Item2"
 				id="Item.gondor_steel_bow_starter" />
@@ -1047,7 +1047,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.wm_gondor_spear" />
+				id="Item.wm_gondor_light_spear" />
 			<Equipment
 				slot="Item2"
 				id="Item.gondor_steel_bow_starter" />
@@ -1089,7 +1089,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_lossarnach_1h_axe_a" />
+				id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
 			<Equipment
 				slot="Item3"
 				id="Item.sm_gd_shield_a1" />
@@ -1128,7 +1128,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item2"
-				id="Item.wm_gondor_lossarnach_1h_axe_a" />
+				id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
 			<Equipment
 				slot="Item3"
 				id="Item.sm_gd_shield_a1" />
@@ -1180,7 +1180,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.wm_gondor_lossarnach_1h_axe_a" />
+				id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
 			<Equipment
 				slot="Body"
 				id="Item.gondor_noble_coat_a" />
@@ -9865,7 +9865,7 @@
 				id="Item.sm_rh_loke_shield_med_a" />
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_chest_light_a" />
@@ -9907,7 +9907,7 @@
 				id="Item.sm_rh_loke_shield_med_a" />
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_chest_light_a" />
@@ -9949,7 +9949,7 @@
 				id="Item.sm_rh_loke_shield_med_a" />
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_chest_light_a" />
@@ -9991,7 +9991,7 @@
 				id="Item.sm_rh_loke_shield_med_a" />
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_chest_light_a" />
@@ -10204,7 +10204,7 @@
 				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_chest_light_a" />
@@ -10243,7 +10243,7 @@
 				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_chest_light_a" />
@@ -10363,7 +10363,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10405,7 +10405,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10447,7 +10447,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Item3"
 				id="Item.sm_rh_loke_shield_med_a" />
@@ -10486,7 +10486,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item2"
-				id="Item.easterling_spear" />
+				id="Item.sm_rh_loke_spear_a" />
 			<Equipment
 				slot="Item3"
 				id="Item.sm_rh_loke_shield_med_a" />

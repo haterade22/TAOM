@@ -1299,7 +1299,7 @@
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gondor_spear" />
+			<Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Item3" id="Item.arrow_emp_1_a" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
@@ -1319,7 +1319,7 @@
 			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gondor_spear" />
+			<Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Item3" id="Item.arrow_emp_1_a" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
@@ -1388,7 +1388,7 @@
 			<Equipment slot="Leg" id="Item.ithilien_boots" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.wm_gondor_spear" />
+			<Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
 			<Equipment slot="Body" id="Item.bandit_envelope_dress_v1" />
 			<Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
 		</EquipmentSet>
