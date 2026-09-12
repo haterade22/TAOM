@@ -1,0 +1,7 @@
+{
+  "_comment": "Hero StringId to party template StringId, both bare. A hero listed here spawns from the named template instead of the clan binding (Patch88, #580). Keep each template unbound by any clan or culture, or every lord of that clan fields it. docs/features/lord-party-templates.md",
+  "overrides": {
+    "lord_1_34": "kingdom_hero_party_gondor_faramir_template",
+    "lord_1_17": "kingdom_hero_party_mordor_sauron_template"
+  }
+}

@@ -122,7 +122,11 @@ The armour fix was then widened past the two houses to the whole line. `lord_1_2
 `lord_1_39` Naktharil sit in `clan_empire_south_3` Melkondili, were already human, and already
 carried a BN skillset, but were still in orc kit. The rule applied is **human plus a BN skillset
 means BN lord armour**, which now holds for all 16 Black Numenorean lords with no exceptions.
-Their clan keeps the 4% party template: this is their personal kit, not their troops.
+Their clan keeps the 4% party template: this is their personal kit, not their troops. Since
+2026-09-12 one member of that clan is the exception: Sauron (`lord_1_17`, the clan's owner) fields
+`kingdom_hero_party_mordor_sauron_template` through the per-hero override in
+[lord-party-templates.md](lord-party-templates.md) (#580), a 40 / 30 / 30 low, mid, high split of
+Uruks and Black Numenoreans. Herumarth and Naktharil still spawn from the Melkondili roster.
 
 ### min_value is half the mechanic, and it is easy to miss
 

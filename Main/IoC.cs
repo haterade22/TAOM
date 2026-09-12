@@ -162,6 +162,7 @@ public static class IoC
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
         LordSpawnGuardIoC.RegisterLordSpawnGuardFeature(container);
+        Features.LordPartyTemplates.LordPartyTemplatesIoC.RegisterLordPartyTemplatesFeature(container);
         Features.StaleCharacterRepair.StaleCharacterRepairIoC.RegisterStaleCharacterRepairFeature(container);
         Features.FiefGranting.FiefGrantingIoC.RegisterFiefGrantingFeature(container);
         Features.Enlistment.EnlistmentIoC.RegisterEnlistmentFeature(container);

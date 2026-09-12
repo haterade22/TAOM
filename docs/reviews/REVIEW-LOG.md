@@ -6,6 +6,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 102 | 2026-09-12 | Per-hero lord party templates (#580): Faramir fields Ithilien rangers, Sauron a Black Numenorean and Uruk host, a postfix on `Clan.DefaultPartyTemplate` live only inside two lord-spawn scopes | (no Codex pass) | 5-agent deep review, ready | 1 MEDIUM fixed (a closure per in-scope read; the decision now takes the service) | 1 (the warned-hero set is bounded by the JSON) | 0 | deep-review v5 |
 | 99 | 2026-09-12 | Camp wait menu dead after refuge founding (#567): wait condition `true`, founding exits before the deposit screen, then the Codex fix (paused picker + context revalidation) | issues-found (0 P1 / 2 P2 / 1 P3) | agree | 1 confirmed P2 on the fix (the unpaused picker let an incoming enemy's `encounter_meeting` become the menu the new exit destroyed); 1 pre-existing P2 filed as #573 (Enlistment load-time discharge leaves the persisted service menu with a false wait condition); 1 P3 (source pins accepted `args => true && false` and a commented-out exit) | 0 | 0 | v6 + 8 Known Suspects, GPT-6-Astra at ultra |
 | 1 | 2026-04-05 | CulturalFeats | no-ship | partial-agree | 1 confirmed | 1 | 2 | v1 (basic) |
 | 2 | 2026-04-05 | BannerColorPersistence | no-ship | partial-agree | 1 (understated) | 2 | 4 | v2 (improved) |
@@ -2689,6 +2690,30 @@ campaign-time thresholds that collapse at high multipliers.
 
 Owed: commits (four shared files carry other sessions' hunks), the in-game smokes in
 `docs/features/enlistment.md` "Testing", the reporting player's x64 log, close #576 and #577.
+
+## Review 102: per-hero lord party templates (#580), 5-agent deep-review (2026-09-12)
+
+Faramir should field Ithilien rangers and Sauron a Black Numenorean and Uruk host, and the engine
+binds party templates to a clan, never a hero: `InitializeLordPartyProperties` and the new-game
+top-up in `SpawnLordParty` both read `Clan.DefaultPartyTemplate`. Faramir shares his clan with
+Denethor and Boromir, Sauron shares his with Herumarth and Naktharil, so the feature is a postfix on
+that getter, live only inside two spawn scopes marked by prefix and finalizer pairs with `__state`
+save and restore (they nest), fed by `lord_party_templates.json` through a pure decision. Two new
+templates sized to the culture ceilings (200 and 260), bound by no clan or culture.
+
+**Deep review, five agents.** Standards, completeness and data flow clean (11 flows, 0 gaps; the
+initializer was confirmed synchronous inside `CreateLordParty`, the finalizer restore confirmed to
+run whether or not Patch65 swallows). Compatibility verified 19 members on the installed DLL and
+decompiled the vendored 0Harmony to confirm that a finalizer returning `__exception` unchanged is
+transparent to Patch65's on the same method in either order. Efficiency found one MEDIUM, a closure
+allocated per in-scope read of the getter, fixed by passing the service to the decision instead of a
+lambda; its LOW (unbounded warned-hero set) was refuted, the set is bounded by the JSON's entries.
+Two design notes (the ambient window spans the whole spawn call; same-clan nested spawns are a
+theoretical residual) went into the code comment and the feature doc. RCA:
+`rca-lord-party-templates-2026-09-12.md`.
+
+Owed: the in-game checks in `docs/features/lord-party-templates.md` "Verification in game", then
+close #580.
 
 ## Unlinked review artefacts (index)
 

@@ -232,7 +232,7 @@ Override pattern + base-class + registration rules: `.claude/rules/gamemodels.md
 
 ## Harmony Patch Categories
 
-94 categories mapping a stack trace to its owning feature -> exact target -> status.
+95 categories mapping a stack trace to its owning feature -> exact target -> status.
 **Full table (category -> feature -> target -> status) + rationale / history / RCAs:
 [`docs/reference/harmony-patch-registry.md`](docs/reference/harmony-patch-registry.md)** — grep the
 failing type there. This is the crash-triage lookup; `/investigate` + `/native-crash-triage`

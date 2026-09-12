@@ -228,7 +228,10 @@ a retarget rather than trusting the sum.
 otherwise falls back to `Culture.DefaultPartyTemplate` (`TaleWorlds.CampaignSystem/Clan.cs:112-122`).
 Vanilla kingdom clans do not carry the attribute at all (only bandit and minor-faction clans do, 25
 of them in `SandBox/ModuleData/spclans.xml`), so a TAOM kingdom clan uses whatever `spclans.xslt`
-binds for it, or the culture's template if that block binds nothing.
+binds for it, or the culture's template if that block binds nothing. One layer sits above the clan
+since 2026-09-12: a hero listed in `lord_party_templates/lord_party_templates.json` spawns from his
+own template through Patch88 ([lord-party-templates.md](../features/lord-party-templates.md)), and
+those templates are sized to the same `CULTURE_TARGETS` ceilings as the per-clan ones.
 
 Verified against `Main/_Module/ModuleData/taom_spcultures.xml` and `spcultures.xslt`:
 

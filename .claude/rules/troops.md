@@ -130,7 +130,10 @@ which is not always the clan's: the five `Culture.bluecraig` clans bind
 not a derivation: they keep `..._mistymountainorcs_mistymountainorcs_N_template` while their stacks
 are `goblin_*` too, because renaming a bound template id breaks `clans.xml`. Computing instead of
 grepping also hides dead data. Two of the 193 (`..._gondor_ithilien_template`,
-`..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14.
+`..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14. A third binding site exists
+since 2026-09-12: `lord_party_templates/lord_party_templates.json` binds a template to ONE hero
+(Patch88, `docs/features/lord-party-templates.md`), and a template listed there is deliberately
+absent from every clan and culture. Grep it too before calling a template dead.
 
 **`max_value` is not the party's size.** The engine draws ONE uniform ratio per party and fills every
 stack to `min + (max - min) * r`, so a template's max sum is a spawn ceiling and the expected spawn

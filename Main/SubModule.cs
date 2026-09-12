@@ -1403,6 +1403,15 @@ public class SubModule : MBSubModuleBase
         // strength of "it only fires on the daily tick": the new-game path would then be
         // unguarded.
         _harmony.PatchCategory("Patch65_LandlessCultureSpawnGuard");
+        // Patch88 (#580): a lord named in lord_party_templates.json fields his own party template.
+        // Postfix on the Clan.DefaultPartyTemplate getter, live only inside the two spawn scopes
+        // (SpawnLordParty and InitializeLordPartyProperties). Same two listeners as Patch65 reach
+        // SpawnLordParty, so the same placement argument holds: the standard batch runs before the
+        // new-game dispatch, and a lazier hook would leave the new-game roster on the clan binding.
+        TAOM.Features.LordPartyTemplates.Hooks.Patch88_LordPartyTemplate.Initialize(
+            IoC.Resolve<TAOM.Features.LordPartyTemplates.ILordPartyTemplateService>(),
+            IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch88_LordPartyTemplate");
         // Patch82 (#551) — restores the engine's own BattleObserver/TroopUpgradeTracker pairing
         // before MapEventSide.AllocateTroops dereferences the tracker unguarded. The target runs off
         // each map event's simulation timer under MapEventManager.Tick, which Campaign.Tick drives,
@@ -1893,6 +1902,7 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.ResetForUnload();
         TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.ResetForUnload();
         TAOM.Features.ReturnToArmy.Hooks.Patch87_ReturnToArmy.ResetForUnload();
+        TAOM.Features.LordPartyTemplates.Hooks.Patch88_LordPartyTemplate.ResetForUnload();
         TAOM.Features.Enlistment.Hooks.Patch85_EnlistedDetachDeferral.ResetForUnload();
         TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.ResetForUnload();
         TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.ResetForUnload();

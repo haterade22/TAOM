@@ -224,7 +224,7 @@ will hand out Calradian troops if the binding is wrong:
 
 | Attribute | Reader |
 |---|---|
-| `default_party_template` | `LordPartyComponent`, lord party spawn |
+| `default_party_template` | `LordPartyComponent`, lord party spawn. The clan-level binding shadows this one, and since 2026-09-12 a hero listed in `lord_party_templates/lord_party_templates.json` shadows the clan (Patch88, [lord-party-templates.md](lord-party-templates.md)) |
 | `villager_party_template` | `VillagerCampaignBehavior`, village trade parties |
 | `militia_party_template` | `MilitiaPartyComponent.CreateMilitiaParty` |
 | `rebels_party_template` | `LordPartyComponent`, the `IsRebelClan` branch |

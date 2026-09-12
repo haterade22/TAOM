@@ -4,6 +4,36 @@
 
 ## 2026-09-12
 
+### feat(lords): a named lord fields his own party template; Faramir raises Ithilien rangers, Sauron a Black Numenorean and Uruk host (#580)
+
+The engine binds party templates to a CLAN, never a hero: both reads that draw a lord's roster
+(`LordPartyComponent.InitializationArgs.InitializeLordPartyProperties`, v1.4.8 `:38`, and the
+new-game top-up in `HeroSpawnCampaignBehavior.SpawnLordParty`, `:265`) go through
+`Clan.DefaultPartyTemplate`. Faramir shares his clan with Denethor and Boromir, Sauron shares his
+with Herumarth and Naktharil, so rebinding either clan would have changed four other lords. New
+feature `LordPartyTemplates`: `lord_party_templates/lord_party_templates.json` maps a hero id to a
+template id, and Patch88 postfixes the clan getter, live only while a lord spawn is in flight. Two
+scope patches (prefix + finalizer, `__state` save and restore because they nest) mark the spawning
+hero on `SpawnLordParty` and on `InitializeLordPartyProperties`, the second covering every
+creation path (rebellions, companion parties, StoryMode). The finalizers return the exception
+untouched so Patch65's conditional swallow on the same method keeps deciding. The decision is a
+pure function; an unresolvable template leaves vanilla in place and warns once per hero.
+
+Data: `kingdom_hero_party_gondor_faramir_template` (max 200, Gondor's ceiling: 100 Ithil Guard
+ranged including the Ithilien Ranger, 60 Ithil Guard foot, 40 Anorien horse, since Ithilien has no
+mounted line) and `kingdom_hero_party_mordor_sauron_template` (max 260: 104 low tier, 78 middle,
+78 high by level band, Uruks and Black Numenoreans, nothing under level 11). Both deliberately
+unbound by any clan or culture, and a test fails if that changes. Faramir's clanmates keep the
+Minas Tirith roster; Melkondili keeps its orc roster. Tests: 46 new (provider, service, the pure
+decision, the shipped data with its 50/20/30 and 40/30/30 splits, bindings against the installed
+DLLs with parameter names, the SubModule wiring, call presence in every patch body). Suite 8,771
+green, 2 skipped. Validator 0 errors. Deep review, five agents: standards, completeness and data
+flow clean, compatibility 19 members verified on the installed DLL, one MEDIUM fixed (a closure per
+in-scope read of the getter; the decision now takes the service), RCA
+`docs/reviews/rca-lord-party-templates-2026-09-12.md`. Owed: in-game check of both parties on a
+new campaign and of a loaded save keeping its rosters. `docs/features/lord-party-templates.md`.
+
+
 ### fix(enlistment): the enlisted soldier never gets the Order of Battle screen and never holds a captaincy (#576)
 
 Players reported that an enlisted soldier could open the deployment screen, drop himself onto

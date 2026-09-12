@@ -160,6 +160,7 @@ None — pure data lookup. `VolunteerRecruitmentService.GetVolunteerTroopId` is 
 
 ## Changelog
 
+- 2026-09-12: The ranger now also reaches the field through Faramir's own party template, `kingdom_hero_party_gondor_faramir_template` (a 0 to 15 stack beside the Ithil Guard ranged line), via the per-hero override in [lord-party-templates.md](lord-party-templates.md) (#580). Recruitment pools were the only route before.
 - 2026-06-22 — Restored the Ithilien Ranger to 10% in the live Gondor pools by adding `gondor_ithilien_ranger: 10` to the `gondor.json` Minas Tirith / Osgiliath / Cair Andros groups (the JSON loader overwrites the fallback pool, so its live spawn rate was 0%); added a production-JSON regression test.
 - 2026-05-23 — Re-equipped Faramir as Ithilien Ranger Captain (battle + civilian rosters), replacing the peasant-looking leather kit with his dedicated character-specific gear.
 - 2026-05-23 — Authored this feature doc and codified the `equipmentType="Civilian"` EquipmentRosters schema rule.

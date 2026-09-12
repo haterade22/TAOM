@@ -62,7 +62,12 @@ A culture attribute, a culture child list or a clan attribute. Nothing else read
 
 `Clan.DefaultPartyTemplate` returns the clan's own binding when it has one and falls back to the
 culture's `default_party_template` otherwise (`Clan.cs:112-122`), which is why most named lords field
-a per-clan roster and only unbound clans field the culture default.
+a per-clan roster and only unbound clans field the culture default. There is no per-hero binding in
+the engine. TAOM adds one in C#: `Main/_Module/ModuleData/lord_party_templates/lord_party_templates.json`
+maps a hero id to a template id and Patch88 swaps the getter's answer while that lord's party is
+being built ([lord-party-templates.md](../features/lord-party-templates.md)). A template named there
+must stay unbound by every clan and culture, so it is a third place to grep before calling a
+template dead.
 
 ## Attributes
 

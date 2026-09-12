@@ -119,6 +119,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
 - [map-event-guard](features/map-event-guard.md): Patch82, restoring the `BattleObserver`/`TroopUpgradeTracker` pairing that four unguarded engine dereferences rely on
 - [return-to-army](features/return-to-army.md): Patch87, "Return to Army" leaves a town or castle for an army member who is not merged into the army, where vanilla's wait menu has no exit
+- [lord-party-templates](features/lord-party-templates.md): Patch88, a lord named in `lord_party_templates.json` fields his own party template instead of his clan's (Faramir the Ithilien rangers, Sauron a Black Numenorean and Uruk host)
 - [stale-character-repair](features/stale-character-repair.md): Patch83, making a save-restored character with no ModuleData definition inert before the engine derefs its null fields
 - [faction-map](features/faction-map.md) — campaign map faction rendering
 - [clan-heraldry](features/clan-heraldry.md): per-clan `color`/`color2`, which is the battlefield armour tint via Patch23, plus per-clan party templates. `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, whose Gondor and Mordor specs have drifted and must not be re-applied
