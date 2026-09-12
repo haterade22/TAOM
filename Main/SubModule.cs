@@ -1200,6 +1200,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.AlignmentDesertion.IAlignmentDesertionService>(),
             IoC.Resolve<IModLogger>()));
 
+        // WandererAllegiance (#575): a wanderer refuses to be hired across the Free/Evil line. Two
+        // condition-gated NPC lines on vanilla's companion_hire token (priority 110 over vanilla's
+        // 100); stateless, reads MCM live, so registered unconditionally. No Harmony patch.
+        campaignStarter.AddBehavior(IoC.Resolve<Features.WandererAllegiance.Hooks.WandererAllegianceDialogBehavior>());
+
         // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
         // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
         campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(

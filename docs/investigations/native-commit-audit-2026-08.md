@@ -389,11 +389,96 @@ From each snapshot record **Private Bytes**, **Mapped File** (committed), **Imag
 **Heap**, **Managed Heap**, and the **top 15 rows of the Mapped-File view by size** — that last one
 is the named-mapped-files split, and it names the offending tpac/atlas *by file*.
 
-**Results table (fill in):**
+**Results table. Run 1 = 2026-09-12, config B only, PARTIAL (paused at 12:15 after the inventory
+sweep; clan, kingdom, settlement, battle and the end VMMap are still owed). Configs A and A+ have
+not been run.** Source: `taom_debug_2026-09-12_11-30-46.log` (pid 39684, TAOM v2.0.28 build
+`612cb8a2`, pair matched, Bannerlord v1.4.8.119303, 63,126 MB RAM, commit limit 128,662 MB,
+sampler at 10 s) and `E:\taom-memory-2026-09-02\commit-matrix\stations.csv`. `privMB` is the
+in-game `[MemProbe]` reading; the OS-side `Invoke-CommitMatrix` stamp for the same label agreed
+within 20 MB every time. **Cheat mode was on**, which makes the party and inventory screens list
+every troop and every item in the game, so those two rows are upper bounds, not a player's cost.
+Day-1 campaign loaded from `save010`, windowed, paused unless stated.
 
 | Config | Station | Run | privMB | wsMB | sysCommitUsedMB | VMMap privateMB | VMMap mappedMB | Top mapped file (MB) | GPU cost MB | notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| _pending_ | | | | | | | | | | |
+| B | B-menu | 1 | 6,759 | 4,405 | 62,058 | | | | | after 4 min idle at the menu; `taom.print_memory` cannot run here (needs a campaign), stamp only |
+| B | save010 load | 1 | 6,895 to 9,634 | | | | | | | `GameLoadingScreen` enter to exit, +2,739 in ~2 min |
+| B | map first settle | 1 | 9,750 to 13,231 | | | | | | 2,784 | `MapScreen` enter to `step0` 39 s later, **+3,481 with no input**; flat 28 s after that |
+| B | B-map-t0 | 1 | 13,195 | 5,823 | 68,763 | | | | 2,784 | engine `application:` 5,823 MB as ONE line, `native:` 0.00/0.00: no category breakdown exists |
+| B | B-map-idle5 (paused) | 1 | 13,209 | 5,653 | 68,959 | | | | 2,784 | 300 s, samples 13,181 to 12,997: **flat** |
+| B | B-map-run5 (normal speed) | 1 | 13,758 | 5,773 | 69,931 | | | | 2,784 | 300 s, samples 13,205 to 13,491, then +267 more in the next 150 s: **~60 to 100 MB/min**, managed +30 of it; 447 AI auto-resolves in the window |
+| B | B-map-baseline (VMMap) | 1 | 13,582 | 5,733 | 70,079 | 12,544 | 291 | not yet read | | committed 14,800 total: Private Data 85%, Managed Heap 638, NT Heap 614, Image 624 |
+| B | B-enc-pre | 1 | 13,744 | 5,905 | 70,404 | | | | 2,784 | |
+| B | B-enc-p1 (20 Mordor troops, ~6 s each) | 1 | 13,108 | 6,074 | 70,006 | | | | 2,784 | **-636**; managed +118 |
+| B | B-enc-p1-settled (60 s) | 1 | 13,222 | 6,072 | 70,076 | | | | 2,784 | flat through the minute |
+| B | B-enc-p2 (same 20, ~2.5 s each) | 1 | 13,236 | 6,054 | 69,988 | | | | 2,784 | **+14**; pass 3 cut as redundant |
+| B | B-save-pre | 1 | 13,187 | 6,045 | 70,064 | | | | | |
+| B | autosave + manual save | 1 | 13,016 to 13,225 | | | | | | | 2.7 s and 2.8 s; samples around both flat |
+| B | B-save-post | 1 | 13,307 | 5,566 | 70,199 | | | | | +120, noise |
+| B | party screen x10 (cheat: all troops) | 1 | 13,402 first enter; exits 14,724 to 14,897; re-enters 14,221 to 14,347 | | | | | | | +450 per open, back within 2 s; resting point moved **+1.0 GB once**, on the first open, never again |
+| B | B-ui-party-settled (60 s) | 1 | 14,327 | 3,611 | 71,350 | | | | 2,784 | managed 770 (was 474 before the sweep) |
+| B | inventory screen x10 (cheat: all items) | 1 | 14,314 first enter; exits 17,115 to 17,263; re-enters 16,548 to 16,848 | | | | | | | managed 475 to 3,15x at every exit, 2,64x at every re-entry: **+2.9 GB transient per open, almost all managed garbage** (see the next two rows) |
+| B | after inventory, 60 s (sample only) | 1 | 16,849 | 5,656 | 74,159 | | | | | 12:15:28, still holding the garbage; session paused here, probe and stamp still owed |
+| B | paused idle, 12:15 to 13:04 (49 min, samples only) | 1 | 14,198 at 12:20, 14,088 at 13:04 | | 72,997 to 74,152 | | | | | **a full GC by 12:20 returned 2.65 GB to the OS** (managed 2,647 to 475); flat for the rest of the hour. Inventory's RETAINED cost after collection is ~0; the resting point is the same ~14.2 GB the party sweep left |
+| B | B-ui-inv-settled (resumed 14:34, after 2 h 20 min paused) | 1 | 14,284 | 2,969 | 77,809 | | | | 2,784 | engine `application:` fell from ~5,900 to 2,906 MB during the pause while OS private commit did not move: what the engine frees stays in its allocator pools |
+| B | character screen x5 (`C`) | 1 | enters 14,236 to 14,349; exits 14,288 to 14,450 | | | | | | | nothing kept |
+| B | clan screen x5 (`L`) | 1 | enters 14,276 to 14,377; exits 14,390 to 14,514 | | | | | | | +240 per open, back within 4 s; nothing kept |
+| B | kingdom screen x5 (`K`) | 1 | enters 14,514 to 14,540; exits 14,377 to 14,443 | | | | | | | nothing kept |
+| B | B-town-pre | 1 | 14,699 | 3,096 | 78,588 | | | | 2,784 | |
+| B | Minas Tirith town scene load (`[BattleLoad]` phases) | 1 | EncounterStart 14,738; MissionInitialize **10,364**; scene loaded 12,702; BattlePlayable 14,049 | | | | | | | 13.7 s. **Entering any mission releases the map scene, ~4.4 GB.** The town scene then costs ~3.7 GB on top of a 10.4 GB no-scene floor |
+| B | B-town-in | 1 | 14,001 | 4,315 | 78,000 | | | | 2,784 | standing in the town |
+| B | B-town-post (back on the map) | 1 | 14,595 | 4,027 | 78,475 | | | | 2,784 | `MissionScreen` exit read 13,785; round trip **-104 vs pre**, nothing kept |
+| B | B-battle-pre | 1 | 14,323 | 3,806 | 78,330 | | | | 2,784 | |
+| B | field battle, `battle_terrain_r`, 13 agents | 1 | EncounterStart 14,516; MissionInitialize 10,929; FinishMissionLoadingBegin **9,914**; BattlePlayable 10,515; ExitBegin 10,612; MapResumed 10,665 | | | | | | | playable in 6.3 s, fought 52 s. The battle scene cost ~0.6 GB; the no-scene floor bottomed at 9.9 GB |
+| B | B-battle-post | 1 | 14,563 | 4,135 | 78,607 | | | | 2,784 | **+240 vs pre**, noise; the map re-settled to ~13.9 within 10 s of `MapResumed` |
+
+**Run 1 findings, in the order they settle questions:**
+
+1. **The engine cannot answer "what is what".** `Utilities.GetApplicationMemoryStatistics()` returns
+   one number (5.8 to 6.1 GB, under half of OS private commit) and `GetNativeMemoryStatistics()`
+   returns zeros in the shipping client. Step 2.0's "yes" branch is dead; attribution is stations
+   plus VMMap, nothing else.
+2. **Composition is private, not mapped: 85% Private Data, 2% Mapped File at the map baseline.**
+   That picks the workstream. L7 (pack splitting for paging granularity) cannot move a mapped total
+   of 291 MB; the weight is decoded, allocated residency, so L1/L2/L3 are the levers. The VMMap
+   `.mmp` still needs its Private-Data view read by allocation site to say which allocations.
+3. **Refuted as native-commit sources:** the encyclopedia (two passes, one first-touch, one repeat,
+   both within noise; whatever made pass 2 faster lives in VRAM or the disk shader cache), saving
+   (two saves, flat), and rendering the paused map (300 s, flat).
+4. **Every mover is bounded first-touch, none leak on repeat.** Ten opens each of party and
+   inventory produced flat ceilings and flat re-entry floors. The party screen keeps ~1.0 GB after
+   its first open; the inventory keeps nothing once a full GC runs (its 2.9 GB per open is managed
+   garbage, returned within five minutes of the pause). This is the "cache, plateaus" row of the
+   dose-response table, so the levers are asset breadth and size, not a lifetime bug. The transient
+   still has to FIT: on a 32 GB machine a 2.9 GB spike from one screen open lands on top of
+   whatever the session already holds, and the GC only runs when the runtime decides to.
+5. **The running campaign itself climbs**, 60 to 100 MB/min at day 1 with heavy AI auto-resolve
+   traffic, almost none of it managed. Five minutes is too short to say whether it plateaus; a
+   30-minute hands-off window at normal speed is the next block worth its time.
+6. **Where the 7.5 GB between the menu (6.6) and the collected, paused point (14.1) went:** save
+   load 2.7, map first settle 3.5, party first open 1.0 (cheat-inflated), running drift ~0.3. The
+   inventory's 2.9 GB was on top of that until the GC took it back. No battle yet.
+
+**Tool defects found by the run (fix before run 2):** `[MemProbe] gpu dump written: <path>` names a
+file that does not exist anywhere; `EngineMemoryStatsReader.cs:51-52` sets the path right after the
+void engine call with no `File.Exists` check, which is a claim without evidence. Block 0 of the
+protocol asked for `taom.print_memory` at the main menu, where it cannot run (`SubModule.cs:570`
+already says so); the stamp covers that cell. `estimatedCostMB` read 2,784 on every probe of the
+session, so treat it as static until a battle moves it.
+
+7. **The scenes are the big fixed costs, and they swap rather than stack.** The map scene is ~4.4
+   GB and the engine releases it on every mission entry, then rebuilds it on return (the "map first
+   settle" of +3.5 GB in finding 6 is this rebuild, seen once). Minas Tirith is ~3.7 GB, a small
+   field battle ~0.6 GB. With no scene loaded the process sits at 9.9 to 10.4 GB: the 6.6 GB menu
+   floor plus 3.3 to 3.8 GB of campaign state (the loaded save's objects, the party screen's kept
+   1.0 GB, the running-campaign drift). So on a 16 GB machine the map alone is a third of physical
+   RAM, and a town or siege scene lands on a 10 GB floor, not on the menu floor.
+8. **Round trips keep nothing.** Town in and out: -104 MB. Battle in and out: +240 MB. Both within
+   the noise of a single probe.
+
+**Still owed for run 1:** the 30-minute running window (in progress from 14:43), `B-end` with VMMap
+at the end of it, then `Invoke-CommitMatrix -Report` and the two VMMap Private-Data reads. Then
+configs A and A+ for the vanilla floor, which no number here is a substitute for.
 
 **Derived numbers to compute and record:**
 

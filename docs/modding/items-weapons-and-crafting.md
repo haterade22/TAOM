@@ -582,6 +582,7 @@ Counting commands run from the game's `Modules` folder. Line references into the
 
 ## Referenced by
 
+- [docs/features/starting-equipment-tuning.md](../features/starting-equipment-tuning.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/equipment-rosters.md](./equipment-rosters.md)
 - [docs/modding/file-catalogue.md](./file-catalogue.md)

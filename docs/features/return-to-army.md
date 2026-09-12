@@ -228,3 +228,17 @@ Search the TAOM debug log for `[ReturnToArmy]`:
 
 - **Issue:** #566, "Return to Army" strands an unattached army member inside a town or castle
 - **Status:** Open, pending the in-game smokes above
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/player-switcher.md](./player-switcher.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reviews/REVIEW-LOG.md](../reviews/REVIEW-LOG.md)
+
+<!-- backlinks-end -->

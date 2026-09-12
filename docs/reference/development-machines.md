@@ -93,6 +93,8 @@ correct there and the register above is enough to translate them.
 
 ## Referenced by
 
+- [docs/ai-includes/codex-operating-guide.md](../ai-includes/codex-operating-guide.md)
+- [docs/ai-includes/taleworlds-research-guide.md](../ai-includes/taleworlds-research-guide.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/bannerlord-engine-and-toolchain.md](./bannerlord-engine-and-toolchain.md)
 

@@ -496,6 +496,7 @@ promoted companion.
 
 ## Referenced by
 
+- [docs/features/wanderer-allegiance.md](./wanderer-allegiance.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/configs-balance.md](../modding/configs-balance.md)
 - [docs/modding/file-catalogue.md](../modding/file-catalogue.md)

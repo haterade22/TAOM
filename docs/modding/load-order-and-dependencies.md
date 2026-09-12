@@ -324,6 +324,7 @@ All measured 2026-09-05. Paths under the game install are written module-relativ
 
 ## Referenced by
 
+- [docs/features/starting-equipment-tuning.md](../features/starting-equipment-tuning.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/clans.md](./clans.md)
 - [docs/modding/file-catalogue.md](./file-catalogue.md)

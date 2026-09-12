@@ -168,7 +168,7 @@ A named companion, copied whole from its own file.
 		</NPCCharacter>
 ```
 
-1. **`is_hero="true"` with `occupation="Wanderer"`.** The pairing is the whole trick. `is_hero="true"` keeps the entry out of the clone pool (`CompanionsCampaignBehavior.cs:348` only collects templates), while `occupation="Wanderer"` still opens the hire dialogue (`LordConversationsCampaignBehavior.cs:1276`).
+1. **`is_hero="true"` with `occupation="Wanderer"`.** The pairing is the whole trick. `is_hero="true"` keeps the entry out of the clone pool (`CompanionsCampaignBehavior.cs:348` only collects templates), while `occupation="Wanderer"` still opens the hire dialogue (`LordConversationsCampaignBehavior.cs:1276`). Since #575 the hire is also alignment-gated: a companion whose culture is Free refuses an Evil-aligned player and the reverse, with a spoken refusal, so the culture you put on a named companion decides who can ever recruit them ([wanderer-allegiance.md](../features/wanderer-allegiance.md)).
 2. **The inline `<EquipmentRoster>` pair.** A named companion carries its own gear, so every item id must exist in the Armory or the slot ends up empty with no error at all. The second roster is tagged `civilian="true"`, which is the correct spelling for an inline roster.
 3. **`name="{=nc_gimli_name}Gimli"`.** No `{FIRSTNAME}` here, because a named companion is not run through the name generator.
 

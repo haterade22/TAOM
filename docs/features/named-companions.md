@@ -20,7 +20,7 @@ Vanilla `CompanionsCampaignBehavior` manages all wanderers via `is_template="tru
 
 Named companions use `is_hero="true"` + `occupation="Wanderer"` in their NPCCharacter XML. This combination:
 1. Makes them **invisible** to `CompanionsCampaignBehavior` (it only iterates `IsTemplate` characters)
-2. **Triggers the vanilla recruitment dialog** (`LordConversationsCampaignBehavior` checks `IsHero && Occupation == Wanderer`)
+2. **Triggers the vanilla recruitment dialog** (`LordConversationsCampaignBehavior` checks `IsHero && Occupation == Wanderer`). Since #575 the hire itself is gated by the culture on the companion: Aragorn, Legolas and Gimli refuse an Evil-aligned player and the Isengard pair refuse a Free one, see [wanderer-allegiance.md](wanderer-allegiance.md)
 3. Gives them a **fixed StringId** (no cloning/renaming)
 
 A custom `NamedCompanionBehavior` places them in specific settlements on new game and re-pins them on load.
@@ -152,6 +152,7 @@ Controls which companions spawn, where, and their race.
 
 ## Changelog
 
+- 2026-09-12: the hire dialogue is alignment-gated (#575, [wanderer-allegiance.md](wanderer-allegiance.md)); no change to placement or data here.
 - 2026-05-13 — Entity State Matrix completion (#127 + #184): added prisoner/fugitive placement guards to `EnsureCompanionsPlaced` and a per-process `ResetSession()` so companions aren't force-placed onto captors/fugitives or skipped across campaigns in the same Bannerlord process.
 - 2026-04-08 — Initial feature: XML/JSON-driven placement of 18 named companions across 7 cultures as recruitable `is_hero`/`Wanderer` characters with fixed identity, race corrections, custom backstory dialog, and a load-time recruited-companion guard.
 

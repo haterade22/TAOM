@@ -156,7 +156,7 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 ## Doc Lookup
 
 **Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
-to… / Read" lookup (all 78 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+to… / Read" lookup (all 83 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
 subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
@@ -173,7 +173,7 @@ Full file/path map (source XMLs, per-language files, tools, cache, validation te
 
 ## Key Paths
 
-Full feature/component map (99 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
+Full feature/component map (103 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
 Layout: `Main/` (.NET Framework 4.7.2) · `Main/Features/<Name>/` · `TAOM.Tests/` ·
 `Main/_Module/ModuleData/<feature>/` · adapters `Main/Adapters/` · core `Main/Core/`.
 `.claude/` tree: `skills/`, `rules/`, `agents/`, `hooks/`; Codex config `.codex/config.toml`,

@@ -193,6 +193,7 @@ the lock, unpauses the engine and force-resumes time. Both live in
 
 ## Referenced by
 
+- [docs/features/wanderer-allegiance.md](./wanderer-allegiance.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)

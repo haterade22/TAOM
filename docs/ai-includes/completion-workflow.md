@@ -108,6 +108,7 @@ Phase 4: CLOSE OUT
 
 ## Referenced by
 
+- [docs/INDEX.md](../INDEX.md)
 - [docs/reference/release-process.md](../reference/release-process.md)
 
 <!-- backlinks-end -->

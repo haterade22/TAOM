@@ -125,6 +125,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [minor-factions](features/minor-factions.md) — minor factions catalog + rules
 - [alignment-aware-execution](features/alignment-aware-execution.md) — race/alignment-aware execution penalties
 - [marriage-alignment](features/marriage-alignment.md): a Free-aligned hero cannot marry an Evil-aligned one (#542, Boromir wed a Misty Mountain orc). Blocks in `TaomMarriageModel.IsCoupleSuitableForMarriage`, the chokepoint every marriage path funnels through; `Patch81` narrows the AI partner draw so Free clans keep their marriage rate
+- [wanderer-allegiance](features/wanderer-allegiance.md): a wanderer refuses to be hired across the Free/Evil line (#575, Aragorn serving Mordor). Two NPC lines on vanilla's `companion_hire` token at priority 110, no Harmony patch; culture-keyed, symmetric, Neutral serves anyone
 - [execution](features/execution.md) — TaomExecutionRelationModel + Patch14
 - [banner-injection](features/banner-injection.md) — player banner persistence
 - [banner-color-persistence](features/banner-color-persistence.md) — clan colors everywhere (Patch23 + Patch24)
@@ -373,6 +374,7 @@ lives here; the published copy is downstream.
 ## Referenced by
 
 - [docs/adrs/010-knowledge-base-architecture.md](adrs/010-knowledge-base-architecture.md)
+- [docs/ai-includes/codex-operating-guide.md](ai-includes/codex-operating-guide.md)
 - [docs/features/doc-graph.md](features/doc-graph.md)
 - [docs/modding/README.md](modding/README.md)
 - [docs/reference/doc-lookup.md](reference/doc-lookup.md)

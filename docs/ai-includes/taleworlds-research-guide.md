@@ -759,6 +759,7 @@ See [development machines](../reference/development-machines.md) and the
 - [docs/ai-includes/agent-operating-manual.md](./agent-operating-manual.md)
 - [docs/ai-includes/agent-teams.md](./agent-teams.md)
 - [docs/ai-includes/architecture.md](./architecture.md)
+- [docs/ai-includes/codex-operating-guide.md](./codex-operating-guide.md)
 - [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)
 - [docs/ai-includes/iterative-problem-solving.md](./iterative-problem-solving.md)
 - [docs/ai-includes/multi-approach-validation.md](./multi-approach-validation.md)

@@ -310,6 +310,7 @@ patch in it, not just the offending method.
 
 ## Referenced by
 
+- [docs/features/return-to-army.md](../../features/return-to-army.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/testing-qa.md](./testing-qa.md)
 - [docs/reviews/rca-castle-recruitment-2026-05-31.md](../rca-castle-recruitment-2026-05-31.md)

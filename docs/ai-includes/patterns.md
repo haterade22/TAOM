@@ -1206,6 +1206,7 @@ When implementing patterns, ensure:
 - [docs/ai-includes/code-quality.md](./code-quality.md)
 - [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)
 - [docs/ai-includes/security.md](./security.md)
+- [docs/ai-includes/taleworlds-research-guide.md](./taleworlds-research-guide.md)
 - [docs/ai-includes/tdd-enforcement.md](./tdd-enforcement.md)
 - [docs/ai-includes/testing-guide.md](./testing-guide.md)
 - [docs/INDEX.md](../INDEX.md)

@@ -84,3 +84,13 @@ are left out. "Next build" means the fix is on trunk with no in-game smoke yet.
 | Poleaxes, bardings, Pelargir, shields | lotraom-assets `0244af88`, `3729340a`, `24ccacee`, `71dcc5b2` | Armoury |
 | Helm's Deep, Mirkwood/Mordor kits | live `TAOM_Map` 2 Sep tpacs; lotraom-assets `2acb0a22` and the 11 Sep kit update | Map |
 | Vista | CHANGELOG 2026-09-04 `docs(map)` | Map |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

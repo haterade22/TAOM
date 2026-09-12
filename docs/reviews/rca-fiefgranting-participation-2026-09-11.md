@@ -153,11 +153,3 @@ honest form of "not run". Its MCM decompile corrected the repo's shorthand: the 
 `PopulateObject`, with the same effect (an orphaned key is ignored, a missing key keeps the compiled
 default). `AGENTS.md` no longer carries a "Lessons From Prior Reviews" section, so the
 `/review-codex` step that updates it had nothing to update; noted rather than re-created.
-
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
-## Referenced by
-
-<!-- backlinks-end -->

@@ -57,7 +57,7 @@ TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationM
         │  extracts ids, single delegate, base fall-through (gamemodels.md rule 4)
         ▼
 IPrisonerRecruitmentMoraleService  ──►  IAlignmentService (Execution feature)
-        │                                    └─ execution/alignment.json (shared, 5 other consumers)
+        │                                    └─ execution/alignment.json (shared, 8 other consumers)
         └──►  IPrisonerRecruitmentSettingsProvider ──► TaomSettings (MCM)
 ```
 

@@ -900,6 +900,19 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), AI lords look for a partner among compatible clans instead of drawing uniformly from every clan in the world. Vanilla's draw wastes the day whenever it lands on a blocked clan, which would make Free factions (Gondor, Rohan, Dale) marry far less often and run short of heirs. Turn OFF to keep the block but restore vanilla's draw.")]
     public bool MarriageAlignmentSteerAiSearch { get; set; } = true;
 
+    // --- World / Wanderer Allegiance ---
+
+    [SettingPropertyGroup("World/Wanderer Allegiance", GroupOrder = 51)]
+    [SettingPropertyBool("Enable Wanderer Allegiance", Order = 0, RequireRestart = false,
+        HintText = "When enabled, a wanderer will not take service across the Free/Evil line: Free-culture wanderers (Gondor, Rohan, the Elves, Erebor and the rest) refuse a player who serves Sauron, and Evil-culture wanderers refuse a player on the Free side. Your side is the kingdom you serve (execution/alignment.json), falling back to your clan's culture when you serve no kingdom. Neutral cultures serve anyone and a Neutral player is refused by nobody. Companions already in your clan are never affected. When off, hiring is vanilla.")]
+    public bool EnableWandererAllegiance { get; set; } = true;
+
+    [SettingPropertyGroup("World/Wanderer Allegiance")]
+    [SettingPropertyDropdown("Who Refuses", Order = 1, RequireRestart = false,
+        HintText = "All wanderers (default): every wanderer, by culture. Named companions only: just the lore characters from named_companions.xml (Aragorn, Legolas, Gimli and the rest); generic tavern wanderers hire as in vanilla.")]
+    public Dropdown<string> WandererAllegianceScope { get; set; } = new Dropdown<string>(
+        new[] { "All wanderers (by culture)", "Named companions only" }, 0);
+
     // --- Prisoner Recruitment ---
 
     [SettingPropertyGroup("World/Prisoner Recruitment", GroupOrder = 39)]

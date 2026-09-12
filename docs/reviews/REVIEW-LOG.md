@@ -1730,6 +1730,7 @@ bug four times. Lessons: mocked-adapter-hides-the-engine-seam and return-values-
 
 ## Referenced by
 
+- [docs/features/return-to-army.md](../features/return-to-army.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 
@@ -2629,6 +2630,65 @@ Suite after the follow-up: 8599 passed / 2 skipped / 0 failed (the banner-bearer
 by #568 in between). RCA: Class 12 and its Codex table in
 `docs/reviews/rca-yotthani-camps-2026-08-23.md`. Owed: the in-game founding walk, a stuck save
 loaded on the fix build, a release.
+
+## Review 100: Wanderer Allegiance (#575), 5-agent deep-review (2026-09-12)
+
+Players reported Aragorn, Legolas and Gimli "ending up in evil clans". No v1.4.8 path moves a
+wanderer into an AI clan (every `AddCompanionAction.Apply` site passes `Clan.PlayerClan`, the
+commander picker needs `Occupation.Lord`, heirs exclude `IsWanderer`, governors come from
+`AliveLords`), so the evil clan is the player's own, reached through the vanilla hire dialogue.
+Fix (uncommitted at review time): two condition-gated NPC lines on vanilla's `companion_hire`
+token at priority 110, a pure rule over `IAlignmentService`, no Harmony patch; an MCM toggle and a
+scope dropdown narrowing it to the named companions.
+
+**Deep review, five agents, no confirmed code findings.** Standards and completeness clean.
+Compatibility verified 20 of 20 members and both load-bearing engine claims on the installed DLL:
+`GetSentenceOptions` returns the first true NPC line with `_sentences` sorted priority-descending
+and `SortLastSentence` splicing a later, higher-priority line ahead; `companion_hire` has one
+producer and one consumer in CampaignSystem and none in SandBox or StoryMode. Its one note (the
+boundary comment called `Clan.Culture` a field; it is an auto-property, and `Hero.MainHero` is a
+computed static that the try/catch covers) was fixed in the comment and the doc. Data flow traced
+11 flows, 0 gaps: all 22 shipped kingdom ids are `alignment.json` keys, so `ResolveSide`'s culture
+fallback is exercised only by kingdomless players; the one inconsistency is the 12 language files
+carrying English placeholders for the two new keys until the translator runs (the session had no
+API key). Efficiency raised one HIGH, "a singleton behavior's `AddNonSerializedListener`
+accumulates across campaigns and doubles the dialogue lines"; DISPUTED on the installed engine:
+`CampaignEvents.Instance => Campaign.Current.CampaignEvents`, constructed per campaign
+(`Campaign.cs:1368`), and `ConversationManager` is per campaign (`:1576`), so listeners and
+sentences die with the campaign. Its MEDIUM (two `TaomSettings.Instance` reads per click) was
+declined under the simplicity criterion. Lesson appended to `lessons/state-lifecycle-save.md`.
+
+Suite: 8685 passed / 2 skipped / 0 failed. Adding the two MCM properties moved the co-op
+fingerprint pins (`SettingsFingerprintTests`: 222 to 224 and 177 to 179; 238 across all pages) and
+both co-op docs. Owed: the translator run, the seven in-game smokes in
+`docs/features/wanderer-allegiance.md`, commit, close #575.
+
+## Review 101: enlisted captaincy (#576) and the parked-out-of-battle detach (#577), 5-agent deep-review (2026-09-12)
+
+Two player reports. While enlisted, the deployment screen opened and the player could captain a
+formation that then took no orders; at x64 fast-forward the party attached and detached during the
+join and "Send troops" threw in `BattleSimulation`. One cause: the 2026-08-12 army join flipped
+`MapEvent.IsPlayerSergeant()` and only its first consumer was audited. Fix (uncommitted at review
+time): `TaomBattleInitializationModel` keeps the Order of Battle screen shut through the same
+`BattleCommandPolicy` gate as the role strip; the Sergeant carve-out and the dead
+`OnDeploymentFinished` belt are deleted; `EnlistedSoldierPlacement.ReclaimAfterDeployment` undoes
+vanilla's own captain and general assignment; `Assess` holds presence while the battle encounter is
+open; `IArmyMembershipAdapter.IsMutating` stops the reconciler re-entering from our own disband.
+
+**Deep review, five agents.** Standards, efficiency and completeness clean. Compatibility verified
+about fifty members on the installed DLL, none incompatible, and corrected two comments: `RemoveUnit`
+clears a captaincy only for a unit that cannot lead remotely (vanilla sets that flag on the player),
+so the explicit clear is load-bearing; and `Mission.MainAgent` is proven non-null at
+`OnAfterDeploymentFinished` from `FinishDeployment:72-78`. Data flow found the HIGH: the save
+coercion (`EnlistedBattle` persists as `EnlistedAttached`) defeats every gate keyed on the state
+after a reload, so #576 reopened and #577's park ran via reload. Fixed in `EnlistmentLoadNormalizer`
+(restore `EnlistedBattle` when the party is in a map event or its battle encounter is open). Two
+pre-existing detach paths deferred and recorded on #577 (MCM off mid-battle, the join rollback's
+wait-menu init). RCA: `rca-enlistment-captaincy-hold-2026-09-12.md`. Follow-up #578 for the
+campaign-time thresholds that collapse at high multipliers.
+
+Owed: commits (four shared files carry other sessions' hunks), the in-game smokes in
+`docs/features/enlistment.md` "Testing", the reporting player's x64 log, close #576 and #577.
 
 ## Unlinked review artefacts (index)
 

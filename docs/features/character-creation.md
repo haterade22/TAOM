@@ -448,6 +448,7 @@ The Postfix's scope is deliberately limited to the age-30 code path. Vanilla ref
 
 - [docs/features/player-possession.md](./player-possession.md)
 - [docs/features/race-age-system.md](./race-age-system.md)
+- [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/body-properties.md](../modding/body-properties.md)
 - [docs/modding/module-armory.md](../modding/module-armory.md)

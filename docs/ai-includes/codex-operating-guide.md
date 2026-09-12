@@ -209,3 +209,17 @@ actually run, known omissions and remaining work. Do not call local instructions
 authenticated merge enforcement. Named runtime subagents, automated paid-provider
 adapters, remote CI approval gates and scheduled audits are not installed by
 this documentation and skill layer.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-operating-manual.md](./agent-operating-manual.md)
+- [docs/ai-includes/completion-workflow.md](./completion-workflow.md)
+- [docs/ai-includes/taleworlds-research-guide.md](./taleworlds-research-guide.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/codex-integration.md](../reference/codex-integration.md)
+
+<!-- backlinks-end -->

@@ -78,3 +78,14 @@ outside a battle" claim qualified to the successful non-leader steady state.
 Codex cost: 122,509 tokens. Zero false positives. Two things it did that the five in-house agents
 did not: it opened the installed co-op mod's patches to test a rationale about co-op, and it ran the
 repo's own IL scanner against synthetic bodies to prove a coverage claim rather than assert it.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/return-to-army.md](../features/return-to-army.md)
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

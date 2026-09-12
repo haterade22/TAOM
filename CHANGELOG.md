@@ -4,6 +4,168 @@
 
 ## 2026-09-12
 
+### fix(enlistment): the enlisted soldier never gets the Order of Battle screen and never holds a captaincy (#576)
+
+Players reported that an enlisted soldier could open the deployment screen, drop himself onto
+infantry, ranged or cavalry as captain, and then watch that formation take no orders for the whole
+battle. The cause was the 2026-08-12 army join that closed #443: it makes
+`MapEvent.IsPlayerSergeant()` true, which is the third arm of
+`SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux`, so the screen opened at
+every rank. The role strip (#424) could not close it, because the engine decides deployment from
+campaign state and caches the answer once per mission on a non-virtual method; worse, the strip's
+`IsPlayerGeneral == false` is what routed the deployment controller into the sergeant-choice view
+that offered the player the captain slot. Taking it ran `AssignSergeant`, which sets
+`Formation.PlayerOwner`; that setter turns the formation's AI off, and TAOM's neither-role pair
+refuses the order UI, so nobody could command it. The feature doc had predicted exactly this as a
+"consequence to watch in-game" and #443 closed without the look.
+
+`TaomBattleInitializationModel` now subclasses the SandBox model and answers `false` from
+`EnlistmentDeploymentService` exactly when `BattleCommandPolicy.ShouldStripPlayerCommand` is true,
+else `base`, so the deployment gate, the role strip and the formation placement share one
+predicate. The rank-3 Sergeant carve-out is deleted (no rank holds a command; #521 says rank 3 is
+effectively unreachable anyway), and the dead `OnDeploymentFinished` belt and its `_applied` latch
+go with it: `SetPlayerRole` has exactly two engine call sites, both before TAOM's `AfterStart`. With
+the screen shut, vanilla's `GeneralsAndCaptainsAssignmentLogic` still makes the player captain of
+the largest formation matching his mount and moves him into it, and moves him into the general's
+formation in battles of 50 or more, so `EnlistedSoldierPlacement.ReclaimAfterDeployment` (from
+`OnAfterDeploymentFinished`, after every vanilla handler) clears any captaincy handed to him and
+stands him back in his assignment's formation.
+
+New: `EnlistmentDeploymentServiceTests` (every state x side equals the shared policy, never
+`true`), `TaomBattleInitializationModelInvariantsTests` (the engine gate stays non-virtual and
+cached, the Aux stays protected virtual, only the Aux is overridden), and
+`EnlistmentAfterDeploymentBindingTests`. `docs/features/enlistment.md` loses its "the Order of
+Battle screen is unreachable, and always was" row, which had been wrong for a month under a "do not
+re-derive" banner. Not yet seen in game; smoke items are in the feature doc.
+
+### fix(enlistment): the reconciler holds the party while its battle encounter is open (#577)
+
+At x64 Extra Fast Forward a player saw the party attach and immediately detach during the battle
+join, `TICK trigger=army left` in the log while the `PlayerEncounter` was still active, and "Send
+troops" throwing `IndexOutOfRangeException` in `BattleSimulation`. That index is #551's, one path
+earlier: `SelectedTroops[(int)PlayerSide]`, and `PlayerSide` is `None` (-1) for a party with no
+`MapEventSide`. Every park clears `AttachedTo`, which pulls an active party off its side.
+`ServiceAttachmentService.Assess` admitted `EnlistedBattle` and returned `AttachRequired` in the
+loot and aftermath window (the map event is already gone there, the encounter is not), and the
+reconciler's park arm had no encounter guard. The trigger was TAOM's own army disband: dispersing
+the army we raised nulls the commander's `Army`, whose setter dispatches `OnPartyLeftArmy`, the very
+edge the maintenance behavior subscribes, so a full reconcile ran from inside the join or inside
+`PlayerEncounter.Finish`. At x64 a campaign hour is about 52 ms of wall clock and the wait menu
+re-arms fast-forward at the retained multiplier, so that pass ran roughly 16 times more often than
+at 4x.
+
+`Assess` now returns `Blocked(BattleEncounterOpen)` whenever the state is `EnlistedBattle` and a
+`PlayerEncounter` is live, placed right after captivity and above commander fitness and the
+settlement exit; the engine owns the party until the encounter closes, and a commander killed in
+that battle is discharged one tick later rather than from inside `Finish`. `IArmyMembershipAdapter.IsMutating`
+is true for the duration of `JoinCommanderArmy` and `LeaveArmy`, and the reconciler's common entry
+returns early while it is set. `BreakStaleBattleLatch` (#551) is unchanged and stays the only
+deliberate exit from the shape. The feature's campaign-time discriminators (the 1-hour stale-latch
+window, the 1-hour retry budget, the 6-hour dwell) all collapse to tens of milliseconds at x64;
+that is #578.
+
+The deep review's data-flow pass then found that the save coercion defeats every one of these
+gates after a reload: `EnlistmentRecord` writes `EnlistedBattle` as `EnlistedAttached` on the
+stated grounds that battle reality is re-derived at load, and that re-derivation had never been
+written. A save at the encounter menu or in the aftermath reloaded as an active, unparked Attached
+soldier; the deployment-screen model and the role strip deferred to vanilla for that battle, and
+`Assess` parked the party out of its live encounter. `EnlistmentLoadNormalizer` now restores
+`EnlistedBattle` at load when the party is in a map event or its battle encounter is still open,
+and leaves a settlement encounter alone. Known limitations, recorded on #577 rather than fixed
+here: the MCM master switch turned off mid-battle still discharges before the encounter closes
+(the documented "discharge outranks ownership" rule), and a failed join's rollback can re-init the
+wait menu, whose init parks on `EnlistedAttached` with no encounter check.
+
+New tests: the hold and its ordering against captivity, commander loss and the settlement exit in
+`ServiceAttachmentServiceTests`; no park on the aftermath shape, no discharge from inside it, and
+the own-mutation guard both ways in `EnlistmentReconcilerTests`. Not yet seen in game; the
+reporting player's diagnostics log is still wanted to confirm which path fired.
+
+### docs(memory): first live commit-attribution run, partial results into the audit runbook
+
+The Phase 2 results table in `docs/investigations/native-commit-audit-2026-08.md` had read
+`_pending_` since 2026-08-05. Run 1 (config B, day-1 campaign, cheat mode on, paused after 45
+minutes with clan, kingdom, settlement, battle and the end VMMap still owed) now fills it from
+`taom_debug_2026-09-12_11-30-46.log` and the `Invoke-CommitMatrix` CSV. What it settled: the
+engine's own accounting has no category breakdown (one `application` number, zeros for `native`),
+so attribution is stations plus VMMap; the map baseline is 85% Private Data and 2% mapped file, so
+pack splitting (L7) cannot move it and the decoded-residency levers (L1/L2/L3) can; the
+encyclopedia, saving and the paused map are refuted as sources; every mover found (save load +2.7
+GB, map first settle +3.5 GB, first party open +1.0 GB kept, inventory +2.9 GB per open but all
+managed garbage that a full GC returned within five minutes of the pause, the last two inflated by
+cheat mode's every-troop and every-item lists) is a bounded first-touch cost that ten repeats did
+not grow; the running campaign itself climbs 60 to 100 MB a minute at day 1 and needs a
+30-minute window. Two tool defects recorded for fixing before run 2: `[MemProbe]` reports a GPU dump
+path that no file exists at (`EngineMemoryStatsReader.cs:51` never checks), and block 0 asked for
+`taom.print_memory` at the main menu, where the cheat gate refuses it. Also reviewed four player
+artifacts from Downloads: the `b18f3441` crash bundle is #539 and its new memory verdict correctly
+read `no memory pressure` (first field validation of that section); two 32 GB machines showed the
+low-headroom WARN at the menu on a 51 GB commit limit and a 15.6 GB private peak on a 39 GB one.
+
+### feat(wanderers): wanderers refuse to serve an opposed-alignment player (#575)
+
+Players reported Aragorn, Legolas and Gimli "ending up in evil clans". Traced against the v1.4.8
+dump, no engine path moves a wanderer into an AI clan: every `AddCompanionAction.Apply` call site
+passes `Clan.PlayerClan`, the AI commander picker requires `Occupation.Lord`, heirs exclude
+`IsWanderer`, governors come from `AliveLords`, and TAOM's own companion minting targets the player
+clan too. The evil clan was the player's own, entered through the vanilla hire dialogue, which never
+asked which side either party was on.
+
+Now a wanderer refuses across the Free/Evil line, keyed on the culture the hero carries: a Free
+wanderer refuses a player who serves Sauron (kingdom first, then clan culture, so a Gondor-born
+mercenary of Mordor reads Evil), an Evil wanderer refuses a Free player, and Neutral cultures serve
+anyone. The refusal is spoken in the dialogue and the menu comes back; no gold moves. No Harmony
+patch: `ConversationManager.GetSentenceOptions` returns the first NPC line on the active token whose
+condition is true, walking the list sorted priority-descending, so two condition-gated lines on
+vanilla's `companion_hire` token at priority 110 pre-empt vanilla's reply (priority 100) exactly when
+a refusal applies. `WandererAllegianceService` is the pure rule over `IAlignmentService`; MCM group
+`World / Wanderer Allegiance` (master toggle, a "Who Refuses" dropdown narrowing it to the 17 named
+companions), JSON at `wanderer_allegiance/wanderer_allegiance_config.json`. Hire-block only:
+companions already in the clan are never affected. Tests: the nine side combinations, the config and
+settings providers, a coverage gate that every wanderer culture is classified in `alignment.json`,
+the IoC/SubModule wiring and priority, and binding pins on the vanilla token. Owed: seven in-game
+smokes (`docs/features/wanderer-allegiance.md`) and the translator run for the two new strings.
+Docs: the feature doc, feature map, INDEX, doc-lookup, named-companions.md and the modding wanderer
+guide.
+
+### fix(time): the map bar Extra Fast Forward button applies the multiplier (#574)
+
+Players reported that the "Extra Fast Forward Multiplier" slider did nothing, and one player that
+it worked. Both were right. The map bar button bound vanilla `ExecuteTimeControlChange(2)`
+directly, which sets the time mode and never touches `Campaign.SpeedUpMultiplier`, the only thing
+`Campaign.TickMapTime` scales by (v1.4.8), so the button was vanilla fast-forward under a
+different tooltip whatever the slider said, and it returned early when the game was already
+fast-forwarding. The E key went through the service, which does write the multiplier. #168 had
+recorded exactly this in May as "Option A, tracked as a future enhancement" and closed.
+
+Both map bar fast-forward buttons now route through `ITimeAccelerationService`:
+`ExecuteExtraFastForward` on the mixin writes the extra multiplier, and `ExecuteFastForward`
+(vanilla's own button, rebound by the existing attribute patch) writes the normal one back; each
+runs behind vanilla's own gate (no menu, or a wait menu that is not time-locked, via the new
+`ITimeControlAdapter.IsWaitMenuActive`) and then makes the vanilla call so `TimeFlowState` stays
+in step. The second rebind closes a sticky hole: after one E press the engine kept the extra value
+and vanilla's button ran at it until Space happened to restore it. The lit state now refreshes
+every frame (`[ViewModelMixin("Tick")]`; `RefreshValues` runs only from the constructor and on a
+gamepad change) and means a fast-forward mode above the normal multiplier, so vanilla's button lit
+alone is normal speed and both lit is extra. The settings provider floors extra at fast. The two
+hint texts name the button. 25 new tests, 62 in the TimeAcceleration filter.
+
+Ruled out against the installed engine on the way: the rebindable key registry (this machine's
+`BannerlordGameKeys.xml` holds the TAOM category correctly), the `OnApplicationTick` wiring, the
+co-op gate in solo play, and any vanilla writer resetting the multiplier mid-session. A player
+screenshot shows the three TAOM rows rendering in Options with Turbo moved to Left Control, which
+makes a bare Ctrl press run at the turbo slider and is the likely "it works for me".
+Not-tested: the Gauntlet command binding to the mixin methods and the per-frame refresh hook are
+runtime-only. Owed: the in-game smokes in #574, which also close #504's outstanding checklist.
+Known limitation: `Campaign.OnLoad` resets the multiplier to 4 on every load whatever the Fast
+Forward Multiplier says, so the vanilla "3" key runs at 4 after a load until Space or a map bar
+button writes the configured value (pre-existing, recorded by the review, not fixed here).
+Deep review: five agents, no defect in the change; the missing feature-map row added, two symmetry
+tests added, efficiency HIGHs downgraded on evidence. RCA
+`docs/reviews/rca-time-acceleration-button-2026-09-12.md`; `/deep-review` Agent 5 gains item 8b, a
+trace of every `Command.Click` in a TAOM prefab to a mod-owned write, so a control bound to a vanilla
+command is flagged whether or not its file changed.
+
 ### test(cc), docs: the starter-kit invariant is pinned, the generator survives its own rewiring, and every stale start-kit statement is corrected (#569)
 
 `StarterKitCoverageTests` pins, with no allowlist, that every weapon and armour slot in all three

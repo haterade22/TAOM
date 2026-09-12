@@ -2631,5 +2631,7 @@
     <string id="taom_res_tt_per_raid" text="Per raid" />
     <string id="taom_res_tt_per_siege" text="Per siege" />
     <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
+    <string id="taom_wa_refuse_free" text="No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
+    <string id="taom_wa_refuse_evil" text="You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
   </strings>
 </base>

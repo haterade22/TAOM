@@ -226,10 +226,17 @@ an item folder loads as a duplicate item id.
 
 ## Referenced by
 
+- [docs/features/career-system.md](./career-system.md)
+- [docs/features/character-creation.md](./character-creation.md)
+- [docs/features/lord-identity-reconciliation.md](./lord-identity-reconciliation.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/balance-levers.md](../modding/balance-levers.md)
 - [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
 - [docs/modding/items-armor.md](../modding/items-armor.md)
+- [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/party-templates.md](../modding/party-templates.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

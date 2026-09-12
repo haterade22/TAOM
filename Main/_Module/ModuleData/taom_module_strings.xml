@@ -2881,4 +2881,8 @@
 	<string id="taom_res_tt_per_siege" text="{=taom_res_tt_per_siege}Per siege" />
 	<string id="taom_res_tt_per_prisoner" text="{=taom_res_tt_per_prisoner}Per prisoner" />
 
+	<!-- Wanderer Allegiance (#575): a wanderer refusing to be hired across the Free/Evil line -->
+	<string id="taom_wa_refuse_free" text="{=taom_wa_refuse_free}No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
+	<string id="taom_wa_refuse_evil" text="{=taom_wa_refuse_evil}You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
+
 </strings>

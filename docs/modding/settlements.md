@@ -467,5 +467,6 @@ Every count was produced on 2026-09-05 by the command beside it. The live file i
 - [docs/modding/recipe-retire-content.md](./recipe-retire-content.md)
 - [docs/modding/strings-and-localization.md](./strings-and-localization.md)
 - [docs/modding/troubleshooting.md](./troubleshooting.md)
+- [docs/reference/taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md)
 
 <!-- backlinks-end -->

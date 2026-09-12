@@ -22,7 +22,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 - [Data, Content & Cultures](lessons/data-content-cultures.md), 103 lessons
 - [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md), 50 lessons
 - [Animation & Skeleton](lessons/animation-skeleton.md), 32 lessons
-- [State, Lifecycle & Save](lessons/state-lifecycle-save.md), 52 lessons
+- [State, Lifecycle & Save](lessons/state-lifecycle-save.md), 53 lessons
 - [XSLT & ModuleData](lessons/xslt-moduledata.md), 28 lessons
 - [Campaign Mechanics](lessons/campaign-mechanics.md), 25 lessons
 - [Localization & UI](lessons/localization-ui.md), 40 lessons
