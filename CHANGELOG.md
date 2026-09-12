@@ -4,6 +4,16 @@
 
 ## 2026-09-11
 
+### chore(data): drop the duplicated vanilla-bandit-clan strip in spclans.xslt, fix a stale culture comment
+
+`spclans.xslt` carried the five `Faction[@id='sea_raiders'...]` empty templates twice, once at the top
+and once verbatim at the end of the file; the trailing copy is gone and the transform output over
+vanilla `spclans.xml` is byte-identical to before (the five clans still stripped, `looters` kept).
+The wave-2 comment in `taom_spcultures.xml` said Gondor Soldiers, Erebor Warriors and Mirkwood
+Stalkers were "INERT until a matching bandit clan + hideouts exist"; they have had both since
+2026-05-28, and the comment now says so and states the inert/crash rule in both directions.
+Found during the #564 research; no behaviour change.
+
 ### feat(bandits): hideout boss fight is exactly 1 boss + N bodyguards (#564)
 
 The end-of-hideout fight was routinely boss plus 20 to 40, and boss plus ~90 on the night route

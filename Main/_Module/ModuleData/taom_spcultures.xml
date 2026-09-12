@@ -4129,9 +4129,11 @@
   <!-- LOTR Bandit Cultures — Wave 2 (heroic-faction offshoots) -->
   <!-- ============================================== -->
   <!-- Gondor Soldiers, Erebor Warriors, Mirkwood Stalkers. is_bandit + can_have_settlement
-       like the wave-1 cultures. INERT until a matching bandit clan + hideouts of the culture
-       exist (no clan with this culture => not iterated in Clan.BanditFactions => no _hideouts
-       indexer hit => crash-safe). Clans are authored once the hideouts are placed. -->
+       like the wave-1 cultures. LIVE since 2026-05-28: each has a bandit clan in
+       characters/clans.xml and 10 hideouts in the live TAOM_Map settlements.xml, so each is
+       iterated in Clan.BanditFactions and its _hideouts entry exists. A bandit culture with
+       NO clan is inert (never iterated, no indexer hit); a clan whose culture has NO hideouts
+       throws in GetInfestedHideoutCount on new game, so never author one without the other. -->
 
   <!-- Gondor Soldiers (Anórien outlaw bands) -->
   <Culture
