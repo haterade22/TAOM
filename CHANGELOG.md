@@ -4,6 +4,39 @@
 
 ## 2026-09-12
 
+### feat(tools): generate_starter_kit.py authors a weak starter_ twin of every player-start item (#569)
+
+The player's kit named the culture's real weapons: the Gondor starter sword swung at damage
+factor 4.18 against a one-handed-sword median of 3.8, the Rivendell (4.9), Harad (5.31) and
+Rohan (5.01) starters sat near the top of the game, career bows ran 83 to 99 against vanilla's
+hunting bow at 40, and the elven starter shield carried 600 HP against 220 for a battered kite.
+Troops keep the real items, so every item a player-start roster hands out (the 256
+culture-default rosters, both their battle and civilian sets, plus the 78 career rosters) now
+gets a `starter_<donor>` duplicate: same meshes and pieces, stats floored to a per-class anchor
+and never above the donor. A crafted weapon's damage is geometry times the blade's
+damage_factor (Crafting.cs 134-135, 363-381), so the clone is one new blade piece (tier 1,
+hidden from the smithing designer) on the donor's own fittings, and its damage is exactly donor
+times new over old; the generator prints that ratio and the clone's percentile within its class
+(swords land at p3 to p6). Bows floor at 45, arrows at 1, shields at 220 HP, culture-default
+armour at body 9, leg 9, cape 6. Clones ship `is_merchandise="false"` (out of loot, shops,
+workshops and tournament prizes; still sellable) and crafted twins carry `value="150"`, because
+DefaultItemValueModel prices a crafted weapon 40% from its fittings' tiers and iron grades
+(lines 41-49, 171-215), which a floored blade on tier-5 elven fittings would still push into
+the thousands.
+
+Applied to the live Armory and the lotraom-assets mirror: 127 items in 14
+`LOTRLOME_items/<folder>/starter_kit.xml` files, 39 starter blades in a marker block of
+`LOTRLOME_crafting_pieces.xml`, and each blade registered in every stylesheet block its donor
+blade appears in (15 description blocks, 8 template blocks; two vanilla-only javelin
+descriptions got new template blocks, passthrough included). Nothing references the new items
+yet; the roster rewiring is the next commit. Gates: 38 unit tests on synthetic fixtures (floors,
+id derivation, crafted versus plain, missing donor and missing anchor abort, block mirroring,
+idempotency, revert, BOM and CRLF round-trip, unregistered folder); `--verify` clean on both
+copies; a second `--apply` is 76 no-ops; `check_external_xslt.py` 17 clean; an lxml transform
+of Native's description files through the modified stylesheets places every starter row and
+loses no vanilla row; validator 0 errors; parity audit PASS. Not yet in game: new item XML
+loads only at process launch.
+
 ### fix(data): the 238 references the Gondor sword rebuild broke are repointed, via Erkam's assets-repo fix (#568)
 
 The 2026-09-01 sword rebuild removed 26 item ids from the live Armory (`wm_gondor_sword_a04` to
