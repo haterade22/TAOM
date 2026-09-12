@@ -978,7 +978,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementEconomyModel(IoC.Resolve<ISettlementEconomyService>(), IoC.Resolve<ISettlementEconomyConfigProvider>()));
-        campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>()));
+        campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>(), IoC.Resolve<IHideoutBossFightService>()));
         campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomClanFinanceModel(
@@ -1134,6 +1134,16 @@ public class SubModule : MBSubModuleBase
         // (fixes caravans shuttling between the nearest two towns). Registered unconditionally so a
         // mid-session master-toggle-on works immediately; no SyncData (ephemeral, rebuilds as caravans move).
         campaignStarter.AddBehavior(IoC.Resolve<Features.CaravanTrade.CaravanVisitMemoryBehavior>());
+
+        // FiefGranting (#565): the siege participation record TaomSettlementClaimantDecision reads.
+        // Records every winning-side party's clan and contribution at MapEventEnded (dispatched
+        // before the owner change in the same finalize), forgets it on any non-siege owner change,
+        // and owns the SyncData halves; the record itself is the singleton
+        // IFiefSiegeParticipationService.
+        campaignStarter.AddBehavior(new Features.FiefGranting.Hooks.FiefGrantingCampaignBehavior(
+            IoC.Resolve<Features.FiefGranting.IFiefSiegeParticipationService>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<IModLogger>()));
 
         // SupplyLines (#505): resupply convoys ordered from towns/lords. The behavior owns the
         // SyncData halves; the order book itself is the singleton ISupplyOrderService.
@@ -1359,6 +1369,14 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
+        // Patch86 — the hideout boss fight is exactly boss + N bodyguards on both routes (#564).
+        // Targets: MapEventHelper.GetPriorityListForHideoutMission (assault split; sole caller
+        // SandBoxMissions.OpenHideoutBattleMission) and the private
+        // HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight (sneak-in). Both run
+        // inside a campaign mission, so the standard batch is early enough. Resolver, not instance.
+        TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.Initialize(
+            IoC.Resolve<IModLogger>(), () => IoC.Resolve<IHideoutBossFightService>());
+        _harmony.PatchCategory("Patch86_HideoutBossFight");
         // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
         // map/menu state opens, well after initialization, so the standard batch is early enough.
         _harmony.PatchCategory("Patch64_MenuLinkColors");
@@ -1859,6 +1877,7 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.ResetForUnload();
         TAOM.Features.Enlistment.Hooks.Patch85_EnlistedDetachDeferral.ResetForUnload();
         TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.ResetForUnload();
+        TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.Hero_CanBecomePrisoner_Patch.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.TakePrisonerAction_Apply_Patch.ResetForUnload();
     }

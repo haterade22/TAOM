@@ -93,6 +93,17 @@ public class CoopVetoClassificationTests
             "Same as its participant sibling: menu_settlement_taken_player_army_member_on_init sets " +
             "text variables and a background mesh only, the prefix returns false solely on the null " +
             "_besiegerParty path vanilla cannot survive, and menu text is per-peer presentation."),
+        ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
+            "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
+            "function for the local hideout mission: it decides which troops spawn in phase 1 and " +
+            "which stand with the boss, and mutates no campaign state. The campaign-side roster " +
+            "trim runs earlier through the GameModel value, not through this prefix, and the only " +
+            "input the peers could disagree on (Hideout Boss Bodyguards) is a fingerprinted " +
+            "simulation-relevant setting. Gating it would restore the boss + everyone fight."),
+        ["Patch86_HideoutAmbushBossFight"] = new(CoopVeto.ReviewedSafe,
+            "Returns true always: it trims a MissionLogic instance list and rewrites an int the " +
+            "original then reads. Mission-local state on the peer running the hideout, no " +
+            "campaign mutation skipped."),
         ["AllianceCampaignBehavior_AddAllianceDecision_Patch"] = new(CoopVeto.ReviewedSafe,
             "Dedup guard, not a policy veto: skips queuing a start-alliance decision for a pair that " +
             "is already allied. Condition is Kingdom.IsAllyWith — replicated vanilla state, so both " +

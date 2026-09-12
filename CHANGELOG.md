@@ -4,6 +4,49 @@
 
 ## 2026-09-11
 
+### feat(bandits): hideout boss fight is exactly 1 boss + N bodyguards (#564)
+
+The end-of-hideout fight was routinely boss plus 20 to 40, and boss plus ~90 on the night route
+at the endgame density cap. Cutting the `*_boss_party_template`s alone would not have changed it:
+the template sizes the boss PARTY parked in the hideout, and the engine sizes the FIGHT from the
+whole hideout. On the assault route `MapEventHelper.GetPriorityListForHideoutMission` sends
+`min(floor(0.8 * total), FirstFightMax)` to phase 1 and everything else to the boss, and
+`HideoutCampaignBehavior.ArrangeHideoutTroopCountsForMission` never trims a boss party (:615), so
+a 40-97 man boss party overflowed straight into the boss phase. On the sneak-in route
+`HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight` spawns every troop that was not
+a sentry; its `Clamp(pop / 2, 4, 20)` is a floor, not a cap.
+
+- New `IHideoutBossFightService` (pure, 33 tests) owns the maths; `Patch86_HideoutBossFight` is one
+  category with two prefixes: a skip-original replacement of `GetPriorityListForHideoutMission`
+  that holds back exactly the boss(es) plus the N highest-level regulars, and a prefix on the
+  private `SpawnRemainingTroopsForBossFight` that trims the injected `_allEnemyTroops` to N. Both
+  fail open to vanilla and are `ReviewedSafe` for co-op.
+- `TaomBanditDensityModel.NumberOfMaximumTroopCountForBossFightInHideout` is now `1 + N`
+  unconditionally (its only consumer is the campaign-side trim, so phase 1 keeps its old size);
+  this is the one property where "vanilla is the floor" no longer holds.
+- MCM `Hideout Boss Bodyguards` (World / Bandit Scaling, 0-10, default 4, `RequireRestart = false`),
+  independent of `Enable Bandit Scaling`. `Boss Fight Curve` scales the first fight only now and is
+  relabelled `Hideout First Fight Curve`; its property name is unchanged so `TAOM.json` values survive.
+- The eight boss party templates go from 1/1 boss + soldier stacks at max 18-32 (sums 67-97) to
+  1/1 boss + soldier stacks summing to min 3 / max 4 (Gundabad drops its fourth guard stack).
+  `HideoutBossPartyTemplateTests` pins the shape; `tools/rebalance_template_power.py` drops `boss`
+  from its scope (its flat solver cannot express `1/2 + 1/1 + 1/1`) and the retired
+  `tools/raise_party_template_maxes.py` narrows its regex to raiders, so neither can re-inflate them.
+- Save-compat: no saved fields. A boss party already spawned from the old template keeps its size
+  until that hideout is cleared once; it lands in phase 1, never in the boss fight.
+- Docs: `docs/features/bandit-management.md` (new "Hideout boss fight: boss + N" section, config
+  table, files, tests, save-compat), the Patch86 registry section, `caravan-bandit-parity.md`,
+  `party-template-sizing.md`, `docs/modding/party-templates.md`, `tools/README.md`, the feature map
+  and GameModel registry rows, the API snapshot (regenerated: 227 patch targets, the committed file
+  had been stale at 220 since Patch82), `reflection-sites.md` (three field rows), the settings
+  counts in `coop-interop.md` and `bannerlord-together-compat.md` (235 / 176), and CLAUDE.md's
+  patch-category count re-measured (92 registry sections; it had read 86).
+- Evidence: filtered runs green (settings 37, service 33, bindings + veto + field injection +
+  reflection sites + patch targets 55, template gates 21, `test_rebalance_template_power.py` 57);
+  `validate_moduledata.py` reports no troop or party-template ref errors (its 238 `BROKEN_ITEM_REF`
+  are pre-existing live-Armory gaps in files this change does not touch). Owed: `/deep-review`,
+  the six in-game smokes listed in the feature doc, and the commit.
+
 ### docs(ai): Codex onboarding and discoverable TAOM workflows
 
 Added the [Codex operating guide](docs/ai-includes/codex-operating-guide.md), a

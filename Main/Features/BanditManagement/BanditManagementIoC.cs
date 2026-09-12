@@ -8,6 +8,7 @@ public static class BanditManagementIoC
     {
         container.Register<IBanditScalingSettingsProvider, BanditScalingSettingsProvider>(Reuse.Singleton);
         container.Register<IBanditScalingService, BanditScalingService>(Reuse.Singleton);
+        container.Register<IHideoutBossFightService, HideoutBossFightService>(Reuse.Singleton);
         container.Register<IHideoutDescriptionService, HideoutDescriptionService>(Reuse.Singleton);
     }
 }

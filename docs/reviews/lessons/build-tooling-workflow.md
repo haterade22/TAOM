@@ -2068,3 +2068,17 @@ correct, attribution wrong, and a pushed commit cannot be re-cut.
   shared file to DISK" row: reconstruct into the index, never the worktree. When it has already happened,
   the remedy is a CHANGELOG line naming the carried hunks.
 - **Source:** 2026-09-11, the #558 documentation commit; relayed by the #559 session.
+
+### When a change moves a number a file quotes, grep the file for the OLD LITERAL, not for the concept
+#564 (2026-09-11) took the eight boss templates out of `rebalance_template_power.py`'s scope, 50
+templates to 42. The edit was scoped by grepping the tool for `boss`, and every hit was fixed. Two
+sentences survived saying "None of the 50 templates carries a hero", one in the tool's `troop_power`
+docstring and one in its test class docstring, because neither contains the word `boss`: they quote
+the total. The tool's tests assert behaviour, so they stayed green.
+- **Why missed:** the grep that scoped the edit searched for the thing being removed, and a derived
+  number does not mention the thing it was derived from. The diff-scoped review agents could not see a
+  line the diff did not touch; the one agent briefed to read every number in the file found it.
+- **Prevent:** after any change that moves a count, scope, threshold or version a file states, grep
+  that file (and its tests and its README row) for the old value as a bare literal (`50`, `16 bandit`)
+  and re-derive each hit. Same class as REVIEW-LOG 90 and 91, where unverified counts rode into prose.
+- **Source:** #564 deep-review, `docs/reviews/rca-hideout-boss-fight-2026-09-11.md` finding 1.

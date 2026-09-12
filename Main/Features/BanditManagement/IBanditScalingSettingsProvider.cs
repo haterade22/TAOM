@@ -10,4 +10,8 @@ public interface IBanditScalingSettingsProvider
     int MaxPartiesPerHideoutCap { get; }
     int MinPartiesToInfest { get; }
     int InitialHideoutsPerFaction { get; }
+
+    /// <summary>Soldiers beside the boss in the hideout boss fight, both routes. MCM-clamped to
+    /// <c>[0, 10]</c>; independent of <see cref="IsEnabled"/> (#564).</summary>
+    int HideoutBossBodyguards { get; }
 }

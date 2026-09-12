@@ -19,6 +19,7 @@ public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvid
     private const int DefaultMaxHideoutsPerFactionCap = 100;
     private const int DefaultMaxPartiesPerHideoutCap = 6;
     private const int DefaultInitialHideoutsPerFaction = 7;
+    private const int DefaultHideoutBossBodyguards = 4;
 
     // No MCM knob: vanilla needs 2 parties before a hideout counts as infested, TAOM needs 1 so
     // hideouts become active and visible sooner. Bounded by the live cap so min <= max holds even
@@ -47,4 +48,7 @@ public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvid
 
     public int MinPartiesToInfest =>
         SettingClamp.Clamp(MinPartiesToInfestValue, MinPartiesToInfestValue, 1, MaxPartiesPerHideoutCap);
+
+    public int HideoutBossBodyguards =>
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditHideoutBossBodyguards, DefaultHideoutBossBodyguards, 0, 10);
 }

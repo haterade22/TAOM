@@ -2,7 +2,7 @@
 
 ## Overview
 
-Replaces vanilla's 5 bandit cultures (`forest_bandits`, `mountain_bandits`, `desert_bandits`, `steppe_bandits`, `sea_raiders`) with lore-appropriate LOTR factions and adds PlayerProgress-driven scaling for hideout density and bandit party size. All scaling is MCM-tunable; defaults give bandits roughly 1.0× vanilla strength in early game and up to 2.5× in endgame.
+Replaces vanilla's 5 bandit cultures (`forest_bandits`, `mountain_bandits`, `desert_bandits`, `steppe_bandits`, `sea_raiders`) with lore-appropriate LOTR factions and adds PlayerProgress-driven scaling for hideout density and bandit party size. All scaling is MCM-tunable; defaults give bandits roughly 1.0× vanilla strength in early game and up to 2.5× in endgame. Since #564 the hideout boss fight is NOT scaled: it is exactly the boss plus the MCM `Hideout Boss Bodyguards` count (default 4) on both the daytime assault and the night sneak-in (see "Hideout boss fight: boss + N" below).
 
 ## Why This Exists
 
@@ -16,21 +16,32 @@ Standard TAOM feature module pattern (ADR-002 thin entry, ADR-007 adapter, singl
 
 ```
 TaomBanditDensityModel : DefaultBanditDensityModel       ← GameModel override
-    └── delegates 4 properties to IBanditScalingService
+    └── delegates 5 density/first-fight properties to IBanditScalingService
+    └── NumberOfMaximumTroopCountForBossFightInHideout = IHideoutBossFightService.BossPhaseTroopCap
 
 Patch39_BanditPartySize (Harmony Postfix)                ← scales party troop counts
     └── targets DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty
     └── filters to party.IsBandit only
 
+Patch86_HideoutBossFight (one category, two Prefixes)    ← boss fight = boss + N (#564)
+    └── Patch86_HideoutAssaultBossFight replaces MapEventHelper.GetPriorityListForHideoutMission
+    └── Patch86_HideoutAmbushBossFight trims HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight
+    └── both delegate to IHideoutBossFightService
+
 IBanditScalingService                                    ← pure math, no TaleWorlds deps
-    └── reads IBanditScalingSettingsProvider (MCM + JSON defaults)
+    └── reads IBanditScalingSettingsProvider (MCM, compiled defaults as fallback)
     └── multiplier = 1 + curve * playerProgress    (vanilla floor enforced)
     └── all inputs NaN/Infinity-guarded via FiniteFloatValidator pattern
+
+IHideoutBossFightService                                 ← pure math, no TaleWorlds deps
+    └── BodyguardCount (MCM, live, clamped 0..10); BossPhaseTroopCap = 1 + BodyguardCount
+    └── PlanAssault: which healthy troops fight in the camp, which stand with the boss
+    └── PlanAmbush: which unspawned troops stand with the boss on the sneak-in
 ```
 
 ### Scaling formula
 
-For each of `DensityCurve`, `PartySizeCurve`, `BossFightCurve`:
+For each of `DensityCurve`, `PartySizeCurve`, `BossFightCurve` (the last one scales the first fight only since #564):
 
 ```
 multiplier(playerProgress) = 1 + curve × clamp(playerProgress, 0, 1)
@@ -46,7 +57,7 @@ Defaults (`curve = 1.5`) give:
 
 A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** become weaker than vanilla through this feature.
 
-> **The ceiling this scales toward moved on 2026-09-06 (#543).** The raider and boss templates carried a flat `max_value="50"` from #315, so a four-stack raider template topped out at exactly 200 troops and `Patch39` drove most endgame parties there. They are now retuned to a troop-POWER budget (~78 power for raiders, ~105 for bosses), which lands at 56-80 bodies for a raider warband depending on the culture's tier mix. Two consequences for this feature: **`Party Size Curve`'s useful range is now much shorter** (the roster clamps at `stack.MaxValue` around a quarter of the way through a campaign, after which raising the slider does nothing), and early-game parties are smaller and more varied (12-32 bodies, against 31-75 before). Retune with `tools/rebalance_template_power.py`, never by hand; reasoning in [caravan-bandit-parity.md](caravan-bandit-parity.md).
+> **The ceiling this scales toward moved on 2026-09-06 (#543).** The raider and boss templates carried a flat `max_value="50"` from #315, so a four-stack raider template topped out at exactly 200 troops and `Patch39` drove most endgame parties there. The raider templates are now retuned to a troop-POWER budget (~78 power), which lands at 56-80 bodies for a warband depending on the culture's tier mix. Two consequences for this feature: **`Party Size Curve`'s useful range is now much shorter** (the roster clamps at `stack.MaxValue` around a quarter of the way through a campaign, after which raising the slider does nothing), and early-game parties are smaller and more varied (12-32 bodies, against 31-75 before). Retune raiders with `tools/rebalance_template_power.py`, never by hand; reasoning in [caravan-bandit-parity.md](caravan-bandit-parity.md). The boss templates left that tool's scope on 2026-09-11 (#564): they are hand-authored to one `1/1` boss plus soldier stacks summing to min 3 / max 4, pinned by `HideoutBossPartyTemplateTests`, and `Patch39` respects that max like any other.
 
 ### What gets scaled
 
@@ -57,7 +68,7 @@ A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** beco
 | Bandit parties per hideout | 3 max | Up to `BanditMaxPartiesPerHideout` (default 6 since #559; the old default of 3 equalled vanilla and pinned it there) |
 | Min parties to infest a hideout | 2 | `MinPartiesToInfest` (constant 1: hideouts go active/visible sooner) |
 | Troops in hideout first fight | `11 × (2 + PlayerProgress)` | × `BossFightCurve` |
-| Troops in hideout boss fight | `1 + 5 × (1 + PlayerProgress)` | × `BossFightCurve` |
+| Troops in hideout boss fight | `1 + 5 × (1 + PlayerProgress)` (boss + 5..10) | **Not scaled.** Exactly `1 + Hideout Boss Bodyguards` (boss + 4 by default) on both routes, independent of the master toggle (#564, see below) |
 | Bandit party troops on map | `min + (max-min) × (0.4 + 0.8 × PlayerProgress)` × random(0.2..0.8) | × `PartySizeCurve`, capped at stack `MaxValue` |
 
 ### Early-game density ("early burst then settle", 2026-05-29)
@@ -77,10 +88,11 @@ Settings live under **TAOM → World / Bandit Scaling** (`GroupOrder = 35`). MCM
 | Enable Bandit Scaling | bool | true | Master toggle. Off = vanilla density + party sizes for NEW spawns; hideouts already on the map stay. |
 | Density Curve | 0.0 – 5.0 | 1.5 | Multiplier on hideout count + parties/hideout at PlayerProgress=1.0 |
 | Party Size Curve | 0.0 – 5.0 | 1.5 | Multiplier on bandit party troop counts at PlayerProgress=1.0 |
-| Boss Fight Curve | 0.0 – 5.0 | 1.5 | Multiplier on hideout first-fight + boss-fight troop counts |
+| Hideout First Fight Curve (`BanditBossFightCurve`; labelled "Boss Fight Curve" until #564) | 0.0-5.0 | 1.5 | Multiplier on the hideout FIRST-fight troop count only (the boss fight is fixed by the row below since #564). The property name is unchanged so a persisted `TAOM.json` value survives |
 | Max Hideouts Per Faction Cap | 1 – 100 | 100 | Hard ceiling regardless of curve (physical hideout count binds first) |
 | Max Parties Per Hideout Cap | 1-20 | 6 | Hard ceiling regardless of curve. Vanilla 3 is also the floor, so a cap of 3 or less pins the value at vanilla and the curve cannot move it (that was the default until #559). |
 | Initial Hideouts Per Faction | 1-30 | 7 | Hideouts each faction starts with on a NEW campaign (vanilla 7, TAOM shipped 14 until #559). Read once at world-gen. |
+| Hideout Boss Bodyguards | 0-10 | 4 | Soldiers standing with the boss in the final fight, both routes; 0 = the boss alone. Applies with the master toggle off. Vanilla fields 5 to 10. Read live, so it takes effect at the next hideout fight. |
 
 **Every setting in the group is read live** through `BanditScalingSettingsProvider` on each model
 property get and each `Patch39` spawn, and every attribute carries `RequireRestart = false`. That
@@ -172,6 +184,30 @@ Migration is driven by [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/
 
 A hideout's `<Location id="hideout_center" scene_name="X">` must resolve to a `Modules/*/SceneObj/X/` folder or **raiding it crashes**. The 99 vanilla-derived hideouts use stock scenes that exist (`bandit_forest_sv`, `desert_hideout_002/004_sv`, `hideout_steppe_001/002_sv`, `mountain_hideout_002/004_sv`, `sea_bandit_a-d_sv`). The 30 wave-2 hideouts (`hideout_gondor/erebor/mirkwood_*`) reference editor scenes not yet exported to `SceneObj/`, so they are **interim-repointed to vanilla hideout scenes** (gondor/mirkwood → `forest_hideout_004_sv`, erebor → `mountain_hideout_002_sv`) to prevent raid crashes; revert each `scene_name` to its settlement id once the custom scenes are compiled. Verify scene refs with [`tools/audit_scene_names.py`](../../tools/audit_scene_names.py) — see [`docs/reference/scene-reference-audit.md`](../reference/scene-reference-audit.md). Vanilla renames scenes between versions, so re-run the audit after any Bannerlord bump.
 
+## Hideout boss fight: boss + N (Patch86, 2026-09-11, #564)
+
+The final fight of a hideout is meant to be the boss and a handful of guards. In TAOM it was routinely boss plus 20 to 40, and boss plus ~90 on the night route at the endgame density cap. The obvious fix, cutting the `*_boss_party_template`s, does not do it on its own: the template sizes the boss PARTY parked in the hideout, and the engine sizes the FIGHT from the whole hideout population. Decompile-verified (v1.4.8), the two routes differ:
+
+| Route | Where the boss group is decided | Before #564 |
+|---|---|---|
+| Assault (day) | `Helpers.MapEventHelper.GetPriorityListForHideoutMission` (`MapEventHelper.cs:147-172`, single caller `SandBoxMissions.cs:1142`): phase 1 = `min(floor(0.8 × total), FirstFightMax)`, and everything else, highest level first, is the boss phase. Before it, `HideoutCampaignBehavior.ArrangeHideoutTroopCountsForMission` (`:606-656`) trims the hideout to `FirstFightMax + BossFightMax`, but line 615 excludes boss parties from the trim. `HideoutMissionController.SpawnBossAndBodyguards` (`:789`) then spawns every troop phase 1 did not take. | `BossFightMax` scaled up to 2.5x (boss + 5..27), plus a 40-97 man boss party (the old template with `Patch39` pushing stacks to max) that the trim could not touch and that overflowed straight into the boss phase. |
+| Sneak in (night) | `HideoutAmbushMissionController.InitializeTroops` (`:751-778`) supplies every troop into the private `_allEnemyTroops`; sentries pop from it (`pop / 8`, `:595-598`); `SpawnBossAndBodyguards` (`:798-821`) computes `Clamp(pop / 2, 4, 20)` and `SpawnRemainingTroopsForBossFight` (`:478-555`) pads the list UP to it (`:507-511`) then spawns every element (`:528-542`). The clamp is a floor, not a cap. | Boss + everyone who was not a sentry. |
+
+Both routes end in `SelectBossAgent` (`return val ?? val2`) and an unguarded `_bossAgent.WieldInitialWeapons`, so the boss phase must always field at least one agent. On a win `PlayerEncounter.DoEnd` (`:1814-1833`) walks every surviving party out of the hideout and unspots it, so troops that never spawn do not block a clear; the vanilla duel branch already leaves the bodyguards alive and relies on that.
+
+### What TAOM does
+
+- **`IHideoutBossFightService`** (pure): `BodyguardCount` is the MCM value read live and clamped to `[0, 10]`; `BossPhaseTroopCap = 1 + BodyguardCount`. `PlanAssault` takes the flattened roster as `(level, isHeroOrBoss, isWounded)` and returns the phase-1 indices plus both counts: the wounded are in neither phase, every healthy hero or `Culture.BanditBoss` troop stands with the boss, the highest-level regulars fill the remaining slots (roster order on ties, as vanilla's stable `OrderByDescending`), and the boss phase is clamped to `[1, healthy - 1]` (`HideoutMissionController.InitializeMission` :590 asserts phase 2 < total). `PlanAmbush` keeps the N highest-level unspawned troops and reports the spawn count vanilla should pad to (only when its troop-type cache can supply the padding, because `GetNewRandomEnemyTroop` :473 derefs it). Every branch is unit-tested (`HideoutBossFightServiceTests`, 33 tests).
+- **`TaomBanditDensityModel.NumberOfMaximumTroopCountForBossFightInHideout => BossPhaseTroopCap`**, unconditional. Its only engine consumer is the trim at `HideoutCampaignBehavior.cs:609`, so the hideout is trimmed to `FirstFightMax + (1 + N)` and phase 1 keeps its pre-#564 size. This is the one property where "vanilla is the floor" no longer holds (vanilla is 6..11).
+- **`Patch86_HideoutAssaultBossFight`**, Prefix, skip original, on `MapEventHelper.GetPriorityListForHideoutMission`. Replicates the roster build (healthy total, per-party flatten, wounded removed first, heroes and bosses counted after that pass, top-level regulars held back, phase-1 roster returned) and sets `firstPhaseTroopCount = healthy - bossPhase`. Drops vanilla's 0.8 / `FirstFightMax` formula and four `Debug.Print` lines. Fails open to vanilla's own split on any exception, which is safe because the prefix mutates nothing before deciding. Exact on every hideout: a fat boss party on an existing save lands in phase 1 once and never in the boss fight.
+- **`Patch86_HideoutAmbushBossFight`**, Prefix, original still runs, on the private `HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight(List<MatrixFrame>, int)`. Injects `____allEnemyTroops`, `____overriddenHideoutBossAgentOrigin` and `____allEnemyTroopTypesCache` (four underscores: three for Harmony plus the field's own), trims the list to the N highest levels and sets `spawnCount = N`; vanilla pads from the cache when fewer remain and spawns the boss from his own origin. The selection is computed before the list is touched, so a throw leaves vanilla's list intact.
+- **Template data**: every `*_boss_party_template` is one `1/1` boss stack plus soldier stacks summing to min 3 / max 4 (vanilla's own shape is boss + chief + 2-4 raiders). `HideoutBossPartyTemplateTests` pins it; `tools/rebalance_template_power.py` and the retired `tools/raise_party_template_maxes.py` exclude boss templates so a re-run cannot re-inflate them.
+- **MCM `Hideout Boss Bodyguards`** (0-10, default 4, `RequireRestart = false`) in World / Bandit Scaling, independent of `Enable Bandit Scaling`. A new property, so no `TAOM.json` carries an old value and the default reaches existing installs. The old `Boss Fight Curve` now scales the first fight only, so its label is `Hideout First Fight Curve` (the property stays `BanditBossFightCurve`, which is what `TAOM.json` keys on) and its hint says so.
+
+Both prefixes return `bool` and are classified `ReviewedSafe` in `CoopVetoClassificationTests`: the assault target is a pure roster-ordering function for the local hideout mission (the campaign-side trim flows through the GameModel value, and N is a fingerprinted setting); the ambush target mutates `MissionLogic` instance state only. Rejected alternative: a GameModel-only override of `SpawnPercentageForFirstFightInHideoutMission` to `(F + 0.5) / (F + 1 + N)`, exact only when the hideout sits at the cap, boss + 1..3 under it, and blind to a fat boss party on an existing save.
+
+**Diagnostics.** Each fight logs one `[Patch86]` info line with the split (`first phase X, boss phase Y of Z healthy` or `kept X of Y unspawned`). A `HarmonyException` or `No such field` at game init means the category was swallowed and neither prefix runs; the registry section in `docs/reference/harmony-patch-registry.md` has the apply-batch detail.
+
 ## Hideout Encounter Descriptions (Patch40, 2026-05-29)
 
 When the player visits a hideout, the encounter menu prose led with the literal placeholder **"(Undefined hideout type)"** for every TAOM bandit hideout. Root cause (decompile-verified, v1.4.5): vanilla `HideoutCampaignBehavior.game_menu_hideout_place_on_init` sets the `HIDEOUT_DESCRIPTION` GameText variable to `{=DOmb81Mu}(Undefined hideout type)` and then overrides it **only** for the five hardcoded vanilla bandit culture StringIds. TAOM renamed those cultures, so none match and the placeholder leaks through. The hideout *name* renders correctly because it comes from the settlement `name=` attribute (a different code path); only the description prose is keyed on culture StringId in C#.
@@ -203,18 +239,25 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 | [`Main/Features/BanditManagement/BanditScalingService.cs`](../../Main/Features/BanditManagement/BanditScalingService.cs) | `multiplier = 1 + curve * progress` |
 | [`Main/Features/BanditManagement/Models/TaomBanditDensityModel.cs`](../../Main/Features/BanditManagement/Models/TaomBanditDensityModel.cs) | GameModel override (hideout count, parties/hideout, fight troops) |
 | [`Main/Features/BanditManagement/Hooks/Patch39_BanditPartySize.cs`](../../Main/Features/BanditManagement/Hooks/Patch39_BanditPartySize.cs) | Postfix scaling bandit party rosters toward stack MaxValue |
+| [`Main/Features/BanditManagement/IHideoutBossFightService.cs`](../../Main/Features/BanditManagement/IHideoutBossFightService.cs) / [`HideoutBossFightService.cs`](../../Main/Features/BanditManagement/HideoutBossFightService.cs) | Boss-fight sizing maths (#564): bodyguard count, boss-phase cap, the assault split and the sneak-in selection |
+| [`Main/Features/BanditManagement/Hooks/Patch86_HideoutBossFight.cs`](../../Main/Features/BanditManagement/Hooks/Patch86_HideoutBossFight.cs) | Shared category, logger and service resolver for the two Patch86 prefixes |
+| [`Main/Features/BanditManagement/Hooks/Patch86_HideoutAssaultBossFight.cs`](../../Main/Features/BanditManagement/Hooks/Patch86_HideoutAssaultBossFight.cs) | Prefix (skip original) on `MapEventHelper.GetPriorityListForHideoutMission`: the assault-route split |
+| [`Main/Features/BanditManagement/Hooks/Patch86_HideoutAmbushBossFight.cs`](../../Main/Features/BanditManagement/Hooks/Patch86_HideoutAmbushBossFight.cs) | Prefix on the private `HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight`: the sneak-in trim |
 | [`Main/Features/BanditManagement/BanditManagementIoC.cs`](../../Main/Features/BanditManagement/BanditManagementIoC.cs) | DryIoc registration |
 | [`Main/_Module/ModuleData/taom_spcultures.xml`](../../Main/_Module/ModuleData/taom_spcultures.xml) | 8 LOTR bandit culture entries (5 on 2026-05-27, 3 wave-2 offshoots on 2026-05-28) |
-| [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 16 party templates: one raider and one boss per bandit culture |
+| [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 16 party templates: one raider and one boss per bandit culture. A boss template is one `1/1` boss stack plus soldier stacks summing to min 3 / max 4 (#564) |
 | [`Main/_Module/ModuleData/taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml) | Culture display names + male/female names (~80 keys) |
 | [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
-| [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | unit tests (service, settings provider, density-model helpers, hideout descriptions) |
+| [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | unit tests (scaling service, settings provider, density-model helpers, hideout descriptions, boss-fight service, Patch86 bindings) |
+| [`TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs`](../../TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs) | Shipped-data gate on the eight boss templates: one pinned boss stack matching the culture's `bandit_boss`, soldier stacks summing to min 3 / max 4 |
 
 ## Dependencies
 
 - `DefaultBanditDensityModel` — overridden via `campaignStarter.AddModel` in [SubModule.cs](../../Main/SubModule.cs).
 - `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` — Harmony Postfix. Coexists peacefully with [TaomPartySizeModel](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs) (which overrides `GetPartyMemberSizeLimit` only).
-- `TaomSettings` (MCM) — 7 properties in the `World/Bandit Scaling` group (added `BanditInitialHideoutsPerFaction`).
+- `Helpers.MapEventHelper.GetPriorityListForHideoutMission`: Harmony Prefix, skip original (Patch86, assault route). Public static, single caller `SandBoxMissions.OpenHideoutBattleMission`.
+- `SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight`: Harmony Prefix, original still runs (Patch86, sneak-in route). Private instance method in SandBox.dll; three private fields injected (`_allEnemyTroops`, `_overriddenHideoutBossAgentOrigin`, `_allEnemyTroopTypesCache`), pinned by `ReflectionSiteBindingTests`.
+- `TaomSettings` (MCM): 8 properties in the `World/Bandit Scaling` group (`BanditInitialHideoutsPerFaction` added 2026-05-29, `BanditHideoutBossBodyguards` added by #564).
 - Existing TAOM culture troop XMLs — pulls raider-tier T1–T4 troops by ID; no new troop authoring.
 - `taom_partyTemplates.xml`: 16 templates (8 raider + 8 boss, one pair per bandit culture).
 
@@ -229,7 +272,11 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 - Per-curve isolation (DensityCurve doesn't bleed into PartySizeCurve)
 - IsEnabled + cap delegation
 
-[`TAOM.Tests/Features/BanditManagement/BanditScalingSettingsProviderTests.cs`](../../TAOM.Tests/Features/BanditManagement/BanditScalingSettingsProviderTests.cs), 5 tests: with no MCM instance (the state outside the game) every property returns the compiled default, each default matches `new TaomSettings()`, the two #559 defaults are 7 and 6, and `MinPartiesToInfest` is 1 and never exceeds the cap.
+[`TAOM.Tests/Features/BanditManagement/BanditScalingSettingsProviderTests.cs`](../../TAOM.Tests/Features/BanditManagement/BanditScalingSettingsProviderTests.cs), 6 tests: with no MCM instance (the state outside the game) every property returns the compiled default, each default matches `new TaomSettings()`, the two #559 defaults are 7 and 6, the #564 bodyguard default is 4, and `MinPartiesToInfest` is 1 and never exceeds the cap.
+
+[`TAOM.Tests/Features/BanditManagement/HideoutBossFightServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/HideoutBossFightServiceTests.cs), 33 tests: the bodyguard count is read live and clamped to 0..10; the assault split holds back every healthy hero or boss plus the N highest-level regulars (roster order on ties), never fields an empty boss phase, never lets phase 1 go negative, drops the wounded from both phases, absorbs a fat boss party into phase 1, and matches vanilla on a single troop; the sneak-in selection keeps the N highest levels, pads to N only when the type cache can supply, and keeps one troop when there is no boss and N is 0.
+
+[`TAOM.Tests/Features/BanditManagement/Patch86HideoutBossFightBindingTests.cs`](../../TAOM.Tests/Features/BanditManagement/Patch86HideoutBossFightBindingTests.cs), 9 tests (`BindingVerification`): both targets resolve with their parameter NAMES (Harmony binds by name) and the `out` flag, the three injected fields keep their types, every engine member the assault body touches still exists, the campaign trim still reads the boss-phase cap (IL), both prefixes still call the service (IL), and the category is registered in all three places.
 
 [`TAOM.Tests/Features/BanditManagement/TaomBanditDensityModelTests.cs`](../../TAOM.Tests/Features/BanditManagement/TaomBanditDensityModelTests.cs), 9 tests on the `internal static` `Cap`/`Scale` helpers (the model's only computation), including the regression for the "vanilla is the floor" invariant (`Cap(base, mult, hardCap)` with `hardCap < base` returns `base`, never `hardCap`) and the #559 regression that the SHIPPED parties-per-hideout cap leaves the curve room to move (`Cap(3, 2.5f, shippedCap) > 3`).
 
@@ -237,14 +284,14 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 
 [`TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs) : 10 tests. Each of the 6 cultures with a description returns its expected `{=key}`; unknown, vanilla-bandit, empty and null culture ids return `null`. `gondor_soldiers` and `mirkwood_stalkers` have no description and fall through to `null` (see Localization).
 
-BanditManagement + Mcm filtered run: 105/105 (2026-09-11).
+BanditManagement + Mcm filtered run: 105/105 (2026-09-11, before #564). The #564 additions' filtered runs are recorded in its CHANGELOG entry.
 
 ## How-To
 
 ### How to tune scaling without recompiling
 
 1. Open MCM in-game → TAOM → World / Bandit Scaling.
-2. Adjust `Density Curve`, `Party Size Curve`, `Boss Fight Curve` (range 0.0–5.0).
+2. Adjust `Density Curve`, `Party Size Curve`, `Hideout First Fight Curve` (range 0.0-5.0), or `Hideout Boss Bodyguards` (0-10) for the size of the final fight.
 3. Press Done. No restart prompt appears (every attribute carries `RequireRestart = false`) and the value is on disk in `TAOM.json` at once. Curves and caps apply on the next bandit spawn / hideout query. `Initial Hideouts Per Faction` is the exception: read once at world-gen, so it changes nothing about a campaign already running.
 
 ### How to add a new hideout
@@ -259,7 +306,7 @@ BanditManagement + Mcm filtered run: 105/105 (2026-09-11).
 ### How to add a new bandit culture
 
 1. Add `<Culture>` entry in [`taom_spcultures.xml`](../../Main/_Module/ModuleData/taom_spcultures.xml). Required attributes: `id`, `name`, `bandit_chief/raider/bandit/boss`, `elite_basic_troop`, `basic_troop`, `is_bandit="true"`, `can_have_settlement="true"`, `encounter_background_mesh`, `bandit_boss_party_template`.
-2. Add two party templates in [`taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml): `{culture}_raider_party_template` and `{culture}_boss_party_template`. Each references troop NPCCharacter IDs.
+2. Add two party templates in [`taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml): `{culture}_raider_party_template` and `{culture}_boss_party_template`. Each references troop NPCCharacter IDs. The boss template is one `1/1` stack of the culture's `bandit_boss` plus soldier stacks summing to min 3 / max 4 (`HideoutBossPartyTemplateTests` fails on anything else); the raider template's maxes are set by `tools/rebalance_template_power.py`.
 3. Add localization keys for culture name + male/female names in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml).
 4. Author hideouts referencing the new culture in `TAOM_Map/settlements.xml`.
 
@@ -269,7 +316,7 @@ Either:
 - MCM → World / Bandit Scaling → uncheck **Enable Bandit Scaling** (single boolean), OR
 - Set every curve to 0.0 (multipliers floor at 1.0).
 
-Both leave the LOTR culture replacement intact — bandits keep their LOTR names, just spawn at vanilla density + sizes.
+Both leave the LOTR culture replacement intact: bandits keep their LOTR names, just spawn at vanilla density + sizes. Neither restores vanilla's boss fight: `Hideout Boss Bodyguards` applies with the toggle off, so the final fight stays boss + N (a design choice, not scaling).
 
 ## Performance
 
@@ -290,6 +337,8 @@ The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` w
 | New MCM settings | Safe — read with `?? default` fallback at every access |
 | 5 new LOTR bandit cultures | New cultures only added; no existing culture IDs renamed |
 | 10 new party templates | New IDs only added; no existing template renamed |
+| Boss templates cut to 1 + 3-4 (#564) | No saved field changes. A boss party already spawned from the old 67-97 template keeps its size until that hideout is cleared once (the engine never trims boss parties); Patch86 still gives boss + N and the surplus fights in phase 1. The next boss party spawned there is 4-5 troops. |
+| `BanditHideoutBossBodyguards` | New MCM property, so no `TAOM.json` carries an old value: the default 4 reaches every install |
 | Hideout XML migration | Hideout IDs preserved; only `culture=` and display name changed. Saves load and re-bind hideouts to the new (renamed) cultures on next game tick. |
 | 80+ new loc keys | Pure additions, can't break existing references |
 
@@ -297,6 +346,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 ## Changelog
 
+- 2026-09-11, `feat` (#564): the hideout boss fight is exactly 1 boss + N bodyguards on both the assault and the sneak-in route (`Patch86_HideoutBossFight`, `IHideoutBossFightService`, MCM `Hideout Boss Bodyguards` default 4); `TaomBanditDensityModel`'s boss-phase cap becomes `1 + N`; the eight boss party templates cut from 67-97 bodies to one `1/1` boss plus soldier stacks summing to min 3 / max 4, and `tools/rebalance_template_power.py` no longer touches them.
 - 2026-09-11, `fix` (#559): `RequireRestart = false` on all 7 settings (MCM was prompting for a restart and discarding the change on Cancel); `bandit_scaling_config.json` and its config provider deleted (its six MCM-backed values were never read while MCM is loaded; the JSON-only `MinPartiesToInfest` override is retired); defaults initial hideouts 14→7 and parties-per-hideout cap 3→6 (the cap equalled vanilla's floor, so Density Curve could not move it). Existing `TAOM.json` files keep 14 / 3 until the group is reset.
 - 2026-05-31 — `fix`: hideout boss fight spawned every bandit friendly (forced retreat) — added 8 dedicated `{culture}_boss` troops with `occupation="Bandit"` + matching bandit culture so the guard dialog no longer hijacks the boss conversation.
 - 2026-05-29 — `feat`: Patch40 themed LOTR hideout encounter descriptions replace vanilla's "(Undefined hideout type)" placeholder for the 5 TAOM bandit cultures.
@@ -308,8 +358,8 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 
-- **`TaomBanditDensityModel` overrides 6 properties** (source-verified): `NumberOfMinimumBanditPartiesInAHideoutToInfestIt`, `NumberOfMaximumHideoutsAtEachBanditFaction`, `NumberOfInitialHideoutsAtEachBanditFaction` (the early-game density lever, vanilla 7 → default 14), `NumberOfMaximumBanditPartiesInEachHideout`, `NumberOfMaximumTroopCountForFirstFightInHideout`, `NumberOfMaximumTroopCountForBossFightInHideout`. (The Architecture diagram's "4 properties" count predates the 2026-05-29 initial-hideouts + min-to-infest additions.)
-- The `Cap`/`Scale` helpers are `internal static` and unit-tested **directly via `InternalsVisibleTo("TAOM.Tests")`**; `Cap` floors at vanilla even when an MCM cap is set below the vanilla base.
+- **`TaomBanditDensityModel` overrides 6 properties** (source-verified): `NumberOfMinimumBanditPartiesInAHideoutToInfestIt`, `NumberOfMaximumHideoutsAtEachBanditFaction`, `NumberOfInitialHideoutsAtEachBanditFaction` (the early-game density lever, vanilla 7; TAOM's default was 14 until #559 and is 7 now), `NumberOfMaximumBanditPartiesInEachHideout`, `NumberOfMaximumTroopCountForFirstFightInHideout`, and `NumberOfMaximumTroopCountForBossFightInHideout`, which since #564 is `1 + Hideout Boss Bodyguards` from `IHideoutBossFightService` rather than a scaled vanilla value.
+- The `Cap`/`Scale` helpers are `internal static` and unit-tested **directly via `InternalsVisibleTo("TAOM.Tests")`**; `Cap` floors at vanilla even when an MCM cap is set below the vanilla base. "Vanilla is the floor" holds for the five scaled properties; the boss-phase cap sits below vanilla's 6..11 by design.
 - The 8 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (8 rows, one `<Faction is_bandit="true">` per culture; verified 2026-09-11).
 - The vanilla `looters` clan is **kept** because its `StringId == "looters"` is hardcoded in `DefaultBanditDensityModel`, and looter spawning runs on a separate code path from hideout bandits.
 - `TAOM_Map/SubModule.xml` declares `<DependedModule Id="TAOM"/>` (the external map module now depends on TAOM, so the LOTR bandit cultures its hideouts reference are guaranteed loaded).
@@ -326,6 +376,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 - [docs/modding/clans.md](../modding/clans.md)
 - [docs/modding/cultures.md](../modding/cultures.md)
 - [docs/modding/load-order-and-dependencies.md](../modding/load-order-and-dependencies.md)
+- [docs/modding/party-templates.md](../modding/party-templates.md)
 - [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/modding/troubleshooting.md](../modding/troubleshooting.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)

@@ -832,8 +832,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public float BanditPartySizeCurve { get; set; } = 1.5f;
 
     [SettingPropertyGroup("World/Bandit Scaling")]
-    [SettingPropertyFloatingInteger("Boss Fight Curve", 0.0f, 5.0f, "#0.0", Order = 3, RequireRestart = false,
-        HintText = "Multiplier on first-fight + boss-fight troop counts inside hideouts at PlayerProgress=1.0. 1.5 (default) = up to 2.5x bandits per hideout assault in endgame.")]
+    [SettingPropertyFloatingInteger("Hideout First Fight Curve", 0.0f, 5.0f, "#0.0", Order = 3, RequireRestart = false,
+        HintText = "Multiplier on the FIRST fight's troop count inside hideouts at PlayerProgress=1.0. 1.5 (default) = up to 2.5x bandits in the camp-clearing phase of a hideout assault in endgame. The boss fight is not scaled: it is exactly the boss plus Hideout Boss Bodyguards below.")]
     public float BanditBossFightCurve { get; set; } = 1.5f;
 
     [SettingPropertyGroup("World/Bandit Scaling")]
@@ -850,6 +850,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("Initial Hideouts Per Faction", 1, 30, Order = 6, RequireRestart = false,
         HintText = "Hideouts each bandit faction starts with on a NEW campaign; read once at world-gen, so changing it does nothing to a campaign already in progress. TAOM has 8 bandit factions, so this is a per-faction target, x8 on the map, bounded by each faction's physical hideout count (three have only 10). Vanilla = 7. Default: 7. Earlier builds shipped 14, up to 100 hideouts on a fresh map against vanilla's 35; if you played one, MCM has already saved 14 in your TAOM.json and only a reset of this group to defaults picks up 7.")]
     public int BanditInitialHideoutsPerFaction { get; set; } = 7;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyInteger("Hideout Boss Bodyguards", 0, 10, Order = 7, RequireRestart = false,
+        HintText = "Soldiers standing with the hideout boss in the final fight, on both the daytime assault and the night sneak-in. The fight is exactly the boss plus this many (0 = the boss alone), whether you take the duel or fight them all; the rest of the camp is cleared in the first phase. Applies with Enable Bandit Scaling off too. Vanilla fields 5 to 10 with the boss. Default: 4.")]
+    public int BanditHideoutBossBodyguards { get; set; } = 4;
 
     // --- World / Recruitment Alignment ---
 
@@ -1073,12 +1078,15 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Kingdom Politics / Fief Grants ---
     //
-    // #458. When a kingdom takes a town or castle it holds an election for the new owner, and
-    // vanilla's ballot cannot change the result: every candidate backs itself at roughly 40x what it
-    // gives a rival, so all three finalists tie and the highest-merit clan wins outright. These knobs
-    // move that merit score, plus the King's Vote that lets a rich ruler overrule the council.
-    // Weights are read live per election, so no restart and no new campaign. The master toggle is
-    // applied when a decision is CREATED, so it does not retrofit an already-pending election.
+    // #458, #565. When a kingdom takes a town or castle it holds an election for the new owner.
+    // Every clan is scored by SettlementClaimantDecision.CalculateMeritOfOutcome, the top three by
+    // merit go on the ballot, and every non-mercenary clan votes 1/2/3 points. Merit weights the
+    // election heavily but does not decide it outright: a finalist that cannot afford its vote is
+    // downgraded, so the "all three finalists tie" claim this comment once made was wrong (refuted
+    // in review, rca-fiefgranting-2026-08-14.md C2). These knobs move that merit score, plus the
+    // King's Vote that lets a rich ruler overrule the council. Weights are read live per election,
+    // so no restart and no new campaign. The master toggle is applied when a decision is CREATED,
+    // so it does not retrofit an already-pending election.
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
     [SettingPropertyBool("Enable Fief Grant Rebalance", Order = 0, RequireRestart = false,
@@ -1086,44 +1094,52 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool EnableFiefGrantRebalance { get; set; } = true;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("Capturer Bonus", 1.0f, 5.0f, "#0.00", Order = 1, RequireRestart = false,
-        HintText = "Merit multiplier for the clan that actually stormed the place. Vanilla gives it a flat +30, less than the ruling clan's +60, so the conqueror routinely loses its own siege. 1.00 = no bonus. Default: 2.50.")]
+    [SettingPropertyFloatingInteger("Siege Participation Bonus", 1.0f, 5.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "Merit multiplier for the clan that carried the winning assault: the largest share of the attacking side's battle contribution, the same number the loot split uses. Every other clan that fielded a party there gets it in proportion, 1 + (bonus - 1) x its share of the top clan's contribution, so an army member with half the leader's contribution gets half the bonus. Vanilla's flat +30 for the assault leader's clan is untouched. 1.00 = off. Default: 2.50.")]
     public float FiefGrantCapturerBonus { get; set; } = 2.5f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("Landless Clan Bonus", 1.0f, 5.0f, "#0.00", Order = 2, RequireRestart = false,
-        HintText = "Merit multiplier for a clan that holds no town or castle at all. Keeps poor clans able to field parties instead of withering and leaving the kingdom. 1.00 = no bonus. Default: 2.00.")]
+    [SettingPropertyFloatingInteger("Absent From Siege Factor", 0.1f, 1.0f, "#0.00", Order = 2, RequireRestart = false,
+        HintText = "Merit multiplier for a clan that had no party in the winning assault, so land goes to the houses that fought for it. Applies to your clan as well, exempt or not: this is about what a clan did, not what it holds. No effect when nothing is on record for the settlement, such as a fief that changed hands without an assault. 1.00 = off. Default: 0.50.")]
+    public float FiefGrantAbsentFromSiegeFactor { get; set; } = 0.5f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Landless Clan Bonus", 1.0f, 5.0f, "#0.00", Order = 3, RequireRestart = false,
+        HintText = "Merit multiplier for a clan that holds no town or castle at all. Keeps poor clans able to field parties instead of withering and leaving the kingdom. Vanilla already favours landless clans (a flat +30 and nothing in its holdings divisor), so this stacks on a strong base. 1.00 = no bonus. Default: 2.00.")]
     public float FiefGrantLandlessBonus { get; set; } = 2.0f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("Concentration Penalty", 0.0f, 1.0f, "#0.00", Order = 3, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Concentration Penalty", 0.0f, 1.0f, "#0.00", Order = 4, RequireRestart = false,
         HintText = "How hard each fief a clan already holds counts against its next claim, as 1/(1 + fiefs x penalty). Vanilla only divides by the VALUE it holds, so a clan sitting on many cheap castles is barely damped. 0.00 = off. Default: 0.35.")]
     public float FiefGrantConcentrationPenalty { get; set; } = 0.35f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("Culture Match Bonus", 1.0f, 3.0f, "#0.00", Order = 4, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Culture Match Bonus", 1.0f, 3.0f, "#0.00", Order = 5, RequireRestart = false,
         HintText = "Merit multiplier when the clan's culture matches the settlement's. Vanilla has no equivalent, which is how an orc clan ends up holding an elven city. 1.00 = off. Default: 1.50.")]
     public float FiefGrantCultureMatchBonus { get; set; } = 1.5f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("Culture Mismatch Penalty", 0.1f, 1.0f, "#0.00", Order = 5, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Culture Mismatch Penalty", 0.1f, 1.0f, "#0.00", Order = 6, RequireRestart = false,
         HintText = "Merit multiplier when it does not match. Lower means foreign clans rarely win a settlement of another culture. 1.00 = off. Default: 0.60.")]
     public float FiefGrantCultureMismatchPenalty { get; set; } = 0.6f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("Ruling Clan Factor", 0.1f, 2.0f, "#0.00", Order = 6, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Ruling Clan Factor", 0.1f, 2.0f, "#0.00", Order = 7, RequireRestart = false,
         HintText = "Merit multiplier for the king's own clan, which vanilla already hands a flat +60 on top of its tier and strength. Below 1.00 damps the crown's claim. 1.00 = vanilla. Default: 0.75.")]
     public float FiefGrantRulingClanFactor { get; set; } = 0.75f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyFloatingInteger("King's Vote Fief Share Cap", 0.0f, 1.0f, "#0.00", Order = 7, RequireRestart = false,
+    [SettingPropertyFloatingInteger("King's Vote Fief Share Cap", 0.0f, 1.0f, "#0.00", Order = 8, RequireRestart = false,
         HintText = "Share of the kingdom's towns and castles above which the ruling clan loses its right to overrule the council. Vanilla lets a king with enough influence override every grant, and his pick is always himself. 1.00 = vanilla. Default: 0.34.")]
     public float FiefGrantKingsVoteFiefShareCap { get; set; } = 0.34f;
 
+    // Renamed from FiefGrantApplyPenaltiesToPlayerClan (default off, i.e. exempt) in #565. MCM keeps
+    // a saved value per property, so flipping that default would have reached fresh installs only;
+    // a new property name is what reaches every install. The old key in TAOM.json is ignored.
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
-    [SettingPropertyBool("Apply Penalties To Your Clan", Order = 8, RequireRestart = false,
-        HintText = "On = your clan is scored like any other, including the concentration and culture-mismatch penalties. Off = you keep the capturer, landless and culture-match bonuses but are never damped for what you already hold. Default: off.")]
-    public bool FiefGrantApplyPenaltiesToPlayerClan { get; set; } = false;
+    [SettingPropertyBool("Exempt Your Clan From Penalties", Order = 9, RequireRestart = false,
+        HintText = "On = your clan keeps every bonus but is never damped for the fiefs it already holds or for a culture mismatch. Off = your clan is scored like any other. Replaces the old Apply Penalties To Your Clan switch, which shipped with the exemption on and let a landed player out-score every AI clan for fiefs they never fought for; the switch was renamed so existing installs pick up the new default. The Absent From Siege Factor applies either way. Default: off.")]
+    public bool FiefGrantExemptPlayerClanFromPenalties { get; set; } = false;
 
     // --- Character Preview / Race Framing ---
     //

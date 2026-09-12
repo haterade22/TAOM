@@ -306,3 +306,25 @@ would open a conversation with a dead, un-clanned hero.
   condition, list the engine state the vanilla condition excluded and check each item against the
   consequence before shipping. And never defer to a smoke run a question a decompile can answer now.
 - **Source:** `docs/reviews/rca-field-commission-dismiss-2026-09-04.md` finding 1 (#540).
+
+### A party template sizes a party; the mission built from it has its own sizing code, so read that before promising a data fix
+The #564 request was "cut the boss party templates so the hideout boss fight is 1 boss + 3-4". The
+templates were 67-97 bodies and the fight was boss + 20..40, so the two looked like cause and effect.
+They were not: `MapEventHelper.GetPriorityListForHideoutMission` (v1.4.8 :147-172) sends
+`min(floor(0.8 * total), FirstFightMax)` of the WHOLE hideout to phase 1 and everything else to the
+boss, and `HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight` (:478-555) spawns every
+troop that was not a sentry, its `Clamp(pop / 2, 4, 20)` being a floor. The template only sized the
+boss PARTY parked in the hideout, and mattered to the fight solely because
+`ArrangeHideoutTroopCountsForMission` :615 never trims a boss party, so a fat one overflowed the cap.
+A template-only change would have shipped, passed every test, and changed nothing the player saw on a
+hideout at the cap.
+- **Why missed (nearly):** the data and the symptom were both large, and the culture attribute is
+  literally named `bandit_boss_party_template`. Nothing in the name says the mission does not read it.
+- **Prevent:** before promising that a `PartyTemplate`, roster or spawn-list data change fixes a
+  MISSION-side symptom (how many spawn, who stands where, what the boss brings), open the mission
+  controller and the `MapEventHelper`/`TroopSupplier` path that builds the mission from the party, and
+  find the line that decides the number. If it is a formula over the whole party set, the template is
+  not the lever. Two routes into the same mission (assault, sneak-in) size themselves differently;
+  read both.
+- **Source:** #564, `docs/features/bandit-management.md` "Hideout boss fight: boss + N",
+  `docs/reviews/rca-hideout-boss-fight-2026-09-11.md`.

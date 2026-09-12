@@ -54,6 +54,18 @@ public class BanditScalingSettingsProviderTests
     }
 
     [TestMethod]
+    public void WithoutMcm_HideoutBossBodyguards_MatchesTheCompiledDefault()
+    {
+        // #564: the boss fight is exactly 1 boss + this many on both hideout routes. Pin the
+        // shipped number (4, the "3 to 4 soldiers" the balance decision asked for) and the
+        // provider/MCM agreement, so a retune has to move both.
+        var settings = new TaomSettings();
+        var provider = Provider();
+        Assert.AreEqual(4, settings.BanditHideoutBossBodyguards);
+        Assert.AreEqual(settings.BanditHideoutBossBodyguards, provider.HideoutBossBodyguards);
+    }
+
+    [TestMethod]
     public void MinPartiesToInfest_IsOne_AndNeverExceedsTheCap()
     {
         var provider = Provider();

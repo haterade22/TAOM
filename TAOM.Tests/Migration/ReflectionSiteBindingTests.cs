@@ -87,6 +87,12 @@ public class ReflectionSiteBindingTests
     // on the abandoned character-creation clan, CharacterDeveloperVM throws enumerating its Heroes,
     // and KillCharacterAction's victim.Clan != Clan.PlayerClan guard stops that clan being destroyed.
     [DataRow("TaleWorlds.CampaignSystem.Campaign", "Campaign", "PlayerDefaultFaction", "Property", "PlayerIdentityAdapter.cs:34")]
+    // --- BanditManagement hideout boss fight (#564): the three private fields Patch86_HideoutAmbushBossFight
+    // injects as ____name parameters. HarmonyFieldInjectionNamingTests pins the underscore count; these pin
+    // the members, and Patch86HideoutBossFightBindingTests pins their types.
+    [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroops", "Field", "Patch86_HideoutAmbushBossFight.cs")]
+    [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_overriddenHideoutBossAgentOrigin", "Field", "Patch86_HideoutAmbushBossFight.cs")]
+    [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroopTypesCache", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

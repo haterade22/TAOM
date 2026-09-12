@@ -19,7 +19,8 @@ public interface IBanditScalingService
     /// <summary>Returns the multiplier for bandit party troop count on map. Always >= 1.0.</summary>
     float GetPartySizeMultiplier(float playerProgress);
 
-    /// <summary>Returns the multiplier for first-fight + boss-fight troop counts at hideouts. Always >= 1.0.</summary>
+    /// <summary>Returns the multiplier for the first-fight troop count at hideouts. Always >= 1.0. The boss
+    /// fight is not scaled: it is <c>1 + IHideoutBossFightService.BodyguardCount</c> (#564).</summary>
     float GetBossFightMultiplier(float playerProgress);
 
     /// <summary>True when bandit scaling is enabled in MCM. When false, callers should fall through to vanilla.</summary>
