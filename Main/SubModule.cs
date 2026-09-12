@@ -1405,6 +1405,13 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.Initialize(
             IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch84_SiegeAftermathMenuGuard");
+        // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
+        // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
+        // for every non-leader member, and the wait menu it opens instead has no exit. The target is
+        // a game menu consequence, which cannot run before the campaign exists, so the standard
+        // batch is early enough.
+        TAOM.Features.ReturnToArmy.Hooks.Patch87_ReturnToArmy.Initialize(IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch87_ReturnToArmy");
         // Patch85 (#557) — defers the enlisted battle-end detach out of the MapEventEnded dispatch
         // into PlayerEncounter.Finish's one-statement window between FinalizeBattle (which dispatches
         // the event) and FinishEncounterInternal (which reads AttachedTo for the post-defeat escape).
@@ -1875,6 +1882,7 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.FieldCommission.Hooks.Patch71_HeroResetEquipmentsGuard.ResetForUnload();
         TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.ResetForUnload();
         TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.ResetForUnload();
+        TAOM.Features.ReturnToArmy.Hooks.Patch87_ReturnToArmy.ResetForUnload();
         TAOM.Features.Enlistment.Hooks.Patch85_EnlistedDetachDeferral.ResetForUnload();
         TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.ResetForUnload();
         TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.ResetForUnload();

@@ -369,6 +369,26 @@ path keyed on `Clan.Leader.IsHumanPlayerCharacter`, of which there are many.
 Anything else that reads `Clan.Leader.IsHumanPlayerCharacter` rather than `Clan == Clan.PlayerClan` is
 suspect for these players and has not been swept.
 
+## Interaction: the lord's army membership survives the takeover
+
+Nothing in the handover reads or writes `MobileParty.Army` or `AttachedTo` (`HeroSwitchService`,
+`PlayerIdentityAdapter.ApplyPlayerCharacter`, and vanilla's `ChangePlayerCharacterAction` underneath
+it), so whatever army state the lord's party held carries over to the player. Two shapes:
+
+- **Merged into the army** (`AttachedTo != null`): the player starts inside the army wait menu and
+  moves with the army until the leader disperses it or the player picks "Leave Army". That is exactly
+  the state a player who joined an army the normal way is in, so nothing special happens.
+- **In the army but not merged** (`Army != null`, `AttachedTo == null`, a lord still marching to the
+  gathering point): the player is free to move and can walk into any non-hostile settlement. Vanilla
+  then has no exit for them from a town or castle, because "Leave" is hidden for army members and
+  "Return to Army" only leaves a village. That was #566 (2026-09-12, a takeover of a Gondor lord who
+  then entered Orthanc). `Patch87_ReturnToArmy` runs vanilla's own Leave for that one case; see
+  [return-to-army.md](return-to-army.md).
+
+Whether a takeover should instead clear `Army` (make the lord leave the army on the spot) is an open
+design question. Vanilla supports both states for a player, and clearing it would also change how a
+takeover of an attached lord plays, so it is left as it is until someone wants it changed.
+
 ## What was dropped, and why it must stay dropped
 
 | Dropped | Reason |

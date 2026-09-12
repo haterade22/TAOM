@@ -93,6 +93,17 @@ public class CoopVetoClassificationTests
             "Same as its participant sibling: menu_settlement_taken_player_army_member_on_init sets " +
             "text variables and a background mesh only, the prefix returns false solely on the null " +
             "_besiegerParty path vanilla cannot survive, and menu text is per-peer presentation."),
+        ["Patch87_ReturnToArmy"] = new(CoopVeto.ReviewedSafe,
+            "Skips only GameMenu.SwitchToMenu(\"army_wait_at_settlement\"), per-peer presentation: " +
+            "the village branch that leaves the settlement is never skipped (Decide returns " +
+            "RunVanilla for a village). What runs instead is the player's own vanilla \"Leave\" " +
+            "sequence on the LOCAL main party, the same calls clicking Leave makes, so it reaches " +
+            "the co-op mod's existing LeaveSettlementAction interception exactly as vanilla Leave " +
+            "does (CoopNightly LeaveSettlementActionPatches). The condition reads MainParty.Army, " +
+            "AttachedTo and CurrentSettlement.IsVillage, engine fields the co-op mod registers for " +
+            "sync, and no TAOM SyncData or config. Replication is asynchronous, so this is a " +
+            "same-integration-as-vanilla argument, not a claim of identical snapshots; two-peer " +
+            "execution is UNVERIFIED (Codex review 98)."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +
