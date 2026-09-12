@@ -2024,3 +2024,18 @@ from the engine and reading the prose last.
   test. If an exception exists, write the qualified sentence; "X is dead, Y still applies, Y is retired
   by decision" is longer and true.
 - **Source:** #559 Codex pass, 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md` findings 8 and 10.
+
+### A worktree-sourced blob is whatever the worktree holds at commit time, not at the time you checked it
+
+Three sessions in one tree. I ran `git status --porcelain` on two shared docs, saw them clean, edited
+them, and minutes later committed them from the worktree through a temporary index. In between,
+another session edited the same two files, so the pushed commit (`8948437d`) carries its hunks under my
+message: the feature map's BanditManagement row and the balance chapter's settings count. Content
+correct, attribution wrong, and a pushed commit cannot be re-cut.
+- **Why missed:** the status check was read as a property of the file instead of the instant, and the
+  temporary-index technique guards against the shared INDEX, not against the worktree moving under you.
+- **Prevent:** for any file another session may hold open, build the commit blob as HEAD plus your own
+  textual change (the way CHANGELOG and the language files were done in the same session), or run
+  `git diff HEAD -- <file>` immediately before `update-index --add` and refuse if it shows a hunk you did
+  not write. When it has already happened, the remedy is a CHANGELOG line naming the carried hunks.
+- **Source:** 2026-09-11, the #558 documentation commit; relayed by the #559 session.

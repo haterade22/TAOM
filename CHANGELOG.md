@@ -213,7 +213,7 @@ table read from the config (77 cost rows: 27 with upkeep, 50 merchant-only), the
 sprite id form are the real ones, the event list is the 12 the behavior registers, the load path is
 described as it is (non-finite repair, no cap clamp), the tier test classes are listed, and the status
 line says what is verified in-game and what is not. The feature map row, the handbook's balance chapter
-(a merchant-only row never deserts) and the console reference follow suit.
+(a merchant-only row never deserts) and the console reference follow suit. This commit also carried two hunks from the #559 session's worktree that are not mine and are correct: the feature map's BanditManagement row (5 to 8 cultures) and the balance chapter's settings count (219 value knobs across 56 groups).
 
 ### fix(mcm): 166 settings told players to restart, and Cancel on that prompt threw the change away (#559)
 
