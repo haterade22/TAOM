@@ -10,13 +10,15 @@ public readonly struct FiefGrantCandidateFacts
     public FiefGrantCandidateFacts(
         int ownedFortifications,
         bool isRulingClan,
-        bool isCapturer,
+        float siegeContributionShare,
+        bool siegeWasRecorded,
         bool isCultureMatch,
         bool isPlayerClan)
     {
         OwnedFortifications = ownedFortifications;
         IsRulingClan = isRulingClan;
-        IsCapturer = isCapturer;
+        SiegeContributionShare = siegeContributionShare;
+        SiegeWasRecorded = siegeWasRecorded;
         IsCultureMatch = isCultureMatch;
         IsPlayerClan = isPlayerClan;
     }
@@ -31,15 +33,23 @@ public readonly struct FiefGrantCandidateFacts
     public bool IsRulingClan { get; }
 
     /// <summary>
-    /// True when the clan actually stormed the place, read from <c>Town.LastCapturedBy</c>. Vanilla's
-    /// <c>SettlementClaimantDecision._capturerHero</c> is written by the constructor and never read,
-    /// and the daily-tick path passes it as <c>null</c> regardless, so this stamp is the only signal.
+    /// The clan's contribution to the winning assault as a fraction of the top contributor's, in
+    /// [0, 1]: 1 for the clan that carried the assault, 0 for a clan that fielded no party. Read
+    /// from the participation record (#565), not from <c>Town.LastCapturedBy</c>: that stamp names
+    /// only the assault leader's clan, is never cleared, and vanilla already pays it a flat +30.
     /// </summary>
-    public bool IsCapturer { get; }
+    public float SiegeContributionShare { get; }
+
+    /// <summary>
+    /// True when a participation record exists for the settlement. Without one nobody is known to
+    /// have fought (a save from before #565, or a settlement that changed hands with no assault),
+    /// so both participation terms stay out of the multiplier rather than damping every clan.
+    /// </summary>
+    public bool SiegeWasRecorded { get; }
 
     /// <summary>True when the clan's culture matches the settlement's. Vanilla has no equivalent term.</summary>
     public bool IsCultureMatch { get; }
 
-    /// <summary>True for the player's own clan, which the "Apply Penalties To Player" knob exempts.</summary>
+    /// <summary>True for the player's own clan, which the "Exempt Your Clan From Penalties" knob can exempt.</summary>
     public bool IsPlayerClan { get; }
 }

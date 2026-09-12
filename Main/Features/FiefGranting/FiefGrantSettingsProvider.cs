@@ -3,7 +3,7 @@ using TAOM.Core.Validation;
 namespace TAOM.Features.FiefGranting;
 
 /// <summary>
-/// Reads the fief-grant knobs off MCM (#458). Standard TAOM recipe: <c>TaomSettings.Instance?.Knob</c>
+/// Reads the fief-grant knobs off MCM (#458, #565). Standard TAOM recipe: <c>TaomSettings.Instance?.Knob</c>
 /// so the compiled default applies when MCM is not loaded, then <see cref="SettingClamp"/> for the
 /// null-safe, NaN-safe clamp to the knob's valid range.
 ///
@@ -17,6 +17,9 @@ public sealed class FiefGrantSettingsProvider : IFiefGrantSettingsProvider
 
     public float CapturerBonus =>
         SettingClamp.Clamp(TaomSettings.Instance?.FiefGrantCapturerBonus, 2.5f, 1.0f, 5.0f);
+
+    public float AbsentFromSiegeFactor =>
+        SettingClamp.Clamp(TaomSettings.Instance?.FiefGrantAbsentFromSiegeFactor, 0.5f, 0.1f, 1.0f);
 
     public float LandlessBonus =>
         SettingClamp.Clamp(TaomSettings.Instance?.FiefGrantLandlessBonus, 2.0f, 1.0f, 5.0f);
@@ -36,6 +39,11 @@ public sealed class FiefGrantSettingsProvider : IFiefGrantSettingsProvider
     public float KingsVoteFiefShareCap =>
         SettingClamp.Clamp(TaomSettings.Instance?.FiefGrantKingsVoteFiefShareCap, 0.34f, 0.0f, 1.0f);
 
+    // Inverted on purpose. The knob used to be "Apply Penalties To Your Clan", default OFF, which
+    // shipped every player exempt and let a landed player out-score any AI clan for fiefs they never
+    // fought for (#565). MCM keeps a saved value per property, so flipping that default would have
+    // reached fresh installs only; the property was renamed to "Exempt Your Clan From Penalties",
+    // default off, so every install picks the new default up. Do not "simplify" this back.
     public bool ApplyPenaltiesToPlayerClan =>
-        TaomSettings.Instance?.FiefGrantApplyPenaltiesToPlayerClan ?? false;
+        !(TaomSettings.Instance?.FiefGrantExemptPlayerClanFromPenalties ?? false);
 }

@@ -4,6 +4,65 @@
 
 ## 2026-09-11
 
+### fix(fiefs): siege participation replaces the capturer stamp, and the player is scored like any clan (#565)
+
+Players were being granted towns and castles after sieges they never joined. Nothing in the
+fief-grant rebalance (#458) had changed since it landed; the reports were the in-game smoke test it
+shipped without, arriving late. Four things stacked. The only participation signal was
+`Town.LastCapturedBy`, one clan stamp written by `ApplyBySiege` to the assault leader's clan and
+never cleared, so army members got nothing and a clan that stormed a place months ago kept a 2.5x
+claim on every re-election of it. The "Apply Penalties To Your Clan" switch shipped OFF, so a landed
+player skipped the concentration and mismatch terms every AI clan paid (a 2.9x swing at two fiefs
+and a culture mismatch) on top of vanilla's own flat +30 for the player. Landless clans dominate
+vanilla's merit already (nothing in the divisor, the maximal proximity factor) and TAOM doubled
+them. And the King's Vote cap removed the override that used to hide the merit ranking.
+
+The capturer term is now a participation term. `FiefGrantingCampaignBehavior` records every
+winning-side clan's share of `MapEventParty.ContributionToBattle` (the number vanilla splits loot
+by) at `MapEventEnded`, which the engine dispatches before the `BySiege` owner change in the same
+finalize. The clan that carried the assault gets the full Siege Participation Bonus, every other
+participant gets `1 + (bonus - 1) * share` of the top clan's contribution, and a clan with no party
+there gets the new Absent From Siege Factor (default 0.50). With no record on file every clan stays
+at 1.0. The rules that decide what is recorded live in `FiefSiegeCaptureRules`, one method per
+engine site: only the battle types `KingdomManager.SiegeCompleted` transfers ownership for (a relief
+battle outside the walls captures nothing), only clans that can appear on the ballot (the capturing
+kingdom's, not mercenaries, not allies who joined the assault), and only when vanilla will open a
+claim at all (a fortification taken by a kingdom with more than one clan), because only the grant
+that follows clears the record. The record persists through `SyncData` as a
+`Dictionary<string, string>`, resets on a fresh campaign, rejects duplicate ids on restore, and is
+host-only under co-op.
+
+"Apply Penalties To Your Clan" (default off, exempt) is replaced by "Exempt Your Clan From
+Penalties" (default off, scored like any clan). MCM keeps a saved value per property, so a flipped
+default on the old key would have reached fresh installs only; the rename is what reaches the
+players who reported this (Codex decompiled the installed loader to confirm an orphaned key is
+ignored). The absent factor applies to the player's clan either way.
+
+Review trail: five deep-review agents found the relief-battle and mercenary gaps; each went
+through `/investigate` with a RED-then-GREEN regression. Codex on GPT-6-Astra at ultra returned
+four P2 and two P3, all verified and fixed: allied outsiders in the record, captures that open no
+claim, duplicate ids on restore, and three doc and hint corrections, including a pre-#565 sentence
+claiming a pending election keeps its creation-time weights (they are read live; only the type swap
+is creation-time). RCA and lessons: `docs/reviews/rca-fiefgranting-participation-2026-09-11.md`,
+`docs/reviews/lessons/campaign-mechanics.md`.
+
+Stale text corrected while here: the feature-map row, the settings group comment and the decision
+class comment all still said the election is "decided entirely by merit, all three finalists tie",
+which the Codex pass on #458 refuted a day after it was written. `CLAUDE.md` gained a Traps row for
+the stamp, and the co-op settings counts moved to 236 total, 222 in `TaomSettings`, 177
+simulation-relevant, 59 excluded (two of those numbers were already stale before this change).
+
+Attribution: commit `140bad85` (#564, another session) carried this change's hunks in
+`TaomSettings.cs`, `SubModule.cs`, `SettingsFingerprintTests.cs`, the patch registry and both co-op
+docs before the rest of #565 was committed, so HEAD referenced `FiefGrantingCampaignBehavior` and
+the renamed setting without their sources for the interval between the two commits.
+
+Verified: build clean; 104 FiefGrant tests green (record, policy, capture rules, session reset,
+handler gates, 4 + 4 binding tests against the installed 1.4.8 engine); full suite 8583 passed,
+2 skipped, 1 failed (`ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, the documented
+`wm_gondor_sword_a04` live-Armory drift, unrelated). Owed: the four in-game smoke tests listed in
+`docs/features/fief-granting.md`; #565 stays open until they pass.
+
 ### chore(data): drop the duplicated vanilla-bandit-clan strip in spclans.xslt, fix a stale culture comment
 
 `spclans.xslt` carried the five `Faction[@id='sea_raiders'...]` empty templates twice, once at the top

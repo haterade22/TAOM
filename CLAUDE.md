@@ -156,7 +156,7 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 ## Doc Lookup
 
 **Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
-to… / Read" lookup (all 77 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+to… / Read" lookup (all 78 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
 subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
@@ -206,6 +206,7 @@ instructions `AGENTS.md`.
 | **Game menus stop time** | A standard `GameMenu` stops campaign time with dead time controls, and `MapState` saves the open menu id, so a player left in a menu after starting a timed process sees a "frozen" game that survives load. Land on the map (or use a wait menu) after starting anything timed. `taom.time_status` / `taom.rescue_time` diagnose and recover. |
 | **A "frozen game" may be a stuck kingdom vote** | The popup's exit is a 5s timer needing an `IsKingsDecisionOver` false->true edge, not a click. No edge, no close: navigation stays locked, Escape is dead, no crash. TWO causes: a cancelled election (`Patch80`, #547) and a player who is not their clan's leader (#550, NOT covered). `docs/features/diplomacy.md` |
 | **Hero capture** | `Hero.CanBecomePrisoner()` returns `true` unconditionally for every non-`MainHero`, so `CanHeroBecomePrisonerEvent` NEVER fires for an AI lord: patch the method. Denying capture IS granting escape (`MapEvent.cs:2004-2008` falls through to `MakeHeroFugitiveAction`). Both `Patch76` seams must carry the SAME `DeathMark` guard. `docs/features/uncapturable-heroes.md`. |
+| **`Town.LastCapturedBy` is a stamp, not participation** | Written ONLY by `ApplyBySiege`, to the assault LEADER's clan, never cleared: army members get nothing and a clan that stormed the place months ago still reads as capturer on every re-election. Vanilla pays it +30 merit. TAOM scores participation from `IFiefSiegeParticipationService` (#565). `docs/features/fief-granting.md`. |
 | **One MarriageModel slot** | `TaomMarriageModel` carries BOTH the Ringwraith block and the Free/Evil rule (#542): `AddModel` does not compose, so a second marriage model silently shadows one of them. New marriage rules go in that class. `IsCoupleSuitableForMarriage` is the chokepoint for every path. `docs/features/marriage-alignment.md` |
 | **Player Switcher priority** | The character-creation handover MUST register at handler priority 1100, above TAOM's own 1050. Lower and `ApplyFinalEffects` plus `SetPlayerRace` hit the real lord: Erebor at renown zero, Sauron's race overwritten and then persisted. Reassign the player clan BEFORE removing the created hero or the orphan clan survives. `docs/features/player-switcher.md`. |
 | **Armory asset trees** | No cooked tree: 0 `AssetPackages/*.tpac`, the engine loads loose `Assets/**` and loose WINS where both exist (TAOM/TAOM_Map ship both; `rgl_log` names `Assets` for each). The old stale-pack trap is unreachable here. Current inventory is GENERATED, never counted by hand: `docs/reference/armory-catalogue/`. |

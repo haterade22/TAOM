@@ -19,7 +19,8 @@ internal static class FiefGrantFactsBuilder
     /// <summary>
     /// Snapshot one candidate clan for <paramref name="contested"/>, the settlement under vote.
     /// </summary>
-    public static FiefGrantCandidateFacts Build(Clan clan, Settlement contested)
+    public static FiefGrantCandidateFacts Build(
+        Clan clan, Settlement contested, IFiefSiegeParticipationService participation)
     {
         if (clan == null) return default;
 
@@ -29,10 +30,12 @@ internal static class FiefGrantFactsBuilder
                            && clan.Leader != null
                            && clan.Leader == kingdom.Leader;
 
-        // Town.LastCapturedBy is the only surviving record of who took the place. Vanilla's own
-        // `_capturerHero` field is written by the constructor and never read, and the daily-tick
-        // path passes it as null anyway.
-        var isCapturer = contested?.Town != null && contested.Town.LastCapturedBy == clan;
+        // Participation comes from TAOM's own record of the winning assault (#565), never from
+        // Town.LastCapturedBy: that stamp names the assault leader's clan only, is never cleared,
+        // and vanilla's merit already pays it a flat +30 that this override leaves in place.
+        var settlementId = contested?.StringId;
+        var recorded = participation != null && participation.HasRecord(settlementId);
+        var share = recorded ? participation.GetContributionShare(settlementId, clan.StringId) : 0f;
 
         var settlementCulture = contested?.Culture;
         var isCultureMatch = settlementCulture != null
@@ -42,7 +45,8 @@ internal static class FiefGrantFactsBuilder
         return new FiefGrantCandidateFacts(
             CountFortifications(clan.Settlements, contested),
             isRulingClan,
-            isCapturer,
+            share,
+            recorded,
             isCultureMatch,
             clan == Clan.PlayerClan);
     }

@@ -91,7 +91,8 @@ public static class Patch70_FiefGrantDecisionSwap
         if (proposerClan == null || settlement == null) return null;
 
         // capturerHero is deliberately null: vanilla stores it and never reads it, the daily-tick
-        // path passes null already, and TaomSettlementClaimantDecision reads Town.LastCapturedBy.
+        // path passes null already, and TaomSettlementClaimantDecision reads TAOM's own siege
+        // participation record (IFiefSiegeParticipationService, #565), not a single hero.
         return new TaomSettlementClaimantDecision(
             proposerClan, settlement, null, original.ClanToExclude)
         {

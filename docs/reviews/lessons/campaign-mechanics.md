@@ -328,3 +328,49 @@ hideout at the cap.
   read both.
 - **Source:** #564, `docs/features/bandit-management.md` "Hideout boss fight: boss + N",
   `docs/reviews/rca-hideout-boss-fight-2026-09-11.md`.
+
+### A record that feeds a later decision mirrors THREE engine sites, not the handler that fires beside it
+
+The #565 siege participation record was first gated like vanilla's loot handler
+(`SiegeAftermathCampaignBehavior.OnMapEventEnded`), which counts every won siege battle. Three
+review rounds each found it one engine site short: the loot handler also counts a `SiegeOutside`
+relief victory that captures nothing (`KingdomManager.SiegeCompleted` transfers ownership only for
+Siege, SallyOut and BlockadeSallyOutBattle); the ballot admits only the capturing kingdom's
+non-mercenary clans (`SettlementClaimantDecision.DetermineInitialCandidates`), while allies at war
+with the defender may join the assault (`SiegeEvent.CanPartyJoinSide`) and would have set the top
+share; and vanilla opens a claim only for a fortification taken by a kingdom with more than one clan
+(`SettlementClaimantCampaignBehavior.OnSettlementOwnerChanged` lines 39-42), so a capture that opens
+no claim gets no grant and nothing ever clears its record.
+
+- **Why missed:** the gate looked mechanical ("same test as vanilla's handler"), so the sibling was
+  mirrored instead of the mechanism. Each round asked one question ("does it capture?", "who may
+  win?", "will a grant follow?") and the previous round's fix answered only that one. The lesson
+  "Same shape as the sibling is a design statement, not a correctness one" was already on file.
+- **Prevent:** before writing any record that a later decision consumes, name three engine sites
+  and derive the write and keep rules from all of them: the method that makes the state change real
+  (transfer), the consumer's admission rule (ballot), and the condition under which the consuming
+  decision will exist at all (claim opening). Put each rule in its own method with the site cited,
+  as `FiefSiegeCaptureRules` does, and test each on bare engine objects. A handler that merely fires
+  at the same moment is evidence of timing, never of scope.
+- **Source:** `docs/reviews/rca-fiefgranting-participation-2026-09-11.md` (deep-review gaps 1 and
+  2, Codex F1 and F2), #565.
+
+### A persisted stamp remembers the LAST event, not the CURRENT one, and your own store is no exception
+
+`Town.LastCapturedBy` is written only by `ApplyBySiege`, to the assault leader's clan, and never
+cleared. TAOM read it as "who fought for this fief", so army members got nothing and a clan that
+stormed a place months ago kept a 2.5x claim on every re-election. The replacement store then
+reproduced the same defect twice in its first day: a record written on a battle that transferred no
+ownership, and a record written on a capture that would never be granted, each readable by an
+unrelated election later because nothing expired it.
+
+- **Why missed:** a stamp reads like a fact about the settlement rather than a memory of one event.
+  The original read had shipped once (#458) with a doc sentence explaining the stamp was "the only
+  surviving record"; that sentence described the storage, not what it meant.
+- **Prevent:** for every persisted per-entity value read at decision time, state which event wrote
+  it, which events clear it, and whether the event being decided is the one it remembers. If any
+  reachable path decides on a different event than the one that wrote it, either expire the value on
+  that path or key the record to the event. A parser for the persisted form treats the writer's
+  invariants as untrusted: duplicates, signs and magnitudes are validated on restore, not assumed.
+- **Source:** `docs/reviews/rca-fiefgranting-participation-2026-09-11.md`, #565 diagnosis and Codex
+  F2 and F3.

@@ -1095,7 +1095,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
     [SettingPropertyFloatingInteger("Siege Participation Bonus", 1.0f, 5.0f, "#0.00", Order = 1, RequireRestart = false,
-        HintText = "Merit multiplier for the clan that carried the winning assault: the largest share of the attacking side's battle contribution, the same number the loot split uses. Every other clan that fielded a party there gets it in proportion, 1 + (bonus - 1) x its share of the top clan's contribution, so an army member with half the leader's contribution gets half the bonus. Vanilla's flat +30 for the assault leader's clan is untouched. 1.00 = off. Default: 2.50.")]
+        HintText = "Merit multiplier for the clan that carried the winning assault: the largest share of the winning besieging side's battle contribution, the same number the loot split uses. Every other clan of that kingdom that fielded a party there gets it in proportion, 1 + (bonus - 1) x its share of the top clan's contribution, so a clan with half the top clan's contribution gets half the bonus. Mercenaries and allies from other kingdoms cannot be granted the fief and are not counted. Vanilla's flat +30 for the assault leader's clan is untouched. 1.00 = off. Default: 2.50.")]
     public float FiefGrantCapturerBonus { get; set; } = 2.5f;
 
     [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]

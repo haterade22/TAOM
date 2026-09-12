@@ -3,13 +3,13 @@ using TAOM.Core.Validation;
 namespace TAOM.Features.FiefGranting;
 
 /// <summary>
-/// Fief-grant scoring policy (#458).
+/// Fief-grant scoring policy (#458, #565).
 ///
 /// Vanilla's <c>SettlementClaimantDecision.CalculateMeritOfOutcome</c> is kept and multiplied rather
 /// than replaced. Its proximity factor and settlement-value divisor are the parts worth keeping, and
 /// reproducing them would mean re-deriving <c>MapDistanceModel</c> distances and
-/// <c>Campaign.MapDiagonal</c> for no gain. Everything TAOM wants to change (concentration, capturer
-/// claim, culture fit, ruler damping) expresses cleanly as a multiplier over primitives.
+/// <c>Campaign.MapDiagonal</c> for no gain. Everything TAOM wants to change (concentration, siege
+/// participation, culture fit, ruler damping) expresses cleanly as a multiplier over primitives.
 ///
 /// Every knob is defensive against garbage: a non-finite or non-positive factor falls back to the
 /// vanilla-parity value rather than inverting or erasing the ranking. `csharp-architecture.md`
@@ -35,7 +35,8 @@ public sealed class FiefGrantPolicyService : IFiefGrantPolicyService
 
         var owned = facts.OwnedFortifications > 0 ? facts.OwnedFortifications : 0;
 
-        // The player exemption drops the terms that work AGAINST a clan and keeps the ones that help.
+        // The player exemption drops the terms that work AGAINST a clan for what it already holds
+        // and keeps the ones that help. Siege participation is deliberately outside it (below).
         var applyPenalties = !facts.IsPlayerClan || _settings.ApplyPenaltiesToPlayerClan;
 
         var multiplier = VanillaMultiplier;
@@ -48,8 +49,26 @@ public sealed class FiefGrantPolicyService : IFiefGrantPolicyService
         if (owned == 0)
             multiplier *= Factor(_settings.LandlessBonus);
 
-        if (facts.IsCapturer)
-            multiplier *= Factor(_settings.CapturerBonus);
+        // Siege participation (#565). Only when the settlement has a record: with none, nobody is
+        // known to have fought, and damping every clan alike would rescale the ranking for nothing.
+        // A non-finite share is garbage from the boundary and falls back to vanilla parity, so the
+        // positive requirement below only ever sends a real absentee to the absent factor.
+        if (facts.SiegeWasRecorded && FiniteFloatValidator.IsFinite(facts.SiegeContributionShare))
+        {
+            if (facts.SiegeContributionShare > 0f)
+            {
+                // The clan that carried the assault (share 1) gets the whole bonus; the rest get it
+                // in proportion to how much of the top clan's contribution they matched.
+                var share = facts.SiegeContributionShare > 1f ? 1f : facts.SiegeContributionShare;
+                multiplier *= 1f + (Factor(_settings.CapturerBonus) - 1f) * share;
+            }
+            else
+            {
+                // About what the clan DID, not what it holds, so the player exemption does not
+                // skip it: an absent player clan is damped like any other absentee.
+                multiplier *= Factor(_settings.AbsentFromSiegeFactor);
+            }
+        }
 
         // The ruling-clan factor spans 0.1 to 2.0, so it is a penalty below 1 and a BONUS above it.
         // The player exemption drops penalties and keeps bonuses, so it must look at the value

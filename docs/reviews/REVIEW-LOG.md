@@ -2500,6 +2500,53 @@ failure, `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, predat
 Cold in-game walk still owed. `AGENTS.md` was mid-rewrite by another session, so the Codex lessons
 went to `docs/reviews/codex-track-record.md`.
 
+## Review 97: Fief grants, siege participation replaces the capturer stamp (#565), 5-agent deep-review, two /investigate runs and a Codex pass on GPT-6-Astra at ultra (2026-09-11)
+
+Players won fiefs from sieges they never joined. The #458 rebalance had shipped without a smoke
+test, and its only participation signal was `Town.LastCapturedBy`: one clan stamp, written to the
+assault leader's clan, never cleared. #565 records every winning-side clan's share of the engine's
+own `ContributionToBattle` at `MapEventEnded`, scales the bonus by share, damps absent clans, and
+renames the player exemption knob so its flipped default reaches existing installs.
+
+**Deep review, five agents.** Standards: the new behavior was 176 lines (trimmed; Patch70 at 161 is
+pre-existing and recorded). Compatibility: 35 engine members verified against the installed 1.4.8
+DLLs, the dispatch ordering proven with line citations, one sub-claim (other assemblies calling
+`ApplyBySiege`) closed by decompiling SandBox and StoryMode: none. Efficiency: one deferrable
+(cache the top contribution; rejected under the simplicity criterion) and one wrong (a
+`string.Join(char, ...)` overload that does not exist on net472). Completeness: clean bar the
+CHANGELOG written last by design. Data flow found both real defects by refuting design claims: the
+write gate mirrored the loot handler and so recorded a `SiegeOutside` relief victory that captures
+nothing, and mercenary clans were recorded although the ballot excludes them. Both were run through
+`/investigate` with a RED-then-GREEN regression each (the old clause restored, the single row seen
+failing, the fix restored).
+
+**Codex, GPT-6-Astra at ultra: P1 0 / P2 4 / P3 2, zero false positives, every finding verified
+against the source before it was applied.** Five of eight suspects survived; three fell. F1: an
+allied faction's party may join the assault (`SiegeEvent.CanPartyJoinSide`) but never be a
+candidate, so it could set the top share; the record now keeps only the capturing faction's clans.
+F2: a capture that opens no claim (a sole-clan kingdom, `Clans.Count > 1` in vanilla's behavior)
+gets no grant, so nothing ever cleared its record and a relinquish or annexation election years
+later read it; the record is now kept only when vanilla will open a claim. F3: a duplicated clan id
+in a hand-edited save string overflowed a long into a negative share; duplicates are rejected on
+restore. F4 to F6: a pre-#565 doc sentence claiming a pending election keeps its creation-time
+weights (they are read live), two stale subsidiary settings counts in the co-op doc, and a hint that
+said "attacking side" where a sally-out's winners are the defender side. Codex also decompiled the
+installed MCM loader to prove the rename mechanism and ran the service source in memory when its own
+build failed, and said so.
+
+**What Codex did well.** It attacked the claims it was handed with named actors and exact event
+sequences, and it found the two enumeration gaps the fix for the deep-review findings had left:
+each round had mirrored one more engine site and stopped. The four rules now live in
+`FiefSiegeCaptureRules`, one method per engine site, with the site cited.
+
+**Not done.** `AGENTS.md` no longer has a "Lessons From Prior Reviews" section, so that skill step
+had nothing to update. In-game smoke tests (four) are owed; #565 stays open until they pass.
+
+Suite: 104/104 on the FiefGrant filter; 8583 of 8586 on the full suite (2 skipped; the one
+failure, `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, is the documented
+`wm_gondor_sword_a04` live-Armory drift, unrelated). RCA:
+`docs/reviews/rca-fiefgranting-participation-2026-09-11.md`.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

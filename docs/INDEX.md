@@ -144,6 +144,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [menu-link-colors](features/menu-link-colors.md) — game-menu hyperlinks recoloured by the linked object's culture (Patch64); 20 `Link.Taom.*` styles in `GameMenu.InfoText`, parchment contrast window pinned by test
 - [quick-actions](features/quick-actions.md) — inventory "Sell All" multi-action menu (Patch34)
 - [fief-management](features/fief-management.md) — custom GameState for fief management
+- [fief-granting](features/fief-granting.md): who gets a captured town or castle (Patch70 decision swap, siege participation record, ten MCM knobs; #458, #565)
 - [arena](features/arena.md) — TaomTournamentModel with culture armor + prize pools
 - [messengers](features/messengers.md) — paid messenger dispatch + travel arrival inquiry
 - [shader-precompilation](features/shader-precompilation.md): pre-compile shaders menu option (Patch21): every character in batches, scene passes an MCM opt-in

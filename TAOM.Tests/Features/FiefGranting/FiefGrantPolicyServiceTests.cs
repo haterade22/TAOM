@@ -8,6 +8,10 @@ namespace TAOM.Tests.Features.FiefGranting;
 /// #458 — fief grants concentrated in one clan per kingdom. These pin the two levers the feature
 /// owns: the merit multiplier layered on vanilla's <c>CalculateMeritOfOutcome</c>, and the King's
 /// Vote gate that stops a rich ruling clan overriding the council on every single grant.
+///
+/// #565 — the capturer term became a participation term: a share of the winning assault's
+/// contribution, scaled up to the full bonus for the clan that carried it, and an absent factor for
+/// clans that had no party there. With no record at all both terms stay out of the multiplier.
 /// </summary>
 [TestClass]
 public class FiefGrantPolicyServiceTests
@@ -23,6 +27,7 @@ public class FiefGrantPolicyServiceTests
         // Neutral baseline: every knob a no-op, so each test moves exactly one lever.
         _settings.IsEnabled.Returns(true);
         _settings.CapturerBonus.Returns(1f);
+        _settings.AbsentFromSiegeFactor.Returns(1f);
         _settings.LandlessBonus.Returns(1f);
         _settings.ConcentrationPenalty.Returns(0f);
         _settings.CultureMatchBonus.Returns(1f);
@@ -37,10 +42,15 @@ public class FiefGrantPolicyServiceTests
     private static FiefGrantCandidateFacts Clan(
         int owned = 1,
         bool ruling = false,
-        bool capturer = false,
+        float share = 0f,
+        bool recorded = false,
         bool cultureMatch = true,
         bool player = false) =>
-        new FiefGrantCandidateFacts(owned, ruling, capturer, cultureMatch, player);
+        new FiefGrantCandidateFacts(owned, ruling, share, recorded, cultureMatch, player);
+
+    /// <summary>The clan that carried the assault: a record exists and its share is the top one.</summary>
+    private static FiefGrantCandidateFacts TopContributor(int owned = 1, bool ruling = false, bool cultureMatch = true, bool player = false) =>
+        Clan(owned, ruling, share: 1f, recorded: true, cultureMatch: cultureMatch, player: player);
 
     // ---------------------------------------------------------------- disabled / vanilla parity
 
@@ -49,9 +59,11 @@ public class FiefGrantPolicyServiceTests
     {
         _settings.IsEnabled.Returns(false);
         _settings.CapturerBonus.Returns(5f);
+        _settings.AbsentFromSiegeFactor.Returns(0.1f);
         _settings.ConcentrationPenalty.Returns(0.9f);
 
-        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(owned: 9, capturer: true)));
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(TopContributor(owned: 9)));
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(owned: 9, recorded: true)));
     }
 
     [TestMethod]
@@ -64,7 +76,8 @@ public class FiefGrantPolicyServiceTests
     [TestMethod]
     public void GetMeritMultiplier_WithNeutralSettings_IsExactlyVanilla()
     {
-        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(owned: 4, ruling: true, capturer: true)));
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(TopContributor(owned: 4, ruling: true)));
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(owned: 4, ruling: true, recorded: true)));
     }
 
     // ---------------------------------------------------------------- spread fiefs across clans
@@ -117,15 +130,94 @@ public class FiefGrantPolicyServiceTests
         Assert.AreEqual(2f, _sut.GetMeritMultiplier(Clan(owned: -3)), 0.0001f);
     }
 
-    // ---------------------------------------------------------------- strong capturer claim
+    // ---------------------------------------------------------------- siege participation (#565)
 
     [TestMethod]
-    public void GetMeritMultiplier_RewardsTheClanThatTookIt()
+    public void GetMeritMultiplier_GivesTheClanThatCarriedTheAssaultTheFullBonus()
     {
         _settings.CapturerBonus.Returns(2.5f);
 
-        Assert.AreEqual(2.5f, _sut.GetMeritMultiplier(Clan(capturer: true)), 0.0001f);
-        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(capturer: false)), 0.0001f);
+        Assert.AreEqual(2.5f, _sut.GetMeritMultiplier(TopContributor()), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_ScalesTheBonusByContributionShare()
+    {
+        _settings.CapturerBonus.Returns(2.5f);
+
+        // 1 + (2.5 - 1) * share: half the top clan's contribution earns half the bonus.
+        Assert.AreEqual(1.75f, _sut.GetMeritMultiplier(Clan(share: 0.5f, recorded: true)), 0.0001f);
+        Assert.AreEqual(1.15f, _sut.GetMeritMultiplier(Clan(share: 0.1f, recorded: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_ClampsAShareAboveOneToTheFullBonus()
+    {
+        _settings.CapturerBonus.Returns(2.5f);
+
+        Assert.AreEqual(2.5f, _sut.GetMeritMultiplier(Clan(share: 3f, recorded: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_DampsAClanAbsentFromARecordedAssault()
+    {
+        _settings.AbsentFromSiegeFactor.Returns(0.5f);
+
+        Assert.AreEqual(0.5f, _sut.GetMeritMultiplier(Clan(share: 0f, recorded: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_ANegativeShare_CountsAsAbsent()
+    {
+        _settings.CapturerBonus.Returns(2.5f);
+        _settings.AbsentFromSiegeFactor.Returns(0.5f);
+
+        Assert.AreEqual(0.5f, _sut.GetMeritMultiplier(Clan(share: -0.5f, recorded: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_WithoutARecord_LeavesBothParticipationTermsOut()
+    {
+        // No record means nobody is known to have fought: applying the absent factor to everyone
+        // would rescale the whole ranking for nothing, and a share without a record is noise.
+        _settings.CapturerBonus.Returns(2.5f);
+        _settings.AbsentFromSiegeFactor.Returns(0.5f);
+
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(share: 0f, recorded: false)), 0.0001f);
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(share: 1f, recorded: false)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_WithANonFiniteShare_IsVanillaParity()
+    {
+        // A NaN share fails the positive requirement, and the NaN rule says garbage falls back to
+        // vanilla parity rather than to either branch of the participation term.
+        _settings.CapturerBonus.Returns(2.5f);
+        _settings.AbsentFromSiegeFactor.Returns(0.5f);
+
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(share: float.NaN, recorded: true)), 0.0001f);
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(share: float.PositiveInfinity, recorded: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_AbsentFactor_AppliesToAnExemptPlayerClan()
+    {
+        // The exemption drops the terms about what the clan already HOLDS. Absence from the siege
+        // is about what it DID, so the player is damped like any other absentee.
+        _settings.ApplyPenaltiesToPlayerClan.Returns(false);
+        _settings.AbsentFromSiegeFactor.Returns(0.5f);
+
+        Assert.AreEqual(0.5f, _sut.GetMeritMultiplier(Clan(share: 0f, recorded: true, player: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_NonFiniteOrNonPositiveAbsentFactor_FallsBackToVanilla()
+    {
+        _settings.AbsentFromSiegeFactor.Returns(float.NaN);
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(share: 0f, recorded: true)));
+
+        _settings.AbsentFromSiegeFactor.Returns(0f);
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(share: 0f, recorded: true)));
     }
 
     /// Multiplier comparison only, same caveat as above: this pins the relative weighting the knobs
@@ -136,8 +228,8 @@ public class FiefGrantPolicyServiceTests
         _settings.CapturerBonus.Returns(2.5f);
         _settings.RulingClanFactor.Returns(0.75f);
 
-        var capturer = _sut.GetMeritMultiplier(Clan(owned: 2, capturer: true));
-        var ruler = _sut.GetMeritMultiplier(Clan(owned: 2, ruling: true));
+        var capturer = _sut.GetMeritMultiplier(TopContributor(owned: 2));
+        var ruler = _sut.GetMeritMultiplier(Clan(owned: 2, ruling: true, recorded: true, share: 0f));
 
         Assert.IsTrue(capturer > ruler,
             $"the capturer's multiplier ({capturer}) must exceed the king's ({ruler}) at equal holdings");
@@ -164,7 +256,19 @@ public class FiefGrantPolicyServiceTests
 
         // 1/(1+2*0.5) * 2 * 1.5
         Assert.AreEqual(1f / 2f * 2f * 1.5f,
-            _sut.GetMeritMultiplier(Clan(owned: 2, capturer: true, cultureMatch: true)), 0.0001f);
+            _sut.GetMeritMultiplier(TopContributor(owned: 2, cultureMatch: true)), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetMeritMultiplier_CombinesTheAbsentFactorWithTheOtherTerms()
+    {
+        _settings.ConcentrationPenalty.Returns(0.5f);
+        _settings.AbsentFromSiegeFactor.Returns(0.5f);
+        _settings.CultureMatchBonus.Returns(1.5f);
+
+        // 1/(1+2*0.5) * 0.5 * 1.5
+        Assert.AreEqual(1f / 2f * 0.5f * 1.5f,
+            _sut.GetMeritMultiplier(Clan(owned: 2, recorded: true, cultureMatch: true)), 0.0001f);
     }
 
     // ---------------------------------------------------------------- player exemption
@@ -178,9 +282,9 @@ public class FiefGrantPolicyServiceTests
         _settings.CultureMismatchPenalty.Returns(0.5f);
         _settings.CapturerBonus.Returns(2f);
 
-        // Only the capturer bonus survives.
+        // Only the participation bonus survives.
         var player = _sut.GetMeritMultiplier(
-            Clan(owned: 4, ruling: true, capturer: true, cultureMatch: false, player: true));
+            TopContributor(owned: 4, ruling: true, cultureMatch: false, player: true));
 
         Assert.AreEqual(2f, player, 0.0001f);
     }
@@ -222,10 +326,10 @@ public class FiefGrantPolicyServiceTests
     public void GetMeritMultiplier_WithNonFiniteSetting_FallsBackToVanilla()
     {
         _settings.CapturerBonus.Returns(float.NaN);
-        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(capturer: true)));
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(TopContributor()));
 
         _settings.CapturerBonus.Returns(float.PositiveInfinity);
-        Assert.AreEqual(1f, _sut.GetMeritMultiplier(Clan(capturer: true)));
+        Assert.AreEqual(1f, _sut.GetMeritMultiplier(TopContributor()));
     }
 
     [TestMethod]
@@ -233,10 +337,13 @@ public class FiefGrantPolicyServiceTests
     {
         _settings.CultureMismatchPenalty.Returns(-4f);
         _settings.CapturerBonus.Returns(0f);
+        _settings.AbsentFromSiegeFactor.Returns(-1f);
 
-        var m = _sut.GetMeritMultiplier(Clan(cultureMatch: false, capturer: true));
+        var m = _sut.GetMeritMultiplier(TopContributor(cultureMatch: false));
+        var absent = _sut.GetMeritMultiplier(Clan(recorded: true, cultureMatch: false));
 
         Assert.IsTrue(m > 0f, $"a merit multiplier of {m} would invert or erase the ranking");
+        Assert.IsTrue(absent > 0f, $"a merit multiplier of {absent} would invert or erase the ranking");
     }
 
     // ---------------------------------------------------------------- King's Vote gate
