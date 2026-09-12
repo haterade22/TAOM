@@ -1,6 +1,15 @@
 # Completion Workflow & Issue/Doc Requirements
 
-Moved verbatim from CLAUDE.md (repo-reorg 2026-07-12) — CLAUDE.md keeps the mandates + the 4-phase outline; this doc holds the full templates and step-by-step sequence. The `/issue` and `/ship` skills encode the same requirements operationally.
+Moved from CLAUDE.md (repo-reorg 2026-07-12). This is the existing Claude builder
+workflow. For provider-neutral work use [the shared workflow](../../.ai/README.md).
+In a shared review packet, the assigned role and shared policy take precedence:
+review alone does not authorize fixes, issue changes or additional paid agents.
+An explicit request to conduct paid dispatch authorizes its stated scope under
+the [shared policy](../../.ai/policy.md#paid-dispatch-authority). The commands below
+remain available for authorized Claude builder work; other clients do not need
+these slash commands. Codex uses the [operating guide](codex-operating-guide.md)
+and repository workflow skills. External writes require task authority, not just
+this document.
 
 ### GitHub Issues — Create for ALL Work
 

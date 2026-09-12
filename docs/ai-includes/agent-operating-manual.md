@@ -1,5 +1,11 @@
 # Agent Operating Manual
 
+This manual describes the existing **Claude subagent** runtime. Codex sessions
+use the [Codex operating guide](codex-operating-guide.md); all providers follow
+the [shared policy](../../.ai/policy.md) and the user's assigned role. The tool
+allowlists, slash commands and dispatch behavior below are client-specific,
+not a grant of authority or a description of Codex's available tools.
+
 **Audience:** any subagent spawned in the TAOM project (the custom agents in `.claude/agents/`, and ad-hoc `Explore` / `Plan` / `general-purpose` agents). Read this at the start of your run. It tells you the execution model, which tools to run and how, and which skills exist (so you can *recommend* them — see below).
 
 > **Why this doc exists:** a subagent runs in its own context with a strict tool allowlist. Claude Code does **not** guarantee that the project's `CLAUDE.md`, the `.claude/rules/`, or the skill descriptions reach you. Do not assume you inherited them — this manual + your own agent definition are your reliable source of truth.

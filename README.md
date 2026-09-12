@@ -18,6 +18,18 @@ troop has been replaced or rewritten to fit Tolkien's world.
 
 > The active development branch (and the GitHub default) is **`bannerlord-1.4.5`**.
 
+## Working with AI
+
+Start any AI client with [AGENTS.md](AGENTS.md) and the
+[shared workflow](.ai/README.md). Any provider can build, review or adjudicate;
+the task determines the role. For Codex, use the
+[operating guide](docs/ai-includes/codex-operating-guide.md) and the five
+repository skills under `.agents/skills/`. Claude imports the same shared rules.
+
+Paid reviewers run only when explicitly requested. Review and verification work
+uses the [non-deploying checks](.ai/verification.md), not the deploying build
+commands in the developer quick start below.
+
 ## Quick Start (Developers)
 
 **Prerequisites**
@@ -67,10 +79,12 @@ TAOM/
 │   ├── features/             # Feature documentation (90 files)
 │   └── migration/            # Bannerlord version-migration tracking
 ├── tools/                    # Rebalancing + localization scripts
+├── .ai/                      # Shared AI policy, roles, scope and review packets
+├── .agents/skills/           # Codex-discoverable TAOM workflow instructions
 ├── .claude/                  # Claude Code config (skills, agents, rules, hooks, memory)
-├── .codex/                   # Codex adversarial-reviewer config
-├── CLAUDE.md                 # AI instruction file (authoritative project reference)
-├── AGENTS.md                 # Codex review instructions
+├── .codex/                   # Codex configuration and onboarding pointer
+├── CLAUDE.md                 # Shared AGENTS.md import + Claude-specific workflows
+├── AGENTS.md                 # Provider-neutral AI instruction entry point
 └── build.ps1                 # Build script
 ```
 

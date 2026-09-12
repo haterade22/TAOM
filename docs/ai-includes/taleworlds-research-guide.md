@@ -74,77 +74,66 @@ AI assistants **MUST** research TaleWorlds decompiled source code before proceed
 
 ## Decompilation Workflow
 
-> **Step 0 — check the engine study docs first.** 19 engine processes are pre-analyzed, TAOM-relevant, and file:line-cited at [`docs/reference/engine/`](../reference/engine/). If your question is "how does X work" (agent spawn, formation/team AI, mount/rider, campaign→mission seam, campaign heartbeat, MBSubModuleBase lifecycle, GauntletUI, GameModel system, save/object system, usable machines, campaign object graph) — read the doc first. It's faster than cold decompilation and pre-filters for TAOM gotchas. Only proceed to decompilation below when the engine study docs don't cover your specific type or method.
+Read the relevant [engine process study](../reference/engine/) first for concepts,
+call paths and TAOM-specific failure modes. Then verify the exact signatures and
+load-bearing behavior against the installed game. A study or old dump does not
+replace that version check. See [development machines](../reference/development-machines.md)
+for the actual game and dump roots, and the [Codex guide](codex-operating-guide.md)
+for client/tool discovery.
 
-### Preferred: ILSpy MCP Server (Recommended)
+### Targeted source helper
 
-The `ilspy` MCP server provides direct decompilation without manual CLI commands. It's configured in `.vscode/mcp.json` and available to Claude Code automatically.
-
-**Usage — decompile a specific type:**
-```
-mcp__ilspy__decompile_assembly(assembly_path, type_name=...)
-```
-
-**Usage — list all types in an assembly:**
-```
-mcp__ilspy__list_types(assembly_path)
-```
-
-**DLL path**: `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
-
-**When to use**: For all TaleWorlds research — Harmony patches, adapter design, GameModel overrides, bug investigation. The MCP server handles decompilation in-process, avoiding shell overhead and providing structured output.
-
-### Alternative: Manual ilspycmd (Fallback)
-
-If the MCP server is unavailable, use `ilspycmd` directly:
+The repository [source helper](../../tools/taom-src.ps1) takes a fully qualified
+type and locates its assembly across the selected game bin and module bins:
 
 ```powershell
-# Decompile a specific type
-ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\<DLL>" -t "TaleWorlds.<Namespace>.<Class>"
+pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Party.MobileParty
 ```
 
-### Batch Decompilation Script (Full Codebase)
+Read the returned file, and check the selected assembly and game version before
+using it as evidence. The helper prefers an available `BANNERLORD_OVERRIDE_DIR`
+over `BANNERLORD_GAME_DIR`; inspect its output rather than assuming which install
+was selected. It writes a versioned cache under the user's `.taom-src` directory.
+That may need permission outside a workspace-only sandbox. Do not automatically
+invoke `clean` or `remove`, or broaden permissions after a denied cache write.
 
-For bulk decompilation of all assemblies (useful for IDE-based searching):
+### Direct ILSpy or a connected MCP server
 
-**1. Run Decompilation Script**
+For a known installed assembly, use `ilspycmd` directly. This is PowerShell
+syntax, not the `%VARIABLE%` expansion used by cmd.exe:
+
 ```powershell
-# From repository root
-.\Scripts\Decompile-BannerlordAssemblies.ps1
+if (-not $env:BANNERLORD_GAME_DIR) { throw "Set the actual game root before this lookup." }
+$taomAssembly = Join-Path $env:BANNERLORD_GAME_DIR 'bin/Win64_Shipping_Client/TaleWorlds.CampaignSystem.dll'
+if (-not (Test-Path -LiteralPath $taomAssembly)) { throw "Assembly not found at the selected game root." }
+ilspycmd $taomAssembly -t 'TaleWorlds.CampaignSystem.Party.MobileParty'
 ```
 
-**What This Does**:
-- Scans 6 game directories (main game + 5 modules: Native, SandBox, SandBoxCore, CustomBattle, StoryMode)
-- Decompiles 75+ TaleWorlds assemblies using `ilspycmd`
-- Creates project files (.csproj) for each assembly
-- Outputs to `Decompiled/` directory
+Some types live in module assemblies, not the top-level bin. Shipping client,
+server and editor builds also differ; locate the right assembly before concluding
+that a type is absent. A namespace is not necessarily an assembly filename.
 
-**2. Verify Decompilation**
-```powershell
-# Check that assemblies were decompiled
-ls Decompiled/
-# Should show directories like:
-# - TaleWorlds.CampaignSystem/
-# - TaleWorlds.Core/
-# - SandBox/
-# - etc.
-```
+A connected ILSpy MCP server is another option. Discover the actual tools and
+argument schemas in the current client, then verify a harmless lookup. Neither
+`.vscode/mcp.json`, root `.mcp.json` nor `.codex/config.toml` establishes that
+another client loaded a server or has access to its paths. Do not copy a tool
+call from an old transcript and claim it ran.
 
-### Incremental Updates
+### Bulk decompilation and refreshes
 
-**When to Re-run**:
-- After game updates
-- When researching newly-discovered assemblies
-- If decompiled code seems outdated
+Use targeted reads for an ordinary API question. For an explicitly scoped dump
+refresh, the repository has [decompile_bannerlord.ps1](../../tools/decompile_bannerlord.ps1)
+(`-Out`, `-GameBin`) and [decompile_to_folder.ps1](../../tools/decompile_to_folder.ps1)
+(`-Source`, `-Destination`, optional `-Force`). Inspect the selected script,
+its assembly selection and overwrite behavior before running it. Pass verified
+machine-specific paths; do not rely on desktop defaults on another machine.
 
-**Force Re-decompilation**:
-```powershell
-.\Scripts\Decompile-BannerlordAssemblies.ps1 -Force
-```
-
-### Documentation References
-- **Quick Start**: `Scripts/README-Decompilation.md`
-- **Comprehensive Guide**: `docs/decompilation-automation.md`
+Bulk helpers can cover different builds and dependencies. Apply
+[provenance and no-decompile restrictions](../../.claude/rules/provenance.md)
+before authorizing their scope. Keep proprietary output outside Git and external
+review packets. Check actual coverage, skipped directories, errors and version
+fingerprints after a refresh; file count alone does not prove a complete or
+current dump. Recheck the installed DLL after a game update.
 
 ---
 
@@ -162,39 +151,23 @@ Be specific about what you don't know:
 
 **2. Locate the Relevant Assembly**
 
-Common assemblies by feature area:
-
-| Feature Area | Assembly | Location |
-|--------------|----------|----------|
-| Campaign parties, heroes, settlements | `TaleWorlds.CampaignSystem` | `Decompiled/TaleWorlds.CampaignSystem/` |
-| Core game types (items, characters) | `TaleWorlds.Core` | `Decompiled/TaleWorlds.Core/` |
-| UI and view models | `TaleWorlds.GauntletUI` | `Decompiled/TaleWorlds.GauntletUI/` |
-| Campaign map screen | `SandBox` | `Decompiled/SandBox/` |
-| Mission/battle logic | `TaleWorlds.MountAndBlade` | `Decompiled/TaleWorlds.MountAndBlade/` |
-| AI and automation | `TaleWorlds.CampaignSystem.AI` | `Decompiled/TaleWorlds.CampaignSystem/AI/` |
+Use the targeted source helper or the actual installed assembly inventory.
+Record the resolved DLL, build and version. Do not infer the assembly name from
+a namespace or assume a type must be in the top-level game bin. See the
+[decompilation workflow](#decompilation-workflow) above.
 
 **3. Search and Decompile**
 
-**Preferred — Use the ILSpy MCP server:**
-```
-# Decompile a specific class directly
-mcp__ilspy__decompile_assembly("E:\Steam\...\TaleWorlds.CampaignSystem.dll", "TaleWorlds.CampaignSystem.Party.MobileParty")
+Use the helper, direct ILSpy or a connected MCP tool as described above. To
+navigate an existing dump, first resolve the machine's real dump root:
 
-# List all types in an assembly to find the right class
-mcp__ilspy__list_types("E:\Steam\...\SandBox.dll")
-```
-
-**Alternative — Search pre-decompiled source with grep:**
 ```powershell
-# Search for class definition
-grep -r "class MobileParty" Decompiled/TaleWorlds.CampaignSystem/
-
-# Search for method signature
-grep -r "void StepSounds" Decompiled/SandBox/
-
-# Search for property
-grep -r "CultureObject Culture" Decompiled/
+if (-not $env:TAOM_DECOMPILE_ROOT) { throw "Resolve the actual dump path before searching." }
+rg -n --glob '*.cs' 'class MobileParty|void StepSounds|CultureObject Culture' $env:TAOM_DECOMPILE_ROOT
 ```
+
+A search hit is a navigation aid. Verify the relevant getter, method signature,
+call site and behavior in the installed assembly before making an engine claim.
 
 **4. Analyze the Code**
 
@@ -747,22 +720,19 @@ Before implementing ANY TaleWorlds-related code, verify:
 
 ### Common Decompilation Locations
 
-| What You're Looking For | Likely Location |
-|-------------------------|-----------------|
-| Party/Hero/Settlement classes | `Decompiled/TaleWorlds.CampaignSystem/` |
-| Item/Character/Equipment | `Decompiled/TaleWorlds.Core/` |
-| Campaign behaviors | `Decompiled/TaleWorlds.CampaignSystem/CampaignBehaviors/` |
-| GameModels | `Decompiled/TaleWorlds.CampaignSystem/GameComponents/` |
-| UI ViewModels | `Decompiled/TaleWorlds.GauntletUI/` or `Decompiled/SandBox/GauntletUI/` |
-| Map screen | `Decompiled/SandBox/View/Map/` |
-| Mission/Battle | `Decompiled/TaleWorlds.MountAndBlade/` |
+Use the path returned by `tools/taom-src.ps1`, or search the actual
+`TAOM_DECOMPILE_ROOT` selected for this machine. Dump layouts depend on the
+generator and build; there is no required repository-local `Decompiled/` tree.
+Module and editor assemblies may be separate from the shipping-client dump.
+See [development machines](../reference/development-machines.md) and the
+[lookup workflow](#decompilation-workflow) before constructing a path.
 
 ### Documentation Quick Links
 
-- **Decompilation Setup**: `Scripts/README-Decompilation.md`
-- **Decompilation Details**: `docs/decompilation-automation.md`
-- **Essential Properties Pattern**: `docs/ai-includes/patterns.md`
-- **Adapter Pattern (ADR-007)**: `docs/adrs/007-adapter-pattern.md`
+- [Decompilation workflow](#decompilation-workflow) and [source helper](../../tools/taom-src.ps1)
+- [Codex operating guide](codex-operating-guide.md)
+- [Essential properties pattern](patterns.md)
+- [Adapter pattern (ADR-007)](../adrs/007-adapter-pattern.md)
 
 ---
 

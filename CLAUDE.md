@@ -1,5 +1,20 @@
 ﻿# CLAUDE.md
 
+@AGENTS.md
+
+## Shared, provider-neutral workflow
+
+Use `.ai/README.md` for cross-AI build and review work. Your role comes from the
+user's assignment, not the Claude brand. For a `.ai` review packet, the shared
+role, evidence format and no-fix reviewer boundary take precedence over the
+builder-oriented completion commands below. A review-only assignment does not
+authorize `/ship`, fixes or additional paid reviewers. Explicit paid-dispatch
+requests authorize their stated scope under `.ai/policy.md`; do not ask again
+for the same permission. Existing Claude skills remain available for authorized
+builder work; they are not required by other clients. Use `.ai/verification.md`
+for non-deploying build/test commands. Codex onboarding and native workflow skills
+are in the [Codex operating guide](docs/ai-includes/codex-operating-guide.md).
+
 Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
 > **Target: Bannerlord 1.4.8** (installed; pinned in `.claude/pinned-game-version.txt` — the session-start hook warns on drift → run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.4.8; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.4.8-impact.md`](docs/migration/v1.4.8-impact.md) · [`v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).

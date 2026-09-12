@@ -4,6 +4,95 @@
 
 ## 2026-09-11
 
+### docs(ai): Codex onboarding and discoverable TAOM workflows
+
+Added the [Codex operating guide](docs/ai-includes/codex-operating-guide.md), a
+`.codex/README.md` entry point and five instruction-only `.agents/skills/`
+workflows: build, review, adjudicate, research and verify. They reference shared
+policy and existing technical rules. Root instructions, README, docs index and
+the legacy Claude-to-Codex guide now route to the same onboarding. Codex is not
+permanently assigned to review, and Claude slash commands are not Codex tools.
+
+Documented explicit paid-dispatch authority, configuration/tool discovery,
+non-deploying verification and isolation for tests that write shared fixtures.
+Corrected the engine research guide's missing script and shell syntax. Model,
+permission and MCP settings are unchanged; only the Codex config's role comment
+was updated. No paid dispatch, runtime subagent setup or remote merge gate was
+installed or run.
+
+The focused review-tool and documentation suite passed all 47 tests. The local
+Skill Creator validator could not start without PyYAML. The documentation graph
+gate still exceeds its existing baseline: comparison with HEAD found no new
+orphans, and the Codex integration guide is now connected. The baseline was not
+raised. Fresh-client skill discovery and a live provider cycle remain untested.
+
+### feat(tooling): provider-neutral AI build and adversarial review foundation
+
+Added `.ai/` shared policy, builder/reviewer/adjudicator roles, scope routing,
+provider setup and evidence formats. Root `AGENTS.md` now selects a role from the
+task instead of assigning Codex permanently to review. The detailed TAOM rules,
+engine research instructions and known exceptions remain in
+`.ai/review-reference.md`. Claude imports the shared entry point while retaining
+its existing workflows and settings.
+
+`tools/reviewctl.py` exports clean, commit-bound review packets and checks returned
+reports for independent provider coverage, omitted paths, stale revisions,
+unresolved findings and missing check evidence. Full-snapshot audits include
+unchanged tracked files. Standard-library tests cover the contract and CLI.
+These are local evidence records, not authenticated merge approvals: no AI is
+launched, no paid call is made and no remote branch protection is configured.
+
+### feat(map): nine Isengard villages, and a table-driven tool for the next batch (#562)
+
+Orthanc held one village while each Isengard castle held three (#546 measured it). Nine village
+entities placed in the worldmap editor now have their data: three castle-villages on Orthanc Gate
+(`castle_village_isengard_b..d`), five on Orthanc itself (`village_isengard_b..f`) and a fourth on
+Forthbrond (`castle_village_I2_4`). Six are food (wheat x2, swine x2, fisherman, sheep), two are iron
+mines, one is a lumberjack. Isengard culture, hearth 500 (the validator's floor for the culture), the
+empire panel meshes and vanilla `empire_village_a..i` scenes every I-region village already uses.
+Sindarin names in the Angrenost style, registered in `tools/Apply-MapVillageNames.py` for later
+renames.
+
+**The editor owns the positions, but only for rows it can find.** `SettlementPositionScript.OnSceneSave`
+(v1.4.8 `SandBox.View`) loads `settlements.xml`, matches each `<Settlement id>` to the campaign entity
+of that name, overwrites `posX`/`posY` from the transform, and saves the file; a row with no entity is
+skipped. That is why the rows must exist before a scene save can place them, and why a placeholder
+position is safe until the next save and a crash after it (#269, `SettlementVisual.OnStartup`).
+
+`tools/add_map_villages.py` replaces the one-off shape of `add_bluecraig_castles.py` (#270): one
+`VILLAGES` row per village, positions read from `scene.xscene` (flagged PLACEHOLDER near the parent
+when the entity is not saved yet), blocks appended after the region's last settlement so the file's
+region grouping survives, one loc row in each of the 12 languages, each file's own BOM and newline
+preserved (the master is BOM plus CRLF, the loc files no BOM and CR CR LF), non-`.xml` backups, every
+written file re-parsed. `--check` is the in-repo gate the unversioned module needs: exit 1 on a missing
+master row, loc row or scene entity, or a position that drifted from the transform. 26 unit tests.
+
+Applied to the live files: +117 lines in the master and +9 rows per language, inserts-only against the
+backups; `--check` exit 0; `validate_moduledata.py` passes the settlement gates (the run's 238
+`BROKEN_ITEM_REF` errors are pre-existing Gondor and Umbar item refs); `audit_scene_names.py` resolves
+all nine scenes. Owed: distance cache rebuild in game, then a new-campaign check that Orthanc lists six
+villages, Orthanc Gate four, Forthbrond four. `check_external_loc_coverage.py` was already red by
++421/+423 per language before this change (the 2026-08-29 bulk rename); these rows add nine to that
+count and the baseline decision is deferred.
+
+**Save-compat: new campaign required, and a pre-batch save is expected to throw, not to miss the
+villages.** `Settlement.Deserialize` keys on the campaign-wide `CampaignGameLoadingType`; on a
+`SavedCampaign` load it runs `Alleys[num].Initialize` against a new settlement's still-empty `Alleys`
+(`Settlement.cs:1024-1031`, `:771`). Read in the v1.4.8 decompile by the review, not yet reproduced on a
+live save.
+
+A six-agent `/deep-review` followed (standards, engine compat, efficiency, completeness, data flow,
+tooling correctness; RCA at
+[docs/reviews/rca-map-villages-tool-2026-09-11.md](docs/reviews/rca-map-villages-tool-2026-09-11.md)).
+Three findings in the tool, all fixed before commit with a test each: `scene_position`'s lazy
+`.*?` under `re.DOTALL` would have read the next entity's transform for an entity that had none
+(harmless on today's scene, where every entity carries one); `--apply` planned the loc rows from the
+ids missing in the master, so a master-present/loc-missing state could never be repaired by a re-run
+(now planned per language from the whole table, proven on a scratch copy of the module); and the
+summary line claimed all 12 languages written when some were skipped. Pre-existing and recorded, not
+changed: `TAOM_Map/SubModule.xml` names `TAOM` only under `DependedModuleMetadatas`, not
+`DependedModules`, so nothing hard-requires the module that defines `Culture.isengard`.
+
 ### chore(repo): ignore the .tmp/ review scratch
 
 Reviewer sessions and Codex runs write snapshots, decompiles and capture logs under `.tmp/` in the

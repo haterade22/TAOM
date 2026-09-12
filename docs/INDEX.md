@@ -1,11 +1,19 @@
 ﻿# TAOM Knowledge Index
 
-**Start here.** This file is the topical map across [docs/](.) — read it instead of grepping when you need to find the canonical doc for any TAOM system. CLAUDE.md describes the working rules and architecture stance; this file maps the persistent knowledge.
+**Start here.** This file maps the canonical docs for TAOM systems. Root
+[AGENTS.md](../AGENTS.md) and [shared policy](../.ai/policy.md) define AI working
+rules; this index maps the persistent knowledge. `CLAUDE.md` is Claude's adapter
+to the shared instructions and its client-specific workflows.
 
 ## Quickstart paths
 
+For any AI client, start with [AGENTS.md](../AGENTS.md) and the
+[shared build/review workflow](../.ai/README.md). The role is assigned per task;
+Codex, Claude, Kimi and other models use the same policy and evidence records.
+
 | If you are... | Go to |
 |---|---|
+| Starting a Codex session | [Codex operating guide](ai-includes/codex-operating-guide.md): instruction discovery, five workflow skills, tools, checks and paid-dispatch boundaries |
 | A fresh Claude session orienting itself | [CLAUDE.md](../CLAUDE.md) → this file → relevant topical section below |
 | Looking for one feature's canonical docs | The "By major system" section below, or directly [docs/features/<name>.md](features/) |
 | Debugging a regression | [reviews/](reviews/) (search for `rca-<feature>-<date>.md`), then auto-memory `feedback_<symptom>.md` files |
@@ -16,7 +24,7 @@
 | Researching a TaleWorlds API before editing | [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) + `pwsh tools/taom-src.ps1 path <Type>` |
 | **Editing the mod data without writing C#** (balancing, adding or removing troops, armour, weapons, lords, cultures, kingdoms, settlements) | [modding/README.md](modding/README.md) and its 38 chapters |
 | Adding text the player will read | [localization/TRANSLATOR_GUIDE.md](localization/TRANSLATOR_GUIDE.md) + [features/localization.md](features/localization.md) |
-| Closing out a feature (build → review → ship) | CLAUDE.md "Completion Workflow" + [reviews/REVIEW-GUIDE.md](reviews/REVIEW-GUIDE.md) |
+| Closing out a feature (build, review, authorized publication) | [Shared workflow](../.ai/README.md) + [verification](../.ai/verification.md); Claude-specific commands remain in [completion-workflow.md](ai-includes/completion-workflow.md) |
 | Checking what was scored on each Codex review | [reviews/REVIEW-LOG.md](reviews/REVIEW-LOG.md) |
 
 ## By major system

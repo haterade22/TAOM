@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "minimum_independent_providers": 2,
+  "instructions": [
+    "AGENTS.md",
+    ".ai/policy.md",
+    ".ai/roles/builder.md",
+    ".ai/roles/reviewer.md",
+    ".ai/roles/adjudicator.md",
+    ".ai/review-reference.md",
+    ".ai/scopes.md",
+    ".ai/verification.md",
+    ".ai/report-format.md"
+  ],
+  "lanes": [
+    {"id": "general", "patterns": ["*"], "checks": ["contract"]},
+    {"id": "managed", "patterns": ["*.cs", "*.csproj", "*.sln", "*.props", "*.targets"], "checks": ["managed-build", "managed-tests"]},
+    {"id": "moduledata", "patterns": ["Main/_Module/ModuleData/*", "*.xslt"], "checks": ["moduledata"]},
+    {"id": "ui", "patterns": ["Main/_Module/GUI/*", "Main/Features/*/ViewModels/*", "Main/Features/*/Views/*"], "checks": []},
+    {"id": "tooling", "patterns": ["tools/*", "*.ps1", "*.sh", "*.py", "*.yml", "*.yaml", ".github/*"], "checks": ["python-tests"]},
+    {"id": "ai-harness", "patterns": ["AGENTS.md", "CLAUDE.md", ".ai/*", ".claude/*", ".codex/*", ".agents/*", ".kimi*", ".mcp.json", "tools/reviewctl.py", "docs/ai-includes/*"], "checks": ["reviewctl-tests"]},
+    {"id": "claude-hooks", "patterns": [".claude/settings.json", ".claude/hooks/*", ".claude/skills/*", "tools/test_hooks.sh"], "checks": ["hook-contract"]},
+    {"id": "native-dependencies", "patterns": ["Dependencies/*", "*.cpp", "*.h", "*.hpp", "*.dll", "*.vcxproj"], "checks": []},
+    {"id": "assets-localization", "patterns": ["*.tpac", "*.png", "*.dds", "*.wav", "*.ogg", "*.fbx", "Main/_Module/ModuleData/Languages/*"], "checks": []},
+    {"id": "docs-policy", "patterns": ["*.md", "*.json", "*.toml", "*.yml", "*.yaml"], "checks": []}
+  ]
+}

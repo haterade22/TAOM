@@ -1,31 +1,50 @@
-# Codex Integration
+# Claude-to-Codex integration
 
-> How Codex is dispatched + the mandatory completion sequence. Extracted from CLAUDE.md 2026-07-18. Dispatch contract also in `.claude/skills/{codex-verify,review-codex}/SKILL.md`.
+For Codex onboarding, building, research and review, use the
+[Codex operating guide](../ai-includes/codex-operating-guide.md). The
+[shared workflow](../../.ai/README.md) applies to all providers: Codex can be the
+builder, and Claude or Kimi can be reviewers. This page documents the existing
+Claude dispatch adapters, not a mandatory role for Codex.
 
+## Existing Claude adapters
 
-Codex operates as an independent verifier via the local `codex` CLI binary (`C:\Users\mikew\AppData\Roaming\npm\codex.cmd` on Windows). It shares no session context with Claude — providing a genuine second opinion.
+| Claude skill | Purpose and source |
+| --- | --- |
+| `/codex-verify [feature]` | Verification through `codex exec`; [skill contract](../../.claude/skills/codex-verify/SKILL.md) |
+| `/review-codex [feature]` | Adversarial review and follow-up; [skill contract](../../.claude/skills/review-codex/SKILL.md) |
+| `/deep-review [feature] --codex` | Optional Codex pre-review before Claude reviewers; [skill contract](../../.claude/skills/deep-review/SKILL.md) |
 
-**As of 2026-05-25, Claude dispatches Codex DIRECTLY via Bash — no terminal hand-off to the user.** Previous workflow asked the user to run `/codex:adversarial-review --background` in a separate terminal; the new flow uses `codex exec - < prompt.md > output.md 2>&1` from inside the skill (`run_in_background: true`). The user receives one notification when the background job completes and Claude continues automatically. See `.claude/skills/{codex-verify,review-codex}/SKILL.md` "Codex CLI invocation contract" for the full dispatch contract.
+These skills contain Claude-specific Bash/background invocation, authentication
+checks and follow-up instructions. Their tool names, notification behavior and
+slash commands are not available automatically in Codex or other clients. Read
+the actual skill before using it; a Markdown table does not establish runtime
+availability. Plugin commands require a separately available plugin.
 
-| Skill | Purpose | Dispatch model |
-|-------|---------|----------------|
-| `/codex-verify [feature]` | Lightweight verification (architectural compliance, 5-20 min) | Claude → `codex exec` via Bash, background |
-| `/review-codex [feature]` | Heavyweight adversarial review (Known Suspects + vanilla decompile + RCA, 10-45 min) | Claude → `codex exec` via Bash, background |
-| `/deep-review [feature] --codex` | Codex pre-review + 5+ Claude agents in parallel | Claude → `codex exec` + parallel `Agent` calls |
-| `/codex:rescue [task]` | Delegate investigation to Codex (plugin-based; interactive) | Plugin/`SendMessage` (user prompt) |
+## Authority and isolation
 
-**Pre-flight:** every skill that dispatches calls `codex login status` first. If not `Logged in using ChatGPT`, the skill stops and surfaces the message — the user must run `codex login` (interactive browser flow). Claude does NOT attempt to authenticate.
+Run paid dispatch when the user explicitly requests it, within the agreed scope
+and budget. Do not repeat an already satisfied approval question. A legacy
+completion checklist alone does not authorize paid calls, parallel agents,
+fixes, issues, commits or publication. See [shared policy](../../.ai/policy.md).
 
-**Config:** `~/.codex/config.toml` (model + reasoning effort; project root has `.codex/config.toml` for project-scoped overrides if needed) | **Instructions:** `AGENTS.md` (project root)
+A fresh session provides conversational separation, not source isolation. Use
+separate clean source checkouts and read-only reviewer access. Confirm the actual
+client and model provider; two CLI brands can use the same provider's models.
+Record evidence and review fixes at a new SHA under the shared packet workflow.
+Its blind first pass excludes known suspects and builder explanations from the
+legacy prompt style. Do not present a legacy prose review as a validated packet.
 
-**Completion workflow (MANDATORY for every C# feature, no exceptions):**
-1. `/verify` — build + tests pass
-2. `/deep-review [feature]` — 5+ parallel Claude agents
-3. Fix all confirmed findings (HIGH must be fixed in-session per `.claude/skills/deep-review/SKILL.md` "HIGH findings — no silent deferrals")
-4. `/review-codex [feature]` — dispatches Codex via Bash, harness notifies on completion
-5. Claude auto-resumes when notification arrives — verify Codex findings, implement confirmed fixes, write Phase 3e RCA
-6. `/verify` again — confirm green after fixes
-7. Issue + docs + CHANGELOG + final commit
+## Local preflight
 
-Steps 2-6 are blocking before commit. Past failure mode: the session author skipped 2 and 4 and shipped a 60-file feature with 1 HIGH + 2 MED + 3 LOW deep-review findings (see `docs/reviews/rca-crash-report-2026-05-25.md` meta-finding). With direct dispatch, there's no "I forgot to open the terminal" excuse — invoking the skill IS the dispatch.
+On PowerShell, use `Get-Command codex`, `codex --version`, `codex --help` and
+`codex exec --help` to select the installed executable and supported options.
+Do not assume the older npm shim is the active binary. Check authentication
+using the installed client's documented status command before an authorized
+dispatch; never log in, expose tokens, or rewrite configuration on the user's
+behalf without authority.
+
+The project [Codex README](../../.codex/README.md) describes the existing settings
+and their limits. [Verification](../../.ai/verification.md) supplies non-deploying
+checks. Paid-provider wrappers, authenticated report ingestion and remote merge
+enforcement are not installed by the shared documentation layer.
 

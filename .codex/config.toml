@@ -1,4 +1,4 @@
-# TAOM — Codex acts as independent reviewer/verifier
+# TAOM: Codex takes the task's role. See AGENTS.md and .codex/README.md.
 model = "gpt-6-astra"
 model_reasoning_effort = "ultra"
 project_doc_max_bytes = 65536
