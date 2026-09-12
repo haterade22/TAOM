@@ -126,7 +126,7 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
      run_in_background: true
      timeout: 600000  (10 min — Codex usually finishes inside this; harness will notify when actually done)
    ```
-4. **Tell the user once** what was dispatched: feature name, prompt path, output path, expected completion window (10-45 min on `xhigh` reasoning). Do NOT poll the background job — the harness sends a notification when the job actually completes.
+4. **Tell the user once** what was dispatched: feature name, prompt path, output path, expected completion window (10-45 min at `max`; review 95 on `gpt-6-astra` at `ultra` took about 30 minutes for a 12-file changeset). Do NOT poll the background job — the harness sends a notification when the job actually completes.
 5. **Continue with other work or stop**. When the background notification arrives, automatically proceed to Phase 3 by reading the output file. Do NOT re-prompt the user to "run /review-codex again" — Claude continues the lifecycle itself.
 
 Fallback path (only if direct dispatch fails — `codex` binary missing, auth expired, sandbox refuses):

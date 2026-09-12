@@ -1,6 +1,6 @@
 # Special Resources
 
-**Status:** Verified in-game (2026-04-14). Gondor Caster resource showing on map bar with rich tooltip (amount, tier, daily breakdown, per-event rates). Icon sprite loading correctly.
+**Status:** Shipped. The 2026-04 core was verified in-game (Gondor Castar on the map bar with tooltip and icon). The 2026-09-11 outflow work (#558: one daily breakdown behind every surface, four outflow toasts, per-troop tooltip rows, the zero-upkeep desertion fix, the Black Numenorean rescale, and the three Codex fixes of review 95) is unit-tested and reviewed but still awaits its in-game smoke; the 20 new strings are English in all 12 languages until the translator runs. #563 tracks the ungated prisoner recruit path.
 
 ## Overview
 
@@ -18,7 +18,7 @@ Per-kingdom special resource system where all 18 TAOM kingdoms have a unique sec
 |----------|----------|-------|
 | War Spoils | Mordor, Isengard, Gundabad, Dol Guldur | Orc plunder from battles |
 | Gems | Erebor | Dwarven mining wealth |
-| Caster | Gondor | Silver coin currency |
+| Castar | Gondor | Numenorean silver coin (the resource id stays `caster`) |
 | Marks | Rohan | Horse-lord currency |
 | Elven Wine | Rivendell, Lothlorien, Mirkwood | Elven trade goods |
 | Lake Fish | Dale | Laketown trade |
@@ -40,14 +40,14 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 
 - **XML-driven config:** Resource definitions with nested `<Kingdom>` and `<Culture>` child elements for many-to-one mappings
 - **Culture fallback:** Resolves via kingdom first, then culture — supports kingdomless players
-- **CampaignBehavior:** Hooks 8 events (DailyTick, MapEventEnded, RaidCompleted, PrisonerTaken, TournamentFinished, HideoutCompleted, NewGameCreated, SessionLaunched)
+- **CampaignBehavior:** Hooks 12 events (SessionLaunched, DailyTickHero, MapEventEnded, RaidCompleted, PrisonerTaken, NewGameCreated, CharacterCreationIsOver, GameLoaded, TournamentFinished, HideoutBattleCompleted, UnitRecruited, GameOver) plus `ScreenManager.OnPushScreen` for the party-screen session
 - **Earn policy:** `SpecialResourceEarnPolicy` — participation (not command) decides a battle payout, and a dedicated server credits nobody. See [Earning Rules](#earning-rules)
 - **Harmony Patch26:** 3 patches — InitializeUpgrades (grey out + hint), AddCommand prefix (clamp count), UpgradeTroop postfix (queue spend)
 - **Pending transaction:** Upgrades queue during party screen, commit on close, revert on cancel
 - **Desertion:** At 0 balance, 10% of each upkeep-troop type deserts daily (min 1 per type). "Upkeep troop" means a troop whose cost row carries a `daily_upkeep` greater than zero; a row with only a `merchant_cost` (the Elite Emissary's 50 offers, many of them ordinary tree troops such as the Erebor Royal Warden) is not one and never deserts (#558)
 - **One daily breakdown:** `ISpecialResourceService.GetDailyBreakdown` returns earning (career gain applied), upkeep (career upkeep modifier applied), net and one `TroopUpkeepLine` per upkeep troop type. The daily tick applies its net; the tooltip, the daily message and the console dump render the same object, so none of them can drift from the deduction. `PartyUpkeepReader` reads the party roster and town count off the engine objects for all three callers (#558)
 - **Notifications:** Green chat for earnings. Every outflow speaks too (#558), built by the pure `SpecialResourceMessages` helper with every number in a slot: a daily line (`War Spoils: +0.4 income, -3.8 upkeep (12 left)`, yellow when the net is negative) on any day the party holds upkeep troops; a red overdraft line when the bill exceeded the balance and the floor at zero absorbed the rest; a yellow spend line when a party-screen session commits upgrades; a yellow charge line on a recruit with a `recruit_cost` (one line per unit, because the engine raises `OnUnitRecruitedEvent` once per recruited prisoner or volunteer). The spend and charge lines report what actually left the wallet, measured before and after the write: the storage floors at zero and the party screen's prisoner recruit is not gated by `recruit_cost` (#563), so the nominal cost can exceed the balance. The existing yellow one-day-ahead deficit warning (now, like the map-bar flag and desertion itself, only when the party holds upkeep troops) (fires only when the next tick would push the balance to zero or below, which is the desertion threshold) and the centre-screen desertion alert are unchanged
-- **SyncData persistence:** Composite `heroId:resourceId` keys, cap enforcement on load
+- **SyncData persistence:** Composite `heroId:resourceId` keys. The load path repairs a non-finite entry to zero (#558) and does NOT clamp to the cap: a per-player cap applied to every key once shrank other resources' balances (#133), so `ClampAll` is no longer called
 - **Career passive integration:** `SpecialResourceGain` scales daily earning, `SpecialResourceUpkeepModifier` reduces upkeep, `SpecialResourceUpgradeCostModifier` reduces upgrade cost — all wired through `ICareerPassiveService`
 - **Resource tiers:** Optional `<Tiers>` XML element defines threshold-based progression (pilot: Gems with 3 tiers). `GetCurrentTier()` resolves highest tier where balance >= threshold. Map bar shows tier name when active.
 - **Map bar display:** `SpecialResourceMapBarMixin` adds one `MapInfoItemVM` to `SecondaryInfoItems` (dormant ownership hazard, see `.claude/rules/gui-ui.md`; the old IndexOutOfRange claim did not reproduce on v1.4.8). The tooltip renders the daily breakdown: title with balance and cap, tier or next tier, `Daily change` rundown with income (town count), elite upkeep (troop-type count) and one row per troop type in the extended (Alt) view, net, `Depleted in N days` while the balance shrinks (no countdown when the net is below the balance's float resolution, since the stored value would never move), or, at zero with a net at or below zero, a notice that elite troops desert each day while the resource stays at zero (the tick adds the net before it tests the balance, so at zero with income covering upkeep nothing deserts and no notice shows); then the per-event rates. Every label is a `{=taom_res_tt_*}` key rendered through `TextObject.ToString()` because `TooltipProperty` accepts strings only. `HasWarning` lights when the party holds upkeep troops and `balance + net <= 0`, the desertion trigger, one day ahead; vanilla lights gold the same way (`MapInfoVM.UpdatePlayerInfo`). Until 2026-09-11 the tooltip computed upkeep from an EMPTY troop list, so it never showed an upkeep line (#558). See [gui-sprite-system.md](gui-sprite-system.md).
@@ -60,14 +60,16 @@ special_resources_config.xml + troop_resource_costs.xml
         |
   SpecialResourceConfigProvider (loads + caches XML, multi-key indexes)
         |
-  SpecialResourceService (resolve, earn, spend, validate, daily tick, desertion)
-       / \         \          \
-      /   \         \          \
-Behavior  Patch26    MapBarMixin  SpriteWidget  ICareerPassiveService
-(events)  (party UI) (map bar)   (dynamic icon) (career modifier)
-                                                      |
-                                              ResourceTier (domain)
-                                              GetCurrentTier (service)
+  SpecialResourceService (resolve, earn, spend, GetDailyBreakdown, daily tick, desertion)
+       / \         \          \              \
+      /   \         \          \              \
+Behavior  Patch26    MapBarMixin  SpriteWidget  Cheats (taom.print/add_special_resources)
+(events)  (party UI) (map bar)   (dynamic icon)
+   |                    |                          ICareerPassiveService (gain, upkeep, upgrade cost)
+   +-- PartyUpkeepReader (roster + town count, shared by behavior, mixin and console)
+   +-- SpecialResourceMessages (the four outflow toasts, pure)
+                                              DailyResourceBreakdown / TroopUpkeepLine (domain)
+                                              ResourceTier (domain), GetCurrentTier (service)
 ```
 
 ## Configuration
@@ -75,7 +77,8 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  ICareerPassiveService
 ### Resource Definitions: `Main/_Module/ModuleData/special_resources/special_resources_config.xml`
 
 ```xml
-<Resource id="war_spoils" display_name="War Spoils" icon_sprite="taom_war_spoils_icon"
+<!-- excerpt: the shipped row also lists gundabad and dolguldur as kingdom and culture -->
+<Resource id="war_spoils" display_name="War Spoils" icon_sprite="SpecialResources\taom_war_spoils_icon"
   cap="10000" starting_amount="0" daily_per_town="0.2"
   per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
   per_prisoner="2" per_tournament_win="3" per_hideout_clear="8">
@@ -141,11 +144,32 @@ holds an unaffordable troop — mirroring vanilla's gold gate, only ever forcing
 deduction is on `OnUnitRecruitedEvent` (player-only; the AI/generic recruit path fires `OnTroopRecruited`
 instead, so AI lords are never charged).
 
-### Current Values (all resources)
+### Current Values (read from `special_resources_config.xml`, 2026-09-11)
 
-- Cap: 10000, Starting: 0
-- Daily per town: +0.5, Battle: +10 (x enemy ratio 0.5-2x), Raid: +8, Siege: +15, Prisoner: +1, Tournament: +5, Hideout: +6
-- 12 Mordor elite troops costed (other factions pending)
+Every resource has cap 10000 and starting amount 0. Daily income is per owned town before the career
+gain passive; the battle payout is the base times the enemy-to-player size ratio clamped to 0.5 to 2.
+
+| Resource | Town/day | Battle base | Raid | Siege | Prisoner | Tournament | Hideout |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| War Spoils | 0.2 | 14 | 12 | 20 | 2 | 3 | 8 |
+| Gems | 1.0 | 5 | 3 | 10 | 0 | 8 | 4 |
+| Castar | 0.6 | 8 | 4 | 18 | 1 | 6 | 5 |
+| Marks | 0.4 | 12 | 0 | 12 | 1 | 10 | 6 |
+| Elven Wine | 0.8 | 6 | 0 | 10 | 0 | 8 | 4 |
+| Lake Fish | 0.7 | 7 | 5 | 10 | 1 | 8 | 5 |
+| War Drums | 0.3 | 14 | 14 | 16 | 2 | 4 | 8 |
+| Tribal Relics | 0.4 | 10 | 10 | 12 | 1 | 6 | 8 |
+| Dunlending Ale | 0.3 | 10 | 12 | 10 | 1 | 5 | 10 |
+| Plunder | 0.3 | 10 | 16 | 14 | 3 | 4 | 10 |
+| War Banners | 0.5 | 12 | 6 | 16 | 1 | 6 | 5 |
+
+`troop_resource_costs.xml` holds 77 rows: 27 carry a `daily_upkeep` (the 8 Mordor uruk elites at 0.05
+to 0.3, the 13 Black Numenoreans at 0.05 to 0.3 since the 2026-09-11 rescale, the 3 Ironpass rams at
+0.1 to 0.25, and the 3 creatures: spider 1, elephant 10, Mumakil 500) and 50 are merchant-only Elite
+Emissary offers across Gondor, Erebor and the Iron Hills, Dol Guldur, Isengard, Gundabad, Mirkwood,
+Rivendell, Rohan and Rhun. Only the 27 count as upkeep troops for desertion. The Mumakil's 500 a day is
+authored creature pricing (one unit eats about eighteen maximum battle payouts a day); it is a balance
+question, not a defect, and the daily toast now makes it visible.
 
 ## Key Files
 
@@ -178,7 +202,7 @@ instead, so AI lords are never charged).
 | `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
 | `Main/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |
 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | 11 resource definitions |
-| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | Mordor troop costs |
+| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 77 cost rows: 27 with daily upkeep, 50 merchant-only emissary offers |
 
 ## Dependencies
 
@@ -198,6 +222,7 @@ instead, so AI lords are never charged).
 - `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
 - `SpecialResourceEarnPolicyTests.cs` — 8 tests: the AI-led-army regression, player-led still earns, losing side, unresolved battle, player on no side, neither side resolved, and both `MayCreditMainHero` cases
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
+- `SpecialResourceTierServiceTests.cs` (14), `SpecialResourceConfigProviderTierTests.cs` (6) and `ResourceTierTests.cs` (3): tier resolution by threshold, `<Tiers>` parsing and sort order, the domain record
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
 ## Cheat Command
@@ -237,12 +262,12 @@ question. Do not duplicate any of that here.
 1. Add a `<Resource>` element with `<Kingdom>` and `<Culture>` children to `special_resources_config.xml`
 2. Or add `<Kingdom>`/`<Culture>` children to an existing resource for shared balance
 3. Add `<Troop>` rows to `troop_resource_costs.xml` for T6+ troops
-4. Add a 33x33 PNG icon to `Main/_Module/GUI/SpriteParts/ui_taom/MapBar/`
+4. Add a 33x33 PNG icon to `Main/_Module/GUI/SpriteParts/ui_taom/SpecialResources/` and reference it as `icon_sprite="SpecialResources\<file name without extension>"`; then re-run the sprite generator and verify the bake, per [gui-sprite-system.md](gui-sprite-system.md) (a loose PNG alone renders blank)
 5. No C# changes needed — fully data-driven
 
 ## How to Tune Earning Rates
 
-Edit attributes on the `<Resource>` element. Each resource can have independent rates. Current values are identical across all 11 resources.
+Edit attributes on the `<Resource>` element. Each resource has its own rates; the table under Configuration is the shipped set. The provider is `Reuse.Singleton`, so a change needs a full game restart, not a new campaign.
 
 ## Earning Rules
 
@@ -294,7 +319,8 @@ ends up controlling, resolving it from the character-creation culture and the li
 - Config provider lazy-loaded with dictionary indexes
 - No LINQ in hot paths — direct enumeration loops
 - SpriteWidget caches resolved sprite (loads once, not per-frame)
-- String formatting only when amount changes (cached `_lastAmount`)
+- String formatting only when amount changes (cached `_lastAmount`); `HasWarning` is written only when it flips (`_lastWarning`)
+- The map-bar refresh (about 5 Hz, 10 Hz in fast-forward) walks the roster once and builds the breakdown to drive `HasWarning`; the cost class equals vanilla's own per-refresh `CalculateClanGoldChange` on the same tick, and a roster-version cache was declined in review 95 (a field plus a stale-icon edge for a few hundred bytes per refresh). Revisit if a profile shows it
 - Comprehensive logging uses `LogDebug` for high-frequency paths, `LogInfo` for events
 
 ## Changelog

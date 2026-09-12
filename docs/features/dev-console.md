@@ -290,7 +290,7 @@ answer is conclusive and fails open in every path.
 | Command | Tier | Gate | What it replaces |
 |---|---|---|---|
 | `taom.add_special_resources [amount]` | B | campaign | — (see [special-resources.md](special-resources.md)) |
-| `taom.print_special_resources` | A | campaign | Read-only balance/cap/tier. **Not** `GrantAmount(…, 0f)` — that clamps and writes back |
+| `taom.print_special_resources` | A | campaign | Read-only balance/cap/tier plus the daily breakdown (income with town count, one upkeep line per troop type, net) since 2026-09-11. **Not** `GrantAmount(…, 0f)` — that clamps and writes back |
 | `taom.print_momentum [keys]` | A | campaign | ~50 in-game days of play to reach the 32 KB save-corruption threshold |
 | `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit, and since #545 prints the ENFORCED frame (`raw/deflated`) beside the DISPLAYED one (`weighted/true-base`) so the two can be compared in one line |
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |

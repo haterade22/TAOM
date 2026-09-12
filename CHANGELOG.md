@@ -204,6 +204,17 @@ lists `gpt-6-astra` with a ladder of low, medium, high, xhigh, max and ultra, so
 `gpt-6-astra` at `ultra` and the review-codex skill's note says so. First run: review 95 above,
 3 MEDIUM, 0 false positives.
 
+### docs(specres): the feature doc caught up with the data it describes
+
+`docs/features/special-resources.md` still said the Gondor resource was "Caster", that every resource
+shared one set of rates, that 12 Mordor troops were costed, that icons live under `MapBar/`, that the
+behavior hooks 8 events and that the load path clamps to the cap. The rates now come as a per-resource
+table read from the config (77 cost rows: 27 with upkeep, 50 merchant-only), the icon folder and the
+sprite id form are the real ones, the event list is the 12 the behavior registers, the load path is
+described as it is (non-finite repair, no cap clamp), the tier test classes are listed, and the status
+line says what is verified in-game and what is not. The feature map row, the handbook's balance chapter
+(a merchant-only row never deserts) and the console reference follow suit.
+
 ### fix(mcm): 166 settings told players to restart, and Cancel on that prompt threw the change away (#559)
 
 A player switched Bandit Scaling off in MCM, set the curves to 0.127, watched those values land in
