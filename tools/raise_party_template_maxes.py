@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
-"""Raise max_value to 50 on party-template stacks (bandits + kingdom hero parties).
+"""Raise max_value to 50 on party-template stacks (bandit raiders + kingdom hero parties).
 
 One-off balance retune (2026-07-02, issue: bandit parties averaged 20-25 on the map):
 sets max_value="50" on every PartyTemplateStack in
 
-  * the 8 bandit cultures' {culture}_raider_party_template + {culture}_boss_party_template
+  * the 8 bandit cultures' {culture}_raider_party_template
   * ALL kingdom_hero_party_* templates (base + mercenary + outlaw + per-clan variants)
 
 in Main/_Module/ModuleData/taom_partyTemplates.xml.
 
+COMPLETED and superseded: the raider templates were re-targeted by
+tools/rebalance_template_power.py (#543) and the lord templates by
+tools/rebalance_party_template_maxes.py. The {culture}_boss_party_template family was in
+scope when this ran and is NOT any more: since #564 a boss party is one 1/1 boss stack plus
+soldier stacks summing to min 3 / max 4 (pinned by HideoutBossPartyTemplateTests), and the
+regex below excludes it so a re-run cannot push those stacks back to 50.
+
 Rules:
   * min_value is never touched.
   * A max_value already >= 50 is never lowered (left as-is, reported).
-  * The dedicated hideout-boss hero stack (min_value="1" max_value="1", troop id
-    ending "_boss") is left untouched -- one boss per hideout is load-bearing for
-    the boss-conversation flow (see docs/features/bandit-management.md).
+  * A hideout-boss hero stack (min_value="1" max_value="1", troop id ending "_boss") is
+    left untouched wherever one appears -- one boss per hideout is load-bearing for the
+    boss-conversation flow (see docs/features/bandit-management.md).
 
 Usage:
     python tools/raise_party_template_maxes.py            # dry-run (default)
@@ -43,7 +50,7 @@ BANDIT_CULTURES = (
 )
 
 BANDIT_TEMPLATE_RE = re.compile(
-    r"^(?:%s)_(?:raider|boss)_party_template$" % "|".join(BANDIT_CULTURES)
+    r"^(?:%s)_(?:raider)_party_template$" % "|".join(BANDIT_CULTURES)
 )
 
 TEMPLATE_OPEN_RE = re.compile(r'<MBPartyTemplate\s+id="([^"]+)"')

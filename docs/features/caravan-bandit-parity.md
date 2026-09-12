@@ -6,7 +6,8 @@ Bandit raider warbands and caravans are now sized against each other in the unit
 compares, so a caravan meeting a warband on the road no longer runs. Two halves of one change: a
 power-budget retune of the 50 bandit and caravan party templates
 (`tools/rebalance_template_power.py`), and a caravan member-cap bonus in `TaomPartySizeModel` so a
-caravan may hold the roster its template spawns.
+caravan may hold the roster its template spawns. (Since #564, 2026-09-11, the eight boss templates
+have left the tool's scope, so it manages 42: 8 raider and 34 caravan. See "The retune" below.)
 
 Bandit warbands drop from up to 200 men to 56-80, sized so every culture's warband lands at the same
 **power** rather than the same headcount. Caravans rise from 20-36 men to 60-88, sized so the weakest
@@ -69,7 +70,8 @@ Two later changes removed what had been masking it. The lord-template walk-back
 2026-08-07 TroopWeight leaderless-shed fix removed the daily trim that had been cutting warbands back.
 
 For scale: vanilla bandit templates cap at 45, vanilla hideout bosses at 6. TAOM's untouched
-`looters` template still caps at vanilla's 36.
+`looters` template still caps at vanilla's 36, and TAOM's boss templates are back at vanilla's shape
+(one `1/1` boss plus soldier stacks summing to min 3 / max 4) since #564.
 
 ## Architecture
 
@@ -94,7 +96,7 @@ vanilla's `(2 + tier) * (10 + tier) * 0.02` for tiers 0-6 (`OverrideVanillaTierP
 and applies a `MountedMultiplier` of 1.2 that vanilla does not have. Tiers 7-10 come from the
 MCM-settable `TaomSettings.Tier7Power..Tier10Power`, NOT from
 `configs/battle_balance_config.json` as an earlier draft of this doc claimed; the tool reads the
-JSON, whose values equal those compiled defaults, and no troop in these 50 templates exceeds
+JSON, whose values equal those compiled defaults, and no troop in the 42 templates it manages exceeds
 tier 5, so the two agree today. For a non-hero troop `IsMounted` is assigned from
 `DefaultFormationClass.IsMounted()` during `Deserialize`, so `default_group` decides it outright.
 
@@ -114,9 +116,17 @@ counts. Budgets live in `DEFAULT_BUDGETS` at the top of the tool.
 | Group | Budget | Result | Early game |
 |---|---|---|---|
 | raider | 78 power, floor at 12.5% of max | 76-79 power, 56-80 bodies | 12-32 bodies |
-| boss | 105 power, floor at 12.5% of max | 97-108 power, 67-97 bodies | in hideout, never roams |
 | caravan | 94 power floor, +15% spread | 93-109 power, 60-80 bodies | same, no ratio spread |
 | elite caravan | 110 power floor, +15% spread | 110-126 power, 66-88 bodies | same |
+
+The boss templates had a row here (105 power, 67-97 bodies) from 2026-09-06 to 2026-09-11. They are
+out of the tool's scope since #564: a boss party never roams, so it was never part of the parity
+question, and its size now follows vanilla's shape (one `1/1` boss plus soldier stacks summing to
+min 3 / max 4, hand-authored and pinned by `HideoutBossPartyTemplateTests`). `solve_flat` cannot
+express that shape, so the tool must not recognise the ids at all, or it would either refuse them or
+re-inflate them; `test_rebalance_template_power.py::BossTemplatesAreOutOfScope` pins that. The boss
+FIGHT was never sized by the template either; see
+[bandit-management.md](bandit-management.md) "Hideout boss fight: boss + N".
 
 ### The bandit floor, and why it needed lowering too
 
@@ -140,11 +150,11 @@ slider does nothing. Recorded in [bandit-management.md](bandit-management.md).
 
 Two solver shapes, because the two families need different things:
 
-- **Bandit templates are flat by construction** (N stacks on one shared max, plus a pinned `1/1` hero
-  stack on a boss template), so `solve_flat` solves for the single shared count. Scaling each stack
-  from its own current value is not a fixed point: when the budget falls between two reachable values
-  the tool oscillates, and `gundabad_raiders_boss_party_template` flipped between 18 and 19 per stack
-  on alternate runs before this was fixed.
+- **Bandit templates are flat by construction** (N stacks on one shared max), so `solve_flat` solves
+  for the single shared count and leaves any pinned `min == max` stack alone. Scaling each stack from
+  its own current value is not a fixed point: when the budget falls between two reachable values the
+  tool oscillates, and `gundabad_raiders_boss_party_template` (in scope at the time) flipped between
+  18 and 19 per stack on alternate runs before this was fixed.
 - **Caravans are solved as a band.** A non-player caravan spawns at `min + (max - min) * r` with one
   uniform `r` per party (`GetInitialPartySizeRatioForMobileParty` returns `party.RandomFloat()`), so
   the MIN is the roster an unlucky caravan actually gets. `floor_power` is therefore applied to the
@@ -159,9 +169,9 @@ consequently about half the bodies for no recorded reason.
 `L` of 1.18.** The 18% surplus is deliberate headroom for the morale factor, which ranges 0.7 to 1.0
 and applies to each side independently.
 
-Boss templates are excluded from that comparison on purpose:
-`BanditSpawnCampaignBehavior.AddBossParty` calls `.Ai.DisableAi()` on them, so they never leave their
-hideout and a caravan cannot meet one on the road.
+Boss templates were excluded from that comparison on purpose while the tool still managed them, and
+are not rows at all since #564: `BanditSpawnCampaignBehavior.AddBossParty` calls `.Ai.DisableAi()` on
+a boss party, so it never leaves its hideout and a caravan cannot meet one on the road.
 
 ### The caravan cap, and why it is not optional
 
@@ -248,11 +258,11 @@ clamp" taken to zero.
 | File | Role |
 |---|---|
 | `tools/rebalance_template_power.py` | The power-budget solver and the template writer |
-| `tools/tests/test_rebalance_template_power.py` | 54 tests: tier maths, all three solvers, byte-faithful IO |
+| `tools/tests/test_rebalance_template_power.py` | 57 tests: tier maths, all three solvers, byte-faithful IO, boss templates out of scope |
 | `tools/generate_supply_caravan_templates.py` | The 17 SupplyLines crew templates (#549) |
 | `Main/Features/SupplyLines/SupplyCaravanService.cs` | `PickCaravanTemplate` resolves the crew template |
 | `TAOM.Tests/Features/SupplyLines/SupplyCaravanTemplateTests.cs` | The decoupling invariants |
-| `Main/_Module/ModuleData/taom_partyTemplates.xml` | 50 retuned templates (16 bandit, 34 caravan) |
+| `Main/_Module/ModuleData/taom_partyTemplates.xml` | 50 retuned templates on 2026-09-06 (16 bandit, 34 caravan); 42 in the tool's scope since #564 (8 raider, 34 caravan) |
 | `Main/_Module/ModuleData/characters/npcs_rohan.xml` | The four repaired caravan NPCs |
 | `Main/Features/AiPartySize/AiPartySizeService.cs` | `ApplyCaravanScaling`, `ApplyCaravanCapBonus`, `DefaultCaravanFlatBonus` |
 | `Main/Features/AiPartySize/IAiPartySizeService.cs` | Contract, including why this member is ungated |

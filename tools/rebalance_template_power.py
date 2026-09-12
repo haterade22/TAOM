@@ -35,7 +35,7 @@ Two couplings to know before trusting this tool's numbers, both currently latent
     `CalculateTierPower`'s `tier >= 7` arm switches on `TaomSettings.Tier7Power..Tier10Power`,
     which are MCM-settable, and its `_ => config.GetTierPower(tier)` default is unreachable
     because `Tier` is clamped to `[0, 10]`. This tool reads the JSON, whose T7-T10 happen to
-    equal those compiled defaults. No troop in the 50 templates it manages exceeds tier 5, so
+    equal those compiled defaults. No troop in the 42 templates it manages exceeds tier 5, so
     nothing is wrong today, but a player who moves a tier slider diverges from this tool.
   - `MOUNTED_MULTIPLIER` below is hardcoded, while the engine reads the settable
     `TaomSettings.MountedMultiplier`. They agree only by its compiled default. This one is
@@ -84,9 +84,15 @@ MOUNTED_GROUPS = {"Cavalry", "HorseArcher"}
 # band twice over, so the floor comes down with it. This cannot restore the old spread, which
 # needs the old ceiling, but it puts the early floor back in vanilla territory (vanilla looters
 # run 4 to 36) instead of pinning every early warband near 21 men.
+#
+# Boss templates (`*_boss_party_template`) are deliberately NOT here. Since #564 they are
+# hand-authored to vanilla's shape, one pinned `1/1` boss stack plus soldier stacks summing to
+# min 3 / max 4, and pinned by the C# gate `HideoutBossPartyTemplateTests`. `solve_flat` cannot
+# express `1/2 + 1/1 + 1/1` (it solves one shared max), so a boss budget here would either refuse
+# the template or re-inflate it to 60-100 bodies, which is what shipped before. The boss FIGHT is
+# not sized by the template at all: Patch86 holds it at boss + the MCM bodyguard count.
 DEFAULT_BUDGETS = {
     "raider": {"power": 78.0, "min_frac": 0.125},
-    "boss": {"power": 105.0, "min_frac": 0.125},
     "caravan": {"floor_power": 94.0, "spread": 0.15},
     "elite_caravan": {"floor_power": 110.0, "spread": 0.15},
 }
@@ -106,7 +112,7 @@ CANONICAL_CARAVAN_SHAPE = {
 # "caravan_guard_rohan", so a careless match classifies every veteran stack as a plain guard.
 CARAVAN_ROLES = ("veteran_caravan_guard", "caravan_guard", "armed_trader")
 
-BANDIT_KINDS = ("raider", "boss")
+BANDIT_KINDS = ("raider",)
 CARAVAN_KINDS = ("caravan", "elite_caravan")
 
 # Both caravan patterns are fully anchored (^...$), so `caravan_template_` cannot swallow an
@@ -116,7 +122,8 @@ TEMPLATE_KIND_RES = (
     ("elite_caravan", re.compile(r"^elite_caravan_template_[a-z_]+$")),
     ("caravan", re.compile(r"^caravan_template_[a-z_]+$")),
     ("raider", re.compile(r"^[a-z_]+_raider_party_template$")),
-    ("boss", re.compile(r"^[a-z_]+_boss_party_template$")),
+    # No boss pattern on purpose: `kind_of` returns None for `*_boss_party_template`, so the
+    # rewrite carries those lines through untouched. See the DEFAULT_BUDGETS note.
 )
 
 TEMPLATE_OPEN_RE = re.compile(r'<MBPartyTemplate\s+id="([^"]+)"')
@@ -207,7 +214,7 @@ def troop_power(troop_id, levels, power_table, mounted=None, heroes=None):
     A hero-flagged troop returns None rather than a number. The engine costs a hero on a
     completely different curve (`TaomMilitaryPowerModel` uses `Level / 4 + 1` for the tier and
     a 1.5 hero multiplier, never the mounted one), so applying the troop formula to one would
-    silently mis-budget its whole template. None of the 50 templates carries a hero today, and
+    silently mis-budget its whole template. None of the 42 templates carries a hero today, and
     treating it as unresolved means a future edit that adds one gets the loud skip-and-report
     path instead of a quiet wrong answer.
     """
@@ -255,13 +262,14 @@ def scale_to_power(shape, powers, budget, floors):
 def solve_flat(mins, maxes, powers, budget):
     """Solve a bandit template for the single `max_value` its flat stacks share.
 
-    Bandit templates are flat by construction: a raider is N stacks on one shared max, a boss is
-    that plus a pinned `1/1` hero stack. Solving for the shared count makes the answer a function
-    of the budget and the troop tiers alone, so it does not depend on what the previous run wrote.
+    Bandit templates are flat by construction: a raider is N stacks on one shared max. Solving
+    for the shared count makes the answer a function of the budget and the troop tiers alone, so
+    it does not depend on what the previous run wrote.
 
     Scaling each stack from its own current value instead is not a fixed point. When the budget
-    falls between two reachable values the tool oscillates: `gundabad_raiders_boss_party_template`
-    flipped between 18 and 19 per stack on alternate runs, which is a silently churning diff.
+    falls between two reachable values the tool oscillates: back when boss templates were still
+    in scope, `gundabad_raiders_boss_party_template` flipped between 18 and 19 per stack on
+    alternate runs, which is a silently churning diff.
 
     A stack with `min == max` is pinned and is returned untouched. A template whose unpinned
     stacks are NOT already uniform is refused rather than flattened, because flattening it would
@@ -304,8 +312,9 @@ def scale_mins(mins, maxes, min_frac):
     Relative proportions are preserved, so the stack shape still carries the same meaning. Three
     guards, in priority order:
 
-      - A stack already pinned (`min == max`) is returned untouched. That is the `1/1` boss hero
-        stack, which must stay exactly one.
+      - A stack already pinned (`min == max`) is returned untouched. Boss templates, whose
+        `1/1` hero stack this guard was written for, are no longer in scope (#564), but a pinned
+        stack in any template it does manage still stays exactly where it was.
       - No stack drops below 1. A zero min is survivable in a way a zero MAX is not (a 0/0 stack
         is unspawnable and unrecoverable, which is the 2026-09-04 defect), but a stack that could
         always field a body should keep doing so.
@@ -528,9 +537,9 @@ def main():
         print("An id here is either undefined or flagged is_hero. Either way the template it")
         print("belongs to was left untouched, which is why this run exits non-zero.")
 
-    # Raiders only. A boss party is created by `BanditSpawnCampaignBehavior.AddBossParty`, which
-    # calls `.Ai.DisableAi()` on it, so it sits in its hideout and never roams: a caravan cannot
-    # meet one on the road, and including it here would understate the parity margin.
+    # Raiders only (and since #564 there are no other bandit rows). A boss party is created by
+    # `BanditSpawnCampaignBehavior.AddBossParty`, which calls `.Ai.DisableAi()` on it, so it sits
+    # in its hideout and never roams: a caravan cannot meet one on the road.
     worst_raider = max((r["new_max_power"] for r in rows if r["kind"] == "raider"),
                        default=0.0)
     weakest_caravan = min((r["new_min_power"] for r in rows if r["kind"] in CARAVAN_KINDS),

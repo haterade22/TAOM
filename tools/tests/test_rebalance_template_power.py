@@ -328,16 +328,19 @@ class FlatBanditSolve(unittest.TestCase):
     """Bandit templates are flat by construction, and solving them that way is what makes the
     tool a fixed point.
 
-    Every raider template is N stacks all sharing one `max_value`; every boss template is that
-    plus a pinned `1/1` hero stack. Scaling each stack from the template's own current value
-    makes the result depend on what the last run wrote, and when the power budget falls between
-    two reachable values the tool oscillates: `gundabad_raiders_boss_party_template` flipped
-    between 18 and 19 per stack, 103 and 108 power, on alternate runs. Solving for the single
-    shared count instead depends only on the budget and the troop tiers, so it converges in one
-    pass and stays there.
+    Every raider template is N stacks all sharing one `max_value`. Scaling each stack from the
+    template's own current value makes the result depend on what the last run wrote, and when
+    the power budget falls between two reachable values the tool oscillates: back when boss
+    templates were in scope, `gundabad_raiders_boss_party_template` flipped between 18 and 19
+    per stack, 103 and 108 power, on alternate runs. Solving for the single shared count instead
+    depends only on the budget and the troop tiers, so it converges in one pass and stays there.
+
+    The fixture keeps that historical shape (a pinned `1/1` stack plus four equal stacks) because
+    it is the case that exercises the pinned-stack guard; boss templates themselves are no longer
+    rows (see `BossTemplatesAreOutOfScope`).
     """
 
-    # gundabad_raiders_boss: pinned boss + four equal stacks.
+    # The old gundabad_raiders_boss shape: pinned hero + four equal stacks.
     PINNED_MINS = [1, 5, 6, 4, 3]
     PINNED_MAXES = [1, 50, 50, 50, 50]
     PINNED_POWERS = [2.10, 1.68, 1.30, 1.30, 0.96]
@@ -395,13 +398,61 @@ class FlatBanditSolve(unittest.TestCase):
         self.assertAlmostEqual(rtp.power_of(out, powers), 77.6, places=2)
 
 
+class BossTemplatesAreOutOfScope(unittest.TestCase):
+    """Boss party templates are hand-authored since #564 and pinned by the C# gate
+    `HideoutBossPartyTemplateTests` (one `1/1` boss stack plus soldier stacks summing to min 3 /
+    max 4). `solve_flat` cannot express `1/2 + 1/1 + 1/1`, so a run that still classified them
+    would either refuse (non-uniform unpinned stacks) or re-inflate them to a power budget. The
+    tool must therefore not recognise them at all, and a document holding one must come back
+    byte-identical.
+    """
+
+    BOSS_ONLY = (
+        BOM + '<?xml version="1.0" encoding="utf-8"?>\r\n'
+        '<MBPartyTemplates>\r\n'
+        '\t<MBPartyTemplate id="dunland_raiders_boss_party_template">\r\n'
+        '\t\t<stacks>\r\n'
+        '\t\t\t<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_raiders_boss" />\r\n'
+        '\t\t\t<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dunland_clan_warrior" />\r\n'
+        '\t\t\t<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_raider" />\r\n'
+        '\t\t\t<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_hunter" />\r\n'
+        '\t\t</stacks>\r\n'
+        '\t</MBPartyTemplate>\r\n'
+        '</MBPartyTemplates>\r\n'
+    )
+    BOSS_LEVELS = {"dunland_raiders_boss": 21, "dunland_clan_warrior": 16,
+                   "dunland_raider": 11, "dunland_hunter": 11}
+
+    def test_kind_of_boss_template_is_none(self):
+        self.assertIsNone(rtp.kind_of("dunland_raiders_boss_party_template"))
+        self.assertIsNone(rtp.kind_of("gundabad_raiders_boss_party_template"))
+        self.assertNotIn("boss", rtp.BANDIT_KINDS)
+        self.assertNotIn("boss", rtp.DEFAULT_BUDGETS)
+
+    def test_rewrite_leaves_a_boss_template_byte_identical(self):
+        out, rows, unknown = rtp.rewrite_text(self.BOSS_ONLY, self.BOSS_LEVELS,
+                                              rtp.load_power_table(), rtp.DEFAULT_BUDGETS,
+                                              scope="all")
+        self.assertEqual(rows, [])
+        self.assertEqual(unknown, [])
+        self.assertEqual(out, self.BOSS_ONLY)
+
+    def test_shipped_boss_templates_produce_no_rows(self):
+        _, rows, _ = rtp.rewrite_text(
+            rtp.TARGET_FILE.read_bytes().decode("utf-8"),
+            rtp.load_troop_levels(), rtp.load_power_table(), rtp.DEFAULT_BUDGETS,
+            rtp.load_mounted_troops(), "all", rtp.load_hero_troops())
+        boss_rows = [r for r in rows if "_boss_" in r["id"]]
+        self.assertEqual(boss_rows, [], "a boss template was retuned: %r" % boss_rows)
+
+
 class HeroTroopHandling(unittest.TestCase):
     """A hero-flagged troop is refused, not costed on the ordinary curve.
 
     `TaomMilitaryPowerModel` costs a hero completely differently: the tier is `Level / 4 + 1`
     rather than `ceil((Level - 5) / 5)`, and the multiplier is `HeroMultiplier` (1.5), never the
     mounted one. Feeding a hero through the troop formula would silently mis-budget its whole
-    template. None of the 50 templates carries one today, so this is a guard against a future
+    template. None of the 42 templates carries one today, so this is a guard against a future
     edit rather than a live fix, which is exactly why it needs a test: nothing else would notice.
     """
 
@@ -436,8 +487,10 @@ class HeroTroopHandling(unittest.TestCase):
             rtp.TARGET_FILE.read_bytes().decode("utf-8"),
             rtp.load_troop_levels(), rtp.load_power_table(), rtp.DEFAULT_BUDGETS,
             rtp.load_mounted_troops(), "all", heroes)
-        self.assertEqual(unknown, [], "every stack in the 50 templates must still be costable")
-        self.assertEqual(len(rows), 50, "all 50 templates must still be retuned, got %d" % len(rows))
+        self.assertEqual(unknown, [], "every stack in the 42 templates must still be costable")
+        self.assertEqual(len(rows), 42,
+                         "all 42 templates (8 raider + 34 caravan) must still be retuned, got %d"
+                         % len(rows))
 
 
 class CanonicalShapeIsWhatMakesCaravansIdempotent(unittest.TestCase):

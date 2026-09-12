@@ -309,7 +309,13 @@ Code: No code changes needed
 - **A villager party's look comes from a random stack, not from the numbers**
   (`VillagerCampaignBehavior.cs:180`), so min and max there control only the party's size. A hideout
   boss stack must stay at 1/1 for the same reason in reverse: hideouts fill from a party template
-  too (`BanditSpawnCampaignBehavior.cs:312-324`), so widening a boss stack multiplies the boss.
+  too (`BanditSpawnCampaignBehavior.cs:312-324`), so widening a boss stack multiplies the boss. The
+  soldier stacks beside it sum to min 3 / max 4 by decision (#564, pinned by
+  `TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs`), and that number is the boss PARTY parked in
+  the hideout, not the boss fight: the engine draws the fight from the whole hideout, and TAOM's
+  `Patch86_HideoutBossFight` holds it at boss + the MCM `Hideout Boss Bodyguards` count on both
+  routes. Cutting the template alone would not have changed the fight
+  ([bandit-management.md](../features/bandit-management.md) "Hideout boss fight: boss + N").
 - **Whatever the tool says, the numbers on disk are the truth.** Docs have gone stale here twice: an
   older Mordor figure of 3500 and an Erebor figure of 220 both survive in prose that the file
   contradicts. Re-measure before quoting.
@@ -319,7 +325,7 @@ Code: No code changes needed
 | Number | Command | Date |
 |---|---|---|
 | 17 `supply_caravan_template_*` crew templates, separate from the caravan ones | `python tools/generate_supply_caravan_templates.py` | 2026-09-06 |
-| 400 templates, 3,329 stacks | `rg -c '<MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -c '<PartyTemplateStack' Main/_Module/ModuleData/taom_partyTemplates.xml` | 2026-09-05 |
+| 400 templates, 3,328 stacks (3,329 until #564 dropped the fourth Gundabad boss-guard stack) | `rg -c '<MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -c '<PartyTemplateStack' Main/_Module/ModuleData/taom_partyTemplates.xml` | 2026-09-11 |
 | 193 lord templates in the tool's scope, 2 of them bound by nothing | the unbound-template one-liner in the Gotchas bullet above | 2026-09-05 |
 | `kingdom_hero_party_erebor_template`: 53 stacks, min 103, max 225; `caravan_template_erebor`: 3 stacks, min 60, max 70 | the per-template one-liner in the Worked example above, once per id | 2026-09-05 |
 | Erebor culture: 10 `PartyTemplate.` references, 8 attributes and 2 caravan children | the culture-block one-liner in the Worked example above | 2026-09-05 |

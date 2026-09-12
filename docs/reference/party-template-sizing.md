@@ -349,8 +349,11 @@ min sum (47) and the 3500 target have not.
   `PartyBase` relationships
 - `tools/raise_party_template_maxes.py`: the completed 2026-07-02 one-off that raised `max_value` to
   50 on every kingdom and bandit template stack still below it, leaving the one-per-hideout boss
-  stack alone. Superseded for culture-level retargeting by `rebalance_party_template_maxes.py`; kept
-  for its history
+  stack alone. Superseded for culture-level retargeting by `rebalance_party_template_maxes.py` and
+  for raiders by `rebalance_template_power.py`; its regex no longer matches the eight
+  `*_boss_party_template`s at all, because those are hand-authored to one `1/1` boss plus soldier
+  stacks summing to min 3 / max 4 since #564 and a re-run must not push them back to 50. Kept for
+  its history
 
 ---
 
