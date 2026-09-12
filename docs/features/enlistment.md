@@ -76,6 +76,15 @@ including foreign/corrupt saves.
 
 ## Menu + battle layers
 
+**Open gap (#573, found 2026-09-12 by the Codex pass on #567):** the wait menu's condition delegate
+is `IsEnlisted`, and in 1.4.8 a wait menu's condition hides EVERY option when false
+(`GameMenu.GetMenuOptionConditionsHold`; the camp-menu incident of #567). A discharge that runs
+during load (Enable Enlistment turned off before loading, or the identity guard) fires from
+`OnGameLoaded`, before `MapState` exists, so `DischargeService.ExitServiceMenuIfOpen` sees no
+menu context and the persisted service-menu id re-enters with zero options. The Patch66 redirects
+do not repair it: `TryRedirectMenu` returns false for the service id and for any non-attached state.
+Reproduction and fix direction are in the issue.
+
 - Wait menu `taom_enlistment_service_wait` (`EnlistmentMenuBehavior` +
   `EnlistmentWaitMenuPresenter` — text built once per menu init, position sync throttled
   to every 5th tick). Menu-guard policy in `EnlistmentMenuService`: redirect ONLY while

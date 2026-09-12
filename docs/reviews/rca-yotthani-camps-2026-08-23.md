@@ -263,8 +263,10 @@ classes rather than reviewer taste.
 - [x] Localization round-trip test (Class 4) - TAOM.Tests/Infrastructure/Localization/RegisteredDefaultRoundTripTests.cs; red until the lossy registration was regenerated, green after
 - [x] IoC no-eager-resolve source-scan test (Class 5) - TAOM.Tests/Infrastructure/IoCRegistrationDisciplineTests.cs, 3-file verified baseline + stale-entry companion
 - [x] Per-feature SessionReset tests (Class 1) - SupplyLinesCampaignBehaviorTests, FieldCampBehaviorSessionResetTests, RefugeCampaignBehaviorTests; both reset paths pinned per feature
+- [x] Class 12 (2026-09-12): wait condition `true` and the founding exit pinned (`FieldCampWiringTests`, `RefugeWiringTests`); the paused picker and the context revalidation pinned after the Codex pass; two campaign-mechanics lessons; the CLAUDE.md "Game menus stop time" row; #573 filed for the Enlistment twin
 
-All six artifacts landed with the batch-1 integration commit; suite 7421 green at that point.
+All six artifacts landed with the batch-1 integration commit; suite 7421 green at that point. The
+Class 12 set landed in `4d2ea82b` and `2f4ce878`; suite 8599 green after the second.
 
 ---
 

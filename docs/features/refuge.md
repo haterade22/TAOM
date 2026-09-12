@@ -9,9 +9,11 @@ behaviourally ported 2026-08-22); provenance:
 ## Architecture
 
 ```
-taom_fc_camp menu, index 4: "Establish a refuge here"
-   -> IWardenService.Candidates (companions, then promotable soldiers) -> picker
+taom_fc_camp menu (a WAIT menu), index 4: "Establish a refuge here"
+   -> IWardenService.Candidates (companions, then promotable soldiers) -> picker, game PAUSED
+   -> OnWardenChosen: refuse unless taom_fc_camp is still current and no encounter is live (#567)
    -> IRefugeService.Found: spawn RefugePartyComponent party -> warden -> charge -> break camp -> raise
+   -> ExitToLast (land on the map; the hold-nearby pin keeps the company) -> garrison deposit screen
 refuge book (SyncData "_taomRefuges") -- RefugeData: tier, warden, build timestamps,
    PERSISTED militia bookkeeping (MilitiaAdded/MilitiaTroopId/MilitiaPreRallyCount)
 manage: taom_refuge_menu (vanilla party screen for garrison+prisoners, stash screen for goods)
@@ -191,6 +193,10 @@ disagrees.
   paths, militia rally + stand-down, save/load with refuge under attack, warden capture path,
   refuge wiped by a hostile lord mid-session, orphan-row dismantle) plus the fix-pass paths:
   toggle-off mid-build, warden death with garrison alive, clan-screen wage line and building row.
+- The #567 founding walk on the fix build: pick a warden, deposit, land on the map with time
+  stopped, raise under the hold-nearby pin; once more with a hostile party approaching when the
+  picker opens (the pause should keep it from arriving); and a player save written in the dead camp
+  menu on v2.0.24 to v2.0.28, loaded with Leave available.
 - 12-language translation run for the `{=taom_rf_*}` keys, including the four added in the round-B
   fix pass (`taom_rf_warden_lost`, `taom_rf_clan_row_building`, `taom_rf_promote_entry_tier`,
   `taom_rf_found_orders_warning`; `taom_rf_promote_entry` is superseded and unreferenced).

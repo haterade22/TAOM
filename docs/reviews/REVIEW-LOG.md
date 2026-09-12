@@ -1,6 +1,6 @@
 ﻿# Codex Adversarial Review Log
 
-Running scorecard of all reviews. **Reviews 1-96, 2026-04-05 to 2026-09-11.** 91 of those numbers have an entry below, as a summary-table row or a `## Review N` section or both; 37, 63, 64 and 73 do not. (Counted 2026-09-01. The previous "83 ... 37, 46, 48, 63, 64 and 73" was low and wrongly listed 46 and 48, which do have sections.) The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
+Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93 of those numbers have an entry below, as a summary-table row or a `## Review N` / `### Review N` section or both; 37, 46, 48, 63, 64 and 73 do not. (Counted 2026-09-12 with a scan over every heading level and table row, replacing the 2026-09-01 hand count of 91. The previous "83 ... 37, 46, 48, 63, 64 and 73" was low and wrongly listed 46 and 48, which do have sections.) The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
 
 ## Summary
 
