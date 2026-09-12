@@ -112,6 +112,22 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         if (!record.IsEnlisted)
             return;
 
+        // OUR OWN ARMY MUTATION RAISES THE EDGE WE SUBSCRIBE (#577). ArmyMembershipAdapter.LeaveArmy
+        // and CreateArmyLedBy disband the army they raised; Army.DisperseInternal sets Army = null
+        // on the commander's party, whose setter dispatches OnPartyLeftArmy, which
+        // EnlistmentMaintenanceBehavior turns into ReconcileNow("army left"). That pass would run
+        // from INSIDE the join (ServiceBattleService.TryJoin) or inside PlayerEncounter.Finish
+        // (Patch85 -> FlushArmyLeaveAfterBattle -> LeaveArmy), on half-mutated adapter state and
+        // with the encounter open by construction. _reconcileInFlight only covers re-entry from a
+        // pass already running; this covers re-entry from the adapter. The hourly pass re-derives
+        // everything an edge could have said, so skipping loses nothing.
+        if (_army?.IsMutating == true)
+        {
+            if (_diag?.IsEnabled == true)
+                _logger?.LogInfo($"[EnlistDiag] reconcile skipped (trigger={trigger}): raised from inside our own army join/leave");
+            return;
+        }
+
         if (_reconcileInFlight)
             return;
 
@@ -725,6 +741,15 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
             case AttachmentBlockReason.PlayerInForeignMapEvent:
                 // Let the foreign event resolve; nothing safe to do.
+                return;
+
+            case AttachmentBlockReason.BattleEncounterOpen:
+                // The battle's own PlayerEncounter is live: the fight, its loot and aftermath, or a
+                // join in flight. The engine owns the party until it closes (#577), and
+                // BreakStaleBattleLatch, which runs before the assessment, is the only deliberate
+                // exit from this shape. Nothing to do, and this is not a fault, so no ERROR.
+                if (_diag?.IsEnabled == true)
+                    _logger?.LogInfo("[EnlistDiag] holding presence: EnlistedBattle with a live encounter (loot, aftermath, or a join in flight)");
                 return;
 
             default:

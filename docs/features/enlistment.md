@@ -101,12 +101,18 @@ Reproduction and fix direction are in the issue.
   `IEnlistmentReconciler.BattleJoinRequested` → `ServiceBattleService.TryJoinCommanderBattle`,
   raised when the commander is in a map event and the player is not. The recovery path covers
   a missed edge (save-load mid-battle, a throw, enlisting into a running fight).
-- **The player has NO battlefield command while enlisted** (#424, PR #426).
-  `EnlistmentBattleRoleMissionBehavior` calls `Team.SetPlayerRole(false, false)` at `AfterStart`
-  when the battle was entered as `EnlistedBattle` and the player does not lead the side;
-  `BattleCommandPolicy` is the pure decision table, and its whole body is
-  `state == EnlistedBattle && !playerLeadsBattleSide` — there is no duty branch, because since #428
-  a duty never detaches the player and so can never produce a battle of their own.
+- **The player has NO battlefield command while enlisted, at any rank** (#424, #576). One pure
+  predicate, `BattleCommandPolicy.ShouldStripPlayerCommand`, whose whole body is
+  `state == EnlistedBattle && !playerLeadsBattleSide`, and three consumers that must never gate
+  apart: `TaomBattleInitializationModel` keeps the Order of Battle deployment screen shut (so there
+  is no captain slot to take), `EnlistmentBattleRoleMissionBehavior` calls
+  `Team.SetPlayerRole(false, false)` at `AfterStart` (so the order UI stays closed and every
+  formation is AI-controlled), and `EnlistmentBattleFormationMissionBehavior` stands him in his
+  assignment's formation and puts him back there after vanilla's captain assignment moves him.
+  There is no duty branch, because since #428 a duty never detaches the player and so can never
+  produce a battle of their own, and there is no rank branch, because the rank-3 Sergeant
+  carve-out shipped 2026-08-12 is what opened the screen to every rank (see "No rank holds a
+  command" below).
 
 ### Standing in the line — and why the soldier is still standing alone (#441, #442, #443)
 
@@ -130,18 +136,18 @@ so the two corrections cannot gate apart.
    IsPlayerTroopInFormation && Mission.Current.MainAgent != null` — and the branch is a two-second
    `AddQuickInformation` toast, not an orders pipeline.
 
-**The formation has nobody else in it — #443, open.** `Mission.GetAgentTeam` (`Mission.cs:5183-5189`)
-routes a party to `PlayerTeam` when `IsUnderPlayersCommand || IsInSameArmyAsPlayer`, else to
-`PlayerAllyTeam`. The player's own party takes the first arm; the commander's party takes neither,
-because enlistment keeps `MainParty.Army` permanently null. And the ally team **is** created, for a
-reason that falls straight out of #424: `MissionCombatantsLogic.SupportsAllyTeamOnPlayerSide:271`
-short-circuits its same-general filter when `isPlayerSergeant` is false, which it structurally is.
-
-So the soldier joins a formation on his own one-man team and is manoeuvred by that team's own
-`TeamAIGeneral`. This is consistent with the #424 field test — "F1–F8 dead and the AI fought the
-line" — because the line being fought was the **ally** team's. The two findings agree; #443 carries
-the design call (look the formation up on `PlayerAllyTeam`, or give the enlisted player a non-null
-`Army`, which TAOM deliberately clears in both `ParkNear` and `RestorePresence`).
+**The formation had nobody else in it (#443, closed 2026-08-20 by the transient army join).**
+`Mission.GetAgentTeam` (`Mission.cs:5183-5189`) routes a party to `PlayerTeam` when
+`IsUnderPlayersCommand || IsInSameArmyAsPlayer`, else to `PlayerAllyTeam`. The player's own party
+takes the first arm; the commander's party took neither while enlistment kept `MainParty.Army`
+null, so the soldier joined a formation on his own one-man team and was manoeuvred by that team's
+own `TeamAIGeneral`. The #424 field test ("F1 to F8 dead and the AI fought the line") was consistent
+with that because the line being fought was the **ally** team's. The fix chosen was the second of
+#443's two options: `ArmyMembershipAdapter.JoinCommanderArmy` gives the player a non-null `Army`
+for the duration of the battle (see "The field-test arc" below), which collapses both parties onto
+`PlayerTeam`. `Army` is still cleared in `ParkNear` and `RestorePresence`, so it is null everywhere
+except inside a battle. The merge-failed path (a kingdomless commander, #495) still lands on the
+one-man team.
 
 **Hardening applied post-merge** (`ab5d3cfe`): a try/catch, because `Mission.SpawnAgent` dispatches
 `OnAgentBuild` in a bare `foreach` (`Mission.cs:4357-4360`) and a throw there aborts the whole spawn
@@ -152,18 +158,19 @@ of `CountOfUnits`, which counts the player himself so a formation of one read as
 removal of a dead `?? Mission.PlayerTeam` fallback that would have placed the agent on a team he is
 not on.
 
-### Battle-role facts that follow from Army being null (verified 1.4.7 — do not re-derive)
+### Battle-role facts (re-derived 2026-09-12 on installed 1.4.8)
 
-Everything below is a consequence of the SAME null `Army` that `ParkNear`/`RestorePresence` enforce.
-Written down because two of them were re-derived wrongly during PR #426's review.
+This table was first written when `Army` was null in every battle and carried a "do not re-derive"
+banner. The transient army join (2026-08-12) changed the premise of three rows and the banner kept
+the stale conclusions alive for a month, which is how #576 shipped. Re-derived, no banner.
 
 | Fact | Why |
 |---|---|
-| Without the correction, the enlisted player is the **general** of his side — not merely "not a sergeant" | `IsPlayerSergeant()` needs `Army != null`, so it is false; `SandBoxMissions` passes `!isPlayerSergeant` positionally as `isPlayerGeneral`; `Team.SetPlayerRole` then does `SetControlledByAI(this != PlayerTeam \|\| !IsPlayerGeneral)` across every formation |
-| Neither-general-nor-sergeant is a **supported vanilla state**, not untested ground | `BehaviorComponent.cs:105` branches on exactly `!IsPlayerGeneral && !IsPlayerSergeant && IsPlayerTroopInFormation` — the soldier-receiving-orders path. The correction makes it reachable |
-| The correction cannot be overwritten later | `SetPlayerRole` has exactly one engine call site (`Mission.cs:745`, team creation), and no `AddTeamAI` caller passes `forceNotAIControlled: true` |
+| What vanilla hands the enlisted player depends on the merge | With the merge (`Army != null`) `IsPlayerSergeant()` is true and `SandBoxMissions` wires `(isPlayerGeneral: false, isPlayerSergeant: true)`. Without it (#495) `IsPlayerSergeant()` is false, `SandBoxMissions` passes `!isPlayerSergeant` positionally as `isPlayerGeneral`, and he is the **general** of his side |
+| Neither-general-nor-sergeant is a **supported vanilla state**, not untested ground | `BehaviorComponent.cs:103-110` branches on exactly `!IsPlayerGeneral && !IsPlayerSergeant && IsPlayerTroopInFormation`, the soldier-receiving-orders path. `Team.SetPlayerRole` sets `SetControlledByAI(true)` on every formation for it, and `MissionOrderVM.CheckCanBeOpened` refuses the order UI on it |
+| One strip at `AfterStart` is final | `SetPlayerRole` has exactly TWO engine call sites, `Mission.cs:741-746` (team creation) and `AssignPlayerRoleInTeamMissionController.cs:43` (`AfterStart`), both before TAOM's `AfterStart`. Nothing re-derives the flags around deployment; an `OnDeploymentFinished` belt that claimed otherwise was dead code and is gone |
 | TAOM's `AfterStart` runs **after** vanilla's role assignment | `AddMissionBehavior` appends; the mission's own controllers enter via `InitializeStartingBehaviors` at construction; TAOM appends during `OnMissionBehaviorInitialize`; `Mission.AfterStart` then iterates the list in order |
-| **The Order-of-Battle screen is unreachable while enlisted, and always was** | `SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux()` offers deployment only if the player leads the side, owns the besieged settlement, or `IsPlayerSergeant()`. All three are false while enlisted → `DeploymentMissionController` calls `FinishDeployment()` immediately. This predates the correction, which is why its ordering relative to deployment setup does not matter |
+| **The Order of Battle screen IS reachable through `IsPlayerSergeant()` once `Army` is non-null, and the role strip cannot close it** | `SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux()` (`:65-83`) offers deployment when the player leads the side, owns the besieged settlement, or `IsPlayerSergeant()`, with 20 or more controllable troops. It reads campaign state only, and the non-virtual `CanPlayerSideDeployWithOrderOfBattle()` caches the answer once per mission, first read at `DeploymentMissionController.SetupTeams:181` on the first tick, after every `AfterStart`. The doc's earlier "unreachable, and always was" row was wrong from 2026-08-12 to 2026-09-12. `TaomBattleInitializationModel` closes it (#576) |
 
 Do **not** adopt the reference mod's approach of rigging `GetCharacterSergeantScore`: that score also
 feeds `DefaultEncounterModel.GetLeadingScore → GetLeaderOfMapEvent`, so it changes who leads the
@@ -429,8 +436,14 @@ which the coercion had just made true — swallowed it. `MapEventManager.Tick` d
 from that menu. The wait menu has no `isLeave` option, so it never closes on its own either.
 
 **Fix:** `encounter` / `join_encounter` are exempt from redirect whenever the player is genuinely in
-a map event. The coercion stays (a transient state has no business in a save), but it no longer
-depends on a re-derivation that does not exist.
+a map event. The coercion stays (a transient state has no business in a save). The re-derivation
+it was always supposed to rest on was finally written on 2026-09-12 (#577):
+`EnlistmentLoadNormalizer` restores `EnlistedBattle` at load when the record reads
+`EnlistedAttached` but the party is still in a map event, or its battle encounter is still open
+(`PlayerEncounter.Battle` set, the aftermath window), and leaves a settlement encounter alone.
+Without it every gate keyed on `EnlistedBattle` read the wrong state for the battle the player
+saved in: the deployment-screen model and the role strip deferred to vanilla, and the presence
+hold did not fire.
 
 ### 3. A duty starting inside a settlement made the player invisible for days
 
@@ -1031,21 +1044,29 @@ Either call alone leaves the property false and the player back on his own team.
 **`PlayerEncounter.FinishEncounterInternal` grants the post-defeat escape only when
 `MainParty.AttachedTo == null`.** `TeleportPartyToOutSideOfEncounterRadius()` plus
 `SetDoNotAttackMainParty(2)` sit behind that check, and `AddPartyToMergedParties` sets `AttachedTo`.
-**So the leave must run before the encounter finishes**, which is why `_army.LeaveArmy()` sits above
-the state gate AND above the loot-flow `HasCurrent` gate in `OnCommanderBattleEnded`; that gate
-returns early while the aftermath encounter is still open. ServeAsSoldier ships with this hole.
-`BattleEnded_EncounterStillOpen_StillLeavesTheArmy` fails if the call is moved below it.
+**So the leave must run before the encounter finishes, and since #557 it runs INSIDE it.**
+`PlayerEncounter.Finish` runs `FinalizeBattle()` (which dispatches `MapEventEnded`) and
+`FinishEncounterInternal()` (which grants the escape) as consecutive statements, and campaign-event
+listeners are LIFO, so a detach on `MapEventEnded` ran BEFORE vanilla's siege-aftermath handler and
+corrupted its read of the side's parties. `Patch85_EnlistedDetachDeferral` postfixes `FinalizeBattle`
+and calls `ServiceBattleService.FlushArmyLeaveAfterBattle`, stateless, guarded on
+`!IsMainPartyInMapEvent` (the #551 guard in its cheapest form); `OnCommanderBattleEnded` no longer
+detaches at all. ServeAsSoldier ships with the original hole.
+`BattleEnded_DoesNotDetachInsideTheMapEventEndedDispatch` and
+`FlushArmyLeaveAfterBattle_DetachesOnceTheBattleIsOver` pin the seam. The flush's own `LeaveArmy`
+disbands the army we raised, which raises the commander's "army left" edge from inside `Finish`;
+the reconciler now refuses that pass while the adapter is mutating (#577, "The presence hold").
 
 **Exactly one precondition sits ABOVE the leave, and it is not a relaxation of the rule** (#551).
 The detach is destructive when the ending event is not the player's: clearing `AttachedTo` runs
 `Party.MapEventSide = null`, which pulls him out of whatever map event he IS in. So the leave is
 skipped when `!mainPartyWasInEndingEvent && _encounter.IsMainPartyInMapEvent`, and logs at ERROR when
-it fires, because reaching that state means the behaviour's gate leaked. The escape ordering is
-untouched: that condition can only hold for a FOREIGN event, and the player's own event reaches this
-method with `mainPartyWasInEndingEvent` true, where the leave runs exactly as before.
+it fires, because reaching that state means the behaviour's gate leaked. That condition can only
+hold for a FOREIGN event; the player's own event reaches this method with `mainPartyWasInEndingEvent`
+true and leaves the detach to the deferred seam above.
 `BattleEnded_ForeignEventWhileInAnotherLiveBattle_DoesNotLeaveTheArmy` and
-`BattleEnded_OurOwnEventEnding_StillLeavesTheArmy` pin both halves. Do not "simplify" this to an
-unconditional detach.
+`BattleEnded_OurOwnEventEnding_LeavesTheDetachToTheDeferredSeam` pin both halves. Do not "simplify"
+this to an unconditional detach.
 
 **`Kingdom.CreateArmy` moves the commander.** It calls `army.Gather()`, whose non-player branch runs
 `FindBestGatheringSettlementAndMoveTheLeader` and dispatches `OnArmyCreated`. So
@@ -1059,18 +1080,123 @@ feature**, see the review-pass section below. It does keep the siege and owner-c
 `Army.GetLongTermBehaviorTextForAILeadedParty` dereference the same field with no guard, so the army
 must never outlive the battle.
 
-### Rank gate (supersedes part of #424)
+### No rank holds a command (#576, replaces the 2026-08-12 rank gate)
 
 With `Army != null`, `IsPlayerSergeant()` is true, so vanilla stops promoting the player to GENERAL
-and offers him ONE formation. `BattleCommandPolicy.ShouldKeepSergeantCommand` lets a rank-3 Sergeant
-keep it and strips every rank below. **It re-checks `Team.IsPlayerSergeant` rather than trusting
-rank**, because the merge is best-effort, a commander with no kingdom gets no army, so vanilla falls
-back to the general-of-the-side path, and gating on rank alone would hand a sergeant the whole army
-precisely when the merge failed.
+and wires him as a sergeant. The 2026-08-12 change let a rank-3 Sergeant keep the one formation
+vanilla then offered (`BattleCommandPolicy.ShouldKeepSergeantCommand`) and noted, as a "consequence
+to watch in-game", that `CanPlayerSideDeployWithOrderOfBattleAux()` also keys on
+`IsPlayerSergeant()`. #443 then closed without that in-game look, and the consequence shipped:
+the Order of Battle deployment screen opened at EVERY rank (its gate reads campaign state, not the
+TAOM rank), the sergeant-choice view listed the player as the only assignable captain and
+auto-selected him, and dropping himself on a formation ran `AssignSergeant`, which sets
+`Formation.PlayerOwner`. That setter turns `IsAIControlled` off (`Formation.cs:271-282`); with TAOM's
+`(false, false)` roles the formation AI never ticks (`Formation.cs:2283`) and the order UI is refused
+(`MissionOrderVM.cs:796-803`). Nobody could command that formation. Players reported it as
+"assign yourself captain and no orders are given".
 
-**Consequence to watch in-game:** `CanPlayerSideDeployWithOrderOfBattleAux()` also keys on
-`IsPlayerSergeant()`, so the Order of Battle deployment screen is now REACHABLE while enlisted, where
-it previously never was. Intended at Sergeant; the F1-F8 observation owed on #424 now covers this too.
+Fixed on 2026-09-12 by removing the carve-out (no rank holds a command; #521 says rank 3 is
+effectively unreachable anyway) and adding the two seams the role strip could not supply:
+
+- **`TaomBattleInitializationModel : SandboxBattleInitializationModel`** overrides
+  `CanPlayerSideDeployWithOrderOfBattleAux()` as `_service.CanPlayerSideDeployWithOrderOfBattle() ??
+  base.…()`. `EnlistmentDeploymentService` answers `false` exactly when
+  `BattleCommandPolicy.ShouldStripPlayerCommand` is true and `null` otherwise, never `true`, so the
+  disabled path is literally `base`. Registered in `SubModule.OnGameStart` after SandBox's model,
+  last registered wins. The engine caches the answer once per mission, and every deployment reader
+  (`DeploymentMissionController.SetupTeams`, `AssignPlayerRoleInTeamMissionController.OnPlayerTeamDeployed`,
+  `GeneralsAndCaptainsAssignmentLogic.OnTeamDeployed`) goes through that one cached bool, so the
+  screen never opens and `AssignSergeant` is unreachable. The commander's lords also regain the AI
+  captain path the open screen used to skip.
+- **`EnlistedSoldierPlacement.ReclaimAfterDeployment`**, from
+  `EnlistmentBattleFormationMissionBehavior.OnAfterDeploymentFinished`. With the screen shut,
+  vanilla's `GeneralsAndCaptainsAssignmentLogic.OnTeamDeployed` runs `AssignBestCaptainsForTeam`
+  over every hero on the player team, the player included, and moves the captain into the largest
+  formation matching his mount state; `OnDeploymentFinished` then moves him into the general's
+  formation whenever the team has 50 or more members. Neither sets `PlayerOwner`, so orders keep
+  flowing, but he is captain of, and standing in, the wrong formation. The correction runs after
+  every `OnDeploymentFinished` handler (`FinishDeployment:48` then `:78`), clears any captaincy
+  handed to the player, and re-runs the placement. The explicit clear is load-bearing:
+  `Formation.RemoveUnit` nulls `Captain` only for a unit that cannot lead formations remotely
+  (`Formation.cs:2193`), and vanilla's `OnDeploymentFinished` sets that flag true on the player
+  before moving him, so the move alone would leave him captain. Known cosmetic leftover: the
+  formation banner set for the brief captaincy stays.
+
+Proof lines, with Enlistment Diagnostics off: `[Enlistment] Order of Battle deployment
+suppressed: enlisted soldier in the commander's battle`, `[Enlistment] battle command stripped at
+AfterStart`, and `[Enlistment] after deployment: cleared N captaincy vanilla handed the soldier,
+formation X -> Y` when vanilla had moved him. Pinned by `EnlistmentDeploymentServiceTests` (every
+state x side equals the shared policy, never true), `TaomBattleInitializationModelInvariantsTests`
+(the engine's gate stays non-virtual and cached, the Aux stays protected virtual) and
+`EnlistmentAfterDeploymentBindingTests`. Not yet seen in game; smoke items in "Testing".
+
+### The presence hold: nothing moves the party while its battle encounter is open (#577)
+
+A player report at x64 campaign speed: the party attached and immediately detached during the
+battle join, the log showed `TICK trigger=army left` while the `PlayerEncounter` was still active,
+and "Send troops" then threw `IndexOutOfRangeException` in `BattleSimulation`. The index is the
+same one #551 named, one path earlier: `BattleSimulation.cs:62` writes
+`SelectedTroops[(int)PlayerSide]`, `PlayerSide => PartyBase.MainParty.Side`, and `Side` is
+`MapEventSide?.MissionSide ?? None` where `None` is -1. Anything that clears `AttachedTo` on an
+active party nulls its `MapEventSide` (`MobileParty.SetAttachedToInternal:1779-1782`), and every
+park and every presence restore clears `AttachedTo` (`ClearArmyAttachment()` runs unconditionally
+inside `ParkNear` and `RestorePresence`).
+
+Two defects, both fixed 2026-09-12:
+
+- **`Assess` admitted `EnlistedBattle` and fell through to `AttachRequired` in the aftermath
+  window.** `MapEventSide.Clear()` nulls `MainParty.MapEvent` BEFORE the encounter closes, so the
+  loot and aftermath window reads as "no battle anywhere" to every rule in `Assess`, and the
+  reconciler's `AttachRequired` arm parked the party with no encounter guard (the `noBattleAnywhere`
+  guard above it covered `LeaveArmy` and the state demotion, never the `Assess` switch). `Assess`
+  now returns `Blocked(BattleEncounterOpen)` whenever `state == EnlistedBattle &&
+  player.HasPlayerEncounter`, placed right after captivity and ABOVE commander fitness and the
+  settlement exit: the engine owns the party until the encounter closes, exactly as in captivity,
+  and a commander killed in that battle is discharged one tick later rather than from inside
+  `PlayerEncounter.Finish`. Keyed on `EnlistedBattle`, not on the encounter alone, because since
+  #510 every settlement placement opens an encounter deliberately. `BreakStaleBattleLatch` runs
+  before the assessment and stays the only deliberate exit from the shape (#551).
+- **TAOM's own army disband raised the edge the reconciler subscribes.** `LeaveArmy` and
+  `CreateArmyLedBy` call `DisbandCreatedArmy`; `Army.DisperseInternal` sets `Army = null` on the
+  commander's party, whose setter dispatches `OnPartyLeftArmy`, which
+  `EnlistmentMaintenanceBehavior` turns into `ReconcileNow("army left")`. That pass ran from inside
+  the join (`TryJoin:100`) or from inside `PlayerEncounter.Finish` (Patch85 ->
+  `FlushArmyLeaveAfterBattle` -> `LeaveArmy`), on half-mutated adapter state and with the encounter
+  open by construction; `_reconcileInFlight` only covers re-entry from a pass already running.
+  `IArmyMembershipAdapter.IsMutating` is now true for the duration of `JoinCommanderArmy` and
+  `LeaveArmy`, and `EnlistmentReconciler.Reconcile` returns early while it is set. A commander
+  leaving a vanilla army still reconciles.
+- **The save coercion defeated every `EnlistedBattle` gate after a reload** (found by the deep
+  review's data-flow pass). `EnlistmentRecord.ToPersistedState` writes `EnlistedBattle` as
+  `EnlistedAttached`, so a save at the encounter menu or in the aftermath reloaded as an active,
+  unparked Attached soldier: the deployment-screen model and the role strip deferred to vanilla
+  for that battle, and `Assess` returned `AttachRequired`, parking the party out of its live
+  encounter. `EnlistmentLoadNormalizer` now restores `EnlistedBattle` at load when the party is in
+  a map event or its battle encounter is still open, before the reconcile runs
+  (`EnlistmentLoadNormalizerTests`, three rows).
+
+Two paths still detach with an open encounter, both pre-existing, both recorded on #577 rather
+than fixed here: the MCM master switch turned off mid-battle runs the discharge (RestorePresence,
+LeaveArmy, ClearArmyAttachment) before the ownership policy closes the encounter, by the documented
+"discharge outranks ownership" rule; and a failed join's rollback can leave the encounter open
+under R1b while `ReassertServiceMenu` re-inits the wait menu, whose init parks unconditionally on
+`EnlistedAttached`.
+
+Why x64 exposed it: `Campaign.TickMapTime` yields 1080 x multiplier campaign seconds per real
+second, so at 64 a campaign hour is about 52 ms of wall clock, `MBCampaignEvent.CheckUpdate` fires
+one `HourlyTick` per crossed hour in a `while` loop, and the service wait menu's `StartWait`
+restores `UnstoppableFastForward` at the retained multiplier every time it is re-asserted. The
+reconciler ran about 16 times more often than at 4x. The feature's campaign-time discriminators
+(`StaleBattleLatchDays` = 1 hour, `AttachRetryIntervalHours` = 1, `SettlementDwellHours` = 6) all
+collapse to tens of milliseconds at that speed; that is #578, not this fix.
+
+Proof lines, with Enlistment Diagnostics ON: `[EnlistDiag] holding presence: EnlistedBattle with a
+live encounter` and `[EnlistDiag] reconcile skipped (trigger=army left): raised from inside our own
+army join/leave`. A `TICK trigger=army left ... verdict=AttachRequired ... hasPlayerEncounter=True`
+line followed by `PARK ok` is the defect. Pinned by `ServiceAttachmentServiceTests` (the hold and
+its ordering against captivity, commander loss and the settlement exit) and
+`EnlistmentReconcilerTests` (no park on the aftermath shape, no discharge from inside it, the
+own-mutation guard both ways). Not yet seen in game; smoke items in "Testing".
 
 ### Where we deliberately diverge from ServeAsSoldier
 
@@ -1640,9 +1766,22 @@ What actually remains, each a state no test can reach:
   `duty '<id>' cancelled (captive)`.
 - **The commander-loss modal, the contract waiver, and the wage/promotion gate.** All written
   2026-08-09, none seen. The live session reached `CommanderUnavailable` but before the modal existed.
-- **Formation placement (#443).** The sharpest case is an **Archer** assignment while carrying a melee
-  kit — if the player stands alone behind the ally line rather than among archers, #443 is confirmed
-  visually.
+- **Formation placement and no captaincy (#443, #576).** Enlist at any rank, join a field battle
+  with 20 or more troops on the side: NO deployment screen; the log carries `Order of Battle
+  deployment suppressed`, `battle command stripped at AfterStart`, `joined ... army for the
+  battle` and `soldier placed in the <class> formation`; F1 to F8 answer "There isn't any unit
+  under command"; the commander's formations move; no formation banner is the player's. Repeat with
+  50 or more on the side (the player must stand in his assigned formation, not the general's) and
+  as a siege assault and a siege defence. Control: leave service and fight a battle of the player's
+  own with 20 or more troops; the deployment screen MUST still open. Merge-failed path (#495, a
+  kingdomless commander): `army merge unavailable` and still no screen.
+- **The presence hold at x64 (#577).** Extra Fast Forward multiplier 64, Diagnostics ON: ride with
+  the commander through three or more battles, click "Send troops" in each encounter menu. Expect no
+  exception and no `TICK trigger=army left ... verdict=AttachRequired` line; expect `reconcile
+  skipped (trigger=army left)` or `holding presence` lines instead. The reporting player's log is
+  still wanted: the confirming sequence is `RESTORE ok`, `joined ... army for the battle`, `TICK
+  trigger=army left state=EnlistedBattle verdict=AttachRequired ... hasPlayerEncounter=True`,
+  `PARK ok ... before: mapEvent=True ... after: mapEvent=False`.
 - **A field battle with the commander in an army.** Still the case most likely to fail:
   `FindCommanderPartyIdIn` matches only the commander's own party in `InvolvedParties`, and an
   attached army member may not appear there.
@@ -1722,6 +1861,8 @@ Specifically owed, because each is a state a test structurally cannot reach:
 ## Referenced by
 
 - [docs/features/map-event-guard.md](./map-event-guard.md)
+- [docs/features/return-to-army.md](./return-to-army.md)
+- [docs/features/wanderer-allegiance.md](./wanderer-allegiance.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/configs-balance.md](../modding/configs-balance.md)
 - [docs/modding/equipment-rosters.md](../modding/equipment-rosters.md)

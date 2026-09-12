@@ -31,7 +31,7 @@ public class ServiceAttachmentServiceTests
 
     private static PlayerPresenceSnapshot Player(
         bool parked = false, bool captive = false, bool inMapEvent = false,
-        string settlementId = null)
+        string settlementId = null, bool hasEncounter = false)
     {
         return new PlayerPresenceSnapshot(
             mainPartyExists: true,
@@ -39,7 +39,8 @@ public class ServiceAttachmentServiceTests
             isActive: !parked,
             isVisible: !parked,
             settlementId: settlementId,
-            isInMapEvent: inMapEvent);
+            isInMapEvent: inMapEvent,
+            hasPlayerEncounter: hasEncounter);
     }
 
     private static CommanderSnapshot CommanderIn(string settlementId)
@@ -261,5 +262,91 @@ public class ServiceAttachmentServiceTests
             onTownLeave: true);
 
         Assert.AreEqual(AttachmentStatus.AttachRequired, result.Status);
+    }
+
+    // ---- The presence hold while a battle encounter is live (#577) ----------------------------
+    //
+    // A live PlayerEncounter in EnlistedBattle is the battle itself, its loot and aftermath window
+    // (MapEventSide.Clear() nulls MainParty.MapEvent BEFORE the encounter closes, so the window
+    // reads as "no battle anywhere"), or the join gap between EnsureEncounterAgainst and
+    // JoinBattle. Nothing may move the party there: a park clears AttachedTo, which pulls the
+    // party off its MapEventSide, and "Send troops" then indexes SelectedTroops[-1].
+
+    [TestMethod]
+    public void Assess_EnlistedBattle_LiveEncounter_HoldsPresence()
+    {
+        // The loot-window shape: active and visible (RestorePresence ran), in no map event, the
+        // commander in none either, the encounter still open. This used to be AttachRequired.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedBattle, HealthyCommander(inMapEvent: false),
+            Player(parked: false, hasEncounter: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
+        Assert.AreEqual(AttachmentBlockReason.BattleEncounterOpen, result.BlockReason);
+    }
+
+    [TestMethod]
+    public void Assess_EnlistedBattle_LiveEncounter_OutranksSettlementExit()
+    {
+        // The exit rule sits above the battle branch for the siege-assault reason; it must not sit
+        // above the hold, or an exit-and-park runs on a party that is mid-encounter.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedBattle, HealthyCommander(),
+            Player(parked: false, hasEncounter: true, settlementId: "town_A"), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
+        Assert.AreEqual(AttachmentBlockReason.BattleEncounterOpen, result.BlockReason);
+    }
+
+    [TestMethod]
+    public void Assess_EnlistedBattle_LiveEncounter_OutranksCommanderLoss()
+    {
+        // A commander killed in this very battle: the discharge waits for the encounter to close
+        // instead of running from inside PlayerEncounter.Finish.
+        var dead = new CommanderSnapshot(exists: true, isAlive: false);
+
+        var result = _service.Assess(
+            EnlistmentState.EnlistedBattle, dead,
+            Player(parked: false, hasEncounter: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
+        Assert.AreEqual(AttachmentBlockReason.BattleEncounterOpen, result.BlockReason);
+    }
+
+    [TestMethod]
+    public void Assess_EnlistedBattle_LiveEncounter_DoesNotOutrankCaptivity()
+    {
+        // Captivity is the one thing that outranks the hold: vanilla owns a captive's party.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedBattle, HealthyCommander(),
+            Player(captive: true, hasEncounter: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
+        Assert.AreEqual(AttachmentBlockReason.PlayerCaptive, result.BlockReason);
+    }
+
+    [TestMethod]
+    public void Assess_EnlistedBattle_NoEncounter_NotParked_StillAttachRequired()
+    {
+        // Parity: once the encounter is gone the old verdict stands. This is the shape the #551
+        // stale-latch break leaves behind, and the reconciler still has to re-park it.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedBattle, HealthyCommander(),
+            Player(parked: false, hasEncounter: false), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.AttachRequired, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_EnlistedAttached_LiveEncounter_Unchanged()
+    {
+        // The hold is keyed on EnlistedBattle, not on the encounter alone: since #510 every
+        // settlement placement opens an encounter deliberately, so an open encounter while
+        // Attached is ordinary and keeps its verdict.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached, CommanderIn("town_A"),
+            Player(parked: false, hasEncounter: true, settlementId: "town_A"), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Attached, result.Status);
     }
 }

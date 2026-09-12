@@ -53,6 +53,27 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (player.IsCaptive)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.PlayerCaptive);
 
+        // THE PRESENCE HOLD (#577). A live PlayerEncounter in EnlistedBattle is the battle itself,
+        // its loot and aftermath window, or the join gap between EnsureEncounterAgainst and
+        // JoinBattle. The aftermath window is the trap: MapEventSide.Clear() nulls
+        // MainParty.MapEvent BEFORE the encounter closes, so it reads as "no battle anywhere" to
+        // every rule below and used to fall through to AttachRequired. A park clears AttachedTo,
+        // which pulls an active party off its MapEventSide (MobileParty.SetAttachedToInternal),
+        // and "Send troops" then indexes BattleSimulation.SelectedTroops[-1]. The engine owns the
+        // party until the encounter closes, exactly as it does in captivity.
+        //
+        // ORDER IS LOAD-BEARING. Below captivity: vanilla owns a captive's party outright. Above
+        // commander fitness: a commander killed in this very battle would otherwise reach the
+        // discharge (RestorePresence, LeaveArmy, ClearArmyAttachment) from inside
+        // PlayerEncounter.Finish when the re-entrant "army left" edge fires; the discharge waits one
+        // tick for the encounter to close. Above the settlement exit so an exit-and-park cannot run
+        // either. Keyed on EnlistedBattle, not on the encounter alone: since #510 every settlement
+        // placement opens an encounter deliberately, so an open encounter while Attached is ordinary.
+        // The reconciler's BreakStaleBattleLatch runs BEFORE this assessment and stays the only
+        // deliberate exit from the shape (#551).
+        if (state == EnlistmentState.EnlistedBattle && player.HasPlayerEncounter)
+            return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.BattleEncounterOpen);
+
         // IsPrisoner is checked explicitly even though a captured hero's PartyBelongedTo
         // goes null in practice — the engine correlation is not guaranteed by contract,
         // and this keeps the fitness criteria identical to IsCommanderFit/ReconcileGrace.

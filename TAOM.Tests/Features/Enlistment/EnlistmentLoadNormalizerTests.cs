@@ -21,6 +21,7 @@ public class EnlistmentLoadNormalizerTests
     private EnlistmentStateMachine _machine = null!;
     private ICommanderLordAdapter _commander = null!;
     private IMobilePartyAttachmentAdapter _partyAdapter = null!;
+    private IEncounterAdapter _encounter = null!;
     private EnlistmentLoadNormalizer _normalizer = null!;
 
     private const double Now = 200.0;
@@ -36,14 +37,18 @@ public class EnlistmentLoadNormalizerTests
         _partyAdapter.RestorePresence().Returns(true);
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
+        // ONE encounter adapter for the normalizer and the reconciler, as the container has one
+        // singleton: a fixture that hands each its own substitute lets the two disagree about
+        // whether an encounter is open, which the game cannot do.
+        _encounter = Substitute.For<IEncounterAdapter>();
         var attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
-        var discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
+        var discharge = new DischargeService(_store, _machine, _partyAdapter, _encounter, new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
         var reconciler = new EnlistmentReconciler(_store, _machine, attachment, _commander, discharge,
-            new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
+            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
             Substitute.For<IArmyMembershipAdapter>(), _logger);
         _normalizer = new EnlistmentLoadNormalizer(
-            _store, _machine, reconciler, _partyAdapter, discharge, _logger);
+            _store, _machine, reconciler, _partyAdapter, discharge, _encounter, _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -59,10 +64,78 @@ public class EnlistmentLoadNormalizerTests
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true));
     }
 
-    private void Presence(bool parked, bool captive = false)
+    private void Presence(bool parked, bool captive = false, bool inMapEvent = false,
+        bool hasEncounter = false, string settlementId = null)
     {
         _partyAdapter.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
-            mainPartyExists: true, isCaptive: captive, isActive: !parked, isVisible: !parked));
+            mainPartyExists: true, isCaptive: captive, isActive: !parked, isVisible: !parked,
+            isInMapEvent: inMapEvent, hasPlayerEncounter: hasEncounter, settlementId: settlementId));
+    }
+
+    private void OpenEncounter(bool isBattle)
+    {
+        _encounter.HasCurrent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: isBattle,
+            encounteredPartyId: isBattle ? "enemy_lord_party" : null, encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false, playerInsideSettlement: !isBattle, isBattleEncounter: isBattle));
+    }
+
+    // ---- The save coercion: EnlistedBattle persists as EnlistedAttached (#577) -----------------
+    //
+    // EnlistmentRecord.ToPersistedState writes EnlistedBattle as EnlistedAttached on the grounds
+    // that battle reality is re-derived at load. These pin that re-derivation, which did not exist
+    // before 2026-09-12: without it every gate keyed on EnlistedBattle (the deployment-screen
+    // model, the role strip, the placement, the presence hold) reads the wrong state for the
+    // battle the player saved in.
+
+    [TestMethod]
+    public void Normalize_SavedAtTheEncounterMenu_PartyStillInTheMapEvent_RestoresBattleState()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: true, hasEncounter: true);
+        OpenEncounter(isBattle: true);
+
+        _normalizer.Normalize("main_hero", Now);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Normalize_SavedInTheAftermath_BattleEncounterStillOpen_RestoresBattleStateAndHoldsPresence()
+    {
+        // The map event is already gone (MapEventSide.Clear() runs before the encounter closes),
+        // the encounter's own battle handle is not. Without the re-derivation this reloads as an
+        // active, unparked Attached soldier, Assess says AttachRequired, and the reconciler parks
+        // the party out of its live encounter: #577's crash shape, reached by reload.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: false, hasEncounter: true);
+        OpenEncounter(isBattle: true);
+
+        _normalizer.Normalize("main_hero", Now);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Normalize_SavedInsideASettlement_EncounterIsNotABattle_StaysAttached()
+    {
+        // Since #510 every settlement placement opens an encounter deliberately. An open encounter
+        // alone must not read as a battle, or every town stop would reload as EnlistedBattle.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            partyIsInSettlement: true, settlementId: "town_A"));
+        Presence(parked: false, inMapEvent: false, hasEncounter: true, settlementId: "town_A");
+        OpenEncounter(isBattle: false);
+
+        _normalizer.Normalize("main_hero", Now);
+
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
     }
 
     [TestMethod]

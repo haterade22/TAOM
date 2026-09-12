@@ -45,6 +45,13 @@ public enum AttachmentBlockReason
 
     /// <summary>Commander missing/dead/party-less — the reconciler moves to CommanderUnavailable.</summary>
     CommanderPartyMissing = 4,
+
+    /// <summary>
+    /// The battle's own PlayerEncounter is live while the state is EnlistedBattle: the fight, its
+    /// loot and aftermath window, or a join in flight. The engine owns the party until it closes;
+    /// a park here clears AttachedTo, which pulls the party off its MapEventSide (#577).
+    /// </summary>
+    BattleEncounterOpen = 5,
 }
 
 /// <summary>Result of the single pure attachment computation that replaced the donor's five overlapping predicates.</summary>

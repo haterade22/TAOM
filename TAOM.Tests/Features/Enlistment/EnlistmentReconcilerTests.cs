@@ -614,6 +614,101 @@ public class EnlistmentReconcilerTests
         Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
     }
 
+    // ---- The presence hold while a battle encounter is live (#577) ----------------------------
+
+    /// <summary>
+    /// The loot and aftermath window as the game actually presents it: EnlistedBattle, the party
+    /// active and visible (RestorePresence ran at the join), in no map event, the commander in
+    /// none either, and the PlayerEncounter still open, read the same way by the presence snapshot
+    /// and by the encounter adapter (both are PlayerEncounter.Current != null in the real adapters).
+    /// </summary>
+    private void BattleAftermathWindow()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: false, inMapEvent: false, hasEncounter: true);
+        _encounter.HasCurrent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false, playerInsideSettlement: false, isBattleEncounter: true));
+    }
+
+    [TestMethod]
+    public void Reconcile_BattleAftermathEncounter_DoesNotReParkTheActivePlayer()
+    {
+        // The test above pins the STATE and nothing else; the park it never asserted against is
+        // the #577 detach. ParkNear clears AttachedTo, which pulls the party off its MapEventSide,
+        // and "Send troops" then indexes SelectedTroops[-1] (BattleSimulation.cs:62).
+        BattleAftermathWindow();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void Reconcile_BattleAftermathEncounter_CommanderDied_NeitherRestoresNorDischarges()
+    {
+        // A commander killed in this very battle. The hold outranks commander fitness on purpose:
+        // otherwise the discharge (RestorePresence, LeaveArmy, ClearArmyAttachment) would run from
+        // inside PlayerEncounter.Finish when the re-entrant "army left" edge fires. It waits for
+        // the encounter to close; the next pass sees the dead commander and discharges then.
+        BattleAftermathWindow();
+        CommanderDead();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _partyAdapter.DidNotReceive().RestorePresence();
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+        Assert.IsTrue(_store.Record.IsEnlisted, "the discharge must wait for the encounter to close");
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void Reconcile_BattleAftermathEncounter_DoesNotLogTheUnhandledReasonError()
+    {
+        // ReconcileBlocked fails loudly on a reason it does not know. The new reason needs its own
+        // arm, or every loot screen logs an ERROR that reads like a fault.
+        BattleAftermathWindow();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _logger.DidNotReceive().LogError(Arg.Is<string>(s => s.Contains("unhandled attachment block reason")));
+    }
+
+    [TestMethod]
+    public void ReconcileNow_DuringOurOwnArmyMutation_DoesNothing()
+    {
+        // ArmyMembershipAdapter.LeaveArmy and CreateArmyLedBy disband the army they raised, which
+        // sets Army = null on the commander's party, which dispatches OnPartyLeftArmy, which is the
+        // "army left" edge this reconciler subscribes. That pass runs from INSIDE the join or
+        // inside PlayerEncounter.Finish, on half-mutated adapter state. It must not run at all.
+        BattleAftermathWindow();
+        _army.IsMutating.Returns(true);
+
+        _reconciler.ReconcileNow(Now, "army left");
+
+        _partyAdapter.DidNotReceive().GetPresence(Arg.Any<string>());
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+        _commander.DidNotReceive().GetSnapshot(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileNow_CommanderLeftAVanillaArmy_StillReconciles()
+    {
+        // The edge the subscription exists for: the commander's real army disbanded under him.
+        MakeEnlisted();
+        CommanderHealthy();
+        PlayerPresence(parked: false);
+        _army.IsMutating.Returns(false);
+
+        _reconciler.ReconcileNow(Now, "army left");
+
+        _partyAdapter.Received().ParkNear(Arg.Any<string>());
+    }
+
     [TestMethod]
     public void Reconcile_CommanderFightingPlayerIsNot_RaisesBattleJoinRequested()
     {

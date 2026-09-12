@@ -24,6 +24,12 @@ public sealed class ArmyMembershipAdapter : IArmyMembershipAdapter
     /// </summary>
     private Army _createdArmy;
 
+    /// <summary>
+    /// Depth of Join/Leave calls in flight. A counter rather than a bool so a nested call cannot
+    /// clear the flag early; <see cref="IsMutating"/> is what the reconciler reads (#577).
+    /// </summary>
+    private int _mutationDepth;
+
     public ArmyMembershipAdapter(IModLogger logger)
     {
         _logger = logger;
@@ -38,8 +44,11 @@ public sealed class ArmyMembershipAdapter : IArmyMembershipAdapter
         }
     }
 
+    public bool IsMutating => _mutationDepth > 0;
+
     public bool JoinCommanderArmy(string commanderHeroId)
     {
+        _mutationDepth++;
         try
         {
             var main = MobileParty.MainParty;
@@ -80,10 +89,15 @@ public sealed class ArmyMembershipAdapter : IArmyMembershipAdapter
             _logger?.LogError($"[Enlistment] JoinCommanderArmy('{commanderHeroId}') failed: {ex.Message}");
             return false;
         }
+        finally
+        {
+            _mutationDepth--;
+        }
     }
 
     public bool LeaveArmy()
     {
+        _mutationDepth++;
         try
         {
             var main = MobileParty.MainParty;
@@ -122,6 +136,10 @@ public sealed class ArmyMembershipAdapter : IArmyMembershipAdapter
         {
             _logger?.LogError($"[Enlistment] LeaveArmy failed: {ex.Message}");
             return false;
+        }
+        finally
+        {
+            _mutationDepth--;
         }
     }
 

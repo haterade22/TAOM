@@ -15,7 +15,10 @@ namespace TAOM.Adapters;
 /// Joining the commander's army for the duration of a battle satisfies
 /// <c>PartyAgentOrigin.IsInSameArmyAsPlayer</c>, which collapses both onto <c>PlayerTeam</c> — same
 /// team, same formations, same deployment block. It also makes <c>MapEvent.IsPlayerSergeant()</c>
-/// true, so vanilla derives the battle roles TAOM currently hand-maintains.
+/// true, which has TWO consumers: vanilla wires the player as a sergeant (TAOM overwrites that
+/// with neither role at <c>AfterStart</c>), and <c>SandboxBattleInitializationModel</c> would open
+/// the Order of Battle deployment screen, which <c>TaomBattleInitializationModel</c> keeps shut
+/// for an enlisted soldier (#576).
 ///
 /// TRANSIENT, and the boundary is not a style choice.
 /// <c>PlayerEncounter.FinishEncounterInternal</c> grants the post-defeat escape —
@@ -53,6 +56,15 @@ public interface IArmyMembershipAdapter
 
     /// <summary>True while the main party belongs to any army.</summary>
     bool IsInArmy { get; }
+
+    /// <summary>
+    /// True for the duration of <see cref="JoinCommanderArmy"/> and <see cref="LeaveArmy"/>.
+    /// Both may disband the army this adapter raised, and <c>Army.DisperseInternal</c> sets
+    /// <c>Army = null</c> on the commander's party, whose setter dispatches
+    /// <c>OnPartyLeftArmy</c>: the very edge the enlistment reconciler subscribes. The reconciler
+    /// reads this to refuse a pass raised from inside our own mutation (#577).
+    /// </summary>
+    bool IsMutating { get; }
 
     /// <summary>
     /// Forget the created-army handle. MUST be called on game load: it is an in-memory

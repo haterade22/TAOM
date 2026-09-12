@@ -11,6 +11,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
     private readonly IEnlistmentReconciler _reconciler;
     private readonly IMobilePartyAttachmentAdapter _partyAdapter;
     private readonly IDischargeService _discharge;
+    private readonly IEncounterAdapter _encounter;
     private readonly IModLogger _logger;
 
     public EnlistmentLoadNormalizer(
@@ -19,6 +20,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
         IEnlistmentReconciler reconciler,
         IMobilePartyAttachmentAdapter partyAdapter,
         IDischargeService discharge,
+        IEncounterAdapter encounter,
         IModLogger logger)
     {
         _store = store;
@@ -26,6 +28,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
         _reconciler = reconciler;
         _partyAdapter = partyAdapter;
         _discharge = discharge;
+        _encounter = encounter;
         _logger = logger;
     }
 
@@ -76,7 +79,38 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
             return;
         }
 
+        // BATTLE RE-DERIVATION (#577). EnlistmentRecord.ToPersistedState coerces EnlistedBattle to
+        // EnlistedAttached on save, on the stated grounds that battle reality is re-derived at load.
+        // Until 2026-09-12 that re-derivation did not exist. A save taken at the encounter menu
+        // between the join and the mission, or during the loot and aftermath window, therefore
+        // reloaded as an Attached soldier who is still in the map event (or whose battle encounter
+        // is still open), and every gate keyed on EnlistedBattle then read the wrong state: the
+        // deployment-screen model and the role strip deferred to vanilla for that battle (#576
+        // again), and the presence hold in Assess did not fire, so the reconciler parked the party
+        // out of its live encounter (#577 again, via reload instead of x64).
+        //
+        // Matrix rows: Attached + in a map event -> Battle; Attached + a live BATTLE encounter
+        // (PlayerEncounter.Battle still set, the aftermath window) -> Battle; Attached + a
+        // settlement encounter (#510 opens one on every placement, not a battle) -> unchanged.
+        // EnlistedAttached -> EnlistedBattle is the join's own edge, so it is legal here.
+        if (record.State == EnlistmentState.EnlistedAttached && IsMidBattle(presence))
+        {
+            _logger?.LogInfo("[Enlistment] load: the record reads EnlistedAttached but the party is still in its battle (the save coerced EnlistedBattle away); restoring EnlistedBattle before the reconcile (#577)");
+            _machine.TryTransition(EnlistmentState.EnlistedBattle);
+        }
+
         // Everything else IS the hourly reconciliation problem — one authority, run now.
         _reconciler.ReconcileHourly(nowDays);
+    }
+
+    private bool IsMidBattle(PlayerPresenceSnapshot presence)
+    {
+        if (presence.IsInMapEvent)
+            return true;
+
+        // The encounter's own battle handle outlives the map event through the aftermath
+        // (MapEventSide.Clear() nulls MainParty.MapEvent BEFORE the encounter closes), which is
+        // exactly the window the presence hold protects. Ownership policy R1b reads the same bit.
+        return presence.HasPlayerEncounter && _encounter.GetOwnership(null).IsBattleEncounter;
     }
 }
