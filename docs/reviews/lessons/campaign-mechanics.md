@@ -375,6 +375,31 @@ unrelated election later because nothing expired it.
 - **Source:** `docs/reviews/rca-fiefgranting-participation-2026-09-11.md`, #565 diagnosis and Codex
   F2 and F3.
 
+### "In an army" is two states, and vanilla's settlement menus only handle the merged one
+
+`MobileParty.Army != null` says the party belongs to an army. `AttachedTo != null` says it has
+physically merged into the leader's stack. Vanilla's `PlayerTownVisitCampaignBehavior` keys on the
+first and assumes the second: "Leave" is hidden for every non-leader member (:994-1006), and
+"Return to Army" (:368-376) switches to the army wait menu and leaves only for a village. For a
+merged member that is right, since the leader's own `LeaveSettlementAction` (:13-26) finishes the
+player's encounter when the army moves. For a member who is NOT merged the wait menu's first tick
+re-routes through `GetGenericStateMenu()` to "You are waiting in X" (foreign faction, :295-298) or
+to a wait nothing ends (own faction, :291-294), and the town has no exit. TAOM's Player Switcher
+takeover inherits exactly that unmerged state from any lord marching to join an army (#566).
+- **Why missed:** the report read as "the option waits instead of leaving", which sounded like a
+  time-control or menu bug, and both of those have TAOM history (`taom.time_status`, the camps
+  freeze). The first hour went to ruling TAOM out. The real question was one property read away:
+  is the party ATTACHED, or merely a member? The vanilla flow for the unmerged case had never been
+  traced because vanilla itself reaches it only through one conversation line.
+- **Prevent:** when a player says they are "in an army", ask which of the two states before reading
+  any menu code; the answer picks the whole flow. When a TAOM feature changes who the player IS
+  (Player Switcher, enlistment, co-op), enumerate the party-level state the new identity brings
+  with it (`Army`, `AttachedTo`, `CurrentSettlement`, `MapEvent`, AI behaviour) and ask what vanilla
+  offers a player in each combination, not just what it offers the character-creation player. The
+  fix for a vanilla dead end is a prefix that runs vanilla's own exit for the one row that traps,
+  never a replacement of the whole method (`Patch87_ReturnToArmy`).
+- **Source:** #566, `docs/features/return-to-army.md`.
+
 ### A wait menu's condition delegate hides EVERY option, Leave included, and nothing exits the menu when it turns false
 
 `GameMenu.GetMenuOptionConditionsHold` (1.4.8) evaluates a wait-menu option as

@@ -123,6 +123,18 @@ Not run in game. Two Gondor troop names changed under existing loc keys and leav
 translations (#572). The assets-repo mirror of this module should be re-synced from here; his base
 had drifted on four files.
 
+### docs(release): the fortnight changelog, written for Discord
+
+The August monthly post stops at v2.0.23 and the v2.0.25 note covers one release, so nothing had
+told players about v2.0.24 to v2.0.28 or the fixes on trunk since. `docs/releases/2026-09-12-fortnight-discord.md`
+is one paste-ready message under the 4,000 character cap: nine released items, twenty-odd on trunk
+waiting on an in-game smoke, and the Armoury and map work from `lotraom-assets` (Erkam, Solus).
+Every bullet traces to an issue or commit in the table under the post. Items the August and v2.0.25
+posts already carried are left out. Two things found on the way and not fixed here: `lotraom-assets`
+`v1.4/TAOM/ModuleData` has diverged from this repo (`d7d5f75b` rewrites the Gondor, Rhûn and Umbar
+troop files this repo last touched on 2026-09-06), and both `TAOM_Map` and `LOTRLOME_Armory` still
+declare v2.0.23 in `SubModule.xml`.
+
 ### fix(camps): refuge founding no longer strands the player in a dead camp wait menu (#567)
 
 Players who founded a refuge and deposited troops into its garrison came back to a camp menu that
@@ -171,6 +183,52 @@ is live. A second P2 is pre-existing in Enlistment (the same wait-menu shape; a 
 runs before the menu context exists), filed as #573. The two source pins were hardened after a P3
 showed they accepted a commented-out exit. Suite after the follow-up: 8599 passed / 2 skipped /
 0 failed.
+
+### fix(army): "Return to Army" leaves the town when the army is not there (#566)
+
+Playing a lord taken over through Player Switcher, a member of an army, the player walked into
+Orthanc and clicked "Return to Army". The game showed "You are waiting in Orthanc", whose only
+button leads back to the town menu, and the town menu has no "Leave" for an army member. No exit.
+
+All of that is vanilla, verified on the installed v1.4.8 `PlayerTownVisitCampaignBehavior`. The
+option's consequence (:368-376) switches to the `army_wait_at_settlement` wait menu and leaves the
+settlement only for a village; `game_menu_town_town_leave_on_condition` (:994-1006) hides "Leave"
+for every non-leader member. Vanilla built that for a member MERGED into the army
+(`AttachedTo != null`), where the army rests in the town and the leader's departure finishes the
+player's encounter. A member who is in the army but NOT merged (`Army != null`, `AttachedTo == null`)
+gets the wait menu's first tick instead, which `GetGenericStateMenu()` turns into "You are waiting
+in X" in a foreign-faction town (:295-298) or a wait nothing ends in an own-faction one (:291-294).
+The takeover is how the player got there: it inherits the lord's `Army` untouched, and a lord
+marching to join an army is exactly that state. Vanilla reaches it through the "we will wait for
+other parties around X, then follow us" line. TAOM code on the path was ruled out first (no patch
+on the behaviours involved, no `EncounterGameMenuModel` override, the enlistment redirect gated off
+before its table).
+
+`Patch87_ReturnToArmy` prefixes the consequence. A pure `ReturnToArmyRules.Decide` runs vanilla for
+every row but one: not in an army or its leader (the option is hidden anyway), merged into the army
+(wait with it), village (vanilla already leaves). For an unattached member in a town or castle it
+replicates vanilla's own "Leave" (:1054-1068): gate position, `LeaveSettlement`, `Finish`,
+`SetMoveModeHold`, autosave signal. Nothing writes `Army`; the player stays a member and steers back
+on their own (auto-marching to the leader was offered and declined). A throw before the first
+mutation defers to vanilla and logs; a throw after it skips vanilla, because vanilla's :371 would
+then dereference the `CurrentSettlement` the leave just nulled.
+
+Tests: `Patch87ReturnToArmyTests` (12) covers all sixteen decision inputs and pins the target, its
+condition, call presence in the vanilla body, every engine member the leave touches, the three-place
+registration and, by IL scan, the prefix's own calls. `CoopVetoClassificationTests` carries the new
+bool prefix as `ReviewedSafe`. Docs: `docs/features/return-to-army.md`, registry, feature map, index,
+doc lookup, a Player Switcher section on inherited army membership, and a campaign-mechanics lesson.
+Deep review (five agents): no HIGH or MEDIUM; two LOW fixed in-session (the error-path boundary sat
+one statement early, and two locals gained their nullable annotation) and the time-stop mechanism
+after the leave written down. RCA `docs/reviews/rca-return-to-army-2026-09-12.md`, with one new
+lesson in `lessons/harmony-il.md`. Full suite 8595 green plus the known banner-bearer data
+failure. Codex (GPT-6-Astra at ultra, review 98): no P1 or P2, two P3 observations, both taken
+(the co-op rationale claimed peer agreement the asynchronous replication cannot promise, now a
+same-integration-as-vanilla argument with two-peer play marked unverified; the IL drift guards pin
+call presence, not branch shape, so the engine-bump re-read is now written into the registry). It
+also disputed the prompt's own double-leave hypothesis and found CoopNightly patches the game-menu
+time writes out, so "paused afterwards" is single-player only. Owed: the five in-game smokes listed
+in the feature doc, then close #566.
 
 ## 2026-09-11
 
