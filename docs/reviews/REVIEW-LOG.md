@@ -6,6 +6,7 @@ Running scorecard of all reviews. **Reviews 1-96, 2026-04-05 to 2026-09-11.** 91
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 99 | 2026-09-12 | Camp wait menu dead after refuge founding (#567): wait condition `true`, founding exits before the deposit screen, then the Codex fix (paused picker + context revalidation) | issues-found (0 P1 / 2 P2 / 1 P3) | agree | 1 confirmed P2 on the fix (the unpaused picker let an incoming enemy's `encounter_meeting` become the menu the new exit destroyed); 1 pre-existing P2 filed as #573 (Enlistment load-time discharge leaves the persisted service menu with a false wait condition); 1 P3 (source pins accepted `args => true && false` and a commented-out exit) | 0 | 0 | v6 + 8 Known Suspects, GPT-6-Astra at ultra |
 | 1 | 2026-04-05 | CulturalFeats | no-ship | partial-agree | 1 confirmed | 1 | 2 | v1 (basic) |
 | 2 | 2026-04-05 | BannerColorPersistence | no-ship | partial-agree | 1 (understated) | 2 | 4 | v2 (improved) |
 | 3 | 2026-04-05 | ArmyTargeting | approve | agree (shallow) | 0 | 0 | 0 | v3 (required sections) |
@@ -2583,6 +2584,51 @@ Suite: 17/17 on the ReturnToArmy + CoopVeto filter; 8597 of 8600 on the full sui
 `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, is the known live-Armory drift).
 RCA: [rca-return-to-army-2026-09-12.md](rca-return-to-army-2026-09-12.md). Feature doc:
 [return-to-army.md](../features/return-to-army.md).
+
+## Review 99: camp wait menu dead after refuge founding (#567), 5-agent deep-review and a Codex pass on GPT-6-Astra at ultra (2026-09-12)
+
+Players who founded a refuge and deposited its garrison came back to "Choose how to make camp
+here." with no options, time controls alive, and a save that loaded straight back into it. The
+root cause is an engine rule the 2026-08-25 wait-menu fix did not know: a wait menu's condition
+delegate is ANDed with every option's own condition, Leave included, and nothing exits the menu
+when it turns false; the camp sub-menu gated it on `PlayerCamp != null`, and refuge founding is
+the one option on that menu that removes the camp and stays. Fix `4d2ea82b`: the condition is
+`true` (which also rescues stuck saves on load) and founding exits the menu before the deposit
+screen.
+
+**Deep review, five agents, no code findings.** Compatibility verified six engine claims on the
+installed DLL, including a vanilla precedent for `GameMenu.ExitToLast` from an inquiry callback
+(`EncounterGameMenuBehavior` through `PlayerEncounter.Finish`). Data flow walked every option on
+both camp menus and every `BreakPlayerCamp` caller, and traced every enlistment-ending path to
+`DischargeService.ExitServiceMenuIfOpen`. The one finding was process: a `git add` of the shared
+lessons file swept in another session's lesson; repaired through the index before the commit.
+
+**Codex, GPT-6-Astra at ultra: P1 0 / P2 2 / P3 1, zero false positives, eight suspects answered
+from the installed DLLs (three disputed, all correctly).** F1 (P2, on the fix): the warden picker
+ran unpaused (`ShowMultiSelectionInquiry` defaults `pauseGameActiveState` to false) and the query
+layer stays usable over a map conversation, so an enemy reaching the camp could replace
+`taom_fc_camp` with `encounter_meeting` under the picker; confirming then ran `Found` and the new
+exit against the ENEMY's menu, and the conversation's end had no menu to switch into the
+encounter from. Fixed in the follow-up commit: the picker pauses (vanilla's AlleyHelper shape) and
+`OnWardenChosen` refuses, before `ResolveWarden`, unless the current menu is still the camp
+sub-menu and no encounter is live; both pinned. F2 (P2, pre-existing): Enlistment's service wait
+menu carries the same `IsEnlisted` condition, and a load-time discharge runs before `MapState`
+exists, so the runtime exit sees no context and the persisted menu id re-enters with a false
+condition; the Patch66 redirects refuse the service id and any non-attached state. Filed as #573.
+O1 (P3): both source pins accepted `args => true && false` and a commented-out exit; slices are
+comment-stripped now and pin the whole argument or statement.
+
+**What Codex did well.** It asked what can change while a modal waits, which no in-house agent
+and not the author asked; it refuted the deep review's Enlistment trace by following the
+persisted menu id past the runtime check into the load order (`Campaign.OnLoadFinished` before
+`SandBoxGameManager.OnLoadFinished`); and it executed the test slices in memory against mutated
+sources instead of reading them.
+
+Prompt: [codex-adversarial-camp-wait-menu-2026-09-12.prompt.md](codex-adversarial-camp-wait-menu-2026-09-12.prompt.md).
+Suite after the follow-up: 8599 passed / 2 skipped / 0 failed (the banner-bearer drift was repaired
+by #568 in between). RCA: Class 12 and its Codex table in
+`docs/reviews/rca-yotthani-camps-2026-08-23.md`. Owed: the in-game founding walk, a stuck save
+loaded on the fix build, a release.
 
 ## Unlinked review artefacts (index)
 

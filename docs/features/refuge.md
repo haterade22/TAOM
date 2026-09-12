@@ -161,6 +161,13 @@ disagrees.
   camp menu whose camp `Found` had just broken rendered a panel with no options and no exit,
   persisted into the save (v2.0.24 to v2.0.28). Keep the `ExitToLast` ahead of
   `OpenScreenAsManageTroopsAndPrisoners`; `RefugeWiringTests` pins the order.
+- The warden picker opens PAUSED (`pauseGameActiveState: true`, vanilla's AlleyHelper shape) and
+  `OnWardenChosen` refuses unless the current menu is still `taom_fc_camp` and no encounter is
+  live, before `ResolveWarden` can promote anyone (Codex review 98, F1). Unpaused, an incoming
+  enemy replaced the camp menu with `encounter_meeting` under the picker (the query layer stays
+  usable over a map conversation), and the post-founding exit then destroyed the ENEMY's menu:
+  the conversation's end had no menu to switch to the encounter from. Keep both belts;
+  `RefugeWiringTests` pins them.
 
 ## Known limitations
 

@@ -399,3 +399,26 @@ there (#567, every release from v2.0.24 to v2.0.28).
   the same `IsEnlisted` delegate and is on the audit list.
 - **Source:** #567, `docs/features/field-camp.md` "Menus and time", `docs/features/refuge.md`
   Traps, `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 12.
+
+### A modal opened from a game menu must pause the game, and its callback must revalidate the menu it came from
+
+`MBInformationManager.ShowMultiSelectionInquiry` and `InformationManager.ShowInquiry` default
+`pauseGameActiveState` to false, and the query layer (order 19501) stays usable over anything the
+map pushes underneath, including the conversation an incoming enemy opens. The warden picker ran
+unpaused; a bandit party reaching the camp replaced `taom_fc_camp` with `encounter_meeting` under
+it, and confirming then ran `Found` and `GameMenu.ExitToLast()` against the ENEMY's menu.
+`ExitToLast` exits whatever context is current, and with it gone the conversation's end had no
+menu to switch to the encounter from (Codex review 98, F1; the #567 follow-up commit).
+
+- **Why missed:** the fix that added the exit reasoned about the menu the picker was opened from,
+  not about the menu that would be current when the callback fired. Five review agents and the
+  author all walked "confirm, then exit"; none asked what can change while a modal waits. Vanilla's
+  own pickers from game menus pass `pauseGameActiveState: true` (AlleyHelper).
+- **Prevent:** pass `pauseGameActiveState: true` on any inquiry opened from a game menu whose
+  callback mutates state or navigates menus, and make the callback refuse, before anything
+  irreversible, when `CurrentMenuId` is no longer the originating menu or an encounter is live.
+  Pin both beside the test that pins the exit. The pause is safe with a screen push inside the
+  callback: the query manager registers and unregisters its disable request against its own
+  instance (`GauntletQueryManager.HandleQueryCreated/Closed`, installed 1.4.8).
+- **Source:** `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 12 (Codex table),
+  `docs/reviews/REVIEW-LOG.md` Review 98, `RefugeMenuController.OnWardenChosen`.

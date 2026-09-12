@@ -97,6 +97,18 @@ Suite: 8597 passed / 2 skipped / 1 failed. The failure is
 `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded` (`wm_gondor_sword_a04` missing from
 the live Armory, noted 2026-09-11), a data test this change does not touch.
 
+Codex pass (review 99, GPT-6-Astra at ultra, same day): one P2 on the fix itself, fixed in the
+follow-up commit. The warden picker ran unpaused (`ShowMultiSelectionInquiry` defaults to not
+pausing) and the query layer stays usable over a map conversation, so an enemy reaching the camp
+could replace the menu with `encounter_meeting` under the picker; confirming then ran `Found` and
+the new exit against the enemy's menu, and the conversation's end had no menu to switch into the
+encounter from. The picker now pauses the game (vanilla's alley picker shape) and `OnWardenChosen`
+refuses, before any promotion, unless the current menu is still the camp sub-menu and no encounter
+is live. A second P2 is pre-existing in Enlistment (the same wait-menu shape; a load-time discharge
+runs before the menu context exists), filed as #573. The two source pins were hardened after a P3
+showed they accepted a commented-out exit. Suite after the follow-up: 8599 passed / 2 skipped /
+0 failed.
+
 ## 2026-09-11
 
 ### fix(fiefs): siege participation replaces the capturer stamp, and the player is scored like any clan (#565)

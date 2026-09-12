@@ -229,6 +229,10 @@ public sealed class RefugeMenuController
             elements.Add(new InquiryElement(candidate, title, null));
         }
 
+        // PAUSED, like vanilla's alley-leader picker (AlleyHelper, pauseGameActiveState: true): the
+        // default is false, and with campaign time running under the picker an incoming enemy
+        // could replace this menu with encounter_meeting before the player confirmed (Codex
+        // review 98, F1). The callback below revalidates the context as the second belt.
         MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
             titleText: new TextObject("{=taom_rf_warden_title}Assign a Warden").ToString(),
             descriptionText: new TextObject(
@@ -240,13 +244,25 @@ public sealed class RefugeMenuController
             affirmativeText: new TextObject("{=taom_rf_confirm}Confirm").ToString(),
             negativeText: new TextObject("{=taom_rf_cancel}Cancel").ToString(),
             affirmativeAction: OnWardenChosen,
-            negativeAction: _ => { }));
+            negativeAction: _ => { }), pauseGameActiveState: true);
     }
 
     private void OnWardenChosen(List<InquiryElement> selected)
     {
         if (selected == null || selected.Count == 0 || !(selected[0].Identifier is WardenCandidate candidate))
             return;
+
+        // Revalidate the ORIGINATING CONTEXT before anything irreversible. The exit after Found
+        // targets whatever menu is current, and a modal can outlive the menu it was opened from:
+        // with the picker unpaused, an incoming enemy replaced this menu with encounter_meeting
+        // underneath it, and confirming then destroyed the ENEMY's menu, leaving a live encounter
+        // with no menu transition (Codex review 98, F1). Refuse here, before ResolveWarden can
+        // promote a soldier and before Found can spend anything.
+        if (_encounters.HasCurrent || _menus.CurrentMenuId != FieldCampCampaignBehavior.CampSubMenuId)
+        {
+            Warn(new TextObject("{=taom_rf_reason_blocked}You cannot do that here."));
+            return;
+        }
 
         // Re-check the gate before resolving: ResolveWarden may PROMOTE a soldier into a
         // companion, and founding must not be able to fail (gold spent elsewhere while the picker

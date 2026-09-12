@@ -235,6 +235,15 @@ entry from HEAD plus this session's lesson only. Rule reinforced: before `git ad
 append-shared file (lessons, CHANGELOG, CLAUDE.md, registries), run `git diff -- <file>` and stage
 through the index when it shows a hunk that is not yours.
 
+Codex pass on the fix (review 98, GPT-6-Astra at ultra, 2026-09-12): eight suspects answered with
+installed-DLL decompiles, three findings, zero false positives.
+
+| # | Sev | Finding | Why missed | Preventive action |
+|---|---|---|---|---|
+| F1 | P2 | The warden picker ran unpaused (`ShowMultiSelectionInquiry` defaults `pauseGameActiveState` to false) and the query layer stays usable over a map conversation, so an enemy reaching the camp replaced `taom_fc_camp` with `encounter_meeting` under the picker; confirming then ran `Found` and the new `ExitToLast()` against the ENEMY's menu, and the conversation's end had no menu to switch to the encounter from. | The fix reasoned about the menu the picker was opened from, not the menu current when the callback fires; five agents and the author walked "confirm, then exit" and nobody asked what can change while a modal waits. | Picker paused (vanilla's AlleyHelper shape); `OnWardenChosen` refuses before `ResolveWarden` when `CurrentMenuId` is not the camp sub-menu or an encounter is live; both pinned in `RefugeWiringTests`; campaign-mechanics lesson. |
+| F2 | P2, pre-existing | Enlistment's service wait menu carries the same `IsEnlisted` condition; a load-time discharge (feature toggled off, identity mismatch) runs before `MapState` exists, so `ExitServiceMenuIfOpen` sees no context and the persisted menu id re-enters with a false condition. The Patch66 redirects refuse the service id and any non-attached state. | The deep review traced every runtime discharge to the exit and stopped; the persisted id is a second copy of "which menu" that the runtime check never reads. | Filed as #573 with the load-order proof; fix direction is clearing the persisted id (or repairing after map entry) plus a pin on the persisted id. |
+| O1 | P3 | Both source pins accepted `args => true && false` and a commented-out exit. | Token presence was pinned instead of the statement. | Slices are comment-stripped; the FieldCamp pin asserts the whole argument with its trailing comma, the Refuge pin the full statement. |
+
 ## Where each class was caught, honestly
 
 Round A's no-narrative design earned its cost: Classes 3 and 6 are structurally invisible to a

@@ -147,14 +147,30 @@ public class FieldCampWiringTests
         Assert.IsTrue(start >= 0, "the camp sub-menu is no longer registered with AddWaitGameMenu");
         int end = src.IndexOf(");", start, StringComparison.Ordinal);
         Assert.IsTrue(end > start, "could not find the end of the AddWaitGameMenu call");
-        var call = src.Substring(start, end - start);
+        // Comment-stripped, and the WHOLE argument (with its trailing comma): `args => true && false`
+        // kept the token and passed the first version of this pin (Codex review 98, O1).
+        var call = StripLineComments(src.Substring(start, end - start));
 
-        StringAssert.Contains(call, "args => true",
-            "the wait-menu condition must be unconditionally true; anything else hides every option "
+        StringAssert.Contains(call, "args => true,",
+            "the wait-menu condition must be exactly `args => true`; anything else hides every option "
             + "(Leave included) the moment it turns false");
         Assert.IsFalse(call.Contains("PlayerCamp"),
             "the wait-menu condition gates on the camp again; breaking the camp while the sub-menu "
             + "is open (refuge founding does exactly that) strands the player with no options and no exit");
+    }
+
+    private static string StripLineComments(string text)
+    {
+        var kept = new System.Text.StringBuilder(text.Length);
+        foreach (var rawLine in text.Split('\n'))
+        {
+            var line = rawLine;
+            int comment = line.IndexOf("//", StringComparison.Ordinal);
+            if (comment >= 0)
+                line = line.Substring(0, comment);
+            kept.Append(line).Append('\n');
+        }
+        return kept.ToString();
     }
 
     [TestMethod]

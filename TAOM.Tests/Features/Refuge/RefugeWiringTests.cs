@@ -154,19 +154,77 @@ public class RefugeWiringTests
         // v2.0.28). Establish and Break camp land on the map for the same reason.
         var src = ReadSource("Main", "Features", "Refuge", "Hooks", "RefugeMenuController.cs");
 
+        var body = OnWardenChosenBody(src);
+
+        int deposit = body.IndexOf("PartyScreenHelper.OpenScreenAsManageTroopsAndPrisoners", StringComparison.Ordinal);
+        Assert.IsTrue(deposit >= 0,
+            "OnWardenChosen no longer opens the garrison deposit screen after founding");
+        // The statement, not the token: a commented-out exit kept the literal and passed (Codex
+        // review 98, O1), so slices are comment-stripped and the assertion names the full statement.
+        int exit = body.IndexOf("_menus.ExitToLast();", StringComparison.Ordinal);
+        Assert.IsTrue(exit >= 0 && exit < deposit,
+            "OnWardenChosen must exit the camp menu BEFORE opening the deposit screen; otherwise the "
+            + "player returns to a wait menu whose camp is gone and cannot leave it");
+    }
+
+    [TestMethod]
+    public void MenuController_FoundingRevalidatesItsContextBeforeAnythingIrreversible()
+    {
+        // Codex review 98, F1: the warden picker did not pause the game, so an incoming enemy
+        // could replace the camp menu with encounter_meeting UNDER the picker; confirming then ran
+        // Found and the new exit against the ENEMY's menu, leaving a live encounter with no menu
+        // transition. Two belts: the picker pauses the game (vanilla's AlleyHelper shape), and the
+        // callback refuses when the current menu is no longer the camp sub-menu or an encounter
+        // exists, BEFORE ResolveWarden (a promotion is irreversible) and before Found.
+        var src = ReadSource("Main", "Features", "Refuge", "Hooks", "RefugeMenuController.cs");
+
+        int pickerStart = src.IndexOf("MBInformationManager.ShowMultiSelectionInquiry(", StringComparison.Ordinal);
+        Assert.IsTrue(pickerStart >= 0, "RefugeMenuController no longer shows the warden picker");
+        // The statement ends at the first ';' after its last named argument (negativeAction).
+        int negative = src.IndexOf("negativeAction:", pickerStart, StringComparison.Ordinal);
+        Assert.IsTrue(negative > pickerStart, "the picker call lost its negativeAction argument");
+        int pickerEnd = src.IndexOf(';', negative);
+        Assert.IsTrue(pickerEnd > negative, "could not find the end of the picker statement");
+        var picker = StripLineComments(src.Substring(pickerStart, pickerEnd - pickerStart));
+        StringAssert.Contains(picker, "pauseGameActiveState: true",
+            "the warden picker must pause the game; unpaused, the world (an incoming enemy) can "
+            + "replace the menu the picker was opened from");
+
+        var body = OnWardenChosenBody(src);
+        int resolve = body.IndexOf("_wardens.ResolveWarden(", StringComparison.Ordinal);
+        Assert.IsTrue(resolve >= 0, "OnWardenChosen no longer resolves the warden");
+        int encounter = body.IndexOf("_encounters.HasCurrent", StringComparison.Ordinal);
+        int menu = body.IndexOf("_menus.CurrentMenuId", StringComparison.Ordinal);
+        Assert.IsTrue(encounter >= 0 && encounter < resolve,
+            "OnWardenChosen must refuse while an encounter is live, before the promotion");
+        Assert.IsTrue(menu >= 0 && menu < resolve,
+            "OnWardenChosen must refuse when the current menu is no longer the camp sub-menu, "
+            + "before the promotion; the exit that follows Found targets whatever menu is current");
+    }
+
+    /// <summary>The OnWardenChosen body up to the next member, with line comments removed so a
+    /// commented-out statement cannot satisfy a token search.</summary>
+    private static string OnWardenChosenBody(string src)
+    {
         int start = src.IndexOf("private void OnWardenChosen(", StringComparison.Ordinal);
         Assert.IsTrue(start >= 0, "RefugeMenuController lost OnWardenChosen");
         int end = src.IndexOf("private ", start + 1, StringComparison.Ordinal);
         if (end < 0)
             end = src.Length;
-        var body = src.Substring(start, end - start);
+        return StripLineComments(src.Substring(start, end - start));
+    }
 
-        int deposit = body.IndexOf("PartyScreenHelper.OpenScreenAsManageTroopsAndPrisoners", StringComparison.Ordinal);
-        Assert.IsTrue(deposit >= 0,
-            "OnWardenChosen no longer opens the garrison deposit screen after founding");
-        int exit = body.IndexOf("_menus.ExitToLast()", StringComparison.Ordinal);
-        Assert.IsTrue(exit >= 0 && exit < deposit,
-            "OnWardenChosen must exit the camp menu BEFORE opening the deposit screen; otherwise the "
-            + "player returns to a wait menu whose camp is gone and cannot leave it");
+    private static string StripLineComments(string text)
+    {
+        var kept = new System.Text.StringBuilder(text.Length);
+        foreach (var rawLine in text.Split('\n'))
+        {
+            var line = rawLine;
+            int comment = line.IndexOf("//", StringComparison.Ordinal);
+            if (comment >= 0)
+                line = line.Substring(0, comment);
+            kept.Append(line).Append('\n');
+        }
+        return kept.ToString();
     }
 }

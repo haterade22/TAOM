@@ -48,6 +48,13 @@ VERDICT: CLEAN / ISSUES FOUND
   opened the installed co-op mod's patches to test a "peers agree" rationale and found the
   membership handler applies asynchronously. When a rationale names another mod, expect Codex to
   read that mod; write the rationale so it survives that read.
+- **Asks what can change while a modal waits** (2026-09-12, camp wait menu review 99): the fix
+  exited the menu the picker was opened from; Codex traced the unpaused picker's lifetime, found
+  the query layer usable over an incoming enemy's map conversation, and showed the exit would
+  destroy the enemy's `encounter_meeting`. It then refuted the in-house Enlistment trace by
+  following the persisted menu id past the runtime check into the load order. When a callback
+  navigates menus, ask which menu will be current when it fires, not which was current when it
+  was armed.
 - **Reads the engine at the RAISE site, not the subscribe site.** Found that `ScreenManager` raises
   `OnPushScreen` AFTER `HandleInitialize` and `OnPopScreen` AFTER `HandleFinalize`, so a diagnostic
   could report `+0 MB` for the screen actually responsible. Nine Claude agents missed it.
