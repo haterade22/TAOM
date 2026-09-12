@@ -2034,8 +2034,12 @@ message: the feature map's BanditManagement row and the balance chapter's settin
 correct, attribution wrong, and a pushed commit cannot be re-cut.
 - **Why missed:** the status check was read as a property of the file instead of the instant, and the
   temporary-index technique guards against the shared INDEX, not against the worktree moving under you.
-- **Prevent:** for any file another session may hold open, build the commit blob as HEAD plus your own
-  textual change (the way CHANGELOG and the language files were done in the same session), or run
-  `git diff HEAD -- <file>` immediately before `update-index --add` and refuse if it shows a hunk you did
-  not write. When it has already happened, the remedy is a CHANGELOG line naming the carried hunks.
+- **Prevent:** `git add <path>` and `update-index --add <path>` stage the WHOLE worktree file, so a status
+  check that predates the other session's edit proves nothing. Run `git diff -- <path>` immediately before
+  staging and refuse if it shows a hunk you did not write; when a peer has hunks in the same file, build
+  the blob yourself: `GIT_INDEX_FILE=<scratch> git read-tree HEAD`, then `update-index --cacheinfo` with a
+  blob made from `git show HEAD:<path>` plus your own change (how the #558 CHANGELOG and language rows and
+  the three #559 commits were built). This is the inverse of CLAUDE.md's "Never write a reconstructed
+  shared file to DISK" row: reconstruct into the index, never the worktree. When it has already happened,
+  the remedy is a CHANGELOG line naming the carried hunks.
 - **Source:** 2026-09-11, the #558 documentation commit; relayed by the #559 session.
