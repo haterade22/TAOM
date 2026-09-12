@@ -56,7 +56,9 @@ public sealed class BannerBearerAssignmentMissionLogic : MissionLogic
         var mission = Mission.Current;
         if (mission == null || mission.Mode != MissionMode.Deployment) return;
 
-        // Headless shader-precompile battles have no DeploymentMissionController to unpause.
+        // The shader-precompile walk's battles need no banner bearers (nobody watches them, and their
+        // deployment auto-finishes since #560); skip them. IsWalkInProgress is true only while a walk's
+        // battle can be initializing or running.
         if (ShaderPrecompileRunner.IsWalkInProgress) return;
 
         var bannerLogic = mission.GetMissionBehavior<BannerBearerLogic>();

@@ -139,9 +139,9 @@ public sealed class ShaderPrecompileRunner
         // records that scene and we drop it from the plan so the walk can complete.
         var skip = new HashSet<string>(_crashGuard.ConsumeAndGetSkipSet(), StringComparer.OrdinalIgnoreCase);
         if (skip.Count > 0) ShowCrashCaptureToast(skip.Count);
-        // Scene passes (terrain/atmosphere) are the GPU-crash-prone part (#287). The MCM "Include Scene
-        // Passes" toggle lets an affected user run only the safe all-characters pass without editing files
-        // or waiting for the native shader-compile guard — off => empty scene list => character battle only.
+        // Scene passes (terrain/atmosphere) are the GPU-crash-prone part (#287). They run only when the MCM
+        // "Include Scene Passes" toggle is on; off means an empty scene list and the character batches only,
+        // with no file edits and no waiting for the native shader-compile guard.
         // We still consume the crash guard's inflight marker above so a prior crash is recorded regardless.
         // Off by default (#560): the property was renamed so the json2-persisted `true` of the old
         // toggle cannot reach it, and an unreadable settings page reads as off, never on.

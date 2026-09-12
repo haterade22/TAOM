@@ -35,11 +35,12 @@ public sealed class ShaderPrecompileDecider
     private readonly long _defaultPerItemTimeoutMs;
     private readonly long _defaultMaxActiveCompileMs;
 
-    // Defaults sized for the real workload: the all-characters battle legitimately compiles for
-    // 20-70 min, so the absolute per-item cap is generous (90 min) and the responsive stuck-detector
-    // is "count frozen for N min" (compiler hung on one shader), not a short fixed cap — that was the
-    // 2026-05-04 premature-abort class of bug. The churn backstop defaults OFF (long.MaxValue) so the
-    // ctor-only callers (and the character battle) are unchanged; the runner enables it for scene passes.
+    // Defaults sized for the real workload: a character batch legitimately compiles for many minutes
+    // on a cold cache, so the absolute per-item cap is generous (90 min here; the runner passes 60 min
+    // per batch) and the responsive stuck-detector is "count frozen for N min" (compiler hung on one
+    // shader), not a short fixed cap — that was the 2026-05-04 premature-abort class of bug. The churn
+    // backstop defaults OFF (long.MaxValue) so the ctor-only callers (and the character batches) are
+    // unchanged; the runner enables it for scene passes.
     public ShaderPrecompileDecider(
         long startupGraceMs = 30_000,   // render time with a zero count before declaring "cached"; gives margin for a load->first-shader gap (Codex watchpoint)
         long settleMs = 5_000,

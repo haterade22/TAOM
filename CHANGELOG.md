@@ -4,6 +4,27 @@
 
 ## 2026-09-11
 
+### chore(repo): ignore the .tmp/ review scratch
+
+Reviewer sessions and Codex runs write snapshots, decompiles and capture logs under `.tmp/` in the
+repo root (44 MB, 2,977 files by the end of 2026-09-11). Untracked, that polluted `git status` and
+gave the docs linter about 1,900 false dash findings. `.tmp/` now sits in the tool-sandbox scratch
+block of `.gitignore`; nothing durable lives there, the record is the committed prompt, RCA and
+review-log entry.
+
+### docs(shaders): stale statements swept after the re-enable (#560)
+
+A repo-wide pass for statements the re-enable made wrong. The v1.4.8 migration row no longer calls
+the hint a known issue and no longer describes the walk as headless; the battle-load diagnostics doc
+no longer says the walk's rationale is parked; the 2026-06-17 and 2026-07-11 shader RCAs carry a
+status line naming what closed their findings and why the mechanism was the opposite of what the
+first assumed; the feature doc's runner and SubModule rows name `TryClaimMission` instead of the old
+gate; `precompile_scenes.txt` says it is read only when the scene-pass toggle is on; and three code
+comments (decider caps, the runner's toggle note, the banner-bearer skip) stop describing the
+all-characters battle and a headless walk. `AGENTS.md` still lists Patch21 as active, which is now
+true; it was left alone because another session has it mid-rewrite. Historical records (raw reviews,
+the changelog archive, release notes, the audit snapshots) keep their wording as records.
+
 ### feat(shaders): Pre-compile Shaders is back, covers the custom-battle roster, scene passes off for everyone (#560)
 
 The main-menu "Pre-compile Shaders" option returns after the 2026-08-20 park. The park's "no longer

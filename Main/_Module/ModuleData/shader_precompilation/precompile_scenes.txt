@@ -3,6 +3,10 @@
 # scenes, custom SIEGE settlement scenes, and custom VILLAGE scenes — every TAOM-authored
 # `_forceatmo` scene ships header-only (no compressed_shader_cache.sack) and runtime-compiles.
 #
+# Scene passes are OFF by default since 2026-09-11 (#560): this list is read only when the MCM toggle
+# "Include Scene Passes (can crash some GPUs)" (EnableShaderPrecompileScenePasses) is on. The troop
+# and equipment pass never needs it.
+#
 # One scene id per line. Lines starting with '#' are comments; blank lines are ignored.
 # If this file is missing or empty, the baked default (this same TAOM battle-scene set) is used.
 # To also pre-compile vanilla terrains, add battle_terrain_* ids (from sp_battle_scenes.xml) below

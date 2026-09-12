@@ -63,6 +63,8 @@ the real validator is a 1-2 hr precompile walk, with the `[ShaderPrecompilation]
 (watch the `Ending item N: Game.Current==null=.. resolved via clean-menu|timeout` lines to confirm the
 teardown path, and any scene where loading goes false but the count stays 0 past the grace).
 
+**Update 2026-09-11:** finding 5 (the character-coverage limitation deferred to "iteration 2") was closed by #560, which batches the roster and preloads every character once. The mechanism was the opposite of what this RCA assumed: the engine's `PreloadHelper.PreloadCharacters` walks both combatants' full rosters before the first frame, so coverage is roster membership and the spawn cap never mattered; the real loss was the 3,000-per-side slot cap with soldiers added twice. See `rca-shader-precompile-reenable-2026-09-11.md`.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

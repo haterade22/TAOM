@@ -4,6 +4,7 @@
 **Feature:** `Main/Features/ShaderPrecompilation/` (1.4.7 fix)
 **Trigger:** user report — "precompile shader is getting stuck for a long time on 1.4.7; worked fine on 1.4.6."
 **Outcome:** root-caused to a 1.4.7 engine regression; fixed with a scoped `MissionLogic` guard + robustness package; in-game confirmed (13/13 items, 8m 6s, 0 NRE, 0 hang). Deep-review (5 agents) returned **0 functional defects**.
+**Update 2026-09-11 (#560):** the walk's battles now take the vanilla shape (a one-character player party, the roster batch as the enemy), so the engine sets `InitialPlayerAgent` itself and deployment auto-finishes; the guard remains as a player-team-only fallback and is added only to the walk's own mission (`TryClaimMission`). See `rca-shader-precompile-reenable-2026-09-11.md`.
 
 ## Top-line
 

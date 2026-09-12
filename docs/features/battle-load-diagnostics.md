@@ -283,8 +283,8 @@ Two things came out of it:
 - **The watchdog now asks whether the queue is moving** before it fires (below).
 
 Cause, not symptom: the shader cache is what makes this rare or constant, and v1.4.8 deletes the
-local cache after **any** module-list change. See [shader-precompilation.md](shader-precompilation.md),
-whose PARKED rationale this bundle contradicts.
+local cache after **any** module-list change. See [shader-precompilation.md](shader-precompilation.md):
+this bundle is the counter-evidence that un-parked the walk (#560, 2026-09-11).
 
 ### The loading window + stall watchdog
 
