@@ -131,6 +131,25 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
+    public bool? IsMainPartyLeadingItsBattleSide
+    {
+        get
+        {
+            try
+            {
+                var mapEvent = PartyBase.MainParty?.MapEvent;
+                if (mapEvent == null)
+                    return null;
+                return mapEvent.GetLeaderParty(mapEvent.PlayerSide) == PartyBase.MainParty;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"[Enlistment] IsMainPartyLeadingItsBattleSide failed: {ex.Message}");
+                return null;
+            }
+        }
+    }
+
     // Mechanical joinability only — see IEncounterAdapter for why MapEvent.CanPartyJoinBattle
     // must NOT be reinstated here.
     public bool IsCommanderBattleJoinable(string partyId, PartyBattleSide side)

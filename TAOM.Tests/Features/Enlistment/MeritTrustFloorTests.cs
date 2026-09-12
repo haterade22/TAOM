@@ -19,7 +19,8 @@ namespace TAOM.Tests.Features.Enlistment;
 /// `leftFieldPenalty` only ever cancelled the survival weight and the four other terms survive it,
 /// and a player who stands inside his own line all battle banks survival + cohesion = 40 with no
 /// kills and no engagement at all. The second only became reachable when the cohesion fallback
-/// stopped scoring zero for an enlisted player who has no formation captain (#443).
+/// stopped scoring zero for an enlisted player whose formation has no captain (the one-man team
+/// before the #443 army join, still reachable when the merge fails, #495).
 ///
 /// The invariant, stated once so a future tuner cannot move a boundary without meeting it: **no
 /// score attainable without fighting may reach a band that pays trust.**

@@ -20,7 +20,9 @@ namespace TAOM.Features.BannerBearers.Models;
 // EVERY override folds the master toggle by deferring to `base`, never by returning a TAOM
 // value or a zero. The model stays registered when the feature is off, and the engine still
 // asks it for every formation — including formations a hero captain or the player's
-// Order-of-Battle screen banners through vanilla's own path, which TAOM never intercepts. An
+// Order-of-Battle screen banners through vanilla's own path, which this model never intercepts
+// (TaomBattleInitializationModel closes that screen for an ENLISTED soldier, #576; every other
+// player still gets it, and the banner path is untouched either way). An
 // override that answered 0 (or TAOM's tuned threshold) while "disabled" would SUPPRESS that
 // vanilla mechanic rather than leave it alone: strictly worse than vanilla, not equal to it.
 // Deep-review 2026-07-16 caught exactly that; see docs/reviews/rca-banner-bearers-2026-07-16.md.

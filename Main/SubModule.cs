@@ -70,6 +70,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.BannerBearers.Models;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Models;
+using TAOM.Features.Enlistment.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
@@ -1079,6 +1080,13 @@ public class SubModule : MBSubModuleBase
         // Battle builds CustomBattleBannerBearersModel off a BasicGameStarter and is unaffected.
         campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(
             IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
+        // Enlistment (#576): the #443 army join makes MapEvent.IsPlayerSergeant() true, which is
+        // the third arm of SandboxBattleInitializationModel's Order of Battle gate, so the
+        // deployment screen opened for an enlisted soldier and let him captain a formation nobody
+        // could then command. Same last-registered-wins resolution as the BannerBearers model
+        // above; the override returns base for every battle that is not enlisted service.
+        campaignStarter.AddModel<BattleInitializationModel>(new TaomBattleInitializationModel(
+            IoC.Resolve<Features.Enlistment.IEnlistmentDeploymentService>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +
@@ -1748,14 +1756,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentConfigProvider>().GetConfig().MeritScoring));
         // Registered unconditionally per the same convention; self-filters in AfterStart on
-        // enlisted-battle state. Corrects #424, whose premise has since narrowed: Army is now joined
-        // for the duration of a battle (#443), so IsPlayerSergeant() is true and vanilla offers a
-        // single formation instead of promoting the player to GENERAL of his whole side. The
-        // behavior keeps that formation at rank Sergeant and strips it below — and re-checks the
-        // engine's verdict, because a commander with no kingdom gets no merge and no sergeant role.
+        // enlisted-battle state. Strips every battlefield role (#424) at every rank. The Order of
+        // Battle screen that the #443 army join made reachable is closed by
+        // TaomBattleInitializationModel (#576) through the same BattleCommandPolicy gate.
         AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleRoleMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
-            IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<IModLogger>()));
         // The second half of the same engine branch (#441): the role strip above delivers
         // neither-role; this puts the soldier IN a formation so IsPlayerTroopInFormation

@@ -159,8 +159,10 @@ public class MeritGeometryAccumulatorTests
     [TestMethod]
     public void CohesionDistanceSq_NoCaptain_FallsBackToTheNearestAlly()
     {
-        // An enlisted player fights on a one-man PlayerTeam (#443), so his formation has no captain
-        // but himself and the scanner reported "absent" every tick. Cohesion scored a flat zero for
+        // Before the #443 army join an enlisted player fought on a one-man PlayerTeam, so his
+        // formation had no captain but himself and the scanner reported "absent" every tick. The
+        // fallback stays because the merge is best-effort and can still fail (#495), and since #576
+        // the soldier never holds a captaincy himself. Cohesion scored a flat zero for
         // the whole battle, costing 15 merit points outright plus the 10-point infantry role-fit
         // bonus, which needs CohesionRatio >= 0.5 — enough on its own to keep an ordinary battle
         // under the score where the merit band starts paying standing.

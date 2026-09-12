@@ -40,6 +40,15 @@ public interface IEncounterAdapter
     bool IsMainPartyInMapEvent { get; }
 
     /// <summary>
+    /// True when the main party leads its side of its current map event, false when another
+    /// party leads it, null when the main party is in no map event at all. The same read the two
+    /// enlisted mission behaviors make inline (<c>mapEvent.GetLeaderParty(mapEvent.PlayerSide) ==
+    /// PartyBase.MainParty</c>); exposed here so <c>EnlistmentDeploymentService</c> can feed
+    /// <c>BattleCommandPolicy</c> without touching an engine type (#576).
+    /// </summary>
+    bool? IsMainPartyLeadingItsBattleSide { get; }
+
+    /// <summary>
     /// True when the given party's map event is still live enough to join. This is a MECHANICAL
     /// check only — it deliberately does NOT consult faction war state.
     ///

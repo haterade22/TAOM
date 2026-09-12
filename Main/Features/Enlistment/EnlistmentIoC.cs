@@ -48,6 +48,9 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentLoadNormalizer, EnlistmentLoadNormalizer>(Reuse.Singleton);
         container.Register<IEnlistmentMenuService, EnlistmentMenuService>(Reuse.Singleton);
         container.Register<IServiceBattleService, ServiceBattleService>(Reuse.Singleton);
+        // Consumed by TaomBattleInitializationModel (registered in SubModule.OnGameStart): keeps
+        // the Order of Battle deployment screen shut for an enlisted soldier (#576).
+        container.Register<IEnlistmentDeploymentService, EnlistmentDeploymentService>(Reuse.Singleton);
 
         container.Register<IEnlistmentWaitMenuPresenter, EnlistmentWaitMenuPresenter>(Reuse.Singleton);
         container.Register<IEnlistmentDialogGateService, EnlistmentDialogGateService>(Reuse.Singleton);

@@ -110,4 +110,21 @@ public class EnlistmentContainerWiringTests
             "IServiceMaintenanceService is not resolvable: "
                 + string.Join("; ", errors.Select(e => e.Value.Message)));
     }
+
+    [TestMethod]
+    public void DeploymentService_Resolvable_ModelDependencySatisfied()
+    {
+        // TaomBattleInitializationModel is constructed in SubModule.OnGameStart with this service;
+        // if the graph below it breaks, the model is never registered and the Order of Battle
+        // screen reopens for an enlisted soldier (#576).
+        var container = BuildContainer();
+
+        var errors = container.Validate(typeof(IEnlistmentDeploymentService));
+
+        Assert.AreEqual(
+            0,
+            errors.Length,
+            "IEnlistmentDeploymentService is not resolvable: "
+                + string.Join("; ", errors.Select(e => e.Value.Message)));
+    }
 }
