@@ -4,6 +4,14 @@ namespace TAOM.Features.TimeAcceleration;
 
 public class TimeAccelerationService : ITimeAccelerationService
 {
+    // CampaignTimeControlMode (v1.4.8): Stop 0, UnstoppablePlay 1, UnstoppableFastForward 2,
+    // StoppablePlay 3, StoppableFastForward 4, UnstoppableFastForwardForPartyWaitTime 5,
+    // FastForwardStop 6. Campaign.TickMapTime multiplies real time by SpeedUpMultiplier in the
+    // three fast-forward modes and ignores it in the other four.
+    private const int UnstoppableFastForward = 2;
+    private const int StoppableFastForward = 4;
+    private const int UnstoppableFastForwardForPartyWaitTime = 5;
+
     private readonly IMapInputAdapter _input;
     private readonly ITimeControlAdapter _timeControl;
     private readonly ITimeAccelerationSettingsProvider _settings;
@@ -92,6 +100,46 @@ public class TimeAccelerationService : ITimeAccelerationService
             if (_input.FastForwardOwnsTimeMode) _timeControl.SetTimeSpeed(2);
         }
     }
+
+    // #574: the MapBar buttons. Until this the Extra Fast Forward button fired vanilla
+    // ExecuteTimeControlChange(2) directly, which sets the MODE only, so it was vanilla fast-forward
+    // under a different tooltip whatever the MCM slider said (#168 shipped that as "Option A").
+    // Vanilla's own FastForward button is rebound to EnterFastForward so it writes the normal
+    // multiplier back; with the mode-only handler, one extra press left the extra value in place
+    // until Space happened to restore it.
+
+    public void EnterExtraFastForward() => EnterFastForwardAt(_settings.ExtraFastForwardMultiplier);
+
+    public void EnterFastForward() => EnterFastForwardAt(_settings.FastForwardMultiplier);
+
+    // "Extra" is a fast-forward mode running above the normal multiplier, read off the engine every
+    // frame so a key press, a click and a vanilla toggle all agree. Turbo lights it too while Ctrl
+    // is held, which is the honest reading.
+    public bool IsExtraFastForwardActive =>
+        _timeControl.IsCampaignActive
+        && IsFastForwardMode(_timeControl.TimeControlMode)
+        && _timeControl.SpeedUpMultiplier > _settings.FastForwardMultiplier;
+
+    private void EnterFastForwardAt(int multiplier)
+    {
+        if (_coop.ShouldDeferToHost) return;
+        if (!_timeControl.IsCampaignActive) return;
+
+        // The gate is vanilla MapTimeControlVM.ExecuteTimeControlChange's, not the key path's: the
+        // buttons keep working inside a WAIT menu that is not time-locked, where vanilla's do. It
+        // runs BEFORE the write, because a multiplier written while vanilla refuses the mode change
+        // would sit latent and surface on the next fast-forward.
+        if (_timeControl.IsMenuOpen && !(_timeControl.IsWaitMenuActive && !_timeControl.IsTimeControlLocked))
+            return;
+
+        _timeControl.SpeedUpMultiplier = multiplier;
+        _timeControl.SetTimeSpeed(2);
+    }
+
+    private static bool IsFastForwardMode(int mode) =>
+        mode == UnstoppableFastForward
+        || mode == StoppableFastForward
+        || mode == UnstoppableFastForwardForPartyWaitTime;
 
     private void RestoreTurboIfActive()
     {

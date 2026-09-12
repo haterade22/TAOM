@@ -613,3 +613,23 @@ into the setting's own tooltip, and the second time the CHANGELOG even said the 
 - **Why missed:** the review traced `{newline}` to `InitializeGlobalTags` and reported it "bound at early bootstrap" without checking the caller, and the text was only ever exercised in a running game.
 - **Prevent:** for any player-facing text built before a `Game` exists (main-menu options, inquiries, launcher-time messages), call `SetTextVariable("newline", "\n")` on the `TextObject` before `ToString()`, or avoid the token. In-game text needs nothing.
 - **Source:** Codex adversarial pass on #560 (GPT-6-Astra, ultra), finding 5, reproduced in a fresh process against the installed localization assemblies; `docs/reviews/rca-shader-precompile-reenable-2026-09-11.md`.
+
+### A mod control bound straight to a vanilla command inherits vanilla's semantics; a "known limitation" comment on a shipped control is an open bug (#574, 2026-09-12)
+The map bar Extra Fast Forward button bound `Command.Click="ExecuteTimeControlChange"` with parameter 2, vanilla's own
+fast-forward handler. Vanilla sets the time MODE; the speed lives in `Campaign.SpeedUpMultiplier`, which nothing on that
+path writes, so the button did exactly what vanilla's did and the MCM slider meant nothing. #168 saw it in May, wrote
+"Option A: redundant with vanilla, tracked as a future enhancement" into the mixin and closed; four months later it came
+back as a player report, with a second player saying it worked (they used the E key, or turbo on Left Control).
+- **Why missed:** the button was authored by copying vanilla's FastForward button XML and changing its id and tooltip,
+  so its handler was vanilla's; the multiplier lived in a service the prefab never reached. The audit that found it
+  framed the defect as a design choice ("redundant with vanilla") and the framing survived two later reviews of the same
+  feature, both scoped to their own diffs. Mixin tests mock the adapter, so the single shared engine property was
+  invisible to them.
+- **Prevent:** a TAOM control binds a TAOM command that applies the mod's state and then delegates to vanilla, never
+  vanilla's command directly; for every `Command.Click` in a TAOM prefab, trace the handler to a mod-owned write. A
+  comment that says a shipped control does not do what its tooltip says is an issue, not a note. Before choosing a
+  mixin refresh method, grep the VM for that method's call sites (`RefreshValues` on `MapTimeControlVM` is constructor
+  and gamepad change only; `Tick` is per frame). `ViewModel.ExecuteCommand` silently skips a method whose parameter
+  count differs from the prefab's `CommandParameter` count, so a mixin command rebound from a vanilla button takes the
+  same parameters vanilla's did.
+- **Source:** #574, deep-review 2026-09-12, `docs/reviews/rca-time-acceleration-button-2026-09-12.md`.

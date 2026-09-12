@@ -8,6 +8,9 @@ public class TimeControlAdapter : ITimeControlAdapter
 
     public bool IsMenuOpen => Campaign.Current?.CurrentMenuContext != null;
 
+    // The same chain vanilla MapTimeControlVM.ExecuteTimeControlChange reads (v1.4.8).
+    public bool IsWaitMenuActive => Campaign.Current?.CurrentMenuContext?.GameMenu?.IsWaitActive ?? false;
+
     public bool IsTimeControlLocked => Campaign.Current?.TimeControlModeLock ?? false;
 
     public float SpeedUpMultiplier

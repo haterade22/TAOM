@@ -476,4 +476,213 @@ public class TimeAccelerationServiceTests
         _timeControl.Received(1).SpeedUpMultiplier = 8;
         _timeControl.DidNotReceive().SpeedUpMultiplier = 4;
     }
+
+    // --- MapBar buttons (#574) --------------------------------------------------------------
+    // The Extra Fast Forward button used to fire vanilla ExecuteTimeControlChange(2), which sets
+    // the MODE only. Campaign.TickMapTime scales real time by SpeedUpMultiplier, so a button that
+    // never writes the multiplier is vanilla fast-forward with a different tooltip, whatever the
+    // MCM slider says. Both MapBar fast-forward buttons now route through these two commands.
+
+    [TestMethod]
+    public void EnterExtraFastForward_MapActive_SetsExtraMultiplierAndFastForwardMode()
+    {
+        _sut.EnterExtraFastForward();
+
+        _timeControl.Received(1).SpeedUpMultiplier = 8;
+        _timeControl.Received(1).SetTimeSpeed(2);
+    }
+
+    [TestMethod]
+    public void EnterExtraFastForward_UsesConfiguredMultiplier()
+    {
+        _settings.ExtraFastForwardMultiplier.Returns(12);
+
+        _sut.EnterExtraFastForward();
+
+        _timeControl.Received(1).SpeedUpMultiplier = 12;
+    }
+
+    [TestMethod]
+    public void EnterExtraFastForward_CoopDefers_DoesNothing()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+
+        _sut.EnterExtraFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void EnterExtraFastForward_CampaignInactive_DoesNothing()
+    {
+        _timeControl.IsCampaignActive.Returns(false);
+
+        _sut.EnterExtraFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    // The gate mirrors vanilla MapTimeControlVM.ExecuteTimeControlChange, not the key path:
+    // proceed with no menu, or inside a WAIT menu that is not time-locked. Writing the multiplier
+    // when vanilla would refuse the mode change would leave the extra value latent for the next
+    // fast-forward, so the gate runs before the write.
+
+    [TestMethod]
+    public void EnterExtraFastForward_NonWaitMenuOpen_DoesNothing()
+    {
+        _timeControl.IsMenuOpen.Returns(true);
+        _timeControl.IsWaitMenuActive.Returns(false);
+
+        _sut.EnterExtraFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void EnterExtraFastForward_WaitMenuNotLocked_Proceeds()
+    {
+        _timeControl.IsMenuOpen.Returns(true);
+        _timeControl.IsWaitMenuActive.Returns(true);
+        _timeControl.IsTimeControlLocked.Returns(false);
+
+        _sut.EnterExtraFastForward();
+
+        _timeControl.Received(1).SpeedUpMultiplier = 8;
+        _timeControl.Received(1).SetTimeSpeed(2);
+    }
+
+    [TestMethod]
+    public void EnterExtraFastForward_WaitMenuLocked_DoesNothing()
+    {
+        _timeControl.IsMenuOpen.Returns(true);
+        _timeControl.IsWaitMenuActive.Returns(true);
+        _timeControl.IsTimeControlLocked.Returns(true);
+
+        _sut.EnterExtraFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void EnterFastForward_RestoresNormalMultiplierAndFastForwardMode()
+    {
+        // The sticky-multiplier hole: after one extra press the engine kept the extra value, and
+        // vanilla's own FastForward button (mode only) never put the normal one back.
+        _timeControl.SpeedUpMultiplier.Returns(8f);
+
+        _sut.EnterFastForward();
+
+        _timeControl.Received(1).SpeedUpMultiplier = 4;
+        _timeControl.Received(1).SetTimeSpeed(2);
+    }
+
+    [TestMethod]
+    public void EnterFastForward_UsesConfiguredMultiplier()
+    {
+        _settings.FastForwardMultiplier.Returns(6);
+
+        _sut.EnterFastForward();
+
+        _timeControl.Received(1).SpeedUpMultiplier = 6;
+    }
+
+    [TestMethod]
+    public void EnterFastForward_CoopDefers_DoesNothing()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+
+        _sut.EnterFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void EnterFastForward_NonWaitMenuOpen_DoesNothing()
+    {
+        _timeControl.IsMenuOpen.Returns(true);
+        _timeControl.IsWaitMenuActive.Returns(false);
+
+        _sut.EnterFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    // --- Lit state for the MapBar button -----------------------------------------------------
+    // Derived from engine state every frame, so a key press, a click and a vanilla toggle all
+    // agree. "Extra" means a fast-forward mode running above the normal fast-forward multiplier;
+    // turbo therefore lights it too while Ctrl is held, which is the honest reading.
+
+    [DataTestMethod]
+    [DataRow(2)] // UnstoppableFastForward
+    [DataRow(4)] // StoppableFastForward
+    [DataRow(5)] // UnstoppableFastForwardForPartyWaitTime
+    public void IsExtraFastForwardActive_FastForwardModeAboveNormalMultiplier_True(int mode)
+    {
+        _timeControl.TimeControlMode.Returns(mode);
+        _timeControl.SpeedUpMultiplier.Returns(8f);
+
+        Assert.IsTrue(_sut.IsExtraFastForwardActive);
+    }
+
+    [TestMethod]
+    public void IsExtraFastForwardActive_FastForwardModeAtNormalMultiplier_False()
+    {
+        _timeControl.TimeControlMode.Returns(StoppableFastForward);
+        _timeControl.SpeedUpMultiplier.Returns(4f);
+
+        Assert.IsFalse(_sut.IsExtraFastForwardActive);
+    }
+
+    [DataTestMethod]
+    [DataRow(0)] // Stop
+    [DataRow(1)] // UnstoppablePlay
+    [DataRow(3)] // StoppablePlay
+    [DataRow(6)] // FastForwardStop
+    public void IsExtraFastForwardActive_PlayOrStopMode_False(int mode)
+    {
+        _timeControl.TimeControlMode.Returns(mode);
+        _timeControl.SpeedUpMultiplier.Returns(8f);
+
+        Assert.IsFalse(_sut.IsExtraFastForwardActive);
+    }
+
+    [TestMethod]
+    public void IsExtraFastForwardActive_CampaignInactive_False()
+    {
+        _timeControl.IsCampaignActive.Returns(false);
+        _timeControl.TimeControlMode.Returns(StoppableFastForward);
+        _timeControl.SpeedUpMultiplier.Returns(8f);
+
+        Assert.IsFalse(_sut.IsExtraFastForwardActive);
+    }
+
+    [TestMethod]
+    public void EnterFastForward_CampaignInactive_DoesNothing()
+    {
+        _timeControl.IsCampaignActive.Returns(false);
+
+        _sut.EnterFastForward();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void EnterFastForward_WaitMenuNotLocked_Proceeds()
+    {
+        _timeControl.IsMenuOpen.Returns(true);
+        _timeControl.IsWaitMenuActive.Returns(true);
+        _timeControl.IsTimeControlLocked.Returns(false);
+
+        _sut.EnterFastForward();
+
+        _timeControl.Received(1).SpeedUpMultiplier = 4;
+        _timeControl.Received(1).SetTimeSpeed(2);
+    }
 }

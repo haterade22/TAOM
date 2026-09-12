@@ -18,14 +18,19 @@ internal class PrefabCenterPanel : PrefabExtensionSetAttributePatch
     };
 }
 
-// Shift the vanilla FastForward button left to create space for the new button.
+// Shift the vanilla FastForward button left to create space for the new button, and route its
+// click through the mixin (#574). Vanilla's handler, ExecuteTimeControlChange(2), sets the time
+// MODE only; after one extra fast-forward the engine kept the extra SpeedUpMultiplier and this
+// button silently ran at it. ExecuteFastForward writes the normal multiplier back first, then
+// makes the same vanilla call. CommandParameter.Click stays vanilla's "2" and is forwarded.
 [PrefabExtension("MapBar", "descendant::ButtonWidget[@Id='FastForwardButton']")]
 [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabFastForwardButton : PrefabExtensionSetAttributePatch
 {
     public override List<Attr> Attributes => new List<Attr>
     {
-        new Attr("PositionXOffset", "-105")
+        new Attr("PositionXOffset", "-105"),
+        new Attr("Command.Click", "ExecuteFastForward")
     };
 }
 
@@ -52,6 +57,9 @@ internal class PrefabPauseButton : PrefabExtensionSetAttributePatch
 }
 
 // Insert the Extra Fast-Forward button after the PauseButton in the CenterPanel children.
+// Command.Click is the mixin's ExecuteExtraFastForward (#574), which writes the extra
+// SpeedUpMultiplier before the vanilla mode change; bound straight to ExecuteTimeControlChange, as
+// it was until then, the button was vanilla fast-forward under a different tooltip.
 [PrefabExtension("MapBar", "descendant::ButtonWidget[@Id='PauseButton']")]
 [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabInsertExtraFastForward : PrefabExtensionInsertPatch
@@ -75,7 +83,7 @@ internal class PrefabInsertExtraFastForward : PrefabExtensionInsertPatch
             " PositionYOffset=\"-13\"" +
             " Brush=\"MapBarFastForwardButton\"" +
             " IsSelected=\"@IsExtraFastForwardActive\"" +
-            " Command.Click=\"ExecuteTimeControlChange\"" +
+            " Command.Click=\"ExecuteExtraFastForward\"" +
             " CommandParameter.Click=\"2\"" +
             " GamepadNavigationIndex=\"4\">" +
             "<Children>" +

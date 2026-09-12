@@ -22,7 +22,7 @@ Time acceleration must run every frame via `OnApplicationTick` (not campaign tic
 
 - **MBSubModuleBase.OnApplicationTick** — per-frame input polling (not a Harmony patch or CampaignBehavior)
 - **UIExtenderEx prefab patches** — shift existing time buttons and insert a new Extra Fast-Forward button
-- **UIExtenderEx ViewModel mixin** — hooks `MapTimeControlVM.RefreshValues()` to data-bind button state
+- **UIExtenderEx ViewModel mixin**: hooks `MapTimeControlVM.Tick()` (per frame) for the button's lit state, and exposes the two button commands
 - **MCM settings** — three integer sliders for multiplier configuration
 
 ### Component Diagram
@@ -39,8 +39,9 @@ IMapInputAdapter   ITimeControlAdapter
 (MapScreen.Input)  (Campaign.Current speed/mode)
 
 UIExtenderEx:
-  TimeAccelerationMixin → MapTimeControlVM.RefreshValues()
-  TimeAccelerationPrefab → MapBar XML (5 patch classes)
+  TimeAccelerationMixin → MapTimeControlVM.Tick() (lit state)
+                       → ExecuteExtraFastForward / ExecuteFastForward → TimeAccelerationService
+  TimeAccelerationPrefab → MapBar XML (5 patch classes; both fast-forward buttons bound to the mixin)
 ```
 
 ## Configuration
@@ -54,7 +55,7 @@ keybind widget at all (its whole vocabulary is Bool/Int/Float/String/Dropdown/Bu
 | Setting | Range | Default | Description |
 |---------|-------|---------|-------------|
 | Fast Forward Multiplier | 1-128 | 4 | Speed on the fast-forward key (Space by default) |
-| Extra Fast Forward Multiplier | 1-128 | 8 | Speed on the extra fast-forward key (E by default) |
+| Extra Fast Forward Multiplier | 1-128 | 8 | Speed on the extra fast-forward key (E by default) and the map bar Extra Fast Forward button. Floored at the Fast Forward Multiplier by the provider |
 | Turbo Multiplier (hold Ctrl) | 1-128 | 16 | Speed while holding Ctrl plus the turbo key (Space by default) |
 
 ### Keybindings (Options > Keybindings > Campaign Map)
@@ -122,22 +123,71 @@ differs from vanilla's time-toggle key, and only then does the service call `Set
 Claiming the mode unconditionally would be wrong in the other direction, since on the shared default
 every press would force fast-forward and the vanilla toggle would never toggle back.
 
+### The map bar buttons (#574)
+
+Until 2026-09-12 the Extra Fast Forward button bound `Command.Click="ExecuteTimeControlChange"` with
+parameter 2, which is vanilla's own fast-forward handler. That handler sets the time MODE and never
+touches `Campaign.SpeedUpMultiplier`, the only thing `TickMapTime` scales by, so the button was
+vanilla fast-forward under a different tooltip whatever the slider said, and it returned early when
+the game was already fast-forwarding. Only the E key wrote the multiplier. #168 had recorded this in
+May as "Option A, tracked as a future enhancement"; it came back as a player report.
+
+Both map bar fast-forward buttons now go through the service, so a click and a key press share one
+path:
+
+| Button | `Command.Click` | What it does |
+|---|---|---|
+| TAOM `FastFastForwardButton` (inserted) | `ExecuteExtraFastForward` on the mixin | `ITimeAccelerationService.EnterExtraFastForward()`, then vanilla `ExecuteTimeControlChange(2)` |
+| vanilla `FastForwardButton` | `ExecuteFastForward` on the mixin, set by the existing `PrefabFastForwardButton` attribute patch | `EnterFastForward()`, then the same vanilla call |
+
+`CommandParameter.Click` stays vanilla's `"2"` on both and is forwarded as the mixin methods' `int`
+parameter (`ViewModel.ExecuteCommand` converts the string when the parameter counts match; a
+parameterless method would be silently skipped). The vanilla call after the service keeps
+`TimeFlowState` and the `_onTimeFlowStateChange` callback in step and no-ops harmlessly when already
+fast-forwarding, because the multiplier write is what changes the pace.
+
+Rebinding vanilla's button closes a second hole: after one E press the engine kept the extra
+multiplier, and vanilla's mode-only handler ran at it until Space happened to restore the normal
+value. The service's two commands run behind vanilla's own gate (no menu open, or a wait menu that
+is not time-locked, read through `ITimeControlAdapter.IsWaitMenuActive`) rather than the key path's,
+so the buttons keep working inside a wait menu where vanilla's do. The gate runs before the write:
+a multiplier written while vanilla refuses the mode change would sit latent for the next fast-forward.
+
+**Lit state.** `RefreshValues` on `MapTimeControlVM` runs only from its constructor and on a
+gamepad state change, so the old `[ViewModelMixin("RefreshValues")]` never followed a key press.
+The mixin now hooks `Tick`, which `MapBarVM.Tick` calls every frame, and `OnRefresh` copies
+`ITimeAccelerationService.IsExtraFastForwardActive`: a fast-forward mode running ABOVE the normal
+multiplier (turbo lights it too while Ctrl is held). The engine's `MapCurrentTimeVisualWidget`
+writes vanilla's `FastForwardButton.IsSelected` itself for every fast-forward mode, so during extra
+fast-forward BOTH buttons are lit: vanilla's alone is normal speed, both is extra. Unlighting
+vanilla's would need a Harmony patch on a widget for a cosmetic gain; rejected.
+
+**Known limitations (pre-existing, recorded by the #574 review).** `Campaign.OnLoad` resets
+`SpeedUpMultiplier` to 4 on every save load regardless of the configured Fast Forward Multiplier, so
+after a load the vanilla "3" key (`MapTimeFastForward`, mode only) fast-forwards at 4 until Space or
+either map bar button writes the configured value. The turbo multiplier has no floor against the
+extra one; a player may set turbo below extra, and turbo still lights the extra button while held.
+
+**Floor.** Both sliders range 1 to 128 independently, so `TimeAccelerationSettingsProvider` floors
+the extra multiplier at the fast-forward one (`ClampExtra`); without it "extra" could be slower than
+"fast" and the lit state unreachable.
+
 ## Key Files
 
 | File | Purpose |
 |------|---------|
 | `Main/Features/TimeAcceleration/ITimeAccelerationService.cs` | Service interface |
-| `Main/Features/TimeAcceleration/TimeAccelerationService.cs` | Core tick logic: input detection, multiplier application, Ctrl+Space save/restore |
+| `Main/Features/TimeAcceleration/TimeAccelerationService.cs` | Core tick logic: input detection, multiplier application, Ctrl+Space save/restore; the two button commands and the lit-state query |
 | `Main/Features/TimeAcceleration/TaomTimeControlHotKeyCategory.cs` | `GameKeyContext` publishing the three rebindable keys; static `Register()` called from `SubModule.OnSubModuleLoad` |
 | `Main/Features/TimeAcceleration/IMapInputAdapter.cs` | Input abstraction (no TaleWorlds types), named per ACTION rather than per key |
 | `Main/Features/TimeAcceleration/MapInputAdapter.cs` | Wraps `MapScreen.Instance.Input`; resolves the bound `GameKey`s once, then reads their current binding each frame |
 | `Main/Features/TimeAcceleration/ITimeControlAdapter.cs` | Time control abstraction (no TaleWorlds types) |
-| `Main/Features/TimeAcceleration/TimeControlAdapter.cs` | Wraps `Campaign.Current` speed/mode/lock |
+| `Main/Features/TimeAcceleration/TimeControlAdapter.cs` | Wraps `Campaign.Current` speed/mode/lock and the wait-menu flag |
 | `Main/Features/TimeAcceleration/ITimeAccelerationSettingsProvider.cs` | Settings interface |
-| `Main/Features/TimeAcceleration/TimeAccelerationSettingsProvider.cs` | Reads `TaomSettings.Instance` |
+| `Main/Features/TimeAcceleration/TimeAccelerationSettingsProvider.cs` | Reads `TaomSettings.Instance`; floors extra at fast |
 | `Main/Features/TimeAcceleration/TimeAccelerationIoC.cs` | DryIoc registration (4 singletons) |
-| `Main/Features/TimeAcceleration/UI/TimeAccelerationMixin.cs` | ViewModel mixin: `IsExtraFastForwardActive` + tooltip |
-| `Main/Features/TimeAcceleration/UI/TimeAccelerationPrefab.cs` | 5 prefab patches: widen panel, shift buttons, insert EFF button |
+| `Main/Features/TimeAcceleration/UI/TimeAccelerationMixin.cs` | ViewModel mixin on `Tick`: `IsExtraFastForwardActive`, tooltip, `ExecuteExtraFastForward` / `ExecuteFastForward` |
+| `Main/Features/TimeAcceleration/UI/TimeAccelerationPrefab.cs` | 5 prefab patches: widen panel, shift buttons (and rebind vanilla's FF button to the mixin), insert EFF button |
 | `Main/_Module/ModuleData/global_strings.xml` | Key names/descriptions for the Options screen. The filename is a hard engine contract: `GlobalTextManager.LoadDefaultTexts()` opens this literal path and reads nothing else |
 | `Main/_Module/ModuleData/Languages/*/std_taom_keybind_strings_*.xml` | The 12 translations of the above, listed in each `language_data.xml` |
 
@@ -150,7 +200,7 @@ every press would force fast-forward and the vanilla toggle would never toggle b
 
 ## Tests
 
-- `TAOM.Tests/Features/TimeAcceleration/TimeAccelerationServiceTests.cs` carries 22 tests covering:
+- `TAOM.Tests/Features/TimeAcceleration/TimeAccelerationServiceTests.cs` carries 42 tests covering:
   - Co-op deferral, including a toggle-on mid-turbo that must restore rather than latch
   - Guard conditions (campaign inactive, map inactive, menu open)
   - Menu open + locked bypass
@@ -162,6 +212,14 @@ every press would force fast-forward and the vanilla toggle would never toggle b
   - Rebinding: the shared Space default without Ctrl must fast-forward and not turbo; turbo rebound
     to its own key fires independently; Ctrl plus the fast-forward key must NOT turbo once turbo has
     moved elsewhere
+  - The map bar commands: extra and normal multipliers written with the mode change, the configured
+    values used, co-op deferral, campaign inactive, and the vanilla gate (non-wait menu blocks,
+    unlocked wait menu proceeds, locked wait menu blocks)
+  - The lit state: true in modes 2, 4 and 5 above the normal multiplier; false at the normal
+    multiplier, in the play and stop modes, and with no campaign
+- `TAOM.Tests/Features/TimeAcceleration/TimeAccelerationSettingsProviderTests.cs` carries 5 tests: the
+  no-MCM fallbacks equal the compiled defaults, the defaults are ordered fast below extra below turbo,
+  and `ClampExtra` floors extra at fast without touching a larger value
 - `TAOM.Tests/Features/TimeAcceleration/TaomTimeControlHotKeyCategoryTests.cs` carries 10 tests pinning the
   three engine contracts above (id floor, slot count, MainCategoryId), plus context type, GroupId,
   id uniqueness, the shipped defaults, and the null-`KeyboardKey` premise the adapter's guard relies on
@@ -197,6 +255,11 @@ take effect.
 
 ## Changelog
 
+- 2026-09-12: the map bar Extra Fast Forward button applies the extra multiplier (#574). It had
+  bound vanilla `ExecuteTimeControlChange(2)` directly, mode only, since the feature landed; #168
+  recorded that as a known limitation. Vanilla's fast-forward button is rebound through the mixin to
+  restore the normal multiplier, the lit state refreshes per frame off `Tick`, and the provider
+  floors extra at fast.
 - 2026-08-22: the three tiers became rebindable native game keys in Options > Keybindings > Campaign
   Map (`TaomTimeControlHotKeyCategory`, ids 500/501/502). Motivation: the extra fast-forward key was
   hardcoded to E, which is also vanilla `MapRotateRight` (GameKey 59), so pressing E accelerated time
@@ -219,5 +282,6 @@ take effect.
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
 - [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->
