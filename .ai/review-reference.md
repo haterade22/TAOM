@@ -39,9 +39,15 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (83 reviews, 184+ bugs found), distilled
+### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Proves a coverage claim by running the repo's own scanner on a synthetic body** (2026-09-12,
+  Return to Army review 98): handed "the IL drift guard cannot see a branch change", it wrote the
+  drifted body, ran `IlCallScanner` over both, and pasted the output, instead of agreeing. It also
+  opened the installed co-op mod's patches to test a "peers agree" rationale and found the
+  membership handler applies asynchronously. When a rationale names another mod, expect Codex to
+  read that mod; write the rationale so it survives that read.
 - **Reads the engine at the RAISE site, not the subscribe site.** Found that `ScreenManager` raises
   `OnPushScreen` AFTER `HandleInitialize` and `OnPopScreen` AFTER `HandleFinalize`, so a diagnostic
   could report `+0 MB` for the screen actually responsible. Nine Claude agents missed it.

@@ -29,15 +29,16 @@ Running scorecard of all reviews. **Reviews 1-96, 2026-04-05 to 2026-09-11.** 91
 | 21 | 2026-07-06 | TournamentExitHang #331 (exit diagnostics + Patch60) | issues-found | agree | 1 confirmed P2 — hook-level `IsEnabled` gates bypassed the deep-review fix's unconditional window-closers (fix verified only at the service layer); S1-S6 suspects all resolved with decompiles | 0 | 0 | adversarial-xhigh |
 | 89 | 2026-09-01 | Enlistment service kit weapons (#525) + polearm/shield gate (#526) | issues-found | agree | 6 confirmed (2 HIGH: a coverage test that derived its culture list from the file it audits, so deleting a culture stayed green; a single-stat armour proxy that let a promotion lose all four hit zones while the score rose. 4 MED/LOW: seed-missing skipping rescue rows, a ratchet with no occurrence count, Umbar kits carrying Dunland/Rohan/Noldor gear (#528), Item4 misnamed "banner slot") | 0 | 0 | adversarial-xhigh |
 | 22 | 2026-07-10 | TournamentExitHang #331 ROUND 2 (ExitStallSampler + PatchShield exclusion) | issues-found | agree | 2 P2 (Timer reentrancy on Poll; no independent sampler toggle) + 4 P3 (suspended-window logging, main-thread invariant [deferred+documented], 2 drift) — all addressed; deep-review compat agent separately caught the false ctor comment + the still-shielded Patch38 hot target | 0 | 0 | adversarial-xhigh |
+| 98 | 2026-09-12 | Return to Army (#566): `Patch87_ReturnToArmy`, one prefix on vanilla `PlayerTownVisitCampaignBehavior.game_menu_return_to_army_on_consequence` that runs vanilla's own Leave for an army member who is in the army but not merged into it (vanilla only leaves a village and hides Leave for members; a Player Switcher takeover inherits the lord's `Army`), pure `ReturnToArmyRules.Decide`, 12 tests | approve (0 P1 / 0 P2 / 2 P3) | agree | 2 confirmed, both prose/coverage: the co-op veto rationale claimed peer agreement that asynchronous replication cannot promise (reworded to the same-integration-as-vanilla argument); the IL drift guard pins call names not branches (Codex ran the scanner on a synthetic IsVillage-or-IsCastle body and it passed; engine-bump re-read written into the registry) | 0 | 0 | v6 + 8 Known Suspects, GPT-6-Astra at ultra |
 | 97 | 2026-09-11 | Hideout boss fight = 1 boss + N bodyguards (#564): `IHideoutBossFightService`, `Patch86` (two prefixes: assault split, sneak-in trim), boss-phase cap on `TaomBanditDensityModel`, MCM `Hideout Boss Bodyguards`, the eight boss templates cut to vanilla shape, two Python tools scoped off them | not run (6 Claude agents) | ISSUES FOUND (0C/0H/0M/1L) | 1 confirmed LOW: a "50 templates" count in two docstrings the diff never touched, stale once the tool's scope became 42 (fixed). Standards, compat (19 engine members + both Harmony targets with parameter names against installed v1.4.8), efficiency, completeness and data flow (12 flows) all clean | 1 (the compat agent's claim that an all-heroes hideout trips vanilla's `InitializeMission` assert: 3 <= 1 is false, the supplier fills the slot from non-priority heroes, and the test it asked for already existed) | 0 | 6-agent (standards / compat / efficiency / completeness / data flow / tooling) |
 | 96 | 2026-09-11 | ShaderPrecompilation re-enable for 1.4.8 (#560) | no-ship | agree | 7 confirmed (2 P1: `EndGame()` callable with no game from a cancel, an `async void` crash past the catch; the inquiry over-promised coverage. 2 P2: a teardown timeout stacked a second game on a still-loading one; a player-started custom battle mid-walk received the guard and was ended by the runner. 3 P3: `{newline}` empty at the cold main menu; the OoB profile-write rationale was false for the custom-battle VM; the MCM load-path wording) | 0 | 0 | adversarial-ultra (gpt-6-astra) |
 | 95 | 2026-09-11 | SpecialResources outflow visibility (#558) | issues-found | agree | 3 confirmed MED (spend and recruit toasts reported the nominal cost through a store that floors at zero; the countdown cast overflowed on FINITE input to int.MinValue with shipped data; the zero-balance notice ignored the sign of the net) | 0 | 0 | adversarial-ultra (gpt-6-astra, first run) |
 
 ## Metrics
 
-**Codex accuracy rate:** 48 real findings / 61 total findings = 79%
-**Codex miss rate:** 8 missed bugs / 56 total real bugs = 14%
-**False positive rate:** 9 false positives / 61 findings total = 15%
+**Codex accuracy rate:** 50 real findings / 63 total findings = 79%
+**Codex miss rate:** 8 missed bugs / 58 total real bugs = 14%
+**False positive rate:** 9 false positives / 63 findings total = 14%
 **Clean feature detection:** 1/1 (ArmyTargeting correctly approved)
 
 **v6 prompt batch (reviews 11-16):** 15 findings, 15 confirmed, 0 false positives = **100% accuracy**
@@ -2546,6 +2547,42 @@ Suite: 104/104 on the FiefGrant filter; 8583 of 8586 on the full suite (2 skippe
 failure, `ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, is the documented
 `wm_gondor_sword_a04` live-Armory drift, unrelated). RCA:
 `docs/reviews/rca-fiefgranting-participation-2026-09-11.md`.
+
+## Review 98: Return to Army (#566), 5-agent deep-review and a Codex pass on GPT-6-Astra at ultra (2026-09-12)
+
+A player taken over through Player Switcher, a member of an army, walked into Orthanc and found
+"Return to Army" opened "You are waiting in Orthanc" with no way out. Vanilla: the consequence
+switches to the army wait menu and leaves only for a village, "Leave" is hidden for every non-leader
+member, and the wait menu's first tick re-routes an unattached member into `town_wait_menus` (foreign
+faction) or a wait nothing ends (own faction). The takeover inherits the lord's `Army` untouched; a lord
+marching to join is exactly `Army != null, AttachedTo == null`. `Patch87_ReturnToArmy` runs vanilla's
+own Leave for that one row and vanilla for every other; `ReturnToArmyRules.Decide` is pure.
+
+**Five agents.** Standards: one nullable-annotation style point (the build emits no warning for
+oblivious engine types; annotated anyway). Compatibility: 17 of 17 engine usages verified on the
+installed DLL, and the note that `Finish` forces Stop only for a party with no army, resolved by
+`ExitToLast` writing Stop unconditionally. Efficiency and completeness clean. Data flow: 10 flows, 0
+gaps, one LOW: the error-path boundary sat one statement early (a throw on the gate-position write
+returned false although nothing vanilla reads had changed). Both LOWs fixed before the Codex pass.
+
+**Codex, GPT-6-Astra at ultra: P1 0 / P2 0 / P3 2, zero false positives.** Eight Known Suspects, all
+answered from the installed DLLs and the installed CoopNightly build. It DISPUTED the post-leave
+re-entry (`SetMoveModeHold` clears the short-term target, so `Army.Tick` cannot merge the party), the
+attached-member strand (the leader's `CurrentSettlement` setter propagates null to attached parties,
+`MobileParty.cs:609-611`, which the in-house trace had missed), the castle path, and the prompt's own
+double-leave hypothesis (the prefix returns false, vanilla never runs on that row). Its two P3s were
+both taken: the co-op veto rationale said replicated fields mean "peers agree", while the co-op mod
+applies membership through `GameThread.RunSafe(blocking: false)`, so the rationale now rests on the
+prefix meeting the co-op mod's `LeaveSettlementAction` interception exactly as vanilla Leave does,
+with two-peer play marked unverified; and the IL drift guard pins call presence, which it proved by
+running `IlCallScanner` over a synthetic drifted body, so the engine-bump re-read is now in the
+registry. New fact from S4: CoopNightly patches the game-menu time writes out, so "paused after the
+leave" is single-player only.
+
+Suite: 17/17 on the ReturnToArmy + CoopVeto filter; 8597 of 8600 on the full suite (the one failure,
+`ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded`, is the known live-Armory drift).
+RCA: [rca-return-to-army-2026-09-12.md](rca-return-to-army-2026-09-12.md). Feature doc:
+[return-to-army.md](../features/return-to-army.md).
 
 ## Unlinked review artefacts (index)
 
