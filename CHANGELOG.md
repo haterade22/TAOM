@@ -36,8 +36,14 @@ bow or crossbow (the validator paid 1.2 s for it, now 0.18 s); a non-numeric `ba
 reported, not raised; a `files` token naming no troop file and prefixes overlapping across lines
 are spec findings; `MAX_TIER = 10` is attributed to TAOM's `TaomCharacterStatsModel` override
 (vanilla caps at 6). RCA: `docs/reviews/rca-ranged-ladders-2026-09-12.md`.
-Owed: the 12-language translator run for the 130 names (no API key in this environment), the
-in-game restart check. `docs/features/ranged-ladders.md`.
+Owed: the 12-language translator run for the 130 names (tracked on #579), the in-game restart
+check. `docs/features/ranged-ladders.md`.
+
+Follow-up, same day: `rebalance_ranged_ladders.py` also writes `REPORT.html` and its tracked copy
+`docs/reference/ranged-troops.html`, every ranged troop per kingdom in rank order with the skills
+beside the weapon (missile speed, drag-model reach, accuracy, `WeaponInaccuracy` spread,
+`AiShootFreq` cadence, the mounted open-fire distance, bow plus ammo damage, shots), sortable
+and filterable; `ranged_ladder.index_ammo` and the troop display name feed it. 49 tests.
 
 ### feat(lords): a named lord fields his own party template; Faramir raises Ithilien rangers, Sauron a Black Numenorean and Uruk host (#580)
 

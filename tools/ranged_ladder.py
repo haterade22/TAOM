@@ -59,6 +59,8 @@ AIR_FRICTION_ARROW = 0.003
 
 _ITEM_REF_RE = re.compile(r'^Item\.')
 _LAUNCHER_HINT_RE = re.compile(rb'weapon_class\s*=\s*"(?:Bow|Crossbow)"')
+_AMMO_HINT_RE = re.compile(rb'weapon_class\s*=\s*"(?:Arrow|Bolt)"')
+AMMO_CLASSES = {"Bow": "Arrow", "Crossbow": "Bolt"}
 
 
 class LadderError(Exception):
@@ -80,6 +82,15 @@ class Launcher:
     file: str           # defining file's basename
 
 
+@dataclass(frozen=True)
+class Ammo:
+    id: str
+    cls: str            # "Arrow" | "Bolt"
+    damage: int         # thrust_damage, added to the bow's at launch (Mission.cs:4932)
+    stack: int          # stack_amount
+    name: str
+
+
 @dataclass
 class RangedTroop:
     id: str
@@ -91,6 +102,7 @@ class RangedTroop:
     sets: list          # battle sets, each {slot: item id} over Item0..Item3 only
     upgrades: list
     skills: dict = field(default_factory=dict)
+    name: str = ""     # display name, localisation tag stripped
 
 
 @dataclass(frozen=True)
@@ -360,6 +372,41 @@ def index_launchers(roots, failures: list | None = None) -> dict[str, Launcher]:
     return index
 
 
+def index_ammo(roots, failures: list | None = None) -> dict[str, Ammo]:
+    """id -> Ammo over every Arrow and Bolt <Item> under the roots, for the report only: a
+    missile's damage at launch is the bow's thrust_damage plus the ammo's."""
+    import xml.etree.ElementTree as ET
+    index: dict[str, Ammo] = {}
+    for root in roots:
+        root = Path(root)
+        if not root.exists():
+            continue
+        for path in sorted(root.rglob("*.xml")):
+            raw = path.read_bytes()
+            if not _AMMO_HINT_RE.search(raw):
+                continue
+            try:
+                tree = ET.fromstring(raw)
+            except ET.ParseError as exc:
+                if failures is not None:
+                    failures.append(f"{path}: not well-formed, its ammo is invisible ({exc})")
+                continue
+            for item in tree.iter("Item"):
+                iid = item.get("id")
+                if not iid or iid in index:
+                    continue
+                for weapon in item.iter("Weapon"):
+                    cls = weapon.get("weapon_class")
+                    if cls in ("Arrow", "Bolt"):
+                        index[iid] = Ammo(
+                            id=iid, cls=cls,
+                            damage=int(weapon.get("thrust_damage", "0") or 0),
+                            stack=int(weapon.get("stack_amount", "0") or 0),
+                            name=display_name(item.get("name")))
+                        break
+    return index
+
+
 def default_item_roots(game_modules, moduledata=MODULEDATA_DIR) -> list[Path]:
     """The three data modules a troop's launcher can come from."""
     roots = []
@@ -422,7 +469,7 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR) -> dict[str, RangedTroop]:
                 group=npc.get("default_group", "") or "", sets=sets,
                 upgrades=[_ITEM_REF_RE.sub("", (u.get("id") or "")).replace("NPCCharacter.", "", 1)
                           for u in npc.findall("./upgrade_targets/upgrade_target")],
-                skills=skills)
+                skills=skills, name=display_name(npc.get("name")))
     return troops
 
 

@@ -210,6 +210,18 @@ class IndexTests(unittest.TestCase):
         self.assertEqual(len(failures), 1)
         self.assertIn("broken.xml", failures[0])
 
+    def test_index_ammo_reads_arrows_and_bolts_with_damage_and_stack(self):
+        (self.root / "b").mkdir()
+        (self.root / "b" / "weapons.xml").write_bytes(b"""<Items>
+  <Item id="arr" name="{=k}Bodkin Arrows" Type="Arrows"><ItemComponent><Weapon weapon_class="Arrow" thrust_damage="6" stack_amount="28" missile_speed="10"/></ItemComponent></Item>
+  <Item id="bolt" name="Bolts" Type="Bolts"><ItemComponent><Weapon weapon_class="Bolt" thrust_damage="12" stack_amount="20"/></ItemComponent></Item>
+  <Item id="b1" name="Bow" Type="Bow"><ItemComponent><Weapon weapon_class="Bow" missile_speed="88"/></ItemComponent></Item>
+</Items>""")
+        idx = rl.index_ammo([self.root])
+        self.assertEqual(set(idx), {"arr", "bolt"})
+        self.assertEqual((idx["arr"].cls, idx["arr"].damage, idx["arr"].stack, idx["arr"].name), ("Arrow", 6, 28, "Bodkin Arrows"))
+        self.assertEqual((idx["bolt"].cls, idx["bolt"].damage, idx["bolt"].stack), ("Bolt", 12, 20))
+
     def test_load_ranged_troops_keeps_weapon_slots_and_skips_civilian_sets(self):
         md = self.root / "ModuleData"
         (md / "troops").mkdir(parents=True)
@@ -391,7 +403,8 @@ class RebalanceToolTests(unittest.TestCase):
 
     def _run(self, *extra):
         return self.rr.main(["--game-modules", str(self.modules), "--moduledata", str(self.md),
-                             "--spec", str(self.spec_path), "--report-dir", str(self.report_dir), *extra])
+                             "--spec", str(self.spec_path), "--report-dir", str(self.report_dir),
+                             "--docs-html", str(self.report_dir / "docs" / "ranged-troops.html"), *extra])
 
     def test_dry_run_writes_the_report_and_touches_nothing(self):
         before = self.troop_file.read_bytes()
@@ -407,6 +420,21 @@ class RebalanceToolTests(unittest.TestCase):
         self.assertEqual(data["edits_pending"], 6)   # militia x2 old ids, archer, xbowman, ranger, elf
         self.assertGreater(data["inversions_before"], 0)
         self.assertEqual(data["inversions_after"], 0)
+
+    def test_dry_run_writes_the_html_report_per_kingdom(self):
+        self.assertEqual(self._run(), 0)
+        html = (self.report_dir / "REPORT.html").read_text(encoding="utf-8")
+        self.assertIn("<title>", html)
+        self.assertIn('id="kingdom-man"', html)               # one section per line, in rank order
+        self.assertLess(html.index('id="kingdom-elf"'), html.index('id="kingdom-man"'))
+        self.assertIn("man_xbowman", html)
+        self.assertIn("man_sp_ranger", html)                   # the special line has its own section
+        self.assertIn('id="kingdom-man_special"', html)
+        self.assertIn("Crossbow", html)
+        self.assertNotIn("—", html)                      # no long dashes in the prose
+        self.assertIn("prefers-color-scheme", html)            # both themes
+        tracked = (self.report_dir / "docs" / "ranged-troops.html").read_text(encoding="utf-8")
+        self.assertEqual(tracked, html)                        # the tracked copy is the same document
 
     def test_apply_refuses_while_the_ladder_items_do_not_exist(self):
         before = self.troop_file.read_bytes()
