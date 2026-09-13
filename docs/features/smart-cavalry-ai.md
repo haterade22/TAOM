@@ -2,197 +2,286 @@
 
 ## Overview
 
-When the player orders a cavalry formation to Charge or ChargeToTarget, intercept the order and orchestrate a coordinated line-charge state machine: form a wide line → charge → pass through the enemy → reform on the other side. Optionally reroute around friendly infantry on the charge line. Player-team cavalry only.
+When the player orders a cavalry formation to Charge (F3) or ChargeToTarget in an open-field battle,
+intercept the order and run a coordinated hit-and-run cycle: line up, charge, ride through, reform on
+the far side facing the enemy, and charge again at the nearest live enemy formation until none is
+left or the player gives any other order. Optionally reroute around friendly infantry on the charge
+line first. Player-commanded formations only; the team AI's formations keep vanilla behaviour.
+
+MCM: **Battle Tactics / Smart Cavalry**. Ships OFF by default until the in-game smoke below passes.
 
 ## Why This Exists
 
-- **Vanilla behavior:** cavalry charges as a clump, stops on first contact with infantry, gets stuck in melee, and tramples friendly units in the way.
-- **TAOM requirement:** cavalry should hit-and-run as a clean line, pass through, reform; in mixed-army Middle-earth battles where Rohirrim or Easterlings cavalry support friendly Gondorian/Dol Guldur infantry, riders should route around their allies, not over them.
-- **Without this feature:** cavalry feels visually wrong (clumpy, sticky) and tactically useless (stops mid-charge, friendlies get killed by their own riders).
+- **Vanilla behaviour:** cavalry charges as a clump, stops on first contact with infantry, gets stuck
+  in melee, and tramples friendly units in the way.
+- **TAOM requirement:** cavalry should hit and run as a clean line, pass through, reform, and come
+  again; in mixed-army Middle-earth battles where Rohirrim or Easterling cavalry support friendly
+  Gondorian or Dol Guldur infantry, riders should route around their allies, not over them.
+- **v1 (2026-05-06 to 2026-09-13) never worked.** Player reports: "cav stop in the middle of the
+  enemy or don't react at all", "you have to double charge them (F3 twice)". Root causes, all
+  verified on the installed v1.4.8 DLL, are recorded in
+  [#586](https://github.com/haterade22/TAOM/issues/586) and
+  [`rca-smart-cavalry-2026-09-13.md`](../reviews/rca-smart-cavalry-2026-09-13.md); the short form is
+  under "Engine facts the design rests on" below.
 
 ## Architecture
 
-### Design Challenge
+### Design challenge
 
-Three things make this non-trivial:
+1. **Single-source MovementOrder side channel.** The player's F3 reaches
+   `Formation.SetMovementOrder`. The feature must intercept just the cavalry path and stay out of
+   everything else: the postfix bails in O(1) on non-player-team formations, AI-controlled formations,
+   the feature toggle, and its own re-entered writes.
+2. **The engine keeps issuing orders too.** `BannerBearerLogic` re-issues a formation's current order
+   when a bearer dies; `Formation.Tick` substitutes a plain Charge when a `ChargeToTarget` target
+   empties; `Team.Tick` issues Retreat to a routed side. The machine has to tell these from the
+   player's own orders (see "Cancel and re-issue" below).
+3. **Nothing may hold riders still.** Every state that holds a Move order has a dwell budget, and
+   every exit that gives up hands the formation back to a vanilla Charge, so no code path can leave
+   riders standing in or near the enemy.
+4. **ADR-007.** The service holds only adapter interfaces and opaque target tokens; the adapters are
+   the only layer that touches `Formation`, `MovementOrder`, `Team`, `Agent`.
 
-1. **Single-source MovementOrder side-channel.** The player issues `Charge` via the Tactics UI, which calls `Formation.SetMovementOrder`. We must intercept *just* the cavalry path and return zero overhead for non-cavalry orders. Postfix-on-everything is fine if it bails fast.
-2. **Recursion risk.** The state machine itself responds to a charge order by issuing further `SetMovementOrder` calls (Stop, Move-to-waypoint, ChargeToTarget). Without a re-entry guard, the postfix would loop infinitely.
-3. **ADR-007 — no sealed types in services.** The service tracks an "original target formation" across the Rerouting branch. We can't store a `Formation` reference in the service; we use opaque `object` tokens that only the command adapter unwraps.
-
-### Solution Approach
-
-Single Harmony Postfix on `Formation.SetMovementOrder`. The patch attribute lives in the shared `Patch_MissionTime_SetMovementOrder` category — applied once from `SubModule.OnMissionBehaviorInitialize` (behind a static one-shot guard) rather than in `OnSubModuleLoad`. Reason: `MovementOrder.cctor` constructs static instances whose ctor reads `Mission.Current.CurrentTime`; applying the patch any earlier crashes JIT prep with NRE. Postfix bails on:
-- Recursion-guard set
-- Non-cavalry formation (via `formation.QuerySystem.IsCavalryFormation`)
-- Non-Charge / non-ChargeToTarget order
-- Non-player-team formation
-- Feature disabled in MCM
-- **Non-field-battle mission** — the coordinated line charge is open-field-only, so `CavalryChargeService.HandleChargeOrder` and `.Tick` bail unless `IBattlefieldQueryAdapter.IsFieldBattle` (engine `Mission.IsFieldBattle`, true ONLY for `MissionTeamAIType == FieldBattle`). This keeps the feature out of siege / sally-out / hideout / naval / settlement missions, where synchronously re-entering native `Formation.SetPositioning`/`SetMovementOrder` mid-deployment can fault (siege-CTD guard, 2026-07-15). Caveat: `SiegeMissionNoDeployment` relief-force assaults are engine-tagged `FieldBattle`, so the feature still runs there.
-
-When the postfix proceeds, it hands control to `ICavalryChargeService.HandleChargeOrder(...)` which decides reroute vs line-charge. The service then drives a state machine via `MissionBehavior.OnMissionTick`:
+### The cycle
 
 ```
-Idle → Forming → Charging → PassingThrough → Reforming → Idle
-                                                    ↓
-                                  (or) → Rerouting → Idle (re-issues charge if target alive)
+player F3 on player-team cavalry (Patch31 postfix)
+   |
+   v
+[reroute needed?] --yes--> Rerouting: Move to waypoint ------ arrived or 12 s ---------+
+   | no                                                                                 |
+   v                                                                                    v
+Forming: SetPositioning(line 5 m ahead) + Move  --aligned or MaxLineUpSeconds-->  Charging: ChargeToTarget
+                                                                                       |
+                                              contact: dot(targetLive - centroid, dir) < 10 m
+                                                                                       v
+Reforming: hold the line  <--- arrived (10 m) ---  PassingThrough: Move to reform point, line facing back
+   |                                                              |  10 s -> HandOff
+   +--aligned or MaxLineUpSeconds--> nearest live enemy? --yes--> Forming (next cycle)
+                                                          --no--> HandOff
 ```
 
-`SmartCavalryRecursionGuard` (a thread-local flag) is raised inside `CavalryCommandAdapter` around every `SetMovementOrder`/`SetPositioning` call. The Postfix reads the flag and bails.
+**HandOff:** `IssueCharge()` (a vanilla free Charge) and state Idle. Reached from every give-up: no
+enemy formation left, the engine refusing a Move (invalid world position), PassingThrough bogged down
+for 10 s, the feature toggled off mid-cycle, or the target sitting on top of the formation so no line
+can be drawn.
 
-### Component Diagram
+**Charge now:** a second F3 (or any charge order the postfix accepts) while a cycle is running does
+not reset the line-up. It re-points the target and jumps straight to Charging.
+
+**Cancel and re-issue:** any non-charge order from the player on a formation mid-cycle, and any order
+at all on an `IsAIControlled` formation, cancels the cycle without issuing anything, so the newer
+order stands (toggle or no toggle; only starting a cycle needs the feature on). The postfix compares
+the order in force before the call (captured by a prefix) with the incoming one: same kind, and for
+a Move the same spot within 1 cm (the engine's own `AreOrdersPracticallySame` allows a metre, which
+a player click could fall inside). An identical re-issue is engine housekeeping and does not cancel.
+
+**Targeted charge (Patch31b):** the player's "charge THAT formation" is a plain Charge followed by
+`SetTargetFormation(target)`. Patch31 starts the cycle at the nearest enemy; the postfix on
+`SetTargetFormation` re-points it at the chosen one: a Forming line is redrawn toward it, a Charging
+formation re-issues its charge at it.
+
+**Dismount and empty:** a formation that stops being cavalry mid-cycle (riders dismounted or lost
+their mounts) is handed back to a vanilla Charge; a formation that emptied has its cycle forgotten so
+`HasActiveCycles` does not keep the tick alive for it.
+
+### Per-state orders and exits
+
+| State | Order issued on entry | Exit |
+|-------|----------------------|------|
+| Forming | `ApplyChargeLine(centroid + dir*5, dir, spacing)` then `IssueMoveTo(line)` (Move is `Hold` state: riders take their arrangement slots; Stop is `StandGround` and never forms a line) | aligned OR `MaxLineUpSeconds` -> Charging. Target gone -> new line at the nearest enemy; none -> HandOff. Move refused -> HandOff |
+| Charging | `IssueChargeToTarget(token)`; `ChargeDirection` frozen at line time | `along = dot(targetLive - centroid, dir) < 10 m` -> PassingThrough. Target gone -> re-target nearest and re-issue; none -> HandOff. No timeout: a Charge-family order never leaves riders standing |
+| PassingThrough | reform point = `centroid + dir*(max(along,0) + depth + ReformDistance)`, where `depth` is how far the target's riders extend past its centre along `dir` (`GetTargetDepthAlong`, so a deep column or a line turned sideways does not swallow the point); `ApplyChargeLine(reform, -dir, spacing)`; `IssueMoveTo(reform)` | centroid within 10 m -> Reforming. 10 s -> HandOff. Move refused -> HandOff |
+| Reforming | none (the Move already holds the line, facing the enemy) | aligned OR `MaxLineUpSeconds` -> next cycle at the nearest live enemy, rerouting around friendlies like the first one; none -> HandOff |
+| Rerouting | `IssueMoveTo(waypoint)` from `CavalryPathPlanner` | within 10 m OR 12 s -> new line at the live target; target gone -> nearest; none -> HandOff |
+
+**Alignment** (`FormationAdapter.IsAligned`, decision in `LineAlignment`): the MEAN distance from each
+rider to its own arrangement slot (`Formation.Arrangement.GetWorldPositionOfUnitOrDefault(unit)`) is
+under `2 m + 8 m * (1 - strictness)`: 10 m at strictness 0, 4.4 m at the 0.7 default, 2 m at 1.
+Arrangement-agnostic (Line, Skein, Wedge), meaningful only under a Move order, which is the only time
+the machine asks. Mean rather than max so one straggler cannot hold the charge; the dwell budget is
+the floor for everything else. Read from the arrangement, not `Formation.GetOrderPositionOfUnit`,
+which is prefixed by MixedFormations' Patch30, sends detached units to their detachment frame, and
+falls back to the rider's own position (distance zero) when a slot is off the navmesh.
+
+**Geometry trade-off (frozen direction).** Contact is measured along the direction the line was drawn
+with, so a flank charge registers when it crosses the plane through the enemy's centre, and the
+reform point keeps the riders' lateral offset instead of converging on the enemy centre. An enemy
+that moves laterally during the charge is followed by vanilla's own `ChargeToTarget` steering, so the
+centroid follows it and the reform point still lands `ReformDistance` past the plane through the live
+enemy centre. The point can land inside an enemy deeper than `ReformDistance` along that axis (a
+column, or a line that turned 90 degrees mid-charge); raise the MCM distance for such fights.
+
+### Component diagram
 
 ```
-       Player charge order  ─────────────────────────►  Formation.SetMovementOrder
-                                                                  │
-                                                          [HarmonyPostfix]
-                                                                  │
-                                                Patch31_FormationSetMovementOrder
-                                                                  │ (cavalry + player team + Charge/ChargeToTarget?)
-                                                                  ▼
-                              SmartCavalryAIMissionBehavior  ──►  ICavalryChargeService.HandleChargeOrder
-                                                                  │
-                                          ┌───────────────────────┴───────────────────────┐
-                                          ▼                                               ▼
-                              ICavalryPathPlanner.TryGetReroutePoint           InitiateLineCharge (Forming)
-                                          │ blocker found                                 │
-                                          ▼                                               │ ApplyChargeLine + IssueStop
-                              BeginReroute (Rerouting)                                    │
-                                  IssueMoveTo(waypoint)                                   │
-                                                                                          ▼
-                                                                              MissionBehavior OnMissionTick
-                                                                                          │
-                                                                              ICavalryChargeService.Tick
-                                                                                          │
-                                                                          (Forming → Charging → PassingThrough → Reforming → Idle)
+ Player charge order ----> Formation.SetMovementOrder
+                              |  [HarmonyPrefix]  captures the previous order (__state)
+                              |  [HarmonyPostfix] Patch31_FormationSetMovementOrder
+                              |     gates: recursion guard, player team, IsAIControlled,
+                              |            charge kind, identical re-issue, toggle, cavalry
+                              v
+   ICavalryChargeService.HandleChargeOrder  (Idle: reroute or line; mid-cycle: charge now)
+   ICavalryChargeService.CancelCharge       (other orders, AI-controlled)
+ ... then, for a targeted charge:
+ OrderController -------> Formation.SetTargetFormation(target)
+                              |  [HarmonyPostfix] Patch31b_FormationSetTargetFormation
+                              v
+   ICavalryChargeService.RetargetCycle      (re-point the running cycle at the chosen target)
+                              ^
+ SmartCavalryAIMissionBehavior.OnMissionTick  (every frame, every player-team cavalry formation)
+                              |
+                              v
+   ICavalryChargeService.Tick  -> Update<State>  -> ICavalryCommandAdapter (Move / ChargeToTarget /
+                                                       Charge / SetPositioning, all under the
+                                                       recursion guard)
+                                                  -> IBattlefieldQueryAdapter (nearest enemy,
+                                                       ground height, friendlies)
 ```
 
 ## Configuration
 
-All knobs live in MCM under **Battle Tactics / Smart Cavalry** (GroupOrder=22).
+All knobs live in MCM under **Battle Tactics / Smart Cavalry** (GroupOrder 22). Every one is
+`RequireRestart = false`.
 
 | MCM key | Type | Range / Default | Effect |
 |---------|------|-----------------|--------|
-| `EnableSmartCavalryAI` | bool | true | Master toggle; off = vanilla behavior. |
-| `SmartCavalryAvoidFriendlies` | bool | true | When on, cavalry reroutes around friendly non-cavalry formations on the charge line. |
-| `SmartCavalryChargeStrictness` | float [0..1] | 0.7 | Tolerance for the alignment check that gates Forming→Charging AND Reforming→Idle. Higher = wait longer for tighter line. |
-| `SmartCavalryReformDistance` | float [10..80]m | 25 | Meters past the target before the cavalry stops and reforms. |
-| `SmartCavalryLineSpacing` | float [0.8..3.0] | 1.2 | Multiplier on per-unit spacing during the line-charge formation. |
-| `SmartCavalryDebug` | bool | false | Emit `[SmartCavalryAI]` HUD diagnostics on every order interception. File log via `IModLogger` is unconditional. |
+| `EnableSmartCavalryAI` | bool | false | Master toggle. Off = vanilla. Turning it off mid-cycle hands any running cycle back to a vanilla Charge on the next tick. |
+| `SmartCavalryAvoidFriendlies` | bool | true | Reroute around friendly non-cavalry formations on the charge line, and nudge riders away from friendly infantry within 3 m (player-commanded formations only). |
+| `SmartCavalryChargeStrictness` | float [0..1] | 0.7 | Alignment tolerance for Forming and Reforming: mean slot distance under `2 + 8*(1-s)` metres. |
+| `SmartCavalryReformDistance` | float [10..80] m | 25 | Metres past the enemy's plane where the riders pull up and reform. |
+| `SmartCavalryLineSpacing` | float [0.8..3.0] | 1.2 | Passed to `Formation.SetPositioning` as `unitSpacing` after `Math.Round`, so it acts as an absolute spacing index (1, 2 or 3), not a multiplier. Known defect, out of #586's scope. |
+| `SmartCavalryMaxLineUpSeconds` | float [1..15] s | 4 | Longest Forming or Reforming holds before proceeding regardless of alignment. The floor that keeps a line-up from ever freezing the formation. |
+| `SmartCavalryDebug` | bool | false | Also log every intercepted charge order and the resulting state to the TAOM log file. State transitions are logged regardless. Nothing is drawn on the HUD. |
 
-### Dead-setting audit (gate per `feedback_user_facing_promise_must_match_code.md`)
+### Dead-setting audit
 
-All five tuning settings are referenced by the service:
+| Setting | Consumer |
+|---------|----------|
+| `EnableSmartCavalryAI` | `Patch31` postfix, `SmartCavalryAIMissionBehavior.OnMissionTick`, `CavalryChargeService.HandleChargeOrder` and `.Tick` (the disabled-mid-cycle hand-off) |
+| `SmartCavalryAvoidFriendlies` | `CavalryChargeService.HandleChargeOrder` (path planner) and `SmartCavalryAIMissionBehavior.OnMissionTick` (collision avoidance) |
+| `SmartCavalryChargeStrictness` | `CavalryChargeService.UpdateForming` and `UpdateReforming` |
+| `SmartCavalryReformDistance` | `CavalryChargeService.UpdateCharging` (contact) |
+| `SmartCavalryLineSpacing` | `CavalryChargeService.LineSpacing()`, used by `InitiateLineCharge` and the reform line |
+| `SmartCavalryMaxLineUpSeconds` | `CavalryChargeService.UpdateForming` and `UpdateReforming` |
+| `SmartCavalryDebug` | `Patch31` postfix (one log line per intercepted order) |
 
-| Setting | Consumer (file:line) |
-|---------|---------------------|
-| `EnableSmartCavalryAI` | `SmartCavalryAISettingsProvider.cs` → service / postfix / mission behavior |
-| `SmartCavalryAvoidFriendlies` | `CavalryChargeService.HandleChargeOrder` (gates the path-planner call) + mission behavior collision avoidance |
-| `SmartCavalryChargeStrictness` | `CavalryChargeService.UpdateForming` AND `UpdateReforming` (the second usage is the **bug-fix** vs the v1.4 decompile baseline — see "Inherited bugs fixed" below) |
-| `SmartCavalryReformDistance` | `CavalryChargeService.UpdatePassingThrough` |
-| `SmartCavalryLineSpacing` | `CavalryChargeService.InitiateLineCharge` (rounded to int and passed to `ICavalryCommandAdapter.ApplyChargeLine`) |
-| `SmartCavalryDebug` | `Patch31_FormationSetMovementOrder.Postfix` (HUD log gate) |
+Settings-consumed tests in `CavalryChargeServiceTests` pin each read. The knob also counts toward the
+co-op settings fingerprint (225 `TaomSettings` properties, 180 simulation-relevant; see
+[coop-interop.md](coop-interop.md)).
 
-No dead promises shipped.
+## Engine facts the design rests on (v1.4.8, installed DLL)
 
-## Inherited bugs fixed during the port
+| Fact | Where | Consequence |
+|------|-------|-------------|
+| `MovementOrderStop` is `MovementStateEnum.StandGround`, and `GetOrderPositionOfUnit` returns the rider's OWN position for StandGround | `MovementOrder.cs:143-144`, `Formation.cs:1262` | A Stop never moves riders into a line. v1 issued Stop for its line-up and its reform; riders froze where they stood. Line-ups are Moves. |
+| `MovementOrderMove` is `Hold`; `GetOrderPositionOfUnit` returns the arrangement slot; `OnApply(Move)` calls `SetPositioning(position)` only | `MovementOrder.cs:145-147, 690-691`, `Formation.cs:1258-1259, 1206-1211` | `SetPositioning(pos, dir, spacing)` then Move keeps the direction and spacing and forms the line. |
+| `Vec2.RightVec()` is `(y, -x)` | `Vec2.cs:277` | v1's `IsAligned` measured spread ALONG the line and required 1.5 m; impossible for more than two riders. |
+| `ChargeToTarget` is inapplicable when the target has no units; the order degrades to a hold at the order position, and `Formation.Tick` substitutes a plain Charge | `MovementOrder.cs:816-817, 536-538, 1107-1115`, `Formation.cs:2291-2295` | The service re-targets on target death itself; the engine's substitute Charge re-enters Patch31 and lands in "charge now", the same re-target. |
+| `Formation.IsAIControlled` is false for every formation of a player general who has not delegated; `Team.DelegateCommandToAI` sets it true for all; `Formation.RemoveUnit` sets it true when a player formation empties and nothing resets it on refill | `Formation.cs:172, 2201-2203`, `Team.cs:447-473` | The machine stays out of AI-commanded formations. A player formation that emptied mid-battle stays AI-commanded (vanilla), so the machine stays out of it for the rest of the battle too. |
+| `BannerBearerLogic.FormationBannerController.RepositionFormation` re-issues the current order | `BannerBearerLogic.cs:157` | Fires on every bearer death. Without the identical-re-issue test it cancelled a running cycle. |
+| `FormationAI.TickOccasionally` issues the AI's movement order only when `IsAIControlled` (there is no `SetCurrentOrder`) | `FormationAI.cs:284-290` | The team AI never orders a player-commanded formation, so a non-charge order on one is the player's. |
+| The player's targeted charge is `SetMovementOrder(MovementOrderCharge)` THEN `SetTargetFormation(target)`; `MovementOrderChargeToTarget` is not on the player path | `OrderController.cs:812-817` | Patch31 sees a plain Charge and starts at the nearest enemy; Patch31b, a postfix on `SetTargetFormation`, re-points the cycle at the formation the player chose. |
+| Every `SetMovementOrder` ends with `SetTargetFormation(null)`, which pushes target index -1 to every rider | `Formation.cs:714, 222-238` | A `ChargeToTarget` alone is a free charge at anyone. `IssueChargeToTarget` re-sets the native target after the order, as vanilla does. |
+| `Formation.Tick` re-applies the retained `FacingOrder`'s direction through `SetPositioning` every tick | `Formation.cs:2311-2314` | A direction written through `SetPositioning` alone lasts one tick. `ApplyChargeLine` installs `FacingOrderLookAtDirection` with every line. |
+| `ColumnFormation.GetWorldPositionOfUnitOrDefault` is null for every unit | `ColumnFormation.cs:663-666, 727-730` | Under a Column arrangement alignment cannot be measured; `IsAligned` returns false and the line-up budget decides. |
+| `Formation.SetMovementOrder(MovementOrder input)`: Harmony binds `input` by name; `MovementOrderEnum.Charge = 2`, `ChargeToTarget = 3`, `Move = 7`, `Stop = 9` | `Formation.cs:685`, `MovementOrder.cs:12-25` | Pinned by `SmartCavalryAIBindingTests` together with every other member the postfix and adapters read. |
 
-The decompiled v1.4 source has two latent issues that the port did NOT propagate:
-
-1. **Hardcoded `0.5f` reform strictness** (decompiled line 517). `UpdateReformingState` ignored `ChargeFormationStrictness` and always used `0.5f` — a user who set strictness to `0.9` (very tight) would still see reform complete at the looser `0.5` tolerance. Our `CavalryChargeService.UpdateReforming` reads the setting. Regression test: `Tick_ReformingAndAligned_TransitionsToIdle` asserts `cav.IsAligned(0.9f)` is what the service queries.
-2. **Per-order HUD spam** (decompiled lines 852–860). The original logged every `SetMovementOrder` invocation to `InformationManager.DisplayMessage` regardless of debug state. Our Postfix gates the HUD message behind `SmartCavalryDebug`. File log via `IModLogger` is unconditional.
-
-## Pre-v1.4 API drift findings
-
-The decompiled source is v1.4. Three pre-v1.4 deltas required deviations from the prompt's blueprint:
-
-| Prompt assumption | v1.3.15 reality | Plan deviation |
-|---|---|---|
-| `Formation.SetPositioning` is private; reflect via `AccessTools` | **public** pre-v1.4 | Drop reflection. `CavalryCommandAdapter` calls directly. |
-| `Agent.SetMovementDirection` is private; reflect via `AccessTools` | **public** pre-v1.4 (`SetMovementDirection(in Vec2)`) | Drop reflection. `MissionBehavior.ApplyCollisionAvoidance` calls directly. |
-| Compare `MovementOrder.OrderType` against int 4 (Charge) and 5 (ChargeToTarget) | `MovementOrderEnum.Charge = 2`, `ChargeToTarget = 3`; property is `OrderEnum` (no `OrderType`) | Use enum names everywhere. Verbatim port silently mismatches against pre-v1.4 enum values. |
-| Read `Formation.MovementOrder` property after `SetMovementOrder` | No public property; use `Formation.GetReadonlyMovementOrderReference()` | `FormationAdapter.CurrentMovementOrderType` and `Patch31` use the readonly-ref accessor. |
-| `Formation.IsCavalry` predicate exists | Doesn't exist on `Formation`. Pre-v1.4 path: `formation.QuerySystem.IsCavalryFormation` | `FormationAdapter.RepresentativeIsCavalry` queries the query-system. |
-
-## Key Files
+## Key files
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/SmartCavalryAI/CavalryChargeService.cs` | State machine driver (Idle→Forming→Charging→PassingThrough→Reforming, plus Rerouting branch). |
-| `Main/Features/SmartCavalryAI/ICavalryChargeService.cs` | Service interface. |
-| `Main/Features/SmartCavalryAI/CavalryPathPlanner.cs` | Pure-function reroute math (port of decompiled `CavalryPathPlanner` verbatim — no API drift). |
-| `Main/Features/SmartCavalryAI/ICavalryPathPlanner.cs` | Path planner interface. |
-| `Main/Features/SmartCavalryAI/SmartCavalryAISettingsProvider.cs` | `TaomSettings.Instance` wrapper with `??` defaults + clamps. |
-| `Main/Features/SmartCavalryAI/SmartCavalryRecursionGuard.cs` | Thread-local flag set by command adapter, read by Postfix. |
-| `Main/Features/SmartCavalryAI/SmartCavalryAIIoC.cs` | DryIoc singleton registrations. |
-| `Main/Features/SmartCavalryAI/Models/CavalryState.cs` | Enum: Idle/Forming/Charging/PassingThrough/Reforming/Rerouting. |
-| `Main/Features/SmartCavalryAI/Models/CavalryFormationState.cs` | Per-formation state DTO. |
-| `Main/Features/SmartCavalryAI/Hooks/SmartCavalryAIMissionBehavior.cs` | `OnMissionTick` driver + per-mounted-unit collision avoidance + `OnEndMission` cleanup. |
-| `Main/Features/SmartCavalryAI/Hooks/Patch31_FormationSetMovementOrder.cs` | Postfix, hands control to the service. |
-| `Main/Adapters/IFormationAdapter.cs` (extended) | +4 props: `RepresentativeIsCavalry`, `IsMoving`, `CurrentMovementOrderType`, `CurrentPosition`, `IsAligned(strictness)`. |
-| `Main/Adapters/ICavalryCommandAdapter.cs` | Cavalry command surface (Issue*, ApplyChargeLine, IsTargetAlive). |
-| `Main/Adapters/CavalryCommandAdapter.cs` | Implementation; raises `SmartCavalryRecursionGuard` around every TaleWorlds API call. |
-| `Main/Adapters/IBattlefieldQueryAdapter.cs` | Battlefield-scope queries (`GetNearbyAgents`, `GetGroundHeightAtPosition`, friendly-formation enumeration). |
-| `Main/Adapters/BattlefieldQueryAdapter.cs` | Implementation. |
-| `Main/Adapters/Models/MovementOrderType.cs` | TAOM-owned enum (Charge/ChargeToTarget/Other) — wraps `MovementOrder.MovementOrderEnum` so service stays free of TaleWorlds types. |
-| `Main/Adapters/Models/NearbyAgentSnapshot.cs` | Snapshot DTO returned by `IBattlefieldQueryAdapter.GetNearbyAgents`. |
-
-## Dependencies
-
-- `IFormationAdapter` (extended this port; reused by MixedFormations)
-- `ICavalryCommandAdapter` (new)
-- `IBattlefieldQueryAdapter` (new)
-- `IModLogger` (existing)
-- `TaomSettings` (existing)
+| `Main/Features/SmartCavalryAI/CavalryChargeService.cs` | The state machine: entries (`HandleChargeOrder`, `ChargeNow`, `BeginReroute`, `InitiateLineCharge`), per-state ticks, `StartNextLineCharge`, `HandOff`, `Cancel`, `HasActiveCycles`. Logs every transition. |
+| `Main/Features/SmartCavalryAI/LineAlignment.cs` | Pure alignment decision and tolerance curve. |
+| `Main/Features/SmartCavalryAI/CavalryPathPlanner.cs` | Pure reroute math (unchanged in v2 except the NaN-safe distance gate). |
+| `Main/Features/SmartCavalryAI/SmartCavalryAISettingsProvider.cs` | `TaomSettings.Instance` wrapper with `SettingClamp` defaults. |
+| `Main/Features/SmartCavalryAI/SmartCavalryRecursionGuard.cs` | Thread-local depth counter raised around every write the feature issues. |
+| `Main/Features/SmartCavalryAI/Models/CavalryFormationState.cs` | Per-formation state: `State`, `StateEnteredTime`, `TargetToken`, `ChargeDirection`, `ReformPoint`, `ReroutePoint`. |
+| `Main/Features/SmartCavalryAI/Hooks/Patch31_FormationSetMovementOrder.cs` | Prefix (previous order) + postfix (gates, target resolution, cancel, hand-off to the service). |
+| `Main/Features/SmartCavalryAI/Hooks/Patch31b_FormationSetTargetFormation.cs` | Postfix on `SetTargetFormation`: the second half of the player's targeted charge, re-points a running cycle. |
+| `Main/Features/SmartCavalryAI/Hooks/SmartCavalryAIMissionBehavior.cs` | Per-frame driver, friendly collision avoidance, `OnEndMission` cleanup. |
+| `Main/Adapters/IFormationAdapter.cs`, `FormationAdapter.cs` | `RepresentativeIsCavalry`, `IsAIControlled`, `CurrentPosition`, `IsAligned`. |
+| `Main/Adapters/ICavalryCommandAdapter.cs`, `CavalryCommandAdapter.cs` | `IssueMoveTo` (bool), `IssueChargeToTarget` (order + native target), `IssueCharge`, `IssueStop`, `ApplyChargeLine` (positioning + facing order), `IsTargetAlive`, `TryGetTargetPosition`, `GetTargetDepthAlong`. |
+| `Main/Adapters/IBattlefieldQueryAdapter.cs`, `BattlefieldQueryAdapter.cs` | `IsFieldBattle`, `TryGetNearestEnemyFormation`, friendlies, ground height, nearby agents. |
 
 ## Tests
 
-`TAOM.Tests/Features/SmartCavalryAI/` — 44 tests across 2 files, MSTest + NSubstitute:
+`TAOM.Tests/Features/SmartCavalryAI/`, MSTest + NSubstitute, 106 tests:
 
-| File | Count | Coverage |
-|------|------:|----------|
-| `CavalryPathPlannerTests.cs` | 12 | All filter conditions (no formations, all-cavalry, behind/past/off-line, target-too-close, empty formation), reroute production (basic, north/south sidestep direction, multiple-blocker closest-pick, diagonal charge). |
-| `CavalryChargeServiceTests.cs` | 32 | All 6 state transitions, all 5 MCM settings (consumed assertions), mission cleanup, recursion guard, idle no-op, non-cavalry no-op, no-player-team no-op, feature-disabled no-op, target-alive vs target-dead Rerouting branches, **Reforming-uses-strictness regression test** for the inherited 0.5f bug. |
+| File | Covers |
+|------|--------|
+| `CavalryChargeServiceTests.cs` (77) | Every entry, transition, timeout and exit in the table above; charge-now from Forming, Reforming, Rerouting and Charging; the targeted charge's re-point (`RetargetCycle`) while Forming and while Charging; cancel, AI-controlled cancel, no-longer-cavalry hand-off, disabled-mid-cycle hand-off and the ownership order between them; live-target contact, flank offset, lateral enemy movement, target depth (and a NaN depth); repeat cycles rerouting around friendlies; NaN target; every setting read. |
+| `LineAlignmentTests.cs` (12) | Tolerance curve at 0 / 0.7 / 1 and out of range; mean vs max; NaN and infinity fail the gate. |
+| `CavalryPathPlannerTests.cs` (13) | Reroute filters and waypoint math; NaN target. |
+| `SmartCavalryAIBindingTests.cs` (4, `BindingVerification`) | `SetMovementOrder`'s and `SetTargetFormation`'s parameter names; enum values 2/3/7/9; every engine member the two postfix bodies and the adapters read (arrangement slots, facing order, native target, re-issue comparison, team queries). |
 
-Total project: 1518 tests (1515 passing; 3 unrelated FiefManagement failures from parallel work).
-
-## How to add a new state to the machine
-
-1. Add the enum value to `Main/Features/SmartCavalryAI/Models/CavalryState.cs`.
-2. Add a case branch in `CavalryChargeService.Tick` (the `switch` over `state.State`).
-3. Implement an `Update<NewState>` method that decides when to transition out.
-4. Write tests in `CavalryChargeServiceTests.cs` for entry, hold, and exit conditions.
-5. Update this doc's "Solution Approach" diagram.
-
-## Performance
-
-The `MissionBehavior` ticks every cavalry formation on the player team each frame. Per formation:
-- One `IFormationAdapter` and one `ICavalryCommandAdapter` allocation per tick (cheap; both are thin wrappers).
-- One state-dictionary lookup.
-- If `AvoidFriendlies` is on, one per-mounted-unit `Mission.GetNearbyAgents` query (3m radius). The mission engine caches its spatial index; cost is bounded by mounted-unit count, not battle size.
-
-The `Patch31` Postfix runs on every `SetMovementOrder` call but bails on non-cavalry / non-charge / suppress-flag in O(1). No per-frame allocation in the postfix.
+`SharedMovementOrderPostfixTests` (CompanionTactics) pins that Patch31 stays in the shared
+`Patch_MissionTime_SetMovementOrder` category and never touches Patch35's stance state.
 
 ## Known limitations
 
-- Single-player only. `Mission.PlayerTeam` is null in spectator/custom-battle missions; the postfix and behavior bail out cleanly.
-- Recursion guard is a single boolean, not a counter — nested reentry inside a `using SmartCavalryRecursionGuard.Enter()` scope would clear the flag prematurely. Not exercised by current code paths, but worth a follow-up if we ever chain SetPositioning + SetMovementOrder synchronously (current implementation does both as separate top-level calls).
-- The path planner's "behind cavalry / past target" filters use signed projections onto the charge direction; very-near-the-target enemies (length < 1m) cause early-exit `false`. Acceptable: the Forming→Charging gate handles these via the alignment check.
+- **Not smoke-tested in game yet.** The state machine is pinned by unit tests against mocked
+  adapters; the engine semantics are verified by decompile and by the binding tests. The checklist
+  below is owed before the toggle defaults on.
+- **An emptied player formation stays AI-commanded** (vanilla `Formation.RemoveUnit`), so refilling
+  it through the troop-transfer screen does not bring it back under the machine until the next battle.
+- **Frozen charge direction** (see the geometry note). The reform point clears the target's riders
+  along the charge axis by `ReformDistance`, measured from the rider that extends furthest; a
+  formation that moves after contact is not re-measured.
+- **A player Move within 1 cm of the machine's own Move point** reads as a re-issue and does not
+  cancel; the machine's next order then displaces it. A click does not land within a centimetre.
+- **Column arrangement:** the engine reports no slot for any unit, so alignment cannot be measured
+  and the line-up runs to `MaxLineUpSeconds` every time.
+- **Reforming holds the line facing the enemy under a Move order**, so between arrival and the next
+  charge the riders defend rather than attack. Bounded by `MaxLineUpSeconds`.
+- **`SmartCavalryLineSpacing` is an absolute spacing index**, not the multiplier its label claims.
+- **Toggling the feature off mid-cycle issues one last order** (the vanilla Charge the player asked
+  for with F3) so the riders are not left on a Move nobody lifts.
+- **Single-player only.** `Mission.PlayerTeam` is null in spectator and custom-battle missions; the
+  postfix and the behavior bail out.
 
-## Changelog
+## In-game smoke (owed)
 
-- 2026-05-13 — Added a `_lock` around `CavalryChargeService` `_states` access (GetState/OnMissionEnd/HandleChargeOrder/Tick + `state.State` mutations) to guard against a future Patch31 refactor re-introducing a cross-thread race (#155).
-- 2026-05-07 — Fixed a SubModule-load NRE by deferring the `Patch31` `Formation.SetMovementOrder` postfix into the shared `Patch_MissionTime_SetMovementOrder` category (applied once at `OnMissionBehaviorInitialize`), since `MovementOrder.cctor` reads `Mission.Current.CurrentTime` which is null during `OnSubModuleLoad`.
+MCM `Enable Smart Cavalry AI` on, `Smart Cavalry Debug Mode` on, field battle with 20 or more riders:
 
-## GitHub Issue
+1. One F3: the order UI reads Move, the riders shuffle into line, and within 4 s the UI reads Charge.
+   No second press.
+2. The riders ride through, pull up about 25 m past the enemy facing back, line up, and charge again.
+   `rgl_log.txt` shows `[SmartCavalryAI]` lines Forming -> Charging -> PassingThrough -> Reforming ->
+   Forming.
+3. F1 Follow-me mid-cycle: the riders come to you and nothing pulls them away (a cancel is logged).
+4. Kill or rout the targeted formation mid-charge: the riders re-target instead of riding back to hold.
+5. F6 delegate to the AI, or an enlisted battle: no line-ups, no `[SmartCavalryAI]` order lines.
+6. Toggle the feature off: vanilla F3.
 
-- **Issue:** TBD — to be opened with feature port commits.
-- **Status:** Pending in-game verification.
+## Performance
 
-## Migrated notes (from CLAUDE.md, 2026-07-12)
+`OnMissionTick` iterates the player team's formations every frame; with the feature off and no cycle
+running it returns after one settings read and one lock. Per cavalry formation per frame: two cached
+adapter lookups, one dictionary lookup under the service lock, and in Forming/Reforming one pass over
+the riders reading their arrangement slots (no allocation, no engine call through Patch30). The
+postfix runs once per order: for a non-charge order on a mid-cycle formation it costs one struct
+compare and one lock; for a charge order it scans the enemy formations once for the nearest.
 
-- **Codex adversarial review:** 4 Codex adversarial findings were fixed during the port, including NaN propagation through `Clamp` and a cross-feature collision with MixedFormations.
-- **Recursion guard is a thread-local depth counter, not a boolean.** `SmartCavalryRecursionGuard` (verified in source: `[ThreadStatic] int _depth`) increments per `Enter()` scope and decrements on dispose, so nested `Enter()` scopes are safe — the inner dispose decrements rather than clearing. `Reset()` is a defensive escape hatch called from `SmartCavalryAIMissionBehavior.OnEndMission` so abnormal mission termination during a suppressed callstack can't permanently disable the feature. This supersedes the "single boolean, not a counter" wording in Known limitations above (the counter upgrade closed that follow-up).
+## History
+
+- 2026-09-13, #586: state machine v2. Move-based line-up, arrangement-slot alignment, frozen-direction
+  contact, reform point past the live enemy, hit-and-run loop, dwell budgets and HandOff, charge-now
+  on a second F3, cancel on other orders and on AI-controlled formations, identical-re-issue test,
+  `SmartCavalryMaxLineUpSeconds`. Deep review (5 agents) and Codex pass; RCA
+  [`rca-smart-cavalry-2026-09-13.md`](../reviews/rca-smart-cavalry-2026-09-13.md).
+- 2026-07-16, #349: open-field-only gate (`IsFieldBattle`) on the service, the tick and the postfix.
+- 2026-05-13, #155: `_lock` around the per-formation state.
+- 2026-05-07: Patch31 deferred into the shared `Patch_MissionTime_SetMovementOrder` category
+  (`MovementOrder.cctor` reads `Mission.Current.CurrentTime`).
+- 2026-05-06, #112: the port. Codex adversarial review fixed NaN propagation through `Clamp` and the
+  MixedFormations cavalry hand-off.
+
+## GitHub issues
+
+- [#586](https://github.com/haterade22/TAOM/issues/586) state machine v2 (this design).
+- [#349](https://github.com/haterade22/TAOM/issues/349) siege guard.
+- [#112](https://github.com/haterade22/TAOM/issues/112) the port.
 
 ---
 

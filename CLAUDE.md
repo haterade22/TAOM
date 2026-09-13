@@ -217,6 +217,7 @@ instructions `AGENTS.md`.
 | **Renaming a Kit animation clip corrupts it** | The Kit keeps resolving the old name: `Size in KB = 0`, Save refused, scrambled model viewer, and the renamed file can vanish. Only a full Kit restart clears it, every time. Leave the clip on `new_animation_clip`, close the Kit, then `python tools/rename_anim_clip_tpac.py <file> <name> --apply` |
 | **Player start items are `starter_` twins** | Every id a `player_char_creation_*` or `player_career_*` roster hands out is a `starter_<donor>` clone; `StarterKitCoverageTests` fails on a real item. The vanilla-six override puts `_replaceWhileMerging="true"` on the ROSTER, never a set: `EquipmentSet` has no schema key. `docs/features/starting-equipment-tuning.md` |
 | **Troop bows are generated `ladder_*` items** | Reach is the bow's `missile_speed`; skill is accuracy, never range. 130 `ladder_<line>_<bow|xbow>_<band>` items live in the unversioned Armory from `tools/ranged_ladders.json`; a reinstall drops them and archers spawn bowless, no error. `generate_ranged_ladder_items.py --verify`; gate `RANGED_LADDER_INVERSION`. `docs/features/ranged-ladders.md` |
+| **A Stop order never forms a line** | `MovementOrderStop` is `StandGround`: `GetOrderPositionOfUnit` returns each rider's OWN position (`Formation.cs:1262`), so a `SetPositioning` line applied under it is ignored and riders freeze in place. Shape a formation with a Move (Hold: arrangement slots). SmartCavalryAI ran 4 months on Stop, 44 tests green (#586). `docs/features/smart-cavalry-ai.md` |
 
 ## Architecture (One-liner)
 

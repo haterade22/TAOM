@@ -217,6 +217,7 @@ Patches: 228. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.Siege.Hooks.BesiegerCamp_GetSiegeCampPartyPosition_Patch` | `TaleWorlds.CampaignSystem.Siege.BesiegerCamp.CampaignVec2 GetSiegeCampPartyPosition(MobileParty mobileParty, MatrixFrame[] siegeCamp1GlobalFrames, MatrixFrame[] siegeCamp2GlobalFrames)` |
 | `TAOM.Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro` | `SandBox.SandBoxGameManager.Void OnLoadFinished()` |
 | `TAOM.Features.SmartCavalryAI.Hooks.Patch31_FormationSetMovementOrder` | `TaleWorlds.MountAndBlade.Formation.Void SetMovementOrder(MovementOrder input)` |
+| `TAOM.Features.SmartCavalryAI.Hooks.Patch31b_FormationSetTargetFormation` | `TaleWorlds.MountAndBlade.Formation.Void SetTargetFormation(Formation targetFormation)` |
 | `TAOM.Features.SpecialResources.Hooks.PartyCharacterVM_InitializeUpgrades_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM.Void InitializeUpgrades()` |
 | `TAOM.Features.SpecialResources.Hooks.PartyScreenLogic_AddCommand_Patch` | `TaleWorlds.CampaignSystem.Party.PartyScreenLogic.Void AddCommand(PartyCommand command)` |
 | `TAOM.Features.SpecialResources.Hooks.PartyScreenLogic_UpgradeTroop_Patch` | `TaleWorlds.CampaignSystem.Party.PartyScreenLogic.Void UpgradeTroop(PartyCommand command)` |
