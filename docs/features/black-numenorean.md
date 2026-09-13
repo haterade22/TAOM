@@ -265,9 +265,15 @@ carrying a private `STAT_TIERS` dict. Four sibling generators each hold their ow
 went stale at once, silently reverting a shipped shoulder fix (found 2026-07-31, now pinned by
 `tools/tests/test_armor_curve_invariant.py::GeneratorCurveSyncTests`). Importing removes that failure
 mode, and applies Mordor's `protection: -1` / `weight_mult: 1.10` from `CULTURAL_MODS` rather than
-hardcoding the result.
+hardcoding the result. Since the kingdom-cap curve (#583, 2026-09-13) every call passes `item_id=`,
+because the cap is the LINE's (`mordor_numenorean`, 57, routed by the `sk_md_num_` / `sm_md_num_`
+prefixes), not the folder's (the orc kit at 38); `CULTURAL_MODS` now carries only the weight and the
+legacy proportions. The rows below are the legacy curve the generator wrote in August; the live
+values follow the 57 cap (elite chest 57, helmet 51, bracer and pauldron 34, greaves 29, the bands
+below at .40 / .64 / .84 of those).
 
-Resulting rows (mesh tier maps one-to-one onto the curve tier):
+Resulting rows at authoring time (mesh tier maps one-to-one onto the curve tier; superseded by the
+cap, see above):
 
 | Tier | head | body (+arm) | arm | leg | shoulder (body/arm) |
 |---|---|---|---|---|---|
@@ -497,10 +503,13 @@ It was a line-name keyword sitting in a tier-keyword list, and once this set shi
 
 Then the wearer-level anchoring landed and made name-based tiering wrong for this set a second way:
 `hood_light_a` now deliberately carries heavy-row stats, so any name-based detector reports a false
-inversion on every piece. `md_num` is therefore in `EXCLUDE_ID_SUBSTRINGS` in both
-`rebalance_armor.py` and `analyze_armor_balance.py`. **This reverses an explicit earlier decision not
-to exclude it.** The reason changed: excluding a name-anchored set would have hidden real defects,
-but excluding a level-anchored one removes noise that cannot be anything else.
+inversion on every piece. `md_num` was therefore in `EXCLUDE_ID_SUBSTRINGS` in both
+`rebalance_armor.py` and `analyze_armor_balance.py` from 2026-08-17 to 2026-09-13. **That reversed an
+explicit earlier decision not to exclude it.** The reason changed: excluding a name-anchored set would
+have hidden real defects, but excluding a level-anchored one removes noise that cannot be anything
+else. The kingdom-cap curve (#583) lifted the exclusion again: the curve now bands a worn item by its
+wearer's level (which is what this set wanted all along) and gives the line its own cap, so the set is
+on the curve and the keyword detector no longer judges it.
 
 **2. A clan-heraldry regeneration would delete this feature.**
 `tools/generate_clan_heraldry.py` operation C upserts `<MBPartyTemplate id="...">` **wholesale** from
