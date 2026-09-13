@@ -23,6 +23,14 @@ Patches gondor_pg_spearman upgrade_target to include the new T5 cavalry.
 Usage:
     python tools/apply_gondor_polish_224.py --dry-run
     python tools/apply_gondor_polish_224.py --apply
+
+RETIRED 2026-09-13: --apply now refuses to run. This was a completed one-off
+(#224, applied 2026-05) kept for the delta-op pattern. Its deltas name ten item
+ids the Armory no longer defines (wm_gondor_sword_a04/a05/a06/a08/a09, the
+Lamedon 2h sword d and four numenorean_sword_2h_* blades), and the two PG
+cavalry troops it adds already exist in the shipped file, which KEYforce has
+since re-rostered (lotraom-assets d7d5f75b, ported as 782534fb, #568).
+--dry-run still works for reading the pattern.
 """
 import argparse
 import os
@@ -443,6 +451,12 @@ def main():
     if not (args.dry_run or args.apply):
         parser.print_help()
         sys.exit(1)
+    if args.apply:
+        print("REFUSED: apply_gondor_polish_224.py is a completed one-off (#224). Its deltas name "
+              "items the Armory retired on 2026-09-01 and 2026-09-11, and troops_gondor.xml has "
+              "since been re-rostered (782534fb / #568). Edit the XML directly; see the module "
+              "docstring.", file=sys.stderr)
+        sys.exit(2)
 
     with open(TROOPS_FILE, "r", encoding="utf-8") as f:
         content = f.read()

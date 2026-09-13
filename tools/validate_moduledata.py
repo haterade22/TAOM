@@ -27,6 +27,10 @@ Checks (each maps to a recurring TAOM bug class):
   HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
   MOUNTED_DWARF              race="dwarf" tagged Cavalry/HorseArcher, or handed a mount
                              -> dwarf spawns inside the horse mesh (misaligned rider bone)
+  GENERATOR_RETIRED_ITEM_REF a data generator under tools/ would WRITE an item id the
+                             live install does not define (warning; needs the install;
+                             the generator list and the walk live in
+                             check_generator_item_refs.py)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -85,6 +89,47 @@ def build_extra_ref_roots(game_modules) -> list:
     if not game_modules.exists():
         return []
     return [game_modules / name / "ModuleData" for name in _EXTRA_REF_MODULES]
+
+
+GENERATOR_CODE = "GENERATOR_RETIRED_ITEM_REF"
+
+
+def generator_item_ref_issues(items: set) -> list:
+    """WARNING per generator under tools/ that would write an item id `items` lacks.
+
+    The XML this validator sweeps is the OUTPUT of those scripts; a retired id
+    sitting in one of their tables is invisible to every other pass until
+    somebody re-runs the script and a troop spawns naked (or a battle hangs on a
+    missing collision body, #352). On 2026-09-13 seven generators held 67 such
+    ids between them. The generator list, the run/import modes and the table
+    walk live in check_generator_item_refs.py; this only turns its findings into
+    issues. Callers skip it without the install: the registry is TAOM-only
+    then, and every Armory id would read as retired.
+
+    A generator that cannot be read at all is reported under the same code, so
+    a broken script never passes as a clean one."""
+    import check_generator_item_refs as cg
+    issues = []
+    for spec in cg.GENERATORS:
+        try:
+            refs = cg.collect(spec)
+        except Exception as exc:  # noqa: BLE001 - any failure is a finding, never a pass
+            issues.append(ts.Issue(
+                severity=ts.Severity.WARNING, code=GENERATOR_CODE, file=spec.path, line=0,
+                entry_id="", message=f"generator could not be checked ({exc}); its item "
+                                     f"ids were NOT verified this run"))
+            continue
+        missing = sorted(r for r in refs if r not in items)
+        if missing:
+            shown = ", ".join(missing[:8]) + (f", +{len(missing) - 8} more" if len(missing) > 8 else "")
+            issues.append(ts.Issue(
+                severity=ts.Severity.WARNING, code=GENERATOR_CODE, file=spec.path, line=0,
+                entry_id="",
+                message=f"{len(missing)} of {len(refs)} item ids this generator writes resolve to "
+                        f"no item in the live install ({shown}). A re-run would leave those "
+                        f"slots empty. Replace them with ids the Armory defines; "
+                        f"python tools/check_generator_item_refs.py lists them all"))
+    return issues
 
 
 def main() -> int:
@@ -147,6 +192,12 @@ def main() -> int:
         print(f"WARNING: {warning}", file=sys.stderr)
 
     issues = validator.run()
+    if game_modules.exists():
+        issues += generator_item_ref_issues(registries.items)
+        issues.sort(key=lambda i: i.sort_key())
+    else:
+        print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
+              f"         checked against the live install.", file=sys.stderr)
 
     if args.code:
         wanted = set(args.code)

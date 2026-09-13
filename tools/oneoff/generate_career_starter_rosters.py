@@ -135,9 +135,11 @@ CULTURES = {
         "folder": "rhun",
         "horse": "saddle_horse", "harness": "light_harness",
         "arrows": "bodkin_arrows_a",
-        "inf":     ["empire_sword_1_t2", "battered_kite_shield", "easterling_spear"],
+        # easterling_spear left the Armory on 2026-09-11; sm_rh_loke_spear_a is
+        # what the shipped rosters carry (KEYforce, lotraom-assets d7d5f75b).
+        "inf":     ["empire_sword_1_t2", "battered_kite_shield", "sm_rh_loke_spear_a"],
         "ranged":  ["composite_bow", "bodkin_arrows_a", "empire_sword_1_t2"],
-        "cavalry": ["easterling_spear", "battered_kite_shield", "empire_sword_1_t2"],
+        "cavalry": ["sm_rh_loke_spear_a", "battered_kite_shield", "empire_sword_1_t2"],
     },
     "sturgia": {  # Dale (XSLT culture). No prefixed weapons — use vanilla northern gear.
         "culture_id": "sturgia",
@@ -277,7 +279,7 @@ GONDOR_BLOCK = """    <!-- ═══ GONDOR — RANGED (Ranger of Ithilien) ═�
     <EquipmentRoster id="player_career_gondor_cavalry_m" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
@@ -289,7 +291,7 @@ GONDOR_BLOCK = """    <!-- ═══ GONDOR — RANGED (Ranger of Ithilien) ═�
     <EquipmentRoster id="player_career_gondor_cavalry_f" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
             <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
@@ -303,7 +305,7 @@ GONDOR_BLOCK = """    <!-- ═══ GONDOR — RANGED (Ranger of Ithilien) ═�
     <EquipmentRoster id="player_career_gondor_infantry_m" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body"  id="Item.starter_infantry_gondor_body_a" />
             <Equipment slot="Leg"   id="Item.starter_infantry_gondor_leg_a" />
@@ -313,7 +315,7 @@ GONDOR_BLOCK = """    <!-- ═══ GONDOR — RANGED (Ranger of Ithilien) ═�
     <EquipmentRoster id="player_career_gondor_infantry_f" culture="Culture.gondor">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body"  id="Item.starter_infantry_gondor_body_a" />
             <Equipment slot="Leg"   id="Item.starter_infantry_gondor_leg_a" />

@@ -12,6 +12,15 @@ upgrade_target references pointing at deleted ids.
 Usage:
     python tools/apply_gondor_troop_revamp.py --dry-run
     python tools/apply_gondor_troop_revamp.py --apply
+
+RETIRED 2026-09-13: --apply now refuses to run. This was a completed one-off
+(#99, applied 2026-05) kept for the mechanical-swap pattern. Its loadout tables
+name 18 item ids the Armory no longer defines (wm_gondor_spear, six of the ten
+Gondor swords, the plain and silver Lossarnach axes, wm_gondor_shield_a02 and
+the gond_shield_* set), and the tree it would overwrite has since been
+re-rostered by KEYforce (lotraom-assets d7d5f75b, ported as 782534fb, #568) and
+re-laddered by #541, #582 and #583. --dry-run still works for reading the
+pattern.
 """
 import argparse
 import os
@@ -1279,7 +1288,11 @@ def main():
     if args.dry_run:
         apply(dry_run=True)
     elif args.apply:
-        apply(dry_run=False)
+        print("REFUSED: apply_gondor_troop_revamp.py is a completed one-off (#99). Its tables name "
+              "items the Armory retired on 2026-09-01 and 2026-09-11, and troops_gondor.xml has "
+              "since been re-rostered (782534fb / #568) and re-laddered (#541, #582, #583). "
+              "Edit the XML directly; see the module docstring.", file=sys.stderr)
+        sys.exit(2)
     else:
         p.print_help()
         sys.exit(1)

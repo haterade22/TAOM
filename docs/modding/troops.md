@@ -175,10 +175,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long" />
         <equipment slot="Cape" id="Item.ithilien_cloak" />
@@ -186,10 +186,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long" />
         <equipment slot="Cape" id="Item.ithilien_cloak_var" />
@@ -197,10 +197,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v3_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood_masked" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
         <equipment slot="Cape" id="Item.ithilien_cloak" />
@@ -208,10 +208,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v4_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
         <equipment slot="Cape" id="Item.ithilien_cloak_var" />
@@ -219,10 +219,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_b" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_b" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short" />
         <equipment slot="Cape" id="Item.ithilien_cloak_var" />
@@ -230,10 +230,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_c" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short" />
         <equipment slot="Cape" id="Item.ithilien_cloak" />
@@ -241,10 +241,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_d" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_d" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood_masked" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short_var" />
         <equipment slot="Cape" id="Item.ithilien_cloak_var" />
@@ -252,10 +252,10 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_b" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
         <equipment slot="Body" id="Item.ithilien_jerkin_short_var" />
         <equipment slot="Cape" id="Item.ithilien_cloak" />
@@ -300,11 +300,10 @@ Code: Code changes required in `Main/Features/TroopProgression/RecruitmentPools/
 1. Edit `level=` and the eight `<skill>` values together. A level change with the old skills leaves the troop off the curve.
 2. Re-check the edges into and out of it. No skill on an upgrade target may sit below its source, and the target's tier must be strictly higher than the source's, or the upgrade costs 0 XP and the party screen crashes on hover.
 3. Re-check the armour ladder as well. A target must not total less armour than its source across Head, Body, Cape, Gloves and Leg, averaged over its battle sets.
-4. A ranged troop's bow or crossbow is its band's generated `ladder_<line>_<bow|xbow>_<band>` item (E T0-2, R T3-4, V T5-6, X T7-8, C T9-10), so a level change that crosses a band boundary changes its cell: run `python tools/rebalance_ranged_ladders.py --apply` and never hand-pick a bow. Reach is the bow's `missile_speed`, not the skill. A mounted troop's cell must carry a usage it can draw from the saddle (`RANGED_MOUNT_USAGE`; Native's `long_bow` is `requires_no_mount`). [`ranged-ladders.md`](../features/ranged-ladders.md).
-5. If the troop drops below tier 2 it stops being recruitable from prisoners: `DefaultPrisonerRecruitmentCalculationModel.cs:79` refuses anything with `Tier < 2`.
-6. Tier shifts are save-safe. Moving a troop from T6 to T5 works across an existing save as long as you re-pick its skills, armour and equipment to match, per [`.claude/rules/troops.md`](../../.claude/rules/troops.md) line 153.
+4. If the troop drops below tier 2 it stops being recruitable from prisoners: `DefaultPrisonerRecruitmentCalculationModel.cs:79` refuses anything with `Tier < 2`.
+5. Tier shifts are save-safe. Moving a troop from T6 to T5 works across an existing save as long as you re-pick its skills, armour and equipment to match, per [`.claude/rules/troops.md`](../../.claude/rules/troops.md) line 153.
 
-Check: `python tools/rebalance_troops.py --fix-monotonicity --dry-run` then `python tools/analyze_troop_balance.py --stdout` then `python tools/rebalance_ranged_ladders.py` (dry run: pending cell moves) then `python tools/validate_moduledata.py`
+Check: `python tools/rebalance_troops.py --fix-monotonicity --dry-run` then `python tools/analyze_troop_balance.py --stdout` then `python tools/validate_moduledata.py`
 Takes effect: next save load
 Code: No code changes needed
 

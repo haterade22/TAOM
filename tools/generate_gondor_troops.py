@@ -4,6 +4,21 @@
 Usage:
     python tools/generate_gondor_troops.py > Main/_Module/ModuleData/troops/troops_gondor.xml
     python tools/generate_gondor_troops.py --dry-run   # print to stdout only
+
+STATUS (2026-09-13): the shipped troops_gondor.xml has been hand-rostered past
+what this scaffolder knows. KEYforce re-rostered the whole tree in
+lotraom-assets d7d5f75b (ported as 782534fb, #568): Cair Andros, Minas Tirith and
+Pinnath Gelin armour, the sm_gd_shield_* shields, bastard swords, crossbows and
+skill tweaks. On top of that sit the #541 armour ladder, the #582 ranged
+ladder and the #583 kingdom cap. Regenerating over the shipped file would
+discard all of it. Reproduce and diff before regenerating; prefer a surgical
+edit of the XML. Every item id below resolves in the live install as of
+2026-09-13: the 2026-09-01 sword rebuild kept a01, a02, a03 and a07 of the ten
+swords, the 2026-09-11 art drop retired wm_gondor_spear and the plain
+Lossarnach axes, and four ids (gond_spear2, gondor_generic_helmet_5_a/_b,
+long_bow) had never existed here at all. `tools/check_generator_item_refs.py`
+now checks this script's output against the live Armory and vanilla item XML;
+`validate_moduledata.py` reports a drift as GENERATOR_RETIRED_ITEM_REF.
 """
 import sys
 from dataclasses import dataclass, field
@@ -214,20 +229,29 @@ class Troop:
 # EQUIPMENT PRESETS BY REGION AND TIER
 # =============================================================================
 # Generic Gondor equipment tiers
+# Swords: the 2026-09-01 rebuild left four of the ten. a01/a02 are the tier-2
+# blades (Medium A/B), a03/a07 the tier-4 blades (Elite A/B), so the ladder
+# steps through them in that order.
 GENERIC_SWORDS = {
-    1: "wm_gondor_sword_a01", 2: "wm_gondor_sword_a02", 3: "wm_gondor_sword_a03",
-    4: "wm_gondor_sword_a05", 5: "wm_gondor_sword_a07", 6: "wm_gondor_sword_a08",
-    7: "wm_gondor_sword_a09", 8: "wm_gondor_sword_a10", 9: "wm_gondor_sword_a10",
+    1: "wm_gondor_sword_a01", 2: "wm_gondor_sword_a01", 3: "wm_gondor_sword_a02",
+    4: "wm_gondor_sword_a02", 5: "wm_gondor_sword_a03", 6: "wm_gondor_sword_a03",
+    7: "wm_gondor_sword_a07", 8: "wm_gondor_sword_a07", 9: "wm_gondor_sword_a07",
 }
+# Spears: wm_gondor_spear (Spear II) was retired on 2026-09-11; the shipped
+# rosters took wm_gondor_spear_b (Heavy Spear) in its place (lotraom-assets
+# d7d5f75b). gond_spear2 never existed in this Armory; the Light Spear is the
+# entry-tier pick (it is what the character-creation starts hand out).
 GENERIC_SPEARS = {
-    1: "gond_spear2", 2: "gond_spear2", 3: "wm_gondor_spear", 4: "wm_gondor_spear",
+    1: "wm_gondor_light_spear", 2: "wm_gondor_light_spear", 3: "wm_gondor_spear_b", 4: "wm_gondor_spear_b",
     5: "wm_gondor_spear_b", 6: "wm_gondor_spear_b", 7: "wm_gondor_spear_a",
     8: "wm_gondor_spear_a", 9: "wm_gondor_spear_a",
 }
+# Shields: wm_gondor_shield_a02 went with the 2026-09-01 shield cleanup; its
+# recorded replacement is sm_gd_shield_a1 (apply_dead_mesh_item_swaps.py).
 GENERIC_SHIELDS = {
-    1: "wm_gondor_shield_a02", 2: "wm_gondor_shield_a02", 3: "wm_gondor_shield_a02",
-    4: "wm_gondor_shield_a02", 5: "wm_gondor_shield_a02", 6: "wm_gondor_shield_a02",
-    7: "wm_gondor_shield_a02", 8: "wm_gondor_shield_a02", 9: "wm_gondor_shield_a02",
+    1: "sm_gd_shield_a1", 2: "sm_gd_shield_a1", 3: "sm_gd_shield_a1",
+    4: "sm_gd_shield_a1", 5: "sm_gd_shield_a1", 6: "sm_gd_shield_a1",
+    7: "sm_gd_shield_a1", 8: "sm_gd_shield_a1", 9: "sm_gd_shield_a1",
 }
 GENERIC_BOWS = {
     1: "gondor_steel_bow_starter", 2: "gondor_steel_bow_starter", 3: "gondor_steel_bow",
@@ -478,27 +502,31 @@ MET_GLOVES  = {4: "", 5: "", 6: "", 7: "", 8: ""}
 
 
 # Region-specific equipment helpers
+# Lossarnach axes: the 2026-09-11 art drop kept two of each (_light and
+# _black_ash_a, the heavy one); the shipped rosters use light below tier 5 and
+# heavy above. gond_shield_one_greyscale / one_red / four_black went to
+# wm_gondor_shield_a02 (2026-07-25) and then to sm_gd_shield_a1 (2026-09-01).
 def equip_lossarnach(t: Troop, is_throwing=False):
     tier = t.tier
     if is_throwing:
-        t.weapons = ["wm_gondor_lossarnach_1h_axe_a", "wm_gondor_lossarnach_1h_axe_b"]
+        t.weapons = ["wm_gondor_lossarnach_1h_axe_light", "wm_gondor_lossarnach_1h_axe_black_ash_a"]
         t.shield = ""
     else:
         if tier <= 4:
-            t.weapons = ["wm_gondor_lossarnach_1h_axe_a"]
-            t.shield = "gond_shield_one_greyscale"
+            t.weapons = ["wm_gondor_lossarnach_1h_axe_light"]
+            t.shield = "sm_gd_shield_a1"
         else:
-            t.weapons = ["wm_gondor_lossarnach_2h_axe_a"]
-            t.shield = "gond_shield_one_greyscale"
+            t.weapons = ["wm_gondor_lossarnach_2h_axe_light"]
+            t.shield = "sm_gd_shield_a1"
     _apply_region_armor(t, LOSS_HEAD, LOSS_BODY, LOSS_LEG, LOSS_CAPE, LOSS_GLOVES)
 
 def equip_lossarnach_noble(t: Troop):
     tier = t.tier
     if tier <= 5:
-        t.weapons = ["wm_gondor_lossarnach_2h_axe_a"]
+        t.weapons = ["wm_gondor_lossarnach_2h_axe_light"]
     else:
-        t.weapons = ["wm_gondor_lossarnach_2h_axe_b"]
-    t.shield = "gond_shield_one_greyscale"
+        t.weapons = ["wm_gondor_lossarnach_2h_axe_black_ash_a"]
+    t.shield = "sm_gd_shield_a1"
     _apply_region_armor(t, LOSS_NOB_HEAD, LOSS_NOB_BODY, LOSS_NOB_LEG, LOSS_NOB_CAPE, LOSS_NOB_GLOVES)
 
 def equip_lebennin(t: Troop, is_ranged=False):
@@ -513,7 +541,7 @@ def equip_lebennin(t: Troop, is_ranged=False):
 def equip_pelargir(t: Troop):
     tier = t.tier
     t.weapons = ["wm_pelargir_sword_a01" if tier <= 5 else "wm_pelargir_sword_a02"]
-    t.shield = "gond_shield_one_greyscale"
+    t.shield = "sm_gd_shield_a1"
     _apply_region_armor(t, PEL_HEAD, PEL_BODY, PEL_LEG, PEL_CAPE, PEL_GLOVES)
 
 def equip_lamedon(t: Troop):
@@ -522,7 +550,7 @@ def equip_lamedon(t: Troop):
         t.weapons = ["wm_gondor_lamedon_1h_sword_a"]
     else:
         t.weapons = ["wm_gondor_lamedon_2h_sword_a"]
-    t.shield = "gond_shield_one_red"
+    t.shield = "sm_gd_shield_a1"
     _apply_region_armor(t, LAM_HEAD, LAM_BODY, LAM_LEG, LAM_CAPE, LAM_GLOVES)
 
 def equip_calembel(t: Troop):
@@ -533,7 +561,7 @@ def equip_calembel(t: Troop):
         t.weapons = ["wm_gondor_lamedon_2h_sword_b"]
     else:
         t.weapons = ["wm_gondor_lamedon_2h_sword_c"]
-    t.shield = "gond_shield_one_red"
+    t.shield = "sm_gd_shield_a1"
     _apply_region_armor(t, CAL_HEAD, CAL_BODY, CAL_LEG, CAL_CAPE, CAL_GLOVES)
 
 def equip_ringlo(t: Troop):
@@ -558,9 +586,12 @@ def equip_dol_amroth_infantry(t: Troop):
     elif tier <= 6:
         t.weapons = ["wm_swan_knight_sworda"]
     elif tier <= 7:
-        t.weapons = ["numenorean_sword_2h_a"]
+        # numenorean_sword_2h_a..y were rebuilt as six greatswords (medium/heavy/
+        # elite a/b) in the 2026-09-11 art drop; the lowest pair takes the old
+        # a/b slots here.
+        t.weapons = ["numenorean_greatsword_medium_a"]
     else:
-        t.weapons = ["numenorean_sword_2h_b"]
+        t.weapons = ["numenorean_greatsword_medium_b"]
     t.shield = "gond_shield_two_swan"
     _apply_region_armor(t, DA_INF_HEAD, DA_INF_BODY, DA_INF_LEG, DA_INF_CAPE, DA_INF_GLOVES)
 
@@ -679,8 +710,9 @@ def equip_citadel(t: Troop, is_ranged=False):
     if is_ranged:
         t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
     else:
-        t.weapons = ["wm_gondor_sword_a10" if tier >= 8 else "wm_gondor_sword_a08"]
-        t.shield = "gond_shield_four_black"
+        # The old Sword X / VIII pair is gone; Elite B / Elite A are the survivors.
+        t.weapons = ["wm_gondor_sword_a07" if tier >= 8 else "wm_gondor_sword_a03"]
+        t.shield = "sm_gd_shield_a1"
     if tier == 5:
         t.head = "sk_gd_mns_noble_helmet_med_a"
         t.body = "sk_gd_mns_citadel_chest_med_a"
@@ -719,8 +751,8 @@ def equip_ithil(t: Troop, is_ranged=False):
     if is_ranged:
         t.weapons = [GENERIC_BOWS[tier], GENERIC_ARROWS, GENERIC_ARROWS]
     else:
-        t.weapons = ["wm_gondor_sword_a10" if tier >= 8 else "wm_gondor_sword_a08"]
-        t.shield = "gond_shield_four_black"
+        t.weapons = ["wm_gondor_sword_a07" if tier >= 8 else "wm_gondor_sword_a03"]
+        t.shield = "sm_gd_shield_a1"
     if tier == 5:
         t.head = "sk_gd_ano_noble_helmet_med_a"
         t.body = "sk_gd_ano_chainmail_full_b"
@@ -1808,8 +1840,11 @@ def build_all_troops() -> list[Troop]:
     # =========================================================================
     t = Troop("gondor_militia_spearman", "Gondor Militia Spearman", 2, "Infantry", weapon_spec="spear")
     equip_generic_spear(t)
-    # Override with militia-specific gear (use generic Anorien items)
-    t.head = "gondor_generic_helmet_5_b"
+    # Override with militia-specific gear (use generic Anorien items). The
+    # gondor_generic_helmet_5_* ids never existed in this Armory; these are the
+    # Anorien infantry helmets the shipped militia wear (med for the basic
+    # troop, heavy for the veterans).
+    t.head = "sk_gd_ano_inf_helmet_med_a"
     t.body = "sk_gd_ano_chainmail_full_a"
     t.leg = "sk_gd_ano_boots_a"
     t.cape = "sk_gd_ano_pauld_inf_med_a"
@@ -1828,7 +1863,7 @@ def build_all_troops() -> list[Troop]:
 
     t = Troop("gondor_militia_veteran_spearman", "Gondor Veteran Militia Spearman", 3, "Infantry", weapon_spec="spear")
     equip_generic_spear(t)
-    t.head = "gondor_generic_helmet_5_a"
+    t.head = "sk_gd_ano_inf_helmet_heavy_a"
     t.body = "sk_gd_ano_chainmail_full_b"
     t.leg = "sk_gd_ano_boots_a"
     t.cape = "sk_gd_ano_pauld_inf_med_a"
@@ -1837,12 +1872,13 @@ def build_all_troops() -> list[Troop]:
 
     t = Troop("gondor_militia_veteran_archer", "Gondor Veteran Militia Archer", 3, "Ranged")
     equip_generic_ranged(t)
-    t.head = "gondor_generic_helmet_5_b"
+    t.head = "sk_gd_ano_inf_helmet_heavy_a"
     t.body = "sk_gd_ano_chainmail_half_b"
     t.leg = "ithilien_boots"
     t.cape = ""
     t.gloves = ""
-    t.weapons = ["long_bow", "default_arrows", "default_arrows", "wm_gondor_sword_a02"]
+    # long_bow is not an item in any loaded module; the T3-4 Gondor bow is.
+    t.weapons = ["gondor_steel_bow", "default_arrows", "default_arrows", "wm_gondor_sword_a02"]
     troops.append(t)
 
     return troops

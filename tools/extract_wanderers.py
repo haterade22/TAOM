@@ -57,22 +57,33 @@ KINGDOM_CONFIG = {
 # Equipment items per kingdom for companion equipment rosters
 KINGDOM_EQUIPMENT = {
     "gondor": {
-        "weapons": ["wm_gondor_sword_a01", "wm_gondor_sword_a03", "wm_gondor_sword_a05"],
-        "shields": ["wm_gondor_shield_a02"],
-        "helmets": ["gondor_helmet", "citidel_guard_helmet1", "citidel_guard_helmet3"],
-        "bodies": ["gondor_chainmaila", "citidel_guard_armor1", "citidel_guard_armor2", "gondor_noble_jerkin_a"],
-        "gloves": ["citidel_guard_gloves", "citidel_guard_bracers"],
-        "boots": ["gondor_boots", "citidel_guard_boots"],
-        "capes": ["citidel_guard_armor_pauldrons", "gondor_pauldrons"],
+        # 2026-09-13: sword a05 went in the 2026-09-01 rebuild. KEYforce's
+        # rosters took a01 for it (lotraom-assets d7d5f75b); a01 is already in
+        # this list, so the third pick is a07 (Elite B) to keep three tiers.
+        # Shield a02 went with the same cleanup (sm_gd_shield_a1,
+        # apply_dead_mesh_item_swaps.py).
+        "weapons": ["wm_gondor_sword_a01", "wm_gondor_sword_a03", "wm_gondor_sword_a07"],
+        "shields": ["sm_gd_shield_a1"],
+        # The LOTRAOM-era gondor_*/citidel_guard_* armour never made it into
+        # this Armory; these are the Anorien and Minas Tirith citadel ids the
+        # shipped Gondor wanderer rosters wear (checked 2026-09-13 by
+        # check_generator_item_refs.py).
+        "helmets": ["sk_gd_ano_inf_helmet_med_a", "sk_gd_mns_cita_helmet_heavy_a", "sk_gd_mns_cita_helmet_heavy_b"],
+        "bodies": ["sk_gd_ano_chainmail_half_a", "sk_gd_mns_citadel_chest_med_a", "sk_gd_mns_citadel_chest_heavy_a", "gondor_noble_jerkin_a"],
+        "gloves": ["sk_gd_ano_gloves_a", "sk_gd_ano_bracer_inf_med_a"],
+        "boots": ["sk_gd_ano_boots_a", "sk_gd_ano_grvs_inf_med_a"],
+        "capes": ["sk_gd_ano_pauld_inf_heavy_a", "sk_gd_ano_pauld_inf_med_a"],
         "civ_bodies": ["gondor_noble_jerkin_a", "gondor_noble_jerkin_b", "ithilien_jerkin_short", "ithilien_jerkin_long"],
-        "civ_boots": ["gondor_boots", "ithilien_boots"],
+        "civ_boots": ["sk_gd_ano_boots_a", "ithilien_boots"],
     },
     "mordor": {
         "weapons": ["isengard_1h_sword_b", "aserai_sword_3_t3"],
         "shields": [],
-        "helmets": ["sk_uruk_mordor_helmet_a1", "sk_uruk_mordor_helmet_a2"],
+        # The Mordor set ships as *_medium_a1/a2 and bracer_medium_a (what the
+        # shipped rosters wear); the unsuffixed ids never existed here.
+        "helmets": ["sk_uruk_mordor_helmet_medium_a1", "sk_uruk_mordor_helmet_medium_a2"],
         "bodies": ["sk_uruk_mordor_chainmail_light_a", "sk_uruk_mordor_chainmail_light_b", "sk_uruk_mordor_chainmail_medium_a1"],
-        "gloves": ["sk_uruk_mordor_bracer_a1"],
+        "gloves": ["sk_uruk_mordor_bracer_medium_a"],
         "boots": ["strapped_leather_boots"],
         "capes": [],
         "civ_bodies": ["sk_uruk_mordor_chainmail_light_a", "sk_uruk_mordor_chainmail_light_b"],

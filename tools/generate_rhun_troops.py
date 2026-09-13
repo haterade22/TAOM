@@ -4,6 +4,21 @@
 Usage:
     python tools/generate_rhun_troops.py > Main/_Module/ModuleData/troops/troops_rhun.xml
     python tools/generate_rhun_troops.py --dry-run   # print summary only
+
+STATUS (2026-09-13): the shipped Rhûn tree is troops/troops_rhun_new.xml
+(SubModule.xml loads that file; troops_rhun.xml is not registered), and it has
+been hand-rostered past this scaffolder: the #541 light-to-heavy plate swap that
+KEYforce confirmed in lotraom-assets d7d5f75b (ported as 782534fb), the #582
+ranged ladder and the #583 kingdom cap. Do not write its output over the
+shipped file. Every item id below resolves in the live install as of
+2026-09-13: the two Easterling ids were re-pointed (easterling_shield went on
+2026-08-28, easterling_spear on 2026-09-11) and seventeen more that had never
+existed in this Armory (the rhun_* Wainrider weapons and shields, the
+khuzait war horse and charger, long_bow, throwing_spear, a mis-spelled Dragon
+scalemail) now follow the shipped troops_rhun_new.xml.
+`tools/check_generator_item_refs.py` checks this script's output against the
+live Armory and vanilla item XML; `validate_moduledata.py` reports a drift as
+GENERATOR_RETIRED_ITEM_REF.
 """
 import sys
 from dataclasses import dataclass, field
@@ -241,8 +256,10 @@ EAST_REG_LEG = {
 
 # Easterling Regular weapons by tier
 EAST_REG_SWORDS = {1: "aserai_sword_3_t3", 2: "aserai_sword_3_t3", 3: "aserai_sword_3_t3", 4: "aserai_sword_5_t4", 5: "aserai_sword_5_t4"}
-EAST_REG_SPEARS = {1: "eastern_spear_3_t3", 2: "eastern_spear_3_t3", 3: "eastern_spear_3_t3", 4: "easterling_spear", 5: "mirkwood_spear_a01"}
-EAST_REG_SHIELDS = {1: "desert_round_shield", 2: "desert_round_shield", 3: "desert_round_shield", 4: "easterling_shield", 5: "easterling_shield"}
+# easterling_spear -> sm_rh_loke_spear_a (KEYforce, lotraom-assets d7d5f75b);
+# easterling_shield -> sm_rh_loke_shield_med_a (apply_dead_mesh_item_swaps.py).
+EAST_REG_SPEARS = {1: "eastern_spear_3_t3", 2: "eastern_spear_3_t3", 3: "eastern_spear_3_t3", 4: "sm_rh_loke_spear_a", 5: "mirkwood_spear_a01"}
+EAST_REG_SHIELDS = {1: "desert_round_shield", 2: "desert_round_shield", 3: "desert_round_shield", 4: "sm_rh_loke_shield_med_a", 5: "sm_rh_loke_shield_med_a"}
 EAST_REG_BOWS = {1: "composite_bow", 2: "composite_bow", 3: "steppe_heavy_bow", 4: "composite_steppe_bow", 5: "steppe_war_bow"}
 EAST_REG_LANCES = {3: "eastern_spear_3_t3", 4: "eastern_spear_4_t4", 5: "khuzait_lance_2_t4"}
 EAST_REG_HORSES = {4: "t3_aserai_horse", 5: "t3_aserai_horse"}
@@ -396,7 +413,7 @@ def equip_loke_archer(t: Troop):
     t.gloves = _loke_gloves(tier)
     t.leg = _loke_leg(tier)
     if tier >= 6:
-        t.weapons = [LOKE_LONGBOW, "bodkin_arrows_b", "bodkin_arrows_b", "rhun_1h_sword_b"]
+        t.weapons = [LOKE_LONGBOW, "bodkin_arrows_b", "bodkin_arrows_b", "sm_rh_loke_1h_sword_b"]
     else:
         t.weapons = ["composite_steppe_bow", "bodkin_arrows_b", "bodkin_arrows_b", "khuzait_sword_3_t3"]
     t.shield = ""
@@ -591,11 +608,16 @@ WAIN_LEG = {
     7: "sk_rh_loke_grvs_scale_heavy_a",
 }
 
-WAIN_GLAIVES = {3: "rhun_polearm_a", 4: "rhun_polearm_a", 5: "rhun_polearm_b", 6: "rhun_polearm_c", 7: "rhun_polearm_c"}
-WAIN_SHIELDS = {3: "rhun_round_shield_a", 4: "rhun_round_shield_a", 5: "rhun_round_shield_b", 6: "rhun_round_shield_b", 7: "rhun_round_shield_c"}
-WAIN_SWORDS = {3: "rhun_1h_sword_a", 4: "rhun_1h_sword_a", 5: "rhun_1h_sword_a", 6: "rhun_1h_sword_b", 7: "rhun_1h_sword_b"}
-WAIN_LANCES = {5: "rhun_lance_a", 6: "rhun_lance_b", 7: "rhun_lance_c"}
-WAIN_HORSES = {5: "khuzait_horse", 6: "khuzait_war_horse", 7: "khuzait_charger"}
+# 2026-09-13: the rhun_polearm/round_shield/1h_sword/lance family and the
+# khuzait_war_horse/charger ids never existed in this Armory or in vanilla
+# 1.4.8. These follow the shipped Wainriders (troops_rhun_new.xml): khuzait
+# lances by tier, the Harad glaive at the top, Loke-Rim swords and shields,
+# and the t2/t3 khuzait horses.
+WAIN_GLAIVES = {3: "khuzait_lance_1_t3", 4: "khuzait_lance_1_t3", 5: "khuzait_lance_2_t4", 6: "wm_harad_glaive_a01", 7: "wm_harad_glaive_a01"}
+WAIN_SHIELDS = {3: "sm_rh_loke_shield_med_a", 4: "sm_rh_loke_shield_med_a", 5: "sm_rh_loke_shield_med_b", 6: "sm_rh_loke_shield_med_b", 7: "sm_rh_loke_shield_heavy_a"}
+WAIN_SWORDS = {3: "sm_rh_loke_1h_sword_a", 4: "sm_rh_loke_1h_sword_a", 5: "sm_rh_loke_1h_sword_a", 6: "sm_rh_loke_1h_sword_b", 7: "sm_rh_loke_1h_sword_b"}
+WAIN_LANCES = {5: "khuzait_lance_1_t3", 6: "khuzait_lance_2_t4", 7: "khuzait_lance_3_t5"}
+WAIN_HORSES = {5: "khuzait_horse", 6: "t2_khuzait_horse", 7: "t3_khuzait_horse"}
 WAIN_HARNESS = {5: "light_harness", 6: "chain_horse_harness", 7: "half_scale_barding"}
 
 
@@ -618,7 +640,7 @@ def equip_wainrider_cavalry(t: Troop):
     t.cape = WAIN_CAPE.get(tier, "")
     t.gloves = WAIN_GLOVES.get(tier, "")
     t.leg = WAIN_LEG.get(tier, "")
-    t.weapons = [WAIN_LANCES.get(tier, "rhun_lance_a"), WAIN_SWORDS[tier]]
+    t.weapons = [WAIN_LANCES.get(tier, "khuzait_lance_1_t3"), WAIN_SWORDS[tier]]
     t.shield = WAIN_SHIELDS.get(tier, "")
     t.horse = WAIN_HORSES.get(tier, "khuzait_horse")
     t.horse_harness = WAIN_HARNESS.get(tier, "light_harness")
@@ -726,7 +748,9 @@ def equip_bsun_archer(t: Troop):
     if tier >= 6:
         t.weapons = [DRAG_LONGBOW, "bodkin_arrows_b", "bodkin_arrows_b", DRAG_MACE_1H]
     else:
-        t.weapons = ["long_bow", "bodkin_arrows_b", "bodkin_arrows_b"]
+        # long_bow is not an item in any loaded module; the vanilla steppe bow
+        # is the mid-tier pick the rest of this file already uses.
+        t.weapons = ["steppe_heavy_bow", "bodkin_arrows_b", "bodkin_arrows_b"]
     t.shield = ""
 
 
@@ -885,7 +909,8 @@ SAG_NAFF_HEAD = {
 SAG_NAFF_BODY = {
     5: "sk_rh_drag_scalemail_light_a",
     6: "sk_rh_drag_scalemail_med_a",
-    7: "sk_rh_drag_scalemail_heavy_a",
+    # The Armory spells the heavy one "heav_a" (sibling of _elite_a and _lord_a).
+    7: "sk_rh_drag_scalemail_heav_a",
 }
 SAG_NAFF_CAPE = {
     5: "", 6: "sk_rh_drag_pauldron_scale_heavy_a",
@@ -919,7 +944,9 @@ def equip_sagarun_naffatun(t: Troop):
     t.cape = SAG_NAFF_CAPE.get(tier, "")
     t.gloves = SAG_NAFF_GLOVES.get(tier, "")
     t.leg = SAG_NAFF_LEG.get(tier, "")
-    t.weapons = ["throwing_spear", "throwing_spear"]
+    # throwing_spear is not an item in any loaded module; the shipped chariots
+    # throw the eastern one.
+    t.weapons = ["eastern_throwing_spear_1_t3", "eastern_throwing_spear_1_t3"]
     t.shield = ""
 
 def equip_sagarun_arbalest(t: Troop):
@@ -1439,7 +1466,7 @@ def build_all_troops() -> list[Troop]:
     t.cape = EAST_REG_CAPE[5]
     t.gloves = EAST_REG_GLOVES[5]
     t.leg = EAST_REG_LEG[5]
-    t.weapons = ["steppe_war_bow", "bodkin_arrows_b", "bodkin_arrows_b", "rhun_1h_sword_b"]
+    t.weapons = ["steppe_war_bow", "bodkin_arrows_b", "bodkin_arrows_b", "sm_rh_loke_1h_sword_b"]
     t.shield = ""
     troops.append(t)
 
@@ -1449,7 +1476,7 @@ def build_all_troops() -> list[Troop]:
     t.cape = EAST_REG_CAPE[5]
     t.gloves = EAST_REG_GLOVES[5]
     t.leg = EAST_REG_LEG[5]
-    t.weapons = ["steppe_war_bow", "bodkin_arrows_b", "bodkin_arrows_b", "rhun_1h_sword_b"]
+    t.weapons = ["steppe_war_bow", "bodkin_arrows_b", "bodkin_arrows_b", "sm_rh_loke_1h_sword_b"]
     t.shield = ""
     t.horse = "t3_aserai_horse"
     t.horse_harness = "lrd_horse_armour_4"
@@ -1585,7 +1612,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("kharaghul_nokor", "Kharagh\u00fbl Nokor", 6, "Cavalry")
     t.head = EAST_REG_HEAD[5]; t.body = EAST_REG_BODY[5]; t.cape = EAST_REG_CAPE[5]
     t.gloves = EAST_REG_GLOVES[5]; t.leg = EAST_REG_LEG[5]
-    t.weapons = ["khuzait_lance_2_t4", "rhun_1h_sword_d"]
+    t.weapons = ["khuzait_lance_2_t4", "sm_rh_loke_1h_sword_b"]
     t.shield = EAST_REG_SHIELDS[5]
     t.horse = "t3_aserai_horse"; t.horse_harness = "lrd_horse_armour_4"
     t.upgrades = ["kharaghul_ashkur_nokor"]
@@ -1603,7 +1630,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("kharaghul_ashkur_nokor", "Kharagh\u00fbl Ashkur Nokor", 7, "Cavalry")
     t.head = EAST_REG_HEAD[5]; t.body = EAST_REG_BODY[5]; t.cape = EAST_REG_CAPE[5]
     t.gloves = EAST_REG_GLOVES[5]; t.leg = EAST_REG_LEG[5]
-    t.weapons = ["khuzait_lance_2_t4", "rhun_1h_sword_a"]
+    t.weapons = ["khuzait_lance_2_t4", "sm_rh_loke_1h_sword_a"]
     t.shield = EAST_REG_SHIELDS[5]
     t.horse = "t3_aserai_horse"; t.horse_harness = "lrd_horse_armour_4"
     troops.append(t)
@@ -1611,7 +1638,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("kharaghul_karash_keshig", "Kharagh\u00fbl Karash Keshig", 7, "HorseArcher")
     t.head = EAST_REG_HEAD[5]; t.body = EAST_REG_BODY[5]; t.cape = EAST_REG_CAPE[5]
     t.gloves = EAST_REG_GLOVES[5]; t.leg = EAST_REG_LEG[5]
-    t.weapons = ["steppe_war_bow", "bodkin_arrows_b", "bodkin_arrows_b", "rhun_1h_sword_a"]
+    t.weapons = ["steppe_war_bow", "bodkin_arrows_b", "bodkin_arrows_b", "sm_rh_loke_1h_sword_a"]
     t.shield = ""
     t.horse = "t3_aserai_horse"; t.horse_harness = "lrd_horse_armour_4"
     troops.append(t)
@@ -1645,7 +1672,7 @@ def build_all_troops() -> list[Troop]:
     t = Troop("rhun_militia_veteran_archer", "Militia Veteran Archer", 3, "Ranged")
     t.face_template = "BodyProperty.fighter_rhun"
     equip_easterling_regular(t)
-    t.weapons = ["long_bow", "bodkin_arrows_a", "aserai_sword_3_t3"]
+    t.weapons = ["steppe_heavy_bow", "bodkin_arrows_a", "aserai_sword_3_t3"]
     t.shield = ""
     troops.append(t)
 

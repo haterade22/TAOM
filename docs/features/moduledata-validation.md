@@ -480,35 +480,34 @@ roster tool all call the pure `ranged_ladder.inversions`, so they cannot disagre
 `Registries.launchers` (every Bow and Crossbow `<Item>` over the same item roots as the armour
 index), so without the install the check is skipped, never faked. A spec that cannot be read or
 contradicts the install, and a ranged troop in a file no line claims, are findings rather than
-silence, and so is a troop file that does not parse (one `(file)` finding: its troops were not
-checked, and not checked is not clean); `_RANGED_LADDER_EXEMPT` holds off-ladder troops with a
-reason each (empty today). The troop that must be faster is judged by its SLOWEST battle set
-and the other by its fastest, because the engine draws each set independently. One
+silence; `_RANGED_LADDER_EXEMPT` holds off-ladder troops with a reason each (empty today). One
 warning per (rule, class, scope) naming the worst pair and the pair count. First run 2026-09-12:
 1,741 pairs (the worst `dunland_dragon_firebolt` T5 at 97 over `sagarun_crossbowman` T5 at 60); the
 repair is `tools/generate_ranged_ladder_items.py --apply` then
 `tools/rebalance_ranged_ladders.py --apply`, which left 0. Design and grid:
 `docs/features/ranged-ladders.md`.
 
-## Ranged mount usage (`RANGED_MOUNT_USAGE`)
+## Generator retired-item refs (`GENERATOR_RETIRED_ITEM_REF`)
 
-**WARNING.** A mounted troop (`default_group` HorseArcher or Cavalry, or a Horse slot in any
-battle set) holding, in any battle set, a bow or crossbow whose `item_usage` set is flagged
-`requires_no_mount`. Native's `item_usage_sets.xml` defines `long_bow` as `base_set="bow"` plus
-that flag and `requires_no_shield`, nothing else; the inventory tooltip says "Can't use on
-horseback" (`CampaignUIHelper`, `ItemUsageSetFlags.RequiresNoMount`) and a mounted AI archer
-spawns with the bow on its back. The ladder rewrite (#582) cloned each line's donor verbatim and
-rostered by class and speed, so seven horse archers whose old bows were vanilla `bow`-usage
-steppe bows received a `long_bow` clone (Harad R and V, Rohan E, Dunland R and V; Codex review
-2026-09-13). The barred set is `Registries.mount_barred_usages`, read from every
-`Modules/*/ModuleData/item_usage_sets.xml` by `ranged_ladder.mount_barred_usages`; it is None
-without the install and the pass is skipped, never faked. The same pure function
-(`ranged_ladder.mount_conflicts`) feeds the roster tool's report, and `planned_edits(barred=)`
-refuses to write such a roster in the first place. Repair in `tools/ranged_ladders.json`: give
-the line `"usage": {"Bow": "bow"}` (the Armory's own `wm_mirkwood_bow_a02` "LongBow II -
-Horse" pattern: same mesh, mounted usage) or a mounted-usage donor, then regenerate (`--verify`
-checks the usage too) and re-roster. A `launchers` registry under 30 entries with an install
-present is a suspect registry, so an empty Modules folder no longer passes as clean.
+**WARNING.** Every other pass reads the XML that ships. None reads the Python that writes it, so a
+generator or apply script can sit under `tools/` naming items the Armory retired months ago, and
+nothing says so until somebody re-runs it: a troop spawns naked (`BROKEN_ITEM_REF` on the output,
+if the validator is run afterwards) or a battle hangs on a missing collision body (#352). Found
+2026-09-13 while porting KEYforce's reference repair: the Gondor and Rhûn troop-tree scaffolders,
+the character-creation, career and starter-armour tables and both wanderer generators held 67 such
+ids between them, 21 of which had never existed in this Armory at all. The pass lives in
+`tools/check_generator_item_refs.py`: each registered generator is read either by running it and
+taking every `id="Item.X"` it prints (the scaffolders) or by importing it without running and
+walking its named tables (dicts, lists, tuple rows and embedded XML template strings; folder and
+culture labels are skipped). Every id is then resolved against `Registries.items`, the same set
+`BROKEN_ITEM_REF` uses, so the live `LOTRLOME_Armory` item XML and the vanilla modules are the
+authority. One warning per generator, naming the first eight ids and the count; a generator that
+cannot be read at all is a finding under the same code, never a pass. Without the install the
+registry is TAOM-only, so the pass is skipped and says so. The standalone CLI exits 1 on any
+finding and 2 without the install; `tools/tests/test_check_generator_item_refs.py` carries the same
+check as a live-install gate. **Add a script to `GENERATORS` when it writes item ids into
+ModuleData.** A one-off swap map names retired ids on its FROM side by design and does not belong
+there.
 
 ## Key Files
 
@@ -715,6 +714,10 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-09-13: `GENERATOR_RETIRED_ITEM_REF` added: the tools/ generators' own item tables are now
+  resolved against the live install, after seven of them were found writing 67 retired or
+  never-defined ids. Standalone CLI `check_generator_item_refs.py` and a unittest gate carry the same
+  check.
 - 2026-08-28: `MOUNTED_DWARF` gained the war-ram carve-out (`WAR_RAM_MOUNT_IDS`, #515): a dwarf
   carrying `taom_war_ram_a`/`_b` is legal, cavalry `default_group` included, and every other mount he
   can reach still errors. The work also closed a latent hole in the pre-existing code: mount

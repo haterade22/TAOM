@@ -7,7 +7,6 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
 | 106 | 2026-09-13 | Supply Lines cross-market goods search (#587): TAOM's first `EditableTextWidget` over every trade good in every orderable market, a pure search engine, hit rows that select the source with the good promoted, and the goods consume hardened to count and deduct on one element | issues-found (0 P1, 1 P2, 1 P3, 1 observation) | agree (all fixed) | 1 P2 confirmed (scroll momentum survives a repopulate) + 1 P3 doc + 1 observation acted on | 0 | 0 | adversarial-ultra (gpt-6-astra), isolated worktree |
-| 108 | 2026-09-13 | Ranged range ladders (#582), the ranged-troops page and the veteran militia step (#588): two 6-agent deep-reviews (2026-09-12, 2026-09-13) and a Codex pass on GPT-6-Astra at ultra | issues-found | agree | 4 P2 + 1 P3 confirmed (7 horse archers on a `requires_no_mount` bow; loot claim wrong; MAX-vs-MAX rule; unparseable troop file silent; valid reorder refused) + Suspect 7 (no gate test through `Validator.run()`, empty Modules passes) | 0 | 0 | adversarial-ultra |
 | 102 | 2026-09-12 | Per-hero lord party templates (#580): Faramir fields Ithilien rangers, Sauron a Black Numenorean and Uruk host, a postfix on `Clan.DefaultPartyTemplate` live only inside two lord-spawn scopes | (no Codex pass) | 5-agent deep review, ready | 1 MEDIUM fixed (a closure per in-scope read; the decision now takes the service) | 1 (the warned-hero set is bounded by the JSON) | 0 | deep-review v5 |
 | 101 | 2026-09-12 | Memory attribution instruments: probe vertex-buffer + GPU split, `[SaveLoad]` GameLoaded/GameInitializationFinished, and a heap release on heavy-screen close | issues-found (0 P1 / 1 P2 / 0 P3) | agree | 1 confirmed P2: the heap release was redundant, `GameStateManager.OnPopState`/`OnPushState` already call `Common.MemoryCleanupGC()` (`:306`/`:278`) and the three screens close through `PopState`; class, tests, registration and wiring removed, and the finding inverted the measurement (2.6 GB surviving the engine's collections is rooted). Deep review before it: 2 confirmed (a doc claim that `OnGameLoaded` fires for new campaigns and bisects the post-`AllBehaviorDataLoaded` window; a dump-path marker set after calls that can throw), 1 agent false positive. RCA `rca-memory-instruments-2026-09-12.md` | 0 | 0 | v6 + 6 Known Suspects, GPT-6-Astra at ultra |
 | 99 | 2026-09-12 | Camp wait menu dead after refuge founding (#567): wait condition `true`, founding exits before the deposit screen, then the Codex fix (paused picker + context revalidation) | issues-found (0 P1 / 2 P2 / 1 P3) | agree | 1 confirmed P2 on the fix (the unpaused picker let an incoming enemy's `encounter_meeting` become the menu the new exit destroyed); 1 pre-existing P2 filed as #573 (Enlistment load-time discharge leaves the persisted service menu with a false wait condition); 1 P3 (source pins accepted `args => true && false` and a commented-out exit) | 0 | 0 | v6 + 8 Known Suspects, GPT-6-Astra at ultra |
@@ -2911,47 +2910,6 @@ day; every build and test of this change ran there). 106 SmartCavalryAI tests. R
 `lessons/testing-qa.md` and `lessons/harmony-il.md`; one CLAUDE.md trap row.
 
 Owed: the in-game smoke in the feature doc; the toggle stays OFF by default until it passes.
-
-## Review 108: ranged range ladders (#582), the ranged-troops page and the veteran militia step (#588), two 6-agent deep-reviews and a Codex pass on GPT-6-Astra at ultra (2026-09-12/13)
-
-The user asked what sets an archer troop's range (the bow's `missile_speed`, not the skill), then
-for every kingdom's reach per tier, then for lower tiers never to outrange higher ones and for
-the kingdoms' archers in a stated order. Shipped as one grid (kingdom rank x engine-tier band),
-130 generated `ladder_*` items in the live Armory and the assets mirror, 227 rosters rewritten,
-the `RANGED_LADDER_INVERSION` gate, a tracked HTML page of every ranged troop with skill beside
-weapon, and the veteran militia 15 above the basic militia on every skill (30 troops).
-
-**Deep review one (2026-09-12, six agents, #582):** the launcher index parsed every item file
-(1.2 s per validator run, now a byte pre-filter, 0.18 s), a `band_base` parse error raised instead
-of reporting, `files` tokens and prefix overlaps unvalidated, `MaxCharacterTier` attributed to the
-vanilla model instead of TAOM's override. `rca-ranged-ladders-2026-09-12.md`. **Deep review two
-(2026-09-13, six agents, the page and the militia step):** the page's crossbow spread used the
-bow's skill factor (engine `CrossbowAccuracy` is -0.0005, bow -0.0009), a wall-clock stamp in a
-tracked generated file, no charset or document skeleton, ammo paired from a different set than
-the bow, a two-cache `KeyError`, a loader that dropped an unparseable file silently.
-`rca-ranged-troops-report-2026-09-13.md`.
-
-**Codex gpt-6-astra at ultra: four P2, one P3, all confirmed, zero false positives; five of eight
-Known Suspects disputed with counts (0 prefix fall-throughs, 0 mixed-class troops, 13/13 loc
-files, 8/8 newline combinations idempotent, Isengard militia arithmetic reproduced).** The P2 that
-mattered: seven horse archers (Harad R/V, Rohan E, Dunland R/V) rostered into cells cloned from a
-`long_bow` donor, a usage set Native flags `requires_no_mount`; Codex tabulated all 16 mounted
-ranged troops with their usage where the Claude agents had checked class and speed. Fixed with a
-per-line `usage` override in the spec (the Armory's own `wm_mirkwood_bow_a02` "- Horse" pattern),
-Rohan's E band on the line donor, `mount_barred_usages()` from the install's
-`item_usage_sets.xml`, `planned_edits(barred=)` refusal, `RANGED_MOUNT_USAGE`. The others: the
-feature doc said `is_merchandise="false"` bows still drop as loot (`GetRandomItem` skips
-`NotMerchandise`; corrected, recorded as the intended shape); MAX-vs-MAX hid an inversion behind
-an alternate set (the higher troop now judged by its slowest); an unparseable troop file vanished
-from the gate (now a `(file)` finding); a valid whole-file-before-prefix order refused; no test
-drove the gate through `Validator.run()` and an empty Modules folder passed silently (`launchers`
-floor). 47 to 68 tests. RCA `rca-ranged-ladders-codex-2026-09-13.md`; lessons in
-`data-content-cultures.md` and `testing-qa.md`; Codex's usage-flag table recorded in
-`.ai/review-reference.md`.
-
-Owed: a full restart and a Custom Battle with a Harad horse archer drawing its bow from the
-saddle, a troop from each end of the grid, the translator run for the 130 names (#579), the
-assets-repo commit, push, close #582.
 
 ## Unlinked review artefacts (index)
 

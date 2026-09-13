@@ -176,11 +176,14 @@ TRAIT_SETS = [
 # Equipment items per kingdom for companion rosters
 KINGDOM_EQUIPMENT = {
     'rivendell': {
+        # 2026-09-13: the Rivendell weapons ship under the wm_ prefix (sword
+        # a01/a02, spear a01, shield a02); the bare ids and the glaive never
+        # existed in this Armory. Same ids the shipped rosters carry.
         'weapons': [
-            'Item.rivendell_sword_a01', 'Item.rivendell_sword_b01',
-            'Item.rivendell_spear_a01', 'Item.rivendell_glaive_a01',
+            'Item.wm_rivendell_sword_a01', 'Item.wm_rivendell_sword_a02',
+            'Item.wm_rivendell_spear_a01',
         ],
-        'shields': ['Item.rivendell_shield_a01'],
+        'shields': ['Item.wm_rivendell_shield_a02'],
         'bows': ['Item.highelf_longbowa', 'Item.highelf_longbowb'],
         'heads': ['Item.rivendell_helmet_gold', 'Item.rivendell_helmet_silver', 'Item.rivendell_helmet_elite', 'Item.rivendell_helmet_lord_circlet'],
         'bodies': ['Item.rivendell_body_gold_a', 'Item.rivendell_body_gold_b', 'Item.rivendell_body_silver_a', 'Item.rivendell_body_silver_b'],
@@ -208,10 +211,10 @@ KINGDOM_EQUIPMENT = {
     'lothlorien': {
         # Use rivendell items as Lothlorien shares elven aesthetic
         'weapons': [
-            'Item.rivendell_sword_a01', 'Item.rivendell_sword_b01',
-            'Item.rivendell_spear_a01',
+            'Item.wm_rivendell_sword_a01', 'Item.wm_rivendell_sword_a02',
+            'Item.wm_rivendell_spear_a01',
         ],
-        'shields': ['Item.rivendell_shield_a01'],
+        'shields': ['Item.wm_rivendell_shield_a02'],
         'bows': ['Item.highelf_longbowa', 'Item.highelf_longbowb', 'Item.highelf_longbowc'],
         'heads': ['Item.rivendell_helmet_gold', 'Item.rivendell_helmet_silver', 'Item.rivendell_helmet_lord_circlet'],
         'bodies': ['Item.rivendell_body_gold_a', 'Item.rivendell_body_gold_b', 'Item.rivendell_body_silver_a'],
@@ -222,13 +225,16 @@ KINGDOM_EQUIPMENT = {
         'civilian_legs': ['Item.rivendell_boots_leather1', 'Item.rivendell_boots_leather2'],
     },
     'dolguldur': {
+        # 2026-09-13: Dol Guldur weapons are the wm_dol_goldur_* set (no
+        # sk_dg_uruk_* weapons exist), helmets are *_helmet_*, not *_head_*,
+        # and the shield is the Khamul medium one. Shipped rosters carry these.
         'weapons': [
-            'Item.sk_dg_uruk_1h_sword_a', 'Item.sk_dg_uruk_1h_axe_a',
-            'Item.sk_dg_uruk_2h_sword_a', 'Item.sk_dg_uruk_polearm_a',
+            'Item.wm_dol_goldur_1h_sword_a01', 'Item.wm_dol_goldur_axe_a01',
+            'Item.wm_dol_goldur_2h_mace_a01', 'Item.wm_dol_goldur_halberd_a01',
         ],
-        'shields': ['Item.sk_dg_uruk_shield_a'],
+        'shields': ['Item.sm_dg_khml_shield_med_a'],
         'bows': [],
-        'heads': ['Item.sk_dg_uruk_head_elite_a', 'Item.sk_dg_uruk_head_elite_b', 'Item.sk_dg_uruk_head_heavy_a', 'Item.sk_dg_uruk_head_heavy_b'],
+        'heads': ['Item.sk_dg_uruk_helmet_elite_a', 'Item.sk_dg_uruk_helmet_elite_b', 'Item.sk_dg_uruk_helmet_heavy_a', 'Item.sk_dg_uruk_helmet_heavy_b'],
         'bodies': ['Item.sk_dg_uruk_chest_elite_a', 'Item.sk_dg_uruk_chest_elite_b', 'Item.sk_dg_uruk_chest_heavy_a', 'Item.sk_dg_uruk_chest_heavy_b'],
         'capes': [],
         'gloves': ['Item.sk_dg_uruk_bracer_elite_a', 'Item.sk_dg_uruk_bracer_heavy_a', 'Item.sk_dg_uruk_bracer_heavy_b'],
@@ -241,12 +247,15 @@ KINGDOM_EQUIPMENT = {
             'Item.dunland_caerdh_axe_1h_a', 'Item.dunland_caerdh_axe_1h_b',
             'Item.dunland_caerdh_axe_2h_a', 'Item.dunland_caerdh_spear_a',
         ],
-        'shields': ['Item.dunland_caerdh_shield_a'],
+        # 2026-09-13: the Dunland set has light/medium/heavy/elite/lord
+        # shields, light/heavy/elite/lord chainmail and light/medium/heavy
+        # bracers; the three ids below that named other grades never existed.
+        'shields': ['Item.dunland_caerdh_shield_light_a'],
         'bows': ['Item.hunting_bow'],
         'heads': ['Item.dunland_caerdh_helmet_elite_a', 'Item.dunland_caerdh_helmet_heavy_a', 'Item.dunland_caerdh_helmet_heavy_b'],
-        'bodies': ['Item.dunland_caerdh_chainmail_elite_a', 'Item.dunland_caerdh_chainmail_heavy_a', 'Item.dunland_caerdh_chainmail_heavy_b', 'Item.dunland_caerdh_chainmail_medium_a'],
+        'bodies': ['Item.dunland_caerdh_chainmail_elite_a', 'Item.dunland_caerdh_chainmail_heavy_a', 'Item.dunland_caerdh_chainmail_heavy_b', 'Item.dunland_caerdh_chainmail_light_a'],
         'capes': [],
-        'gloves': ['Item.dunland_caerdh_bracer_elite_a', 'Item.dunland_caerdh_bracer_heavy_a', 'Item.dunland_caerdh_bracer_medium_a'],
+        'gloves': ['Item.dunland_caerdh_bracer_heavy_b', 'Item.dunland_caerdh_bracer_heavy_a', 'Item.dunland_caerdh_bracer_medium_a'],
         'legs': ['Item.dunland_caerdh_boots_heavy_a', 'Item.dunland_caerdh_boots_medium_a'],
         'civilian_bodies': ['Item.battania_civil_a', 'Item.battania_woodland_outfit'],
         'civilian_legs': ['Item.battania_leather_boots'],
@@ -267,31 +276,42 @@ KINGDOM_EQUIPMENT = {
         'civilian_legs': ['Item.haradrim02_boots'],
     },
     'rhun': {
+        # 2026-09-13: rhun_1h_sword_b and rhun_round_shield_c never existed
+        # here; the Loke-Rim sword and shield are the culture's own.
         'weapons': [
-            'Item.rhun_1h_sword_b', 'Item.aserai_sword_3_t3',
+            'Item.sm_rh_loke_1h_sword_a', 'Item.aserai_sword_3_t3',
         ],
-        'shields': ['Item.rhun_round_shield_c', 'Item.desert_round_shield'],
+        'shields': ['Item.sm_rh_loke_shield_med_a', 'Item.desert_round_shield'],
         'bows': ['Item.composite_bow'],
-        'heads': ['Item.easterling_head', 'Item.easterlingwarriors04_helmet'],
-        'bodies': ['Item.easterling_torso', 'Item.easterlingwarriors01_torso', 'Item.easterlingwarriors04_torso'],
-        'capes': ['Item.easterlingwarriors04_cape'],
-        'gloves': ['Item.easterling_glove', 'Item.easterlingwarriors01_gloves'],
-        'legs': ['Item.easterling_boots', 'Item.easterlingwarriors01_boots'],
-        'civilian_bodies': ['Item.khuzait_civil_coat_a', 'Item.khuzait_civil_coat_b', 'Item.khuzait_civil_coat_c'],
-        'civilian_legs': ['Item.khuzait_civil_boots', 'Item.khuzait_leather_boots'],
+        # 2026-09-13: the easterling_* armour left the Armory on 2026-08-28.
+        # These are the Loke-Rim ids the shipped rosters carry, one for one,
+        # from the swap map in apply_dead_mesh_item_swaps.py.
+        'heads': ['Item.sk_rh_loke_helmet_inf_elite_i', 'Item.sk_rh_loke_helmet_inf_med_c'],
+        'bodies': ['Item.sk_rh_loke_scalemail_heavy_b', 'Item.sk_rh_loke_scalemail_light_b', 'Item.sk_rh_loke_chest_light_a'],
+        'capes': ['Item.sk_rh_loke_pauldron_scale_heavy_a'],
+        'gloves': ['Item.sk_rh_loke_bracer_heavy_b', 'Item.sk_rh_loke_bracer_heavy_c'],
+        'legs': ['Item.sk_rh_loke_grvs_plate_light_a', 'Item.sk_rh_loke_grvs_light_b'],
+        # Vanilla 1.4.8 ships khuzait_civil_coat and _b, and khuzait_curved_boots;
+        # the _a/_c coats and the civil/leather boots are not items.
+        'civilian_bodies': ['Item.khuzait_civil_coat', 'Item.khuzait_civil_coat_b'],
+        'civilian_legs': ['Item.khuzait_curved_boots', 'Item.sk_rh_loke_boots_a'],
     },
     'umbar': {
+        # 2026-09-13: gond_spear2 and the gondor_nobke_*/citidel_guard_*/
+        # fountain_shoulders2/gondor_chainmaila ids never existed here. These
+        # are what the shipped Umbar wanderer rosters carry (apply_umbar_
+        # equipment.py dressed the culture on 2026-09-01).
         'weapons': [
             'Item.aserai_sword_3_t3', 'Item.aserai_sword_5_t4',
-            'Item.gond_spear2', 'Item.isengard_pike_a',
+            'Item.wm_gondor_spear_b', 'Item.isengard_pike_a',
         ],
         'shields': ['Item.desert_round_shield'],
         'bows': ['Item.lowland_longbow', 'Item.composite_bow'],
-        'heads': ['Item.dunland_caerdh_helmet_heavy_e', 'Item.gondor_nobke_helmet1', 'Item.ithilien_hood_masked_var'],
-        'bodies': ['Item.ar_ardunian_elite_armour', 'Item.gondor_chainmaila', 'Item.ithilien_jerkin_long'],
-        'capes': ['Item.citidel_guard_armor_pauldrons', 'Item.fountain_shoulders2'],
-        'gloves': ['Item.gondor_nobke_bracers', 'Item.ithilien_bracers'],
-        'legs': ['Item.ithilien_boots', 'Item.ithilien_boots_heavy', 'Item.gondor_nobke_boots'],
+        'heads': ['Item.dunland_caerdh_helmet_heavy_e', 'Item.sk_gd_ano_noble_helmet_med_a', 'Item.ithilien_hood_masked_var'],
+        'bodies': ['Item.ar_ardunian_elite_armour', 'Item.sk_gd_ano_chainmail_half_a', 'Item.ithilien_jerkin_long'],
+        'capes': ['Item.sk_gd_ano_pauld_inf_heavy_a', 'Item.sk_gd_ano_pauld_noble_med_a'],
+        'gloves': ['Item.sk_gd_ano_bracer_noble_heavy_a', 'Item.ithilien_bracers'],
+        'legs': ['Item.ithilien_boots', 'Item.ithilien_boots_heavy', 'Item.sk_gd_ano_boots_a'],
         'civilian_bodies': ['Item.layered_leather_tunic', 'Item.bandit_envelope_dress_v1'],
         'civilian_legs': ['Item.ithilien_boots', 'Item.dunland_caerdh_boots_light_a'],
     },

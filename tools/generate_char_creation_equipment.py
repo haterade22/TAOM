@@ -42,11 +42,15 @@ CULTURES = {
         "cape": "ithilien_cloak",
         "cape_alt": "ithilien_cloak_var",
         "sword": "wm_gondor_sword_a01",
-        "spear": "wm_gondor_spear",
+        # 2026-09-13: wm_gondor_spear and the plain Lossarnach axe left the
+        # Armory on 2026-09-11; these are the ids KEYforce put in the shipped
+        # rosters (lotraom-assets d7d5f75b). gond_shld2 never resolved; the
+        # file's hand fix went wm_gondor_shield_a02 -> sm_gd_shield_a1.
+        "spear": "wm_gondor_light_spear",
         "bow": "gondor_steel_bow_starter",
         "arrows": "default_arrows",
-        "shield": "gond_shld2",
-        "axe_or_mace": "wm_gondor_lossarnach_1h_axe_a",
+        "shield": "sm_gd_shield_a1",
+        "axe_or_mace": "wm_gondor_lossarnach_1h_axe_black_ash_a",
     },
     "mordor": {
         "body_civilian": "sk_uruk_mordor_chainmail_light_a",
@@ -180,17 +184,21 @@ CULTURES = {
         "body_alt": "sk_rh_loke_tunic_a",
         "body_military": "sk_rh_loke_chest_light_a",
         "leg": "sk_rh_loke_boots_a",
-        "leg_alt": "easterling_boots",
+        # 2026-09-13: the easterling_* art went on 2026-08-28 and the spear on
+        # 2026-09-11. These are the Loke-Rim ids the shipped rosters carry
+        # (apply_dead_mesh_item_swaps.py for the armour, KEYforce's
+        # lotraom-assets d7d5f75b for the spear); both capes collapsed onto one.
+        "leg_alt": "sk_rh_loke_grvs_plate_light_a",
         "head_light": "sk_rh_loke_hood_light_a",
         "head_military": "sk_rh_loke_helmet_inf_light_a",
-        "gloves": "easterling_glove",
-        "cape": "easterling_cape",
-        "cape_alt": "easterlingwarriors01_cape",
-        "sword": "rhun_1h_sword_a_t1",
-        "spear": "easterling_spear",
+        "gloves": "sk_rh_loke_bracer_heavy_b",
+        "cape": "sk_rh_loke_pauldron_lam_heavy_a",
+        "cape_alt": "sk_rh_loke_pauldron_lam_heavy_a",
+        "sword": "sm_rh_loke_1h_sword_a",
+        "spear": "sm_rh_loke_spear_a",
         "bow": "hunting_bow",
         "arrows": "default_arrows",
-        "shield": "easterling_shield",
+        "shield": "sm_rh_loke_shield_med_a",
         "axe_or_mace": None,
     },
     "shaghana": {
@@ -611,8 +619,11 @@ def append_cultures(culture_ids, apply=False):
 
     A full rewrite is NOT safe here. The shipped file has been hand-corrected since it was last
     generated (verified 2026-08-10: Gondor's shield was fixed from `gond_shld2` to
-    `wm_gondor_shield_a02` in 8 rosters), so re-running the whole generator silently reverts those
-    edits. Until the tables are reconciled with the file, only ever append.
+    `wm_gondor_shield_a02` in 8 rosters, since re-pointed to `sm_gd_shield_a1`), and since #569
+    every id the rosters hand out is a `starter_<donor>` twin written by
+    `wire_starter_kit_rosters.py`, which `StarterKitCoverageTests` enforces. Re-running the whole
+    generator reverts both. Until the tables are reconciled with the file, only ever append, and
+    run the starter-kit wiring over anything appended.
 
     Idempotent: a culture that already has rosters in the file is skipped.
     """

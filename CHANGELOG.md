@@ -44,36 +44,6 @@ Not-tested: the Harmony prefix and postfixes and the MissionBehavior entry point
 ADR-008); the in-game smoke is owed.
 Save-compat: none; mission-scoped state and one new MCM property.
 
-### fix(data): a rider cannot draw a `long_bow`; the ranged ladders after their Codex pass (#582, #588)
-
-Codex (gpt-6-astra, ultra) on the seven ladder commits: four P2, one P3, all confirmed, zero false
-positives, five of eight Known Suspects disputed with counts. The gameplay defect: seven horse
-archers (Harad R and V, Rohan E, Dunland R and V) were rostered into cells cloned from a
-`long_bow`-usage donor, and Native's `long_bow` usage set is `base_set="bow"` plus
-`requires_no_mount` (and `requires_no_shield`), so they spawned with a bow on their back that they
-never drew; all seven had carried a vanilla steppe bow before the rewrite. Fixed the way the
-Armory fixes it (`wm_mirkwood_bow_a02` "LongBow II - Horse" is the a01 mesh with `item_usage="bow"`):
-the spec's new per-line `usage` override (`{"Bow": "bow"}` on Harad and Dunland, so both keep their
-own bow mesh) and Rohan's E band on the line's `composite_steppe_bow` instead of `glen_ranger_bow`;
-the generator writes the usage onto the clone and `--verify` checks it; 130 items regenerated in
-the live Armory and the mirror, 0 roster edits (the cell ids did not change). Guards so it cannot
-ship again: `Launcher.usage`, `RangedTroop.mounted`, `mount_barred_usages()` read from the
-install's `item_usage_sets.xml` (None without it, and every caller says it skipped),
-`planned_edits(barred=)` refuses to roster a mounted troop into a barred cell, the validator's
-`RANGED_MOUNT_USAGE` names any that exists (0 today, 7 before). The other findings: the doc claim
-that ladder bows still drop as loot was wrong (`is_merchandise="false"` is `NotMerchandise`, which
-`DefaultBattleRewardModel.GetRandomItem` skips at lines 125 and 153; the items are troop-only by
-construction and the donors stay in shops and loot for the player, recorded as a decision); the
-inversion rule judged both troops by their fastest set, so a slow alternate set on the higher
-troop could hide an inversion the engine can spawn (now its slowest set); a troop file that does
-not parse vanished from the gate (now a `(file)` finding: not checked is not clean); `validate_spec`
-refused a valid whole-file-before-prefix order; no test drove the gate through `Validator.run()`
-and an empty Modules folder passed with no notice (`launchers` joins the suspect-registry floors).
-`tools/tests/test_ranged_ladder.py` 47 to 68 tests; validator 0 errors, no new warnings. RCA
-`docs/reviews/rca-ranged-ladders-codex-2026-09-13.md`; lessons in `data-content-cultures.md` and
-`testing-qa.md`; review 108. Not gated: `requires_no_shield` on a bow (Native ships twelve
-Wolfskins sets with a `long_bow` bow beside a shield).
-
 ### feat(supply-lines): search every market from the order screen, and every trade good is orderable (#587)
 
 The supply order screen made the player pick one settlement and read its goods; finding out who
@@ -109,53 +79,6 @@ Not-tested: rendering (the text box, its placeholder, the hide/show swap, the 54
 goods scroll reset) and the first-keystroke build on the full map need the in-game smoke listed in
 the feature doc. RCA: `docs/reviews/rca-supply-search-2026-09-13.md`.
 `docs/features/supply-lines.md`.
-
-### fix(tools): the clan_heraldry specs are synced from the live files, and applying them is a no-op (#589)
-
-`generate_clan_heraldry.py` replaces a whole `<MBPartyTemplate>` from
-`clan_heraldry/<culture>.json`, and the specs had not moved since August: measured against the
-live files, 176 of 192 rosters and six Gondor `template_id`s were behind (the 2026-08-14 and
-2026-09-01 retargets, the Black Numenorean houses, the ladders and #584 all edited the templates
-directly), so the guard widened in #584 refused 19 of the 21 specs. `build_clan_specs.py` is not
-the way back, it composes rosters from scratch. New `tools/sync_clan_specs_from_live.py` copies
-each clan's live binding into `template_id` and the live stacks into `roster`, leaves colours
-alone (current on all 192 clans), keeps each JSON's line endings, trailing newline and escaping,
-stamps a `_rosters` provenance note, and refuses a clan with no live faction, one whose faction
-binds no template (the engine would use the culture default, so guessing the clan-id template
-would write a roster it never fields), or a binding to no template. Applied: 182 clan changes across 19 files; `bandits` and `khand` untouched. Gondor's
-`_note` no longer warns that its roster half is stale. Two defects in the generator surfaced on
-the way: `render_template` joined with LF inside the CRLF party file, and `write()` put a BOM on
-`characters/clans.xml`, which has none; both fixed. Proof: `generate_clan_heraldry.py --all
---apply` is byte-identical on all three live files, and `tools/tests/test_clan_heraldry_specs.py`
-fails on the first spec-vs-live divergence or the first non-no-op apply. `docs/features/
-clan-heraldry.md` now documents the direction of flow.
-
-### fix(tools): the kingdom-cap curve after its Codex pass (#583)
-
-Codex (gpt-6-astra, ultra) on the committed changeset: no P1, four P2, three P3, all confirmed,
-zero false positives. The two-tier invariant `check_kingdom_curve_invariant` proves the primary
-stat only; the previous entry's "no legendary roll passes the elite piece" was wider than the
-proof. A secondary keeps its item's own ratio, and where that ratio is small the flat modifier
-bonus outgrows the tier gap (a legendary medium Isengard pauldron rolls arm 5 + 5 against the elite
-one's 7); the live sweep in `analyze_armor_balance.py` judges every governed stat per item and
-lists 50 roster-backed secondary cases, all inherited ratios the restat preserved. They go to the
-roster pass; docstring, doc and this entry now say primary only. `tier_from_value` takes the item
-id, so the overview's reserve list and the `--weights-only` path judge a sub-line item on its own
-cap: 62 Dol Guldur items in the rhun folder had read as Rhun heavy and left Rhun's reserve (114,
-now 176). The overview's curve view is labelled the generic benchmark it is, and the report ends
-with two observation tables for the roster pass: kit off the culture's line (162 rows over 33
-troops: Isengard orcs in Mordor orc kit, Rhun in Dol Guldur's `sk_dg_` kit, Mordor militia in
-Black Uruk kit, Umbar nobles in Black Numenorean plate, the elves in Gondor kit; a `mordor_num_` or
-`mordor_uruk_` troop is held to its own line) and uncurved vanilla kit above the culture's elite
-slot value (11 rows: Dunland's `tall_helmet` and `plumed_helmet`, Harad's scale chest and
-chausses). Docs: the display tier does steer workshop production (`DefaultItemCategorySelector`
-files armour by tier, `WorkshopsCampaignBehavior` produces by category), `CULTURAL_MODS` no longer
-sets a capped kingdom's protection, `--no-lower-armor` holds neither material nor weight on its
-own, `--tier-source roster` skips only keyword-less unworn kit, and one secondary is
-path-dependent by a point (`rivendell_torso_heavy_tier3_silvergoldb`, leg 34 for a direct 33)
-because each apply rounds from the current ratio. Tests: 4 new (22 in
-`test_analyze_kingdom_armour.py`, 23 in `test_kingdom_caps.py`). RCA section in
-`docs/reviews/rca-kingdom-cap-curve-2026-09-13.md`, Review 104 in `docs/reviews/REVIEW-LOG.md`.
 
 ### feat(armour): the kingdom-cap curve, applied to the whole Armory, and the ladder repair it needed (#583)
 
@@ -197,6 +120,26 @@ every test of this change green (1,415 of the suite's 1,416 at commit; the one f
 session's in-flight clan-heraldry test). Owed: a full restart and the party screen on the capstones
 (item XML loads at launch), the assets-repo commit, and the roster pass on the flagged cells.
 
+### fix(tools): the clan_heraldry specs are synced from the live files, and applying them is a no-op (#589)
+
+`generate_clan_heraldry.py` replaces a whole `<MBPartyTemplate>` from
+`clan_heraldry/<culture>.json`, and the specs had not moved since August: measured against the
+live files, 176 of 192 rosters and six Gondor `template_id`s were behind (the 2026-08-14 and
+2026-09-01 retargets, the Black Numenorean houses, the ladders and #584 all edited the templates
+directly), so the guard widened in #584 refused 19 of the 21 specs. `build_clan_specs.py` is not
+the way back, it composes rosters from scratch. New `tools/sync_clan_specs_from_live.py` copies
+each clan's live binding into `template_id` and the live stacks into `roster`, leaves colours
+alone (current on all 192 clans), keeps each JSON's line endings, trailing newline and escaping,
+stamps a `_rosters` provenance note, and refuses a clan with no live faction, one whose faction
+binds no template (the engine would use the culture default, so guessing the clan-id template
+would write a roster it never fields), or a binding to no template. Applied: 182 clan changes across 19 files; `bandits` and `khand` untouched. Gondor's
+`_note` no longer warns that its roster half is stale. Two defects in the generator surfaced on
+the way: `render_template` joined with LF inside the CRLF party file, and `write()` put a BOM on
+`characters/clans.xml`, which has none; both fixed. Proof: `generate_clan_heraldry.py --all
+--apply` is byte-identical on all three live files, and `tools/tests/test_clan_heraldry_specs.py`
+fails on the first spec-vs-live divergence or the first non-no-op apply. `docs/features/
+clan-heraldry.md` now documents the direction of flow.
+
 ### fix(data): Black Numenoreans field only for the two houses, Sauron and the vassal reward (#584)
 
 Every Mordor orc and uruk lord spawned a token handful of Black Numenoreans: the 13 `mordor_num_*`
@@ -224,8 +167,6 @@ the rebalancer reports and this change did not apply. Save-compat: templates sha
 only. Owed: new-campaign smoke (a `clan_empire_south_2` lord with zero Black Numenoreans, the Mouth
 of Sauron mostly BN, a Mordor level-3 patrol with none).
 
-## 2026-09-12
-
 ### feat(balance): troop weight 3.0 for every level 41+ elite (#585)
 
 `troop_weights.xml` is a flat per-id lookup with no level table; 3.0 covered ten level-46/51
@@ -250,31 +191,48 @@ would undershoot the intended integer; `ResultFramePenaltyTests` asserts the tru
 Codex's four cases plus a fractional base that must keep its fraction. Owed: in-game check that an
 L41+ elite costs 3 slots in the party screen's weighted frame.
 
-### fix(tools): the ranged-troops page after its review, and the militia cache guard
+### feat(tools): a data generator can no longer write an item the Armory does not define
 
-Six agents on the two follow-ups, no HIGH, eight fixes. The page's Spread column used the bow's
-skill factor for crossbows; `CrossbowAccuracy` is -0.0005 per level against the bow's -0.0009
-(`DefaultSkillEffects.cs:249,254`), so every crossbow row was 6 to 9% too tight. The tracked
-`docs/reference/ranged-troops.html` carried a clock, so each regenerate dirtied the repo, and had no
-document skeleton or charset: now a full document, no clock, byte-identical across runs, pinned LF
-in `.gitattributes`. A row's ammo now comes from the sets that field the chosen launcher (0 of 227
-affected today). `militia_troop_ids` re-reads when the elite cache is missing its entry instead of
-leaving `elite_militia_troop_ids` to raise. A troop file that does not parse is reported rather than
-dropped. The "flat by design" militia prose in three places, the C# test's regex-lockstep comment,
-and the page's `difficulty` wording corrected. 60 tests across the two files. RCA:
-`docs/reviews/rca-ranged-troops-report-2026-09-13.md`.
+Review of lotraom-assets 66ac53be, c89bc6d3 and d7d5f75b (Erkam, 2026-09-12): "claude fixes" was
+a verbatim copy of this repo's 782534fb, the revert undid it, and "fixed" re-applied it with his own
+npcs_gondor.xml. Every item reference in those commits is already in this repo (782534fb ported
+them the same morning; `validate_moduledata.py` reports 0 errors against the live Armory), so no
+ModuleData XML changed. Our npcs_gondor.xml is a superset of his: it keeps `is_female="true"` on 16
+female townsfolk and notables and the five arena `<face>` templates his copy lacks. The mirror is
+behind this repo on five of those files (#569, #582 and the veteran-militia skills landed after
+his snapshot) and the sync direction is repo to mirror.
 
-### fix(data): the veteran militia stand 15 above the basic militia on every skill
+What the review turned up was the tooling. Nothing had ever checked the Python that writes
+ModuleData against the items the game loads, and seven generators between them named 67 ids the
+Armory had retired or had never defined: the Gondor scaffolder (the retired spear, six swords, the
+plain and silver Lossarnach axes, `wm_gondor_shield_a02` and the `gond_shield_*` set, plus four ids
+that never existed here), the Rhûn scaffolder (the Easterling spear and shield plus seventeen
+never-defined `rhun_*` Wainrider weapons, war horses, `long_bow`, `throwing_spear` and a mis-spelled
+Dragon scalemail), the character-creation, career and starter-armour tables, and both wanderer
+generators (the LOTRAOM-era `gondor_*`/`citidel_guard_*` armour, bare `rivendell_*` weapons,
+`sk_dg_uruk_*` weapons and `*_head_*` helmets, three Dunland grades, `khuzait_civil_coat_a/_c`).
+Every one now names what the shipped rosters carry or the live Armory defines (the four surviving
+Gondor swords as a tier ladder, `wm_gondor_spear_b` and `wm_gondor_light_spear`, the light and
+black-ash Lossarnach axes, `sm_gd_shield_a1`, the Loke-Rim and Dragon sets, the `wm_dol_goldur_*`
+weapons, khuzait lances and t2/t3 horses for the Wainriders). The two completed Gondor one-offs
+(`apply_gondor_troop_revamp.py` #99, `apply_gondor_polish_224.py` #224) refuse `--apply` with a
+message instead: their tables would overwrite KEYforce's roster whatever ids they carried. The
+modding handbook's Ithilien ranger excerpt was refreshed to the shipped block.
 
-Every militia slot a culture binds takes the level-21 baseline whatever the troop's level, which
-is deliberate, but the four slots shared it exactly, so a culture's militia archer (level 11) and
-veteran militia archer (level 16) were the same eight numbers in all 15 cultures and the promotion
-changed nothing. `rebalance_troops.py` now keeps the elite ids (`*_elite_militia_troop`) apart
-from the basic ones and adds `MILITIA_ELITE_BONUS` (15, the user asked for 10 to 20) to every
-skill before cultural modifiers. `--fix-monotonicity --restat <the 30 elite ids>` rewrote exactly
-30 troops in 15 files, +15 per skill (+120 a troop, +115 where a skill had been floored at 0);
-`docs/reference/ranged-troops.html` regenerated for the 15 veteran archers. Tests:
-`tools/tests/test_militia_elite_bonus.py`.
+The gate: `tools/check_generator_item_refs.py` reads each registered generator (run it and take
+every `id="Item.X"` it prints, or import it and walk its tables) and resolves every id against the
+validator's own registry, so the live `LOTRLOME_Armory` weapon, armour and shield XML and the
+vanilla modules are the authority. `validate_moduledata.py` now emits `GENERATOR_RETIRED_ITEM_REF`
+(warning; skipped, never faked, without the install), the CLI exits 1 on a finding, and
+`tools/tests/test_check_generator_item_refs.py` (17 tests) carries the same check as a live-install
+gate. First clean run: 7 generators, 6,144 item ids, 0 unresolved.
+
+Not-tested: the generators' output is not shipped (the XML is hand-rostered past them), so no
+in-game check applies; the one-offs' refusal was exercised and `troops_gondor.xml` was unchanged.
+Rejected: rewriting the two one-offs' 147 table entries (a re-run would still overwrite the
+re-rostered tree); a static id scan over all of tools/ (swap maps name retired ids on purpose).
+
+## 2026-09-12
 
 ### feat(data): ranged range ladders, tier climbs reach inside a line and kingdom rank orders each band (#582)
 
@@ -308,14 +266,8 @@ bow or crossbow (the validator paid 1.2 s for it, now 0.18 s); a non-numeric `ba
 reported, not raised; a `files` token naming no troop file and prefixes overlapping across lines
 are spec findings; `MAX_TIER = 10` is attributed to TAOM's `TaomCharacterStatsModel` override
 (vanilla caps at 6). RCA: `docs/reviews/rca-ranged-ladders-2026-09-12.md`.
-Owed: the 12-language translator run for the 130 names (tracked on #579), the in-game restart
-check. `docs/features/ranged-ladders.md`.
-
-Follow-up, same day: `rebalance_ranged_ladders.py` also writes `REPORT.html` and its tracked copy
-`docs/reference/ranged-troops.html`, every ranged troop per kingdom in rank order with the skills
-beside the weapon (missile speed, drag-model reach, accuracy, `WeaponInaccuracy` spread,
-`AiShootFreq` cadence, the mounted open-fire distance, bow plus ammo damage, shots), sortable
-and filterable; `ranged_ladder.index_ammo` and the troop display name feed it. 49 tests.
+Owed: the 12-language translator run for the 130 names (no API key in this environment), the
+in-game restart check. `docs/features/ranged-ladders.md`.
 
 ### feat(tools): kingdom armour overview by engine tier, and a cross-culture armour gate (#581)
 
