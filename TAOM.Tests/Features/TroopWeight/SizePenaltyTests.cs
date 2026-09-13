@@ -154,4 +154,41 @@ public class ResultFramePenaltyTests
 
         Assert.AreEqual(100f, limit.BaseNumber, Tolerance);
     }
+
+    // The engine reads the limit as (int)ResultNumber (PartyBase.PartySizeLimit), and ResultNumber is
+    // BaseNumber + BaseNumber * SumOfFactors in float. (B - p/s) * s is not exactly B*s - p, so a
+    // subtraction that should land on 70 can land on 69.99999 and truncate to 69: one slot under the
+    // promised exact cost, and the ">= 1" floor becomes 0. Codex review 103 reproduced these on the
+    // installed struct with Gondor's real 0.025 feat. The tolerance assertions above cannot see it.
+    [DataTestMethod]
+    [DataRow(80f, 0.025f, 12, 70)]
+    [DataRow(120f, 0.025f, 120, 3)]
+    [DataRow(120f, 0.025f, 122, 1)]
+    [DataRow(100f, 0.2f, 119, 1)]
+    [DataRow(100f, 0f, 9, 91)]
+    public void SubtractResultFramePenalty_TruncatedResult_IsExactlyTheIntendedInteger(
+        float baseNumber, float factor, int penalty, int expectedCap)
+    {
+        var limit = new ExplainedNumber(baseNumber);
+        if (factor != 0f)
+            limit.AddFactor(factor);
+        int intended = (int)limit.ResultNumber - penalty;
+        Assert.AreEqual(expectedCap, intended, "precondition: the case is set up to land on this cap");
+
+        TroopWeightService.SubtractResultFramePenalty(ref limit, penalty);
+
+        Assert.AreEqual(expectedCap, (int)limit.ResultNumber,
+            $"ResultNumber {limit.ResultNumber:R} truncates to the wrong cap");
+    }
+
+    [TestMethod]
+    public void SubtractResultFramePenalty_FractionalBase_KeepsItsFraction()
+    {
+        // The correction only lifts an undershoot; a legitimately fractional base is not rounded.
+        var limit = new ExplainedNumber(82.4f);
+
+        TroopWeightService.SubtractResultFramePenalty(ref limit, 12);
+
+        Assert.AreEqual(70.4f, limit.ResultNumber, 0.001f);
+    }
 }

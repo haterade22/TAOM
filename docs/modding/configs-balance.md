@@ -401,7 +401,7 @@ Code: No code changes needed
 
 | Number | Command | Date |
 |---|---|---|
-| 105 live `<TroopWeight>` rows (106 raw lines, one commented out); 93 at 2.0, 10 at 3.0, 1 at 4.0, 1 at 10.0 | python ElementTree count plus a `weight` Counter over `troop_weights.xml`, and `rg -c '<TroopWeight '` for the raw line count | 2026-09-05 |
+| 105 live `<TroopWeight>` rows (106 raw lines, one commented out); 52 at 2.0, 51 at 3.0, 1 at 4.0, 1 at 10.0 | python ElementTree count plus a `weight` Counter over `troop_weights.xml`, and `rg -c '<TroopWeight '` for the raw line count | 2026-09-13 |
 | 77 `<Troop>` rows with six distinct attributes in `troop_resource_costs.xml` | python ElementTree attribute union over `troop_resource_costs.xml` | 2026-09-05 |
 | 11 `<Resource>` rows in `special_resources_config.xml` | python ElementTree count over `special_resources_config.xml` | 2026-09-05 |
 | 22 `<Culture>` rows in `startup_resources_config.xml` | python ElementTree count over `startup_resources_config.xml` | 2026-09-05 |

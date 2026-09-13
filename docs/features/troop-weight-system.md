@@ -450,8 +450,13 @@ against `troop_weights.xml` and the `troops/troops_*.xml` rosters on 2026-08-14:
 Ordering matters only for contributor 3. `ExplainedNumber` sums factors and applies them to
 `BaseNumber`, so an `Add` lands in the base frame whenever it runs; the weight penalty is a
 result-frame body count, so `SubtractResultFramePenalty` divides `1 + SumOfFactors` back out
-(`Main/Features/TroopWeight/TroopWeightService.cs:141-153`) and must run after the feats so it reads
-the boosted `ResultNumber` as its base.
+(`Main/Features/TroopWeight/TroopWeightService.cs`) and must run after the feats so it reads
+the boosted `ResultNumber` as its base. The division is exact in algebra and not in float: the
+engine reads `(int)ResultNumber`, and `(B - p/s) * s` lands a hair under `B*s - p`, so Gondor's
+0.025 feat turned an intended 70 into 69.99999 (read 69) and the floor of 1 into 0.99999 (read 0).
+Since 2026-09-13 (Codex review 105) the method probes the subtraction on a copy of the struct and
+lifts it by 0.001 in the result frame when the truncated result would fall below the integer
+`ComputeSizePenalty` was given; a legitimately fractional base keeps its fraction.
 
 Contributor 2 is the easiest of the three to miss. The cultural-feats floor section names only 1 and
 3, so a reader arriving from there sees two of the three. The two pages that carry all three are
@@ -461,8 +466,9 @@ Contributor 2 is the easiest of the three to miss. The cultural-feats floor sect
 **Open question, deliberately unanswered.** The Overview above frames this feature as a composition
 incentive. A culture whose roster is heavy end to end has no composition to choose, so for it the tax
 degenerates into a flat cap cut: an all-weight-2.0 roster settles at `raw = baseLimit / 2` by the
-boundary math in point 3 above. On the counts above that lands on Rivendell and Mirkwood, and neither
-culture appears in `ApplyPartySizeFeats`, so nothing offsets it. The Overview also names that exact
+boundary math in point 3 above, and since #585 an all-level-41+ roster at `raw = baseLimit / 3`. On
+the counts above that lands on Rivendell and Mirkwood, and neither culture appears in
+`ApplyPartySizeFeats`, so nothing offsets it. The Overview also names that exact
 case ("100+ Rivendell blademasters") as the thing to prevent, so the flat cut may be the intent rather
 than a gap. Nobody has written down which. The 20% floor answers the opposing-bonus question for
 Mordor, Isengard, Dol Guldur and Gundabad; it does not answer this one.
@@ -495,11 +501,18 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 |--------|-------|-----------|
 | 10.0 | 1 | `harad_elephant_rider` |
 | 4.0 | 1 | `taom_spider_creature` (`cave_troll` would be the second, but is commented out) |
-| 3.0 | 10 | Rivendell Gondolin line (5), Mirkwood palace guard + Thingol's heir (2), Erebor oathsworn royal legionary + Erebor/Iron Hills royal wardens (3) |
-| 2.0 | 93 | All Imladris/Mirkwood elves, warg riders (all cultures), Black Númenóreans, Khamûl's elite, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard, Erebor/Iron Hills nobles, Ironpass ram cavalry, Gundabad elites, `gondor_pg_vet_cavalry` |
+| 3.0 | 51 | Every listed troop at level 41 or above: the Rivendell Gondolin line (5) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
+| 2.0 | 52 | Every listed troop below level 41: the lower Imladris/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry` |
 | 1.0 | default | Every unlisted troop, stated in the file's own header comment, and there is no other default anywhere |
 
-<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();d=collections.defaultdict(list);[d[x.get('weight')].append(x.get('id')) for x in r.findall('.//TroopWeight')];print({k:len(v) for k,v in d.items()})" 2026-09-06 -->
+**The level rule (#585, 2026-09-13).** A listed troop at level 41 or above pays 3.0 and a listed troop
+below that pays 2.0; the two mount packages price the creature plus its crew and sit outside it. The
+file is a flat per-id lookup and no code reads a troop's level, so the rule holds only as long as the
+rows do: `TroopWeightLevelBandTests` pins it from both sides of the boundary and fails on a weighted
+id that resolves to no troop. Before #585 the 3.0 band was the ten level-46/51 capstones and the file
+argued that mounted branches never escalate with tier; both are gone.
+
+<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();d=collections.defaultdict(list);[d[x.get('weight')].append(x.get('id')) for x in r.findall('.//TroopWeight')];print({k:len(v) for k,v in d.items()})" 2026-09-13 -->
 | 1.0 | default | All standard human/orc/goblin infantry, archers, militia, cavalry |
 
 ### MCM Setting
@@ -526,7 +539,7 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 | `Main/Features/TroopWeight/Hooks/IOn*.cs` | 6 hook interfaces: shed-on-upgrade + the 5 display surfaces |
 | `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 6 Harmony patches, all `Patch17_TroopWeight`: `UpgradeReadyTroops` + `PartyVM.RefreshPartyInformation` + `CampaignUIHelper.GetMainPartyHealthTooltip` + `ClanPartyItemVM.UpdateProperties` + `RecruitmentVM.RefreshPartyProperties` + `PartyCharacterVM.RefreshValues` |
 | `Main/Features/TroopWeight/Diagnostics/` | TEMPORARY special-currency count diagnostic (separate investigation) |
-| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **105 live rows: 93 at 2.0, 10 at 3.0, one at 4.0, one at 10.0.** A raw grep returns 106 because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-09-06 --> |
+| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **105 live rows: 52 at 2.0, 51 at 3.0, one at 4.0, one at 10.0.** A raw grep returns 106 because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-09-13 --> |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `{=taom_troop_weight_size}` (enforcement label, no longer rendered) + `{=taom_troop_weight_tag}` (row `×N` tag) |
 | `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
 
@@ -561,10 +574,10 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 ## How to Add a New Weight Tier
 
 Weight values are continuous floats — any positive value works. Common tiers:
-- `1.0` — Standard (default for unlisted troops)
-- `2.0` — Elite (occupies 2 party slots)
-- `3.0` — Legendary (occupies 3 party slots)
-- `4.0` — Monster (occupies 4 party slots)
+- `1.0`: standard (default for unlisted troops)
+- `2.0`: elite below level 41 (occupies 2 party slots)
+- `3.0`: elite at level 41 or above (occupies 3 party slots); this is a rule, not a taste, see "The level rule" above
+- `4.0`: monster (occupies 4 party slots)
 
 ## Performance
 

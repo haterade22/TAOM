@@ -158,8 +158,26 @@ public class TroopWeightService : ITroopWeightService
         if (!(scale > MinFactorScale))
             return;
 
-        limit.Add(-resultFramePenalty / scale, HeavyTroopsText);
+        // The engine reads (int)ResultNumber, and ResultNumber is BaseNumber + BaseNumber * SumOfFactors
+        // in float, so (B - p/s) * s is not exactly B*s - p: 82 - 12 can land on 69.99999 and truncate to
+        // 69, one slot under the exact cost promised above, and the ">= 1" floor becomes 0 (Codex review
+        // 103, reproduced on the installed struct with Gondor's 0.025 feat). Probe the subtraction on a
+        // copy (a struct; Add with no description records no line) and lift it by a hair when it would
+        // undershoot the intended integer. A legitimately fractional base keeps its fraction: the lift
+        // fires only when the truncated result falls BELOW the integer ComputeSizePenalty was given.
+        int intendedCap = (int)limit.ResultNumber - resultFramePenalty;
+        float delta = -resultFramePenalty / scale;
+        var probe = limit;
+        probe.Add(delta);
+        if ((int)probe.ResultNumber < intendedCap)
+            delta += (intendedCap - probe.ResultNumber + CancellationNudge) / scale;
+
+        limit.Add(delta, HeavyTroopsText);
     }
+
+    // Result-frame lift applied only to an undershoot. Float resolution near a party limit (hundreds) is
+    // about 1e-5, so this dwarfs the cancellation error and can never carry the result to the next integer.
+    private const float CancellationNudge = 0.001f;
 
     public int GetTrueBaseSizeLimit(PartyBase party)
     {

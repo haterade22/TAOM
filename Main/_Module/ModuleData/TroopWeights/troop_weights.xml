@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TroopWeights>
-    <!-- Default weight is 1.0 for all unlisted troops -->
+    <!-- Default weight is 1.0 for all unlisted troops.
+
+         Level rule (#585, 2026-09-13): a listed troop at level 41 or above pays 3.0, a listed
+         troop below that pays 2.0, and the two mount packages (spider 4.0, elephant 10.0) price
+         the creature plus its crew rather than the rider's tier. The file is a flat per-id
+         lookup and nothing in the code reads a troop's level, so the rule is only as true as
+         these rows: TroopWeightLevelBandTests pins it from both sides of the boundary. -->
 
     <!-- ===== CAVE TROLLS (Weight 4.0) — Massive monster units ===== -->
     <!-- DISABLED 2026-05-14: Cave troll WIP; not ready for live game yet. Re-enable by uncommenting.
@@ -8,23 +14,24 @@
     -->
 
     <!-- ===== RIVENDELL / IMLADRIS — High Elves ===== -->
-    <!-- Legendary commanders (Weight 3.0) -->
+    <!-- Level 51 (3.0) -->
     <TroopWeight id="rivendell_glorfindel_guard" weight="3.0" />
     <TroopWeight id="rivendell_gondolin_battlemaster" weight="3.0" />
     <TroopWeight id="rivendell_high_captain" weight="3.0" />
     <TroopWeight id="rivendell_knight_golden_flower" weight="3.0" />
     <TroopWeight id="rivendell_warden_gondolin" weight="3.0" />
-    <!-- Elite tier (Weight 2.0) -->
-    <TroopWeight id="rivendell_royal_knight" weight="2.0" />
-    <TroopWeight id="rivendell_royal_guard" weight="2.0" />
-    <TroopWeight id="noldorin_lancer" weight="2.0" />
-    <TroopWeight id="rider_of_himring" weight="2.0" />
-    <TroopWeight id="battlemaster_of_the_first_age" weight="2.0" />
-    <TroopWeight id="imladris_blademaster" weight="2.0" />
-    <TroopWeight id="imladris_horse_archer" weight="2.0" />
-    <TroopWeight id="imladris_marchwarden" weight="2.0" />
-    <TroopWeight id="imladris_outrider" weight="2.0" />
-    <TroopWeight id="imladris_warden" weight="2.0" />
+    <!-- Level 41 and 46 (3.0) -->
+    <TroopWeight id="rivendell_royal_knight" weight="3.0" />
+    <TroopWeight id="rivendell_royal_guard" weight="3.0" />
+    <TroopWeight id="noldorin_lancer" weight="3.0" />
+    <TroopWeight id="rider_of_himring" weight="3.0" />
+    <TroopWeight id="battlemaster_of_the_first_age" weight="3.0" />
+    <TroopWeight id="imladris_blademaster" weight="3.0" />
+    <TroopWeight id="imladris_horse_archer" weight="3.0" />
+    <TroopWeight id="imladris_marchwarden" weight="3.0" />
+    <TroopWeight id="imladris_outrider" weight="3.0" />
+    <TroopWeight id="imladris_warden" weight="3.0" />
+    <!-- Level 21 to 36 (2.0) -->
     <TroopWeight id="imladris_guardsman" weight="2.0" />
     <TroopWeight id="imladris_marksman" weight="2.0" />
     <TroopWeight id="imladris_nobleman" weight="2.0" />
@@ -34,50 +41,51 @@
     <TroopWeight id="rivendell_noble" weight="2.0" />
 
     <!-- ===== MIRKWOOD — Wood Elves ===== -->
-    <!-- Legendary (Weight 3.0) -->
+    <!-- Level 51 (3.0) -->
     <TroopWeight id="mirkwood_palaceguard" weight="3.0" />
     <TroopWeight id="mirkwood_thingolheir" weight="3.0" />
-    <!-- Elite tier (Weight 2.0) -->
-    <TroopWeight id="mirkwood_beleglas" weight="2.0" />
-    <TroopWeight id="mirkwood_borderwardens" weight="2.0" />
-    <TroopWeight id="mirkwood_glaivesman" weight="2.0" />
-    <TroopWeight id="mirkwood_guardians" weight="2.0" />
-    <TroopWeight id="mirkwood_guards" weight="2.0" />
-    <TroopWeight id="mirkwood_rochenlas" weight="2.0" />
-    <TroopWeight id="mirkwood_sentinels" weight="2.0" />
-    <TroopWeight id="mirkwood_swordsman" weight="2.0" />
-    <TroopWeight id="mirkwood_wardens" weight="2.0" />
-    <TroopWeight id="mirkwood_woodsman" weight="2.0" />
+    <!-- Level 41 and 46 (3.0) -->
+    <TroopWeight id="mirkwood_beleglas" weight="3.0" />
+    <TroopWeight id="mirkwood_borderwardens" weight="3.0" />
+    <TroopWeight id="mirkwood_glaivesman" weight="3.0" />
+    <TroopWeight id="mirkwood_guardians" weight="3.0" />
+    <TroopWeight id="mirkwood_guards" weight="3.0" />
+    <TroopWeight id="mirkwood_rochenlas" weight="3.0" />
+    <TroopWeight id="mirkwood_sentinels" weight="3.0" />
+    <TroopWeight id="mirkwood_swordsman" weight="3.0" />
+    <TroopWeight id="mirkwood_wardens" weight="3.0" />
+    <TroopWeight id="mirkwood_woodsman" weight="3.0" />
+    <!-- Level 36 (2.0) -->
     <TroopWeight id="mirkwood_recruit" weight="2.0" />
 
     <!-- ===== EREBOR — Elite Dwarven Warriors ===== -->
-    <!-- Royal elite (Weight 3.0) -->
+    <!-- Level 46 royal tips (3.0) -->
     <TroopWeight id="erebor_oathsworn_royal_legionary" weight="3.0" />
     <TroopWeight id="erebor_noble_royal_warden" weight="3.0" />
     <TroopWeight id="iron_hills_noble_royal_warden" weight="3.0" />
-    <!-- Elite tier (Weight 2.0) -->
+    <!-- Level 36 and below 2.0, level 41 3.0 -->
     <TroopWeight id="erebor_oathsworn" weight="2.0" />
-    <TroopWeight id="erebor_oathsworn_legionary" weight="2.0" />
-    <TroopWeight id="erebor_noble_gate_warden" weight="2.0" />
-    <TroopWeight id="erebor_noble_shield_breaker" weight="2.0" />
-    <!-- Iron Hills Noble line (#212 KEYforce revamp) — T5–T8 -->
+    <TroopWeight id="erebor_oathsworn_legionary" weight="3.0" />
+    <TroopWeight id="erebor_noble_gate_warden" weight="3.0" />
+    <TroopWeight id="erebor_noble_shield_breaker" weight="3.0" />
+    <!-- Iron Hills Noble line (#212 KEYforce revamp), T5 to T8; the two level-41 tips pay 3.0 -->
     <TroopWeight id="iron_hills_noble_sharpshooter" weight="2.0" />
     <TroopWeight id="iron_hills_noble_veteran_sharpshooter" weight="2.0" />
     <TroopWeight id="iron_hills_noble_infantry" weight="2.0" />
     <TroopWeight id="iron_hills_noble_guard" weight="2.0" />
     <TroopWeight id="iron_hills_noble_shield_guard" weight="2.0" />
-    <TroopWeight id="iron_hills_noble_gate_warden" weight="2.0" />
+    <TroopWeight id="iron_hills_noble_gate_warden" weight="3.0" />
     <TroopWeight id="iron_hills_noble_hammer_guard" weight="2.0" />
     <TroopWeight id="iron_hills_noble_anvilguard" weight="2.0" />
-    <TroopWeight id="iron_hills_noble_ironbreaker" weight="2.0" />
-    <!-- Ironpass ram cavalry (#515) - the whole branch at 2.0, matching every other mounted
-         line in this file. Warg riders sit flat at 2.0 from level 11 (orc_warg_scout) to 36
-         (dg_fell_warg_rider), and the Black Numenorean horse branch is flat 2.0 across all
-         four of its tiers including the level-46 temple knight, so a mounted branch does not
-         escalate with tier here. 2.0 is also double their Ironpass foot peers
-         (infantry/axeman/veteran_axeman/mountain_guard, all unlisted at 1.0), the same ratio
-         warg riders carry over orc infantry. Erebor 3.0 stays reserved for the level-46 royal
-         tips; ironpass_ram_marshal is a level-41 branch tip, not a culture T-max.
+    <TroopWeight id="iron_hills_noble_ironbreaker" weight="3.0" />
+    <!-- Ironpass ram cavalry (#515): 2.0 from level 21, and the level-41 marshal pays 3.0 under
+         the level rule like every other listed troop. Until #585 the whole branch sat flat at
+         2.0 on the argument that no mounted line escalated with tier (warg riders are 2.0 from
+         level 11 to 36); the level rule now overrides that for any mounted troop at 41+, which
+         also lifts the Black Numenorean knight and temple knight, the noldorin lancer, the
+         rider of Himring, the Imladris horse archer and outrider, and Khamul's knights. 2.0 is
+         double the Ironpass foot peers (infantry/axeman/veteran_axeman/mountain_guard, all
+         unlisted at 1.0), the same ratio warg riders carry over orc infantry.
 
          ironpass_ram_herder (16) is deliberately ABSENT and falls through to the 1.0 default.
          It is the pooled branch root, so it is the rung a player recruits over and over from a
@@ -90,7 +98,7 @@
     <TroopWeight id="ironpass_goat_charger" weight="2.0" />
     <TroopWeight id="ironpass_ram_breaker" weight="2.0" />
     <TroopWeight id="ironpass_ram_vanguard" weight="2.0" />
-    <TroopWeight id="ironpass_ram_marshal" weight="2.0" />
+    <TroopWeight id="ironpass_ram_marshal" weight="3.0" />
 
     <!-- ===== MORDOR ===== -->
     <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />
@@ -105,15 +113,15 @@
     <!-- Spider Rider package (Weight 3.0): 2 (giant spider mount) + 1 (goblin rider) — elephant precedent (7.0 = 2+1+4) -->
     <TroopWeight id="taom_spider_creature" weight="4.0" />
 
-    <!-- Khamul's Shadow Line (Weight 2.0) -->
-    <TroopWeight id="dg_khamul_shadow_knight" weight="2.0" />
-    <TroopWeight id="dg_khamul_shadow_reaper" weight="2.0" />
-    <TroopWeight id="dg_khamul_shadow_guard" weight="2.0" />
-    <TroopWeight id="dg_khamul_shadow_bowman" weight="2.0" />
-    <TroopWeight id="dg_khamul_veiled_guard" weight="2.0" />
-    <TroopWeight id="dg_khamul_veiled_knight" weight="2.0" />
-    <TroopWeight id="dg_khamul_veiled_marksman" weight="2.0" />
-    <TroopWeight id="dg_khamul_veiled_reaper" weight="2.0" />
+    <!-- Khamul's Shadow Line: level 41 and 46, all 3.0 -->
+    <TroopWeight id="dg_khamul_shadow_knight" weight="3.0" />
+    <TroopWeight id="dg_khamul_shadow_reaper" weight="3.0" />
+    <TroopWeight id="dg_khamul_shadow_guard" weight="3.0" />
+    <TroopWeight id="dg_khamul_shadow_bowman" weight="3.0" />
+    <TroopWeight id="dg_khamul_veiled_guard" weight="3.0" />
+    <TroopWeight id="dg_khamul_veiled_knight" weight="3.0" />
+    <TroopWeight id="dg_khamul_veiled_marksman" weight="3.0" />
+    <TroopWeight id="dg_khamul_veiled_reaper" weight="3.0" />
     <!-- Uruk Black Guard Line (Weight 2.0) -->
     <TroopWeight id="dg_uruk_black_guard" weight="2.0" />
     <TroopWeight id="dg_uruk_black_slayer" weight="2.0" />
@@ -139,10 +147,10 @@
     <TroopWeight id="harad_elephant_rider" weight="10.0" />
 
     <!-- ===== ISENGARD ===== -->
-    <!-- Orthanc Guard Line (Weight 2.0) -->
+    <!-- Orthanc Guard Line: 2.0, the level-41 bodyguard 3.0 -->
     <TroopWeight id="orthanc_guard" weight="2.0" />
     <TroopWeight id="orthanc_warden" weight="2.0" />
-    <TroopWeight id="orthanc_bodyguard" weight="2.0" />
+    <TroopWeight id="orthanc_bodyguard" weight="3.0" />
     <!-- Urukhai Elites (Weight 2.0) -->
     <TroopWeight id="urukhai_nazg_hai" weight="2.0" />
     <!-- Warg Riders (Weight 2.0) -->
@@ -150,7 +158,8 @@
     <TroopWeight id="orc_warg_overseer" weight="2.0" />
     <TroopWeight id="orc_warg_enforcer" weight="2.0" />
     <TroopWeight id="orc_warg_lieutenant" weight="2.0" />
-    <!-- Black Numenorean line: the 2.0 elite band -->
+    <!-- Black Numenorean line: 2.0 up to level 36, 3.0 from level 41 (knight/warden/marksman
+         and the three level-46 temple tips) -->
     <TroopWeight id="mordor_num_initiate" weight="2.0" />
     <TroopWeight id="mordor_num_cavalry" weight="2.0" />
     <TroopWeight id="mordor_num_infantry" weight="2.0" />
@@ -158,10 +167,10 @@
     <TroopWeight id="mordor_num_vet_cavalry" weight="2.0" />
     <TroopWeight id="mordor_num_vet_infantry" weight="2.0" />
     <TroopWeight id="mordor_num_vet_archer" weight="2.0" />
-    <TroopWeight id="mordor_num_knight" weight="2.0" />
-    <TroopWeight id="mordor_num_warden" weight="2.0" />
-    <TroopWeight id="mordor_num_marksman" weight="2.0" />
-    <TroopWeight id="mordor_num_temple_knight" weight="2.0" />
-    <TroopWeight id="mordor_num_temple_guard" weight="2.0" />
-    <TroopWeight id="mordor_num_shadowbow" weight="2.0" />
+    <TroopWeight id="mordor_num_knight" weight="3.0" />
+    <TroopWeight id="mordor_num_warden" weight="3.0" />
+    <TroopWeight id="mordor_num_marksman" weight="3.0" />
+    <TroopWeight id="mordor_num_temple_knight" weight="3.0" />
+    <TroopWeight id="mordor_num_temple_guard" weight="3.0" />
+    <TroopWeight id="mordor_num_shadowbow" weight="3.0" />
 </TroopWeights>

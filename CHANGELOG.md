@@ -33,6 +33,30 @@ of Sauron mostly BN, a Mordor level-3 patrol with none).
 
 ## 2026-09-12
 
+### feat(balance): troop weight 3.0 for every level 41+ elite (#585)
+
+`troop_weights.xml` is a flat per-id lookup with no level table; 3.0 covered ten level-46/51
+capstones and 93 troops from level 11 to 46 all paid 2.0, with the file arguing that mounted
+branches never escalate with tier. The rule is now level-based: a listed troop at level 41 or above
+pays 3.0, below that 2.0, the two mount packages (spider 4.0, mumakil 10.0) outside it. 41 rows
+moved (15 at level 46, 26 at level 41) across Rivendell, Mirkwood, Erebor, Iron Hills, Ironpass,
+Khamul's line, Orthanc and the Black Numenoreans, so the file holds 52 at 2.0 and 51 at 3.0.
+`ComputeSizePenalty` subtracts `weighted - raw` from the party-size limit, so an all-level-41+
+party fields `base / 3` raw troops instead of `base / 2`; the two Black Numenorean houses average
+2.12 per head at the template midpoint (1.93 with the old weights; the doc's earlier 1.91 was
+never recomputed after the 260 retarget). Gate: `TroopWeightLevelBandTests` pins the band
+from both sides and fails on a weighted id that resolves to no troop. The MCM hint on
+`EnableTroopWeight` names the bands (not a localized string). Weights load at process start, so a
+full restart, not a new campaign. Codex (gpt-6-astra, ultra, review 105): no P1 or P2 in the
+changeset, four wrong numbers in comments and docs (fixed), and one PRE-EXISTING P2 fixed here
+because larger weights reach it sooner: `SubtractResultFramePenalty` divides the penalty by
+`1 + SumOfFactors` and the engine truncates `ResultNumber`, and `(B - p/s) * s` is not `B*s - p` in
+float, so Gondor's 0.025 feat turned an intended cap of 70 into 69.99999 and read 69, and the
+promised floor of 1 read 0. The subtraction is now probed on a copy and lifted by 0.001 when it
+would undershoot the intended integer; `ResultFramePenaltyTests` asserts the truncated cap on
+Codex's four cases plus a fractional base that must keep its fraction. Owed: in-game check that an
+L41+ elite costs 3 slots in the party screen's weighted frame.
+
 ### fix(tools): the ranged-troops page after its review, and the militia cache guard
 
 Six agents on the two follow-ups, no HIGH, eight fixes. The page's Spread column used the bow's

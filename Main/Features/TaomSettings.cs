@@ -37,7 +37,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // path reaching SaveSettings also quits the game, so SaveTriggered never arrives mid-session and the
     // watcher never runs. Player-reported 2026-09-06.
     [SettingPropertyBool("Enable Troop Weight", Order = 0, RequireRestart = false,
-        HintText = "Weighted party size — elite units consume more party capacity. Cave trolls (4x), elves (2x), warg riders (2x).")]
+        HintText = "Weighted party size: elite units consume more party capacity. Elites 2x, level 41+ elites 3x, warg riders 2x, cave trolls 4x, mumakil 10x.")]
     public bool EnableTroopWeight { get; set; } = true;
 
     // --- AI Party Size ---

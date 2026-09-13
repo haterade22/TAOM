@@ -422,7 +422,10 @@ Counted in `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` on 2026-08-1
 2026-05-14), 75
 of them at 2.0. Only 33 of that 75 are orc, uruk or warg; 39 are elven or dwarven (`imladris_*`,
 `mirkwood_*`, `rivendell_*`, `noldorin_lancer`, `erebor_*`, `iron_hills_noble_*`), as are all 10 of
-the weight-3.0 ids. `ApplyPartySizeFeats` names 12 cultures (Mordor, Gundabad, Goblin, Blue Craig,
+the weight-3.0 ids. (Re-counted 2026-09-13 after #585: 105 live rows, 52 at 2.0 and 51 at 3.0, the
+3.0 band now being every listed troop at level 41 or above, which adds Khamul's line, Orthanc and the
+Black Numenorean tips to the elven and dwarven set; the interaction below is unchanged.)
+`ApplyPartySizeFeats` names 12 cultures (Mordor, Gundabad, Goblin, Blue Craig,
 Misty Mountain Orcs, Dol Guldur, Isengard, Gondor, Dunland, Rhun, Harad, Khand) and no elven or
 dwarven realm is among them. So the evil cultures take bonus and tax together, where a heavy roster's
 surplus can subtract more than a small percentage bonus adds, and the elves and dwarves take the tax
