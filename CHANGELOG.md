@@ -28,7 +28,13 @@ removed one by one and the result proven equal to the original minus those keys)
 exists in a strings source, a language file or a cache, so TAOM troop names are outside the
 pipeline in every language; that gap stays open on the issue. Dry runs afterwards report 0 rows
 needing the model in every language; the localization gate (34 tests) is green and all 468
-language files in the three modules parse.
+language files in the three modules parse. A second sweep of issue bodies (not just titles)
+found #446 (Polish behind in TAOM_Map and the Armory, now at parity, closed) and translation
+checkboxes on #513, #558, #575 and #540, all satisfied by the same run. The external-module
+coverage ratchet, `tools/check_external_loc_coverage.py`, had been red since the nine Isengard
+villages (#562) landed with names the model keeps unchanged in every language; its baseline is
+re-recorded at 2,928 identical rows across 12 languages, every one of them a proper-noun name
+the model returned as-is, and it passes again.
 
 ### feat(special-resources): the encyclopedia troop tree badges the troops that cost a resource (#590)
 
