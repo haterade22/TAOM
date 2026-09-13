@@ -324,6 +324,72 @@ class KingdomArmourTests(unittest.TestCase):
         self.assertEqual(set(c["folders"]), {"alpha", "beta"})
         self.assertIn(("a_helm_elite", "elite"), [(u["id"], u["tier"]) for u in c["unworn_elite"]])
 
+    def _cap_alpha_and_beta(self, alpha=57, beta=44, sub=None):
+        """Put the two fixture cultures on the kingdom-cap model for one test (restored after)."""
+        saved = (dict(ra.KINGDOM_CAPS), ra.LINE_PREFIXES)
+        ra.KINGDOM_CAPS["alpha"], ra.KINGDOM_CAPS["beta"] = alpha, beta
+        if sub:
+            ra.KINGDOM_CAPS["alpha_sub"] = sub
+            ra.LINE_PREFIXES = ra.LINE_PREFIXES + (("sub_", "alpha_sub"),)
+        self.addCleanup(self._restore_caps, saved)
+
+    @staticmethod
+    def _restore_caps(saved):
+        caps, prefixes = saved
+        ra.KINGDOM_CAPS.clear()
+        ra.KINGDOM_CAPS.update(caps)
+        ra.LINE_PREFIXES = prefixes
+
+    def test_a_sub_line_item_in_a_shared_folder_is_judged_on_its_own_cap(self):
+        """A Dol Guldur helmet in the rhun folder at its own elite value (41) read as Rhun heavy
+        (43 is nearer than 51) and vanished from the reserve; 62 such items (Codex, 2026-09-13).
+        Here: alpha is capped 57, its `sub_` line 46, and the unworn sub_helm sits at 46 x .9 = 41."""
+        self._cap_alpha_and_beta(sub=46)
+        self.items["sub_helm"] = {"value": 41, "stats": {"head_armor": 41, "body_armor": 0, "arm_armor": 0,
+                                                          "leg_armor": 0}, "folder": "alpha",
+                                  "type": "HeadArmor", "name": "Sub Helm", "file": "x"}
+        c = ka.ceilings("alpha", self._records(), self.troops, self.items, ka.worn_by_index(self.troops))
+        self.assertIn(("sub_helm", "elite"), [(u["id"], u["tier"]) for u in c["unworn_elite"]])
+
+    def test_off_line_kit_lists_imports_and_uncurved_items_above_the_ceiling(self):
+        """Observations for the roster pass, not findings: a troop wearing another line's kit
+        (Umbar nobles in Black Numenorean plate) and a vanilla item above the culture's elite slot
+        value (a 47 helmet on a 40 kingdom), which no restat can touch (Codex, 2026-09-13)."""
+        self._cap_alpha_and_beta()
+        self.items["v_helm"] = {"value": 47, "stats": {"head_armor": 47, "body_armor": 0, "arm_armor": 0,
+                                                       "leg_armor": 0}, "folder": None,
+                                "type": "HeadArmor", "name": "Vanilla Helm", "file": "x"}
+        self.troops["beta_t5"]["sets"][0]["Head"] = "v_helm"
+        obs = ka.off_line_kit(self._records(), self.troops, self.items)
+        imports = {(r["troop"], r["item"]) for r in obs["imports"]}
+        self.assertIn(("beta_t6", "a_chest_heavy"), imports)      # alpha kit (57) on a 44 culture
+        self.assertIn(("beta_t5", "a_glove"), imports)
+        self.assertNotIn(("beta_t5", "b_chest"), imports)          # its own line
+        self.assertFalse([r for r in obs["imports"] if r["culture"] == "alpha"])
+        row = [r for r in obs["imports"] if r["troop"] == "beta_t6" and r["item"] == "a_chest_heavy"][0]
+        self.assertEqual((row["culture_cap"], row["line"], row["line_cap"], row["slot"]), (44, "alpha", 57, "Body"))
+        self.assertEqual([(r["troop"], r["item"], r["primary"], r["ceiling"]) for r in obs["uncurved"]],
+                         [("beta_t5", "v_helm", 47, 40)])
+        self.assertNotIn("v_boot", {r["item"] for r in obs["uncurved"]})  # villagers are not a culture
+        self.assertNotIn("alpha_troll", {r["troop"] for r in obs["imports"] + obs["uncurved"]})  # creature
+
+    def test_a_troop_sub_line_is_held_to_its_own_cap_not_the_files_default(self):
+        """The Mordor file's default line is the orc cap; its Black Numenorean and Black Uruk
+        troops are dressed from their own lines by design and must not read as imports
+        (Codex, 2026-09-13: a file-default rule would mislabel 32 intended cases)."""
+        self._cap_alpha_and_beta(sub=46)
+        ka.TROOP_LINE_PREFIXES, saved = (("alpha_t6", "alpha_sub"),), ka.TROOP_LINE_PREFIXES
+        self.addCleanup(setattr, ka, "TROOP_LINE_PREFIXES", saved)
+        self.items["sub_helm"] = {"value": 41, "stats": {"head_armor": 41, "body_armor": 0, "arm_armor": 0,
+                                                          "leg_armor": 0}, "folder": "alpha",
+                                  "type": "HeadArmor", "name": "Sub Helm", "file": "x"}
+        self.troops["alpha_t6"]["sets"][0]["Head"] = "sub_helm"
+        self.troops["alpha_t5"]["sets"][0]["Head"] = "sub_helm"
+        rows = {(r["troop"], r["item"]) for r in ka.off_line_kit(self._records(), self.troops, self.items)["imports"]}
+        self.assertIn(("alpha_t5", "sub_helm"), rows)          # a 57 troop in 46 kit: an import
+        self.assertNotIn(("alpha_t6", "sub_helm"), rows)       # its own line
+        self.assertIn(("alpha_t6", "a_chest_heavy"), rows)     # the 46 line in 57 kit: also an import
+
     def test_gate_preview_uses_the_validator_function_and_constants(self):
         recs = self._records()
         self.assertEqual(ka.gate_preview(recs), [])

@@ -102,6 +102,9 @@ CURVE_CULTURE_ALIASES = {'dolguldur': 'dol_guldur', 'rhun_new': 'rhun', 'lindon'
 # already skipped by the skill tool. Kept explicit rather than derived from rb.SKIP_TROOP_IDS,
 # which also names three ordinary crossbow troops; a test pins the subset relation.
 BESPOKE_RIDERS = frozenset({'harad_elephant_rider', 'harad_mumakil_rider'})
+# A troop line inside one troop file that is dressed from its own armour line (the same prefixes
+# tools/ranged_ladders.json routes); every other troop is held to its file culture's default line.
+TROOP_LINE_PREFIXES = (('mordor_num_', 'mordor_numenorean'), ('mordor_uruk_', 'mordor_uruk'))
 
 DEFAULT_THRESHOLD = 20
 DEFAULT_MIN_TIER_GAP = 2
@@ -412,7 +415,7 @@ def ceilings(culture, records, troops, items, worn_by):
         for primary, iid, hero, rec in eligible:
             if iid in worn_by:
                 continue
-            tier = ra.tier_from_value(primary, cslot, rec.get('folder') or culture)
+            tier = ra.tier_from_value(primary, cslot, rec.get('folder') or culture, item_id=iid)
             if tier in ('elite', 'lord'):
                 unworn.append({'id': iid, 'name': rec.get('name', ''), 'slot': slot,
                                'primary': primary, 'tier': tier, 'folder': rec.get('folder')})
@@ -420,8 +423,60 @@ def ceilings(culture, records, troops, items, worn_by):
     return {'folders': folders, 'slots': slots, 'unworn_elite': unworn}
 
 
+def _culture_cap(troop):
+    """The chest cap of the line this troop is dressed from by design (its own sub-line for the
+    Mordor Black Numenoreans and Black Uruks, else its file culture's default line), or None."""
+    for prefix, line in TROOP_LINE_PREFIXES:
+        if troop['id'].startswith(prefix):
+            return ra.KINGDOM_CAPS.get(line)
+    return ra.KINGDOM_CAPS.get(ra.kingdom_key(None, curve_culture(troop)) or '')
+
+
+def off_line_kit(records, troops, items):
+    """Two observation lists for the roster pass (not findings): `imports`, a worn item whose
+    line cap differs from the wearer culture's own cap (an Umbar noble in Black Numenorean plate,
+    a Dol Guldur archer in Rhun's helmet), and `uncurved`, a worn item with no cap at all (vanilla,
+    or a folder off the curve) whose primary stat sits above the culture's elite value for that
+    slot, which no restat can move. Battle sets of the ladder's troops only (no creature, exempt or
+    bare-chested troop); one row per troop, slot and item."""
+    imports, uncurved, seen = [], [], set()
+    for r in _ladder_records(records):
+        troop = troops.get(r['id'])
+        if not troop:
+            continue
+        culture_cap = _culture_cap(troop)
+        if not culture_cap:
+            continue
+        for st in troop['sets']:
+            for slot in ARMOUR_SLOTS:
+                iid = st.get(slot)
+                if not iid or (r['id'], slot, iid) in seen or iid not in items:
+                    continue
+                seen.add((r['id'], slot, iid))
+                it = items[iid]
+                line = ra.kingdom_key(iid, it.get('folder')) if it.get('folder') else None
+                line_cap = ra.KINGDOM_CAPS.get(line) if line else None
+                base = {'troop': r['id'], 'culture': r['culture'], 'tier': r['tier'], 'slot': slot, 'item': iid}
+                if line_cap and line_cap != culture_cap:
+                    imports.append(dict(base, culture_cap=culture_cap, line=line, line_cap=line_cap))
+                elif not line_cap:
+                    cslot = SLOT_TO_CURVE[slot]
+                    stat = ra.GOVERNED_STATS[cslot][0]
+                    primary = it.get('stats', {}).get(stat, 0)
+                    ceiling = ra.cap_value(culture_cap, cslot, 'elite')
+                    if primary > ceiling:
+                        uncurved.append(dict(base, primary=primary, ceiling=ceiling))
+
+    def key(x):
+        return (x['culture'], -x['tier'], x['troop'], ARMOUR_SLOTS.index(x['slot']))
+    return {'imports': sorted(imports, key=key), 'uncurved': sorted(uncurved, key=key)}
+
+
 def curve_view(records):
-    """{culture: {tier: n, predicted median, actual median, deltas, mean filled share}}."""
+    """{culture: {tier: n, predicted median, actual median, deltas, mean filled share}}.
+    The prediction is a generic benchmark: the culture's DEFAULT line at the troop's band
+    (a Black Numenorean in troops_mordor is held against the orc cap), every slot filled,
+    secondaries at the legacy proportion. It is not a per-item target."""
     groups = defaultdict(list)
     for r in _matrix_records(records):
         groups[(r['culture'], r['tier'])].append(r)
@@ -479,6 +534,7 @@ def build_context(troops, items, militia, threshold, min_gap, only_culture, game
         'gate': gate_preview(records),
         'ceilings': {c: ceilings(c, records, troops, items, worn_by) for c in detail_cultures},
         'curve': curve_view(records),
+        'off_line': off_line_kit(records, troops, items),
     }
 
 
@@ -631,9 +687,33 @@ def render_report(ctx):
         if ids:
             out.append(f'- {label}: {len(ids)}: ' + ', '.join(f'`{i}`' for i in ids))
     out.append('')
+    out.append(render_off_line(ctx['off_line'], ctx['only_culture']))
     out.append('_Nothing was applied. Fixing an inversion is a roster, item or curve decision taken with this report '
                'in hand; see docs/features/armor-balance.md "Kingdom armour ladder"._\n')
     return '\n'.join(out)
+
+
+def render_off_line(obs, only_culture=None):
+    """The two observation tables (kit from another line; uncurved kit above the ceiling)."""
+    imports = [r for r in obs['imports'] if not only_culture or r['culture'] == only_culture]
+    uncurved = [r for r in obs['uncurved'] if not only_culture or r['culture'] == only_culture]
+    out = ["## Kit off the culture's line (observations for the roster pass, not findings)\n",
+           f"- Worn items whose line cap differs from the wearer culture's cap: {len(imports)} "
+           f'(troop, slot, item) rows over {len({r["troop"] for r in imports})} troop(s). The gate already '
+           f'scales each item to its own line, so these are not inversions; they are the kit a roster pass '
+           f'would look at first.']
+    if imports:
+        out += ['', '| Culture (cap) | Troop | T | Slot | Item | Line (cap) |', '|---|---|---|---|---|---|']
+        out += [f'| {r["culture"]} ({r["culture_cap"]}) | `{r["troop"]}` | {r["tier"]} | {r["slot"]} | `{r["item"]}` '
+                f'| {r["line"]} ({r["line_cap"]}) |' for r in imports]
+    out += ['', f"- Worn items with no cap (vanilla, or a folder off the curve) above the culture's elite value for "
+                f'the slot: {len(uncurved)}. No restat reaches them; the fix is a roster swap.']
+    if uncurved:
+        out += ['', '| Culture | Troop | T | Slot | Item | Primary | Elite value |', '|---|---|---|---|---|---|---|']
+        out += [f'| {r["culture"]} | `{r["troop"]}` | {r["tier"]} | {r["slot"]} | `{r["item"]}` | {r["primary"]} '
+                f'| {r["ceiling"]} |' for r in uncurved]
+    return '\n'.join(out) + '\n'
+
 
 
 def render_culture(culture, ctx):
@@ -660,7 +740,9 @@ def render_culture(culture, ctx):
         out.append('')
     cv = ctx['curve'].get(culture, {})
     if cv:
-        out.append('**Curve view** (what `rebalance_armor` predicts for a fully slotted troop at that level vs actual medians)\n')
+        out.append('**Curve view** (a generic benchmark, not a per-item target: the culture\'s default line at the '
+                   'troop\'s band with every slot filled and secondaries at the legacy proportion, vs actual medians; '
+                   'a troop in another line\'s kit is held against the default line)\n')
         out.append('| Tier | n | Predicted total | Actual median | Delta | d head | d body | d arm | d leg | Filled slots |')
         out.append('|---|---|---|---|---|---|---|---|---|---|')
         for t in sorted(cv):
@@ -708,6 +790,7 @@ def build_json(ctx):
                          'slots': ce['slots'], 'unworn': ce['unworn_elite']}
                      for c, ce in ctx['ceilings'].items()},
         'curve': {c: {str(t): s for t, s in row.items()} for c, row in ctx['curve'].items()},
+        'offLine': ctx['off_line'],
         'exclusions': {tag: [r['id'] for r in ctx['records'] if tag in r['tags']]
                        for tag in ('creature', 'bespoke_rider', 'no_sets', 'no_level', 'bodyless', 'ladder_exempt',
                                    'militia', 'standalone', 'mount_rider')},

@@ -139,6 +139,13 @@ class CurveTests(unittest.TestCase):
         self.assertEqual(ra.calculate_stats("elite", "body", "troll")["body_armor"], 50 + 8)
         self.assertEqual(ra.calculate_stats("elite", "body", "troll")["leg_armor"], 28 + 5)
 
+    def test_tier_from_value_routes_a_sub_line_by_item_id(self):
+        """A Dol Guldur helmet at 41 (its own elite) read as Rhun heavy (43) when the value
+        was judged on the folder's cap alone (Codex, 2026-09-13)."""
+        self.assertEqual(ra.tier_from_value(41, "head", "rhun"), "heavy")
+        self.assertEqual(ra.tier_from_value(41, "head", "rhun", item_id="sk_dg_khml_helmet_x"), "elite")
+        self.assertEqual(ra.tier_from_value(51, "head", "rhun", item_id="sk_rh_loke_helmet_x"), "elite")
+
     def test_weight_is_the_legacy_ladder(self):
         self.assertEqual(ra.calculate_stats("elite", "head", "gondor")["weight"],
                          round(ra.HEAD_BASELINES["elite"]["weight"] * ra.CULTURAL_MODS["gondor"]["weight_mult"], 1))

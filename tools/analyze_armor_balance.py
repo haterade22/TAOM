@@ -228,10 +228,14 @@ KINGDOM_INVARIANT_PAIRS = (('heavy', 'light'), ('elite', 'medium'))
 
 
 def check_kingdom_curve_invariant(variant_cap=None):
-    """The two-tier invariant on the kingdom-cap curve: for every cap, slot and pair (n, n-2),
-    the primary stat at tier n (variant 0) must exceed tier n-2 at the variant cap plus the
-    legendary roll of n-2's loot table. Pure function of the curve constants. Secondary stats
-    follow their primary by ratio, so the primary carries the check."""
+    """The two-tier invariant on the kingdom-cap curve's PRIMARY stat: for every cap, slot and
+    pair (n, n-2), the primary at tier n (variant 0) must exceed tier n-2 at the variant cap plus
+    the legendary roll of n-2's loot table. Pure function of the curve constants, so it proves the
+    primary only. Secondaries keep each item's own legacy ratio to its primary; a small ratio
+    shrinks the tier gap without shrinking the flat modifier bonus, so a legendary medium piece can
+    still pass an elite one on a secondary (live Isengard pauldrons: medium arm 5 + 5 against elite
+    7). Those are judged per live item by _check_tier_inversions, which reads every governed stat
+    with the item's own modifier group (Codex, 2026-09-13)."""
     cap_v = ra.VARIANT_CAP if variant_cap is None else variant_cap
     violations = []
     for kingdom, cap in sorted(ra.KINGDOM_CAPS.items()):

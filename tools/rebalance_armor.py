@@ -353,7 +353,7 @@ def load_roster_tier_map():
 
 def load_roster_records():
     """The full derive_armor_tiers.py records ({item_id: record}) for --tier-source roster-first,
-    which needs anchorLevel and tierSource, not just the keyword-first tier."""
+    which needs anchorLevel and tierSource, not just the tier column (anchor first since #583)."""
     map_path = os.path.join(os.path.dirname(__file__), 'data', 'armor_roster_tiers.json')
     if not os.path.exists(map_path):
         return None, None
@@ -624,18 +624,19 @@ def calculate_stats(tier, slot_type, culture, variant_num=0, item_id=None):
     return result
 
 
-def tier_from_value(primary, slot_type, culture):
+def tier_from_value(primary, slot_type, culture, item_id=None):
     """Map an item's CURRENT primary armor to the nearest combat tier (for --weights-only laddering).
 
     Used when we want weight to track the item's existing (correct) armor without re-stating armor or
     relying on the brittle name-keyword detector. Compares the value to each tier's baseline+mod target
-    and returns the closest combat tier.
+    and returns the closest combat tier. Pass item_id so a prefix-routed sub-line (sk_dg_ in the rhun
+    folder, the Mordor lines) is judged on its own cap, not the folder's.
     """
     if primary is None:
         return 'medium'
     best, best_d = 'light', None
     for tier in ['light', 'medium', 'heavy', 'elite', 'lord']:
-        target = _get_primary_stat(calculate_stats(tier, slot_type, culture), slot_type)
+        target = _get_primary_stat(calculate_stats(tier, slot_type, culture, item_id=item_id), slot_type)
         if target is None:
             continue
         d = abs(primary - target)
@@ -882,7 +883,8 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                 mode = 'weight' if weights_only else 'full'
         elif weights_only:
             if ladder_this_slot:
-                tier = tier_from_value(_get_primary_stat(current_values, slot_type), slot_type, culture)
+                tier = tier_from_value(_get_primary_stat(current_values, slot_type), slot_type, culture,
+                                       item_id=item_id)
                 mode = 'weight'
             else:
                 tier, mode = 'medium', 'skip'   # slot already weight-varied; never collapse it

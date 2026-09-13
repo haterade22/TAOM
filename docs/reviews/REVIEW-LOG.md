@@ -2763,8 +2763,25 @@ writer skips commented copies. Post-fix: dry run plans nothing, both trees ident
 seven cap-scaled cells remain (goblin T7, Mirkwood T7 to T10, the elves' T10 fan-out). RCA:
 `rca-kingdom-cap-curve-2026-09-13.md`; lesson in `lessons/build-tooling-workflow.md`.
 
-Owed: Codex pass, a full restart and the party screen on the capstones, the assets-repo commit,
-`docs/modding/balance-levers.md:139` once that file is free, the roster pass on the flagged cells.
+**Codex adversarial pass (gpt-6-astra, ultra), on the tree committed as `e4de8a78`..`b41721ab`.**
+No P1, four P2, three P3, all confirmed, zero false positives; three of eight Known Suspects
+disputed with executed arithmetic. It reproduced the applied values, the ladder repair, the
+validator and the tree parity before looking. The two code P2s: the two-tier invariant proves the
+primary stat only while its prose said no legendary roll passes the elite piece (a live Isengard
+pauldron rolls medium arm 5 + 5 against elite 7; the live sweep lists 50 roster-backed secondary
+cases, all inherited ratios), and the reserve list judged an unworn item on its folder's cap alone,
+so 62 Dol Guldur items in the rhun folder read as Rhun heavy and vanished (Rhun's reserve 114, now
+176). Two doc P2s: the display tier does steer workshop production through
+`DefaultItemCategorySelector`, and four How-To statements were stale (`CULTURAL_MODS` protection,
+`--no-lower-armor` and material, `roster` and unworn kit, a keyword-first comment). P3s: the curve
+view is a generic benchmark and is now labelled so; the report gained two observation tables (kit
+off the culture's line, 162 rows over 33 troops; uncurved kit above the ceiling, 11 rows); one
+secondary is path-dependent by a point and the rounding convention is documented. Fixes with
+tests in the follow-up commit; RCA section "Codex adversarial pass" in
+`rca-kingdom-cap-curve-2026-09-13.md`; two lessons in `lessons/build-tooling-workflow.md`.
+
+Owed: a full restart and the party screen on the capstones, `docs/modding/balance-levers.md:139`
+once that file is free, the roster pass on the flagged cells and the 50 secondary cases.
 
 ## Review 105: Black Numenorean confinement (#584) and the level-41 weight band (#585), 6-agent deep-review + Codex (2026-09-13)
 

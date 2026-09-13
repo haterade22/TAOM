@@ -24,6 +24,33 @@ the way: `render_template` joined with LF inside the CRLF party file, and `write
 fails on the first spec-vs-live divergence or the first non-no-op apply. `docs/features/
 clan-heraldry.md` now documents the direction of flow.
 
+### fix(tools): the kingdom-cap curve after its Codex pass (#583)
+
+Codex (gpt-6-astra, ultra) on the committed changeset: no P1, four P2, three P3, all confirmed,
+zero false positives. The two-tier invariant `check_kingdom_curve_invariant` proves the primary
+stat only; the previous entry's "no legendary roll passes the elite piece" was wider than the
+proof. A secondary keeps its item's own ratio, and where that ratio is small the flat modifier
+bonus outgrows the tier gap (a legendary medium Isengard pauldron rolls arm 5 + 5 against the elite
+one's 7); the live sweep in `analyze_armor_balance.py` judges every governed stat per item and
+lists 50 roster-backed secondary cases, all inherited ratios the restat preserved. They go to the
+roster pass; docstring, doc and this entry now say primary only. `tier_from_value` takes the item
+id, so the overview's reserve list and the `--weights-only` path judge a sub-line item on its own
+cap: 62 Dol Guldur items in the rhun folder had read as Rhun heavy and left Rhun's reserve (114,
+now 176). The overview's curve view is labelled the generic benchmark it is, and the report ends
+with two observation tables for the roster pass: kit off the culture's line (162 rows over 33
+troops: Isengard orcs in Mordor orc kit, Rhun in Dol Guldur's `sk_dg_` kit, Mordor militia in
+Black Uruk kit, Umbar nobles in Black Numenorean plate, the elves in Gondor kit; a `mordor_num_` or
+`mordor_uruk_` troop is held to its own line) and uncurved vanilla kit above the culture's elite
+slot value (11 rows: Dunland's `tall_helmet` and `plumed_helmet`, Harad's scale chest and
+chausses). Docs: the display tier does steer workshop production (`DefaultItemCategorySelector`
+files armour by tier, `WorkshopsCampaignBehavior` produces by category), `CULTURAL_MODS` no longer
+sets a capped kingdom's protection, `--no-lower-armor` holds neither material nor weight on its
+own, `--tier-source roster` skips only keyword-less unworn kit, and one secondary is
+path-dependent by a point (`rivendell_torso_heavy_tier3_silvergoldb`, leg 34 for a direct 33)
+because each apply rounds from the current ratio. Tests: 4 new (22 in
+`test_analyze_kingdom_armour.py`, 23 in `test_kingdom_caps.py`). RCA section in
+`docs/reviews/rca-kingdom-cap-curve-2026-09-13.md`, Review 104 in `docs/reviews/REVIEW-LOG.md`.
+
 ### feat(armour): the kingdom-cap curve, applied to the whole Armory, and the ladder repair it needed (#583)
 
 #581's overview showed the top of most trees dressed under the culture's elite row and the row
