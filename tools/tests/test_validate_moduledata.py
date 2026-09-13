@@ -1415,6 +1415,154 @@ class UpgradeArmourRegressionTests(unittest.TestCase):
     def test_check_is_skipped_without_an_armour_registry(self):
         self.assertEqual(self._run("helm_light", armour={}), [])
 
+
+class CrossCultureArmourInversionTests(unittest.TestCase):
+    """CROSS_CULTURE_ARMOUR_INVERSION (#581): a kingdom's tier-t troops must not sit more than
+    the margin under what the game's OTHER kingdoms field two tiers lower. Median-based per
+    culture-tier cell, never pairwise, so the elves being twice everyone by design and one odd
+    capstone do not drown the signal."""
+
+    TROOPS = """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="{prefix}_t2" level="11" default_group="Infantry">
+    <Equipments><EquipmentRoster><equipment slot="Body" id="Item.{t2}" /></EquipmentRoster></Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="{t4_id}" level="21" default_group="Infantry">
+    <Equipments><EquipmentRoster><equipment slot="Body" id="Item.{t4}" /></EquipmentRoster></Equipments>
+  </NPCCharacter>
+</NPCCharacters>
+"""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.armour = {"lo": 40, "mid": 100, "hi": 200}
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _write_culture(self, culture, t2="hi", t4="hi", t4_id=None):
+        _write(self.md / "troops" / f"troops_{culture}.xml",
+               self.TROOPS.format(prefix=culture, t2=t2, t4=t4,
+                                  t4_id=t4_id or f"{culture}_t4"))
+
+    def _run(self, armour=None, folders=None):
+        regs = ts.Registries(items=set(self.armour), item_def_files={},
+                             npccharacters=set(), cultures=set(), party_templates=set(),
+                             item_armour=self.armour if armour is None else armour,
+                             item_folder=folders or {})
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run()
+                if i.code == "CROSS_CULTURE_ARMOUR_INVERSION"]
+
+    def _field(self, weak_t4="lo", weak_id=None):
+        # Culture a's tier-4 troop wears `weak_t4`; b, c and d all field a 200-armour tier 2.
+        self._write_culture("a", t2="mid", t4=weak_t4, t4_id=weak_id)
+        for c in ("b", "c", "d"):
+            self._write_culture(c)
+
+    def test_pure_function_flags_a_cell_under_the_field_median_by_more_than_the_margin(self):
+        cells = {("a", 4): [40.0], ("b", 2): [200.0], ("c", 2): [200.0], ("d", 2): [200.0]}
+        hits = ts.cross_culture_armour_inversions(cells, margin=20, gap=2, min_cultures=3)
+        self.assertEqual([(h["culture"], h["tier"], h["shortfall"]) for h in hits],
+                         [("a", 4, 160.0)])
+        self.assertEqual(hits[0]["field_tier"], 2)
+        self.assertEqual(hits[0]["field"], [("b", 200.0), ("c", 200.0), ("d", 200.0)])
+        self.assertEqual(ts.cross_culture_armour_inversions(cells, margin=200, gap=2, min_cultures=3), [])
+
+    def test_weak_tier_is_a_warning_with_the_cell_id(self):
+        self._field()
+        issues = self._run()
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+        self.assertEqual(issues[0].entry_id, "a/tier4")
+        self.assertIn("median 40", issues[0].message)
+        self.assertIn("160", issues[0].message)
+        self.assertIn("analyze_kingdom_armour", issues[0].message)
+
+    def test_within_margin_is_clean(self):
+        self._field(weak_t4="hi")
+        self.assertEqual(self._run(), [])
+
+    def test_needs_at_least_three_other_cultures(self):
+        self._field()
+        (self.md / "troops" / "troops_d.xml").unlink()
+        self.assertEqual(self._run(), [])
+
+    def test_exempt_ids_and_bodyless_are_left_out(self):
+        exempt = sorted(ts.Validator._ARMOUR_LADDER_EXEMPT)[0]
+        self._field(weak_id=exempt)
+        self.assertEqual(self._run(), [])
+        bodyless = sorted(ts.Validator._BODYLESS_BY_DESIGN)[0]
+        self._field(weak_id=bodyless)
+        self.assertEqual(self._run(), [])
+
+    def test_villagers_are_not_a_culture(self):
+        self._field(weak_t4="hi")
+        _write(self.md / "characters" / "npcs_x.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="villager_x" level="1">\n'
+               '    <Equipments><EquipmentRoster><equipment slot="Body" id="Item.lo" />'
+               "</EquipmentRoster></Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+        self.assertEqual(self._run(), [])
+
+    def test_check_is_skipped_without_an_armour_registry(self):
+        self._field()
+        self.assertEqual(self._run(armour={}), [])
+
+    def test_items_are_scaled_to_the_reference_cap_of_their_own_line(self):
+        """Kingdoms differ in armour power by design (#583): a low-cap kingdom's raw totals sit
+        under a high-cap kingdom's, and that is not a finding. Every ITEM is scaled to the reference
+        cap of the line it belongs to (its folder, or the prefix-routed sub-line), never the wearer's
+        culture: an Umbar noble in Black Numenorean plate wears 57-cap kit."""
+        import rebalance_armor as ra
+        self.assertEqual(ts.item_cap_for("sm_md_num_grvs_elite_a", "mordor"), ra.KINGDOM_CAPS["mordor_numenorean"])
+        self.assertEqual(ts.item_cap_for("sk_uruk_mordor_helmet_a", "mordor"), ra.KINGDOM_CAPS["mordor_uruk"])
+        self.assertEqual(ts.item_cap_for("sk_md_orc_x", "mordor"), ra.KINGDOM_CAPS["mordor_orc"])
+        self.assertEqual(ts.item_cap_for("sk_dg_khml_x", "rhun"), ra.KINGDOM_CAPS["dol_guldur"])
+        self.assertEqual(ts.item_cap_for("anything", "gondor"), 57)
+        self.assertIsNone(ts.item_cap_for("anything", None))       # vanilla or repo item
+        self.assertIsNone(ts.item_cap_for("anything", "troll"))    # a folder without a cap
+        self.assertAlmostEqual(ts.scale_to_reference_cap(38, 38), ts.REFERENCE_CAP)
+        self.assertEqual(ts.scale_to_reference_cap(40, None), 40)
+        old = dict(ra.KINGDOM_CAPS)
+        try:
+            ra.KINGDOM_CAPS["lowcap"] = 38
+            ra.KINGDOM_CAPS["men"] = 57
+            self.armour["hi2"] = 200
+            # a's tier-4 troop wears `lo` (40) from a 38-cap folder: 40 * 57 / 38 = 60 against a
+            # 200 field whose kit is 57-cap: still flagged.
+            self._field()
+            self.assertEqual(len(self._run(folders={"lo": "lowcap", "hi": "men"})), 1)
+            # Item level, not culture level: the weak troop's 200 is 57-cap kit (stays 200) while
+            # the field's identical 200 is 38-cap kit (scales to 300): flagged, 100 short.
+            self._field(weak_t4="hi2")
+            hits = self._run(folders={"hi": "lowcap", "hi2": "men"})
+            self.assertEqual(len(hits), 1)
+            self.assertIn("100 under", hits[0].message)
+            # Same kit on the same cap: clear.
+            self.assertEqual(self._run(folders={"hi": "men", "hi2": "men"}), [])
+        finally:
+            ra.KINGDOM_CAPS.clear()
+            ra.KINGDOM_CAPS.update(old)
+            self.armour.pop("hi2", None)
+
+    def test_exempt_ids_still_exist_in_the_shipped_troops(self):
+        troops = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData" / "troops"
+        if not troops.is_dir():
+            self.skipTest("troop data not present")
+        ids = set()
+        for f in troops.glob("troops_*.xml"):
+            ids |= set(re.findall(r'<NPCCharacter[^>]*?\sid="([^"]+)"',
+                                  f.read_text(encoding="utf-8-sig", errors="ignore")))
+        self.assertGreater(len(ids), 100, "the scan is broken, not the allowlist")
+        stale = sorted(set(ts.Validator._ARMOUR_LADDER_EXEMPT) - ids)
+        self.assertEqual(stale, [], f"exempt troops no longer exist: {stale}")
+        for tid, reason in ts.Validator._ARMOUR_LADDER_EXEMPT.items():
+            self.assertTrue(reason.strip(), f"{tid} is exempt without a stated reason")
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 

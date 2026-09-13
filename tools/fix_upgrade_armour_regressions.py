@@ -118,11 +118,15 @@ def family(item_id):
 # =============================================================================
 
 def load_item_armour(game_modules, moduledata=None):
-    """item id -> {'value': int, 'folder': str|None, 'file': str}.
+    """item id -> {'value': int, 'stats': {stat: int}, 'folder': str|None, 'file': str,
+                   'type': str|None, 'name': str}.
 
     folder is the LOTRLOME_items culture folder for Armory items, None for vanilla and repo items;
     file is the defining file's basename (head_armors.xml etc.), which is what keeps a helmet from
-    being offered as a chest.
+    being offered as a chest. stats keeps the four regions apart and type is the item's Type
+    attribute (HeadArmor, BodyArmor, HandArmor, LegArmor, Cape) for tools/analyze_kingdom_armour.py,
+    which reports per region and cannot trust the file name as the slot (starter_armors.xml mixes
+    slots in one file). value stays the sum the clamp and the validator mirror read.
     """
     items = {}
     roots = []
@@ -144,10 +148,14 @@ def load_item_armour(game_modules, moduledata=None):
                 iid = it.get('id')
                 if a is None or not iid:
                     continue
+                stats = {k: int(a.get(k, '0') or 0) for k in ARMOUR_STATS}
                 items[iid] = {
-                    'value': sum(int(a.get(k, '0') or 0) for k in ARMOUR_STATS),
+                    'value': sum(stats.values()),
+                    'stats': stats,
                     'folder': folder,
                     'file': os.path.basename(fp),
+                    'type': it.get('Type'),
+                    'name': rb.get_display_name(it.get('name', '') or ''),
                 }
     return items
 
@@ -194,6 +202,12 @@ def load_troops(moduledata=None):
             troops[tid] = {
                 'id': tid, 'file': fp, 'external': external,
                 'level': int(npc.get('level', '0') or 0),
+                # The validator's index keeps an absent level= as None and skips the troop; the
+                # analyzer needs the same distinction, since 0 here is also what an absent
+                # attribute reads as.
+                'has_level': npc.get('level') is not None,
+                'name': rb.get_display_name(npc.get('name', '') or ''),
+                'group': npc.get('default_group', '') or '',
                 'sets': sets,
                 'upgrades': [u for u in upgrades if u],
             }

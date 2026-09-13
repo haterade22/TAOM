@@ -14,6 +14,7 @@ Usage:
 
 import argparse
 import xml.etree.ElementTree as ET
+import math
 import os
 import sys
 import glob
@@ -131,15 +132,24 @@ VARIANT_CAP = 1
 # independently by the engine. Capes need this because the native ladder's deltas are calibrated
 # for chest-scale bases (30-60), not cape-scale (2-25): +12 on a 42-armor cuirass is +29%, but
 # +12 on a 12-armor pauldron is +100%.
+# Since the kingdom-cap curve (#583, 2026-09-13) bracers and greaves sit at 0.6 and 0.5 of the
+# chest cap, as compressed as capes, so all three extremity slots share one table: medium rolls
+# cloth (+5), not leather (+7), because at a 35 cap the elite piece leads the medium one by only
+# 7.6 (arm) or 6.3 (leg) points and a +7 roll plus the variant step would pass it. Heavy keeps
+# chain for its modifier names (Loose / Rusty read fine on plate); it is never the low side of a
+# judged pair, since the lord band equals the elite band on the cap curve.
+_EXTREMITY_MODIFIER_GROUPS = {
+    'civilian': 'cloth_unarmoured',  # +3
+    'light':    'cloth',             # +5
+    'medium':   'cloth',             # +5
+    'heavy':    'chain',             # +9 -- naming-safe on Plate (Loose / Rusty)
+    'elite':    'chain',             # +9
+    'lord':     'chain',             # +9
+}
 SLOT_MODIFIER_GROUPS = {
-    'shoulder': {
-        'civilian': 'cloth_unarmoured',  # +3
-        'light':    'cloth',             # +5
-        'medium':   'leather',           # +7
-        'heavy':    'chain',             # +9 -- naming-safe on Plate (Loose / Rusty)
-        'elite':    'chain',             # +9
-        'lord':     'chain',             # +9
-    },
+    'shoulder': _EXTREMITY_MODIFIER_GROUPS,
+    'arm': _EXTREMITY_MODIFIER_GROUPS,
+    'leg': _EXTREMITY_MODIFIER_GROUPS,
 }
 
 # Every stat whose ladder must satisfy the two-tier invariant for a slot. Shoulder governs BOTH
@@ -205,6 +215,71 @@ CULTURAL_MODS = {
 }
 
 # =============================================================================
+# Kingdom caps (the curve since 2026-09-13, #583)
+# =============================================================================
+# Each kingdom's armour power is one number, the chest (body_armor) of its elite band; the other
+# slots and the bands below are fixed ratios of it. This replaced the flat SLOT_BASELINES +
+# CULTURAL_MODS.protection model for every kingdom listed here (the tables above stay as the
+# fallback for the civilian tier, weights, and cultures without a cap, such as the troll). The
+# maintainer's table, verbatim; named hero armour (HERO_NAMES) is excluded from the curve.
+# The lord band equals the elite band: nothing but named kit sits above a kingdom's cap.
+KINGDOM_CAPS = {
+    'erebor': 70, 'iron_hills': 70,
+    'rivendell': 68, 'lindon': 68,
+    'mirkwood': 63,
+    'lothlorien': 60,           # no armour item today; recorded for when one exists
+    'gondor': 57, 'rhun': 57, 'mordor_numenorean': 57, 'arnor': 57,
+    'gundabad': 49,
+    'dol_guldur': 46, 'khand': 46,   # Khand owns no armour item today
+    'isengard': 45,
+    'dale': 44, 'harad': 44, 'umbar': 44, 'mercenary': 44,
+    'mordor_uruk': 43,
+    'rohan': 40, 'dunland': 40,
+    'mordor_orc': 38, 'mistymountainorcs': 38, 'goblin': 38,   # one shared orc kit
+    'thenn': 35,
+}
+SLOT_CAP_RATIO = {'body': 1.0, 'head': 0.9, 'arm': 0.6, 'shoulder': 0.6, 'leg': 0.5}
+BAND_RATIO = {'light': 0.40, 'medium': 0.64, 'heavy': 0.84, 'elite': 1.0, 'lord': 1.0}
+
+# Sub-lines that share an Armory folder, routed by id prefix; anything else takes the folder.
+# The mordor folder holds three kits at three caps and two misfiled strangers; the rhun folder
+# holds Dol Guldur's Khamul line. First match wins.
+LINE_PREFIXES = (
+    ('sk_md_num_', 'mordor_numenorean'), ('sm_md_num_', 'mordor_numenorean'),
+    ('sk_uruk_mordor_', 'mordor_uruk'),
+    ('sk_md_mor_', 'mordor_orc'), ('sk_md_orc_', 'mordor_orc'), ('sk_gn_orc_', 'mordor_orc'),
+    ('urukscout_', 'isengard'),
+    ('ar_ardunian_', 'umbar'),
+    ('sk_dg_', 'dol_guldur'),
+)
+FOLDER_DEFAULT_LINE = {'mordor': 'mordor_orc'}
+
+
+def kingdom_key(item_id, culture):
+    """The KINGDOM_CAPS key for an item, or None when the culture has no cap (legacy curve)."""
+    for prefix, key in LINE_PREFIXES:
+        if (item_id or '').startswith(prefix):
+            return key
+    key = FOLDER_DEFAULT_LINE.get(culture, culture)
+    return key if key in KINGDOM_CAPS else None
+
+
+def level_to_band(level):
+    """The armour band a troop level sits in; one source for the writer and derive_armor_tiers."""
+    if level <= 13:
+        return 'light'
+    if level <= 18:
+        return 'medium'
+    if level <= 30:
+        return 'heavy'
+    return 'elite'  # L31-51
+
+
+def cap_value(cap, slot_type, tier):
+    """round-half-up of cap x slot ratio x band ratio."""
+    return int(math.floor(cap * SLOT_CAP_RATIO[slot_type] * BAND_RATIO[tier] + 0.5))
+
+# =============================================================================
 # Material Type Mapping (strict tier-based)
 # =============================================================================
 
@@ -234,13 +309,19 @@ HERO_NAMES = {
 
 # Hero / boss / fixed-display item id substrings excluded from re-stat (in addition to HERO_NAMES,
 # matched against the display name). Mirrors analyze_armor_balance.EXCLUDE_ID_SUBSTRINGS.
-# 'md_num' (Black Numenorean): that set anchors its stats to the wearer's LEVEL rather
-# than to the mesh's tier token, so a `_light_` id intentionally carries heavy-row stats.
-# Name-based tier detection would report a false inversion on every piece, and an --apply
-# run would flatten the set. This reverses the 2026-08-17 decision NOT to exclude it; the
-# reason changed when the set stopped being name-anchored.
-EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown',
-                         'md_num')
+# 'md_num' (Black Numenorean) was here from 2026-08-17 to 2026-09-13 because that set anchors
+# its stats to the wearer's LEVEL rather than to the mesh's tier token, and the keyword detector
+# would have flattened it. The kingdom-cap curve tiers a worn item by its wearer's level
+# (--tier-source roster-first), which is what the set wanted all along, and it has its own cap
+# (mordor_numenorean, 57), so the exclusion is lifted (#583).
+EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown')
+
+
+# Generated troop kit whose display names carry a hero's name: the Dol Guldur "Khamul ..." line
+# (194 `sk_dg_khml_*` items worn by the dg_khamul_* troops) is named after its captain, not worn by
+# him. A display-name match on HERO_NAMES must not exclude it; Khamul's own kit is `khamul_*`.
+# Mirrored in analyze_armor_balance.is_excluded; a test pins the two together.
+HERO_NAME_FALSE_POSITIVE_PREFIXES = ('sk_dg_khml_',)
 
 
 def is_excluded(item_id, display_name):
@@ -249,6 +330,8 @@ def is_excluded(item_id, display_name):
     nl = (display_name or '').lower()
     if any(s in idl for s in EXCLUDE_ID_SUBSTRINGS):
         return True
+    if idl.startswith(HERO_NAME_FALSE_POSITIVE_PREFIXES):
+        return False
     return any(h and h in nl for h in HERO_NAMES)
 
 
@@ -266,6 +349,18 @@ def load_roster_tier_map():
     with open(map_path, 'r', encoding='utf-8') as f:
         data = _json.load(f)
     return {iid: rec.get('tier') for iid, rec in data.get('items', {}).items()}, data.get('generatedAt')
+
+
+def load_roster_records():
+    """The full derive_armor_tiers.py records ({item_id: record}) for --tier-source roster-first,
+    which needs anchorLevel and tierSource, not just the keyword-first tier."""
+    map_path = os.path.join(os.path.dirname(__file__), 'data', 'armor_roster_tiers.json')
+    if not os.path.exists(map_path):
+        return None, None
+    import json as _json
+    with open(map_path, 'r', encoding='utf-8') as f:
+        data = _json.load(f)
+    return data.get('items', {}), data.get('generatedAt')
 
 # Roman numeral pattern for variant detection
 ROMAN_NUMERAL_RE = re.compile(r'\b(I{1,3}|IV|V|VI{0,3}|IX|X{0,3}I{0,3}V?I{0,3})\b')
@@ -465,15 +560,39 @@ def get_display_name(name_attr):
 # Stat Calculation
 # =============================================================================
 
-def calculate_stats(tier, slot_type, culture, variant_num=0):
+def calculate_stats(tier, slot_type, culture, variant_num=0, item_id=None):
     """
     Calculate armor stats for a given tier, slot, and culture.
     variant_num adds +1 per step for numbered variants.
     Returns dict of {stat_name: value, 'weight': value, 'material_type': str, 'modifier_group': str}
+
+    On the kingdom-cap curve (every culture in KINGDOM_CAPS, combat tiers) the slot's PRIMARY stat
+    is cap x slot ratio x band ratio; the row's secondary (a chest's leg_armor, a cape's arm_armor)
+    keeps the legacy row's secondary-to-primary proportion for that tier. The writer then scales
+    an ITEM's own secondaries with its primary instead, so each folder keeps its convention (a
+    Gondor chest carries arm_armor, a Rhun chest leg_armor). item_id routes the sub-lines that
+    share a folder. The civilian tier, weights and cultures without a cap stay on the
+    SLOT_BASELINES model below.
     """
     baselines = SLOT_BASELINES[slot_type]
     baseline = baselines[tier]
     mods = CULTURAL_MODS.get(culture, {'protection': 0, 'weight_mult': 1.0})
+
+    key = kingdom_key(item_id, culture) if tier in BAND_RATIO else None
+    if key is not None:
+        stat_name = GOVERNED_STATS[slot_type][0]
+        primary = max(1, cap_value(KINGDOM_CAPS[key], slot_type, tier) + min(variant_num, VARIANT_CAP))
+        result = {stat_name: primary}
+        for stat, base_val in baseline.items():
+            if stat == 'weight' or stat == stat_name:
+                continue
+            base_primary = baseline[stat_name]
+            result[stat] = (int(math.floor(primary * base_val / base_primary + 0.5))
+                            if base_val > 0 and base_primary > 0 else 0)
+        result['weight'] = round(baseline['weight'] * mods['weight_mult'], 1)
+        result['material_type'] = MATERIAL_MAP[tier]['material_type']
+        result['modifier_group'] = modifier_group_for(slot_type, tier)
+        return result
 
     result = {}
     for stat, base_val in baseline.items():
@@ -529,10 +648,19 @@ def tier_from_value(primary, slot_type, culture):
 # Regex-based XML Replacement
 # =============================================================================
 
-def apply_changes_via_regex(filepath, item_changes):
+def _inside_comment(text, pos):
+    """True when `pos` falls inside an unclosed <!-- ... --> that opened before it."""
+    start = text.rfind('<!--', 0, pos)
+    return start != -1 and text.find('-->', start, pos) == -1
+
+
+def apply_changes_via_regex(filepath, item_changes, backup_tag=None):
     """
     Apply stat/weight/material changes to XML file using regex.
-    Preserves all formatting, comments, whitespace.
+    Preserves all formatting, comments, whitespace, the BOM and the line endings (a binary
+    round-trip: the Armory mixes LF and CRLF files, and a text-mode write rewrote whole files).
+    With backup_tag, a `<file>.bak-<tag>` copy of the original is taken once, before the first
+    write; a `.bak-*` name never matches the engine's `*.xml` glob.
 
     item_changes: dict of item_id -> {
         'weight': new_weight,
@@ -540,16 +668,19 @@ def apply_changes_via_regex(filepath, item_changes):
         'material_type': 'Plate', 'modifier_group': 'plate'
     }
     """
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
+    raw = open(filepath, 'rb').read()
+    content = raw.decode('utf-8')  # a BOM survives inside the string and is written back as is
 
     for item_id, changes in item_changes.items():
-        # Find the item block: from id="item_id" to </Item>
+        # Find the item block: from id="item_id" to </Item>, skipping any match that sits inside
+        # an XML comment (the Armory keeps commented-out <Item> blocks for reference; editing the
+        # dead copy would report success and leave the live item untouched).
         item_pattern = re.compile(
             r'(id="' + re.escape(item_id) + r'")(.*?)(</Item>)',
             re.DOTALL
         )
-        item_match = item_pattern.search(content)
+        item_match = next((m for m in item_pattern.finditer(content)
+                           if not _inside_comment(content, m.start())), None)
         if not item_match:
             print(f"  WARNING: Could not find item {item_id} in {filepath}")
             continue
@@ -597,8 +728,18 @@ def apply_changes_via_regex(filepath, item_changes):
 
         content = content[:item_match.start(2)] + new_block + content[item_match.end(2):]
 
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
+    out = content.encode('utf-8')
+    if out == raw:
+        return
+    # Parse before writing: a substitution that broke the document must never reach the tree.
+    ET.fromstring(out[3:] if out.startswith(b'\xef\xbb\xbf') else out)
+    if backup_tag:
+        backup = filepath + '.bak-' + backup_tag
+        if not os.path.exists(backup):
+            with open(backup, 'wb') as f:
+                f.write(raw)
+    with open(filepath, 'wb') as f:
+        f.write(out)
 
 
 # =============================================================================
@@ -615,14 +756,43 @@ def parse_current_values(armor_elem, slot_type):
     return values
 
 
+def _roster_first_tier(roster_map, item_id):
+    """The band for --tier-source roster-first: the lowest troop wearer's level decides; the id
+    keyword decides only for kit no troop wears; civilian keyword kit and kit with neither is
+    skipped (None). roster_map values may be the tier string (legacy map) or the full record."""
+    rec = roster_map.get(item_id)
+    if rec is None:
+        return None
+    if isinstance(rec, str):
+        return 'elite' if rec == 'lord' else rec
+    kw_tier = rec.get('tier') if rec.get('tierSource') == 'id-keyword' else None
+    if kw_tier == 'civilian':
+        return None
+    anchor = rec.get('anchorLevel')
+    if anchor is not None:
+        return level_to_band(int(anchor))
+    return kw_tier
+
+
 def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                  tier_source='keyword', roster_map=None, no_lower_armor=False,
-                 materials_only=False, keep_materials=False):
+                 materials_only=False, keep_materials=False, keep_weights=False,
+                 keep_material_type=False, backup_tag=None):
     """Process a single armor XML file. Returns list of change records.
 
     tier_source='roster' picks each item's tier from the derive_armor_tiers.py map (authoritative —
     the level of the troop that wears the item) instead of the brittle name-keyword detector; unworn
     and hero/boss items are skipped (left untouched). tier_source='keyword' is the legacy detector.
+    tier_source='roster-first' (the kingdom-cap curve, #583) takes the band of the item's LOWEST
+    troop wearer even when the id carries a tier keyword (the Fountain Guard helmet is `_heavy_`
+    and worn only at level 46), falls back to the keyword for unworn kit, and skips civilian kit,
+    hero kit and kit with neither; it needs the full-record map (load_roster_records).
+
+    keep_weights=True leaves weight alone in a full re-stat; keep_material_type=True leaves
+    material_type (hit sounds and FX) alone while modifier_group (the loot table) still follows the
+    slot's ladder. backup_tag names the one-time `.bak-<tag>` copy the writer takes per file.
+    On the kingdom-cap curve a secondary stat the item carries is scaled by the same factor as
+    its primary, so a folder's convention survives the restat.
 
     weights_only=True writes ONLY the weight (armor + material untouched). Combined with the keyword
     source it ladders by the item's current armor value and is guarded to currently-monolithic slots;
@@ -694,8 +864,16 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                     mode = 'material'
             else:
                 tier, mode = detect_tier(item_id, item_name, current_values, slot_type), 'material'
+        elif tier_source == 'roster-first':
+            band = None if is_excluded(item_id, item_name) else _roster_first_tier(roster_map, item_id)
+            if band is None:
+                tier, mode = 'medium', 'skip'   # hero/boss, civilian, or nothing to anchor on
+            else:
+                tier, mode = band, ('weight' if weights_only else 'full')
         elif tier_source == 'roster':
             roster_tier = roster_map.get(item_id)
+            if isinstance(roster_tier, dict):
+                roster_tier = roster_tier.get('tier')
             if is_excluded(item_id, item_name) or roster_tier is None:
                 tier, mode = 'medium', 'skip'   # hero/boss or unworn: leave untouched
             else:
@@ -718,8 +896,8 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
             new_values, new_weight = {}, current_weight
             new_material, new_modifier, has_change = current_material, current_modifier, False
         else:
-            new_stats = calculate_stats(tier, slot_type, culture, variant_num)
-            new_weight = new_stats['weight']
+            new_stats = calculate_stats(tier, slot_type, culture, variant_num, item_id=item_id)
+            new_weight = current_weight if keep_weights else new_stats['weight']
             if mode == 'weight':
                 new_values, new_material, new_modifier = {}, current_material, current_modifier
                 has_change = new_weight != current_weight
@@ -735,13 +913,25 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                         tgt = new_stats[s]
                         # no_lower_armor: never reduce a stat (raise under-tiered items, keep the rest).
                         new_values[s] = max(tgt, current_values[s]) if no_lower_armor else tgt
+                # Kingdom-cap curve: the row carries the primary only; every other stat the item
+                # declares keeps its ratio to the primary (a 0 stays 0), so a Gondor chest keeps
+                # its arm_armor convention and a cape its arm_armor.
+                primary_stat = GOVERNED_STATS[slot_type][0]
+                if kingdom_key(item_id, culture) is not None and primary_stat in new_values:
+                    old_p, new_p = current_values.get(primary_stat, 0), new_values[primary_stat]
+                    for s, cur in current_values.items():
+                        if s == primary_stat:
+                            continue
+                        scaled = int(math.floor(cur * new_p / old_p + 0.5)) if old_p > 0 and cur > 0 else cur
+                        new_values[s] = max(scaled, cur) if no_lower_armor else scaled
                 # material/modifier is a CURVE-CORRECTNESS attribute, not an armor value, so
                 # no_lower_armor must NOT freeze it — that is how ~1000 items kept an unearned
                 # `plate` group. Use --keep-materials for the explicit opt-out.
                 if keep_materials:
                     new_material, new_modifier = current_material, current_modifier
                 else:
-                    new_material, new_modifier = new_stats['material_type'], new_stats['modifier_group']
+                    new_material = current_material if keep_material_type else new_stats['material_type']
+                    new_modifier = new_stats['modifier_group']
                 has_change = (
                     new_weight != current_weight or
                     new_material != current_material or
@@ -786,7 +976,7 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
 
     # Apply via regex
     if not dry_run and item_changes:
-        apply_changes_via_regex(filepath, item_changes)
+        apply_changes_via_regex(filepath, item_changes, backup_tag=backup_tag)
 
     return changes
 
@@ -958,9 +1148,17 @@ def main():
                         help='Required to --apply across ALL cultures (safety guard for preserved cultures)')
     parser.add_argument('--weights-only', action='store_true',
                         help='Ladder ONLY weights (tier follows current armor value); leave armor + material untouched')
-    parser.add_argument('--tier-source', choices=['keyword', 'roster'], default='keyword',
+    parser.add_argument('--tier-source', choices=['keyword', 'roster', 'roster-first'], default='keyword',
                         help="Tier source: 'roster' uses the derive_armor_tiers map (authoritative roster tiers, "
-                             "skips hero/unworn); 'keyword' uses the legacy name detector (default)")
+                             "skips hero/unworn); 'roster-first' takes the lowest wearer's band even over an id "
+                             "keyword and falls back to the keyword for unworn kit (the kingdom-cap curve); "
+                             "'keyword' uses the legacy name detector (default)")
+    parser.add_argument('--keep-weights', action='store_true',
+                        help='Leave weight alone during a full re-stat (armour and loot table only).')
+    parser.add_argument('--keep-material-type', action='store_true',
+                        help='Leave material_type (hit sounds/FX) alone; modifier_group still follows the ladder.')
+    parser.add_argument('--backup-tag', default='',
+                        help='Take a one-time <file>.bak-<tag> copy of every file written (recommended for --apply).')
     parser.add_argument('--no-lower-armor', action='store_true',
                         help='Never reduce an armor stat (raise under-tiered items, keep the rest). '
                              'Use for "do not nerf" cultures (e.g. dunland).')
@@ -981,10 +1179,11 @@ def main():
     requested_slots = {s.strip() for s in args.slots.split(',') if s.strip()}
 
     roster_map = None
-    if args.tier_source == 'roster':
-        roster_map, gen = load_roster_tier_map()
+    if args.tier_source in ('roster', 'roster-first'):
+        roster_map, gen = (load_roster_records() if args.tier_source == 'roster-first'
+                           else load_roster_tier_map())
         if roster_map is None:
-            print("ERROR: --tier-source roster needs tools/data/armor_roster_tiers.json. "
+            print(f"ERROR: --tier-source {args.tier_source} needs tools/data/armor_roster_tiers.json. "
                   "Run: python tools/derive_armor_tiers.py")
             sys.exit(2)
         print(f"Roster tier map: {len(roster_map)} items (generated {gen})")
@@ -1041,7 +1240,10 @@ def main():
                                     tier_source=args.tier_source, roster_map=roster_map,
                                     no_lower_armor=args.no_lower_armor,
                                     materials_only=args.materials_only,
-                                    keep_materials=args.keep_materials)
+                                    keep_materials=args.keep_materials,
+                                    keep_weights=args.keep_weights,
+                                    keep_material_type=args.keep_material_type,
+                                    backup_tag=args.backup_tag or None)
             all_changes.extend(changes)
             files_processed += 1
 

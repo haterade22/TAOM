@@ -47,7 +47,8 @@ from typing import Optional
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rebalance_armor as ra  # noqa: E402  (curve source of truth)
 
-CULTURE = "mordor"
+CULTURE = "mordor"          # the Armory folder; the CAP is the line's (mordor_numenorean, 57 since
+                            # #583), which calculate_stats routes by item id, so every call passes it
 ITEM_NAME_PREFIX = "Mordor"
 LINE_NAME = "Black Numenorean"
 
@@ -337,7 +338,7 @@ SECTION_COMMENT = (
 
 def generate_item_xml(item: ArmorItem) -> str:
     slot_type, subtype = SLOT_TYPES[item.slot]
-    stats = ra.calculate_stats(item.tier, item.slot, CULTURE)
+    stats = ra.calculate_stats(item.tier, item.slot, CULTURE, item_id=item.id)
     weight = stats["weight"]
     material = stats["material_type"]
     modifier_group = stats["modifier_group"]
@@ -445,7 +446,7 @@ def dry_run(armory_base=None):
         else:
             print(f"\n=== {filename} ({len(items)} items) ===")
         for item in items:
-            stats = ra.calculate_stats(item.tier, item.slot, CULTURE)
+            stats = ra.calculate_stats(item.tier, item.slot, CULTURE, item_id=item.id)
             shown = ", ".join(
                 f"{k}={v}" for k, v in stats.items()
                 if k not in ("weight", "material_type", "modifier_group"))

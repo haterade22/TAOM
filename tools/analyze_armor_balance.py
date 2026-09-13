@@ -60,11 +60,9 @@ EXCLUDE_ID_SUBSTRINGS = (
     'glorfindel', 'gf_',                 # rivendell hero
     'crown',                             # any crown is a fixed-display hero outlier (was 'dain_crown';
                                          # [Gondor] King's Crown keyword-tiers as 'lord' and poisons comparisons)
-    'md_num',                            # Black Numenorean line: stats are anchored to the
-                                         # WEARER'S LEVEL, not to the mesh's tier token, so a
-                                         # `_light_` id deliberately carries heavy-row stats and
-                                         # name-based tier detection reports false inversions on
-                                         # every piece. See generate_black_numenorean_armor.py.
+    # 'md_num' (Black Numenorean) sat here 2026-08-17 to 2026-09-13: level-anchored stats that the
+    # keyword detector misread. The kingdom-cap curve bands a worn item by its wearer's level and
+    # gives the line its own cap (mordor_numenorean), so it is on the curve again (#583).
 )
 
 
@@ -88,6 +86,8 @@ def is_excluded(item_id, display_name):
     nl = (display_name or '').lower()
     if any(s in idl for s in EXCLUDE_ID_SUBSTRINGS):
         return True
+    if idl.startswith(ra.HERO_NAME_FALSE_POSITIVE_PREFIXES):
+        return False  # troop kit named after its captain (the Dol Guldur Khamul line)
     for hero in ra.HERO_NAMES:
         if hero and hero in nl:
             return True
@@ -218,6 +218,36 @@ def check_curve_invariant(variant_cap=None):
                                 if m['protection'] == protection
                                 and c not in INVARIANT_EXEMPT_CULTURES),
                         })
+    return violations
+
+
+# The two band pairs the kingdom-cap curve is judged on. Civilian kit is off the curve, and the
+# lord band equals the elite band, so (lord, heavy) is an adjacent gap by construction, which is
+# the loot excitement the invariant allows.
+KINGDOM_INVARIANT_PAIRS = (('heavy', 'light'), ('elite', 'medium'))
+
+
+def check_kingdom_curve_invariant(variant_cap=None):
+    """The two-tier invariant on the kingdom-cap curve: for every cap, slot and pair (n, n-2),
+    the primary stat at tier n (variant 0) must exceed tier n-2 at the variant cap plus the
+    legendary roll of n-2's loot table. Pure function of the curve constants. Secondary stats
+    follow their primary by ratio, so the primary carries the check."""
+    cap_v = ra.VARIANT_CAP if variant_cap is None else variant_cap
+    violations = []
+    for kingdom, cap in sorted(ra.KINGDOM_CAPS.items()):
+        for slot_type in ra.SLOT_CAP_RATIO:
+            for hi_tier, lo_tier in KINGDOM_INVARIANT_PAIRS:
+                hi = max(1, ra.cap_value(cap, slot_type, hi_tier))
+                lo = max(1, ra.cap_value(cap, slot_type, lo_tier) + min(cap_v, ra.VARIANT_CAP))
+                lego_group = ra.modifier_group_for(slot_type, lo_tier)
+                lego = ra.LEGENDARY_ARMOR[lego_group]
+                if hi <= lo + lego:
+                    violations.append({
+                        'kingdom': kingdom, 'cap': cap, 'slot': slot_type,
+                        'stat': ra.GOVERNED_STATS[slot_type][0],
+                        'hi_tier': hi_tier, 'lo_tier': lo_tier,
+                        'hi': hi, 'lo': lo, 'lego': lego, 'modifier_group': lego_group,
+                    })
     return violations
 
 

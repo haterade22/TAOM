@@ -78,6 +78,7 @@ class Registries:
     settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value) records
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
     item_armour: dict = field(default_factory=dict)           # armour item id -> head+body+arm+leg (empty = unavailable)
+    item_folder: dict = field(default_factory=dict)           # armour item id -> LOTRLOME_items folder (None = vanilla/repo)
     launchers: dict = field(default_factory=dict)             # bow/crossbow id -> ranged_ladder.Launcher (empty = unavailable)
 
 
@@ -229,6 +230,7 @@ class Validator:
         issues += self._armour_slot_coverage()
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
+        issues += self._cross_culture_armour_inversions()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
         issues.sort(key=lambda i: i.sort_key())
@@ -1287,6 +1289,21 @@ class Validator:
     # militia-to-militia edges are exempt exactly as they are for skills.
     _EQUIPMENT_ELEM_RE = re.compile(r"<equipment\b[^>]*?/>")
 
+    @staticmethod
+    def _slot_armour_avg(rec, slot, armour, folders=None) -> float:
+        """A troop's armour in one slot: the mean over its battle sets of the item's summed
+        armour, an unfilled or unknown item counting 0. Shared by the two armour gates so they
+        cannot disagree about what a troop wears. With `folders` (item id -> Armory folder) each
+        item's value is first scaled to the reference cap of the line it belongs to."""
+        vals = []
+        for st in rec["sets"]:
+            iid = st.get(slot)
+            v = armour.get(iid, 0) if iid else 0
+            if folders is not None and iid:
+                v = scale_to_reference_cap(v, item_cap_for(iid, folders.get(iid)))
+            vals.append(v)
+        return sum(vals) / len(vals) if vals else 0.0
+
     def _upgrade_armour_regressions(self) -> list:
         armour = getattr(self.reg, "item_armour", None) or {}
         if not armour:
@@ -1295,8 +1312,7 @@ class Validator:
         militia = self._militia_bound_ids()
 
         def slot_avg(rec, slot):
-            vals = [armour.get(st.get(slot), 0) if st.get(slot) else 0 for st in rec["sets"]]
-            return sum(vals) / len(vals) if vals else 0.0
+            return self._slot_armour_avg(rec, slot, armour)
 
         issues = []
         for source_id in sorted(troops):
@@ -1329,6 +1345,81 @@ class Validator:
                         f"own item family or hands it the source's item"
                     ),
                 ))
+        return issues
+
+    # -- pass 4j: a kingdom's tier sitting under the field two tiers lower ----- #
+    # The item curve (tools/rebalance_armor.py) has ONE row, "elite", for levels 31 to 51, so a
+    # culture whose tree stops at level 31 (engine tier 6) and one that runs to level 51 (tier 10)
+    # target the same item stats, and nothing along the way compared kingdoms with each other:
+    # UPGRADE_ARMOUR_REGRESSION is per upgrade edge, the armour analyzer is per culture. On
+    # 2026-09-12 a Dunland level-31 noble (182 armour, a lord-row helmet) out-armoured Gondor's
+    # level-46 Moon Guard (180) and five of its twelve level-41 capstones (#581).
+    #
+    # The check is per (culture, engine tier) CELL, on medians: the cell's median total is held
+    # against the median of every OTHER culture's median at tier - gap. That asks the player's
+    # question ("is this kingdom's tier 9 weaker than everyone else's tier 7?") and is stable:
+    # a pairwise troop check produces tens of thousands of pairs, and culture-pair medians are
+    # dominated by the elves being twice everyone by design. A culture uniformly OVER the field
+    # is not flagged here; tools/analyze_kingdom_armour.py shows that side. Item values come
+    # from the install, so the check is skipped, never faked, without them. Villagers are not
+    # a culture (characters/npcs_*.xml is left out), and the bare-chested-by-design troops are
+    # left out because their totals are not comparable.
+    _CROSS_CULTURE_ARMOUR_MARGIN = 20   # ~0.4 of one curve row (+46..48 on a fully slotted troop)
+    _CROSS_CULTURE_ARMOUR_TIER_GAP = 2
+    _CROSS_CULTURE_ARMOUR_MIN_CULTURES = 3
+    # Troops whose kit is off the ladder on purpose. Adding an entry is a decision: state why.
+    _ARMOUR_LADDER_EXEMPT = {
+        "cave_troll": "non-humanoid; troll plate at level 51 is its own scale",
+        "harad_elephant_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
+        "harad_mumakil_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
+        "gondor_ithilien_ranger": "tier-10 light ranger kit by design (docs/features/gondor-ithilien-ranger.md)",
+    }
+
+    def _cross_culture_armour_inversions(self) -> list:
+        armour = getattr(self.reg, "item_armour", None) or {}
+        if not armour:
+            return []
+        folders = getattr(self.reg, "item_folder", None) or {}
+        troops, _ = self._upgrade_troop_index()
+        cells = {}
+        lowest = {}
+        for tid in sorted(troops):
+            rec = troops[tid]
+            fname = re.split(r"[\\/]", rec["file"])[-1]
+            if not fname.startswith("troops_") or not fname.endswith(".xml"):
+                continue
+            if rec["level"] is None or not rec["sets"]:
+                continue
+            if tid in self._ARMOUR_LADDER_EXEMPT or tid in self._BODYLESS_BY_DESIGN:
+                continue
+            culture = fname[len("troops_"):-len(".xml")]
+            total = sum(self._slot_armour_avg(rec, s, armour, folders) for s in self._ARMOUR_SLOTS)
+            key = (culture, self._troop_tier(rec["level"]))
+            cells.setdefault(key, []).append(total)
+            if key not in lowest or total < lowest[key][0]:
+                lowest[key] = (total, tid, rec)
+        issues = []
+        for hit in cross_culture_armour_inversions(
+                cells, self._CROSS_CULTURE_ARMOUR_MARGIN, self._CROSS_CULTURE_ARMOUR_TIER_GAP,
+                self._CROSS_CULTURE_ARMOUR_MIN_CULTURES):
+            _, low_id, low_rec = lowest[(hit["culture"], hit["tier"])]
+            field = ", ".join(f"{c} {m:.0f}" for c, m in hit["field"])
+            issues.append(Issue(
+                severity=Severity.WARNING, code="CROSS_CULTURE_ARMOUR_INVERSION",
+                file=low_rec["file"], line=low_rec["line"],
+                entry_id=f'{hit["culture"]}/tier{hit["tier"]}',
+                message=(
+                    f'{hit["culture"]} tier {hit["tier"]} troops total median {hit["median"]:.0f} '
+                    f'armour (scaled to a {REFERENCE_CAP} chest cap) over {hit["n"]} troop(s), '
+                    f'{hit["shortfall"]:.0f} under the {hit["field_median"]:.0f} the other kingdoms '
+                    f'field at tier {hit["field_tier"]} ({field}); weakest here: {low_id}. A player reads that '
+                    f"as a top-tier troop dressed worse than everyone else's mid-tier. The repair "
+                    f"is a roster or curve decision, not a script: run "
+                    f"tools/analyze_kingdom_armour.py for the culture x tier picture, or add the "
+                    f"troop to _ARMOUR_LADDER_EXEMPT with a reason if the kit is off the ladder "
+                    f"on purpose"
+                ),
+            ))
         return issues
 
     def _mounted_dwarves(self) -> list:
@@ -1822,6 +1913,105 @@ _ARMOR_ELEM_RE = re.compile(r'<Armor\b([^>]*?)/?>')
 _ARMOUR_ATTRS = ("head_armor", "body_armor", "arm_armor", "leg_armor")
 
 
+# Since the kingdom-cap armour curve (#583) each kingdom's armour power is a chest cap set by the
+# maintainer (rebalance_armor.KINGDOM_CAPS: Erebor 70 ... goblins 38), so raw totals differ across
+# kingdoms BY DESIGN and the cross-culture check must not read that as a defect. Every ITEM's value
+# is scaled to one reference cap (Gondor's 57, the men's baseline) before a troop is totalled and
+# the medians compared: the question becomes "is this troop dressed below the power of the kit it
+# wears, relative to the others", the roster question the caps leave open. Item level, not culture
+# level, because items belong to a line (an Umbar noble in Black Numenorean plate wears 57-cap
+# kit; scaling him by Umbar's 44 read as 29% more armour than he has, deep review 2026-09-13).
+# Without the curve module the check runs unscaled.
+REFERENCE_CAP = 57
+
+
+def _curve():
+    try:
+        import rebalance_armor as _ra  # stdlib-only sibling; guarded so the validator never needs it
+        return _ra
+    except Exception:
+        return None
+
+
+def item_cap_for(item_id: str, folder, curve=None):
+    """The chest cap of the line an armour item belongs to (its LOTRLOME_items folder, or the
+    prefix-routed sub-line), or None when the curve module or the cap is unavailable."""
+    ra = _curve() if curve is None else curve
+    if ra is None or not folder:
+        return None
+    key = ra.kingdom_key(item_id, folder)
+    return ra.KINGDOM_CAPS.get(key) if key else None
+
+
+def scale_to_reference_cap(total: float, cap) -> float:
+    return total * REFERENCE_CAP / cap if cap else total
+
+
+def _median(values) -> float:
+    vals = sorted(values)
+    n = len(vals)
+    mid = n // 2
+    return float(vals[mid]) if n % 2 else (vals[mid - 1] + vals[mid]) / 2.0
+
+
+def cross_culture_armour_inversions(cells, margin, gap, min_cultures) -> list:
+    """The CROSS_CULTURE_ARMOUR_INVERSION rule as a pure function, so the validator and
+    tools/analyze_kingdom_armour.py (its "gate preview") run the same arithmetic.
+
+    cells: {(culture, engine tier): [per-troop armour totals]}. For every cell (c, t) with
+    t >= gap, the cell's median is held against the median of the OTHER cultures' medians at
+    tier t - gap; a cell needs at least min_cultures such neighbours to be judged at all, and
+    it is flagged when its median plus the margin is still under that field median. Returns
+    one dict per flagged cell, sorted by culture then tier: culture, tier, median, n,
+    field_tier, field_median, field ([(culture, median)] sorted by culture), shortfall.
+    """
+    medians = {key: _median(vals) for key, vals in cells.items() if vals}
+    hits = []
+    for (culture, tier) in sorted(medians):
+        if tier < gap:
+            continue
+        field = sorted((c2, m) for (c2, t2), m in medians.items()
+                       if c2 != culture and t2 == tier - gap)
+        if len(field) < min_cultures:
+            continue
+        field_median = _median(m for _, m in field)
+        m = medians[(culture, tier)]
+        if m + margin >= field_median:
+            continue
+        hits.append({
+            "culture": culture, "tier": tier, "median": m, "n": len(cells[(culture, tier)]),
+            "field_tier": tier - gap, "field_median": field_median, "field": field,
+            "shortfall": field_median - m,
+        })
+    return hits
+
+
+_ITEMS_FOLDER_RE = re.compile(r"LOTRLOME_items[\\/]([^\\/]+)[\\/]")
+
+
+def build_item_folders(item_roots) -> dict:
+    """armour item id -> its LOTRLOME_items culture folder (None for vanilla and repo items), the
+    key the kingdom-cap curve routes an item's cap by."""
+    folders = {}
+    for root in item_roots:
+        root = Path(root)
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            text = _read_stripped(xml)
+            if "<Armor" not in text:
+                continue
+            m = _ITEMS_FOLDER_RE.search(str(xml))
+            folder = m.group(1) if m else None
+            for im in _ITEM_BLOCK_RE.finditer(text):
+                if not im.group(2) or not _ARMOR_ELEM_RE.search(im.group(2)):
+                    continue
+                idm = re.search(r'\bid="([^"]+)"', im.group(1))
+                if idm:
+                    folders[idm.group(1)] = folder
+    return folders
+
+
 def build_item_armour(item_roots) -> dict:
     """armour item id -> head + body + arm + leg, over every <Item> carrying an <Armor> element.
 
@@ -1922,6 +2112,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
 
     harness_family_types, mount_family_types = build_harness_registries(item_roots)
     item_armour = build_item_armour(item_roots)
+    item_folder = build_item_folders(item_roots)
     launchers = build_launchers(item_roots)
 
     if game_modules is None:
@@ -1939,6 +2130,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         # Armour values are mostly Armory and vanilla; a TAOM-only table would judge every
         # edge on a handful of repo items and read the rest as bare. Unavailable, not partial.
         item_armour = {}
+        item_folder = {}
         launchers = {}
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
@@ -1973,6 +2165,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         settlement_economy=settlement_economy,
         suspect_registries=suspect,
         item_armour=item_armour,
+        item_folder=item_folder,
         launchers=launchers,
     )
 

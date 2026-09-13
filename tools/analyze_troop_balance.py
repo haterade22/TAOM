@@ -59,7 +59,9 @@ CREATURE_IDS = {'cave_troll'}
 
 # Humanoid troops that ride a non-humanoid mount. Judged on the formula like any other troop;
 # tagged purely so the reader has context if their Riding/combat skills look hand-tuned.
-MOUNT_RIDER_MARKERS = ('warg', 'elephant', 'spider', 'wolf rider', 'wolf-rider', 'beast master', 'beastmaster')
+# 'mumak' covers harad_mumakil_rider, which sat untagged beside harad_elephant_rider until #581.
+MOUNT_RIDER_MARKERS = ('warg', 'elephant', 'mumak', 'spider', 'wolf rider', 'wolf-rider',
+                       'beast master', 'beastmaster')
 
 
 def get_display_name(name_attr):

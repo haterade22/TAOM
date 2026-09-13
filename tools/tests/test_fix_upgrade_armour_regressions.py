@@ -228,5 +228,65 @@ class ClampTests(unittest.TestCase):
         self.assertNotEqual(fx.family("sk_dg_khml_hood_med_a"), fx.family("sk_dg_khml_helmet_inf_med_c"))
 
 
+class LoaderTests(unittest.TestCase):
+    """The loaders also feed tools/analyze_kingdom_armour.py (#581), which needs the four regions
+    kept apart, the item's Type as its slot key and display names. The summed 'value' and the
+    folder/file keys are what the clamp and the validator mirror read, so they must not move."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        root = Path(self._tmp.name)
+        self.md = root / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.modules = root / "Modules"
+        armory = self.modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "alpha"
+        armory.mkdir(parents=True)
+        (armory / "body_armors.xml").write_text(
+            '<Items>'
+            '<Item id="a_chest_heavy" name="{=k}[Alpha] Heavy Chest" Type="BodyArmor">'
+            '<ItemComponent><Armor body_armor="42" leg_armor="22" material_type="Plate" /></ItemComponent>'
+            '</Item>'
+            '</Items>', encoding="utf-8")
+        vanilla = self.modules / "SandBoxCore" / "ModuleData" / "items"
+        vanilla.mkdir(parents=True)
+        (vanilla / "vanilla.xml").write_text(
+            '<Items><Item id="v_boot" name="Boots" Type="LegArmor">'
+            '<ItemComponent><Armor leg_armor="5" /></ItemComponent></Item></Items>', encoding="utf-8")
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_load_item_armour_keeps_per_stat_values_type_and_name(self):
+        items = fx.load_item_armour(str(self.modules), str(self.md))
+        self.assertEqual(items["a_chest_heavy"], {
+            "value": 64,
+            "stats": {"head_armor": 0, "body_armor": 42, "arm_armor": 0, "leg_armor": 22},
+            "folder": "alpha", "file": "body_armors.xml",
+            "type": "BodyArmor", "name": "[Alpha] Heavy Chest",
+        })
+        self.assertIsNone(items["v_boot"]["folder"])
+        self.assertEqual(items["v_boot"]["stats"]["leg_armor"], 5)
+        self.assertEqual(items["v_boot"]["type"], "LegArmor")
+
+    def test_load_troops_records_name_and_group(self):
+        (self.md / "troops" / "troops_alpha.xml").write_text(
+            '<NPCCharacters>'
+            '<NPCCharacter id="alpha_troll" level="51" name="{=k}Cave Troll" default_group="Infantry">'
+            '<Equipments><EquipmentRoster><equipment slot="Body" id="Item.a_chest_heavy" />'
+            '</EquipmentRoster></Equipments>'
+            '</NPCCharacter>'
+            '<NPCCharacter id="alpha_unlevelled" name="{=k}No Level"></NPCCharacter>'
+            '</NPCCharacters>', encoding="utf-8")
+        troops = fx.load_troops(str(self.md))
+        self.assertEqual(troops["alpha_troll"]["name"], "Cave Troll")
+        self.assertEqual(troops["alpha_troll"]["group"], "Infantry")
+        self.assertEqual(troops["alpha_troll"]["sets"], [{"Body": "a_chest_heavy"}])
+        self.assertTrue(troops["alpha_troll"]["has_level"])
+        # An absent level= reads as 0 for the clamp (unchanged) and is marked so the analyzer can
+        # skip it exactly as the validator's index does.
+        self.assertEqual(troops["alpha_unlevelled"]["level"], 0)
+        self.assertFalse(troops["alpha_unlevelled"]["has_level"])
+
+
 if __name__ == "__main__":
     unittest.main()

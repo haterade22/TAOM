@@ -95,7 +95,7 @@ class LadderTests(unittest.TestCase):
 
         def value(item_id):
             it = by_id[item_id]
-            s = ra.calculate_stats(it.tier, it.slot, gen.CULTURE)
+            s = ra.calculate_stats(it.tier, it.slot, gen.CULTURE, item_id=item_id)
             v = s[stat_key[it.slot]]
             if it.slot == "shoulder":
                 v += s["arm_armor"]

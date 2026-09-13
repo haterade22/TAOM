@@ -13,10 +13,14 @@ soldier), so an item worn at several levels anchors its tier to its LOWEST weare
 over-arm the lower troops. Items worn across a wide level span are flagged as shared (the lower
 troops get the right armor; the higher ones accept a compromise).
 
-Tier signal precedence per item:
-  1. explicit tier keyword in the id (_light_/_med_/_heavy_/_elite_/_lord_) — the author's own label
-  2. roster anchor band (lowest wearer level) — for items with no keyword (the Dale case)
-  3. unworn — no troop references it; roster cannot tier it (falls back to name/value detection)
+Tier signal precedence per item (anchor first since the kingdom-cap curve, #583, 2026-09-13; it
+was keyword first before, which is how the Fountain Guard's `_heavy_` helmet, worn only at level
+46, stayed at 33):
+  1. roster anchor band (lowest BATTLE wearer level, ladder-exempt troops never anchor)
+  2. explicit tier keyword in the id (_light_/_med_/_heavy_/_elite_/_lord_, _civ_) for kit no troop wears
+  3. unworn and keyword-less: roster cannot tier it (falls back to name/value detection)
+The writer's --tier-source roster-first applies the same precedence, so the map's tier, target
+and status columns describe what the restat does.
 
 This script NEVER writes armor XML. It writes the derived map (tools/data/armor_roster_tiers.json)
 and a human report (tools/reports/armor-balance/ROSTER-TIERS.md). It computes the level-band
@@ -60,19 +64,18 @@ TIER_ORDER = ['light', 'medium', 'heavy', 'elite', 'lord']
 # owner's decision (2026-06-30): ELITE TROOPS ARE DEFINED BY LEVELS 31-51. The armor 'lord' tier is
 # therefore hero-only (named lords/heroes, excluded from rosters) and is never assigned from a troop
 # level here. Tunable reference, not a verdict — see the module docstring.
-def level_to_tier(level):
-    if level <= 13:
-        return 'light'
-    if level <= 18:
-        return 'medium'
-    if level <= 30:
-        return 'heavy'
-    return 'elite'  # L31-51
+# One source since the kingdom-cap curve (#583): the writer's --tier-source roster-first bands a
+# worn item by the same function, so the map and the restat cannot disagree about a level.
+level_to_tier = ra.level_to_band
 
 
 def id_keyword_tier(item_id):
     """Return the tier the item id explicitly encodes, or None."""
     idl = item_id.lower()
+    # Civilian first: a `_civ_` id may also carry a tier word (`_civ_heavy_coat`), and civilian kit
+    # is off the combat curve whatever its wearer's level.
+    if '_civ' in idl or 'civilian' in idl:
+        return 'civilian'
     for kw, tier in (('_lord', 'lord'), ('_elite', 'elite'), ('_heavy', 'heavy'),
                      ('_medium', 'medium'), ('_med', 'medium'), ('_light', 'light')):
         if kw in idl:
@@ -90,8 +93,27 @@ def line_suffix(item_id):
 # Parsing
 # =============================================================================
 
+# Troops whose kit is off the ladder by design (the light Ithilien ranger at level 51, the troll,
+# the Harad mount riders): they wear their kit, but they do not ANCHOR it. One source, the
+# validator's allowlist, so the map and the CROSS_CULTURE_ARMOUR_INVERSION gate agree.
+try:
+    import taom_schema as _ts
+    LADDER_EXEMPT_TROOPS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT)
+except Exception:  # a bare checkout without the schema JSONs still gets the ids
+    LADDER_EXEMPT_TROOPS = frozenset({'cave_troll', 'harad_elephant_rider', 'harad_mumakil_rider',
+                                      'gondor_ithilien_ranger'})
+
+
+def _is_civilian_roster(elem):
+    return elem.get('civilian') == 'true' or elem.get('equipmentType') == 'Civilian'
+
+
 def parse_rosters():
-    """Return wearers: item_id -> list of {troop, culture, level, slot}."""
+    """Return wearers: item_id -> list of {troop, culture, level, slot}.
+
+    BATTLE sets only: a dress in a level-46 dwarf's civilian set anchored 'Civilian Female Dress'
+    at the elite band on 2026-09-13 and the dry run would have written 70 on it. Ladder-exempt
+    troops are read but never anchor."""
     wearers = defaultdict(list)
     if not os.path.isdir(TROOPS_DIR):
         return wearers
@@ -105,21 +127,26 @@ def parse_rosters():
             continue
         for npc in root.findall('.//NPCCharacter'):
             tid = npc.get('id', '')
+            if tid in LADDER_EXEMPT_TROOPS:
+                continue
             try:
                 level = int(npc.get('level', '0'))
             except ValueError:
                 level = 0
             seen = set()  # de-dupe (item, slot) across a troop's multiple rosters
-            for eq in npc.findall('.//EquipmentRoster/equipment'):
-                slot = EQUIP_SLOT_MAP.get(eq.get('slot', ''))
-                if not slot:
+            for roster in list(npc.iter('EquipmentRoster')) + list(npc.iter('EquipmentSet')):
+                if _is_civilian_roster(roster):
                     continue
-                raw = eq.get('id', '')
-                item_id = raw.split('.', 1)[1] if raw.startswith('Item.') else raw
-                if not item_id or (item_id, slot) in seen:
-                    continue
-                seen.add((item_id, slot))
-                wearers[item_id].append({'troop': tid, 'culture': culture, 'level': level, 'slot': slot})
+                for eq in roster.findall('equipment'):
+                    slot = EQUIP_SLOT_MAP.get(eq.get('slot', ''))
+                    if not slot:
+                        continue
+                    raw = eq.get('id', '')
+                    item_id = raw.split('.', 1)[1] if raw.startswith('Item.') else raw
+                    if not item_id or (item_id, slot) in seen:
+                        continue
+                    seen.add((item_id, slot))
+                    wearers[item_id].append({'troop': tid, 'culture': culture, 'level': level, 'slot': slot})
     return wearers
 
 
@@ -178,14 +205,16 @@ def derive():
         anchor = levels[0] if levels else None
         kw_tier = id_keyword_tier(item_id)
 
-        if kw_tier:
-            tier, source = kw_tier, 'id-keyword'
+        if kw_tier == 'civilian':
+            tier, source = 'civilian', 'id-keyword'      # off the combat curve, whoever wears it
         elif anchor is not None:
             tier, source = level_to_tier(anchor), f'roster(L{anchor})'
+        elif kw_tier:
+            tier, source = kw_tier, 'id-keyword'
         else:
             tier, source = None, 'unworn'
 
-        target = ra._get_primary_stat(ra.calculate_stats(tier, slot, culture), slot) if tier else None
+        target = ra._get_primary_stat(ra.calculate_stats(tier, slot, culture, item_id=item_id), slot) if tier else None
         current = info['primary']
         delta = (current - target) if (current is not None and target is not None) else None
         if delta is None:
