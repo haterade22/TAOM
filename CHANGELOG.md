@@ -4,6 +4,41 @@
 
 ## 2026-09-12
 
+### feat(data): ranged range ladders, tier climbs reach inside a line and kingdom rank orders each band (#582)
+
+Asked what sets an archer troop's range, the bow or the skill. The 1.4.8 decompile answers the bow:
+`Mission.cs:4943` launches at the wielded bow's `missile_speed`, `SandboxAgentStatCalculateModel.cs:978`
+pins `MissileSpeedMultiplier` at 1 for bows, and Bow skill only feeds accuracy, cadence, lead error
+and (mounted) the fraction of max range the AI opens fire at. Tabulating the 227 troops that carry a
+bow or crossbow showed no order at all: six trees handed a higher tier a slower launcher (Gondor T6
+and Dale T5 on vanilla `crossbow_e`, Mordor T5 on `mountain_hunting_bow`, Isengard uruk crossbows
+flat at 60), seven kingdoms' militia carried vanilla `noble_long_bow` over their own regulars, and Dol
+Guldur outranged Gondor. 1,741 inverted pairs.
+
+Two rules now, per launcher class: inside a line (a troop file, or an elite id prefix inside one) a
+lower tier is never faster than a higher tier; inside a tier band a better-ranked kingdom line is
+never slower than a worse-ranked one. Both come from one grid in `tools/ranged_ladders.json`,
+`speed = band_base[band] + rank_step * (18 - rank)`, bands E T0-2 to C T9-10, the 18 lines in the
+user's order (Mirkwood first, Dunland last; Ithil Guard, Ithilien Ranger and Blackroot Vale are a
+Gondor special line, Black Numenoreans and Black Uruks their own Mordor lines, Lindon shares
+Rivendell, Umbar sits under Rhun). Every cell is a generated `ladder_<line>_<bow|xbow>_<band>` item,
+130 in all, a verbatim clone of the line's own donor bow with only id, name and `missile_speed`
+changed and `is_merchandise=false`; `tools/generate_ranged_ladder_items.py` writes them and their
+English name rows into the live Armory and the assets mirror (`--verify`, `--revert`).
+`tools/rebalance_ranged_ladders.py` reports the grid, both rules' inversions and every ranged troop's
+reach before and after, and `--apply` moved 258 launcher slots over 227 troops onto their cells:
+1,741 pairs to 0. `RANGED_LADDER_INVERSION` (warning) in the validator calls the same pure function.
+Corners: Dunland E 58 (about 205 m) to Mirkwood C 108 (about 385 m). The ranking moved some lines a
+long way on purpose (Dol Guldur 85-92 down to 62-78, Isengard crossbows 60 up to 82-90).
+`tools/ranged_ladder.py` is the shared library; `tools/tests/test_ranged_ladder.py` (47 tests).
+Deep review (six agents, no HIGH): the launcher index now parses only files whose bytes mention a
+bow or crossbow (the validator paid 1.2 s for it, now 0.18 s); a non-numeric `band_base` is
+reported, not raised; a `files` token naming no troop file and prefixes overlapping across lines
+are spec findings; `MAX_TIER = 10` is attributed to TAOM's `TaomCharacterStatsModel` override
+(vanilla caps at 6). RCA: `docs/reviews/rca-ranged-ladders-2026-09-12.md`.
+Owed: the 12-language translator run for the 130 names (no API key in this environment), the
+in-game restart check. `docs/features/ranged-ladders.md`.
+
 ### feat(lords): a named lord fields his own party template; Faramir raises Ithilien rangers, Sauron a Black Numenorean and Uruk host (#580)
 
 The engine binds party templates to a CLAN, never a hero: both reads that draw a lord's roster

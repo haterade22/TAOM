@@ -439,6 +439,27 @@ than run against a handful of repo items. Militia-to-militia edges are exempt, a
 as the chest stand-in). The repair is `tools/fix_upgrade_armour_regressions.py --apply`; the first
 run found 62 regressing edges across 13 cultures and left 0.
 
+## Ranged ladder inversion (`RANGED_LADDER_INVERSION`)
+
+**WARNING.** The ranged half of the ladder rule (#582). An archer's reach is its launcher's
+`missile_speed` and nothing else (`Mission.cs:4943` launches at the bow's speed,
+`SandboxAgentStatCalculateModel.cs:978` pins `MissileSpeedMultiplier` at 1 for bows; Bow skill feeds
+accuracy, cadence and AI error). Two rules, per launcher class: inside a LINE (a `troops_<culture>.xml`
+file, or an id prefix inside one, in the kingdom rank order of `tools/ranged_ladders.json`) a lower
+tier is never faster than a higher tier; inside a BAND (engine tier E T0-2, R T3-4, V T5-6, X T7-8,
+C T9-10) a better-ranked line is never slower than a worse-ranked one. Both are one grid,
+`speed = band_base[band] + rank_step * (n_lines - rank)`, and the validator, the report and the
+roster tool all call the pure `ranged_ladder.inversions`, so they cannot disagree. Speeds are
+`Registries.launchers` (every Bow and Crossbow `<Item>` over the same item roots as the armour
+index), so without the install the check is skipped, never faked. A spec that cannot be read or
+contradicts the install, and a ranged troop in a file no line claims, are findings rather than
+silence; `_RANGED_LADDER_EXEMPT` holds off-ladder troops with a reason each (empty today). One
+warning per (rule, class, scope) naming the worst pair and the pair count. First run 2026-09-12:
+1,741 pairs (the worst `dunland_dragon_firebolt` T5 at 97 over `sagarun_crossbowman` T5 at 60); the
+repair is `tools/generate_ranged_ladder_items.py --apply` then
+`tools/rebalance_ranged_ladders.py --apply`, which left 0. Design and grid:
+`docs/features/ranged-ladders.md`.
+
 ## Key Files
 
 | File | Purpose |

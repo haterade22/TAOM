@@ -1395,3 +1395,9 @@ A later module's same-id element is MERGED into the earlier one (`MBObjectManage
 - **Why missed:** nothing syncs the mirror from the repo, and the artist's mapping was context dependent (one dead sword id became three different ids across rosters), so no swap script could reproduce it.
 - **Prevent:** diff each artist-touched file's BASE against HEAD before copying; copy verbatim only where the base equals HEAD, otherwise three-way merge. Re-sync the mirror from the repo after landing so his next base is current.
 - **Source:** #568, 2026-09-12.
+
+### An archer's reach is the bow's `missile_speed`; the skill number is not range, and a ladder no gate holds drifts
+Bow skill feeds accuracy, cadence, lead error and (mounted only) how far out the AI opens fire; the arc a troop draws is the launcher's `missile_speed`, verified in `Mission.cs:4943` and `SandboxAgentStatCalculateModel.cs:978`. Rosters were authored tier by tier on skill and armour while the bows came from whatever the culture folder had, so 227 ranged troops shipped with 1,741 pairs where a lower tier or a worse-ranked kingdom outranged a better one, militia on vanilla `noble_long_bow` above their own regulars (#582).
+- **Why missed:** no surface shows range. The party screen shows skill, the item tooltip shows speed, and no tool put the two side by side; every ladder gate in the validator judged skills or armour.
+- **Prevent:** the order lives in ONE spec (`tools/ranged_ladders.json`: bands by engine tier, kingdom lines in rank order, `speed = band_base + rank_step * (n - rank)`), every cell is a generated item, and the `RANGED_LADDER_INVERSION` gate, the report and the roster writer share one pure function. Author a new ranged troop with a `ladder_*` item, never a raw bow; move a kingdom by moving its line, never by hand-picking a bow.
+- **Source:** `docs/features/ranged-ladders.md`, issue #582

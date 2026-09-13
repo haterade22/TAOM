@@ -102,6 +102,7 @@
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | Decompiled source | `E:\Decompiled_Bannerlord\` (pre-decompiled, organized by category) |
 | CI/CD | `.github/workflows/build.yml` |
+| Ranged range ladders | `tools/ranged_ladders.json` (the grid: bands by engine tier, 18 kingdom lines in rank order, donors), `tools/ranged_ladder.py` (library), `tools/generate_ranged_ladder_items.py` (130 `ladder_*` items + English loc rows into the live Armory and the mirror), `tools/rebalance_ranged_ladders.py` (report + roster rewrite), `RANGED_LADDER_INVERSION` gate in `tools/taom_schema.py`. Reach is `missile_speed`; skill is not range. `docs/features/ranged-ladders.md` (#582) |
 | One-off scripts (finished) | `tools/oneoff/` — one-off migration/authoring scripts move here when done; `tools/` keeps only living tools (see `tools/README.md` § One-offs) |
 | Shared build props | `Directory.Build.props` |
 | Skills | `.claude/skills/` |
