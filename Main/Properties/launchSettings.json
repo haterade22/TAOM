@@ -9,6 +9,15 @@
       "sqlDebugging": false,
       "jsWebView2Debugging": false
     },
+    "Bannerlord (L5 no TAOM main)": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\$(GameBinariesFolder)\\Bannerlord.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*TAOM.Dependencies*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*FastMode*LOTRLOME_Armory*TAOM_Map*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\$(GameBinariesFolder)",
+      "debugEngines": "managed-framework,native",
+      "sqlDebugging": false,
+      "jsWebView2Debugging": false
+    },
     "BLSE Bannerlord": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\$(GameBinariesFolder)\\Bannerlord.BLSE.Standalone.exe",

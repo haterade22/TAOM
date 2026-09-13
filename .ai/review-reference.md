@@ -42,6 +42,15 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Reads the concrete close path down to the manager layer, not the layer the code subscribed
+  to** (2026-09-12, memory instruments review 101): handed "the engine never collects on a plain
+  `PopScreen`", it opened `InventoryManager.CloseInventoryPresentation`,
+  `PartyScreenHelper.CloseScreen` and `GauntletCharacterDeveloperScreen.CloseCharacterDeveloperScreen`,
+  followed each to `GameStateManager.PopState`, and showed `OnPopState` ends with
+  `Common.MemoryCleanupGC()` (`:306`, `OnPushState` `:278`). A heap-release class that five Claude
+  agents had passed was removed on that reading, and the measurement it was built on inverted:
+  memory that survives the engine's own collection is rooted, not garbage. When a briefing states
+  what the engine "never" does, expect Codex to look for where it does.
 - **Proves a coverage claim by running the repo's own scanner on a synthetic body** (2026-09-12,
   Return to Army review 98): handed "the IL drift guard cannot see a branch change", it wrote the
   drifted body, ran `IlCallScanner` over both, and pasted the output, instead of agreeing. It also

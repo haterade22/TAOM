@@ -431,6 +431,8 @@ Day-1 campaign loaded from `save010`, windowed, paused unless stated.
 | B | B-battle-pre | 1 | 14,323 | 3,806 | 78,330 | | | | 2,784 | |
 | B | field battle, `battle_terrain_r`, 13 agents | 1 | EncounterStart 14,516; MissionInitialize 10,929; FinishMissionLoadingBegin **9,914**; BattlePlayable 10,515; ExitBegin 10,612; MapResumed 10,665 | | | | | | | playable in 6.3 s, fought 52 s. The battle scene cost ~0.6 GB; the no-scene floor bottomed at 9.9 GB |
 | B | B-battle-post | 1 | 14,563 | 4,135 | 78,607 | | | | 2,784 | **+240 vs pre**, noise; the map re-settled to ~13.9 within 10 s of `MapResumed` |
+| B | running window, normal speed, 14:43 to 15:00 (17 min, samples only; cut short by decision) | 1 | 14,529 to 14,792; range 14,506 to 14,865 | | | | | | | **+260 MB in 17 min (~15 MB/min)** with 1,257 AI auto-resolves; the day-1 climb slowed from 60 to 100 MB/min to ~15, so it plateaus rather than runs |
+| B | B-end (VMMap) | 1 | 14,769 (stamp) | 3,499 | 71,537 | not yet read | not yet read | not yet read | | `vmmap-B-end.csv` 1.7 MB, `.mmp` 4.0 MB. Session ended 15:00 by normal quit. Run 1 complete except configs A/A+ |
 
 **Run 1 findings, in the order they settle questions:**
 
@@ -447,11 +449,14 @@ Day-1 campaign loaded from `save010`, windowed, paused unless stated.
    (two saves, flat), and rendering the paused map (300 s, flat).
 4. **Every mover is bounded first-touch, none leak on repeat.** Ten opens each of party and
    inventory produced flat ceilings and flat re-entry floors. The party screen keeps ~1.0 GB after
-   its first open; the inventory keeps nothing once a full GC runs (its 2.9 GB per open is managed
-   garbage, returned within five minutes of the pause). This is the "cache, plateaus" row of the
-   dose-response table, so the levers are asset breadth and size, not a lifetime bug. The transient
-   still has to FIT: on a 32 GB machine a 2.9 GB spike from one screen open lands on top of
-   whatever the session already holds, and the GC only runs when the runtime decides to.
+   its first open; the inventory keeps 2.2 GB of managed heap between opens and gave it back five
+   minutes after the last close. That 2.2 GB is NOT collectable garbage: the engine runs
+   `Common.MemoryCleanupGC()` at every state pop and push (`GameStateManager.cs:278/306`), so it
+   survived two full collections and is rooted until something releases it (the Codex pass on the
+   attempted heap-release, `rca-memory-instruments-2026-09-12.md`). This is the "cache, plateaus"
+   row of the dose-response table, so the levers are asset breadth and size, not a lifetime bug.
+   The transient still has to FIT: on a 32 GB machine a 2.9 GB spike from one screen open lands on
+   top of whatever the session already holds.
 5. **The running campaign itself climbs**, 60 to 100 MB/min at day 1 with heavy AI auto-resolve
    traffic, almost none of it managed. Five minutes is too short to say whether it plateaus; a
    30-minute hands-off window at normal speed is the next block worth its time.
@@ -476,9 +481,231 @@ session, so treat it as static until a battle moves it.
 8. **Round trips keep nothing.** Town in and out: -104 MB. Battle in and out: +240 MB. Both within
    the noise of a single probe.
 
-**Still owed for run 1:** the 30-minute running window (in progress from 14:43), `B-end` with VMMap
-at the end of it, then `Invoke-CommitMatrix -Report` and the two VMMap Private-Data reads. Then
-configs A and A+ for the vanilla floor, which no number here is a substitute for.
+**Run 1 closed 15:00 by decision.** `Invoke-CommitMatrix -Report`: 20 stations, all FRESH, one pid
+throughout. The process was then killed from the map rather than quit (rgl ends at
+`OnGameWindowFocusChange: False`, no bundle, no native error, no `[Shutdown]` marker on this branch),
+so nothing was lost but the log has no clean ending. Logs archived to `E:\taom-memory-2026-09-02\`.
+
+**VMMap Private-Data read (baseline 11:56 vs end 15:00, committed KB in the CSVs):** the private
+commit is NOT one engine arena. At the end it is 1,066 regions of exactly **4.00 MB (4,264 MB)**, an
+allocator's chunk size, so a third of the commit is the engine's own pool and opaque to VMMap; plus
+214 regions of 16 MB or more (7,455 MB) and 227 of 1 to 16 MB (1,214 MB). The large singles: 341,
+318, 318, 256, 159, 132, 98 MB. Repeats worth naming: **22 x 21.38 MB (470 MB)**, 4 x 85.38, 6 x
+32.00, 7 x 16.00, 18 x 5.38, and **2 x exactly 64.00 MB, which is the two 4096-square RGBA8
+banner sprite sheets** (`SpriteSheetCount=2` after L1), the first time a region size has
+fingerprinted a known asset. Session growth 14.8 to 16.0 GB committed came as +135 pool chunks (540
+MB), +29 large regions (420 MB, five of them 60 to 62 MB singles that were not there at baseline),
+NT heap +280 MB, managed +180 MB. Mapped File never moved off 291 MB. Next VMMap worth taking: one
+INSIDE a mission with the map released, so the map scene's regions can be diffed out by size. Configs A/A+ are parked: the maintainer
+wants TAOM attributed on its own terms, not against vanilla.
+
+**Next phase, decided 2026-09-12: annotate the four layers, remove nothing yet.** Instruments, not
+levers, in this order:
+
+| Layer | Instrument | Touches content? |
+|---|---|---|
+| Map scene 4.4 GB | `taom.print_memory` gains `Utilities.GetVertexBufferChunkSystemMemoryUsage()` (CPU-side mesh copies) and `GetGPUMemoryStats` (render target / depth / SRV / buffer), read on the map and inside a mission. (`GetGpuMemoryOfAllocationGroup(name)` is a dead end: a strings pass over `TaleWorlds.Native.dll` on 2026-09-12 found only `allocation_group_index`, no name vocabulary, and no managed caller passes a literal.) | no |
+| Map scene, per asset | offline script: `Main_map` entities to prefabs to meshes to materials to textures, texture headers from TAOM_Map's tpacs (format, dims, mips), resident bytes per asset, flagged when uncompressed or mip-less; flora entity counts by prefab | no |
+| Campaign state 3.3 to 3.8 GB | `privMB` on every `[SaveLoad]` phase plus new phases (after `OnGameLoaded`, around `OnSessionLaunched`, map-ready); names the 67 s silence in the same pass | no |
+| Menu floor 6.6 GB | subtraction ladder on a scratch install: `<AlwaysLoad/>` off, Armory out of the load order, TAOM_Map out; `[MemStation] enter GauntletInitialScreen` is the reading, no campaign needed | scratch copy only |
+| Transient UI spikes | BUILT AND REMOVED 2026-09-12: a `Common.MemoryCleanupGC()` on pop of inventory/party/character was redundant, because `GameStateManager.OnPopState` and `OnPushState` already end with that call (installed `GameStateManager.cs:278/306`) and these screens close through `PopState`. The 2.6 GB that stayed between inventory opens therefore survived two engine collections: it is ROOTED, and the question is who holds it (Codex pass, RCA `rca-memory-instruments-2026-09-12.md`) | nothing |
+
+The probe additions and the `[SaveLoad]` phases are also built and deployed (TAOM.dll 2026-09-12 15:32).
+
+**Layer 1 offline manifest, built and run 2026-09-12 (`tools/audit_map_scene_memory.py`, 33 tests;
+output `E:\taom-memory-2026-09-02\map-manifest\`, 2 s run).** It walks `references.txt`,
+`scene.xscene`, `atmosphere.xml` and `flora.bin`, expands prefabs across TAOM_Map, Native and
+SandBox, and weighs every referenced texture, mesh, material and collision body from the tpac tables
+of contents (texture mip chains verified byte-for-byte against the pixel segment on 3,582 of 3,583
+checkable textures). What the Main_map scene references:
+
+| module | category | count | bytes |
+|---|---|---:|---:|
+| TAOM_Map | textures | 474 | 2.34 GB (875 MB BC5 normals, 749 MB DXT1) |
+| TAOM_Map | meshes | 210 | 1.73 GB (editor segment 1.02 GB, runtime segment 735 MB; which is resident is UNKNOWN) |
+| Native | textures | 1,311 | 3.13 GB (1.54 GB of it only in `EmAssetPackages`) |
+| Native | meshes | 431 | 1.08 GB |
+| total | | | **8.39 GB referenced**, against ~4.4 GB measured resident, so the engine streams or drops part of it |
+
+Named heavyweights: `16K_Vista_02` (TAOM_Map, DXT5 16384², 15 mips, 357,913,968 B), `edoras_t3`
+379 MB (362 MB of it editor-segment geometry, flagged EDITOR_STREAM_BLOAT; t1/t2 similar),
+`empire_wall_brick_d` (Native, DXT1 8192², 42.7 MB), and 50 textures at exactly 22,369,648 B
+(4096² 13-mip BC5/DXT5 or 2048x8192), 28 of them TAOM_Map's `t_*_n` normal maps.
+
+**VMMap fingerprint (the attribution mechanism, verified 2026-09-12):** the `B-end` snapshot's
+single 357,957,632 B private region is `16K_Vista_02`'s mip chain plus **43,664 B**; its 24
+regions of 22,413,312 B are 4096² 13-mip textures plus the same **43,664 B**. Identical overhead on
+both, so a Private Data region of (texture bytes + 43,664) is that texture's full mip chain held in
+SYSTEM memory, one region per texture. Read the rest of the histogram the same way: region bytes
+minus 43,664, look the size up in `textures.tsv`. Size alone cannot tell two textures of the same
+size apart (24 resident of 50 candidates), but it does say what CLASS of asset the commit is, and it
+says the engine keeps CPU-side copies of whole mip chains for at least the vista and two dozen
+4K textures on the map alone. The 4 MB pool chunks (4.3 GB) stay opaque to this method.
+
+**Run 2 (2026-09-12 17:00, new campaign, log `taom_debug_2026-09-12_16-00-19.log`): the map scene
+diffed out by VMMap, and the first mesh-vs-texture split.** A VMMap taken INSIDE Minas Tirith
+(`L-town`, pid 40408, 13,613 MB) against the on-map `B-end` snapshot:
+
+| | on the map | in the town |
+|---|---:|---:|
+| 4 MB pool chunks | 1,066 | 1,057 |
+| 16K vista region (357,957,632 B) | 1 | 0 |
+| 4096² 13-mip texture regions (22,413,312 B) | 22 | 18 |
+| regions of 16 MB and up | 214 (7,455 MB) | 172 (6,317 MB) |
+| **only in this snapshot, 16 MB and up** | **4,264 MB** | **3,495 MB** |
+
+The map-only large regions (4,264 MB) and the town-only ones (3,495 MB) are the measured scene
+costs (4.4 and ~3.9 GB); the pool does not move between scenes. Of the map's 4,264 MB, exactly one
+region names itself against the manifest: the vista, 341 MB. The other ~90 map-only regions
+(27 to 85 MB each, 3.9 GB together, irregular sizes such as 62.27, 61.52, 55.76, 51.65 MB) match
+no packed texture's mip chain within 4 KB, so they are generated at load rather than read from a
+tpac: terrain and flora runtime data (`terrain.bin` is 56 MB on disk, `flora.bin` 40 MB, and the
+rgl log builds terrain shaders at load) is the candidate, and it scales with map area, which is
+the "our map is twice vanilla's" lever if it holds. Naming them needs the engine's terrain
+pipeline, not the manifest.
+
+`taom.print_memory` with the new counters: `vertexBufferSysMem` is in BYTES and read **363 MB on
+the map** (`L-map`, 13,352 privMB) and **929 MB in the town** (`L-town`, 13,464 privMB). Geometry is
+under a tenth of the map's 4.4 GB and about a quarter of the town's, so both scenes are
+texture-and-buffer dominated in system memory. `GetGPUMemoryStats` returned all zeros: a dead
+surface in the shipping client, like the native block; render it as unavailable, not as zeros.
+Also from run 2: the loading screen for a NEW campaign stamps `GameInitializationFinished` at
+6,940 MB, 88 s in, and the loading screen exits at 9,571 MB 35 s later, so the +2.6 GB of the
+"campaign state" layer lands AFTER campaign initialization, in the session-launch and map-screen
+construction window, not in the object graph; character creation +767 MB again; the map
+settles +2.5 GB within 10 s of appearing.
+
+**Layer 2 bisected by the new `[SaveLoad]` phases (run 2, 17:29, reloading the autosave from
+inside the running campaign, so the old map is torn down first):**
+
+| phase | t | privMB | note |
+|---|---:|---:|---|
+| `LoadRequested` | +0 s | 14,104 (old map still up) | |
+| `LoadDataOk` | +4.0 s | | |
+| `ObjectsInitialized` | +8.0 s | | |
+| `GameLoaded` | +26.1 s | 10,001 | old map gone; the object graph deserialized in ~26 s |
+| `AllBehaviorDataLoaded` | +26.1 s | | 39 ms after `GameLoaded`: behavior data is instant |
+| `GameInitializationFinished` | +51.7 s | 10,002 | **25.6 s of CPU with +1 MB**: the `Campaign.OnInitialize` tail (RegisterEvents onward) allocates nothing |
+| loading screen exit | +58 s | 11,758 | session launch + map-screen construction: **7 s, +1.76 GB** |
+| `MapScreen` enter | +59 s | 11,400 | |
+| settled | +83 s | 14,720 | the map's own settle, +3.3 GB |
+
+So the "campaign state" layer is mostly the map screen being built, and the silent stretch #509
+saw is CPU, not allocation: 25.6 s here on a warm second load, 67 s this morning on the first load
+of the process. What runs in that stretch is the next thing to stamp (a `[SaveLoad]` phase around
+`OnSessionLaunched` and the settlement distance cache are the candidates). A second campaign in
+the same process settled 1.8 GB above the first (14,720 vs 12,9xx), the usual process-lifetime
+cost of a second game.
+
+**The inventory's 2.2 GB of managed heap is rooted, then released later, and the engine collects
+it:** run 2 opened the inventory once at 14,281 / heap 489 and closed at 17,285 / heap 2,694;
+`GameStateManager.OnPopState` ran its `Common.MemoryCleanupGC()` right after that line and the
+heap sat at 2,65x MB for 45 s (17:27:17 to 17:28:02), then read 484 MB at the save/load screen
+90 s after the close (an autosave and a state push, both of which end in an engine collection,
+sat in between). Something holds those objects for a minute or more after the screen is gone and
+lets go on its own; a UI texture or tableau cache with a delayed release is the candidate. Naming
+it needs a managed heap snapshot of the live process (PerfView `HeapSnapshot` works on .NET
+Framework) taken within a minute of an inventory close. The heap-release class that was built to
+"return" this memory could never have, and was removed.
+
+**Two process-lifetime numbers from run 2, and an exit stall.** Returning to the main menu from
+the campaign left the process at **10,273 MB** against the 6.6 GB cold menu floor, so 3.7 GB of
+the campaign's residency survives the return to menu, and a second campaign started in the same
+process settled 1.8 GB above the first (14,720 vs 12,9xx). Both are the usual cost of a second game
+in one process and both argue for a full restart between sessions on small machines. Exit to
+desktop then stalled for **96 s** between `Unregister tooltip for type: ExplainedNumber`
+(17:32:01.999) and `Exiting network manager...` (17:33:37.949) in `rgl_log_40408.txt`, with the
+process idle (0.4 s CPU in 3 s, 190 of 193 threads suspended, 3 waiting), TAOM's sampler still
+ticking every 10 s at a flat 10.05 GB, and TAOM's own unload not yet run, so the wait is inside the
+engine's exit sequence before module unload. It completed on its own; the teardown after it took
+under a second. **Resolved 17:55 the same day: Visual Studio was attached to `Bannerlord.exe`.** The
+next exit (the L1 ladder run, pid 67288) surfaced VS's "Exception thrown at 0x00007FFEA7ADE2B1
+(TaleWorlds.Native.dll): 0xC0000005 reading 0x000001B142000EE4" after the engine log had already
+printed "Managed Interface deleted", i.e. an access violation in the engine's native final cleanup
+(the `Non-Zero Device Reference Count` stage), which the debugger holds until Continue. Without a
+debugger the process just ends there, which is what player logs show. So the 96 s was the
+debugger, not the engine; the exit-time native fault itself is vanilla territory and not TAOM's to
+chase. Detach VS before timing anything at exit.
+
+**Graphics-settings diff (started 2026-09-12 evening).** Question: how much of the map's ~3.9 GB
+of load-time-generated buffers do the engine's own player-facing settings control? Baseline from
+`engine_config.txt`: `foliage_quality=4`, `terrain_quality=2`, `texture_quality=2`,
+`texture_budget=3` (`number_of_ragdolls=5`, `NumberOfCorpses=3`). Protocol: `G-hi` VMMap on the
+settled map at those values; foliage, terrain and texture quality to their minimums in Options,
+`G-lo` VMMap after a settle; quit, relaunch with the low values persisted, `G-lo2` VMMap, so the
+live switch and the from-launch effect are both measured; diff the region histograms.
+
+**Result (run 3, 2026-09-12 19:57 to 20:03, pid 54180, new campaign on the settled map):** `G-hi`
+12,780 MB at the baseline values; after setting foliage, terrain and texture quality to 0 in
+Options (no restart requested, values persisted to `engine_config.txt`), the map went **12,787 to
+9,734 MB within 70 s, a 3.05 GB drop**; `G-lo` VMMap: Private Data 11.72 to 8.64 GB (**-3.09 GB**),
+managed heap and mapped files unchanged. What vanished: the 16K vista region (341 MB), two 85 MB
+and two 64 MB texture regions, ~35 regions of ~32 MB, and more (4,452 MB of large regions gone,
+1,536 MB of smaller replacements appeared). So about three quarters of the map's 4.4 GB is under
+the engine's own player-facing settings, and the engine frees it on a live switch. This is the
+largest single lever found today and it needs no content change: a settings recommendation for
+small machines is a real mitigation now, and the per-setting split (below) says which slider.
+
+Per-setting split, same session, each a live switch followed by a 60 s settle:
+
+| step | foliage | terrain | texture | settled privMB | delta |
+|---|---:|---:|---:|---:|---:|
+| G-hi | 4 | 2 | 2 | 12,810 | |
+| all three to 0 | 0 | 0 | 0 | 9,734 | **-3,076** |
+| texture back to 2 | 0 | 0 | 2 | 12,052 | **+2,318**: texture quality is three quarters of the lever |
+| terrain back to 2 | 0 | 2 | 2 | 12,251 | **+199**: terrain quality is small on this map |
+| foliage back to 4 | 4 | 2 | 2 | 13,020 | **+769**: foliage is the second lever; back within 210 MB of the start |
+
+**Conclusion of the graphics-settings diff:** on this machine, on the settled campaign map, the
+three player-facing sliders control **~3.1 GB of the map's 4.4 GB**: texture quality 2.3 GB,
+foliage 0.77 GB, terrain 0.2 GB, all freed on a live switch with no restart. The vista and the
+large texture regions are what texture quality drops (the engine keeps lower mips resident at the
+lower setting). For a 16 GB machine, texture quality one step down is worth more than every TAOM
+content lever measured today combined, and it costs the player nothing but sharpness. The
+untouched remainder of the map (~1.3 GB, geometry 363 MB plus terrain and flora base data) and
+the 6.6 GB floor are what content work can still reach.
+
+**Next steps, in order (decided 2026-09-12 evening):**
+1. Phase 3, the menu-floor ladder (table above): four launches to the menu, one config edit and two
+   launcher unticks, all reversible.
+2. A `[SaveLoad]` stamp around `OnSessionLaunched` and the settlement distance-cache load, to split
+   the 25.6 s CPU stretch (#509's window).
+3. A PerfView heap snapshot within a minute of an inventory close, to name the 2.2 GB root.
+4. Render `GetGPUMemoryStats` as unavailable instead of zeros (formatter tweak), and give the
+   terrain/flora runtime-data hypothesis a test: read the map with flora density lowered in the
+   engine's own graphics options (a player-side setting, no content change) and diff the region
+   histogram again.
+
+**Menu-floor ladder, ready to run (each rung: launch, wait for the main menu, wait 60 s, quit; the
+number is the `[MemStation] enter screen='GauntletInitialScreen'` line, no campaign and no console
+needed).** TAOM's hard `DependedModules` are Native, SandBoxCore, Sandbox and CustomBattle only
+(`Main/_Module/SubModule.xml:10-14`), so the Armory and the map can be unticked in the launcher for a
+menu-only launch; the game would fail at campaign start without them, which the ladder never reaches.
+
+| Rung | Change (all reversible, scratch only) | What its delta names |
+|---|---|---|
+| L0 | nothing (the 6.6 GB reference) | measured three times 2026-09-12: enter 6,767 to 6,788, settled 6,565 to 6,600 after a minute |
+| L1 | in the DEPLOYED `Modules/TAOM/GUI/SpriteParts/Config.xml`, remove `<AlwaysLoad/>` from `ui_taom_bannericons`, `ui_taom` and `ui_taom_career_system` (the loading screen and the fonts keep theirs so the menu renders; `.bak-ladder` copy beside it, restored afterwards) | **RUN 2026-09-12 17:52: enter 7,018, settled 6,586. No measurable change against L0.** The three atlases' eager load is not in the floor; the lever is dead for the menu cell (their combined resident size is under the run-to-run spread of ~100 MB) |
+| L2 | launcher: untick `LOTRLOME_Armory` | **RUN 2026-09-12 18:00: enter 5,761, settled 5,620, so ~970 MB against L0's 6,586.** Verified out: the engine log mentions the Armory twice (launcher enumeration) against 70 in L1 (its XML and packs loading). The Armory's registration surface (items, action sets, skins, monsters, physics materials) is about a seventh of the menu floor |
+| L3 | launcher: untick `TAOM_Map` (Armory back on) | **RUN 2026-09-12 18:05: enter 6,285, settled 6,090, so ~500 MB against L0's 6,586.** Verified out (2 engine-log mentions vs 180). The map module's menu-time surface, before its scene is ever loaded |
+| L4 | launcher: untick both | **RUN 2026-09-12 18:15: enter 5,271, settled 5,169.** Additive: 5,169 + 966 + 496 = 6,631 against L0's 6,586, within the run-to-run spread |
+
+| L5 | VS launch profile "Bannerlord (L5 no TAOM main)" (`Main/Properties/launchSettings.json`): TAOM's main module out, Dependencies + Armory + map in. No `taom_debug` exists without TAOM, so the reading is the OS-side stamp | **RUN 2026-09-12 18:44: `L5-menu` stamp 6,003 MB** (verified: one engine-log mention of `Modules/TAOM/`, Armory 70, map 180). Against L0's OS-side stamp of 6,759 (4 min at the menu), TAOM main is ~0.6 to 0.75 GB |
+
+**Ladder result (2026-09-12, five launches, 50 minutes), the 6.6 GB menu floor attributed:**
+
+| slice | MB | from |
+|---|---:|---|
+| engine + vanilla modules + TAOM.Dependencies | ~4,400 | L4 (5,169) minus TAOM main; cross-checked by L5 = 4,400 + 970 + 500 = 5,870 vs 6,003 measured |
+| LOTRLOME_Armory | ~970 | L0 minus L2 |
+| TAOM (main module) | ~700 | L0 stamp minus L5 stamp |
+| TAOM_Map | ~500 | L0 minus L3 |
+| three TAOM sprite atlases' eager load | not measurable | L1 |
+
+TAOM's three modules add about 2.2 GB to the main menu; the other two thirds of the floor is the
+game itself. The Armory is the largest TAOM slice at the menu, ahead of the map module and of
+TAOM's own code and UI. Config restored and both modules reticked after L4; the L5 launch profile
+is an addition to a tracked file, keep or discard.
 
 **Derived numbers to compute and record:**
 

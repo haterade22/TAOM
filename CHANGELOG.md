@@ -33,6 +33,73 @@ in-scope read of the getter; the decision now takes the service), RCA
 `docs/reviews/rca-lord-party-templates-2026-09-12.md`. Owed: in-game check of both parties on a
 new campaign and of a loaded save keeping its rosters. `docs/features/lord-party-templates.md`.
 
+### feat(diagnostics): the memory probe splits mesh from texture, save-load phases carry memory, and a map-scene manifest names the assets
+
+Instruments the first live attribution run (the `docs(memory)` entry below) showed were missing,
+built to annotate the 14 GB rather than reduce it; nothing in the content changed.
+
+`taom.print_memory` now also reports `Utilities.GetVertexBufferChunkSystemMemoryUsage()` and the
+`GetGPUMemoryStats` split (total / render target / depth / SRV / buffer), because the engine's two
+string surfaces turned out to be one number each in the shipping client and could not say whether
+the map scene's 4.4 GB is geometry or textures. Both print as raw engine units; no managed caller
+formats them, so the unit is calibrated from the first live reading against VMMap instead of
+assumed. The same run caught the probe claiming `gpu dump written: <path>` for a file that existed
+nowhere (the engine call is void and writes nothing); a path is now reported only once the file
+exists, otherwise `gpu dump requested but no file appeared at: <path>`.
+
+`[SaveLoad]` gains `GameLoaded` and `GameInitializationFinished`, stamped from the two
+`MBSubModuleBase` overrides on the load attempt's own seq and clock, each carrying the
+`gc=/heapMB=/privMB=/wsMB=` tail that `[BattleLoad]` phases already carried (extracted into
+`ProcessMemoryTokens`, byte-identical). The run measured 95 s and +2.7 GB between
+`AllBehaviorDataLoaded` and the map screen with nothing in either log. On the installed engine
+`OnGameLoaded` fires before `LoadBehaviorData` and only for a saved campaign, so it brackets the
+behavior-data load from above; `OnGameInitializationFinished` fires after `RegisterEvents` on both
+paths and is the stamp that bisects the silent window, which is what #509 asked for after a
+10-minute stall in the same place on 2026-08-23.
+
+A heap release on heavy-screen close was built in the same pass and removed the same day. The
+inventory screen measured +2.9 GB per open with the managed heap staying at 2.6 GB between opens,
+and `ScreenManager` never collects on a plain `PopScreen`; but the Codex review read the actual
+close paths: inventory, party and character close through `GameStateManager.PopState`, whose
+`OnPopState` already ends with `Common.MemoryCleanupGC()` (installed v1.4.8,
+`GameStateManager.cs:306`; `OnPushState` too at `:278`). The release was a second full collection
+right before the engine's own, and the 2.6 GB survived the engine's collections, so it is rooted
+state rather than garbage. The layer checked was one below the one that mattered; RCA at
+`docs/reviews/rca-memory-instruments-2026-09-12.md`. Tests: formatter tokens and the
+never-fabricate paths, the shared token shape, the two new phases on the attempt clock. Suite
+8,771 green after the removal.
+
+Also added `tools/audit_map_scene_memory.py` (33 tests), an offline manifest of the campaign map
+scene's asset payload: textures, meshes, materials, collision bodies, prefabs and flora, decoded from
+the scene files and the tpac tables of contents across TAOM_Map, Native and SandBox, with resident
+bytes per asset and flags for editor-segment bloat and chains that exist only in `EmAssetPackages`.
+Main_map references 8.39 GB (TAOM_Map 2.34 GB textures + 1.73 GB meshes) against ~4.4 GB measured
+resident. Its sizes fingerprint VMMap: the 357,957,632 B private region in this morning's snapshot
+is `16K_Vista_02`'s mip chain plus 43,664 B, and the 24 regions of 22,413,312 B are 4096-square
+13-mip textures plus the same 43,664 B, so the engine holds whole mip chains in system memory and a
+region's size names the texture class. Runbook: `docs/investigations/native-commit-audit-2026-08.md`.
+
+First live use of the instruments the same evening (run 2, new campaign, Minas Tirith, reload):
+`vertexBufferSysMem` is bytes and reads 363 MB on the map and 929 MB in the town, so geometry is a
+small slice of both scenes; a VMMap taken inside the town diffs the map's large regions out at
+4,264 MB, of which only the vista names itself and ~90 regions of 27 to 85 MB match no packed
+texture (built at load, terrain and flora runtime data the likely owner); the `[SaveLoad]` phases
+split a load into 26 s of deserializing, 25.6 s of CPU with +1 MB, and 7 s / +1.76 GB of map-screen
+construction; the inventory's 2.2 GB of managed heap survives the engine's own collection and is
+released about 90 s later; `GetGPUMemoryStats` is all zeros in the shipping client; and exit to
+desktop stalled 96 s, idle, before completing (Visual Studio was attached and holding an exit-time
+native fault in the engine's final cleanup; not TAOM's). The menu-floor ladder ran the same
+evening, five launches verified by engine-log module counts (the fifth from a new
+`Main/Properties/launchSettings.json` profile that starts the game without TAOM's main module):
+the 6.6 GB main-menu floor is the engine and vanilla modules ~4.4 GB, the Armory ~0.97 GB, TAOM
+main ~0.7 GB and TAOM_Map ~0.5 GB, additive within the run-to-run spread, and the three TAOM sprite
+atlases' eager load is not measurable in it. Last, a graphics-settings diff on the settled map:
+setting the engine's own foliage, terrain and texture quality to their minimums dropped the map
+from 12,787 to 9,734 MB on a live switch with no restart (VMMap: the vista and the large texture
+regions gone), and switching them back one at a time split it as texture quality 2.3 GB, foliage
+0.77 GB, terrain 0.2 GB. About three quarters of the map scene's 4.4 GB is under sliders the player
+already has, which is the largest lever measured today and needs no content change. All in the
+runbook.
 
 ### fix(enlistment): the enlisted soldier never gets the Order of Battle screen and never holds a captaincy (#576)
 
