@@ -24,7 +24,8 @@ public sealed class CavalryPathPlanner : ICavalryPathPlanner
 
         var toTarget = targetPosition - cavPosition;
         var length = toTarget.Length;
-        if (length < TargetTooCloseLength) return false;
+        // Positive requirement: a NaN length must not reach the division and become the waypoint.
+        if (!(length >= TargetTooCloseLength)) return false;
 
         var dir = toTarget * (1f / length);
         var right = dir.RightVec();

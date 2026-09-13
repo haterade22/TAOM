@@ -194,4 +194,16 @@ public class CavalryPathPlannerTests
         Assert.IsTrue(_sut.TryGetReroutePoint(cav, target, new List<IFormationAdapter> { blocker }, out var waypoint));
         Assert.AreNotEqual(Vec2.Zero, waypoint);
     }
+
+    [TestMethod]
+    public void TryGetReroutePoint_NaNTargetPosition_ReturnsFalse()
+    {
+        // The distance gate is a positive requirement, so a NaN never reaches the division.
+        var friendlies = new List<IFormationAdapter> { MakeFormation(new Vec2(50f, 0f)) };
+
+        var result = _sut.TryGetReroutePoint(Vec2.Zero, new Vec2(float.NaN, 0f), friendlies, out var waypoint);
+
+        Assert.IsFalse(result);
+        Assert.AreEqual(Vec2.Zero, waypoint);
+    }
 }

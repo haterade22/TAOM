@@ -723,7 +723,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
     [SettingPropertyFloatingInteger("Charge Formation Strictness", 0.0f, 1.0f, "#0.00", Order = 2, RequireRestart = false,
-        HintText = "How tightly the cavalry line must form before charging AND before reform completes. 0 = launch immediately; 1 = wait until every unit is in perfect line. Default 0.7.")]
+        HintText = "How close riders must be to their slots before the line charges, and before a reform counts as done: the average rider may be 10 m off at 0, 4.4 m at the 0.7 default, 2 m at 1. Max Line-Up Seconds launches the charge regardless when it runs out.")]
     public float SmartCavalryChargeStrictness { get; set; } = 0.7f;
 
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
@@ -737,8 +737,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public float SmartCavalryLineSpacing { get; set; } = 1.2f;
 
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
-    [SettingPropertyBool("Smart Cavalry Debug Mode", Order = 5, RequireRestart = false,
-        HintText = "Show diagnostic [SmartCavalryAI] state-transition messages on the in-game HUD. Off = file log only.")]
+    [SettingPropertyFloatingInteger("Max Line-Up Seconds", 1f, 15f, "#0.0", Order = 5, RequireRestart = false,
+        HintText = "Longest the cavalry spend lining up before they charge anyway, and before they re-charge after a reform. Lower is snappier with a looser line. Default 4.")]
+    public float SmartCavalryMaxLineUpSeconds { get; set; } = 4f;
+
+    [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
+    [SettingPropertyBool("Smart Cavalry Debug Mode", Order = 6, RequireRestart = false,
+        HintText = "Also write every intercepted charge order and the state it produced to the TAOM log file. State transitions are logged regardless. Nothing is drawn on the HUD.")]
     public bool SmartCavalryDebug { get; set; } = false;
 
     // --- Performance / Dead Mount Cleanup ---

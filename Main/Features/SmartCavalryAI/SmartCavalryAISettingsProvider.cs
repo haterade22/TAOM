@@ -18,5 +18,8 @@ public sealed class SmartCavalryAISettingsProvider : ISmartCavalryAISettingsProv
     public float ChargeLineSpacing =>
         SettingClamp.Clamp(TaomSettings.Instance?.SmartCavalryLineSpacing, 1.2f, 0.8f, 3.0f);
 
+    public float MaxLineUpSeconds =>
+        SettingClamp.Clamp(TaomSettings.Instance?.SmartCavalryMaxLineUpSeconds, 4f, 1f, 15f);
+
     public bool IsDebugMode => TaomSettings.Instance?.SmartCavalryDebug ?? false;
 }

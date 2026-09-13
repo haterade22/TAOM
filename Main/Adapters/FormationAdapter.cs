@@ -4,6 +4,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Adapters.Models;
 using TAOM.Features.MixedFormations.Models;
+using TAOM.Features.SmartCavalryAI;
 
 namespace TAOM.Adapters;
 
@@ -37,6 +38,9 @@ public sealed class FormationAdapter : IFormationAdapter
 
     public bool RepresentativeIsCavalry =>
         _formation?.QuerySystem != null && _formation.QuerySystem.IsCavalryFormation;
+
+    // A null formation reads as AI-controlled so the cavalry machine never enters it.
+    public bool IsAIControlled => _formation?.IsAIControlled ?? true;
 
     public bool IsMoving =>
         _formation != null && _formation.GetMovementState() != MovementOrder.MovementStateEnum.Hold;
@@ -123,34 +127,31 @@ public sealed class FormationAdapter : IFormationAdapter
     public bool IsAligned(float strictness)
     {
         if (_formation == null || _formation.CountOfUnits < 2) return true;
+        var arrangement = _formation.Arrangement;
+        if (arrangement == null) return true;
 
-        // Single pass — sum + count for the average, AND collect projections so the
-        // second pass for max-deviation doesn't re-iterate the engine collection.
-        var right = _formation.Direction.RightVec();
-        var sumProj = 0f;
-        var count = 0;
+        // Distance from each rider to the arrangement slot the engine drives it toward under a
+        // Hold-type order (Move). Read straight from the arrangement, not through the public
+        // Formation.GetOrderPositionOfUnit: that method is prefixed by MixedFormations' Patch30
+        // (an adapter allocation per call), sends detached units to their detachment frame, and
+        // falls back to the rider's OWN position when the slot is off the navmesh, which would
+        // read as a distance of zero. A rider the arrangement has not placed yet is skipped.
         _alignmentScratch.Clear();
         foreach (var unit in _formation.UnitsWithoutLooseDetachedOnes)
         {
             if (unit is not Agent agent) continue;
-            var proj = Vec2.DotProduct(agent.Position.AsVec2, right);
-            _alignmentScratch.Add(proj);
-            sumProj += proj;
-            count++;
+            var slot = arrangement.GetWorldPositionOfUnitOrDefault(unit);
+            if (!slot.HasValue || !slot.Value.IsValid) continue;
+            _alignmentScratch.Add(agent.Position.AsVec2.Distance(slot.Value.AsVec2));
         }
-        if (count < 2) return true;
-
-        var avgProj = sumProj / count;
-        var maxDeviation = 0f;
-        for (var i = 0; i < _alignmentScratch.Count; i++)
-        {
-            var dev = System.Math.Abs(_alignmentScratch[i] - avgProj);
-            if (dev > maxDeviation) maxDeviation = dev;
-        }
-
-        var tolerance = 5f * (1f - strictness);
-        return maxDeviation < tolerance;
+        // No slot for anyone (ColumnFormation.GetWorldPositionOfUnitOrDefault is null for every
+        // unit): alignment cannot be measured, so let the line-up budget decide rather than
+        // reading "nothing to line up" as aligned.
+        if (_alignmentScratch.Count == 0) return false;
+        return LineAlignment.IsAligned(_alignmentScratch, strictness);
     }
 
+    // Shared across adapter instances on purpose: IsAligned runs on the mission tick, one
+    // formation at a time, and consumes the list before returning. Not safe to call concurrently.
     private static readonly System.Collections.Generic.List<float> _alignmentScratch = new();
 }

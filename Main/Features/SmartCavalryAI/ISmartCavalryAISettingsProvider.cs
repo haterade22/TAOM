@@ -12,5 +12,11 @@ public interface ISmartCavalryAISettingsProvider
     float ChargeFormationStrictness { get; }
     float ReformDistanceAfterCharge { get; }
     float ChargeLineSpacing { get; }
+
+    /// <summary>Longest the machine holds riders in a line-up (Forming) or a reform (Reforming)
+    /// before it proceeds regardless of alignment. The floor that keeps a hold state from ever
+    /// freezing the formation. Seconds, [1..15], default 4.</summary>
+    float MaxLineUpSeconds { get; }
+
     bool IsDebugMode { get; }
 }

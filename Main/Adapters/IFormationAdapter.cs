@@ -38,6 +38,12 @@ public interface IFormationAdapter
     /// <c>FormationQuerySystem.IsCavalryFormation</c> in v1.3.15.</summary>
     bool RepresentativeIsCavalry { get; }
 
+    /// <summary>True when the team AI commands this formation (<c>Formation.IsAIControlled</c>:
+    /// F6 delegation, an enlisted battle, or the player is dead). The cavalry state machine only
+    /// acts on orders the player gives, so it never enters such a formation and cancels itself
+    /// if a formation it drives becomes AI-controlled mid-cycle.</summary>
+    bool IsAIControlled { get; }
+
     /// <summary>True when the formation is in any non-Hold movement state (charge, move,
     /// retreat, charge-to-target). The complement of <c>IsHolding</c> with explicit
     /// semantics for callers that don't want to invert.</summary>
@@ -54,10 +60,11 @@ public interface IFormationAdapter
     /// commanded target.</summary>
     Vec2 CurrentPosition { get; }
 
-    /// <summary>True when the formation's units are tightly lined up perpendicular to
-    /// <see cref="Direction"/>, within a tolerance derived from
-    /// <paramref name="strictness"/> (0..1 — higher means tighter alignment required).
-    /// Used by the cavalry state machine to gate Forming→Charging and Reforming→Idle.</summary>
+    /// <summary>True when the formation's riders are close to their own arrangement slots:
+    /// the MEAN distance from each rider to <c>Formation.GetOrderPositionOfUnit</c> is under
+    /// <c>LineAlignment.Tolerance(strictness)</c> (10 m at 0, 4.4 m at 0.7, 2 m at 1). Only
+    /// meaningful under a Hold-type order (Move), which is when the state machine asks. Gates
+    /// Forming to Charging and Reforming to the next cycle.</summary>
     bool IsAligned(float strictness);
 
     // -- CompanionTactics extensions (Patch35) -----------------------------------

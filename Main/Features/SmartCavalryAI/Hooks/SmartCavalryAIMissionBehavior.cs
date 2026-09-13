@@ -59,7 +59,9 @@ public sealed class SmartCavalryAIMissionBehavior : MissionBehavior
     public override void OnMissionTick(float dt)
     {
         base.OnMissionTick(dt);
-        if (!_settings.IsEnabled) return;
+        // Off: skip the per-formation work, unless a cycle the toggle interrupted still needs
+        // handing back to a vanilla charge (the service tick does that, then this returns again).
+        if (!_settings.IsEnabled && !_service.HasActiveCycles) return;
         // Open-field-only. This gate is load-bearing at THIS level, not just in the service:
         // ApplyCollisionAvoidance below writes agent.SetMovementDirection directly, bypassing
         // ICavalryChargeService entirely, so the service-side gate cannot suppress it. Gating the
@@ -74,22 +76,19 @@ public sealed class SmartCavalryAIMissionBehavior : MissionBehavior
 
         foreach (var formation in team.FormationsIncludingEmpty)
         {
-            if (formation == null || formation.CountOfUnits == 0) continue;
-            if (!_cavCache.TryGetValue(formation, out var cav))
-            {
-                cav = new FormationAdapter(formation);
-                _cavCache[formation] = cav;
-            }
+            if (formation == null) continue;
+            // An emptied formation is never ticked again; forget its cycle or HasActiveCycles stays true.
+            if (formation.CountOfUnits == 0) { _service.CancelCharge(formation); continue; }
+            if (!_cavCache.TryGetValue(formation, out var cav)) _cavCache[formation] = cav = new FormationAdapter(formation);
+            if (!_commandCache.TryGetValue(formation, out var commands)) _commandCache[formation] = commands = new CavalryCommandAdapter(formation);
+
+            // Every live formation is ticked, cavalry or not: a cycle whose riders dismounted must
+            // still reach its exit. The service returns at once for a formation with no state.
+            _service.Tick(cav, commands, _battlefield, dt, time);
             if (!cav.RepresentativeIsCavalry) continue;
 
-            if (!_commandCache.TryGetValue(formation, out var commands))
-            {
-                commands = new CavalryCommandAdapter(formation);
-                _commandCache[formation] = commands;
-            }
-            _service.Tick(cav, commands, _battlefield, dt, time);
-
-            if (_settings.AvoidFriendlies)
+            // Player-command work only: the team AI's formations keep vanilla movement.
+            if (_settings.IsEnabled && _settings.AvoidFriendlies && !cav.IsAIControlled)
             {
                 ApplyCollisionAvoidance(formation, team);
             }

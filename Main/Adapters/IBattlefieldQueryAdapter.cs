@@ -16,7 +16,7 @@ public interface IBattlefieldQueryAdapter
     bool HasPlayerTeam { get; }
 
     /// <summary>True iff the current mission is an open-field battle
-    /// (<c>Mission.Current.IsFieldBattle</c> — team-AI type == FieldBattle). FALSE for
+    /// (<c>Mission.Current.IsFieldBattle</c>, team-AI type == FieldBattle). FALSE for
     /// siege, sally-out, hideout, naval, and every settlement/no-team-AI mission. The
     /// SmartCavalryAI line-charge feature is open-field-only, so it gates on this. False
     /// when there is no live mission.</summary>
@@ -27,6 +27,13 @@ public interface IBattlefieldQueryAdapter
     /// Used by reroute path-planning to find friendly infantry obstructing the charge line.
     /// Empty list when no PlayerTeam.</summary>
     IReadOnlyList<IFormationAdapter> GetFriendlyFormationsExcluding(object excludeFormationKey);
+
+    /// <summary>The nearest enemy formation with units, measured centroid to centroid from the
+    /// formation behind <paramref name="ownFormationKey"/>. Skips the own team and any team
+    /// friendly to it, and skips the own formation by reference (belt and braces for the
+    /// undocumented <c>IsFriendOf(self)</c> invariant). False when no enemy formation has units.
+    /// The token is opaque to services; only <c>ICavalryCommandAdapter</c> unwraps it.</summary>
+    bool TryGetNearestEnemyFormation(object ownFormationKey, out object? targetToken, out Vec2 position);
 
     /// <summary>Wraps <c>Mission.Current.GetNearbyAgents(center, radius, buffer)</c>. Returns
     /// snapshots so callers don't hold Agent references.</summary>

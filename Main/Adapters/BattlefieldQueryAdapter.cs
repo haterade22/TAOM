@@ -9,7 +9,7 @@ namespace TAOM.Adapters;
 public sealed class BattlefieldQueryAdapter : IBattlefieldQueryAdapter
 {
     // Per-instance, NOT static. The adapter is registered as Reuse.Singleton so there's
-    // exactly one instance — but a per-instance buffer means a future hypothetical
+    // exactly one instance, but a per-instance buffer means a future hypothetical
     // re-entrant call (or a second adapter created for a test) doesn't corrupt shared state.
     private readonly MBList<Agent> _scratchBuffer = new();
 
@@ -36,6 +36,39 @@ public sealed class BattlefieldQueryAdapter : IBattlefieldQueryAdapter
             result.Add(new FormationAdapter(formation));
         }
         return result;
+    }
+
+    public bool TryGetNearestEnemyFormation(object ownFormationKey, out object? targetToken, out Vec2 position)
+    {
+        targetToken = null;
+        position = Vec2.Zero;
+        var mission = Mission.Current;
+        if (mission == null || ownFormationKey is not Formation own || own.Team == null) return false;
+
+        Formation? best = null;
+        var bestDistance = float.MaxValue;
+        foreach (var team in mission.Teams)
+        {
+            // Explicit identity skip: IsFriendOf(self) is true in standard setups, but quirky
+            // multi-team custom battles have produced false (lessons/harmony-il.md, identity skips).
+            if (team == null || team == own.Team) continue;
+            if (team.IsFriendOf(own.Team)) continue;
+            foreach (var enemy in team.FormationsIncludingEmpty)
+            {
+                if (enemy == null || enemy.CountOfUnits == 0) continue;
+                if (ReferenceEquals(enemy, own)) continue;
+                var d = own.CurrentPosition.Distance(enemy.CurrentPosition);
+                if (d < bestDistance)
+                {
+                    bestDistance = d;
+                    best = enemy;
+                }
+            }
+        }
+        if (best == null) return false;
+        targetToken = best;
+        position = best.CurrentPosition;
+        return true;
     }
 
     public void GetNearbyAgents(Vec2 center, float radius, List<NearbyAgentSnapshot> output)

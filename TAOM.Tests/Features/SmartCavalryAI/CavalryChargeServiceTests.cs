@@ -3,16 +3,29 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.Library;
 using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Features.SmartCavalryAI.Models;
 
 namespace TAOM.Tests.Features.SmartCavalryAI;
 
+/// <summary>
+/// State machine v2 (#586). Geometry every test shares: the cavalry starts at the origin facing
+/// east, the target formation sits 100 m east. Forming is entered at t=0, the aligned tick at
+/// t=1 launches the charge, contact happens once the centroid is inside 10 m of the target
+/// measured along the charge direction, and the reform point is ReformDistance past the target
+/// plane (25 m by default, so x=125 for a head-on charge).
+/// </summary>
 [TestClass]
 public class CavalryChargeServiceTests
 {
+    private static readonly Vec2 East = new(1f, 0f);
+    private static readonly Vec2 Target = new(100f, 0f);
+    private static readonly Vec3 Target3 = new(100f, 0f, 0f, -1f);
+
     private ISmartCavalryAISettingsProvider _settings = null!;
     private ICavalryPathPlanner _pathPlanner = null!;
+    private IModLogger _logger = null!;
     private CavalryChargeService _sut = null!;
 
     [TestInitialize]
@@ -20,45 +33,66 @@ public class CavalryChargeServiceTests
     {
         _settings = Substitute.For<ISmartCavalryAISettingsProvider>();
         _pathPlanner = Substitute.For<ICavalryPathPlanner>();
+        _logger = Substitute.For<IModLogger>();
         _settings.IsEnabled.Returns(true);
         _settings.AvoidFriendlies.Returns(true);
         _settings.ChargeFormationStrictness.Returns(0.7f);
         _settings.ReformDistanceAfterCharge.Returns(25f);
         _settings.ChargeLineSpacing.Returns(1.2f);
+        _settings.MaxLineUpSeconds.Returns(4f);
         _settings.IsDebugMode.Returns(false);
-        _sut = new CavalryChargeService(_settings, _pathPlanner);
+        StubPlannerNoReroute();
+        _sut = new CavalryChargeService(_settings, _pathPlanner, _logger);
     }
 
+    // ============ helpers ============
+
     private static IFormationAdapter MakeCav(
-        Vec2 currentPosition,
-        Vec2 direction,
+        Vec2 position,
         bool isAligned = false,
-        object? formationKey = null)
+        object? formationKey = null,
+        bool isAIControlled = false)
     {
         var f = Substitute.For<IFormationAdapter>();
         f.FormationKey.Returns(formationKey ?? new object());
-        f.CurrentPosition.Returns(currentPosition);
-        f.Direction.Returns(direction);
+        f.CurrentPosition.Returns(position);
+        f.Direction.Returns(East);
         f.RepresentativeIsCavalry.Returns(true);
+        f.IsAIControlled.Returns(isAIControlled);
         f.IsAligned(Arg.Any<float>()).Returns(isAligned);
         return f;
     }
 
+    /// <summary>Same formation, moved. Keeps the key so the service finds its state.</summary>
+    private static IFormationAdapter Relocate(IFormationAdapter cav, Vec2 position, bool isAligned = false)
+        => MakeCav(position, isAligned, cav.FormationKey);
+
     private static ICavalryCommandAdapter MakeCommands(
-        Vec2 currentPosition,
-        Vec2 direction,
-        bool targetAlive = true)
+        bool targetAlive = true,
+        Vec2? liveTargetPosition = null,
+        bool moveSucceeds = true)
     {
         var c = Substitute.For<ICavalryCommandAdapter>();
-        c.CurrentPosition.Returns(currentPosition);
-        c.Direction.Returns(direction);
+        c.CurrentPosition.Returns(Vec2.Zero);
+        c.Direction.Returns(East);
         c.IsTargetAlive(Arg.Any<object>()).Returns(targetAlive);
+        c.IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>()).Returns(moveSucceeds);
+        c.GetTargetDepthAlong(Arg.Any<object>(), Arg.Any<Vec2>()).Returns(0f);
+        var live = liveTargetPosition ?? Target;
+        c.TryGetTargetPosition(Arg.Any<object>(), out Arg.Any<Vec2>())
+            .Returns(call =>
+            {
+                call[1] = live;
+                return targetAlive;
+            });
         return c;
     }
 
     private static IBattlefieldQueryAdapter MakeBattlefield(
         IReadOnlyList<IFormationAdapter>? friendlies = null,
-        bool isFieldBattle = true)
+        bool isFieldBattle = true,
+        object? nearestEnemy = null,
+        Vec2 nearestEnemyPosition = default)
     {
         var b = Substitute.For<IBattlefieldQueryAdapter>();
         b.HasPlayerTeam.Returns(true);
@@ -66,6 +100,13 @@ public class CavalryChargeServiceTests
         b.GetFriendlyFormationsExcluding(Arg.Any<object>())
             .Returns(friendlies ?? new List<IFormationAdapter>());
         b.GetGroundHeightAtPosition(Arg.Any<Vec3>()).Returns(0f);
+        b.TryGetNearestEnemyFormation(Arg.Any<object>(), out Arg.Any<object?>(), out Arg.Any<Vec2>())
+            .Returns(call =>
+            {
+                call[1] = nearestEnemy;
+                call[2] = nearestEnemyPosition;
+                return nearestEnemy != null;
+            });
         return b;
     }
 
@@ -99,64 +140,104 @@ public class CavalryChargeServiceTests
             });
     }
 
-    // ============ HandleChargeOrder ============
+    private static Vec2 Near(Vec2 expected) => Arg.Is<Vec2>(v => (v - expected).Length < 0.01f);
+
+    private static Vec3 NearXY(float x, float y) =>
+        Arg.Is<Vec3>(p => System.Math.Abs(p.x - x) < 0.01f && System.Math.Abs(p.y - y) < 0.01f);
+
+    /// <summary>Forming at t=0, aligned tick at t=1: the formation is Charging at its target.</summary>
+    private (IFormationAdapter cav, object target) DriveToCharging(
+        ICavalryCommandAdapter commands, IBattlefieldQueryAdapter battlefield)
+    {
+        var cav = MakeCav(Vec2.Zero, isAligned: true);
+        var target = new object();
+        _sut.HandleChargeOrder(cav, commands, battlefield, target, Target3, 0f);
+        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        return (cav, target);
+    }
+
+    /// <summary>Charging, then a contact tick at x=92 (t=2): PassingThrough toward x=125.</summary>
+    private (IFormationAdapter cav, object target) DriveToPassingThrough(
+        ICavalryCommandAdapter commands, IBattlefieldQueryAdapter battlefield)
+    {
+        var (cav, target) = DriveToCharging(commands, battlefield);
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        return (cav, target);
+    }
+
+    /// <summary>PassingThrough, then an arrival tick at x=124 (t=3): Reforming.</summary>
+    private (IFormationAdapter cav, object target) DriveToReforming(
+        ICavalryCommandAdapter commands, IBattlefieldQueryAdapter battlefield)
+    {
+        var (cav, target) = DriveToPassingThrough(commands, battlefield);
+        _sut.Tick(Relocate(cav, new Vec2(124f, 0f)), commands, battlefield, 0.1f, 3f);
+        Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
+        return (cav, target);
+    }
+
+    // ============ HandleChargeOrder: entry ============
 
     [TestMethod]
     public void HandleChargeOrder_FeatureDisabled_DoesNothing()
     {
         _settings.IsEnabled.Returns(false);
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
 
         Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().IssueStop();
         commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
         commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        commands.DidNotReceive().IssueCharge();
     }
 
     [TestMethod]
     public void HandleChargeOrder_NoBlockers_TransitionsToForming()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
+        var cav = MakeCav(Vec2.Zero);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
 
         Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
     }
 
     [TestMethod]
-    public void HandleChargeOrder_NoBlockers_AppliesChargeLineAndStops()
+    public void HandleChargeOrder_NoBlockers_AppliesChargeLineAndMovesToIt_NeverStops()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
+        // Stop is StandGround: riders hold their OWN positions and ignore the line. Only a Move
+        // (Hold state) puts them in their slots, so the line-up must be a Move 5 m ahead.
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
 
-        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
-        commands.Received(1).IssueStop();
+        commands.Received(1).ApplyChargeLine(NearXY(5f, 0f), Near(East), Arg.Any<int>());
+        commands.Received(1).IssueMoveTo(Near(new Vec2(5f, 0f)), Arg.Any<float>());
+        commands.DidNotReceive().IssueStop();
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_LineMoveRefused_HandsBackToVanillaCharge()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands(moveSucceeds: false);
+
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
     }
 
     [TestMethod]
     public void HandleChargeOrder_BlockersDetected_TransitionsToRerouting()
     {
         StubPlannerReroute(new Vec2(50f, -10f));
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
+        var cav = MakeCav(Vec2.Zero);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
 
         Assert.AreEqual(CavalryState.Rerouting, _sut.GetState(cav.FormationKey));
     }
@@ -165,26 +246,21 @@ public class CavalryChargeServiceTests
     public void HandleChargeOrder_BlockersDetected_IssuesMoveToWaypoint()
     {
         StubPlannerReroute(new Vec2(50f, -10f));
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
 
-        commands.Received(1).IssueMoveTo(new Vec2(50f, -10f), Arg.Any<float>());
+        commands.Received(1).IssueMoveTo(Near(new Vec2(50f, -10f)), Arg.Any<float>());
     }
 
     [TestMethod]
     public void HandleChargeOrder_AvoidFriendliesOff_SkipsPathPlanner_GoesToForming()
     {
         _settings.AvoidFriendlies.Returns(false);
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
+        var cav = MakeCav(Vec2.Zero);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
 
         Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
         _pathPlanner.DidNotReceive()
@@ -195,323 +271,915 @@ public class CavalryChargeServiceTests
     }
 
     [TestMethod]
-    public void HandleChargeOrder_StoresOriginalTargetToken_ForRerouting()
-    {
-        StubPlannerReroute(new Vec2(50f, -10f));
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
-
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
-
-        // After waypoint reach, IssueChargeToTarget should be called with the SAME token.
-        var cavAtWaypoint = MakeCav(new Vec2(50f, -10f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        var commands2 = MakeCommands(new Vec2(50f, -10f), new Vec2(1f, 0f));  // arrived at waypoint
-        _sut.Tick(cavAtWaypoint, commands2, battlefield, dt: 0.1f, currentMissionTime: 1f);
-        commands2.Received(1).IssueChargeToTarget(target);
-    }
-
-    [TestMethod]
     public void HandleChargeOrder_PassesChargeLineSpacingToCommands()
     {
         _settings.ChargeLineSpacing.Returns(2.4f);
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
 
         commands.Received(1).ApplyChargeLine(
             Arg.Any<Vec3>(), Arg.Any<Vec2>(),
             Arg.Is<int>(s => s == 2));  // round(2.4f) == 2
     }
 
-    // ============ Tick: Forming → Charging ============
+    [TestMethod]
+    public void HandleChargeOrder_ZeroLengthDirection_DoesNotEnterFormingOrIssueCommands()
+    {
+        var cav = MakeCav(new Vec2(50f, 50f));
+        var commands = MakeCommands();
+
+        // Target at the same position as the cavalry: no direction to line up along.
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(),
+            new Vec3(50.5f, 50f, 0f, -1f), 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_NonCavalryFormation_DoesNothing()
+    {
+        var cav = Substitute.For<IFormationAdapter>();
+        cav.FormationKey.Returns(new object());
+        cav.RepresentativeIsCavalry.Returns(false);
+        cav.CurrentPosition.Returns(Vec2.Zero);
+        cav.Direction.Returns(East);
+
+        _sut.HandleChargeOrder(cav, MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_AIControlledFormation_DoesNothing()
+    {
+        // F6 delegation, an enlisted battle, a dead player: the team AI's orders are not ours.
+        var cav = MakeCav(Vec2.Zero, isAIControlled: true);
+        var commands = MakeCommands();
+
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
+        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_NoPlayerTeam_DoesNothing()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var battlefield = Substitute.For<IBattlefieldQueryAdapter>();
+        battlefield.HasPlayerTeam.Returns(false);
+        // Explicit so this test isolates the HasPlayerTeam guard only: NSubstitute's bool default
+        // would otherwise leave IsFieldBattle false and pass for the wrong reason.
+        battlefield.IsFieldBattle.Returns(true);
+
+        _sut.HandleChargeOrder(cav, MakeCommands(), battlefield, new object(), Target3, 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_NotFieldBattle_DoesNothing()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(isFieldBattle: false), new object(), Target3, 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
+    }
+
+    // ============ HandleChargeOrder: a second F3 means "charge now" ============
+
+    [TestMethod]
+    public void HandleChargeOrder_WhileForming_JumpsToChargingWithNewTarget()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var first = new object();
+        var second = new object();
+        _sut.HandleChargeOrder(cav, commands, battlefield, first, Target3, 0f);
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+
+        _sut.HandleChargeOrder(cav, commands, battlefield, second, new Vec3(0f, 100f, 0f, -1f), 0.5f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(second);
+        commands.DidNotReceive().IssueChargeToTarget(first);
+        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_WhileForming_ChargeNowTracksTheNewTargetDirection()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var battlefield = MakeBattlefield();
+        var north = new Vec2(0f, 100f);
+        var commands = MakeCommands(liveTargetPosition: north);
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(0f, 100f, 0f, -1f), 0.5f);
+
+        // Contact is measured along the NEW direction (north): x=0, y=92 is 8 m short.
+        _sut.Tick(Relocate(cav, new Vec2(0f, 92f)), commands, battlefield, 0.1f, 1f);
+
+        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueMoveTo(Near(new Vec2(0f, 125f)), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_WhileReforming_JumpsToCharging()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToReforming(commands, battlefield);
+        var second = new object();
+
+        _sut.HandleChargeOrder(Relocate(cav, new Vec2(124f, 0f)), commands, battlefield, second, Target3, 3.5f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(second);
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_WhileRerouting_JumpsToChargingWithNewTarget()
+    {
+        StubPlannerReroute(new Vec2(50f, -10f));
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
+        Assert.AreEqual(CavalryState.Rerouting, _sut.GetState(cav.FormationKey));
+        var second = new object();
+
+        _sut.HandleChargeOrder(cav, commands, battlefield, second, Target3, 0.5f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(second);
+    }
+
+    // ============ Forming ============
 
     [TestMethod]
     public void Tick_FormingAndAligned_TransitionsToCharging()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero, isAligned: true);
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
         var target = new object();
+        _sut.HandleChargeOrder(cav, commands, battlefield, target, Target3, 0f);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, dt: 0.1f, currentMissionTime: 1f);
+        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
 
         Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
         commands.Received(1).IssueChargeToTarget(target);
     }
 
     [TestMethod]
-    public void Tick_FormingAndNotAligned_StaysForming()
+    public void Tick_FormingNotAlignedBeforeMaxLineUp_StaysForming()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: false);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero, isAligned: false);
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
+        _sut.Tick(cav, commands, battlefield, 0.1f, 3.9f);
 
         Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+    }
+
+    [TestMethod]
+    public void Tick_FormingNotAlignedAfterMaxLineUp_ChargesAnyway()
+    {
+        // The floor: a line that will not form must not hold the formation. 4 s, then go.
+        var cav = MakeCav(Vec2.Zero, isAligned: false);
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var target = new object();
+        _sut.HandleChargeOrder(cav, commands, battlefield, target, Target3, 0f);
+
+        _sut.Tick(cav, commands, battlefield, 0.1f, 4f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(target);
     }
 
     [TestMethod]
     public void Tick_FormingUsesChargeFormationStrictness()
     {
         _settings.ChargeFormationStrictness.Returns(0.9f);
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero);
         cav.IsAligned(0.9f).Returns(true);
         cav.IsAligned(Arg.Is<float>(f => f != 0.9f)).Returns(false);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
         _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
 
         Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
         cav.Received().IsAligned(0.9f);
     }
 
-    // ============ Tick: Charging → PassingThrough ============
-
     [TestMethod]
-    public void Tick_ChargingAndDistanceLessThan10_TransitionsToPassingThrough()
+    public void Tick_FormingAndTargetDead_RetargetsNearestEnemyAndRelines()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
+        var cav = MakeCav(Vec2.Zero, isAligned: true);
+        var commands = MakeCommands(targetAlive: false);
+        var replacement = new object();
+        var battlefield = MakeBattlefield(nearestEnemy: replacement, nearestEnemyPosition: new Vec2(0f, 100f));
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);  // → Charging
+        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
 
-        // Move cav to within 10m of target
-        var cav2 = MakeCav(new Vec2(95f, 0f), new Vec2(1f, 0f), isAligned: true, formationKey: cav.FormationKey);
-        var commands2 = MakeCommands(new Vec2(95f, 0f), new Vec2(1f, 0f));
-        _sut.Tick(cav2, commands2, battlefield, 0.1f, 2f);
-
-        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        // A new line toward the replacement (north), not a charge at a formation that is gone.
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.Received(1).ApplyChargeLine(NearXY(0f, 5f), Near(new Vec2(0f, 1f)), Arg.Any<int>());
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+        commands.DidNotReceive().IssueCharge();
     }
 
     [TestMethod]
-    public void Tick_ChargingAndDistanceGreaterThan10_StaysCharging()
+    public void Tick_FormingAndTargetDeadNoEnemyLeft_HandsBackToVanillaCharge()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero, isAligned: true);
+        var commands = MakeCommands(targetAlive: false);
         var battlefield = MakeBattlefield();
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);  // → Charging
+        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
 
-        // Cav at midpoint, distance ~50
-        var cav2 = MakeCav(new Vec2(50f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        var commands2 = MakeCommands(new Vec2(50f, 0f), new Vec2(1f, 0f));
-        _sut.Tick(cav2, commands2, battlefield, 0.1f, 2f);
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+    }
+
+    // ============ Charging ============
+
+    [TestMethod]
+    public void Tick_ChargingWithinContactAlongChargeDir_MovesToReformPointFacingEnemy()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+
+        // 8 m short of the target along the charge direction: contact.
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        // Reform point: 25 m past the target plane, on the far side, facing back west.
+        commands.Received(1).IssueMoveTo(Near(new Vec2(125f, 0f)), Arg.Any<float>());
+        commands.Received(1).ApplyChargeLine(NearXY(125f, 0f), Near(new Vec2(-1f, 0f)), Arg.Any<int>());
+        commands.DidNotReceive().IssueStop();
+    }
+
+    [TestMethod]
+    public void Tick_ChargingBeyondContact_StaysCharging()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(50f, 0f)), commands, battlefield, 0.1f, 2f);
 
         Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueMoveTo(Near(new Vec2(125f, 0f)), Arg.Any<float>());
     }
 
-    // ============ Tick: PassingThrough → Reforming ============
-
     [TestMethod]
-    public void Tick_PassingThroughAndDistanceGreaterThanReform_TransitionsToReforming()
+    public void Tick_ChargingUsesLiveTargetPosition_NotSnapshot()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        // The order named x=100, but the enemy has advanced to x=60. Contact is against x=60.
+        var commands = MakeCommands(liveTargetPosition: new Vec2(60f, 0f));
         var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
 
-        // HandleChargeOrder → Forming, then Tick → Charging, then Tick at <10m → PassingThrough
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);  // → Charging
-        var cav2 = MakeCav(new Vec2(95f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        _sut.Tick(cav2, MakeCommands(new Vec2(95f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 2f);  // → PassingThrough
+        _sut.Tick(Relocate(cav, new Vec2(52f, 0f)), commands, battlefield, 0.1f, 2f);
 
-        // Move to 30m past target. ReformDistanceAfterCharge = 25.
-        var cav3 = MakeCav(new Vec2(130f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        var commands3 = MakeCommands(new Vec2(130f, 0f), new Vec2(1f, 0f));
-        _sut.Tick(cav3, commands3, battlefield, 0.1f, 3f);
-
-        Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
-        commands3.Received(1).IssueStop();
+        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueMoveTo(Near(new Vec2(85f, 0f)), Arg.Any<float>());
     }
 
     [TestMethod]
-    public void Tick_PassingThroughUsesReformDistanceAfterChargeSetting()
+    public void Tick_ChargingFlankOffset_ContactUsesChargePlaneAndKeepsLateralOffset()
+    {
+        // 30 m off the enemy centre but 5 m short of its plane: that is contact for a flank
+        // charge, and the riders ride straight on rather than converging on the centre.
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(95f, 30f)), commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueMoveTo(Near(new Vec2(125f, 30f)), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Tick_ChargingAndTargetDead_RetargetsAndReissuesChargeToTarget()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, target) = DriveToCharging(commands, battlefield);
+        var replacement = new object();
+        commands.IsTargetAlive(target).Returns(false);
+        commands.IsTargetAlive(replacement).Returns(true);
+        var battlefieldWithEnemy = MakeBattlefield(nearestEnemy: replacement, nearestEnemyPosition: new Vec2(150f, 0f));
+
+        _sut.Tick(Relocate(cav, new Vec2(50f, 0f)), commands, battlefieldWithEnemy, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(replacement);
+        commands.DidNotReceive().IssueCharge();
+    }
+
+    [TestMethod]
+    public void Tick_ChargingAndTargetDeadNoEnemyLeft_HandsBackToVanillaCharge()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, target) = DriveToCharging(commands, battlefield);
+        commands.IsTargetAlive(target).Returns(false);
+
+        _sut.Tick(Relocate(cav, new Vec2(50f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
+    }
+
+    [TestMethod]
+    public void Tick_ChargingReformMoveRefused_HandsBackToVanillaCharge()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        commands.IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>()).Returns(false);
+
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
+    }
+
+    [TestMethod]
+    public void Tick_ChargingContact_ReadsReformDistanceAfterCharge()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        _settings.ClearReceivedCalls();
+
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        _ = _settings.Received().ReformDistanceAfterCharge;
+    }
+
+    [TestMethod]
+    public void Tick_ChargingContact_UsesReformDistanceAfterChargeSetting()
     {
         _settings.ReformDistanceAfterCharge.Returns(50f);
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
 
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
-        var cav2 = MakeCav(new Vec2(95f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        _sut.Tick(cav2, MakeCommands(new Vec2(95f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 2f);
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
 
-        // 30m past target — under custom 50m threshold; should NOT reform yet
-        var cav3 = MakeCav(new Vec2(130f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        _sut.Tick(cav3, MakeCommands(new Vec2(130f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 3f);
+        commands.Received(1).IssueMoveTo(Near(new Vec2(150f, 0f)), Arg.Any<float>());
+    }
+
+    // ============ PassingThrough ============
+
+    [TestMethod]
+    public void Tick_PassingThroughArrivedAtReformPoint_TransitionsToReforming_NoStop()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToPassingThrough(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(124f, 0f)), commands, battlefield, 0.1f, 3f);
+
+        Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueStop();
+    }
+
+    [TestMethod]
+    public void Tick_PassingThroughNotArrivedBeforeTimeout_StaysPassingThrough()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToPassingThrough(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(105f, 0f)), commands, battlefield, 0.1f, 7f);
+
         Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueCharge();
+    }
 
-        // 60m past — over threshold; should reform
-        var cav4 = MakeCav(new Vec2(160f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        _sut.Tick(cav4, MakeCommands(new Vec2(160f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 4f);
+    [TestMethod]
+    public void Tick_PassingThroughTimedOut_HandsBackToVanillaCharge()
+    {
+        // Bogged down inside the enemy for 10 s: let vanilla have them.
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToPassingThrough(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(105f, 0f)), commands, battlefield, 0.1f, 12f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
+    }
+
+    // ============ Reforming ============
+
+    [TestMethod]
+    public void Tick_ReformingAligned_StartsNextCycleTowardNearestEnemy()
+    {
+        var commands = MakeCommands();
+        var next = new object();
+        var battlefield = MakeBattlefield(nearestEnemy: next, nearestEnemyPosition: new Vec2(200f, 0f));
+        var (cav, _) = DriveToReforming(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(125f, 0f), isAligned: true), commands, battlefield, 0.1f, 4f);
+
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.Received(1).ApplyChargeLine(NearXY(130f, 0f), Near(East), Arg.Any<int>());
+        commands.Received(1).IssueMoveTo(Near(new Vec2(130f, 0f)), Arg.Any<float>());
+
+        // And the new cycle charges the NEW target once the line forms.
+        _sut.Tick(Relocate(cav, new Vec2(130f, 0f), isAligned: true), commands, battlefield, 0.1f, 5f);
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(next);
+    }
+
+    [TestMethod]
+    public void Tick_ReformingNotAlignedBeforeTimeout_StaysReforming()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield(nearestEnemy: new object(), nearestEnemyPosition: new Vec2(200f, 0f));
+        var (cav, _) = DriveToReforming(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(125f, 0f), isAligned: false), commands, battlefield, 0.1f, 5f);
+
         Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
     }
 
-    // ============ Tick: Reforming → Idle (THE BUG-FIX REGRESSION TEST) ============
+    [TestMethod]
+    public void Tick_ReformingTimedOut_StartsNextCycle()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield(nearestEnemy: new object(), nearestEnemyPosition: new Vec2(200f, 0f));
+        var (cav, _) = DriveToReforming(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(125f, 0f), isAligned: false), commands, battlefield, 0.1f, 7f);
+
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+    }
 
     [TestMethod]
-    public void Tick_ReformingAndAligned_TransitionsToIdle()
+    public void Tick_ReformingNoEnemyLeft_HandsBackToVanillaCharge()
     {
-        // Set strictness to 0.9 — original (decompiled) code used hardcoded 0.5 here.
-        // Verifies our fix: Reforming honors ChargeFormationStrictness.
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToReforming(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(125f, 0f), isAligned: true), commands, battlefield, 0.1f, 4f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
+    }
+
+    [TestMethod]
+    public void Tick_ReformingUsesChargeFormationStrictness()
+    {
+        // The port's decompile baseline hardcoded 0.5f here; the setting must be what is read.
         _settings.ChargeFormationStrictness.Returns(0.9f);
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        cav.IsAligned(0.9f).Returns(true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield(nearestEnemy: new object(), nearestEnemyPosition: new Vec2(200f, 0f));
+        var (cav, _) = DriveToReforming(commands, battlefield);
+        var reforming = Relocate(cav, new Vec2(125f, 0f));
+        reforming.IsAligned(0.9f).Returns(true);
+        reforming.IsAligned(Arg.Is<float>(f => f != 0.9f)).Returns(false);
 
-        // Drive to Reforming
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);  // → Charging
-        var cavClose = MakeCav(new Vec2(95f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        cavClose.IsAligned(Arg.Any<float>()).Returns(true);
-        _sut.Tick(cavClose, MakeCommands(new Vec2(95f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 2f);  // → PassingThrough
-        var cavFar = MakeCav(new Vec2(130f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        cavFar.IsAligned(Arg.Any<float>()).Returns(true);
-        _sut.Tick(cavFar, MakeCommands(new Vec2(130f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 3f);  // → Reforming
+        _sut.Tick(reforming, commands, battlefield, 0.1f, 4f);
 
-        var cavReform = MakeCav(new Vec2(140f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        cavReform.IsAligned(0.9f).Returns(true);
-        _sut.Tick(cavReform, MakeCommands(new Vec2(140f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 4f);
-
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        cavReform.Received().IsAligned(0.9f);  // proves we used the setting, not 0.5f
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        reforming.Received().IsAligned(0.9f);
     }
 
-    [TestMethod]
-    public void Tick_ReformingAndNotAligned_StaysReforming()
-    {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        cav.IsAligned(Arg.Any<float>()).Returns(true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-
-        // Drive to Reforming
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
-        var cavClose = MakeCav(new Vec2(95f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        cavClose.IsAligned(Arg.Any<float>()).Returns(true);
-        _sut.Tick(cavClose, MakeCommands(new Vec2(95f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 2f);
-        var cavFar = MakeCav(new Vec2(130f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        cavFar.IsAligned(Arg.Any<float>()).Returns(true);
-        _sut.Tick(cavFar, MakeCommands(new Vec2(130f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 3f);
-        Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
-
-        // Now NOT aligned during reform
-        var cavReform = MakeCav(new Vec2(140f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        cavReform.IsAligned(Arg.Any<float>()).Returns(false);
-        _sut.Tick(cavReform, MakeCommands(new Vec2(140f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 4f);
-
-        Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
-    }
-
-    // ============ Tick: Rerouting ============
+    // ============ Rerouting ============
 
     [TestMethod]
-    public void Tick_ReroutingAndWaypointReached_AndTargetAlive_TransitionsToIdleAndReissuesCharge()
+    public void Tick_ReroutingWaypointReached_TargetAlive_InitiatesLineChargeTowardLiveTarget()
     {
         StubPlannerReroute(new Vec2(50f, -10f));
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
         var target = new object();
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, battlefield, target, Target3, 0f);
 
-        // Move to within 10m of waypoint
-        var cavAtWaypoint = MakeCav(new Vec2(50f, -10f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        var commandsAtWaypoint = MakeCommands(new Vec2(50f, -10f), new Vec2(1f, 0f), targetAlive: true);
-        _sut.Tick(cavAtWaypoint, commandsAtWaypoint, battlefield, 0.1f, 1f);
+        _sut.Tick(Relocate(cav, new Vec2(50f, -10f)), commands, battlefield, 0.1f, 1f);
 
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commandsAtWaypoint.Received(1).IssueChargeToTarget(target);
+        // The reroute leads INTO the line charge (Forming), not straight to a bare ChargeToTarget.
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+
+        // Once the line forms, the charge goes at the ORIGINAL target token.
+        _sut.Tick(Relocate(cav, new Vec2(55f, -9f), isAligned: true), commands, battlefield, 0.1f, 2f);
+        commands.Received(1).IssueChargeToTarget(target);
     }
 
     [TestMethod]
-    public void Tick_ReroutingAndWaypointReached_TargetDead_TransitionsToIdleNoCharge()
+    public void Tick_ReroutingWaypointReached_TargetDeadNoEnemyLeft_HandsBackToVanillaCharge()
     {
         StubPlannerReroute(new Vec2(50f, -10f));
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands(targetAlive: false);
         var battlefield = MakeBattlefield();
-        var target = new object();
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
 
-        var cavAtWaypoint = MakeCav(new Vec2(50f, -10f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        var commandsAtWaypoint = MakeCommands(new Vec2(50f, -10f), new Vec2(1f, 0f), targetAlive: false);
-        _sut.Tick(cavAtWaypoint, commandsAtWaypoint, battlefield, 0.1f, 1f);
+        _sut.Tick(Relocate(cav, new Vec2(50f, -10f)), commands, battlefield, 0.1f, 1f);
 
         Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commandsAtWaypoint.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+        commands.Received(1).IssueCharge();
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+    }
+
+    [TestMethod]
+    public void Tick_ReroutingWaypointReached_TargetDead_RetargetsNearestEnemy()
+    {
+        StubPlannerReroute(new Vec2(50f, -10f));
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands(targetAlive: false);
+        var battlefield = MakeBattlefield(nearestEnemy: new object(), nearestEnemyPosition: new Vec2(50f, 90f));
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
+
+        _sut.Tick(Relocate(cav, new Vec2(50f, -10f)), commands, battlefield, 0.1f, 1f);
+
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Near(new Vec2(0f, 1f)), Arg.Any<int>());
     }
 
     [TestMethod]
     public void Tick_ReroutingWaypointNotReached_StaysRerouting()
     {
         StubPlannerReroute(new Vec2(50f, -10f));
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
 
-        var cavMidway = MakeCav(new Vec2(20f, -3f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        var commandsMidway = MakeCommands(new Vec2(20f, -3f), new Vec2(1f, 0f));
-        _sut.Tick(cavMidway, commandsMidway, battlefield, 0.1f, 1f);
+        _sut.Tick(Relocate(cav, new Vec2(20f, -3f)), commands, battlefield, 0.1f, 1f);
 
         Assert.AreEqual(CavalryState.Rerouting, _sut.GetState(cav.FormationKey));
     }
 
-    // ============ Idle Tick ============
+    [TestMethod]
+    public void Tick_ReroutingTimedOut_InitiatesLineChargeAnyway()
+    {
+        // A waypoint the engine clamped out of reach must not hold the formation: 12 s, then go.
+        StubPlannerReroute(new Vec2(50f, -10f));
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
+
+        _sut.Tick(Relocate(cav, new Vec2(20f, -3f)), commands, battlefield, 0.1f, 12f);
+
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+    }
+
+    // ============ Cancel and AI control ============
 
     [TestMethod]
-    public void Tick_IdleState_DoesNothing()
+    public void CancelCharge_ActiveState_ResetsToIdleWithoutOrders()
     {
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var commands = MakeCommands();
         var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        commands.ClearReceivedCalls();
+
+        _sut.CancelCharge(cav.FormationKey);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceiveWithAnyArgs().IssueCharge();
+        commands.DidNotReceiveWithAnyArgs().IssueStop();
+        commands.DidNotReceiveWithAnyArgs().IssueMoveTo(default, default);
+        commands.DidNotReceiveWithAnyArgs().IssueChargeToTarget(default!);
+    }
+
+    [TestMethod]
+    public void CancelCharge_UnknownKey_DoesNothing()
+    {
+        _sut.CancelCharge(new object());
+        _sut.CancelCharge(null!);
+    }
+
+    [TestMethod]
+    public void CancelCharge_ThenTick_DoesNotResumeTheMachine()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        _sut.CancelCharge(cav.FormationKey);
+        commands.ClearReceivedCalls();
+
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceiveWithAnyArgs().IssueMoveTo(default, default);
+    }
+
+    [TestMethod]
+    public void Tick_AIControlledFormationWithState_CancelsWithoutOrders()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        commands.ClearReceivedCalls();
+        var delegated = MakeCav(new Vec2(92f, 0f), isAligned: true, formationKey: cav.FormationKey, isAIControlled: true);
+
+        _sut.Tick(delegated, commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceiveWithAnyArgs().IssueMoveTo(default, default);
+        commands.DidNotReceiveWithAnyArgs().IssueCharge();
+    }
+
+    // ============ Toggle flipped off mid-cycle ============
+
+    [TestMethod]
+    public void Tick_FeatureDisabledMidCycle_HandsBackToVanillaCharge()
+    {
+        // The behavior keeps ticking while HasActiveCycles is true, so a Move this machine issued
+        // is never left standing after the player turns the feature off.
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), Target3, 0f);
+        Assert.IsTrue(_sut.HasActiveCycles);
+        _settings.IsEnabled.Returns(false);
 
         _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
 
         Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().IssueStop();
-        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
-        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
-        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        Assert.IsFalse(_sut.HasActiveCycles);
+        commands.Received(1).IssueCharge();
     }
 
-    // ============ OnMissionEnd ============
+    [TestMethod]
+    public void HasActiveCycles_NoStateOrIdleOnly_IsFalse()
+    {
+        Assert.IsFalse(_sut.HasActiveCycles);
+        var commands = MakeCommands();
+        var (cav, _) = DriveToCharging(commands, MakeBattlefield());
+        _sut.CancelCharge(cav.FormationKey);
+        Assert.IsFalse(_sut.HasActiveCycles);
+    }
+
+    // ============ Engine re-entry and geometry pins ============
+
+    [TestMethod]
+    public void HandleChargeOrder_WhileCharging_RetargetsWithoutRelining()
+    {
+        // Formation.Tick substitutes a plain Charge when a ChargeToTarget's target empties; the
+        // postfix routes it here as a charge order mid-cycle. It must re-target, not re-line.
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        var replacement = new object();
+
+        _sut.HandleChargeOrder(Relocate(cav, new Vec2(40f, 0f)), commands, battlefield, replacement, Target3, 1.5f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(replacement);
+        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void HandleChargeOrder_NaNTargetPosition_DoesNotEnterFormingOrIssueCommands()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(),
+            new Vec3(float.NaN, 0f, 0f, -1f), 0f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Tick_ChargingTargetMovedLaterally_ReformPointClearsTheLiveEnemyPlane()
+    {
+        // The charge direction is frozen at line time. An enemy that slides 40 m north during the
+        // charge is chased by vanilla's own ChargeToTarget steering, so the centroid follows it;
+        // the reform point then sits 25 m past the plane through the LIVE enemy centre along the
+        // frozen axis, at the centroid's own lateral offset. Pinned as the documented trade-off.
+        var commands = MakeCommands(liveTargetPosition: new Vec2(100f, 40f));
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(92f, 38f)), commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.PassingThrough, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueMoveTo(Near(new Vec2(125f, 38f)), Arg.Any<float>());
+    }
+
+    // ============ The player's targeted charge (Patch31b -> RetargetCycle) ============
+
+    [TestMethod]
+    public void RetargetCycle_WhileForming_RedrawsTheLineTowardTheNamedTarget()
+    {
+        // Vanilla's targeted charge is a plain Charge (handled at the nearest enemy, A) followed by
+        // SetTargetFormation(B). The Forming line must be redrawn at B and the charge go to B.
+        var cav = MakeCav(Vec2.Zero, isAligned: true);
+        var commands = MakeCommands(liveTargetPosition: new Vec2(0f, 100f));
+        var battlefield = MakeBattlefield();
+        var nearest = new object();
+        var named = new object();
+        _sut.HandleChargeOrder(cav, commands, battlefield, nearest, Target3, 0f);
+
+        _sut.RetargetCycle(cav, commands, battlefield, named, new Vec3(0f, 100f, 0f, -1f), 0f);
+
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.Received(1).ApplyChargeLine(NearXY(0f, 5f), Near(new Vec2(0f, 1f)), Arg.Any<int>());
+        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
+        commands.Received(1).IssueChargeToTarget(named);
+        commands.DidNotReceive().IssueChargeToTarget(nearest);
+    }
+
+    [TestMethod]
+    public void RetargetCycle_WhileCharging_ReissuesTheChargeAtTheNamedTarget()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, nearest) = DriveToCharging(commands, battlefield);
+        var named = new object();
+
+        _sut.RetargetCycle(Relocate(cav, new Vec2(20f, 0f)), commands, battlefield, named, new Vec3(100f, 60f, 0f, -1f), 1.5f);
+
+        Assert.AreEqual(CavalryState.Charging, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueChargeToTarget(named);
+        commands.Received(1).IssueChargeToTarget(nearest);
+        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RetargetCycle_IdleOrSameTarget_DoesNothing()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        _sut.RetargetCycle(cav, commands, battlefield, new object(), Target3, 0f);
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+
+        var target = new object();
+        _sut.HandleChargeOrder(cav, commands, battlefield, target, Target3, 0f);
+        commands.ClearReceivedCalls();
+        _sut.RetargetCycle(cav, commands, battlefield, target, Target3, 0.1f);
+        commands.DidNotReceiveWithAnyArgs().ApplyChargeLine(default, default, default);
+    }
+
+    // ============ Reform point clears the enemy's depth ============
+
+    [TestMethod]
+    public void Tick_ChargingContact_ReformPointClearsTheTargetDepthAlongTheChargeAxis()
+    {
+        // A 40 m deep column past its centre: the reform point is 25 m past its far edge, not 25 m
+        // past its centre plane (92 + 8 + 40 + 25 = 165).
+        var commands = MakeCommands();
+        commands.GetTargetDepthAlong(Arg.Any<object>(), Arg.Any<Vec2>()).Returns(40f);
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        commands.Received(1).IssueMoveTo(Near(new Vec2(165f, 0f)), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Tick_ChargingContact_NaNTargetDepthAddsNothing()
+    {
+        var commands = MakeCommands();
+        commands.GetTargetDepthAlong(Arg.Any<object>(), Arg.Any<Vec2>()).Returns(float.NaN);
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+
+        _sut.Tick(Relocate(cav, new Vec2(92f, 0f)), commands, battlefield, 0.1f, 2f);
+
+        commands.Received(1).IssueMoveTo(Near(new Vec2(125f, 0f)), Arg.Any<float>());
+    }
+
+    // ============ Repeat cycles reroute like the first ============
+
+    [TestMethod]
+    public void Tick_ReformingAligned_FriendlyOnTheNextChargeLine_Reroutes()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield(nearestEnemy: new object(), nearestEnemyPosition: new Vec2(200f, 0f));
+        var (cav, _) = DriveToReforming(commands, battlefield);
+        StubPlannerReroute(new Vec2(160f, -12f));
+
+        _sut.Tick(Relocate(cav, new Vec2(125f, 0f), isAligned: true), commands, battlefield, 0.1f, 4f);
+
+        Assert.AreEqual(CavalryState.Rerouting, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueMoveTo(Near(new Vec2(160f, -12f)), Arg.Any<float>());
+    }
+
+    // ============ Tick ownership order ============
+
+    [TestMethod]
+    public void Tick_FormationNoLongerCavalry_HandsBackToVanillaCharge()
+    {
+        // Riders dismounted mid-cycle: the machine gives up the cycle with a charge, never a Cancel
+        // that would leave the Move it issued standing.
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        var dismounted = MakeCav(new Vec2(40f, 0f), formationKey: cav.FormationKey);
+        dismounted.RepresentativeIsCavalry.Returns(false);
+
+        _sut.Tick(dismounted, commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.Received(1).IssueCharge();
+    }
+
+    [TestMethod]
+    public void Tick_AIControlledAndDisabled_CancelsWithoutIssuingAnOrder()
+    {
+        // Ownership wins over the toggle: a formation the team AI now commands gets no order from us.
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+        var (cav, _) = DriveToCharging(commands, battlefield);
+        commands.ClearReceivedCalls();
+        _settings.IsEnabled.Returns(false);
+        var delegated = MakeCav(new Vec2(40f, 0f), formationKey: cav.FormationKey, isAIControlled: true);
+
+        _sut.Tick(delegated, commands, battlefield, 0.1f, 2f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceiveWithAnyArgs().IssueCharge();
+    }
+
+    // ============ Idle, mission end, lookups ============
+
+    [TestMethod]
+    public void Tick_IdleState_DoesNothing()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+
+        _sut.Tick(cav, commands, MakeBattlefield(), 0.1f, 1f);
+
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceiveWithAnyArgs().IssueStop();
+        commands.DidNotReceiveWithAnyArgs().IssueMoveTo(default, default);
+        commands.DidNotReceiveWithAnyArgs().IssueChargeToTarget(default!);
+        commands.DidNotReceiveWithAnyArgs().IssueCharge();
+        commands.DidNotReceiveWithAnyArgs().ApplyChargeLine(default, default, default);
+    }
+
+    [TestMethod]
+    public void Tick_NullFormationKey_DoesNotThrow()
+    {
+        var cav = Substitute.For<IFormationAdapter>();
+        cav.FormationKey.Returns((object)null!);
+        cav.RepresentativeIsCavalry.Returns(true);
+        cav.CurrentPosition.Returns(Vec2.Zero);
+
+        _sut.Tick(cav, MakeCommands(), MakeBattlefield(), 0.1f, 1f);
+    }
+
+    [TestMethod]
+    public void Tick_NotFieldBattle_DoesNotDriveStateMachine()
+    {
+        var cav = MakeCav(Vec2.Zero, isAligned: true);
+        var commands = MakeCommands();
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+
+        _sut.Tick(cav, commands, MakeBattlefield(isFieldBattle: false), 0.1f, 1f);
+
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
+    }
 
     [TestMethod]
     public void OnMissionEnd_ClearsAllPerFormationState()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        var cav = MakeCav(Vec2.Zero);
+        _sut.HandleChargeOrder(cav, MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
         Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
 
         _sut.OnMissionEnd();
@@ -522,69 +1190,69 @@ public class CavalryChargeServiceTests
     [TestMethod]
     public void GetState_UnknownFormationKey_ReturnsIdle()
     {
-        var unknownKey = new object();
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(unknownKey));
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(new object()));
     }
 
-    // ============ Settings consumption assertions (dead-promise gate) ============
+    // ============ Settings consumption (dead-promise gate) ============
 
     [TestMethod]
     public void HandleChargeOrder_ReadsIsEnabled()
     {
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        _sut.HandleChargeOrder(cav, MakeCommands(Vec2.Zero, new Vec2(1f, 0f)),
-            MakeBattlefield(), new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(MakeCav(Vec2.Zero), MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
         _ = _settings.Received().IsEnabled;
     }
 
     [TestMethod]
     public void HandleChargeOrder_ReadsAvoidFriendlies()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        _sut.HandleChargeOrder(cav, MakeCommands(Vec2.Zero, new Vec2(1f, 0f)),
-            MakeBattlefield(), new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(MakeCav(Vec2.Zero), MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
         _ = _settings.Received().AvoidFriendlies;
-    }
-
-    [TestMethod]
-    public void Tick_FormingState_ReadsChargeFormationStrictness()
-    {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _settings.ClearReceivedCalls();
-        _sut.Tick(cav, commands, MakeBattlefield(), 0.1f, 1f);
-        _ = _settings.Received().ChargeFormationStrictness;
-    }
-
-    [TestMethod]
-    public void Tick_PassingThroughState_ReadsReformDistanceAfterCharge()
-    {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);  // → Charging
-        var cavClose = MakeCav(new Vec2(95f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        _sut.Tick(cavClose, MakeCommands(new Vec2(95f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 2f);  // → PassingThrough
-
-        _settings.ClearReceivedCalls();
-        var cavMidway = MakeCav(new Vec2(110f, 0f), new Vec2(1f, 0f), formationKey: cav.FormationKey);
-        _sut.Tick(cavMidway, MakeCommands(new Vec2(110f, 0f), new Vec2(1f, 0f)), battlefield, 0.1f, 3f);
-        _ = _settings.Received().ReformDistanceAfterCharge;
     }
 
     [TestMethod]
     public void HandleChargeOrder_ReadsChargeLineSpacing_WhenForming()
     {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        _sut.HandleChargeOrder(MakeCav(Vec2.Zero), MakeCommands(), MakeBattlefield(), new object(), Target3, 0f);
         _ = _settings.Received().ChargeLineSpacing;
+    }
+
+    [TestMethod]
+    public void Tick_FormingState_ReadsChargeFormationStrictness()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
+        _settings.ClearReceivedCalls();
+
+        _sut.Tick(cav, commands, MakeBattlefield(), 0.1f, 1f);
+
+        _ = _settings.Received().ChargeFormationStrictness;
+    }
+
+    [TestMethod]
+    public void Tick_FormingState_ReadsMaxLineUpSeconds()
+    {
+        var cav = MakeCav(Vec2.Zero);
+        var commands = MakeCommands();
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), Target3, 0f);
+        _settings.ClearReceivedCalls();
+
+        _sut.Tick(cav, commands, MakeBattlefield(), 0.1f, 1f);
+
+        _ = _settings.Received().MaxLineUpSeconds;
+    }
+
+    // ============ Observability ============
+
+    [TestMethod]
+    public void Tick_Transition_LogsTheStateChange()
+    {
+        var commands = MakeCommands();
+        var battlefield = MakeBattlefield();
+
+        DriveToCharging(commands, battlefield);
+
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("[SmartCavalryAI]") && s.Contains("Charging")));
     }
 
     // ============ Recursion guard ============
@@ -617,7 +1285,6 @@ public class CavalryChargeServiceTests
             {
                 Assert.IsTrue(SmartCavalryRecursionGuard.IsSuppressed);
             }
-            // Inner dispose must NOT clear the flag while outer scope is active.
             Assert.IsTrue(SmartCavalryRecursionGuard.IsSuppressed,
                 "Counter must not clear after inner dispose; outer scope still active.");
         }
@@ -627,7 +1294,7 @@ public class CavalryChargeServiceTests
     [TestMethod]
     public void RecursionGuard_Reset_ClearsStuckFlag()
     {
-        SmartCavalryRecursionGuard.Enter();  // never disposed — simulates abnormal termination
+        SmartCavalryRecursionGuard.Enter();  // never disposed: simulates abnormal termination
         Assert.IsTrue(SmartCavalryRecursionGuard.IsSuppressed);
 
         SmartCavalryRecursionGuard.Reset();
@@ -635,157 +1302,8 @@ public class CavalryChargeServiceTests
         Assert.IsFalse(SmartCavalryRecursionGuard.IsSuppressed,
             "Reset() must clear stuck flag from abnormal mission termination.");
     }
-
-    // ============ Idempotency + correctness fixes from /deep-review ============
-
-    [TestMethod]
-    public void HandleChargeOrder_AlreadyForming_DoesNotResetState()
-    {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-        var target = new object();
-
-        // First call → Forming + ApplyChargeLine + IssueStop fired exactly once each.
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0f);
-        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
-
-        // Second call (player double-tapped) — must short-circuit, no extra commands issued.
-        _sut.HandleChargeOrder(cav, commands, battlefield, target, new Vec3(100f, 0f, 0f, -1f), 0.1f);
-
-        commands.Received(1).ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
-        commands.Received(1).IssueStop();
-    }
-
-    [TestMethod]
-    public void HandleChargeOrder_ZeroLengthDirection_DoesNotEnterFormingOrIssueCommands()
-    {
-        StubPlannerNoReroute();
-        var cav = MakeCav(new Vec2(50f, 50f), new Vec2(1f, 0f));
-        var commands = MakeCommands(new Vec2(50f, 50f), new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield();
-
-        // Target at same position as cav → length < 1 → must abort entirely.
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(),
-            new Vec3(50.5f, 50f, 0f, -1f), 0f);
-
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
-        commands.DidNotReceive().IssueStop();
-    }
-
-    [TestMethod]
-    public void Tick_NullFormationKey_DoesNotThrow()
-    {
-        var cav = Substitute.For<IFormationAdapter>();
-        cav.FormationKey.Returns((object)null!);
-        cav.RepresentativeIsCavalry.Returns(true);
-        cav.CurrentPosition.Returns(Vec2.Zero);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-
-        _sut.Tick(cav, commands, MakeBattlefield(), 0.1f, 1f);
-        // No throw is the assertion. Silently no-ops.
-    }
-
-    [TestMethod]
-    public void Tick_FormingAndTargetDead_TransitionsToIdleWithoutCharging()
-    {
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f), targetAlive: false);
-        var battlefield = MakeBattlefield();
-
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(),
-            new Vec3(100f, 0f, 0f, -1f), 0f);
-        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
-
-        _sut.Tick(cav, commands, battlefield, 0.1f, 1f);
-
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
-    }
-
-    // ============ Settings out-of-range fallback (verified via provider clamp) ============
-
-    [TestMethod]
-    public void HandleChargeOrder_NonCavalryFormation_DoesNothing()
-    {
-        var cav = Substitute.For<IFormationAdapter>();
-        cav.FormationKey.Returns(new object());
-        cav.RepresentativeIsCavalry.Returns(false);
-        cav.CurrentPosition.Returns(Vec2.Zero);
-        cav.Direction.Returns(new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-
-        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(),
-            new Vec3(100f, 0f, 0f, -1f), 0f);
-
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-    }
-
-    [TestMethod]
-    public void HandleChargeOrder_NoPlayerTeam_DoesNothing()
-    {
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = Substitute.For<IBattlefieldQueryAdapter>();
-        battlefield.HasPlayerTeam.Returns(false);
-        // Explicit so this test isolates the HasPlayerTeam guard only. Without it, NSubstitute's
-        // bool default would leave IsFieldBattle == false and the test would pass for the wrong
-        // reason if the guard order in HandleChargeOrder is ever changed.
-        battlefield.IsFieldBattle.Returns(true);
-
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(),
-            new Vec3(100f, 0f, 0f, -1f), 0f);
-
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-    }
-
-    // ============ Open-field-only siege guard (crash-fix regression tests) ============
-
-    [TestMethod]
-    public void HandleChargeOrder_NotFieldBattle_DoesNothing()
-    {
-        // Arrange — every charge precondition is satisfied EXCEPT the mission is not an open-field
-        // battle (e.g. a siege). SmartCavalryAI must not re-enter native formation code here.
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        var battlefield = MakeBattlefield(isFieldBattle: false);
-
-        // Act
-        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-
-        // Assert — no native formation commands issued, state never leaves Idle.
-        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
-        commands.DidNotReceive().IssueStop();
-        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
-    }
-
-    [TestMethod]
-    public void Tick_NotFieldBattle_DoesNotDriveStateMachine()
-    {
-        // Arrange — reach Forming in a field battle (aligned, so a normal Tick would advance to Charging).
-        StubPlannerNoReroute();
-        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
-        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
-        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
-        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
-
-        // Act — tick with a non-field battlefield; the state machine must be frozen.
-        _sut.Tick(cav, commands, MakeBattlefield(isFieldBattle: false), 0.1f, 1f);
-
-        // Assert — no advance to Charging, no charge order issued.
-        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
-    }
 }
 
-// Note: SmartCavalryAISettingsProvider has no direct unit tests — it accesses
-// TaomSettings.Instance which inherits from MCMv5's AttributeGlobalSettings and triggers
-// an MCMv5 assembly load that's unavailable in the test environment. The NaN-guard logic
-// (SafeClamp returns the compiled default for NaN/Infinity inputs) is verified by code
-// review against the adversarial review finding. Future refactor: inject a settings-source
-// delegate (Func<TaomSettings?>) into the provider so the static singleton is mockable.
+// Note: SmartCavalryAISettingsProvider has no direct unit tests. It reads TaomSettings.Instance,
+// which inherits from MCMv5's AttributeGlobalSettings and triggers an MCMv5 assembly load that is
+// unavailable in the test host. Its clamps go through the shared SettingClamp, which is tested.

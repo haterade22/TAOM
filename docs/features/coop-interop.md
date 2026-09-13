@@ -307,12 +307,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **238** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **239** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 224 in `TaomSettings`, 7 in `BattleLoadDiagnosticsSettings`, 6 in
+  the split is 225 in `TaomSettings`, 7 in `BattleLoadDiagnosticsSettings`, 6 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **179 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 179 are in
+  **180 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 180 are in
   `TaomSettings`. The 59 excluded are instrumentation, player-local inventory convenience,
   presentation, one action button, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
@@ -331,7 +331,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 179 values read off two screens.
+  short strings instead of 180 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -353,7 +353,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset, the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 179 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 180 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 
