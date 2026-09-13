@@ -2716,6 +2716,56 @@ theoretical residual) went into the code comment and the feature doc. RCA:
 Owed: the in-game checks in `docs/features/lord-party-templates.md` "Verification in game", then
 close #580.
 
+## Review 103: kingdom armour overview and the cross-culture armour gate (#581), 6-agent deep-review (2026-09-12)
+
+A report that a Gondor tier-9 troop wore less armour than a Dunland tier-5 troop. The totals were
+not inverted (180 vs 163) but the head slot was (33 vs 40), Dunland T6 topped Gondor's T9 Moon Guard
+and five of its twelve T8s, and no tool had ever compared kingdoms with each other: the curve has one
+row for levels 31 to 51. New read-only `tools/analyze_kingdom_armour.py` (culture x engine-tier
+matrices for the total and each region, cross-culture inversions, Armory ceilings and the unworn
+reserve, curve view, gate preview) and a median-based `CROSS_CULTURE_ARMOUR_INVERSION` warning whose
+arithmetic is one pure function both callers share. Nothing written to game data; the fix is the
+next pass.
+
+**Deep review, six agents (Python tooling, so a tooling-correctness agent joined the five).**
+Standards, efficiency (0.8 s tool, 0.18 s validator pass) and completeness clean. Compatibility
+verified the four engine claims on the installed DLLs and added the seed nuance on the per-slot draw.
+Data flow reproduced the validator's four cells from the tool's preview to the digit and listed
+three dormant loader divergences (no `level=`, creature exclusion unenforced, item roots), the first
+two closed with tests. Tooling found the two MEDIUMs that changed the report: the exempt Ithilien
+ranger topped every worst-pairs table, and Umbar's reserve list judged Harad's items on Umbar's
+curve. Both fixed; 7,803 pairs over 150 culture pairs after, Gondor the weaker side of 2,766. RCA:
+`rca-kingdom-armour-2026-09-12.md`; lesson in `lessons/build-tooling-workflow.md`.
+
+Owed: the fix decision (re-slot rosters, restat items, or extend the curve above level 31), then
+close #581.
+
+## Review 104: the kingdom-cap armour curve applied to the whole Armory (#583), 6-agent deep-review (2026-09-13)
+
+The maintainer replaced the curve's design with a chest cap per kingdom (Erebor 70 to Thenn 35),
+slot ratios (helmet .9, bracer .6, pauldron .6, greaves .5) and rebuilt bands (.40, .64, .84, 1.0,
+lord = elite), carried in `rebalance_armor.py` as `KINGDOM_CAPS` with sub-lines routed by id
+prefix, applied to both Armory trees (2,510 items, then 7), followed by the ladder repair on the
+58 promotion edges it exposed (197 swaps, 12 troop files) and one derive + restat iteration to a
+stable state.
+
+**Deep review, six agents.** Standards, efficiency and completeness clean; compatibility verified
+all five engine claims (flat independent modifier bonus with the `num > 0` guard, the 3/5/7/9/12
+legendary deltas, `material_type` read by sound and FX only, no clamp on load, the tier and price
+formula) and recorded that a 70 chest now shows the top tooltip tier. Data flow reproduced twelve
+applied values by hand and the 0/1,835 anchor sweep, and found the two real ones: the tier map was
+still keyword first while the writer is anchor first (682 worn items mislabelled in the report),
+and the gate scaled a troop by its culture's cap while items carry their line's cap (an Umbar noble
+in Black Numenorean plate read 29% high). Tooling found the dead civilian guard, the comment-blind
+block regex and the character-set BOM strip. All fixed with tests: the map is anchor first, the
+gate and the overview scale per item through `Registries.item_folder` and `item_cap_for`, the
+writer skips commented copies. Post-fix: dry run plans nothing, both trees identical, the same
+seven cap-scaled cells remain (goblin T7, Mirkwood T7 to T10, the elves' T10 fan-out). RCA:
+`rca-kingdom-cap-curve-2026-09-13.md`; lesson in `lessons/build-tooling-workflow.md`.
+
+Owed: Codex pass, a full restart and the party screen on the capstones, the assets-repo commit,
+`docs/modding/balance-levers.md:139` once that file is free, the roster pass on the flagged cells.
+
 ## Review 105: Black Numenorean confinement (#584) and the level-41 weight band (#585), 6-agent deep-review + Codex (2026-09-13)
 
 The user asked for the Black Numenoreans out of every orc and uruk party and kept to their clans,

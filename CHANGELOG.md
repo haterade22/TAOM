@@ -4,6 +4,46 @@
 
 ## 2026-09-13
 
+### feat(armour): the kingdom-cap curve, applied to the whole Armory, and the ladder repair it needed (#583)
+
+#581's overview showed the top of most trees dressed under the culture's elite row and the row
+itself flat from level 31 to 51, so a Dunland level-31 noble and a Gondor level-46 Fountain Guard
+targeted the same stats. The maintainer replaced the curve's design: each kingdom's armour power is
+one chest value at the elite band (Erebor and Iron Hills 70, Rivendell and Lindon 68, Mirkwood 63,
+Lothlorien 60, Gondor, Rhun, the Black Numenoreans and Arnor 57, Gundabad 49, Dol Guldur and Khand
+46, Isengard 45, Dale, Harad, Umbar and the mercenary pool 44, Black Uruks 43, Rohan and Dunland 40,
+the shared orc kit of Mordor, the Misty Mountains and Goblin-town 38, Thenn 35), helmets at 0.9 of
+it, bracers and pauldrons at 0.6, greaves at 0.5, the bands below at 0.40, 0.64 and 0.84, the lord
+band equal to the elite band so only named hero kit sits above a cap. `rebalance_armor.py` carries
+it as `KINGDOM_CAPS`, `SLOT_CAP_RATIO` and `BAND_RATIO`; the old baseline tables serve the civilian
+tier, weights and the troll only. Sub-lines sharing a folder are routed by id prefix (the three
+Mordor lines, Dol Guldur's `sk_dg_` kit in the rhun folder, Isengard's misfiled uruk scouts,
+Umbar's Ardunian armour). New `--tier-source roster-first` bands a worn item by its lowest
+battle-set troop wearer even over an id keyword (the Fountain Guard helmet is `_heavy_` and worn
+only at level 46); civilian sets never anchor, ladder-exempt troops never anchor, the Black
+Numenorean restat exclusion is lifted (the line has its own cap now), and the Dol Guldur troop
+line named "Khamul ..." is no longer mistaken for his kit. Secondaries keep their ratio to the
+primary, weights and material types are untouched, and the arm, leg and shoulder loot tables share
+a medium-at-cloth ladder so no legendary roll passes the elite piece at any cap
+(`check_kingdom_curve_invariant`, pinned green). The writer is now a binary round-trip with a
+one-time `.bak-<tag>` per file.
+
+Applied 2026-09-13 to the Steam Armory and the `lotraom-assets` mirror, byte-identical before and
+after: 2,510 items on the first run, 316 untouched (hero, civilian and unworn keyword-less kit), a
+dry run afterwards plans nothing. The re-curve exposed 58 promotion edges where a child wore kit
+anchored low by a shared wearer (`UPGRADE_ARMOUR_REGRESSION`); `fix_upgrade_armour_regressions.py
+--apply` resolved all 58 with 197 slot swaps in 12 troop files, 7 items moved with the new anchors,
+and the next iteration was stable. Capstone medians after: Gondor tier 9 251 (was 194), Erebor 335,
+the elves 384, Mordor 270, Rhun 288, Dol Guldur 243, Gundabad 248, Isengard 209, Rohan 203, Dale
+190, Dunland 165. The cross-kingdom gate and the overview's pair list now scale every item to the
+57 reference cap of the line it belongs to first, since kingdoms differ by design; what they still flag is a kingdom dressed
+below its own power: goblin tier 7, Mirkwood tiers 7 to 10 (one small kit shared across every
+tier), the elves' tier-10 fan-out under their own tier 9, plus a vanilla chest on Harad's camel
+lancer the Armory cannot restat. Tests: 22 in `tools/tests/test_kingdom_caps.py`, one more gate test;
+every test of this change green (1,415 of the suite's 1,416 at commit; the one failure is another
+session's in-flight clan-heraldry test). Owed: a full restart and the party screen on the capstones
+(item XML loads at launch), the assets-repo commit, and the roster pass on the flagged cells.
+
 ### fix(data): Black Numenoreans field only for the two houses, Sauron and the vassal reward (#584)
 
 Every Mordor orc and uruk lord spawned a token handful of Black Numenoreans: the 13 `mordor_num_*`
@@ -123,6 +163,52 @@ Follow-up, same day: `rebalance_ranged_ladders.py` also writes `REPORT.html` and
 beside the weapon (missile speed, drag-model reach, accuracy, `WeaponInaccuracy` spread,
 `AiShootFreq` cadence, the mounted open-fire distance, bow plus ammo damage, shots), sortable
 and filterable; `ranged_ladder.index_ammo` and the troop display name feed it. 49 tests.
+
+### feat(tools): kingdom armour overview by engine tier, and a cross-culture armour gate (#581)
+
+A report that a Gondor tier-9 troop wore less armour than a Dunland tier-5 troop. Checked against
+the live Armory: the totals are not inverted (weakest Gondor T9 180, strongest Dunland T5 163) but
+the head slot is (Dunland T5 helmets 40, Gondor T9 helmets 33), Dunland T6 (182, lord-row helmets
+at 45) beats Gondor's T9 Moon Guard (180) and five of its twelve T8 capstones, and Gondor's T10
+Ithilien ranger (125) sits under Dunland T4. Nothing had ever compared kingdoms with each other:
+`rebalance_armor.py` and `analyze_armor_balance.py` judge items within one culture,
+`fix_upgrade_armour_regressions.py` and `UPGRADE_ARMOUR_REGRESSION` judge one upgrade edge. The
+structural cause is the curve's single "elite" row for levels 31 to 51: Dale, Dunland and Umbar stop
+at level 31 (engine tier 6), thirteen cultures run to 41 to 51 (tiers 8 to 10) on the same target.
+
+New `tools/analyze_kingdom_armour.py`, read-only: per troop the four engine regions (head, body,
+arm, leg) summed over the five armour slots exactly as `Equipment.Get*ArmorSum` does, averaged over
+battle sets with an unfilled slot at 0, placed by engine tier. Reports (md, html, json under the
+gitignored `tools/reports/kingdom-armour/`): a culture x tier matrix for the total and one per
+region, cross-culture inversions aggregated per culture pair, the validator gate's own verdict, and
+per culture the Armory ceiling (best troop-eligible item in the folders the culture actually wears,
+observed from the rosters, vs the best worn), the unworn elite/lord-row items, and the curve's
+prediction per tier against actual. First run over 854 troops: 7,803 pairs at threshold 20 and a
+two-tier gap, Gondor on the weak side of 2,766 of them and Dunland on the strong side of 43, none
+against Gondor (at threshold 0 a Dunlending tops a Gondor troop two tiers up in 61 pairs, by 17 at
+most); Gondor's head median is 33 from T4 to T9 with a 41 folder ceiling (Dunland 45, Mordor 50,
+Erebor 78), its T8 median (177) sits under nine cultures' T6 medians (Lindon and Rivendell share
+one roster), and 20 elite/lord-row Gondor items are worn by nobody. Findings and the three fix options (re-slot rosters, restat items, extend the curve
+above L31) are in `docs/features/armor-balance.md` "Kingdom armour ladder"; none was applied.
+
+New `CROSS_CULTURE_ARMOUR_INVERSION` (warning) in `validate_moduledata.py`: per culture and engine
+tier, the median armour total held against the median of the other kingdoms' medians two tiers
+lower; warns 20 points under with at least three neighbours. The rule is one pure function,
+`taom_schema.cross_culture_armour_inversions`, which the report's gate preview also calls. Exempt
+with a reason each: `cave_troll`, the two Harad mount riders, `gondor_ithilien_ranger`. Four cells
+today: `goblin/tier7`, `gondor/tier9`, `lindon/tier10`, `rivendell/tier10`. Loader changes are
+additive: `fix_upgrade_armour_regressions.load_item_armour` keeps the four stats, the item `Type`
+and the name, `load_troops` keeps the name and `default_group`; `analyze_troop_balance` tags
+`harad_mumakil_rider` as a mount rider (`mumak` marker). Deep review (six agents, RCA
+`docs/reviews/rca-kingdom-armour-2026-09-12.md`) moved two things before the first report was
+trusted: the exempt troops now leave the matrices and the pair list as they leave the gate (the
+Ithilien ranger had topped every worst-pairs table), and an unworn item's tier in the ceiling
+tables is judged on its own folder's curve (Umbar wears Harad's folder; two Harad elite pieces had
+dropped out of Umbar's reserve list). A troop with no `level=` is now skipped like the validator
+skips it, and a test over the shipped troops fails if a troop the analyzer excludes by name is
+missing from `_ARMOUR_LADDER_EXEMPT`. Tests: 19 new in
+`tools/tests/test_analyze_kingdom_armour.py`, 8 gate tests and 2 loader tests; the tools suite is
+1,319 green.
 
 ### feat(lords): a named lord fields his own party template; Faramir raises Ithilien rangers, Sauron a Black Numenorean and Uruk host (#580)
 
