@@ -25,8 +25,8 @@ Harmony seam on the clan template getter that is live only while a lord party is
   override changes exactly the two lords asked for.
 - **Without this feature:** Faramir spawns the Anorien levy and Citadel roster of
   `kingdom_hero_party_gondor_minas_tirith_template`; Sauron spawns orc lackeys, warg riders and
-  militia from `kingdom_hero_party_mordor_empire_south_3_template` with a 4% Black Numenorean
-  sprinkle.
+  militia from `kingdom_hero_party_mordor_empire_south_3_template` (which carried a 4% Black
+  Numenorean sprinkle until #584 removed it from every non-house Mordor template).
 
 ## Architecture
 

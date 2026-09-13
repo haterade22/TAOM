@@ -10,9 +10,14 @@ rows. These troops reach the field through lord parties instead.
 Three files, all in the TAOM repo:
 
   taom_partyTemplates.xml
-      Stacks in the culture default + all 15 per-clan lord templates (the ones
-      named lords actually use, via Clan.DefaultPartyTemplate), plus one exact
-      entry each in the level-3 patrol and the vassal-reward template.
+      Stacks in the two house templates only (clan_empire_south_1 Dolgubeth and
+      clan_empire_south_9 Wawrim, the clans that field the line; see
+      docs/features/black-numenorean.md "The Two Houses") plus one exact entry
+      in the vassal-reward template, which is how a Mordor player receives one.
+      Until #584 (2026-09-13) this also sprinkled 13 stacks into the culture
+      default and the other 13 clan templates and one infantry into the level-3
+      patrol; BlackNumenoreanPartyTemplateTests now fails on any of those, so
+      do not widen LORD_TEMPLATES or EXACT without changing that test first.
 
       max_value is a CEILING, not a count: the engine draws one uniform ratio
       per party and fills every stack to min + (max - min) * r. Adding stacks
@@ -23,8 +28,8 @@ Three files, all in the TAOM repo:
       entries below use exact min == max values it will not disturb.
 
   TroopWeights/troop_weights.xml
-      2.0 for the whole line, matching mordor_uruk_captain.
-      troop-weight-system.md already lists "Black Numenoreans" in that band.
+      2.0 up to level 36 and 3.0 from level 41 (#585, the level rule pinned by
+      TroopWeightLevelBandTests).
 
   special_resources/troop_resource_costs.xml
       war_spoils costs, scaled off the existing Mordor elite entries.
@@ -65,21 +70,23 @@ LORD_STACKS = [
     ("mordor_num_shadowbow", 5),
 ]
 
-LORD_TEMPLATES = ["kingdom_hero_party_mordor_template"] + [
-    f"kingdom_hero_party_mordor_empire_south_{n}_template" for n in range(1, 16)
+LORD_TEMPLATES = [
+    "kingdom_hero_party_mordor_empire_south_1_template",
+    "kingdom_hero_party_mordor_empire_south_9_template",
 ]
 
 # Exact-count templates, outside the rebalance tool's scope.
 EXACT = {
-    "patrol_party_mordor_template_level_3": [("mordor_num_infantry", 1)],
     "vassal_reward_troops_mordor": [("mordor_num_vet_infantry", 1)],
 }
 
 WEIGHTS = {
-    # All 2.0: troop-weight-system.md documents the tier set as 1.0/2.0/3.0/4.0
-    # and already names "Black Numenoreans" in the 2.0 band. A first draft used
-    # 1.5 for T5/T6, which would have been the only non-integer weights in the
-    # whole 100-entry file.
+    # troop-weight-system.md documents the tier set as 1.0/2.0/3.0/4.0. A first
+    # draft used 1.5 for T5/T6, which would have been the only non-integer
+    # weights in the whole 100-entry file. Level 41+ pays 3.0 since #585.
+    # do_weights only ADDS an id the file lacks; it never corrects an existing
+    # row, so a clean --dry-run is not proof the file matches these values.
+    # The gate for that is TroopWeightLevelBandTests.
     "mordor_num_initiate": "2.0",
     "mordor_num_cavalry": "2.0",
     "mordor_num_infantry": "2.0",
@@ -87,16 +94,20 @@ WEIGHTS = {
     "mordor_num_vet_cavalry": "2.0",
     "mordor_num_vet_infantry": "2.0",
     "mordor_num_vet_archer": "2.0",
-    "mordor_num_knight": "2.0",
-    "mordor_num_warden": "2.0",
-    "mordor_num_marksman": "2.0",
-    "mordor_num_temple_knight": "2.0",
-    "mordor_num_temple_guard": "2.0",
-    "mordor_num_shadowbow": "2.0",
+    "mordor_num_knight": "3.0",
+    "mordor_num_warden": "3.0",
+    "mordor_num_marksman": "3.0",
+    "mordor_num_temple_knight": "3.0",
+    "mordor_num_temple_guard": "3.0",
+    "mordor_num_shadowbow": "3.0",
 }
 
 
 def read(path):
+    # Byte-faithful on purpose: plain utf-8 (not utf-8-sig) keeps a BOM as U+FEFF
+    # inside the string, and newline="" on BOTH sides leaves CRLF alone. The
+    # same guarantee as the binary round-trip in tools/README.md "XML I/O
+    # convention"; do not "tidy" either flag away.
     with open(path, "r", encoding="utf-8", newline="") as f:
         return f.read()
 
@@ -176,7 +187,7 @@ def do_weights(dry):
         sys.exit(1)
     line_start = text.rfind(eol, 0, close) + len(eol)
     indent = re.match(r"[ \t]*", text[line_start:]).group(0) or "    "
-    block = (f'{indent}<!-- Black Numenorean line: the 2.0 elite band -->{eol}'
+    block = (f'{indent}<!-- Black Numenorean line: 2.0 up to level 36, 3.0 from level 41 -->{eol}'
              + "".join(f'{indent}<TroopWeight id="{k}" weight="{v}" />{eol}'
                        for k, v in todo.items()))
     print(f"  troop_weights.xml: +{len(todo)}")

@@ -2,6 +2,35 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-13
+
+### fix(data): Black Numenoreans field only for the two houses, Sauron and the vassal reward (#584)
+
+Every Mordor orc and uruk lord spawned a token handful of Black Numenoreans: the 13 `mordor_num_*`
+stacks sat in all thirteen non-house clan templates (`initiate 0/2`, twelve at `0/1`) and in the
+culture default (all thirteen at `0/1`), the pre-2026-08-25 "4% sprinkle" the two-houses change had
+left in place, plus one
+`mordor_num_infantry` in the level-3 patrol. All 183 stacks are gone. The line now spawns in exactly
+four templates: `clan_empire_south_1` Dolgubeth and `clan_empire_south_9` Wawrim (unchanged at 93%),
+Sauron's own (#580), and `vassal_reward_troops_mordor` (the player's route into it).
+`rebalance_party_template_maxes.py --apply` pulled the fourteen edited lord templates from 246/247
+back to the 260 Mordor ceiling (120 stacks rescaled, `min_value` untouched). Gate:
+`BlackNumenoreanPartyTemplateTests` fails on a fifth template, checks both houses still carry all
+13 ids, and pins the id list against `troops_mordor.xml`. `tools/wire_black_numenorean_troops.py`
+adds any stack a template lacks, so its 16-template list would have re-sprinkled them on the next
+run; it now targets the two houses and the reward only, and its dry run adds nothing. Deep review
+found the confinement had blinded a second guard: `generate_clan_heraldry.py` refused to replace a
+template only when the spec would drop a troop id, and for the 13 non-house templates the live id
+set now equals the stale `clan_heraldry/mordor.json`. The guard also refuses a spec whose
+`max_value` sum is below the live template's (every spec but `bandits` and `khand` predates the
+2026-08-14 retarget; 19 of 21 refuse on a dry run), pinned by
+`tools/tests/test_generate_clan_heraldry.py`. RCA:
+`docs/reviews/rca-black-numenorean-confinement-2026-09-13.md`. Not touched:
+`kingdom_hero_party_erebor_template` sits at 225 against a 220 target in HEAD, a pre-existing drift
+the rebalancer reports and this change did not apply. Save-compat: templates shape new lord parties
+only. Owed: new-campaign smoke (a `clan_empire_south_2` lord with zero Black Numenoreans, the Mouth
+of Sauron mostly BN, a Mordor level-3 patrol with none).
+
 ## 2026-09-12
 
 ### fix(tools): the ranged-troops page after its review, and the militia cache guard

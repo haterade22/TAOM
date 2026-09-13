@@ -54,7 +54,13 @@ Two to four equipment rosters per troop, driven by how many mesh variants that t
 The line shipped without a home. Every one of the 16 Mordor lord party templates carried the same
 13 stacks summing to 146 of 3500 max_value, exactly 4%, so Black Numenoreans were a uniform token
 sprinkle across all fifteen clans rather than anybody's army. Two clans are now the houses that
-field them, and the other thirteen were deliberately left at 4%.
+field them. The other thirteen were left at 4% on 2026-08-25 and lost it on 2026-09-13 (#584): every
+`mordor_num_*` stack is gone from those thirteen clan templates, from the culture default
+`kingdom_hero_party_mordor_template`, and from the level-3 patrol, so an orc or uruk lord now fields
+no Black Numenoreans at all. The line spawns in exactly four templates: the two houses below,
+Sauron's own (#580), and the vassal reward. `BlackNumenoreanPartyTemplateTests` fails on a fifth,
+and `tools/wire_black_numenorean_troops.py` targets only those (it adds any stack a template lacks,
+so its old 16-template list would have re-sprinkled them on the next run).
 
 | Clan | House | Seat | Template BN share |
 |---|---|---|---|
@@ -122,8 +128,8 @@ The armour fix was then widened past the two houses to the whole line. `lord_1_2
 `lord_1_39` Naktharil sit in `clan_empire_south_3` Melkondili, were already human, and already
 carried a BN skillset, but were still in orc kit. The rule applied is **human plus a BN skillset
 means BN lord armour**, which now holds for all 16 Black Numenorean lords with no exceptions.
-Their clan keeps the 4% party template: this is their personal kit, not their troops. Since
-2026-09-12 one member of that clan is the exception: Sauron (`lord_1_17`, the clan's owner) fields
+Their clan fields the orc roster (the 4% sprinkle it kept until #584 is gone): this is their
+personal kit, not their troops. Since 2026-09-12 one member of that clan is the exception: Sauron (`lord_1_17`, the clan's owner) fields
 `kingdom_hero_party_mordor_sauron_template` through the per-hero override in
 [lord-party-templates.md](lord-party-templates.md) (#580), a 40 / 30 / 30 low, mid, high split of
 Uruks and Black Numenoreans. Herumarth and Naktharil still spawn from the Melkondili roster.
@@ -149,11 +155,14 @@ Making them identical would have reproduced the exact flaw this change was fixin
 
 ### Expect smaller armies from these two clans
 
-All 13 BN troops are `weight="2.0"` against a Mordor roster average near 1.20, and
-`TroopWeightService.ComputeSizePenalty` subtracts `weightedCount - rawCount` from the party size
-limit. A 92% BN party settles at roughly `baseLimit / 1.91` raw troops, so these lords field around
-60 to 65% of the head count of other Mordor lords, with far better troops. That is the intended
-shape. `war_spoils` upkeep is not a factor: `SpecialResourceService` gates on the player's resources
+The initiate to veteran rungs are `weight="2.0"` and the six level-41+ rungs (knight, warden,
+marksman and the three temple tips) are `3.0` since #585, against a Mordor roster average near 1.10,
+and `TroopWeightService.ComputeSizePenalty` subtracts `weightedCount - rawCount` from the party
+size limit. At the template midpoint both house rosters average 2.12 per head (135 raw, 286.5
+weighted), so a house lord settles at roughly `baseLimit / 2.12` raw troops, about half the head
+count of a sibling Mordor lord (average 1.10), with far better troops. That is the intended shape.
+With the pre-#585 weights the same midpoint gave 1.93 (260.5 weighted over 135 raw); the 1.91 this
+section used to quote was computed on the 3500-scale rosters and never redone after the retarget. `war_spoils` upkeep is not a factor: `SpecialResourceService` gates on the player's resources
 only, so AI lords pay nothing.
 
 ### New string keys, because editing in place would have shipped the old names
@@ -224,8 +233,9 @@ IsIntentionallyUnrecruited"), so `mordor_num_` joins militia, `_boss`, `_merc` a
 that clause with the reasoning recorded inline. **If the line is ever made recruitable, delete the
 clause rather than widening it, and add `mordor_num_initiate` to the Mordor pools.**
 
-They reach the field through lord party templates, the level-3 patrol, the vassal reward, and
-prisoner recruitment (which then walks the upgrade tree normally).
+They reach the field through the two house lord templates and Sauron's, the vassal reward, and
+prisoner recruitment (which then walks the upgrade tree normally). The level-3 patrol carried one
+infantry until #584.
 
 **"AI-only" is the wrong label and an earlier draft used it.** `vassal_reward_troops_mordor` grants
 `mordor_num_vet_infantry`, and `DefaultVassalRewardsModel` adds every stack in that template straight
@@ -243,8 +253,10 @@ each stack to `min + (max - min) * r`. Adding 13 stacks pushed each Mordor lord 
 scales every stack's spread so the sum lands back on 3500. It is idempotent and absolute rather than
 multiplicative, so the other 176 templates were no-ops.
 
-The level-3 patrol and vassal-reward templates use exact `min == max` counts and sit outside that
-tool's scope, which is why their single entries each are hand-set.
+The vassal-reward template uses an exact `min == max` count and sits outside that tool's scope,
+which is why its single entry is hand-set. Removing stacks needs the same re-normalise in the other
+direction: stripping the 4% sprinkle (#584) dropped fourteen Mordor templates from 260 to 246 or
+247, and the tool scaled them back to 260 (120 stacks changed, `min_value` untouched).
 
 ### Armour stats come from the curve function, not a copied table
 
@@ -498,10 +510,20 @@ and zero `mordor_num` entries, while the live templates now carry 23 to 26 stack
 Numenorean stacks from 15 of the 16 templates **and** revert the 3500 rescale. The JSON was already
 stale before this feature; this widens the blast radius from a rebalance to a feature deletion.
 **Fixed here.** `upsert_party_template` now refuses to replace a template when the spec would drop
-troops the live file already has, naming exactly what would be lost. 19 of the 21 culture specs pass
-unaffected; it catches Mordor and, separately, a **pre-existing** case where the Gondor spec would
-have deleted 5 Lossarnach noble troops. Regenerating a spec (or adding the missing troops to it)
-clears the refusal.
+troops the live file already has, naming exactly what would be lost. At the time 19 of the 21 culture
+specs passed that check; it caught Mordor and, separately, a **pre-existing** case where the Gondor
+spec would have deleted 5 Lossarnach noble troops. Regenerating a spec (or adding the missing troops
+to it) clears the refusal.
+
+**Widened 2026-09-13 (#584).** The id check was the only guard, and confining the line removed the
+very ids it fired on: for the 13 non-house Mordor templates the live id set and the stale spec's
+became identical, leaving only the two houses tripping it. The second way a spec falls behind drops
+no id at all, a party-size retarget, and every culture spec except `bandits` and `khand` still
+carries pre-2026-08-14 counts (Gondor's Minas Tirith spec sums to 33 against a live 200). So the
+guard now also refuses a spec whose `max_value` sum is below the live template's, and a dry run of
+`--all` refuses 19 of the 21 specs today, which is the truth the id check had been hiding.
+`tools/tests/test_generate_clan_heraldry.py` pins both halves. Regenerate a spec from the live file
+before applying it.
 
 **3. Two validators are silently green on this feature.**
 `validate_mesh_refs.py --scan-bodies` checks **nothing** in the Armory: `tpac_paths_for_modules`

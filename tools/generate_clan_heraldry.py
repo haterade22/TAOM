@@ -186,6 +186,15 @@ def upsert_party_template(text, template_id, roster):
     delete troops it has never heard of. So: refuse, and say exactly what would
     have been lost. Re-generate the spec (or add the missing troops to it) and
     the run proceeds normally.
+
+    A spec falls behind in a second way that drops no id: a party-size retarget
+    (`rebalance_party_template_maxes.py`) rewrites every max_value and keeps
+    every troop. The id check cannot see that. It went unnoticed while the
+    Mordor spec was also missing the Black Numenorean line, because the id
+    check fired first on every clan; when #584 (2026-09-13) removed that line
+    from 13 of the 15 templates their id sets matched the stale spec exactly,
+    and only the two house clans still tripped the guard. So a spec whose
+    max_value sum is below the live template's is refused on the same terms.
     """
     rendered = render_template(template_id, roster)
     existing = re.compile(r'\t?<MBPartyTemplate id="%s">.*?</MBPartyTemplate>' % re.escape(template_id), re.S)
@@ -199,6 +208,13 @@ def upsert_party_template(text, template_id, roster):
                 "%s: the spec would drop %d troop(s) present in the live template: %s. "
                 "Regenerate the spec from the current file (or add these to it) before applying."
                 % (template_id, len(lost), ", ".join(lost)))
+        live_max = sum(int(v) for v in re.findall(r'max_value="(\d+)"', match.group(0)))
+        incoming_max = sum(int(s["max"]) for s in roster)
+        if incoming_max < live_max:
+            raise TemplateWouldShrink(
+                "%s: the spec's max_value sum is %d against %d in the live template, so it predates a "
+                "party-size retarget. Regenerate the spec from the current file before applying."
+                % (template_id, incoming_max, live_max))
         return existing.sub(lambda _: rendered, text, count=1)
     # insert before closing </partyTemplates>
     return text.replace("</partyTemplates>", rendered + "\n\n</partyTemplates>", 1)
