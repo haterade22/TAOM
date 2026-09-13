@@ -4,6 +4,42 @@
 
 ## 2026-09-13
 
+### feat(supply-lines): search every market from the order screen, and every trade good is orderable (#587)
+
+The supply order screen made the player pick one settlement and read its goods; finding out who
+stocks a good meant clicking through the list, which on TAOM_Map is close to a thousand rows. A
+text box now sits above the source column: two characters in (one for a CJK ideograph) and the
+settlement list gives way to hits, one per good at a source, nearest first, then cheapest, with
+stock, price and distance on each; a click selects that source with the good at the top of its
+list and the goods panel scrolled to it. The box is vanilla's `EditableTextWidget`, TAOM's first
+(`Encyclopedia.Search.TextBox` from the brush clone); it writes every keystroke into the VM's
+setter and the VM notifies the raw value back, because an echoed trimmed string re-enters the
+widget mid-update and drifts its visible text from its real one. Matching is the encyclopedia's
+rule (diacritics stripped, case ignored, substring), not the inventory's accidentally case-sensitive
+one. The catalogue is built once per screen open from the orderable settlement rows (lords sell no
+goods; at-war and unreachable rows are never scanned) and reused, since campaign time is frozen
+under the pushed state; the pure `SupplyGoodsSearch` runs over pre-folded names, stable, capped at
+60 with the total in a status line. A pending quantity locks every hit: a hit from the selected
+source would repopulate the goods and wipe the order. Typing never runs `Recompute`, so it neither
+re-quotes nor erases a confirm failure. Two things changed underneath: `GetGoods` lists every
+`IsTradeGood` item (food, raw materials, finished goods; the port had kept the donor's food-only
+filter) and drops the top-14 cut, which would have hidden the very good a search found; and the
+consume now counts and deducts on the same unmodified element and records the take only when
+`AddToCounts` returns an index (it returns -1 and removes nothing when the stack is absent). No
+trade good carries a modifier today (every food and trade good in vanilla, the Armory and TAOM is
+typed Goods; `TradeItemComponent` never sets a modifier group), so the guard keeps the invariant in
+code rather than in data. A design stress test before implementation removed four defects from the
+plan (the same-source hit wiping the order, the goods scroll offset surviving a repopulate, a
+settable `IsSearchActive` taking write-backs from both `IsHidden` and `IsVisible`, locks routed
+through `Recompute`); the five-agent deep review found one MED (the consume parity, fixed) and two
+efficiency MEDs (one fixed, the lazy first-keystroke build kept and documented). Six
+`taom_sl_search_*` / `taom_sl_hit_*` keys registered and seeded in the 12 languages; the paid
+translation rides #508. 34 engine tests, 30 VM tests; suite 8895 green.
+Not-tested: rendering (the text box, its placeholder, the hide/show swap, the 54 px hit rows, the
+goods scroll reset) and the first-keystroke build on the full map need the in-game smoke listed in
+the feature doc. RCA: `docs/reviews/rca-supply-search-2026-09-13.md`.
+`docs/features/supply-lines.md`.
+
 ### fix(tools): the clan_heraldry specs are synced from the live files, and applying them is a no-op (#589)
 
 `generate_clan_heraldry.py` replaces a whole `<MBPartyTemplate>` from

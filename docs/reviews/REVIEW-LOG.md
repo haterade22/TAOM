@@ -6,6 +6,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 106 | 2026-09-13 | Supply Lines cross-market goods search (#587): TAOM's first `EditableTextWidget` over every trade good in every orderable market, a pure search engine, hit rows that select the source with the good promoted, and the goods consume hardened to count and deduct on one element | issues-found (0 P1, 1 P2, 1 P3, 1 observation) | agree (all fixed) | 1 P2 confirmed (scroll momentum survives a repopulate) + 1 P3 doc + 1 observation acted on | 0 | 0 | adversarial-ultra (gpt-6-astra), isolated worktree |
 | 102 | 2026-09-12 | Per-hero lord party templates (#580): Faramir fields Ithilien rangers, Sauron a Black Numenorean and Uruk host, a postfix on `Clan.DefaultPartyTemplate` live only inside two lord-spawn scopes | (no Codex pass) | 5-agent deep review, ready | 1 MEDIUM fixed (a closure per in-scope read; the decision now takes the service) | 1 (the warned-hero set is bounded by the JSON) | 0 | deep-review v5 |
 | 101 | 2026-09-12 | Memory attribution instruments: probe vertex-buffer + GPU split, `[SaveLoad]` GameLoaded/GameInitializationFinished, and a heap release on heavy-screen close | issues-found (0 P1 / 1 P2 / 0 P3) | agree | 1 confirmed P2: the heap release was redundant, `GameStateManager.OnPopState`/`OnPushState` already call `Common.MemoryCleanupGC()` (`:306`/`:278`) and the three screens close through `PopState`; class, tests, registration and wiring removed, and the finding inverted the measurement (2.6 GB surviving the engine's collections is rooted). Deep review before it: 2 confirmed (a doc claim that `OnGameLoaded` fires for new campaigns and bisects the post-`AllBehaviorDataLoaded` window; a dump-path marker set after calls that can throw), 1 agent false positive. RCA `rca-memory-instruments-2026-09-12.md` | 0 | 0 | v6 + 6 Known Suspects, GPT-6-Astra at ultra |
 | 99 | 2026-09-12 | Camp wait menu dead after refuge founding (#567): wait condition `true`, founding exits before the deposit screen, then the Codex fix (paused picker + context revalidation) | issues-found (0 P1 / 2 P2 / 1 P3) | agree | 1 confirmed P2 on the fix (the unpaused picker let an incoming enemy's `encounter_meeting` become the menu the new exit destroyed); 1 pre-existing P2 filed as #573 (Enlistment load-time discharge leaves the persisted service menu with a false wait condition); 1 P3 (source pins accepted `args => true && false` and a commented-out exit) | 0 | 0 | v6 + 8 Known Suspects, GPT-6-Astra at ultra |
@@ -2816,6 +2817,53 @@ old band) were all numbers written from an agent's summary and not from the data
 Owed: new-campaign smoke (a `clan_empire_south_2` lord with no Black Numenoreans, the Mouth of
 Sauron mostly BN, a Mordor level-3 patrol with none), a full restart and an L41+ elite reading 3
 slots in the party screen's weighted frame.
+
+## Review 106: Supply Lines cross-market goods search (#587), 5-agent deep-review + Codex (2026-09-13)
+
+The user asked to search for a good across every market from the supply order screen instead of
+clicking through close to a thousand settlements, and, asked, chose every trade good over food
+only and goods only over goods plus troops. The screen got TAOM's first `EditableTextWidget`
+(`Encyclopedia.Search.TextBox` from the brush clone), a pure `SupplyGoodsSearch` over a catalogue
+built once per screen open, hit rows that select the source with the good at `Goods[0]`, a
+wholesale hit lock while a quantity is pending, and two changes underneath: `GetGoods` lists every
+`IsTradeGood` item with no 14-row cap, and the consume counts and deducts on the same unmodified
+element and records the take only when `AddToCounts` returns an index. A design-time stress test
+(a Plan agent, before implementation) removed four defects from the plan: a same-source hit pick
+wiping the order, the goods scroll offset surviving a repopulate, a settable `IsSearchActive`
+taking write-backs from both `IsHidden` and `IsVisible`, and locks routed through `Recompute`.
+
+**Deep review, five agents.** Standards clean; compatibility 23 signatures verified on the
+installed DLLs, plus the note that `EditableTextWidget`, `ScrollbarWidget` and `Widget` live in
+`TaleWorlds.GauntletUI.BaseTypes`; efficiency two MEDs (the get-only `IsSearchActive` folded the
+query on every binding read, fixed by caching; the lazy first-keystroke catalogue build, kept and
+documented); completeness clean. Data flow, 10 flows, one MED: the consume counted with
+`GetItemNumber` (item only) and deducted with `AddToCounts(item, n)` (unmodified element only,
+returns -1 and touches nothing when absent) without reading the return, so a modifier-carrying
+stack would have been billed and delivered without leaving the settlement; unreachable on today's
+data (every food and trade good is typed Goods and `TradeItemComponent` never sets a modifier
+group, checked file by file), fixed in code anyway. Three LOWs: a status line counting listings
+that read as places (reworded plural-neutral in the C#, the registry and the 12 seeded rows
+together), and two untested transitions (tests added).
+
+**Codex gpt-6-astra at ultra, isolated worktree: 0 P1, 1 P2, 1 P3, 1 observation, 0 false
+positives, 7 of 9 handed suspects disputed with decompiled evidence.** The P2: the scroll reset
+wrote 0 into the two-way `ValueFloat` but `ScrollablePanel` keeps its wheel MOMENTUM across a
+repopulate whenever both lists overflow (`:588-598`), so a notch followed at once by a hit pick
+coasts the pane off the promoted row; Codex ran the panel's update equations (115 px of drift
+against a 150 px pane). Fixed: the screen finds the pane by id after `LoadMovie` and hands the VM
+its `ResetTweenSpeed` (`ResetGoodsScroll`, an `Action`, never a widget), invoked before the value
+reset; two tests pin the order and the no-hook fallback. The P3: the feature doc claimed vanilla's
+inventory closes on Escape while its search box has focus; `GauntletInventoryScreen.OnFrameTick`
+returns on `IsFocusedOnInput()` before any poll. TAOM now takes that rule, so Escape cannot
+discard a pending order mid-typing. The observation: a console-created modified goods stack would
+list but never consume (fails closed); `GetGoods` now skips modified elements. RCA:
+`rca-supply-search-2026-09-13.md`; lessons in `campaign-mechanics.md` and `localization-ui.md`.
+Suite 8838 green in the worktree.
+
+Owed: the in-game smoke (the text box and its placeholder render, the hide/show swap, the 54 px
+hit rows, the goods scroll landing after a wheel notch, Escape ignored while typing, a non-food
+trade good delivered, the first-keystroke build on the full map) and the paid translation run for
+the six keys (#508).
 
 ## Unlinked review artefacts (index)
 
