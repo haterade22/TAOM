@@ -80,6 +80,7 @@ class Registries:
     item_armour: dict = field(default_factory=dict)           # armour item id -> head+body+arm+leg (empty = unavailable)
     item_folder: dict = field(default_factory=dict)           # armour item id -> LOTRLOME_items folder (None = vanilla/repo)
     launchers: dict = field(default_factory=dict)             # bow/crossbow id -> ranged_ladder.Launcher (empty = unavailable)
+    mount_barred_usages: set = None                           # item_usage ids flagged requires_no_mount (None = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -1519,9 +1520,31 @@ class Validator:
                 message="the ladder spec contradicts itself or the install, so no troop's reach was "
                         "checked: " + "; ".join(problems[:4]) + (" ..." if len(problems) > 4 else ""),
             )]
-        troops = {tid: t for tid, t in rl.load_ranged_troops(self.moduledata).items()
+        failures: list = []
+        troops = {tid: t for tid, t in rl.load_ranged_troops(self.moduledata, failures=failures).items()
                   if tid not in self._RANGED_LADDER_EXEMPT}
         issues = []
+        for f in failures:
+            # A file that does not parse drops every troop in it from both rules: say so, or a
+            # corrupted file reads as a clean one (Codex review, 2026-09-13).
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=self._rel(Path(f.split(": ", 1)[0])), line=0,
+                entry_id="(file)",
+                message=f"{Path(f.split(': ', 1)[0]).name} is not well-formed XML, so none of its troops was "
+                        f"checked by the ranged ladder rules (not checked is not clean): {f.split(': ', 1)[1]}",
+            ))
+        barred = getattr(self.reg, "mount_barred_usages", None)
+        if barred:
+            for c in rl.mount_conflicts(troops, launchers, barred):
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="RANGED_MOUNT_USAGE",
+                    file=self._rel(Path(troops[c.troop].file)), line=0, entry_id=c.troop,
+                    message=(f'mounted troop carries "{c.launcher}" whose item_usage "{c.usage}" is flagged '
+                             f"requires_no_mount (Native item_usage_sets.xml), so it spawns on the horse holding a bow "
+                             f"it never draws. In tools/ranged_ladders.json give the line a \"usage\" override "
+                             f"({{\"Bow\": \"bow\"}}, the Armory's own \"- Horse\" pattern) or a donor with a mounted "
+                             f"usage, then regenerate and re-roster"),
+                ))
         for troop in rl.unassigned(troops, launchers, spec):
             issues.append(Issue(
                 severity=Severity.WARNING, code=code, file=self._rel(Path(troop.file)), line=0,
@@ -2045,6 +2068,15 @@ def build_item_armour(item_roots) -> dict:
     return armour
 
 
+def build_mount_barred_usages(game_modules):
+    """item_usage ids flagged requires_no_mount, from the install's item_usage_sets.xml files;
+    None without the install (the gate then skips the mount check and says so)."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import ranged_ladder as rl
+    return rl.mount_barred_usages(game_modules) if game_modules else None
+
+
 def build_launchers(item_roots) -> dict:
     """bow/crossbow id -> ranged_ladder.Launcher over the same item roots the armour index
     reads, for RANGED_LADDER_INVERSION. Unavailable (empty) without the install."""
@@ -2114,6 +2146,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     item_armour = build_item_armour(item_roots)
     item_folder = build_item_folders(item_roots)
     launchers = build_launchers(item_roots)
+    mount_barred = build_mount_barred_usages(game_modules)
 
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
@@ -2132,6 +2165,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         item_armour = {}
         item_folder = {}
         launchers = {}
+        mount_barred = None
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
@@ -2146,7 +2180,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     # "the file list broke", not "the data changed a bit".
     suspect = []
     if game_modules:
-        for label, value, floor in (("body_properties", body_properties, 50),
+        for label, value, floor in (("launchers", launchers, 30),
+                                    ("body_properties", body_properties, 50),
                                     ("cultures", cultures, 20),
                                     ("settled_cultures", settled_cultures, 15),
                                     ("settlement_economy", settlement_economy, 400)):
@@ -2167,6 +2202,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         item_armour=item_armour,
         item_folder=item_folder,
         launchers=launchers,
+        mount_barred_usages=mount_barred,
     )
 
 

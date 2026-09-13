@@ -303,6 +303,12 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **Why it works:** Codex compares documented behavior against the IoC registration lifetime and the points where the config is first resolved.
 **Prevention:** When writing how-to-retune docs for any JSON/XML-backed feature, state the actual reload scope explicitly (application restart vs new campaign vs per-tick). Don't copy plan language without verifying.
 
+### SUCCESS-7: Every troop an item-assigning tool touched, tabulated against the item's usage flags
+**Review:** Ranged range ladders, review 108 (2026-09-13)
+**What worked:** The roster tool cloned each kingdom's donor bow and handed the clone to every troop in a band by class and speed. Asked which mounted troop received which `item_usage`, Codex listed all 16 mounted ranged troops with the usage and whether Native permits it mounted, and found seven horse archers holding a `long_bow` clone (`requires_no_mount`: the bow spawns on their back and is never drawn). Six Claude agents briefed on class and speed had passed them. Asked for EVERY reader of `NotMerchandise`, it read the loot model and corrected a doc claim.
+**Why it works:** a clone copies every attribute, and the tool reads two of them; the reviewer enumerates the ones it does not read against the troops that now carry them.
+**Prevention:** when a tool assigns an existing item to troops, the prompt names the item attributes the tool does NOT set (`item_usage`, flags, `culture`, `difficulty`, `is_merchandise`) and asks what each does to the troops that now carry it, mounted, shielded and by race. Data guard: `ranged_ladder.mount_barred_usages` + `RANGED_MOUNT_USAGE`.
+
 ---
 
 ## Real Bugs Found (by source)

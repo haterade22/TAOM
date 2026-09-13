@@ -457,7 +457,7 @@ The blade appears in `crafting_templates.xslt` under `OneHandedSword` (line 115)
 
 1. **Every number in `<Weapon>` is a whole number.** Single-piece weapon stats are schema-typed `unsignedInt`, so `weapon_length="182"` loads and `weapon_length="182.4"` throws a hard schema error naming the attribute. Crafting-piece `length`, `blade_length` and `blade_width` are floats and decimals are fine there.
 2. **`thrust_damage` is the missile damage** on a ranged weapon, and `item_usage` is not optional: on a Bow, Crossbow, Sling, Pistol or Musket the price model calls `.Contains` on it and throws a null reference if it is missing.
-3. **`difficulty="100"`** is a skill gate, not a stat. This bow is unusable below Bow skill 100; the starter variant beside it in the file sets `difficulty="0"`.
+3. **`difficulty="100"`** is a skill gate on the PLAYER's inventory screen, not a stat: `CharacterHelper.CanUseItem` refuses the equip below Bow 100 and the tooltip colours it, and no spawn, AI or loot code reads it, so a troop rostered with this bow fields it at any skill (the ranged ladder's `ladder_gondor_special_bow_r` is a clone of it on level-16 troops). The starter variant beside it in the file sets `difficulty="0"`.
 
 ## Recipes: Add / Modify / Delete
 

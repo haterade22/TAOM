@@ -4,6 +4,36 @@
 
 ## 2026-09-13
 
+### fix(data): a rider cannot draw a `long_bow`; the ranged ladders after their Codex pass (#582, #588)
+
+Codex (gpt-6-astra, ultra) on the seven ladder commits: four P2, one P3, all confirmed, zero false
+positives, five of eight Known Suspects disputed with counts. The gameplay defect: seven horse
+archers (Harad R and V, Rohan E, Dunland R and V) were rostered into cells cloned from a
+`long_bow`-usage donor, and Native's `long_bow` usage set is `base_set="bow"` plus
+`requires_no_mount` (and `requires_no_shield`), so they spawned with a bow on their back that they
+never drew; all seven had carried a vanilla steppe bow before the rewrite. Fixed the way the
+Armory fixes it (`wm_mirkwood_bow_a02` "LongBow II - Horse" is the a01 mesh with `item_usage="bow"`):
+the spec's new per-line `usage` override (`{"Bow": "bow"}` on Harad and Dunland, so both keep their
+own bow mesh) and Rohan's E band on the line's `composite_steppe_bow` instead of `glen_ranger_bow`;
+the generator writes the usage onto the clone and `--verify` checks it; 130 items regenerated in
+the live Armory and the mirror, 0 roster edits (the cell ids did not change). Guards so it cannot
+ship again: `Launcher.usage`, `RangedTroop.mounted`, `mount_barred_usages()` read from the
+install's `item_usage_sets.xml` (None without it, and every caller says it skipped),
+`planned_edits(barred=)` refuses to roster a mounted troop into a barred cell, the validator's
+`RANGED_MOUNT_USAGE` names any that exists (0 today, 7 before). The other findings: the doc claim
+that ladder bows still drop as loot was wrong (`is_merchandise="false"` is `NotMerchandise`, which
+`DefaultBattleRewardModel.GetRandomItem` skips at lines 125 and 153; the items are troop-only by
+construction and the donors stay in shops and loot for the player, recorded as a decision); the
+inversion rule judged both troops by their fastest set, so a slow alternate set on the higher
+troop could hide an inversion the engine can spawn (now its slowest set); a troop file that does
+not parse vanished from the gate (now a `(file)` finding: not checked is not clean); `validate_spec`
+refused a valid whole-file-before-prefix order; no test drove the gate through `Validator.run()`
+and an empty Modules folder passed with no notice (`launchers` joins the suspect-registry floors).
+`tools/tests/test_ranged_ladder.py` 47 to 68 tests; validator 0 errors, no new warnings. RCA
+`docs/reviews/rca-ranged-ladders-codex-2026-09-13.md`; lessons in `data-content-cultures.md` and
+`testing-qa.md`; review 108. Not gated: `requires_no_shield` on a bow (Native ships twelve
+Wolfskins sets with a `long_bow` bow beside a shield).
+
 ### feat(supply-lines): search every market from the order screen, and every trade good is orderable (#587)
 
 The supply order screen made the player pick one settlement and read its goods; finding out who

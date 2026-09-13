@@ -94,8 +94,9 @@ def apply_in_memory(troops: dict, edits: list) -> dict:
     return out
 
 
-def build_context(spec: dict, launchers: dict, troops: dict, game_modules, moduledata, ammo: dict | None = None) -> dict:
-    edits = rl.planned_edits(troops, launchers, spec)
+def build_context(spec: dict, launchers: dict, troops: dict, game_modules, moduledata, ammo: dict | None = None,
+                  barred: set | None = None) -> dict:
+    edits = rl.planned_edits(troops, launchers, spec, barred)
     before = rl.inversions(troops, launchers, spec)
     after_idx = simulated_launchers(spec, launchers)
     after_troops = apply_in_memory(troops, edits)
@@ -105,6 +106,8 @@ def build_context(spec: dict, launchers: dict, troops: dict, game_modules, modul
         "troops": troops, "after_troops": after_troops, "edits": edits,
         "before": before, "after": after,
         "unassigned": rl.unassigned(troops, launchers, spec),
+        "mount_conflicts": rl.mount_conflicts(troops, launchers, barred) if barred else [],
+        "barred": barred,
         "items": rl.planned_items(spec), "ammo": ammo or {},
         "game_modules": str(game_modules), "moduledata": str(moduledata),
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
@@ -206,6 +209,10 @@ def render_report(ctx: dict) -> str:
         f"- Pending roster edits: {len(edits)} slots over {touched} troops.",
         f"- Inversions before: {len(ctx['before'])} pairs; after the edits: {len(ctx['after'])}.",
         f"- Troops no line claims: {', '.join(t.id for t in ctx['unassigned']) or 'none'}.",
+        (f"- Mounted troops holding a launcher they cannot draw from the saddle (usage requires_no_mount): "
+         + (', '.join(f'`{c.troop}` ({c.launcher}, {c.usage})' for c in ctx['mount_conflicts']) or 'none') + '.')
+        if ctx.get('barred') is not None else
+        "- Mounted-usage check skipped: no item_usage_sets.xml could be read.",
         "",
         "## The grid",
         "",
@@ -248,6 +255,7 @@ def build_json(ctx: dict) -> dict:
         "inversions_after": len(ctx["after"]),
         "worst_before": [g.worst.__dict__ | {"count": g.count} for g in rl.summarize(ctx["before"])],
         "unassigned": [t.id for t in ctx["unassigned"]],
+        "mount_conflicts": [c.__dict__ for c in ctx["mount_conflicts"]],
     }
 
 
@@ -600,11 +608,14 @@ def main(argv=None):
 
     troops = rl.load_ranged_troops(args.moduledata, failures=failures)
     ammo = rl.index_ammo(rl.default_item_roots(game_modules, args.moduledata), failures=failures)
+    barred = rl.mount_barred_usages(game_modules)
+    if barred is None:
+        print("WARNING: no item_usage_sets.xml under the Modules folder; the mounted-usage check is skipped")
     for f in failures:
         if f not in printed:
             print(f"WARNING: {f}")
     try:
-        ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo)
+        ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo, barred)
     except rl.LadderError as exc:
         print(f"ERROR: {exc}")
         return 2
@@ -643,7 +654,7 @@ def main(argv=None):
         return 2
     changes = [{"file": e.file, "troop": e.troop, "slot": e.slot, "old": e.old, "new": e.new} for e in edits]
     written = fx.write_changes(changes)
-    remaining = rl.planned_edits(rl.load_ranged_troops(args.moduledata), launchers, spec)
+    remaining = rl.planned_edits(rl.load_ranged_troops(args.moduledata), launchers, spec, barred)
     print(f"Applied {len(edits)} slot edits over {len({e.troop for e in edits})} troops in {written} file(s); "
           f"{len(remaining)} edit(s) still pending.")
     return 0 if not remaining else 1

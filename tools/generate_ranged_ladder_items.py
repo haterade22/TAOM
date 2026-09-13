@@ -84,7 +84,8 @@ def ladder_name(donor_name: str | None, new_id: str, band: str) -> str:
 
 
 def clone_launcher(donor: ET.Element, item: rl.LadderItem) -> ET.Element:
-    """A verbatim copy with the identity, the name, the speed and the shop flag swapped."""
+    """A verbatim copy with the identity, the name, the speed and the shop flag swapped, and
+    the item_usage when the line overrides it (a bow a rider can draw, see rl.usage_for)."""
     out = copy.deepcopy(donor)
     out.set("id", item.id)
     out.set("name", ladder_name(donor.get("name"), item.id, item.band))
@@ -93,6 +94,8 @@ def clone_launcher(donor: ET.Element, item: rl.LadderItem) -> ET.Element:
     for weapon in out.iter("Weapon"):
         if weapon.get("weapon_class") == item.cls:
             weapon.set("missile_speed", str(item.speed))
+            if item.usage:
+                weapon.set("item_usage", item.usage)
             changed += 1
     if not changed:
         raise GeneratorError(f"{item.donor}: no <Weapon weapon_class=\"{item.cls}\"> to set missile_speed on")
@@ -229,7 +232,8 @@ def apply_plan(plan, md: Path, write: bool) -> list[str]:
 
 
 def verify_plan(plan, md: Path) -> list[str]:
-    """Drift: a missing file, a missing id, or a speed that is not the grid's."""
+    """Drift: a missing file, a missing id, a speed that is not the grid's, or a usage that is
+    not the line's override (a stale long_bow clone spawns on a horse and is never drawn)."""
     drift: list[str] = []
     for folder, clones in plan.items():
         path = _items_path(md, folder)
@@ -244,13 +248,15 @@ def verify_plan(plan, md: Path) -> list[str]:
         on_disk = {}
         for node in root.iter("Item"):
             w = node.find("ItemComponent/Weapon")
-            on_disk[node.get("id")] = w.get("missile_speed") if w is not None else None
+            on_disk[node.get("id")] = (w.get("missile_speed"), w.get("item_usage")) if w is not None else (None, None)
         for item, _ in clones:
-            got = on_disk.get(item.id)
+            got, usage = on_disk.get(item.id, (None, None))
             if got is None:
                 drift.append(f"{path.name} ({folder}): item {item.id} missing")
             elif got != str(item.speed):
                 drift.append(f"{path.name} ({folder}): {item.id} missile_speed {got}, grid says {item.speed}")
+            elif item.usage and usage != item.usage:
+                drift.append(f"{path.name} ({folder}): {item.id} item_usage {usage}, the line says {item.usage}")
     for folder, clones in plan.items():
         loc = _loc_path(md, folder)
         if not loc.exists():

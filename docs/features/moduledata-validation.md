@@ -480,12 +480,35 @@ roster tool all call the pure `ranged_ladder.inversions`, so they cannot disagre
 `Registries.launchers` (every Bow and Crossbow `<Item>` over the same item roots as the armour
 index), so without the install the check is skipped, never faked. A spec that cannot be read or
 contradicts the install, and a ranged troop in a file no line claims, are findings rather than
-silence; `_RANGED_LADDER_EXEMPT` holds off-ladder troops with a reason each (empty today). One
+silence, and so is a troop file that does not parse (one `(file)` finding: its troops were not
+checked, and not checked is not clean); `_RANGED_LADDER_EXEMPT` holds off-ladder troops with a
+reason each (empty today). The troop that must be faster is judged by its SLOWEST battle set
+and the other by its fastest, because the engine draws each set independently. One
 warning per (rule, class, scope) naming the worst pair and the pair count. First run 2026-09-12:
 1,741 pairs (the worst `dunland_dragon_firebolt` T5 at 97 over `sagarun_crossbowman` T5 at 60); the
 repair is `tools/generate_ranged_ladder_items.py --apply` then
 `tools/rebalance_ranged_ladders.py --apply`, which left 0. Design and grid:
 `docs/features/ranged-ladders.md`.
+
+## Ranged mount usage (`RANGED_MOUNT_USAGE`)
+
+**WARNING.** A mounted troop (`default_group` HorseArcher or Cavalry, or a Horse slot in any
+battle set) holding, in any battle set, a bow or crossbow whose `item_usage` set is flagged
+`requires_no_mount`. Native's `item_usage_sets.xml` defines `long_bow` as `base_set="bow"` plus
+that flag and `requires_no_shield`, nothing else; the inventory tooltip says "Can't use on
+horseback" (`CampaignUIHelper`, `ItemUsageSetFlags.RequiresNoMount`) and a mounted AI archer
+spawns with the bow on its back. The ladder rewrite (#582) cloned each line's donor verbatim and
+rostered by class and speed, so seven horse archers whose old bows were vanilla `bow`-usage
+steppe bows received a `long_bow` clone (Harad R and V, Rohan E, Dunland R and V; Codex review
+2026-09-13). The barred set is `Registries.mount_barred_usages`, read from every
+`Modules/*/ModuleData/item_usage_sets.xml` by `ranged_ladder.mount_barred_usages`; it is None
+without the install and the pass is skipped, never faked. The same pure function
+(`ranged_ladder.mount_conflicts`) feeds the roster tool's report, and `planned_edits(barred=)`
+refuses to write such a roster in the first place. Repair in `tools/ranged_ladders.json`: give
+the line `"usage": {"Bow": "bow"}` (the Armory's own `wm_mirkwood_bow_a02` "LongBow II -
+Horse" pattern: same mesh, mounted usage) or a mounted-usage donor, then regenerate (`--verify`
+checks the usage too) and re-roster. A `launchers` registry under 30 entries with an install
+present is a suspect registry, so an empty Modules folder no longer passes as clean.
 
 ## Key Files
 

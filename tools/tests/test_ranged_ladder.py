@@ -47,20 +47,24 @@ def _spec(**over):
 
 
 def _launchers():
-    def mk(i, c, s):
+    def mk(i, c, s, usage="bow"):
         return rl.Launcher(id=i, cls=c, speed=s, accuracy=90, damage=80, name=f"[Test] {i}",
-                           file="weapons.xml")
-    return {i: mk(i, c, s) for i, c, s in (
+                           file="weapons.xml", usage=usage)
+    out = {i: mk(i, c, s) for i, c, s in (
         ("elf_bow", "Bow", 95), ("elf_bow_top", "Bow", 100), ("man_bow", "Bow", 80),
         ("man_xbow", "Crossbow", 75), ("hunting_bow", "Bow", 64),
         ("ladder_man_bow_e", "Bow", 60), ("ladder_man_bow_r", "Bow", 64),
     )}
+    out["long_bow_item"] = mk("long_bow_item", "Bow", 85, usage="long_bow")
+    return out
 
 
-def _troop(tid, culture, level, sets, upgrades=(), group="Ranged"):
+def _troop(tid, culture, level, sets, upgrades=(), group="Ranged", mounted=None):
+    if mounted is None:
+        mounted = group in ("HorseArcher", "Cavalry")
     return rl.RangedTroop(id=tid, file=f"troops_{culture}.xml", culture=culture, level=level,
                           tier=rl.engine_tier(level), group=group, sets=list(sets),
-                          upgrades=list(upgrades), skills={})
+                          upgrades=list(upgrades), skills={}, mounted=mounted)
 
 
 def _npc_xml(tid, level, sets, culture_id="man"):
@@ -121,6 +125,15 @@ class SpecTests(unittest.TestCase):
         noclass["lines"][2]["donor"] = {"Sling": "x"}
         self.assertTrue(any("Sling" in p for p in rl.validate_spec(noclass)))
 
+    def test_a_whole_file_line_may_precede_its_prefix_lines(self):
+        spec = _spec()
+        spec["lines"] = [spec["lines"][2], spec["lines"][1], spec["lines"][0]]   # man before man_special
+        self.assertEqual(rl.validate_spec(spec), [])
+        self.assertEqual(rl.line_of(_troop("man_sp_ranger", "man", 36, []), spec), "man_special")
+        two_whole = _spec()
+        two_whole["lines"].append({"id": "man2", "folder": "man", "files": ["man"], "donor": {"Bow": "man_bow"}})
+        self.assertTrue(any("claimed whole" in p for p in rl.validate_spec(two_whole)))
+
     def test_validate_spec_reports_a_non_numeric_base_instead_of_raising(self):
         bad = _spec(band_base={"E": "low", "R": 62, "V": 66, "X": 70, "C": 74})
         problems = rl.validate_spec(bad)   # must not raise (deep review 2026-09-12, tooling agent)
@@ -160,6 +173,18 @@ class SpecTests(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 # Lines                                                                         #
 # --------------------------------------------------------------------------- #
+class UsageOverrideSpecTests(unittest.TestCase):
+    def test_a_usage_override_must_name_a_ladder_class_and_a_usage_id(self):
+        spec = _spec()
+        spec["lines"][2]["usage"] = {"Bow": "bow"}
+        self.assertEqual(rl.validate_spec(spec, _launchers()), [])
+        spec["lines"][2]["usage"] = {"Javelin": "bow", "Crossbow": ""}
+        problems = rl.validate_spec(spec, _launchers())
+        self.assertEqual(len(problems), 2, problems)
+        self.assertTrue(any("Javelin" in p for p in problems))
+        self.assertTrue(any("Crossbow" in p and "empty" in p for p in problems))
+
+
 class LineTests(unittest.TestCase):
     def test_prefix_claims_before_file(self):
         spec = _spec()
@@ -206,6 +231,7 @@ class IndexTests(unittest.TestCase):
         self.assertEqual(set(idx), {"b1", "x1"})
         self.assertEqual((idx["b1"].cls, idx["b1"].speed, idx["b1"].accuracy, idx["b1"].damage, idx["b1"].name),
                          ("Bow", 88, 90, 70, "Bow One"))
+        self.assertEqual(idx["b1"].usage, "")                       # the fixture item declares none
         self.assertEqual(idx["x1"].cls, "Crossbow")
         self.assertEqual(len(failures), 1)
         self.assertIn("broken.xml", failures[0])
@@ -244,6 +270,27 @@ class IndexTests(unittest.TestCase):
         self.assertEqual(t.sets, [{"Item0": "man_bow", "Item1": "arrows_a"},
                                   {"Item0": "sword_a", "Item2": "man_bow", "Item3": "arrows_a"}])
 
+    def test_loader_marks_a_troop_mounted_by_group_or_by_a_horse_slot(self):
+        md = self.root / "ModuleData"
+        (md / "troops").mkdir(parents=True)
+        body = (_npc_xml("man_foot", 21, [{"Item0": "man_bow"}])
+                + _npc_xml("man_horse", 21, [{"Item0": "man_bow", "Horse": "pony"}])
+                + _npc_xml("man_ha", 21, [{"Item0": "man_bow"}]).replace('default_group="Ranged"', 'default_group="HorseArcher"'))
+        (md / "troops" / "troops_man.xml").write_bytes(f"<NPCCharacters>{body}\n</NPCCharacters>".encode())
+        troops = rl.load_ranged_troops(md)
+        self.assertEqual([troops[t].mounted for t in ("man_foot", "man_horse", "man_ha")], [False, True, True])
+
+    def test_mount_barred_usages_come_from_the_install(self):
+        modules = self.root / "Modules"
+        (modules / "Native" / "ModuleData").mkdir(parents=True)
+        (modules / "Native" / "ModuleData" / "item_usage_sets.xml").write_bytes(b"""<item_usage_sets>
+  <item_usage_set id="bow"><flags/></item_usage_set>
+  <item_usage_set id="long_bow" base_set="bow"><flags><flag name="requires_no_mount"/><flag name="requires_no_shield"/></flags></item_usage_set>
+  <item_usage_set id="crossbow"><flags><flag name="requires_no_mount"/></flags></item_usage_set>
+</item_usage_sets>""")
+        self.assertEqual(rl.mount_barred_usages(modules), {"long_bow", "crossbow"})
+        self.assertIsNone(rl.mount_barred_usages(self.root / "nowhere"))   # unreadable is None, never a guess
+
     def test_troop_speed_is_the_max_over_sets_per_class(self):
         idx = _launchers()
         t = _troop("t", "man", 21, [{"Item0": "man_bow"}, {"Item0": "hunting_bow", "Item2": "man_xbow"}])
@@ -275,6 +322,27 @@ class InversionTests(unittest.TestCase):
         found = rl.inversions(troops, idx, _spec())
         self.assertEqual([(f.kind, f.low, f.high, f.low_speed, f.high_speed) for f in found],
                          [("rank", "man_a", "elf_a", 80, 64)])
+
+    def test_the_higher_troop_is_judged_by_its_slowest_set(self):
+        idx = _launchers()
+        troops = {
+            "man_a": _troop("man_a", "man", 11, [{"Item0": "man_bow"}]),                              # T2: 80
+            "man_b": _troop("man_b", "man", 26, [{"Item0": "hunting_bow"}, {"Item0": "elf_bow"}]),    # T5: 64 or 95
+        }
+        found = rl.inversions(troops, idx, _spec())
+        self.assertEqual([(f.low, f.high, f.low_speed, f.high_speed) for f in found], [("man_a", "man_b", 80, 64)])
+
+    def test_mount_conflicts_name_every_mounted_troop_holding_a_barred_usage(self):
+        idx = _launchers()
+        troops = {
+            "man_h": _troop("man_h", "man", 21, [{"Item0": "long_bow_item"}], group="HorseArcher"),
+            "man_c": _troop("man_c", "man", 21, [{"Item0": "long_bow_item"}, {"Item0": "man_bow"}], group="Cavalry"),
+            "man_f": _troop("man_f", "man", 21, [{"Item0": "long_bow_item"}]),
+            "man_ok": _troop("man_ok", "man", 21, [{"Item0": "man_bow"}], group="HorseArcher"),
+        }
+        hits = rl.mount_conflicts(troops, idx, {"long_bow"})
+        self.assertEqual([(h.troop, h.launcher, h.usage) for h in hits],
+                         [("man_c", "long_bow_item", "long_bow"), ("man_h", "long_bow_item", "long_bow")])
 
     def test_ties_pass_and_classes_never_compare(self):
         idx = _launchers()
@@ -321,6 +389,28 @@ class PlanTests(unittest.TestCase):
                          ("elf_bow_top", 78, "elf", "elf", "Bow", "C"))
         mid = next(i for i in items if i.id == "ladder_elf_bow_r")
         self.assertEqual(mid.donor, "elf_bow")
+        self.assertIsNone(mid.usage)
+
+    def test_planned_items_carry_the_line_usage_override_per_class(self):
+        spec = _spec()
+        spec["lines"][2]["usage"] = {"Bow": "bow"}
+        items = {i.id: i for i in rl.planned_items(spec)}
+        self.assertEqual(items["ladder_man_bow_r"].usage, "bow")
+        self.assertIsNone(items["ladder_man_xbow_r"].usage)
+        self.assertIsNone(items["ladder_man_special_bow_r"].usage)
+
+    def test_planned_edits_accept_a_barred_donor_when_the_line_overrides_the_usage(self):
+        # The Armory's own pattern: wm_mirkwood_bow_a02 "LongBow II - Horse" is the a01 mesh
+        # with item_usage="bow" (long_bow is base_set="bow" plus the two flags).
+        idx = _launchers()
+        spec = _spec()
+        spec["lines"][2]["donor_by_band"] = {"Bow": {"R": "long_bow_item"}}
+        spec["lines"][2]["usage"] = {"Bow": "bow"}
+        troops = {"man_h": _troop("man_h", "man", 21, [{"Item0": "man_bow"}], group="HorseArcher")}
+        self.assertEqual(len(rl.planned_edits(troops, idx, spec, barred={"long_bow"})), 1)
+        spec["lines"][2]["usage"] = {"Bow": "long_bow"}   # an override can bar too
+        with self.assertRaises(rl.LadderError):
+            rl.planned_edits(troops, idx, spec, barred={"long_bow"})
 
     def test_planned_edits_rewrite_every_launcher_slot_and_nothing_else(self):
         idx = _launchers()
@@ -341,6 +431,18 @@ class PlanTests(unittest.TestCase):
             ("elf_x", "Item0", "elf_bow"): "ladder_elf_bow_v",
         })
         self.assertTrue(all(e.file.endswith(".xml") for e in edits))
+
+    def test_planned_edits_refuse_a_mounted_troop_in_a_cell_with_a_barred_donor(self):
+        idx = _launchers()
+        spec = _spec()
+        spec["lines"][2]["donor_by_band"] = {"Bow": {"R": "long_bow_item"}}
+        troops = {"man_h": _troop("man_h", "man", 21, [{"Item0": "man_bow"}], group="HorseArcher")}
+        with self.assertRaises(rl.LadderError) as ctx:
+            rl.planned_edits(troops, idx, spec, barred={"long_bow"})
+        self.assertIn("man_h", str(ctx.exception))
+        self.assertIn("long_bow", str(ctx.exception))
+        # Without a barred set (install unreadable) the planner still plans; the gate reports instead.
+        self.assertEqual(len(rl.planned_edits(troops, idx, spec)), 1)
 
     def test_planned_edits_refuse_a_class_the_line_does_not_declare(self):
         idx = _launchers()
@@ -622,6 +724,29 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual((w.get("missile_speed"), w.get("accuracy"), w.get("thrust_damage"), w.get("ammo_limit")), ("66", "100", "100", "1"))
         self.assertIsNotNone(out.find("Flags"))
         self.assertEqual(donor.get("id"), "elf_bow")  # the donor is untouched
+        self.assertIsNone(w.get("item_usage"))          # no override: the donor's usage (absent here) stays
+
+    def test_clone_sets_the_usage_override_on_the_ladder_weapon_only(self):
+        import xml.etree.ElementTree as ET
+        donor = ET.fromstring('<Item id="man_bow" name="[Man] Bow" Type="Bow">'
+                              '<ItemComponent><Weapon weapon_class="Bow" missile_speed="80" item_usage="long_bow"/></ItemComponent></Item>')
+        item = rl.LadderItem(id="ladder_man_bow_r", line="man", cls="Bow", band="R", speed=62, donor="man_bow", folder="man", usage="bow")
+        out = self.gen.clone_launcher(donor, item)
+        self.assertEqual(out.find("ItemComponent/Weapon").get("item_usage"), "bow")
+        self.assertEqual(donor.find("ItemComponent/Weapon").get("item_usage"), "long_bow")
+
+    def test_verify_sees_a_ladder_item_whose_usage_is_not_the_override(self):
+        import json
+        spec = _spec()
+        spec["lines"][0]["usage"] = {"Bow": "bow"}
+        self.spec_path.write_text(json.dumps(spec), encoding="utf-8")
+        self.assertEqual(self._run("--apply"), 0)
+        text = self._elf_file().read_bytes()
+        self.assertEqual(text.count(b'item_usage="bow"'), 5)      # every elf band, from the long_bow donor
+        self.assertNotIn(b'item_usage="long_bow"', text)
+        self.assertEqual(self._run("--verify"), 0)
+        self._elf_file().write_bytes(text.replace(b'item_usage="bow"', b'item_usage="long_bow"', 1))
+        self.assertEqual(self._run("--verify"), 1)
 
     def test_dry_run_writes_nothing_and_apply_writes_both_trees(self):
         self.assertEqual(self._run(), 0)
@@ -761,10 +886,10 @@ class ValidatorGateTests(unittest.TestCase):
         spec = rl.load_spec()
         for line in spec["lines"]:
             for cls, donor in (line.get("donor") or {}).items():
-                out.setdefault(donor, rl.Launcher(donor, cls, 70, 90, 80, donor, "w.xml"))
+                out.setdefault(donor, rl.Launcher(donor, cls, 70, 90, 80, donor, "w.xml", "bow"))
             for cls, per_band in (line.get("donor_by_band") or {}).items():
                 for donor in per_band.values():
-                    out.setdefault(donor, rl.Launcher(donor, cls, 70, 90, 80, donor, "w.xml"))
+                    out.setdefault(donor, rl.Launcher(donor, cls, 70, 90, 80, donor, "w.xml", "bow"))
         return out
 
     def _gate(self, launchers):
@@ -783,8 +908,8 @@ class ValidatorGateTests(unittest.TestCase):
 
     def test_tier_and_rank_inversions_are_reported_once_per_scope(self):
         launchers = self._with_real_donors(_launchers())
-        launchers["fast"] = rl.Launcher("fast", "Bow", 80, 90, 80, "Fast", "w.xml")
-        launchers["slow"] = rl.Launcher("slow", "Bow", 64, 90, 80, "Slow", "w.xml")
+        launchers["fast"] = rl.Launcher("fast", "Bow", 80, 90, 80, "Fast", "w.xml", "bow")
+        launchers["slow"] = rl.Launcher("slow", "Bow", 64, 90, 80, "Slow", "w.xml", "bow")
         self._troops("dunland", ("dunland_a", 11, "fast"), ("dunland_b", 26, "slow"), ("dunland_c", 31, "slow"))
         self._troops("mirkwood", ("mirkwood_a", 16, "slow"))     # rank 1 at R, slower than dunland? no: R has no dunland
         self._troops("rohan", ("rohan_a", 11, "slow"))            # rank 17 at E, slower than dunland_a (rank 18): inversion
@@ -800,8 +925,8 @@ class ValidatorGateTests(unittest.TestCase):
 
     def test_clean_rosters_pass_and_exempt_troops_are_skipped(self):
         launchers = self._with_real_donors(_launchers())
-        launchers["fast"] = rl.Launcher("fast", "Bow", 80, 90, 80, "Fast", "w.xml")
-        launchers["slow"] = rl.Launcher("slow", "Bow", 64, 90, 80, "Slow", "w.xml")
+        launchers["fast"] = rl.Launcher("fast", "Bow", 80, 90, 80, "Fast", "w.xml", "bow")
+        launchers["slow"] = rl.Launcher("slow", "Bow", 64, 90, 80, "Slow", "w.xml", "bow")
         self._troops("dunland", ("dunland_a", 11, "slow"), ("dunland_b", 26, "fast"))
         self.assertEqual(self._gate(launchers), [])
         self._troops("dunland", ("dunland_a", 11, "fast"), ("dunland_b", 26, "slow"))
@@ -813,6 +938,25 @@ class ValidatorGateTests(unittest.TestCase):
         finally:
             self.ts.Validator._RANGED_LADDER_EXEMPT.clear()
             self.ts.Validator._RANGED_LADDER_EXEMPT.update(old)
+
+    def test_a_troop_file_that_does_not_parse_is_a_finding_not_a_pass(self):
+        launchers = self._with_real_donors(_launchers())
+        (self.md / "troops" / "troops_dunland.xml").write_bytes(b"<NPCCharacters><NPCCharacter id=")
+        issues = self._gate(launchers)
+        self.assertEqual([i.entry_id for i in issues], ["(file)"])
+        self.assertIn("troops_dunland.xml", issues[0].message)
+        self.assertIn("not checked", issues[0].message)
+
+    def test_a_mounted_troop_with_a_barred_usage_is_a_finding(self):
+        launchers = self._with_real_donors(_launchers())
+        self._troops("dunland", ("dunland_h", 21, "long_bow_item"))
+        (self.md / "troops" / "troops_dunland.xml").write_bytes(
+            (self.md / "troops" / "troops_dunland.xml").read_bytes().replace(b'default_group="Ranged"', b'default_group="HorseArcher"'))
+        v = self.ts.Validator(self.md, self.schemas, self._regs(launchers))
+        v.reg.mount_barred_usages = {"long_bow"}
+        issues = [i for i in v._ranged_ladder_inversions()]
+        self.assertEqual([(i.code, i.entry_id) for i in issues], [("RANGED_MOUNT_USAGE", "dunland_h")])
+        self.assertIn("long_bow", issues[0].message)
 
     def test_unclaimed_file_is_a_finding(self):
         launchers = self._with_real_donors(_launchers())
@@ -831,6 +975,14 @@ class ValidatorGateTests(unittest.TestCase):
     def test_live_registry_builder_indexes_launchers_only_with_an_install(self):
         regs = self.ts.build_registries(self.md, None)
         self.assertEqual(regs.launchers, {})
+        self.assertIsNone(regs.mount_barred_usages)
+
+    def test_an_install_with_no_launchers_is_a_suspect_registry_not_a_pass(self):
+        modules = Path(self._tmp.name) / "Modules"
+        (modules / "SandBoxCore" / "ModuleData" / "items").mkdir(parents=True)
+        regs = self.ts.build_registries(self.md, modules)
+        self.assertEqual(regs.launchers, {})
+        self.assertTrue(any("launchers" in s for s in regs.suspect_registries))
 
 
 if __name__ == "__main__":

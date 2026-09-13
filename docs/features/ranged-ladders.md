@@ -58,7 +58,7 @@ every tier would need about 85 distinct speeds up to 140 and was rejected.
 |---|---|
 | Engine tier | `clamp(ceil((level - 5) / 5), 0, 10)`, `ranged_ladder.engine_tier`, pinned to `taom_schema.Validator._troop_tier` by a test. The formula is vanilla `DefaultCharacterStatsModel.GetTier`; the cap of 10 is TAOM's `TaomCharacterStatsModel.MaxCharacterTier` override (vanilla caps at 6), so a reader checking the dump against `MAX_TIER = 10` is looking at the wrong model |
 | Band | E = T0-2, R = T3-4, V = T5-6, X = T7-8, C = T9-10 (`bands` in the spec) |
-| Line | A troop file (`files`, the `troops_<culture>.xml` token) or an id prefix inside one (`prefixes`, matched first). Militia, bosses and horse archers ride their file's line |
+| Line | A troop file (`files`, the `troops_<culture>.xml` token) or an id prefix inside one (`prefixes`, matched first). Militia, bosses and horse archers ride their file's line. A prefix line may sit anywhere in the order relative to the whole-file line it carves from; only two WHOLE claims on one file are refused |
 | Rank | The line's position in `lines`, 1 = the best archers |
 | Speed | `band_base[band] + rank_step * (n_lines - rank)`; `band_base = {E:58, R:62, V:66, X:70, C:74}`, `rank_step = 2` |
 
@@ -76,9 +76,15 @@ Every band of every (line, class) the spec declares a donor for is a generated i
 never depends on which troops exist today. Each is a verbatim clone of the line's donor (`donor`
 per class, `donor_by_band` where the line has a visual progression: elf Longbow I to IV, Ithilien I
 to III, Numenorean I/II, Erebor I/II, Dale recurve to longbow, Rhun steppe to Dragon longbow) with
-only `id`, `name` and `missile_speed` replaced and `is_merchandise="false"` (130 near-duplicate bows
-must not flood the shops; loot is the fallen troop's own kit and still drops them). Damage,
-accuracy, difficulty, mesh and flags are the donor's, so a vanilla donor keeps its vanilla
+only `id`, `name` and `missile_speed` replaced (and `item_usage` where the line overrides it,
+below) and `is_merchandise="false"`. That flag is `ItemObject.NotMerchandise`, and it does
+more than keep 130 near-duplicate bows out of the shops: vanilla
+`DefaultBattleRewardModel.GetRandomItem` (v1.4.8 lines 125 and 153) skips every
+`NotMerchandise` slot when it rolls casualty loot, so a ladder bow never drops from a fallen
+archer either. The ladder items are troop-only by construction; the player's own bows are the
+donors, which stay in the shops and the loot pool untouched. (The first draft of this page
+said loot still dropped them; the Codex review of 2026-09-13 read the model and it does not.)
+Damage, accuracy, difficulty, mesh and flags are the donor's, so a vanilla donor keeps its vanilla
 `culture=` and an Ithilien donor its `difficulty="100"`; neither matters to an AI troop
 (`CharacterObject.IsRanged` and `GetFormationClass` read the item TYPE; `difficulty` is read only
 by the player's inventory screen, `CharacterHelper.CanUseItem` for the equip gate and the tooltip,
@@ -87,6 +93,23 @@ vanilla `DefaultTournamentModel.GetRegularRewardItems` sorts candidate prizes by
 `item.Culture == town.Culture`, and about half the 130 clones carry a vanilla culture
 (`Culture.vlandia` on every `crossbow_c` clone, for instance). Today `is_merchandise="false"`
 excludes them from that pool before the culture is ever compared.
+
+**A rider cannot draw a `long_bow`.** Native's `item_usage_sets.xml` gives the `long_bow` usage
+set `base_set="bow"` plus two flags, `requires_no_mount` and `requires_no_shield`, and nothing
+else; the engine's inventory tooltip says "Can't use on horseback" from the first flag
+(`CampaignUIHelper`, `ItemUsageSetFlags.RequiresNoMount`) and a mounted AI archer holding one
+spawns with it on its back and never fires. Seven horse archers (Harad, Dunland, Rohan E) shipped
+that way on 2026-09-12 because their line's donor was a `long_bow` bow. The Armory's own answer
+is `wm_mirkwood_bow_a02` "LongBow II - Horse": the a01 mesh with `item_usage="bow"`. The spec
+does the same per line with `"usage": {"Bow": "bow"}` (Harad and Dunland today), which the
+generator writes onto the clone's `<Weapon>` and `--verify` checks, so the kingdom keeps its own
+bow mesh; Rohan instead dropped its E-band `glen_ranger_bow` override for the line's
+`composite_steppe_bow`. `planned_edits(barred=)` refuses to roster a mounted troop into a cell
+whose effective usage (override, else donor) is in the install's `requires_no_mount` set, and the
+validator's `RANGED_MOUNT_USAGE` warning names any such troop that exists; both read the set from
+`Modules/*/ModuleData/item_usage_sets.xml` (`ranged_ladder.mount_barred_usages`) and skip, saying
+so, when no such file can be read. The second flag is not gated: Native itself ships twelve
+Wolfskins sets (`default_group="Ranged"`) with a `long_bow` bow beside a shield.
 
 Names are `{=<id>}<donor name, its own numeral and "- Starting" / "- Horse" suffix stripped>
 <band numeral I..V>`, and the generator registers each English row in the Armory's
@@ -116,7 +139,7 @@ tools/ranged_ladder.py     engine_tier, band_of, rank_of, grid_speed, ladder_id,
         |                                             (live Armory + lotraom-assets mirror)
         +--> tools/rebalance_ranged_ladders.py       tools/reports/ranged-ladders/{REPORT.md,json}
         |                                             --apply: troops/troops_*.xml launcher slots
-        +--> tools/taom_schema.py                    RANGED_LADDER_INVERSION (warning)
+        +--> tools/taom_schema.py                    RANGED_LADDER_INVERSION, RANGED_MOUNT_USAGE (warnings)
 ```
 
 ## Configuration
@@ -131,6 +154,9 @@ tools/ranged_ladder.py     engine_tier, band_of, rank_of, grid_speed, ladder_id,
     "prefixes": ["gondor_ith_", "gondor_ithilien_", "gondor_brv_"],
     "donor": {"Bow": "wm_ithilien_bow"},
     "donor_by_band": {"Bow": {"X": "wm_ithilien_bow_b", "C": "wm_ithilien_bow_c"}}},
+   {"id": "harad", "folder": "harad", "files": ["harad"],
+    "donor": {"Bow": "wm_harad_bow_a01"}, "usage": {"Bow": "bow"},
+    "donor_by_band": {"Bow": {"X": "wm_harad_bow_a02", "C": "wm_harad_bow_a02"}}},
    ...]}
 ```
 
@@ -139,8 +165,9 @@ list moves every one of its items by `rank_step` per place. `validate_spec` refu
 bands leave a tier uncovered, whose bases do not increase, whose `rank_step` is not positive,
 whose `folder` the Armory's `SubModule.xml` does not register, whose donor is missing or of
 the wrong class, whose `files` token names no `troops_<token>.xml` on disk (a typo would
-otherwise be a line with no troops, which reads as clean), or whose prefixes overlap across two
-lines (an id matching both would be decided by list order alone).
+otherwise be a line with no troops, which reads as clean), whose prefixes overlap across two
+lines (an id matching both would be decided by list order alone), or whose `usage` names a
+class that is not a ladder or an empty usage id.
 
 ### Current Values
 
@@ -180,8 +207,8 @@ easier for the same skill.
 | `tools/generate_ranged_ladder_items.py` | Items and English loc rows into the live Armory and the mirror (`--apply`, `--verify`, `--revert`) |
 | `tools/rebalance_ranged_ladders.py` | Report to `tools/reports/ranged-ladders/` (md, html, json); `--apply` rewrites the rosters |
 | `docs/reference/ranged-troops.html` | The tracked HTML: every ranged troop per kingdom, skills beside weapon speed, reach, accuracy, spread (bow factor 0.0009 per skill level, crossbow 0.0005), cadence, damage (launcher plus ammo, `Mission.OnAgentShootMissile`); a full document with its own charset, no clock in it so a regenerate is byte-identical (`.gitattributes` pins it LF); never hand-edited |
-| `tools/taom_schema.py` | `Registries.launchers`, `build_launchers`, `Validator._ranged_ladder_inversions`, `_RANGED_LADDER_EXEMPT` |
-| `tools/tests/test_ranged_ladder.py` | 47 tests over all of the above, synthetic data only |
+| `tools/taom_schema.py` | `Registries.launchers` and `.mount_barred_usages`, `build_launchers`, `build_mount_barred_usages`, `Validator._ranged_ladder_inversions` (emits `RANGED_LADDER_INVERSION` and `RANGED_MOUNT_USAGE`), `_RANGED_LADDER_EXEMPT`; an install with no launchers is a suspect registry |
+| `tools/tests/test_ranged_ladder.py` | 68 tests over all of the above, synthetic data only |
 | `Main/_Module/ModuleData/troops/troops_*.xml` | The 227 rosters, edited through the tool only |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/ranged_ladder.xml` | 13 generated item files (unversioned; `--verify` is the reversion gate) |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/Languages/loc_<folder>.xml` | The marker block of English names |
@@ -198,11 +225,15 @@ easier for the same skill.
 function pinned to the validator's, prefix-before-file line precedence, launcher index (bows and
 crossbows only, `*.xml` only, parse failures reported), troop loader (weapon slots, civilian sets
 skipped, villagers excluded), the two rules on fixtures (tier, rank, ties, cross-class, unassigned),
-grouping, planned items and edits, drag-model monotonicity; the roster tool end to end on a fake
+grouping, planned items and edits (the usage override, the mounted refusal), drag-model
+monotonicity, the higher troop judged by its slowest set; the mount-barred set read from a
+fixture `item_usage_sets.xml` and None without one; the roster tool end to end on a fake
 install (dry run touches nothing, apply refuses until the items exist, byte-faithful rewrite, ammo
 untouched, idempotent, missing install reported); the generator end to end (both trees, loc rows
-with sidecar, idempotent, `--verify` drift on a speed, an id and a missing mirror file, `--revert`
-exact, unregistered folder and missing donor refused); the validator gate on real-spec fixtures.
+with sidecar, idempotent, `--verify` drift on a speed, a usage, an id and a missing mirror file,
+`--revert` exact, unregistered folder and missing donor refused); the validator gate on real-spec
+fixtures, including a troop file that does not parse (a `(file)` finding, never a clean pass) and
+a mounted troop on a barred usage.
 
 ## How to change the ranking or the spread
 
@@ -228,6 +259,12 @@ roots; parsing every file cost 1.2 s).
   Deep review: index pre-filter (validator cost 1.2 s to 0.18 s), `band_base` parse reported not
   raised, `files` tokens and prefix overlaps validated, `MaxCharacterTier` attributed to TAOM's
   override. `docs/reviews/rca-ranged-ladders-2026-09-12.md`.
+- 2026-09-13: the tracked HTML report (`docs/reference/ranged-troops.html`) and the militia
+  veteran step (#588). Codex review (gpt-6-astra, ultra): seven horse archers rostered into
+  `long_bow` cells (`usage` override, `RANGED_MOUNT_USAGE`, planner refusal); the loot claim above
+  corrected; the higher troop of a pair judged by its slowest set; an unparseable troop file is a
+  finding; a valid prefix-before-file order accepted; an install with no launchers is a suspect
+  registry. `docs/reviews/rca-ranged-ladders-codex-2026-09-13.md`.
 
 ## GitHub Issue
 

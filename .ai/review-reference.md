@@ -42,6 +42,13 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Tabulates every troop an item-assigning tool touched against the item's usage flags** (2026-09-13,
+  ranged ladders review 108): asked which mounted troop received which `item_usage`, it listed all
+  16 mounted ranged troops with the usage and whether Native permits it mounted, found seven
+  `long_bow` clones on horse archers that six Claude agents briefed on class and speed had passed,
+  and, asked for EVERY reader of `NotMerchandise`, read `DefaultBattleRewardModel.GetRandomItem` and
+  `MapEvent:1602` and corrected a doc claim about loot. Brief a data-tool review with the item
+  attributes the tool does NOT set and ask what each one does to the troops that now carry it.
 - **Reads the widget's update loop past the bound field** (2026-09-13, supply search review 106):
   handed a scroll reset that wrote 0 into a two-way `ScrollbarWidget.ValueFloat`, it read
   `ScrollablePanel.UpdateScrollablePanel` after the value read and found the private wheel momentum

@@ -80,6 +80,14 @@ class Launcher:
     damage: int         # thrust_damage
     name: str           # display name, localisation tag stripped
     file: str           # defining file's basename
+    usage: str = ""    # item_usage; a usage set flagged requires_no_mount cannot be drawn mounted
+
+
+@dataclass(frozen=True)
+class MountConflict:
+    troop: str
+    launcher: str
+    usage: str
 
 
 @dataclass(frozen=True)
@@ -103,6 +111,7 @@ class RangedTroop:
     upgrades: list
     skills: dict = field(default_factory=dict)
     name: str = ""     # display name, localisation tag stripped
+    mounted: bool = False  # HorseArcher/Cavalry group, or a Horse slot in any battle set
 
 
 @dataclass(frozen=True)
@@ -142,6 +151,7 @@ class LadderItem:
     speed: int
     donor: str
     folder: str
+    usage: str | None = None   # the line's item_usage override for the class, else the donor's
 
 
 @dataclass(frozen=True)
@@ -205,6 +215,14 @@ def line_spec(line_id: str, spec: dict) -> dict:
         if line["id"] == line_id:
             return line
     raise LadderError(f"line {line_id!r} is not in the spec")
+
+
+def usage_for(line: dict, cls: str) -> str | None:
+    """The line's item_usage override for a class, or None to keep the donor's. The Armory's
+    own pattern for a bow a rider can draw: wm_mirkwood_bow_a02 "LongBow II - Horse" is the
+    a01 mesh with item_usage="bow" (Native's long_bow is base_set="bow" plus the flags
+    requires_no_mount and requires_no_shield, nothing else)."""
+    return (line.get("usage") or {}).get(cls)
 
 
 def donor_for(line: dict, cls: str, band: str) -> str | None:
@@ -271,12 +289,12 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
         for f in line.get("files") or []:
             if cultures is not None and f not in cultures:
                 problems.append(f"line {lid!r} claims {f!r} but no troops_{f}.xml is present; the line has no troops")
-            # A file may be claimed by several lines only when the earlier claims carry
-            # prefixes (the specials carve troops out of a file another line owns whole).
+            # A file may be claimed WHOLE by one line only; prefix lines carve troops out of it
+            # and may sit anywhere in the order (line_of tries prefixes first).
             owner = claimed_files.get(f)
-            if owner is not None and not line_spec(owner, spec).get("prefixes"):
-                problems.append(f"file {f!r} is claimed whole by both {owner!r} and {lid!r}")
             if not line.get("prefixes"):
+                if owner is not None:
+                    problems.append(f"file {f!r} is claimed whole by both {owner!r} and {lid!r}")
                 claimed_files[f] = lid
         donors = line.get("donor") or {}
         if not donors:
@@ -286,6 +304,11 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
                 problems.append(f"line {lid!r} declares donor class {cls!r}; only Bow and Crossbow are ladders")
             elif launchers is not None:
                 _check_donor(lid, cls, donor, launchers, problems)
+        for cls, usage in (line.get("usage") or {}).items():
+            if cls not in CLASSES:
+                problems.append(f"line {lid!r} overrides item_usage for {cls!r}; only Bow and Crossbow are ladders")
+            elif not isinstance(usage, str) or not usage.strip():
+                problems.append(f"line {lid!r} item_usage override for {cls!r} is empty")
         for cls, per_band in (line.get("donor_by_band") or {}).items():
             if cls not in donors:
                 problems.append(f"line {lid!r} has donor_by_band for {cls!r} but no default donor")
@@ -367,9 +390,30 @@ def index_launchers(roots, failures: list | None = None) -> dict[str, Launcher]:
                             accuracy=int(weapon.get("accuracy", "0") or 0),
                             damage=int(weapon.get("thrust_damage", "0") or 0),
                             name=display_name(item.get("name")),
-                            file=path.name)
+                            file=path.name, usage=weapon.get("item_usage", "") or "")
                         break
     return index
+
+
+def mount_barred_usages(game_modules) -> set | None:
+    """The item_usage ids whose usage set carries `requires_no_mount` (Native's long_bow, for
+    one), read from every Modules/*/ModuleData/item_usage_sets.xml. None when no such file could
+    be read: the callers then skip the mount check and say so, never guess a list."""
+    import xml.etree.ElementTree as ET
+    if not game_modules:
+        return None
+    barred: set[str] = set()
+    seen = False
+    for path in sorted(Path(game_modules).glob("*/ModuleData/item_usage_sets.xml")):
+        try:
+            root = ET.parse(path).getroot()
+        except ET.ParseError:
+            continue
+        seen = True
+        for us in root.iter("item_usage_set"):
+            if any(f.get("name") == "requires_no_mount" for f in us.iter("flag")):
+                barred.add(us.get("id", ""))
+    return barred if seen else None
 
 
 def index_ammo(roots, failures: list | None = None) -> dict[str, Ammo]:
@@ -448,6 +492,7 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) 
             if not tid:
                 continue
             sets = []
+            horse = False
             for es in list(npc.iter("EquipmentRoster")) + list(npc.iter("EquipmentSet")):
                 if _is_civilian(es):
                     continue
@@ -459,6 +504,8 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) 
                     slot = eq.get("slot", "")
                     if slot in LAUNCHER_SLOTS:
                         slots[slot] = _ITEM_REF_RE.sub("", eq.get("id") or "")
+                    elif slot == "Horse" and (eq.get("id") or "").strip():
+                        horse = True
                 sets.append(slots)
             level = int(npc.get("level", "0") or 0)
             skills = {}
@@ -472,7 +519,8 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) 
                 group=npc.get("default_group", "") or "", sets=sets,
                 upgrades=[_ITEM_REF_RE.sub("", (u.get("id") or "")).replace("NPCCharacter.", "", 1)
                           for u in npc.findall("./upgrade_targets/upgrade_target")],
-                skills=skills, name=display_name(npc.get("name")))
+                skills=skills, name=display_name(npc.get("name")),
+                mounted=horse or (npc.get("default_group", "") in ("HorseArcher", "Cavalry")))
     return troops
 
 
@@ -496,11 +544,41 @@ def troop_speed(troop: RangedTroop, launchers: dict, cls: str) -> int | None:
     return max(launchers[i].speed for i in ids)
 
 
+def troop_min_speed(troop: RangedTroop, launchers: dict, cls: str) -> int | None:
+    """The slowest launcher of the class the troop can spawn with. The rules hold the troop that
+    should be faster to its WORST set, so an alternate set with a slower bow cannot hide behind a
+    faster one (Codex review, 2026-09-13)."""
+    ids = troop_launchers(troop, launchers).get(cls)
+    if not ids:
+        return None
+    return min(launchers[i].speed for i in ids)
+
+
+def mount_conflicts(troops: dict, launchers: dict, barred: set) -> list[MountConflict]:
+    """Every mounted troop holding, in any battle set, a launcher whose item_usage is barred
+    on horseback. Pure; the planner refuses on it and the validator reports it."""
+    out: list[MountConflict] = []
+    for tid in sorted(troops):
+        troop = troops[tid]
+        if not troop.mounted:
+            continue
+        seen: set[str] = set()
+        for st in troop.sets:
+            for slot in LAUNCHER_SLOTS:
+                rec = launchers.get(st.get(slot, ""))
+                if rec is not None and rec.usage in barred and rec.id not in seen:
+                    seen.add(rec.id)
+                    out.append(MountConflict(tid, rec.id, rec.usage))
+    return out
+
+
 # --------------------------------------------------------------------------- #
 # The two rules                                                                 #
 # --------------------------------------------------------------------------- #
 def _records(troops: dict, launchers: dict, spec: dict):
-    """(troop, line, band, cls, speed) for every assigned troop and class it carries."""
+    """(troop, line, band, cls, max speed, min speed) for every assigned troop and class it
+    carries. A troop is judged by its MAX when it should be the slower one and by its MIN when it
+    should be the faster one, so no alternate set can hide an inversion."""
     out = []
     for tid in sorted(troops):
         troop = troops[tid]
@@ -510,7 +588,8 @@ def _records(troops: dict, launchers: dict, spec: dict):
         for cls in CLASSES:
             speed = troop_speed(troop, launchers, cls)
             if speed is not None:
-                out.append((troop, line, band_of(troop.tier, spec), cls, speed))
+                out.append((troop, line, band_of(troop.tier, spec), cls, speed,
+                            troop_min_speed(troop, launchers, cls)))
     return out
 
 
@@ -525,8 +604,8 @@ def inversions(troops: dict, launchers: dict, spec: dict) -> list[Inversion]:
     """Every pair that breaks a rule. Pure: the validator and the tool both call this."""
     recs = _records(troops, launchers, spec)
     found: list[Inversion] = []
-    for a_troop, a_line, a_band, a_cls, a_speed in recs:
-        for b_troop, b_line, b_band, b_cls, b_speed in recs:
+    for a_troop, a_line, a_band, a_cls, a_speed, _a_min in recs:
+        for b_troop, b_line, b_band, b_cls, _b_max, b_speed in recs:
             if a_cls != b_cls or a_troop.id == b_troop.id:
                 continue
             # Rule 1: inside a line, a lower tier is never faster.
@@ -574,14 +653,18 @@ def planned_items(spec: dict) -> list[LadderItem]:
                 items.append(LadderItem(
                     id=ladder_id(line["id"], cls, band), line=line["id"], cls=cls, band=band,
                     speed=grid_speed(line["id"], band, spec),
-                    donor=donor_for(line, cls, band), folder=line["folder"]))
+                    donor=donor_for(line, cls, band), folder=line["folder"],
+                    usage=usage_for(line, cls)))
     return items
 
 
-def planned_edits(troops: dict, launchers: dict, spec: dict) -> list[Edit]:
+def planned_edits(troops: dict, launchers: dict, spec: dict, barred: set | None = None) -> list[Edit]:
     """{(troop, slot, old) -> new} for every launcher slot of every battle set whose item is
     not already the troop's cell. Ammo slots are never touched, a class never changes. A troop
-    whose line declares no donor for a class it carries is an error, not a skip."""
+    whose line declares no donor for a class it carries is an error, not a skip; so is a mounted
+    troop whose cell's usage (the line's override, else the donor's) is in `barred`
+    (requires_no_mount): the item would spawn on the horse and never be drawn. Pass `barred=None`
+    only when the install could not be read."""
     edits: list[Edit] = []
     for tid in sorted(troops):
         troop = troops[tid]
@@ -589,6 +672,18 @@ def planned_edits(troops: dict, launchers: dict, spec: dict) -> list[Edit]:
         if line is None:
             continue
         band = band_of(troop.tier, spec)
+        if barred and troop.mounted:
+            for cls in CLASSES:
+                if cls in troop_launchers(troop, launchers):
+                    ls = line_spec(line, spec)
+                    donor = launchers.get(donor_for(ls, cls, band) or "")
+                    usage = usage_for(ls, cls) or (donor.usage if donor is not None else None)
+                    if usage in barred:
+                        raise LadderError(
+                            f"{tid} is mounted but its cell {ladder_id(line, cls, band)} would carry "
+                            f"item_usage {usage} (requires_no_mount) from donor {donor.id if donor else '?'}; "
+                            f"give line {line!r} a donor the troop can draw from the saddle, or a "
+                            f"\"usage\" override ({{\"{cls}\": \"bow\"}}) in the spec")
         seen: set[tuple] = set()
         for st in troop.sets:
             for slot in LAUNCHER_SLOTS:
