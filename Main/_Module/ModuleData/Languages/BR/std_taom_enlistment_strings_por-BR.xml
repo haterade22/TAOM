@@ -427,39 +427,39 @@
 
 	<string id="taom_enlist_arrival_stay" text="Ficar com a companhia" />
 
-	<string id="taom_fc_cancel" text="Cancel" />
+	<string id="taom_fc_cancel" text="Cancelar" />
 
-	<string id="taom_fc_dismiss" text="Your commission is ended. Return to the ranks." />
+	<string id="taom_fc_dismiss" text="Sua comissão terminou. Volte às fileiras." />
 
-	<string id="taom_fc_dismiss_answer" text="Back to the line, then. What I carry goes with the commission; the ranks do not hand it back. You are certain of this?" />
+	<string id="taom_fc_dismiss_answer" text="De volta à linha, então. O que carrego pertence à comissão; as fileiras não o devolvem. Tem certeza disso?" />
 
-	<string id="taom_fc_dismiss_cancel" text="No. Keep your commission; forget I spoke." />
+	<string id="taom_fc_dismiss_cancel" text="Não. Mantenha sua comissão; esqueça o que eu disse." />
 
-	<string id="taom_fc_dismiss_confirm" text="I am certain. Return to the {TROOP_NAME} ranks." />
+	<string id="taom_fc_dismiss_confirm" text="Tenho certeza. Volte às fileiras de {TROOP_NAME}." />
 
-	<string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME} will be discharged and one {TROOP_NAME} added to your party in their place. Everything they carry as a companion is lost with the commission. This cannot be undone." />
+	<string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME} será dispensado e um {TROOP_NAME} será adicionado ao seu grupo em seu lugar. Tudo o que carrega como companheiro se perde com a comissão. Isso não pode ser desfeito." />
 
-	<string id="taom_fc_dismiss_done" text="Then I go back to the line. It was an honor to carry the rank." />
+	<string id="taom_fc_dismiss_done" text="Então volto para a linha. Foi uma honra portar a patente." />
 
-	<string id="taom_fc_dismiss_entry" text="{HERO_NAME} (was {TROOP_NAME})" />
+	<string id="taom_fc_dismiss_entry" text="{HERO_NAME} (era {TROOP_NAME})" />
 
-	<string id="taom_fc_dismiss_failed" text="{HERO_NAME} could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed" text="{HERO_NAME} não pôde ser dispensado agora." />
 
-	<string id="taom_fc_dismiss_failed_unnamed" text="That companion could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed_unnamed" text="Esse companheiro não pôde ser dispensado agora." />
 
-	<string id="taom_fc_dismiss_menu" text="Discharge a promoted companion" />
+	<string id="taom_fc_dismiss_menu" text="Dispensar um companheiro promovido" />
 
-	<string id="taom_fc_dismiss_pick" text="Choose" />
+	<string id="taom_fc_dismiss_pick" text="Escolher" />
 
-	<string id="taom_fc_dismiss_picker_desc" text="Choose who returns to the ranks. They rejoin your party as the soldier they were promoted from; the gear they carry as a companion is lost." />
+	<string id="taom_fc_dismiss_picker_desc" text="Escolha quem volta às fileiras. Ele retorna ao seu grupo como o soldado do qual foi promovido; o equipamento que carrega como companheiro é perdido." />
 
-	<string id="taom_fc_dismiss_picker_title" text="Discharge a Promoted Companion" />
+	<string id="taom_fc_dismiss_picker_title" text="Dispensar um Companheiro Promovido" />
 
-	<string id="taom_fc_dismiss_title" text="Return to the Ranks" />
+	<string id="taom_fc_dismiss_title" text="Voltar às Fileiras" />
 
-	<string id="taom_fc_dismiss_yes" text="Discharge" />
+	<string id="taom_fc_dismiss_yes" text="Dispensar" />
 
-	<string id="taom_fc_dismissed" text="{HERO_NAME} has returned to the ranks as a {TROOP_NAME}." />
+	<string id="taom_fc_dismissed" text="{HERO_NAME} voltou às fileiras como {TROOP_NAME}." />
 
   </strings>
 

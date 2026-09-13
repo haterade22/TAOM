@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_dg2_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_dg2_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_dg2_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_dg2_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_dg2_t2_a_key" text="守門堅守充能減少,更頻繁啟動。" />
     <string id="taom_dg2_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_dg2_t2_a_p2" text="+2 隊伍規模。" />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_dg2_t3_b_p2" text="+15% 生命再生。" />
     <string id="taom_dg2_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_dg2_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_dg2_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_dale_marksman_root_desc" text="黑箭賦予 +5% 遠程傷害以紀念弓箭手巴德。" />
     <string id="taom_dm_t1_a_key" text="黑箭範圍增加,覆蓋更廣的殺戮區域。" />
     <string id="taom_dm_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_ig_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_ig_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_ig_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_ig_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_ig_t2_a_key" text="秘銀堡壘充能減少,更頻繁地啟動。" />
     <string id="taom_ig_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_ig_t2_a_p2" text="+2 隊伍規模。" />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_ig_t3_b_p2" text="+15% 生命恢復。" />
     <string id="taom_ig_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_ig_t3_b_p4" text="+15% 部隊恢復。" />
+    <string id="taom_ig_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_crossbow_master_root_desc" text="精準彈幕使用精工弩矢時賦予 +5% 遠程傷害。" />
     <string id="taom_cbm_t1_a_key" text="精準彈幕半徑增加,覆蓋更廣闊的殺戮區域。" />
     <string id="taom_cbm_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_bd_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_bd_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_bd_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_bd_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_bd_t2_a_key" text="星光編織充能減少,啟動更加頻繁。" />
     <string id="taom_bd_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_bd_t2_a_p2" text="+2 隊伍規模。" />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_bd_t3_b_p2" text="+15% 生命回復。" />
     <string id="taom_bd_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_bd_t3_b_p4" text="+15% 部隊回復。" />
+    <string id="taom_bd_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_elven_archer_root_desc" text="精靈視覺憑藉數世紀的練習賦予+5%遠程傷害。" />
     <string id="taom_elar_t1_a_key" text="精靈視覺範圍增加,覆蓋更廣的殺戮區域。" />
     <string id="taom_elar_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_wdn_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_wdn_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_wdn_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_wdn_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_wdn_t2_a_key" text="寧若戴爾祝福充能減少,更頻繁地啟動。" />
     <string id="taom_wdn_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_wdn_t2_a_p2" text="+2 隊伍規模。" />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_wdn_t3_b_p2" text="+15% 生命再生。" />
     <string id="taom_wdn_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_wdn_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_wdn_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_galadhrim_archer_root_desc" text="銀雨賦予 +5% 遠程傷害,箭矢浸染星光。" />
     <string id="taom_gar_t1_a_key" text="銀雨範圍增加,覆蓋更廣的殺戮區域。" />
     <string id="taom_gar_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_shw_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_shw_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_shw_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_shw_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_shw_t2_a_key" text="森林斗篷充能減少,更頻繁地啟動。" />
     <string id="taom_shw_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_shw_t2_a_p2" text="+2 隊伍規模。" />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_shw_t3_b_p2" text="+15% 生命恢復。" />
     <string id="taom_shw_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_shw_t3_b_p4" text="+15% 部隊恢復。" />
+    <string id="taom_shw_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_silvan_archer_root_desc" text="林冠突襲從樹頂賦予 +5% 遠程傷害。" />
     <string id="taom_sva_t1_a_key" text="樹冠打擊範圍增加,覆蓋更廣闊的殺戮區域。" />
     <string id="taom_sva_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_ub_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_ub_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_ub_t1_b_p4" text="+5% 部隊生命回復。" />
+    <string id="taom_ub_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_ub_t2_a_key" text="血之狂怒充能降低,更頻繁地啟動。" />
     <string id="taom_ub_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_ub_t2_a_p2" text="+2 隊伍規模。" />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_ub_t3_b_p2" text="+15% 生命回復。" />
     <string id="taom_ub_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_ub_t3_b_p4" text="+15% 部隊回復。" />
+    <string id="taom_ub_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_uruk_crossbow_root_desc" text="鐵雨賦予使用歐散克鍛造弩箭時 +5% 遠程傷害。" />
     <string id="taom_ucb_t1_a_key" text="鐵雨範圍增加,覆蓋更廣闊的殺戮區域。" />
     <string id="taom_ucb_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_ctm_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_ctm_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_ctm_t1_b_p4" text="+5% 部隊再生。" />
+    <string id="taom_ctm_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_ctm_t2_a_key" text="巨魔狂暴充能減少,更頻繁觸發。" />
     <string id="taom_ctm_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_ctm_t2_a_p2" text="+2 隊伍規模。" />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_ctm_t3_b_p2" text="+15% 生命再生。" />
     <string id="taom_ctm_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_ctm_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_ctm_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_goblin_sniper_root_desc" text="毒鏢賦予+5%遠程傷害,附帶洞穴真菌毒素。" />
     <string id="taom_gbs_t1_a_key" text="毒鏢範圍增加,覆蓋更廣的殺戮區域。" />
     <string id="taom_gbs_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_swr_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_swr_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_swr_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_swr_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_swr_t2_a_key" text="靈魂汲取充能縮短,更頻繁地啟動。" />
     <string id="taom_swr_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_swr_t2_a_p2" text="+2 隊伍規模。" />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="+18% 抗性。" />
     <string id="taom_swr_t3_b_p2" text="+15% 生命恢復速度。" />
     <string id="taom_swr_t3_b_p3" text="+20% 部隊士氣。" />
-    <string id="taom_swr_t3_b_p4" text="+15% 部隊恢復速度。" />
+    <string id="taom_swr_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_necromancer_acolyte_root_desc" text="黑暗箭矢賦予 +5% 遠程傷害,蘊含死靈能量。" />
     <string id="taom_nca_t1_a_key" text="黑暗箭矢範圍增加,覆蓋更廣的殺戮區域。" />
     <string id="taom_nca_t1_a_p1" text="+8% 遠程傷害。" />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% 抗性。" />
     <string id="taom_crb_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_crb_t1_b_p3" text="+5% 部隊抗性。" />
-    <string id="taom_crb_t1_b_p4" text="+5% 部隊恢復。" />
+    <string id="taom_crb_t1_b_p4" text="+5% 部隊存活率。" />
     <string id="taom_crb_t2_a_key" text="登船作戰充能減少,更頻繁啟動。" />
     <string id="taom_crb_t2_a_p1" text="+10% 部隊士氣。" />
     <string id="taom_crb_t2_a_p2" text="隊伍規模+2。" />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="抗性+18%。" />
     <string id="taom_crb_t3_b_p2" text="生命恢復+15%。" />
     <string id="taom_crb_t3_b_p3" text="部隊士氣+20%。" />
-    <string id="taom_crb_t3_b_p4" text="部隊恢復+15%。" />
+    <string id="taom_crb_t3_b_p4" text="+15% 部隊存活率。" />
     <string id="taom_corsair_crossbow_root_desc" text="「索具射擊」提供+5%遠程傷害,穩定瞄準。" />
     <string id="taom_crc_t1_a_key" text="「索具射擊」範圍增加,覆蓋更廣的殺戮區域。" />
     <string id="taom_crc_t1_a_p1" text="遠程傷害+8%。" />

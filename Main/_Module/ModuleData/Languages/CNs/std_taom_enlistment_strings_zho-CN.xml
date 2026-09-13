@@ -427,39 +427,39 @@
 
 	<string id="taom_enlist_arrival_stay" text="留在队伍中" />
 
-	<string id="taom_fc_cancel" text="Cancel" />
+	<string id="taom_fc_cancel" text="取消" />
 
-	<string id="taom_fc_dismiss" text="Your commission is ended. Return to the ranks." />
+	<string id="taom_fc_dismiss" text="你的任职到此结束。回到队列中去吧。" />
 
-	<string id="taom_fc_dismiss_answer" text="Back to the line, then. What I carry goes with the commission; the ranks do not hand it back. You are certain of this?" />
+	<string id="taom_fc_dismiss_answer" text="那就回到队列里去。我随身所带的一切都随任职而来，回到队列便不会归还。你确定吗？" />
 
-	<string id="taom_fc_dismiss_cancel" text="No. Keep your commission; forget I spoke." />
+	<string id="taom_fc_dismiss_cancel" text="不。保留你的职位吧，就当我没说过。" />
 
-	<string id="taom_fc_dismiss_confirm" text="I am certain. Return to the {TROOP_NAME} ranks." />
+	<string id="taom_fc_dismiss_confirm" text="我确定。回到{TROOP_NAME}的队列中去。" />
 
-	<string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME} will be discharged and one {TROOP_NAME} added to your party in their place. Everything they carry as a companion is lost with the commission. This cannot be undone." />
+	<string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME}将被解除职务，并有一名{TROOP_NAME}加入你的队伍取而代之。他们作为同伴携带的一切都将随职位一同失去。此操作无法撤销。" />
 
-	<string id="taom_fc_dismiss_done" text="Then I go back to the line. It was an honor to carry the rank." />
+	<string id="taom_fc_dismiss_done" text="那我便回到队列中去。能担此军衔，是我的荣幸。" />
 
-	<string id="taom_fc_dismiss_entry" text="{HERO_NAME} (was {TROOP_NAME})" />
+	<string id="taom_fc_dismiss_entry" text="{HERO_NAME}（原为{TROOP_NAME}）" />
 
-	<string id="taom_fc_dismiss_failed" text="{HERO_NAME} could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed" text="目前无法解除{HERO_NAME}的职务。" />
 
-	<string id="taom_fc_dismiss_failed_unnamed" text="That companion could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed_unnamed" text="目前无法解除该同伴的职务。" />
 
-	<string id="taom_fc_dismiss_menu" text="Discharge a promoted companion" />
+	<string id="taom_fc_dismiss_menu" text="解除一名晋升同伴的职务" />
 
-	<string id="taom_fc_dismiss_pick" text="Choose" />
+	<string id="taom_fc_dismiss_pick" text="选择" />
 
-	<string id="taom_fc_dismiss_picker_desc" text="Choose who returns to the ranks. They rejoin your party as the soldier they were promoted from; the gear they carry as a companion is lost." />
+	<string id="taom_fc_dismiss_picker_desc" text="选择谁回到队列中。他们将以晋升前的兵种身份重新加入你的队伍；作为同伴携带的装备将会失去。" />
 
-	<string id="taom_fc_dismiss_picker_title" text="Discharge a Promoted Companion" />
+	<string id="taom_fc_dismiss_picker_title" text="解除晋升同伴的职务" />
 
-	<string id="taom_fc_dismiss_title" text="Return to the Ranks" />
+	<string id="taom_fc_dismiss_title" text="回到队列" />
 
-	<string id="taom_fc_dismiss_yes" text="Discharge" />
+	<string id="taom_fc_dismiss_yes" text="解除职务" />
 
-	<string id="taom_fc_dismissed" text="{HERO_NAME} has returned to the ranks as a {TROOP_NAME}." />
+	<string id="taom_fc_dismissed" text="{HERO_NAME}已作为{TROOP_NAME}回到队列中。" />
 
   </strings>
 

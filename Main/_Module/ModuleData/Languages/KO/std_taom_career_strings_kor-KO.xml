@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="저항력 +8%." />
     <string id="taom_dg2_t1_b_p2" text="병력 사기 +5%." />
     <string id="taom_dg2_t1_b_p3" text="병력 저항력 +5%." />
-    <string id="taom_dg2_t1_b_p4" text="병력 재생력 +5%." />
+    <string id="taom_dg2_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_dg2_t2_a_key" text="성문 사수의 충전이 감소하여 더 자주 발동됩니다." />
     <string id="taom_dg2_t2_a_p1" text="병력 사기 +10%." />
     <string id="taom_dg2_t2_a_p2" text="부대 규모 +2." />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="저항력 +18%." />
     <string id="taom_dg2_t3_b_p2" text="체력 재생 +15%." />
     <string id="taom_dg2_t3_b_p3" text="부대 사기 +20%." />
-    <string id="taom_dg2_t3_b_p4" text="부대 재생 +15%." />
+    <string id="taom_dg2_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_dale_marksman_root_desc" text="검은 화살은 활잡이 바르드를 기리며 원거리 피해 +5%를 부여합니다." />
     <string id="taom_dm_t1_a_key" text="검은 화살의 범위가 증가하여 더 넓은 사살 구역을 커버." />
     <string id="taom_dm_t1_a_p1" text="원거리 피해량 +8%." />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% 저항력." />
     <string id="taom_ig_t1_b_p2" text="+5% 병력 사기." />
     <string id="taom_ig_t1_b_p3" text="+5% 병력 저항력." />
-    <string id="taom_ig_t1_b_p4" text="+5% 병력 재생력." />
+    <string id="taom_ig_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_ig_t2_a_key" text="미스릴 방벽 충전 시간 감소, 더 자주 발동." />
     <string id="taom_ig_t2_a_p1" text="+10% 병력 사기." />
     <string id="taom_ig_t2_a_p2" text="+2 부대 규모." />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% 저항력." />
     <string id="taom_ig_t3_b_p2" text="+15% 생명력 재생." />
     <string id="taom_ig_t3_b_p3" text="+20% 병력 사기." />
-    <string id="taom_ig_t3_b_p4" text="+15% 병력 재생력." />
+    <string id="taom_ig_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_crossbow_master_root_desc" text="정밀 사격이 명작 볼트로 +5% 원거리 피해량 부여." />
     <string id="taom_cbm_t1_a_key" text="정밀 사격 범위 증가, 더 넓은 살상 지역 커버." />
     <string id="taom_cbm_t1_a_p1" text="+8% 원거리 피해량." />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="+8% 저항력." />
     <string id="taom_bd_t1_b_p2" text="+5% 병력 사기." />
     <string id="taom_bd_t1_b_p3" text="+5% 병력 저항력." />
-    <string id="taom_bd_t1_b_p4" text="+5% 병력 재생." />
+    <string id="taom_bd_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_bd_t2_a_key" text="별빛 직조 충전 시간이 감소하여 더 자주 발동됩니다." />
     <string id="taom_bd_t2_a_p1" text="+10% 병력 사기." />
     <string id="taom_bd_t2_a_p2" text="+2 부대 규모." />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="+18% 저항력." />
     <string id="taom_bd_t3_b_p2" text="+15% 체력 재생." />
     <string id="taom_bd_t3_b_p3" text="+20% 병력 사기." />
-    <string id="taom_bd_t3_b_p4" text="+15% 병력 재생." />
+    <string id="taom_bd_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_elven_archer_root_desc" text="엘프의 시야는 수 세기의 연마로 +5% 원거리 공격력을 부여합니다." />
     <string id="taom_elar_t1_a_key" text="엘프의 시야 범위가 증가하여 더 넓은 사격 구역을 포괄합니다." />
     <string id="taom_elar_t1_a_p1" text="+8% 원거리 공격력." />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="+8% 저항." />
     <string id="taom_wdn_t1_b_p2" text="+5% 부대 사기." />
     <string id="taom_wdn_t1_b_p3" text="+5% 부대 저항." />
-    <string id="taom_wdn_t1_b_p4" text="+5% 부대 재생." />
+    <string id="taom_wdn_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_wdn_t2_a_key" text="님로델의 축복 충전 시간이 감소하여 더 자주 활성화됩니다." />
     <string id="taom_wdn_t2_a_p1" text="+10% 부대 사기." />
     <string id="taom_wdn_t2_a_p2" text="+2 부대 규모." />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="저항력 +18%." />
     <string id="taom_wdn_t3_b_p2" text="체력 재생 +15%." />
     <string id="taom_wdn_t3_b_p3" text="부대 사기 +20%." />
-    <string id="taom_wdn_t3_b_p4" text="부대 재생력 +15%." />
+    <string id="taom_wdn_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_galadhrim_archer_root_desc" text="은빛 비는 원거리 피해량 +5%를 부여하며, 화살촉에는 별빛이 깃든다." />
     <string id="taom_gar_t1_a_key" text="은빛 비의 범위가 증가하여 더 넓은 처치 구역을 덮는다." />
     <string id="taom_gar_t1_a_p1" text="원거리 피해량 +8%." />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="저항력 +8%" />
     <string id="taom_shw_t1_b_p2" text="병력 사기 +5%" />
     <string id="taom_shw_t1_b_p3" text="병력 저항력 +5%" />
-    <string id="taom_shw_t1_b_p4" text="+5% 병력 재생." />
+    <string id="taom_shw_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_shw_t2_a_key" text="숲의 망토 충전 시간 감소, 더 자주 발동." />
     <string id="taom_shw_t2_a_p1" text="+10% 병력 사기." />
     <string id="taom_shw_t2_a_p2" text="+2 부대 규모." />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% 저항력." />
     <string id="taom_shw_t3_b_p2" text="+15% 체력 재생." />
     <string id="taom_shw_t3_b_p3" text="+20% 병력 사기." />
-    <string id="taom_shw_t3_b_p4" text="+15% 병력 재생." />
+    <string id="taom_shw_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_silvan_archer_root_desc" text="나무 위 일격은 나뭇가지 위에서 +5% 원거리 피해 부여." />
     <string id="taom_sva_t1_a_key" text="나무 위 일격 범위 증가, 더 넓은 살상 지역 확보." />
     <string id="taom_sva_t1_a_p1" text="+8% 원거리 피해." />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% 저항력." />
     <string id="taom_ub_t1_b_p2" text="+5% 병력 사기." />
     <string id="taom_ub_t1_b_p3" text="+5% 병력 저항력." />
-    <string id="taom_ub_t1_b_p4" text="+5% 병력 재생력." />
+    <string id="taom_ub_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_ub_t2_a_key" text="피의 분노 충전 시간 감소, 더 자주 발동된다." />
     <string id="taom_ub_t2_a_p1" text="+10% 병력 사기." />
     <string id="taom_ub_t2_a_p2" text="+2 부대 규모." />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% 저항력." />
     <string id="taom_ub_t3_b_p2" text="+15% 체력 재생." />
     <string id="taom_ub_t3_b_p3" text="+20% 병력 사기." />
-    <string id="taom_ub_t3_b_p4" text="+15% 병력 재생력." />
+    <string id="taom_ub_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_uruk_crossbow_root_desc" text="철의 비는 오르상크에서 벼려진 화살로 +5% 원거리 피해를 부여한다." />
     <string id="taom_ucb_t1_a_key" text="철의 비 범위 증가, 더 넓은 살상 구역을 포괄한다." />
     <string id="taom_ucb_t1_a_p1" text="+8% 원거리 피해." />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="+8% 저항력." />
     <string id="taom_ctm_t1_b_p2" text="+5% 부대 사기." />
     <string id="taom_ctm_t1_b_p3" text="+5% 부대 저항력." />
-    <string id="taom_ctm_t1_b_p4" text="+5% 부대 재생력." />
+    <string id="taom_ctm_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_ctm_t2_a_key" text="트롤 광란 재사용 대기시간이 감소하여, 더 자주 발동됩니다." />
     <string id="taom_ctm_t2_a_p1" text="+10% 부대 사기." />
     <string id="taom_ctm_t2_a_p2" text="+2 부대 규모." />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="+18% 저항력." />
     <string id="taom_ctm_t3_b_p2" text="+15% 체력 재생." />
     <string id="taom_ctm_t3_b_p3" text="+20% 부대 사기." />
-    <string id="taom_ctm_t3_b_p4" text="+15% 부대 재생." />
+    <string id="taom_ctm_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_goblin_sniper_root_desc" text="독 다트가 동굴 버섯 독소로 +5% 원거리 피해량 부여." />
     <string id="taom_gbs_t1_a_key" text="독 다트 범위 증가, 더 넓은 살상 지역 형성." />
     <string id="taom_gbs_t1_a_p1" text="+8% 원거리 피해량." />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="저항력 +8%." />
     <string id="taom_swr_t1_b_p2" text="병력 사기 +5%." />
     <string id="taom_swr_t1_b_p3" text="병력 저항력 +5%." />
-    <string id="taom_swr_t1_b_p4" text="병력 재생력 +5%." />
+    <string id="taom_swr_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_swr_t2_a_key" text="영혼 흡수 충전량 감소, 더 자주 발동됩니다." />
     <string id="taom_swr_t2_a_p1" text="병력 사기 +10%." />
     <string id="taom_swr_t2_a_p2" text="부대 규모 +2." />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="저항력 +18%." />
     <string id="taom_swr_t3_b_p2" text="생명력 재생 +15%." />
     <string id="taom_swr_t3_b_p3" text="병력 사기 +20%." />
-    <string id="taom_swr_t3_b_p4" text="병력 재생력 +15%." />
+    <string id="taom_swr_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_necromancer_acolyte_root_desc" text="암흑 화살이 강령술 에너지로 원거리 피해량 +5%를 부여합니다." />
     <string id="taom_nca_t1_a_key" text="암흑 화살 범위 증가, 더 넓은 살상 지역을 커버합니다." />
     <string id="taom_nca_t1_a_p1" text="원거리 피해량 +8%." />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% 저항력." />
     <string id="taom_crb_t1_b_p2" text="+5% 병력 사기." />
     <string id="taom_crb_t1_b_p3" text="+5% 병력 저항력." />
-    <string id="taom_crb_t1_b_p4" text="+5% 병력 재생." />
+    <string id="taom_crb_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_crb_t2_a_key" text="접선 전투 충전시간 감소, 더 자주 발동합니다." />
     <string id="taom_crb_t2_a_p1" text="+10% 병력 사기." />
     <string id="taom_crb_t2_a_p2" text="+2 부대 규모." />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="+18% 저항력." />
     <string id="taom_crb_t3_b_p2" text="+15% 체력 재생." />
     <string id="taom_crb_t3_b_p3" text="+20% 병력 사기." />
-    <string id="taom_crb_t3_b_p4" text="+15% 병력 재생." />
+    <string id="taom_crb_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_corsair_crossbow_root_desc" text="삭구 사격은 안정된 조준으로 +5% 원거리 피해를 부여합니다." />
     <string id="taom_crc_t1_a_key" text="삭구 사격 범위 증가, 더 넓은 사격 지대를 커버합니다." />
     <string id="taom_crc_t1_a_p1" text="+8% 원거리 피해." />

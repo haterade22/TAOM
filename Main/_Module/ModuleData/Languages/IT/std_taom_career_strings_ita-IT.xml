@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="+8% resistenza." />
     <string id="taom_dg2_t1_b_p2" text="+5% morale truppe." />
     <string id="taom_dg2_t1_b_p3" text="+5% resistenza truppe." />
-    <string id="taom_dg2_t1_b_p4" text="+5% rigenerazione truppe." />
+    <string id="taom_dg2_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_dg2_t2_a_key" text="Carica di Difesa del Portone ridotta, attivandosi più frequentemente." />
     <string id="taom_dg2_t2_a_p1" text="+10% morale truppe." />
     <string id="taom_dg2_t2_a_p2" text="+2 dimensione gruppo." />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="+18% resistenza." />
     <string id="taom_dg2_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_dg2_t3_b_p3" text="+20% morale truppe." />
-    <string id="taom_dg2_t3_b_p4" text="+15% rigenerazione truppe." />
+    <string id="taom_dg2_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_dale_marksman_root_desc" text="Freccia Nera garantisce +5% danno a distanza in onore di Bard l'Arciere." />
     <string id="taom_dm_t1_a_key" text="Raggio di Freccia Nera aumentato, coprendo zone di morte più ampie." />
     <string id="taom_dm_t1_a_p1" text="+8% danno a distanza." />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% resistenza." />
     <string id="taom_ig_t1_b_p2" text="+5% morale truppe." />
     <string id="taom_ig_t1_b_p3" text="+5% resistenza truppe." />
-    <string id="taom_ig_t1_b_p4" text="+5% rigenerazione truppe." />
+    <string id="taom_ig_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_ig_t2_a_key" text="Carica del Bastione di Mithril ridotta, si attiva più frequentemente." />
     <string id="taom_ig_t2_a_p1" text="+10% morale truppe." />
     <string id="taom_ig_t2_a_p2" text="+2 dimensione gruppo." />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% resistenza." />
     <string id="taom_ig_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_ig_t3_b_p3" text="+20% morale delle truppe." />
-    <string id="taom_ig_t3_b_p4" text="+15% rigenerazione delle truppe." />
+    <string id="taom_ig_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_crossbow_master_root_desc" text="Sbarramento di Precisione garantisce +5% danno a distanza con dardi magistrali." />
     <string id="taom_cbm_t1_a_key" text="Raggio di Sbarramento di Precisione aumentato, coprendo zone d'uccisione più ampie." />
     <string id="taom_cbm_t1_a_p1" text="+8% danno a distanza." />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="+8% resistenza." />
     <string id="taom_bd_t1_b_p2" text="+5% morale delle truppe." />
     <string id="taom_bd_t1_b_p3" text="+5% resistenza delle truppe." />
-    <string id="taom_bd_t1_b_p4" text="+5% rigenerazione delle truppe." />
+    <string id="taom_bd_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_bd_t2_a_key" text="Carica del Tessuto Stellare ridotta, si attiva più frequentemente." />
     <string id="taom_bd_t2_a_p1" text="+10% morale delle truppe." />
     <string id="taom_bd_t2_a_p2" text="+2 dimensione gruppo." />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="+18% resistenza." />
     <string id="taom_bd_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_bd_t3_b_p3" text="+20% morale delle truppe." />
-    <string id="taom_bd_t3_b_p4" text="+15% rigenerazione delle truppe." />
+    <string id="taom_bd_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_elven_archer_root_desc" text="Vista Elfica garantisce +5% danno a distanza con secoli di pratica." />
     <string id="taom_elar_t1_a_key" text="Raggio della Vista Elfica aumentato, coprendo zone mortali più ampie." />
     <string id="taom_elar_t1_a_p1" text="+8% danno a distanza." />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="+8% resistenza." />
     <string id="taom_wdn_t1_b_p2" text="+5% morale truppe." />
     <string id="taom_wdn_t1_b_p3" text="+5% resistenza truppe." />
-    <string id="taom_wdn_t1_b_p4" text="+5% rigenerazione truppe." />
+    <string id="taom_wdn_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_wdn_t2_a_key" text="Ricarica della Benedizione di Nimrodel ridotta, attivandosi più frequentemente." />
     <string id="taom_wdn_t2_a_p1" text="+10% morale truppe." />
     <string id="taom_wdn_t2_a_p2" text="+2 dimensione gruppo." />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="+18% resistenza." />
     <string id="taom_wdn_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_wdn_t3_b_p3" text="+20% morale truppe." />
-    <string id="taom_wdn_t3_b_p4" text="+15% rigenerazione truppe." />
+    <string id="taom_wdn_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_galadhrim_archer_root_desc" text="Pioggia d'Argento garantisce +5% danno a distanza, frecce intrise di luce stellare." />
     <string id="taom_gar_t1_a_key" text="Raggio di Pioggia d'Argento aumentato, coprendo zone di morte più ampie." />
     <string id="taom_gar_t1_a_p1" text="+8% danno a distanza." />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="+8% resistenza." />
     <string id="taom_shw_t1_b_p2" text="+5% morale delle truppe." />
     <string id="taom_shw_t1_b_p3" text="+5% resistenza delle truppe." />
-    <string id="taom_shw_t1_b_p4" text="+5% rigenerazione delle truppe." />
+    <string id="taom_shw_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_shw_t2_a_key" text="La carica del Mantello della Foresta è ridotta, attivandosi più frequentemente." />
     <string id="taom_shw_t2_a_p1" text="+10% morale delle truppe." />
     <string id="taom_shw_t2_a_p2" text="+2 dimensione del gruppo." />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% resistenza." />
     <string id="taom_shw_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_shw_t3_b_p3" text="+20% morale truppe." />
-    <string id="taom_shw_t3_b_p4" text="+15% rigenerazione truppe." />
+    <string id="taom_shw_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_silvan_archer_root_desc" text="Colpo dalla Canopia garantisce +5% danno a distanza dalle cime degli alberi." />
     <string id="taom_sva_t1_a_key" text="Raggio del Colpo dalla Canopia aumentato, coprendo zone di eliminazione più ampie." />
     <string id="taom_sva_t1_a_p1" text="+8% danno a distanza." />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% resistenza." />
     <string id="taom_ub_t1_b_p2" text="+5% morale delle truppe." />
     <string id="taom_ub_t1_b_p3" text="+5% resistenza delle truppe." />
-    <string id="taom_ub_t1_b_p4" text="+5% rigenerazione delle truppe." />
+    <string id="taom_ub_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_ub_t2_a_key" text="Carica di Furia Sanguinaria ridotta, attivandosi più frequentemente." />
     <string id="taom_ub_t2_a_p1" text="+10% morale delle truppe." />
     <string id="taom_ub_t2_a_p2" text="+2 dimensione gruppo." />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% resistenza." />
     <string id="taom_ub_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_ub_t3_b_p3" text="+20% morale truppe." />
-    <string id="taom_ub_t3_b_p4" text="+15% rigenerazione truppe." />
+    <string id="taom_ub_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_uruk_crossbow_root_desc" text="Pioggia di Ferro conferisce +5% danno a distanza con dardi forgiati a Orthanc." />
     <string id="taom_ucb_t1_a_key" text="Raggio di Pioggia di Ferro aumentato, coprendo zone di sterminio più ampie." />
     <string id="taom_ucb_t1_a_p1" text="+8% danno a distanza." />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="+8% resistenza." />
     <string id="taom_ctm_t1_b_p2" text="+5% morale truppe." />
     <string id="taom_ctm_t1_b_p3" text="+5% resistenza truppe." />
-    <string id="taom_ctm_t1_b_p4" text="+5% rigenerazione truppe." />
+    <string id="taom_ctm_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_ctm_t2_a_key" text="Carica di Frenesia del Troll ridotta, attivandosi più frequentemente." />
     <string id="taom_ctm_t2_a_p1" text="+10% morale truppe." />
     <string id="taom_ctm_t2_a_p2" text="+2 dimensione gruppo." />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="+18% resistenza." />
     <string id="taom_ctm_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_ctm_t3_b_p3" text="+20% morale truppe." />
-    <string id="taom_ctm_t3_b_p4" text="+15% rigenerazione truppe." />
+    <string id="taom_ctm_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_goblin_sniper_root_desc" text="Dardo Avvelenato garantisce +5% danno a distanza con tossina di fungo delle caverne." />
     <string id="taom_gbs_t1_a_key" text="Raggio di Dardo Avvelenato aumentato, coprendo zone di morte più ampie." />
     <string id="taom_gbs_t1_a_p1" text="+8% danno a distanza." />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="+8% resistenza." />
     <string id="taom_swr_t1_b_p2" text="+5% morale delle truppe." />
     <string id="taom_swr_t1_b_p3" text="+5% resistenza delle truppe." />
-    <string id="taom_swr_t1_b_p4" text="+5% rigenerazione delle truppe." />
+    <string id="taom_swr_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_swr_t2_a_key" text="Carica del Risucchio d'Anima ridotta, attivandosi più frequentemente." />
     <string id="taom_swr_t2_a_p1" text="+10% morale delle truppe." />
     <string id="taom_swr_t2_a_p2" text="+2 dimensione del gruppo." />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="+18% resistenza." />
     <string id="taom_swr_t3_b_p2" text="+15% rigenerazione salute." />
     <string id="taom_swr_t3_b_p3" text="+20% morale delle truppe." />
-    <string id="taom_swr_t3_b_p4" text="+15% rigenerazione delle truppe." />
+    <string id="taom_swr_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_necromancer_acolyte_root_desc" text="Dardo Oscuro garantisce +5% danno a distanza con energia necromantica." />
     <string id="taom_nca_t1_a_key" text="Raggio di Dardo Oscuro aumentato, coprendo zone d'uccisione più ampie." />
     <string id="taom_nca_t1_a_p1" text="+8% danno a distanza." />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% resistenza." />
     <string id="taom_crb_t1_b_p2" text="+5% morale delle truppe." />
     <string id="taom_crb_t1_b_p3" text="+5% resistenza delle truppe." />
-    <string id="taom_crb_t1_b_p4" text="+5% rigenerazione delle truppe." />
+    <string id="taom_crb_t1_b_p4" text="+5% sopravvivenza delle truppe." />
     <string id="taom_crb_t2_a_key" text="Tempo di ricarica di Azione d'Arrembaggio ridotto, attivando più frequentemente." />
     <string id="taom_crb_t2_a_p1" text="+10% morale delle truppe." />
     <string id="taom_crb_t2_a_p2" text="+2 alla dimensione del gruppo." />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="+18% resistenza." />
     <string id="taom_crb_t3_b_p2" text="+15% rigenerazione della salute." />
     <string id="taom_crb_t3_b_p3" text="+20% morale delle truppe." />
-    <string id="taom_crb_t3_b_p4" text="+15% rigenerazione delle truppe." />
+    <string id="taom_crb_t3_b_p4" text="+15% sopravvivenza delle truppe." />
     <string id="taom_corsair_crossbow_root_desc" text="Tiro al Sartiame fornisce +5% danno a distanza con mira stabilizzata." />
     <string id="taom_crc_t1_a_key" text="Raggio del Tiro al Sartiame aumentato, coprendo zone letali più ampie." />
     <string id="taom_crc_t1_a_p1" text="+8% danno a distanza." />

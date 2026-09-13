@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="+8% resistencia." />
     <string id="taom_dg2_t1_b_p2" text="+5% moral de tropas." />
     <string id="taom_dg2_t1_b_p3" text="+5% resistencia de tropas." />
-    <string id="taom_dg2_t1_b_p4" text="+5% regeneración de tropas." />
+    <string id="taom_dg2_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_dg2_t2_a_key" text="Carga de Defensa de la Puerta reducida, activándose con mayor frecuencia." />
     <string id="taom_dg2_t2_a_p1" text="+10% moral de tropas." />
     <string id="taom_dg2_t2_a_p2" text="+2 tamaño del grupo." />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="+18% resistencia." />
     <string id="taom_dg2_t3_b_p2" text="+15% regeneración de salud." />
     <string id="taom_dg2_t3_b_p3" text="+20% moral de tropas." />
-    <string id="taom_dg2_t3_b_p4" text="+15% regeneración de tropas." />
+    <string id="taom_dg2_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_dale_marksman_root_desc" text="Flecha Negra otorga +5% daño a distancia en honor a Bardo el Arquero." />
     <string id="taom_dm_t1_a_key" text="Radio de Flecha Negra aumentado, cubriendo zonas de muerte más amplias." />
     <string id="taom_dm_t1_a_p1" text="+8% daño a distancia." />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_ig_t1_b_p2" text="+5% de moral de tropas." />
     <string id="taom_ig_t1_b_p3" text="+5% de resistencia de tropas." />
-    <string id="taom_ig_t1_b_p4" text="+5% de regeneración de tropas." />
+    <string id="taom_ig_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_ig_t2_a_key" text="Recarga del Bastión de Mithril reducida, activándose más frecuentemente." />
     <string id="taom_ig_t2_a_p1" text="+10% de moral de tropas." />
     <string id="taom_ig_t2_a_p2" text="+2 de tamaño del grupo." />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% de resistencia." />
     <string id="taom_ig_t3_b_p2" text="+15% de regeneración de salud." />
     <string id="taom_ig_t3_b_p3" text="+20% de moral de tropas." />
-    <string id="taom_ig_t3_b_p4" text="+15% de regeneración de tropas." />
+    <string id="taom_ig_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_crossbow_master_root_desc" text="Andanada de Precisión otorga +5% de daño a distancia con virotes de obra maestra." />
     <string id="taom_cbm_t1_a_key" text="Radio de Andanada de Precisión aumentado, cubriendo zonas de exterminio más amplias." />
     <string id="taom_cbm_t1_a_p1" text="+8% de daño a distancia." />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="+8% resistencia." />
     <string id="taom_bd_t1_b_p2" text="+5% moral de tropas." />
     <string id="taom_bd_t1_b_p3" text="+5% resistencia de tropas." />
-    <string id="taom_bd_t1_b_p4" text="+5% regeneración de tropas." />
+    <string id="taom_bd_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_bd_t2_a_key" text="Carga de Tejido de Luz Estelar reducida, activándose con mayor frecuencia." />
     <string id="taom_bd_t2_a_p1" text="+10% de moral de tropas." />
     <string id="taom_bd_t2_a_p2" text="+2 de tamaño de grupo." />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="+18% de resistencia." />
     <string id="taom_bd_t3_b_p2" text="+15% de regeneración de salud." />
     <string id="taom_bd_t3_b_p3" text="+20% de moral de tropas." />
-    <string id="taom_bd_t3_b_p4" text="+15% de regeneración de tropas." />
+    <string id="taom_bd_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_elven_archer_root_desc" text="Vista Élfica otorga +5% de daño a distancia con siglos de práctica." />
     <string id="taom_elar_t1_a_key" text="Radio de Vista Élfica aumentado, cubriendo zonas de exterminio más amplias." />
     <string id="taom_elar_t1_a_p1" text="+8% de daño a distancia." />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_wdn_t1_b_p2" text="+5% de moral de tropas." />
     <string id="taom_wdn_t1_b_p3" text="+5% de resistencia de tropas." />
-    <string id="taom_wdn_t1_b_p4" text="+5% de regeneración de tropas." />
+    <string id="taom_wdn_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_wdn_t2_a_key" text="Carga de la Bendición de Nimrodel reducida, activándose con mayor frecuencia." />
     <string id="taom_wdn_t2_a_p1" text="+10% de moral de tropas." />
     <string id="taom_wdn_t2_a_p2" text="+2 de tamaño del grupo." />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="+18% de resistencia." />
     <string id="taom_wdn_t3_b_p2" text="+15% de regeneración de salud." />
     <string id="taom_wdn_t3_b_p3" text="+20% de moral de tropas." />
-    <string id="taom_wdn_t3_b_p4" text="+15% de regeneración de tropas." />
+    <string id="taom_wdn_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_galadhrim_archer_root_desc" text="Lluvia de Plata otorga +5% de daño a distancia, flechas bañadas en luz estelar." />
     <string id="taom_gar_t1_a_key" text="Radio de Lluvia de Plata aumentado, cubriendo zonas de muerte más amplias." />
     <string id="taom_gar_t1_a_p1" text="+8% de daño a distancia." />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="+8% resistencia." />
     <string id="taom_shw_t1_b_p2" text="+5% moral de tropas." />
     <string id="taom_shw_t1_b_p3" text="+5% resistencia de tropas." />
-    <string id="taom_shw_t1_b_p4" text="+5% regeneración de tropas." />
+    <string id="taom_shw_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_shw_t2_a_key" text="Carga de Manto del Bosque reducida, activándose con mayor frecuencia." />
     <string id="taom_shw_t2_a_p1" text="+10% moral de tropas." />
     <string id="taom_shw_t2_a_p2" text="+2 al tamaño de grupo." />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% resistencia." />
     <string id="taom_shw_t3_b_p2" text="+15% regeneración de salud." />
     <string id="taom_shw_t3_b_p3" text="+20% moral de tropas." />
-    <string id="taom_shw_t3_b_p4" text="+15% regeneración de tropas." />
+    <string id="taom_shw_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_silvan_archer_root_desc" text="Golpe del Dosel otorga +5% daño a distancia desde las copas de los árboles." />
     <string id="taom_sva_t1_a_key" text="Radio de Golpe del Dosel aumentado, cubriendo zonas de muerte más amplias." />
     <string id="taom_sva_t1_a_p1" text="+8% daño a distancia." />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_ub_t1_b_p2" text="+5% de moral de tropas." />
     <string id="taom_ub_t1_b_p3" text="+5% de resistencia de tropas." />
-    <string id="taom_ub_t1_b_p4" text="+5% de regeneración de tropas." />
+    <string id="taom_ub_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_ub_t2_a_key" text="Carga de Furia Sangrienta reducida, activándose con más frecuencia." />
     <string id="taom_ub_t2_a_p1" text="+10% moral de tropas." />
     <string id="taom_ub_t2_a_p2" text="+2 tamaño de grupo." />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% resistencia." />
     <string id="taom_ub_t3_b_p2" text="+15% regeneración de salud." />
     <string id="taom_ub_t3_b_p3" text="+20% moral de tropas." />
-    <string id="taom_ub_t3_b_p4" text="+15% regeneración de tropas." />
+    <string id="taom_ub_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_uruk_crossbow_root_desc" text="Lluvia de Hierro otorga +5% daño a distancia con virotes forjados en Orthanc." />
     <string id="taom_ucb_t1_a_key" text="Radio de Lluvia de Hierro incrementado, cubriendo zonas de muerte más amplias." />
     <string id="taom_ucb_t1_a_p1" text="+8% daño a distancia." />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_ctm_t1_b_p2" text="+5% de moral de tropas." />
     <string id="taom_ctm_t1_b_p3" text="+5% de resistencia de tropas." />
-    <string id="taom_ctm_t1_b_p4" text="+5% de regeneración de tropas." />
+    <string id="taom_ctm_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_ctm_t2_a_key" text="Carga de Frenesí de Trol reducida, activándose con mayor frecuencia." />
     <string id="taom_ctm_t2_a_p1" text="+10% de moral de tropas." />
     <string id="taom_ctm_t2_a_p2" text="+2 de tamaño de grupo." />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="+18% de resistencia." />
     <string id="taom_ctm_t3_b_p2" text="+15% de regeneración de salud." />
     <string id="taom_ctm_t3_b_p3" text="+20% de moral de tropas." />
-    <string id="taom_ctm_t3_b_p4" text="+15% de regeneración de tropas." />
+    <string id="taom_ctm_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_goblin_sniper_root_desc" text="Dardo Venenoso otorga +5% de daño a distancia con toxina de hongo de caverna." />
     <string id="taom_gbs_t1_a_key" text="Radio de Dardo Venenoso aumentado, cubriendo zonas de muerte más amplias." />
     <string id="taom_gbs_t1_a_p1" text="+8% de daño a distancia." />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_swr_t1_b_p2" text="+5% de moral de tropas." />
     <string id="taom_swr_t1_b_p3" text="+5% de resistencia de tropas." />
-    <string id="taom_swr_t1_b_p4" text="+5% de regeneración de tropas." />
+    <string id="taom_swr_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_swr_t2_a_key" text="Carga de Drenar Alma reducida, activándose más frecuentemente." />
     <string id="taom_swr_t2_a_p1" text="+10% de moral de tropas." />
     <string id="taom_swr_t2_a_p2" text="+2 de tamaño de grupo." />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="+18% resistencia." />
     <string id="taom_swr_t3_b_p2" text="+15% regeneración de salud." />
     <string id="taom_swr_t3_b_p3" text="+20% moral de tropas." />
-    <string id="taom_swr_t3_b_p4" text="+15% regeneración de tropas." />
+    <string id="taom_swr_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_necromancer_acolyte_root_desc" text="Rayo Oscuro otorga +5% daño a distancia con energía nigromántica." />
     <string id="taom_nca_t1_a_key" text="Radio de Rayo Oscuro aumentado, cubriendo zonas de muerte más amplias." />
     <string id="taom_nca_t1_a_p1" text="+8% daño a distancia." />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% resistencia." />
     <string id="taom_crb_t1_b_p2" text="+5% moral de tropas." />
     <string id="taom_crb_t1_b_p3" text="+5% resistencia de tropas." />
-    <string id="taom_crb_t1_b_p4" text="+5% regeneración de tropas." />
+    <string id="taom_crb_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_crb_t2_a_key" text="Carga de Acción de Abordaje reducida, activándose con más frecuencia." />
     <string id="taom_crb_t2_a_p1" text="+10% moral de tropas." />
     <string id="taom_crb_t2_a_p2" text="+2 al tamaño del grupo." />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="+18% de resistencia." />
     <string id="taom_crb_t3_b_p2" text="+15% de regeneración de salud." />
     <string id="taom_crb_t3_b_p3" text="+20% de moral de tropas." />
-    <string id="taom_crb_t3_b_p4" text="+15% de regeneración de tropas." />
+    <string id="taom_crb_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_corsair_crossbow_root_desc" text="Disparo al Aparejo otorga +5% de daño a distancia con puntería firme." />
     <string id="taom_crc_t1_a_key" text="Radio de Disparo al Aparejo aumentado, cubriendo zonas de muerte más amplias." />
     <string id="taom_crc_t1_a_p1" text="+8% de daño a distancia." />

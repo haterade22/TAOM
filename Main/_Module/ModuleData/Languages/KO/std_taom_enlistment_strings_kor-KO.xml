@@ -427,39 +427,39 @@
 
 	<string id="taom_enlist_arrival_stay" text="부대와 함께 남는다" />
 
-	<string id="taom_fc_cancel" text="Cancel" />
+	<string id="taom_fc_cancel" text="취소" />
 
-	<string id="taom_fc_dismiss" text="Your commission is ended. Return to the ranks." />
+	<string id="taom_fc_dismiss" text="자네의 임명은 끝났네. 대열로 돌아가게." />
 
-	<string id="taom_fc_dismiss_answer" text="Back to the line, then. What I carry goes with the commission; the ranks do not hand it back. You are certain of this?" />
+	<string id="taom_fc_dismiss_answer" text="그럼 다시 대열로 돌아가지요. 제가 지닌 것은 임명과 함께 사라지고, 대열은 그것을 돌려주지 않습니다. 정말 확실하십니까?" />
 
-	<string id="taom_fc_dismiss_cancel" text="No. Keep your commission; forget I spoke." />
+	<string id="taom_fc_dismiss_cancel" text="아니다. 임명은 그대로 유지하게. 내 말은 잊어라." />
 
-	<string id="taom_fc_dismiss_confirm" text="I am certain. Return to the {TROOP_NAME} ranks." />
+	<string id="taom_fc_dismiss_confirm" text="확실하다. {TROOP_NAME} 대열로 돌아가라." />
 
-	<string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME} will be discharged and one {TROOP_NAME} added to your party in their place. Everything they carry as a companion is lost with the commission. This cannot be undone." />
+	<string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME}이(가) 전역하고 그 자리에 {TROOP_NAME} 한 명이 부대에 합류합니다. 동료로서 지니고 있던 모든 것은 임명과 함께 사라집니다. 이 작업은 되돌릴 수 없습니다." />
 
-	<string id="taom_fc_dismiss_done" text="Then I go back to the line. It was an honor to carry the rank." />
+	<string id="taom_fc_dismiss_done" text="그럼 저는 대열로 돌아가겠습니다. 그 계급을 지녔던 것은 영광이었습니다." />
 
-	<string id="taom_fc_dismiss_entry" text="{HERO_NAME} (was {TROOP_NAME})" />
+	<string id="taom_fc_dismiss_entry" text="{HERO_NAME} (이전: {TROOP_NAME})" />
 
-	<string id="taom_fc_dismiss_failed" text="{HERO_NAME} could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed" text="{HERO_NAME}은(는) 지금 전역시킬 수 없습니다." />
 
-	<string id="taom_fc_dismiss_failed_unnamed" text="That companion could not be discharged right now." />
+	<string id="taom_fc_dismiss_failed_unnamed" text="그 동료는 지금 전역시킬 수 없습니다." />
 
-	<string id="taom_fc_dismiss_menu" text="Discharge a promoted companion" />
+	<string id="taom_fc_dismiss_menu" text="승진한 동료 전역시키기" />
 
-	<string id="taom_fc_dismiss_pick" text="Choose" />
+	<string id="taom_fc_dismiss_pick" text="선택" />
 
-	<string id="taom_fc_dismiss_picker_desc" text="Choose who returns to the ranks. They rejoin your party as the soldier they were promoted from; the gear they carry as a companion is lost." />
+	<string id="taom_fc_dismiss_picker_desc" text="대열로 돌아갈 자를 고르십시오. 그들은 승진하기 전의 병사로 부대에 다시 합류하며, 동료로서 지닌 장비는 사라집니다." />
 
-	<string id="taom_fc_dismiss_picker_title" text="Discharge a Promoted Companion" />
+	<string id="taom_fc_dismiss_picker_title" text="승진한 동료 전역" />
 
-	<string id="taom_fc_dismiss_title" text="Return to the Ranks" />
+	<string id="taom_fc_dismiss_title" text="대열로 복귀" />
 
-	<string id="taom_fc_dismiss_yes" text="Discharge" />
+	<string id="taom_fc_dismiss_yes" text="전역" />
 
-	<string id="taom_fc_dismissed" text="{HERO_NAME} has returned to the ranks as a {TROOP_NAME}." />
+	<string id="taom_fc_dismissed" text="{HERO_NAME}이(가) {TROOP_NAME}(으)로 대열에 복귀했습니다." />
 
   </strings>
 

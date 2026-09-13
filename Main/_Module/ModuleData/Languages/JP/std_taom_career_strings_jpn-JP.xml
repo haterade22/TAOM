@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="耐性+8%" />
     <string id="taom_dg2_t1_b_p2" text="部隊士気+5%" />
     <string id="taom_dg2_t1_b_p3" text="部隊耐性+5%" />
-    <string id="taom_dg2_t1_b_p4" text="部隊再生+5%" />
+    <string id="taom_dg2_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_dg2_t2_a_key" text="門の守りのチャージが減少し、より頻繁に発動する。" />
     <string id="taom_dg2_t2_a_p1" text="部隊士気+10%" />
     <string id="taom_dg2_t2_a_p2" text="パーティサイズ+2" />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="耐性+18%" />
     <string id="taom_dg2_t3_b_p2" text="体力再生+15%" />
     <string id="taom_dg2_t3_b_p3" text="部隊士気+20%" />
-    <string id="taom_dg2_t3_b_p4" text="部隊再生+15%" />
+    <string id="taom_dg2_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_dale_marksman_root_desc" text="黒き矢は弓の名手バルドを称え、+5%の遠距離ダメージを付与する。" />
     <string id="taom_dm_t1_a_key" text="黒き矢の範囲が拡大し、より広いキルゾーンをカバーする。" />
     <string id="taom_dm_t1_a_p1" text="遠距離ダメージ+8%" />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_ig_t1_b_p2" text="+5% 部隊士気。" />
     <string id="taom_ig_t1_b_p3" text="+5% 部隊抵抗力。" />
-    <string id="taom_ig_t1_b_p4" text="+5% 部隊回復力。" />
+    <string id="taom_ig_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_ig_t2_a_key" text="ミスリルの砦の充填が短縮、より頻繁に発動する。" />
     <string id="taom_ig_t2_a_p1" text="+10% 部隊士気。" />
     <string id="taom_ig_t2_a_p2" text="+2 部隊規模。" />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% 抵抗力。" />
     <string id="taom_ig_t3_b_p2" text="+15% 体力再生。" />
     <string id="taom_ig_t3_b_p3" text="+20% 部隊士気。" />
-    <string id="taom_ig_t3_b_p4" text="+15% 部隊再生。" />
+    <string id="taom_ig_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_crossbow_master_root_desc" text="精密弾幕により、名工のボルトで+5% 遠隔ダメージを獲得。" />
     <string id="taom_cbm_t1_a_key" text="精密弾幕の範囲が拡大し、より広い殺傷地帯をカバー。" />
     <string id="taom_cbm_t1_a_p1" text="+8% 遠隔ダメージ。" />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="抵抗力+8%" />
     <string id="taom_bd_t1_b_p2" text="兵の士気+5%" />
     <string id="taom_bd_t1_b_p3" text="兵の抵抗力+5%" />
-    <string id="taom_bd_t1_b_p4" text="兵の再生力+5%" />
+    <string id="taom_bd_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_bd_t2_a_key" text="星光の織りのチャージが減少し、より頻繁に発動する。" />
     <string id="taom_bd_t2_a_p1" text="部隊士気+10%" />
     <string id="taom_bd_t2_a_p2" text="部隊規模+2" />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="耐性+18%" />
     <string id="taom_bd_t3_b_p2" text="体力回復+15%" />
     <string id="taom_bd_t3_b_p3" text="部隊士気+20%" />
-    <string id="taom_bd_t3_b_p4" text="部隊回復+15%" />
+    <string id="taom_bd_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_elven_archer_root_desc" text="エルフの眼は何世紀もの修練により遠隔ダメージ+5%を付与する。" />
     <string id="taom_elar_t1_a_key" text="エルフの眼の範囲が増加し、より広い射撃範囲をカバーする。" />
     <string id="taom_elar_t1_a_p1" text="遠隔ダメージ+8%" />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="抵抗力+8%。" />
     <string id="taom_wdn_t1_b_p2" text="部隊士気+5%。" />
     <string id="taom_wdn_t1_b_p3" text="部隊抵抗力+5%。" />
-    <string id="taom_wdn_t1_b_p4" text="部隊回復力+5%。" />
+    <string id="taom_wdn_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_wdn_t2_a_key" text="ニムロデルの祝福のチャージが減少し、より頻繁に発動する。" />
     <string id="taom_wdn_t2_a_p1" text="部隊士気+10%。" />
     <string id="taom_wdn_t2_a_p2" text="部隊規模+2。" />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="抵抗力+18%。" />
     <string id="taom_wdn_t3_b_p2" text="体力回復+15%。" />
     <string id="taom_wdn_t3_b_p3" text="部隊士気+20%。" />
-    <string id="taom_wdn_t3_b_p4" text="部隊回復力+15%。" />
+    <string id="taom_wdn_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_galadhrim_archer_root_desc" text="シルヴァーレインにより遠距離ダメージ+5%、矢は星明りに包まれる。" />
     <string id="taom_gar_t1_a_key" text="シルヴァーレインの範囲が拡大し、より広い殺戮ゾーンをカバーする。" />
     <string id="taom_gar_t1_a_p1" text="遠距離ダメージ+8%。" />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_shw_t1_b_p2" text="+5% 部隊士気。" />
     <string id="taom_shw_t1_b_p3" text="+5% 部隊抵抗力。" />
-    <string id="taom_shw_t1_b_p4" text="+5% 部隊再生力。" />
+    <string id="taom_shw_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_shw_t2_a_key" text="森の外套のチャージ時間短縮、より頻繁に発動。" />
     <string id="taom_shw_t2_a_p1" text="+10% 部隊士気。" />
     <string id="taom_shw_t2_a_p2" text="+2 部隊規模。" />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% 抵抗力。" />
     <string id="taom_shw_t3_b_p2" text="+15% 体力再生。" />
     <string id="taom_shw_t3_b_p3" text="+20% 部隊士気。" />
-    <string id="taom_shw_t3_b_p4" text="+15% 部隊再生力。" />
+    <string id="taom_shw_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_silvan_archer_root_desc" text="樹上襲撃により樹冠から+5% 遠隔ダメージを付与。" />
     <string id="taom_sva_t1_a_key" text="樹上襲撃の範囲拡大、より広いキルゾーンをカバー。" />
     <string id="taom_sva_t1_a_p1" text="+8% 遠隔ダメージ。" />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_ub_t1_b_p2" text="+5% 部隊士気。" />
     <string id="taom_ub_t1_b_p3" text="+5% 部隊抵抗力。" />
-    <string id="taom_ub_t1_b_p4" text="+5% 部隊再生力。" />
+    <string id="taom_ub_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_ub_t2_a_key" text="血の激怒のチャージが減少、より頻繁に発動する。" />
     <string id="taom_ub_t2_a_p1" text="+10% 部隊士気。" />
     <string id="taom_ub_t2_a_p2" text="+2 部隊規模。" />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% 抵抗力。" />
     <string id="taom_ub_t3_b_p2" text="+15% 体力再生。" />
     <string id="taom_ub_t3_b_p3" text="+20% 部隊士気。" />
-    <string id="taom_ub_t3_b_p4" text="+15% 部隊再生力。" />
+    <string id="taom_ub_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_uruk_crossbow_root_desc" text="鉄の雨はオルサンクで鍛えられた矢で+5%遠距離ダメージを付与。" />
     <string id="taom_ucb_t1_a_key" text="鉄の雨の範囲が拡大、より広い殺戮地帯を覆う。" />
     <string id="taom_ucb_t1_a_p1" text="+8% 遠距離ダメージ。" />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="耐性+8%" />
     <string id="taom_ctm_t1_b_p2" text="兵士の士気+5%" />
     <string id="taom_ctm_t1_b_p3" text="兵士の耐性+5%" />
-    <string id="taom_ctm_t1_b_p4" text="兵士の回復力+5%" />
+    <string id="taom_ctm_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_ctm_t2_a_key" text="トロールの狂乱の充填が短縮され、より頻繁に発動する。" />
     <string id="taom_ctm_t2_a_p1" text="兵士の士気+10%" />
     <string id="taom_ctm_t2_a_p2" text="部隊規模+2" />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="抵抗力+18%。" />
     <string id="taom_ctm_t3_b_p2" text="体力回復+15%。" />
     <string id="taom_ctm_t3_b_p3" text="部隊士気+20%。" />
-    <string id="taom_ctm_t3_b_p4" text="部隊回復+15%。" />
+    <string id="taom_ctm_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_goblin_sniper_root_desc" text="毒の矢は洞窟の菌類毒素により遠隔ダメージ+5%を付与。" />
     <string id="taom_gbs_t1_a_key" text="毒の矢の範囲が増加、より広いキルゾーンを制圧。" />
     <string id="taom_gbs_t1_a_p1" text="遠隔ダメージ+8%。" />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="+8% 耐性。" />
     <string id="taom_swr_t1_b_p2" text="部隊士気+5%。" />
     <string id="taom_swr_t1_b_p3" text="部隊耐性+5%。" />
-    <string id="taom_swr_t1_b_p4" text="部隊再生+5%。" />
+    <string id="taom_swr_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_swr_t2_a_key" text="ソウル・ドレインのチャージが短縮され、より頻繁に発動する。" />
     <string id="taom_swr_t2_a_p1" text="部隊士気+10%。" />
     <string id="taom_swr_t2_a_p2" text="部隊規模+2。" />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="耐性+18%。" />
     <string id="taom_swr_t3_b_p2" text="体力再生+15%。" />
     <string id="taom_swr_t3_b_p3" text="部隊士気+20%。" />
-    <string id="taom_swr_t3_b_p4" text="部隊再生+15%。" />
+    <string id="taom_swr_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_necromancer_acolyte_root_desc" text="ダーク・ボルトが死霊エネルギーで遠隔ダメージ+5%を付与する。" />
     <string id="taom_nca_t1_a_key" text="ダーク・ボルトの範囲が拡大し、より広い殺傷範囲をカバーする。" />
     <string id="taom_nca_t1_a_p1" text="遠隔ダメージ+8%。" />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_crb_t1_b_p2" text="+5% 部隊士気。" />
     <string id="taom_crb_t1_b_p3" text="+5% 部隊抵抗力。" />
-    <string id="taom_crb_t1_b_p4" text="+5% 部隊回復力。" />
+    <string id="taom_crb_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_crb_t2_a_key" text="接舷戦闘のチャージが減少し、より頻繁に発動する。" />
     <string id="taom_crb_t2_a_p1" text="+10% 部隊士気。" />
     <string id="taom_crb_t2_a_p2" text="+2 パーティサイズ。" />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="+18% 抵抗力。" />
     <string id="taom_crb_t3_b_p2" text="+15% 体力回復。" />
     <string id="taom_crb_t3_b_p3" text="+20% 部隊士気。" />
-    <string id="taom_crb_t3_b_p4" text="+15% 部隊回復力。" />
+    <string id="taom_crb_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_corsair_crossbow_root_desc" text="索具射撃は安定した狙いで+5%の遠隔ダメージを付与する。" />
     <string id="taom_crc_t1_a_key" text="索具射撃の範囲が拡大し、より広い殲滅範囲をカバーする。" />
     <string id="taom_crc_t1_a_p1" text="+8% 遠隔ダメージ。" />

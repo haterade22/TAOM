@@ -4,6 +4,32 @@
 
 ## 2026-09-13
 
+### localization: the whole translator backlog cleared in one run, all three modules, 12 languages (#579, #534, #508, #498)
+
+Every row that still held English in any of the 12 languages is translated: 216 entries per
+language through `claude-opus-5` (198 backlog rows plus the 18 career survival pips reset below),
+zero validation failures, $3.71 in total. That closes the backlog issues in one sitting, as asked:
+the #575 wanderer refusal lines and the #590 encyclopedia badge keys (#579), the two career keybind
+strings (#534), the 161 camps-port keys (#508), the #558 `taom_res_*` rows and the Blue Craig feat
+name, and the 130 `ladder_*` ranged-ladder names in the live Armory (numerals I to V preserved,
+`--verify` clean). #478 is not among them: the 49 Advanced Starting Options keys it names have never
+been in this branch's `ModuleData`, and the 22 female-notable names are inline `NPCCharacter`
+names with no strings row, outside the pipeline like troop names; the issue stays open.
+The live TAOM_Map settlement files also took several hundred rows per language straight from the
+cache, so a module reinstall had reverted them to English at some point; the repo cache is the
+record, the live files are not versioned.
+
+The 18 career pip descriptions that still said troop regeneration in 11 languages (#498) were the
+known translator trap: the tool only refills rows that hold English, and its cache answers by id.
+They were reset to the current English and evicted from all 12 caches first (per-row byte
+substitution; the RU cache is not in the translator's canonical layout, so its 18 lines were
+removed one by one and the result proven equal to the original minus those keys), then refilled.
+#572 turned out not to be a stale-translation bug: no troop name key from any `troops_*.xml`
+exists in a strings source, a language file or a cache, so TAOM troop names are outside the
+pipeline in every language; that gap stays open on the issue. Dry runs afterwards report 0 rows
+needing the model in every language; the localization gate (34 tests) is green and all 468
+language files in the three modules parse.
+
 ### feat(special-resources): the encyclopedia troop tree badges the troops that cost a resource (#590)
 
 Players asked for a marker on the encyclopedia troop tree for troops that need a special resource.

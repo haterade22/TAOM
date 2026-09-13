@@ -671,9 +671,9 @@
     <string id="taom_vote_lapsed" text="&quot;{VOTE}&quot; oylaması artık geçerli değil ve geri çekildi." />
     <string id="taom_wotr_no_peace" text="Yüzük Savaşı kızışıyor. Barış mümkün değil." />
     <string id="taom_precompile_shaders" text="Gölgelendiricileri Ön-Derle" />
-    <string id="taom_precompile_hint" text="Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes." />
-    <string id="taom_precompile_inquiry_title" text="Shader Pre-compilation" />
-    <string id="taom_precompile_inquiry_body" text="Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play." />
+    <string id="taom_precompile_hint" text="Birlik ve teçhizat gölgelendiricilerini önceden derler, böylece ilk savaşlar takılmaz veya donmaz. Mod listenizde herhangi bir değişiklik yaptıktan sonra tekrar çalıştırın: modül listesi değiştiğinde oyun derlenmiş gölgelendiricileri temizler." />
+    <string id="taom_precompile_inquiry_title" text="Gölgelendirici Ön Derlemesi" />
+    <string id="taom_precompile_inquiry_body" text="TAOM'un ve ana oyunun birliklerini, lordlarını ve savaş teçhizatını içeren bir dizi gizli savaş yükler; böylece gölgelendiricileri her kültüre karşı verdiğiniz ilk savaş sırasında değil, şimdi derlenir.{newline}{newline}Bu işlem uzun sürer: temiz bir gölgelendirici önbelleğinde 20 ila 70 dakika bekleyin. Oyunu açık bırakın ve başka bir savaş başlatmayın; ilerleme yükleme ekranında ve bir durum satırında gösterilir. İptal etmek için istediğiniz zaman Ctrl+Shift+K tuşlarını basılı tutun.{newline}{newline}Modül listeniz her değiştiğinde oyun derlenmiş gölgelendiricileri temizler, bu yüzden mod ekledikten, kaldırdıktan veya sıralamalarını değiştirdikten sonra bunu tekrar çalıştırın.{newline}{newline}Sahne geçişleri (TAOM'un kendi savaş sahneleri için arazi ve atmosfer gölgelendiricileri) bazı ekran kartlarını çökerttiği için varsayılan olarak kapalıdır. İsterseniz Mod Seçenekleri, TAOM, Grafik/Gölgelendirici Ön Derlemesi altından açabilirsiniz.{newline}{newline}'Gölgelendirici ön derlemesi TAMAMLANDI' yazısını gördüğünüzde oynayabilirsiniz." />
     <string id="taom_main_menu_new_game" text="İnsanlar Çağı'na Gir" />
     <string id="taom_career_screen_title" text="Kariyer" />
     <string id="taom_career_done" text="Tamam" />
@@ -2610,40 +2610,40 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} takviye gönderiyor, yoldalar." />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} tutulamaz. Ele geçirilmeden önce meydandan sıyrılıp gider." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} tutulamaz. Adamların ona ulaşmadan çoktan gitmiştir." />
-    <string id="taom_caravan_escort" text="Caravan escort" />
-    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} income, -{UPKEEP} upkeep ({BALANCE} left)" />
-    <string id="taom_res_upkeep_overdraft" text="Upkeep of {UPKEEP} {RESOURCE} exceeded your {BALANCE}; none is left" />
-    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spent on upgrades ({BALANCE} left)" />
-    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} for {COUNT} {TROOP}" />
-    <string id="taom_res_tt_tier" text="Tier" />
+    <string id="taom_caravan_escort" text="Kervan muhafızı" />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} gelir, -{UPKEEP} idame ({BALANCE} kaldı)" />
+    <string id="taom_res_upkeep_overdraft" text="{UPKEEP} {RESOURCE} idame gideri {BALANCE} miktarınızı aştı; hiç kalmadı" />
+    <string id="taom_res_upgrade_spend" text="Yükseltmelere -{AMOUNT} {RESOURCE} harcandı ({BALANCE} kaldı)" />
+    <string id="taom_res_recruit_charge" text="{COUNT} {TROOP} için -{AMOUNT} {RESOURCE}" />
+    <string id="taom_res_tt_tier" text="Kademe" />
     <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
-    <string id="taom_res_tt_next_tier" text="Next tier at" />
+    <string id="taom_res_tt_next_tier" text="Sonraki kademe" />
     <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
-    <string id="taom_res_tt_daily_change" text="Daily change" />
-    <string id="taom_res_tt_income" text="Income ({TOWNS} towns)" />
-    <string id="taom_res_tt_upkeep" text="Elite upkeep ({TYPES} troop types)" />
+    <string id="taom_res_tt_daily_change" text="Günlük değişim" />
+    <string id="taom_res_tt_income" text="Gelir ({TOWNS} şehir)" />
+    <string id="taom_res_tt_upkeep" text="Seçkin idamesi ({TYPES} birlik türü)" />
     <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
     <string id="taom_res_tt_net" text="Net" />
-    <string id="taom_res_tt_depleted_in" text="Depleted in" />
-    <string id="taom_res_tt_days" text="{DAYS} days" />
-    <string id="taom_res_tt_deserting" text="Elite troops desert each day while you have no {RESOURCE}" />
-    <string id="taom_res_tt_per_battle" text="Per battle" />
-    <string id="taom_res_tt_per_raid" text="Per raid" />
-    <string id="taom_res_tt_per_siege" text="Per siege" />
-    <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
-    <string id="taom_wa_refuse_free" text="No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
-    <string id="taom_wa_refuse_evil" text="You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
-    <string id="taom_sl_search_placeholder" text="Search goods in every market" />
-    <string id="taom_sl_search_none" text="No source stocks that." />
-    <string id="taom_sl_search_capped" text="Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search." />
-    <string id="taom_sl_search_count" text="Matches: {COUNT}, nearest first." />
-    <string id="taom_sl_hit_row" text="{ITEM} at {SOURCE}" />
-    <string id="taom_sl_hit_detail" text="{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
-    <string id="taom_res_badge_title" text="Requires {RESOURCE}" />
-    <string id="taom_res_badge_upgrade" text="Upgrade" />
-    <string id="taom_res_badge_recruit" text="Recruit" />
-    <string id="taom_res_badge_upkeep" text="Upkeep per day" />
-    <string id="taom_res_badge_emissary" text="Elite Emissary price" />
-    <string id="taom_res_badge_paid_in" text="Upgrades, recruits and upkeep are paid in your own {RESOURCE}" />
+    <string id="taom_res_tt_depleted_in" text="Tükenmesine" />
+    <string id="taom_res_tt_days" text="{DAYS} gün" />
+    <string id="taom_res_tt_deserting" text="Hiç {RESOURCE} kaynağınız olmadığı sürece seçkin birlikler her gün firar eder" />
+    <string id="taom_res_tt_per_battle" text="Savaş başına" />
+    <string id="taom_res_tt_per_raid" text="Baskın başına" />
+    <string id="taom_res_tt_per_siege" text="Kuşatma başına" />
+    <string id="taom_res_tt_per_prisoner" text="Esir başına" />
+    <string id="taom_wa_refuse_free" text="Hayır. Kimin savaşını verdiğini biliyorum ve Gölge için kılıç kuşanmam, hiçbir bedele. Kendine başka bir kılıç bul." />
+    <string id="taom_wa_refuse_evil" text="Elf dostlarıyla yürüyorsun. Senin paranı alsam kendi halkım kellemi alır, seninkiler de beni silahlı görmektense asılmış görmeyi yeğler. Hayır." />
+    <string id="taom_sl_search_placeholder" text="Tüm pazarlarda mal ara" />
+    <string id="taom_sl_search_none" text="Hiçbir kaynakta bundan yok." />
+    <string id="taom_sl_search_capped" text="Eşleşme: {COUNT}, en yakın {SHOWN} tanesi gösteriliyor. Aramayı daraltın." />
+    <string id="taom_sl_search_count" text="Eşleşme: {COUNT}, en yakın önce." />
+    <string id="taom_sl_hit_row" text="{SOURCE} konumunda {ITEM}" />
+    <string id="taom_sl_hit_detail" text="Stokta {STOCK}, {PRICE} dinar, {DISTANCE} uzaklıkta" />
+    <string id="taom_res_badge_title" text="{RESOURCE} gerektirir" />
+    <string id="taom_res_badge_upgrade" text="Yükseltme" />
+    <string id="taom_res_badge_recruit" text="Asker Al" />
+    <string id="taom_res_badge_upkeep" text="Günlük idame" />
+    <string id="taom_res_badge_emissary" text="Seçkin Elçi bedeli" />
+    <string id="taom_res_badge_paid_in" text="Yükseltmeler, askerler ve idame kendi {RESOURCE} kaynağınızdan ödenir" />
   </strings>
 </base>

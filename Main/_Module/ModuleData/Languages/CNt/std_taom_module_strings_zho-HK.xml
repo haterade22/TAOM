@@ -671,9 +671,9 @@
     <string id="taom_vote_lapsed" text="關於「{VOTE}」的表決已不再適用，因此被撤回。" />
     <string id="taom_wotr_no_peace" text="魔戒聖戰正熾。無法和平。" />
     <string id="taom_precompile_shaders" text="預編譯著色器" />
-    <string id="taom_precompile_hint" text="Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes." />
-    <string id="taom_precompile_inquiry_title" text="Shader Pre-compilation" />
-    <string id="taom_precompile_inquiry_body" text="Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play." />
+    <string id="taom_precompile_hint" text="預先編譯兵種與裝備著色器，使首場戰鬥不會卡頓或停滯。每次變更模組清單後請重新執行：模組清單變動時，遊戲會清除已編譯的著色器。" />
+    <string id="taom_precompile_inquiry_title" text="著色器預先編譯" />
+    <string id="taom_precompile_inquiry_body" text="載入一系列隱藏戰鬥，包含 TAOM 與原版遊戲的兵種、領主及戰鬥裝備，使其著色器現在就完成編譯，而非在你首次與各文化交戰時才編譯。{newline}{newline}此過程需要一段時間：在全新的著色器快取下，預計需 20 至 70 分鐘。請讓遊戲持續運行，且不要開始其他戰鬥；進度會顯示在載入畫面及狀態列上。隨時按住 Ctrl+Shift+K 可取消。{newline}{newline}每當你的模組清單變動時，遊戲都會清除已編譯的著色器，因此在新增、移除或重新排序模組後請再次執行。{newline}{newline}場景編譯（TAOM 自有戰鬥場景的地形與大氣著色器）預設為關閉，因為在某些顯示卡上會導致當機。若你需要，可於「模組選項 → TAOM → 圖形/著色器預先編譯」中開啟。{newline}{newline}當你看到「著色器預先編譯 完成」時，即可開始遊玩。" />
     <string id="taom_main_menu_new_game" text="進入人類紀元" />
     <string id="taom_career_screen_title" text="職業" />
     <string id="taom_career_done" text="完成" />
@@ -2610,40 +2610,40 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} 派出了援軍，他們正在路上。" />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} 無法被擒。在被捉住之前，他已悄然離開戰場。" />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} 無法被擒。你的人尚未趕到，他便已不見蹤影。" />
-    <string id="taom_caravan_escort" text="Caravan escort" />
-    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} income, -{UPKEEP} upkeep ({BALANCE} left)" />
-    <string id="taom_res_upkeep_overdraft" text="Upkeep of {UPKEEP} {RESOURCE} exceeded your {BALANCE}; none is left" />
-    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spent on upgrades ({BALANCE} left)" />
-    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} for {COUNT} {TROOP}" />
-    <string id="taom_res_tt_tier" text="Tier" />
-    <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
-    <string id="taom_res_tt_next_tier" text="Next tier at" />
-    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
-    <string id="taom_res_tt_daily_change" text="Daily change" />
-    <string id="taom_res_tt_income" text="Income ({TOWNS} towns)" />
-    <string id="taom_res_tt_upkeep" text="Elite upkeep ({TYPES} troop types)" />
+    <string id="taom_caravan_escort" text="商隊護衛" />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}：收入 +{INCOME}，維持費 -{UPKEEP}（剩餘 {BALANCE}）" />
+    <string id="taom_res_upkeep_overdraft" text="{UPKEEP} 點 {RESOURCE} 的維持費超出你所擁有的 {BALANCE}；已消耗殆盡" />
+    <string id="taom_res_upgrade_spend" text="升級花費 -{AMOUNT} {RESOURCE}（剩餘 {BALANCE}）" />
+    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE}，用於 {COUNT} 名 {TROOP}" />
+    <string id="taom_res_tt_tier" text="階級" />
+    <string id="taom_res_tt_tier_value" text="{LEVEL}（{NAME}）" />
+    <string id="taom_res_tt_next_tier" text="下一階級於" />
+    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD}（{NAME}）" />
+    <string id="taom_res_tt_daily_change" text="每日變化" />
+    <string id="taom_res_tt_income" text="收入（{TOWNS} 座城鎮）" />
+    <string id="taom_res_tt_upkeep" text="精銳維持費（{TYPES} 種兵種）" />
     <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
-    <string id="taom_res_tt_net" text="Net" />
-    <string id="taom_res_tt_depleted_in" text="Depleted in" />
-    <string id="taom_res_tt_days" text="{DAYS} days" />
-    <string id="taom_res_tt_deserting" text="Elite troops desert each day while you have no {RESOURCE}" />
-    <string id="taom_res_tt_per_battle" text="Per battle" />
-    <string id="taom_res_tt_per_raid" text="Per raid" />
-    <string id="taom_res_tt_per_siege" text="Per siege" />
-    <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
-    <string id="taom_wa_refuse_free" text="No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
-    <string id="taom_wa_refuse_evil" text="You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
-    <string id="taom_sl_search_placeholder" text="Search goods in every market" />
-    <string id="taom_sl_search_none" text="No source stocks that." />
-    <string id="taom_sl_search_capped" text="Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search." />
-    <string id="taom_sl_search_count" text="Matches: {COUNT}, nearest first." />
-    <string id="taom_sl_hit_row" text="{ITEM} at {SOURCE}" />
-    <string id="taom_sl_hit_detail" text="{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
-    <string id="taom_res_badge_title" text="Requires {RESOURCE}" />
-    <string id="taom_res_badge_upgrade" text="Upgrade" />
-    <string id="taom_res_badge_recruit" text="Recruit" />
-    <string id="taom_res_badge_upkeep" text="Upkeep per day" />
-    <string id="taom_res_badge_emissary" text="Elite Emissary price" />
-    <string id="taom_res_badge_paid_in" text="Upgrades, recruits and upkeep are paid in your own {RESOURCE}" />
+    <string id="taom_res_tt_net" text="淨額" />
+    <string id="taom_res_tt_depleted_in" text="耗盡於" />
+    <string id="taom_res_tt_days" text="{DAYS} 天" />
+    <string id="taom_res_tt_deserting" text="當你沒有 {RESOURCE} 時，精銳部隊每日都會逃亡" />
+    <string id="taom_res_tt_per_battle" text="每場戰鬥" />
+    <string id="taom_res_tt_per_raid" text="每次劫掠" />
+    <string id="taom_res_tt_per_siege" text="每次攻城" />
+    <string id="taom_res_tt_per_prisoner" text="每名俘虜" />
+    <string id="taom_wa_refuse_free" text="不。我知道你為誰而戰，我絕不為黑影揮劍，無論出多少價。另尋他人吧。" />
+    <string id="taom_wa_refuse_evil" text="你與精靈之友同行。我的族人若知我收你的錢，會取我的頭；而你的人寧可見我上絞架，也不願讓我持械。不行。" />
+    <string id="taom_sl_search_placeholder" text="搜尋各市場的貨物" />
+    <string id="taom_sl_search_none" text="沒有任何來源有此存貨。" />
+    <string id="taom_sl_search_capped" text="符合項目：{COUNT}，僅顯示最近的 {SHOWN} 項。請縮小搜尋範圍。" />
+    <string id="taom_sl_search_count" text="符合項目：{COUNT}，由近至遠排列。" />
+    <string id="taom_sl_hit_row" text="{ITEM}，位於 {SOURCE}" />
+    <string id="taom_sl_hit_detail" text="存貨 {STOCK}，{PRICE} 第納爾，距離 {DISTANCE}" />
+    <string id="taom_res_badge_title" text="需要 {RESOURCE}" />
+    <string id="taom_res_badge_upgrade" text="升級" />
+    <string id="taom_res_badge_recruit" text="招募" />
+    <string id="taom_res_badge_upkeep" text="每日維持費" />
+    <string id="taom_res_badge_emissary" text="精銳使者價格" />
+    <string id="taom_res_badge_paid_in" text="升級、招募與維持費均以你自己的 {RESOURCE} 支付" />
   </strings>
 </base>

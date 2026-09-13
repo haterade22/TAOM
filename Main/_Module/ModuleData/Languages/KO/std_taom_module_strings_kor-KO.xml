@@ -671,9 +671,9 @@
     <string id="taom_vote_lapsed" text="“{VOTE}” 안건은 더 이상 유효하지 않아 철회되었습니다." />
     <string id="taom_wotr_no_peace" text="반지 전쟁이 격렬하게 벌어지고 있습니다. 평화는 있을 수 없습니다." />
     <string id="taom_precompile_shaders" text="셰이더 사전 컴파일" />
-    <string id="taom_precompile_hint" text="Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes." />
-    <string id="taom_precompile_inquiry_title" text="Shader Pre-compilation" />
-    <string id="taom_precompile_inquiry_body" text="Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play." />
+    <string id="taom_precompile_hint" text="병사 및 장비 셰이더를 미리 컴파일하여 첫 전투에서 끊김이나 멈춤이 발생하지 않도록 합니다. 모드 목록을 변경한 뒤에는 다시 실행하십시오. 모듈 목록이 바뀌면 게임이 컴파일된 셰이더를 삭제합니다." />
+    <string id="taom_precompile_inquiry_title" text="셰이더 사전 컴파일" />
+    <string id="taom_precompile_inquiry_body" text="TAOM과 기본 게임의 병사, 영주, 전투 장비가 포함된 일련의 숨겨진 전투를 불러와, 각 문화권과의 첫 전투 도중이 아니라 지금 셰이더를 컴파일합니다.{newline}{newline}시간이 다소 걸립니다. 셰이더 캐시가 비어 있다면 20~70분 정도 예상하십시오. 게임을 켜 둔 채로 두고 다른 전투를 시작하지 마십시오. 진행 상황은 로딩 화면과 상태 표시줄에 나타납니다. 언제든 Ctrl+Shift+K를 누르고 있으면 취소됩니다.{newline}{newline}모듈 목록이 변경될 때마다 게임이 컴파일된 셰이더를 삭제하므로, 모드를 추가하거나 제거하거나 순서를 바꾼 뒤에는 다시 실행하십시오.{newline}{newline}장면 단계(TAOM 자체 전투 장면의 지형 및 대기 셰이더)는 일부 GPU에서 충돌을 일으키므로 기본적으로 꺼져 있습니다. 원하신다면 모드 옵션 &gt; TAOM &gt; 그래픽/셰이더 사전 컴파일에서 켜십시오.{newline}{newline}'Shader pre-compilation COMPLETE'가 표시되면 플레이하실 수 있습니다." />
     <string id="taom_main_menu_new_game" text="인간의 시대로" />
     <string id="taom_career_screen_title" text="직업" />
     <string id="taom_career_done" text="완료" />
@@ -2610,40 +2610,40 @@
     <string id="taom_sl_lord_dispatched" text="{LORD}이(가) 증원군을 보냈으며, 지금 오는 중입니다." />
     <string id="taom_uncapturable_escapes_battle" text="{HERO}은(는) 붙잡을 수 없습니다. 그는 사로잡히기 전에 전장을 빠져나갑니다." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO}은(는) 붙잡을 수 없습니다. 당신의 부하들이 닿기도 전에 사라졌습니다." />
-    <string id="taom_caravan_escort" text="Caravan escort" />
-    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} income, -{UPKEEP} upkeep ({BALANCE} left)" />
-    <string id="taom_res_upkeep_overdraft" text="Upkeep of {UPKEEP} {RESOURCE} exceeded your {BALANCE}; none is left" />
-    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spent on upgrades ({BALANCE} left)" />
-    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} for {COUNT} {TROOP}" />
-    <string id="taom_res_tt_tier" text="Tier" />
+    <string id="taom_caravan_escort" text="대상 호위" />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} 수입, -{UPKEEP} 유지비 ({BALANCE} 남음)" />
+    <string id="taom_res_upkeep_overdraft" text="{RESOURCE} 유지비 {UPKEEP}이(가) 보유량 {BALANCE}을(를) 초과했습니다. 남은 것이 없습니다" />
+    <string id="taom_res_upgrade_spend" text="승급에 {RESOURCE} -{AMOUNT} 소모 ({BALANCE} 남음)" />
+    <string id="taom_res_recruit_charge" text="{TROOP} {COUNT}명에 {RESOURCE} -{AMOUNT}" />
+    <string id="taom_res_tt_tier" text="등급" />
     <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
-    <string id="taom_res_tt_next_tier" text="Next tier at" />
+    <string id="taom_res_tt_next_tier" text="다음 등급 도달" />
     <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
-    <string id="taom_res_tt_daily_change" text="Daily change" />
-    <string id="taom_res_tt_income" text="Income ({TOWNS} towns)" />
-    <string id="taom_res_tt_upkeep" text="Elite upkeep ({TYPES} troop types)" />
+    <string id="taom_res_tt_daily_change" text="일일 변동" />
+    <string id="taom_res_tt_income" text="수입 (도시 {TOWNS}개)" />
+    <string id="taom_res_tt_upkeep" text="정예 유지비 (병종 {TYPES}종)" />
     <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
-    <string id="taom_res_tt_net" text="Net" />
-    <string id="taom_res_tt_depleted_in" text="Depleted in" />
-    <string id="taom_res_tt_days" text="{DAYS} days" />
-    <string id="taom_res_tt_deserting" text="Elite troops desert each day while you have no {RESOURCE}" />
-    <string id="taom_res_tt_per_battle" text="Per battle" />
-    <string id="taom_res_tt_per_raid" text="Per raid" />
-    <string id="taom_res_tt_per_siege" text="Per siege" />
-    <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
-    <string id="taom_wa_refuse_free" text="No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
-    <string id="taom_wa_refuse_evil" text="You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
-    <string id="taom_sl_search_placeholder" text="Search goods in every market" />
-    <string id="taom_sl_search_none" text="No source stocks that." />
-    <string id="taom_sl_search_capped" text="Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search." />
-    <string id="taom_sl_search_count" text="Matches: {COUNT}, nearest first." />
-    <string id="taom_sl_hit_row" text="{ITEM} at {SOURCE}" />
-    <string id="taom_sl_hit_detail" text="{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
-    <string id="taom_res_badge_title" text="Requires {RESOURCE}" />
-    <string id="taom_res_badge_upgrade" text="Upgrade" />
-    <string id="taom_res_badge_recruit" text="Recruit" />
-    <string id="taom_res_badge_upkeep" text="Upkeep per day" />
-    <string id="taom_res_badge_emissary" text="Elite Emissary price" />
-    <string id="taom_res_badge_paid_in" text="Upgrades, recruits and upkeep are paid in your own {RESOURCE}" />
+    <string id="taom_res_tt_net" text="순수익" />
+    <string id="taom_res_tt_depleted_in" text="고갈까지" />
+    <string id="taom_res_tt_days" text="{DAYS}일" />
+    <string id="taom_res_tt_deserting" text="{RESOURCE}이(가) 없는 동안 매일 정예 병사가 이탈합니다" />
+    <string id="taom_res_tt_per_battle" text="전투당" />
+    <string id="taom_res_tt_per_raid" text="약탈당" />
+    <string id="taom_res_tt_per_siege" text="공성당" />
+    <string id="taom_res_tt_per_prisoner" text="포로당" />
+    <string id="taom_wa_refuse_free" text="싫소. 당신이 누구의 전쟁을 치르는지 알고 있소. 어떤 대가를 준대도 암흑의 세력을 위해 칼을 들지는 않겠소. 다른 검을 찾으시오." />
+    <string id="taom_wa_refuse_evil" text="당신은 요정의 친구들과 함께 행군하지 않소. 내 동족은 당신의 돈을 받았다고 내 목을 칠 것이고, 당신네는 내게 무기를 쥐여주느니 차라리 목매달 것이오. 안 되오." />
+    <string id="taom_sl_search_placeholder" text="모든 시장에서 상품 검색" />
+    <string id="taom_sl_search_none" text="그 물품을 보유한 곳이 없습니다." />
+    <string id="taom_sl_search_capped" text="일치: {COUNT}건, 가장 가까운 {SHOWN}건 표시. 검색을 좁히십시오." />
+    <string id="taom_sl_search_count" text="일치: {COUNT}건, 가까운 순." />
+    <string id="taom_sl_hit_row" text="{SOURCE}의 {ITEM}" />
+    <string id="taom_sl_hit_detail" text="재고 {STOCK}, {PRICE} 데나르, {DISTANCE} 거리" />
+    <string id="taom_res_badge_title" text="{RESOURCE} 필요" />
+    <string id="taom_res_badge_upgrade" text="승급" />
+    <string id="taom_res_badge_recruit" text="모병" />
+    <string id="taom_res_badge_upkeep" text="일일 유지비" />
+    <string id="taom_res_badge_emissary" text="정예 사절 가격" />
+    <string id="taom_res_badge_paid_in" text="승급, 모병, 유지비는 보유한 {RESOURCE}(으)로 지불됩니다" />
   </strings>
 </base>

@@ -671,9 +671,9 @@
     <string id="taom_vote_lapsed" text="A votação sobre &quot;{VOTE}&quot; deixou de ser aplicável e foi retirada." />
     <string id="taom_wotr_no_peace" text="A Guerra do Anel se enfurece. Não pode haver paz." />
     <string id="taom_precompile_shaders" text="Pré-compilar Shaders" />
-    <string id="taom_precompile_hint" text="Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes." />
-    <string id="taom_precompile_inquiry_title" text="Shader Pre-compilation" />
-    <string id="taom_precompile_inquiry_body" text="Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play." />
+    <string id="taom_precompile_hint" text="Pré-compila os shaders de tropas e equipamentos para que as primeiras batalhas não travem nem engasguem. Execute novamente após qualquer alteração na sua lista de mods: o jogo limpa os shaders compilados quando a lista de módulos muda." />
+    <string id="taom_precompile_inquiry_title" text="Pré-compilação de Shaders" />
+    <string id="taom_precompile_inquiry_body" text="Carrega uma série de batalhas ocultas contendo as tropas, senhores e equipamentos de batalha do TAOM e do jogo base, para que seus shaders sejam compilados agora, em vez de durante sua primeira batalha contra cada cultura.{newline}{newline}Isso demora: espere de 20 a 70 minutos com um cache de shaders novo. Deixe o jogo rodando e não inicie outra batalha; o progresso aparece na tela de carregamento e como uma linha de status. Segure Ctrl+Shift+K a qualquer momento para cancelar.{newline}{newline}O jogo limpa seus shaders compilados sempre que sua lista de módulos muda, então execute isto novamente após adicionar, remover ou reordenar mods.{newline}{newline}As passagens de cena (shaders de terreno e atmosfera das cenas de batalha próprias do TAOM) estão desativadas por padrão porque travam algumas GPUs. Ative-as em Opções de Mod, TAOM, Gráficos/Pré-compilação de Shaders se desejar.{newline}{newline}Quando você vir 'Pré-compilação de shaders COMPLETA', pode jogar." />
     <string id="taom_main_menu_new_game" text="Entrar na Era dos Homens" />
     <string id="taom_career_screen_title" text="Carreira" />
     <string id="taom_career_done" text="Concluído" />
@@ -2610,40 +2610,40 @@
     <string id="taom_sl_lord_dispatched" text="{LORD} envia reforços, eles estão a caminho." />
     <string id="taom_uncapturable_escapes_battle" text="{HERO} não pode ser detido. Ele escapa do campo antes que possa ser capturado." />
     <string id="taom_uncapturable_escapes_capture" text="{HERO} não pode ser detido. Ele desaparece antes que seus homens o alcancem." />
-    <string id="taom_caravan_escort" text="Caravan escort" />
-    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} income, -{UPKEEP} upkeep ({BALANCE} left)" />
-    <string id="taom_res_upkeep_overdraft" text="Upkeep of {UPKEEP} {RESOURCE} exceeded your {BALANCE}; none is left" />
-    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spent on upgrades ({BALANCE} left)" />
-    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} for {COUNT} {TROOP}" />
-    <string id="taom_res_tt_tier" text="Tier" />
+    <string id="taom_caravan_escort" text="Escolta de caravana" />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} de renda, -{UPKEEP} de manutenção ({BALANCE} restantes)" />
+    <string id="taom_res_upkeep_overdraft" text="A manutenção de {UPKEEP} {RESOURCE} excedeu seu saldo de {BALANCE}; nada restou" />
+    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} gastos em melhorias ({BALANCE} restantes)" />
+    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} por {COUNT} {TROOP}" />
+    <string id="taom_res_tt_tier" text="Nível" />
     <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
-    <string id="taom_res_tt_next_tier" text="Next tier at" />
+    <string id="taom_res_tt_next_tier" text="Próximo nível em" />
     <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
-    <string id="taom_res_tt_daily_change" text="Daily change" />
-    <string id="taom_res_tt_income" text="Income ({TOWNS} towns)" />
-    <string id="taom_res_tt_upkeep" text="Elite upkeep ({TYPES} troop types)" />
+    <string id="taom_res_tt_daily_change" text="Variação diária" />
+    <string id="taom_res_tt_income" text="Renda ({TOWNS} cidades)" />
+    <string id="taom_res_tt_upkeep" text="Manutenção de elite ({TYPES} tipos de tropa)" />
     <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
-    <string id="taom_res_tt_net" text="Net" />
-    <string id="taom_res_tt_depleted_in" text="Depleted in" />
-    <string id="taom_res_tt_days" text="{DAYS} days" />
-    <string id="taom_res_tt_deserting" text="Elite troops desert each day while you have no {RESOURCE}" />
-    <string id="taom_res_tt_per_battle" text="Per battle" />
-    <string id="taom_res_tt_per_raid" text="Per raid" />
-    <string id="taom_res_tt_per_siege" text="Per siege" />
-    <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
-    <string id="taom_wa_refuse_free" text="No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
-    <string id="taom_wa_refuse_evil" text="You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
-    <string id="taom_sl_search_placeholder" text="Search goods in every market" />
-    <string id="taom_sl_search_none" text="No source stocks that." />
-    <string id="taom_sl_search_capped" text="Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search." />
-    <string id="taom_sl_search_count" text="Matches: {COUNT}, nearest first." />
-    <string id="taom_sl_hit_row" text="{ITEM} at {SOURCE}" />
-    <string id="taom_sl_hit_detail" text="{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
-    <string id="taom_res_badge_title" text="Requires {RESOURCE}" />
-    <string id="taom_res_badge_upgrade" text="Upgrade" />
-    <string id="taom_res_badge_recruit" text="Recruit" />
-    <string id="taom_res_badge_upkeep" text="Upkeep per day" />
-    <string id="taom_res_badge_emissary" text="Elite Emissary price" />
-    <string id="taom_res_badge_paid_in" text="Upgrades, recruits and upkeep are paid in your own {RESOURCE}" />
+    <string id="taom_res_tt_net" text="Líquido" />
+    <string id="taom_res_tt_depleted_in" text="Esgotado em" />
+    <string id="taom_res_tt_days" text="{DAYS} dias" />
+    <string id="taom_res_tt_deserting" text="Tropas de elite desertam a cada dia enquanto você não tiver {RESOURCE}" />
+    <string id="taom_res_tt_per_battle" text="Por batalha" />
+    <string id="taom_res_tt_per_raid" text="Por pilhagem" />
+    <string id="taom_res_tt_per_siege" text="Por cerco" />
+    <string id="taom_res_tt_per_prisoner" text="Por prisioneiro" />
+    <string id="taom_wa_refuse_free" text="Não. Sei por quem você luta, e não empunharei uma lâmina pela Sombra, por preço algum. Procure outra espada." />
+    <string id="taom_wa_refuse_evil" text="Você marcha com os amigos dos Elfos. Meu próprio povo tomaria minha cabeça por aceitar suas moedas, e o seu preferiria me ver enforcado a me ver armado. Não." />
+    <string id="taom_sl_search_placeholder" text="Buscar mercadorias em todos os mercados" />
+    <string id="taom_sl_search_none" text="Nenhuma fonte tem isso em estoque." />
+    <string id="taom_sl_search_capped" text="Resultados: {COUNT}, mostrando os {SHOWN} mais próximos. Refine a busca." />
+    <string id="taom_sl_search_count" text="Resultados: {COUNT}, os mais próximos primeiro." />
+    <string id="taom_sl_hit_row" text="{ITEM} em {SOURCE}" />
+    <string id="taom_sl_hit_detail" text="{STOCK} em estoque, {PRICE} denares, a {DISTANCE} de distância" />
+    <string id="taom_res_badge_title" text="Requer {RESOURCE}" />
+    <string id="taom_res_badge_upgrade" text="Melhorar" />
+    <string id="taom_res_badge_recruit" text="Recrutar" />
+    <string id="taom_res_badge_upkeep" text="Manutenção por dia" />
+    <string id="taom_res_badge_emissary" text="Preço do Emissário de Elite" />
+    <string id="taom_res_badge_paid_in" text="Melhorias, recrutamentos e manutenção são pagos com seu próprio {RESOURCE}" />
   </strings>
 </base>

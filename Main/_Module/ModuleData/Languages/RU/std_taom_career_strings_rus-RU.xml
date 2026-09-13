@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_dg2_t1_b_p2" text="+5% к боевому духу отряда." />
     <string id="taom_dg2_t1_b_p3" text="+5% к сопротивлению отряда." />
-    <string id="taom_dg2_t1_b_p4" text="+5% к регенерации отряда." />
+    <string id="taom_dg2_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_dg2_t2_a_key" text="Время восстановления Стойкости у врат сокращено, активируется чаще." />
     <string id="taom_dg2_t2_a_p1" text="+10% к боевому духу отряда." />
     <string id="taom_dg2_t2_a_p2" text="+2 к размеру отряда." />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_dg2_t3_b_p2" text="+15% к восстановлению здоровья." />
     <string id="taom_dg2_t3_b_p3" text="+20% к боевому духу войск." />
-    <string id="taom_dg2_t3_b_p4" text="+15% к восстановлению войск." />
+    <string id="taom_dg2_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_dale_marksman_root_desc" text="Чёрная Стрела дарует +5% к дальнобойному урону в честь Барда Лучника." />
     <string id="taom_dm_t1_a_key" text="Радиус Чёрной Стрелы увеличен, охватывая более широкие зоны поражения." />
     <string id="taom_dm_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_ig_t1_b_p2" text="+5% к боевому духу войск." />
     <string id="taom_ig_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_ig_t1_b_p4" text="+5% к регенерации войск." />
+    <string id="taom_ig_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_ig_t2_a_key" text="Заряд Мифрильного Бастиона уменьшен, активируется чаще." />
     <string id="taom_ig_t2_a_p1" text="+10% к боевому духу войск." />
     <string id="taom_ig_t2_a_p2" text="+2 к размеру отряда." />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_ig_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_ig_t3_b_p3" text="+20% к боевому духу войск." />
-    <string id="taom_ig_t3_b_p4" text="+15% к регенерации войск." />
+    <string id="taom_ig_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_crossbow_master_root_desc" text="Точный Залп дает +5% к дальнобойному урону мастерскими болтами." />
     <string id="taom_cbm_t1_a_key" text="Радиус Точного Залпа увеличен, покрывая более широкие зоны поражения." />
     <string id="taom_cbm_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_bd_t1_b_p2" text="+5% к моральному духу войск." />
     <string id="taom_bd_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_bd_t1_b_p4" text="+5% к регенерации войск." />
+    <string id="taom_bd_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_bd_t2_a_key" text="Заряд Звёздного Плетения снижен, активируется чаще." />
     <string id="taom_bd_t2_a_p1" text="+10% к моральному духу войск." />
     <string id="taom_bd_t2_a_p2" text="+2 к размеру отряда." />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_bd_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_bd_t3_b_p3" text="+20% к моральному духу войск." />
-    <string id="taom_bd_t3_b_p4" text="+15% к регенерации войск." />
+    <string id="taom_bd_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_elven_archer_root_desc" text="Эльфийское Зрение даёт +5% к дальнобойному урону благодаря векам практики." />
     <string id="taom_elar_t1_a_key" text="Радиус Эльфийского Зрения увеличен, охватывая более широкие зоны поражения." />
     <string id="taom_elar_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_wdn_t1_b_p2" text="+5% к боевому духу войск." />
     <string id="taom_wdn_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_wdn_t1_b_p4" text="+5% к регенерации войск." />
+    <string id="taom_wdn_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_wdn_t2_a_key" text="Перезарядка Благословения Нимродели снижена, активируется чаще." />
     <string id="taom_wdn_t2_a_p1" text="+10% к боевому духу войск." />
     <string id="taom_wdn_t2_a_p2" text="+2 к размеру отряда." />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_wdn_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_wdn_t3_b_p3" text="+20% к боевому духу войск." />
-    <string id="taom_wdn_t3_b_p4" text="+15% к регенерации войск." />
+    <string id="taom_wdn_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_galadhrim_archer_root_desc" text="Серебряный Дождь дает +5% к дальнобойному урону, стрелы, окропленные звездным светом." />
     <string id="taom_gar_t1_a_key" text="Радиус Серебряного Дождя увеличен, покрывает более широкие зоны поражения." />
     <string id="taom_gar_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_shw_t1_b_p2" text="+5% к боевому духу войск." />
     <string id="taom_shw_t1_b_p3" text="+5% к сопротивлению отряда." />
-    <string id="taom_shw_t1_b_p4" text="+5% к регенерации отряда." />
+    <string id="taom_shw_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_shw_t2_a_key" text="Заряд Лесного плаща уменьшен, активируется чаще." />
     <string id="taom_shw_t2_a_p1" text="+10% к боевому духу отряда." />
     <string id="taom_shw_t2_a_p2" text="+2 к размеру отряда." />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_shw_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_shw_t3_b_p3" text="+20% к боевому духу отряда." />
-    <string id="taom_shw_t3_b_p4" text="+15% к регенерации отряда." />
+    <string id="taom_shw_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_silvan_archer_root_desc" text="Удар с крон дает +5% к дальнобойному урону с верхушек деревьев." />
     <string id="taom_sva_t1_a_key" text="Радиус Удара с крон увеличен, покрывая более широкие зоны поражения." />
     <string id="taom_sva_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_ub_t1_b_p2" text="+5% к боевому духу войск." />
     <string id="taom_ub_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_ub_t1_b_p4" text="+5% к регенерации войск." />
+    <string id="taom_ub_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_ub_t2_a_key" text="Заряд Кровавой Ярости уменьшен, активируется чаще." />
     <string id="taom_ub_t2_a_p1" text="+10% к боевому духу войск." />
     <string id="taom_ub_t2_a_p2" text="+2 к размеру отряда." />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_ub_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_ub_t3_b_p3" text="+20% к боевому духу войск." />
-    <string id="taom_ub_t3_b_p4" text="+15% к регенерации войск." />
+    <string id="taom_ub_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_uruk_crossbow_root_desc" text="Железный Дождь дает +5% к дальнобойному урону болтами, откованными в Ортханке." />
     <string id="taom_ucb_t1_a_key" text="Радиус Железного Дождя увеличен, покрывая более широкие зоны поражения." />
     <string id="taom_ucb_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_ctm_t1_b_p2" text="+5% к моральному духу войск." />
     <string id="taom_ctm_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_ctm_t1_b_p4" text="+5% к регенерации войск." />
+    <string id="taom_ctm_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_ctm_t2_a_key" text="Время восстановления Неистовства тролля сокращено, активируется чаще." />
     <string id="taom_ctm_t2_a_p1" text="+10% к моральному духу войск." />
     <string id="taom_ctm_t2_a_p2" text="+2 к размеру отряда." />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_ctm_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_ctm_t3_b_p3" text="+20% к боевому духу войск." />
-    <string id="taom_ctm_t3_b_p4" text="+15% к регенерации войск." />
+    <string id="taom_ctm_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_goblin_sniper_root_desc" text="Ядовитый Дротик даёт +5% к дальнобойному урону благодаря токсину пещерных грибов." />
     <string id="taom_gbs_t1_a_key" text="Радиус Ядовитого Дротика увеличен, покрывая более широкие зоны поражения." />
     <string id="taom_gbs_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_swr_t1_b_p2" text="+5% к моральному духу войск." />
     <string id="taom_swr_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_swr_t1_b_p4" text="+5% к восстановлению войск." />
+    <string id="taom_swr_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_swr_t2_a_key" text="Заряд Похищения Души уменьшен, активируется чаще." />
     <string id="taom_swr_t2_a_p1" text="+10% к моральному духу войск." />
     <string id="taom_swr_t2_a_p2" text="+2 к размеру отряда." />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_swr_t3_b_p2" text="+15% к восстановлению здоровья." />
     <string id="taom_swr_t3_b_p3" text="+20% к моральному духу войск." />
-    <string id="taom_swr_t3_b_p4" text="+15% к восстановлению войск." />
+    <string id="taom_swr_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_necromancer_acolyte_root_desc" text="Темный Разряд дает +5% к дальнобойному урону некромантской энергией." />
     <string id="taom_nca_t1_a_key" text="Радиус Темного Разряда увеличен, покрывая более широкие зоны поражения." />
     <string id="taom_nca_t1_a_p1" text="+8% к дальнобойному урону." />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_crb_t1_b_p2" text="+5% к боевому духу войск." />
     <string id="taom_crb_t1_b_p3" text="+5% к сопротивлению войск." />
-    <string id="taom_crb_t1_b_p4" text="+5% к регенерации войск." />
+    <string id="taom_crb_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_crb_t2_a_key" text="Время перезарядки Абордажа уменьшено, активируется чаще." />
     <string id="taom_crb_t2_a_p1" text="+10% к боевому духу войск." />
     <string id="taom_crb_t2_a_p2" text="+2 к размеру отряда." />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="+18% к сопротивлению." />
     <string id="taom_crb_t3_b_p2" text="+15% к регенерации здоровья." />
     <string id="taom_crb_t3_b_p3" text="+20% к боевому духу войск." />
-    <string id="taom_crb_t3_b_p4" text="+15% к регенерации войск." />
+    <string id="taom_crb_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_corsair_crossbow_root_desc" text="Выстрел по такелажу даёт +5% к дальнобойному урону при твёрдой руке." />
     <string id="taom_crc_t1_a_key" text="Радиус действия Выстрела по такелажу увеличен, покрывая широкие зоны поражения." />
     <string id="taom_crc_t1_a_p1" text="+8% к дальнобойному урону." />

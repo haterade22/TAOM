@@ -1229,7 +1229,7 @@
     <string id="taom_dg2_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_dg2_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_dg2_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_dg2_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_dg2_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_dg2_t2_a_key" text="Torhalt-Aufladung verringert, aktiviert häufiger." />
     <string id="taom_dg2_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_dg2_t2_a_p2" text="+2 Gruppengröße." />
@@ -1249,7 +1249,7 @@
     <string id="taom_dg2_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_dg2_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_dg2_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_dg2_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_dg2_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_dale_marksman_root_desc" text="Schwarzer Pfeil gewährt +5% Fernkampfschaden zu Ehren von Bard dem Bogenschützen." />
     <string id="taom_dm_t1_a_key" text="Schwarzer Pfeil-Radius vergrößert, deckt breitere Tötungszonen ab." />
     <string id="taom_dm_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1322,7 +1322,7 @@
     <string id="taom_ig_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_ig_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_ig_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_ig_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_ig_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_ig_t2_a_key" text="Mithril-Bastion-Aufladung reduziert, aktiviert sich häufiger." />
     <string id="taom_ig_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_ig_t2_a_p2" text="+2 Gruppengröße." />
@@ -1342,7 +1342,7 @@
     <string id="taom_ig_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_ig_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_ig_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_ig_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_ig_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_crossbow_master_root_desc" text="Präzisionsfeuer gewährt +5% Fernkampfschaden mit meisterhaften Bolzen." />
     <string id="taom_cbm_t1_a_key" text="Präzisionsfeuer Radius vergrößert, deckt breitere Tötungszonen ab." />
     <string id="taom_cbm_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1415,7 +1415,7 @@
     <string id="taom_bd_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_bd_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_bd_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_bd_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_bd_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_bd_t2_a_key" text="Sternenglanz-Gewebe-Ladung reduziert, aktiviert häufiger." />
     <string id="taom_bd_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_bd_t2_a_p2" text="+2 Truppengröße." />
@@ -1435,7 +1435,7 @@
     <string id="taom_bd_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_bd_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_bd_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_bd_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_bd_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_elven_archer_root_desc" text="Elbensicht gewährt +5% Fernkampfschaden mit jahrhundertelanger Übung." />
     <string id="taom_elar_t1_a_key" text="Elbensicht-Radius erhöht, deckt breitere Tötungszonen ab." />
     <string id="taom_elar_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1508,7 +1508,7 @@
     <string id="taom_wdn_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_wdn_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_wdn_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_wdn_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_wdn_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_wdn_t2_a_key" text="Aufladung von Nimrodels Segen verringert, aktiviert häufiger." />
     <string id="taom_wdn_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_wdn_t2_a_p2" text="+2 Gruppengröße." />
@@ -1528,7 +1528,7 @@
     <string id="taom_wdn_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_wdn_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_wdn_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_wdn_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_wdn_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_galadhrim_archer_root_desc" text="Silberregen gewährt +5% Fernkampfschaden, Pfeile getaucht in Sternenlicht." />
     <string id="taom_gar_t1_a_key" text="Radius des Silberregens vergrößert, deckt breitere Todeszone ab." />
     <string id="taom_gar_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1601,7 +1601,7 @@
     <string id="taom_shw_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_shw_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_shw_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_shw_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_shw_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_shw_t2_a_key" text="Waldmantel-Aufladung reduziert, aktiviert sich häufiger." />
     <string id="taom_shw_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_shw_t2_a_p2" text="+2 Gruppengröße." />
@@ -1621,7 +1621,7 @@
     <string id="taom_shw_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_shw_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_shw_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_shw_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_shw_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_silvan_archer_root_desc" text="Kronenschlag gewährt +5% Fernkampfschaden aus den Baumkronen." />
     <string id="taom_sva_t1_a_key" text="Kronenschlag-Radius vergrößert, deckt breitere Tötungszonen ab." />
     <string id="taom_sva_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1694,7 +1694,7 @@
     <string id="taom_ub_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_ub_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_ub_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_ub_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_ub_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_ub_t2_a_key" text="Blutrausch-Aufladung reduziert, aktiviert häufiger." />
     <string id="taom_ub_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_ub_t2_a_p2" text="+2 Gruppengröße." />
@@ -1714,7 +1714,7 @@
     <string id="taom_ub_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_ub_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_ub_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_ub_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_ub_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_uruk_crossbow_root_desc" text="Eisenregen gewährt +5% Fernkampfschaden mit Orthanc-geschmiedeten Bolzen." />
     <string id="taom_ucb_t1_a_key" text="Eisenregen-Radius erhöht, deckt breitere Tötungszonen ab." />
     <string id="taom_ucb_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1787,7 +1787,7 @@
     <string id="taom_ctm_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_ctm_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_ctm_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_ctm_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_ctm_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_ctm_t2_a_key" text="Trollraserei-Aufladung reduziert, aktiviert häufiger." />
     <string id="taom_ctm_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_ctm_t2_a_p2" text="+2 Truppengröße." />
@@ -1807,7 +1807,7 @@
     <string id="taom_ctm_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_ctm_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_ctm_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_ctm_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_ctm_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_goblin_sniper_root_desc" text="Giftpfeil gewährt +5% Fernkampfschaden mit Höhlenpilzgift." />
     <string id="taom_gbs_t1_a_key" text="Giftpfeil-Radius erhöht, deckt größere Tötungszonen ab." />
     <string id="taom_gbs_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1880,7 +1880,7 @@
     <string id="taom_swr_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_swr_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_swr_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_swr_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_swr_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_swr_t2_a_key" text="Seelenentzug-Aufladung reduziert, aktiviert häufiger." />
     <string id="taom_swr_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_swr_t2_a_p2" text="+2 Gruppengröße." />
@@ -1900,7 +1900,7 @@
     <string id="taom_swr_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_swr_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_swr_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_swr_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_swr_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_necromancer_acolyte_root_desc" text="Dunkler Blitz gewährt +5% Fernkampfschaden mit nekromantischer Energie." />
     <string id="taom_nca_t1_a_key" text="Dunkler Blitz-Radius vergrößert, deckt breitere Tötungszonen ab." />
     <string id="taom_nca_t1_a_p1" text="+8% Fernkampfschaden." />
@@ -1973,7 +1973,7 @@
     <string id="taom_crb_t1_b_p1" text="+8% Widerstand." />
     <string id="taom_crb_t1_b_p2" text="+5% Truppenmoral." />
     <string id="taom_crb_t1_b_p3" text="+5% Truppenwiderstand." />
-    <string id="taom_crb_t1_b_p4" text="+5% Truppenregeneration." />
+    <string id="taom_crb_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
     <string id="taom_crb_t2_a_key" text="Enteraktion-Aufladung reduziert, häufigere Aktivierung." />
     <string id="taom_crb_t2_a_p1" text="+10% Truppenmoral." />
     <string id="taom_crb_t2_a_p2" text="+2 Gruppengröße." />
@@ -1993,7 +1993,7 @@
     <string id="taom_crb_t3_b_p1" text="+18% Widerstand." />
     <string id="taom_crb_t3_b_p2" text="+15% Gesundheitsregeneration." />
     <string id="taom_crb_t3_b_p3" text="+20% Truppenmoral." />
-    <string id="taom_crb_t3_b_p4" text="+15% Truppenregeneration." />
+    <string id="taom_crb_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
     <string id="taom_corsair_crossbow_root_desc" text="Takelschuss gewährt +5% Fernkampfschaden mit ruhigem Zielen." />
     <string id="taom_crc_t1_a_key" text="Takelschuss-Radius erhöht, deckt breitere Tötungszonen ab." />
     <string id="taom_crc_t1_a_p1" text="+8% Fernkampfschaden." />
