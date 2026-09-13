@@ -519,11 +519,13 @@ to it) clears the refusal.
 very ids it fired on: for the 13 non-house Mordor templates the live id set and the stale spec's
 became identical, leaving only the two houses tripping it. The second way a spec falls behind drops
 no id at all, a party-size retarget, and every culture spec except `bandits` and `khand` still
-carries pre-2026-08-14 counts (Gondor's Minas Tirith spec sums to 33 against a live 200). So the
-guard now also refuses a spec whose `max_value` sum is below the live template's, and a dry run of
-`--all` refuses 19 of the 21 specs today, which is the truth the id check had been hiding.
-`tools/tests/test_generate_clan_heraldry.py` pins both halves. Regenerate a spec from the live file
-before applying it.
+carried pre-2026-08-14 counts (Gondor's Minas Tirith spec summed to 33 against a live 200). So the
+guard now also refuses a spec whose `max_value` sum is below the live template's; on the day it was
+added a dry run of `--all` refused 19 of the 21 specs, which is the truth the id check had been
+hiding. `tools/tests/test_generate_clan_heraldry.py` pins both halves. The specs were then synced
+FROM the live files (#589, `tools/sync_clan_specs_from_live.py`): every spec now names its clan's
+live binding and carries the live stacks, `--all --apply` is byte-identical on all three files, and
+`tools/tests/test_clan_heraldry_specs.py` fails on the first divergence.
 
 **3. Two validators are silently green on this feature.**
 `validate_mesh_refs.py --scan-bodies` checks **nothing** in the Armory: `tpac_paths_for_modules`

@@ -1,7 +1,8 @@
 {
   "culture": "umbar",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF2E2A24/FFB58A4E base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=umbar).",
+  "_note": "Per-clan color = FF2E2A24/FFB58A4E base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=umbar); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_umbar_1",
@@ -13,52 +14,52 @@
         {
           "troop": "aux_basic",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "umbar_elite",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "umbar_elite_root0",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "umbar_elite_root01",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "umbar_elite_root000",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "umbar_elite_root010",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "umbar_elite_root1",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "umbar_elite_root10",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "umbar_elite_root101",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "umbar_elite_root0001",
           "min": 2,
-          "max": 4
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_umbar_umbar_1_template"
@@ -73,57 +74,57 @@
         {
           "troop": "umbar_elite",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "umbar_elite_root0",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "aux_basic",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "umbar_elite_root00",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "umbar_elite_root001",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "umbar_elite_root01",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "umbar_elite_root010",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "umbar_elite_root0000",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "umbar_elite_root1",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "umbar_elite_root100",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "umbar_elite_root0001",
           "min": 2,
-          "max": 4
+          "max": 19
         }
       ],
       "template_id": "kingdom_hero_party_umbar_umbar_2_template"
@@ -138,52 +139,52 @@
         {
           "troop": "umbar_elite_root0",
           "min": 2,
-          "max": 4
+          "max": 21
         },
         {
           "troop": "aux_basic",
           "min": 2,
-          "max": 4
+          "max": 21
         },
         {
           "troop": "umbar_elite_root001",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "umbar_elite_root01",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "umbar_elite_root0000",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "umbar_elite_root1",
           "min": 2,
-          "max": 4
+          "max": 21
         },
         {
           "troop": "umbar_elite_root10",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "umbar_elite_root101",
           "min": 0,
-          "max": 1
+          "max": 19
         },
         {
           "troop": "umbar_elite_root100",
           "min": 0,
-          "max": 1
+          "max": 19
         },
         {
           "troop": "umbar_elite_root0001",
           "min": 2,
-          "max": 4
+          "max": 21
         }
       ],
       "template_id": "kingdom_hero_party_umbar_umbar_3_template"
@@ -198,37 +199,37 @@
         {
           "troop": "aux_basic",
           "min": 2,
-          "max": 4
+          "max": 29
         },
         {
           "troop": "umbar_elite",
           "min": 2,
-          "max": 4
+          "max": 29
         },
         {
           "troop": "umbar_elite_root01",
           "min": 1,
-          "max": 2
+          "max": 28
         },
         {
           "troop": "umbar_elite_root000",
           "min": 0,
-          "max": 1
+          "max": 28
         },
         {
           "troop": "umbar_elite_root1",
           "min": 2,
-          "max": 4
+          "max": 29
         },
         {
           "troop": "umbar_elite_root100",
           "min": 0,
-          "max": 1
+          "max": 28
         },
         {
           "troop": "umbar_elite_root0001",
           "min": 2,
-          "max": 4
+          "max": 29
         }
       ],
       "template_id": "kingdom_hero_party_umbar_umbar_4_template"
@@ -243,47 +244,47 @@
         {
           "troop": "umbar_elite_root00",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "umbar_elite_root001",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "umbar_elite_root01",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "umbar_elite_root010",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "umbar_elite_root0000",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "umbar_elite_root10",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "umbar_elite_root101",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "umbar_elite_root100",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "umbar_elite_root0001",
           "min": 0,
-          "max": 1
+          "max": 22
         }
       ],
       "template_id": "kingdom_hero_party_umbar_umbar_5_template"
@@ -298,47 +299,47 @@
         {
           "troop": "umbar_elite_root0",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "aux_basic",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "umbar_elite_root001",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "umbar_elite_root0000",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "umbar_elite_root1",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "umbar_elite_root10",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "umbar_elite_root100",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "umbar_elite_root101",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "umbar_elite_root0001",
           "min": 2,
-          "max": 4
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_umbar_umbar_6_template"

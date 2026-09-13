@@ -123,7 +123,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [lord-party-templates](features/lord-party-templates.md): Patch88, a lord named in `lord_party_templates.json` fields his own party template instead of his clan's (Faramir the Ithilien rangers, Sauron a Black Numenorean and Uruk host)
 - [stale-character-repair](features/stale-character-repair.md): Patch83, making a save-restored character with no ModuleData definition inert before the engine derefs its null fields
 - [faction-map](features/faction-map.md) — campaign map faction rendering
-- [clan-heraldry](features/clan-heraldry.md): per-clan `color`/`color2`, which is the battlefield armour tint via Patch23, plus per-clan party templates. `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, whose Gondor and Mordor specs have drifted and must not be re-applied
+- [clan-heraldry](features/clan-heraldry.md): per-clan `color`/`color2`, which is the battlefield armour tint via Patch23, plus per-clan party templates. `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`; the specs are synced from the live files by `tools/sync_clan_specs_from_live.py` (#589) and re-applying them is a no-op
 - [minor-factions](features/minor-factions.md) — minor factions catalog + rules
 - [alignment-aware-execution](features/alignment-aware-execution.md) — race/alignment-aware execution penalties
 - [marriage-alignment](features/marriage-alignment.md): a Free-aligned hero cannot marry an Evil-aligned one (#542, Boromir wed a Misty Mountain orc). Blocks in `TaomMarriageModel.IsCoupleSuitableForMarriage`, the chokepoint every marriage path funnels through; `Patch81` narrows the AI partner draw so Free clans keep their marriage rate

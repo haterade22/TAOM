@@ -1,7 +1,8 @@
 {
   "culture": "mordor",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF1A1717/FF7E1518 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=mordor).",
+  "_note": "Per-clan color = FF1A1717/FF7E1518 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=mordor); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_empire_south_1",
@@ -11,69 +12,84 @@
       "color2": "FF5F102A",
       "roster": [
         {
-          "troop": "mordor_orc_recruit",
-          "min": 2,
-          "max": 4
+          "troop": "mordor_num_initiate",
+          "min": 4,
+          "max": 59
         },
         {
-          "troop": "mordor_warg_tamer",
+          "troop": "mordor_num_infantry",
           "min": 2,
+          "max": 33
+        },
+        {
+          "troop": "mordor_num_archer",
+          "min": 2,
+          "max": 29
+        },
+        {
+          "troop": "mordor_num_cavalry",
+          "min": 2,
+          "max": 18
+        },
+        {
+          "troop": "mordor_num_vet_infantry",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "mordor_num_vet_archer",
+          "min": 0,
+          "max": 18
+        },
+        {
+          "troop": "mordor_num_vet_cavalry",
+          "min": 0,
+          "max": 11
+        },
+        {
+          "troop": "mordor_num_warden",
+          "min": 0,
+          "max": 14
+        },
+        {
+          "troop": "mordor_num_marksman",
+          "min": 0,
+          "max": 12
+        },
+        {
+          "troop": "mordor_num_knight",
+          "min": 0,
+          "max": 7
+        },
+        {
+          "troop": "mordor_num_temple_guard",
+          "min": 0,
+          "max": 8
+        },
+        {
+          "troop": "mordor_num_shadowbow",
+          "min": 0,
+          "max": 7
+        },
+        {
+          "troop": "mordor_num_temple_knight",
+          "min": 0,
           "max": 4
         },
         {
           "troop": "mordor_orc_lackey",
-          "min": 2,
-          "max": 4
+          "min": 0,
+          "max": 7
         },
         {
           "troop": "mordor_orc_fighter",
-          "min": 1,
-          "max": 2
-        },
-        {
-          "troop": "mordor_orc_reaver",
           "min": 0,
-          "max": 1
-        },
-        {
-          "troop": "mordor_uruk_shieldbearer",
-          "min": 0,
-          "max": 1
-        },
-        {
-          "troop": "mordor_militia_archer",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_orc_hunter",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_orc_scout",
-          "min": 1,
-          "max": 2
-        },
-        {
-          "troop": "mordor_uruk_archer",
-          "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_warg_raider",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_warg_reaver",
-          "min": 1,
-          "max": 2
-        },
-        {
-          "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 6
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_1_template"
@@ -88,67 +104,67 @@
         {
           "troop": "mordor_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_uruk_grunt",
-          "min": 2,
+          "min": 0,
           "max": 4
         },
         {
           "troop": "mordor_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 26
         },
         {
           "troop": "mordor_orc_warrior",
           "min": 1,
-          "max": 2
+          "max": 26
         },
         {
           "troop": "mordor_orc_impaler",
           "min": 1,
-          "max": 2
+          "max": 29
         },
         {
           "troop": "mordor_uruk_shieldbearer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_uruk_infantry",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_uruk_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 25
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_10_template"
@@ -163,67 +179,67 @@
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_orc_warrior",
           "min": 1,
-          "max": 2
+          "max": 27
         },
         {
           "troop": "mordor_orc_impaler",
           "min": 1,
-          "max": 2
+          "max": 27
         },
         {
           "troop": "mordor_uruk_infantry",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_uruk_heavy_archer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_uruk_heavy_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 25
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_11_template"
@@ -238,52 +254,52 @@
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 36
         },
         {
           "troop": "mordor_uruk_grunt",
-          "min": 2,
-          "max": 4
+          "min": 0,
+          "max": 5
         },
         {
           "troop": "mordor_orc_impaler",
           "min": 1,
-          "max": 2
+          "max": 34
         },
         {
           "troop": "mordor_uruk_vanguard",
           "min": 0,
-          "max": 1
+          "max": 5
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 36
         },
         {
           "troop": "mordor_uruk_heavy_crossbow",
           "min": 0,
-          "max": 1
+          "max": 5
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 36
         },
         {
           "troop": "mordor_warg_reaver",
           "min": 1,
-          "max": 2
+          "max": 35
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 34
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 34
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_12_template"
@@ -297,63 +313,63 @@
       "roster": [
         {
           "troop": "mordor_uruk_fighter",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_uruk_warrior",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_orc_infantry",
           "min": 1,
-          "max": 2
+          "max": 44
         },
         {
           "troop": "mordor_uruk_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_uruk_captain",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_orc_archer",
           "min": 1,
-          "max": 2
+          "max": 44
         },
         {
           "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_uruk_archer",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_uruk_crossbow",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_warg_reaver",
           "min": 1,
-          "max": 2
+          "max": 44
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 42
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 44
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_13_template"
@@ -368,67 +384,67 @@
         {
           "troop": "mordor_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_uruk_warrior",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_uruk_captain",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_orc_scout",
           "min": 1,
-          "max": 2
+          "max": 29
         },
         {
           "troop": "mordor_uruk_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_uruk_heavy_archer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 29
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_14_template"
@@ -443,67 +459,67 @@
         {
           "troop": "mordor_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "mordor_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "mordor_orc_infantry",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "mordor_uruk_baraddurguard",
           "min": 0,
-          "max": 1
+          "max": 3
         },
         {
           "troop": "mordor_orc_reaver",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "mordor_orc_scout",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "mordor_uruk_heavy_archer",
           "min": 0,
-          "max": 1
+          "max": 3
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 23
         },
         {
           "troop": "mordor_warg_reaver",
           "min": 1,
-          "max": 2
+          "max": 23
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 22
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_15_template"
@@ -518,67 +534,67 @@
         {
           "troop": "mordor_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 26
         },
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 26
         },
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 26
         },
         {
           "troop": "mordor_uruk_grunt",
-          "min": 2,
+          "min": 0,
           "max": 4
         },
         {
           "troop": "mordor_orc_fighter",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "mordor_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "mordor_orc_warrior",
           "min": 1,
-          "max": 2
+          "max": 26
         },
         {
           "troop": "mordor_orc_reaver",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "mordor_uruk_shieldbearer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 25
         },
         {
           "troop": "mordor_uruk_heavy_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 25
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_2_template"
@@ -593,67 +609,67 @@
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 27
         },
         {
           "troop": "mordor_orc_warrior",
           "min": 1,
-          "max": 2
+          "max": 27
         },
         {
           "troop": "mordor_uruk_shieldbearer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_uruk_archer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_uruk_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 25
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_3_template"
@@ -668,52 +684,52 @@
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 36
         },
         {
           "troop": "mordor_uruk_grunt",
-          "min": 2,
-          "max": 4
+          "min": 0,
+          "max": 5
         },
         {
           "troop": "mordor_orc_warrior",
           "min": 1,
-          "max": 2
+          "max": 34
         },
         {
           "troop": "mordor_uruk_infantry",
           "min": 0,
-          "max": 1
+          "max": 5
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 36
         },
         {
           "troop": "mordor_uruk_crossbow",
           "min": 0,
-          "max": 1
+          "max": 5
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 36
         },
         {
           "troop": "mordor_warg_reaver",
           "min": 1,
-          "max": 2
+          "max": 35
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 34
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 34
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_4_template"
@@ -728,62 +744,62 @@
         {
           "troop": "mordor_orc_impaler",
           "min": 1,
-          "max": 2
+          "max": 44
         },
         {
           "troop": "mordor_uruk_fighter",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_uruk_warrior",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_uruk_vanguard",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_uruk_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_orc_archer",
           "min": 1,
-          "max": 2
+          "max": 44
         },
         {
           "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_uruk_heavy_archer",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_uruk_heavy_crossbow",
           "min": 0,
-          "max": 1
+          "max": 6
         },
         {
           "troop": "mordor_warg_reaver",
           "min": 1,
-          "max": 2
+          "max": 44
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 42
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 44
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_5_template"
@@ -798,67 +814,67 @@
         {
           "troop": "mordor_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_uruk_fighter",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_uruk_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 30
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_orc_scout",
           "min": 1,
-          "max": 2
+          "max": 29
         },
         {
           "troop": "mordor_uruk_heavy_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_uruk_archer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 29
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_6_template"
@@ -873,67 +889,67 @@
         {
           "troop": "mordor_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_uruk_warrior",
-          "min": 1,
-          "max": 2
+          "min": 0,
+          "max": 4
         },
         {
           "troop": "mordor_uruk_captain",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_uruk_baraddurguard",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 28
         },
         {
           "troop": "mordor_orc_scout",
           "min": 1,
-          "max": 2
+          "max": 26
         },
         {
           "troop": "mordor_uruk_archer",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 27
         },
         {
           "troop": "mordor_warg_reaver",
           "min": 1,
-          "max": 2
+          "max": 26
         },
         {
           "troop": "mordor_warg_ravager",
           "min": 0,
-          "max": 1
+          "max": 25
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_7_template"
@@ -948,67 +964,67 @@
         {
           "troop": "mordor_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 26
         },
         {
           "troop": "mordor_orc_lackey",
           "min": 2,
-          "max": 4
+          "max": 26
         },
         {
           "troop": "mordor_warg_rider",
           "min": 2,
-          "max": 4
+          "max": 26
         },
         {
           "troop": "mordor_uruk_grunt",
-          "min": 2,
+          "min": 0,
           "max": 4
         },
         {
           "troop": "mordor_orc_infantry",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "mordor_orc_fighter",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "mordor_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 26
         },
         {
           "troop": "mordor_uruk_baraddurguard",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_orc_reaver",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "mordor_orc_hunter",
           "min": 2,
-          "max": 4
+          "max": 25
         },
         {
           "troop": "mordor_uruk_crossbow",
           "min": 0,
-          "max": 1
+          "max": 4
         },
         {
           "troop": "mordor_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 25
         },
         {
           "troop": "mordor_warg_beastmaster",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_8_template"
@@ -1021,69 +1037,84 @@
       "color2": "FF9D3E1A",
       "roster": [
         {
-          "troop": "mordor_orc_lackey",
+          "troop": "mordor_num_initiate",
+          "min": 4,
+          "max": 58
+        },
+        {
+          "troop": "mordor_num_cavalry",
           "min": 2,
-          "max": 4
+          "max": 33
+        },
+        {
+          "troop": "mordor_num_infantry",
+          "min": 2,
+          "max": 25
+        },
+        {
+          "troop": "mordor_num_archer",
+          "min": 2,
+          "max": 22
+        },
+        {
+          "troop": "mordor_num_vet_cavalry",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "mordor_num_vet_infantry",
+          "min": 0,
+          "max": 16
+        },
+        {
+          "troop": "mordor_num_vet_archer",
+          "min": 0,
+          "max": 14
+        },
+        {
+          "troop": "mordor_num_knight",
+          "min": 0,
+          "max": 14
+        },
+        {
+          "troop": "mordor_num_warden",
+          "min": 0,
+          "max": 10
+        },
+        {
+          "troop": "mordor_num_marksman",
+          "min": 0,
+          "max": 9
+        },
+        {
+          "troop": "mordor_num_temple_knight",
+          "min": 0,
+          "max": 8
+        },
+        {
+          "troop": "mordor_num_temple_guard",
+          "min": 0,
+          "max": 6
+        },
+        {
+          "troop": "mordor_num_shadowbow",
+          "min": 0,
+          "max": 5
         },
         {
           "troop": "mordor_warg_rider",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_orc_fighter",
-          "min": 1,
-          "max": 2
-        },
-        {
-          "troop": "mordor_militia_veteran_spearman",
-          "min": 1,
-          "max": 2
-        },
-        {
-          "troop": "mordor_orc_reaver",
           "min": 0,
-          "max": 1
+          "max": 8
         },
         {
-          "troop": "mordor_militia_veteran_archer",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_militia_archer",
-          "min": 2,
-          "max": 4
+          "troop": "mordor_orc_lackey",
+          "min": 0,
+          "max": 6
         },
         {
           "troop": "mordor_orc_hunter",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_uruk_skirmisher",
-          "min": 1,
-          "max": 2
-        },
-        {
-          "troop": "mordor_uruk_heavy_archer",
           "min": 0,
-          "max": 1
-        },
-        {
-          "troop": "mordor_uruk_heavy_crossbow",
-          "min": 0,
-          "max": 1
-        },
-        {
-          "troop": "mordor_warg_raider",
-          "min": 2,
-          "max": 4
-        },
-        {
-          "troop": "mordor_warg_ravager",
-          "min": 0,
-          "max": 1
+          "max": 5
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_9_template"

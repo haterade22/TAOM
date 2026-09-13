@@ -1,7 +1,8 @@
 {
   "culture": "empire",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF5A3D28/FF8C3A2C base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=empire).",
+  "_note": "Per-clan color = FF5A3D28/FF8C3A2C base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=empire); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_empire_north_1",
@@ -13,67 +14,67 @@
         {
           "troop": "dunland_peasant",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_clan_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_ox_pikeman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_wolf_axeman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_hunter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raven_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_raven_ranger",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_stag_lancer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_stag_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_stag_noble_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_1_template"
@@ -88,67 +89,67 @@
         {
           "troop": "dunland_raider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raven_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_boar_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_boar_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_wolf_axeman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_bear_berserker",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_dragon_firebolt",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_lizard_horseman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_lizard_noble_cavalry",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_2_template"
@@ -163,67 +164,67 @@
         {
           "troop": "dunland_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raven_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_bear_berserker",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_hunter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raven_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_raven_master_ranger",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_dragon_sniper",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_falcon_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_falcon_noble_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_3_template"
@@ -238,62 +239,62 @@
         {
           "troop": "dunland_raven_noble_son",
           "min": 2,
-          "max": 4
+          "max": 17
         },
         {
           "troop": "dunland_boar_noble_son",
           "min": 2,
-          "max": 4
+          "max": 17
         },
         {
           "troop": "dunland_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_boar_boar_warrior",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dunland_hunter",
           "min": 2,
-          "max": 4
+          "max": 17
         },
         {
           "troop": "dunland_dragon_sniper",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dunland_stag_lancer",
           "min": 2,
-          "max": 4
+          "max": 17
         },
         {
           "troop": "dunland_lizard_horseman",
           "min": 2,
-          "max": 4
+          "max": 17
         },
         {
           "troop": "dunland_falcon_archer",
           "min": 2,
-          "max": 4
+          "max": 17
         },
         {
           "troop": "dunland_stag_rider",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_stag_noble_lancer",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dunland_lizard_noble_cavalry",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_4_template"
@@ -308,62 +309,62 @@
         {
           "troop": "dunland_veteran_swordman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_wolf_raider",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_bear_chosen",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_ox_guard",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "dunland_wolf_champion",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "dunland_raven_warrior",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_raven_ranger",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dunland_dragon_firebolt",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dunland_lizard_outrider",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dunland_lizard_noble_cavalry",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dunland_falcon_noble_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_5_template"
@@ -378,67 +379,67 @@
         {
           "troop": "dunland_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_wolf_raider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_wolf_champion",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_hunter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_raven_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_dragon_firebolt",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_raven_master_ranger",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_falcon_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_falcon_noble_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_6_template"
@@ -453,67 +454,67 @@
         {
           "troop": "dunland_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_swordsman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_peasant",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_bear_chosen",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_bear_executioner",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_boar_warlord",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_hunter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raven_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_raven_master_ranger",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_stag_lancer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_stag_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_stag_noble_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_7_template"
@@ -528,67 +529,67 @@
         {
           "troop": "dunland_swordsman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_peasant",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_noble_son",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_boar_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_clan_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_boar_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_boar_warlord",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_ox_iron_wall",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_dragon_sniper",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_lizard_horseman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_lizard_noble_cavalry",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_8_template"
@@ -603,67 +604,67 @@
         {
           "troop": "dunland_peasant",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_clan_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_boar_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_ox_iron_wall",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "dunland_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_hunter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_raven_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dunland_raven_ranger",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_dragon_firebolt",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "dunland_falcon_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dunland_falcon_noble_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_dunland_empire_north_9_template"

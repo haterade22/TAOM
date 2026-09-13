@@ -1,7 +1,8 @@
 {
   "culture": "mistymountainorcs",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF2A2A2A/FF6E5A40 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=goblin).",
+  "_note": "Per-clan color = FF2A2A2A/FF6E5A40 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=goblin); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_mistymountainorcs_1",
@@ -13,62 +14,62 @@
         {
           "troop": "goblin_snaga",
           "min": 2,
-          "max": 4
+          "max": 32
         },
         {
           "troop": "goblin_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 32
         },
         {
           "troop": "goblin_grunt",
           "min": 2,
-          "max": 4
+          "max": 32
         },
         {
           "troop": "goblin_guard",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_brute",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_veteran_sword_warrior",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "goblin_veteran_spear_warrior",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "goblin_hunter",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "goblin_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "goblin_lurker",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_sentry",
           "min": 0,
-          "max": 1
+          "max": 14
         }
       ],
       "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_1_template"
@@ -83,62 +84,62 @@
         {
           "troop": "goblin_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 32
         },
         {
           "troop": "goblin_grunt",
           "min": 2,
-          "max": 4
+          "max": 32
         },
         {
           "troop": "goblin_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 32
         },
         {
           "troop": "goblin_fighter",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "goblin_brute",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_sword_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_spear_warrior",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_berserker",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "goblin_veteran_spear_warrior",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "goblin_veteran_berserker",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "goblin_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 31
         },
         {
           "troop": "goblin_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         }
       ],
       "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_2_template"
@@ -153,57 +154,57 @@
         {
           "troop": "goblin_grunt",
           "min": 2,
-          "max": 4
+          "max": 34
         },
         {
           "troop": "goblin_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 34
         },
         {
           "troop": "goblin_sword_warrior",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "goblin_spear_warrior",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "goblin_veteran_berserker",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "goblin_hunter",
           "min": 2,
-          "max": 4
+          "max": 34
         },
         {
           "troop": "goblin_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 35
         },
         {
           "troop": "goblin_lurker",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "goblin_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "goblin_sentry",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "goblin_archer",
           "min": 0,
-          "max": 1
+          "max": 17
         }
       ],
       "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_3_template"
@@ -218,57 +219,57 @@
         {
           "troop": "goblin_spear_warrior",
           "min": 1,
-          "max": 2
+          "max": 25
         },
         {
           "troop": "goblin_berserker",
           "min": 1,
-          "max": 2
+          "max": 25
         },
         {
           "troop": "goblin_guard",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "goblin_chosen_of_tharzog",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "goblin_guardian_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "mistymountainorcs_bolgs_ironfang",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "goblin_veteran_sword_warrior",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "goblin_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "goblin_lurker",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "goblin_archer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "goblin_sentry",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_4_template"
@@ -283,52 +284,52 @@
         {
           "troop": "goblin_fighter",
           "min": 2,
-          "max": 4
+          "max": 37
         },
         {
           "troop": "goblin_snaga",
           "min": 2,
-          "max": 4
+          "max": 37
         },
         {
           "troop": "goblin_berserker",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "goblin_guardian_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "goblin_hunter",
           "min": 2,
-          "max": 4
+          "max": 37
         },
         {
           "troop": "goblin_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 38
         },
         {
           "troop": "goblin_lurker",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "goblin_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "goblin_sentry",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "goblin_archer",
           "min": 0,
-          "max": 1
+          "max": 18
         }
       ],
       "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_5_template"

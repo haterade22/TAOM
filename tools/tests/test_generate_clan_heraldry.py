@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for upsert_party_template() in generate_clan_heraldry.py.
+"""Unit tests for upsert_party_template() and the read/write pair in generate_clan_heraldry.py.
 
 Operation C replaces a whole <MBPartyTemplate> from the spec roster, so a spec that has fallen
 behind the live file is authority to delete whatever the live file gained since. The guard added on
@@ -10,7 +10,9 @@ templates, so for those the live id set and the stale spec's id set became ident
 id-only guard stopped seeing that `clan_heraldry/mordor.json` still carries the pre-retarget counts
 (max 2 to 4 against a live 23 to 44). These tests pin both halves of "behind".
 """
+import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -19,16 +21,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import generate_clan_heraldry as gh  # noqa: E402
 
 
-def live_file(stacks):
-    body = "\n".join(
+def live_file(stacks, eol="\n"):
+    body = eol.join(
         '\t\t\t<PartyTemplateStack min_value="%d" max_value="%d" troop="NPCCharacter.%s" />' % (mn, mx, t)
         for t, mn, mx in stacks)
-    return ('<partyTemplates>\n'
-            '\t<MBPartyTemplate id="kingdom_hero_party_x_template">\n'
-            '\t\t<stacks>\n' + body + '\n'
-            '\t\t</stacks>\n'
-            '\t</MBPartyTemplate>\n'
-            '</partyTemplates>')
+    return eol.join([
+        '<partyTemplates>',
+        '\t<MBPartyTemplate id="kingdom_hero_party_x_template">',
+        '\t\t<stacks>',
+        body,
+        '\t\t</stacks>',
+        '\t</MBPartyTemplate>',
+        '</partyTemplates>'])
 
 
 def roster(stacks):
@@ -66,6 +70,44 @@ class UpsertRefusesASpecBehindTheLiveFile(unittest.TestCase):
         out = gh.upsert_party_template(text, "kingdom_hero_party_y_template", roster([("z", 0, 1)]))
         self.assertIn('<MBPartyTemplate id="kingdom_hero_party_y_template">', out)
         self.assertIn('<MBPartyTemplate id="kingdom_hero_party_x_template">', out)
+
+    def test_a_crlf_file_gets_crlf_lines(self):
+        # taom_partyTemplates.xml is CRLF; a "\n" join left replaced templates with LF lines (#589).
+        text = live_file([("a", 1, 30)], eol="\r\n")
+        out = gh.upsert_party_template(text, "kingdom_hero_party_x_template", roster([("a", 1, 30), ("b", 0, 4)]))
+        self.assertNotIn("\n", out.replace("\r\n", ""), "a bare LF was written into a CRLF file")
+        same = gh.upsert_party_template(text, "kingdom_hero_party_x_template", roster([("a", 1, 30)]))
+        self.assertEqual(text, same, "re-applying the live roster must be a no-op")
+
+
+class ReadWriteKeepTheFilesBytes(unittest.TestCase):
+    """write() re-prepends a BOM only when the file had one, and never translates line endings.
+    Until #589 it wrote utf-8-sig unconditionally, so a real --apply added a BOM to
+    characters/clans.xml while the in-memory no-op invariant passed."""
+
+    def roundtrip(self, data):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "f.xml")
+            with open(p, "wb") as f:
+                f.write(data)
+            gh.write(p, gh.read(p))
+            with open(p, "rb") as f:
+                out = f.read()
+            with open(p + ".bak", "rb") as f:
+                bak = f.read()
+        return out, bak
+
+    def test_no_bom_crlf_file_stays_without_bom(self):
+        data = b'<?xml version="1.0"?>' + b"\r\n" + b"<Factions>" + b"\r\n" + b"</Factions>" + b"\r\n"
+        out, bak = self.roundtrip(data)
+        self.assertEqual(data, out)
+        self.assertEqual(data, bak)
+
+    def test_bom_lf_file_keeps_its_bom(self):
+        data = gh.BOM + b'<?xml version="1.0"?>' + b"\n" + b"<Factions>" + b"\n" + b"</Factions>" + b"\n"
+        out, bak = self.roundtrip(data)
+        self.assertEqual(data, out)
+        self.assertEqual(data, bak)
 
 
 if __name__ == "__main__":

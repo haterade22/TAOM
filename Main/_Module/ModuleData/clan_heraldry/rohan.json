@@ -1,7 +1,8 @@
 {
   "culture": "vlandia",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF35632F/FFE0D6A8 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=vlandia).",
+  "_note": "Per-clan color = FF35632F/FFE0D6A8 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=vlandia); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_vlandia_1",
@@ -13,67 +14,67 @@
         {
           "troop": "rohan_westfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westmarches_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westmarches_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_swordsman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_meduseld_veteran_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westemnet_royal_rider",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_1_template"
@@ -88,72 +89,72 @@
         {
           "troop": "rohan_westmarches_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_militiaman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_guardsman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_swordsman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_meduseld_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westfold_helmingas_axeman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_westfold_veteran_2h_axeman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_royal_lancer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_10_template"
@@ -168,72 +169,72 @@
         {
           "troop": "rohan_edoras_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_militiaman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_meduseld_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westfold_veteran_2h_axeman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_westemnet_rider",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_eorlingas_rider",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_11_template"
@@ -248,67 +249,67 @@
         {
           "troop": "rohan_westfold_militiaman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westmarches_guardsman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_meduseld_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_lance_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westemnet_veteran_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_golden_hall_veteran_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_eorlingas_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_12_template"
@@ -323,62 +324,62 @@
         {
           "troop": "rohan_westfold_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_westfold_2h_axeman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_westmarches_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_edoras_helmingas_swordsman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_edoras_meduseld_helmingas_spearman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_westemnet_eorlingas_rider",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_eastemnet_kings_own_lancer",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_edoras_golden_hall_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_13_template"
@@ -393,72 +394,72 @@
         {
           "troop": "rohan_edoras_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_2h_axeman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_meduseld_helmingas_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_bowman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_veteran_lancer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_14_template"
@@ -473,67 +474,67 @@
         {
           "troop": "rohan_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westfold_axeman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westmarches_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_veteran_swordsman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_master_swordsman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_golden_hall_supreme_rider",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_15_template"
@@ -548,72 +549,72 @@
         {
           "troop": "rohan_westfold_axeman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_veteran_swordsman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westmarches_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_meduseld_master_spearman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_edoras_meduseld_veteran_spearman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_royal_rider",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_16_template"
@@ -628,72 +629,72 @@
         {
           "troop": "rohan_westfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_swordsman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_meduseld_veteran_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_westemnet_rider",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_royal_lancer",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_17_template"
@@ -708,67 +709,67 @@
         {
           "troop": "rohan_westmarches_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_swordsman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westfold_helmingas_axeman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_lance_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westemnet_veteran_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastemnet_elite_lancer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_veteran_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_eorlingas_rider",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_18_template"
@@ -783,62 +784,62 @@
         {
           "troop": "rohan_edoras_meduseld_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_westfold_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_westfold_veteran_2h_axeman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_westmarches_meduseld_spearman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_edoras_golden_hall_veteran_rider",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_westemnet_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_eastemnet_kings_own_lancer",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_19_template"
@@ -853,72 +854,72 @@
         {
           "troop": "rohan_westfold_militiaman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_guardsman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westmarches_meduseld_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_bowman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_veteran_lancer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_kings_own_lancer",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_2_template"
@@ -933,67 +934,67 @@
         {
           "troop": "rohan_westmarches_guardsman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westfold_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westfold_2h_axeman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_helmingas_swordsman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_golden_hall_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_20_template"
@@ -1008,72 +1009,72 @@
         {
           "troop": "rohan_edoras_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_axeman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_2h_axeman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westmarches_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_meduseld_helmingas_spearman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_edoras_master_swordsman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_supreme_rider",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_21_template"
@@ -1088,72 +1089,72 @@
         {
           "troop": "rohan_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_axeman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_veteran_swordsman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_master_swordsman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_westemnet_rider",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_royal_rider",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_22_template"
@@ -1168,67 +1169,67 @@
         {
           "troop": "rohan_westfold_axeman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_veteran_swordsman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_meduseld_master_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_lance_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westemnet_veteran_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westemnet_elite_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_elite_lancer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_royal_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_3_template"
@@ -1243,62 +1244,62 @@
         {
           "troop": "rohan_westmarches_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_edoras_swordsman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_edoras_meduseld_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_edoras_meduseld_veteran_spearman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_westfold_helmingas_axeman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_eastemnet_elite_lancer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "rohan_edoras_golden_hall_eorlingas_rider",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "rohan_westemnet_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_4_template"
@@ -1313,72 +1314,72 @@
         {
           "troop": "rohan_westmarches_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_swordsman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westfold_helmingas_axeman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_bowman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_veteran_lancer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_5_template"
@@ -1393,67 +1394,67 @@
         {
           "troop": "rohan_edoras_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westfold_militiaman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_meduseld_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westfold_veteran_2h_axeman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastemnet_kings_own_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_6_template"
@@ -1468,72 +1469,72 @@
         {
           "troop": "rohan_westfold_militiaman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westmarches_guardsman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westfold_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westmarches_meduseld_spearman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_edoras_helmingas_swordsman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastemnet_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_kings_own_rider",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_eorlingas_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_7_template"
@@ -1548,72 +1549,72 @@
         {
           "troop": "rohan_westmarches_guardsman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_westfold_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_westfold_2h_axeman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_edoras_helmingas_swordsman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_militia_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "rohan_militia_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_westemnet_rider",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_edoras_golden_hall_supreme_rider",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rohan_wold_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_8_template"
@@ -1628,67 +1629,67 @@
         {
           "troop": "rohan_edoras_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westfold_2h_axeman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_edoras_meduseld_helmingas_spearman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rohan_eastfold_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_eastfold_veteran_bowman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_eastemnet_lance_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_westemnet_veteran_rider",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_edoras_golden_hall_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_elite_rider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "rohan_westemnet_royal_rider",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "rohan_wold_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rohan_wold_elite_horse_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rohan_vlandia_9_template"

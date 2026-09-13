@@ -237,7 +237,7 @@ def build_spec(lotr, clan_culture, pool_culture, base1, base2, registry, troop_i
     n = len(clans)
     note = ("Colors-only (no TAOM troop pool); per-clan color = %s/%s base + per-clan variation." % (base1, base2)
             if colors_only else
-            "Per-clan color = %s/%s base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=%s)." % (base1, base2, pool_culture))
+            "Per-clan color = %s/%s base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=%s); see _rosters for their current source." % (base1, base2, pool_culture))
     spec = {"culture": clan_culture, "_generated_by": "tools/build_clan_specs.py",
             "_note": note, "clans": []}
     for i, c in enumerate(clans):

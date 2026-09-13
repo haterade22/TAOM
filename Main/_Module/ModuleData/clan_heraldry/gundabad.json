@@ -1,7 +1,8 @@
 {
   "culture": "gundabad",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF2E2A26/FF6E5A40 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=gundabad).",
+  "_note": "Per-clan color = FF2E2A26/FF6E5A40 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=gundabad); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_gundabad_1",
@@ -13,67 +14,67 @@
         {
           "troop": "gundabad_snaga",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "gundabad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "gundabad_guard",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "gundabad_brute",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "gundabad_veteran_sword_warrior",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "gundabad_hunter",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "gundabad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "gundabad_lurker",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "gundabad_sentry",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "gundabad_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "gundabad_dread_rider_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "gundabad_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "gundabad_despoiler_of_the_vale",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_gundabad_gundabad_1_template"
@@ -88,72 +89,72 @@
         {
           "troop": "gundabad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_grunt",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_fighter",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_brute",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "gundabad_sword_warrior",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "gundabad_veteran_spear_warrior",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "gundabad_veteran_berserker",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "gundabad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_archer",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "gundabad_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_dread_rider_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "gundabad_scout",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_despoiler_of_the_vale",
           "min": 0,
-          "max": 1
+          "max": 18
         }
       ],
       "template_id": "kingdom_hero_party_gundabad_gundabad_2_template"
@@ -168,72 +169,72 @@
         {
           "troop": "gundabad_grunt",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_sword_warrior",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "gundabad_spear_warrior",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "gundabad_veteran_berserker",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "gundabad_hunter",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_lurker",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "gundabad_sentry",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "gundabad_archer",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "gundabad_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_dread_rider_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "gundabad_scout",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "gundabad_despoiler_of_the_vale",
           "min": 0,
-          "max": 1
+          "max": 18
         }
       ],
       "template_id": "kingdom_hero_party_gundabad_gundabad_3_template"
@@ -248,57 +249,57 @@
         {
           "troop": "gundabad_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "gundabad_fighter",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "gundabad_spear_warrior",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_chosen_of_tharzog",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "gundabad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "gundabad_archer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "gundabad_warg_tamer",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "gundabad_tracker",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_dread_rider_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "gundabad_scout",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "gundabad_despoiler_of_the_vale",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_gundabad_gundabad_4_template"
@@ -313,57 +314,57 @@
         {
           "troop": "gundabad_berserker",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_guard",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_brute",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_guardian_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "gundabad_bolgs_ironfang",
           "min": 0,
-          "max": 1
+          "max": 24
         },
         {
           "troop": "gundabad_lurker",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_sentry",
           "min": 0,
-          "max": 1
+          "max": 24
         },
         {
           "troop": "gundabad_archer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "gundabad_tracker",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "gundabad_dread_rider_of_the_tower",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "gundabad_despoiler_of_the_vale",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_gundabad_gundabad_5_template"

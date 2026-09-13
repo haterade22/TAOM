@@ -64,11 +64,17 @@ Pipeline (tooling-first, idempotent, dry-run/apply):
 tools/repaint_kingdom_colors.py   ── Phase 0: 8 XSLT kingdoms' color/color2 → lore palette
 tools/clan_registry.py            ── exact 209-clan inventory (id, culture, source, current color)
                                       → docs/reviews/_clan_registry.json
-tools/build_clan_specs.py         ── auto-compose per-culture specs:
+tools/build_clan_specs.py         ── the ORIGINAL composer (2026-08 rollout, one-shot):
                                        · color = lore base + deterministic per-clan HSL variation
                                        · roster = archetype (balanced/inf/ranged/cav/elite/skirmisher)
                                          composed from that culture's troops_*.xml (comments stripped)
                                       → Main/_Module/ModuleData/clan_heraldry/<culture>.json
+                                      Do not re-run it for an existing culture: it invents rosters.
+tools/sync_clan_specs_from_live.py ── since 2026-09-13 (#589) the roster half flows the OTHER way:
+                                       · template_id <- the clan's live default_party_template binding
+                                       · roster      <- the live template's stacks
+                                       · colours untouched (the spec authors them)
+                                      Every spec carries a `_rosters` note saying so.
 tools/generate_clan_heraldry.py   ── consume specs, idempotently edit 3 files:
                                        A. characters/clans.xml      (source=xml  → add attrs)
                                        B. spclans.xslt              (source=xslt → per-clan override, passthrough kept)
@@ -132,20 +138,30 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 
 ## How-To
 
-> **Do not run the generator on Gondor.** `clan_heraldry/gondor.json` has drifted from the shipped
-> `spclans.xslt` on `template_id` for clans 2, 5, 6, 7, 8 and 9. The shipped XSLT holds the correct
-> mapping, from the deliberate `fix(gondor-clans): reconcile clan to default_party_template bindings`
-> pass recorded in `docs/changelog-archive/CHANGELOG-2026-H1.md`. `--all --apply` globs every spec
-> file, so it would silently revert that fix. Reconcile the spec's `template_id` half first, or edit
-> `spclans.xslt` and `characters/clans.xml` by hand. The same trap applies to `mordor.json`.
+> **The specs are synced from the live files, not the other way round (#589, 2026-09-13).** Until
+> then `gondor.json` held the pre-reconcile `template_id` rotation for clans 2, 5, 6, 7, 8 and 9 and
+> 176 of the 192 rosters predated the 2026-08-14 party-size retarget, so `--all --apply` would have
+> reverted six Gondor bindings and every lord template's ceiling. `sync_clan_specs_from_live.py`
+> copied the live bindings and stacks into every spec, `generate_clan_heraldry.py --all --apply` is
+> now byte-identical on all three files, and `tools/tests/test_clan_heraldry_specs.py` fails the
+> moment a spec and the live files disagree. The generator's guard also refuses a spec whose max
+> sum is below the live template's (#584), so a stale spec cannot be applied by accident either way.
 
 **Re-colour or re-roster a clan:** edit its entry in `clan_heraldry/<culture>.json`, then
 `python tools/generate_clan_heraldry.py --spec <culture> --apply` (idempotent — replaces, never dupes).
 
-**Regenerate all auto-specs** (e.g. after adding troops): `python tools/build_clan_specs.py` then
-`python tools/generate_clan_heraldry.py --all --apply`.
+**After editing a lord template or a clan binding in the live files** (a troop added, a retarget,
+a clan re-bound): `python tools/sync_clan_specs_from_live.py --apply`, which copies the change into
+the specs. Never `build_clan_specs.py` for an existing culture: it composes rosters from scratch and
+`--apply` would overwrite the live templates with them.
 
-**Add a brand-new faction:** add it to `CULTURE_TABLE` (or `TROOPLESS_TABLE`) in `build_clan_specs.py`.
+**Re-roster a clan through the spec** (the other direction): edit its `roster` in the JSON, then
+`python tools/generate_clan_heraldry.py --spec <culture> --apply`. The guard refuses a spec whose
+max sum is below the live template's, so a deliberate reduction needs the live file edited and
+synced instead.
+
+**Add a brand-new faction:** add it to `CULTURE_TABLE` (or `TROOPLESS_TABLE`) in `build_clan_specs.py`,
+run it for that culture only (`--culture <name>`), apply, then sync.
 
 ## Known Limitations
 

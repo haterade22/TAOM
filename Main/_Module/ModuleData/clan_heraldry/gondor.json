@@ -1,251 +1,836 @@
 {
   "culture": "gondor",
-  "_note": "color=primary armor tint, color2=secondary. Both are derived from the clan's own banner_key: color is the layer-0 background palette colour, color2 is the layer-1 icon colour, resolved through <BannerColors> in banner_icons.xml. Keep them in step with the banner. WARNING: the template_id/roster half of this spec is STALE. It still holds the pre-reconciliation fief mapping for clans 2, 5, 6, 7, 8 and 9; the shipped spclans.xslt holds the correct one (see CHANGELOG-2026-H1 'fix(gondor-clans): reconcile clan to default_party_template bindings'). The theme labels below follow the SHIPPED mapping, not template_id. Do not run generate_clan_heraldry.py on this spec until template_id is reconciled: --apply would revert those six party templates. Clans 9 and 11 carry FFFEFEFE rather than the banner's exact FFFFFFFF: FFFFFFFF equals uint.MaxValue, which AgentVisuals_Create_Patch treats as 'no clan colour set', so colour randomness would stay on and the engine would override the clan colour. Do not 'correct' these two back to FFFFFFFF.",
+  "_note": "color=primary armor tint, color2=secondary. Both are derived from the clan's own banner_key: color is the layer-0 background palette colour, color2 is the layer-1 icon colour, resolved through <BannerColors> in banner_icons.xml. Keep them in step with the banner. The template_id/roster half is synced FROM the live files (spclans.xslt binding, taom_partyTemplates.xml stacks) by tools/sync_clan_specs_from_live.py since 2026-09-13 (#589); until then it held the pre-reconciliation fief mapping for clans 2, 5, 6, 7, 8 and 9 and running the generator would have reverted six party templates. Edit the live files and re-sync; do not hand-edit rosters here. Clans 9 and 11 carry FFFEFEFE rather than the banner's exact FFFFFFFF: FFFFFFFF equals uint.MaxValue, which AgentVisuals_Create_Patch treats as 'no clan colour set', so colour randomness would stay on and the engine would override the clan colour. Do not 'correct' these two back to FFFFFFFF.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
-      "id": "clan_empire_west_1", "source": "xslt",
+      "id": "clan_empire_west_1",
+      "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_minas_tirith_template",
       "theme": "Minas Tirith / House of Hurinionath (Stewards): black & white, from the house banner",
-      "color": "FF211F1F", "color2": "FFFFFFFF",
+      "color": "FF211F1F",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_ano_peasant", "min": 3, "max": 6},
-        {"troop": "gondor_ano_militia", "min": 2, "max": 4},
-        {"troop": "gondor_ano_footman", "min": 2, "max": 4},
-        {"troop": "gondor_mt_trainee", "min": 2, "max": 4},
-        {"troop": "gondor_ano_archer", "min": 1, "max": 3},
-        {"troop": "gondor_mt_veteran", "min": 1, "max": 3},
-        {"troop": "gondor_mt_sergeant", "min": 1, "max": 2},
-        {"troop": "gondor_mt_longbowman", "min": 1, "max": 2},
-        {"troop": "gondor_ano_mt_cavalry", "min": 0, "max": 1},
-        {"troop": "gondor_mt_captain", "min": 0, "max": 1},
-        {"troop": "gondor_mt_sharpshooter", "min": 0, "max": 1},
-        {"troop": "gondor_ano_mt_knight", "min": 0, "max": 1},
-        {"troop": "gondor_mt_fountain_guard", "min": 0, "max": 1}
+        {
+          "troop": "gondor_ano_peasant",
+          "min": 3,
+          "max": 17
+        },
+        {
+          "troop": "gondor_ano_militia",
+          "min": 2,
+          "max": 16
+        },
+        {
+          "troop": "gondor_ano_footman",
+          "min": 2,
+          "max": 16
+        },
+        {
+          "troop": "gondor_mt_trainee",
+          "min": 2,
+          "max": 16
+        },
+        {
+          "troop": "gondor_ano_archer",
+          "min": 1,
+          "max": 15
+        },
+        {
+          "troop": "gondor_mt_veteran",
+          "min": 1,
+          "max": 15
+        },
+        {
+          "troop": "gondor_mt_sergeant",
+          "min": 1,
+          "max": 15
+        },
+        {
+          "troop": "gondor_mt_longbowman",
+          "min": 1,
+          "max": 15
+        },
+        {
+          "troop": "gondor_ano_mt_cavalry",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "gondor_mt_captain",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "gondor_mt_sharpshooter",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "gondor_ano_mt_knight",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "gondor_mt_fountain_guard",
+          "min": 0,
+          "max": 15
+        }
       ]
     },
     {
-      "id": "clan_empire_west_2", "source": "xslt",
-      "template_id": "kingdom_hero_party_gondor_lossarnach_template",
+      "id": "clan_empire_west_2",
+      "source": "xslt",
+      "template_id": "kingdom_hero_party_gondor_dol_amroth_template",
       "theme": "Dol Amroth / House of Imrazorionath (Swan Knights): blue & white, from the house banner",
-      "color": "FF30336B", "color2": "FFFFFFFF",
+      "color": "FF30336B",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_loss_lumberman", "min": 3, "max": 6},
-        {"troop": "gondor_loss_woodsman", "min": 2, "max": 4},
-        {"troop": "gondor_loss_skirmisher", "min": 2, "max": 4},
-        {"troop": "gondor_loss_axe_thrower", "min": 1, "max": 3},
-        {"troop": "gondor_loss_axebearer", "min": 1, "max": 3},
-        {"troop": "gondor_loss_guard", "min": 1, "max": 2},
-        {"troop": "gondor_loss_vet_axe_thrower", "min": 0, "max": 1},
-        {"troop": "gondor_loss_vet_axebearer", "min": 0, "max": 1},
-        {"troop": "gondor_loss_vet_guard", "min": 0, "max": 1},
-        {"troop": "gondor_ano_militia", "min": 1, "max": 2}
+        {
+          "troop": "gondor_da_footman",
+          "min": 3,
+          "max": 20
+        },
+        {
+          "troop": "gondor_da_squire",
+          "min": 2,
+          "max": 19
+        },
+        {
+          "troop": "gondor_da_infantry",
+          "min": 2,
+          "max": 19
+        },
+        {
+          "troop": "gondor_da_cavalry",
+          "min": 1,
+          "max": 18
+        },
+        {
+          "troop": "gondor_da_knight",
+          "min": 1,
+          "max": 18
+        },
+        {
+          "troop": "gondor_da_vet_infantry",
+          "min": 1,
+          "max": 18
+        },
+        {
+          "troop": "gondor_da_vet_knight",
+          "min": 0,
+          "max": 17
+        },
+        {
+          "troop": "gondor_da_swan_knight",
+          "min": 0,
+          "max": 17
+        },
+        {
+          "troop": "gondor_da_foot_knight",
+          "min": 0,
+          "max": 18
+        },
+        {
+          "troop": "gondor_da_swan_guard",
+          "min": 0,
+          "max": 18
+        },
+        {
+          "troop": "gondor_da_noble",
+          "min": 0,
+          "max": 18
+        }
       ]
     },
     {
-      "id": "clan_empire_west_3", "source": "xslt",
+      "id": "clan_empire_west_3",
+      "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_lebennin_template",
       "theme": "Lebennin / House of Earnurionath (five streams, river-men): deep blue & white, from the house banner",
-      "color": "FF003A8C", "color2": "FFFFFFFF",
+      "color": "FF003A8C",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_leb_militia", "min": 3, "max": 6},
-        {"troop": "gondor_leb_skirmisher", "min": 2, "max": 4},
-        {"troop": "gondor_leb_archer", "min": 2, "max": 4},
-        {"troop": "gondor_leb_infantry", "min": 1, "max": 3},
-        {"troop": "gondor_leb_longbowman", "min": 1, "max": 2},
-        {"troop": "gondor_leb_vet_archer", "min": 1, "max": 2},
-        {"troop": "gondor_leb_vet_infantry", "min": 0, "max": 1},
-        {"troop": "gondor_leb_sea_guard", "min": 0, "max": 1},
-        {"troop": "gondor_ano_militia", "min": 1, "max": 2}
+        {
+          "troop": "gondor_leb_militia",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_leb_skirmisher",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_leb_archer",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_leb_infantry",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_leb_longbowman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_leb_vet_archer",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_leb_vet_infantry",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_leb_sea_guard",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_ano_militia",
+          "min": 1,
+          "max": 22
+        }
       ]
     },
     {
-      "id": "clan_empire_west_4", "source": "xslt",
+      "id": "clan_empire_west_4",
+      "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_lamedon_template",
       "theme": "Lamedon / House of Barahirionath (hill-men): amber & white, from the house banner",
-      "color": "FFD48806", "color2": "FFFFFFFF",
+      "color": "FFD48806",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_lam_clansman", "min": 3, "max": 6},
-        {"troop": "gondor_lam_footman", "min": 2, "max": 4},
-        {"troop": "gondor_lam_swordman", "min": 2, "max": 3},
-        {"troop": "gondor_lam_vet_swordman", "min": 1, "max": 2},
-        {"troop": "gondor_lam_hill_warden", "min": 0, "max": 2},
-        {"troop": "gondor_ano_militia", "min": 2, "max": 3},
-        {"troop": "gondor_ano_archer_militia", "min": 1, "max": 2},
-        {"troop": "gondor_loss_skirmisher", "min": 1, "max": 2}
+        {
+          "troop": "gondor_lam_clansman",
+          "min": 3,
+          "max": 26
+        },
+        {
+          "troop": "gondor_lam_footman",
+          "min": 2,
+          "max": 25
+        },
+        {
+          "troop": "gondor_lam_swordman",
+          "min": 2,
+          "max": 25
+        },
+        {
+          "troop": "gondor_lam_vet_swordman",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "troop": "gondor_lam_hill_warden",
+          "min": 0,
+          "max": 24
+        },
+        {
+          "troop": "gondor_ano_militia",
+          "min": 2,
+          "max": 25
+        },
+        {
+          "troop": "gondor_ano_archer_militia",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "troop": "gondor_loss_skirmisher",
+          "min": 1,
+          "max": 25
+        }
       ]
     },
     {
-      "id": "clan_empire_west_5", "source": "xslt",
-      "template_id": "kingdom_hero_party_gondor_pinnath_gelin_template",
+      "id": "clan_empire_west_5",
+      "source": "xslt",
+      "template_id": "kingdom_hero_party_gondor_lossarnach_template",
       "theme": "Lossarnach / House of Ausirionath (axemen of the flowery vale): dark green & white, from the house banner",
-      "color": "FF284E19", "color2": "FFFFFFFF",
+      "color": "FF284E19",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_pg_volunteer", "min": 3, "max": 6},
-        {"troop": "gondor_pg_militia", "min": 2, "max": 4},
-        {"troop": "gondor_pg_footman", "min": 2, "max": 3},
-        {"troop": "gondor_pg_archer", "min": 2, "max": 3},
-        {"troop": "gondor_pg_spearman", "min": 1, "max": 3},
-        {"troop": "gondor_pg_vet_archer", "min": 1, "max": 2},
-        {"troop": "gondor_pg_vet_spearman", "min": 0, "max": 2},
-        {"troop": "gondor_pg_spearwarden", "min": 0, "max": 1},
-        {"troop": "gondor_pg_cavalry", "min": 0, "max": 1},
-        {"troop": "gondor_pg_vet_cavalry", "min": 0, "max": 1}
+        {
+          "troop": "gondor_loss_lumberman",
+          "min": 3,
+          "max": 15
+        },
+        {
+          "troop": "gondor_loss_woodsman",
+          "min": 2,
+          "max": 14
+        },
+        {
+          "troop": "gondor_loss_skirmisher",
+          "min": 2,
+          "max": 14
+        },
+        {
+          "troop": "gondor_loss_axe_thrower",
+          "min": 1,
+          "max": 14
+        },
+        {
+          "troop": "gondor_loss_axebearer",
+          "min": 1,
+          "max": 14
+        },
+        {
+          "troop": "gondor_loss_guard",
+          "min": 1,
+          "max": 14
+        },
+        {
+          "troop": "gondor_loss_vet_axe_thrower",
+          "min": 0,
+          "max": 13
+        },
+        {
+          "troop": "gondor_loss_vet_axebearer",
+          "min": 0,
+          "max": 13
+        },
+        {
+          "troop": "gondor_loss_vet_guard",
+          "min": 0,
+          "max": 13
+        },
+        {
+          "troop": "gondor_loss_noble",
+          "min": 1,
+          "max": 14
+        },
+        {
+          "troop": "gondor_loss_noble_veteran",
+          "min": 0,
+          "max": 12
+        },
+        {
+          "troop": "gondor_loss_noble_sergeant",
+          "min": 0,
+          "max": 12
+        },
+        {
+          "troop": "gondor_loss_noble_warden",
+          "min": 0,
+          "max": 12
+        },
+        {
+          "troop": "gondor_loss_noble_captain",
+          "min": 0,
+          "max": 12
+        },
+        {
+          "troop": "gondor_ano_militia",
+          "min": 1,
+          "max": 14
+        }
       ]
     },
     {
-      "id": "clan_empire_west_6", "source": "xslt",
-      "template_id": "kingdom_hero_party_gondor_ithilien_template",
+      "id": "clan_empire_west_6",
+      "source": "xslt",
+      "template_id": "kingdom_hero_party_gondor_pinnath_gelin_template",
       "theme": "Pinnath Gelin / House of Halboronionath (green hills, spear & bow): green & white, from the house banner",
-      "color": "FF34671E", "color2": "FFFFFFFF",
+      "color": "FF34671E",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_ith_watcher", "min": 3, "max": 5},
-        {"troop": "gondor_ith_veteran", "min": 2, "max": 4},
-        {"troop": "gondor_ith_longbowman", "min": 2, "max": 3},
-        {"troop": "gondor_brv_ranger", "min": 1, "max": 3},
-        {"troop": "gondor_ith_sergeant", "min": 1, "max": 2},
-        {"troop": "gondor_ith_sharpshooter", "min": 1, "max": 2},
-        {"troop": "gondor_ith_captain", "min": 0, "max": 1},
-        {"troop": "gondor_ith_moon_guard", "min": 0, "max": 1},
-        {"troop": "gondor_ano_footman", "min": 1, "max": 2}
+        {
+          "troop": "gondor_pg_volunteer",
+          "min": 3,
+          "max": 21
+        },
+        {
+          "troop": "gondor_pg_militia",
+          "min": 2,
+          "max": 21
+        },
+        {
+          "troop": "gondor_pg_footman",
+          "min": 2,
+          "max": 21
+        },
+        {
+          "troop": "gondor_pg_archer",
+          "min": 2,
+          "max": 21
+        },
+        {
+          "troop": "gondor_pg_spearman",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "troop": "gondor_pg_vet_archer",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "troop": "gondor_pg_vet_spearman",
+          "min": 0,
+          "max": 19
+        },
+        {
+          "troop": "gondor_pg_spearwarden",
+          "min": 0,
+          "max": 19
+        },
+        {
+          "troop": "gondor_pg_cavalry",
+          "min": 0,
+          "max": 19
+        },
+        {
+          "troop": "gondor_pg_vet_cavalry",
+          "min": 0,
+          "max": 19
+        }
       ]
     },
     {
-      "id": "clan_empire_west_7", "source": "xslt",
-      "template_id": "kingdom_hero_party_gondor_dol_amroth_template",
-      "theme": "Calembel / House of Malandilionath (Ringlo vale knights): dark red & white, from the house banner",
-      "color": "FF5A1310", "color2": "FFFFFFFF",
-      "roster": [
-        {"troop": "gondor_da_footman", "min": 3, "max": 5},
-        {"troop": "gondor_da_squire", "min": 2, "max": 4},
-        {"troop": "gondor_da_infantry", "min": 2, "max": 3},
-        {"troop": "gondor_da_cavalry", "min": 1, "max": 3},
-        {"troop": "gondor_da_knight", "min": 1, "max": 2},
-        {"troop": "gondor_da_vet_infantry", "min": 1, "max": 2},
-        {"troop": "gondor_da_vet_knight", "min": 0, "max": 1},
-        {"troop": "gondor_da_swan_knight", "min": 0, "max": 1},
-        {"troop": "gondor_da_foot_knight", "min": 0, "max": 1},
-        {"troop": "gondor_da_swan_guard", "min": 0, "max": 1},
-        {"troop": "gondor_da_noble", "min": 0, "max": 1}
-      ]
-    },
-    {
-      "id": "clan_empire_west_8", "source": "xslt",
-      "template_id": "kingdom_hero_party_gondor_belfalas_template",
-      "theme": "Anfalas / House of Olindurionath (the Langstrand levy): bronze & white, from the house banner",
-      "color": "FF874D00", "color2": "FFF5F5F5",
-      "roster": [
-        {"troop": "gondor_bel_recruit", "min": 3, "max": 6},
-        {"troop": "gondor_bel_hunter", "min": 2, "max": 4},
-        {"troop": "gondor_bel_bowman", "min": 2, "max": 3},
-        {"troop": "gondor_bel_footman", "min": 2, "max": 3},
-        {"troop": "gondor_bel_archer", "min": 1, "max": 2},
-        {"troop": "gondor_bel_soldier", "min": 1, "max": 2},
-        {"troop": "gondor_bel_infantry", "min": 1, "max": 2},
-        {"troop": "gondor_bel_vet_archer", "min": 0, "max": 1},
-        {"troop": "gondor_bel_vet_infantry", "min": 0, "max": 1},
-        {"troop": "gondor_bel_coastguard", "min": 0, "max": 1}
-      ]
-    },
-    {
-      "id": "clan_empire_west_9", "source": "xslt",
+      "id": "clan_empire_west_7",
+      "source": "xslt",
       "template_id": "kingdom_hero_party_gondor_calembel_template",
-      "theme": "Blackroot Vale / House of Danuhirionath (Morthond shadow archers): white & black, from the house banner",
-      "color": "FFFEFEFE", "color2": "FF000000",
+      "theme": "Calembel / House of Malandilionath (Ringlo vale knights): dark red & white, from the house banner",
+      "color": "FF5A1310",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_ano_militia", "min": 3, "max": 5},
-        {"troop": "gondor_cal_swordsman", "min": 2, "max": 4},
-        {"troop": "gondor_ano_footman", "min": 2, "max": 3},
-        {"troop": "gondor_cal_heavy_swordsman", "min": 1, "max": 3},
-        {"troop": "gondor_cal_sergeant", "min": 1, "max": 2},
-        {"troop": "gondor_cal_vale_knight", "min": 0, "max": 2},
-        {"troop": "gondor_cal_noble", "min": 0, "max": 1},
-        {"troop": "gondor_loss_skirmisher", "min": 1, "max": 2},
-        {"troop": "gondor_ano_archer", "min": 1, "max": 2}
+        {
+          "troop": "gondor_ano_militia",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_cal_swordsman",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_ano_footman",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_cal_heavy_swordsman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_cal_sergeant",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_cal_vale_knight",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_cal_noble",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_loss_skirmisher",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_ano_archer",
+          "min": 1,
+          "max": 22
+        }
       ]
     },
     {
-      "id": "clan_empire_west_10", "source": "xml",
+      "id": "clan_empire_west_8",
+      "source": "xslt",
+      "template_id": "kingdom_hero_party_gondor_anfalas_template",
+      "theme": "Anfalas / House of Olindurionath (the Langstrand levy): bronze & white, from the house banner",
+      "color": "FF874D00",
+      "color2": "FFF5F5F5",
+      "roster": [
+        {
+          "troop": "gondor_anf_levy",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_anf_militia",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_anf_footman",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_anf_guardsman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_anf_infantry",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_anf_cavalry",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_anf_vet_infantry",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_anf_vet_cavalry",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_bel_bowman",
+          "min": 1,
+          "max": 22
+        }
+      ]
+    },
+    {
+      "id": "clan_empire_west_9",
+      "source": "xslt",
+      "template_id": "kingdom_hero_party_gondor_blackroot_vale_template",
+      "theme": "Blackroot Vale / House of Danuhirionath (Morthond shadow archers): white & black, from the house banner",
+      "color": "FFFEFEFE",
+      "color2": "FF000000",
+      "roster": [
+        {
+          "troop": "gondor_brv_bowman",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_brv_scout",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_brv_archer",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_brv_vet_archer",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_brv_ranger",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_brv_shadowbow",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_brv_shadowhunter",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_ano_footman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_lam_clansman",
+          "min": 1,
+          "max": 22
+        }
+      ]
+    },
+    {
+      "id": "clan_empire_west_10",
+      "source": "xml",
       "template_id": "kingdom_hero_party_gondor_linhir_template",
       "theme": "Linhir / House of Hyarthulionath: gold & navy, from the house banner",
-      "color": "FFAD8B00", "color2": "FF030852",
+      "color": "FFAD8B00",
+      "color2": "FF030852",
       "roster": [
-        {"troop": "gondor_lin_footman", "min": 3, "max": 5},
-        {"troop": "gondor_lin_spearman", "min": 2, "max": 4},
-        {"troop": "gondor_ano_militia", "min": 2, "max": 3},
-        {"troop": "gondor_lin_vet_spearman", "min": 1, "max": 3},
-        {"troop": "gondor_leb_archer", "min": 1, "max": 2},
-        {"troop": "gondor_lin_high_guard", "min": 0, "max": 2},
-        {"troop": "gondor_lin_noble", "min": 0, "max": 1},
-        {"troop": "gondor_leb_skirmisher", "min": 1, "max": 2}
+        {
+          "troop": "gondor_lin_footman",
+          "min": 3,
+          "max": 26
+        },
+        {
+          "troop": "gondor_lin_spearman",
+          "min": 2,
+          "max": 25
+        },
+        {
+          "troop": "gondor_ano_militia",
+          "min": 2,
+          "max": 25
+        },
+        {
+          "troop": "gondor_lin_vet_spearman",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "troop": "gondor_leb_archer",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "troop": "gondor_lin_high_guard",
+          "min": 0,
+          "max": 25
+        },
+        {
+          "troop": "gondor_lin_noble",
+          "min": 0,
+          "max": 24
+        },
+        {
+          "troop": "gondor_leb_skirmisher",
+          "min": 1,
+          "max": 25
+        }
       ]
     },
     {
-      "id": "clan_empire_west_11", "source": "xml",
+      "id": "clan_empire_west_11",
+      "source": "xml",
       "template_id": "kingdom_hero_party_gondor_tolfalas_template",
       "theme": "Tolfalas / House of Caladionath (isle crossbows & marksmen): white & charcoal, from the house banner",
-      "color": "FFFEFEFE", "color2": "FF262626",
+      "color": "FFFEFEFE",
+      "color2": "FF262626",
       "roster": [
-        {"troop": "gondor_ano_militia", "min": 3, "max": 5},
-        {"troop": "gondor_tol_crossbowman", "min": 2, "max": 4},
-        {"troop": "gondor_ano_footman", "min": 2, "max": 3},
-        {"troop": "gondor_tol_arbalest", "min": 1, "max": 3},
-        {"troop": "gondor_tol_vet_crossbowman", "min": 1, "max": 2},
-        {"troop": "gondor_tol_marksman", "min": 0, "max": 2},
-        {"troop": "gondor_tol_sharpshooter", "min": 0, "max": 1},
-        {"troop": "gondor_bel_footman", "min": 1, "max": 2},
-        {"troop": "gondor_bel_soldier", "min": 0, "max": 1}
+        {
+          "troop": "gondor_ano_militia",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_tol_crossbowman",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_ano_footman",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_tol_arbalest",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_tol_vet_crossbowman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_tol_marksman",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_tol_sharpshooter",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_bel_footman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_bel_soldier",
+          "min": 0,
+          "max": 22
+        }
       ]
     },
     {
-      "id": "clan_empire_west_12", "source": "xml",
+      "id": "clan_empire_west_12",
+      "source": "xml",
       "template_id": "kingdom_hero_party_gondor_serelond_template",
       "theme": "Serelond / House of Garvirionath (coast pikemen): slate & white, from the house banner",
-      "color": "FF515267", "color2": "FFF5F5F5",
+      "color": "FF515267",
+      "color2": "FFF5F5F5",
       "roster": [
-        {"troop": "gondor_ano_militia", "min": 3, "max": 5},
-        {"troop": "gondor_ser_pikeman", "min": 2, "max": 4},
-        {"troop": "gondor_ser_veteran", "min": 2, "max": 3},
-        {"troop": "gondor_ser_maceman", "min": 1, "max": 3},
-        {"troop": "gondor_ser_pikewarden", "min": 1, "max": 2},
-        {"troop": "gondor_ser_vet_maceman", "min": 0, "max": 1},
-        {"troop": "gondor_ser_phalanx", "min": 0, "max": 1},
-        {"troop": "gondor_ser_coastwarden", "min": 0, "max": 1},
-        {"troop": "gondor_ser_noble", "min": 0, "max": 1},
-        {"troop": "gondor_leb_archer", "min": 1, "max": 2}
+        {
+          "troop": "gondor_ano_militia",
+          "min": 3,
+          "max": 21
+        },
+        {
+          "troop": "gondor_ser_pikeman",
+          "min": 2,
+          "max": 21
+        },
+        {
+          "troop": "gondor_ser_veteran",
+          "min": 2,
+          "max": 21
+        },
+        {
+          "troop": "gondor_ser_maceman",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "troop": "gondor_ser_pikewarden",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "troop": "gondor_ser_vet_maceman",
+          "min": 0,
+          "max": 20
+        },
+        {
+          "troop": "gondor_ser_phalanx",
+          "min": 0,
+          "max": 19
+        },
+        {
+          "troop": "gondor_ser_coastwarden",
+          "min": 0,
+          "max": 19
+        },
+        {
+          "troop": "gondor_ser_noble",
+          "min": 0,
+          "max": 19
+        },
+        {
+          "troop": "gondor_leb_archer",
+          "min": 1,
+          "max": 20
+        }
       ]
     },
     {
-      "id": "clan_empire_west_13", "source": "xml",
+      "id": "clan_empire_west_13",
+      "source": "xml",
       "template_id": "kingdom_hero_party_gondor_anfalas_template",
       "theme": "Anfalas / House of Hirilionath (the Langstrand levy): navy & white, from the house banner",
-      "color": "FF002766", "color2": "FFF5F5F5",
+      "color": "FF002766",
+      "color2": "FFF5F5F5",
       "roster": [
-        {"troop": "gondor_anf_levy", "min": 3, "max": 6},
-        {"troop": "gondor_anf_militia", "min": 2, "max": 4},
-        {"troop": "gondor_anf_footman", "min": 2, "max": 3},
-        {"troop": "gondor_anf_guardsman", "min": 1, "max": 3},
-        {"troop": "gondor_anf_infantry", "min": 1, "max": 2},
-        {"troop": "gondor_anf_cavalry", "min": 1, "max": 2},
-        {"troop": "gondor_anf_vet_infantry", "min": 0, "max": 1},
-        {"troop": "gondor_anf_vet_cavalry", "min": 0, "max": 1},
-        {"troop": "gondor_bel_bowman", "min": 1, "max": 2}
+        {
+          "troop": "gondor_anf_levy",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_anf_militia",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_anf_footman",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_anf_guardsman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_anf_infantry",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_anf_cavalry",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_anf_vet_infantry",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_anf_vet_cavalry",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_bel_bowman",
+          "min": 1,
+          "max": 22
+        }
       ]
     },
     {
-      "id": "clan_empire_west_14", "source": "xml",
+      "id": "clan_empire_west_14",
+      "source": "xml",
       "template_id": "kingdom_hero_party_gondor_blackroot_vale_template",
       "theme": "Blackroot Vale / House of Baranionath (Morthond shadow archers): dark red & white, from the house banner",
-      "color": "FF570D0D", "color2": "FFFFFFFF",
+      "color": "FF570D0D",
+      "color2": "FFFFFFFF",
       "roster": [
-        {"troop": "gondor_brv_bowman", "min": 3, "max": 5},
-        {"troop": "gondor_brv_scout", "min": 2, "max": 4},
-        {"troop": "gondor_brv_archer", "min": 2, "max": 3},
-        {"troop": "gondor_brv_vet_archer", "min": 1, "max": 3},
-        {"troop": "gondor_brv_ranger", "min": 1, "max": 2},
-        {"troop": "gondor_brv_shadowbow", "min": 0, "max": 2},
-        {"troop": "gondor_brv_shadowhunter", "min": 0, "max": 1},
-        {"troop": "gondor_ano_footman", "min": 1, "max": 2},
-        {"troop": "gondor_lam_clansman", "min": 1, "max": 2}
+        {
+          "troop": "gondor_brv_bowman",
+          "min": 3,
+          "max": 23
+        },
+        {
+          "troop": "gondor_brv_scout",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_brv_archer",
+          "min": 2,
+          "max": 23
+        },
+        {
+          "troop": "gondor_brv_vet_archer",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_brv_ranger",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_brv_shadowbow",
+          "min": 0,
+          "max": 21
+        },
+        {
+          "troop": "gondor_brv_shadowhunter",
+          "min": 0,
+          "max": 22
+        },
+        {
+          "troop": "gondor_ano_footman",
+          "min": 1,
+          "max": 22
+        },
+        {
+          "troop": "gondor_lam_clansman",
+          "min": 1,
+          "max": 22
+        }
       ]
     }
   ]

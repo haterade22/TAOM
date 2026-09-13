@@ -1,7 +1,8 @@
 {
   "culture": "khuzait",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FFC0962E/FF5A1A14 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=khuzait).",
+  "_note": "Per-clan color = FFC0962E/FF5A1A14 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=khuzait); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_khuzait_1",
@@ -13,67 +14,67 @@
         {
           "troop": "easterling_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "balcoth_volunteer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "balcoth_axeman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "far_rhun_infantry",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "sagarun_marine",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_bowman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rhun_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "sagarun_skirmisher",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dragon_wrath_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_youth",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_ashkur_nokor",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_1_template"
@@ -88,72 +89,72 @@
         {
           "troop": "balcoth_volunteer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "far_rhun_levy",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "sagarun_deckhand",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "easterling_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "far_rhun_infantry",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "easterling_swordsman_new",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "loke_rim_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "loke_rim_maceman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "rhun_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "black_sun_longbowman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "far_rhun_horseman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "loke_rim_gilded_cataphract",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_10_template"
@@ -168,77 +169,77 @@
         {
           "troop": "far_rhun_levy",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "sagarun_deckhand",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "easterling_swordsman_new",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "easterling_halberdier_new",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "loke_rim_maceman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_skirmisher_new",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "rhun_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "balcoth_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "easterling_veteran_archer_new",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "sagarun_storm_helmed_naffatun",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "sagarun_storm_marked_arbalest",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_rider",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "dragon_wrath_lancer",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_11_template"
@@ -253,67 +254,67 @@
         {
           "troop": "sagarun_deckhand",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "easterling_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "easterling_halberdier_new",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dragon_wrath_disciple",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rhun_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "sagarun_storm_marked_arbalest",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "far_rhun_cavalry",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "far_rhun_horse_master",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "darkhun_cavalry",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "kharaghul_horse_master",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "darkhun_knight",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_12_template"
@@ -328,62 +329,62 @@
         {
           "troop": "loke_rim_footman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dragon_wrath_acolyte",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "wain_footman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "wain_iron_glaive",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "black_sun_executioner",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "black_sun_archer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "loke_rim_gilded_marksman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "dragon_wrath_longbowman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "kharaghul_horse_master",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dragon_wrath_ash_knight",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "wainrider_khans_chosen",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_13_template"
@@ -398,77 +399,77 @@
         {
           "troop": "rhun_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "black_sun_trainee",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "dragon_wrath_acolyte",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "black_sun_executioner",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_archer_new",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "loke_rim_bowman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "black_sun_scout",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "wainrider_wind_arrow_sharpshooter",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "sagarun_naffatun",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "dragon_wrath_longbowman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "black_sun_marksman",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_raider",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "wainrider_khans_chosen",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_14_template"
@@ -483,67 +484,67 @@
         {
           "troop": "black_sun_trainee",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "darkhun_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "wain_footman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "black_sun_raider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "darkhun_guard",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "loke_rim_bowman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "black_sun_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "sagarun_naffatun",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "black_sun_marksman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "easterling_cavalry_new",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "wainrider_swift_chariot",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_15_template"
@@ -558,72 +559,72 @@
         {
           "troop": "darkhun_recruit",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "balcoth_footman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "far_rhun_footman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "sagarun_watchman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "black_sun_raider",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "darkhun_infantry",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "sagarun_storm_forged_marine",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "loke_rim_gilded_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "black_sun_scout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "dragon_wrath_ash_marksman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "darkhun_horseman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "darkhun_cultist_knight",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_16_template"
@@ -638,77 +639,77 @@
         {
           "troop": "balcoth_footman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "far_rhun_footman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "darkhun_infantry",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "balcoth_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "loke_rim_gilded_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "wainrider_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "easterling_bowman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "rhun_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "loke_rim_marksman",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "black_sun_chosen_marksman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "dragon_wrath_obsidian_warbow",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "far_rhun_cataphract",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "dragon_wrath_obsidian_knight",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_17_template"
@@ -723,67 +724,67 @@
         {
           "troop": "far_rhun_footman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "sagarun_watchman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "balcoth_veteran_axeman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "loke_rim_gilded_champion",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_bowman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dragon_wrath_obsidian_warbow",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_youth",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "far_rhun_horseman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "darkhun_veteran_cavalry",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "easterling_veteran_cavalry",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "wainrider_warlord_chariot",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_18_template"
@@ -798,62 +799,62 @@
         {
           "troop": "far_rhun_gate_guard",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "easterling_veteran_swordsman_new",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "easterling_veteran_halberdier_new",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dragon_wrath_infantry",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "wain_darkhan",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "sagarun_crossbowman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dragon_wrath_archer",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "black_sun_longbowman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "easterling_veteran_cavalry",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "kharaghul_ashkur_nokor",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "loke_rim_gilded_cataphract",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_19_template"
@@ -868,77 +869,77 @@
         {
           "troop": "easterling_footman_new",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "loke_rim_initiate",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "easterling_veteran_swordsman_new",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "wain_darkhan",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_skirmisher_new",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "rhun_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "balcoth_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "easterling_veteran_archer_new",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "loke_rim_archer",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "black_sun_longbowman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "sagarun_storm_helmed_naffatun",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_rider",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "loke_rim_gilded_cataphract",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_2_template"
@@ -953,67 +954,67 @@
         {
           "troop": "loke_rim_initiate",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "wain_youngblood",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "easterling_veteran_halberdier_new",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "loke_rim_infantry",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "black_sun_scourge",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "rhun_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "balcoth_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "loke_rim_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "sagarun_storm_helmed_naffatun",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "far_rhun_cavalry",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dragon_wrath_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_3_template"
@@ -1028,72 +1029,72 @@
         {
           "troop": "wain_youngblood",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "rhun_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "black_sun_footman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "darkhun_footman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "loke_rim_infantry",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "wain_glaiveman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "darkhun_ironbound",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "dragon_wrath_ash_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "balcoth_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "sagarun_storm_marked_arbalest",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "far_rhun_horse_master",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "darkhun_knight",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_4_template"
@@ -1108,77 +1109,77 @@
         {
           "troop": "rhun_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "black_sun_footman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "wain_glaiveman",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "black_sun_reaver",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "dragon_wrath_ash_shieldguard",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_archer_new",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "loke_rim_bowman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "black_sun_scout",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "wainrider_wind_arrow_sharpshooter",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "loke_rim_gilded_marksman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "dragon_wrath_longbowman",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_raider",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "dragon_wrath_ash_knight",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_5_template"
@@ -1193,67 +1194,67 @@
         {
           "troop": "black_sun_footman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "darkhun_footman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "black_sun_reaver",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "dragon_wrath_ash_executioner",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "loke_rim_bowman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dragon_wrath_longbowman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "easterling_cavalry_new",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "darkhun_horseman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "far_rhun_iron_cataphract",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "kharaghul_nokor",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "wainrider_khans_chosen",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_6_template"
@@ -1268,62 +1269,62 @@
         {
           "troop": "darkhun_veteran_infantry",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "far_rhun_iron_legionary",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "balcoth_axeman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "dragon_wrath_obsidian_shieldmaster",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "dragon_wrath_obsidian_war_reaver",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "sagarun_arbalest",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "black_sun_marksman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "dragon_wrath_ash_marksman",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "kharaghul_nokor",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "wainrider_swift_chariot",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "darkhun_cultist_knight",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_7_template"
@@ -1338,77 +1339,77 @@
         {
           "troop": "easterling_recruit",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "balcoth_volunteer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "far_rhun_iron_legionary",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "dragon_wrath_obsidian_war_reaver",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "wainrider_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "easterling_bowman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "rhun_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "loke_rim_marksman",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "sagarun_skirmisher",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "dragon_wrath_ash_marksman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "black_sun_chosen_marksman",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "far_rhun_cataphract",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "darkhun_cultist_knight",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "balcoth_horse_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "kharaghul_karash_keshig",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_8_template"
@@ -1423,67 +1424,67 @@
         {
           "troop": "balcoth_volunteer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "far_rhun_levy",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "balcoth_axeman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "far_rhun_infantry",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "sagarun_marine",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "easterling_bowman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "rhun_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "sagarun_skirmisher",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "black_sun_chosen_marksman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_youth",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "dragon_wrath_obsidian_knight",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "kharaghul_horse_scout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "kharaghul_keshig",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_rhun_khuzait_9_template"

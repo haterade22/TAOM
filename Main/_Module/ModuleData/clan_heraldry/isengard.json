@@ -1,7 +1,8 @@
 {
   "culture": "isengard",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF2C2C2C/FFD8D8D8 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=isengard).",
+  "_note": "Per-clan color = FF2C2C2C/FFD8D8D8 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=isengard); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_isengard_1",
@@ -13,67 +14,67 @@
         {
           "troop": "isengard_orc_grunt",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_recruit",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_berserker",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_marauder",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_champion",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "orthanc_chosen",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_scout_v2",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_rider_v2",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "orc_warg_enforcer",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_1_template"
@@ -88,67 +89,67 @@
         {
           "troop": "urukhai_recruit",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_berserker",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_brawler",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_fighter",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_butcher",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_feller",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_spearman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "orthanc_chosen",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_reaver",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_crossbowman",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "orc_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_ravager_v2",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_10_template"
@@ -163,67 +164,67 @@
         {
           "troop": "isengard_orc_berserker",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_brawler",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_feller",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_spearman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_reaver",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_arbalest",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_veterancrossbowman",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_scout_v2",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "orc_warg_lieutenant",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_11_template"
@@ -238,57 +239,57 @@
         {
           "troop": "isengard_orc_brawler",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "urukhai_fighter",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "urukhai_spearman",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "urukhai_berserker",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "orc_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "isengard_orc_warg_scout_v2",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "isengard_orc_warg_rider_v2",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "orc_warg_enforcer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "isengard_orc_warg_ravager_v2",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_2_template"
@@ -303,62 +304,62 @@
         {
           "troop": "urukhai_swordman",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "isengard_orc_slayer",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "isengard_orc_reaver",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "urukhai_veteranpikeman",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "urukhai_pavise",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "urukhai_tracker",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "urukhai_arbalest",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "urukhai_crossbowman",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "urukhai_veterancrossbowman",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "orc_warg_overseer",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "isengard_orc_warg_ravager_v2",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "orc_warg_lieutenant",
           "min": 0,
-          "max": 1
+          "max": 21
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_3_template"
@@ -373,67 +374,67 @@
         {
           "troop": "isengard_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_warrior",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_slayer",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_pavise",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_arbalest",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "isengard_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_veterancrossbowman",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "orc_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "orc_warg_lieutenant",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_4_template"
@@ -448,67 +449,67 @@
         {
           "troop": "isengard_orc_warrior",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_ravager",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_warrior",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_reaver",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_veteraninfantry",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "orthanc_guard",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_scout_v2",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_rider_v2",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "orc_warg_enforcer",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_5_template"
@@ -523,67 +524,67 @@
         {
           "troop": "isengard_orc_ravager",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_warrior",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_grunt",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_slayer",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_pikeman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_veteranspearman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "orthanc_guard",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_nazg_hai",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_crossbowman",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "orc_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_ravager_v2",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_6_template"
@@ -598,67 +599,67 @@
         {
           "troop": "urukhai_warrior",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_pikeman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_veteranspearman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_nazg_hai",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_scout",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "urukhai_arbalest",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "urukhai_veterancrossbowman",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "isengard_orc_warg_scout_v2",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "orc_warg_lieutenant",
           "min": 0,
-          "max": 1
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_7_template"
@@ -673,57 +674,57 @@
         {
           "troop": "isengard_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "isengard_orc_grunt",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "urukhai_veteranspearman",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "orthanc_warden",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "isengard_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "urukhai_archer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "orc_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "isengard_orc_warg_scout_v2",
           "min": 2,
-          "max": 4
+          "max": 24
         },
         {
           "troop": "isengard_orc_warg_rider_v2",
           "min": 1,
-          "max": 2
+          "max": 24
         },
         {
           "troop": "orc_warg_enforcer",
           "min": 0,
-          "max": 1
+          "max": 23
         },
         {
           "troop": "isengard_orc_warg_ravager_v2",
           "min": 0,
-          "max": 1
+          "max": 23
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_8_template"
@@ -738,62 +739,62 @@
         {
           "troop": "urukhai_infantry",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "isengard_orc_marauder",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "isengard_orc_butcher",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "orthanc_bodyguard",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "urukhai_champion",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "urukhai_tracker",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "urukhai_arbalest",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "urukhai_crossbowman",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "urukhai_veterancrossbowman",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "orc_warg_overseer",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "isengard_orc_warg_ravager_v2",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "orc_warg_lieutenant",
           "min": 0,
-          "max": 1
+          "max": 21
         }
       ],
       "template_id": "kingdom_hero_party_isengard_isengard_9_template"

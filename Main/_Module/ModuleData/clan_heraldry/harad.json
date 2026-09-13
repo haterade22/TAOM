@@ -1,7 +1,8 @@
 {
   "culture": "aserai",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF8E1C1C/FFC9A227 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=aserai).",
+  "_note": "Per-clan color = FF8E1C1C/FFC9A227 base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=aserai); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_aserai_1",
@@ -13,67 +14,67 @@
         {
           "troop": "harad_levy",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_swordfighter",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_sandblade",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_footman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_marksman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "harad_noble",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_camel_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_1_template"
@@ -88,72 +89,72 @@
         {
           "troop": "harad_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_spearfighter",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_levy",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_sandblade",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_sunlance",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_bronzefang",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_vipereye",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_camelscout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpentguard",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_2_template"
@@ -168,72 +169,72 @@
         {
           "troop": "harad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_spearfighter",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_spearguard",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_bronzefang",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_serpent_eye",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_marksman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_noble",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_fangking",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_3_template"
@@ -248,67 +249,67 @@
         {
           "troop": "harad_spearfighter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_levy",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_spearguard",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_warlance",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_marksman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "harad_camelscout",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_noble",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_gildedfang",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_camelrider",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_camel_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_4_template"
@@ -323,62 +324,62 @@
         {
           "troop": "harad_swordfighter",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "harad_sandblade",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "harad_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "harad_champion",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "harad_footman",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "harad_archer",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "harad_vipereye",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "harad_serpent_eye",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "harad_camelrider",
           "min": 1,
-          "max": 2
+          "max": 17
         },
         {
           "troop": "harad_serpentguard",
           "min": 0,
-          "max": 1
+          "max": 17
         },
         {
           "troop": "harad_fangking",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 16
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_5_template"
@@ -393,72 +394,72 @@
         {
           "troop": "harad_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_sandblade",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_footman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_serpent_eye",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_marksman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_camelscout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_fangking",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_6_template"
@@ -473,67 +474,67 @@
         {
           "troop": "harad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_spearfighter",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_spearguard",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_sunlance",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "harad_marksman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "harad_noble",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_camel_lancer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_7_template"
@@ -548,72 +549,72 @@
         {
           "troop": "harad_spearfighter",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_levy",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_spearguard",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_swordfighter",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_bronzefang",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_warlance",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_vipereye",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_camelscout",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpentguard",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_8_template"
@@ -628,72 +629,72 @@
         {
           "troop": "harad_levy",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_swordfighter",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_sandblade",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_warlance",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "harad_serpent_eye",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_marksman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "harad_noble",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_fangking",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "harad_horsearcher",
           "min": 2,
-          "max": 4
+          "max": 15
         },
         {
           "troop": "harad_serpenthorsearcher",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_harad_aserai_9_template"

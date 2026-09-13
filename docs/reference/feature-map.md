@@ -11,7 +11,7 @@
 | Adapters | `Main/Adapters/` |
 | BannerColorPersistence | `Main/Features/BannerColorPersistence/` (Patch23 + Patch24). Patch23 makes the party leader's CLAN colours win over the kingdom colour on the UI surfaces and, via the `Mission.SpawnAgent` prefix, on battlefield armour tint; it reads `clan.Color`/`clan.Color2` with no `MapFaction` hop. Patch24 blocks vanilla kingdom-sync for the player clan and pushes a ruling clan's colours onto its kingdom banner. 7 flags in `configs/banner_color_config.json`. See [banner-color-persistence.md](../features/banner-color-persistence.md) |
 | BannerInjection | `Main/Features/BannerInjection/` re-stamps `banner_key` from XML/XSLT onto kingdoms and clans on new game and save load; skips ruling clans and player-edited banners. See [banner-injection.md](../features/banner-injection.md) |
-| Clan heraldry data | `Main/_Module/ModuleData/clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, per-clan `color`/`color2` and `default_party_template`. The Gondor and Mordor specs have drifted from shipped `spclans.xslt`; do not re-apply them. See [clan-heraldry.md](../features/clan-heraldry.md) |
+| Clan heraldry data | `Main/_Module/ModuleData/clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`, per-clan `color`/`color2` and `default_party_template`. Colours are authored in the spec; `template_id` and `roster` are synced FROM the live files by `tools/sync_clan_specs_from_live.py` (#589), so re-applying a spec is a no-op and a stale one is refused. See [clan-heraldry.md](../features/clan-heraldry.md) |
 | Core | `Main/Core/` |
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |

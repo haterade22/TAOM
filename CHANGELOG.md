@@ -4,6 +4,26 @@
 
 ## 2026-09-13
 
+### fix(tools): the clan_heraldry specs are synced from the live files, and applying them is a no-op (#589)
+
+`generate_clan_heraldry.py` replaces a whole `<MBPartyTemplate>` from
+`clan_heraldry/<culture>.json`, and the specs had not moved since August: measured against the
+live files, 176 of 192 rosters and six Gondor `template_id`s were behind (the 2026-08-14 and
+2026-09-01 retargets, the Black Numenorean houses, the ladders and #584 all edited the templates
+directly), so the guard widened in #584 refused 19 of the 21 specs. `build_clan_specs.py` is not
+the way back, it composes rosters from scratch. New `tools/sync_clan_specs_from_live.py` copies
+each clan's live binding into `template_id` and the live stacks into `roster`, leaves colours
+alone (current on all 192 clans), keeps each JSON's line endings, trailing newline and escaping,
+stamps a `_rosters` provenance note, and refuses a clan with no live faction, one whose faction
+binds no template (the engine would use the culture default, so guessing the clan-id template
+would write a roster it never fields), or a binding to no template. Applied: 182 clan changes across 19 files; `bandits` and `khand` untouched. Gondor's
+`_note` no longer warns that its roster half is stale. Two defects in the generator surfaced on
+the way: `render_template` joined with LF inside the CRLF party file, and `write()` put a BOM on
+`characters/clans.xml`, which has none; both fixed. Proof: `generate_clan_heraldry.py --all
+--apply` is byte-identical on all three live files, and `tools/tests/test_clan_heraldry_specs.py`
+fails on the first spec-vs-live divergence or the first non-no-op apply. `docs/features/
+clan-heraldry.md` now documents the direction of flow.
+
 ### feat(armour): the kingdom-cap curve, applied to the whole Armory, and the ladder repair it needed (#583)
 
 #581's overview showed the top of most trees dressed under the culture's elite row and the row

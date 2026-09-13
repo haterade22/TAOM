@@ -1,7 +1,8 @@
 {
   "culture": "mirkwood",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF1F5A2C/FFA8C47C base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=mirkwood).",
+  "_note": "Per-clan color = FF1F5A2C/FFA8C47C base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=mirkwood); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_mirkwood_1",
@@ -13,57 +14,57 @@
         {
           "troop": "mirkwood_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_recruit",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_woodsman",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "mirkwood_guardians",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "mirkwood_glaivesman",
           "min": 0,
-          "max": 1
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 13
         },
         {
           "troop": "mirkwood_borderwardens",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_rochenlas",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_beleglas",
           "min": 1,
-          "max": 2
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_mirkwood_mirkwood_1_template"
@@ -78,62 +79,62 @@
         {
           "troop": "mirkwood_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 13
         },
         {
           "troop": "mirkwood_recruit",
           "min": 2,
-          "max": 4
+          "max": 13
         },
         {
           "troop": "mirkwood_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 13
         },
         {
           "troop": "mirkwood_guards",
           "min": 1,
-          "max": 2
+          "max": 12
         },
         {
           "troop": "mirkwood_wardens",
           "min": 1,
-          "max": 2
+          "max": 12
         },
         {
           "troop": "mirkwood_woodsman",
           "min": 1,
-          "max": 2
+          "max": 12
         },
         {
           "troop": "mirkwood_glaivesman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_swordsman",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "mirkwood_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 13
         },
         {
           "troop": "mirkwood_thingolheir",
           "min": 0,
-          "max": 1
+          "max": 12
         },
         {
           "troop": "mirkwood_rochenlas",
           "min": 2,
-          "max": 4
+          "max": 13
         },
         {
           "troop": "mirkwood_beleglas",
           "min": 0,
-          "max": 1
+          "max": 12
         }
       ],
       "template_id": "kingdom_hero_party_mirkwood_mirkwood_2_template"
@@ -148,57 +149,57 @@
         {
           "troop": "mirkwood_recruit",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_wardens",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "mirkwood_woodsman",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "mirkwood_swordsman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "mirkwood_borderwardens",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_thingolheir",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_rochenlas",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_beleglas",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_mirkwood_mirkwood_3_template"
@@ -213,42 +214,42 @@
         {
           "troop": "mirkwood_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "mirkwood_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "mirkwood_woodsman",
           "min": 1,
-          "max": 2
+          "max": 19
         },
         {
           "troop": "mirkwood_palaceguard",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "mirkwood_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "mirkwood_thingolheir",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "mirkwood_rochenlas",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "mirkwood_beleglas",
           "min": 1,
-          "max": 2
+          "max": 19
         }
       ],
       "template_id": "kingdom_hero_party_mirkwood_mirkwood_4_template"
@@ -263,52 +264,52 @@
         {
           "troop": "mirkwood_guards",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "mirkwood_wardens",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "mirkwood_woodsman",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "mirkwood_guardians",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "mirkwood_glaivesman",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "mirkwood_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "mirkwood_sentinels",
           "min": 1,
-          "max": 2
+          "max": 15
         },
         {
           "troop": "mirkwood_borderwardens",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "mirkwood_thingolheir",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "mirkwood_beleglas",
           "min": 1,
-          "max": 2
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_mirkwood_mirkwood_5_template"
@@ -323,57 +324,57 @@
         {
           "troop": "mirkwood_recruit",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_wardens",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "mirkwood_glaivesman",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_sentinels",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "mirkwood_militia_veteran_archer",
           "min": 1,
-          "max": 2
+          "max": 14
         },
         {
           "troop": "mirkwood_thingolheir",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_borderwardens",
           "min": 0,
-          "max": 1
+          "max": 13
         },
         {
           "troop": "mirkwood_rochenlas",
           "min": 2,
-          "max": 4
+          "max": 14
         },
         {
           "troop": "mirkwood_beleglas",
           "min": 0,
-          "max": 1
+          "max": 13
         }
       ],
       "template_id": "kingdom_hero_party_mirkwood_mirkwood_6_template"

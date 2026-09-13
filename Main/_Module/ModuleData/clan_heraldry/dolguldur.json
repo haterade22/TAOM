@@ -1,7 +1,8 @@
 {
   "culture": "dolguldur",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF3A2E22/FF6E7A3E base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=dolguldur).",
+  "_note": "Per-clan color = FF3A2E22/FF6E7A3E base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=dolguldur); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_dolguldur_1",
@@ -13,62 +14,62 @@
         {
           "troop": "dg_goblin_slave",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_goblin_crawler",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_orc_warrior",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_uruk_veteran_warrior",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_disciple",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dg_goblin_hunter",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dolguldur_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_orc_scout",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_uruk_black_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "dg_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_khamul_veiled_knight",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dg_warg_red_fang",
           "min": 2,
-          "max": 4
+          "max": 22
         }
       ],
       "template_id": "kingdom_hero_party_dolguldur_dolguldur_1_template"
@@ -83,67 +84,67 @@
         {
           "troop": "dg_goblin_crawler",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "dg_goblin_harrier",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "dg_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "dg_orc_gnasher",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "dg_uruk_veteran_warrior",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "dolguldur_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 20
         },
         {
           "troop": "dg_uruk_black_guard",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "dg_uruk_black_slayer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "dolguldur_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "dg_khamul_shadow_archer",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "dg_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 20
         },
         {
           "troop": "dg_khamul_shadow_knight",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "dg_warg_red_fang",
           "min": 2,
-          "max": 4
+          "max": 20
         }
       ],
       "template_id": "kingdom_hero_party_dolguldur_dolguldur_2_template"
@@ -158,72 +159,72 @@
         {
           "troop": "dg_goblin_harrier",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dolguldur_militia_veteran_spearman",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "dg_goblin_impaler",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "dg_uruk_black_slayer",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "dg_uruk_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dolguldur_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_goblin_archer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_goblin_fellbow",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "dg_khamul_shadow_marksman",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "dg_khamul_veiled_marksman",
           "min": 0,
-          "max": 1
+          "max": 19
         },
         {
           "troop": "dg_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_khamul_veiled_knight",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "dg_warg_red_fang",
           "min": 2,
-          "max": 4
+          "max": 19
         }
       ],
       "template_id": "kingdom_hero_party_dolguldur_dolguldur_3_template"
@@ -238,62 +239,62 @@
         {
           "troop": "dg_orc_recruit",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_orc_gnasher",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_goblin_impaler",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_infantry",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dolguldur_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_khamul_veiled_marksman",
           "min": 0,
-          "max": 1
+          "max": 20
         },
         {
           "troop": "dg_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_warg_scout",
           "min": 2,
-          "max": 4
+          "max": 22
         },
         {
           "troop": "dg_fell_warg_rider",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_warg_skirmisher",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_knight",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dg_warg_red_fang",
           "min": 2,
-          "max": 4
+          "max": 22
         }
       ],
       "template_id": "kingdom_hero_party_dolguldur_dolguldur_4_template"
@@ -308,62 +309,62 @@
         {
           "troop": "dg_orc_reaver",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_uruk_swordsman",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_initiate",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_warden",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dg_khamul_veiled_guard",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dg_uruk_fell_archer",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_bowman",
           "min": 0,
-          "max": 1
+          "max": 21
         },
         {
           "troop": "dg_uruk_black_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "dg_warg_skirmisher",
           "min": 1,
-          "max": 2
+          "max": 22
         },
         {
           "troop": "dg_khamul_veiled_knight",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "dg_khamul_shadow_knight",
           "min": 0,
-          "max": 1
+          "max": 22
         },
         {
           "troop": "dg_warg_red_fang",
           "min": 0,
-          "max": 1
+          "max": 21
         }
       ],
       "template_id": "kingdom_hero_party_dolguldur_dolguldur_5_template"
@@ -378,72 +379,72 @@
         {
           "troop": "dg_uruk_foul",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dolguldur_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_uruk_swordsman",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "dg_khamul_veiled_guard",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "dg_goblin_hunter",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dolguldur_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_uruk_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_orc_scout",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "dg_uruk_bowman",
           "min": 1,
-          "max": 2
+          "max": 18
         },
         {
           "troop": "dg_uruk_black_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "dg_khamul_shadow_archer",
           "min": 0,
-          "max": 1
+          "max": 19
         },
         {
           "troop": "dg_warg_raider",
           "min": 2,
-          "max": 4
+          "max": 19
         },
         {
           "troop": "dg_khamul_shadow_knight",
           "min": 0,
-          "max": 1
+          "max": 18
         },
         {
           "troop": "dg_warg_red_fang",
           "min": 2,
-          "max": 4
+          "max": 19
         }
       ],
       "template_id": "kingdom_hero_party_dolguldur_dolguldur_6_template"

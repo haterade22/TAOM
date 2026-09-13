@@ -1,7 +1,8 @@
 {
   "culture": "erebor",
   "_generated_by": "tools/build_clan_specs.py",
-  "_note": "Per-clan color = FF1E5A3A/FFB8860B base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=erebor).",
+  "_note": "Per-clan color = FF1E5A3A/FFB8860B base + per-clan variation; rosters were originally archetype-composed from troops_*.xml (culture=erebor); see _rosters for their current source.",
+  "_rosters": "template_id and roster are synced FROM the live files (the clan's default_party_template binding and the template's stacks) by tools/sync_clan_specs_from_live.py; the live files are the source, so edit them and re-sync rather than editing rosters here. Colours are authored here.",
   "clans": [
     {
       "id": "clan_erebor_1",
@@ -13,62 +14,72 @@
         {
           "troop": "erebor_militia_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_reg_miner",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_swordsman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_reg_fighter",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_hammer_guard",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "erebor_noble_shield_guard",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "erebor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "ironpass_arbalest",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_scout",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_veteran_arbalest",
           "min": 0,
-          "max": 1
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_rider",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_goat_charger",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_1_template"
@@ -83,62 +94,72 @@
         {
           "troop": "erebor_reg_miner",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "ironpass_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_reg_fighter",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_infantry",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_fighter",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_axeman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_shield_guard",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "erebor_noble_veteran_axe_guard",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "erebor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_rider",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_goat_charger",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_2_template"
@@ -153,62 +174,72 @@
         {
           "troop": "iron_hills_reg_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "ironpass_recruit",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_noble_infantry",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_fighter",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_veteran_axe_guard",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "erebor_reg_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_noble_ranger",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_reg_bowman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_archer",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_veteran_archer",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "ironpass_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_rider",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_breaker",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_3_template"
@@ -223,62 +254,72 @@
         {
           "troop": "iron_hills_reg_fighter",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_axeman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_infantry",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_oathsworn",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "ironpass_mountain_guard",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_shield_guard",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "iron_hills_noble_anvilguard",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "erebor_noble_archer",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_bowman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_arbalest",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_veteran_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 16
+        },
+        {
+          "troop": "ironpass_goat_charger",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_breaker",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_4_template"
@@ -293,62 +334,72 @@
         {
           "troop": "erebor_militia_veteran_spearman",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_reg_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "ironpass_axeman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_mountain_guard",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "iron_hills_reg_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_reg_skirmisher",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_bowman",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_arbalest",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_veteran_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "ironpass_veteran_arbalest",
           "min": 0,
-          "max": 1
+          "max": 15
+        },
+        {
+          "troop": "ironpass_goat_charger",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_breaker",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_5_template"
@@ -363,62 +414,72 @@
         {
           "troop": "erebor_reg_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_noble",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_infantry",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_reg_mattock_warrior",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_shield_guard",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_anvilguard",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "erebor_militia_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "ironpass_arbalest",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_scout",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "ironpass_veteran_arbalest",
           "min": 0,
-          "max": 1
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_breaker",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_marshal",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_6_template"
@@ -433,62 +494,72 @@
         {
           "troop": "erebor_noble",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_reg_militia",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "ironpass_warrior",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_noble",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "erebor_reg_mattock_warrior",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_reg_warrior",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_guard",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "erebor_noble_axe_guard",
           "min": 1,
-          "max": 2
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_anvilguard",
           "min": 0,
-          "max": 1
+          "max": 16
         },
         {
           "troop": "erebor_noble_gate_warden",
           "min": 0,
-          "max": 1
+          "max": 15
         },
         {
           "troop": "erebor_militia_veteran_archer",
           "min": 2,
-          "max": 4
+          "max": 16
         },
         {
           "troop": "iron_hills_noble_sharpshooter",
           "min": 0,
-          "max": 1
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_breaker",
+          "min": 0,
+          "max": 15
+        },
+        {
+          "troop": "ironpass_ram_marshal",
+          "min": 0,
+          "max": 15
         }
       ],
       "template_id": "kingdom_hero_party_erebor_erebor_7_template"

@@ -44,16 +44,24 @@ SPEC_DIR = os.path.join(MD, "clan_heraldry")
 TAB = "\t"
 
 
+BOM = b"\xef\xbb\xbf"
+
+
 def read(path):
+    # utf-8-sig strips a BOM on read; write() puts it back only if the file had one. Until
+    # #589 write() used utf-8-sig unconditionally, so a real --apply added a BOM to
+    # characters/clans.xml (which has none) while the in-memory no-op invariant passed.
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         return f.read()
 
 
 def write(path, text):
-    with open(path + ".bak", "w", encoding="utf-8-sig", newline="") as f:
-        f.write(read(path))
-    with open(path, "w", encoding="utf-8-sig", newline="") as f:
-        f.write(text)
+    raw = open(path, "rb").read()
+    prefix = BOM if raw.startswith(BOM) else b""
+    with open(path + ".bak", "wb") as f:
+        f.write(raw)
+    with open(path, "wb") as f:
+        f.write(prefix + text.encode("utf-8"))
 
 
 def template_id_for(clan):
@@ -157,14 +165,17 @@ def upsert_xslt_override(text, clan_id, color, color2, dpt):
 
 
 # ---------- C. taom_partyTemplates.xml ----------
-def render_template(template_id, roster):
+def render_template(template_id, roster, eol="\n"):
+    # eol is the party file's own terminator: the file is CRLF, and a "\n" join left every
+    # replaced template with LF lines inside a CRLF file (caught by the no-op invariant in
+    # tools/tests/test_clan_heraldry_specs.py, #589).
     lines = ['\t<MBPartyTemplate id="%s">' % template_id, '\t\t<stacks>']
     for s in roster:
         lines.append('\t\t\t<PartyTemplateStack min_value="%d" max_value="%d" troop="NPCCharacter.%s" />'
                      % (int(s["min"]), int(s["max"]), s["troop"]))
     lines.append('\t\t</stacks>')
     lines.append('\t</MBPartyTemplate>')
-    return "\n".join(lines)
+    return eol.join(lines)
 
 
 class TemplateWouldShrink(Exception):
@@ -196,7 +207,8 @@ def upsert_party_template(text, template_id, roster):
     and only the two house clans still tripped the guard. So a spec whose
     max_value sum is below the live template's is refused on the same terms.
     """
-    rendered = render_template(template_id, roster)
+    eol = "\r\n" if text.count("\r\n") > text.count("\n") - text.count("\r\n") else "\n"
+    rendered = render_template(template_id, roster, eol)
     existing = re.compile(r'\t?<MBPartyTemplate id="%s">.*?</MBPartyTemplate>' % re.escape(template_id), re.S)
     match = existing.search(text)
     if match:
@@ -217,7 +229,7 @@ def upsert_party_template(text, template_id, roster):
                 % (template_id, incoming_max, live_max))
         return existing.sub(lambda _: rendered, text, count=1)
     # insert before closing </partyTemplates>
-    return text.replace("</partyTemplates>", rendered + "\n\n</partyTemplates>", 1)
+    return text.replace("</partyTemplates>", rendered + eol + eol + "</partyTemplates>", 1)
 
 
 def main():
