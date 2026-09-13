@@ -1,7 +1,7 @@
 # RCA: Codex adversarial pass on the ranged ladders (#582, #588, 2026-09-13)
 
 **Top line.** Codex (gpt-6-astra, ultra, `docs/reviews/raw/codex-adversarial-ranged-ladders-2026-09-13.md`)
-reviewed the seven commits `d20838e4`..`02666e32`: the ladder library, spec, generator, roster tool,
+reviewed the seven commits `d20838e4`..`0e371c6b` (the prompt names that last tree by its pre-amend hash `02666e32`, same tree): the ladder library, spec, generator, roster tool,
 the `RANGED_LADDER_INVERSION` gate, the militia +15 step and the tracked HTML. It reported four P2
 and one P3, all confirmed on re-reading, zero false positives, and disputed five of the eight Known
 Suspects with counted evidence (0 prefix matches outside a claimed file, 0 mixed-class troops, 13/13
