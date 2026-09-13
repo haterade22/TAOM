@@ -2113,28 +2113,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="85" />
+                value="100" />
             <skill
                 id="Riding"
-                value="0" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="102" />
+                value="117" />
             <skill
                 id="TwoHanded"
-                value="105" />
+                value="120" />
             <skill
                 id="Polearm"
-                value="137" />
+                value="152" />
             <skill
                 id="Bow"
-                value="30" />
+                value="45" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="45" />
+                value="60" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -2237,28 +2237,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="85" />
+                value="100" />
             <skill
                 id="Riding"
-                value="0" />
-            <skill
-                id="OneHanded"
-                value="92" />
-            <skill
-                id="TwoHanded"
-                value="60" />
-            <skill
-                id="Polearm"
-                value="62" />
-            <skill
-                id="Bow"
-                value="145" />
-            <skill
-                id="Crossbow"
                 value="15" />
             <skill
+                id="OneHanded"
+                value="107" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="77" />
+            <skill
+                id="Bow"
+                value="160" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
                 id="Throwing"
-                value="35" />
+                value="50" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>

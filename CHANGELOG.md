@@ -4,6 +4,18 @@
 
 ## 2026-09-12
 
+### fix(data): the veteran militia stand 15 above the basic militia on every skill
+
+Every militia slot a culture binds takes the level-21 baseline whatever the troop's level, which
+is deliberate, but the four slots shared it exactly, so a culture's militia archer (level 11) and
+veteran militia archer (level 16) were the same eight numbers in all 15 cultures and the promotion
+changed nothing. `rebalance_troops.py` now keeps the elite ids (`*_elite_militia_troop`) apart
+from the basic ones and adds `MILITIA_ELITE_BONUS` (15, the user asked for 10 to 20) to every
+skill before cultural modifiers. `--fix-monotonicity --restat <the 30 elite ids>` rewrote exactly
+30 troops in 15 files, +15 per skill (+120 a troop, +115 where a skill had been floored at 0);
+`docs/reference/ranged-troops.html` regenerated for the 15 veteran archers. Tests:
+`tools/tests/test_militia_elite_bonus.py`.
+
 ### feat(data): ranged range ladders, tier climbs reach inside a line and kingdom rank orders each band (#582)
 
 Asked what sets an archer troop's range, the bow or the skill. The 1.4.8 decompile answers the bow:

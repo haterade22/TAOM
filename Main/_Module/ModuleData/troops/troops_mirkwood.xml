@@ -1200,28 +1200,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="140" />
+                value="155" />
             <skill
                 id="Riding"
-                value="20" />
+                value="35" />
             <skill
                 id="OneHanded"
-                value="150" />
+                value="165" />
             <skill
                 id="TwoHanded"
-                value="140" />
+                value="155" />
             <skill
                 id="Polearm"
-                value="175" />
+                value="190" />
             <skill
                 id="Bow"
-                value="65" />
+                value="80" />
             <skill
                 id="Crossbow"
-                value="60" />
+                value="75" />
             <skill
                 id="Throwing"
-                value="100" />
+                value="115" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -1358,28 +1358,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="140" />
+                value="155" />
             <skill
                 id="Riding"
-                value="20" />
+                value="35" />
             <skill
                 id="OneHanded"
-                value="140" />
+                value="155" />
             <skill
                 id="TwoHanded"
-                value="95" />
+                value="110" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="115" />
             <skill
                 id="Bow"
-                value="180" />
+                value="195" />
             <skill
                 id="Crossbow"
-                value="80" />
+                value="95" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="105" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>

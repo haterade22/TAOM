@@ -10663,28 +10663,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="130" />
-            <skill
-                id="Riding"
-                value="45" />
-            <skill
-                id="OneHanded"
                 value="145" />
             <skill
+                id="Riding"
+                value="60" />
+            <skill
+                id="OneHanded"
+                value="160" />
+            <skill
                 id="TwoHanded"
-                value="150" />
+                value="165" />
             <skill
                 id="Polearm"
-                value="185" />
+                value="200" />
             <skill
                 id="Bow"
-                value="55" />
+                value="70" />
             <skill
                 id="Crossbow"
-                value="50" />
+                value="65" />
             <skill
                 id="Throwing"
-                value="90" />
+                value="105" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -11018,28 +11018,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="130" />
+                value="145" />
             <skill
                 id="Riding"
-                value="45" />
+                value="60" />
             <skill
                 id="OneHanded"
-                value="135" />
+                value="150" />
             <skill
                 id="TwoHanded"
-                value="105" />
+                value="120" />
             <skill
                 id="Polearm"
-                value="110" />
+                value="125" />
             <skill
                 id="Bow"
-                value="170" />
+                value="185" />
             <skill
                 id="Crossbow"
-                value="70" />
+                value="85" />
             <skill
                 id="Throwing"
-                value="80" />
+                value="95" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>

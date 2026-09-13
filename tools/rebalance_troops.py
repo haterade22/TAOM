@@ -398,9 +398,15 @@ def apply_specialization(skills, specialization, level=None, culture=None):
 MILITIA_BINDING_FILES = ('taom_spcultures.xml', 'spcultures.xslt')
 # The leading (?<![A-Za-z0-9_]) stops a longer attribute that merely ENDS in militia_troop (say a
 # hypothetical reserve_melee_militia_troop) from being read as a militia binding.
+# Group 1 is the `elite_` marker (empty for a basic slot), group 2 the troop id.
 MILITIA_BINDING_RE = re.compile(
-    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(?:elite_)?militia_troop"?\s*(?:=\s*"|>)\s*'
+    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop"?\s*(?:=\s*"|>)\s*'
     r'NPCCharacter\.([A-Za-z0-9_]+)')
+# The elite (veteran) militia stand this much above the basic militia on every skill. Both
+# take the level-21 baseline whatever their level (militia are siege and village defenders by
+# design), and until 2026-09-13 the four slots shared it exactly, so a culture's militia archer
+# (level 11) and veteran militia archer (level 16) were the same troop on the party screen.
+MILITIA_ELITE_BONUS = 15
 _XML_COMMENT_RE = re.compile(r'<!--.*?-->', re.S)
 
 
@@ -409,6 +415,7 @@ def _strip_xml_comments(text):
     return _XML_COMMENT_RE.sub(lambda m: '\n' * m.group(0).count('\n'), text)
 
 _militia_ids_cache = {}
+_elite_militia_ids_cache = {}
 
 
 def militia_troop_ids(moduledata_dir=None):
@@ -425,6 +432,7 @@ def militia_troop_ids(moduledata_dir=None):
     if root in _militia_ids_cache:
         return _militia_ids_cache[root]
     ids = set()
+    elite = set()
     missing = []
     for filename in MILITIA_BINDING_FILES:
         path = os.path.join(root, filename)
@@ -434,7 +442,10 @@ def militia_troop_ids(moduledata_dir=None):
         with open(path, 'r', encoding='utf-8-sig', errors='replace') as f:
             # Mask comments first: a commented-out <Culture> block is not a live binding, and
             # counting one would silently widen the militia exemption.
-            ids.update(MILITIA_BINDING_RE.findall(_strip_xml_comments(f.read())))
+            for marker, tid in MILITIA_BINDING_RE.findall(_strip_xml_comments(f.read())):
+                ids.add(tid)
+                if marker:
+                    elite.add(tid)
     # FAIL CLOSED. This decision moved from a self-contained name heuristic (which could not fail)
     # to a read of two external files. If that read comes back empty the tool would classify all 60
     # militia as ordinary troops and a --apply would cut them to their level curve, roughly 55%,
@@ -445,7 +456,20 @@ def militia_troop_ids(moduledata_dir=None):
             f"ordinary troop. Missing: {', '.join(missing) or 'none'}; ids found: {len(ids)}. "
             f"Expected {', '.join(MILITIA_BINDING_FILES)} under {root}.")
     _militia_ids_cache[root] = ids
+    _elite_militia_ids_cache[root] = elite
     return ids
+
+
+def elite_militia_troop_ids(moduledata_dir=None):
+    """The subset of militia_troop_ids a culture binds to an `*elite_militia_troop` slot."""
+    root = os.path.abspath(moduledata_dir or MODULEDATA_DIR)
+    if root not in _elite_militia_ids_cache:
+        militia_troop_ids(moduledata_dir)
+    return _elite_militia_ids_cache[root]
+
+
+def is_elite_militia(troop_id):
+    return troop_id in elite_militia_troop_ids()
 
 
 def is_militia(troop_id, troop_name=None):
@@ -479,6 +503,8 @@ def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes
         militia_baseline = RANGED_BASELINES.get(21) if group == 'Ranged' else INFANTRY_BASELINES.get(21)
         if militia_baseline:
             baseline = militia_baseline
+            if is_elite_militia(troop_id):
+                baseline = {k: v + MILITIA_ELITE_BONUS for k, v in baseline.items()}
 
     # Get cultural modifiers
     mods = CULTURAL_MODS.get(culture, {})
@@ -681,7 +707,8 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
     never reverted.
 
     Two exemptions. Militia to militia: militia are pinned to the level-21 baseline regardless
-    of level so village defence stays costly, which makes a militia promotion flat by design.
+    of level so village defence stays costly; the elite slot adds MILITIA_ELITE_BONUS on every
+    skill, so a militia promotion is a fixed step, never a curve, and the clamp leaves it alone.
     And RESPECIALIZATION_EXEMPT_EDGES, per skill, for a child that drops a weapon its parent
     genuinely carried; without it the clamp puts back exactly what the writer just floored.
     """

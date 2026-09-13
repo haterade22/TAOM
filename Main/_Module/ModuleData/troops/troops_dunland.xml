@@ -3317,28 +3317,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
+                value="130" />
             <skill
                 id="Riding"
-                value="10" />
+                value="25" />
             <skill
                 id="OneHanded"
-                value="115" />
+                value="130" />
             <skill
                 id="TwoHanded"
-                value="115" />
+                value="130" />
             <skill
                 id="Polearm"
-                value="145" />
+                value="160" />
             <skill
                 id="Bow"
-                value="15" />
+                value="30" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="25" />
             <skill
                 id="Throwing"
-                value="65" />
+                value="80" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -3387,28 +3387,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
-            <skill
-                id="Riding"
-                value="10" />
-            <skill
-                id="OneHanded"
-                value="105" />
-            <skill
-                id="TwoHanded"
-                value="70" />
-            <skill
-                id="Polearm"
-                value="70" />
-            <skill
-                id="Bow"
                 value="130" />
             <skill
+                id="Riding"
+                value="25" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="85" />
+            <skill
+                id="Polearm"
+                value="85" />
+            <skill
+                id="Bow"
+                value="145" />
+            <skill
                 id="Crossbow"
-                value="30" />
+                value="45" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="70" />
         </skills>
         <Equipments>
             <EquipmentRoster>
