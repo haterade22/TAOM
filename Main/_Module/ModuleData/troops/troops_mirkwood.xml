@@ -342,7 +342,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a01" />
+                    id="Item.ladder_mirkwood_bow_x" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a01" />
@@ -579,7 +579,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a01" />
+                    id="Item.ladder_mirkwood_bow_c" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a02" />
@@ -930,7 +930,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a01" />
+                    id="Item.ladder_mirkwood_bow_c" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a03" />
@@ -1113,7 +1113,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a01" />
+                    id="Item.ladder_mirkwood_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a01" />
@@ -1133,7 +1133,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a02" />
+                    id="Item.ladder_mirkwood_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a01" />
@@ -1150,7 +1150,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a01" />
+                    id="Item.ladder_mirkwood_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a02" />
@@ -1332,7 +1332,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mirkwood_bow_a02" />
+                <equipment slot="Item0" id="Item.ladder_mirkwood_bow_r" />
                 <equipment slot="Item1" id="Item.wm_mirkwood_arrow_a02" />
                 <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
                 <equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
@@ -1386,7 +1386,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a02" />
+                    id="Item.ladder_mirkwood_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a02" />
@@ -1409,7 +1409,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a03" />
+                    id="Item.ladder_mirkwood_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a01" />
@@ -1432,7 +1432,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mirkwood_bow_a02" />
+                    id="Item.ladder_mirkwood_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_arrow_a02" />

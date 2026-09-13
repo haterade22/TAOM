@@ -231,7 +231,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -254,7 +254,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -277,7 +277,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -301,7 +301,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -325,7 +325,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -348,7 +348,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -371,7 +371,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -394,7 +394,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -417,7 +417,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -440,7 +440,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1098,7 +1098,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1130,7 +1130,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1162,7 +1162,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1194,7 +1194,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1226,7 +1226,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1502,7 +1502,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_gundabad_bow_v" />
                 <equipment slot="Item1" id="Item.steppe_arrows" />
                 <equipment slot="Item2" id="Item.steppe_arrows" />
                 <equipment slot="Item3" id="Item.wm_gundabad_mace_a02" />
@@ -1560,7 +1560,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1595,7 +1595,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1630,7 +1630,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1665,7 +1665,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1700,7 +1700,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1735,7 +1735,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1819,7 +1819,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1848,7 +1848,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1877,7 +1877,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_bow_a" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1955,7 +1955,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_isengard_bow_a01" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -2030,7 +2030,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_isengard_bow_a02" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -2059,7 +2059,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_isengard_bow_a02" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -2088,7 +2088,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_isengard_bow_a02" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -2117,7 +2117,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_isengard_bow_a02" />
+                    id="Item.ladder_gundabad_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -3125,7 +3125,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.hunting_bow" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -3145,7 +3145,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.hunting_bow" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -3162,7 +3162,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.hunting_bow" />
+                    id="Item.ladder_gundabad_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -3364,7 +3364,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.hunting_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -3387,7 +3387,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.hunting_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -3410,7 +3410,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.hunting_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -3583,7 +3583,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -3615,7 +3615,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -3647,7 +3647,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -3679,7 +3679,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -3711,7 +3711,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_gundabad_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />

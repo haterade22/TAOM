@@ -1024,7 +1024,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_pelargir_sword_a02" />
@@ -1063,7 +1063,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_pelargir_sword_a02" />
@@ -1100,7 +1100,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_pelargir_sword_a02" />
@@ -2182,7 +2182,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.composite_steppe_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_e" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a02" />
@@ -2220,7 +2220,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.composite_steppe_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -2259,7 +2259,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.composite_steppe_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
@@ -2296,7 +2296,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.composite_steppe_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
@@ -3217,7 +3217,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_r" />
         <equipment slot="Item1" id="Item.bolt_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
@@ -3255,7 +3255,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_r" />
         <equipment slot="Item1" id="Item.bolt_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
@@ -3293,7 +3293,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_d" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_v" />
         <equipment slot="Item1" id="Item.bolt_c" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
@@ -3331,7 +3331,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_e" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_v" />
         <equipment slot="Item1" id="Item.bolt_c" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
@@ -3367,7 +3367,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_f" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_x" />
         <equipment slot="Item1" id="Item.bolt_d" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
@@ -3517,7 +3517,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_gondor_spear_b" />
         <equipment slot="Head" id="Item.sk_gd_pin_arc_helmet_heavy_a" />
@@ -3553,7 +3553,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_spear_b" />
@@ -4097,7 +4097,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4136,7 +4136,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4175,7 +4175,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lamedon_1h_sword_a" />
         <equipment slot="Head" id="Item.sk_gd_vale_helmet_med_a" />
@@ -4214,7 +4214,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_lamedon_bastard_heavy" />
@@ -4225,7 +4225,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_lamedon_bastard_heavy" />
@@ -4264,7 +4264,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_x" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_lamedon_bastard_heavy" />
@@ -4302,7 +4302,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4313,7 +4313,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4324,7 +4324,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4335,7 +4335,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4346,7 +4346,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_b" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4357,7 +4357,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4368,7 +4368,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_d" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_d" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4379,7 +4379,7 @@
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4416,7 +4416,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_x" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -4453,7 +4453,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_x" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_gd_shield_a3" />
         <equipment slot="Item3" id="Item.wm_gondor_lamedon_bastard_heavy" />
@@ -5114,7 +5114,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_r" />
         <equipment slot="Item1" id="Item.bolt_b" />
         <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_lon_helmet_med_a" />
@@ -5124,7 +5124,7 @@
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_c" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_r" />
         <equipment slot="Item1" id="Item.bolt_b" />
         <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_lon_helmet_med_b" />
@@ -5162,7 +5162,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_d" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_v" />
         <equipment slot="Item1" id="Item.bolt_c" />
               <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Head" id="Item.sk_gd_lon_helmet_med_a" />
@@ -5172,7 +5172,7 @@
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_d" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_v" />
         <equipment slot="Item1" id="Item.bolt_c" />
               <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Head" id="Item.sk_gd_lon_helmet_med_b" />
@@ -5210,7 +5210,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_e" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_v" />
         <equipment slot="Item1" id="Item.bolt_c" />
         <equipment slot="Item2" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item3" id="Item.empire_mace_3_t4" />
@@ -5221,7 +5221,7 @@
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_e" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_v" />
         <equipment slot="Item1" id="Item.bolt_c" />
         <equipment slot="Item2" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item3" id="Item.empire_mace_3_t4" />
@@ -5260,7 +5260,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_f" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_x" />
         <equipment slot="Item1" id="Item.bolt_d" />
         <equipment slot="Item2" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item3" id="Item.empire_mace_4_t5" />
@@ -5271,7 +5271,7 @@
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_f" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_x" />
         <equipment slot="Item1" id="Item.bolt_d" />
         <equipment slot="Item2" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item3" id="Item.empire_mace_4_t5" />
@@ -5308,7 +5308,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_f" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_x" />
         <equipment slot="Item1" id="Item.bolt_d" />
         <equipment slot="Item2" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item3" id="Item.empire_mace_4_t5" />
@@ -5319,7 +5319,7 @@
         <equipment slot="Leg" id="Item.sk_gd_sere_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.crossbow_f" />
+        <equipment slot="Item0" id="Item.ladder_gondor_xbow_x" />
         <equipment slot="Item1" id="Item.bolt_d" />
         <equipment slot="Item2" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item3" id="Item.empire_mace_4_t5" />
@@ -5884,7 +5884,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
@@ -5923,7 +5923,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
@@ -5960,7 +5960,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_x" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
@@ -6212,7 +6212,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.gondor_steel_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_x" />
         <equipment slot="Item1" id="Item.piercing_arrows" />
         <equipment slot="Item2" id="Item.piercing_arrows" />
         <equipment slot="Head" id="Item.sk_gd_osg_ward_helmet_heavy_a" />
@@ -6251,7 +6251,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.gondor_steel_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_x" />
         <equipment slot="Item1" id="Item.piercing_arrows" />
         <equipment slot="Item2" id="Item.piercing_arrows" />
         <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_b" />
@@ -6288,7 +6288,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.gondor_steel_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
         <equipment slot="Item1" id="Item.piercing_arrows" />
         <equipment slot="Item2" id="Item.piercing_arrows" />
         <equipment slot="Head" id="Item.sk_gd_ith_noble_helmet_heavy_a" />
@@ -6878,7 +6878,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lamedon_1h_sword_a" />
         <equipment slot="Item3" id="Item.sm_gd_shield_a3" />
@@ -6915,7 +6915,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lamedon_bastard_heavy" />
         <equipment slot="Item3" id="Item.sm_gd_shield_a3" />
@@ -7195,7 +7195,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_x" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_lamedon_bastard_heavy" />
@@ -7232,7 +7232,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_ithilien_bow_b" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_x" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_lamedon_bastard_heavy" />
@@ -7666,7 +7666,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_e" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
@@ -7701,7 +7701,7 @@
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
@@ -7739,7 +7739,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
@@ -7778,7 +7778,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
@@ -7815,7 +7815,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_v" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
@@ -7889,7 +7889,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.hunting_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_e" />
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
@@ -7959,7 +7959,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.noble_long_bow" />
+        <equipment slot="Item0" id="Item.ladder_gondor_bow_r" />
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a02" />

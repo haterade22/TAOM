@@ -477,7 +477,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_recurve_bow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
@@ -487,7 +487,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_recurve_bow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
@@ -524,7 +524,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
@@ -535,7 +535,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
@@ -573,7 +573,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a05" />
@@ -584,7 +584,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a05" />
@@ -620,7 +620,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
                 <equipment slot="Item1" id="Item.barbed_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
@@ -631,7 +631,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
                 <equipment slot="Item1" id="Item.barbed_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
@@ -669,7 +669,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_c" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.dale_sword_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
@@ -679,7 +679,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_c" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
@@ -716,7 +716,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_d" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a07" />
@@ -727,7 +727,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_d" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a07" />
@@ -765,7 +765,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_e" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
@@ -776,7 +776,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_e" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
@@ -812,7 +812,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_f" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a08" />
@@ -823,7 +823,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b04" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_f" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_e" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a08" />
@@ -1526,7 +1526,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_recurve_bow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_e" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
@@ -1596,7 +1596,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />

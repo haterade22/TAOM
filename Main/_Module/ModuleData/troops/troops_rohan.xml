@@ -52,7 +52,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_rohan_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -126,7 +126,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_rohan_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -209,7 +209,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_rohan_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -292,7 +292,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.composite_steppe_bow" />
+                    id="Item.ladder_rohan_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -375,7 +375,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.steppe_war_bow" />
+                    id="Item.ladder_rohan_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -458,7 +458,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.steppe_war_bow" />
+                    id="Item.ladder_rohan_bow_v" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -538,7 +538,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.steppe_war_bow" />
+                    id="Item.ladder_rohan_bow_x" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -1741,7 +1741,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.glen_ranger_bow" />
+                    id="Item.ladder_rohan_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -1806,7 +1806,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.woodland_yew_bow" />
+                    id="Item.ladder_rohan_bow_e" />
                 <equipment
                     slot="Item1"
                     id="Item.range_arrows" />
@@ -1883,7 +1883,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.woodland_longbow" />
+                    id="Item.ladder_rohan_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_a" />
@@ -1957,7 +1957,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.noble_long_bow" />
+                    id="Item.ladder_rohan_bow_r" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -5906,14 +5906,14 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_e" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_e" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
@@ -5921,7 +5921,7 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_e" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_d" />
@@ -6042,7 +6042,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.vlandia_sword_2_t3" />
                 <equipment slot="Body" id="Item.cts_rohan_armor4" />
@@ -6051,7 +6051,7 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.vlandia_sword_2_t3" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_f" />
@@ -6061,7 +6061,7 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.vlandia_sword_2_t3" />
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />

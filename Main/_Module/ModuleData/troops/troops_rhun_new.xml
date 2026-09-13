@@ -136,7 +136,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -147,7 +147,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -185,7 +185,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
@@ -223,7 +223,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
@@ -298,7 +298,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -334,7 +334,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -903,7 +903,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_heavy_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.khuzait_sword_3_t3" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_c" />
@@ -942,7 +942,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -1021,7 +1021,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_polearm_1_t4" />
@@ -1096,7 +1096,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -1221,7 +1221,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -1232,7 +1232,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -1271,7 +1271,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.bolt_a" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -1280,7 +1280,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.bolt_a" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -1410,7 +1410,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_c" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.bolt_c" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -1421,7 +1421,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_c" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_v" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.bolt_c" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -1547,7 +1547,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_d" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_x" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.bolt_d" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
@@ -1558,7 +1558,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_scale_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.crossbow_d" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_x" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.bolt_d" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_axe_a" />
@@ -1668,7 +1668,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_e" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
@@ -1742,7 +1742,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_heavy_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
@@ -1892,7 +1892,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -2035,7 +2035,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -2160,7 +2160,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -2171,7 +2171,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -2316,7 +2316,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -2327,7 +2327,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_hplate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
@@ -2532,7 +2532,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -2543,7 +2543,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -2554,7 +2554,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -2751,7 +2751,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -2762,7 +2762,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_a" />
@@ -2887,7 +2887,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -2898,7 +2898,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -3033,7 +3033,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -3044,7 +3044,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.steppe_war_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -3241,7 +3241,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -3252,7 +3252,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -3441,7 +3441,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_c" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_b" />
@@ -3452,7 +3452,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_c" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_b" />
@@ -3917,7 +3917,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_e" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
@@ -3926,7 +3926,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.hunting_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_e" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
@@ -3995,7 +3995,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
@@ -4144,7 +4144,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_r" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_a" />
@@ -4218,7 +4218,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_long_bow" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_a" />
@@ -4292,7 +4292,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_v" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -4365,7 +4365,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
@@ -4402,7 +4402,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_longbow_a" />
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_x" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_mace_a" />
