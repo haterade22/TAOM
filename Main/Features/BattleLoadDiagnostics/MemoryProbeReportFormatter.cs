@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using TAOM.Features.BattleLoadDiagnostics.Domain;
@@ -69,14 +70,37 @@ public static class MemoryProbeReportFormatter
         else
             sb.AppendLine($"{Tag} gpu: <unavailable>");
 
+        // Raw engine units on both of the next two: no managed caller formats them, so the unit is
+        // calibrated against VMMap from the first live reading rather than asserted here.
+        if (engine.VertexBufferRead)
+            sb.AppendLine($"{Tag} vertexBufferSysMem={engine.VertexBufferSystemMemory} (raw engine units)");
+        else
+            sb.AppendLine($"{Tag} vertexBufferSysMem=<unavailable>");
+
+        if (engine.GpuSplit.HasValue)
+        {
+            var g = engine.GpuSplit.Value;
+            sb.AppendLine($"{Tag} gpu split: total={Raw(g.Total)} renderTarget={Raw(g.RenderTarget)} " +
+                          $"depthTarget={Raw(g.DepthTarget)} srv={Raw(g.Srv)} buffer={Raw(g.Buffer)} (raw engine units)");
+        }
+        else
+        {
+            sb.AppendLine($"{Tag} gpu split: <unavailable>");
+        }
+
         if (!string.IsNullOrEmpty(engine.GpuDumpPath))
             sb.AppendLine($"{Tag} gpu dump written: {engine.GpuDumpPath}");
+        else if (!string.IsNullOrEmpty(engine.GpuDumpMissingPath))
+            sb.AppendLine($"{Tag} gpu dump requested but no file appeared at: {engine.GpuDumpMissingPath}");
 
         AppendBlock(sb, "application", engine.ApplicationStatistics);
         AppendBlock(sb, "native", engine.NativeStatistics);
 
         return sb.ToString().TrimEnd();
     }
+
+    // Invariant culture: a comma decimal separator would split one token into two for any reader.
+    private static string Raw(float value) => value.ToString("0.##", CultureInfo.InvariantCulture);
 
     // The engine returns these as multi-line blobs. Every line gets the tag so a grep for [MemProbe]
     // returns the whole reading rather than just its first line.

@@ -590,6 +590,12 @@ public class SubModule : MBSubModuleBase
         try { IoC.Resolve<Features.BattleLoadDiagnostics.MemoryStationSampler>().Start(); }
         catch { /* never block the main menu over a diagnostic */ }
 
+        // No heap release on screen pop, on purpose: GameStateManager.OnPopState and OnPushState
+        // already end with Common.MemoryCleanupGC() (installed v1.4.8, GameStateManager.cs:278/306),
+        // and the inventory/party/character screens close through PopState. A release built here on
+        // 2026-09-12 was a second full collection right before the engine's own and was removed
+        // the same day (docs/reviews/rca-memory-instruments-2026-09-12.md).
+
         // DevConsole discovery audit: ask the engine whether it actually registered TAOM's taom.*
         // console commands. CollectCommandLineFunctions is invoked from TaleWorlds.Native.dll, so its
         // timing relative to our assembly load is not knowable offline — but HasFunctionForCommand is
@@ -723,6 +729,32 @@ public class SubModule : MBSubModuleBase
             RegisterSpecialResourcesAndCareers(campaignStarter, careerPassives);
             RegisterCampaignLifeBehaviors(campaignStarter);
         }
+    }
+
+    // [SaveLoad] campaign-launch memory stamps. Engine order for a saved campaign (installed
+    // v1.4.8 Campaign.cs:1420-1452): OnGameLoaded, then LoadBehaviorData (AllBehaviorDataLoaded),
+    // RegisterEvents, ..., then OnGameInitializationFinished. The 2026-09-12 live run measured
+    // 95 s and +2.7 GB between AllBehaviorDataLoaded and the map screen with nothing in either
+    // log (#509 saw the same window stall for 10 minutes); the GameInitializationFinished stamp
+    // bisects it, and this one brackets the behavior-data load from above. OnGameLoaded never
+    // fires for a NEW campaign. Thin and guarded: a diagnostic must never fail a load. Both
+    // virtuals verified public on the installed v1.4.8 MBSubModuleBase.
+    public override void OnGameLoaded(Game game, object initializerObject)
+    {
+        base.OnGameLoaded(game, initializerObject);
+        StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameLoaded);
+    }
+
+    // The GameInitializationFinished stamp lives in the existing OnGameInitializationFinished
+    // override further down, ahead of its once-per-process patch guard.
+    private static void StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase phase)
+    {
+        try
+        {
+            IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>()
+                .LogPhase(phase, Features.BattleLoadDiagnostics.ProcessMemoryTokens.Format());
+        }
+        catch { /* never fail a load over a diagnostic */ }
     }
 
     /// <summary>
@@ -1268,6 +1300,10 @@ public class SubModule : MBSubModuleBase
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
+
+        // [SaveLoad] campaign-launch memory stamp, BEFORE the once-per-process guard below so every
+        // game init in the process gets one, not just the first.
+        StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameInitializationFinished);
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates

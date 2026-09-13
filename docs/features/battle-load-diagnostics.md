@@ -529,6 +529,39 @@ output itself rather than only in this paragraph.
 > [`native-commit-audit-2026-08.md`](../investigations/native-commit-audit-2026-08.md) runs each
 > screen as pass/repeat/close-and-wait rather than as one station.
 
+### Why there is no heap release on screen close (built and removed 2026-09-12)
+
+The first live run measured the inventory screen at **+2.9 GB per open**, with the managed heap at
+2,64x MB at every re-entry against 475 MB before the sweep, and the heap only fell back to 475 MB
+five minutes after the last close. A `ScreenCloseHeapRelease` was built that ran
+`Common.MemoryCleanupGC()` on `OnPopScreen` for the inventory, party and character screens. The
+Codex pass removed it the same day, on the installed source: these screens close through
+`GameStateManager.PopState`, and `GameStateManager.OnPopState` already ends with
+`Common.MemoryCleanupGC()` (`GameStateManager.cs:306`), as does `OnPushState` (`:278`). The engine
+full-collects on every state push and pop; only `ScreenManager` itself never does, and that was the
+layer checked. So the release was a second full collection right before the engine's own, and the
+2.6 GB that survived was LIVE across two engine collections (close, then the next open), not garbage:
+something released it minutes later. Reading a `[MemStation] enter` line for one of these screens
+therefore gives the heap AFTER the engine's collection at the previous close; a large figure there
+is rooted state, and the question is who holds it, not when to collect. RCA:
+`docs/reviews/rca-memory-instruments-2026-09-12.md`.
+
+### What `taom.print_memory` reports since 2026-09-12
+
+The first live run showed the engine's two string surfaces are one number each in the shipping
+client (`Application memory size: 5839 MB`, `native: 0.00 MB`), so they cannot split the private
+commit. The probe now also reports `Utilities.GetVertexBufferChunkSystemMemoryUsage()` (the CPU-side
+vertex buffer chunks, i.e. mesh geometry resident in system memory) and the
+`Utilities.GetGPUMemoryStats` split (total / render target / depth target / SRV / buffer). Both are
+printed as raw engine units, because no managed caller in the shipping or editor build formats them;
+the first live reading calibrates the unit against VMMap. Read them on the map and again inside a
+mission, where the map scene is released, and the map's cost splits into mesh and texture.
+
+The same run also caught the probe claiming `gpu dump written: <path>` for a file that existed
+nowhere: `DumpGPUMemoryStatistics` is void and the shipping client writes nothing. The reader now
+reports a path only after `File.Exists` says so, and otherwise prints
+`gpu dump requested but no file appeared at: <path>`.
+
 ## Configuration
 
 MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`, auto-registered by MCM). Defaults are the "diagnose now" posture — everything ON.
@@ -553,6 +586,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/IEquipmentDumpFormatter.cs` / `EquipmentDumpFormatter.cs` | Pure `EquipmentSnapshot → log lines` (the `bo=`/`shieldBo=` tokens) |
 | `Main/Features/BattleLoadDiagnostics/MemoryPressureSampler.cs` | Background `Timer` + pure `ShouldSample`/`IsLowHeadroom`/`ShouldWarn`/`ShouldRearm`/`Format*` seams; owns the `[MemSample]` contract constants (floor 2048 / 10 % / hysteresis 512 / interval 30 s, 10–120) |
 | `Main/Features/BattleLoadDiagnostics/MemoryStationSampler.cs` | `[MemStation]` screen anchors (#386 follow-up). Subscribes to `ScreenManager.OnPushScreen`/`OnPopScreen` (public static events, no Harmony); pure `ShouldEmit`/`SanitizeScreenName`/`FormatStation`/`FormatCapReached` seams; 2,000-line session cap |
+| `Main/Features/BattleLoadDiagnostics/ProcessMemoryTokens.cs` | The `gc=/heapMB=/privMB=/wsMB=` tail shared by `[BattleLoad]` and `[SaveLoad]` phase lines (extracted from `MemStats()` 2026-09-12, byte-identical output) |
 | `Main/Features/BattleLoadDiagnostics/MemorySampleReader.cs` | Direct-P/Invoke reader (`GlobalMemoryStatusEx` + `GetProcessMemoryInfo` + `GC.GetTotalMemory`); never throws, false on failure |
 | `Main/Features/BattleLoadDiagnostics/Domain/MemorySample.cs` | Point-in-time memory reading DTO (no behavior) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadLoadingWindow.cs` | Static volatile open/closed latch + `OpenedAtUtc` |
@@ -561,9 +595,9 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/Hooks/MissionState_OnTick_RenderWait_Patch.cs` | Phase 4f: the `SceneView.ReadyToRender` wait, sampled per frame and stamped at 1 Hz |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
-| `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats` DTOs |
+| `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats`, `GpuMemorySplit` DTOs |
 | `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 10 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) — 17 patch classes total |
-| `Main/Features/BattleLoadDiagnostics/IEngineMemoryStatsReader.cs` / `EngineMemoryStatsReader.cs` | ADR-007 boundary over the four `TaleWorlds.Engine.Utilities` memory statics. Each call guarded separately — one unavailable native surface must not blank the other three. **Deliberately does not call `GetMemoryUsageOfCategory(int)`**: no category-count/name API exists, so a blind index walk is an AV risk |
+| `Main/Features/BattleLoadDiagnostics/IEngineMemoryStatsReader.cs` / `EngineMemoryStatsReader.cs` | ADR-007 boundary over the `TaleWorlds.Engine.Utilities` memory statics (the two string surfaces, the GPU cost estimate, the GPU dump, and since 2026-09-12 `GetVertexBufferChunkSystemMemoryUsage` and `GetGPUMemoryStats`). Each call guarded separately, so one unavailable native surface cannot blank the others; a dump path is reported only once the file exists. **Deliberately does not call `GetMemoryUsageOfCategory(int)`**: no category-count/name API exists, so a blind index walk is an AV risk. `GetGpuMemoryOfAllocationGroup(name)` was checked and dropped: the native binary carries no group-name vocabulary |
 | `Main/Features/BattleLoadDiagnostics/MemoryProbeReportFormatter.cs` | Pure `EngineMemoryStats + MemorySample? + label → string` for `taom.print_memory`. Owns the `[MemProbe]` tag and the station-label validator (the log-forgery guard) |
 | `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `taom.print_memory [label] [gpu]` — Tier A, cheat gate (`RunAnywhere`). See [dev-console.md](dev-console.md) |
 | `Main/Adapters/IEquipmentSnapshotAdapter.cs` / `EquipmentSnapshotAdapter.cs` | ADR-007 boundary: `Agent`/`Equipment`/`ItemObject` → `EquipmentSnapshot` |
@@ -753,6 +787,16 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-09-12: **The probe splits mesh from texture, the save-load phases carry memory, and a
+  heap release was built and removed.** `taom.print_memory` now reports
+  `GetVertexBufferChunkSystemMemoryUsage` (bytes; 363 MB on the map, 929 MB in Minas Tirith) and
+  the `GetGPUMemoryStats` split (all zeros in the shipping client), and only claims a GPU dump once
+  the file exists. `ProcessMemoryTokens` carries the `gc=/heapMB=/privMB=/wsMB=` tail into the two
+  new `[SaveLoad]` phases (`GameLoaded`, `GameInitializationFinished`), the bisecting stamps #509
+  asked for. A `ScreenCloseHeapRelease` on `OnPopScreen` was removed the same day after the Codex
+  pass showed `GameStateManager` already collects on every state pop and push (RCA
+  `rca-memory-instruments-2026-09-12.md`); the first live run of the instruments, the menu-floor
+  ladder and the graphics-settings diff are in `native-commit-audit-2026-08.md` Phase 2.
 - 2026-09-04 ([#539](https://github.com/haterade22/TAOM/issues/539)): **Closed the render-ready window and taught the watchdog to tell slow from wedged**
   (bundle b18f3441). A player load fired a stall bundle after 305 s; the engine log for that window
   holds 818 `compile_shader` lines and nothing else, so the load was working and

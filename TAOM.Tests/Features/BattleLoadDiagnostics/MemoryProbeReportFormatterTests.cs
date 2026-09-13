@@ -31,8 +31,13 @@ public class MemoryProbeReportFormatterTests
         string? native = "native-stats",
         int gpuCostMb = 0,
         bool gpuCostRead = false,
-        string? gpuDumpPath = null) =>
-        new EngineMemoryStats(app, native, gpuCostMb, gpuCostRead, gpuDumpPath);
+        string? gpuDumpPath = null,
+        int vertexBuffer = 0,
+        bool vertexBufferRead = false,
+        GpuMemorySplit? gpuSplit = null,
+        string? gpuDumpMissingPath = null) =>
+        new EngineMemoryStats(app, native, gpuCostMb, gpuCostRead, gpuDumpPath,
+            vertexBuffer, vertexBufferRead, gpuSplit, gpuDumpMissingPath);
 
     // ---- engine statistics blocks ------------------------------------------------------------
 
@@ -149,6 +154,60 @@ public class MemoryProbeReportFormatterTests
 
         Assert.IsFalse(text.Contains("gpu dump written"),
             $"no dump was requested, so no file may be claimed: {text}");
+    }
+
+    // The 2026-09-12 live run reported "gpu dump written: <path>" for a file that existed nowhere:
+    // the engine call is void and the reader trusted it. A requested-but-absent dump must say so
+    // and must never claim a path as written.
+    [TestMethod]
+    public void Format_GpuDumpMissing_SaysNoFileAppeared_AndClaimsNothingWritten()
+    {
+        const string path = @"C:\game\Logs\taom_gpu_memory_2026-09-12_11-40-37.txt";
+
+        var text = MemoryProbeReportFormatter.Format(Stats(gpuDumpPath: null, gpuDumpMissingPath: path), Sample(), osRead: true, label: null);
+
+        StringAssert.Contains(text, "gpu dump requested but no file appeared at: " + path);
+        Assert.IsFalse(text.Contains("gpu dump written"),
+            $"an absent dump must never be reported as written: {text}");
+    }
+
+    // ---- vertex buffers and the GPU split (the mesh-vs-texture instrument) --------------------
+
+    [TestMethod]
+    public void Format_VertexBufferRead_IncludesTheRawValue()
+    {
+        var text = MemoryProbeReportFormatter.Format(Stats(vertexBuffer: 1234567, vertexBufferRead: true), Sample(), osRead: true, label: null);
+
+        StringAssert.Contains(text, "vertexBufferSysMem=1234567");
+    }
+
+    [TestMethod]
+    public void Format_VertexBufferUnread_OmitsTheNumber()
+    {
+        var text = MemoryProbeReportFormatter.Format(Stats(vertexBuffer: 0, vertexBufferRead: false), Sample(), osRead: true, label: null);
+
+        StringAssert.Contains(text, "vertexBufferSysMem=<unavailable>");
+        Assert.IsFalse(text.Contains("vertexBufferSysMem=0"),
+            $"an unread vertex-buffer figure must be omitted, never reported as 0: {text}");
+    }
+
+    [TestMethod]
+    public void Format_GpuSplitRead_IncludesAllFiveTokens_InvariantCulture()
+    {
+        var split = new GpuMemorySplit(total: 2784.5f, renderTarget: 512f, depthTarget: 64.25f, srv: 1900f, buffer: 308.125f);
+
+        var text = MemoryProbeReportFormatter.Format(Stats(gpuSplit: split), Sample(), osRead: true, label: null);
+
+        StringAssert.Contains(text, "gpu split: total=2784.5 renderTarget=512 depthTarget=64.25 srv=1900 buffer=308.13");
+    }
+
+    [TestMethod]
+    public void Format_GpuSplitUnread_RendersUnavailable()
+    {
+        var text = MemoryProbeReportFormatter.Format(Stats(gpuSplit: null), Sample(), osRead: true, label: null);
+
+        StringAssert.Contains(text, "gpu split: <unavailable>");
+        Assert.IsFalse(text.Contains("srv=0"), $"an unread GPU split must not print zeros: {text}");
     }
 
     // ---- label validation (the log-forgery guard) ---------------------------------------------

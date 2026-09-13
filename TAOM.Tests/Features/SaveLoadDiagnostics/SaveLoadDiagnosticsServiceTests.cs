@@ -45,6 +45,23 @@ public class SaveLoadDiagnosticsServiceTests
             s.Contains("phase=SaveBegin") && s.Contains("name='saveauto2'")));
     }
 
+    // The two campaign-launch phases added 2026-09-12 carry the process memory tokens as their
+    // detail, so the 95 s / 2.7 GB stretch after AllBehaviorDataLoaded gets attributed by phase.
+    // They ride the same seq/clock as the load attempt they follow.
+    [TestMethod]
+    public void LogPhase_CampaignLaunchPhases_CarryProcessMemoryTokensOnTheLoadAttemptClock()
+    {
+        _sut.BeginLoadAttempt("save010");
+
+        _sut.LogPhase(SaveLoadPhase.GameLoaded, TAOM.Features.BattleLoadDiagnostics.ProcessMemoryTokens.Format());
+        _sut.LogPhase(SaveLoadPhase.GameInitializationFinished, TAOM.Features.BattleLoadDiagnostics.ProcessMemoryTokens.Format());
+
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("seq=2") && s.Contains("phase=GameLoaded") && s.Contains("privMB=") && s.Contains("heapMB=")));
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("seq=3") && s.Contains("phase=GameInitializationFinished") && s.Contains("privMB=")));
+    }
+
     [TestMethod]
     public void LogPhase_SecondCall_IncrementsSeq()
     {

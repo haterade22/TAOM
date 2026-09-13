@@ -552,22 +552,9 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     // gen0/gen1/gen2 collection counts + managed heap size, plus the process footprint
     // (privMB/wsMB via one GetProcessMemoryInfo syscall — #386). Deltas between ExitBegin and
     // MapResumed expose a mission-end full GC (Common.MemoryCleanupGC) as the time sink; the
-    // process tokens anchor the phase line against the periodic [MemSample] trajectory. On
-    // reader failure both process tokens are omitted (never a fabricated 0 in a user log).
-    private static string MemStats()
-    {
-        string gcStats;
-        try
-        {
-            long heapMb = GC.GetTotalMemory(forceFullCollection: false) / (1024 * 1024);
-            gcStats = $"gc={GC.CollectionCount(0)}/{GC.CollectionCount(1)}/{GC.CollectionCount(2)} heapMB={heapMb}";
-        }
-        catch { gcStats = "gc=<unavailable>"; }
-
-        return MemorySampleReader.TryReadProcess(out long privMb, out long wsMb)
-            ? $"{gcStats} privMB={privMb} wsMB={wsMb}"
-            : gcStats;
-    }
+    // process tokens anchor the phase line against the periodic [MemSample] trajectory. The
+    // vocabulary is shared with the [SaveLoad] campaign-launch phases via ProcessMemoryTokens.
+    private static string MemStats() => ProcessMemoryTokens.Format();
 
     // Single choke point: increment the sequence, stamp elapsed ms, update the status line
     // for the watchdog, and write the marker. The status line is updated BEFORE the
