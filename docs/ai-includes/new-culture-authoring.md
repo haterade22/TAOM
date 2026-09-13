@@ -25,7 +25,7 @@ Before starting, confirm all of these. Skipping any forces a rework later.
 - [ ] **Culture ID decision**. Check `~/.claude/projects/.../memory/kingdom-culture-mapping.md`:
   - Custom culture (`gondor`, `erebor`, etc.) — adds rows in `taom_spcultures.xml`.
   - XSLT passthrough culture (vanilla `vlandia`, `sturgia`, `empire`, `aserai`, `khuzait`, `battania`) — rename via `spcultures.xslt`. Dale uses `sturgia`; Rohan uses `vlandia`; Khand uses `battania`; etc.
-- [ ] **Tier cap decision**. Dale caps at T7 (no T8 elites). Gondor goes to T8. Pick before authoring skill curves.
+- [ ] **Tier cap decision**. Dale stops at level 31 (engine tier 6); Gondor runs to level 51 (tier 10); TAOM's `MaxCharacterTier` is 10. Pick before authoring skill curves. Armour power is a separate decision: the kingdom's chest cap in `rebalance_armor.KINGDOM_CAPS` (#583), which the restat applies to every item by its lowest wearer's band.
 - [ ] **Lore brief**. Pick 3–4 Tolkien primary-source citations (Hobbit, LOTR appendices, Unfinished Tales) for the culture's military identity. These inform troop naming and weapon-family choices.
   - For canonical naming + geography, see [reference/external-resources.md](../reference/external-resources.md) § LOTR/Tolkien — esp. the **RealElvish naming generators** (Sindarin/Gondor vs Old-English/Rohirrim patterns) and the **Atlas of Middle-earth** (settlement placement / travel-days). Cross-check any name against Tolkien Gateway before committing.
 

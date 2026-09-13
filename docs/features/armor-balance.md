@@ -29,9 +29,92 @@ The analyzer `import rebalance_armor`s the curve verbatim, so the two tools can 
 
 ### The curve
 
-Per-tier, per-slot baseline (primary stat), with a per-culture additive **protection** mod and multiplicative **weight** mod. `final_primary = baseline[tier][slot] + protection`; `final_weight = baseline_weight × weight_mult`. Secondary stats (leg-on-body, arm-on-shoulder) get 60% of the protection mod.
+**Since 2026-09-13 (#583) the curve is the kingdom-cap model in the next section.** The baseline
+tables and cultural protection mods below remain the model for the civilian tier, for weights
+(`baseline_weight x weight_mult`, unchanged) and for any folder without a cap (the troll); they are
+kept here because the two-tier invariant test still pins them.
 
-Primary-stat baseline (from `SLOT_BASELINES`):
+### The kingdom-cap curve (2026-09-13, #583)
+
+Each kingdom's armour power is one number, the chest (`body_armor`) of its elite band, set by the
+maintainer; the other slots and the bands below are fixed ratios of it
+(`rebalance_armor.KINGDOM_CAPS`, `SLOT_CAP_RATIO`, `BAND_RATIO`, `cap_value`):
+
+| Cap | Kingdoms | Chest | Helmet .9 | Bracer .6 | Pauldron .6 | Greaves .5 |
+|----:|---|---:|---:|---:|---:|---:|
+| 70 | Erebor, Iron Hills | 70 | 63 | 42 | 42 | 35 |
+| 68 | Rivendell, Lindon | 68 | 61 | 41 | 41 | 34 |
+| 63 | Mirkwood | 63 | 57 | 38 | 38 | 32 |
+| 60 | Lothlorien (no item yet) | 60 | 54 | 36 | 36 | 30 |
+| 57 | Gondor, Rhun, Black Numenoreans, Arnor | 57 | 51 | 34 | 34 | 29 |
+| 49 | Gundabad | 49 | 44 | 29 | 29 | 25 |
+| 46 | Dol Guldur, Khand (no item yet) | 46 | 41 | 28 | 28 | 23 |
+| 45 | Isengard | 45 | 41 | 27 | 27 | 23 |
+| 44 | Dale, Harad, Umbar, mercenary | 44 | 40 | 26 | 26 | 22 |
+| 43 | Mordor Black Uruks | 43 | 39 | 26 | 26 | 22 |
+| 40 | Rohan, Dunland | 40 | 36 | 24 | 24 | 20 |
+| 38 | Mordor orcs, Misty Mountain orcs, goblins (one shared kit) | 38 | 34 | 23 | 23 | 19 |
+| 35 | Thenn | 35 | 32 | 21 | 21 | 18 |
+
+Bands: light 0.40, medium 0.64, heavy 0.84, elite 1.0 of the elite value, rounded half up; the lord
+band equals the elite band, so nothing but named hero kit (`HERO_NAMES`, `EXCLUDE_ID_SUBSTRINGS`)
+sits above a kingdom's cap. The band an item sits in is the band of its LOWEST battle-set troop
+wearer (`level_to_band`: light to 13, medium 14 to 18, heavy 19 to 30, elite 31 up), decided by
+`--tier-source roster-first`; an id keyword decides only for kit no troop wears, and kit with
+neither is left alone. Civilian sets never anchor, and the ladder-exempt troops
+(`taom_schema.Validator._ARMOUR_LADDER_EXEMPT`: the Ithilien ranger, the troll, the Harad mount
+riders) wear their kit without anchoring it, so the ranger's hood stays a hood.
+
+Sub-lines that share a folder are routed by id prefix (`LINE_PREFIXES`): `sk_md_num_` and
+`sm_md_num_` to the Black Numenorean cap, `sk_uruk_mordor_` to the Black Uruk cap, `sk_md_mor_`,
+`sk_md_orc_` and `sk_gn_orc_` to the orc cap (the goblin and Misty Mountain rosters wear those
+same items), `sk_dg_` in the rhun folder to Dol Guldur, `urukscout_` to Isengard, `ar_ardunian_`
+to Umbar. The `md_num` restat exclusion is lifted: the Black Numenorean set wanted level-anchored
+tiering all along and now has its own cap. The Dol Guldur troop line is NAMED "Khamul ..." and is
+not his kit, so `HERO_NAME_FALSE_POSITIVE_PREFIXES` keeps it on the curve.
+
+A secondary stat an item carries (a Gondor chest's `arm_armor`, a Rhun chest's `leg_armor`, a
+cape's `arm_armor`) is scaled by the same factor as its primary, so each folder keeps its
+convention. Weights and `material_type` are not touched (`--keep-weights`,
+`--keep-material-type`); `modifier_group` follows the band, and the three extremity slots (arm,
+leg, shoulder) share one loot table whose medium row is cloth (+5), because at 0.5 and 0.6 of a
+35 cap a +7 roll on a medium piece would pass the elite one
+(`analyze_armor_balance.check_kingdom_curve_invariant`, pinned green for every cap).
+
+`derive_armor_tiers.py`'s map follows the same precedence (anchor first, keyword for unworn kit,
+civilian keyword kit civilian whoever wears it), so its `tier`, `target` and `status` columns
+describe what the restat does; until the deep review of 2026-09-13 the map was keyword first and
+mislabelled 682 of 1,861 worn items. Two engine facts checked on the installed 1.4.8 DLLs: no
+armour stat is clamped on load (`ArmorComponent.Deserialize` is a plain `int.Parse`), and the
+item's display tier and price follow `DefaultItemValueModel.CalculateArmorTier`
+(`(1.2 head + body + leg + arm) x type x 0.1 - 0.4`), so an Erebor chest at 70 now shows the top
+"Armor Tier" in its tooltip and prices accordingly; nothing in the managed shop or loot code
+filters on that tier.
+
+**Applied 2026-09-13** to the Steam tree and the `lotraom-assets` mirror (byte-identical before
+and after), backups `.bak-kingdomcurve-583` once per file: 2,510 items on the first run, 316
+untouched (hero kit, civilian and unworn keyword-less kit), then 7 more after the ladder repair
+below; a third run plans nothing. Command:
+
+```
+python tools/derive_armor_tiers.py
+python tools/rebalance_armor.py --apply --all --tier-source roster-first --keep-weights --keep-material-type --backup-tag kingdomcurve-583
+python tools/rebalance_armor.py --apply --all --tier-source roster-first --keep-weights --keep-material-type --backup-tag kingdomcurve-583 --armory-path "E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory\ModuleData\LOTRLOME_items"
+```
+
+The re-curve exposed 58 promotion edges where the child wore kit anchored low by a shared wearer
+(`UPGRADE_ARMOUR_REGRESSION`); `fix_upgrade_armour_regressions.py --apply` resolved all 58 with 197
+slot swaps in 12 troop files, and one derive + restat iteration after it was stable. Post-state
+medians (total armour, capstone tiers): Gondor T9 251 (was 194), Erebor T9 335, elves T9 384,
+Mordor T9 270, Rhun T9 288, Dol Guldur T9 243, Gundabad T8 248, Isengard T8 209, Rohan T8 203,
+Dale T6 190, Dunland T6 165, Harad T6 174, Umbar T6 240 (it wears Black Numenorean pieces, which
+carry the 57 cap), goblins T7 110. Left for the roster pass, as the cap-scaled
+`CROSS_CULTURE_ARMOUR_INVERSION` cells: goblin T7, Mirkwood T7 to T10 (its tree shares a handful
+of items across every tier), Lindon and Rivendell T10 (the golden-flower fan-out under its own T9);
+also the vanilla `aserai_scale_armor_on_chain` (51) on Harad's camel lancer, out of the Armory's
+reach.
+
+Legacy baseline (primary stat, from `SLOT_BASELINES`; the fallback and the weight ladder):
 
 | Slot | light | medium | heavy | elite | lord |
 |------|------:|-------:|------:|------:|-----:|
@@ -110,7 +193,7 @@ The authoritative signal is the other direction: **an item's intended tier = the
 
 This roster walk is implemented in **`tools/derive_armor_tiers.py`** (Phase 2). It joins every `troops_*.xml` roster (equipment slot → item id, via `Item.<id>`; slots map `Head/Body/Leg/Gloves→arm/Cape→shoulder`) to the live armory by item id, anchors each item to its lowest wearer, and writes the map to `tools/data/armor_roster_tiers.json` + a report at `tools/reports/armor-balance/ROSTER-TIERS.md`.
 
-Tier-signal precedence per item: (1) an explicit tier keyword in the id (`_light_`/`_med_`/`_heavy_`/`_elite_`/`_lord_`) — the author's own label; (2) the roster anchor band (lowest wearer level) for keyword-less items (the Dale case); (3) **unworn** — no troop references it (arnor, mercenary, thenn have no dedicated roster, so all their items fall here and keep name/value tiering).
+Tier-signal precedence per item, since #583 (2026-09-13): (1) the roster anchor band, the lowest BATTLE-set troop wearer's level, ladder-exempt troops never anchoring; (2) an explicit tier keyword in the id (`_light_`/`_med_`/`_heavy_`/`_elite_`/`_lord_`) for kit no troop wears, with `_civ`/`civilian` ids civilian whoever wears them; (3) unworn and keyword-less, no tier. Until 2026-09-13 the keyword came first, which is how the Fountain Guard's `_heavy_` helmet, worn only at level 46, stayed on the heavy row, and why the map mislabelled 682 of 1,861 worn items against what `--tier-source roster-first` writes.
 
 Level→tier bands (calibrated on Dale ground truth + the owner's elite=31-51 decision): `≤13 light · 14-18 medium · 19-30 heavy · 31-51 elite`. The armor `lord` tier is hero-only (named lords/heroes, excluded from rosters) — no troop is roster-tiered `lord`.
 
@@ -157,6 +240,8 @@ Never run `--apply` without first reading the analyzer report and a dry-run.
 | `tools/derive_armor_tiers.py` | READS. Roster→item→tier join (Phase 2); reuse-anchored; under/over re-stat candidates. |
 | `tools/data/armor_roster_tiers.json` | The derived map (item → wearers → anchor → tier → current vs target). |
 | `tools/reports/armor-balance/{REPORT,ROSTER-TIERS}.{html,md}` | The viewable reports (regenerated each run). |
+| `tools/analyze_kingdom_armour.py` | READS. Cross-culture overview by engine tier (#581): matrices, inversions, ceilings, curve view, gate preview. Reports to `tools/reports/kingdom-armour/`. |
+| `tools/taom_schema.py` `cross_culture_armour_inversions` | The `CROSS_CULTURE_ARMOUR_INVERSION` rule as a pure function; the validator and the overview's gate preview both call it. |
 | `tools/validate_all_troop_refs.py` | Cross-checks troop→item refs (underwear-bug gate). |
 | Live armory `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/<culture>/*.xml` | The only tree the game loads. |
 
@@ -211,6 +296,84 @@ the two Dunland `wulf_helmet_medium_*` from 45 (the lord row) to 22: an item val
 L21 Dunlending an armour downgrade from the L16 warriors. Equipment ladders are now gated per upgrade
 edge by `UPGRADE_ARMOUR_REGRESSION` (see `troop-skill-balance.md`, "Armour is a ladder too").
 
+## Kingdom armour ladder: cross-culture (2026-09-12, #581)
+
+A report that a Gondor tier-9 troop wore less armour than a Dunland tier-5 troop. Every tool
+above judges items within one culture or one upgrade edge, so nothing had ever put the kingdoms
+side by side by tier. `tools/analyze_kingdom_armour.py` does that now (read-only, reports under
+`tools/reports/kingdom-armour/`, gitignored like the other analyzer output), and the validator
+carries a `CROSS_CULTURE_ARMOUR_INVERSION` warning so the class stays visible.
+
+**How a troop is measured.** The four engine regions (head, body, arm, leg), each summed over the
+five armour slots exactly as `Equipment.GetHeadArmorSum` / `GetHumanBodyArmorSum` /
+`GetArmArmorSum` / `GetLegArmorSum` do (v1.4.8 `Equipment.cs:271-325`): a chest contributes arm
+armour, a cape body armour. Each region is the mean over the troop's battle sets, an unfilled
+slot counting 0, civilian sets excluded; the total equals `fix_upgrade_armour_regressions.total`.
+Troops are placed by ENGINE tier, `clamp(ceil((level - 5) / 5), 0, 10)`, the number the party
+screen shows, not by the curve's five level bands. Creature troops, the two bespoke mount riders
+and any troop without a `level=` are excluded; militia and standalone troops are tagged; the
+bare-chested-by-design troops are compared on Head, Gloves and Leg only; the validator's
+`_ARMOUR_LADDER_EXEMPT` troops leave the matrices, the pair list and the gate together and stay in
+the per-culture troop tables tagged `ladder_exempt` (the first draft kept them in the pairs, and
+the Ithilien ranger topped every worst-pairs list as if it were a live regression). The per-slot
+draw is the campaign spawn path's behaviour: `Equipment.GetRandomEquipmentElements` redraws per
+slot whenever the seed is not -1, and `CharacterHelper.GetPartyMemberFaceSeed` never yields -1
+(`.claude/rules/troops.md` carries the exception, settlement guards). In the ceiling tables an
+unworn item's tier is judged on the curve of the Armory FOLDER it lives in, because that is the
+curve it was statted on: Umbar wears Harad's folder (-3) while carrying its own -1, and judged on
+Umbar's curve Harad's elite pieces read as heavy and dropped out of Umbar's reserve list. Items
+worn only by an excluded troop (the troll plate on `cave_troll`) count as worn, so they appear in
+no reserve list, and their folder counts as worn by nobody, so they appear in no ceiling table. The
+curve-view aliases (`dolguldur`, `rhun_new`, `lindon`, `goblin` to the folder each wears) are for
+the armour curve only; the skill curve in `rebalance_troops.detect_culture` keeps goblin as its own
+weaker culture, on purpose.
+
+**What the first run found (854 troops, 16 cultures).**
+
+- The literal pair is not inverted: the weakest Gondor T9 (`gondor_ith_moon_guard`, L46) totals
+  180, the strongest Dunland T5 (L26 nobles) 163. The head slot is: Dunland T5 helmets are 40 and
+  T6 helmets 45, while Gondor's head median is 33 at every tier from T4 to T9 and its best helmet
+  in the whole folder is 41 (Dale 41, Dunland 45, Isengard 46, Mordor 50, Rohan 50, Rhun 56,
+  Erebor 78). Dunland T6 (182) beats Gondor's T9 Moon Guard (180) and five of its twelve T8s.
+- Dunland is not the outlier; Gondor is. At threshold 20 and a two-tier gap the run lists 7,803
+  troop pairs over 150 culture pairs, and Gondor is the weaker side of 2,766 of them (goblin next
+  at 998; Dunland is the stronger side of 43, none of them against Gondor: at threshold 0 a
+  Dunlending tops a Gondor troop two or more tiers up in 61 pairs, the widest by 17 points).
+  Gondor's T8 median (177) sits under the T6 median of the elves (280), Erebor (228),
+  Isengard (215), Dale (202), Dol Guldur (195), Umbar (190), Rhun (188) and Gundabad (184); its T5
+  median (150) is above only Goblin-town (126), Mordor (126), Rohan (128) and Rhun (149) among the
+  fifteen cultures with a T5 cell.
+- The curve's one "elite" row for L31 to L51 means Gondor's T6 through T10 all target 221 and
+  land at 171, 172, 177, 194 and 125 (the ranger). The curve view's leg column reads 31 to 35 under
+  target for Gondor at every tier from T4, but part of that is a convention, not a deficit: the
+  curve's body row carries a `leg_armor` secondary and Gondor chests carry `arm_armor` instead (1
+  of 116 has any leg armour; Dunland, Erebor, Rohan and Dale are the same, Rhun and Isengard carry
+  it). Read "d leg" against the culture's own convention.
+- The Armory holds a reserve. Gondor has 20 unworn elite/lord-row items: seven helmets at 40
+  (Dol Amroth foot, cavalry and warden, Linhir lord), six chests at 50 to 51 (Cair Andros, Dol
+  Amroth B, Linhir, Lond Galen, Osgiliath, Arndir), five elite capes, the Serelond lord bracer and
+  greaves. Nothing sits above body 51 / head 41 in the folder, so re-slotting can lift the T8/T9
+  capitals to the folder ceiling (the Serelond set: 41 / 51 / 20 / 27 / 35, all worn) and no further.
+- The gate warns on four cells: `goblin/tier7` (135 vs a 178 field at T5), `gondor/tier9` (194 vs
+  220 at T7), `lindon/tier10` and `rivendell/tier10` (205 vs 227 at T8, the golden-flower fan-out
+  capstones at 191 under their own T9 at 376). The exemptions are `cave_troll`, the two Harad
+  riders and `gondor_ithilien_ranger` (a light ranger kit by design; without it Gondor T10 warns too).
+
+**The gate.** Per (culture, engine tier) cell, on medians: a cell warns when its median total sits
+more than 20 points (about 0.4 of one curve row) under the median of the other cultures' medians two
+tiers lower, with at least three other cultures holding such a cell. Per-troop pairs were rejected
+(thousands, unreadable) and culture-pair medians too (the elves are twice everyone by design). A
+culture uniformly OVER the field is not flagged; the report's pairwise section shows that side. The
+arithmetic is one pure function, `taom_schema.cross_culture_armour_inversions`, which the report's
+"gate preview" section calls with the validator's own constants.
+
+**What was decided (2026-09-13, #583).** The three options on the table were (A) re-slot rosters
+only, (B) restat the top-tier items, (C) rebuild the curve. The maintainer took (C) in its own
+form: a chest cap per kingdom with fixed slot and band ratios, applied to the whole Armory (the
+"kingdom-cap curve" section above), followed by the ladder repair on the 58 promotion edges the
+re-curve exposed. The gate scales every item to the 57 reference cap of its own line since
+then, because kingdoms now differ in armour power by design.
+
 ## Dependencies
 
 - `rebalance_armor.py` (curve) — the analyzer imports it.
@@ -221,13 +384,17 @@ edge by `UPGRADE_ARMOUR_REGRESSION` (see `troop-skill-balance.md`, "Armour is a 
 
 The analyzer is read-only and self-verifying: running it against the live tree must reproduce the known defects (iron_hills arm monolithic, harad body all 9.5, dale clean). No unit-test harness yet; the regression check is "re-run and confirm the executive summary matches this doc's baseline."
 
+The kingdom overview has one: `tools/tests/test_analyze_kingdom_armour.py` (19 cases on a synthetic two-culture tree: region sums, civilian exclusion, classification, ladder-exempt handling, curve aliases, matrices, pairwise and bare-chested inversions, ceilings judged on the item's own folder, gate preview, a `main` run that hashes every fixture XML before and after, and one over the shipped troops that fails if a troop the analyzer excludes by name is missing from `_ARMOUR_LADDER_EXEMPT`). The gate's own tests are `CrossCultureArmourInversionTests` in `tools/tests/test_validate_moduledata.py`, including one that fails if an `_ARMOUR_LADDER_EXEMPT` id no longer exists in the shipped troops.
+
+The kingdom-cap curve (#583) has `tools/tests/test_kingdom_caps.py` (22 cases): the cap table and ratios as the maintainer stated them, every cap key a folder or a routed line, the routing of each sub-line, the cap-model values per band and slot (rounding half up, lord = elite, the four Mordor-folder lines by id), secondaries by legacy proportion, weight on the legacy ladder, `level_to_band` at each band edge and shared with the derivation, the Black Numenoreans back on the curve with hero kit and the Khamul line told apart, the two-tier invariant clean on every cap and reported on a compressed one, anchors (battle sets only, civilian and ladder-exempt troops never anchor, the exempt set is the validator's, the map anchor first like the writer), and the writer (roster-first banding, secondaries by ratio with zero staying zero, weights and material kept while the extremity loot tables move, a commented copy skipped, BOM and CRLF preserved, one `.bak-<tag>` per file that a second apply leaves alone).
+
 ## How-To
 
 **Fix a culture's monolithic weight slot:** use `rebalance_armor.py --apply --weights-only --cultures <c>`. It ladders ONLY the weight to each item's armor-derived tier (`tier_from_value`) and leaves armor + material untouched, so it can't mangle hand-tuned armor through the keyword detector. It is guarded — it only touches a slot that is **currently monolithic-weight**, so it can never collapse an already-varied slot (the harad-shoulder regression, fixed 2026-06-30). Back up the culture folder first; re-run the analyzer to confirm the error cleared.
 
 **`--weights-only` applicability (important):** it is correct ONLY when the slot's armor is varied AND correctly tiered, because weight follows armor. It is the right tool where the armor is already right and only the weight is frozen (harad body/head/leg). It is the WRONG tool when: (a) the armor is itself uniform — it can't ladder (no-op, e.g. rohan's combat boots, iron_hills arm), those need an armor mid-tier first; or (b) the armor is over-tiered for the culture's intended weight class — it would propagate that into heavier weights (e.g. dunland body 30-45 → 12-21kg, the opposite of the light-raider intent). Cultures in (b) need the identity decision (lower armor + material) before any weight pass.
 
-**Re-tier a whole culture from its rosters:** `python tools/derive_armor_tiers.py` (refresh the map), then `rebalance_armor.py --dry-run --tier-source roster --cultures <c>` and read the proposed changes. Each worn item is re-stated to its troop-level tier (hero/unworn skipped), capped at elite. Add `--no-lower-armor` for a "do not nerf" culture (raises under-tiered items, never reduces, preserves material). Add `--weights-only` to set weight by roster tier without touching armor (e.g. a mobility trim that spares elite plate). Always dry-run first — the dunland dry-run caught a wrong-direction change before applying.
+**Re-tier a whole culture from its rosters:** `python tools/derive_armor_tiers.py` (refresh the map), then `rebalance_armor.py --dry-run --tier-source roster-first --cultures <c> --keep-weights --keep-material-type` and read the proposed changes. Each worn item is re-stated to its lowest wearer's band on the kingdom-cap curve (hero and civilian kit skipped, unworn kit by its id keyword, keyword-less unworn kit left alone); the older `--tier-source roster` reads the map's `tier` column, which is now anchor first too, so the two differ only in that `roster` skips every unworn item and folds `lord` to `elite`. Add `--no-lower-armor` for a "do not nerf" culture (raises under-tiered items, never reduces, preserves material). Add `--weights-only` to set weight by roster tier without touching armor (e.g. a mobility trim that spares elite plate). Always dry-run first: the dunland dry-run caught a wrong-direction change before applying.
 
 **Add/adjust a cultural identity:** edit `CULTURAL_MODS[culture]`; dry-run; the analyzer's "In CULTURAL_MODS" column flags any culture still on the neutral default.
 

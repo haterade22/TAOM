@@ -64,6 +64,8 @@ When the artist ships new gear, this file is updated and the two phase-2 scripts
 
 ### Stat tiers: `tools/generate_gondor_armor.py` `STAT_TIERS`
 
+> **Stale for values since 2026-09-13 (#583).** The Armory's numbers now follow the kingdom-cap curve in `tools/rebalance_armor.py` (Gondor cap 57: elite helmet 51, chest 57, bracer 34, pauldron 34, greaves 29; bands .40/.64/.84/1.0), and `rebalance_armor.py --tier-source roster-first` restats anything the generator writes. The table below is the generator's authoring shape (which slot, which family, weights), not the shipped values; see [armor-balance.md](./armor-balance.md) "The kingdom-cap curve".
+
 | Slot | light | medium | heavy | elite |
 |------|-------|--------|-------|-------|
 | head | 15/1.5 | 24/2.5 | 32/3.5 | 40/4.5 |

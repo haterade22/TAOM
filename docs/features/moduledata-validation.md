@@ -439,6 +439,33 @@ than run against a handful of repo items. Militia-to-militia edges are exempt, a
 as the chest stand-in). The repair is `tools/fix_upgrade_armour_regressions.py --apply`; the first
 run found 62 regressing edges across 13 cultures and left 0.
 
+## Cross-culture armour inversion (`CROSS_CULTURE_ARMOUR_INVERSION`)
+
+**WARNING.** The cross-kingdom half of the ladder rule (#581). The edge gate above compares a troop
+with its own parent; this one compares a culture's tier with the other kingdoms. For every
+`(culture, engine tier)` cell (culture = the `troops_<culture>.xml` stem, tier =
+`clamp(ceil((level - 5) / 5), 0, 10)`) the validator takes the median of its troops' armour totals
+(the same per-slot battle-set average as the edge gate, summed over the five slots) and holds it
+against the median of every OTHER culture's median two tiers lower. It warns when the cell sits more
+than 20 points under that field and at least three other cultures hold a cell at that lower tier.
+The arithmetic is the pure `taom_schema.cross_culture_armour_inversions`, which
+`tools/analyze_kingdom_armour.py` also calls for its gate preview, so the report and the validator
+cannot disagree. Since the kingdom-cap curve (#583) every ITEM's value is first scaled to the 57
+reference cap of the line it belongs to (`scale_to_reference_cap`, `item_cap_for`: the item's
+`LOTRLOME_items` folder from `Registries.item_folder`, routed through `rebalance_armor.kingdom_key`
+so a Black Numenorean piece is 57-cap kit whoever wears it), because kingdoms differ in armour
+power by design and a goblin at 38 under a dwarf at 70 is not a finding; what remains is a troop
+dressed below the power of its own kit. Item level rather than culture level: the first draft
+scaled by the wearer's culture, and an Umbar noble in full Black Numenorean plate read 29% higher
+than it was (deep review, 2026-09-13). Without the curve module the check runs unscaled. Skipped
+without the install, like the edge gate. Left out: `characters/npcs_*.xml`
+(villagers are not a culture), the `_BODYLESS_BY_DESIGN` troops (their totals are not comparable),
+and `_ARMOUR_LADDER_EXEMPT`, an allowlist with a reason per id (`cave_troll`, the two Harad mount
+riders, `gondor_ithilien_ranger`); a test fails when an exempt id no longer exists. First run
+2026-09-12: four cells, `goblin/tier7`, `gondor/tier9`, `lindon/tier10`, `rivendell/tier10`. The
+repair is a roster, item or curve decision, not a script; the options are in
+`docs/features/armor-balance.md` "Kingdom armour ladder".
+
 ## Ranged ladder inversion (`RANGED_LADDER_INVERSION`)
 
 **WARNING.** The ranged half of the ladder rule (#582). An archer's reach is its launcher's
@@ -472,7 +499,7 @@ repair is `tools/generate_ranged_ladder_items.py --apply` then
 | `tools/schemas/taom_npccharacter.json` | Troops + characters + wanderers + companions + education templates |
 | `tools/schemas/taom_spcultures.json` | Cultures |
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
-| `tools/tests/test_validate_moduledata.py` | 75 unittest cases (validator) |
+| `tools/tests/test_validate_moduledata.py` | 144 unittest cases (validator; counted 2026-09-12) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
 | `.claude/hooks/check-moduledata-validation.sh` | PreToolUse commit gate (blocks on ERROR; fail-open) |
 | `.claude/rules/moduledata-validation.md` | Auto-loaded rule when editing the covered XML / schemas |

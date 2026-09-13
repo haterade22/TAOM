@@ -2,7 +2,7 @@
 
 ## Overview
 
-A standalone T9 Gondor recruit, `gondor_ithilien_ranger` (level 41, `is_basic_troop="true"`, `default_group="Ranged"`), recruitable directly from notables in Minas Tirith and the two Ithilien-area castles. Equipped exclusively from the LOTRLOME_Armory Ithilien wardrobe (8 jerkin variants × matching hood/cloak/boots/bracers + Ithilien bows + Noldor Elven Arrows). Also re-equips Faramir as Captain of the Ithilien Rangers using his dedicated character-specific armor.
+A standalone T10 Gondor recruit, `gondor_ithilien_ranger` (level 51 on disk since the tier-10 ladder; the original design was T9 / level 41, and this doc's tree below still shows that. `is_basic_troop="true"`, `default_group="Ranged"`), recruitable directly from notables in Minas Tirith and the two Ithilien-area castles. Equipped exclusively from the LOTRLOME_Armory Ithilien wardrobe (8 jerkin variants × matching hood/cloak/boots/bracers + Ithilien bows + Noldor Elven Arrows). Also re-equips Faramir as Captain of the Ithilien Rangers using his dedicated character-specific armor.
 
 ## Why This Exists
 
@@ -36,7 +36,7 @@ The new troop has 8 `<EquipmentRoster>` blocks, each pairing a unique Ithilien j
 
 ```
 troops/troops_gondor.xml
-  └── gondor_ithilien_ranger (T9, level 41, is_basic_troop)
+  └── gondor_ithilien_ranger (T10, level 51 on disk; authored as T9 / level 41, is_basic_troop)
         ├── 8 EquipmentRoster blocks (1 per ithilien_jerkin_* body variant)
         └── <upgrade_targets /> (empty — standalone)
 
