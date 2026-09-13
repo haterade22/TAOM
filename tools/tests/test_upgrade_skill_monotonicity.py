@@ -25,8 +25,9 @@ A skill the target never declares reads as 0 (CharacterObject.GetSkillValue), so
 <skill> element is a drop, not "unchanged". 34 Mordor and Morannon troops shipped that way.
 
 Militia to militia is the one exemption: militia take the level-21 baseline whatever their real
-level, so a militia promotion is flat by design. The exemption reads what a culture BINDS, never a
-name. Name matching is the bug.
+level, the elite slot a fixed MILITIA_ELITE_BONUS above it (since 2026-09-13), so a militia
+promotion is a step the curve never produces and the gate leaves alone. The exemption reads what
+a culture BINDS, never a name. Name matching is the bug.
 """
 import os
 import shutil

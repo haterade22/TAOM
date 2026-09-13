@@ -348,6 +348,36 @@ class PlanTests(unittest.TestCase):
         with self.assertRaises(rl.LadderError):
             rl.planned_edits(troops, idx, _spec())
 
+    def test_troop_rows_pairs_ammo_with_the_chosen_launcher_set_and_marks_mounted(self):
+        import rebalance_ranged_ladders as rr
+        idx = _launchers()
+        idx["fast_bow"] = rl.Launcher("fast_bow", "Bow", 90, 95, 80, "Fast", "w.xml")
+        ammo = {"weak": rl.Ammo("weak", "Arrow", 2, 30, "Weak"), "strong": rl.Ammo("strong", "Arrow", 9, 20, "Strong"),
+                "bolts": rl.Ammo("bolts", "Bolt", 12, 20, "Bolts")}
+        troops = {
+            # set 1: the fast bow with weak arrows; set 2: the slow bow with strong arrows. The row
+            # shows the fastest launcher, so its ammo must come from set 1, never set 2's.
+            "man_a": _troop("man_a", "man", 21, [{"Item0": "fast_bow", "Item1": "weak"}, {"Item0": "man_bow", "Item1": "strong"}]),
+            "man_h": _troop("man_h", "man", 21, [{"Item0": "man_bow", "Item1": "strong"}], group="HorseArcher"),
+            "man_x": _troop("man_x", "man", 26, [{"Item0": "man_xbow", "Item1": "bolts"}]),
+        }
+        ctx = rr.build_context(_spec(), idx, troops, "gm", "md", ammo)
+        rows = {r["id"]: r for r in rr.troop_rows(ctx)["man"]}
+        a = rows["man_a"]
+        self.assertEqual((a["launcher"], a["ammo"], a["ammo_dmg"], a["total_dmg"], a["alts"]), ("fast_bow", "weak", 2, 82, 1))
+        self.assertIsNone(a["opens"])                                   # on foot: the full reach
+        self.assertIsNotNone(rows["man_h"]["opens"])                     # mounted: the AI's open-fire fraction
+        self.assertLess(rows["man_h"]["opens"], rows["man_h"]["reach"])
+        x = rows["man_x"]
+        self.assertEqual((x["cls"], x["ammo"], x["total_dmg"]), ("Crossbow", "bolts", 80 + 12))
+
+    def test_weapon_inaccuracy_uses_each_class_skill_factor(self):
+        import rebalance_ranged_ladders as rr
+        # DefaultSkillEffects: BowAccuracy -0.0009 per level, CrossbowAccuracy -0.0005 per level.
+        self.assertAlmostEqual(rr.weapon_inaccuracy(90, 150, "Bow"), 10 * (1 - 0.0009 * 150) * 0.001)
+        self.assertAlmostEqual(rr.weapon_inaccuracy(90, 150, "Crossbow"), 10 * (1 - 0.0005 * 150) * 0.001)
+        self.assertGreater(rr.weapon_inaccuracy(90, 150, "Crossbow"), rr.weapon_inaccuracy(90, 150, "Bow"))
+
     def test_flight_range_grows_with_speed(self):
         r = [rl.flight_range(v) for v in (58, 74, 90, 108)]
         self.assertEqual(r, sorted(r))
@@ -435,6 +465,35 @@ class RebalanceToolTests(unittest.TestCase):
         self.assertIn("prefers-color-scheme", html)            # both themes
         tracked = (self.report_dir / "docs" / "ranged-troops.html").read_text(encoding="utf-8")
         self.assertEqual(tracked, html)                        # the tracked copy is the same document
+        self.assertTrue(html.startswith("<!DOCTYPE html>"))    # opened from disk, the charset must be declared
+        self.assertIn('<meta charset="utf-8">', html)
+        self.assertIn("</html>", html)
+        self.assertNotIn(" UTC", html)                         # a tracked generated file carries no clock
+
+    def test_html_is_reproducible_and_escapes_names(self):
+        import ranged_ladder as rl2
+        self.troop_file.write_bytes(self.troop_file.read_bytes().replace(
+            b'name="{=t_man_xbowman}man_xbowman"', b'name="{=t_man_xbowman}Beruthiel&apos;s &amp; Co &lt;Rangers&gt;"'))
+        self.assertEqual(self._run(), 0)
+        first = (self.report_dir / "REPORT.html").read_bytes()
+        self.assertEqual(self._run(), 0)
+        self.assertEqual((self.report_dir / "REPORT.html").read_bytes(), first)   # same data, same bytes
+        html = first.decode("utf-8")
+        self.assertIn("Beruthiel&#x27;s &amp; Co &lt;Rangers&gt;", html)
+        self.assertNotIn("<Rangers>", html)
+
+    def test_a_troop_file_that_does_not_parse_is_reported_not_dropped(self):
+        (self.md / "troops" / "troops_elf.xml").write_bytes(b"<NPCCharacters><NPCCharacter id=")
+        failures = []
+        troops = rl.load_ranged_troops(self.md, failures=failures)
+        self.assertNotIn("elf_archer", troops)
+        self.assertEqual(len(failures), 1)
+        self.assertIn("troops_elf.xml", failures[0])
+
+    def test_docs_html_dash_skips_the_tracked_copy(self):
+        self.assertEqual(self._run("--docs-html", "-"), 0)
+        self.assertTrue((self.report_dir / "REPORT.html").exists())
+        self.assertFalse((self.report_dir / "docs" / "ranged-troops.html").exists())
 
     def test_apply_refuses_while_the_ladder_items_do_not_exist(self):
         before = self.troop_file.read_bytes()

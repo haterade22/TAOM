@@ -86,7 +86,7 @@ class Launcher:
 class Ammo:
     id: str
     cls: str            # "Arrow" | "Bolt"
-    damage: int         # thrust_damage, added to the bow's at launch (Mission.cs:4932)
+    damage: int         # thrust_damage; the missile leaves with the launcher's plus this (Mission.cs:4916-4953)
     stack: int          # stack_amount
     name: str
 
@@ -427,17 +427,20 @@ def _is_civilian(elem) -> bool:
     return elem.get("civilian") == "true" or elem.get("equipmentType") == "Civilian"
 
 
-def load_ranged_troops(moduledata=MODULEDATA_DIR) -> dict[str, RangedTroop]:
+def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) -> dict[str, RangedTroop]:
     """Every NPCCharacter in troops/troops_*.xml with its battle sets restricted to the four
     weapon slots. Villagers (characters/npcs_*.xml) are not on the ladder. Civilian sets never
-    cross-draw with battle sets and are skipped."""
+    cross-draw with battle sets and are skipped. A file that does not parse is recorded in
+    `failures`: its troops would otherwise vanish from every report and gate without a word."""
     import xml.etree.ElementTree as ET
     md = Path(moduledata)
     troops: dict[str, RangedTroop] = {}
     for path in sorted((md / "troops").glob("troops_*.xml")):
         try:
             root = ET.parse(path).getroot()
-        except ET.ParseError:
+        except ET.ParseError as exc:
+            if failures is not None:
+                failures.append(f"{path}: not well-formed, its troops are invisible ({exc})")
             continue
         culture = path.name[len("troops_"):-len(".xml")]
         for npc in root.iter("NPCCharacter"):

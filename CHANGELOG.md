@@ -4,6 +4,20 @@
 
 ## 2026-09-12
 
+### fix(tools): the ranged-troops page after its review, and the militia cache guard
+
+Six agents on the two follow-ups, no HIGH, eight fixes. The page's Spread column used the bow's
+skill factor for crossbows; `CrossbowAccuracy` is -0.0005 per level against the bow's -0.0009
+(`DefaultSkillEffects.cs:249,254`), so every crossbow row was 6 to 9% too tight. The tracked
+`docs/reference/ranged-troops.html` carried a clock, so each regenerate dirtied the repo, and had no
+document skeleton or charset: now a full document, no clock, byte-identical across runs, pinned LF
+in `.gitattributes`. A row's ammo now comes from the sets that field the chosen launcher (0 of 227
+affected today). `militia_troop_ids` re-reads when the elite cache is missing its entry instead of
+leaving `elite_militia_troop_ids` to raise. A troop file that does not parse is reported rather than
+dropped. The "flat by design" militia prose in three places, the C# test's regex-lockstep comment,
+and the page's `difficulty` wording corrected. 60 tests across the two files. RCA:
+`docs/reviews/rca-ranged-troops-report-2026-09-13.md`.
+
 ### fix(data): the veteran militia stand 15 above the basic militia on every skill
 
 Every militia slot a culture binds takes the level-21 baseline whatever the troop's level, which

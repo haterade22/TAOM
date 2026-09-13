@@ -173,8 +173,9 @@ public class TroopUpgradeSkillMonotonicityTests
     /// The authoritative militia set: troop ids bound to a culture militia slot. Two encodings are
     /// in use, an attribute in taom_spcultures.xml and an xsl:attribute element in spcultures.xslt
     /// (Dale, Dunland, Rhun and Rohan use the latter), so both are matched. The pattern is kept
-    /// character-for-character in step with MILITIA_BINDING_RE in tools/rebalance_troops.py and
-    /// _MILITIA_BINDING_RE in tools/taom_schema.py: if the three ever disagree, the writer and the
+    /// in step with MILITIA_BINDING_RE in tools/rebalance_troops.py (which since 2026-09-13 also
+    /// captures the elite_ marker) and _MILITIA_BINDING_RE in tools/taom_schema.py: if the three
+    /// ever disagree on WHICH ids are militia, the writer and the
     /// gate classify the same troop differently.
     /// </summary>
     private static HashSet<string> LoadMilitiaBoundIds(string moduleData)

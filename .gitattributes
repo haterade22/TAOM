@@ -19,3 +19,6 @@
 # would rewrite all 72 on the next checkout for no benefit, since Python is CRLF-tolerant
 # and no hook execs a .py through a shebang. If that churn is ever wanted, do it as its
 # own commit with `git add --renormalize`, not as a side effect of a hook fix.
+
+# A generated, tracked page: the generator writes LF and the file must diff clean on every machine.
+docs/reference/ranged-troops.html text eol=lf

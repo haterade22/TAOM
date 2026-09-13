@@ -277,10 +277,14 @@ def ai_level(skill: int) -> float:
     return max(0.0, min(1.0, skill / 300.0 * 0.96))
 
 
-def weapon_inaccuracy(accuracy: int, skill: int) -> float:
+# DefaultSkillEffects: BowAccuracy AddFactor -0.0009 per level, CrossbowAccuracy -0.0005.
+ACCURACY_FACTOR = {"Bow": 0.0009, "Crossbow": 0.0005}
+
+
+def weapon_inaccuracy(accuracy: int, skill: int, cls: str) -> float:
     """SandboxAgentStatCalculateModel.GetWeaponInaccuracy for a bow or crossbow: (100 - accuracy)
-    times the BowAccuracy/CrossbowAccuracy factor (1 - 0.0009 per level) times 0.001."""
-    return (100 - accuracy) * (1.0 - 0.0009 * skill) * 0.001
+    times the class's skill factor (1 - ACCURACY_FACTOR[cls] per level) times 0.001."""
+    return (100 - accuracy) * (1.0 - ACCURACY_FACTOR[cls] * skill) * 0.001
 
 
 def troop_rows(ctx: dict) -> dict:
@@ -301,7 +305,10 @@ def troop_rows(ctx: dict) -> dict:
             best = max((launchers[i] for i in ids), key=lambda l: l.speed)
             skill = t.skills.get(cls, 0)
             want = rl.AMMO_CLASSES[cls]
-            shots = [ammo[st[s]] for st in t.sets for s in rl.LAUNCHER_SLOTS
+            # Ammo from the sets that field the chosen launcher, so the row is a kit a set
+            # actually spawns, never one set's bow with another set's quiver.
+            own_sets = [st for st in t.sets if best.id in st.values()]
+            shots = [ammo[st[s]] for st in own_sets for s in rl.LAUNCHER_SLOTS
                      if st.get(s) in ammo and ammo[st[s]].cls == want]
             shot = max(shots, key=lambda a: a.damage) if shots else None
             reach = rl.flight_range(best.speed)
@@ -317,7 +324,7 @@ def troop_rows(ctx: dict) -> dict:
                 "ammo": shot.id if shot else "", "ammo_dmg": shot.damage if shot else 0,
                 "ammo_stack": shot.stack if shot else 0,
                 "total_dmg": best.damage + (shot.damage if shot else 0),
-                "reach": reach, "spread": weapon_inaccuracy(best.accuracy, skill) * 1000,
+                "reach": reach, "spread": weapon_inaccuracy(best.accuracy, skill, cls) * 1000,
                 "cadence": 0.3 + 0.7 * lvl,
                 "opens": reach * (0.3 + 0.4 * lvl) if mounted else None,
                 "sets": len(t.sets), "alts": len(ids) - 1,
@@ -470,17 +477,17 @@ def render_html(ctx: dict) -> str:
             continue
         body = []
         for r in rs:
-            chip = f'<span class="chip {"bow" if r["cls"] == "Bow" else "xbow"}">{r["cls"]}</span>'
+            chip = f'<span class="chip {"bow" if r["cls"] == "Bow" else "xbow"}">{_esc(r["cls"])}</span>'
             alt = f" (+{r['alts']} alt)" if r["alts"] else ""
             body.append(
                 f'<tr data-cls="{r["cls"]}">'
                 + cell(r["tier"], "num")
-                + f'<td data-v="{r["band"]}"><span class="band {r["band"]}">{r["band"]}</span></td>'
+                + f'<td data-v="{_esc(r["band"])}"><span class="band {_esc(r["band"])}">{_esc(r["band"])}</span></td>'
                 + f'<td class="id" data-v="{_esc(r["id"])}">{_esc(r["id"])}<span class="nm">{_esc(r["name"])}</span></td>'
                 + cell(r["level"], "num") + cell(r["group"])
                 + cell(r["bow"], "num") + cell(r["crossbow"], "num") + cell(r["athletics"], "num") + cell(r["riding"], "num")
                 + f'<td class="id" data-v="{_esc(r["launcher"])}">{_esc(r["launcher"])}{_esc(alt)}<span class="nm">{_esc(r["launcher_name"])}</span></td>'
-                + f'<td data-v="{r["cls"]}">{chip}</td>'
+                + f'<td data-v="{_esc(r["cls"])}">{chip}</td>'
                 + cell(r["speed"], "num") + cell(f'{r["reach"]:.0f}', "num") + cell(r["accuracy"], "num")
                 + cell(f'{r["spread"]:.1f}', "num") + cell(f'{r["cadence"]:.2f}', "num")
                 + cell(f'{r["opens"]:.0f}' if r["opens"] is not None else "", "num")
@@ -499,12 +506,16 @@ def render_html(ctx: dict) -> str:
 
     title = "Ranged Troops of Middle-earth"
     n_lines = sum(1 for l in lines if rows.get(l))
+    # A tracked generated file carries no clock: same data, same bytes. The document is a
+    # complete page (doctype, charset) because docs/reference/ is opened straight from disk.
     return (
+        "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         "<title>" + title + "</title>\n"
         '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap">\n'
-        "<style>" + _HTML_CSS + "</style>\n"
-        '<header class="mast"><div class="eyebrow">TAOM, generated ' + _esc(ctx["generated"]) + ' by tools/rebalance_ranged_ladders.py</div>'
+        "<style>" + _HTML_CSS + "</style>\n</head>\n<body>\n"
+        '<header class="mast"><div class="eyebrow">TAOM, generated by tools/rebalance_ranged_ladders.py from the troop files and the live Armory</div>'
         f"<h1>{title}</h1>"
         "<p>Every troop that carries a bow or crossbow, per kingdom in the ladder's rank order, with the skill the troop "
         "brings and the reach the weapon gives. Reach is the launcher's <code>missile_speed</code>; skill never changes it. "
@@ -528,7 +539,8 @@ def render_html(ctx: dict) -> str:
         "quiver's <code>stack_amount</code>.</p></div>"
         "<div><div class=\"eyebrow\">What the skill decides</div>"
         "<p><b>Bow</b> / <b>Xbow</b> are the troop's skills. <b>Spread</b> is the engine's <code>WeaponInaccuracy</code> "
-        "x1000, <code>(100 - accuracy) x (1 - 0.0009 x skill)</code>: lower is tighter, and it is the only place the "
+        "x1000, <code>(100 - accuracy) x (1 - f x skill)</code> with f 0.0009 for a bow and 0.0005 for a crossbow "
+        "(<code>DefaultSkillEffects</code>): lower is tighter, and it is the only place the "
         "skill meets the weapon. <b>Cadence</b> is <code>AiShootFreq</code>, <code>0.3 + 0.7 x aiLevel</code> with "
         "<code>aiLevel = skill / 300 x 0.96</code> at Normal combat AI. <b>Opens m</b>, mounted troops only, is the "
         "distance a horse archer starts shooting from, <code>reach x (0.3 + 0.4 x aiLevel)</code>; foot archers use the "
@@ -542,7 +554,7 @@ def render_html(ctx: dict) -> str:
         '<p class="foot">Band E is engine tier 0 to 2, R 3 to 4, V 5 to 6, X 7 to 8, C 9 to 10. The row under each kingdom is its '
         "ladder: the missile speed every band's item carries, from <code>tools/ranged_ladders.json</code>. "
         "Rain or snow cut bow and crossbow speed by 10% and fog cuts range by 20% in the mission; neither is in these numbers.</p>\n"
-        "</main>\n<script>" + _HTML_JS + "</script>\n"
+        "</main>\n<script>" + _HTML_JS + "</script>\n</body>\n</html>\n"
     )
 
 
@@ -578,6 +590,7 @@ def main(argv=None):
     launchers = rl.index_launchers(rl.default_item_roots(game_modules, args.moduledata), failures=failures)
     for f in failures:
         print(f"WARNING: {f}")
+    printed = list(failures)
     problems += rl.validate_spec(spec, launchers, cultures=rl.troop_file_cultures(args.moduledata))
     if problems:
         print("ERROR: the spec contradicts itself or the install; nothing was written:")
@@ -585,8 +598,11 @@ def main(argv=None):
             print(f"  - {p}")
         return 2
 
-    troops = rl.load_ranged_troops(args.moduledata)
-    ammo = rl.index_ammo(rl.default_item_roots(game_modules, args.moduledata))
+    troops = rl.load_ranged_troops(args.moduledata, failures=failures)
+    ammo = rl.index_ammo(rl.default_item_roots(game_modules, args.moduledata), failures=failures)
+    for f in failures:
+        if f not in printed:
+            print(f"WARNING: {f}")
     try:
         ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo)
     except rl.LadderError as exc:

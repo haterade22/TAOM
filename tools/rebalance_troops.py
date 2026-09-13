@@ -429,7 +429,9 @@ def militia_troop_ids(moduledata_dir=None):
     label, the binding is the fact.
     """
     root = os.path.abspath(moduledata_dir or MODULEDATA_DIR)
-    if root in _militia_ids_cache:
+    # Both caches are filled together below; a basic entry without its elite twin (something
+    # filled the basic cache directly) is re-read rather than trusted.
+    if root in _militia_ids_cache and root in _elite_militia_ids_cache:
         return _militia_ids_cache[root]
     ids = set()
     elite = set()

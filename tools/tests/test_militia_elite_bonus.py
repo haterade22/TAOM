@@ -60,6 +60,51 @@ class EliteMilitiaBonusTests(unittest.TestCase):
         for skill in rb.SKILL_NAMES:
             self.assertEqual(vet[skill], basic[skill] + rb.MILITIA_ELITE_BONUS, skill)
 
+    def test_the_melee_elite_slot_gets_the_same_step(self):
+        basic = rb.calculate_skills("gondor", 11, "Infantry", "gondor_militia_spearman", "Gondor Militia Spearman",
+                                    weapon_classes={"Polearm", "Shield"})
+        vet = rb.calculate_skills("gondor", 16, "Infantry", "gondor_militia_veteran_spearman",
+                                  "Gondor Veteran Militia Spearman", weapon_classes={"Polearm", "Shield"})
+        for skill in rb.SKILL_NAMES:
+            self.assertEqual(vet[skill], basic[skill] + rb.MILITIA_ELITE_BONUS, skill)
+
+    def test_every_culture_on_disk_carries_the_step(self):
+        """Against the committed troop files: each elite militia sits exactly the bonus above its
+        basic sibling on every skill the sibling has above the floor (a basic skill floored at 0
+        hides part of the step, so there only 0 < diff <= bonus is provable)."""
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        import ranged_ladder as rl
+        troops = rl.load_ranged_troops()
+        elite = rb.elite_militia_troop_ids()
+        checked = 0
+        for vet_id in sorted(elite):
+            basic_id = vet_id.replace("_veteran", "")
+            self.assertIn(basic_id, troops, vet_id)
+            vet, basic = troops[vet_id].skills, troops[basic_id].skills
+            for skill in rb.SKILL_NAMES:
+                b, v = basic.get(skill, 0), vet.get(skill, 0)
+                if b >= rb.MILITIA_ELITE_BONUS:
+                    self.assertEqual(v, b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill}")
+                else:
+                    self.assertTrue(b <= v <= b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill} {b}->{v}")
+            checked += 1
+        self.assertEqual(checked, 30)
+
+    def test_elite_ids_survive_a_basic_cache_filled_out_of_band(self):
+        """A basic entry without its elite twin (something filled the basic cache directly) is
+        re-read, never a KeyError (deep review 2026-09-13, tooling agent)."""
+        root = os.path.abspath(rb.MODULEDATA_DIR)
+        saved = dict(rb._militia_ids_cache), dict(rb._elite_militia_ids_cache)
+        try:
+            rb._militia_ids_cache.clear()
+            rb._elite_militia_ids_cache.clear()
+            rb._militia_ids_cache[root] = {"stale"}
+            self.assertIn("gondor_militia_veteran_archer", rb.elite_militia_troop_ids())
+            self.assertIn("gondor_militia_archer", rb.militia_troop_ids())   # the stale entry was replaced
+        finally:
+            rb._militia_ids_cache.clear(); rb._militia_ids_cache.update(saved[0])
+            rb._elite_militia_ids_cache.clear(); rb._elite_militia_ids_cache.update(saved[1])
+
     def test_a_line_troop_at_the_same_level_is_untouched(self):
         line = rb.calculate_skills("gondor", 16, "Ranged", "gondor_brv_bowman", "Blackroot Vale Bowman",
                                    weapon_classes={"Bow", "Arrows", "OneHanded"})
