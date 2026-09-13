@@ -2884,5 +2884,14 @@
 	<!-- Wanderer Allegiance (#575): a wanderer refusing to be hired across the Free/Evil line -->
 	<string id="taom_wa_refuse_free" text="{=taom_wa_refuse_free}No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
 	<string id="taom_wa_refuse_evil" text="{=taom_wa_refuse_evil}You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- SupplyLines -->
+	<string id="taom_sl_search_placeholder" text="{=taom_sl_search_placeholder}Search goods in every market" />
+	<string id="taom_sl_search_none" text="{=taom_sl_search_none}No source stocks that." />
+	<string id="taom_sl_search_capped" text="{=taom_sl_search_capped}Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search." />
+	<string id="taom_sl_search_count" text="{=taom_sl_search_count}Matches: {COUNT}, nearest first." />
+	<string id="taom_sl_hit_row" text="{=taom_sl_hit_row}{ITEM} at {SOURCE}" />
+	<string id="taom_sl_hit_detail" text="{=taom_sl_hit_detail}{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
+
 
 </strings>

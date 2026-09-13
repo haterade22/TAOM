@@ -2,9 +2,12 @@
 
 Order resupply convoys from the field (#505). Pick a town, castle or friendly lord, choose goods
 from the source's real market stock and troops from its volunteers, pick an escort, and a caravan
-crosses the map to your party. Port of the commissioned yotthani SupplyLines module (Bannerlord
-1.4.5, decompiled and behaviourally ported 2026-08-22); provenance:
+crosses the map to your party. Or go the other way (#587): type a good into the search box and
+every market that stocks it lists nearest first with stock, price and distance; one click selects
+that source with the good at the top of its list. Port of the commissioned yotthani SupplyLines
+module (Bannerlord 1.4.5, decompiled and behaviourally ported 2026-08-22); provenance:
 [provenance-register.md](../reference/provenance-register.md) "Yotthani commissioned modules".
+The search is TAOM's own addition.
 
 ## Problem
 
@@ -22,6 +25,11 @@ SupplyOrderGameState ── [GameStateScreen] attribute ──▶ GauntletSupply
                                   ▼
 SupplyOrderScreenVM ◀── ISupplySourceService (sources, goods, troops)
         │                ISupplyPricingService (quote)
+        │
+        │ SearchText keystroke ─▶ catalogue (built ONCE from the orderable settlement
+        │                          rows via GetGoods) ─▶ SupplyGoodsSearch.Search (pure)
+        │                          ─▶ SearchHits replace the settlement list; a hit pick
+        │                          selects its source with the good at Goods[0]
         │ Confirm
         ▼
 ISupplyOrderService.TryPlaceOrder
@@ -114,6 +122,41 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   encounter with a one-line notice. The component's `Leader` is null, so vanilla would strike a
   stranger conversation with the highest-tier roster troop, or a null partner on an empty
   roster.
+- **Every trade good, uncapped (#587)**: `GetGoods` lists `ItemObject.IsTradeGood` (ItemType
+  Goods: food, raw materials, finished goods), most valuable first, with no row cap. The port had
+  carried the source module's food-only filter and a top-14 cut; the cut had to go because a
+  search that finds grain at a town is useless if the goods list then hides grain behind 14
+  dearer items, and the goods panel already scrolls. Trade goods carry no quality modifier, so
+  the modifier-blind `AddToCounts(item, -n)` consume stays exact; weapons and armour were kept
+  out for exactly that reason.
+- **Cross-market search (#587)** is a live `EditableTextWidget` (vanilla's inventory pattern:
+  the widget writes every keystroke into the VM's public `SearchText` setter, Enter is not
+  involved). The VM notifies the change back with the RAW value: echoing a trimmed or folded
+  string re-enters the widget's `Text` setter mid-update and desynchronises its visible and real
+  text (`EncyclopediaNavigatorVM.SearchText` stores lowercase but notifies what it was given).
+  `SupplyGoodsSearch` is a pure static engine: names folded once at catalogue build
+  (`Helpers.StringHelpers.RemoveDiacritics` + trim), case-insensitive substring, nearest first
+  then cheapest then name, stable order, capped at 60 with the uncapped total in the status
+  line; two characters minimum, one when the query opens with an Asian character (vanilla's
+  encyclopedia rule). The catalogue is built on the first qualifying keystroke from the
+  orderable settlement rows only (lords sell no goods; at-war and unreachable rows never reach
+  `GetGoods`) and reused for the life of the screen: campaign time is frozen under the pushed
+  game state, so stock cannot move. Picking a hit runs the ordinary source selection with the
+  good promoted to `Goods[0]` and the goods pane reset twice over: the screen hands the VM the
+  pane's own `ScrollablePanel.ResetTweenSpeed` (`ResetGoodsScroll`, found by widget id after
+  `LoadMovie`) because a wheel notch leaves the pane coasting and that momentum survives a
+  repopulate whenever both lists overflow (`ScrollablePanel.cs:588-598`; Codex review P2), and
+  then `GoodsScrollValue`, a two-way binding on `ScrollbarWidget.ValueFloat`, goes to 0 because
+  the panel also keeps its plain offset across a repopulate. Without both, a deep-scrolled goods
+  list leaves the promoted row above the viewport and the click looks dead. `GetGoods` lists only
+  the UNMODIFIED stack of each good, the element the consume counts and deducts on; no ordinary
+  path stocks a modified good, but the console can (`campaign.add_item_to_player_party` with a
+  modifier, then a sale), and a row the consume cannot take would fail the order closed. A
+  pending quantity locks EVERY hit, not only other sources':
+  a hit from the selected source would repopulate the goods list and wipe the order. Typing never
+  runs `Recompute`, so a keystroke neither re-quotes the order nor erases a confirm failure the
+  player is reading. `IsSearchActive` is get-only on purpose: both `IsHidden` and `IsVisible`
+  bindings write back through `ViewModel.SetPropertyValue`, which only finds public setters.
 
 ## Source defects fixed in the port (not carried)
 
@@ -183,24 +226,30 @@ complete so cargo is never stranded by a toggle.
 | `Domain/SupplyLinesSaveDefiner.cs` | Base 726901001; order, caravan component, enums, container |
 | `SupplyPricingService.cs` | Pure quote/troop-price/planned-hours maths, positive-requirement NaN gates |
 | `SupplyOrderEngine.cs` | Pure hourly verdicts (Continue/Deliver/Lose), encounter gating, loss precedence |
-| `SupplySourceService.cs` | Source eligibility, goods/troops enumeration, deducting consumption, alignment gate |
+| `SupplySourceService.cs` | Source eligibility, goods (every trade good, uncapped) / troops enumeration, deducting consumption, alignment gate |
+| `SupplyGoodsSearch.cs` | Pure cross-market search: catalogue entries with names folded once, `Search` (substring, nearest then cheapest, stable, capped 60 with total), the 2-char / 1-ideograph floor |
+| `UI/SupplySearchHitRowVM.cs` | One search result row: "{ITEM} at {SOURCE}" plus stock/price/distance; locked wholesale while an order is pending |
 | `SupplyCaravanService.cs` | Spawn/teardown/respawn + the hardened teleport movement; AI re-pin on load |
 | `SupplyOrderService.cs` | The order book: place/advance/deliver/lose/cancel; campaign statics behind protected virtuals |
 | `SupplyRouteVisualService.cs` | Throttled map arrow trail (0.25h resample, retint on change, 40-arrow cap) |
 | `Components/SupplyCaravanComponent.cs` | First custom PartyComponent in TAOM; identity only |
 | `Hooks/SupplyLinesCampaignBehavior.cs` | Events, SyncData halves, session reset gate, town/town_keep menu options |
 | `Hooks/SupplyCaravanEncounterPatch.cs` | Patch73_SupplyLines: DoMeeting guard, caravan click-through suppressed |
-| `UI/GauntletSupplyOrderScreen.cs` + `SupplyOrderScreenVM.cs` + row VMs | The order screen (attribute path, focus layer, latched teardown) |
-| `Main/_Module/GUI/PreFabs/SupplyLines/TaomSupplyOrderScreen.xml` | Ported prefab, `{=taom_sl_*}` texts. Text brushes are `Popup.Description.Text` / `Popup.Button.Text` (Native/GUI/Brushes/Popup.xml, grep-verified on the installed 1.4.8) with per-site `Brush.FontSize`; the port originally shipped `Popup.Text.Medium`/`.Small`, which exist in NO brush file anywhere and silently rendered 22 widgets with the engine default brush (round B critic) |
+| `UI/GauntletSupplyOrderScreen.cs` + `SupplyOrderScreenVM.cs` + row VMs | The order screen (attribute path, focus layer, latched teardown); the VM owns the search state, the lazy catalogue and the hit pick |
+| `Main/_Module/GUI/PreFabs/SupplyLines/TaomSupplyOrderScreen.xml` | Ported prefab, `{=taom_sl_*}` texts. Text brushes are `Popup.Description.Text` / `Popup.Button.Text` (Native/GUI/Brushes/Popup.xml, grep-verified on the installed 1.4.8) with per-site `Brush.FontSize`; the port originally shipped `Popup.Text.Medium`/`.Small`, which exist in NO brush file anywhere and silently rendered 22 widgets with the engine default brush (round B critic). The search box is an `EditableTextWidget` on `Encyclopedia.Search.TextBox`, declared in TAOM's own Encyclopedia brush clone; the left column is a vertical StackLayout whose settlement and hit wrappers toggle on `IsSearchActive` (`IsHidden` on one, `IsVisible` on the other) so exactly one StretchToParent child is visible |
 
 Tests: pricing, engine verdicts (incl. the 1.5x force-deliver pin), the order book (reset,
 cancel-camp, live-cargo, counter derivation, destroy-event loss recording,
 status-before-destroy ordering, dispatch-message branch), cargo/provision maths
 (`SupplyCaravanCargoMathTests`), order POCO incl. dispatch origin, behavior session-reset
-contract, VM matrix (incl. the unreachable-sentinel row states), prefab-binding round-trip
-(forward + reverse dead-binding, sprite/brush allowlist), engine bindings (Bearing setter,
-VolunteerModel gate, wage model, CreateParty overload) plus the Patch73 target/category pins,
-plus the shipped-config and localization-key sweeps that gate every feature.
+contract, VM matrix (incl. the unreachable-sentinel row states), the search engine
+(`SupplyGoodsSearchTests`: floor, folding, order, stability, cap) and the VM search flow (lazy
+catalogue built once, lord / at-war / unreachable rows never scanned, raw-value notification,
+hit pick promotes and resets the scroll, wholesale hit lock, clear keeps the order, status
+variants, a keystroke never touches `ErrorText`), prefab-binding round-trip (forward + reverse
+dead-binding, sprite/brush allowlist), engine bindings (Bearing setter, VolunteerModel gate, wage
+model, CreateParty overload) plus the Patch73 target/category pins, plus the shipped-config and
+localization-key sweeps that gate every feature.
 
 ## Traps
 
@@ -225,16 +274,47 @@ plus the shipped-config and localization-key sweeps that gate every feature.
 - `Patch73_SupplyLines` must be in the Harmony category registration list in `SubModule`
   (single-owner file; registered by the orchestrator) or the DoMeeting guard silently never
   patches.
+- **No hotkey is polled while the search box has focus.** `OnFrameTick` returns on
+  `GauntletLayer.IsFocusedOnInput()` before reading `Exit`, vanilla's inventory rule
+  (`GauntletInventoryScreen.OnFrameTick`), so Escape cannot discard a pending order mid-typing;
+  click away or press the "x", then Escape closes the screen. The registered panel categories
+  bind letters (Q, E, A, D, R, B, C, I, N, K, L, J, P, V, U) but registration only stores
+  definitions; nothing acts on them unless polled, and `EditableTextWidget.HandleInput` takes
+  letters and Space as text. An earlier draft of this doc claimed vanilla closes on Escape while
+  typing; it does not (Codex review P3).
+- **An inquiry over the screen clears the widget's focus, not the layer's.** `GauntletLayer.OnLoseFocus`
+  runs `EventManager.ClearFocus`; `TrySetFocus` in `OnActivate` restores the layer only. Text,
+  hits and quantities survive; the player clicks the box again to keep typing.
+- **A `CoverChildren` button cannot hold a `StretchToParent` overlay.** `DefaultLayout`
+  measures every child against the incoming spec, so the overlay would inflate the row to the
+  whole column; the hit rows are fixed 54 px for that reason, and a long "{ITEM} at {SOURCE}"
+  wraps into the detail line rather than growing the row.
+- **A hidden `ScrollablePanel` keeps its offset, and a visible one keeps its momentum.** The
+  settlement list comes back where it was scrolled (vanilla's encyclopedia results do the same).
+  The goods pane is the one that is reset, through `ResetGoodsScroll` (momentum) and
+  `GoodsScrollValue` (offset); the value alone is not enough.
 
 ## Owed / follow-ups
 
 - In-game smoke (#505 checklist): order from town, village + lord, delivery after caravan
   losses (partial), cancel, camp-placed order + camp break, save/load mid-transit, click the
   caravan (no stranger conversation).
+- In-game smoke (#587): type two letters and watch the settlement list swap for hits, nearest
+  first; pick one and see the source highlighted with the good first and the goods panel at the
+  top; set a quantity and see every hit and other settlement grey out; the "x" returns the
+  settlement list with the selection and quantities kept; Escape does nothing while the box has
+  focus and closes the screen once it is clicked away; a wheel notch in the goods pane followed
+  at once by a hit pick lands at the top; a non-food trade good (iron, wool) orders and is
+  delivered; the first qualifying
+  keystroke's catalogue build on the full TAOM_Map (~800 orderable settlements) does not hitch.
+  Rendering is not something a test can certify: the text box, the placeholder, the hide/show
+  swap, the hit row height and the goods scroll reset all need eyes.
 - 12-language TRANSLATION run for the `{=taom_sl_*}` keys (backlog issue #508). Registration and
   English rows are done: every key including `taom_sl_caravan_meet` and `taom_sl_lord_dispatched`
   is registered in `taom_module_strings.xml` and present in all 12 language files as English
-  fallback (batch-2 integration).
+  fallback (batch-2 integration). The six #587 search keys (`taom_sl_search_placeholder`,
+  `_search_none`, `_search_count`, `_search_capped`, `taom_sl_hit_row`, `taom_sl_hit_detail`)
+  are registered and seeded the same way and ride the same run.
 - Optional fidelity restore: the `sl_reinf_*` lord conversation (see Deliberate departures).
 
 ## Prefab labels are VM properties (field-tested 2026-08-25)

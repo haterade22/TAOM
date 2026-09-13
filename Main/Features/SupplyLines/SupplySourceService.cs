@@ -29,9 +29,6 @@ public sealed class SupplySourceService : ISupplySourceService
     // Friendly lords further away than this are not worth a messenger; matches the source module.
     private const float LordMessengerRadius = 80f;
 
-    // The order screen shows at most this many goods rows; we keep the most valuable ones.
-    private const int MaxGoodsRows = 14;
-
     private readonly ISupplyPricingService _pricing;
     private readonly IModLogger _logger;
 
@@ -100,15 +97,20 @@ public sealed class SupplySourceService : ISupplySourceService
         if (roster == null)
             return result;
 
-        var rows = new List<SupplyLineItem>();
         for (int i = 0; i < roster.Count; i++)
         {
             var element = roster.GetElementCopyAtIndex(i);
             var item = element.EquipmentElement.Item;
             int amount = element.Amount;
-            if (item == null || amount <= 0 || !item.IsFood)
+            // Every trade good (ItemType Goods: food, raw materials, finished goods), not only
+            // food, since #587; the port's food-only filter came from the source module. Only
+            // the UNMODIFIED stack is listed: the consume counts and deducts on that element,
+            // and no ordinary path stocks a modified good (TradeItemComponent has no modifier
+            // group), but the console can (campaign.add_item_to_player_party with a modifier,
+            // then a sale), and a row the consume cannot take would fail the order closed.
+            if (item == null || amount <= 0 || !item.IsTradeGood || element.EquipmentElement.ItemModifier != null)
                 continue;
-            rows.Add(new SupplyLineItem
+            result.Add(new SupplyLineItem
             {
                 Id = item.StringId,
                 Name = item.Name?.ToString() ?? item.StringId,
@@ -117,10 +119,9 @@ public sealed class SupplySourceService : ISupplySourceService
             });
         }
 
-        // Most valuable first; the screen caps at MaxGoodsRows rows.
-        rows.Sort((a, b) => b.UnitPrice.CompareTo(a.UnitPrice));
-        for (int i = 0; i < rows.Count && i < MaxGoodsRows; i++)
-            result.Add(rows[i]);
+        // Most valuable first, uncapped: the goods panel scrolls, and the cross-market search
+        // must be able to land on a cheap good the old top-14 cut would have hidden.
+        result.Sort((a, b) => b.UnitPrice.CompareTo(a.UnitPrice));
         return result;
     }
 
@@ -245,7 +246,15 @@ public sealed class SupplySourceService : ISupplySourceService
                 _logger.LogWarning($"[SupplyLines] Consume: unknown item id '{pair.Key}' skipped");
                 continue;
             }
-            int present = roster.GetItemNumber(item);
+            // Count and deduct against the SAME stack: the unmodified element. GetItemNumber
+            // matches on item alone (first stack of any modifier) while AddToCounts(item, n)
+            // only ever finds the unmodified element and returns -1 without touching anything
+            // when it is absent, so a modifier-carrying stack would be billed and delivered
+            // without leaving the roster. No trade good carries a modifier today (deep review
+            // #587 checked the item data); the guard keeps the invariant in code, not in data.
+            var element = new EquipmentElement(item);
+            int index = roster.FindIndexOfElement(element);
+            int present = index >= 0 ? roster.GetElementNumber(index) : 0;
             int take = Math.Min(pair.Value, present);
             if (take <= 0)
                 continue;
@@ -253,7 +262,11 @@ public sealed class SupplySourceService : ISupplySourceService
             // Deduct from the settlement and price at the moment of deduction. The source module
             // never removed the goods (an economy dupe) and priced from a stale screen snapshot.
             int unitPrice = GetItemMarketValue(settlement, item);
-            roster.AddToCounts(item, -take);
+            if (roster.AddToCounts(element, -take) < 0)
+            {
+                _logger.LogWarning($"[SupplyLines] Consume: '{pair.Key}' was not deducted from '{settlement.StringId}', nothing recorded");
+                continue;
+            }
             result.Goods[pair.Key] = take;
             result.GoodsMarketValue += take * (float)unitPrice;
         }

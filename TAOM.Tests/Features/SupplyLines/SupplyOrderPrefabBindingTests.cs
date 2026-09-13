@@ -37,6 +37,7 @@ public class SupplyOrderPrefabBindingTests
         ["Settlements"] = typeof(SupplySourceRowVM),
         ["Goods"] = typeof(SupplyGoodRowVM),
         ["Troops"] = typeof(SupplyTroopRowVM),
+        ["SearchHits"] = typeof(SupplySearchHitRowVM),
     };
 
     // Vanilla sprites and brushes the prefab deliberately uses. Anything referenced beyond this
@@ -180,6 +181,7 @@ public class SupplyOrderPrefabBindingTests
             typeof(SupplySourceRowVM),
             typeof(SupplyGoodRowVM),
             typeof(SupplyTroopRowVM),
+            typeof(SupplySearchHitRowVM),
         };
         foreach (var vmType in vmTypes)
         {

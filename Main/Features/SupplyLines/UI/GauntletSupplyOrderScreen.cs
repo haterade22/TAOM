@@ -2,6 +2,7 @@ using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
+using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -73,6 +74,10 @@ public class GauntletSupplyOrderScreen : ScreenBase, IGameStateListener
                 _gauntletLayer.Input.RegisterHotKeyCategory(campaignCategory);
 
             _movie = _gauntletLayer.LoadMovie("TaomSupplyOrderScreen", _viewModel);
+            // The goods pane keeps wheel momentum across a repopulate; only its own reset clears
+            // it. A missing widget degrades to the VM's value reset (Codex review #587 P2).
+            if (_gauntletLayer.UIContext?.Root?.FindChild("GoodsScrollPanel", includeAllChildren: true) is ScrollablePanel goodsPanel)
+                _viewModel.ResetGoodsScroll = goodsPanel.ResetTweenSpeed;
             AddLayer(_gauntletLayer);
             ScreenManager.TrySetFocus(_gauntletLayer);
         }
@@ -89,7 +94,11 @@ public class GauntletSupplyOrderScreen : ScreenBase, IGameStateListener
     protected override void OnFrameTick(float dt)
     {
         base.OnFrameTick(dt);
-        if (!_closed && _gauntletLayer != null && _gauntletLayer.Input.IsHotKeyReleased("Exit"))
+        // Vanilla's inventory rule: while the search box has focus, no panel hotkey is polled,
+        // so Escape cannot discard a pending order mid-typing (click away or the "x" first).
+        if (_closed || _gauntletLayer == null || _gauntletLayer.IsFocusedOnInput())
+            return;
+        if (_gauntletLayer.Input.IsHotKeyReleased("Exit"))
             CloseScreen();
     }
 

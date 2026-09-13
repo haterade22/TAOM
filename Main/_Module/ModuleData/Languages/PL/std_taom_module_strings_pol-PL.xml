@@ -2633,5 +2633,11 @@
     <string id="taom_res_tt_per_prisoner" text="Per prisoner" />
     <string id="taom_wa_refuse_free" text="No. I know whose war you fight, and I will not carry a blade for the Shadow, not for any price. Find another sword." />
     <string id="taom_wa_refuse_evil" text="You march with the Elf-friends. My own people would have my head for taking your coin, and yours would sooner see me hanged than armed. No." />
+    <string id="taom_sl_search_placeholder" text="Search goods in every market" />
+    <string id="taom_sl_search_none" text="No source stocks that." />
+    <string id="taom_sl_search_capped" text="Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search." />
+    <string id="taom_sl_search_count" text="Matches: {COUNT}, nearest first." />
+    <string id="taom_sl_hit_row" text="{ITEM} at {SOURCE}" />
+    <string id="taom_sl_hit_detail" text="{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
   </strings>
 </base>

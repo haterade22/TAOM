@@ -30,8 +30,23 @@ public sealed class SupplyOrderScreenVM : ViewModel
     private readonly MBBindingList<SupplySourceRowVM> _settlements = new MBBindingList<SupplySourceRowVM>();
     private readonly MBBindingList<SupplyGoodRowVM> _goods = new MBBindingList<SupplyGoodRowVM>();
     private readonly MBBindingList<SupplyTroopRowVM> _troops = new MBBindingList<SupplyTroopRowVM>();
+    private readonly MBBindingList<SupplySearchHitRowVM> _searchHits = new MBBindingList<SupplySearchHitRowVM>();
 
     private SupplySourceRowVM? _selectedSource;
+
+    // Cross-market search (#587). The catalogue is built on the first qualifying keystroke and
+    // reused for the life of the screen: campaign time is frozen under this pushed game state, so
+    // stock cannot move. Hits are keyed back to their settlement rows by the SupplySourceInfo
+    // reference both sides already hold.
+    private List<SupplyGoodsCatalogueEntry>? _catalogue;
+    private readonly Dictionary<SupplySourceInfo, SupplySourceRowVM> _rowsBySource =
+        new Dictionary<SupplySourceInfo, SupplySourceRowVM>();
+    private string? _promotedItemId;
+    private string _searchText = string.Empty;
+    private bool _searchActive;
+    private string _searchPlaceholderText;
+    private string _searchStatusText = string.Empty;
+    private float _goodsScrollValue;
 
     private string _screenTitle;
     // Button labels live here, not as literal Text= in the prefab: Gauntlet does not localize
@@ -83,6 +98,7 @@ public sealed class SupplyOrderScreenVM : ViewModel
         _cancelText = new TextObject("{=taom_sl_cancel}Cancel").ToString();
         _goodsHeaderText = new TextObject("{=taom_sl_goods_header}Goods in stock").ToString();
         _troopsHeaderText = new TextObject("{=taom_sl_troops_header}Volunteers (recruits)").ToString();
+        _searchPlaceholderText = new TextObject("{=taom_sl_search_placeholder}Search goods in every market").ToString();
 
         PopulateSources();
         var first = FirstOrderableSource();
@@ -241,6 +257,85 @@ public sealed class SupplyOrderScreenVM : ViewModel
 
     [DataSourceProperty]
     public MBBindingList<SupplyTroopRowVM> Troops => _troops;
+
+    [DataSourceProperty]
+    public MBBindingList<SupplySearchHitRowVM> SearchHits => _searchHits;
+
+    /// <summary>
+    /// Two-way: the EditableTextWidget writes every keystroke into this setter. The change is
+    /// notified with the RAW value on purpose: echoing a trimmed or folded string re-enters the
+    /// widget's Text setter while it is mid-update and desynchronises its visible and real text
+    /// (the encyclopedia's SearchText stores lowercase but notifies the value it was given).
+    /// </summary>
+    [DataSourceProperty]
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            value ??= string.Empty;
+            if (_searchText != value)
+            {
+                _searchText = value;
+                OnPropertyChangedWithValue(value, nameof(SearchText));
+                RefreshSearch();
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string SearchPlaceholderText
+    {
+        get => _searchPlaceholderText;
+        set
+        {
+            if (_searchPlaceholderText != value)
+            {
+                _searchPlaceholderText = value;
+                OnPropertyChangedWithValue(value, nameof(SearchPlaceholderText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string SearchStatusText
+    {
+        get => _searchStatusText;
+        set
+        {
+            if (_searchStatusText != value)
+            {
+                _searchStatusText = value;
+                OnPropertyChangedWithValue(value, nameof(SearchStatusText));
+            }
+        }
+    }
+
+    // Get-only on purpose: both IsHidden="@IsSearchActive" and IsVisible="@IsSearchActive"
+    // write back through ViewModel.SetPropertyValue, which only finds PUBLIC setters; a setter
+    // here would let the widget's own visibility change loop into the VM. Cached by
+    // RefreshSearch so the query is folded once per keystroke, not once per binding read.
+    [DataSourceProperty]
+    public bool IsSearchActive => _searchActive;
+
+    /// <summary>
+    /// Two-way with the goods scrollbar. The panel keeps its offset across a repopulate, so a
+    /// good promoted to the top after a search pick could sit above the viewport and the click
+    /// would look dead; every repopulate resets this to 0.
+    /// </summary>
+    [DataSourceProperty]
+    public float GoodsScrollValue
+    {
+        get => _goodsScrollValue;
+        set
+        {
+            if (_goodsScrollValue != value)
+            {
+                _goodsScrollValue = value;
+                OnPropertyChangedWithValue(value, nameof(GoodsScrollValue));
+            }
+        }
+    }
 
     [DataSourceProperty]
     public bool EscortNone
@@ -474,16 +569,26 @@ public sealed class SupplyOrderScreenVM : ViewModel
         _closeAction?.Invoke();
     }
 
+    /// <summary>The "x" beside the box: the notify-back clears the widget's own text.</summary>
+    public void ExecuteClearSearch()
+    {
+        SearchText = string.Empty;
+    }
+
     private void PopulateSources()
     {
         _settlements.Clear();
+        _rowsBySource.Clear();
         var sources = _sourceService.GetSources();
         if (sources == null)
             return;
         foreach (var info in sources)
         {
-            if (info != null)
-                _settlements.Add(new SupplySourceRowVM(info, OnSourceSelected));
+            if (info == null)
+                continue;
+            var row = new SupplySourceRowVM(info, OnSourceSelected);
+            _settlements.Add(row);
+            _rowsBySource[info] = row;
         }
     }
 
@@ -497,31 +602,140 @@ public sealed class SupplyOrderScreenVM : ViewModel
         return null;
     }
 
-    private void OnSourceSelected(SupplySourceRowVM row)
+    // A plain settlement click: no promoted good, and any earlier hit highlight is forgotten.
+    private void OnSourceSelected(SupplySourceRowVM row) => SelectSource(row, null);
+
+    private void SelectSource(SupplySourceRowVM row, string? preferredItemId)
     {
         if (_selectedSource != null)
             _selectedSource.IsSelected = false;
         _selectedSource = row;
         if (row != null)
             row.IsSelected = true;
+        _promotedItemId = preferredItemId;
 
-        PopulateGoods(row);
+        PopulateGoods(row, preferredItemId);
         PopulateTroops(row);
+        RefreshHitHighlights();
         Recompute();
     }
 
-    private void PopulateGoods(SupplySourceRowVM? row)
+    private void OnHitSelected(SupplySearchHitRowVM hit)
+    {
+        var row = hit?.SourceRow;
+        if (row == null || !row.CanOrder)
+            return;
+        SelectSource(row, hit!.Item?.Id);
+    }
+
+    /// <summary>
+    /// The goods pane's own <c>ScrollablePanel.ResetTweenSpeed</c>, handed in by the screen once
+    /// the movie exists. A wheel notch leaves the pane coasting (ScrollablePanel.cs:588-598,
+    /// v1.4.8) and that momentum survives a repopulate whenever both lists overflow, so the
+    /// value reset alone could carry the pane off the promoted row again (Codex review #587
+    /// P2). Not a binding: the VM never holds a widget.
+    /// </summary>
+    public Action? ResetGoodsScroll { get; set; }
+
+    private void PopulateGoods(SupplySourceRowVM? row, string? preferredItemId)
     {
         _goods.Clear();
+        ResetGoodsScroll?.Invoke();
+        GoodsScrollValue = 0f;
         if (row == null)
             return;
         var lines = _sourceService.GetGoods(row.Info);
         if (lines == null)
             return;
+        // The good the player searched for goes first; the rest keep the service's order.
+        SupplyLineItem? preferred = null;
         foreach (var line in lines)
         {
-            if (line != null)
+            if (line == null)
+                continue;
+            if (preferred == null && !string.IsNullOrEmpty(preferredItemId) && line.Id == preferredItemId)
+                preferred = line;
+        }
+        if (preferred != null)
+            _goods.Add(new SupplyGoodRowVM(preferred, Recompute));
+        foreach (var line in lines)
+        {
+            if (line != null && !ReferenceEquals(line, preferred))
                 _goods.Add(new SupplyGoodRowVM(line, Recompute));
+        }
+    }
+
+    // --- cross-market search ---
+
+    private void RefreshSearch()
+    {
+        _searchHits.Clear();
+        _searchActive = SupplyGoodsSearch.IsActive(_searchText);
+        if (!_searchActive)
+        {
+            SearchStatusText = string.Empty;
+            OnPropertyChanged(nameof(IsSearchActive));
+            return;
+        }
+
+        var hits = SupplyGoodsSearch.Search(EnsureCatalogue(), _searchText, out var total);
+        // Locks are applied at construction, never through Recompute: a keystroke must not
+        // re-quote the order or erase a confirm failure the player is reading.
+        bool locked = CanClear;
+        foreach (var hit in hits)
+        {
+            if (hit?.Source == null || !_rowsBySource.TryGetValue(hit.Source, out var row))
+                continue;
+            bool isPicked = ReferenceEquals(row, _selectedSource)
+                && _promotedItemId != null && hit.Item?.Id == _promotedItemId;
+            _searchHits.Add(new SupplySearchHitRowVM(hit, row, isPicked, locked, OnHitSelected));
+        }
+
+        SearchStatusText = BuildSearchStatus(_searchHits.Count, total);
+        OnPropertyChanged(nameof(IsSearchActive));
+    }
+
+    private static string BuildSearchStatus(int shown, int total)
+    {
+        if (total <= 0)
+            return new TextObject("{=taom_sl_search_none}No source stocks that.").ToString();
+        if (shown < total)
+        {
+            var capped = new TextObject("{=taom_sl_search_capped}Matches: {COUNT}, showing the nearest {SHOWN}. Narrow the search.");
+            capped.SetTextVariable("SHOWN", shown);
+            capped.SetTextVariable("COUNT", total);
+            return capped.ToString();
+        }
+        var found = new TextObject("{=taom_sl_search_count}Matches: {COUNT}, nearest first.");
+        found.SetTextVariable("COUNT", total);
+        return found.ToString();
+    }
+
+    /// <summary>
+    /// Orderable settlement rows only: lords sell no goods, and an at-war or unreachable row
+    /// (CanOrder false after the row's own sanitizing) is never scanned, so a hit can always be
+    /// ordered from.
+    /// </summary>
+    private List<SupplyGoodsCatalogueEntry> EnsureCatalogue()
+    {
+        if (_catalogue != null)
+            return _catalogue;
+        _catalogue = new List<SupplyGoodsCatalogueEntry>();
+        foreach (var row in _settlements)
+        {
+            if (row == null || !row.CanOrder || row.IsLord)
+                continue;
+            _catalogue.Add(SupplyGoodsCatalogueEntry.Create(row.Info, row.Distance, _sourceService.GetGoods(row.Info)));
+        }
+        return _catalogue;
+    }
+
+    private void RefreshHitHighlights()
+    {
+        foreach (var hit in _searchHits)
+        {
+            hit.IsSelected = ReferenceEquals(hit.SourceRow, _selectedSource)
+                && _promotedItemId != null && hit.Item?.Id == _promotedItemId;
         }
     }
 
@@ -580,9 +794,12 @@ public sealed class SupplyOrderScreenVM : ViewModel
             && _settings.Enabled;
         CanClear = totalQty > 0;
 
-        // One source at a time: any pending quantity locks every other row until Clear.
+        // One source at a time: any pending quantity locks every other row until Clear. Hits lock
+        // wholesale: a hit from the selected source would repopulate the goods and wipe the order.
         foreach (var row in _settlements)
             row.SetLocked(CanClear && !ReferenceEquals(row, _selectedSource));
+        foreach (var hit in _searchHits)
+            hit.SetLocked(CanClear);
 
         // Any change invalidates a stale failure message from the previous confirm attempt.
         ErrorText = string.Empty;

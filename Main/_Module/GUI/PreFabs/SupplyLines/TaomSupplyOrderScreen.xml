@@ -30,58 +30,168 @@
                        StackLayout.LayoutMethod="HorizontalLeftToRight">
               <Children>
 
-                <!-- LEFT: settlement list. Scrollable pattern copied from vanilla
-                     CharacterCreationCultureStage: ClipRect/InnerPanel are widget-id PATHS,
-                     the ScrollbarWidget is a SIBLING of the ScrollablePanel (..\Id), and the
-                     clip widget uses ClipContents="true". -->
+                <!-- LEFT: search box over EITHER the settlement list OR the search hits. The two
+                     wrappers toggle on the same IsSearchActive (IsHidden vs IsVisible), so exactly
+                     one StretchToParent child is visible and the StackLayout hands it the rest of
+                     the column. Scrollable pattern copied from vanilla CharacterCreationCultureStage:
+                     ClipRect/InnerPanel are widget-id PATHS, the ScrollbarWidget is a SIBLING of the
+                     ScrollablePanel (..\Id), and the clip widget uses ClipContents="true". -->
                 <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                         SuggestedWidth="320" SuggestedHeight="540">
                   <Children>
-                    <ScrollablePanel Id="SettlementScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                     AutoHideScrollBars="true" MouseScrollAxis="Vertical"
-                                     ClipRect="SettlementClip" InnerPanel="SettlementClip\SettlementList" VerticalScrollbar="..\SettlementScrollbar">
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                               StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
-                        <Widget Id="SettlementClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                ClipContents="true" MarginRight="12">
+
+                        <!-- Search row: flat box (the escort-button style) holding vanilla's
+                             EditableTextWidget, which writes every keystroke into @SearchText, plus
+                             an "x" that clears it. The brush lives in TAOM's Encyclopedia brush clone. -->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                   SuggestedHeight="36" MarginBottom="6"
+                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
                           <Children>
-                            <ListPanel Id="SettlementList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                       StackLayout.LayoutMethod="VerticalTopToBottom" ClipContents="true"
-                                       DataSource="{Settlements}">
-                              <ItemTemplate>
-                                <ButtonWidget DoNotPassEventsToChildren="true"
-                                              WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                              SuggestedHeight="40" MarginBottom="4"
-                                              Brush="ButtonBrush2" IsEnabled="@RowEnabled"
-                                              Command.Click="ExecuteSelect" UpdateChildrenStates="true">
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                              <Children>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#241B11FF" AlphaFactor="0.95" />
+                                <EditableTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    MarginLeft="8" MarginRight="8" MarginTop="4" MarginBottom="4"
+                                                    Brush="Encyclopedia.Search.TextBox" Brush.FontSize="16"
+                                                    MaxLength="40"
+                                                    DefaultSearchText="@SearchPlaceholderText" Text="@SearchText" />
+                              </Children>
+                            </Widget>
+                            <ButtonWidget DoNotPassEventsToChildren="true"
+                                          WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                          SuggestedWidth="34" SuggestedHeight="34" MarginLeft="6"
+                                          VerticalAlignment="Center"
+                                          Brush="ButtonBrush2" Command.Click="ExecuteClearSearch" UpdateChildrenStates="true">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16"
+                                            Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="x" />
+                              </Children>
+                            </ButtonWidget>
+                          </Children>
+                        </ListPanel>
+
+                        <!-- Search status: none / found N / nearest N of M. Gated on the same flag so
+                             the inactive state leaves nothing behind. -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="4" MarginLeft="4"
+                                    Brush="Popup.Description.Text" Brush.FontSize="13"
+                                    Brush.FontColor="#A09080FF" Text="@SearchStatusText" IsVisible="@IsSearchActive" />
+
+                        <!-- Settlement list (hidden while a search is active) -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                IsHidden="@IsSearchActive">
+                          <Children>
+                            <ScrollablePanel Id="SettlementScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                             AutoHideScrollBars="true" MouseScrollAxis="Vertical"
+                                             ClipRect="SettlementClip" InnerPanel="SettlementClip\SettlementList" VerticalScrollbar="..\SettlementScrollbar">
+                              <Children>
+                                <Widget Id="SettlementClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        ClipContents="true" MarginRight="12">
                                   <Children>
-                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                            Sprite="BlankWhiteSquare_9" Color="#FFD700FF" AlphaFactor="0.18"
-                                            IsVisible="@IsSelected" />
-                                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                                HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10"
-                                                Brush="Popup.Description.Text" Brush.FontSize="16"
-                                                Text="@DisplayName" />
-                                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                                HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10"
-                                                Brush="Popup.Description.Text" Brush.FontSize="13"
-                                                Brush.FontColor="#A09080FF" Text="@DistanceText" />
+                                    <ListPanel Id="SettlementList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                               StackLayout.LayoutMethod="VerticalTopToBottom" ClipContents="true"
+                                               DataSource="{Settlements}">
+                                      <ItemTemplate>
+                                        <ButtonWidget DoNotPassEventsToChildren="true"
+                                                      WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                      SuggestedHeight="40" MarginBottom="4"
+                                                      Brush="ButtonBrush2" IsEnabled="@RowEnabled"
+                                                      Command.Click="ExecuteSelect" UpdateChildrenStates="true">
+                                          <Children>
+                                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Sprite="BlankWhiteSquare_9" Color="#FFD700FF" AlphaFactor="0.18"
+                                                    IsVisible="@IsSelected" />
+                                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                        HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10"
+                                                        Brush="Popup.Description.Text" Brush.FontSize="16"
+                                                        Text="@DisplayName" />
+                                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                        HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10"
+                                                        Brush="Popup.Description.Text" Brush.FontSize="13"
+                                                        Brush.FontColor="#A09080FF" Text="@DistanceText" />
+                                          </Children>
+                                        </ButtonWidget>
+                                      </ItemTemplate>
+                                    </ListPanel>
                                   </Children>
-                                </ButtonWidget>
-                              </ItemTemplate>
-                            </ListPanel>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="SettlementScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                             SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
+                                             Handle="SettlementScrollHandle" MinValue="0" MaxValue="100"
+                                             Sprite="BlankWhiteSquare_9" Color="#00000066">
+                              <Children>
+                                <Widget Id="SettlementScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        SuggestedHeight="40" Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" />
+                              </Children>
+                            </ScrollbarWidget>
                           </Children>
                         </Widget>
+
+                        <!-- Search hits (one row per good at a source, nearest first). Fixed-height
+                             rows: a CoverChildren button would measure the StretchToParent overlay
+                             against the whole column and inflate. -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                IsVisible="@IsSearchActive">
+                          <Children>
+                            <ScrollablePanel Id="HitsScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                             AutoHideScrollBars="true" MouseScrollAxis="Vertical"
+                                             ClipRect="HitsClip" InnerPanel="HitsClip\HitsList" VerticalScrollbar="..\HitsScrollbar">
+                              <Children>
+                                <Widget Id="HitsClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        ClipContents="true" MarginRight="12">
+                                  <Children>
+                                    <ListPanel Id="HitsList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                               StackLayout.LayoutMethod="VerticalTopToBottom" ClipContents="true"
+                                               DataSource="{SearchHits}">
+                                      <ItemTemplate>
+                                        <ButtonWidget DoNotPassEventsToChildren="true"
+                                                      WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                      SuggestedHeight="54" MarginBottom="4"
+                                                      Brush="ButtonBrush2" IsEnabled="@RowEnabled"
+                                                      Command.Click="ExecuteSelect" UpdateChildrenStates="true">
+                                          <Children>
+                                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Sprite="BlankWhiteSquare_9" Color="#FFD700FF" AlphaFactor="0.18"
+                                                    IsVisible="@IsSelected" />
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                        MarginLeft="10" MarginRight="10" MarginTop="7"
+                                                        Brush="Popup.Description.Text" Brush.FontSize="15"
+                                                        Text="@Label" />
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                        HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                                        MarginLeft="10" MarginRight="10" MarginBottom="7"
+                                                        Brush="Popup.Description.Text" Brush.FontSize="12"
+                                                        Brush.FontColor="#A09080FF" Text="@DetailText" />
+                                          </Children>
+                                        </ButtonWidget>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="HitsScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                             SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
+                                             Handle="HitsScrollHandle" MinValue="0" MaxValue="100"
+                                             Sprite="BlankWhiteSquare_9" Color="#00000066">
+                              <Children>
+                                <Widget Id="HitsScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        SuggestedHeight="40" Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" />
+                              </Children>
+                            </ScrollbarWidget>
+                          </Children>
+                        </Widget>
+
                       </Children>
-                    </ScrollablePanel>
-                    <ScrollbarWidget Id="SettlementScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
-                                     SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
-                                     Handle="SettlementScrollHandle" MinValue="0" MaxValue="100"
-                                     Sprite="BlankWhiteSquare_9" Color="#00000066">
-                      <Children>
-                        <Widget Id="SettlementScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                SuggestedHeight="40" Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" />
-                      </Children>
-                    </ScrollbarWidget>
+                    </ListPanel>
                   </Children>
                 </Widget>
 
@@ -162,9 +272,12 @@
                                 </Widget>
                               </Children>
                             </ScrollablePanel>
+                            <!-- ValueFloat is two-way: the VM resets it to 0 on every repopulate so a
+                                 good promoted to the top after a search pick is in view. -->
                             <ScrollbarWidget Id="GoodsScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
                                              SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
                                              Handle="GoodsScrollHandle" MinValue="0" MaxValue="100"
+                                             ValueFloat="@GoodsScrollValue"
                                              Sprite="BlankWhiteSquare_9" Color="#00000066">
                               <Children>
                                 <Widget Id="GoodsScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"

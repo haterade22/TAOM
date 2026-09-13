@@ -494,4 +494,512 @@ public class SupplyOrderScreenVMTests
         Assert.AreEqual("10", vm.Settlements[0].DistanceText);
         Assert.IsTrue(vm.Settlements[0].RowEnabled);
     }
+
+    // --- cross-market search (#587) ---
+
+    private static SupplyLineItem DaleGrain() => Line("grain", "Grain", 9, 4);
+
+    [TestMethod]
+    public void SearchText_OneCharacter_InactiveAndNoHits()
+    {
+        var vm = CreateVM();
+
+        vm.SearchText = "g";
+
+        Assert.IsFalse(vm.IsSearchActive);
+        Assert.AreEqual(0, vm.SearchHits.Count);
+        Assert.AreEqual(string.Empty, vm.SearchStatusText);
+    }
+
+    [TestMethod]
+    public void SearchText_Null_TreatedAsEmpty()
+    {
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+
+        vm.SearchText = null!;
+
+        Assert.AreEqual(string.Empty, vm.SearchText);
+        Assert.IsFalse(vm.IsSearchActive);
+        Assert.AreEqual(0, vm.SearchHits.Count);
+    }
+
+    [TestMethod]
+    public void SearchText_TwoCharacters_HitsAcrossOrderableSourcesNearestFirst()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+
+        Assert.IsTrue(vm.IsSearchActive);
+        Assert.AreEqual(2, vm.SearchHits.Count);
+        Assert.AreSame(vm.Settlements[0], vm.SearchHits[0].SourceRow, "Bree at 10 is nearer than Dale at 20");
+        Assert.AreSame(vm.Settlements[1], vm.SearchHits[1].SourceRow);
+        Assert.AreEqual("grain", vm.SearchHits[0].Item.Id);
+    }
+
+    [TestMethod]
+    public void SearchText_BelowMinimum_NeverBuildsTheCatalogue()
+    {
+        var vm = CreateVM();
+
+        vm.SearchText = "g";
+
+        _sourceService.DidNotReceive().GetGoods(_townB);
+    }
+
+    [TestMethod]
+    public void SearchText_LordRow_NeverCatalogued()
+    {
+        var vm = CreateVM();
+
+        vm.SearchText = "gu";
+
+        _sourceService.DidNotReceive().GetGoods(_lordC);
+        Assert.AreEqual(0, vm.SearchHits.Count, "a lord's troops are not goods");
+    }
+
+    [TestMethod]
+    public void SearchText_AtWarRow_NeverCatalogued()
+    {
+        _townB.CanOrder = false;
+        _townB.DisabledReason = "at war";
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+
+        _sourceService.DidNotReceive().GetGoods(_townB);
+        Assert.AreEqual(1, vm.SearchHits.Count);
+    }
+
+    [TestMethod]
+    public void SearchText_UnreachableRow_NeverCatalogued()
+    {
+        _townB.Distance = float.MaxValue;
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+
+        _sourceService.DidNotReceive().GetGoods(_townB);
+        Assert.AreEqual(1, vm.SearchHits.Count);
+    }
+
+    [TestMethod]
+    public void SearchText_NaNDistanceRow_NeverCatalogued()
+    {
+        _townB.Distance = float.NaN;
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+
+        _sourceService.DidNotReceive().GetGoods(_townB);
+    }
+
+    [TestMethod]
+    public void SearchText_SecondKeystroke_CatalogueBuiltOnce()
+    {
+        // town_b is never selected, so its only GetGoods call is the catalogue build; two
+        // qualifying keystrokes must not scan the map twice.
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+        vm.SearchText = "gra";
+
+        _sourceService.Received(1).GetGoods(_townB);
+    }
+
+    [TestMethod]
+    public void SearchText_NullGoodsFromService_NoHitsNoThrow()
+    {
+        _sourceService.GetGoods(_townB).Returns((IReadOnlyList<SupplyLineItem>)null!);
+        var vm = CreateVM();
+
+        vm.SearchText = "wi";
+
+        Assert.AreEqual(0, vm.SearchHits.Count);
+    }
+
+    [TestMethod]
+    public void SearchText_Set_NotifiesTheRawValue()
+    {
+        // The widget desynchronises its visible and real text if the VM echoes a normalised value.
+        var vm = CreateVM();
+        object? notified = null;
+        vm.PropertyChangedWithValue += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SupplyOrderScreenVM.SearchText))
+                notified = e.Value;
+        };
+
+        vm.SearchText = "  Gr";
+
+        Assert.AreEqual("  Gr", notified);
+        Assert.AreEqual("  Gr", vm.SearchText);
+        Assert.IsTrue(vm.IsSearchActive, "trimmed length 2 qualifies");
+    }
+
+    [TestMethod]
+    public void SearchText_TypedAfterConfirmFailure_ErrorTextPreserved()
+    {
+        // Typing in the search box must not run Recompute, which would erase the failure line
+        // the player is reading and re-quote the order per keystroke.
+        _orders.TryPlaceOrder(
+                Arg.Any<SupplySourceInfo>(), Arg.Any<IReadOnlyDictionary<string, int>>(),
+                Arg.Any<IReadOnlyDictionary<string, int>>(), Arg.Any<SupplyEscortOption>(),
+                out Arg.Any<string>(), Arg.Any<bool>())
+            .Returns(ci => { ci[4] = "no route"; return null; });
+        var vm = CreateVM();
+        vm.Goods[0].ExecutePlus();
+        vm.ExecuteConfirm();
+        Assert.AreEqual("no route", vm.ErrorText);
+
+        vm.SearchText = "gr";
+
+        Assert.AreEqual("no route", vm.ErrorText);
+    }
+
+    [TestMethod]
+    public void SearchHit_Row_ShowsItemSourceStockPriceAndDistance()
+    {
+        var vm = CreateVM();
+
+        vm.SearchText = "fi";
+
+        var hit = vm.SearchHits[0];
+        StringAssert.Contains(hit.Label, "Fish");
+        StringAssert.Contains(hit.Label, "Bree");
+        StringAssert.Contains(hit.DetailText, "3");
+        StringAssert.Contains(hit.DetailText, "20");
+        StringAssert.Contains(hit.DetailText, vm.Settlements[0].DistanceText);
+        Assert.IsTrue(hit.RowEnabled);
+        Assert.IsFalse(hit.IsSelected);
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_SelectsSourceAndPromotesTheGood()
+    {
+        // Dale prices wine above grain, so GetGoods lists wine first; picking the grain hit
+        // must still land grain at Goods[0] so the player sees what they searched for.
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem>
+        {
+            Line("wine", "Wine", 2, 30),
+            DaleGrain(),
+        });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        var daleHit = vm.SearchHits[1];
+
+        daleHit.ExecuteSelect();
+
+        Assert.IsTrue(vm.Settlements[1].IsSelected);
+        Assert.IsFalse(vm.Settlements[0].IsSelected);
+        Assert.AreEqual(2, vm.Goods.Count);
+        Assert.AreEqual("grain", vm.Goods[0].ItemId);
+        Assert.AreEqual("wine", vm.Goods[1].ItemId);
+        Assert.IsTrue(daleHit.IsSelected);
+        Assert.IsFalse(vm.SearchHits[0].IsSelected);
+        Assert.IsTrue(vm.IsSearchActive, "the result list stays up after a pick");
+        Assert.AreEqual("gr", vm.SearchText);
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_RepopulatesTroopsAndCallsGetGoodsOnce()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        _sourceService.GetTroops(_townB).Returns(new List<SupplyLineItem> { Line("dale_spear", "Dale Spearman", 2, 60) });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        _sourceService.ClearReceivedCalls();
+
+        vm.SearchHits[1].ExecuteSelect();
+
+        Assert.AreEqual("dale_spear", vm.Troops[0].ItemId);
+        _sourceService.Received(1).GetGoods(_townB);
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_ResetsTheGoodsScroll()
+    {
+        // The goods panel keeps its scroll offset across a repopulate, so a promoted Goods[0]
+        // could sit above the viewport and the click would look dead.
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.GoodsScrollValue = 0.7f; // the widget writes the player's scroll back
+
+        vm.SearchHits[1].ExecuteSelect();
+
+        Assert.AreEqual(0f, vm.GoodsScrollValue);
+    }
+
+    [TestMethod]
+    public void SourceRowSelect_AlsoResetsTheGoodsScroll()
+    {
+        var vm = CreateVM();
+        vm.GoodsScrollValue = 0.7f;
+
+        vm.Settlements[1].ExecuteSelect();
+
+        Assert.AreEqual(0f, vm.GoodsScrollValue);
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_ThenQuantity_LocksEveryHit()
+    {
+        // A hit from the SELECTED source would repopulate the goods list and wipe the pending
+        // quantities, so a pending order pins every hit, not only the other sources' ones.
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain(), Line("grapes", "Grapes", 1, 9) });
+        var vm = CreateVM();
+        vm.SearchText = "gra";
+        vm.SearchHits[1].ExecuteSelect();
+
+        vm.Goods[0].ExecutePlus();
+
+        Assert.IsFalse(vm.SearchHits[0].RowEnabled, "Bree's hit");
+        Assert.IsFalse(vm.SearchHits[1].RowEnabled, "the picked Dale hit");
+        Assert.IsFalse(vm.SearchHits[2].RowEnabled, "Dale's other hit");
+        Assert.IsTrue(vm.SearchHits[1].IsSelected, "still highlighted while locked");
+        Assert.IsFalse(vm.Settlements[0].RowEnabled);
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_LockedHit_DoesNotChangeSelectionOrWipeQty()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.Goods[0].ExecutePlus(); // Bree (auto-selected) has a pending quantity
+
+        vm.SearchHits[1].ExecuteSelect();
+
+        Assert.IsTrue(vm.Settlements[0].IsSelected);
+        Assert.IsFalse(vm.Settlements[1].IsSelected);
+        Assert.IsFalse(vm.SearchHits[1].IsSelected);
+        Assert.AreEqual(1, vm.Goods[0].Qty);
+    }
+
+    [TestMethod]
+    public void SearchText_RetypedWhilePending_NewHitsStartLocked()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.Goods[0].ExecutePlus();
+
+        vm.SearchText = "gr";
+
+        Assert.IsFalse(vm.SearchHits[0].RowEnabled);
+        Assert.IsFalse(vm.SearchHits[1].RowEnabled);
+    }
+
+    [TestMethod]
+    public void ExecuteClear_UnlocksHitRowsToo()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.Goods[0].ExecutePlus();
+
+        vm.ExecuteClear();
+
+        Assert.IsTrue(vm.SearchHits[0].RowEnabled);
+        Assert.IsTrue(vm.SearchHits[1].RowEnabled);
+    }
+
+    [TestMethod]
+    public void SearchText_RetypedAfterPick_KeepsSelectionAndReflectsPickedHit()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.SearchHits[1].ExecuteSelect();
+
+        vm.SearchText = "gra";
+
+        Assert.IsTrue(vm.Settlements[1].IsSelected);
+        Assert.IsTrue(vm.SearchHits[1].IsSelected, "the rebuilt hit for the picked good stays highlighted");
+        Assert.IsFalse(vm.SearchHits[0].IsSelected);
+    }
+
+    [TestMethod]
+    public void SourceRowSelect_AfterHitPick_NextSearchHasNoHighlightedHit()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.SearchHits[1].ExecuteSelect();
+
+        vm.Settlements[0].ExecuteSelect();
+        vm.SearchText = "gra";
+
+        Assert.IsTrue(vm.Settlements[0].IsSelected);
+        Assert.IsFalse(vm.SearchHits[0].IsSelected, "a plain settlement pick forgets the picked good");
+        Assert.IsFalse(vm.SearchHits[1].IsSelected);
+    }
+
+    [TestMethod]
+    public void ExecuteConfirm_AfterHitPick_OrdersFromTheHitSource()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        _orders.TryPlaceOrder(
+                Arg.Any<SupplySourceInfo>(), Arg.Any<IReadOnlyDictionary<string, int>>(),
+                Arg.Any<IReadOnlyDictionary<string, int>>(), Arg.Any<SupplyEscortOption>(),
+                out Arg.Any<string>(), Arg.Any<bool>())
+            .Returns(new SupplyOrder());
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.SearchHits[1].ExecuteSelect();
+        vm.Goods[0].ExecutePlus();
+
+        vm.ExecuteConfirm();
+
+        _orders.Received(1).TryPlaceOrder(
+            _townB,
+            Arg.Is<IReadOnlyDictionary<string, int>>(g => g.Count == 1 && g["grain"] == 1),
+            Arg.Any<IReadOnlyDictionary<string, int>>(),
+            Arg.Any<SupplyEscortOption>(),
+            out Arg.Any<string>(),
+            Arg.Any<bool>());
+        Assert.IsTrue(_closeCalled);
+    }
+
+    [TestMethod]
+    public void ExecuteClearSearch_EmptiesHitsAndKeepsTheSelection()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.SearchHits[1].ExecuteSelect();
+        vm.Goods[0].ExecutePlus();
+
+        vm.ExecuteClearSearch();
+
+        Assert.AreEqual(string.Empty, vm.SearchText);
+        Assert.IsFalse(vm.IsSearchActive);
+        Assert.AreEqual(0, vm.SearchHits.Count);
+        Assert.AreEqual(string.Empty, vm.SearchStatusText);
+        Assert.IsTrue(vm.Settlements[1].IsSelected);
+        Assert.AreEqual("grain", vm.Goods[0].ItemId);
+        Assert.AreEqual(1, vm.Goods[0].Qty, "clearing the search is not clearing the order");
+    }
+
+    [TestMethod]
+    public void SearchStatusText_NoMatch_SaysSo()
+    {
+        var vm = CreateVM();
+
+        vm.SearchText = "zz";
+
+        Assert.IsTrue(vm.IsSearchActive);
+        Assert.AreEqual(0, vm.SearchHits.Count);
+        StringAssert.Contains(vm.SearchStatusText, "No ");
+    }
+
+    [TestMethod]
+    public void SearchStatusText_Matches_ShowsTheCount()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+
+        StringAssert.Contains(vm.SearchStatusText, "2");
+    }
+
+    [TestMethod]
+    public void SearchStatusText_Capped_ShowsShownOfTotal()
+    {
+        int total = SupplyGoodsSearch.MaxHits + 10;
+        var sources = new List<SupplySourceInfo>();
+        for (int i = 0; i < total; i++)
+        {
+            var town = Town($"town_{i}", $"Town {i}", i + 1);
+            _sourceService.GetGoods(town).Returns(new List<SupplyLineItem> { DaleGrain() });
+            sources.Add(town);
+        }
+        _sourceService.GetSources().Returns(sources);
+        var vm = CreateVM();
+
+        vm.SearchText = "gr";
+
+        Assert.AreEqual(SupplyGoodsSearch.MaxHits, vm.SearchHits.Count);
+        StringAssert.Contains(vm.SearchStatusText, SupplyGoodsSearch.MaxHits.ToString());
+        StringAssert.Contains(vm.SearchStatusText, total.ToString());
+    }
+
+    [TestMethod]
+    public void SearchPlaceholderText_Ctor_IsSet()
+    {
+        var vm = CreateVM();
+        Assert.IsFalse(string.IsNullOrEmpty(vm.SearchPlaceholderText));
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_PreferredGoodAbsentFromFreshList_NoPromotionNoThrow()
+    {
+        // The catalogue and the pick both read a frozen roster, so this cannot happen in game;
+        // the accepted degradation if it ever did is "no promoted row", never a crash.
+        _sourceService.GetGoods(_townB).Returns(
+            new List<SupplyLineItem> { DaleGrain() },                  // catalogue build
+            new List<SupplyLineItem> { Line("wine", "Wine", 2, 30) }); // the pick's fresh read
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+
+        vm.SearchHits[1].ExecuteSelect();
+
+        Assert.IsTrue(vm.Settlements[1].IsSelected);
+        Assert.AreEqual(1, vm.Goods.Count);
+        Assert.AreEqual("wine", vm.Goods[0].ItemId);
+    }
+
+    [TestMethod]
+    public void SourceRowSelect_AfterHitPick_ClearsTheHitHighlightWithoutRetyping()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+        vm.SearchHits[1].ExecuteSelect();
+        Assert.IsTrue(vm.SearchHits[1].IsSelected);
+
+        vm.Settlements[0].ExecuteSelect();
+
+        Assert.IsFalse(vm.SearchHits[1].IsSelected, "the hit list is still up; its highlight must follow the selection");
+        Assert.IsFalse(vm.SearchHits[0].IsSelected, "a plain settlement pick promotes nothing");
+    }
+
+    [TestMethod]
+    public void PopulateGoods_EveryRepopulate_InvokesTheWidgetScrollResetBeforeTheValueReset()
+    {
+        // A wheel notch leaves the goods pane coasting and the value reset alone cannot stop it
+        // (Codex review #587 P2); the screen hands the VM the pane's own ResetTweenSpeed.
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { DaleGrain() });
+        var vm = CreateVM();
+        var calls = new List<string>();
+        vm.ResetGoodsScroll = () => calls.Add("widget");
+        vm.PropertyChangedWithFloatValue += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SupplyOrderScreenVM.GoodsScrollValue))
+                calls.Add("value");
+        };
+        vm.GoodsScrollValue = 0.5f;
+        calls.Clear();
+
+        vm.Settlements[1].ExecuteSelect();
+
+        CollectionAssert.AreEqual(new[] { "widget", "value" }, calls);
+    }
+
+    [TestMethod]
+    public void PopulateGoods_NoWidgetHook_StillResetsTheValue()
+    {
+        var vm = CreateVM();
+        vm.GoodsScrollValue = 0.5f;
+
+        vm.Settlements[1].ExecuteSelect();
+
+        Assert.AreEqual(0f, vm.GoodsScrollValue);
+    }
 }

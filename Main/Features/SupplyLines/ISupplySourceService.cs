@@ -54,7 +54,7 @@ public interface ISupplySourceService
     /// <summary>Eligible settlements (distance-sorted) then friendly lords.</summary>
     IReadOnlyList<SupplySourceInfo> GetSources();
 
-    /// <summary>Food goods in the source's market, best 14 by unit price. Empty for lords.</summary>
+    /// <summary>Every trade good in the source's market, most valuable first, uncapped. Empty for lords.</summary>
     IReadOnlyList<SupplyLineItem> GetGoods(SupplySourceInfo source);
 
     /// <summary>Recruitable troops: settlement volunteers (alignment-gated) or the lord's roster.</summary>

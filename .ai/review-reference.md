@@ -42,6 +42,25 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Reads the widget's update loop past the bound field** (2026-09-13, supply search review 106):
+  handed a scroll reset that wrote 0 into a two-way `ScrollbarWidget.ValueFloat`, it read
+  `ScrollablePanel.UpdateScrollablePanel` after the value read and found the private wheel momentum
+  added on the next line, cleared only when the new content does not overflow, then executed the
+  equations to size the drift. When a fix targets the state a binding can see, expect Codex to
+  look for the state it cannot.
+- **Walks the post-condition of an engine call, not its signature** (2026-09-13, SmartCavalryAI
+  v2, #586): three P1s in one pass, all about what a call leaves for the NEXT frame or the NEXT
+  call. `Formation.SetMovementOrder` ends by clearing the native target its own `ChargeToTarget`
+  had just set (`Formation.cs:714`), so the feature's charge was a free charge at anyone;
+  `Formation.Tick` re-applies the retained `FacingOrder` through `SetPositioning` every tick
+  (`:2311-2314`), so a line's direction lasted one tick; and the player's targeted charge is a
+  plain Charge FOLLOWED by `SetTargetFormation` (`OrderController.cs:812-817`), so a postfix on
+  the order alone charged the nearest enemy instead of the chosen one. Five agents and the author
+  had verified every signature and none of the three post-conditions. It also compiled and ran a
+  Harmony probe to settle a `__state` question, disputed three of seven handed suspects with
+  decompiled lines, and reported that its sandbox could not build instead of substituting a stale
+  run. When a design says "we issue X", expect Codex to read what the engine does right after X
+  returns, and who calls X right before.
 - **Reads the concrete close path down to the manager layer, not the layer the code subscribed
   to** (2026-09-12, memory instruments review 101): handed "the engine never collects on a plain
   `PopScreen`", it opened `InventoryManager.CloseInventoryPresentation`,
