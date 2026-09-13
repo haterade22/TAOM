@@ -78,6 +78,7 @@ class Registries:
     settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value) records
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
     item_armour: dict = field(default_factory=dict)           # armour item id -> head+body+arm+leg (empty = unavailable)
+    launchers: dict = field(default_factory=dict)             # bow/crossbow id -> ranged_ladder.Launcher (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -229,6 +230,7 @@ class Validator:
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
         issues += self._upgrade_tier_collapse()
+        issues += self._ranged_ladder_inversions()
         issues.sort(key=lambda i: i.sort_key())
         return issues
 
@@ -1390,6 +1392,75 @@ class Validator:
                     ))
         return issues
 
+    # -- RANGED_LADDER_INVERSION -------------------------------------------- #
+    # An archer's reach is its launcher's missile_speed and nothing else (tools/ranged_ladder.py
+    # cites the decompile). Two rules, per launcher class: inside a line a lower tier is never
+    # faster than a higher tier; inside a band a better-ranked kingdom line is never slower than
+    # a worse-ranked one. Both come from the grid in tools/ranged_ladders.json, and the same
+    # pure function (ranged_ladder.inversions) drives this gate and the repair tool,
+    # tools/rebalance_ranged_ladders.py, so the two cannot disagree. On 2026-09-12 the 227
+    # ranged troops carried 1,741 inverted pairs (#582). Launcher speeds come from the install,
+    # so the check is skipped, never faked, without it; a missing or self-contradicting spec is
+    # itself a finding, because a gate that quietly checks nothing reads like a clean run.
+    _RANGED_LADDER_EXEMPT: dict = {}   # troop id -> why its launcher is off the ladder on purpose
+
+    def _ranged_ladder_inversions(self) -> list:
+        launchers = getattr(self.reg, "launchers", None) or {}
+        if not launchers:
+            return []
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import ranged_ladder as rl
+        code = "RANGED_LADDER_INVERSION"
+        spec_rel = "tools/ranged_ladders.json"
+        try:
+            spec = rl.load_spec()
+        except (OSError, ValueError) as exc:
+            return [Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(spec)",
+                message=(f"the ladder spec cannot be read ({exc}), so no troop's reach was checked. "
+                         "Restore it from git rather than deleting the check."),
+            )]
+        problems = rl.validate_spec(spec, launchers, cultures=rl.troop_file_cultures(self.moduledata))
+        if problems:
+            return [Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(spec)",
+                message="the ladder spec contradicts itself or the install, so no troop's reach was "
+                        "checked: " + "; ".join(problems[:4]) + (" ..." if len(problems) > 4 else ""),
+            )]
+        troops = {tid: t for tid, t in rl.load_ranged_troops(self.moduledata).items()
+                  if tid not in self._RANGED_LADDER_EXEMPT}
+        issues = []
+        for troop in rl.unassigned(troops, launchers, spec):
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=self._rel(Path(troop.file)), line=0,
+                entry_id=troop.id,
+                message=(f"carries a bow or crossbow but no line in {spec_rel} claims its file "
+                         f"({os.path.basename(troop.file)}), so its reach is outside every rule. "
+                         "Add the file to a line, or the troop to _RANGED_LADDER_EXEMPT with a reason"),
+            ))
+        for g in rl.summarize(rl.inversions(troops, launchers, spec)):
+            w = g.worst
+            low = troops[w.low]
+            if g.kind == "tier":
+                why = (f'inside line "{g.scope}" a lower tier outranges a higher one: '
+                       f'"{w.low}" (tier {w.low_tier}, missile_speed {w.low_speed}) over '
+                       f'"{w.high}" (tier {w.high_tier}, {w.high_speed})')
+            else:
+                why = (f'inside band {g.scope} a worse-ranked line outranges a better one: '
+                       f'"{w.low}" ({w.low_line}, rank {rl.rank_of(w.low_line, spec)}, missile_speed '
+                       f'{w.low_speed}) over "{w.high}" ({w.high_line}, rank '
+                       f'{rl.rank_of(w.high_line, spec)}, {w.high_speed})')
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=self._rel(Path(low.file)), line=0,
+                entry_id=w.low,
+                message=(f"{g.cls}: {why}; {g.count} such pair(s) in this scope. Reach is the "
+                         f"launcher's missile_speed; run python tools/rebalance_ranged_ladders.py "
+                         f"(--apply after tools/generate_ranged_ladder_items.py --apply) to put "
+                         f"every roster on its grid cell"),
+            ))
+        return issues
+
 
 # --------------------------------------------------------------------------- #
 # Registry builders (real data) — reuse the existing validators' proven logic  #
@@ -1784,6 +1855,15 @@ def build_item_armour(item_roots) -> dict:
     return armour
 
 
+def build_launchers(item_roots) -> dict:
+    """bow/crossbow id -> ranged_ladder.Launcher over the same item roots the armour index
+    reads, for RANGED_LADDER_INVERSION. Unavailable (empty) without the install."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import ranged_ladder as rl
+    return rl.index_launchers(item_roots)
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
@@ -1842,6 +1922,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
 
     harness_family_types, mount_family_types = build_harness_registries(item_roots)
     item_armour = build_item_armour(item_roots)
+    launchers = build_launchers(item_roots)
 
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
@@ -1858,6 +1939,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         # Armour values are mostly Armory and vanilla; a TAOM-only table would judge every
         # edge on a handful of repo items and read the rest as bare. Unavailable, not partial.
         item_armour = {}
+        launchers = {}
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
@@ -1891,6 +1973,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         settlement_economy=settlement_economy,
         suspect_registries=suspect,
         item_armour=item_armour,
+        launchers=launchers,
     )
 
 
