@@ -17,6 +17,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     private List<SpecialResource> _resources;
     private Dictionary<string, SpecialResource> _byKingdom;
     private Dictionary<string, SpecialResource> _byCulture;
+    private Dictionary<string, SpecialResource> _byId;
     private Dictionary<string, TroopResourceCostEntry> _troopCosts;
 
     public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger)
@@ -43,6 +44,12 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         return cultureId != null && _byCulture.TryGetValue(cultureId, out var resource) ? resource : null;
     }
 
+    public SpecialResource GetById(string resourceId)
+    {
+        EnsureLoaded();
+        return resourceId != null && _byId.TryGetValue(resourceId, out var resource) ? resource : null;
+    }
+
     public TroopResourceCostEntry GetTroopCost(string troopId)
     {
         EnsureLoaded();
@@ -57,6 +64,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         _resources = new List<SpecialResource>();
         _byKingdom = new Dictionary<string, SpecialResource>();
         _byCulture = new Dictionary<string, SpecialResource>();
+        _byId = new Dictionary<string, SpecialResource>();
         _troopCosts = new Dictionary<string, TroopResourceCostEntry>();
 
         LoadResources();
@@ -119,6 +127,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                     _byKingdom[kid] = resource;
                 foreach (var cid in cultureIds)
                     _byCulture[cid] = resource;
+                if (!string.IsNullOrEmpty(resource.Id))
+                    _byId[resource.Id] = resource;
             }
 
             _logger.LogInfo($"SpecialResourceConfigProvider: Loaded {_resources.Count} resource definitions");

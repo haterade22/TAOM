@@ -4,6 +4,27 @@
 
 ## 2026-09-13
 
+### feat(special-resources): the encyclopedia troop tree badges the troops that cost a resource (#590)
+
+Players asked for a marker on the encyclopedia troop tree for troops that need a special resource.
+Every troop whose cost row carries an upgrade cost, a recruit cost or a daily upkeep (27 today: the
+Mordor uruk elites, the Black Numenorean line, the Ironpass rams, the spider, the elephant and the
+Mumakil) now shows its own resource icon in the bottom-right corner of its card. Hovering it lists the
+resource, then Upgrade, Recruit, Upkeep per day and Elite Emissary price where set, and names the
+player's own resource when it is not the troop's, since those charges land in the player's resource
+(#558). The 50 emissary-only rows stay unmarked by decision: they are ordinary tree troops the
+emissary happens to sell. The badge is a widget in TAOM's existing clone of
+`EncyclopediaUnitTreeNodeItem.xml`, fed by a UIExtenderEx mixin on `EncyclopediaUnitVM` that reads
+the troop from the private `_character` field once (registered and gated as a reflection site). The
+cost row's `resource_id` picks the icon through the new `ISpecialResourceConfigProvider.GetById`, so
+that attribute is load-bearing for the first time and `TroopResourceCostDataTests` gates it. Six
+`taom_res_badge_*` strings, seeded as English in all 12 languages.
+
+Deep-reviewed by 5 agents, no findings. Verified in a throwaway worktree because the shared tree
+carried another session's in-flight files that do not compile yet: full suite 8924 green, 18 new
+tests. Not-tested: the in-game render of the badge and its tooltip (1024 px icons drawn at 22 px),
+and the translator run (no API key in this shell).
+
 ### feat(map-ui): settlement nameplates show friend and enemy, and are translucent again (#591)
 
 Players could not tell an enemy town from a friendly one on the campaign map, and noticed vanilla's plates

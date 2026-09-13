@@ -201,4 +201,50 @@ public class SpecialResourceConfigProviderTierTests
         Assert.AreEqual(1, gems.TierThresholds.Count);
         Assert.AreEqual(0, warSpoils.TierThresholds.Count);
     }
+    // ── GetById: the lookup the encyclopedia badge makes from a cost row's resource_id (#590) ──
+
+    [TestMethod]
+    public void GetById_KnownId_ReturnsResource()
+    {
+        WriteResourceXml(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<SpecialResources>
+  <Resource id=""gems"" display_name=""Gems"" icon_sprite=""SpecialResources\taom_gems_icon""
+    cap=""600"" starting_amount=""40"" daily_per_town=""1.0""
+    per_battle_victory_base=""5"" per_raid=""3"" per_siege_victory=""10"" per_prisoner=""0"">
+    <Kingdom id=""erebor"" />
+    <Culture id=""erebor"" />
+  </Resource>
+  <Resource id=""caster"" display_name=""Castar"" icon_sprite=""SpecialResources\taom_caster_icon""
+    cap=""600"" starting_amount=""0"" daily_per_town=""0.6""
+    per_battle_victory_base=""8"" per_raid=""4"" per_siege_victory=""18"" per_prisoner=""1"">
+    <Kingdom id=""empire_w"" />
+    <Culture id=""gondor"" />
+  </Resource>
+</SpecialResources>");
+        var provider = new SpecialResourceConfigProvider(_pathService, _logger);
+
+        var resource = provider.GetById("caster");
+
+        Assert.IsNotNull(resource);
+        Assert.AreEqual("Castar", resource.DisplayName);
+        Assert.AreEqual("SpecialResources\\taom_caster_icon", resource.IconSpriteName);
+        Assert.AreSame(provider.GetByCultureId("gondor"), resource);
+    }
+
+    [TestMethod]
+    public void GetById_UnknownOrNullId_ReturnsNull()
+    {
+        WriteResourceXml(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<SpecialResources>
+  <Resource id=""gems"" display_name=""Gems"" icon_sprite=""SpecialResources\taom_gems_icon""
+    cap=""600"" starting_amount=""40"" daily_per_town=""1.0""
+    per_battle_victory_base=""5"" per_raid=""3"" per_siege_victory=""10"" per_prisoner=""0"">
+    <Kingdom id=""erebor"" />
+  </Resource>
+</SpecialResources>");
+        var provider = new SpecialResourceConfigProvider(_pathService, _logger);
+
+        Assert.IsNull(provider.GetById("no_such_resource"));
+        Assert.IsNull(provider.GetById(null));
+    }
 }

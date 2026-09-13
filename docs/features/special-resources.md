@@ -144,6 +144,28 @@ holds an unaffordable troop — mirroring vanilla's gold gate, only ever forcing
 deduction is on `OnUnitRecruitedEvent` (player-only; the AI/generic recruit path fires `OnTroopRecruited`
 instead, so AI lords are never charged).
 
+### Encyclopedia badge (#590)
+
+The encyclopedia troop tree (Home > Troops > a troop) marks every troop whose row carries an
+`upgrade_cost`, a `recruit_cost` or a `daily_upkeep` above zero with that troop's resource icon in the
+bottom-right corner of its card (27 rows on 2026-09-13). A row that only carries a `merchant_cost` is
+an ordinary tree troop the Elite Emissary sells and shows nothing. Hovering the badge lists the
+resource, then Upgrade, Recruit, Upkeep per day and Elite Emissary price where set, and adds a line
+naming the player's own resource when it is not the troop's, because those three charges land in the
+PLAYER's resolved resource whatever the troop's faction.
+
+How it is wired: TAOM's clone of `EncyclopediaUnitTreeNodeItem.xml` carries the badge widget beside
+the vanilla tier and type icons, bound to `EncyclopediaUnitBadgeMixin`, a UIExtenderEx mixin on
+`EncyclopediaUnitVM` (the VM the card binds as `{Unit}`). Neither tree VM exposes the troop, so the
+mixin reads the private `_character` field once at construction (registered in
+`docs/reference/taleworlds-api-snapshot/reflection-sites.md`, gated by `ReflectionSiteBindingTests`).
+The icon comes from the row's `resource_id` through `ISpecialResourceConfigProvider.GetById`, which
+makes that attribute load-bearing for the first time: `TroopResourceCostDataTests` requires every
+`resource_id` in the shipped file to name a configured resource. The tooltip is a lazy
+`BasicTooltipViewModel`, so nothing renders until hover and no refresh hook is needed. Predicate and
+rows live in the pure `SpecialResourceTroopBadge`. The 11 icons are 1024 px sources drawn at 22 px
+here (33 px on the map bar); if they alias, widen the widget first and bake a small variant second.
+
 ### Current Values (read from `special_resources_config.xml`, 2026-09-11)
 
 Every resource has cap 10000 and starting amount 0. Daily income is per owned town before the career
@@ -179,7 +201,7 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/SpecialResourceService.cs` | Core logic (resolve, earn, spend, desertion, session) |
 | `Main/Features/SpecialResources/ISpecialResourceStorageService.cs` | Storage interface |
 | `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | Composite-key dict persistence |
-| `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface (GetByKingdomId, GetByCultureId) |
+| `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface (GetByKingdomId, GetByCultureId, GetById, GetTroopCost) |
 | `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing |
 | `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior (8 events, desertion, notifications) |
 | `Main/Features/SpecialResources/SpecialResourceEarnPolicy.cs` | The two pure earn gates: participation victory + dedicated-server suppression |
@@ -201,6 +223,9 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Map bar UIExtenderEx mixin |
 | `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
 | `Main/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |
+| `Main/Features/SpecialResources/SpecialResourceTroopBadge.cs` | Pure predicate and tooltip rows for the encyclopedia badge (#590) |
+| `Main/Features/SpecialResources/UI/EncyclopediaUnitBadgeMixin.cs` | UIExtenderEx mixin on `EncyclopediaUnitVM`: badge visibility, icon sprite, lazy tooltip (#590) |
+| `Main/_Module/GUI/Prefabs/Encyclopedia/EncyclopediaSubPages/EncyclopediaUnitTreeNodeItem.xml` | TAOM clone of the vanilla troop-tree node; carries the badge widget beside the tier and type icons |
 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | 11 resource definitions |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 77 cost rows: 27 with daily upkeep, 50 merchant-only emissary offers |
 
@@ -209,7 +234,7 @@ question, not a defect, and the daily toast now makes it visible.
 - `IPathService` (Core) — module data path resolution
 - `IModLogger` (Core) — logging (`[SpecRes]` prefix)
 - `IDedicatedServerProvider` (CoopInterop) — suppresses every earn path on a headless dedicated server
-- UIExtenderEx — map bar mixin + prefab extension
+- UIExtenderEx: map bar mixin + prefab extension, encyclopedia badge mixin (#590)
 - Harmony 2.x — Patch26_SpecialResources (3 patches)
 
 ## Tests
@@ -222,7 +247,9 @@ question, not a defect, and the daily toast now makes it visible.
 - `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
 - `SpecialResourceEarnPolicyTests.cs` — 8 tests: the AI-led-army regression, player-led still earns, losing side, unresolved battle, player on no side, neither side resolved, and both `MayCreditMainHero` cases
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
-- `SpecialResourceTierServiceTests.cs` (14), `SpecialResourceConfigProviderTierTests.cs` (6) and `ResourceTierTests.cs` (3): tier resolution by threshold, `<Tiers>` parsing and sort order, the domain record
+- `SpecialResourceTierServiceTests.cs` (14), `SpecialResourceConfigProviderTierTests.cs` (6, plus the 2 `GetById` tests for a known and an unknown or null id) and `ResourceTierTests.cs` (3): tier resolution by threshold, `<Tiers>` parsing and sort order, the domain record
+- `SpecialResourceTroopBadgeTests.cs`: 14 tests (#590). The predicate for each cost field alone, the merchant-only row shape and a null row; the rows for a captain, an elephant rider and a ram in their fixed order with zero fields omitted; the paid-in note only when the player's resource differs; no digit baked into any label
+- `TroopResourceCostDataTests.cs`: 2 tests reading the shipped XML: every `resource_id` names a configured resource, and every badged row reaches a `SpecialResources\` icon sprite
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
 ## Cheat Command
@@ -325,6 +352,7 @@ ends up controlling, resolving it from the character-creation culture and the li
 
 ## Changelog
 
+- 2026-09-13 (#590): the encyclopedia troop tree badges every troop that costs a resource to upgrade, recruit or keep, with the troop's own resource icon and a hover tooltip of the costs; `ISpecialResourceConfigProvider.GetById`; the row's `resource_id` is now gated by `TroopResourceCostDataTests`; six `taom_res_badge_*` keys seeded as English in all 12 languages (translator run owed). The in-game render check is owed.
 - 2026-09-11 (#558): every outflow is visible. The tooltip renders the real daily breakdown (it had computed upkeep from an empty list since the first commit), with per-troop upkeep rows, days until depleted and a warning flag one day ahead of desertion; a daily income/upkeep line, an overdraft line, an upgrade-spend line and a recruit-charge line join the earning toast; troops whose row carries no `daily_upkeep` no longer desert; `taom.print_special_resources` prints the breakdown; 20 new `taom_res_*` keys, seeded as English in all 12 languages (translator run owed). Data: the 13 Black Numenorean rows rescaled to the Mordor line's upkeep ratio and merchant band. Codex (GPT-6-Astra at ultra, review 95) added three MEDIUM fixes the same day: measured debits behind the spend and charge lines, a range-checked countdown cast, and the zero-balance notice gated on the net.
 - 2026-08-03 — Earning is keyed on participation (`MapEvent.PlayerSide == WinningSide`) instead of commanding the winning side, which also fixes single-player: fighting inside an AI lord's army used to pay nothing. Added `SpecialResourceEarnPolicy` (pure, 8 tests) and a dedicated-server gate that suppresses all five earn paths.
 - 2026-07-30 — Added the `taom.add_special_resources` console cheat (TAOM's first console command) plus `ISpecialResourceService.GrantAmount`, the only arbitrary-amount grant path in the feature.

@@ -38,6 +38,13 @@
                   </Children>
                 </Widget>
       
+                <!-- TAOM #590: special-resource badge, shown on a troop that costs a resource to upgrade, recruit or keep -->
+                <Widget IsVisible="@HasSpecialResourceCost" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="22" SuggestedHeight="22" HorizontalAlignment="Right" VerticalAlignment="Bottom" PositionXOffset="-2" PositionYOffset="-5" Sprite="@SpecialResourceIconSprite">
+                  <Children>
+                    <HintWidget DataSource="{SpecialResourceTooltip}" DoNotAcceptEvents="true" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"/>
+                  </Children>
+                </Widget>
+
                 <!-- Hint -->
                 <HintWidget DoNotAcceptEvents="true" HeightSizePolicy ="StretchToParent" WidthSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
 

@@ -59,6 +59,8 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:21")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:71")]
+    // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM", "EncyclopediaUnitVM", "_character", "Field", "EncyclopediaUnitBadgeMixin.cs:31")]
     // --- EditorCacheRebuild path cache (PersistentPathCache.cs) ---
     [DataRow("TaleWorlds.Engine.PathReuseCache", "PathReuseCache", "_store", "Field", "PersistentPathCache.cs:149")]
     // --- EditorCacheRebuild distance-cache reflection web (NavigationCacheAdapter.cs) ---

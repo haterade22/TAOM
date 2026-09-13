@@ -2639,5 +2639,11 @@
     <string id="taom_sl_search_count" text="Matches: {COUNT}, nearest first." />
     <string id="taom_sl_hit_row" text="{ITEM} at {SOURCE}" />
     <string id="taom_sl_hit_detail" text="{STOCK} in stock, {PRICE} denars, {DISTANCE} away" />
+    <string id="taom_res_badge_title" text="Requires {RESOURCE}" />
+    <string id="taom_res_badge_upgrade" text="Upgrade" />
+    <string id="taom_res_badge_recruit" text="Recruit" />
+    <string id="taom_res_badge_upkeep" text="Upkeep per day" />
+    <string id="taom_res_badge_emissary" text="Elite Emissary price" />
+    <string id="taom_res_badge_paid_in" text="Upgrades, recruits and upkeep are paid in your own {RESOURCE}" />
   </strings>
 </base>
