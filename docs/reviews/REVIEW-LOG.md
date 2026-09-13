@@ -2716,6 +2716,40 @@ theoretical residual) went into the code comment and the feature doc. RCA:
 Owed: the in-game checks in `docs/features/lord-party-templates.md` "Verification in game", then
 close #580.
 
+## Review 105: Black Numenorean confinement (#584) and the level-41 weight band (#585), 6-agent deep-review + Codex (2026-09-13)
+
+The user asked for the Black Numenoreans out of every orc and uruk party and kept to their clans,
+and for troop weight at the higher levels raised to 3. Decisions: both houses (Dolgubeth, Wawrim)
+and Sauron's per-hero template keep the line, the vassal reward keeps its one veteran, the
+level-3 patrol loses its one infantry; every 2.0 row at level 41 or 46 goes to 3.0 (41 rows). 183
+stacks removed from 15 templates, `rebalance_party_template_maxes.py --apply` rescaled 120 maxes
+back to the 260 ceiling (mins untouched, houses and Sauron byte-identical), the BN wiring script
+retargeted so a re-run adds nothing, two shipped-data tests (`BlackNumenoreanPartyTemplateTests`,
+`TroopWeightLevelBandTests`) pin both rules from both sides.
+
+**Deep review, six agents.** Standards one dash, compatibility 4/4 engine questions verified on the
+installed DLLs (fill formula, patrol ratio 1, template resolution at load, the clamp), efficiency
+and completeness clean bar a stale lesson count, tooling two comment notes. Data flow, 8 flows and
+one MEDIUM: `generate_clan_heraldry.py`'s refusal guard compared troop-id sets only, and deleting
+the BN ids made 13 templates' sets equal the stale `mordor.json`, so the guard rested on the two
+houses. Widened to refuse a spec whose max sum is below the live template's; 19 of 21 specs refuse
+today (`bandits`, `khand` current), the tool gained its first test.
+
+**Codex gpt-6-astra at ultra (183k tokens): no P1 / no P2 in the changeset, four P3 wrong numbers,
+one PRE-EXISTING P2, zero false positives.** The P2: `SubtractResultFramePenalty` fed `(B - p/s) * s`
+through float and the engine's `(int)` cast, so Gondor's 0.025 feat read 69 for an intended 70 and
+0 for the promised floor of 1; Codex executed the installed `ExplainedNumber` with the shipped feat
+value. Fixed with a probe-and-lift (0.001 in the result frame, only on an undershoot), five
+integer-frame test cases plus a fractional-base case. The P3s (a level-11 comment on a level-36
+troop, a `0/2` the culture default never had, a 1.91 that is 1.93, a generator comment naming the
+old band) were all numbers written from an agent's summary and not from the data. RCA:
+`rca-black-numenorean-confinement-2026-09-13.md`; lessons in `build-tooling-workflow.md` and
+`testing-qa.md`. Suite 8,784 green.
+
+Owed: new-campaign smoke (a `clan_empire_south_2` lord with no Black Numenoreans, the Mouth of
+Sauron mostly BN, a Mordor level-3 patrol with none), a full restart and an L41+ elite reading 3
+slots in the party screen's weighted frame.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph
