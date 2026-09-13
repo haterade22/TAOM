@@ -58,7 +58,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 Any patch with `MovementOrder` in its postfix signature MUST join `Patch_MissionTime_SetMovementOrder`
 (applied once from `OnMissionBehaviorInitialize`), because `MovementOrder.cctor` reads
 `Mission.Current.CurrentTime` — null in `OnSubModuleLoad`/`OnGameInitializationFinished`. It currently
-houses Patch31_SmartCavalryAI + Patch35_CompanionTactics; add yours there, never a fresh category.
+houses Patch31_SmartCavalryAI (+ its Patch31b sibling on `Formation.SetTargetFormation`) + Patch35_CompanionTactics; add yours there, never a fresh category.
 
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy

@@ -113,7 +113,7 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
 8. Prior review lessons:
    SUCCESSES: Config ID cross-ref caught rohan/dol_guldur mismatches. Vanilla decompilation caught missing gates. Lifecycle tracing caught stale caches.
    FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
-9. Output to: docs/reviews/raw/codex-adversarial-{feature}-{date}.md
+9. Output: return the full report as your FINAL MESSAGE. The dispatcher redirects stdout into docs/reviews/raw/codex-adversarial-{feature}-{date}.md; tell Codex NOT to write that path itself (2026-09-13: it assembled its report into the same file the transcript was streaming into and the transcript won; the report had to be rebuilt from its part files).
 
 ### 2e: Dispatch Codex directly
 

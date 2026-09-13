@@ -2866,6 +2866,52 @@ hit rows, the goods scroll landing after a wheel notch, Escape ignored while typ
 trade good delivered, the first-keystroke build on the full map) and the paid translation run for
 the six keys (#508).
 
+## Review 107: SmartCavalryAI state machine v2 (#586), 5-agent deep-review, fix re-check and Codex gpt-6-astra ultra pass (2026-09-13)
+
+Player feedback: with Smart Cavalry AI on, cavalry stood still, stopped inside the enemy, and needed
+F3 twice. The v1 port could not work: its line-up was a Stop (StandGround holds each rider where it
+stands, `Formation.cs:1262`), its alignment check measured spread ALONG the line and asked for 1.5 m
+of it, and its double-tap guard left the second F3 to vanilla. Four months shipped with 44 green
+tests and two review passes while the feature doc said "Pending in-game verification". v2 rewrites
+the machine: Move-based line-up, mean rider-to-slot alignment (`LineAlignment`, pure and tested
+against numbers), frozen-direction contact, a reform point past the live enemy's depth, a hit-and-run
+loop, dwell budgets on every hold state, hand-off to a vanilla Charge on every give-up, charge-now on
+a second F3, cancel on any other order, an `IsAIControlled` gate, and `Max Line-Up Seconds` in MCM.
+
+**Deep review, five agents plus a re-check of the fix deltas.** Standards clean (five flagged dashes
+were pre-existing lines). Compatibility verified all eight engine claims on the installed DLL and
+enumerated the target's 63 call sites, which found the one real defect in the rework:
+`BannerBearerLogic.RepositionFormation` re-issues a formation's current order when a bearer dies and
+the postfix read it as a player order; fixed with a prefix-captured previous order. Efficiency's HIGH
+was my alignment read going through Patch30's prefixed `GetOrderPositionOfUnit`; it now reads the
+arrangement slot directly, which also removed two false readings. Data flow, briefed to falsify the
+design, found the toggle-off freeze, the collision nudge missing the AI gate, two inverted NaN gates,
+a debug hint promising a HUD that never existed, and the Column arrangement edge. The re-check found
+two holes in the fixes themselves (an emptied formation's stale state, Column's all-null slots).
+
+**Codex (gpt-6-astra, ultra, about 75 minutes): 3 P1 and 4 P2, all confirmed against the DLL.** The
+three P1s share one shape, the state a call leaves behind: `SetMovementOrder` ends by clearing the
+native target (`Formation.cs:714`), so my `ChargeToTarget` sent riders on a free charge; the player's
+targeted charge is a plain Charge followed by `SetTargetFormation` (`OrderController.cs:812-817`), so
+the postfix charged the nearest enemy instead of the chosen one; `Formation.Tick` re-applies the
+retained `FacingOrder` every tick, so my line direction lasted one tick. The adapter now re-sets the
+target and installs a facing order, and a second postfix (`Patch31b`, on `SetTargetFormation`)
+re-points a running cycle at the chosen formation. P2s: dismounted riders lost every exit (every live
+formation is ticked now), a 1 m re-issue tolerance a deliberate redraw could fall into (1 cm), the
+reform point ignoring the enemy's depth (`GetTargetDepthAlong`), and the Column case, already fixed.
+It also caught a proper noun I had copied into five docs: `FormationAI.SetCurrentOrder` does not
+exist, the gate is in `TickOccasionally`. Codex could not build (its sandbox denies MSBuild SDK
+discovery) and said so instead of substituting a stale run. It also assembled its report into the
+path the dispatcher was redirecting the CLI transcript to; the report was rebuilt from its part files
+and the skill prompt now tells Codex to return the report as its final message.
+
+Suite 8825 green in an isolated worktree (the shared tree carried another session's red test all
+day; every build and test of this change ran there). 106 SmartCavalryAI tests. RCA
+`rca-smart-cavalry-2026-09-13.md`; lessons in `lessons/adapters-taleworlds-api.md`,
+`lessons/testing-qa.md` and `lessons/harmony-il.md`; one CLAUDE.md trap row.
+
+Owed: the in-game smoke in the feature doc; the toggle stays OFF by default until it passes.
+
 ## Review 108: ranged range ladders (#582), the ranged-troops page and the veteran militia step (#588), two 6-agent deep-reviews and a Codex pass on GPT-6-Astra at ultra (2026-09-12/13)
 
 The user asked what sets an archer troop's range (the bow's `missile_speed`, not the skill), then

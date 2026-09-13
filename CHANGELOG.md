@@ -4,6 +4,46 @@
 
 ## 2026-09-13
 
+### fix(cavalry): Smart Cavalry AI forms a line, charges, rides through and comes again (#586)
+
+Players with Smart Cavalry AI on reported cavalry standing still, stopping inside the enemy, and
+needing F3 twice. The v1 port (2026-05-06) could not work: its line-up issued a Stop, which the engine
+implements as every rider holding its own position (`Formation.cs:1262`), so no line ever formed; its
+alignment check measured spread along the line and asked for 1.5 m of it, which more than two riders
+can never satisfy; and its double-tap guard left the second F3 to vanilla. The state machine is
+rewritten. Forming is a Move into a line 5 m ahead; alignment is the mean distance from each rider to
+its arrangement slot (`LineAlignment`, 10 / 4.4 / 2 m at strictness 0 / 0.7 / 1); contact is measured
+along a charge direction frozen at line time; the reform point sits past the live enemy's depth along
+that axis; the cycle repeats at the nearest live enemy until none is left or the player gives another
+order; every hold state has a dwell budget and every give-up hands the formation back to a vanilla
+Charge, so no exit leaves riders standing. A second F3 charges at once. Any other player order cancels
+the cycle; a formation the team AI commands (F6, enlisted, dead player) is never entered; a formation
+that empties or dismounts leaves the machine. The player's targeted charge, which the engine issues as
+a plain Charge followed by `SetTargetFormation`, is picked up by a second postfix (`Patch31b`) that
+re-points the cycle at the chosen formation. New MCM knob `Max Line-Up Seconds` (default 4); the
+strictness and debug hints now say what the code does.
+
+Reviewed by a 5-agent deep review, a re-check of its fixes, and a Codex `gpt-6-astra` ultra pass
+(3 P1 confirmed and fixed: `SetMovementOrder` clears the native target after every order so the
+adapter re-sets it; the targeted-charge shape above; `Formation.Tick` re-applies the retained
+`FacingOrder` every tick so every line installs one). Suite 8825 green in an isolated worktree, 106
+SmartCavalryAI tests. Docs: `docs/features/smart-cavalry-ai.md` rewritten, registry Patch31 section,
+lessons in three category files, RCA `docs/reviews/rca-smart-cavalry-2026-09-13.md`, a CLAUDE.md trap
+row, the co-op settings counts (225 / 180). The toggle stays OFF by default until the in-game smoke in
+the feature doc passes.
+
+Files: `Main/Features/SmartCavalryAI/**`, `Main/Adapters/{I,}FormationAdapter.cs`,
+`Main/Adapters/{I,}CavalryCommandAdapter.cs`, `Main/Adapters/{I,}BattlefieldQueryAdapter.cs`,
+`Main/Features/TaomSettings.cs`, `TAOM.Tests/Features/SmartCavalryAI/**`,
+`TAOM.Tests/Features/CoopInterop/SettingsFingerprintTests.cs`.
+Research: `Formation.SetMovementOrder` / `GetOrderPositionOfUnit` / `Tick` / `SetTargetFormation` /
+`RemoveUnit`, `MovementOrder.MovementState` / `OnApply` / `IsApplicable` / `AreOrdersPracticallySame`,
+`OrderController.SetOrderWithFormation`, `BannerBearerLogic.RepositionFormation`,
+`FormationAI.TickOccasionally`, `IFormationArrangement.GetWorldPositionOfUnitOrDefault` (installed v1.4.8).
+Not-tested: the Harmony prefix and postfixes and the MissionBehavior entry point (game-tested per
+ADR-008); the in-game smoke is owed.
+Save-compat: none; mission-scoped state and one new MCM property.
+
 ### fix(data): a rider cannot draw a `long_bow`; the ranged ladders after their Codex pass (#582, #588)
 
 Codex (gpt-6-astra, ultra) on the seven ladder commits: four P2, one P3, all confirmed, zero false
