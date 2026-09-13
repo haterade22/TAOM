@@ -1211,10 +1211,10 @@
               <equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1268,10 +1268,10 @@
               <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_javelin_a01" />
               <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1324,10 +1324,10 @@
               <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Item2" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1341,7 +1341,7 @@
                     id="Item.sk_md_orc_vgd_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -1350,7 +1350,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1364,7 +1364,7 @@
                     id="Item.sk_md_orc_inf_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -1373,7 +1373,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1387,7 +1387,7 @@
                     id="Item.sk_md_orc_vgd_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -1396,7 +1396,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1410,7 +1410,7 @@
                     id="Item.sk_md_orc_brt_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -1419,7 +1419,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1433,7 +1433,7 @@
                     id="Item.sk_md_orc_brt_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -1442,7 +1442,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1495,10 +1495,10 @@
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1552,7 +1552,7 @@
               <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
@@ -1569,7 +1569,7 @@
                     id="Item.sk_md_orc_brt_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -1578,7 +1578,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1592,7 +1592,7 @@
                     id="Item.sk_md_orc_brt_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_b" />
@@ -1601,7 +1601,7 @@
                     id="Item.sk_md_orc_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_a" />
+                    id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1655,8 +1655,8 @@
               <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
-              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
@@ -1711,10 +1711,10 @@
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
               <equipment slot="Head" id="Item.sk_gn_orc_arc_helmet_med_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -2374,10 +2374,10 @@
         <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
         <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>

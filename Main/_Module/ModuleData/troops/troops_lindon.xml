@@ -345,10 +345,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -365,10 +365,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1_hood" />
+                    id="Item.rivendell_helmet_mask_hood" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -385,10 +385,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1_hood_silver" />
+                    id="Item.rivendell_helmet_mask_hood" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -405,10 +405,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1_hood_silvergold" />
+                    id="Item.rivendell_helmet_mask_hood" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -425,10 +425,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1_silver" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -445,10 +445,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1_silvergold" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -465,10 +465,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2_silver" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -485,10 +485,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2_silvergold" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -505,10 +505,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_d" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -525,10 +525,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -545,10 +545,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -565,10 +565,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier1" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -585,10 +585,10 @@
                     id="Item.wm_elven_shield_a" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -678,10 +678,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -704,10 +704,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2_silver" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -730,10 +730,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2_silvergold" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -756,10 +756,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_d" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -782,10 +782,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -808,10 +808,10 @@
                     id="Item.wm_rivendell_sword_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -834,10 +834,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -860,10 +860,10 @@
                     id="Item.wm_rivendell_sword_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier2" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_body_gold_a" />
+                    id="Item.rivendell_torso_light_light_tier4" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_gloves_gold" />
@@ -3384,7 +3384,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silver" />
+                    id="Item.rivendell_torso_heavy_tier2" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3419,7 +3419,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silver" />
+                    id="Item.rivendell_torso_heavy_tier2" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3454,7 +3454,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silver" />
+                    id="Item.rivendell_torso_heavy_tier2" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3489,7 +3489,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silverb" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3524,7 +3524,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4_silverb" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3559,7 +3559,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4_silver" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3594,7 +3594,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silver" />
+                    id="Item.rivendell_torso_heavy_tier2" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -3629,7 +3629,7 @@
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4_silver" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_3_silvergold" />
@@ -4156,13 +4156,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier3" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4176,13 +4176,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silverb" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4196,13 +4196,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier2_silver" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4216,13 +4216,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier2_silvergold" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4236,13 +4236,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier3_silver" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4256,13 +4256,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier3_silvergold" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4276,13 +4276,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4_silverb" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4296,13 +4296,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier2" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2" />
@@ -4316,13 +4316,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4336,13 +4336,13 @@
                     id="Item.he_sword" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_infantry_tier3" />
+                    id="Item.rivendell_helmet_infantry_tier3_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.rivendell_cape_a" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3" />
+                    id="Item.rivendell_torso_heavy_tier2" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2" />
@@ -4429,7 +4429,7 @@
                     id="Item.rivendell_pauldron_elite_robe" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4452,7 +4452,7 @@
                     id="Item.rivendell_pauldron_elite_robe" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4475,7 +4475,7 @@
                     id="Item.rivendell_pauldron_cape" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4498,7 +4498,7 @@
                     id="Item.rivendell_pauldron_elite_robe_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4521,7 +4521,7 @@
                     id="Item.rivendell_pauldron_leather_cape" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4544,7 +4544,7 @@
                     id="Item.rivendell_pauldron_leather_robe" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4567,7 +4567,7 @@
                     id="Item.rivendell_pauldron_elite_robe" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2" />
@@ -4590,7 +4590,7 @@
                     id="Item.rivendell_pauldron_elite_robe" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1" />
@@ -4613,7 +4613,7 @@
                     id="Item.rivendell_pauldron_elite_robe" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4" />
+                    id="Item.rivendell_torso_heavy_tier2_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2" />
@@ -6832,7 +6832,7 @@
                     id="Item.rivendell_pauldron_tier2_robe_silvergold" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silvergoldb" />
+                    id="Item.rivendell_torso_heavy_tier3_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2_silvergold" />
@@ -6864,7 +6864,7 @@
                     id="Item.rivendell_pauldron_tier1_robe_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silvergoldb" />
+                    id="Item.rivendell_torso_heavy_tier3_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2_silvergold" />
@@ -6896,7 +6896,7 @@
                     id="Item.rivendell_pauldron_tier2_robe_silver" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silvergoldb" />
+                    id="Item.rivendell_torso_heavy_tier3_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2_silvergold" />
@@ -6928,7 +6928,7 @@
                     id="Item.rivendell_pauldron_tier1_robe_silvergold" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4_silvergoldb" />
+                    id="Item.rivendell_torso_heavy_tier3_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1_silvergold" />
@@ -6960,7 +6960,7 @@
                     id="Item.rivendell_pauldron_tier2_robe_silvergold" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier3_silvergoldb" />
+                    id="Item.rivendell_torso_heavy_tier3_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2_silvergold" />
@@ -6992,7 +6992,7 @@
                     id="Item.rivendell_pauldron_tier1_robe_silvergold" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_infantry_tier4_silvergoldb" />
+                    id="Item.rivendell_torso_heavy_tier3_silvergold" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_1_silvergold" />

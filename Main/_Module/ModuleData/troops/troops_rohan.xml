@@ -310,13 +310,13 @@
                     id="Item.cts_rohan_armor1111" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_armguard1" />
+                    id="Item.cts_rohan_armguard2" />
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t2"
@@ -870,10 +870,10 @@
                     id="Item.cts_rohan_armor1" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_armguard1" />
+                    id="Item.cts_rohan_armguard2" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />
@@ -1113,13 +1113,13 @@
                     id="Item.roh_nbl_hlm_cf" />
                 <equipment
                     slot="Body"
-                    id="Item.roh_nbl_arm_r" />
+                    id="Item.cts_rohan_royal_guard_armor" />
                 <equipment
                     slot="Cape"
                     id="Item.roh_nbl_shldr_cgs_2" />
                 <equipment
                     slot="Gloves"
-                    id="Item.roh_nbl_glv" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_royal_guard_boots" />
@@ -1436,10 +1436,10 @@
                     id="Item.cts_rohan_armor1111" />
                 <equipment
                     slot="Cape"
-                    id="Item.cts_rohan_cape3" />
+                    id="Item.cts_rohan_cape4" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_armguard1" />
+                    id="Item.cts_rohan_armguard2" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_boots4" />

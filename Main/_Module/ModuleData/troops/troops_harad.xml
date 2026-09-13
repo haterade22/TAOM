@@ -1057,19 +1057,19 @@
                     id="Item.eastern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.harad05_v1_helmet" />
+                    id="Item.harad03_helmet" />
                 <equipment
                     slot="Body"
-                    id="Item.harad05_v4_torso" />
+                    id="Item.harad03_torso" />
                 <equipment
                     slot="Cape"
-                    id="Item.harad05_v4_cape" />
+                    id="Item.harad05_v1_cape" />
                 <equipment
                     slot="Gloves"
-                    id="Item.harad05_v1_gloves" />
+                    id="Item.harad03_glove" />
                 <equipment
                     slot="Leg"
-                    id="Item.harad05_v4_boots" />
+                    id="Item.harad03_boots" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1131,19 +1131,19 @@
                     id="Item.eastern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.harad05_v1_helmet" />
+                    id="Item.harad03_helmet" />
                 <equipment
                     slot="Body"
-                    id="Item.harad05_v4_torso" />
+                    id="Item.harad03_torso" />
                 <equipment
                     slot="Cape"
-                    id="Item.harad05_v4_cape" />
+                    id="Item.harad05_v1_cape" />
                 <equipment
                     slot="Gloves"
-                    id="Item.harad05_v1_gloves" />
+                    id="Item.harad03_glove" />
                 <equipment
                     slot="Leg"
-                    id="Item.harad05_v4_boots" />
+                    id="Item.harad03_boots" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1357,19 +1357,19 @@
                     id="Item.eastern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.harad05_v1_helmet" />
+                    id="Item.harad03_helmet" />
                 <equipment
                     slot="Body"
-                    id="Item.harad05_v4_torso" />
+                    id="Item.harad03_torso" />
                 <equipment
                     slot="Cape"
-                    id="Item.harad05_v4_cape" />
+                    id="Item.harad05_v1_cape" />
                 <equipment
                     slot="Gloves"
-                    id="Item.harad05_v1_gloves" />
+                    id="Item.harad03_glove" />
                 <equipment
                     slot="Leg"
-                    id="Item.harad05_v4_boots" />
+                    id="Item.harad03_boots" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -1425,16 +1425,16 @@
                     id="Item.desert_round_shield" />
                 <equipment
                     slot="Head"
-                    id="Item.harad05_v1_helmet" />
+                    id="Item.harad03_helmet" />
                 <equipment
                     slot="Body"
-                    id="Item.harad05_v4_torso" />
+                    id="Item.harad03_torso" />
                 <equipment
                     slot="Cape"
                     id="Item.harad04_cape" />
                 <equipment
                     slot="Gloves"
-                    id="Item.harad05_v1_gloves" />
+                    id="Item.harad03_glove" />
                 <equipment
                     slot="Leg"
                     id="Item.harad05_v2_boots" />
@@ -2054,10 +2054,10 @@
                     id="Item.eastern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.harad05_v1_helmet" />
+                    id="Item.harad07_helmet" />
                 <equipment
                     slot="Body"
-                    id="Item.harad05_v4_torso" />
+                    id="Item.harad07_torso" />
                 <equipment
                     slot="Cape"
                     id="Item.harad06_v1_cape" />

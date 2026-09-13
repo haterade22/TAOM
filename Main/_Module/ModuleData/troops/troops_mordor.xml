@@ -676,7 +676,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_c1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_heavy_c1" />
@@ -705,7 +705,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_medium_a2" />
@@ -730,7 +730,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_medium_b2" />
@@ -755,7 +755,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_medium_c2" />
@@ -780,7 +780,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_medium_d2" />
@@ -805,7 +805,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_medium_b1" />
@@ -833,7 +833,7 @@
                     id="Item.sk_uruk_mordor_pauldron_medium_b" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_mordor_chainmail_medium_c1" />
@@ -857,7 +857,7 @@
                     id="Item.sm_uruk_sword_c" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_mordor_helmet_heavy_a1" />
+                    id="Item.sk_uruk_mordor_helmet_elite_d1" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_uruk_mordor_pauldron_medium_a" />

@@ -2527,8 +2527,8 @@
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a03" />
-                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_c" />
-                <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_e" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
                 <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_b" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
@@ -2585,7 +2585,7 @@
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a02" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_e" />
-                <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_f" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_b" />
                 <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_c" />
                 <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_c" />
@@ -2871,7 +2871,7 @@
                 <equipment slot="Item2" id="Item.wm_dol_goldur_halberd_a01" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_h" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_d" />
-                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_d" />
                 <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_f" />
                 <equipment slot="Horse" id="Item.warg_dark" />
@@ -3464,8 +3464,8 @@
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_heavy_a" />
-                <equipment slot="Body" id="Item.sk_dg_khml_plate_elite_a" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_plate_heavy_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
                 <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -3476,7 +3476,7 @@
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_heavy_b" />
-                <equipment slot="Body" id="Item.sk_dg_khml_plate_elite_b" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
@@ -3488,8 +3488,8 @@
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_heavy_c" />
-                <equipment slot="Body" id="Item.sk_dg_khml_plate_elite_c" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_b" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
                 <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -3587,7 +3587,7 @@
                 <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_elite_a" />
-                <equipment slot="Body" id="Item.sk_dg_khml_plate_elite_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
@@ -3596,8 +3596,8 @@
                 <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_elite_b" />
-                <equipment slot="Body" id="Item.sk_dg_khml_plate_elite_b" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_b" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
             </EquipmentRoster>
@@ -3605,8 +3605,8 @@
                 <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_elite_c" />
-                <equipment slot="Body" id="Item.sk_dg_khml_plate_elite_c" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_plate_heavy_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
             </EquipmentRoster>
@@ -3699,7 +3699,7 @@
                 <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_g" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
@@ -3707,7 +3707,7 @@
                 <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_h" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
@@ -3715,7 +3715,7 @@
                 <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_i" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_c" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
@@ -3758,7 +3758,7 @@
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
@@ -3769,7 +3769,7 @@
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
@@ -3780,7 +3780,7 @@
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_c" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_c" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
@@ -3820,7 +3820,7 @@
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
@@ -3831,7 +3831,7 @@
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
@@ -3842,7 +3842,7 @@
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_dg_khml_cape_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_heavy_c" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>

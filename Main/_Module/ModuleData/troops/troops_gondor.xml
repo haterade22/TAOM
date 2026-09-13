@@ -4179,7 +4179,7 @@
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_gondor_lamedon_1h_sword_a" />
         <equipment slot="Head" id="Item.sk_gd_vale_helmet_med_a" />
-        <equipment slot="Body" id="Item.sk_gd_vale_chest_med_a" />
+        <equipment slot="Body" id="Item.sk_gd_vale_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_vale_cape_c" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -8045,7 +8045,7 @@
         <equipment slot="Item3" id="Item.western_javelin_3_t4" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
-        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
