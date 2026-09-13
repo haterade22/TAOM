@@ -85,7 +85,7 @@
                   </Children>
                 </ListPanel>
 
-                <Widget Id="SettlementNameplateLayout" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Medium.TotalWidth" SuggestedHeight="!Medium.BannerDiamondSize" VerticalAlignment="Center">
+                <TaomSettlementPlateWidget Id="SettlementNameplateLayout" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Medium.TotalWidth" SuggestedHeight="!Medium.BannerDiamondSize" VerticalAlignment="Center" RelationType="@Relation" BarBackgroundWidget="BarContainer\SettlementBarBackgroundWidget" NameTextWidget="BarContainer\SettlementNameTextWidget" FrameWidget="DiamondSlot\SettlementBannerBorderWidget" BannerWidget="DiamondSlot\SettlementBannerWidget" TrackedRingWidget="BarContainer\TrackedRingWidget">
                   <Children>
                     <Widget Id="BarContainer" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Medium.Width" SuggestedHeight="!Medium.Height" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="!Medium.BarStartX">
                       <Children>
@@ -99,7 +99,7 @@
                           </Children>
                         </ButtonWidget>
 
-                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Medium.TrackerWidthHeight" SuggestedHeight="!Medium.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="8" Sprite="SPGeneral\Nameplates\tracked_ring" ColorFactor="10" IsDisabled="true" IsVisible="@IsTracked" />
+                        <Widget Id="TrackedRingWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Medium.TrackerWidthHeight" SuggestedHeight="!Medium.TrackerWidthHeight" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="8" Sprite="SPGeneral\Nameplates\tracked_ring" ColorFactor="10" IsDisabled="true" IsVisible="@IsTracked" />
                       </Children>
                     </Widget>
 
@@ -110,7 +110,7 @@
                       </Children>
                     </Widget>
                   </Children>
-                </Widget>
+                </TaomSettlementPlateWidget>
 
               </Children>
             </ButtonWidget>

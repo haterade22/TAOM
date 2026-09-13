@@ -4,6 +4,42 @@
 
 ## 2026-09-13
 
+### feat(map-ui): settlement nameplates show friend and enemy, and are translucent again (#591)
+
+Players could not tell an enemy town from a friendly one on the campaign map, and noticed vanilla's plates
+read differently. Vanilla colours the plate by relation: `SettlementNameplateWidget.RelationType` writes
+`NameplateItem.Color`, and the item widget carries the plate sprite, so the colour multiplies what you see;
+a per-frame lerp holds the plate at 35% (neutral) or 50% (own faction) alpha. Thyrell's parchment-and-diamond
+redesign (April) moved every visual onto child widgets, and `Widget.Render` passes neither `Color` nor
+`AlphaFactor` to children, so both signals have landed on a spriteless widget for five months: every plate
+opaque, none colour coded, and the Patch38 distance fade with nothing to fade.
+
+Fix: `TaomSettlementPlateWidget`, a custom container in the three nameplate prefabs (the
+`SettlementNameplateLayout` element, Id unchanged), binds `@Relation` a second time and paints the bar wash,
+name text and diamond frame from a palette; neutral is identity so it looks exactly as before, and unknown
+ints resolve to neutral. Every late update it mirrors the item widget's alpha and colour factor onto the bar
+and frame, and takes the text, banner, tracked ring and party and event icons down with it below vanilla's
+0.35 minimum so the fade removes the whole plate instead of leaving a name or a ring floating over the map.
+Enemy and allied plates are raised to the own-faction 0.5 by `INameplateRelationAlphaService`, applied in
+the Patch38 postfix ahead of the distance multiplier. Colours are `#RRGGBBAA` attributes on the widget for
+the artist to tune without a rebuild; no MCM knob. 46 new tests: palette, alpha policy, alpha floor, prefab
+drift over the three sizes (every widget path resolves by Id, the item widget within the ancestor depth the
+widget walks, its own paths intact), engine bindings against the installed DLLs. Suite 8970 green (2 skipped).
+
+Deep-reviewed by 5 agents (3 findings fixed: the widget was over the entry-point ceiling, a banner brush
+clone where `ReadOnlyBrush` was meant, and a caller guard that made the policy's tested NaN branch
+unreachable) and a Codex `gpt-6-astra` ultra pass (1 P2 fixed: making the plate fade had exposed the tracked
+ring and the party and event icons, which vanilla never fades, so a far tracked settlement kept an opaque
+ring; 2 P3 fixed: a NaN already in a brush defeated the tolerance compare, and the docs said a bad colour
+attribute blanks the movie when the loader catches it per attribute and keeps the default; 1 test gap
+closed). RCA `docs/reviews/rca-settlement-nameplate-relation-2026-09-13.md`. Docs:
+`docs/features/settlement-nameplate-relation.md`, the fade doc, feature map, registry Patch38 note, two UI
+lessons, a testing lesson and a sentence in `gui-ui.md`.
+
+Not-tested: the widget's render and the postfix body need the live game; the in-game checklist (neutral,
+own, enemy, allied plates; war declared mid-session; tracked; the fade band; all three sizes) is in the
+feature doc, and the colour values are starting points for the in-game pass with Thyrell.
+
 ### fix(cavalry): Smart Cavalry AI forms a line, charges, rides through and comes again (#586)
 
 Players with Smart Cavalry AI on reported cavalry standing still, stopping inside the enemy, and

@@ -103,6 +103,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [culture-marketplace](features/culture-marketplace.md) — daily LOTRLOME item injection by owner culture
 - [settlement-guards](features/settlement-guards.md) — per-settlement guard pools, clan/culture fallback (Patch28)
 - [settlement-nameplate-fade](features/settlement-nameplate-fade.md) — distance-based nameplate fade (Patch38)
+- [settlement-nameplate-relation](features/settlement-nameplate-relation.md): relation colour on the bar, name text and diamond frame; bar and frame follow vanilla's plate alpha; enemy and allied plates at 50% (#591, custom container widget, no patch)
 - [revolt-tuning](features/revolt-tuning.md) — JSON-tunable revolt soft-nerf, TaomSettlementLoyaltyModel
 - [culture-conversion](features/culture-conversion.md) — conquered fiefs gradually adopt the owner's culture: Settlement.Culture flip + notable replacement (#325) + converted-recruitment branch
 - [settlement-food](features/settlement-food.md): why 70 of 72 towns started food-negative and could not hold a garrison (#546). Vanilla consumption is linear in prosperity while production is flat, so TAOM's high-prosperity map starves by arithmetic. Adds the prosperity-scaled `hinterlandFoodPerProsperity` production term (and its strict `< 1/prosperityFoodDivisor` invariant) and ships tuned defaults instead of vanilla ones. The original Troop-Weight garrison correction is an inert no-op today

@@ -65,6 +65,7 @@ using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.CrashReport;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.SettlementNameplateRelation;
 using TAOM.Features.MenuLinkColors;
 using TAOM.Features.LordSpawnGuard;
 using TAOM.Features.EconomyDiagnostics;
@@ -159,6 +160,7 @@ public static class IoC
         Features.BlowDiagnostics.BlowDiagnosticsIoC.RegisterBlowDiagnosticsFeature(container);
         Features.AutoResolveDiagnostics.AutoResolveDiagnosticsIoC.RegisterAutoResolveDiagnosticsFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
+        NameplateRelationIoC.RegisterSettlementNameplateRelationFeature(container);
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
         LordSpawnGuardIoC.RegisterLordSpawnGuardFeature(container);

@@ -47,6 +47,8 @@ TAOM ships full `<Prefab>` **clones** of many vanilla prefabs (party screen, cus
 
 Before editing a clone (or after a Bannerlord version bump), **diff it against installed vanilla** and consult the v1.4.5 rename table + fix procedure in [`.claude/rules/vanilla-data-comparison.md`](./vanilla-data-comparison.md) ("GUI prefab clones" section). The canonical example: v1.4.5 renamed `ImageTypeCode` → `TextureProviderName` on `ImageIdentifierWidget`/`MaskedTextureWidget`; TAOM's stale clones left every Party-screen troop thumbnail stuck on the loading spinner (RCA `docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`, memory `feedback_gui_prefab_clones_stale_across_versions.md`). **Rendering ≠ live** — only the running game confirms a prefab renders.
 
+A clone can also stop consuming an engine signal with every attribute still valid: moving the `Sprite` off the widget the engine writes `Color` / `AlphaFactor` / `ColorFactor` to (vanilla's `SettlementNameplateItemWidget`) leaves those writes with nothing to draw, because `Widget.Render` never passes them to children. TAOM's nameplate redesign lost relation colour and plate transparency this way for five months (#591). When a clone re-parents visuals, list what the engine writes on the original element and make a custom container widget consume it: `docs/features/settlement-nameplate-relation.md`.
+
 ## UIExtenderEx PrefabExtension Safety (MANDATORY)
 
 Before injecting into ANY vanilla prefab container:

@@ -24,6 +24,8 @@ Linear fade: `multiplier = clamp01(1 - (distance - near) / (far - near))`.
 
 Disabled / NaN-input / collapsed-range paths short-circuit to `multiplier = 1.0`, which leaves vanilla behavior untouched (`__result *= 1f` is a no-op).
 
+Since #591 the same postfix first applies the relation floor from `SettlementNameplateRelation` (enemy and allied plates raised to 0.5, tracked plates untouched), then the multiplier, so the fade scales the raised value. On TAOM's diamond prefab the item widget this fade drives carries no sprite; `TaomSettlementPlateWidget` mirrors its alpha onto the parchment bar and diamond frame and takes the text and banner down with it below vanilla's 0.35 minimum, which is what makes the fade visible there. See [settlement-nameplate-relation.md](settlement-nameplate-relation.md).
+
 ### Component Diagram
 
 ```
@@ -96,6 +98,7 @@ This patch runs at ~3000 calls/second on a populated map (60 FPS × ~50 visible 
 
 ## Changelog
 
+- 2026-09-13 (#591): the postfix applies the relation floor (`INameplateRelationAlphaService`) before the distance multiplier and `Initialize` takes both services; the fade gains a visible target on TAOM's prefab through `TaomSettlementPlateWidget`.
 - 2026-05-25 — feat(map) #223: distance-based settlement nameplate fade — Harmony Postfix on `SettlementNameplateWidget.DetermineTargetAlphaValue()` multiplies vanilla target alpha by a [0,1] fade factor from `DistanceToCamera`; 3 MCM settings (`EnableNameplateFade`, `NameplateFadeNearDistance` 5-500/80, `NameplateFadeFarDistance` 10-1000/200); disabled/NaN/`Far<=Near` short-circuit to vanilla; deep-review fixed 1 HIGH + 1 MED + 1 LOW (cached `TaomSettings.Instance`, `Initialize(svc)` static-field capture, Infinity-near regression test).
 
 ## GitHub Issue
