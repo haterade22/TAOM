@@ -86,7 +86,7 @@ public class TaomSettlementPlateWidget : Widget
             ResolveReferences();
             ApplyPaletteIfDirty();
             if (_item != null)
-                SettlementPlatePresenter.MirrorAlpha(_item, _bar, _frame, _text, _banner, _ring, ref _lastAlpha, ref _lastColorFactor);
+                SettlementPlatePresenter.MirrorAlpha(_item, Settings, _relationType, _bar, _frame, _text, _banner, _ring, ref _lastAlpha, ref _lastColorFactor);
         }
         catch
         {

@@ -4,6 +4,25 @@
 
 ## 2026-09-13
 
+### fix(map-ui): low nameplate opacities keep the name opaque, invalid settings warn once (#596)
+
+Second deep review plus a Codex `gpt-6-astra` ultra pass on the committed MCM controls. Both found the
+same defect: the text curve that keeps the name, banner, tracked ring and icons at full alpha until the
+distance fade pulls the plate under vanilla's 0.35 was written for #591, when the fade was the only way
+a plate went that low. The new opacity sliders reach 10, so a 10% plate settled at 0.10 gave a 29% name
+at close range on every slider value from 10 to 34. The curve now anchors on the plate's own configured
+resting opacity when that is below 0.35 (vanilla's anchor for tracked plates, unknown relations or
+missing settings), so the name stays opaque while the plate sits at its chosen value and follows it only
+under the fade. Codex also held the provider to the config-validation rule: an invalid hand-edited
+`TAOM.json` value (MCM's slider clamps, its JSON loader does not) now reverts to the default with one
+warning per property in the TAOM log, never per read. Two statements in the RCA were corrected (MCM's
+slider does clamp; MCM raises a save-time settings event, which the per-frame compare deliberately does
+not rely on since Cancel undoes without saving). 13 new tests (76 in the feature). Suite 9058 green
+(2 skipped). Performance and compatibility passed with nothing to fix; the recursive icon alpha under
+the fade is bounded by vanilla's own per-frame work on the same widgets.
+
+Not-tested: the sliders in the live MCM screen and the repaint on the open map.
+
 ### feat(map-ui): MCM controls for nameplate relation colour and plate opacity (#596)
 
 After #591 the user asked for the plate tuning to be in the players' hands. Four controls join

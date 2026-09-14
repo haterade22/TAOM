@@ -94,6 +94,40 @@ public class PlateAlphaPolicyTests
     }
 
     [TestMethod]
+    public void TextAlphaFor_RestingBelowVanilla_KeepsTextOpaqueAtTheRestingValue()
+    {
+        // A player's 10% neutral plate settles at 0.10; the name must stay fully opaque there and
+        // follow the plate only once the fade takes it lower (Codex F1 / data flow, #596).
+        Assert.AreEqual(1f, PlateAlphaPolicy.TextAlphaFor(0.10f, 0.10f), 0.0001f);
+        Assert.AreEqual(1f, PlateAlphaPolicy.TextAlphaFor(0.20f, 0.20f), 0.0001f);
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.05f, 0.10f), 0.0001f);
+        Assert.AreEqual(0f, PlateAlphaPolicy.TextAlphaFor(0f, 0.10f), 0.0001f);
+    }
+
+    [TestMethod]
+    public void TextAlphaFor_RestingAtOrAboveVanilla_KeepsVanillaAnchor()
+    {
+        // The default coloured curve (resting 0.5) is unchanged: text fades only below 0.35.
+        Assert.AreEqual(1f, PlateAlphaPolicy.TextAlphaFor(0.35f, 0.5f), 0.0001f);
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.175f, 0.5f), 0.0001f);
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.175f, 0.35f), 0.0001f);
+        Assert.AreEqual(1f, PlateAlphaPolicy.TextAlphaFor(0.8f, 1f), 0.0001f);
+    }
+
+    [TestMethod]
+    public void TextAlphaFor_NonFiniteOrNonPositiveResting_UsesVanillaAnchor()
+    {
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.175f, float.NaN), 0.0001f);
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.175f, float.PositiveInfinity), 0.0001f);
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.175f, 0f), 0.0001f);
+        Assert.AreEqual(0.5f, PlateAlphaPolicy.TextAlphaFor(0.175f, -1f), 0.0001f);
+    }
+
+    [TestMethod]
+    public void TextAlphaFor_NonFinitePlateAlpha_ReturnsOneForAnyResting()
+        => Assert.AreEqual(1f, PlateAlphaPolicy.TextAlphaFor(float.NaN, 0.10f));
+
+    [TestMethod]
     public void NeedsWrite_CurrentEqualsTarget_ReturnsFalse()
         => Assert.IsFalse(PlateAlphaPolicy.NeedsWrite(1f, 1f));
 

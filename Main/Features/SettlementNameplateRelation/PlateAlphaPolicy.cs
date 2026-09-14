@@ -53,19 +53,32 @@ public static class PlateAlphaPolicy
         return true;
     }
 
-    /// <summary>Text and banner alpha for a plate alpha: 1 at or above the vanilla minimum,
-    /// linear to 0 below it, 1 for non-finite input (never hide the name on garbage).</summary>
-    public static float TextAlphaFor(float plateAlpha)
+    /// <summary>Text and banner alpha for a plate alpha against the vanilla anchor: 1 at or above
+    /// 0.35, linear to 0 below it, 1 for non-finite input (never hide the name on garbage).</summary>
+    public static float TextAlphaFor(float plateAlpha) => TextAlphaFor(plateAlpha, VanillaMinimumPlateAlpha);
+
+    /// <summary>
+    /// The same curve anchored on the plate's own resting alpha when that is BELOW vanilla's 0.35
+    /// (#596): a player who sets a 10% plate keeps a fully opaque name at close range, and the name
+    /// starts following the plate only once the distance fade pulls it under 0.10. A resting value
+    /// at or above 0.35, non-finite or non-positive keeps the vanilla anchor, so the default
+    /// coloured curves are unchanged and a tracked plate's 0.8 never moves the anchor.
+    /// </summary>
+    public static float TextAlphaFor(float plateAlpha, float restingAlpha)
     {
         if (!FiniteFloatValidator.IsFinite(plateAlpha))
             return 1f;
 
-        if (plateAlpha >= VanillaMinimumPlateAlpha)
+        var anchor = VanillaMinimumPlateAlpha;
+        if (FiniteFloatValidator.IsFinite(restingAlpha) && restingAlpha > 0f && restingAlpha < VanillaMinimumPlateAlpha)
+            anchor = restingAlpha;
+
+        if (plateAlpha >= anchor)
             return 1f;
 
         if (plateAlpha <= 0f)
             return 0f;
 
-        return plateAlpha / VanillaMinimumPlateAlpha;
+        return plateAlpha / anchor;
     }
 }

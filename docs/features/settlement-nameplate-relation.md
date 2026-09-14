@@ -56,10 +56,12 @@ diamond frame and banner by widget path (`Widget.FindChild(BindingPath)` resolve
 - **Alpha:** every `OnLateUpdate` the widget reads the ancestor `SettlementNameplateItemWidget`'s
   `AlphaFactor` and `ColorFactor` (written by vanilla's parallel update earlier in the frame) and
   copies them to the bar and frame when they changed. Text and banner get
-  `clamp01(plateAlpha / 0.35)`: 1 at or above vanilla's minimum in-window plate alpha, exactly as
-  vanilla keeps them, and following the plate down only under the distance fade so no name floats
-  over the map without its plate. That write repeats whenever the brush disagrees, because vanilla
-  lerps the text toward full alpha every frame. The tracked ring, the party icons under the plate
+  `clamp01(plateAlpha / anchor)`, where the anchor is vanilla's 0.35 minimum in-window plate
+  alpha, or the plate's own configured resting opacity when a player has set that lower (#596): 1
+  whenever the plate sits at its resting value, exactly as vanilla keeps them, and following the
+  plate down only under the distance fade so no name floats over the map without its plate. A
+  tracked plate, an unknown relation or missing settings keep the vanilla anchor. That write
+  repeats whenever the brush disagrees, because vanilla lerps the text toward full alpha every frame. The tracked ring, the party icons under the plate
   and the event icons beside it follow the same text alpha: at close range that is 1, exactly
   vanilla, and under the fade it takes them down with the plate. Without it a far tracked
   settlement (which vanilla never culls) kept an opaque ring after its plate had faded, and the
@@ -103,15 +105,21 @@ Four controls beside the fade sliders, all applied live (no restart, no map relo
 | `NameplateRelationPlateOpacity` (Coloured Plate Opacity %) | float | 10 to 100 | 50 | Target alpha of an own-faction, enemy or allied plate; vanilla gives own faction 50 and the other two 35. |
 
 Tracked plates keep vanilla's 80 (and 100 at the screen edge) whatever the sliders say, and the
-distance fade still multiplies the chosen value. `NameplateRelationSettingsProvider` turns the
-percentages into fractions and reverts a non-finite or out-of-range value (a hand-edited
-`TAOM.json`) to the compiled default; the alpha service additionally refuses a non-positive value
-and leaves vanilla's target alone. The engine-constructed plate widget reads the toggle and
-strength through the static `TaomSettlementPlateWidget.Settings`, captured once in the IoC end
-block; each plate compares the effective strength against the one it last painted, once per
-frame, so a slider move repaints on the next frame with no event wiring. The provider caches
-`TaomSettings.Instance` on first successful read rather than in its constructor, because the
-container is built before MCM has created the instance.
+distance fade still multiplies the chosen value. An opacity below 35 also moves the text-curve
+anchor, so the name, banner, ring and icons stay fully opaque while the plate sits at its chosen
+value and follow it down only under the fade. `NameplateRelationSettingsProvider` turns the
+percentages into fractions and reverts a non-finite or out-of-range value to the compiled default
+with one warning per property in the TAOM log (MCM's slider clamps to the range, but its JSON
+loader assigns a hand-edited `TAOM.json` value as is); the alpha service additionally refuses a
+non-positive value and leaves vanilla's target alone. The engine-constructed plate widget reads
+the toggle and strength through the static `TaomSettlementPlateWidget.Settings`, captured once in
+the IoC end block; each plate compares the effective strength against the one it last painted,
+once per frame, so a change repaints on the first frame back on the map. MCM writes every slider
+move straight into the live settings object (Cancel undoes them), and raises only a save-time
+`PropertyChanged` on the settings object (the pattern `AiPartySizeSettingsWatcher` uses), so the
+per-frame compare is the mechanism rather than an event. The map does not tick while the options
+screen is open. The provider caches `TaomSettings.Instance` on first successful read rather than
+in its constructor, because the container is built before MCM has created the instance.
 
 ### Prefab attributes (the artist's reference)
 
@@ -163,12 +171,13 @@ vanilla's own-faction level for every coloured plate.
 
 - `TAOM.Tests/Features/SettlementNameplateRelation/NameplateRelationPaletteTests.cs`: 18 tests, every relation, unknown and negative ints, custom entries, `#RRGGBBAA` format of all twelve defaults, neutral is white not vanilla's black, `Blend` (full, zero, midpoint, clamped, non-finite, neutral unchanged) and `EffectiveStrength` (off, clamp, non-finite).
 - `NameplateRelationAlphaServiceTests.cs`: 11 tests against a substituted provider: neutral and coloured opacities by relation, custom values above and below vanilla, tracked untouched, zero and NaN pass through, unknown relation unchanged, a non-positive setting leaves vanilla's target.
-- `NameplateRelationSettingsProviderTests.cs`: 7 tests, defaults with no MCM instance match the slider defaults, percent to fraction, NaN / Infinity / out-of-range revert to the default.
-- `PlateAlphaPolicyTests.cs`: 15 tests, first call, unchanged, changed, NaN and Infinity refused, text alpha curve, the 0.35 pin, and `NeedsWrite` (equal, within tolerance, beyond, non-finite destination).
+- `NameplateRelationSettingsProviderTests.cs`: 12 tests, defaults with no MCM instance match the slider defaults and log nothing, percent to fraction, NaN / Infinity / out-of-range revert to the default, and the reversion warning fires once per property (a null logger is tolerated).
+- `PlateAlphaPolicyTests.cs`: 19 tests, first call, unchanged, changed, NaN and Infinity refused, text alpha curve, the 0.35 pin, the resting-alpha anchor (below vanilla, at or above, non-finite or non-positive, NaN plate alpha), and `NeedsWrite` (equal, within tolerance, beyond, non-finite destination).
+- `SettlementPlatePresenterTests.cs`: 4 tests, the text-curve anchor by relation, tracked, unknown relation and missing settings.
 - `NameplateRelationPrefabTests.cs`: 6 tests over the three prefabs, one widget with the right Id and binding, every widget path (bar, text, frame, banner, tracked ring) resolves by Id, colour attributes well formed, the item widget's own paths intact, the item widget within the ancestor depth the widget walks, no state cascade on the capsule.
 - `NameplateRelationBindingTests.cs`: 6 tests, engine members pinned against the installed DLLs (`BindingVerification`), widget constructor and simple-name uniqueness.
 
-63 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
+76 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
 The four MCM properties also move the settings fingerprint pin (`SettingsFingerprintTests`, 229 in
 `TaomSettings`) and sit in `CoopSettingsRelevance`'s presentation list.
 
@@ -198,6 +207,9 @@ per call to a path already running at ~3000 calls/sec.
 
 ## Changelog
 
+- 2026-09-13: fix(map-ui) #596 review follow-up: the text curve anchors on the plate's configured
+  resting opacity when that is below 0.35, so a low slider value no longer dims the name at close
+  range; an invalid hand-edited setting warns once per property.
 - 2026-09-13: feat(map-ui) #596: four MCM controls (colour toggle, tint strength, neutral and
   coloured plate opacity), live, through a validated settings provider and a static on the widget.
 - 2026-09-13: feat(map-ui) #591: relation colour on bar, text and frame; bar and frame follow

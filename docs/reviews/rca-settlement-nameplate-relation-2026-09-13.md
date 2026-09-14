@@ -44,9 +44,26 @@ raised one finding that does not hold.
 | # | Sev | Bug | Category | Why missed | Preventive action |
 |---|---|---|---|---|---|
 | 8 | LOW | `INameplateRelationAlphaService`'s doc comment still described the #591 contract (raise enemy and allied to 0.5, never touch neutral or own, never lower) after the implementation changed to "set the configured opacity for all four relations". The interface file itself had no code change, so it was never opened. | Doc drift on an untouched file | A contract change was made in the implementation and the feature doc; the interface, which is where a reader looks first, was not in the diff and so not re-read. | Comment rewritten. When an implementation's contract changes, re-read every file that states that contract (interface, feature doc, registry), not only the files the diff touches. |
-| 9 | none | Performance proposed checking `_paletteDirty` before reading the two settings each frame. The proposed order still reads the settings on every non-dirty frame (inside the `if (!_paletteDirty)` branch), so the claimed early-out does not exist; the per-frame read IS the live-apply mechanism, since MCM raises no event TAOM can subscribe to (confirmed by the compatibility agent). Disputed. | False positive | | Recorded here so the next review does not re-raise it. |
+| 9 | none | Performance proposed checking `_paletteDirty` before reading the two settings each frame. The proposed order still reads the settings on every non-dirty frame (inside the `if (!_paletteDirty)` branch), so the claimed early-out does not exist; the per-frame read is the live-apply mechanism: MCM writes slider moves straight into the live settings object and raises only a save-time `PropertyChanged` on it (`BaseSettings.SaveTriggered`, which `AiPartySizeSettingsWatcher` subscribes to), not a per-change event, and Cancel undoes values without a save. Disputed. | False positive | | Recorded here so the next review does not re-raise it. |
 
-No Codex pass was dispatched for #596 (paid; not requested for this follow-up).
+(Two statements in the first version of this table were wrong and are corrected above, both caught by the Codex pass below: MCM's slider DOES clamp to the attribute range, only its JSON loader does not; and MCM does expose a settings-object event, at save time.)
+
+## #596 review 2: second deep review plus Codex (gpt-6-astra, ultra), on the commit
+
+Requested by the user on the committed `fe266439`. Standards, compatibility (six more MCM and
+engine facts, including that MCM applies every slider move to the live instance and that the map
+layer does not tick under the options screen), performance (no high or medium; the recursive icon
+alpha is bounded by vanilla's own per-frame work on the same widgets) and completeness passed.
+Data flow and Codex converged on the same defect, and Codex added a diagnostic gap and two RCA
+corrections.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 10 | P2 | `PlateAlphaPolicy.TextAlphaFor` anchored the name, banner, ring and icon alpha on vanilla's fixed 0.35, written for #591 when the only way a plate went below 0.35 was the distance fade. #596 added a second way: a configured opacity down to 10 with no fade at all. A 10% plate settled at 0.10 gave a 29% name at close range; every slider value 10 to 34 on either opacity dimmed the name, against the doc's "text stays opaque at close range". | New input invalidating an existing gate (the fourth NaN-gate category's shape, applied to a threshold rather than NaN) | The #596 design traced the sliders to the alpha service and the widget's tint compare, not to the policy's curve, whose constant reads as an engine fact rather than an assumption about the input range. No test composed a configured opacity with the text curve. | `TextAlphaFor(plateAlpha, restingAlpha)` anchors on min(0.35, the plate's configured resting opacity), vanilla's anchor for tracked, unknown or missing settings; `SettlementPlatePresenter.RestingAlpha` supplies it; eight tests pin the curve and the anchor selection. Doc contract rewritten. |
+| 11 | P3 | `NameplateRelationSettingsProvider.NormalizePercent` reverted an invalid value silently. The config-validation rule (`csharp-architecture.md`) requires a warning on fallback so the player learns which value is in force; MCM's JSON loader assigns a hand-edited value with no check, so the branch is reachable. | Rule compliance (config providers must validate AND report) | The rule's "log a warning" clause was read as satisfied by the revert; the reads run every frame, so a per-read log looked impossible and the requirement was dropped instead of bounded. | `Read` logs once per property (a bit mask) naming the value, the range and the default; `IModLogger` injected; five tests, including the once-only guarantee. |
+| 12 | doc | Two supporting statements in finding 9 above were wrong: "no range check on slider or JSON load" (the slider VM clamps; only JSON does not) and "MCM raises no event" (it raises `PropertyChanged` at save time). | RCA accuracy | Both were relayed from the first deep review's compatibility summary without re-reading the MCM source. | Corrected in place; the feature doc says the same. |
+
+## Root-cause pattern
 
 ## Root-cause pattern
 
