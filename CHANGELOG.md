@@ -4,6 +4,30 @@
 
 ## 2026-09-14
 
+### fix(module): the #371 Dependencies pairing guard is back in the manifest
+
+`Main/_Module/SubModule.xml` carried an eight-line comment explaining that
+`<DependedModule Id="TAOM.Dependencies" />` is the element the engine actually honours and why its
+absence lets a user run any TAOM against any Dependencies until Harmony and UIExtenderEx fail at the
+member level and every character renders in bind pose. The element the comment described was not in
+the file, and neither was its BUTR-launcher mirror in `DependedModuleMetadatas`.
+
+Both were present at v2.0.20 and went out as collateral in `cc1713eb` (2026-08-11, a cultures commit
+whose message never mentions dependencies). **v2.0.21 through v2.0.28 all shipped with the guard
+documented and not implemented.** It was caught and restored on the v1.5.0 port branch on 2026-08-19
+(`0f1488b4`), but that branch was parked and the fix never reached trunk; the 2026-09-14 tracker
+sweep then closed #371 on evidence that lived only there.
+
+Restored verbatim from v2.0.20. The pin reads `v2.0.6` and `Dependencies/_Module/SubModule.xml` reads
+`v2.0.6`, so the pairing is accurate rather than merely present. `docs/modding/module-taom.md` had
+since recorded the gap as intentional and called the release doc wrong; that paragraph now says what
+happened.
+
+Not-tested: the C# suite. Steam moved this machine to Bannerlord v1.5.2 on 2026-09-14 and the v1.4.8
+engine trunk targets is no longer installed anywhere, so TAOM.Tests cannot build against this branch
+here. Verified by XML parse, the pairing equality, and the identical elements shipping in v2.1.0 and
+v2.1.1 built against v1.5.0.
+
 ### chore(issues): 63 issues closed on landed code, in-game smoke still owed
 
 Tracker sweep of all 121 open issues. The rule applied: an issue closes once its code is on trunk,
