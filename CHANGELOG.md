@@ -4,6 +4,40 @@
 
 ## 2026-09-14
 
+### chore(issues): 63 issues closed on landed code, in-game smoke still owed
+
+Tracker sweep of all 121 open issues. The rule applied: an issue closes once its code is on trunk,
+whether or not the in-game check has run, because a player report can reopen it and an open issue
+whose fix shipped weeks ago reads as unfixed. Evidence per issue was read this session (the fix
+commit, the CHANGELOG entry, the file on disk, the issue's last comment) and each closing comment
+names it and says what is still owed. 58 stay open because nothing shipped for them, they are
+blocked outside TAOM (Modding Kit, asset re-exports, the laptop's partial Armory), or they wait on a
+decision.
+
+Closed: #62, #82, #89, #118, #296, #345, #349, #371, #392, #431, #438, #450, #481, #502, #503,
+#509, #510, #512, #513, #514, #515, #529, #530, #531, #535, #537, #538, #539, #540, #541, #542,
+#543, #544, #545, #546, #547, #548, #551, #552, #553, #554, #556, #557, #558, #559, #560, #564,
+#565, #566, #567, #568, #569, #574, #575, #576, #577, #580, #582, #591, #592, #595, #596, #598.
+
+Five of those close in an unusual state, by the user's call, each comment saying so: #82
+(NativeSkinFixes) and #296 (NavalTravel) are implemented but PARKED and disabled at the wiring
+level, and closing the tracker does not un-park them; #118's Phase-14 gate is retired, the 10-pair
+smoke equivalence standing as the proof; #89's `TaomSiegeEventModel` ships but the engine never
+calls it on 1.4.x; #392's sprite is in the atlas by a hand downscale while the generator's
+register-then-drop is untouched (a recurrence gets its own issue).
+
+Three findings from the sweep worth keeping. `git log --grep '#N'` misses fixes that landed inside a
+concurrent session's sweep commit with an unrelated subject: #545, #553 (`1707f52e`) and #598
+(`84faba01`) all did, and only the CHANGELOG heading or the file on disk shows them. Memory said
+Player Switcher (#514) was unmerged; `Main/Features/PlayerSwitcher` is on trunk. And one hash in a draft
+closing comment (#566) was mistyped in transcription; every hash was checked against `git cat-file`
+before posting, which is what caught it.
+
+Still open (58): #12, #111, #117, #120, #275, #318, #319, #343, #347, #359, #385, #393, #396, #398,
+#408, #415, #419, #420, #421, #422, #439, #448, #451, #455, #457, #460, #477, #478, #479, #480,
+#482, #485, #491, #492, #493, #494, #495, #496, #497, #499, #500, #501, #511, #521, #527, #528,
+#532, #550, #555, #561, #563, #570, #571, #572, #573, #578, #593, #594.
+
 ### chore(release): the patreon release copy swept too; #562 and #597 closed on the distance-cache rebuild
 
 `E:\LOTRAOM_Releases\patreon\Modules` holds `LOTRLOME_Armory` and `TAOM_Map` copied before the
