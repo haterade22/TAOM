@@ -131,6 +131,30 @@ public class PlainTextCrashReportRendererTests
         SysCommitUsedMb: 29847, SysCommitLimitMb: 31646,
         AvailPhysMb: 310, TotalPhysMb: 16296, MemLoadPercent: 97);
 
+    // The bundle carries diag.log as a file, but report.txt is what a triager actually reads first,
+    // and the whole reason diag.log was added is that PatchShield's swallowed-exception lines are the
+    // signature of a build running against the wrong Bannerlord. Rendering the file into the report
+    // is the part that makes it findable; MakeMinimalContext leaves the diag fields empty, so without
+    // this test the populated branch was never exercised.
+    [TestMethod]
+    public void Render_WithDiagLogContent_SurfacesThePathAndTheSwallowedExceptions()
+    {
+        var ctx = MakeMinimalContext() with
+        {
+            Logs = new LogTailSnapshot(
+                null, System.Array.Empty<string>(),
+                null, System.Array.Empty<string>(),
+                @"C:\Modules\TAOM.Dependencies\diag.log",
+                new[] { "PatchShield swallowed MissingMethodException from a patch on Foo.Bar" }),
+        };
+
+        var text = new PlainTextCrashReportRenderer().Render(ctx);
+
+        StringAssert.Contains(text, "diag.log", "the diag log path belongs in the report a triager reads");
+        StringAssert.Contains(text, "MissingMethodException",
+            "the swallowed-exception tail is the engine-mismatch evidence and must not be dropped");
+    }
+
     private static ExceptionContext MakeMinimalContext()
     {
         return new ExceptionContext(
@@ -156,7 +180,7 @@ public class PlainTextCrashReportRendererTests
             AppDomain: new AppDomainSnapshot("Test", "C:\\test", null, true),
             EnvVars: System.Array.Empty<EnvVarEntry>(),
             Performance: new FrameTimingSnapshot(System.Array.Empty<float>(), 0d, 0d, 0),
-            Logs: new LogTailSnapshot(null, System.Array.Empty<string>(), null, System.Array.Empty<string>()),
+            Logs: new LogTailSnapshot(null, System.Array.Empty<string>(), null, System.Array.Empty<string>(), null, System.Array.Empty<string>()),
             CollectorFailures: System.Array.Empty<CollectorFailure>());
     }
 }

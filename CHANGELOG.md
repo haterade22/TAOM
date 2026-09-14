@@ -96,6 +96,59 @@ name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead blo
 and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
 with v1.5.2's widget rename.
 
+### fix(diagnostics): a player log names its engine and says whether the game crashed (#481, from the archived line)
+
+A player reported "played for two weeks, now it crashes" and sent a debug log that could not answer
+the question. Reading it established that the session never started a game at all: the always-on
+`[SaveLoad]`, `[MissionDiag]` and `[Diplomacy]` markers were all absent, so the 28 minutes of
+`[MemSample]` lines were a main menu sitting idle, not play. It was the relaunch after the crash,
+not the crash. Four things made that log unreadable, and all four are fixed here.
+
+**The engine version is now recorded at startup.** It used to be logged only by
+`MissionDiagnosticService.LogSessionSnapshot`, which runs from `OnGameStart`, so any session that
+never loaded a save recorded the TAOM build precisely and the Bannerlord build not at all. That is
+backwards: TAOM's version is recoverable from the module folder, while the engine version is the
+fact that decides whether a report is engine drift or a real bug. `BuildStampReport.EngineReport`
+now emits an `[Engine]` line beside `[BuildStamp]`, naming the Native module version and every
+active module. `MissionDiagnosticService` keeps its fuller per-module breakdown at `OnGameStart`;
+this is the floor that is always present. Separate tag, so `[BuildStamp]` greps stay about the #371
+module pairing.
+
+**A clean shutdown now leaves a mark.** `OnSubModuleUnloaded` wrote nothing, so quitting to desktop
+and dying to a native access violation produced byte-identical log tails: the file just stopped.
+`[Shutdown] clean module unload` is written first, while the container and logger are both alive and
+on the durable flushed path. The value is entirely in its absence. A log that ends without it means
+the process died. Verified against the engine: `OnSubModuleUnloaded` is reached only through the
+native `Finalize` callback on an orderly shutdown, which a crash never gets to.
+
+**`diag.log` travels in the crash bundle.** PatchShield records the `MissingMethod` / `MissingField`
+/ `TypeLoad` trinity that means a build is running against a Bannerlord it was not compiled for, and
+it writes to `TAOM.Dependencies/diag.log`, not to `Logs/`. The bundle collected `report.txt`,
+`report.json`, `taom_debug.log`, `rgl_log.txt` and `manifest.txt`, so the single most diagnostic
+file for an engine mismatch was the one players never uploaded. It now lands in the ZIP, the
+manifest, and `report.txt`. `report.json` picks it up through the existing reflection serializer.
+
+**Log retention 10 to 30.** Every launch prunes, so a player who crashes and keeps playing pushes
+the crash log one slot closer to deletion each start. Nine relaunches is shorter than the round trip
+of noticing a crash, reporting it, and being asked for the log.
+
+Also corrected two stale claims in `docs/features/crash-report.md`: the bundle inventory omitted
+`diag.log`, and the Logs row still described the RGL log as coming from `Documents` when the
+collector has probed `%ProgramData%` first for some time.
+
+Suite 6716 green. Deep review passed on standards, API compatibility (7 engine members verified
+against the installed DLLs, including that `ModuleHelper` is populated before `OnSubModuleLoad`
+runs) and efficiency, with no functional data-flow gaps.
+
+Not-tested: the `SubModule.cs` wiring itself, which is a thin entry point per ADR-002.
+
+Cherry-picked from the archived v1.5.0 line (`586abf26`, 2026-08-19) onto `bannerlord-1.5.x` on 2026-09-14:
+the CrashReport files merged clean, `CrashBundleWriterTests` was an add/add resolved by keeping trunk's two
+manifest tests beside the port's three bundle tests on one context builder, and the `SubModule.cs` hunk was
+the old Patch66 map-load block, already landed here as Patch89. #481 was closed on 2026-09-14 on evidence
+that was not on trunk; trunk (v1.4.8) still lacks this and cannot be compiled on this machine, so the
+back-port there is owed.
+
 ### fix(troopweight): the clan-screen row patch targets the two concrete rows, and a gate for bodiless targets
 
 A member-level diff of every engine member TAOM binds (246 patch targets, 46 GameModel bases, the

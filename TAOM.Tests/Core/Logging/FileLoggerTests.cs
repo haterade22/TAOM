@@ -291,16 +291,38 @@ public class FileLoggerTests
     {
         var dir = Path.Combine(_testDir, "Logs");
         Directory.CreateDirectory(dir);
+        var first = new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc);
         for (int i = 0; i < count; i++)
         {
-            var p = Path.Combine(dir, $"taom_debug_2026-01-{i + 1:00}_12-00-00.log");
+            var stamp = first.AddDays(i);
+            var p = Path.Combine(dir, $"taom_debug_{stamp:yyyy-MM-dd}_12-00-00.log");
             File.WriteAllText(p, $"old log {i}");
-            File.SetLastWriteTimeUtc(p, new DateTime(2026, 1, i + 1, 12, 0, 0, DateTimeKind.Utc));
+            File.SetLastWriteTimeUtc(p, stamp);
         }
     }
 
     private static string[] DebugLogs(string dir) =>
         Directory.GetFiles(dir, "taom_debug_*.log");
+
+    // The default matters on its own, separately from the parameterised behaviour above, because
+    // production only ever uses the parameterless ctor. Retention is a support-window decision, not
+    // a disk-space one: every launch prunes, so a player who crashes and then keeps playing pushes
+    // the crash log one slot closer to deletion each time they start the game. At the original 10 it
+    // survived nine relaunches, which is comfortably shorter than the round trip of noticing a
+    // crash, reporting it, and being asked for logs. Sized here for a couple of weeks of daily play.
+    [TestMethod]
+    public void Ctor_Default_RetainsAFullSupportRoundTripOfLogs()
+    {
+        SeedOldLogs(40);
+
+        using var logger = new FileLogger();
+
+        var remaining = DebugLogs(Path.Combine(_testDir, "Logs"));
+        Assert.AreEqual(30, remaining.Length,
+            "the shipped default is what decides whether a player's crash log still exists when we ask for it");
+        StringAssert.Contains(string.Join("|", remaining), Path.GetFileName(logger.LogFilePath),
+            "the log currently being written must never be pruned");
+    }
 
     [TestMethod]
     public void Ctor_WithRetentionLimit_KeepsOnlyTheNewestLogsIncludingItsOwn()

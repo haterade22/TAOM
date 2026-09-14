@@ -25,7 +25,13 @@ public class FileLogger : IModLogger
     private readonly string _logPath;
     private const string LogDirectory = "Logs";
     private const string LogPattern = "taom_debug_*.log";
-    private const int DefaultRetainedLogs = 10;
+    // Sized for a support round trip, not for disk. Every launch prunes, so a player who crashes and
+    // then keeps playing pushes the crash log one slot closer to deletion on each start; at the
+    // original 10 it survived nine relaunches, which is shorter than the time it usually takes to
+    // notice a crash, report it, and be asked for the log. Raised 2026-08-19 after a player report
+    // arrived with a log from the wrong session and no way to tell whether the real one still
+    // existed. Debug logs are small next to the crash bundles that already share this directory.
+    private const int DefaultRetainedLogs = 30;
 
     public string? LogFilePath => _logPath;
 
