@@ -278,7 +278,16 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 ## Commits
 
-50/72 rule. No AI attribution. Example: `feat: add garrison patrol calculation`
+**Every commit subject carries the module version** (user rule, 2026-09-13):
+`<type>[(scope)]: vX.Y.Z - <description>`, where `vX.Y.Z` is exactly the `<Version>` in
+`Main/_Module/SubModule.xml` as committed. The version moves ONLY in a `/release` commit, whose
+subject names the new one (`chore(release): v2.0.29 - TAOM v2.0.29`). Why: a crash bundle reports
+`TaomVersion` from that file and between releases every pushed commit reads as the same version;
+`git log --grep 'v2.0.28 - '` now lists exactly the commits a v2.0.28 build can contain.
+Enforced by `.claude/hooks/check-commit-subject-version.sh` (refuses a subject without the label or
+with the wrong version; amend/fixup/squash forms that bring no new subject pass).
+Subject at most 72 characters (the label costs about 20, so the old 50 no longer fits), body
+wrapped at 72, no AI attribution. Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 
 **Optional trailers** (add when relevant — each on its own line after the blank line):
 
@@ -358,7 +367,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-32 hook registrations: 27 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 28 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration. Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
+33 hook registrations: 28 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 29 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted 2026-09-13 after `check-commit-subject-version.sh`). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".

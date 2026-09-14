@@ -581,9 +581,14 @@ These are all registered, intentional patches — do not flag them as unauthoriz
 
 ## Commit Conventions
 
-50/72 rule. No AI attribution.
+Every commit subject carries the module version: `<type>[(scope)]: vX.Y.Z - <description>`, with
+`vX.Y.Z` exactly the `<Version>` in `Main/_Module/SubModule.xml` as committed (user rule
+2026-09-13; the version moves only in a `/release` commit, whose subject names the new one).
+Subject at most 72 characters, body wrapped at 72. No AI attribution. A subject without the label
+or with the wrong version is a defect; `.claude/hooks/check-commit-subject-version.sh` refuses it
+at commit time in Claude Code.
 
-Example: `feat: add garrison patrol calculation`
+Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 
 **Optional trailers** (each on its own line after blank line):
 

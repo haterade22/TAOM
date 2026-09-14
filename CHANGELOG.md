@@ -2,7 +2,39 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-14
+
+### chore(commits): every commit subject carries the module version, and a gate refuses the rest
+
+Mike's rule (2026-09-13), stated when 102 commits had gone out after the v2.0.28 tag with nothing in
+a player's crash bundle able to name one of them: every subject reads
+`<type>[(scope)]: vX.Y.Z - <description>`, `vX.Y.Z` being the `<Version>` in
+`Main/_Module/SubModule.xml` as committed, and the version moves only in a `/release` commit, whose
+subject names the new one (`chore(release): v2.0.29 - TAOM v2.0.29`). `git log --grep 'v2.0.28 - '`
+then lists exactly the commits a v2.0.28 build can contain. A git tag per commit was offered and
+declined, as was backfilling the 102. New PreToolUse(Bash) gate `check-commit-subject-version.sh`
+refuses a subject without the label or with another version: it reads heredoc bodies, `-m` strings
+and `-F` files (Git Bash paths through `cygpath`), judges options only after the `commit` token so
+`git -C <dir> commit` is not mistaken for the reuse-message flag, takes the staged SubModule.xml
+first so a release commit agrees with itself, and lets amend without a message, fixup, squash and
+reuse-message forms through. Registered at 10 s on Mike's say-so (config-protection asks first).
+Subjects may run to 72 characters now. Convention updated in CLAUDE.md, `.ai/review-reference.md`,
+`/commit-split`, `/release`, `docs/reference/release-process.md` and the hooks catalog (33
+registrations, 29 scripts). `tools/test_hooks.sh` gains a section of 16 subject cases; the harness
+runs 207 passed, 0 failed.
+
 ## 2026-09-13
+
+### docs(release): the two-day changelog for 12 and 13 September, written for Discord
+
+`docs/releases/2026-09-13-two-day-discord.md` follows the fortnight post from the morning of the 12th
+with everything that landed after it: two days of commits, the fourteen issues closed on the 13th,
+and the live-module work (the #597 villages, the texture downsizing, the LODs) that no commit in this
+repo carries. Nothing in it is released; every item is on trunk waiting on an in-game smoke, and the
+post says so. Under 4,000 characters, with the bullet-to-issue table under the post. Left out on
+purpose: the four items the fortnight post already carried (#565, #566, #567, #562) and the tooling
+and diagnostics entries (the memory probe, the clan heraldry sync, the generator guard) that change
+nothing a player sees.
 
 ### chore(armory-assets): LODs for the 28 Armoury meshes that had none, five levels each, generated in headless Blender
 
@@ -108,7 +140,7 @@ share; the roll-zero rows for the six castles and the Minas Tirith and Osgiliath
 re-derived for the new buckets. Suite 9084 passed, 0 failed, 2 skipped.
 
 Not-tested: the recruit screen in a live campaign. The pool provider is a process singleton, so a
-running game needs a full restart to pick the new JSON up. No issue exists for this change yet.
+running game needs a full restart to pick the new JSON up. Issue #598.
 
 ### fix(map-ui): low nameplate opacities keep the name opaque, invalid settings warn once (#596)
 

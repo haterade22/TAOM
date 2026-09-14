@@ -80,8 +80,11 @@ Stage **explicitly** — `git add <paths>`, never `-A`. A shared file routinely 
 edits.
 
 ```
-chore(release): TAOM vX.Y.Z
+chore(release): vX.Y.Z - TAOM vX.Y.Z
 ```
+
+The label is the NEW version, the one this commit writes into `SubModule.xml`; the
+`check-commit-subject-version.sh` hook reads the staged copy, so it agrees.
 
 ## Phase 7 — Tag and push (the step that gets skipped)
 

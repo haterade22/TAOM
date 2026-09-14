@@ -51,6 +51,11 @@
           },
           {
             "type": "command",
+            "command": ".claude/hooks/check-commit-subject-version.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": ".claude/hooks/block-dangerous-git.sh",
             "timeout": 5
           },

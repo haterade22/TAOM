@@ -74,7 +74,10 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 4. Bump the version fields above.
 4. Write `docs/releases/vX.Y.Z-discord.md` (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
 5. CHANGELOG entry.
-6. Commit `chore(release): TAOM vX.Y.Z`, staging release paths explicitly.
+6. Commit `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging release paths explicitly. Every other
+   commit carries the CURRENT version the same way (`<type>: vX.Y.Z - <description>`, user rule
+   2026-09-13, hook `check-commit-subject-version.sh`), so between releases
+   `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 7. `git tag -a vX.Y.Z -m "…"` then `git push origin bannerlord-1.4.5 vX.Y.Z`.
 
 **Step 7 is the one that gets skipped**, which is why

@@ -439,6 +439,66 @@ for name in $BLOCKING_BASH_GATES; do
 done
 
 # ---------------------------------------------------------------------------
+head2 "6. check-commit-subject-version: subject cases against the real SubModule.xml"
+# The gate reads <Version value="..."> from Main/_Module/SubModule.xml, so it runs here
+# against the repo, not the sandbox, and the expected label is read the same way the hook
+# reads it. A case is "label|expect|command"; expect is allow or deny.
+CSV_HOOK=".claude/hooks/check-commit-subject-version.sh"
+CSV_VER=$(grep -o '<Version value="[^"]*"' Main/_Module/SubModule.xml 2>/dev/null | head -1 | sed 's/.*"\(.*\)"/\1/')
+if [[ ! -f "$CSV_HOOK" ]]; then
+    bad "$CSV_HOOK missing"
+elif [[ -z "$CSV_VER" ]]; then
+    bad "could not read <Version> from Main/_Module/SubModule.xml for the subject cases"
+else
+    CSV_MSGFILE="$SANDBOX/subject-ok.txt"; printf 'docs: %s - from a file\n\nbody\n' "$CSV_VER" > "$CSV_MSGFILE"
+    CSV_BADFILE="$SANDBOX/subject-bad.txt"; printf 'docs: from a file without the label\n' > "$CSV_BADFILE"
+    CSV_CASES=(
+      "labelled -m|allow|git commit -m \"fix(recruitment): $CSV_VER - Glanhir recruits the Ringlo Vale line\""
+      "labelled -m, no scope|allow|git commit -m 'docs: $CSV_VER - update the changelog'"
+      "labelled --message=|allow|git commit --message=\"chore: $CSV_VER - tidy\""
+      "no label|deny|git commit -m \"fix(recruitment): Glanhir recruits the Ringlo Vale line\""
+      "wrong version|deny|git commit -m \"fix: v9.9.9 - Glanhir recruits the Ringlo Vale line\""
+      "label without the dash|deny|git commit -m \"fix: $CSV_VER Glanhir recruits\""
+      "heredoc labelled|allow|git commit -m \"\$(cat <<'EOF'
+feat(gondor): $CSV_VER - three harbor ships
+
+Body line.
+EOF
+)\""
+      "heredoc unlabelled|deny|git commit -m \"\$(cat <<'EOF'
+feat(gondor): three harbor ships
+
+Body line.
+EOF
+)\""
+      "-F file labelled|allow|git commit -F $CSV_MSGFILE"
+      "-F file unlabelled|deny|git commit -F $CSV_BADFILE"
+      "amend keeps HEAD subject|allow|git commit --amend --no-edit"
+      "fixup|allow|git commit --fixup=abc1234"
+      "git -C form|allow|git -C $REPO commit -m \"test: $CSV_VER - harness case\""
+      "git -C form unlabelled|deny|git -C $REPO commit -m \"test: harness case\""
+      "commit-tree is not a commit|allow|git commit-tree HEAD^{tree} -m \"x\""
+      "not git|allow|echo hi"
+    )
+    for entry in "${CSV_CASES[@]}"; do
+        label="${entry%%|*}"; rest="${entry#*|}"; expect="${rest%%|*}"; cmd="${rest#*|}"
+        payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"hook_event_name":"PreToolUse"}))' "$cmd")
+        OUT=$(printf '%s' "$payload" | timeout -k 2 12 env CLAUDE_PROJECT_DIR="$REPO" bash "$CSV_HOOK" 2>/dev/null)
+        RC=$?
+        if [[ $RC -ne 0 ]]; then
+            bad "subject case [$label] exit $RC"
+            continue
+        fi
+        if printf '%s' "$OUT" | grep -q '"permissionDecision":"deny"'; then got=deny; else got=allow; fi
+        if [[ "$got" == "$expect" ]]; then
+            ok "subject case [$label] -> $got"
+        else
+            bad "subject case [$label] expected $expect, got $got: $(printf '%s' "$OUT" | head -c 160)"
+        fi
+    done
+fi
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then
