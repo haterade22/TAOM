@@ -1,4 +1,4 @@
-﻿﻿# CHANGELOG — TAOM (Tales From the Age of Men)
+﻿# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
@@ -77,6 +77,24 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `banner-color-persistence.md`, `party-icon-scale.md`, `configs-balance.md`, `feature-map.md`,
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
+
+### fix(career): the two HUD leftovers the 2026-08-06 import brought back are gone
+
+`docs/features/career-system.md` has said since 2026-08-05 that the `AbilityHUD` panel and its
+prefab were deleted by #382 and that the energy bar lives in `CareerEnergyBarPrefab`, a UIExtenderEx
+insert into Native's `AgentStatus`. The repository disagreed. Commit `6c384e87` (2026-08-06,
+"Refactor code structure") swept two files in from the external reference package that the same
+doc's "install hygiene" note says had been copied into the live module: a 358-line
+`GUI/PreFabs/Mission/AgentStatus.xml` that is vanilla's file plus one `IsVisible="false"` block
+naming a `<CareerEnergyBarWidget>` class that has never existed in TAOM, and an "empty override"
+`AbilityHUD.xml` written from the reference module's point of view ("this module loads after
+TAOM"). Both are deleted. Nothing referenced either: the energy bar players see is the extension,
+which resolves against vanilla's prefab exactly as it did against the copy.
+
+Found by the new `PrefabElementTypeBindingTests`, landed with the prefab re-base that follows: Gauntlet builds an element it cannot
+name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead block never crashed,
+and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
+with v1.5.2's widget rename.
 
 ### fix(cultures): every culture names its executioner for the v1.5.x cutscene
 
