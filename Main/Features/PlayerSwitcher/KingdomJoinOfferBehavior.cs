@@ -15,6 +15,11 @@ namespace TAOM.Features.PlayerSwitcher;
 /// </remarks>
 public class KingdomJoinOfferBehavior : CampaignBehaviorBase
 {
+    // The last of the ten OnCharacterCreationIsOverEvent phases, so it runs after v1.5.0's
+    // Advanced Starting Options has applied the chosen player start (phase 8) and the player's
+    // kingdom, if any, is settled.
+    private const int CharacterCreationFinalizePhase = 9;
+
     private readonly IKingdomJoinOfferService _offer;
     private readonly IModLogger _logger;
 
@@ -34,8 +39,13 @@ public class KingdomJoinOfferBehavior : CampaignBehaviorBase
         // Nothing persists; the offer is made once, in the session that created the campaign.
     }
 
-    private void OnCharacterCreationIsOver()
+    internal void OnCharacterCreationIsOver(int index)
     {
+        // v1.5.0: OnCharacterCreationIsOverEvent became MbEvent<int> and the dispatcher fires it
+        // TEN times (index 0..9) as a phase-ordering mechanism. Unguarded, the offer would be
+        // raised ten times.
+        if (index != CharacterCreationFinalizePhase) return;
+
         try
         {
             _offer.OfferIfEarned();

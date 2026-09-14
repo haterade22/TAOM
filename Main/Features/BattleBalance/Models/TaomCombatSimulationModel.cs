@@ -29,10 +29,13 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
     // so the two systems cannot drift apart).
     public override ExplainedNumber SimulateHit(CharacterObject strikerTroop,
         CharacterObject struckTroop, PartyBase strikerParty, PartyBase struckParty,
-        float strikerAdvantage, MapEvent battle, float strikerSideMorale, float struckSideMorale)
+        float strikerAdvantage, MapEvent battle, BattleEnvironment battleEnvironment,
+        float strikerSideMorale, float struckSideMorale)
     {
+        // v1.5.2 added BattleEnvironment between the map event and the morale pair. Passed straight
+        // through: the refuge reduction below does not depend on where the battle is fought.
         var result = base.SimulateHit(strikerTroop, struckTroop, strikerParty, struckParty,
-            strikerAdvantage, battle, strikerSideMorale, struckSideMorale);
+            strikerAdvantage, battle, battleEnvironment, strikerSideMorale, struckSideMorale);
 
         var reduction = _refugeDefense?.DefenderDamageReduction(struckParty?.MobileParty?.StringId) ?? 0f;
         // Shared composition contract (RefugeDamageReduction): (1 - r) on the FINAL number, same

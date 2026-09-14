@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Execution feature replaces vanilla Bannerlord's one-size-fits-all lord execution penalties with a LOTR-thematic system. When a Free Peoples lord executes a servant of Sauron there is no dishonor; when a lord executes one of their own allies it is **kinslaying**, punished more harshly than vanilla. The feature wraps Bannerlord's existing execution kill chain with thread-local context propagation, a `DefaultExecutionRelationModel` override, and Harmony patches that gate the Honor-trait penalty by the executor's alignment.
+The Execution feature replaces vanilla Bannerlord's one-size-fits-all lord execution penalties with a LOTR-thematic system. When a Free Peoples lord executes a servant of Sauron there is no dishonor; when a lord executes one of their own allies it is **kinslaying**, punished more harshly than vanilla. The feature sits on the engine's blood-feud execution fallout (Bannerlord v1.5.x): a Harmony prefix gates the Honor-trait penalty by the executor's alignment and a postfix reshapes the per-clan relation penalty.
 
 The alignment subsystem itself (kingdom-to-alignment mapping, relation-modifier rules) is documented in detail at [`alignment-aware-execution.md`](alignment-aware-execution.md). This page covers the feature's overall wiring; that page covers the per-rule decision logic.
 
@@ -25,44 +25,39 @@ That breaks LOTR immersion. Aragorn executing the Mouth of Sauron should not mak
 
 ### Design Challenge
 
-`KillCharacterAction.ApplyInternal` is a `private static` method on a `public static class`. The two execution entry points (party screen, post-battle conversation) both flow through it, and the vanilla Honor penalty is applied **inside** that method via `TraitLevelingHelper.OnLordExecuted`, *after* the kingdoms involved have been forgotten by the call stack. To gate the Honor penalty on the executor's vs. victim's alignment, TAOM needs:
+Since Bannerlord v1.5.0 an execution lands in the engine as a **blood feud**. `KillCharacterAction.ApplyInternal` kills the hero; for a player execution `ExecutionCampaignBehavior` then starts a feud with the victim's clan: that clan's relation drops to the floor, every OTHER clan receives a per-clan penalty computed by the static `GetBloodFeudStartRelationPenaltyToOtherClan(Hero dyingHero, Clan otherClan)`, and `TraitLevelingHelper.OnBloodFeudStarted(Hero executedHero)` applies the Honor hit. Nothing in that chain knows about alignment, and none of it is a GameModel any more: v1.5.0 deleted `ExecutionRelationModel` outright, and with it the argument-less `OnLordExecuted()` that once forced TAOM to smuggle the participants through a thread-local snapshot taken in an `ApplyInternal` prefix. TAOM needs:
 
-1. The victim and executor kingdom IDs available at the moment `TraitLevelingHelper.OnLordExecuted` fires (which has no kingdom parameters).
-2. A way to override `DefaultExecutionRelationModel.GetRelationChangeForExecutingHero` for the relation-preview UI and the actual relation deltas.
+1. The Honor hit skipped when executor and victim stand on opposing sides, without touching the feud itself.
+2. The per-clan penalty reshaped per evaluating clan: zero for clans on the executor's side, vanilla for the victim's side, 1.5x for kinslaying.
 
 ### Solution Approach
 
-A two-pronged hook: thread-local context for the trait-penalty patch, and a GameModel override for the relation calculations. Both resolve their participants through the same `IAlignmentService`, the honor patch via `IOnExecutionAction` and the model via `IExecutionRelationService`.
+Two thin Harmony patches, one per seam. Each converts the sealed engine objects to `ExecutionParticipant(kingdomId, cultureId)` at the boundary and delegates to `IOnExecutionAction`; the relation half of that hook delegates on to `IExecutionRelationService`, the one owner of side resolution, cross-alignment zeroing and the kinslaying multiplier.
 
 ```
 Main/_Module/ModuleData/execution/alignment.json
         |
-  AlignmentConfigProvider (loads kingdomId -> "free"/"evil"/"neutral")
+  AlignmentConfigProvider (loads id -> "free"/"evil"/"neutral")
         |
-  AlignmentService (ResolveSide, GetKingdomSide / GetCultureSide,
+  AlignmentService (ResolveSide with culture fallback,
                     AreEnemyAlignments / AreSameAlignment)
         |
         +---------------------------+
         |                           |
-  ExecutionActionHook         ExecutionRelationService
-  : IOnExecutionAction        : IExecutionRelationService
-        |                           |
-        |                    TaomExecutionRelationModel
-        |                     (override of vanilla
-        |                      GetRelationChangeForExecutingHero)
-        |                           |
-        +----- ExecutionContext ----+
-                    |
-      KillCharacterAction_ApplyInternal_Patch
-        (Prefix snapshots victim + executor,
-         kingdom AND culture; Finalizer clears)
-                    |
-      TraitLevelingHelper_OnLordExecuted_Patch
-        (Prefix reads the snapshot; skips the
-         vanilla Honor penalty when cross-alignment)
+  ExecutionActionHook  ------>  ExecutionRelationService
+  : IOnExecutionAction          : IExecutionRelationService
+        |                       (side resolution, cross-alignment
+        |                        zeroing, kinslaying x1.5)
+        +-----------------------------------+
+        |                                   |
+  TraitLevelingHelper_                ExecutionCampaignBehavior_
+  OnBloodFeudStarted_Patch            BloodFeudRelationPenalty_Patch
+  (Prefix: returns                    (Postfix on the static per-clan
+   ShouldApplyHonorPenalty;            penalty: rewrites the int through
+   false skips the Honor hit)          GetRelationModifier; 0 = no hit)
 ```
 
-`ExecutionContext` holds thread-local kingdom **and** culture ids for both victim and executor, plus an explicit active flag (a hero legitimately has no kingdom, so the flag cannot be inferred from a null id). The outer Prefix on `ApplyInternal` populates it; the Finalizer clears it. Inside that scope, the inner Prefix on `OnLordExecuted` reads the snapshot and consults `IOnExecutionAction.ShouldApplyHonorPenalty(...)`. Returning `false` skips the vanilla Honor-XP loss.
+Both patches take the executor from `IPlayerContextAdapter` and the victim from the `Hero` the engine passes in; the relation postfix takes the evaluator from the `Clan`. The Honor seam is player-only. The relation seam is not: when an AI clan executes a member of the player's clan, vanilla starts the feud the other way round and still runs the same loop against the player's relations, so the hook's `IsPlayerTheBereaved` (the victim's clan is the player's clan) sends that path back to vanilla's number untouched. The victim's clan may already be destroyed when the Honor prefix runs (`ApplyInternal` destroys it before dispatching `OnHeroKilled`), which nulls its kingdom; that is why every participant carries the culture id as well and `AlignmentService.ResolveSide` falls back to it. There is deliberately no "unknown, defer to vanilla" early return (#556). The relation postfix returns whatever the service decides: a zero trips the engine's own `!= 0` guard, so that clan takes no hit and is not counted in the summary notice. The same static method feeds the pre-execution "this will hurt your relations with N clans" tooltip, so the warning and the outcome cannot disagree. The feud itself, the victim clan's relation floor, is left to vanilla: a clan whose kinsman you beheaded is entitled to hunt you whatever side either of you is on.
 
 The snapshot is taken at the top of `ApplyInternal` for a reason: the method destroys the victim's clan, which nulls `Clan.Kingdom`, before it fires the event that drives the relation pass. Full ordering in `alignment-aware-execution.md` (#556).
 
@@ -133,35 +128,34 @@ fallback to place a kingdom-less hero:
 | `Main/Features/Execution/AlignmentConfigProvider.cs` | Loads + parses `alignment.json`; `Reuse.Singleton` (cached for process lifetime) |
 | `Main/Features/Execution/IAlignmentConfigProvider.cs` | Config provider interface |
 | `Main/Features/Execution/FactionSide.cs` | Enum: `Free`, `Evil`, `Neutral` |
-| `Main/Features/Execution/Hooks/IOnExecutionAction.cs` | Honor-penalty decision hook: `ShouldApplyHonorPenalty` only |
+| `Main/Features/Execution/Hooks/IOnExecutionAction.cs` | Boundary hook: `ShouldApplyHonorPenalty` (honor half) and `GetRelationModifier` (relation half) |
 | `Main/Features/Execution/IExecutionRelationService.cs` | `ExecutionParticipant`, `ExecutionRelationResult`, relation contract |
 | `Main/Features/Execution/ExecutionRelationService.cs` | Relation decision: side resolution, kinslaying, notification suppression |
-| `Main/Features/Execution/Hooks/ExecutionActionHook.cs` | `IOnExecutionAction` implementation; consults `IAlignmentService` |
-| `Main/Features/Execution/Hooks/ExecutionContext.cs` | `ThreadLocal<string>` victim/executor kingdom-ID pair; bridges the outer-Prefix to the inner-Prefix |
-| `Main/Features/Execution/Hooks/KillCharacterAction_ApplyInternal_Patch.cs` | Outer Harmony Prefix + Finalizer; sets / clears `ExecutionContext` |
-| `Main/Features/Execution/Hooks/TraitLevelingHelper_OnLordExecuted_Patch.cs` | Inner Harmony Prefix; skips vanilla Honor penalty when cross-alignment |
-| `Main/Features/Execution/Models/TaomExecutionRelationModel.cs` | `DefaultExecutionRelationModel` override; routes relation deltas through `IExecutionRelationService` |
-| `Main/Features/Execution/ExecutionIoC.cs` | DryIoc registrations (singletons for all 3 services); `InitializeHooks` wires the manual-patch's hook reference |
+| `Main/Features/Execution/Hooks/ExecutionActionHook.cs` | `IOnExecutionAction` implementation; honor half consults `IAlignmentService`, relation half delegates to `IExecutionRelationService` with notifications off |
+| `Main/Features/Execution/Hooks/TraitLevelingHelper_OnBloodFeudStarted_Patch.cs` | Harmony Prefix on `TraitLevelingHelper.OnBloodFeudStarted(Hero)`; returns `ShouldApplyHonorPenalty`, `false` skips the vanilla Honor hit |
+| `Main/Features/Execution/Hooks/ExecutionCampaignBehavior_BloodFeudRelationPenalty_Patch.cs` | Harmony Postfix on the static `ExecutionCampaignBehavior.GetBloodFeudStartRelationPenaltyToOtherClan(Hero, Clan)`; rewrites the per-clan penalty through the hook |
+| `Main/Features/Execution/ExecutionIoC.cs` | DryIoc registrations (singletons for all 3 services); `InitializeHooks` hands both patches the hook and `IPlayerContextAdapter` |
 | `Main/_Module/ModuleData/execution/alignment.json` | Kingdom → alignment data |
 
 ## Dependencies
 
 - `IAlignmentService` (Execution feature) — public alignment-query API; consumed by `ExecutionActionHook` and (indirectly) by anyone needing alignment context
-- `IOnExecutionAction` (Execution feature): honor-penalty decision, consumed by `TraitLevelingHelper_OnLordExecuted_Patch`
-- `IExecutionRelationService` (Execution feature): relation decision, consumed by `TaomExecutionRelationModel`
+- `IOnExecutionAction` (Execution feature): both decisions, consumed by `TraitLevelingHelper_OnBloodFeudStarted_Patch` and `ExecutionCampaignBehavior_BloodFeudRelationPenalty_Patch`
+- `IExecutionRelationService` (Execution feature): relation decision, consumed by `ExecutionActionHook`
+- `IPlayerContextAdapter` (Adapters): the executor's kingdom and culture ids, read by both patches
 - `IPathService` (Core) — resolves the alignment.json path during config load
 - `IModLogger` (Core) — used by `AlignmentConfigProvider` for load diagnostics
 
-No `Adapter` interfaces — the feature operates entirely on kingdom `StringId` strings extracted at the patch entry point. The sealed types (`Hero`, `Clan`, `Kingdom`) are touched only in the patches and in the `TaomExecutionRelationModel` override body, both of which are entry-point classes per ADR-002 / ADR-007.
+No feature-specific adapters: participants are `(kingdomId, cultureId)` string pairs built at the two patch entry points from the `Hero` and `Clan` the engine passes and from `IPlayerContextAdapter`. The sealed types are touched only there, which is what ADR-002 / ADR-007 allow for an entry point.
 
 ## Tests
 
 - `TAOM.Tests/Features/Execution/AlignmentServiceTests.cs`: **35 tests**, kingdom- and culture-to-side mapping, `ResolveSide` precedence and fallback, both truth tables in their string and `FactionSide` forms, unknown-id behavior.
-- `TAOM.Tests/Features/Execution/ExecutionActionHookTests.cs`: **5 tests**, `ShouldApplyHonorPenalty` per alignment pairing, plus the kingdom-less executor and destroyed-victim-clan paths.
+- `TAOM.Tests/Features/Execution/ExecutionActionHookTests.cs`: **9 tests**, `ShouldApplyHonorPenalty` per alignment pairing plus the kingdom-less executor and destroyed-victim-clan paths, and `GetRelationModifier` delegation: the service delta is returned unchanged (zero included), every participant reaches the service intact, notifications are requested off.
 - `TAOM.Tests/Features/Execution/ExecutionRelationServiceTests.cs`: **18 tests**, cross-alignment branching, kinslaying multiplier, notification suppression, and a kingdom-less participant in each of the three positions.
 - `TAOM.Tests/Features/Execution/ShippedMainCultureAlignmentCoverageTests.cs`: **3 tests**, every playable TAOM culture has an alignment entry and resolves to its declared side through the kingdom-less path.
 
-Manual Harmony Prefix + Finalizer wiring on `KillCharacterAction_ApplyInternal_Patch` and `TraitLevelingHelper_OnLordExecuted_Patch` is exercised via the live game; no unit-test coverage for the patch binding itself today. (Audit gap class — see issue #192 / #193 for the analogous wiring-regression-test pattern.)
+The two Harmony patches bind by attribute and are exercised in the live game; `HarmonyPatchBindingTests` proves both targets resolve on the installed engine, and `docs/reference/taleworlds-api-snapshot/patch-targets.md` records their v1.5.2 signatures.
 
 ## How to Re-tune a Kingdom's Alignment
 

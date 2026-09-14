@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
+using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyItem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories;
 using TaleWorlds.Library;
 using TAOM.Tests.Migration;
@@ -17,7 +18,8 @@ namespace TAOM.Tests.Features.Refuge;
 /// <summary>
 /// Drift-guards for every engine surface Patch75 and the refuge menus bind that the compiler
 /// cannot fully certify: the clan-screen patch reaches a PRIVATE method (<c>OnPartySelection</c>)
-/// by string and constructs <c>ClanPartyItemVM</c> at a pinned arity, the encounter patch targets
+/// by string and constructs <c>ClanPartyItemWithPartyVM</c> at a pinned arity (v1.5.x: the base
+/// <c>ClanPartyItemVM</c> is abstract and the ctor grew a change-role callback), the encounter patch targets
 /// <c>PlayerEncounter.DoMeeting</c> through a Harmony attribute (string-bound method name), and
 /// the menu controller calls two Helpers screen-openers whose overload shape has drifted across
 /// engine versions before. Each failure mode past the compiler is a silent no-op in game; it must
@@ -81,21 +83,24 @@ public class Patch75BindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
-    public void ClanPartyItemVM_SevenArgumentConstructor_Resolves()
+    public void ClanPartyItemWithPartyVM_EightArgumentConstructor_Resolves()
     {
         RequireGame();
-        var ctor = AccessTools.Constructor(typeof(ClanPartyItemVM), new[]
+        // v1.5.x: ClanPartyItemVM went abstract; vanilla builds every party-backed row (garrisons
+        // included) as ClanPartyItemWithPartyVM, whose ctor gained Action<ClanRoleItemVM>.
+        var ctor = AccessTools.Constructor(typeof(ClanPartyItemWithPartyVM), new[]
         {
             typeof(PartyBase),
             typeof(Action<ClanPartyItemVM>),
             typeof(Action),
             typeof(Action),
+            typeof(Action<ClanRoleItemVM>),
             typeof(ClanPartyItemVM.ClanPartyType),
             typeof(IDisbandPartyCampaignBehavior),
             typeof(ITeleportationCampaignBehavior),
         });
         Assert.IsNotNull(ctor,
-            "ClanPartyItemVM's 7-argument constructor did not resolve; the refuge garrison row "
+            "ClanPartyItemWithPartyVM's 8-argument constructor did not resolve; the refuge garrison row "
             + "construction in Patch75 no longer matches the engine.");
     }
 

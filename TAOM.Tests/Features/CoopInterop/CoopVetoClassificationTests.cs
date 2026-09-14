@@ -131,9 +131,10 @@ public class CoopVetoClassificationTests
             "without making Sauron capturable in a fief but not in a field battle. An edited " +
             "config or mismatched TAOM version diverges here, which is the same exposure every " +
             "other shipped-data mechanic in TAOM already carries."),
-        ["TraitLevelingHelper_OnLordExecuted_Patch"] = new(CoopVeto.ReviewedSafe,
-            "Skips the vanilla honour penalty. Condition is AlignmentService.AreEnemyAlignments — a " +
-            "static shipped kingdom->alignment table, no campaign state, so peers agree."),
+        ["TraitLevelingHelper_OnBloodFeudStarted_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Skips the vanilla trait penalty for starting a blood feud (v1.5.x successor of " +
+            "OnLordExecuted). Condition is AlignmentService.ResolveSide over the shipped " +
+            "kingdom/culture->alignment table, no campaign state, so peers agree."),
         ["BesiegerCamp_GetSiegeCampPartyPosition_Patch"] = new(CoopVeto.ReviewedSafe,
             "Position override driven by static siege-camp config; deterministic across peers."),
         ["PartyBaseHelper_HasFeat_Patch"] = new(CoopVeto.ReviewedSafe,

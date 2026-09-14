@@ -26,17 +26,22 @@ value directly; it only edits IL. **Solution:** rewrite each `0.3` literal into 
 float, pop none). `GetScale()` reads the MCM slider each invocation, so a slider change applies on the next icon
 rebuild. This is the same "transpiler calls a static" pattern as `CastleAiToggle` in CastleRecruitment.
 
-**Two scale sites** in `AddCharacterToPartyIcon` (v1.4.6), each uniquely matchable by the instruction that
-follows the `ldc.r4 0.3`:
+**Three scale sites in two methods** since Bannerlord v1.5.0 (two sites in one method on v1.4.x), each uniquely
+matchable by the instruction that follows the `ldc.r4 0.3`:
 
-| Site | Vanilla C# | IL shape | Match rule |
-|------|-----------|----------|-----------|
-| Leader figure | `.Scale(0.3f)` | `ldc.r4 0.3` → `callvirt AgentVisualsData::Scale` | `0.3` immediately before a `Scale` call |
-| Mount | `.Scale(item.ScaleFactor * 0.3f)` | `ldc.r4 0.3` → `mul` → `callvirt Scale` | `0.3` immediately before `mul` |
+| Site | Method (v1.5.x) | Vanilla C# | IL shape | Match rule |
+|------|-----------------|-----------|----------|-----------|
+| Leader figure | `SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual` | `.Scale(0.3f)` | `ldc.r4 0.3` then `callvirt AgentVisualsData::Scale` | `0.3` immediately before a `Scale` call (`RewriteHumanVisualSite`) |
+| Mount | `MobilePartyVisual.AddCharacterToPartyIcon` | `.Scale(item.ScaleFactor * 0.3f)` | `ldc.r4 0.3` then `mul` | `0.3` immediately before `mul` (`RewriteIconSites`) |
+| Human world frame | `MobilePartyVisual.AddCharacterToPartyIcon` | `ApplyScaleLocal(0.3f)` | `ldc.r4 0.3` then `call ApplyScaleLocal` | `0.3` immediately before `ApplyScaleLocal` (`RewriteIconSites`) |
 
-The method's other `0.3` literals feed animation-speed math (`… / 0.3f` = `div`) and are not matched. If either
-site is absent after an engine change, that swap is skipped with a warning and vanilla `0.3` is preserved — the
-transpiler never throws (so a Harmony category re-apply can't crash).
+v1.5.0 moved the people literal out of `AddCharacterToPartyIcon` into the new helper and hardcoded the third one,
+so the feature needs two patch classes in the same category: `Patch53_PartyIconScale` on the original method and
+`Patch53_PartyIconScaleHumanVisual` on the helper. The methods' other `0.3` literals feed animation-speed math
+(`… / 0.3f` = `div`) and are not matched. If a site is absent after an engine change, that swap is skipped with a
+warning and vanilla `0.3` is preserved; the transpiler never throws (so a Harmony category re-apply cannot crash).
+That fail-safe is also how the v1.5.0 relocation shipped silently: Harmony never feeds one method's IL to another
+method's transpiler, so the people swap simply stopped and the slider scaled the mount but not the rider.
 
 ```
 Patch53_PartyIconScale (thin Harmony transpiler entry)
@@ -48,8 +53,9 @@ PartyIconScaleConfig.GetScale()    ← static the rewritten IL calls
 TaomSettings.MapFigureScale        ← MCM slider
 ```
 
-Coexists with the BannerColorPersistence **Postfix** on the same method — a transpiler rewrites the body, a
-postfix runs after; no conflict.
+Coexists with the BannerColorPersistence transpiler on `GetHumanAgentPartyVisual` (v1.5.x): Harmony chains
+transpilers on one method, and the two match different instructions (a `0.3f` literal before `Scale` here, the
+faction-colour reads there), so neither disturbs the other's site.
 
 ## Configuration
 

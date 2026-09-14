@@ -129,14 +129,15 @@ Target is `base + prosperity * perProsperity` and the daily change is `rate * (t
 
 ### revolt_tuning_config.json
 
-<!-- engine-ref type="TAOM.Features.RevoltTuning.RevoltTuningConfigProvider" file="Main/Features/RevoltTuning/RevoltTuningConfigProvider.cs" lines="50-101" -->
+<!-- engine-ref type="TAOM.Features.RevoltTuning.RevoltTuningConfigProvider" file="Main/Features/RevoltTuning/RevoltTuningConfigProvider.cs" lines="50-120" -->
 
 | Field | Type | Required | Shipped | Vanilla | Legal range | What it does | Read at (file:line) |
 |---|---|---|---|---|---|---|---|
-| `rebellionStartLoyaltyThreshold` | int | no | 5 | 15 | `[0, 100]` | Rebellion fires at loyalty at or below this | `RevoltTuningConfigProvider.cs:65` |
-| `rebelliousStateStartLoyaltyThreshold` | int | no | 10 | 25 | `[0, 100]`, and must be at least the field above | Warning state begins here | `RevoltTuningConfigProvider.cs:72-79` |
-| `settlementOwnerDifferentCultureLoyaltyEffect` | float | no | -1.0 | -3.0 | finite and at most 0 | Daily loyalty change when the owner's culture differs | `RevoltTuningConfigProvider.cs:85` |
-| `governorDifferentCultureLoyaltyEffect` | float | no | -0.5 | -1.0 | finite and at most 0 | Daily loyalty change when the governor's culture differs | `RevoltTuningConfigProvider.cs:92` |
+| `rebellionStartLoyaltyThreshold` | int | no | 5 | 15 | `[0, 100]` | Rebellion fires at loyalty at or below this | `RevoltTuningConfigProvider.cs:64` |
+| `rebelliousStateStartLoyaltyThreshold` | int | no | 10 | 25 | `[0, 100]`, and must be at least the field above | Warning state begins here | `RevoltTuningConfigProvider.cs:71-83` |
+| `highRebellionStartLoyaltyThreshold` | int | no | 17 | n/a | `[0, 100]` | The rebellion trigger when the campaign was started with the Advanced Starting Option "High Rebellion" (v1.5.x) | `RevoltTuningConfigProvider.cs:86` |
+| `highRebellionRebelliousStateStartLoyaltyThreshold` | int | no | 24 | n/a | `[0, 100]`, and must be at least the field above | The warning state under that same option | `RevoltTuningConfigProvider.cs:93-105` |
+| `settlementOwnerDifferentCultureLoyaltyEffect` | float | no | -1.0 | -3.0 | finite and at most 0 | Daily loyalty change when the owner's culture differs | `RevoltTuningConfigProvider.cs:108` |
 
 Inverting the two thresholds reverts **both** to defaults, not just the offender (`RevoltTuningConfigProvider.cs:79`). A positive penalty is rejected outright: a sign-flipped `1.0` would turn the feature from softening revolts into accelerating them, which is the review finding that produced the whole validation rule ([csharp-architecture](../../.claude/rules/csharp-architecture.md), "Why").
 
@@ -332,8 +333,9 @@ A whole JSON config, `configs/revolt_tuning_config.json`:
 {
   "rebellionStartLoyaltyThreshold": 5,
   "rebelliousStateStartLoyaltyThreshold": 10,
-  "settlementOwnerDifferentCultureLoyaltyEffect": -1.0,
-  "governorDifferentCultureLoyaltyEffect": -0.5
+  "highRebellionStartLoyaltyThreshold": 17,
+  "highRebellionRebelliousStateStartLoyaltyThreshold": 24,
+  "settlementOwnerDifferentCultureLoyaltyEffect": -1.0
 }
 ```
 

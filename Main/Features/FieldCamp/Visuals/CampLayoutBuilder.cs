@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SandBox.View.Map.Visuals;
+using SandBox.View;
 using TAOM.Features.FieldCamp.Domain;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -197,7 +197,9 @@ internal static class CampLayoutBuilder
                 return;
             entity.AddMultiMesh(tentMesh);
 
-            MetaMesh? bannerMesh = MobilePartyVisual.GetBannerOfCharacter(banner, BannerMeshName);
+            // v1.5.x: MobilePartyVisual.GetBannerOfCharacter became
+            // SandBoxViewHelpers.BannerVisualHelper.GetBanner, same body (tableau material cache).
+            MetaMesh? bannerMesh = SandBoxViewHelpers.BannerVisualHelper.GetBanner(banner, BannerMeshName);
             if ((NativeObject?)bannerMesh != null)
             {
                 // The banner is a child mesh of the tent entity, so its frame is local: raised a

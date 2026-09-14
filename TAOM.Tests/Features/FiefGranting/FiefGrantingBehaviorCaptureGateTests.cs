@@ -27,13 +27,60 @@ public class FiefGrantingBehaviorCaptureGateTests
 {
     // ---------------------------------------------------------------- which battles capture
 
+    /// <summary>v1.5.x: a MapEvent no longer stores its type. <c>EventType</c> is
+    /// <c>Component.GetBattleType()</c>, and every MapEvent vanilla creates carries a component
+    /// (<c>Initialize(attacker, defender, component)</c>), so <c>BattleTypes.None</c> is no longer a
+    /// reachable state. Each case stages the component vanilla would attach, bare, with the private
+    /// field that component reports from set to the requested type where the type is not a constant.</summary>
     private static BattleSideEnum SideFor(MapEvent.BattleTypes battleType)
     {
         var mapEvent = (MapEvent)FormatterServices.GetUninitializedObject(typeof(MapEvent));
-        var typeField = typeof(MapEvent).GetField("_mapEventType", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.IsNotNull(typeField, "MapEvent._mapEventType is gone; the IsSiegeAssault/IsSallyOut flags moved.");
-        typeField!.SetValue(mapEvent, battleType);
+        var setter = typeof(MapEvent).GetProperty("Component")?.GetSetMethod(nonPublic: true);
+        Assert.IsNotNull(setter, "MapEvent.Component lost its setter; the test cannot stage a battle type.");
+        setter!.Invoke(mapEvent, new object[] { ComponentFor(battleType) });
         return FiefSiegeCaptureRules.SideThatCapturesOnVictory(mapEvent);
+    }
+
+    private static MapEventComponent ComponentFor(MapEvent.BattleTypes battleType)
+    {
+        switch (battleType)
+        {
+            case MapEvent.BattleTypes.Siege:
+                return Bare<SiegeAssaultEventComponent>("_eventType", battleType);
+            case MapEvent.BattleTypes.SiegeOutside:
+                return Bare<SiegeOutsideEventComponent>("_eventType", battleType);
+            case MapEvent.BattleTypes.SallyOut:
+                return Bare<SiegeSallyOutEventComponent>();
+            case MapEvent.BattleTypes.BlockadeBattle:
+                return Bare<BlockadeBattleEventComponent>("_isSallyOut", false);
+            case MapEvent.BattleTypes.BlockadeSallyOutBattle:
+                return Bare<BlockadeBattleEventComponent>("_isSallyOut", true);
+            case MapEvent.BattleTypes.FieldBattle:
+                return Bare<FieldBattleEventComponent>();
+            case MapEvent.BattleTypes.Raid:
+                return Bare<RaidEventComponent>();
+            case MapEvent.BattleTypes.Hideout:
+                return Bare<HideoutEventComponent>();
+            case MapEvent.BattleTypes.IsForcingVolunteers:
+                return Bare<ForceVolunteersEventComponent>();
+            case MapEvent.BattleTypes.IsForcingSupplies:
+                return Bare<ForceSuppliesEventComponent>();
+            case MapEvent.BattleTypes.SiegeAmbush:
+                return Bare<SiegeAmbushEventComponent>();
+            default:
+                throw new AssertFailedException($"No v1.5.x MapEventComponent stages {battleType}.");
+        }
+    }
+
+    private static MapEventComponent Bare<T>(string? field = null, object? value = null)
+        where T : MapEventComponent
+    {
+        var component = (T)FormatterServices.GetUninitializedObject(typeof(T));
+        if (field == null) return component;
+        var info = typeof(T).GetField(field, BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(info, $"{typeof(T).Name}.{field} is gone; the battle type this component reports moved.");
+        info!.SetValue(component, value);
+        return component;
     }
 
     [TestMethod]
@@ -61,13 +108,13 @@ public class FiefGrantingBehaviorCaptureGateTests
     }
 
     [DataTestMethod]
-    [DataRow(MapEvent.BattleTypes.None)]
     [DataRow(MapEvent.BattleTypes.FieldBattle)]
     [DataRow(MapEvent.BattleTypes.Raid)]
     [DataRow(MapEvent.BattleTypes.IsForcingVolunteers)]
     [DataRow(MapEvent.BattleTypes.IsForcingSupplies)]
     [DataRow(MapEvent.BattleTypes.Hideout)]
     [DataRow(MapEvent.BattleTypes.BlockadeBattle)]
+    [DataRow(MapEvent.BattleTypes.SiegeAmbush)] // v1.5.x: not in KingdomManager.SiegeCompleted's set
     public void SideThatCapturesOnVictory_AnyOtherBattle_CapturesNothing(MapEvent.BattleTypes battleType)
     {
         Assert.AreEqual(BattleSideEnum.None, SideFor(battleType));

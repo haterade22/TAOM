@@ -33,11 +33,11 @@ public interface IExecutionRelationService
     /// <summary>
     /// Compute the alignment-modified relation delta and the post-modification notification flag.
     /// </summary>
-    /// <param name="executor">The executing hero (always the player — vanilla only asks for player executions).</param>
+    /// <param name="executor">The executing hero (the player: the v1.5.x seam sends an AI execution of the player's kin back to vanilla before the service is asked).</param>
     /// <param name="victim">The executed hero.</param>
     /// <param name="evaluator">The clan leader whose relation with the player is being calculated.</param>
-    /// <param name="baseRelationDelta">Vanilla <c>GetRelationChangeForExecutingHero</c> result.</param>
-    /// <param name="baseShowNotification">Vanilla <c>showQuickNotification</c> out-value.</param>
+    /// <param name="baseRelationDelta">Vanilla <c>ExecutionCampaignBehavior.GetBloodFeudStartRelationPenaltyToOtherClan</c> result (v1.5.x).</param>
+    /// <param name="baseShowNotification">Whether vanilla would show a quick notification; the v1.5.x seam applies each clan silently and shows one summary, so callers pass <c>false</c>.</param>
     /// <returns>
     /// Final relation delta + notification flag. Each participant's side is resolved by kingdom id
     /// with a culture-id fallback, so a participant with no kingdom is still placed on a side rather

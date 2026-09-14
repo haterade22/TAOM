@@ -24,8 +24,8 @@ public sealed class BannerBearerAssignmentMissionLogic : MissionLogic
     // Warn once per bad id per mission, not once per formation.
     private readonly HashSet<string> _warnedBannerIds = new HashSet<string>();
 
-    // Reused across formations — OnTeamDeployed runs once per team, so these never compete with
-    // the per-frame paths, but there's no reason to allocate one list per formation either.
+    // Reused across formations. OnBattleSideSpawned runs once per battle side, so these never
+    // compete with the per-frame paths, and there is no reason to allocate one list per formation.
     private readonly List<string?> _cultureScratch = new List<string?>();
     private readonly List<int> _bannerDataScratch = new List<int>();
 
@@ -36,13 +36,25 @@ public sealed class BannerBearerAssignmentMissionLogic : MissionLogic
     }
 
     // Vanilla's own call site for SetFormationBanner is this event
-    // (GeneralsAndCaptainsAssignmentLogic.OnTeamDeployed -> AssignBestCaptainsForTeam), reached
-    // from MissionAgentSpawnLogic.OnSideDeploymentOver AFTER initial troops have spawned. Match
-    // it exactly and we inherit vanilla's safety envelope.
-    public override void OnTeamDeployed(Team team)
+    // (GeneralsAndCaptainsAssignmentLogic.OnBattleSideSpawned -> AssignBestCaptainsForTeam),
+    // reached from MissionAgentSpawnLogic via Mission.OnInitialSpawnCompleted(battleSide) AFTER
+    // initial troops have spawned. Match it exactly and we inherit vanilla's safety envelope.
+    //
+    // v1.5.0 deleted MissionBehavior.OnTeamDeployed(Team) outright (zero occurrences in the
+    // engine) and moved the same work to OnBattleSideSpawned(BattleSideEnum). Vanilla's own
+    // migration was a pure wrap: the old per-team body became the loop body over
+    // Mission.GetTeamsOfSide(side), with no other change. This mirrors that exactly, so the
+    // deployment-phase guards below still see the phase they were written against.
+    public override void OnBattleSideSpawned(BattleSideEnum side)
     {
-        base.OnTeamDeployed(team);
+        base.OnBattleSideSpawned(side);
 
+        foreach (var team in Mission.GetTeamsOfSide(side))
+            AssignBannersForTeam(team);
+    }
+
+    private void AssignBannersForTeam(Team team)
+    {
         if (team == null || !_service.IsEnabled) return;
 
         // THE FREEZE GUARD — do not remove.

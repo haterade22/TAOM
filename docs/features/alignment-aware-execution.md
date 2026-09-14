@@ -1,5 +1,46 @@
 # Alignment-Aware Execution System
 
+> **Engine status (2026-09-14, Bannerlord v1.5.2).** Everything from the second H2 down describes the
+> v1.4.8 engine and is kept as the record of why the feature took the shape it did. v1.5.0 deleted
+> `ExecutionRelationModel` engine-wide and replaced the argument-less
+> `TraitLevelingHelper.OnLordExecuted()` with `OnBloodFeudStarted(Hero executedHero)`, so
+> `TaomExecutionRelationModel`, `ExecutionContext` and the `KillCharacterAction.ApplyInternal` /
+> `OnLordExecuted` patches no longer exist. The live wiring is in [`execution.md`](execution.md).
+
+## The v1.5.x seam (current)
+
+An execution is now blood-feud fallout, all of it inside `ExecutionCampaignBehavior` (v1.5.2 decompile,
+`E:\Decompiled_Bannerlord\_shipping_build\TaleWorlds.CampaignSystem.cs`):
+
+1. `KillCharacterAction.ApplyInternal` still destroys a leaderless victim clan
+   (`DestroyClanAction.ApplyByClanLeaderDeath`, which nulls its kingdom) BEFORE dispatching `OnHeroKilled`.
+2. `OnHeroKilled(victim, killer, Executed)` branches: `killer == Hero.MainHero` goes to
+   `OnPlayerExecutedHero(victim)`; `victim.Clan == Clan.PlayerClan` goes to
+   `OnPlayerClanMemberExecuted(victim, killer)`. The deferred `ExecutionAfterMapEvent` path reaches
+   `OnPlayerExecutedHero` from `OnDeathMarkAdded` with the same `killer == Hero.MainHero` gate.
+3. `OnPlayerExecutedHero`: if the victim's clan has no feud with the player yet,
+   `ChangeBloodFeudStateAction.StartBloodFeudWithClanByPlayerExecutingAHero(victim.Clan, victim)` and then
+   `TraitLevelingHelper.OnBloodFeudStarted(victim)`: Honor -1000 for a victim with Honor at or above 0,
+   otherwise Mercy -500, plus Mercy -500 unconditionally. **TAOM prefix:**
+   `TraitLevelingHelper_OnBloodFeudStarted_Patch` returns `ShouldApplyHonorPenalty(victim, executor)`;
+   `false` skips all of it. The victim's kingdom can be null here (step 1), hence the culture fallback.
+4. The feud action dispatches `OnBloodFeudStateChanged(clanWithFeud, executedHero, detail)`: the relation
+   between the player's leader and the feud clan's leader is set to the floor, then, only if
+   `clanWithFeud.Kingdom != null`, every clan but the player's is asked
+   `GetBloodFeudStartRelationPenaltyToOtherClan(executedHero, item)` and any non-zero answer is applied to
+   the PLAYER's relation with that clan (`showQuickNotification: false`) and counted for one summary
+   notice. Vanilla answers -45 (honourable noble victim) or -30 for a clan on good terms with the
+   victim's clan, -50 or -25 for a clan in the victim's kingdom, else 0. **TAOM postfix:**
+   `ExecutionCampaignBehavior_BloodFeudRelationPenalty_Patch` rewrites that int through
+   `IExecutionRelationService`; zero means the clan is skipped and not counted.
+5. The same static method feeds `HeroExecutionSceneNotificationData.GetExecuteTroopHintText`, the
+   pre-execution tooltip, so the warning and the outcome agree per clan.
+6. `OnPlayerClanMemberExecuted` (an AI executor, a player-clan victim) starts the feud the other way round
+   (`StartBloodFeudWithClanByAIExecutingPlayerRelative`) and runs the SAME loop against the player's
+   relations. The signature carries no executor and the player is the bereaved, so the postfix leaves
+   vanilla's number alone there (`IOnExecutionAction.IsPlayerTheBereaved`). Found by the 2026-09-14
+   deep review of the v1.5.2 port; the first cut assumed the player was the executor on every path.
+
 ## Overview
 
 The Alignment-Aware Execution system replaces vanilla Bannerlord's one-size-fits-all lord execution penalties with a LOTR-thematic system that considers the moral alignment of the executor, victim, and every evaluating clan leader. When a Free Peoples lord executes a servant of Sauron, there is no dishonor — only justice. When a lord slays one of their own allies, it is kinslaying, punished far more harshly than vanilla.

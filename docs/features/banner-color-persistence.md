@@ -43,11 +43,12 @@ Patch24_BannerDriftGuard
   └── Clan.UpdateBannerColorsAccordingToKingdom — Prefix, skip when enabled
   └── Clan.UpdateBannerColor — Postfix, sync kingdom colors from ruling clan
 
-Patch23_BannerColorPersistence (11 patches + 1 manual)
+Patch23_BannerColorPersistence (11 patches + 1 manual transpiler)
   └── GetCharacterCode (×2), SPInventory, PartyVM, HeroVM, PartyCharacterVM,
       ClanPartyItemVM, Mission.SpawnAgent, NotificationHelper, Banner.GetFirstIconColor,
       BannerEditorView.OnTick (BannerPaste)
-  └── MobilePartyVisual.AddCharacterToPartyIcon (manual reflection patch)
+  └── SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual (manual transpiler, v1.5.x;
+      was a Postfix on MobilePartyVisual.AddCharacterToPartyIcon until v1.5.0 dropped its colour parameters)
       └── IBannerHeroAdapter → extracts ClanColorInfo from CharacterObject/Hero/Clan boundary
 ```
 
@@ -107,7 +108,7 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `Hooks/Clan_UpdateBannerColorsAccordingToKingdom_Patch.cs` | Patch24 — drift guard Prefix |
 | `Hooks/Clan_UpdateBannerColor_Patch.cs` | Patch24 — kingdom color sync Postfix |
 | `Hooks/BannerEditorView_OnTick_Patch.cs` | Patch23 — BannerPaste Ctrl+C/V; `MethodInfo` cached at Initialize |
-| `Hooks/MobilePartyVisual_AddCharacterToPartyIcon_Patch.cs` | No category — manual patch via reflection |
+| `Hooks/MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.cs` + `BannerColorTranspiler.cs` | No category, manual transpiler on the v1.5.x map-figure builder: appends a resolver call after each faction-colour read, stack-neutral, vanilla value passes through when TAOM holds no colour |
 | `Hooks/Agent_EquipItemsFromSpawnEquipment_Patch.cs` | Patch23 — registers agent in color store + resolves clan colors |
 | `Hooks/AgentVisuals_Create_Patch.cs` | Manual patch — disables color randomness when clan colors set |
 | `Hooks/MapConversationTableau_SpawnOpponentLeader_Patch.cs` | Manual patch — conversation leader clan colors |

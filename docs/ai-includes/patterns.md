@@ -886,9 +886,13 @@ public class ContextConsumer_Patch
 5. **Public Accessor**: Provide read-only property for other patches to access context
 6. **Documentation**: Document the coordination between patches clearly
 
-### Real-World Example: Execution System
+### Real-World Example: Execution System (historical, Bannerlord v1.4.x)
 
-The execution system demonstrates this pattern for blocking honor penalties based on character alignment:
+The execution system used this pattern to block honor penalties based on character alignment until Bannerlord
+v1.5.0 deleted `TraitLevelingHelper.OnLordExecuted()`; its successor `OnBloodFeudStarted(Hero executedHero)`
+carries the victim, so the thread-local bridge below was retired with the v1.5.x port (see
+`docs/features/execution.md`). The example stays because the pattern is still the right tool when two patches
+must share state and the inner seam has no parameters:
 
 **Problem**: `TraitLevelingHelper.OnLordExecuted()` applies -1000 honor penalty but has NO parameters (can't know victim/killer). The method is called AFTER `KillCharacterAction.ApplyInternal(victim, killer)` which HAS the parameters we need.
 

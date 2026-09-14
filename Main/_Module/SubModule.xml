@@ -23,7 +23,7 @@
     <DependedModule Id="TAOM.Dependencies" />
   </DependedModules>
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.8.*" />
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.2.*" />
     <!-- Version-pinned mirror of the DependedModule above, for BUTR/BLSE launchers (which DO read
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
@@ -32,7 +32,7 @@
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
     <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
-         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.4.7) parses only
+         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.2) parses only
          DependedModules, ModulesToLoadAfterThis, IncompatibleModules and SubModules, with no branch
          for DependedModuleMetadatas at all. The engine-honoured pin is the <ModulesToLoadAfterThis>
          element below; this line is the BUTR-launcher mirror of it. Deliberately NOT a
@@ -41,6 +41,16 @@
     <DependedModuleMetadata id="BattleLinkMPClient" order="LoadAfterThis" optional="true" />
     <DependedModuleMetadata id="Coop" order="LoadAfterThis" optional="true" />
   </DependedModuleMetadatas>
+  <!-- TAOM does not support the War Sails expansion (module id NavalDLC): it ships its own settlements,
+       kingdoms, clans, heroes and cultures plus XSLT overrides against SandBoxCore/Sandbox/Native/StoryMode,
+       all of which collide with a total conversion whose TAOM_Map/settlements.xslt strips every vanilla
+       settlement. NavalDLC is DefaultModule="true" and installed here, so it is on unless the player turns
+       it off, and its start-options provider registers a "nordinvasion" scenario whose handler does
+       Kingdom.All.Find(t => t.StringId == "nord") and dereferences the result unguarded. TAOM has no nord
+       kingdom, so the pairing is refused here rather than left to chance. -->
+  <IncompatibleModules>
+    <Module Id="NavalDLC" />
+  </IncompatibleModules>
   <!-- Engine-honoured load-order pin (vanilla launcher topology-sorts on this + DependedModules).
        Ordering TAOM before the co-op layer is what the Priority.High on the DeclareWar/MakePeace
        prefixes assumes: TAOM validates racial enmity / War of the Ring constraints first, and a

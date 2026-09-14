@@ -41,6 +41,43 @@ still hold (`OnTeamDeployed`, `GetPrisonerRecruitmentMoraleEffect`, `GovernorDif
 the model did not exist then: `TaomCombatSimulationModel.SimulateHit`, added to trunk in the
 intervening month.
 
+**Then: compile.** `bannerlord-1.5.x` builds against v1.5.2. Pins: `.claude/pinned-game-version.txt`
+v1.5.2, Native `v1.5.2.*` in `SubModule.xml`, and `<IncompatibleModules>` refusing `NavalDLC`, whose
+start-options handler dereferences a `nord` kingdom TAOM does not have. Nine compile errors in two
+waves. The six from the first: the five v1.5.0 seams above plus `SimulateHit`'s new `BattleEnvironment`
+parameter. Three from trunk code that had never met a 1.5.x engine: `MobilePartyVisual.GetBannerOfCharacter`
+became `SandBoxViewHelpers.BannerVisualHelper.GetBanner` (the FieldCamp banner), `OnCharacterCreationIsOverEvent`
+is `MbEvent<int>` fired ten times so the kingdom-join offer needed the phase-9 guard its three siblings
+carry, and `ClanPartyItemVM` went abstract so the refuge garrison row is a `ClanPartyItemWithPartyVM`
+with the constructor's new change-role callback.
+
+Execution is re-homed onto the blood-feud seam: a prefix on `TraitLevelingHelper.OnBloodFeudStarted(Hero)`
+and a postfix on the static per-clan `GetBloodFeudStartRelationPenaltyToOtherClan(Hero, Clan)`;
+`TaomExecutionRelationModel`, `ExecutionContext` and their two patches are deleted; participants are
+`(kingdomId, cultureId)` with the culture fallback and no null escape (#556 holds). The deep review
+found the seam's second caller: when an AI clan executes a member of the player's clan, vanilla runs
+the same loop against the player's relations, the signature carries no executor, and the first cut
+had assumed the player, so the kinslaying 1.5x would have fired against the bereaved. The hook now
+decides that path (`IsPlayerTheBereaved`) and leaves vanilla's number alone; RCA
+`docs/reviews/rca-v1.5.2-compile-2026-09-14.md`. The banner-colour map-icon seam is a transpiler on
+`MobilePartyVisualHelper.GetHumanAgentPartyVisual` (the old postfix target lost its colour parameters),
+Patch53 gains a second transpiler for the people literal v1.5.0 moved there, and `TranspilerSiteBindingTests`
+feeds both the real engine IL (5 of 5 rewrites, no fail-safe). The two High Rebellion loyalty thresholds
+join `revolt_tuning_config.json` where `governorDifferentCultureLoyaltyEffect` (no v1.5.x base) leaves.
+Two tests fell to engine internals and were re-derived: `MapEvent` no longer stores its type
+(`EventType => Component.GetBattleType()`; `BattleTypes.None` is unreachable, `SiegeAmbush` is new),
+and the Patch75 pin moved to the 8-argument row constructor. Every ten-phase subscriber has a guard test.
+
+Gates: build 0 errors; **9,131 passed, 2 skipped, 0 failed of 9,133** (trunk's last green was 9,045);
+BindingVerification 304; the API snapshot regenerated at 46 models and 233 patches with every changed
+row accounted for (three Patch88 rows were on trunk but never snapshotted); `validate_moduledata` 0
+errors; `lint_docs` config drift 0, the two remaining reports being the CLAUDE.md target line, which
+moves in the docs commit, and its pre-existing size overrun. Docs updated for the deleted seams:
+`execution.md`, `alignment-aware-execution.md` (v1.4.8 record kept under a status banner),
+`banner-color-persistence.md`, `party-icon-scale.md`, `configs-balance.md`, `feature-map.md`,
+`ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
+the caller list whenever a patch supplies an actor the signature does not carry.
+
 ### fix(xslt): comment_strings overrides keep their variant tags
 
 `comment_strings.xslt` overrides 36 vanilla conversation strings. `<xsl:copy>` copies the element but

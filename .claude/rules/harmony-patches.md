@@ -37,6 +37,11 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
 - Method existence in the installed engine version (see `.claude/pinned-game-version.txt`)
+- Every caller of the target, with the actor each one supplies, whenever the patch infers an actor
+  the signature does not carry (the player, the killer, the owner). Write that caller list into the
+  patch doc beside the claim. 2026-09-14: the blood-feud relation seam has no executor parameter;
+  the port arrived from the player-only caller, wrote "always the player", and the AI-executes-
+  player-kin caller ran the kinslaying multiplier against the bereaved (`lessons/harmony-il.md`).
 
 ## Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.

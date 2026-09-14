@@ -7,6 +7,7 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories;
+using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyItem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
@@ -22,7 +23,7 @@ namespace TAOM.Features.Refuge.Hooks;
 /// <para>The row wiring reuses the VM's own private <c>OnPartySelection</c> (via a cached
 /// reflection handle, per the hot-path rule; a UI refresh is not hot, but the lookup still runs
 /// once, not per refresh) so selecting a refuge row behaves exactly like selecting a vanilla
-/// garrison. Expense-change and change-leader callbacks are no-ops, AND the wage panel is
+/// garrison. Expense-change, change-leader and (v1.5.x) change-role callbacks are no-ops. The wage panel is
 /// suppressed post-construction: the Garrison-typed ctor builds a live wage slider whose figure
 /// is never charged (DefaultClanFinanceModel processes neither WarPartyComponents nor
 /// OwnedCaravans for a refuge) and whose SetWagePaymentLimit falls through to the base
@@ -68,6 +69,7 @@ public static class RefugeClanScreenPatch
             var onSelect = (Action<ClanPartyItemVM>)Delegate.CreateDelegate(
                 typeof(Action<ClanPartyItemVM>), __instance, method);
             Action noop = () => { };
+            Action<ClanRoleItemVM> roleNoop = _ => { }; // unreachable: vanilla hides roles on Garrison rows
             var disbandBehavior = Campaign.Current?.GetCampaignBehavior<IDisbandPartyCampaignBehavior>();
             var teleportationBehavior = Campaign.Current?.GetCampaignBehavior<ITeleportationCampaignBehavior>();
 
@@ -88,8 +90,8 @@ public static class RefugeClanScreenPatch
                     continue;
                 }
 
-                var row = new ClanPartyItemVM(
-                    party.Party, onSelect, noop, noop,
+                var row = new ClanPartyItemWithPartyVM( // v1.5.x: the base is abstract; vanilla's garrison row type
+                    party.Party, onSelect, noop, noop, roleNoop,
                     ClanPartyItemVM.ClanPartyType.Garrison,
                     disbandBehavior, teleportationBehavior);
                 SuppressWagePanel(row);

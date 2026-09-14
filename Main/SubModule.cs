@@ -25,7 +25,6 @@ using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.Execution;
 using TAOM.Features.Execution.Hooks;
-using TAOM.Features.Execution.Models;
 using TAOM.Features.PrisonerRecruitment.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
@@ -397,7 +396,7 @@ public class SubModule : MBSubModuleBase
         MakePeaceAction_ApplyInternal_Patch.Initialize(logger);
 
         var executionHook = IoC.Resolve<IOnExecutionAction>();
-        ExecutionIoC.InitializeHooks(executionHook);
+        ExecutionIoC.InitializeHooks(executionHook, IoC.Resolve<IPlayerContextAdapter>());
 
         // The weight penalty itself is applied by TaomPartySizeModel (registered in CreateGameModels), not a
         // Harmony patch. Shed-on-upgrade enforces it for AI parties; the five display hooks restate the cap
@@ -503,7 +502,7 @@ public class SubModule : MBSubModuleBase
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         MapConversationTableau_SpawnOpponentBodyguard_Patch.Initialize(bannerColorService, bannerHeroAdapter);
-        MobilePartyVisual_AddCharacterToPartyIcon_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.Initialize(bannerColorService, bannerHeroAdapter, IoC.Resolve<IModLogger>());
         OrderOfBattleHeroItemVM_RefreshInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
 
         Mission_Initialize_Patch.Initialize(logger);
@@ -982,9 +981,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
 
-        var executionRelationService = IoC.Resolve<IExecutionRelationService>();
-        var playerContext = IoC.Resolve<IPlayerContextAdapter>();
-        campaignStarter.AddModel(new TaomExecutionRelationModel(executionRelationService, playerContext));
+        // TaomExecutionRelationModel was removed at the v1.5.x bump: vanilla deleted
+        // ExecutionRelationModel engine-wide, so there is no base to override. Both halves of the
+        // alignment rule now live on the Blood Feud seam: the trait half in
+        // TraitLevelingHelper_OnBloodFeudStarted_Patch, the relation half in
+        // ExecutionCampaignBehavior_BloodFeudRelationPenalty_Patch (both Patch14_Execution).
     }
 
     // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
@@ -1130,7 +1131,8 @@ public class SubModule : MBSubModuleBase
         var goldService = IoC.Resolve<IStartupGoldService>();
         var influenceService = IoC.Resolve<IStartupInfluenceService>();
         var startupLogger = IoC.Resolve<IModLogger>();
-        campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
+        var playerGoldService = IoC.Resolve<IPlayerStartupGoldService>();
+        campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, playerGoldService, startupLogger));
 
         var namedCompanionService = IoC.Resolve<INamedCompanionService>();
         campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
@@ -1587,6 +1589,7 @@ public class SubModule : MBSubModuleBase
         // to PartyIconScaleConfig.GetScale(), so both honour the MCM "Map Figure Scale" slider
         // (default 0.15 = half vanilla). See docs/features/party-icon-scale.md.
         Features.PartyIconScale.Hooks.Patch53_PartyIconScale.Initialize(IoC.Resolve<IModLogger>());
+        Features.PartyIconScale.Hooks.Patch53_PartyIconScaleHumanVisual.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch53_PartyIconScale");
 
         // NavalTravel PARKED 2026-06-26 (#296/#120) — see the model-registration comment in OnGameStart.
