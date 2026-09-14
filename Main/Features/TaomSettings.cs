@@ -1087,6 +1087,26 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Camera distance at which fade completes. Nameplates farther than this are fully hidden. Must be greater than Fade Start Distance. Default 200.")]
     public float NameplateFadeFarDistance { get; set; } = 200f;
 
+    [SettingPropertyGroup("Map UI/Settlement Nameplates")]
+    [SettingPropertyBool("Colour Nameplates by Relation", Order = 3, RequireRestart = false,
+        HintText = "Tint each settlement plate by your relation to its owner: green for your own faction, red for an enemy, blue for an allied kingdom, plain parchment for neutral. Off leaves every plate parchment. Applies immediately.")]
+    public bool EnableNameplateRelationColors { get; set; } = true;
+
+    [SettingPropertyGroup("Map UI/Settlement Nameplates")]
+    [SettingPropertyFloatingInteger("Relation Tint Strength (%)", 0f, 100f, "#0", Order = 4, RequireRestart = false,
+        HintText = "How strongly the relation colour is applied to the bar, the name and the diamond frame. 100 is the full palette, 0 is plain parchment for everyone. Applies immediately. Default 100.")]
+    public float NameplateRelationTintStrength { get; set; } = 100f;
+
+    [SettingPropertyGroup("Map UI/Settlement Nameplates")]
+    [SettingPropertyFloatingInteger("Neutral Plate Opacity (%)", 10f, 100f, "#0", Order = 5, RequireRestart = false,
+        HintText = "Opacity of a neutral settlement's plate. Vanilla uses 35, which can be faint over dark terrain. Tracked settlements keep vanilla's 80. Applies immediately. Default 35.")]
+    public float NameplateNeutralPlateOpacity { get; set; } = 35f;
+
+    [SettingPropertyGroup("Map UI/Settlement Nameplates")]
+    [SettingPropertyFloatingInteger("Coloured Plate Opacity (%)", 10f, 100f, "#0", Order = 6, RequireRestart = false,
+        HintText = "Opacity of a plate owned by your own faction, an enemy or an allied kingdom. Vanilla uses 50 for your own faction and 35 for the others. Tracked settlements keep vanilla's 80. Applies immediately. Default 50.")]
+    public float NameplateRelationPlateOpacity { get; set; } = 50f;
+
     // --- Map UI / Party Icons ---
 
     [SettingPropertyGroup("Map UI/Party Icons", GroupOrder = 41)]

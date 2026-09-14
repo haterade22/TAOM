@@ -31,6 +31,23 @@ ping-pong because both setters and the VM setter reject unchanged values). It th
 | 6 | P3 | The feature doc, the palette comment and two test comments said a 7-character colour "blanks the whole nameplate movie with no log". The attribute loader (`WidgetExtensions.SetWidgetAttributeFromString`) catches per attribute with `Debug.FailedAssert` and keeps the previous value; the override is silently ignored, the movie renders. | Documentation accuracy | The throw was verified (`Substring(7, 2)`); the consequence was inferred from the sprite-name rule ("renders blank, no log") without reading the loader's catch. | All four statements corrected. State a failure's consequence only after reading the code that catches it. |
 | 7 | obs | The prefab tests could not fail on a re-nesting that pushes the item widget beyond `MaxAncestorDepth` (4); Codex proved it with an in-memory mutation that passed all five predicates while production mirroring would silently stop. | Test gap | The tests pinned what the widget reads by path and not what it reads by walking parents. | `PlateWidget_AllSizes_ItemAncestorWithinProductionDepth` walks the XML parents to the item widget and asserts the hop count against the widget's (now internal) constant. |
 
+## #596 follow-up: the MCM controls (same day)
+
+Five-agent deep review of the four MCM controls (toggle, tint strength, neutral and coloured
+plate opacity). Standards, compatibility (six MCM and engine facts verified against the installed
+DLLs and the vendored MCM v5.11.4 source: `AttributeGlobalSettings<T>.Instance` is null before
+MCM registers and referentially stable after, MCM writes the auto-property by reflection with no
+range check on slider or JSON load, `Color.Lerp` extrapolates outside [0, 1]) and completeness
+passed. Data flow traced seven flows, all connected, and found one inconsistency; performance
+raised one finding that does not hold.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 8 | LOW | `INameplateRelationAlphaService`'s doc comment still described the #591 contract (raise enemy and allied to 0.5, never touch neutral or own, never lower) after the implementation changed to "set the configured opacity for all four relations". The interface file itself had no code change, so it was never opened. | Doc drift on an untouched file | A contract change was made in the implementation and the feature doc; the interface, which is where a reader looks first, was not in the diff and so not re-read. | Comment rewritten. When an implementation's contract changes, re-read every file that states that contract (interface, feature doc, registry), not only the files the diff touches. |
+| 9 | none | Performance proposed checking `_paletteDirty` before reading the two settings each frame. The proposed order still reads the settings on every non-dirty frame (inside the `if (!_paletteDirty)` branch), so the claimed early-out does not exist; the per-frame read IS the live-apply mechanism, since MCM raises no event TAOM can subscribe to (confirmed by the compatibility agent). Disputed. | False positive | | Recorded here so the next review does not re-raise it. |
+
+No Codex pass was dispatched for #596 (paid; not requested for this follow-up).
+
 ## Root-cause pattern
 
 Findings 1 and 3 share a cause: the widget carried code that belonged one layer down. The

@@ -76,6 +76,32 @@ public static class NameplateRelationPalette
         }
     }
 
+    /// <summary>
+    /// The MCM tint slider (#596): blends an entry toward identity (white bar and frame, which
+    /// multiply the sprites by nothing; black text, the brush's own colour). 1 is the entry as
+    /// authored, 0 is a neutral-looking plate. Strength is clamped to [0, 1]; a non-finite value
+    /// paints the full entry rather than a NaN colour.
+    /// </summary>
+    public static NameplatePaletteEntry Blend(in NameplatePaletteEntry entry, float strength)
+    {
+        var s = EffectiveStrength(true, strength);
+        if (s >= 1f) return entry;
+        return new NameplatePaletteEntry(
+            Color.Lerp(Color.White, entry.Bar, s),
+            Color.Lerp(Color.Black, entry.Text, s),
+            Color.Lerp(Color.White, entry.Frame, s));
+    }
+
+    /// <summary>The strength a plate should paint with: 0 when the colours are off, else the
+    /// slider value clamped to [0, 1], with a non-finite value read as 1.</summary>
+    public static float EffectiveStrength(bool colorsEnabled, float strength)
+    {
+        if (!colorsEnabled) return 0f;
+        if (float.IsNaN(strength) || float.IsInfinity(strength)) return 1f;
+        if (strength <= 0f) return 0f;
+        return strength >= 1f ? 1f : strength;
+    }
+
     private static NameplatePaletteEntry Entry(string bar, string text, string frame)
         => new NameplatePaletteEntry(
             Color.ConvertStringToColor(bar),

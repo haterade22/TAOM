@@ -95,6 +95,78 @@ public class NameplateRelationPaletteTests
     }
 
     [TestMethod]
+    public void Blend_StrengthOne_ReturnsEntry()
+        => AssertEntry(NameplateRelationPalette.DefaultEnemy,
+            NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultEnemy, 1f));
+
+    [TestMethod]
+    public void Blend_StrengthZero_ReturnsIdentity()
+    {
+        // Identity is what neutral uses: white bar and frame (a multiply that changes nothing),
+        // black text (the brush's own colour).
+        var blended = NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultEnemy, 0f);
+        AssertColor("#FFFFFFFF", blended.Bar, "bar");
+        AssertColor("#000000FF", blended.Text, "text");
+        AssertColor("#FFFFFFFF", blended.Frame, "frame");
+    }
+
+    [TestMethod]
+    public void Blend_HalfStrength_IsTheMidpoint()
+    {
+        var entry = new NameplatePaletteEntry(new Color(0f, 0f, 0f), new Color(1f, 1f, 1f), new Color(0.5f, 0f, 0f));
+
+        var blended = NameplateRelationPalette.Blend(entry, 0.5f);
+
+        Assert.AreEqual(0.5f, blended.Bar.Red, 0.0001f);
+        Assert.AreEqual(0.5f, blended.Bar.Green, 0.0001f);
+        Assert.AreEqual(0.5f, blended.Text.Red, 0.0001f);
+        Assert.AreEqual(0.75f, blended.Frame.Red, 0.0001f);
+        Assert.AreEqual(0.5f, blended.Frame.Green, 0.0001f);
+        Assert.AreEqual(1f, blended.Bar.Alpha, 0.0001f);
+    }
+
+    [TestMethod]
+    public void Blend_StrengthOutsideUnitRange_IsClamped()
+    {
+        AssertEntry(NameplateRelationPalette.DefaultAlly, NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultAlly, 7f));
+        AssertColor("#000000FF", NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultAlly, -3f).Text, "text");
+    }
+
+    [TestMethod]
+    public void Blend_NonFiniteStrength_ReturnsEntry()
+    {
+        // A poisoned setting must not paint a NaN colour; the full palette is the safe answer.
+        AssertEntry(NameplateRelationPalette.DefaultEnemy, NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultEnemy, float.NaN));
+        AssertEntry(NameplateRelationPalette.DefaultEnemy, NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultEnemy, float.PositiveInfinity));
+    }
+
+    [TestMethod]
+    public void EffectiveStrength_ColorsOff_ReturnsZero()
+        => Assert.AreEqual(0f, NameplateRelationPalette.EffectiveStrength(false, 1f));
+
+    [TestMethod]
+    public void EffectiveStrength_ColorsOn_ClampsToUnitRange()
+    {
+        Assert.AreEqual(0.4f, NameplateRelationPalette.EffectiveStrength(true, 0.4f));
+        Assert.AreEqual(1f, NameplateRelationPalette.EffectiveStrength(true, 3f));
+        Assert.AreEqual(0f, NameplateRelationPalette.EffectiveStrength(true, -0.5f));
+    }
+
+    [TestMethod]
+    public void EffectiveStrength_NonFinite_ReturnsOne()
+    {
+        Assert.AreEqual(1f, NameplateRelationPalette.EffectiveStrength(true, float.NaN));
+        Assert.AreEqual(1f, NameplateRelationPalette.EffectiveStrength(true, float.NegativeInfinity));
+    }
+
+    [TestMethod]
+    public void Blend_Neutral_UnchangedAtAnyStrength()
+    {
+        AssertEntry(NameplateRelationPalette.DefaultNeutral, NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultNeutral, 0f));
+        AssertEntry(NameplateRelationPalette.DefaultNeutral, NameplateRelationPalette.Blend(NameplateRelationPalette.DefaultNeutral, 0.4f));
+    }
+
+    [TestMethod]
     public void NeutralBar_IsWhite_NotVanillaBlack()
     {
         // Vanilla tints its white plate sprite black for neutral. Widget.Color multiplies the

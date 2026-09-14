@@ -67,8 +67,10 @@ diamond frame and banner by widget path (`Widget.FindChild(BindingPath)` resolve
 - **Non-finite destinations:** every alpha write goes through `PlateAlphaPolicy.NeedsWrite`, which
   treats a NaN or infinite value already in the destination as a reason to write; a plain
   tolerance compare against NaN is always false and would never recover it (Codex review F2).
-- **Relation floor:** `NameplateRelationAlphaService.Adjust` lifts an untracked enemy or allied
-  target below 0.5 to 0.5; the Patch38 postfix applies it before the distance multiplier.
+- **Relation floor:** `NameplateRelationAlphaService.Adjust` replaces an untracked in-window
+  target with the configured opacity for its relation (defaults: neutral 0.35, the three coloured
+  states 0.5, so enemy and allied plates come up from vanilla's 0.35); the Patch38 postfix applies
+  it before the distance multiplier.
 - Never throws: the whole late update sits in one try/catch (the UI layer is PatchShield-excluded).
 
 ### Component Diagram
@@ -89,9 +91,33 @@ SettlementNameplateWidget.DetermineTargetAlphaValue (vanilla, per frame)
 
 ## Configuration
 
-No config file and no MCM setting. The colours are `Color`-typed attributes on the widget, so the
-artist tunes them in the prefab without a rebuild; the compiled defaults apply when an attribute is
-absent. Every value must be exactly `#RRGGBBAA`: `Color.ConvertStringToColor` reads
+### MCM: `Map UI / Settlement Nameplates` (#596)
+
+Four controls beside the fade sliders, all applied live (no restart, no map reload):
+
+| Setting | Type | Range | Default | What it does |
+|---|---|---|---|---|
+| `EnableNameplateRelationColors` (Colour Nameplates by Relation) | bool | | on | Off paints every plate as neutral. |
+| `NameplateRelationTintStrength` (Relation Tint Strength %) | float | 0 to 100 | 100 | Blends each palette entry toward identity: 100 is the palette as authored, 0 is parchment and black text for everyone. |
+| `NameplateNeutralPlateOpacity` (Neutral Plate Opacity %) | float | 10 to 100 | 35 | Target alpha of an untracked neutral plate; vanilla's 35 can be faint over dark terrain. |
+| `NameplateRelationPlateOpacity` (Coloured Plate Opacity %) | float | 10 to 100 | 50 | Target alpha of an own-faction, enemy or allied plate; vanilla gives own faction 50 and the other two 35. |
+
+Tracked plates keep vanilla's 80 (and 100 at the screen edge) whatever the sliders say, and the
+distance fade still multiplies the chosen value. `NameplateRelationSettingsProvider` turns the
+percentages into fractions and reverts a non-finite or out-of-range value (a hand-edited
+`TAOM.json`) to the compiled default; the alpha service additionally refuses a non-positive value
+and leaves vanilla's target alone. The engine-constructed plate widget reads the toggle and
+strength through the static `TaomSettlementPlateWidget.Settings`, captured once in the IoC end
+block; each plate compares the effective strength against the one it last painted, once per
+frame, so a slider move repaints on the next frame with no event wiring. The provider caches
+`TaomSettings.Instance` on first successful read rather than in its constructor, because the
+container is built before MCM has created the instance.
+
+### Prefab attributes (the artist's reference)
+
+The colours themselves are `Color`-typed attributes on the widget, so the artist tunes them in the
+prefab without a rebuild; the compiled defaults apply when an attribute is absent, and the MCM
+strength slider scales whatever the prefab says. Every value must be exactly `#RRGGBBAA`: `Color.ConvertStringToColor` reads
 `Substring(7, 2)`, and a 7-character value throws inside the attribute loader, which catches it per
 attribute with a failed assert and keeps the compiled default, so a mistyped override is silently
 ignored rather than applied (a test pins the format of every default and of any attribute present;
@@ -108,8 +134,8 @@ the loader behaviour was verified by the Codex pass against the installed v1.4.8
 
 Bar and frame values are multiplied into the sprite, so a pastel keeps the parchment texture and
 a saturated value darkens it. These are starting points; the in-game pass with Thyrell decides
-the final ones. The raised enemy / allied target (0.5) is a constant in
-`NameplateRelationAlphaService`, chosen to equal vanilla's own-faction level.
+the final ones. The plate opacities are the two MCM sliders above; their defaults reproduce
+vanilla's own-faction level for every coloured plate.
 
 ## Key Files
 
@@ -120,7 +146,9 @@ the final ones. The raised enemy / allied target (0.5) is a constant in
 | `Main/Features/SettlementNameplateRelation/NameplateRelationPalette.cs` | Relation int to colours, defaults, unknown resolves to neutral |
 | `Main/Features/SettlementNameplateRelation/NameplatePaletteEntry.cs` | Bar / text / frame colour triple |
 | `Main/Features/SettlementNameplateRelation/PlateAlphaPolicy.cs` | Per-frame change detector with finite guard; text alpha curve |
-| `Main/Features/SettlementNameplateRelation/INameplateRelationAlphaService.cs`, `NameplateRelationAlphaService.cs` | Enemy / allied target alpha floor |
+| `Main/Features/SettlementNameplateRelation/INameplateRelationAlphaService.cs`, `NameplateRelationAlphaService.cs` | Plate target alpha by relation from the two opacity settings (tracked, zero and NaN untouched) |
+| `Main/Features/SettlementNameplateRelation/INameplateRelationSettingsProvider.cs`, `NameplateRelationSettingsProvider.cs` | MCM bridge: percent to fraction, finite and range validation, lazy `TaomSettings.Instance` cache |
+| `Main/Features/TaomSettings.cs` | The four `Map UI/Settlement Nameplates` properties (#596) |
 | `Main/Features/SettlementNameplateRelation/NameplateRelationIoC.cs` | DryIoc registration |
 | `Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs` | Patch38 postfix: relation floor, then distance fade |
 | `Main/_Module/GUI/Prefabs/Nameplate/SettlementNameplateItem{Large,Medium,Small}.xml` | The `SettlementNameplateLayout` element is the custom widget |
@@ -133,13 +161,16 @@ the final ones. The raised enemy / allied target (0.5) is a constant in
 
 ## Tests
 
-- `TAOM.Tests/Features/SettlementNameplateRelation/NameplateRelationPaletteTests.cs`: 8 tests, every relation, unknown and negative ints, custom entries, `#RRGGBBAA` format of all twelve defaults, neutral is white not vanilla's black.
-- `NameplateRelationAlphaServiceTests.cs`: 10 tests, neutral and own unchanged, enemy and ally raised, tracked kept, never lowered, zero and NaN pass through, unknown relation unchanged.
+- `TAOM.Tests/Features/SettlementNameplateRelation/NameplateRelationPaletteTests.cs`: 18 tests, every relation, unknown and negative ints, custom entries, `#RRGGBBAA` format of all twelve defaults, neutral is white not vanilla's black, `Blend` (full, zero, midpoint, clamped, non-finite, neutral unchanged) and `EffectiveStrength` (off, clamp, non-finite).
+- `NameplateRelationAlphaServiceTests.cs`: 11 tests against a substituted provider: neutral and coloured opacities by relation, custom values above and below vanilla, tracked untouched, zero and NaN pass through, unknown relation unchanged, a non-positive setting leaves vanilla's target.
+- `NameplateRelationSettingsProviderTests.cs`: 7 tests, defaults with no MCM instance match the slider defaults, percent to fraction, NaN / Infinity / out-of-range revert to the default.
 - `PlateAlphaPolicyTests.cs`: 15 tests, first call, unchanged, changed, NaN and Infinity refused, text alpha curve, the 0.35 pin, and `NeedsWrite` (equal, within tolerance, beyond, non-finite destination).
 - `NameplateRelationPrefabTests.cs`: 6 tests over the three prefabs, one widget with the right Id and binding, every widget path (bar, text, frame, banner, tracked ring) resolves by Id, colour attributes well formed, the item widget's own paths intact, the item widget within the ancestor depth the widget walks, no state cascade on the capsule.
 - `NameplateRelationBindingTests.cs`: 6 tests, engine members pinned against the installed DLLs (`BindingVerification`), widget constructor and simple-name uniqueness.
 
-46 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
+63 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
+The four MCM properties also move the settings fingerprint pin (`SettingsFingerprintTests`, 229 in
+`TaomSettings`) and sit in `CoopSettingsRelevance`'s presentation list.
 
 The widget's render and the postfix body need the live game. In-game checklist: neutral plate
 unchanged at 35% with opaque text; own green, enemy red, allied blue at 50%; declaring war
@@ -167,10 +198,13 @@ per call to a path already running at ~3000 calls/sec.
 
 ## Changelog
 
+- 2026-09-13: feat(map-ui) #596: four MCM controls (colour toggle, tint strength, neutral and
+  coloured plate opacity), live, through a validated settings provider and a static on the widget.
 - 2026-09-13: feat(map-ui) #591: relation colour on bar, text and frame; bar and frame follow
   vanilla alpha; enemy and allied targets raised to 0.5 in the Patch38 postfix.
 
 ## GitHub Issue
 
 - **Issue:** #591 [feat(map-ui): settlement nameplates show relation colour and vanilla transparency](https://github.com/haterade22/TAOM/issues/591)
-- **Status:** Open
+- **Issue:** #596 [feat(map-ui): MCM controls for settlement nameplate relation colour and plate opacity](https://github.com/haterade22/TAOM/issues/596)
+- **Status:** Open (both await the in-game pass)

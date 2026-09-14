@@ -2,22 +2,39 @@ namespace TAOM.Features.SettlementNameplateRelation;
 
 public class NameplateRelationAlphaService : INameplateRelationAlphaService
 {
-    /// <summary>Vanilla's own-faction in-window target
-    /// (<c>SettlementNameplateWidget._normalAllyAlphaTarget</c>, v1.4.8 dump line 69).</summary>
-    public const float RaisedTargetAlpha = 0.5f;
+    private readonly INameplateRelationSettingsProvider _settings;
+
+    public NameplateRelationAlphaService(INameplateRelationSettingsProvider settings)
+    {
+        _settings = settings;
+    }
 
     public float Adjust(float vanillaTarget, int relationType, bool isTracked)
     {
         if (isTracked)
             return vanillaTarget;
 
-        if (relationType != NameplateRelationPalette.Enemy && relationType != NameplateRelationPalette.Ally)
-            return vanillaTarget;
-
-        // Positive requirement, not "<= 0 return": NaN fails it and falls through untouched.
+        // Positive requirement, not "<= 0 return": NaN fails it and falls through untouched, and
+        // an off-window 0 stays hidden.
         if (!(vanillaTarget > 0f))
             return vanillaTarget;
 
-        return vanillaTarget < RaisedTargetAlpha ? RaisedTargetAlpha : vanillaTarget;
+        float configured;
+        switch (relationType)
+        {
+            case NameplateRelationPalette.Neutral:
+                configured = _settings.NeutralPlateAlpha;
+                break;
+            case NameplateRelationPalette.SameFaction:
+            case NameplateRelationPalette.Enemy:
+            case NameplateRelationPalette.Ally:
+                configured = _settings.RelationPlateAlpha;
+                break;
+            default:
+                return vanillaTarget;
+        }
+
+        // The provider validates, but a value about to reach the renderer is gated here too.
+        return configured > 0f ? configured : vanillaTarget;
     }
 }

@@ -199,6 +199,7 @@ public static class IoC
         FieldCampIoC.InitializePatchStatics(container);
         Features.Refuge.RefugeIoC.InitializePatchStatics(container);
         Features.UncapturableHeroes.UncapturableHeroesIoC.InitializePatchStatics(container);
+        NameplateRelationIoC.InitializeWidgetStatics(container);
 
         // Post-registration initialization
         CareerSystemIoC.InitializeCalculators(container.Resolve<Features.CareerSystem.Mutations.IMutationCalculatorRegistry>());

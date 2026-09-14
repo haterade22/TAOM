@@ -11,20 +11,24 @@ namespace TAOM.Features.SettlementNameplateRelation;
 /// visibility by writing <c>Color</c>, <c>AlphaFactor</c> and <c>ColorFactor</c> on the
 /// <see cref="SettlementNameplateItemWidget"/>; TAOM's restyled prefab draws the bar, text and
 /// diamond on descendants the engine never propagates those values to. This widget consumes them:
-/// <c>RelationType="@Relation"</c> picks a palette entry, and <see cref="SettlementPlatePresenter"/>
-/// mirrors the item's alpha every late update. Engine-constructed, auto-registered by simple type
-/// name (hence the Taom prefix). Never throws: a broken tint is cosmetic, an exception is a CTD.
+/// <c>RelationType="@Relation"</c> picks a palette entry, blended by the MCM tint strength (#596),
+/// and <see cref="SettlementPlatePresenter"/> mirrors the item's alpha every late update.
+/// Engine-constructed (settings arrive through the static <see cref="Settings"/>), auto-registered
+/// by simple type name (hence the Taom prefix). Never throws: a broken tint is cosmetic.
 /// </summary>
 public class TaomSettlementPlateWidget : Widget
 {
-    /// <summary>How many parents up the item widget may sit; the prefabs place it two up. A
-    /// prefab test pins the real nesting against this bound.</summary>
+    /// <summary>Parents to walk for the item widget (the prefabs nest it two up; a prefab test pins that).</summary>
     internal const int MaxAncestorDepth = 4;
     private const int MaxResolveAttempts = 120;
+
+    /// <summary>Captured once by <c>NameplateRelationIoC.InitializeWidgetStatics</c>; null means defaults.</summary>
+    public static INameplateRelationSettingsProvider? Settings { get; set; }
 
     private int _relationType = -1;
     private bool _paletteDirty;
     private int _resolveAttempts;
+    private float _appliedTint = float.NaN;
     private SettlementNameplateItemWidget? _item;
     private Widget? _bar;
     private Widget? _frame;
@@ -44,17 +48,7 @@ public class TaomSettlementPlateWidget : Widget
     }
 
     [Editor(false)]
-    public int RelationType
-    {
-        get => _relationType;
-        set
-        {
-            if (_relationType == value) return;
-            _relationType = value;
-            OnPropertyChanged(value, nameof(RelationType));
-            _paletteDirty = true;
-        }
-    }
+    public int RelationType { get => _relationType; set => SetRelation(value); }
 
     [Editor(false)]
     public Widget? BarBackgroundWidget { get => _bar; set => SetReference(ref _bar, value, nameof(BarBackgroundWidget)); }
@@ -71,7 +65,6 @@ public class TaomSettlementPlateWidget : Widget
     [Editor(false)]
     public Widget? TrackedRingWidget { get => _ring; set => SetReference(ref _ring, value, nameof(TrackedRingWidget)); }
 
-    // The twelve XML-overridable colours. Bar and frame multiply their sprites; text is the font colour.
     [Editor(false)] public Color NeutralBarColor { get => _neutral.Bar; set => SetEntry(ref _neutral, value, _neutral.Text, _neutral.Frame); }
     [Editor(false)] public Color NeutralTextColor { get => _neutral.Text; set => SetEntry(ref _neutral, _neutral.Bar, value, _neutral.Frame); }
     [Editor(false)] public Color NeutralFrameColor { get => _neutral.Frame; set => SetEntry(ref _neutral, _neutral.Bar, _neutral.Text, value); }
@@ -101,6 +94,14 @@ public class TaomSettlementPlateWidget : Widget
         }
     }
 
+    private void SetRelation(int value)
+    {
+        if (_relationType == value) return;
+        _relationType = value;
+        OnPropertyChanged(value, nameof(RelationType));
+        _paletteDirty = true;
+    }
+
     private void SetReference<T>(ref T? field, T? value, string name) where T : Widget
     {
         if (ReferenceEquals(field, value)) return;
@@ -116,8 +117,7 @@ public class TaomSettlementPlateWidget : Widget
         _paletteDirty = true;
     }
 
-    /// <summary>The XML path attributes normally deliver every reference; a miss hands over null,
-    /// so fall back to an Id search for a bounded number of frames, then stop paying for it.</summary>
+    /// <summary>XML paths deliver every reference; on a null miss, fall back to an Id search for a bounded number of frames.</summary>
     private void ResolveReferences()
     {
         if (_resolveAttempts >= MaxResolveAttempts) return;
@@ -132,13 +132,18 @@ public class TaomSettlementPlateWidget : Widget
         if (_ring == null) TrackedRingWidget = FindChild("TrackedRingWidget", true);
     }
 
+    /// <summary>A slider move (or the toggle) repaints on the next frame: one float compare per plate.</summary>
     private void ApplyPaletteIfDirty()
     {
+        var settings = Settings;
+        var tint = NameplateRelationPalette.EffectiveStrength(settings?.ColorsEnabled ?? true, settings?.TintStrength ?? 1f);
+        if (tint != _appliedTint) _paletteDirty = true;
         if (!_paletteDirty) return;
         if (_bar == null && _text == null && _frame == null) return;
 
         var entry = NameplateRelationPalette.Select(_relationType, _neutral, _sameFaction, _enemy, _ally);
-        SettlementPlatePresenter.ApplyPalette(_bar, _frame, _text, entry);
+        SettlementPlatePresenter.ApplyPalette(_bar, _frame, _text, NameplateRelationPalette.Blend(entry, tint));
+        _appliedTint = tint;
         _paletteDirty = false;
     }
 }

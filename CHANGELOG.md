@@ -4,6 +4,26 @@
 
 ## 2026-09-13
 
+### feat(map-ui): MCM controls for nameplate relation colour and plate opacity (#596)
+
+After #591 the user asked for the plate tuning to be in the players' hands. Four controls join
+`Map UI / Settlement Nameplates`, all live: Colour Nameplates by Relation (off paints every plate
+neutral), Relation Tint Strength (0 to 100%, blends each palette entry toward parchment and black
+text, so one slider stands in for the twelve colour fields MCM cannot edit), Neutral Plate Opacity
+(10 to 100%, default vanilla's 35, which is faint over dark terrain) and Coloured Plate Opacity
+(10 to 100%, default 50 for own, enemy and allied plates). Tracked plates keep vanilla's 80 and the
+distance fade still multiplies the chosen value. `NameplateRelationSettingsProvider` turns the
+percentages into fractions and reverts a NaN or out-of-range value from a hand-edited `TAOM.json`
+to the compiled default; it caches `TaomSettings.Instance` on first successful read because the
+container is built before MCM creates it. The alpha service now takes the provider and returns the
+configured target for an untracked in-window plate by relation; the engine-constructed plate widget
+reads the toggle and strength through a static captured in the IoC end block and repaints when the
+effective strength differs from the one it last painted, one float compare per plate per frame.
+17 new tests (63 in the feature); the settings fingerprint pin moves to 229 and the two docs quoting
+the total say 243. Suite 9027 green (2 skipped).
+
+Not-tested: the sliders in the live MCM screen and the repaint on the open map.
+
 ### localization: the whole translator backlog cleared in one run, all three modules, 12 languages (#579, #534, #508, #498)
 
 Every row that still held English in any of the 12 languages is translated: 216 entries per

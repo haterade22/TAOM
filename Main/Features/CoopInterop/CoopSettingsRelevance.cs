@@ -103,6 +103,8 @@ public static class CoopSettingsRelevance
         "ShowAllEncyclopediaCharacters", "EnableNameplateFade", "MapFigureScale",
         "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
+        "EnableNameplateRelationColors", "NameplateRelationTintStrength",
+        "NameplateNeutralPlateOpacity", "NameplateRelationPlateOpacity",
         "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
         "EnableNativeSkinFixes",
         // Already suppressed under co-op — TimeAcceleration's UI carries
