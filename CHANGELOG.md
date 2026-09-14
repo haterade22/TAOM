@@ -4,6 +4,20 @@
 
 ## 2026-09-14
 
+### chore(release): the patreon release copy swept too; #562 and #597 closed on the distance-cache rebuild
+
+`E:\LOTRAOM_Releases\patreon\Modules` holds `LOTRLOME_Armory` and `TAOM_Map` copied before the
+morning sweep, so it carried the same 164 sidecars and the two scene `Backups` folders (452 MB).
+`tools/sweep_module_backups.ps1 -ModulesRoot <that path> -QuarantineRoot
+E:\Bannerlord_Backups\module_bak_sweep_2026-09-14_patreon -SkipRepoModule -Apply`: its own
+quarantine, because the default one is date-stamped and already held every one of those relative
+paths from the install run, and the script refuses to overwrite a destination mid-move. 0 orphans,
+0 mismatches on the re-hash sample, 0 remaining. Mike then reported the in-game distance-cache
+rebuild done (`settlements_distance_cache_Default.bin`, 08:21), the last owed step on both village
+issues: #562 (nine Isengard villages, all nine ids verified in the live file) and #597 (Serelond,
+Methir, Framsburg; `FORTIFICATION_WITHOUT_VILLAGE` raises nothing) closed on his call, with the
+new-campaign smoke recorded as the one thing still unverified on each.
+
 ### fix(tools): the release packager drops dated backup sidecars and the scene Backups folders
 
 `tools/package_release.py` excluded only names ending in exactly `.xml.bak`. Every one of the 164
