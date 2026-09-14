@@ -96,6 +96,50 @@ name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead blo
 and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
 with v1.5.2's widget rename.
 
+### feat(diagnostics): the map-load timeline, renumbered Patch89 for the v1.5.x line
+
+The archived v1.5.0 port's map-load diagnostics come across in substance: a `[MapLoad]`
+heartbeat every 5 seconds from a `Campaign.RealTick` postfix (frames, fps, tick ms, a per-type
+party census on emit frames only, campaign time, the loading-window state and the whole game-state
+stack) and a sequence-numbered lifecycle trace of every state push, pop, clean and initialize, the
+map state and screen seams, the first completed map frame, and every raise and lower of the global
+loading window with its managed caller chain. It is the instrument that diagnosed the v1.5.0 stall
+on its first run (the map screen lowers the window only once `ReadyToRender && CheckSceneReadyToRender`
+has held while its counter reaches 3, and a terrain baked by pre-1.5 tools never satisfied it), and
+it is what will say in thirty seconds whether the v1.5.2 Modding Kit's re-bake fixed it. Four
+categories applied separately from `OnSubModuleLoad`, each in its own try/catch, so a drifted
+binding cannot take the heartbeat down with it.
+
+Renumbered from Patch66 to **Patch89**: trunk gave 66 to Enlistment while the port was parked. All
+thirteen targets resolve on v1.5.2 (`HarmonyPatchBindingTests`, and a binding review quoted every
+signature, including the deliberate base binding on `GameState.OnInitialize`, which `MapState` still
+does not override), the snapshot grows to 246 patches, and the registry gains the Patch89 section.
+Two things changed on the way over, both from that review. The heartbeat service is a process-wide
+singleton and the tracer is static, so a second campaign in one process would have read its first
+line against the first campaign's clock and counts; `MapLoadDiagnosticsBehavior` now resets both on
+every session launch, with a test for the service and one for the behavior. And the tick timer is a
+`Stopwatch.GetTimestamp()` pair instead of a `Stopwatch` allocated every campaign frame for every
+player. `docs/features/map-load-diagnostics.md` is the feature doc; its v1.5.0 impact link now
+points at the archived branch, where that write-up lives.
+
+### fix(career): the two HUD leftovers the 2026-08-06 import brought back are gone
+
+`docs/features/career-system.md` has said since 2026-08-05 that the `AbilityHUD` panel and its
+prefab were deleted by #382 and that the energy bar lives in `CareerEnergyBarPrefab`, a UIExtenderEx
+insert into Native's `AgentStatus`. The repository disagreed. Commit `6c384e87` (2026-08-06,
+"Refactor code structure") swept two files in from the external reference package that the same
+doc's "install hygiene" note says had been copied into the live module: a 358-line
+`GUI/PreFabs/Mission/AgentStatus.xml` that is vanilla's file plus one `IsVisible="false"` block
+naming a `<CareerEnergyBarWidget>` class that has never existed in TAOM, and an "empty override"
+`AbilityHUD.xml` written from the reference module's point of view ("this module loads after
+TAOM"). Both are deleted. Nothing referenced either: the energy bar players see is the extension,
+which resolves against vanilla's prefab exactly as it did against the copy.
+
+Found by the new `PrefabElementTypeBindingTests`, landed with the prefab re-base that follows: Gauntlet builds an element it cannot
+name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead block never crashed,
+and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
+with v1.5.2's widget rename.
+
 ### fix(cultures): every culture names its executioner for the v1.5.x cutscene
 
 Bannerlord v1.5.0 added `CultureObject.Executioner` (the `executioner` attribute) and the execution
