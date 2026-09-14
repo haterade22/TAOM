@@ -4,6 +4,22 @@
 
 ## 2026-09-14
 
+### chore(release): the pre-release backup sweep, and the one sidecar git was still carrying
+
+Mike is cutting a public build, and the Cloudflare distribution rejects `.bak`.
+`pwsh tools/sweep_module_backups.ps1 -Apply` moved 182 files (455 MB) into
+`E:\Bannerlord_Backups\module_bak_sweep_2026-09-14\` under a SHA256 manifest: 104 Armory
+`ModuleData` sidecars (the #583 `.bak-kingdomcurve-583` set and the `.bak-rangedladder` name rows),
+51 in TAOM_Map (the #597 village and rename passes across 12 languages plus three `settlements.xml`
+copies), 9 in TAOM, the same 9 in the repo's `Main/_Module` (CopyModule redeploys them on every
+build), and the two Modding Kit scene `Backups` folders (437 MB). No orphans, 0 hash mismatches on
+the re-sample, 0 remaining on the re-scan. None of the 173 sidecars carried a bare `.bak`
+extension; every one had a dated or topic suffix, which is why a `*.bak` filter would have found
+nothing. `Main/_Module/ModuleData/sp_battle_scenes.xml.bak_scenes` was git-tracked (added in
+`0ed2cf38`, before the `*.bak*` ignore rule), so every checkout brought it back; removed from the
+index here. The 2026-09-13 live edits to TAOM_Map and the Armory keep their rollback in the
+quarantine, same relative path.
+
 ### chore(commits): every commit subject carries the module version, and a gate refuses the rest
 
 Mike's rule (2026-09-13), stated when 102 commits had gone out after the v2.0.28 tag with nothing in
