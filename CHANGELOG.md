@@ -4,6 +4,43 @@
 
 ## 2026-09-14
 
+### chore: Bannerlord v1.5.2 engine bump (in progress)
+
+Steam moved the install from v1.4.8 to **v1.5.2** on 2026-09-14 (beta branch, buildid 25055496),
+and this time the **Modding Kit moved with it** (buildid 25055627, `wEditor/Version.xml` v1.5.2),
+which is what the v1.5.0 port on the old `bannerlord-1.5.x` branch was parked waiting for. That
+branch's tip is preserved as tag `archive/bannerlord-1.5.0-port`; the line name now belongs to a
+fresh branch cut from trunk at `6bab10ae` (v2.0.28), and the still-relevant v1.5.0 work is being
+re-derived onto it against v1.5.2 rather than merged: 240 trunk commits sit between the two, 75 of
+the 183 files the old port touched conflict, and four of those are the Execution seam, where trunk
+moved ahead of the port.
+
+**First: the change-set oracle.** The update stamps every file it writes, and a Steam integrity
+verify destroys that signal, so `docs/migration/v1.5.2-changeset.txt` was captured before anything
+else ran: **4,599 vanilla files**, against 1,643 at v1.5.0. It is a bigger data change than v1.5.0
+was, not a smaller one: 100 vanilla GUI XML (73 at 1.5.0), 97 ModuleData XML (88), 1,513 managed
+DLLs across both binaries, and a ~1,900-file `TileSets` tree under `Native` and `NavalDLC` that is
+the new terrain pipeline. TAOM-owned and third-party module folders are excluded from the capture
+because their timestamps are ours.
+
+**The v1.5.0 decompile baseline was recovered, not lost.** `E:\Decompiled_Bannerlord\_shipping_build`
+and `_modules_build` turned out to be the 2026-08-19 v1.5.0 regen, never archived and mislabelled
+by a manifest that regen never rewrote. Both are now `_v1.5.0`, so this bump gets a small
+1.5.0-to-1.5.2 diff as well as the big 1.4.8-to-1.5.2 one. Both native binaries are copied aside
+with version-bearing names; the stale global `taom-src` index is renamed and a fresh `v1.5.2` cache
+resolves.
+
+**Trunk cannot compile on this machine any more.** No v1.4.8 engine DLL survives anywhere on it, so
+the two engine-agnostic back-ports above carry `Not-tested` trailers for the C# suite and lean on
+non-engine proofs. The third, #481, is deferred to this branch where it can be compiled, and will
+be cherry-picked back to trunk verified.
+
+Trunk against the v1.5.2 engine, unmodified, produces six compile errors: the five v1.5.0 seams that
+still hold (`OnTeamDeployed`, `GetPrisonerRecruitmentMoraleEffect`, `GovernorDifferentCultureLoyaltyEffect`,
+`OnLordExecuted`, `DefaultExecutionRelationModel`) plus one that v1.5.0 could not have shown because
+the model did not exist then: `TaomCombatSimulationModel.SimulateHit`, added to trunk in the
+intervening month.
+
 ### fix(xslt): comment_strings overrides keep their variant tags
 
 `comment_strings.xslt` overrides 36 vanilla conversation strings. `<xsl:copy>` copies the element but
