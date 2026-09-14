@@ -25,6 +25,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.dunland_peasant</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.dunland_noble_son</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.dunland_noble_son</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.dunland_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.dunland_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.dunland_militia_veteran_spearman</xsl:attribute>
@@ -333,6 +334,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.harad_levy</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.harad_noble</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.harad_noble</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.harad_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.harad_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.harad_militia_veteran_spearman</xsl:attribute>
@@ -623,6 +625,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.rohan_edoras_recruit</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rohan_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rohan_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rohan_militia_veteran_spearman</xsl:attribute>
@@ -922,6 +925,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.loke_rim_initiate</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.loke_rim_cavalry</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.loke_rim_cavalry</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>
@@ -1200,6 +1204,7 @@
 			<!-- Military: troops, militias, party templates -->
 			<xsl:attribute name="basic_troop">NPCCharacter.dale_recruit</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.dale_squire</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.dale_squire</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.dale_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.dale_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.dale_militia_veteran_spearman</xsl:attribute>
@@ -1342,6 +1347,7 @@
 			     an already-re-themed sibling (khuzait) for any value still matching /battania/i. -->
 			<xsl:attribute name="basic_troop">NPCCharacter.loke_rim_initiate</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.loke_rim_cavalry</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.loke_rim_cavalry</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>

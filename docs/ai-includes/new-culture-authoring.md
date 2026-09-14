@@ -217,6 +217,7 @@ The full list of bindable culture attributes per v1.4.8 `TaleWorlds.CampaignSyst
 |---|---|---|
 | `basic_troop` | yes | |
 | `elite_basic_troop` | yes | |
+| `executioner` | **yes, Bannerlord v1.5.x** | The character the execution cutscene dresses as the headsman; `HeroExecutionSceneNotificationData` dereferences it unguarded, so a culture without one crashes on its player's first execution. TAOM names the elite troop. Gate: `CultureExecutionerTests` |
 | `melee_militia_troop`, `ranged_militia_troop` | yes | |
 | `melee_elite_militia_troop`, `ranged_elite_militia_troop` | yes | |
 | `default_party_template` | yes | |

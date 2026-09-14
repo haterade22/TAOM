@@ -78,6 +78,26 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### fix(cultures): every culture names its executioner for the v1.5.x cutscene
+
+Bannerlord v1.5.0 added `CultureObject.Executioner` (the `executioner` attribute) and the execution
+cutscene dresses it as the headsman without a null check: `HeroExecutionSceneNotificationData` clones
+`Executer.Culture.Executioner.FirstBattleEquipment` before handing it the axe. Vanilla sets it on
+its six main cultures; TAOM set it nowhere, so a player of any TAOM culture crashed on their first
+execution. Every culture in `taom_spcultures.xml` (24, the eight bandit cultures included) now names
+its elite troop, and `spcultures.xslt` sets the same for the six renamed vanilla cultures, whose
+attribute set the stylesheet replaces wholesale. `CultureExecutionerTests` asserts the attribute on
+every declared culture and on the stylesheet's output over a stub input, and that each id resolves.
+
+The archived v1.5.0 port also grew 22 female notable templates for the Advanced Starting Options
+Trader start. Trunk had already done that on its own in the meantime (six female templates per
+culture, the six XSLT cultures included), so nothing of it is carried over; the port's two data
+gates are, with the one assertion that pinned the port's own `*_f` ids dropped in favour of
+`NotableTemplateGenderTests`, which asserts on the `is_female` flag.
+`CultureXmlCommentPlacementTests` guards the #484 crash class (a comment inside `notable_templates`
+aborts the whole file). Gates: the 20 culture tests green, `validate_moduledata` 0 errors, both
+files parse. Docs: `cultures.md` and `new-culture-authoring.md` list the attribute as required.
+
 ### fix(xslt): comment_strings overrides keep their variant tags
 
 `comment_strings.xslt` overrides 36 vanilla conversation strings. `<xsl:copy>` copies the element but

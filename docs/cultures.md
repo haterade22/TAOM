@@ -53,7 +53,7 @@ party-template pass deliberately. See [kingdom-creation.md](features/kingdom-cre
 - **Attributes needed (~80+):**
   - Identity: `id`, `name`, `text`, `is_main_culture`, `can_have_settlement`
   - Visual: `color`, `color2`, `faction_banner_key`, `encounter_background_mesh`, `board_game_type`
-  - Troop refs: `basic_troop`, `elite_basic_troop`, `melee_militia_troop`, `ranged_militia_troop`, `melee_elite_militia_troop`, `ranged_elite_militia_troop`
+  - Troop refs: `basic_troop`, `elite_basic_troop`, `melee_militia_troop`, `ranged_militia_troop`, `melee_elite_militia_troop`, `ranged_elite_militia_troop`, and since Bannerlord v1.5.x `executioner` (the cutscene headsman; unguarded in the engine, gated by `CultureExecutionerTests`)
   - Party template refs (all eight are engine-read and all eight must be bound): `default_party_template`, `villager_party_template`, `militia_party_template`, `rebels_party_template`, `vassal_reward_party_template`, `settlement_patrol_template_level_1/2/3`. **`elite_caravan_party_template` used to be listed here and is not an attribute at all:** the deserializer takes caravans only from the child elements below. Contract + the two crash surfaces: [culture-playability-wiring.md](features/culture-playability-wiring.md)
   - Equipment roster refs: `default_battle_equipment_roster`, `default_civilian_equipment_roster`, `default_stealth_equipment_roster`, `duel_preset_equipment_roster`, `marriage_bride_equipment_roster`
   - Notary refs: `merchant_notary`, `artisan_notary`, `preacher_notary`, `rural_notable_notary`
