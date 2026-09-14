@@ -112,6 +112,8 @@ public class HarmonyPatchBindingTests
             var items = seq.Cast<object>().ToList();
             if (items.Count == 0) return (false, "TargetMethods() returned an empty sequence");
             if (items.Any(x => x == null)) return (false, "TargetMethods() contained a null entry (unresolved target)");
+            var bodiless = items.OfType<MethodBase>().Where(m => !HasBody(m)).ToList();
+            if (bodiless.Count > 0) return (false, "TargetMethods() named a target with no body (abstract or extern): " + string.Join(", ", bodiless.Select(Describe)));
             return (true, $"TargetMethods() → {items.Count} target(s)");
         }
 
@@ -121,6 +123,7 @@ public class HarmonyPatchBindingTests
         {
             if (!(tm.Invoke(null, null) is MethodBase mb))
                 return (false, "TargetMethod() returned null — target not found in the installed engine");
+            if (!HasBody(mb)) return (false, $"TargetMethod() → {Describe(mb)} has no body (abstract or extern); Harmony cannot patch it");
             return (true, $"TargetMethod() → {Describe(mb)}");
         }
 
@@ -154,10 +157,29 @@ public class HarmonyPatchBindingTests
                 return (true, $"skipped — MethodType.{mt} not statically verified");
         }
 
-        return resolved == null
-            ? (false, $"{declaringType.FullName}.{methodName} ({mt}) did not resolve against the installed engine")
-            : (true, $"{mt} → {Describe(resolved)}");
+        if (resolved == null)
+            return (false, $"{declaringType.FullName}.{methodName} ({mt}) did not resolve against the installed engine");
+        if (!HasBody(resolved))
+            return (false, $"{mt} → {Describe(resolved)} resolved but has no body (abstract or extern); Harmony cannot patch it. "
+                          + "v1.5.0 made ClanPartyItemVM.UpdateProperties abstract this way: the override that does the work is on a subclass.");
+        return (true, $"{mt} → {Describe(resolved)}");
     }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void AnAbstractEngineMethod_ResolvesButHasNoBody_SoTheGateRefusesIt()
+    {
+        // The v1.5.0 shape that motivated HasBody: the base row type's UpdateProperties resolves by name
+        // and is abstract; a patch on it applies nothing and aborts its category.
+        var abstractTarget = AccessTools.Method(
+            typeof(TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyItemVM), "UpdateProperties");
+        Assert.IsNotNull(abstractTarget, "ClanPartyItemVM.UpdateProperties no longer resolves; retarget this pin.");
+        Assert.IsFalse(HasBody(abstractTarget), "ClanPartyItemVM.UpdateProperties grew a body; the TroopWeight patch could target it again.");
+    }
+
+    // Resolving is not patching: an abstract target resolves by name and then has nothing for Harmony
+    // to rewrite. Harmony throws at apply time, which aborts the whole category.
+    private static bool HasBody(MethodBase mb) => !mb.IsAbstract && mb.GetMethodBody() != null;
 
     private static (Type declaringType, string methodName, MethodType? methodType, Type[] argTypes) MergeSpec(Type patchType)
     {

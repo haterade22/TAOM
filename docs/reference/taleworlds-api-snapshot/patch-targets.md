@@ -244,7 +244,7 @@ Patches: 246. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair` | `TaleWorlds.ObjectSystem.MBObjectManager.Void PreAfterLoad()` |
 | `TAOM.Features.SupplyLines.Hooks.SupplyCaravanEncounterPatch` | `TaleWorlds.CampaignSystem.Encounters.PlayerEncounter.Void DoMeeting()` |
 | `TAOM.Features.TroopWeight.Hooks.CampaignUIHelper_GetMainPartyHealthTooltip_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.CampaignUIHelper.List`1 GetMainPartyHealthTooltip()` |
-| `TAOM.Features.TroopWeight.Hooks.ClanPartyItemVM_UpdateProperties_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyItemVM.Void UpdateProperties()` |
+| `TAOM.Features.TroopWeight.Hooks.ClanPartyItemVM_UpdateProperties_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyItem.ClanPartyItemWithPartyVM.Void UpdateProperties()` |
 | `TAOM.Features.TroopWeight.Hooks.PartyCharacterVM_RefreshValues_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM.Void RefreshValues()` |
 | `TAOM.Features.TroopWeight.Hooks.PartyUpgraderUpgradeReadyTroops_Patch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.PartyUpgraderCampaignBehavior.Void UpgradeReadyTroops(PartyBase party)` |
 | `TAOM.Features.TroopWeight.Hooks.PartyVM_RefreshPartyInformation_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyVM.Void RefreshPartyInformation()` |

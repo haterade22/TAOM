@@ -96,6 +96,21 @@ name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead blo
 and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
 with v1.5.2's widget rename.
 
+### fix(troopweight): the clan-screen row patch targets the two concrete rows, and a gate for bodiless targets
+
+A member-level diff of every engine member TAOM binds (246 patch targets, 46 GameModel bases, the
+reflection sites and the XML loaders, v1.4.8 against v1.5.2) found one target that resolves and
+cannot be patched: `ClanPartyItemVM.UpdateProperties` is abstract since v1.5.0, the work having
+moved into `ClanPartyItemWithPartyVM` and `ClanPartyItemWithHeroVM`. `HarmonyPatchBindingTests`
+was green because it checks that a target resolves, and an abstract method resolves by name; at
+apply time Harmony has no body to rewrite, throws, and takes the rest of `Patch17_TroopWeight` with
+it. The patch now names both overrides through `TargetMethods`, so the weighted "X/limit" party-size
+text reaches every clan-screen row again, and the binding test refuses any target without a body
+(abstract or extern), with a negative pin on the engine member that motivated it.
+
+The same diff put 51 changed bodies in front of six review agents (29 GameModel base methods, 17
+patch targets, 5 XML loaders); their verdicts land in the next entry.
+
 ### fix(ui): prefab clones re-based on the v1.5.2 vanilla files, and a gate for element names
 
 Ten of TAOM's 51 prefab clones shadow a vanilla file the update rewrote (the change-set oracle
