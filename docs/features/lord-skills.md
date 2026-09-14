@@ -16,8 +16,8 @@ Lore-driven skill values + personality traits for every TAOM adult lord across a
 
 Two engine quirks made the obvious approach (just edit `<skills>` blocks) fail:
 
-1. **Hero NPCCharacters ignore explicit `<skills>` blocks** — only `skill_template="SkillSet.X"` is honored at hero generation. Hand-editing `<skills>` is dead code.
-2. **Same-ID NPCs across additive XML sources resolve by load order** — `characters/lords.xml` loads AFTER `lords.xslt`-transformed vanilla per SubModule.xml, so the XSLT overrides for the 11 lord_1_X_Y IDs that exist in both files are shadowed by `lords.xml`. Hand-editing the XSLT for those IDs is also dead code.
+1. **Hero NPCCharacters ignored explicit `<skills>` blocks through v1.4.8**: only `skill_template="SkillSet.X"` was honored at hero generation, so hand-editing `<skills>` was dead code and the generators kept the block as a documentation mirror of the SkillSet. **Since v1.5.2 the loader applies the inline block on top of a copy of the template**, so a mirror that drifts from its SkillSet overrides it. The SkillSet stays the source of truth: `python tools/sync_lord_inline_skills.py --apply` re-syncs every mirror and `LordInlineSkillParityTests` fails on drift, in `characters/lords.xml` and in `lords.xslt`'s literal blocks alike (64 and 19 lords had drifted when the bump landed, 2026-09-14).
+2. **Same-ID NPCs across additive XML sources merge in load order**: `characters/lords.xml` loads AFTER `lords.xslt`-transformed vanilla per SubModule.xml, and `MBObjectManager.MergeElements` merges a duplicate id attribute by attribute and child by child (a `<skill id>` matches by id), so for the 179 ids that exist in both files (54 of them with the `lord_1_X_Y` shape, re-counted 2026-09-14) `characters/lords.xml` wins for every attribute and skill it redeclares, while the XSLT copy still supplies what it does not. For `skill_template` and a fully listed `<skills>` block that means the XSLT copy is inert; 13 of those ids deliberately carry a different SkillSet in `characters/lords.xml` than in the stylesheet, and the parity gate accepts both because each copy matches its own set.
 
 ### Solution Approach
 

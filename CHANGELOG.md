@@ -78,6 +78,52 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### fix(lords): the inline skill mirrors match their SkillSets again, because v1.5.2 reads them
+
+The constructor-and-loader batch of the body diff found the second real finding of the bump.
+Through v1.4.8 `BasicCharacterObject.Deserialize` read an NPCCharacter's inline `<skills>` block
+only when its `skill_template` did not resolve, and TAOM built on that: the SkillSet is the source
+of truth (`taom_lord_skill_sets.xml`, `/lord-skills`), the generators keep the inline block as a
+documentation mirror, and `analyze_lord_balance.py` flags a mirror that disagrees with its set.
+Since v1.5.2 the loader copies the template into a fresh `MBCharacterSkills` under the character's
+own id and applies the inline block on top, so a drifted mirror silently overrides the template.
+64 lords in `characters/lords.xml` had drifted, both directions: `lord_3_15_2` on
+`spc_matriarch_skills_rookie` carried 18/20/17 against the template's 80/100/140, the seven
+`taom_north_orc_female_skills` lords carried higher numbers than their set. `lords.xslt`, which
+writes the vanilla-id lords through `xsl:template` blocks with the same template-plus-inline
+shape, carried 19 more (329 values): Sauron, the Witch-king, the three Nazgûl and the Black
+Númenóreans among them, the Witch-king's inline `OneHanded` 290 against his set's 315. The first
+draft of this fix read only `*.xml`; the data-flow review found the stylesheet. No player has seen
+any of this yet (the branch is not released); on the v1.4.8 line the numbers were never read.
+
+- `tools/sync_lord_inline_skills.py` (new): report by default, `--apply` rewrites every listed
+  inline value to its SkillSet's (0 for a skill the set does not define, which is what the engine's
+  property owner answers), in both shapes (the XML `NPCCharacter` and the `xsl:template` with an
+  `<xsl:attribute name="skill_template">` beside a literal `<skills>` block), BOM and line endings
+  preserved; SkillSets resolve from the installed vanilla modules (the `spc_*` rookies live in
+  SandBox) and then the repo's `*skill_sets*.xml`. 1,528 blocks checked, 1,138 values rewritten
+  in `characters/lords.xml` and 329 in `lords.xslt`; nothing but skill values changed in either
+  (the masked diffs are empty). Same-id SkillSets across modules merge the way
+  `MBObjectManager.MergeElements` merges them (later module overrides the skills it lists, keeps
+  the rest, `_replaceWhileMerging` drops them), in load order; the review caught the first draft
+  taking the last file whole, which vanilla's own duplicate
+  `infantry_heavyinfantry_level1_template_skills` would have mis-read.
+  `tools/tests/test_sync_lord_inline_skills.py` (11 tests) pins the rewrite, the BOM and CRLF
+  round trip, the unresolved-template skip, idempotency, the stylesheet shape and the merge rule.
+- `LordInlineSkillParityTests` (BindingVerification, new): every inline block beside a template
+  equals the SkillSet it names, skill for skill, in the XML files and in the stylesheets' literal
+  blocks; red at 1,138 and then 329 mismatches before the two syncs, green after. Only skills the block lists are compared: a skill it omits keeps the copied template value,
+  which is what v1.4.8 gave.
+- `docs/features/lord-skills.md`'s first engine quirk ("hero NPCCharacters ignore explicit
+  `<skills>` blocks") now says through which version that held; `analyze_lord_balance.py` and
+  `repoint_evil_lord_skillsets.py` carry the same correction in their headers; `tools/README.md`
+  gains the row.
+
+Suite 9,174 passed / 2 skipped / 0 failed of 9,176; `validate_moduledata` 0 errors.
+
+Research: `TaleWorlds.Core.BasicCharacterObject.Deserialize` (v1.4.8 against v1.5.2, lines 353-364
+in the category tree), `PropertyOwner<T>.Deserialize`.
+
 ### fix(engine): body-diff verdicts, the recruitment-cost perks in their v1.5.2 shape, dead faction-keyed data
 
 The member-level body diff (v1.4.8 against v1.5.2, every engine member TAOM binds: 62 rows) went

@@ -249,24 +249,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="18" />
-            <skill id="TwoHanded" value="5" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="19" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="5" />
-            <skill id="Riding" value="20" />
-            <skill id="Athletics" value="9" />
-            <skill id="Crafting" value="16" />
-            <skill id="Scouting" value="12" />
-            <skill id="Tactics" value="14" />
-            <skill id="Roguery" value="6" />
-            <skill id="Charm" value="28" />
-            <skill id="Leadership" value="17" />
-            <skill id="Trade" value="31" />
-            <skill id="Steward" value="21" />
-            <skill id="Medicine" value="16" />
-            <skill id="Engineering" value="13" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
+            <skill id="Crafting" value="55" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits>
             <!-- AGE 5 -->
@@ -377,24 +377,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="21" />
-            <skill id="TwoHanded" value="5" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="5" />
-            <skill id="Riding" value="23" />
-            <skill id="Athletics" value="12" />
-            <skill id="Crafting" value="20" />
-            <skill id="Scouting" value="16" />
-            <skill id="Tactics" value="18" />
-            <skill id="Roguery" value="8" />
-            <skill id="Charm" value="34" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="35" />
-            <skill id="Steward" value="27" />
-            <skill id="Medicine" value="22" />
-            <skill id="Engineering" value="17" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
+            <skill id="Crafting" value="55" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits />
         <Equipments>
@@ -551,24 +551,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="37" />
-            <skill id="TwoHanded" value="11" />
-            <skill id="Polearm" value="23" />
-            <skill id="Bow" value="21" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="10" />
-            <skill id="Riding" value="44" />
-            <skill id="Athletics" value="21" />
-            <skill id="Crafting" value="6" />
-            <skill id="Scouting" value="20" />
-            <skill id="Tactics" value="24" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="29" />
-            <skill id="Leadership" value="24" />
-            <skill id="Trade" value="20" />
-            <skill id="Steward" value="14" />
-            <skill id="Medicine" value="10" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="90" />
+            <skill id="Crafting" value="40" />
+            <skill id="Scouting" value="85" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="15" />
+            <skill id="Charm" value="95" />
+            <skill id="Leadership" value="115" />
+            <skill id="Trade" value="30" />
+            <skill id="Steward" value="70" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits>
             <!-- AGE 7 -->
@@ -997,24 +997,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="39" />
-            <skill id="TwoHanded" value="5" />
-            <skill id="Polearm" value="15" />
-            <skill id="Bow" value="29" />
-            <skill id="Crossbow" value="14" />
-            <skill id="Throwing" value="11" />
-            <skill id="Riding" value="44" />
-            <skill id="Athletics" value="32" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
             <skill id="Crafting" value="55" />
-            <skill id="Scouting" value="43" />
-            <skill id="Tactics" value="49" />
-            <skill id="Roguery" value="23" />
-            <skill id="Charm" value="74" />
-            <skill id="Leadership" value="61" />
-            <skill id="Trade" value="70" />
-            <skill id="Steward" value="72" />
-            <skill id="Medicine" value="58" />
-            <skill id="Engineering" value="46" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits />
         <Equipments>
@@ -1272,24 +1272,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="46" />
-            <skill id="TwoHanded" value="13" />
-            <skill id="Polearm" value="18" />
-            <skill id="Bow" value="48" />
-            <skill id="Crossbow" value="13" />
-            <skill id="Throwing" value="10" />
-            <skill id="Riding" value="21" />
-            <skill id="Athletics" value="54" />
-            <skill id="Crafting" value="60" />
-            <skill id="Scouting" value="59" />
-            <skill id="Tactics" value="45" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="58" />
-            <skill id="Leadership" value="55" />
-            <skill id="Trade" value="50" />
-            <skill id="Steward" value="66" />
-            <skill id="Medicine" value="68" />
-            <skill id="Engineering" value="42" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits>
             <!-- CHILD, YOUNGER DAUGHTER OF CALADOG -->
@@ -2134,24 +2134,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -2557,24 +2557,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -2842,24 +2842,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -3025,24 +3025,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -3958,24 +3958,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -4147,24 +4147,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -4426,24 +4426,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="127" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="77" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="112" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="127" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -8937,24 +8937,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="10" />
-            <skill id="TwoHanded" value="10" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="15" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="15" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="11" />
-            <skill id="Tactics" value="5" />
-            <skill id="Roguery" value="10" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="5" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="5" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
+            <skill id="Crafting" value="55" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits />
         <Equipments>
@@ -9169,24 +9169,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="13" />
-            <skill id="TwoHanded" value="11" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="16" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="18" />
-            <skill id="Crafting" value="6" />
-            <skill id="Scouting" value="14" />
-            <skill id="Tactics" value="5" />
-            <skill id="Roguery" value="12" />
-            <skill id="Charm" value="7" />
-            <skill id="Leadership" value="5" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="8" />
-            <skill id="Medicine" value="6" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits />
         <Equipments>
@@ -9211,24 +9211,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="11" />
-            <skill id="TwoHanded" value="11" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="15" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="16" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="11" />
-            <skill id="Tactics" value="5" />
-            <skill id="Roguery" value="10" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="5" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="5" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="90" />
+            <skill id="Crafting" value="40" />
+            <skill id="Scouting" value="85" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="15" />
+            <skill id="Charm" value="95" />
+            <skill id="Leadership" value="115" />
+            <skill id="Trade" value="30" />
+            <skill id="Steward" value="70" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits />
         <Equipments>
@@ -10111,24 +10111,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="26" />
-            <skill id="TwoHanded" value="23" />
-            <skill id="Polearm" value="11" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="8" />
-            <skill id="Throwing" value="16" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="27" />
-            <skill id="Crafting" value="55" />
-            <skill id="Scouting" value="24" />
-            <skill id="Tactics" value="27" />
-            <skill id="Roguery" value="12" />
-            <skill id="Charm" value="35" />
-            <skill id="Leadership" value="34" />
-            <skill id="Trade" value="45" />
-            <skill id="Steward" value="50" />
-            <skill id="Medicine" value="32" />
-            <skill id="Engineering" value="45" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -10365,24 +10365,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="55" />
-            <skill id="TwoHanded" value="65" />
-            <skill id="Polearm" value="40" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="7" />
-            <skill id="Throwing" value="48" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="65" />
-            <skill id="Crafting" value="36" />
-            <skill id="Scouting" value="31" />
-            <skill id="Tactics" value="33" />
-            <skill id="Roguery" value="23" />
-            <skill id="Charm" value="14" />
-            <skill id="Leadership" value="26" />
-            <skill id="Trade" value="22" />
-            <skill id="Steward" value="24" />
-            <skill id="Medicine" value="28" />
-            <skill id="Engineering" value="29" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="35" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="35" />
+            <skill id="Charm" value="45" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="65" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -10667,24 +10667,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="35" />
-            <skill id="TwoHanded" value="43" />
-            <skill id="Polearm" value="23" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="31" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="41" />
-            <skill id="Crafting" value="31" />
-            <skill id="Scouting" value="17" />
-            <skill id="Tactics" value="19" />
-            <skill id="Roguery" value="13" />
-            <skill id="Charm" value="8" />
-            <skill id="Leadership" value="14" />
-            <skill id="Trade" value="19" />
-            <skill id="Steward" value="18" />
-            <skill id="Medicine" value="16" />
-            <skill id="Engineering" value="25" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="60" />
+            <skill id="Tactics" value="85" />
+            <skill id="Roguery" value="55" />
+            <skill id="Charm" value="30" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="30" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="35" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -10921,24 +10921,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="6" />
-            <skill id="TwoHanded" value="11" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="7" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="5" />
-            <skill id="Crafting" value="24" />
-            <skill id="Scouting" value="5" />
-            <skill id="Tactics" value="5" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="5" />
-            <skill id="Trade" value="14" />
-            <skill id="Steward" value="8" />
-            <skill id="Medicine" value="5" />
-            <skill id="Engineering" value="19" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -11229,24 +11229,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="65" />
-            <skill id="TwoHanded" value="76" />
-            <skill id="Polearm" value="49" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="8" />
-            <skill id="Throwing" value="56" />
-            <skill id="Riding" value="9" />
-            <skill id="Athletics" value="76" />
-            <skill id="Crafting" value="39" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="40" />
-            <skill id="Roguery" value="29" />
-            <skill id="Charm" value="17" />
-            <skill id="Leadership" value="32" />
-            <skill id="Trade" value="23" />
-            <skill id="Steward" value="27" />
-            <skill id="Medicine" value="34" />
-            <skill id="Engineering" value="31" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -11483,24 +11483,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="21" />
-            <skill id="TwoHanded" value="27" />
-            <skill id="Polearm" value="9" />
-            <skill id="Bow" value="5" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="65" />
             <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="19" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="23" />
-            <skill id="Crafting" value="27" />
-            <skill id="Scouting" value="7" />
-            <skill id="Tactics" value="8" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="6" />
-            <skill id="Trade" value="16" />
-            <skill id="Steward" value="13" />
-            <skill id="Medicine" value="7" />
-            <skill id="Engineering" value="22" />
+            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="35" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="35" />
+            <skill id="Charm" value="45" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="65" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -11639,24 +11639,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="68" />
-            <skill id="TwoHanded" value="56" />
-            <skill id="Polearm" value="61" />
-            <skill id="Bow" value="9" />
-            <skill id="Crossbow" value="7" />
-            <skill id="Throwing" value="38" />
-            <skill id="Riding" value="62" />
-            <skill id="Athletics" value="61" />
-            <skill id="Crafting" value="14" />
-            <skill id="Scouting" value="53" />
-            <skill id="Tactics" value="52" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="40" />
-            <skill id="Leadership" value="47" />
-            <skill id="Trade" value="11" />
-            <skill id="Steward" value="32" />
-            <skill id="Medicine" value="23" />
-            <skill id="Engineering" value="11" />
+            <skill id="OneHanded" value="85" />
+            <skill id="TwoHanded" value="55" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="75" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="115" />
+            <skill id="Roguery" value="65" />
+            <skill id="Charm" value="90" />
+            <skill id="Leadership" value="100" />
+            <skill id="Trade" value="45" />
+            <skill id="Steward" value="35" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits>
             <Trait id="CavalryFightingSkills" value="8" />
@@ -11692,24 +11692,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="52" />
-            <skill id="TwoHanded" value="44" />
-            <skill id="Polearm" value="44" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="32" />
-            <skill id="Riding" value="43" />
-            <skill id="Athletics" value="49" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="42" />
-            <skill id="Tactics" value="38" />
-            <skill id="Roguery" value="18" />
-            <skill id="Charm" value="29" />
-            <skill id="Leadership" value="33" />
-            <skill id="Trade" value="8" />
-            <skill id="Steward" value="23" />
-            <skill id="Medicine" value="17" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="90" />
+            <skill id="Crafting" value="40" />
+            <skill id="Scouting" value="85" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="15" />
+            <skill id="Charm" value="95" />
+            <skill id="Leadership" value="115" />
+            <skill id="Trade" value="30" />
+            <skill id="Steward" value="70" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits>
             <Trait id="CavalryFightingSkills" value="8" />
@@ -11748,24 +11748,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="32" />
-            <skill id="TwoHanded" value="27" />
-            <skill id="Polearm" value="23" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="23" />
-            <skill id="Riding" value="17" />
-            <skill id="Athletics" value="32" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="26" />
-            <skill id="Tactics" value="19" />
-            <skill id="Roguery" value="14" />
-            <skill id="Charm" value="15" />
-            <skill id="Leadership" value="14" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="8" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="95" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="125" />
+            <skill id="Athletics" value="75" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="70" />
+            <skill id="Leadership" value="95" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="60" />
+            <skill id="Medicine" value="45" />
+            <skill id="Engineering" value="30" />
         </skills>
         <Traits>
             <Trait id="CavalryFightingSkills" value="8" />
@@ -11807,24 +11807,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="8" />
-            <skill id="TwoHanded" value="9" />
-            <skill id="Polearm" value="5" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="14" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="12" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="7" />
-            <skill id="Tactics" value="5" />
-            <skill id="Roguery" value="8" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="5" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="5" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
+            <skill id="Crafting" value="55" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits>
             <!--NONCOMBATANT
@@ -12689,24 +12689,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="21" />
-            <skill id="TwoHanded" value="15" />
-            <skill id="Polearm" value="7" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="19" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="27" />
-            <skill id="Crafting" value="20" />
-            <skill id="Scouting" value="26" />
-            <skill id="Tactics" value="18" />
-            <skill id="Roguery" value="18" />
-            <skill id="Charm" value="24" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="20" />
-            <skill id="Steward" value="27" />
-            <skill id="Medicine" value="22" />
-            <skill id="Engineering" value="17" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits>
             <Trait id="Politician" value="6" />
@@ -19626,24 +19626,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="40" />
-            <skill id="TwoHanded" value="59" />
-            <skill id="Polearm" value="46" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="16" />
-            <skill id="Throwing" value="34" />
-            <skill id="Riding" value="6" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="27" />
-            <skill id="Tactics" value="39" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="28" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -19730,24 +19730,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="40" />
-            <skill id="TwoHanded" value="59" />
-            <skill id="Polearm" value="46" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="16" />
-            <skill id="Throwing" value="34" />
-            <skill id="Riding" value="6" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="27" />
-            <skill id="Tactics" value="39" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="28" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="35" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="35" />
+            <skill id="Charm" value="45" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="65" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -19834,24 +19834,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="40" />
-            <skill id="TwoHanded" value="59" />
-            <skill id="Polearm" value="46" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="16" />
-            <skill id="Throwing" value="34" />
-            <skill id="Riding" value="6" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="27" />
-            <skill id="Tactics" value="39" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="28" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="60" />
+            <skill id="Tactics" value="85" />
+            <skill id="Roguery" value="55" />
+            <skill id="Charm" value="30" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="30" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="35" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -19938,24 +19938,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="40" />
-            <skill id="TwoHanded" value="59" />
-            <skill id="Polearm" value="46" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="16" />
-            <skill id="Throwing" value="34" />
-            <skill id="Riding" value="6" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="27" />
-            <skill id="Tactics" value="39" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="28" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -20087,24 +20087,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="40" />
-            <skill id="TwoHanded" value="59" />
-            <skill id="Polearm" value="46" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="16" />
-            <skill id="Throwing" value="34" />
-            <skill id="Riding" value="6" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="27" />
-            <skill id="Tactics" value="39" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="28" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="60" />
+            <skill id="Tactics" value="85" />
+            <skill id="Roguery" value="55" />
+            <skill id="Charm" value="30" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="30" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="35" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="2" />
@@ -20235,24 +20235,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="20" />
-            <skill id="TwoHanded" value="38" />
-            <skill id="Polearm" value="28" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="13" />
-            <skill id="Throwing" value="17" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="40" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="14" />
-            <skill id="Tactics" value="25" />
-            <skill id="Roguery" value="11" />
-            <skill id="Charm" value="6" />
-            <skill id="Leadership" value="12" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="6" />
-            <skill id="Medicine" value="13" />
-            <skill id="Engineering" value="24" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -20335,24 +20335,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="25" />
-            <skill id="TwoHanded" value="43" />
-            <skill id="Polearm" value="33" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="14" />
-            <skill id="Throwing" value="21" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="46" />
-            <skill id="Crafting" value="6" />
-            <skill id="Scouting" value="17" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="13" />
-            <skill id="Charm" value="8" />
-            <skill id="Leadership" value="14" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="8" />
-            <skill id="Medicine" value="16" />
-            <skill id="Engineering" value="25" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -20435,24 +20435,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="35" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="41" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="30" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="58" />
-            <skill id="Crafting" value="9" />
-            <skill id="Scouting" value="24" />
-            <skill id="Tactics" value="36" />
-            <skill id="Roguery" value="18" />
-            <skill id="Charm" value="11" />
-            <skill id="Leadership" value="20" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
             <skill id="Trade" value="5" />
-            <skill id="Steward" value="11" />
-            <skill id="Medicine" value="22" />
-            <skill id="Engineering" value="27" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="2" />
@@ -20535,24 +20535,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="20" />
-            <skill id="TwoHanded" value="38" />
-            <skill id="Polearm" value="28" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="13" />
-            <skill id="Throwing" value="17" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="40" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="14" />
-            <skill id="Tactics" value="25" />
-            <skill id="Roguery" value="11" />
-            <skill id="Charm" value="6" />
-            <skill id="Leadership" value="12" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
             <skill id="Trade" value="5" />
-            <skill id="Steward" value="6" />
-            <skill id="Medicine" value="13" />
-            <skill id="Engineering" value="24" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -20631,24 +20631,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="16" />
-            <skill id="TwoHanded" value="32" />
-            <skill id="Polearm" value="24" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="12" />
-            <skill id="Throwing" value="13" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="34" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="10" />
-            <skill id="Tactics" value="21" />
-            <skill id="Roguery" value="8" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="9" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="10" />
-            <skill id="Engineering" value="23" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="35" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="35" />
+            <skill id="Charm" value="45" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="65" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -20731,24 +20731,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="11" />
-            <skill id="TwoHanded" value="27" />
-            <skill id="Polearm" value="19" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="11" />
-            <skill id="Throwing" value="9" />
-            <skill id="Riding" value="5" />
-            <skill id="Athletics" value="28" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="7" />
-            <skill id="Tactics" value="18" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="6" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="7" />
-            <skill id="Engineering" value="22" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="60" />
+            <skill id="Tactics" value="85" />
+            <skill id="Roguery" value="55" />
+            <skill id="Charm" value="30" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="30" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="35" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -22676,24 +22676,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="55" />
-            <skill id="TwoHanded" value="44" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="42" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
             <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="34" />
-            <skill id="Riding" value="16" />
-            <skill id="Athletics" value="69" />
-            <skill id="Crafting" value="30" />
-            <skill id="Scouting" value="47" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="21" />
-            <skill id="Charm" value="22" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="50" />
-            <skill id="Engineering" value="8" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -23390,24 +23390,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="16" />
-            <skill id="TwoHanded" value="13" />
-            <skill id="Polearm" value="11" />
-            <skill id="Bow" value="27" />
-            <skill id="Crossbow" value="11" />
-            <skill id="Throwing" value="16" />
-            <skill id="Riding" value="13" />
-            <skill id="Athletics" value="22" />
-            <skill id="Crafting" value="11" />
-            <skill id="Scouting" value="22" />
-            <skill id="Tactics" value="16" />
-            <skill id="Roguery" value="6" />
-            <skill id="Charm" value="8" />
-            <skill id="Leadership" value="13" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="6" />
-            <skill id="Medicine" value="8" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="85" />
+            <skill id="TwoHanded" value="55" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="75" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="115" />
+            <skill id="Roguery" value="65" />
+            <skill id="Charm" value="90" />
+            <skill id="Leadership" value="100" />
+            <skill id="Trade" value="45" />
+            <skill id="Steward" value="35" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits>
             <Trait id="ArcherFightingSkills" value="1" />
@@ -24568,24 +24568,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="160" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="130" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="255" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="210" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="180" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="255" />
+            <skill id="Crafting" value="200" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="260" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="260" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="255" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="240" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -24616,24 +24616,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="275" />
-            <skill id="TwoHanded" value="265" />
+            <skill id="OneHanded" value="255" />
+            <skill id="TwoHanded" value="210" />
             <skill id="Polearm" value="240" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="110" />
-            <skill id="Throwing" value="190" />
-            <skill id="Riding" value="190" />
-            <skill id="Athletics" value="265" />
-            <skill id="Crafting" value="140" />
+            <skill id="Bow" value="210" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="180" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="255" />
+            <skill id="Crafting" value="200" />
             <skill id="Scouting" value="240" />
-            <skill id="Tactics" value="255" />
+            <skill id="Tactics" value="260" />
             <skill id="Roguery" value="240" />
-            <skill id="Charm" value="180" />
-            <skill id="Leadership" value="270" />
-            <skill id="Trade" value="140" />
-            <skill id="Steward" value="200" />
-            <skill id="Medicine" value="90" />
-            <skill id="Engineering" value="180" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="260" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="255" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="240" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -24664,24 +24664,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="160" />
-            <skill id="Crossbow" value="110" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="180" />
+            <skill id="Crossbow" value="140" />
             <skill id="Throwing" value="140" />
-            <skill id="Riding" value="110" />
+            <skill id="Riding" value="180" />
             <skill id="Athletics" value="200" />
-            <skill id="Crafting" value="180" />
-            <skill id="Scouting" value="170" />
-            <skill id="Tactics" value="160" />
-            <skill id="Roguery" value="210" />
-            <skill id="Charm" value="130" />
-            <skill id="Leadership" value="150" />
-            <skill id="Trade" value="130" />
-            <skill id="Steward" value="180" />
-            <skill id="Medicine" value="120" />
-            <skill id="Engineering" value="160" />
+            <skill id="Crafting" value="240" />
+            <skill id="Scouting" value="210" />
+            <skill id="Tactics" value="240" />
+            <skill id="Roguery" value="250" />
+            <skill id="Charm" value="275" />
+            <skill id="Leadership" value="230" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="260" />
+            <skill id="Medicine" value="250" />
+            <skill id="Engineering" value="210" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -24712,24 +24712,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="160" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="130" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="255" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="210" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="180" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="255" />
+            <skill id="Crafting" value="200" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="260" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="260" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="255" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="240" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -24760,24 +24760,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="235" />
-            <skill id="TwoHanded" value="220" />
-            <skill id="Polearm" value="215" />
-            <skill id="Bow" value="140" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="160" />
-            <skill id="Riding" value="150" />
-            <skill id="Athletics" value="240" />
-            <skill id="Crafting" value="110" />
-            <skill id="Scouting" value="200" />
-            <skill id="Tactics" value="180" />
-            <skill id="Roguery" value="200" />
-            <skill id="Charm" value="120" />
-            <skill id="Leadership" value="160" />
-            <skill id="Trade" value="100" />
-            <skill id="Steward" value="130" />
-            <skill id="Medicine" value="70" />
-            <skill id="Engineering" value="120" />
+            <skill id="OneHanded" value="255" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="210" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="180" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="255" />
+            <skill id="Crafting" value="200" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="260" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="260" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="255" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="240" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -25240,24 +25240,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="36" />
-            <skill id="TwoHanded" value="23" />
-            <skill id="Polearm" value="18" />
-            <skill id="Bow" value="8" />
-            <skill id="Crossbow" value="13" />
-            <skill id="Throwing" value="25" />
-            <skill id="Riding" value="21" />
-            <skill id="Athletics" value="44" />
-            <skill id="Crafting" value="50" />
-            <skill id="Scouting" value="49" />
-            <skill id="Tactics" value="45" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="58" />
-            <skill id="Leadership" value="50" />
-            <skill id="Trade" value="50" />
-            <skill id="Steward" value="66" />
-            <skill id="Medicine" value="53" />
-            <skill id="Engineering" value="42" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits />
         <Equipments>
@@ -25279,24 +25279,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="28" />
-            <skill id="TwoHanded" value="19" />
-            <skill id="Polearm" value="13" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="9" />
-            <skill id="Throwing" value="22" />
-            <skill id="Riding" value="12" />
-            <skill id="Athletics" value="35" />
-            <skill id="Crafting" value="35" />
-            <skill id="Scouting" value="38" />
-            <skill id="Tactics" value="31" />
-            <skill id="Roguery" value="25" />
-            <skill id="Charm" value="41" />
-            <skill id="Leadership" value="34" />
-            <skill id="Trade" value="35" />
-            <skill id="Steward" value="46" />
-            <skill id="Medicine" value="37" />
-            <skill id="Engineering" value="30" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
+            <skill id="Crafting" value="55" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits />
         <Equipments>
@@ -25414,24 +25414,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="23" />
-            <skill id="TwoHanded" value="16" />
-            <skill id="Polearm" value="9" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="20" />
-            <skill id="Riding" value="6" />
-            <skill id="Athletics" value="29" />
-            <skill id="Crafting" value="25" />
-            <skill id="Scouting" value="30" />
-            <skill id="Tactics" value="23" />
-            <skill id="Roguery" value="20" />
-            <skill id="Charm" value="29" />
-            <skill id="Leadership" value="23" />
-            <skill id="Trade" value="25" />
-            <skill id="Steward" value="34" />
-            <skill id="Medicine" value="27" />
-            <skill id="Engineering" value="21" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits />
         <Equipments>
@@ -25597,24 +25597,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="265" />
-            <skill id="TwoHanded" value="255" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="110" />
-            <skill id="Throwing" value="190" />
-            <skill id="Riding" value="180" />
+            <skill id="OneHanded" value="255" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="210" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="180" />
+            <skill id="Riding" value="240" />
             <skill id="Athletics" value="255" />
-            <skill id="Crafting" value="130" />
+            <skill id="Crafting" value="200" />
             <skill id="Scouting" value="240" />
-            <skill id="Tactics" value="240" />
-            <skill id="Roguery" value="255" />
-            <skill id="Charm" value="170" />
-            <skill id="Leadership" value="255" />
-            <skill id="Trade" value="130" />
-            <skill id="Steward" value="180" />
-            <skill id="Medicine" value="80" />
-            <skill id="Engineering" value="170" />
+            <skill id="Tactics" value="260" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="260" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="255" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="240" />
         </skills>
         <Traits>
             <Trait id="Honor" value="-2" />
@@ -25837,24 +25837,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -25935,24 +25935,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="35" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="35" />
+            <skill id="Charm" value="45" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="65" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -26042,24 +26042,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="60" />
+            <skill id="Tactics" value="85" />
+            <skill id="Roguery" value="55" />
+            <skill id="Charm" value="30" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="30" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="35" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -26143,24 +26143,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -26615,24 +26615,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -27087,24 +27087,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="35" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="35" />
+            <skill id="Charm" value="45" />
+            <skill id="Leadership" value="80" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="65" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="50" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -27559,24 +27559,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="90" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="120" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="60" />
+            <skill id="Tactics" value="85" />
+            <skill id="Roguery" value="55" />
+            <skill id="Charm" value="30" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="30" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="35" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -27659,24 +27659,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -27759,24 +27759,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="54" />
-            <skill id="Polearm" value="36" />
-            <skill id="Bow" value="7" />
-            <skill id="Crossbow" value="6" />
-            <skill id="Throwing" value="49" />
-            <skill id="Riding" value="11" />
-            <skill id="Athletics" value="64" />
-            <skill id="Crafting" value="10" />
-            <skill id="Scouting" value="37" />
-            <skill id="Tactics" value="29" />
-            <skill id="Roguery" value="31" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="18" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="12" />
-            <skill id="Medicine" value="25" />
-            <skill id="Engineering" value="8" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
+            <skill id="Steward" value="15" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -28049,24 +28049,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="65" />
-            <skill id="TwoHanded" value="50" />
-            <skill id="Polearm" value="40" />
-            <skill id="Bow" value="34" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="38" />
-            <skill id="Riding" value="18" />
-            <skill id="Athletics" value="70" />
-            <skill id="Crafting" value="21" />
-            <skill id="Scouting" value="46" />
-            <skill id="Tactics" value="33" />
-            <skill id="Roguery" value="23" />
-            <skill id="Charm" value="29" />
-            <skill id="Leadership" value="41" />
-            <skill id="Trade" value="7" />
-            <skill id="Steward" value="14" />
-            <skill id="Medicine" value="48" />
-            <skill id="Engineering" value="9" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="100" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="70" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="15" />
+            <skill id="Scouting" value="45" />
+            <skill id="Tactics" value="90" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="60" />
+            <skill id="Leadership" value="75" />
+            <skill id="Trade" value="25" />
+            <skill id="Steward" value="40" />
+            <skill id="Medicine" value="30" />
+            <skill id="Engineering" value="10" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="1" />
@@ -28152,24 +28152,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="45" />
-            <skill id="Bow" value="35" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="50" />
             <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="42" />
-            <skill id="Riding" value="21" />
-            <skill id="Athletics" value="75" />
-            <skill id="Crafting" value="23" />
-            <skill id="Scouting" value="49" />
-            <skill id="Tactics" value="37" />
-            <skill id="Roguery" value="26" />
-            <skill id="Charm" value="30" />
-            <skill id="Leadership" value="44" />
-            <skill id="Trade" value="7" />
+            <skill id="Throwing" value="110" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="145" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="95" />
+            <skill id="Tactics" value="10" />
+            <skill id="Roguery" value="125" />
+            <skill id="Charm" value="5" />
+            <skill id="Leadership" value="30" />
+            <skill id="Trade" value="5" />
             <skill id="Steward" value="15" />
-            <skill id="Medicine" value="51" />
-            <skill id="Engineering" value="10" />
+            <skill id="Medicine" value="10" />
+            <skill id="Engineering" value="5" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="10" />
@@ -30072,24 +30072,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="5" />
-            <skill id="TwoHanded" value="5" />
-            <skill id="Polearm" value="11" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="5" />
-            <skill id="Riding" value="20" />
-            <skill id="Athletics" value="5" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="5" />
-            <skill id="Tactics" value="6" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="5" />
-            <skill id="Leadership" value="6" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="5" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="55" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="90" />
+            <skill id="Crafting" value="40" />
+            <skill id="Scouting" value="85" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="15" />
+            <skill id="Charm" value="95" />
+            <skill id="Leadership" value="115" />
+            <skill id="Trade" value="30" />
+            <skill id="Steward" value="70" />
+            <skill id="Medicine" value="60" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="3" />
@@ -30874,24 +30874,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="37" />
-            <skill id="TwoHanded" value="30" />
-            <skill id="Polearm" value="54" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="15" />
-            <skill id="Riding" value="71" />
-            <skill id="Athletics" value="25" />
-            <skill id="Crafting" value="9" />
-            <skill id="Scouting" value="28" />
-            <skill id="Tactics" value="43" />
-            <skill id="Roguery" value="7" />
-            <skill id="Charm" value="31" />
-            <skill id="Leadership" value="43" />
-            <skill id="Trade" value="7" />
-            <skill id="Steward" value="20" />
-            <skill id="Medicine" value="15" />
-            <skill id="Engineering" value="7" />
+            <skill id="OneHanded" value="85" />
+            <skill id="TwoHanded" value="55" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="75" />
+            <skill id="Riding" value="130" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="30" />
+            <skill id="Scouting" value="120" />
+            <skill id="Tactics" value="115" />
+            <skill id="Roguery" value="65" />
+            <skill id="Charm" value="90" />
+            <skill id="Leadership" value="100" />
+            <skill id="Trade" value="45" />
+            <skill id="Steward" value="35" />
+            <skill id="Medicine" value="40" />
+            <skill id="Engineering" value="25" />
         </skills>
         <Traits>
             <!-- USED TO DERIVE SKILLS -->
@@ -30970,24 +30970,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="5" />
-            <skill id="TwoHanded" value="5" />
-            <skill id="Polearm" value="17" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="5" />
-            <skill id="Riding" value="28" />
-            <skill id="Athletics" value="5" />
-            <skill id="Crafting" value="6" />
-            <skill id="Scouting" value="5" />
-            <skill id="Tactics" value="15" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="12" />
-            <skill id="Leadership" value="16" />
-            <skill id="Trade" value="6" />
-            <skill id="Steward" value="8" />
-            <skill id="Medicine" value="6" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="65" />
+            <skill id="Throwing" value="25" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="70" />
+            <skill id="Crafting" value="55" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="110" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="140" />
+            <skill id="Trade" value="95" />
+            <skill id="Steward" value="125" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="60" />
         </skills>
         <Traits>
             <Trait id="Commander" value="4" />
@@ -31062,24 +31062,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="6" />
-            <skill id="TwoHanded" value="5" />
-            <skill id="Polearm" value="21" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="5" />
-            <skill id="Riding" value="33" />
-            <skill id="Athletics" value="5" />
-            <skill id="Crafting" value="5" />
-            <skill id="Scouting" value="5" />
-            <skill id="Tactics" value="15" />
-            <skill id="Roguery" value="5" />
-            <skill id="Charm" value="9" />
-            <skill id="Leadership" value="15" />
-            <skill id="Trade" value="5" />
-            <skill id="Steward" value="5" />
-            <skill id="Medicine" value="5" />
-            <skill id="Engineering" value="5" />
+            <skill id="OneHanded" value="95" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="65" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="125" />
+            <skill id="Athletics" value="75" />
+            <skill id="Crafting" value="25" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="100" />
+            <skill id="Roguery" value="40" />
+            <skill id="Charm" value="70" />
+            <skill id="Leadership" value="95" />
+            <skill id="Trade" value="15" />
+            <skill id="Steward" value="60" />
+            <skill id="Medicine" value="45" />
+            <skill id="Engineering" value="30" />
         </skills>
         <Traits>
             <Trait id="KnightFightingSkills" value="6" />
@@ -31300,24 +31300,24 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="29" />
-            <skill id="TwoHanded" value="14" />
-            <skill id="Polearm" value="35" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="14" />
-            <skill id="Throwing" value="11" />
-            <skill id="Riding" value="59" />
-            <skill id="Athletics" value="27" />
-            <skill id="Crafting" value="55" />
-            <skill id="Scouting" value="43" />
-            <skill id="Tactics" value="59" />
-            <skill id="Roguery" value="23" />
-            <skill id="Charm" value="69" />
-            <skill id="Leadership" value="71" />
-            <skill id="Trade" value="55" />
-            <skill id="Steward" value="72" />
-            <skill id="Medicine" value="58" />
-            <skill id="Engineering" value="46" />
+            <skill id="OneHanded" value="62" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="55" />
+            <skill id="Riding" value="100" />
+            <skill id="Athletics" value="60" />
+            <skill id="Crafting" value="100" />
+            <skill id="Scouting" value="80" />
+            <skill id="Tactics" value="95" />
+            <skill id="Roguery" value="45" />
+            <skill id="Charm" value="125" />
+            <skill id="Leadership" value="120" />
+            <skill id="Trade" value="100" />
+            <skill id="Steward" value="130" />
+            <skill id="Medicine" value="115" />
+            <skill id="Engineering" value="90" />
         </skills>
         <Traits>
             <Trait id="Honor" value="1" />

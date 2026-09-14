@@ -4,7 +4,9 @@ Per-culture LORD stats + perk review (READ-ONLY).
 
 The lord analog of analyze_troop_balance.py. For every lord:
   - resolves the AUTHORITATIVE skills via skill_template -> SkillSet in taom_lord_skill_sets.xml
-    (the engine ignores the inline <skills> block — that's documentation only);
+    (through v1.4.8 the engine ignored the inline <skills> block, so it was documentation only;
+    since v1.5.2 the loader applies it on top of the template, which is why
+    sync_lord_inline_skills.py keeps every mirror equal to its SkillSet);
   - compares the skill total against the rebalance_lords.py reference curve (archetype baseline +
     cultural modifier + age) — the same parity lens used for troops;
   - maps each skill level to the perks it unlocks (from tools/data/bannerlord_perks.json).

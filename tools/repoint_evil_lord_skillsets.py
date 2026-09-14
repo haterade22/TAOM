@@ -84,9 +84,11 @@ CULTURE_SWAPS = {
 }
 # Inline parity (2026-07-03 rework): instead of a hand-maintained per-template value map,
 # the FULL inline <skills> block of every managed-culture lord is synced to its resolved
-# SkillSet's values, read straight from taom_lord_skill_sets.xml. The engine only reads the
-# SkillSet; inline blocks are documentation, and this keeps analyze_lord_balance.py's
-# inline-vs-SkillSet mismatch check clean for every culture this script manages.
+# SkillSet's values, read straight from taom_lord_skill_sets.xml. Through v1.4.8 the engine read
+# only the SkillSet and the inline block was documentation; since v1.5.2 the loader applies the
+# inline block on top of the template, so parity is what keeps the SkillSet authoritative.
+# sync_lord_inline_skills.py does the same for EVERY lord (and LordInlineSkillParityTests gates
+# it); this keeps analyze_lord_balance.py's mismatch check clean for the cultures it manages.
 SETS_XML = REPO / "Main" / "_Module" / "ModuleData" / "taom_lord_skill_sets.xml"
 
 
