@@ -16,7 +16,7 @@ copied from:
 This script opens the cited decompile file, finds the named method plus every
 non-public helper it calls in the same class (transitively), and extracts the
 attribute and element names those bodies read through the idioms ILSpy emits for
-the v1.4.8 dump:
+the v1.5.2 dump (the category tree named by TAOM_DECOMPILE_ROOT):
 
     Attributes["x"]  Attributes?["x"]  GetAttribute("x")
     ReadObjectReferenceFromXml("x", ...)  ReadObjectReferenceFromXml<T>("x", ...)
@@ -78,7 +78,7 @@ from _gamedir import game_modules as resolve_game_modules  # noqa: E402
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs" / "modding"
 MANIFEST_PATH = REPO_ROOT / "tools" / "handbook_attribute_manifest.json"
-DEFAULT_DUMP_ROOT = r"E:\Decompiled_Bannerlord\_categories_v1.4.8"
+DEFAULT_DUMP_ROOT = r"E:\Decompiled_Bannerlord\_categories_v1.5.2"
 DUMP_ENV_VAR = "TAOM_DECOMPILE_ROOT"
 DEFAULT_GAME_MODULES = resolve_game_modules(
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
@@ -752,7 +752,7 @@ def main(argv=None) -> int:
     dump_root = resolve_dump_root(args.dump_root)
     if args.update and not dump_root.is_dir():
         print(f"ERROR: --update needs the decompile dump, and none was found at {dump_root}\n"
-              f"       Set ${DUMP_ENV_VAR} or pass --dump-root to the v1.4.8 decompile "
+              f"       Set ${DUMP_ENV_VAR} or pass --dump-root to the v1.5.2 decompile "
               f"(default {DEFAULT_DUMP_ROOT}).", file=sys.stderr)
         return 2
 
@@ -760,7 +760,7 @@ def main(argv=None) -> int:
         report = run(args.docs, dump_root, args.repo_root, args.game_modules, args.manifest)
     except DumpRootMissing as exc:
         print(f"ERROR: decompile dump root not found: {exc.dump_root}\n"
-              f"       Set ${DUMP_ENV_VAR} (or pass --dump-root) to the v1.4.8 decompile, "
+              f"       Set ${DUMP_ENV_VAR} (or pass --dump-root) to the v1.5.2 decompile,"
               f"default {DEFAULT_DUMP_ROOT}.\n"
               f"       No committed manifest at {exc.manifest_path} to fall back on either; "
               f"a machine with the dump writes one with --update.", file=sys.stderr)

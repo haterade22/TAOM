@@ -1,7 +1,7 @@
 # Creature Mount Authoring — the complete workflow
 
 How to take a non-humanoid creature from raw assets to a **rideable, battle-stable mount** in
-TAOM on Bannerlord **1.4.8** (the workflow was proven on 1.4.5 → 1.4.6 — see "The engine-bump
+TAOM on Bannerlord **1.5.2** (the workflow was proven on 1.4.5 → 1.4.6; see "The engine-bump
 protocol" near the end). Distilled from the two campaigns that proved every step the hard way:
 the **war elephant** (2026-06-03 → 06-10, upstream-pack port) and the **giant spider**
 (2026-06-04 → 06-12, custom skeleton + custom clips — the maximal case). The warg

@@ -68,7 +68,7 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    the editor binary.
 7. **Steam overwrites in place, so old native images do not survive — archive one before each
    engine bump.** The only `TaleWorlds.Native.dll` copies on this machine are the two live ones
-   under `bin/Win64_Shipping_{Client,wEditor}`, and both are now v1.4.8; nothing v1.4.5 or v1.4.7
+   under `bin/Win64_Shipping_{Client,wEditor}`, and both are now v1.5.2 (rewritten 2026-09-14; the archived `.dll` twins under `E:\Decompiled_Bannerlord\_native` are the exception); nothing v1.4.5 through v1.5.0
    is preserved in the repo or under `E:\Decompiled_Bannerlord\` (the decompile stack holds `.cs`
    for managed assemblies only — native modules are merely *listed* in `_native_dlls.txt`).
    Consequence: the open player report at `crashz/report.json` (`BannerlordVersion v1.4.7.117484`)

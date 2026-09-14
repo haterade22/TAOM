@@ -7,9 +7,11 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.PartyIconScale.Hooks;
 
 /// <summary>
-/// Patch53 — Transpiler on private <c>MobilePartyVisual.AddCharacterToPartyIcon</c>. Replaces the two
-/// hardcoded vanilla <c>0.3f</c> campaign-map scale literals (the leader figure and its mount) with a
-/// <c>call</c> to <see cref="PartyIconScaleConfig.GetScale"/>, so both honour the MCM "Map Figure Scale"
+/// Patch53 — Transpiler on private <c>MobilePartyVisual.AddCharacterToPartyIcon</c>. Replaces the
+/// hardcoded vanilla <c>0.3f</c> campaign-map scale literals left in that method since v1.5.0 (the mount,
+/// and the human frame's <c>ApplyScaleLocal</c>; the leader figure's own literal moved to
+/// <c>MobilePartyVisualHelper.GetHumanAgentPartyVisual</c>, which <c>Patch53_PartyIconScaleHumanVisual</c>
+/// rewrites) with a <c>call</c> to <see cref="PartyIconScaleConfig.GetScale"/>, so all honour the MCM "Map Figure Scale"
 /// slider (default 0.15 = half vanilla). Thin entry point: all IL work lives in
 /// <see cref="PartyIconScaleTranspiler"/>. Coexists with the BannerColorPersistence Postfix on the same
 /// method (transpiler rewrites IL; postfix runs after).

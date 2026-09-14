@@ -162,7 +162,7 @@ Nine `.bak*` files sit inside registered folders: five `equipmentsets/taom_enlis
 | `TAOM_Map/ModuleData/Languages/` (25 files) | engine scan (`LocalizedTextManager.cs:91-99`) | `LocalizedTextManager` | a root `language_data.xml` plus 12 folders of `language_data.xml` and `loc_settlements.xml`: the translated settlement names; English is the literal text after each `{=key}` in `settlements.xml`, so a rename is a 13-file edit <!-- measured: find TAOM_Map/ModuleData/Languages -type f \| wc -l; ls TAOM_Map/ModuleData/Languages/DE 2026-09-05 --> | `tools/Apply-MapVillageNames.py`, `tools/rebuild_translation_files.py`, `tools/translate_with_claude.py`; coverage by `tools/check_external_loc_coverage.py` | live |
 | `TAOM_Map/ModuleData/DistanceCaches/` (3 files) | C#: TAOM's EditorCacheRebuild feature ([editor-cache-rebuild](../features/editor-cache-rebuild.md)) | the engine's map distance cache plus TAOM's rebuild tooling | `settlements_distance_cache_Default.bin` (the settlement-to-settlement travel matrix), `settlements_snapshot.json` and `last_rebuild_report.json`; the cache must be rebuilt whenever a settlement is added, moved or removed | generated | live, derived |
 
-`TAOM_Map/SubModule.xml:15` still pins `Native` at `v1.4.5.*` while the installed engine is v1.4.8; harmless today, worth fixing at the next engine bump. <!-- measured: grep -n DependedModuleMetadata TAOM_Map/SubModule.xml 2026-09-05 -->
+`TAOM_Map/SubModule.xml:15` still pins `Native` at `v1.4.5.*` while the installed engine is v1.5.2; harmless today (the pin was still `v1.4.5.*` through the 1.4.8 and 1.5.2 bumps). <!-- measured: grep -n DependedModuleMetadata TAOM_Map/SubModule.xml 2026-09-14 -->
 
 ## LOTRLOME_Armory: the live art and items module
 

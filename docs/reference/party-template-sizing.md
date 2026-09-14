@@ -1,7 +1,7 @@
 # Party-template sizing: what `max_value` actually controls
 
 > Written 2026-08-14 during the evil-culture balance pass. Every engine claim below was read out of
-> the v1.4.8 decompile under `E:\Decompiled_Bannerlord\Campaign\TaleWorlds.CampaignSystem\` and is
+> the v1.4.8 decompile, now archived under `E:\Decompiled_Bannerlord\_categories_v1.4.8\Campaign\TaleWorlds.CampaignSystem\` (the root holds no category folders any more; the v1.5.2 tree is `_categories_v1.5.2`), and is
 > cited with a file and line. Read this before retuning `Main/_Module/ModuleData/taom_partyTemplates.xml`,
 > because the obvious reading of `max_value` is wrong and the numbers below will be retuned again
 > after the in-game smoke test.

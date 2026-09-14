@@ -13,7 +13,7 @@ If you're authoring a **net-new culture** (armor + troops + recruitment), read [
 
 1. **Source of truth**: hand-edited `CULTURES` dict in [`tools/apply_culture_skills_traits.py`](../../tools/apply_culture_skills_traits.py).
 2. **Generator**: `python tools/apply_culture_skills_traits.py --all-cultures --apply` emits 3 outputs — `taom_lord_skill_sets.xml` (SkillSets), updated `lords.xml` + `lords.xslt` (skill_template attr swaps + populated `<skills>`/`<Traits>` blocks).
-3. **Engine consumption**: every adult NPCCharacter has `skill_template="SkillSet.taom_..."` that points to a TAOM-owned SkillSet — that's what the engine actually uses. Explicit `<skills>` blocks on hero NPCs were IGNORED through v1.4.8 (kept as documentation only); since v1.5.2 the loader applies them on top of a copy of the SkillSet, so they must equal it (`python tools/sync_lord_inline_skills.py --apply`; gate `LordInlineSkillParityTests`).
+3. **Engine consumption**: every adult NPCCharacter has `skill_template="SkillSet.taom_..."` that points to a TAOM-owned SkillSet; that is what the engine actually uses. Explicit `<skills>` blocks on hero NPCs were IGNORED through v1.4.8 (kept as documentation only); since v1.5.2 the loader applies them on top of a copy of the SkillSet, so they must equal it (`python tools/sync_lord_inline_skills.py --apply`; gate `LordInlineSkillParityTests`).
 4. **Verify**: XML well-formed (3 files), then in-game Encyclopedia spot-check (Boromir OneHanded=295 + level growth = ~302).
 5. **Ship**: commit-split (data + tool separate), one GitHub issue per culture via [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
 

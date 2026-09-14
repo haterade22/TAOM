@@ -78,6 +78,68 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### docs(engine): the v1.5.2 impact record, the ranked body diff, and the target line moves to 1.5.2
+
+`docs/migration/v1.5.2-impact.md` is the bump's record in the shape of the v1.5.0 one: bottom
+line, the change-set oracle, corrections to the v1.5.0 record (the unarchived v1.5.0 decompile,
+nine compile fixes against a trunk that had bound 31 more patches), what landed commit by commit,
+the body diff, data and resources (the nine undefined brushes and six unreferenced prefabs stay
+listed as outstanding), the map re-bake blocker, gates and owed. `v1.5.2-diff-ranked.md` carries
+every one of the 355 body-diff rows with its verdict, now including the two batches that were
+still out when the body-diff entry below landed: the second patch batch (ten targets, all OK; the
+`PlayerEncounter.FinalizeBattle` rewrite into an eleven-way `MapEventComponent` dispatch still
+fires `MapEventEnded` before `Finish()`'s next statement, which is all `Patch85` needs) and the
+constructor-and-loader batch (five constructors byte-identical across the bump, three loaders
+clean, and the `BasicCharacterObject.Deserialize` change that the `fix(lords)` entry above
+repairs). `docs/reference/taleworlds-api-snapshot/reflection-sites.md` gets its 2026-09-14
+status line.
+
+The target line is v1.5.2 in `CLAUDE.md` (the Harmony category count is 93, counted from the
+`[HarmonyPatchCategory]` attributes; the file is trimmed by a few bytes, still over its budget),
+`AGENTS.md`, `docs/ai-includes/agent-operating-manual.md` (v1.4.8 joins the stale list),
+`docs/migration/TRACKING.md` (v1.5.0 and v1.5.2 rows), `docs/INDEX.md`,
+`docs/reference/taleworlds-api-snapshot/reflection-sites.md` and `docs/features/native-skin-fixes.md`
+(the client `TaleWorlds.Native.dll` the parked patterns scan was rewritten again on 2026-09-14,
+14,163,928 bytes; the hooks are now four bumps past the v1.4.6 they were authored on).
+`/engine-bump` Phase 3 gains the member-level body-diff step with the v1.5.2 calibration, so the
+next bump does not rediscover it.
+
+The stale-reference sweep behind it: 217 files outside the historical records still named
+v1.4.8, most as dated evidence ("verified against installed v1.4.8", left as history) and the
+rest as a claim about the present, corrected. Harness: the `taleworlds-researcher` and
+`feature-builder` agents, the `codex-verify`, `investigate`, `taom-src`, `native-crash-triage` and
+`lint-docs` skills, `.ai/review-reference.md` (which also still listed `TaomExecutionRelationModel`
+as a live GameModel). Reference: `bannerlord-engine-and-toolchain.md` (the dump is v1.5.2, both
+`GameVersion` consts read `v1.5.2.121216`, the archived baselines are listed, the root
+`_manifest.json` belongs to the 2026-08-10 category run and says so), `development-machines.md`,
+`party-template-sizing.md` (the category folders no longer sit at the dump root),
+`taleworlds-api-snapshot/README.md`, `doc-lookup.md`, `INDEX.md` (the execution line still named
+the deleted model). `execution.md` still described the v1.4.x `ExecutionContext` snapshot and the
+deleted model in its architecture section; it now describes the two live patches. The
+`TRANSLATOR_GUIDE` string-family table lost the kingdom-keyed row. **The modding handbook's engine
+tables are re-verified against v1.5.2:** `tools/decompile_to_folder.ps1` built
+`E:\Decompiled_Bannerlord\_categories_v1.5.2` (59 DLLs), `check_handbook_attributes.py` defaults
+to it (its test pins the new default), and against that tree the gate found exactly the two
+attributes the bump added, `Culture.executioner` and `Settlement.ferry_target`, now documented,
+and the committed manifest (`handbook_attribute_manifest.json`) is refreshed from the v1.5.2 tree.
+Two handbook chapters described behaviour v1.5.x changed: `kingdoms.md` still called `title` the
+encyclopedia heading (it is `Kingdom.FormalName` now, read by war and peace text), and
+`skill-sets.md` still said an inline `<skills>` block is ignored when `skill_template` resolves
+(v1.5.2 always applies it, over a copy of the template registered under the character's own id).
+Feature docs corrected the same way: `troop-weight-system.md` and `refuge.md` named the abstract
+`ClanPartyItemVM` where the two concrete rows are the targets, `party-icon-scale.md`'s overview
+still described one transpiler and two literals (the three `Patch53` source doc comments said
+the same and are refreshed, comment-only), `prisoner-recruitment.md` gains the float return
+and the Honor multiplier, `lord-party-templates.md` the naval-capability shape, and
+`bannerlord-together-compat.md`, `creature-mount-authoring.md` and `player-switcher.md` their
+pins. Four "no consumer anywhere in the dump" claims in the handbook were wrong on every version,
+because the original search never covered the module bins: `using_arm_band` and
+`lod_atlas_index` are read by `TaleWorlds.MountAndBlade.View`, `fishing_party_template` and
+`settlement_patrol_template_coastal` by NavalDLC (moot for TAOM, which declares it incompatible);
+corrected in `items-armor.md`, `items-weapons-and-crafting.md`, `cultures.md` and
+`open-questions.md`. Dated evidence citations ("verified against installed v1.4.8") stay as
+written: they record what was checked and when.
+
 ### fix(lords): the inline skill mirrors match their SkillSets again, because v1.5.2 reads them
 
 The constructor-and-loader batch of the body diff found the second real finding of the bump.

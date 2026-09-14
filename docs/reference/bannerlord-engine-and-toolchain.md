@@ -38,7 +38,7 @@ boot. The 2026-08-03 case was 168 root-level `<action>` elements in LOTRLOME_Arm
 — tolerated by build 1.4.7.117484, fatal on build 117131 (`KeyNotFoundException` in
 `MBObjectManager.MergeElements` at `/action_sets/action`). Both build numbers come from the co-op field
 report; they are **not** locally verifiable — the installed client's `bin/Win64_Shipping_Client/Version.xml`
-carries only `<Singleplayer Value="v1.4.8"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
+carries only `<Singleplayer Value="v1.5.2"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
 
 What *is* verifiable on disk is that the two installs ship different schema sets: `<game>/XmlSchemas/`
 has 51 `.xsd`, the Dedicated Server app 45 — it lacks the single-player/naval set (`SPCultures.xsd`,
@@ -84,13 +84,13 @@ server-capable.
 
 > **That path is the desktop's.** The dump lives wherever the machine put it, and
 > `TAOM_DECOMPILE_ROOT` names the category tree on machines that are not the desktop (on the laptop,
-> `C:\Decompiled_Bannerlord\_categories_v1.4.8`). The layout below is the same everywhere; only the
+> `C:\Decompiled_Bannerlord\_categories_v<ver>`; the desktop's current tree is `_categories_v1.5.2`). The layout below is the same everywhere; only the
 > root differs. Both decompile scripts take the destination as a parameter and read no environment
 > variable. See [development-machines](development-machines.md).
 
 | Path | Build | Form | Use |
 |---|---|---|---|
-| `Campaign\`, `MountAndBlade\`, `Core\`, `Engine\`, `UI\`, … (category folders) | shipping | curated, by namespace | **browse** patterns/namespaces (the long-standing reference) |
+| `_categories_v<ver>\{Campaign,MountAndBlade,Core,Engine,UI,…}\` (category folders; nothing sits at the root any more, each version's tree is its own folder) | shipping | curated, by namespace | **browse** patterns/namespaces (the long-standing reference); the handbook gate reads it |
 | `_shipping_build\<Dll>.cs` | shipping | one .cs per DLL | full per-DLL decompile; **diff** vs editor |
 | `_editor_build\<Dll>.cs` | wEditor | one .cs per DLL | **editor-only code** (EditorGame, AnimalSpawnSettings, …) |
 | `_modules_build\<Module>__<Dll>.cs` | module bins | one .cs per DLL, module-prefixed | the assemblies that ship inside `Modules\*\bin\Win64_Shipping_Client` (SandBox.View, TaleWorlds.MountAndBlade.View, the GauntletUI satellites, …) |
@@ -99,10 +99,14 @@ server-capable.
 Regenerate with **`pwsh tools/decompile_bannerlord.ps1`** (re-run after an engine update). `ilspycmd` only
 decompiles .NET assemblies; native DLLs are detected and listed, not decompiled.
 
-**Current version: v1.4.8**, regenerated 2026-08-10. `_manifest.json` carries `"version": "v1.4.8"`,
-and `TaleWorlds.Library`'s `public const string GameVersion` reads `v1.4.8.119303` in both
-`_shipping_build` and `_editor_build`. Counts at that regen: 56 `.cs` in `_shipping_build`, 66 in
-`_editor_build`, 125 in `_modules_build`.
+**Current version: v1.5.2**, regenerated 2026-09-14. `TaleWorlds.Library`'s `public const string
+GameVersion` reads `v1.5.2.121216` in both `_shipping_build` and `_editor_build` (the Modding Kit
+moved with the client this time). Counts at that regen: 56 `.cs` in `_shipping_build`, 65 in
+`_editor_build`, 86 in `_modules_build`. The root `_manifest.json` is NOT the per-DLL builds'
+record: `decompile_to_folder.ps1` writes it for the category tree, and the root copy still says
+`"version": "v1.4.8"` from the 2026-08-10 run (`_manifest_v1.4.8.json` is its archived twin). The
+v1.5.2 category tree at `_categories_v1.5.2` carries its own `_manifest.json` (`"version":
+"v1.5.2"`, 59 DLLs, 2026-09-14), and `tools/check_handbook_attributes.py` defaults to it.
 
 **`_modules_build` (added 2026-08-10) covers assemblies nothing else did.** The two
 `<GameBin>\Win64_Shipping_*` folders hold only the base binaries, and the category tree's generator
@@ -122,17 +126,25 @@ a flat layout would silently drop one. `TaleWorlds.MountAndBlade.Multiplayer.dll
 `CustomBattle\` and `Multiplayer\`, and the vendored companions collide harder still — `0Harmony`
 appears in three module bins, `System.Runtime.CompilerServices.Unsafe` in four.
 
-**Preserved baselines** (rename before regenerating — `/engine-bump` Phase 2):
-`_shipping_build_v1.4.5` / `_v1.4.6` / `_v1.4.7`, `_editor_build_v1.4.5`, and
-`_categories_v1.4.5` / `_v1.4.6` / `_v1.4.7` for the category tree. There is no
-`_modules_build_v<older>` — the folder did not exist before 1.4.8.
+**Preserved baselines** (rename before regenerating, `/engine-bump` Phase 2):
+`_shipping_build_v1.4.5` / `_v1.4.6` / `_v1.4.7` / `_v1.4.8` / `_v1.5.0`, `_modules_build_v1.4.8` /
+`_v1.5.0`, `_editor_build_v1.4.5` / `_v1.4.8` (plus `_editor_build_v1.4.8-kit-2026-08-19`, the Kit
+build that stayed on v1.4.8 while the client went to v1.5.0), and `_categories_v1.4.5` / `_v1.4.6`
+/ `_v1.4.7` / `_v1.4.8` / `_v1.5.2` for the category tree. `_modules_build` did not exist before
+1.4.8, so there is no older baseline of it. The `_v1.5.0` shipping and modules folders were the
+2026-08-19 regen that sat under the unversioned names (with `_manifest.json` still saying v1.4.8)
+until the v1.5.2 bump archived them; `_manifest_v1.5.0-note.json` records that. The four
+`_diff_<from>_to_<to>_{shipping,modules}.txt` files are the file-level diffs of the v1.5.2 bump.
 
 **The wEditor build follows its own Steam schedule and can skip versions.** On 2026-08-10 it went
 `v1.4.5.114928` → `v1.4.8.119303` — three engine versions in one update — while the client moved
 1.4.7 → 1.4.8 (compare `GameVersion` in `_editor_build_v1.4.5\TaleWorlds.Library.cs` against
 `_editor_build\TaleWorlds.Library.cs`). Anything derived from a wEditor binary is valid only against
 the version that binary carried at the time, which is why `/native-crash-triage` checks
-`bin/Win64_Shipping_wEditor/Version.xml` before trusting a fault offset.
+`bin/Win64_Shipping_wEditor/Version.xml` before trusting a fault offset. The other direction
+happened at v1.5.0: the client moved on 2026-08-19 and the Kit stayed on v1.4.8, which is what
+parked the v1.5.0 port (the map could not be re-baked). On 2026-09-14 both moved to
+`v1.5.2.121216` together.
 
 **Authoritative signatures** still come from `pwsh tools/taom-src.ps1 path <Type>` (runs `ilspycmd` on the
 *installed* shipping DLLs, auto-detects version). Use the decompiled folders for *browsing*; use `taom-src` for

@@ -1,5 +1,5 @@
 {
-  "dump_root_name": "_categories_v1.4.8",
+  "dump_root_name": "_categories_v1.5.2",
   "markers": {
     "TaleWorlds.CampaignSystem.CharacterObject|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/CharacterObject.cs|Deserialize": {
       "attributes": [
@@ -89,6 +89,7 @@
         "default_stealth_equipment_roster",
         "duel_preset_equipment_roster",
         "elite_basic_troop",
+        "executioner",
         "female_beggar",
         "female_dancer",
         "fishing_party_template",
@@ -268,6 +269,7 @@
         "complex_template",
         "component_name",
         "culture",
+        "ferry_target",
         "gate_posX",
         "gate_posY",
         "id",

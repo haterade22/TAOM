@@ -3,8 +3,9 @@
 ## Overview
 
 Shrinks the campaign-map party-icon **leader figure and its mount** from the vanilla hardcoded `0.3` scale to
-an MCM-configurable value (default `0.15` = half). A single Harmony transpiler rewrites both `0.3f` literals in
-`MobilePartyVisual.AddCharacterToPartyIcon` into a call that reads the live MCM "Map Figure Scale" slider, so the
+an MCM-configurable value (default `0.15` = half). Two Harmony transpilers rewrite the three `0.3f` literals across
+`MobilePartyVisual.AddCharacterToPartyIcon` and `SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual`
+(since v1.5.0; one method and two literals before) into a call that reads the live MCM "Map Figure Scale" slider, so the
 figures honour a runtime-tunable size instead of the engine constant.
 
 ## Why This Exists
@@ -110,6 +111,7 @@ mount-site shape) if caravan animals should match.
 
 ## Changelog
 
+- 2026-09-14: corrected the Overview, which still described the pre-v1.5.0 shape (one method, one transpiler, two literals) that the Architecture section below it had already moved past.
 - 2026-06-24 — Added MCM-configurable party-icon figure scale (default `0.15`, half vanilla `0.30`): `Patch53_PartyIconScale` transpiler rewrites both `0.3f` literals (leader figure + mount) in `MobilePartyVisual.AddCharacterToPartyIcon` to `PartyIconScaleConfig.GetScale()`, reading the new "Map Figure Scale" MCM slider. Issue #297.
 
 ---

@@ -15,7 +15,10 @@ override. MCM group: **World/Prisoner Recruitment** (master + per-player/AI gate
 - **Vanilla behavior:** `DefaultPrisonerRecruitmentCalculationModel.GetPrisonerRecruitmentMoraleEffect`
   charges **−1 morale per troop recruited (−2 per bandit)**, multiplied by the count, regardless of who
   the prisoner is. The only relief is a perk: `Leadership.Presence` (same-culture only) or
-  `Roguery.TwoFaced` (bandits only) zeroes it.
+  `Roguery.TwoFaced` (bandits only) zeroes it. Since v1.5.2 the method returns `float` (was `int`)
+  and a non-zero result is scaled by the recruiting leader's Honor trait
+  (`TraitEffectHelper.GetTraitEffectBonus(..., HonorRecruitPenaltyReductionEffect)`); TAOM's
+  override calls `base.` for the non-waived case, so it inherits both.
 - **TAOM requirement:** In Middle-earth the War of the Ring has two sides. Absorbing troops who already
   fight for your cause is not a morale event — your men do not resent standing beside fellow servants
   of Sauron.

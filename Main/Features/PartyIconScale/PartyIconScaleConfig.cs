@@ -6,9 +6,9 @@ namespace TAOM.Features.PartyIconScale;
 /// Resolves the campaign-map party-icon figure/mount scale from the MCM "Map Figure Scale" slider
 /// (<see cref="TaomSettings.MapFigureScale"/>).
 /// <para>
-/// <see cref="GetScale"/> is the static that the <c>Patch53_PartyIconScale</c> transpiler rewrites the
-/// hardcoded vanilla <c>0.3f</c> literal in <c>MobilePartyVisual.AddCharacterToPartyIcon</c> into a
-/// <c>call</c> of. It MUST stay a public, parameterless, <see cref="float"/>-returning static so the IL
+/// <see cref="GetScale"/> is the static that the two <c>Patch53</c> transpilers rewrite the hardcoded
+/// vanilla <c>0.3f</c> literals in <c>MobilePartyVisual.AddCharacterToPartyIcon</c> and (since v1.5.0)
+/// <c>MobilePartyVisualHelper.GetHumanAgentPartyVisual</c> into a <c>call</c> of. It MUST stay a public, parameterless, <see cref="float"/>-returning static so the IL
 /// <c>call</c> stays stack-neutral with the <c>ldc.r4</c> it replaces. <see cref="Resolve"/> holds the
 /// pure, validated logic (tested via <c>InternalsVisibleTo("TAOM.Tests")</c>).
 /// </para>

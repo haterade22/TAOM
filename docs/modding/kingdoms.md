@@ -30,7 +30,7 @@ Every one of TAOM's 14 entries carries the same 16 attributes. Fourteen of them 
 | Attribute | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
 | `id` | string | Yes | none, the load throws | The kingdom's internal handle. Everything else points at it as `Kingdom.<id>`. Two entries with the same id are one kingdom either way: across two files the rows are merged before they are read, inside one file the second re-runs the deserializer over the first (see Gotchas). | `MBObjectManager.cs:1391` |
-| `name` | localized string | Yes | none, the load throws | The formal display name on the map and in the encyclopedia. Read unguarded, so an entry without it kills the whole file. | `Kingdom.cs:764` |
+| `name` | localized string | Yes | none, the load throws | The kingdom's base display name (`Kingdom.Name`, via `GetName()`): what a generic list or dropdown shows. Since v1.5.x this is distinct from the formal name, which comes from `title` below. Read unguarded, so an entry without it kills the whole file. | `Kingdom.cs:745` |
 | `short_name` | localized string | No | falls back to `name` | The informal form used mid-sentence and in clickable kingdom links. | `Kingdom.cs:764` |
 | `culture` | `Culture.<id>` | In practice yes | null, and null crashes | The culture the kingdom belongs to. Sets its basic recruit (`Kingdom.cs:166`) and its starting policies. A missing or misspelled value throws inside `InitializeKingdom` at `Kingdom.cs:573`. | `Kingdom.cs:764` |
 | `owner` | `Hero.<id>` | No | no ruling clan, so no leader | The ruling hero. The engine stores that hero's **clan**, not the hero, so the hero must already have a `faction=` in the heroes file or the kingdom ends up leaderless. | `Kingdom.cs:765` |
@@ -41,7 +41,7 @@ Every one of TAOM's 14 entries carries the same 16 attributes. Fourteen of them 
 | `secondary_banner_color` | hex AARRGGBB | No | `0` | Banner icon colour forced onto every member clan's banner (`Clan.cs:1381`). | `Kingdom.cs:767` |
 | `banner_key` | dot-separated banner code | No | a random banner seeded from `id`, stable across runs (`Kingdom.cs:775`) | The heraldry, as a flat list of numbers. Read in groups of ten, one layer per group (`Banner.cs:580-584`). A malformed code is swallowed and leaves an empty banner rather than crashing (`Banner.cs:245-248`). | `Kingdom.cs:768-771` |
 | `text` | localized string | No | empty text | The encyclopedia blurb. Flavour only. | `Kingdom.cs:756` |
-| `title` | localized string | No | empty text | The heading on the encyclopedia page. | `Kingdom.cs:757` |
+| `title` | localized string | No | empty text | Since v1.5.x (re-verified 2026-09-14): `Kingdom.FormalName`, set through the same `ChangeKingdomName` call as `name` and `short_name`, and read by war and peace declaration text (`FORMAL_NAME`) and other kingdom narrative strings, not only the encyclopedia heading. A `str_kingdom_formal_name` text key would trip a `Debug.FailedAssert` (TAOM defines none). | `Kingdom.cs:738` |
 | `ruler_title` | localized string | No | empty text | What this kingdom calls its ruler ("King", "Brenin"). | `Kingdom.cs:758` |
 
 A `banner_key` is not opaque. `TryGetBannerDataFromCode` splits it on `.` and walks it ten numbers at a time, each group building one banner layer: icon id, two colour ids, an x and y position, an x and y size, two flags that are true when the number is `1`, and a rotation that is the tenth number times `0.0027777778` (`Banner.cs:576-593`). Erebor's 90 numbers are therefore exactly nine layers. Numbers left over at the end that do not complete a group of ten are ignored, and a group holding anything that is not an integer clears the whole list and gives you an empty banner with no message. TAOM has no doc that decodes the icon and colour id pools, so the working method is still to copy a code from a kingdom whose banner you like and change one group at a time.
@@ -54,7 +54,7 @@ These two are written on all 14 entries and on all 8 XSLT rewrites, and nothing 
 
 | Attribute | Status |
 |---|---|
-| `settlement_banner_mesh` | Read but has no effect. `Kingdom.Deserialize` never touches it, and the string has 0 hits across the whole v1.4.8 managed decompile (the command is in Numbers below). |
+| `settlement_banner_mesh` | Read but has no effect. `Kingdom.Deserialize` never touches it, and the string has 0 hits across the whole v1.5.2 managed decompile (re-checked 2026-09-14, including the `_modules_build` set) (the command is in Numbers below). |
 | `flag_mesh` | Same. Copy it forward or delete it, either is safe. What it drove before, and whether native code still consumes it, is not determined from the engine. |
 
 ## Child elements

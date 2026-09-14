@@ -211,7 +211,7 @@ Register in `Main/_Module/SubModule.xml` next to similar cultures:
 
 For XSLT-passthrough cultures, the existing culture block in `spcultures.xslt` will preserve every vanilla attribute via `<xsl:apply-templates select="@*"/>` — including ones you don't want. Enumerate **every** CultureObject template/troop attribute the engine reads and explicitly classify each as BIND or PASSTHROUGH.
 
-The full list of bindable culture attributes per v1.4.8 `TaleWorlds.CampaignSystem.CultureObject.Deserialize` (`CultureObject.cs:269-280`, re-verified 2026-08-12):
+The full list of bindable culture attributes per `TaleWorlds.CampaignSystem.CultureObject.Deserialize` (v1.4.8 `CultureObject.cs:269-280`, re-verified 2026-08-12; the v1.5.2 body differs only by the added `executioner` read, body-diffed 2026-09-14):
 
 | Attribute | Always bind to TAOM value | Optional / passthrough |
 |---|---|---|

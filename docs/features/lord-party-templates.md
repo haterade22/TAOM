@@ -73,9 +73,9 @@ Patch88, three thin patches in one category, plus a pure decision and a validati
 - **The window is the whole call.** The ambient owner is set for the duration of `SpawnLordParty`
   and of `InitializeLordPartyProperties`, not for the one statement that reads the template. Any
   read of the owner's clan template that runs synchronously inside either sees the swap. In the
-  installed v1.4.8 engine nothing else does (the review decompiled the chain: `MobilePartyCreated`
+  installed engine nothing else does (re-checked on v1.5.2, 2026-09-14: the getter and both scoped readers are byte-identical to v1.4.8 and the assembly has the same 13 readers; the review decompiled the chain: `MobilePartyCreated`
   fires inside `MobileParty.CreateParty` while the scope is open and none of its three listeners
-  reads the getter; `LordPartyComponent.CanHaveNavalNavigationCapability` is overridden to `true`,
+  reads the getter; `LordPartyComponent.CanHaveNavalNavigationCapability` is overridden outright (`true` on v1.4.8, `_leader?.CanHaveFleet ?? true` since v1.5.x),
   so the clan's naval capability is never consulted there). A future listener or another mod's
   hook that reads the getter inside that window would see the override; re-check this on an engine
   bump alongside the binding tests. One more theoretical residual: two lords of the SAME clan

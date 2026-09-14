@@ -129,7 +129,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [alignment-aware-execution](features/alignment-aware-execution.md) — race/alignment-aware execution penalties
 - [marriage-alignment](features/marriage-alignment.md): a Free-aligned hero cannot marry an Evil-aligned one (#542, Boromir wed a Misty Mountain orc). Blocks in `TaomMarriageModel.IsCoupleSuitableForMarriage`, the chokepoint every marriage path funnels through; `Patch81` narrows the AI partner draw so Free clans keep their marriage rate
 - [wanderer-allegiance](features/wanderer-allegiance.md): a wanderer refuses to be hired across the Free/Evil line (#575, Aragorn serving Mordor). Two NPC lines on vanilla's `companion_hire` token at priority 110, no Harmony patch; culture-keyed, symmetric, Neutral serves anyone
-- [execution](features/execution.md) — TaomExecutionRelationModel + Patch14
+- [execution](features/execution.md): the alignment rule on the v1.5.x blood-feud seam, two `Patch14_Execution` patches (`TaomExecutionRelationModel` is gone with the engine's `ExecutionRelationModel`)
 - [banner-injection](features/banner-injection.md) — player banner persistence
 - [banner-color-persistence](features/banner-color-persistence.md) — clan colors everywhere (Patch23 + Patch24)
 - [named-companions](features/named-companions.md) — 18 lore companions as recruitable wanderers
@@ -242,7 +242,8 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 ## Migration history (v1.2 → v1.3 → v1.4.x)
 
 - [migration/TRACKING.md](migration/TRACKING.md) — top-level migration audit trail
-- [migration/v1.4.8-impact.md](migration/v1.4.8-impact.md) — **current bump (2026-08-10).** v1.4.8 changelog → TAOM surface → verdict matrix, the engine changes the changelog doesn't mention, and what the bump left owed. Previous bump: [migration/v1.4.7-impact.md](migration/v1.4.7-impact.md), same document shape
+- [migration/v1.5.2-impact.md](migration/v1.5.2-impact.md): **current bump (2026-09-14).** The re-port from trunk onto v1.5.2, the change-set oracle, the member-level body diff and its two findings, the map re-bake blocker, gates and owed. Ranked rows: [migration/v1.5.2-diff-ranked.md](migration/v1.5.2-diff-ranked.md)
+- [migration/v1.4.8-impact.md](migration/v1.4.8-impact.md): previous bump (2026-08-10). v1.4.8 changelog → TAOM surface → verdict matrix, the engine changes the changelog doesn't mention, and what the bump left owed. Before it: [migration/v1.4.7-impact.md](migration/v1.4.7-impact.md), same document shape
 - [migration/v1.4.x-overview.md](migration/v1.4.x-overview.md) — current target migration plan
 - [migration/api-diff-1.3.15-to-1.4.5.md](migration/api-diff-1.3.15-to-1.4.5.md) — API delta table
 - [migration/XML-SCHEMA-CHANGES.md](migration/XML-SCHEMA-CHANGES.md) — XML schema changes between versions
@@ -311,7 +312,7 @@ engineering detail in `features/` and link outward from here.
 
 ## Modder handbook (ModuleData, file by file)
 
-Written for a content author editing the XML without writing C#: attribute tables generated from the v1.4.8 deserializers, worked examples lifted from shipped files, and add / modify / delete recipes that each end in a validator command, what the change needs to take effect, and whether it needs code. Two read-only gates keep it honest, `tools/check_handbook_attributes.py` (an attribute the engine never reads, or one no table documents) and `tools/lint_handbook.py` (the contract itself).
+Written for a content author editing the XML without writing C#: attribute tables generated from the v1.4.8 deserializers and re-verified against v1.5.2 (2026-09-14, 152 markers, 0 findings), worked examples lifted from shipped files, and add / modify / delete recipes that each end in a validator command, what the change needs to take effect, and whether it needs code. Two read-only gates keep it honest, `tools/check_handbook_attributes.py` (an attribute the engine never reads, or one no table documents) and `tools/lint_handbook.py` (the contract itself).
 
 - [modding/README.md](modding/README.md): the hub: an "I want to..." table, the reading order, and how to read a chapter
 - [modding/editing-safely.md](modding/editing-safely.md): hand-edit hygiene: BOM, line endings, the .xml backup that loads as a duplicate id, the parser smoke test

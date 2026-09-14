@@ -48,6 +48,7 @@ The identity attribute comes from the base class every one of these objects deri
 | `port_posY` | float | only if `port_posX` is present | none inside that branch | Y half of the dock point. Author as a pair. | `Settlement.cs:958` |
 | `culture` | ref, `Culture.<id>` | no in the parser, yes in practice | `Settlement.Culture` stays null and militia spawning throws | Which culture the place belongs to: scene dressing, townsfolk, vanilla militia troop types. The dotted prefix is mandatory; a bare `gondor` throws `MBInvalidReferenceException`. | `Settlement.cs:961` |
 | `text` | string, localised | no | empty | The Encyclopedia flavour paragraph. No gameplay effect. 235 settlements carry one. | `Settlement.cs:962` |
+| `ferry_target` | ref, `Settlement.<id>` | no | null, no ferry | New in v1.5.x: an optional naval ferry link. SandBox's settlement panel binds `HasFerry` from it and NavalDLC's ferry-travel screens resolve position, culture and encounter distance through it. TAOM declares `IncompatibleModules NavalDLC` (`Main/_Module/SubModule.xml`), so the travel mechanic never runs; the panel bind evaluates harmlessly. No TAOM settlement sets it. | `Settlement.cs:976` |
 | `owner` | ref, `Faction.<clanId>` | no | no starting owner | The clan that holds this fief when a **new campaign** begins. Applied only when the settlement has a `<Town>` component, and skipped entirely on a save load. All 221 rows sit on fortifications; a village never has one. | `Settlement.cs:1038` |
 
 ### `<Town>` (towns and castles both)

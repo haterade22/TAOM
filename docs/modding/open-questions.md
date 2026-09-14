@@ -21,6 +21,7 @@ hand edits, so land a repo-side validator gate with any fix.
 - Whether the ten <Armor> attributes with zero uses in the armoury (body_mesh_type, body_deform_type, stealth_factor, no_slim, tail_cover_type, reins_mesh, maneuver_bonus, speed_bonus, charge_bonus, tier_override) are deliberately unused. ArmorComponent.cs:146-217 is the only description of what they would do.
 - Which item_category an armour piece should carry. Ten armoury items set one and the rest let the engine auto-classify; DefaultItemCategories.cs is the id registry and nothing in docs/ picks a convention.
 - tail_cover_type and lod_atlas_index are read and stored by the engine with no managed consumer in the v1.4.8 dump, so their effect could not be determined from the decompile (marked as such in the tables and in inert=).
+  Partly answered 2026-09-14: `lod_atlas_index` has a consumer the original search missed because it never covered the module bins: `TaleWorlds.MountAndBlade.View` (Native module) reads `item2.LodAtlasIndex` when building agent visuals, on v1.4.8 and v1.5.2 alike. `tail_cover_type` stays unanswered.
 
 ## items-shields.md
 
@@ -112,6 +113,7 @@ hand edits, so land a repo-side validator gate with any fix.
 - kingdom_hero_party_erebor_template sums to max 225 against the tool's 220 target, the only template in the file off its band. A dry run says 5 stacks would change. Nothing records whether the file or the target is the intended number, so I documented both rather than picking one.
 - No doc catalogues the MCM-only balance knobs. The party-size cap is seven knobs in the 'AI Party Size' group with no JSON or XML surface, and Main/Features/TaomSettings.cs is the only list of the whole MCM surface (docs/features/mcm.md is just the Patch41 layout fix). Someone should decide whether that catalogue belongs in the handbook's balance-levers chapter.
 - Whether NavalDLC still calls GetUpperTroopLimit / GetLowerTroopLimit in v1.4.8 cannot be checked from the _categories_v1.4.8 tree, which has no _modules_build aggregate. I verified only that one file in that dump mentions either name (their own definitions), so the 'informational' claim is proven for the base campaign and left unstated for NavalDLC.
+  Answered 2026-09-14 against the v1.5.2 `_modules_build` dump, which now carries a NavalDLC assembly: `NavalDLC__NavalDLC.cs` calls `GetUpperTroopLimit()` three times (`MobilePartyHelper.FillPartyManuallyAfterCreation`, a party-size `ExplainedNumber`, and `Culture.SettlementPatrolPartyTemplateNaval.GetUpperTroopLimit()`) and `GetLowerTroopLimit()` once (a pirate-party health-ratio check), so the informational framing does not hold for NavalDLC. Moot for a TAOM game: `Main/_Module/SubModule.xml` declares `IncompatibleModules NavalDLC`.
 - kingdom_hero_party_gondor_ithilien_template and kingdom_hero_party_gondor_belfalas_template are bound by no culture and no clan, still true today. Whether they are meant to be wired up or deleted is undecided in every doc I read.
 
 ## clans.md

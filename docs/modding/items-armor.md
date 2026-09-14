@@ -90,7 +90,7 @@ These belong to weapons, mounts and crafted items. They are listed so the table 
 | `static_animation_name` | string | no | null | A looping animation played on the item. | `ItemObject.cs:527` |
 | `AmmoOffset` | `x,y,z` | no | unset | Moves the nocked arrow or bolt. Note the capital A. Putting it on an item with no `<Weapon>` is an immediate crash at load. | `ItemObject.cs:644` |
 | `IsFood` | bool | no | `false` | Marks the item as party food. Note the capital I. | `ItemObject.cs:555` |
-| `using_arm_band` | string | no | null | Read but has no effect: no consumer anywhere in the v1.4.8 dump and no use in vanilla data. | `ItemObject.cs:561` |
+| `using_arm_band` | string | no | null | Read and consumed, contrary to the earlier "no consumer" claim, which never searched the module bins: `TaleWorlds.MountAndBlade.View` (Native module) copies the mesh onto the agent (`MetaMesh.GetCopy(ArmBandMeshName, ...)`, present on v1.4.8 and v1.5.2, re-checked 2026-09-14). No use in vanilla data. | `ItemObject.cs:561` |
 | `lod_atlas_index` | int | no | `-1` | Selects a shared texture atlas for the distant model. Read and stored, but its effect is not determined from the engine: no managed consumer exists in the dump. | `ItemObject.cs:547` |
 | `crafting_template` | ref, bare id | on `<CraftedItem>` | none, the load throws | Which crafting template a pre-built weapon is assembled from. | `ItemObject.cs:434` |
 | `has_modifier` | string compare | no | `true` | `has_modifier="false"` stops a crafted weapon rolling a quality modifier. | `ItemObject.cs:435` |

@@ -17,7 +17,7 @@ are in the [Codex operating guide](docs/ai-includes/codex-operating-guide.md).
 
 Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
-> **Target: Bannerlord 1.4.8** (installed; pinned in `.claude/pinned-game-version.txt` — the session-start hook warns on drift → run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.4.8; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.4.8-impact.md`](docs/migration/v1.4.8-impact.md) · [`v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
+> **Target: Bannerlord 1.5.2** (installed, Steam beta; pinned in `.claude/pinned-game-version.txt`; on the hook's drift warning run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.5.2; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.5.2-impact.md`](docs/migration/v1.5.2-impact.md) · [`v1.4.8-impact.md`](docs/migration/v1.4.8-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
 
 ## Commands
 
@@ -39,7 +39,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - check the decompile dump for concepts (v1.4.8, matching installed; its path is per-[machine](docs/reference/development-machines.md)), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs**: the dump can lag after an engine bump, the installed DLLs are always authoritative |
+| **Research First** | Never guess TaleWorlds behavior - check the decompile dump for concepts (v1.5.2, matching installed; its path is per-[machine](docs/reference/development-machines.md)), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs**: the dump can lag after an engine bump, the installed DLLs are always authoritative |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
 | **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.4 incompatibilities, missing tests, data flow gaps |
 
@@ -235,7 +235,7 @@ Override pattern + base-class + registration rules: `.claude/rules/gamemodels.md
 
 ## Harmony Patch Categories
 
-95 categories mapping a stack trace to its owning feature -> exact target -> status.
+93 categories mapping a stack trace to its owning feature -> exact target -> status.
 **Full table (category -> feature -> target -> status) + rationale / history / RCAs:
 [`docs/reference/harmony-patch-registry.md`](docs/reference/harmony-patch-registry.md)** — grep the
 failing type there. This is the crash-triage lookup; `/investigate` + `/native-crash-triage`
@@ -395,8 +395,8 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Target: Bannerlord v1.4.8 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.8 as of 2026-08-10 — `ilspycmd` on the installed 1.4.8 DLLs is authoritative)
-- `E:\Decompiled_Bannerlord\` — v1.4.8 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved — note `_editor_build_v1.4.5`: the Modding Kit sat three versions behind until 1.4.8 brought it level). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
+- Target: Bannerlord v1.5.2 (installed game version, Steam beta; the `E:\Decompiled_Bannerlord\` dump is v1.5.2 as of 2026-09-14; `ilspycmd` on the installed 1.5.2 DLLs is authoritative)
+- `E:\Decompiled_Bannerlord\`: v1.5.2 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; `_*_v1.4.8` and `_*_v1.5.0` baselines preserved; the Modding Kit moved with the client this time, so the map can be re-baked). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
 - Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 

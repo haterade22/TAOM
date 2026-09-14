@@ -383,13 +383,13 @@ TAOM mod code doesn't touch this — it's pure engine convention.
 
 ## String Categories Reference
 
-### Module Strings (taom_module_strings, ~653)
+### Module Strings (taom_module_strings, ~2,660 rows as of 2026-09-14)
 
 | Pattern | Example | Controls |
 |---------|---------|----------|
 | `str_faction_ruler.*` | "King", "Chieftain" | Ruler title |
 | `str_faction_official.*` | "a noble of Rohan" | NPC reference text |
-| `str_adjective_for_faction.*` | "Rohirric" | Adjective form |
+| `str_adjective_for_culture.*`, `str_faction_formal_name_for_culture.*`, `str_faction_informal_name_for_culture.*` | "Rohirric", "Riddermark" | Culture-keyed faction naming (since v1.5.2 the engine reads only these; the kingdom-keyed `str_adjective_for_faction.*` / `str_short_term_for_faction.*` rows are gone) |
 | `str_neutral_term_for_culture.*` | "Rohirrim" | Plural demonym |
 | `TAOM_*_name`, `TAOM_*_text` | Kingdom encyclopedia entries | Lore descriptions |
 | `taom_career_*`, `taom_main_menu_*` | UI labels | Buttons/menus from C# code |

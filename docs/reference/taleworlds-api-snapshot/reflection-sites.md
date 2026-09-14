@@ -2,7 +2,7 @@
 
 **Purpose.** TAOM reaches into private/internal TaleWorlds members by *string name* in many places. The C# compiler cannot verify those — a rename/move/removal in a Bannerlord update makes the lookup return `null`, and the reflecting code logs-and-survives, so the feature silently degrades with **no crash to investigate**. This file is the authoritative inventory of every reflection touchpoint, and the data source for the offline binding gate `TAOM.Tests/Migration/ReflectionSiteBindingTests.cs`.
 
-It also exists so that an agent working on TAOM does not need the external decompile dump (`E:\Decompiled_Bannerlord\`) just to answer "what private member does feature X reach into, and is it still there in v1.4.8?"
+It also exists so that an agent working on TAOM does not need the external decompile dump (`E:\Decompiled_Bannerlord\`) just to answer "what private member does feature X reach into, and is it still there in v1.5.2?"
 
 **How the gate uses this.** Each row in [Category B](#category-b--auxiliary-static-engine-reflection-gated) is a `[DataRow]` in `ReflectionSiteBindingTests`. The test resolves the type (full name, then simple-name fallback) and asserts the member exists on the installed engine. Run it with:
 
@@ -71,6 +71,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…HideoutAmbushMissionController` | `_overriddenHideoutBossAgentOrigin` | field (private, `IAgentOriginBase`) | `Patch86_HideoutAmbushBossFight.cs` | Hideout boss fight (#564). Non-null when a boss spawns from his own origin; decides whether a zero bodyguard count must keep one troop for `SelectBossAgent` |
 | `…HideoutAmbushMissionController` | `_allEnemyTroopTypesCache` | field (private, `List<IAgentOriginBase>`) | `Patch86_HideoutAmbushBossFight.cs` | Hideout boss fight (#564). Vanilla pads from it (`GetNewRandomEnemyTroop` derefs `GetRandomElement` on it), so the prefix only asks for padding when it is non-empty |
 
+Status (2026-09-14): v1.5.2 engine bump (branch `bannerlord-1.5.x`). Every gate row still resolves against the installed v1.5.2 DLLs (`BindingVerification` green inside the 9,173-test run at `bc5b5d71`). The member-level body diff read the six reflection targets: five unchanged, and the `PartyCharacterVM.TypeIconData` getter and setter are byte-identical to v1.4.8. Hygiene, not drift: `RoleTooltipDecorator` resolves that `PropertyInfo` and never reads or writes it (it decorates `vm.Name`), so this row pins a binding nothing depends on; recorded in `docs/migration/v1.5.2-impact.md` as outstanding.
 Status (2026-09-11): Hideout boss fight (#564) adds three `HideoutAmbushMissionController` field rows, all three injected by `Patch86_HideoutAmbushBossFight` and pinned by the `ReflectionSiteBindingTests` rows plus a field-TYPE assertion in `Patch86HideoutBossFightBindingTests`; **all resolve against installed v1.4.8** (`BindingVerification` filtered run green, see the CHANGELOG entry).
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**
 Status (2026-07-14): SettlementGuards rows added (`PrepareGuardAgentDataFromGarrison` backfill + `_garrisonTroops`, #346) — **all 35 gate rows resolve against installed v1.4.7.**

@@ -1,6 +1,6 @@
 # TAOM: Shared AI Instructions
 
-TAOM is a Lord of the Rings total conversion for Bannerlord v1.4.8, targeting
+TAOM is a Lord of the Rings total conversion for Bannerlord v1.5.2, targeting
 .NET Framework 4.7.2. These instructions apply to every AI client and model.
 No provider is permanently the builder or reviewer.
 

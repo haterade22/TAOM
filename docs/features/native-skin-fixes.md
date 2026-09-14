@@ -54,8 +54,8 @@ calls — Harmony doesn't reach C++ code.
 
 The upstream NativeSkinFixes mod uses hardcoded RVAs (`0x617B50` etc.) inside
 `TaleWorlds.Native.dll`. Every Bannerlord patch changes those offsets, so the
-mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.8 as of
-2026-08-10) and wants the hooks to keep working across `v1.4.x → v1.5.x`
+mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.5.2 as of
+2026-09-14) and wants the hooks to keep working across `v1.4.x → v1.5.x`
 patches without C++ rebuilds.
 
 ### Solution Approach
@@ -128,11 +128,12 @@ All 7 signatures were authored + statically verified against Bannerlord v1.4.6's
 `TaleWorlds.Native.dll` (each was a single match at the RVA below). See the
 "v1.4.6 native port" section below for the method and the RVA/verification map.
 
-**They have not been re-verified since. The engine is now v1.4.8 — two bumps past the v1.4.6 the
-patterns were authored against (v1.4.6 → v1.4.7 → v1.4.8).** `Signatures.h:29` still heads its
-shipped values "AUTHORED FOR BANNERLORD v1.4.6 (2026-06-30)", and the client
+**They have not been re-verified since. The engine is now v1.5.2, four bumps past the v1.4.6 the
+patterns were authored against (v1.4.6 → v1.4.7 → v1.4.8 → v1.5.0 → v1.5.2).** `Signatures.h:29`
+still heads its shipped values "AUTHORED FOR BANNERLORD v1.4.6 (2026-06-30)", and the client
 `bin\Win64_Shipping_Client\TaleWorlds.Native.dll` those patterns scan was rewritten by the v1.4.8
-update on 2026-08-10 at 07:22 (14,185,944 bytes on disk now). The feature is PARKED and disabled at
+update on 2026-08-10 (14,185,944 bytes) and again by the v1.5.2 update on 2026-09-14 at 12:12
+(14,163,928 bytes on disk now). The feature is PARKED and disabled at
 the wiring level (2026-07-08), so nothing loads these signatures today. Treat every RVA and pattern
 below as provenance from that port, not as a live binding, and **re-author them against the engine
 in `.claude/pinned-game-version.txt` before re-enabling** — two engine versions is outside the range

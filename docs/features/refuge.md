@@ -95,7 +95,7 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 - **Clan screen: every refuge listed, wage control suppressed.** All rows (ready, building with a
   "(being raised)" suffix, orphan-adopted) appear under Garrisons (source parity; a mid-raise
   refuge holding a deposited garrison must not vanish for the build window). The Garrison-typed
-  `ClanPartyItemVM` ctor builds a live wage slider whose figure is never charged
+  `ClanPartyItemWithPartyVM` ctor (the `ClanPartyItemVM` base is abstract since v1.5.0) builds a live wage slider whose figure is never charged
   (`DefaultClanFinanceModel` processes neither `WarPartyComponents` nor `OwnedCaravans` for a
   refuge) and whose `SetWagePaymentLimit` is a silent base-`PartyComponent` no-op, so the patch
   suppresses it post-construction (`ShouldPartyHaveExpense = false`, `ExpenseItem = null`) and

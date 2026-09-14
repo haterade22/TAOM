@@ -48,7 +48,7 @@ Every id reference between these four files resolves through `MBObjectManager.Ge
 | `mesh` | string | Yes | none, load crashes | The packaged mesh drawn for the part. Armory convention is `mesh` equal to `id`. | `CraftingPiece.cs:159` |
 | `culture` | culture reference | No | null | Flavour and filtering. Must carry the prefix, `culture="Culture.gondor"`; a bare id throws. | `CraftingPiece.cs:160` |
 | `appearance` | float | No | `0.5` | Price only, and only the pommel's value counts (the blade's if there is no pommel). | `CraftingPiece.cs:161` |
-| `CraftingCost` | int, capital C | No | `0` | Read but has no effect in v1.4.8. Smithing cost comes from `<Materials>`. | `CraftingPiece.cs:162` |
+| `CraftingCost` | int, capital C | No | `0` | Read but has no effect on v1.5.2 (still true, re-checked 2026-09-14). Smithing cost comes from `<Materials>`. | `CraftingPiece.cs:162` |
 | `weight` | float, kilograms | No | `0` | Summed across the four fitted parts. Weight drives inertia, which drives swing speed and handling. | `CraftingPiece.cs:163` |
 | `length` | float, centimetres | Yes unless both distances are given | none | Part length. Setting it makes the part symmetric: the attachment point sits at the middle. | `CraftingPiece.cs:165` |
 | `distance_to_next_piece` | float, centimetres | Yes when `length` is absent | none, load crashes | Pivot to the attachment toward the tip. Use for an asymmetric head. | `CraftingPiece.cs:174` |
@@ -56,7 +56,7 @@ Every id reference between these four files resolves through `MBObjectManager.Ge
 | `center_of_mass` | float, fraction of the part's length | No | `0.5` | 0 is the pommel end, 1 the tip. Feeds balance and the sweet spot. | `CraftingPiece.cs:181` |
 | `item_holster_pos_shift` | `"x,y,z"` floats, metres | No | `0,0,0`, and silently so when the string does not split into three | Nudges the sheathed weapon on the body. Added to the template's own offset. | `CraftingPiece.cs:184` |
 | `tier` | int | No | `1` | The main balance dial. The finished weapon's tier is the mean of its fitted parts' tiers, and smithing difficulty is `tier * 50` per part. | `CraftingPiece.cs:197` |
-| `is_unique` | bool | No | `false` | Read but has no effect in v1.4.8; no consumer of the property exists in the dump. | `CraftingPiece.cs:199` |
+| `is_unique` | bool | No | `false` | Read but has no effect on v1.5.2; no consumer of the property exists in the dump (still true, re-checked 2026-09-14). | `CraftingPiece.cs:199` |
 | `is_default` | bool | No | `false` | Unlocked in the smithing screen from the start instead of needing research. | `CraftingPiece.cs:200` |
 | `is_hidden` | bool | No | `false` | Hides the part from the smithing designer. A `<CraftedItem>` can still use it, which is how a hero weapon stays uncopyable. | `CraftingPiece.cs:201` |
 | `full_scale` | bool, exact string compare to `true` | No | `true` for Guard and Pommel, `false` for Blade and Handle | Whether weight scales cubically with the designer's scale slider. `full_scale="True"` reads as false. | `CraftingPiece.cs:202` |
@@ -157,7 +157,7 @@ One deserializer, two branches. `<CraftedItem>` reads only `id`, `name`, `crafti
 | `appearance` | float | No | `0.5` | A price multiplier, not a combat stat. | `ItemObject.cs:553` |
 | `IsFood` | bool, capital I | No | `false` | Party food, meaningful only with a `<Trade>` component. | `ItemObject.cs:555` |
 | `using_tableau` | bool | No | `false` | Texture painted at runtime from heraldry. Shields use it. | `ItemObject.cs:560` |
-| `using_arm_band` | string | No | null | Read, and no consumer and no vanilla use exist in v1.4.8. | `ItemObject.cs:561` |
+| `using_arm_band` | string | No | null | Read and consumed by `TaleWorlds.MountAndBlade.View` (the Native module bin copies the named mesh onto the agent; present on v1.4.8 and v1.5.2, re-checked 2026-09-14). No vanilla item sets it. | `ItemObject.cs:561` |
 | `scale_factor` | float | No | `1.0` | Scales the model and the effective reach together. | `ItemObject.cs:566` |
 | `Type` | enum, capital T, case-insensitive | Advisory for weapons, authoritative for armour and horses | `Invalid`, and the whole block is skipped when the attribute is absent | For anything with a `<Weapon>` component it is overwritten by the type derived from `weapon_class`, with a red debug line. Change `weapon_class`, not `Type`. | `ItemObject.cs:625` |
 | `AmmoOffset` | `"x,y,z"`, capital A | No | unset | Moves the nocked arrow on the string. Putting it on an item with no `<Weapon>` component throws a null reference at load. | `ItemObject.cs:644` |
@@ -217,9 +217,9 @@ The legal `weapon_class` values, in enum order, are `Undefined`, `Dagger`, `OneH
 | Element or attribute | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
 | `<BladeData>` | element | Yes on a Blade that will be fitted | no blade data | Damage, physics material and collision body. A fitted Blade with no `<BladeData>` throws a null reference while the item file loads. A second one replaces the first. | `CraftingPiece.cs:234` |
-| `<StatContributions>` | element | No | all seven bonuses 0 | Seven bonus numbers. Only `armor_bonus`, and only on the Guard, has any effect in v1.4.8. A second element overwrites the first. | `CraftingPiece.cs:216` |
+| `<StatContributions>` | element | No | all seven bonuses 0 | Seven bonus numbers. Only `armor_bonus`, and only on the Guard, has any effect on v1.5.2 (still true, re-checked 2026-09-14). A second element overwrites the first. | `CraftingPiece.cs:216` |
 | `armor_bonus` | int | No | `0` | Hand armour, read from the Guard slot alone. Putting it on any other slot does nothing in combat. | `CraftingPiece.cs:218` |
-| `handling_bonus` | int | No | `0` | Tooltip only in v1.4.8. Change `weight`, `length` and `center_of_mass` instead. | `CraftingPiece.cs:220` |
+| `handling_bonus` | int | No | `0` | Tooltip only on v1.5.2 (still true, re-checked 2026-09-14). Change `weight`, `length` and `center_of_mass` instead. | `CraftingPiece.cs:220` |
 | `swing_damage_bonus` | int | No | `0` | Tooltip only. Edit `<Swing damage_factor>` instead. | `CraftingPiece.cs:222` |
 | `swing_speed_bonus` | int | No | `0` | Tooltip only. | `CraftingPiece.cs:224` |
 | `thrust_damage_bonus` | int | No | `0` | Tooltip only. Edit `<Thrust damage_factor>` instead. | `CraftingPiece.cs:226` |
@@ -496,7 +496,7 @@ There is a generator for both shapes. `python tools/build_weapon_xml.py --manife
 
 ### Modify
 
-1. **Damage on a crafted weapon: edit the blade's `damage_factor`.** `<Swing damage_factor>` and `<Thrust damage_factor>` in the Blade piece's `<BladeData>` are the only damage inputs the engine reads (`Crafting.cs:134-135`). The seven `<StatContributions>` bonuses look like the obvious dial and are tooltip text in v1.4.8, with the single exception of `armor_bonus` on a Guard.
+1. **Damage on a crafted weapon: edit the blade's `damage_factor`.** `<Swing damage_factor>` and `<Thrust damage_factor>` in the Blade piece's `<BladeData>` are the only damage inputs the engine reads (`Crafting.cs:134-135`). The seven `<StatContributions>` bonuses look like the obvious dial and are tooltip text on v1.5.2, with the single exception of `armor_bonus` on a Guard.
 2. **Speed and handling: edit geometry, not bonuses.** Swing speed comes out of `weight`, `length` and `center_of_mass` through inertia. There is no speed attribute on a crafting piece.
 3. **Reach: edit the pieces that carry it.** For a four-piece sword the pommel has `build_order="-1"` and contributes nothing to reach; length reduces to half the handle plus the guard minus its two offsets plus the blade.
 4. **Damage on a single-piece weapon: edit `<Weapon>` directly.** `thrust_damage` doubles as missile damage for anything ranged.

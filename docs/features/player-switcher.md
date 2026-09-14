@@ -194,7 +194,7 @@ offering genuinely dead heroes.
 
 `Patch77_PlayerSwitcher`, two postfixes on `BodyGeneratorView`.
 
-**Bind by arity, never by a type array.** The 1.4.8 constructor takes 13 parameters and is the only
+**Bind by arity, never by a type array.** The constructor takes 13 parameters (v1.4.8; still 13 and still the only one on v1.5.2, re-checked 2026-09-14) and is the only
 one declared. `TargetMethods()` yields it only when `GetConstructors().Length == 1`, and
 `Prepare()` refuses to bind otherwise. `AccessTools.Constructor(typeof(BodyGeneratorView))` with no
 type array is **not** a substitute: Harmony normalises a null parameter array to `Type.EmptyTypes`

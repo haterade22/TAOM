@@ -83,10 +83,10 @@ same sentence applies to every `SandBoxCore/`, `SandBox/`, `CustomBattle/`, `TAO
 
 | Module | What it is | Where you edit it | `<Version>` | C# entry points | Managed XML registrations | `project.mbproj` rows | Size on this install |
 |---|---|---|---|---|---|---|---|
-| `Native` | The engine's own data: skeletons, action sets, item modifiers, banner icons, the 39 `soln_*` native ids | Never. Game install, `Official` | `v1.4.8` (`Native/SubModule.xml:5`) | vanilla | 24 `XmlNode` rows across 18 ids | 50 `<file>` rows <!-- measured: for m in Native SandBoxCore SandBox CustomBattle TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies; do grep -c '<file ' "<game>/Modules/$m/ModuleData/project.mbproj"; done 2026-09-05 --> | not counted |
-| `SandBoxCore` | Vanilla items, cultures, characters, rosters, skills, body properties | Never. Game install, `Official`, depends on `Native` (`SandBoxCore/SubModule.xml:10`) | `v1.4.8` | vanilla | 8 rows across 6 ids | none (no `project.mbproj`) | not counted |
-| `SandBox` | The vanilla campaign: settlements, kingdoms, clans, heroes, workshops, concepts, music. **Folder `SandBox`, id `Sandbox`** (`SandBox/SubModule.xml:4`); every TAOM manifest writes `Sandbox` on purpose | Never. Game install, `Official`, depends on `Native` and `SandBoxCore` (`SandBox/SubModule.xml:10-11`) | `v1.4.8` | vanilla | 31 rows across 16 ids | 0 `<file>` rows | not counted |
-| `CustomBattle` | The custom-battle game type (`CustomGame`) and its scene list | Never. Game install, `Official`, depends on `Native` and `SandBoxCore` (`CustomBattle/SubModule.xml:10-11`) | `v1.4.8` | vanilla | 2 rows across 2 ids | none (no `project.mbproj`) | not counted |
+| `Native` | The engine's own data: skeletons, action sets, item modifiers, banner icons, the 39 `soln_*` native ids | Never. Game install, `Official` | `v1.5.2` (`Native/SubModule.xml:5`) | vanilla | 24 `XmlNode` rows across 18 ids | 50 `<file>` rows <!-- measured: for m in Native SandBoxCore SandBox CustomBattle TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies; do grep -c '<file ' "<game>/Modules/$m/ModuleData/project.mbproj"; done 2026-09-05 --> | not counted |
+| `SandBoxCore` | Vanilla items, cultures, characters, rosters, skills, body properties | Never. Game install, `Official`, depends on `Native` (`SandBoxCore/SubModule.xml:10`) | `v1.5.2` | vanilla | 8 rows across 6 ids | none (no `project.mbproj`) | not counted |
+| `SandBox` | The vanilla campaign: settlements, kingdoms, clans, heroes, workshops, concepts, music. **Folder `SandBox`, id `Sandbox`** (`SandBox/SubModule.xml:4`); every TAOM manifest writes `Sandbox` on purpose | Never. Game install, `Official`, depends on `Native` and `SandBoxCore` (`SandBox/SubModule.xml:10-11`) | `v1.5.2` | vanilla | 31 rows across 16 ids | 0 `<file>` rows | not counted |
+| `CustomBattle` | The custom-battle game type (`CustomGame`) and its scene list | Never. Game install, `Official`, depends on `Native` and `SandBoxCore` (`CustomBattle/SubModule.xml:10-11`) | `v1.5.2` | vanilla | 2 rows across 2 ids | none (no `project.mbproj`) | not counted |
 | `TAOM.Dependencies` | The library module: Harmony, UIExtenderEx, ButterLib, MCM and TAOM's shield layer, booted from one folder so a player enables only two TAOM entries | Repo, [`Dependencies/_Module/`](../../Dependencies/_Module/SubModule.xml); the build copies it | `v2.0.6` (`Dependencies/_Module/SubModule.xml:6`) | 7 `<SubModule>` entries | 0 | 0 (no `project.mbproj`) | 46 MB, 42 of it `bin/` <!-- measured: du -sm "<game>/Modules/TAOM.Dependencies"/* 2026-09-05 --> |
 | `TAOM` | The code and data module: `TAOM.dll`, every troop, lord, culture, kingdom, clan, roster, string, GUI and config | Repo, [`Main/_Module/`](../../Main/_Module/SubModule.xml); the build copies it | `v2.0.28` (`Main/_Module/SubModule.xml:6`) | 1 (`TAOM.dll`, `TAOM.SubModule`) | 100 `XmlNode` rows across 12 ids <!-- measured: grep -c "<XmlNode>" Main/_Module/SubModule.xml 2026-09-05 --> | 5 `<file>` rows (4 voice definitions, 1 module sound) | 6,147 MB, of which 5,141 MB is `RuntimeDataCache` <!-- measured: du -sm "<game>/Modules/TAOM" and du -sm "<game>/Modules/TAOM"/* 2026-09-05 --> |
 | `LOTRLOME_Armory` | Every TAOM-authored item, crafting piece, monster, race skin, action set and creature asset. Vanilla items keep loading beside them, from `SandBoxCore/SubModule.xml:15`. Data plus art, no C# | Game install only, `LOTRLOME_Armory/SubModule.xml`; the reinstall warning above applies | `v2.0.23` (`LOTRLOME_Armory/SubModule.xml:4`) | 0 (`<SubModules/>`, line 20) | 33 rows: 21 `Items`, 8 `Monsters`, 1 each `CraftingPieces`, `CraftingTemplates`, `WeaponDescriptions`, `ModuleSounds` <!-- measured: grep -o 'XmlName id="[^"]*"' LOTRLOME_Armory/SubModule.xml | sort | uniq -c 2026-09-05 --> | 11 `<file>` rows | 35,595 MB: 18,415 `AssetSources`, 12,978 `RuntimeDataCache`, 4,148 `Assets`, 22 `ModuleData` <!-- measured: du -sm "<game>/Modules/LOTRLOME_Armory"/* 2026-09-05 --> |
@@ -254,8 +254,8 @@ and [Module Dependencies](module-dependencies.md) carries the pairing in full.
 The other two numbers pair with nothing: `TAOM_Map`'s only tie to `TAOM` is the versionless metadata
 row at line 19, and `LOTRLOME_Armory` names `TAOM` nowhere. Both live modules still pin the engine at
 `v1.4.5.*` in their `Native` metadata row (`TAOM_Map/SubModule.xml:15`, `LOTRLOME_Armory/SubModule.xml:15`)
-while `TAOM` pins `v1.4.8.*` (`Main/_Module/SubModule.xml:25`) and the installed game reports `v1.4.8`
-(`bin/Win64_Shipping_Client/Version.xml`, matching the repo pin file). <!-- measured: cat "<game>/bin/Win64_Shipping_Client/Version.xml"; cat .claude/pinned-game-version.txt 2026-09-05 -->
+while `TAOM` pins `v1.5.2.*` (`Main/_Module/SubModule.xml`) and the installed game reports `v1.5.2`
+(`bin/Win64_Shipping_Client/Version.xml`, matching the repo pin file). <!-- measured: cat "<game>/bin/Win64_Shipping_Client/Version.xml"; cat .claude/pinned-game-version.txt 2026-09-14 -->
 The stale values are harmless only because no launcher on this machine reads them. The alias stubs
 carry a fifth kind of number, `v2.4.99.0` at `Stubs/Bannerlord.Harmony/_Module/SubModule.xml:44`: the
 shipped package's minor with `.99`, so any `v2.4.*` lower bound in a third-party manifest is satisfied
@@ -489,7 +489,7 @@ block is marked as an excerpt rather than an example.
 1. `path="LOTRLOME_items/gondor"` names a folder, so every `*.xml` inside it loads and a backup named
    `*.xml` there becomes duplicate item ids ([Submodule and registration](submodule-and-registration.md)).
 2. `<GameType value = "EditorGame"/>` is what makes the items visible inside the Modding Kit.
-3. `version="v1.4.5.*"` on the `Native` row is stale against the installed `v1.4.8`, and inert on a
+3. `version="v1.4.5.*"` on the `Native` row is stale against the installed `v1.5.2`, and inert on a
    vanilla launcher.
 
 ## Reading order for a brand-new modder
@@ -536,7 +536,7 @@ All measured 2026-09-05 on this machine; the game install is referred to as `<ga
 - `TAOM.Dependencies` mentions in `Main/_Module/SubModule.xml`: 1, on line 15, inside a comment: `grep -n "TAOM.Dependencies" Main/_Module/SubModule.xml`.
 - Seven `<SubModule>` blocks in `Dependencies/_Module/SubModule.xml`, at `<SubModuleClassType>` lines 153, 166, 175, 193, 205, 215, 229: `grep -n "<SubModuleClassType" Dependencies/_Module/SubModule.xml`.
 - `GetSortedModules` call sites: 3 hits, the definition plus two multiplayer callers; `Metadata` in `TaleWorlds.MountAndBlade.Launcher.Library`: 0 hits: `grep -rn` over the v1.4.8 category decompile.
-- Engine version `v1.4.8`: `cat "<game>/bin/Win64_Shipping_Client/Version.xml"` and `cat .claude/pinned-game-version.txt`.
+- Engine version `v1.5.2`: `cat "<game>/bin/Win64_Shipping_Client/Version.xml"` and `cat .claude/pinned-game-version.txt`.
 - `THIRD-PARTY-LICENSES.txt` present in `Main/_Module/` and `Dependencies/_Module/`, absent from both live modules: `ls` of the four module roots.
 
 ## Read next

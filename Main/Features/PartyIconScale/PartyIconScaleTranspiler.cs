@@ -8,9 +8,11 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.PartyIconScale;
 
 /// <summary>
-/// IL surgery for <c>Patch53_PartyIconScale</c>. Rewrites the two hardcoded <c>0.3f</c> scale literals in
-/// <c>MobilePartyVisual.AddCharacterToPartyIcon</c> into <c>call PartyIconScaleConfig.GetScale()</c> so the
-/// campaign-map party-icon figure and its mount honour the MCM "Map Figure Scale" slider.
+/// IL surgery for both <c>Patch53</c> transpilers. Rewrites the three hardcoded <c>0.3f</c> scale literals,
+/// two in <c>MobilePartyVisual.AddCharacterToPartyIcon</c> and one in
+/// <c>MobilePartyVisualHelper.GetHumanAgentPartyVisual</c> (since v1.5.0), into
+/// <c>call PartyIconScaleConfig.GetScale()</c> so the campaign-map party-icon figure and its mount honour
+/// the MCM "Map Figure Scale" slider.
 /// <list type="bullet">
 ///   <item><b>People:</b> <c>ldc.r4 0.3</c> immediately before <c>callvirt AgentVisualsData::Scale</c>
 ///   (<c>.Scale(0.3f)</c>).</item>

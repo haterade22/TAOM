@@ -397,7 +397,7 @@ Say "not determined" rather than guessing on these. Each names where to look.
 
 - **How `cloth_bodies.xml` and `cloth_materials.xml` are loaded.** Neither appears in `SubModule.xml` nor in `project.mbproj`, and `cloth_bodies` appears nowhere in the shipping-client decompile. The dump is a shipping-client build, so search the editor build instead.
 - **Which module-root folders the engine discovers with no registration at all.** `Languages/`, `Prefabs/`, `ModuleSounds/`, `SceneObj/` and `SceneEditData/` are all present and unregistered, and the pattern is clearly convention, but the discovery code path has not been read.
-- **Whether the stale `<DependedModuleMetadata id="Native" version="v1.4.5.*"/>` is enforced against the installed v1.4.8 or advisory.** The game runs, which suggests advisory, but the launcher's version-constraint code has not been read.
+- **Whether the stale `<DependedModuleMetadata id="Native" version="v1.4.5.*"/>` is enforced against the installed v1.5.2 or advisory.** The game runs, which suggests advisory, but the launcher's version-constraint code has not been read.
 - **How far the tracked snapshot has drifted from the live files.** The snapshot ledger stops at 2026-08-20 while live timestamps run to 2026-09-02. Timestamps were compared, contents were not diffed.
 - **Which `hair_tag`, `beard_tag` and `tattoo_tag` names are legal per race.** The declaration site is the per-race block in `skins.xml`; the matching is native, so the decompile will not tell you. Working examples live in `Main/_Module/ModuleData/TAOM_bodyproperties.xml`.
 

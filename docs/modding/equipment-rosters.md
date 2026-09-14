@@ -145,7 +145,7 @@ appears **0** times.
 
 Each attribute name on `<Flags>` is parsed as an `EquipmentCategories` value and OR-ed in when the
 value is `true` (`MBEquipmentRoster.cs:73-84`). A misspelled flag name throws from `Enum.Parse`.
-Five flags exist on v1.4.8; the thirteen listed in
+Five flags exist on v1.5.2 (unchanged, re-checked 2026-09-14); the thirteen listed in
 [the v1.4.3 overhaul note](../migration/v1.4.x-equipment-overhaul.md) were removed and must not be
 authored.
 

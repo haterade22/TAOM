@@ -18,7 +18,7 @@ Historical model names, patch counts and review totals are context, not live fac
 - Test files for coverage and correctness
 
 ### Severity Ratings
-- **CRITICAL**: ADR-007 (sealed type in service), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.4.8)
+- **CRITICAL**: ADR-007 (sealed type in service), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.5.2)
 - **HIGH**: Missing test coverage for service, incorrect base class for GameModel, XSLT dropping vanilla attributes
 - **MEDIUM**: Performance issue in hot path, missing IoC registration, interface not segregated
 - **LOW**: Style violation, missing comment explaining non-obvious behavior
@@ -154,7 +154,7 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 
 ## Project Overview
 
-TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.4.8. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
+TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.5.2. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
 
 **Build and test:** use the [non-deploying verification commands](verification.md).
 Build the solution and test in the same configuration with both copy-suppression
@@ -285,7 +285,7 @@ ALWAYS decompile the target method before writing a patch. Verify:
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.4.8
+- Method existence in Bannerlord v1.5.2
 
 ### Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
@@ -378,7 +378,7 @@ public class TaomFooModel : DefaultFooModel
 | `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision rules |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | LOTR faction relationships |
-| `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific execution penalties |
+| (none since v1.5.0: `ExecutionRelationModel` was deleted from the engine) | the alignment-aware execution penalties now live in two `Patch14_Execution` Harmony patches, see `docs/features/execution.md` | Culture-specific execution penalties |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions |
 | `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Army targeting: commitment stickiness, faction priority lists, border proximity |
 
@@ -630,7 +630,7 @@ Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 
 ### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
 
-The entire Bannerlord v1.4.8 codebase is pre-decompiled and organized by category:
+The entire Bannerlord v1.5.2 codebase is pre-decompiled and organized by category (`E:\Decompiled_Bannerlord\_categories_v1.5.2`; older trees beside it):
 
 | Folder | Contents |
 |--------|----------|

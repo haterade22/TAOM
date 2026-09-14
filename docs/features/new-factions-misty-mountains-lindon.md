@@ -82,7 +82,7 @@ TAOM's diplomacy uses `AllianceTier`: **Permanent** (force-started at launch, wa
   isolationist Grey-Havens design. (Lindon is deliberately excluded from the orc Hostile list.)
 
 **Execution alignment (`execution/alignment.json`).** A SEPARATE kingdom-keyed config that
-`AlignmentService` reads (free/evil/neutral side) — it drives `TaomExecutionRelationModel`
+`AlignmentService` reads (free/evil/neutral side); it drives the `Patch14_Execution` blood-feud
 execution-relation penalties and the `DiplomacyService.IsWarAllowed` same-alignment war-block
 backstop. The 4 new kingdoms MUST have a row here or `GetKingdomSide` falls back to `Neutral`
 (mis-scores both). Set: `goblin`/`mistymountainorcs`/`bluecraig` = `evil`, `lindon` = `free`.
