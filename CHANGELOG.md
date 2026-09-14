@@ -4,6 +4,26 @@
 
 ## 2026-09-14
 
+### fix(xslt): comment_strings overrides keep their variant tags
+
+`comment_strings.xslt` overrides 36 vanilla conversation strings. `<xsl:copy>` copies the element but
+not its children, and 24 of the templates followed it with an attribute-only
+`<xsl:apply-templates select="@*[...]"/>`, so the `<tags>` child was dropped. `<tags>` is what the
+engine uses to pick the culture, persona and trait variant; a stripped string stops matching the case
+it was written for and matches everything at once. Twelve templates already carried the fix and a
+comment explaining it, so this was a known defect that had only been partially applied.
+
+All 24 now emit `<xsl:apply-templates select="node()"/>`. Verified on transform OUTPUT against the
+live v1.5.2 `comment_strings.xml`, not by reading the markup: 35 of 35 overridden ids keep their
+`<tags>`, 0 lose them. `TAOM.Tests/Core/CommentStringTagsTests.cs` gates it with the sentinel-stub
+pattern, reading the overridden ids out of the stylesheet so a new override is covered automatically.
+
+Fixed on the v1.5.0 port branch on 2026-08-19 and never reached trunk; not v1.5.0 drift, just
+surfaced by it.
+
+Not-tested: the new test class itself, for the reason above (trunk cannot build on this machine). It
+passed on the v1.5.0 branch and needs no engine assembly; the output proof is the load-bearing check.
+
 ### fix(module): the #371 Dependencies pairing guard is back in the manifest
 
 `Main/_Module/SubModule.xml` carried an eight-line comment explaining that
