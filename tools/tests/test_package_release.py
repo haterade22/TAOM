@@ -13,7 +13,10 @@ Each test maps to one part of the contract:
   - AssetSources / Prefabs_Unused excluded outright
   - EmAssetPackages and Assets/Race Test are CANDIDATES, copied unless explicitly named
   - SceneEditData / SceneObj / AssetPackages copied (vanilla ships them -- regression guard)
-  - *.xml.bak excluded anywhere (glob-loaded ModuleData hazard)
+  - backup sidecars excluded anywhere: bare .bak plus the dated/topic forms the tools
+    write (.bak-<topic>, .bak_<topic>, .bak<N>, .backup, .orig, .prev, .old, .tmp,
+    .transplanted-<date>); a suffix BEFORE the real extension (foo.bak.xml) still ships
+  - SceneObj/Backups and SceneEditData/Backups (Modding Kit scene backups) excluded
   - bin/*.pdb|exp|lib excluded, bin/*.dll copied
   - runtime state files (diag.log, last-good-modlist.txt) excluded; licences copied
   - unrecognised top-level entries are UNKNOWN -> reported, never copied
@@ -92,7 +95,53 @@ class TestConfidentExclusions(unittest.TestCase):
         # not merely dead weight.
         self.assertEqual(act("ModuleData/action_sets.xml.bak"), pr.EXCLUDE)
         self.assertEqual(act("ModuleData/Languages/DE/loc_settlements.xml.bak"), pr.EXCLUDE)
-        self.assertEqual(rule("ModuleData/action_sets.xml.bak"), "XML_BAK")
+        self.assertEqual(rule("ModuleData/action_sets.xml.bak"), "BACKUP_SIDECAR")
+
+    def test_dated_backup_sidecars_excluded(self):
+        # The tools under tools/ write dated, topic-tagged suffixes, and those are the
+        # bulk of what accumulates: the 2026-09-14 pre-release sweep found 164 sidecars
+        # in the install and not one of them ended in a bare ".bak". An exact-suffix
+        # rule therefore shipped every one of them. Same suffix set as
+        # tools/sweep_module_backups.ps1, which is the other half of the release gate.
+        for rel in (
+            "ModuleData/troops/troops_rohan.xml.bak-fellwarg-20260831",
+            "ModuleData/LOTRLOME_items/gondor/body_armors.xml.bak-kingdomcurve-583",
+            "ModuleData/Languages/DE/loc_settlements.xml.bak_mapvillages_20260913_220727",
+            "ModuleData/troops/troops_rohan.xml.bak-",   # trailing dash, a real file
+            "ModuleData/LOTRLOME_items/LOTRAOM_shields.xml.bak2",
+            "Assets/creature/spider/meshes/sk_spider_forest_c_geo.tpac.backup",
+            "ModuleData/action_sets.xml.orig",
+            "ModuleData/DistanceCaches/settlements_distance_cache_Default.bin.prev",
+            "ModuleData/foo.xml.old",
+            "ModuleData/foo.xml.tmp",
+            "ModuleData/foo.xml.transplanted-20260828",
+            "ModuleData/FOO.XML.BAK-UPPER",
+        ):
+            self.assertEqual(act(rel), pr.EXCLUDE, rel)
+            self.assertEqual(rule(rel), "BACKUP_SIDECAR", rel)
+
+    def test_backup_suffix_must_be_last(self):
+        # The engine globs GetFiles("*.xml"), so foo.bak.xml IS loaded and parsed as
+        # data, duplicating every id in it. The packager must not paper over that by
+        # quietly dropping the file: it ships, and the validator is where it gets caught.
+        self.assertEqual(act("ModuleData/foo.bak.xml"), pr.COPY)
+        self.assertEqual(act("ModuleData/backup_troops.xml"), pr.COPY)
+        self.assertEqual(act("ModuleData/troops.xml.bakery"), pr.COPY)
+
+    def test_scene_backups_folders_excluded(self):
+        # The Modding Kit writes SceneObj/Backups/<scene> and SceneEditData/Backups/<scene>
+        # on every scene save (437 MB for Main_map on 2026-09-14). Both parents are on
+        # KNOWN_TOP_DIRS because vanilla ships them, so without this rule the include-list
+        # waves the backups through with the live scene.
+        self.assertEqual(act("SceneObj/Backups/Main_map/scene.xscene"), pr.EXCLUDE)
+        self.assertEqual(rule("SceneObj/Backups/Main_map/scene.xscene"), "SCENE_BACKUPS")
+        self.assertEqual(act("SceneEditData/Backups/Main_map/terrain_ed.bin"), pr.EXCLUDE)
+        self.assertEqual(rule("SceneEditData/Backups/Main_map/terrain_ed.bin"), "SCENE_BACKUPS")
+        # The live scene beside it still ships (vanilla-ships-them regression guard).
+        self.assertEqual(act("SceneObj/Main_map/scene.xscene"), pr.COPY)
+        self.assertEqual(act("SceneEditData/Main_map/terrain_ed.bin"), pr.COPY)
+        # "Backups" must be the second path part, not a scene that happens to carry the name.
+        self.assertEqual(act("SceneObj/Main_map/Backups_readme.txt"), pr.COPY)
 
     def test_native_debug_artifacts(self):
         for f in ("TAOM.NativeSkinFixes.pdb", "TAOM.NativeSkinFixes.exp", "TAOM.NativeSkinFixes.lib"):
@@ -222,6 +271,9 @@ def _fixture(tmp: Path) -> Path:
     _write(src, "TAOM/AssetSources/big.png", 8000)
     _write(src, "TAOM/ModuleData/troops.xml", 200)
     _write(src, "TAOM/ModuleData/troops.xml.bak", 250)
+    _write(src, "TAOM/ModuleData/troops.xml.bak-fellwarg-20260831", 260)
+    _write(src, "TAOM/SceneObj/Main_map/scene.xscene", 600)
+    _write(src, "TAOM/SceneObj/Backups/Main_map/scene.xscene", 700)
     _write(src, "TAOM/bin/Win64_Shipping_Client/TAOM.dll", 300)
     _write(src, "TAOM/bin/Win64_Shipping_Client/TAOM.pdb", 900)
     _write(src, "TAOM/EmAssetPackages/em.tpac", 400)
@@ -235,11 +287,15 @@ class TestPlan(unittest.TestCase):
             src = _fixture(Path(td))
             plan = pr.plan_module(src / "TAOM")
 
-            self.assertEqual(plan.total_bytes, 100 + 1000 + 5000 + 0 + 8000 + 200 + 250 + 300 + 900 + 400 + 77)
-            # copied: SubModule 100 + pack0 1000 + troops 200 + dll 300 + em 400
-            self.assertEqual(plan.copy_bytes, 2000)
-            # excluded: rdc 5000 + rtemp 0 + AssetSources 8000 + bak 250 + pdb 900
-            self.assertEqual(plan.exclude_bytes, 14150)
+            self.assertEqual(
+                plan.total_bytes,
+                100 + 1000 + 5000 + 0 + 8000 + 200 + 250 + 260 + 600 + 700 + 300 + 900 + 400 + 77,
+            )
+            # copied: SubModule 100 + pack0 1000 + troops 200 + live scene 600 + dll 300 + em 400
+            self.assertEqual(plan.copy_bytes, 2600)
+            # excluded: rdc 5000 + rtemp 0 + AssetSources 8000 + bak 250 + dated bak 260
+            #           + scene backup 700 + pdb 900
+            self.assertEqual(plan.exclude_bytes, 15110)
             self.assertEqual(plan.unknown_bytes, 77)
             self.assertEqual(plan.total_bytes, plan.copy_bytes + plan.exclude_bytes + plan.unknown_bytes)
 
@@ -247,8 +303,8 @@ class TestPlan(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             src = _fixture(Path(td))
             plan = pr.plan_module(src / "TAOM", keep_rdc=True)
-            self.assertEqual(plan.copy_bytes, 2000 + 5000)
-            self.assertEqual(plan.exclude_bytes, 14150 - 5000)  # .rtemp still excluded
+            self.assertEqual(plan.copy_bytes, 2600 + 5000)
+            self.assertEqual(plan.exclude_bytes, 15110 - 5000)  # .rtemp still excluded
 
     def test_by_rule_totals(self):
         with tempfile.TemporaryDirectory() as td:
@@ -256,7 +312,8 @@ class TestPlan(unittest.TestCase):
             plan = pr.plan_module(src / "TAOM")
             self.assertEqual(plan.by_rule["RUNTIME_DATA_CACHE"], 5000)
             self.assertEqual(plan.by_rule["ASSET_SOURCES"], 8000)
-            self.assertEqual(plan.by_rule["XML_BAK"], 250)
+            self.assertEqual(plan.by_rule["BACKUP_SIDECAR"], 250 + 260)
+            self.assertEqual(plan.by_rule["SCENE_BACKUPS"], 700)
             self.assertEqual(plan.by_rule["NATIVE_DEBUG"], 900)
 
 
@@ -300,11 +357,14 @@ class TestCli(unittest.TestCase):
 
             self.assertTrue((dest / "TAOM/AssetPackages/pack0.tpac").exists())
             self.assertTrue((dest / "TAOM/ModuleData/troops.xml").exists())
+            self.assertTrue((dest / "TAOM/SceneObj/Main_map/scene.xscene").exists())
             self.assertTrue((dest / "TAOM/EmAssetPackages/em.tpac").exists())
             for gone in (
                 "TAOM/RuntimeDataCache",
                 "TAOM/AssetSources",
                 "TAOM/ModuleData/troops.xml.bak",
+                "TAOM/ModuleData/troops.xml.bak-fellwarg-20260831",
+                "TAOM/SceneObj/Backups",
                 "TAOM/bin/Win64_Shipping_Client/TAOM.pdb",
                 "TAOM/Mystery",
             ):
@@ -319,7 +379,7 @@ class TestCli(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stderr)
             data = json.loads(man.read_text())
             self.assertEqual(data["modules"][0]["name"], "TAOM")
-            self.assertEqual(data["modules"][0]["copy_bytes"], 2000)
+            self.assertEqual(data["modules"][0]["copy_bytes"], 2600)
             self.assertEqual(data["totals"]["unknown_bytes"], 77)
             self.assertIn("Mystery/thing.bin", " ".join(data["modules"][0]["unknown"]))
 

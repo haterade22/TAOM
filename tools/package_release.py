@@ -38,6 +38,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import sys
 from dataclasses import dataclass, field
@@ -79,6 +80,23 @@ RUNTIME_STATE_FILES = frozenset({"diag.log", "last-good-modlist.txt", "failed-mo
 RDC_DIR_PREFIX = "RuntimeDataCache"
 NATIVE_DEBUG_EXT = frozenset({".pdb", ".exp", ".lib"})
 
+# Backup sidecars the tools under tools/ leave beside the live file (tools/README.md "XML I/O
+# convention"). The suffix sits AFTER the real extension, and the dated, topic-tagged forms are
+# the bulk of them: the 2026-09-14 pre-release sweep found 164 in the install and not one ended
+# in a bare ".bak", so an exact ".xml.bak" rule shipped every one. This is the same expression
+# as $SuffixRx in tools/sweep_module_backups.ps1; change both or neither. A suffix BEFORE the
+# real extension (foo.bak.xml) is deliberately NOT matched: the engine globs *.xml and parses
+# it, so dropping it here would hide a duplicate-id hazard the validator should catch.
+BACKUP_SUFFIX_RE = re.compile(
+    r"(?i)\.(?:bak(?:\d+|[-_][A-Za-z0-9._-]*)?|backup|orig|prev(?:\d+|[-_][A-Za-z0-9._-]*)?"
+    r"|old|tmp|transplanted-\d+)$"
+)
+
+# The Modding Kit writes SceneObj/Backups/<scene> and SceneEditData/Backups/<scene> on every
+# scene save (437 MB for Main_map on 2026-09-14). Both parents are KNOWN_TOP_DIRS because
+# vanilla ships them, so the include-list alone would wave the backups through.
+SCENE_BACKUP_PARENTS = frozenset({"SceneObj", "SceneEditData"})
+
 CANDIDATE_RULES = ("EM_ASSET_PACKAGES", "RACE_TEST")
 
 
@@ -117,8 +135,10 @@ def classify(rel: str, *, keep_rdc: bool = False, exclude_candidates=()) -> Deci
         return Decision(EXCLUDE, "ASSET_SOURCES", "editor-only, never loaded at runtime")
     if top == "Prefabs_Unused":
         return Decision(EXCLUDE, "PREFABS_UNUSED", "unreferenced prefab scratch")
-    if name.endswith(".xml.bak"):
-        return Decision(EXCLUDE, "XML_BAK", "ModuleData is glob-loaded: duplicate-registration hazard")
+    if BACKUP_SUFFIX_RE.search(name):
+        return Decision(EXCLUDE, "BACKUP_SIDECAR", "tool backup beside the live file; .bak breaks the upload")
+    if top in SCENE_BACKUP_PARENTS and len(parts) >= 2 and parts[1] == "Backups":
+        return Decision(EXCLUDE, "SCENE_BACKUPS", "Modding Kit scene backups, regenerated on every save")
     if top == "bin" and p.suffix.lower() in NATIVE_DEBUG_EXT:
         return Decision(EXCLUDE, "NATIVE_DEBUG", "debug/link artifact")
     if len(parts) == 1 and name in RUNTIME_STATE_FILES:

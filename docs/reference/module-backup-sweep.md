@@ -136,6 +136,45 @@ run, as its documented rollback slot. It ships (9.9 MB), so a pre-release sweep 
 running the sweep mid-development closes that rollback window. If you are about to rebuild the
 distance cache, sweep afterwards, not before.
 
+## The 2026-09-14 run
+
+**182 files, 455.0 MB**, four roots, thirteen days after the first run. Manifest at
+`E:\Bannerlord_Backups\module_bak_sweep_2026-09-14\MANIFEST.csv`.
+
+| Root | Category | Files | Size |
+|---|---|---|---|
+| LOTRLOME_Armory | `ModuleData` | 104 | 3.6 MB |
+| TAOM_Map | `ModuleData` | 51 | 11.5 MB |
+| TAOM_Map | scene `Backups\` | 9 | 437.4 MB |
+| TAOM | `ModuleData` | 9 | 1.3 MB |
+| repo `Main\_Module` | `ModuleData` | 9 | 1.3 MB |
+
+Verified: 0 orphans, 10 sampled files re-hashed with 0 mismatches, 0 sidecars remaining on the
+re-scan, an independent `find` over the same roots empty, `validate_moduledata.py` 0 errors,
+`python -m unittest discover -s tools/tests` 1,500 passed.
+
+What it was: the #583 `.bak-kingdomcurve-583` set (87 armour files) and the `.bak-rangedladder`
+name rows (13) in the Armory; the #597 village and rename passes in TAOM_Map (12 languages x 4
+`loc_settlements.xml` stamps, plus three `settlements.xml` copies, which are the rollback for the
+live map edits of 2026-09-13); the enlistment and fell-warg passes in TAOM, mirrored in the repo
+`_Module`. Not one of the 173 sidecars ended in a bare `.bak`.
+
+The TAOM `.bak_scenes` file was git-tracked (added in `0ed2cf38`, before `.gitignore` covered
+`*.bak*`), so the 2026-09-01 sweep moved it and the next checkout put it back. Removed from the
+index in `ea035cf6`.
+
+### The packager is the second gate, and it had the same bare-`.bak` hole
+
+`tools/package_release.py` classified only names ending in exactly `.xml.bak` as excluded, which
+matched 0 of the 164 install files above, and the two scene `Backups` folders sat under
+`SceneObj` / `SceneEditData`, both on its include-list because vanilla ships them. So a release
+packaged without first running this sweep would have carried every sidecar. Since 2026-09-14 the
+packager's `BACKUP_SUFFIX_RE` is the same expression as this script's `$SuffixRx` (change both or
+neither), rule `BACKUP_SIDECAR`, and `SceneObj/Backups` / `SceneEditData/Backups` are excluded
+under `SCENE_BACKUPS`. A suffix before the real extension (`foo.bak.xml`) still ships on purpose:
+the engine parses it, so hiding it would hide a duplicate-id hazard. Tests in
+`tools/tests/test_package_release.py`.
+
 ## When to run it
 
 Before cutting a release, as part of [the release process](release-process.md). It is also worth a

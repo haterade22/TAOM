@@ -4,6 +4,24 @@
 
 ## 2026-09-14
 
+### fix(tools): the release packager drops dated backup sidecars and the scene Backups folders
+
+`tools/package_release.py` excluded only names ending in exactly `.xml.bak`. Every one of the 164
+sidecars the pre-release sweep found in the install carried a dated or topic suffix
+(`.bak-kingdomcurve-583`, `.bak_mapvillages_20260913_220727`, `.bak-rangedladder`), so that rule
+matched none of them, and the Modding Kit's `SceneObj/Backups` and `SceneEditData/Backups` (437 MB)
+sat under two folders the include-list copies because vanilla ships them. A package cut without
+first running `sweep_module_backups.ps1` would have carried all of it. New `BACKUP_SUFFIX_RE` is the
+same expression as the sweep's `$SuffixRx` (`.bak`, `.bak<N>`, `.bak-<topic>`, `.bak_<topic>`,
+`.backup`, `.orig`, `.prev*`, `.old`, `.tmp`, `.transplanted-<date>`, case-insensitive, suffix
+last), rule `BACKUP_SIDECAR` replacing `XML_BAK`; the two `Backups` folders are excluded under
+`SCENE_BACKUPS`. `foo.bak.xml` still ships on purpose: the engine globs `*.xml` and parses it, so
+dropping it would hide the duplicate-id hazard the validator exists to catch. Test-first:
+`test_package_release.py` gains the dated-suffix table, the suffix-must-be-last guard and the scene
+folder pair (33 tests, tools suite 1,500). Dry run on the live install after the sweep: 9,912
+files, 0 unknown, nothing left for either rule to drop. Run recorded in
+`docs/reference/module-backup-sweep.md`.
+
 ### chore(release): the pre-release backup sweep, and the one sidecar git was still carrying
 
 Mike is cutting a public build, and the Cloudflare distribution rejects `.bak`.
