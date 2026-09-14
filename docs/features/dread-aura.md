@@ -393,3 +393,9 @@ Two consequences worth being deliberate about:
 - [docs/roadmap.md](../roadmap.md)
 
 <!-- backlinks-end -->
+
+## Source pruning and slot reuse (2026-09-13, #595)
+
+2026-09-13 (#595): `DreadSourceTracker.Prune` requires `AgentSlotIdentity.IsCurrentOccupant` as well as the
+engine's `IsActive()`, which answers for a recycled slot's new tenant; the pulse runner's null-`Team` early-out
+was the only thing masking that.

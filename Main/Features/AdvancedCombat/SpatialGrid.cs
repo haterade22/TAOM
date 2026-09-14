@@ -5,27 +5,55 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.AdvancedCombat;
 
+/// <summary>
+/// Cells of live agents for the creature trees' range scans, rebuilt every two seconds from the
+/// mission tick. Until #592 the trees read it from the engine's asynchronous agent tick while this
+/// tick rebuilt it; the third player freeze of 2026-09-13 had nothing but four warg trees, each
+/// scanning here on every evaluation. Every reader and the rebuild are on the mission tick now, the
+/// rebuild replaces the map instead of clearing it in place, and the tripwire reports any thread
+/// that comes back (#595).
+/// </summary>
 public class SpatialGrid
 {
     public static SpatialGrid Instance { get; internal set; }
 
-    private readonly Dictionary<(int, int, int), List<Agent>> Grid = new();
+    private Dictionary<(int, int, int), List<Agent>> _grid = new();
     public float CellSize = 20f;
+
+    private static readonly Action<string> ReportOffThread =
+        message => Debug.Print(message, 0, Debug.DebugColor.Red);
 
     public void UpdateGrid(List<Agent> agents)
     {
-        Grid.Clear();
+        MissionThreadGuard.NoteCall("SpatialGrid.UpdateGrid", ReportOffThread);
+        // A fresh map, published by one reference write: a reader that still holds the old one walks a
+        // finished structure rather than a map being cleared under it.
+        var grid = new Dictionary<(int, int, int), List<Agent>>();
         foreach (Agent agent in agents)
         {
             if (!agent.IsActive())
                 continue;
             var cell = GetCell(agent.Position);
-            if (!Grid.TryGetValue(cell, out List<Agent> list))
+            if (!grid.TryGetValue(cell, out List<Agent> list))
             {
                 list = new List<Agent>();
-                Grid[cell] = list;
+                grid[cell] = list;
             }
             list.Add(agent);
+        }
+        _grid = grid;
+    }
+
+    /// <summary>
+    /// Drop a deleted agent. Its managed handle would otherwise sit here until the next rebuild,
+    /// reading position from the engine slot its index now belongs to (#595).
+    /// </summary>
+    public void Remove(Agent agent)
+    {
+        if (agent == null) return;
+        foreach (List<Agent> cell in _grid.Values)
+        {
+            if (cell.Remove(agent)) return;
         }
     }
 
@@ -53,7 +81,9 @@ public class SpatialGrid
     /// </summary>
     public void GetAgentsInRadius(Vec3 center, float radius, List<Agent> buffer)
     {
+        MissionThreadGuard.NoteCall("SpatialGrid.GetAgentsInRadius", ReportOffThread);
         buffer.Clear();
+        var grid = _grid;
         float radiusSquared = radius * radius;
         int minX = (int)Math.Floor((center.x - radius) / CellSize);
         int maxX = (int)Math.Floor((center.x + radius) / CellSize);
@@ -69,7 +99,7 @@ public class SpatialGrid
         for (int y = minY; y <= maxY; y++)
         for (int z = minZ; z <= maxZ; z++)
         {
-            if (!Grid.TryGetValue((x, y, z), out List<Agent> cell)) continue;
+            if (!grid.TryGetValue((x, y, z), out List<Agent> cell)) continue;
             foreach (Agent agent in cell)
             {
                 float dx = agent.Position.x - center.x;

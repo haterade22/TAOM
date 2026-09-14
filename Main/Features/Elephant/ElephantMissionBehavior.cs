@@ -111,6 +111,9 @@ public class ElephantMissionBehavior : MissionLogic
             // crew↔elephant collision fix (e.g. give the crew the elephant's FaceGroupId so they don't collide
             // with it, the engine's own rider-vs-mount mechanism). TrySpawnHowdahCrew is retained for that fix.
             // See docs/features/elephant.md → "Slide root-cause isolation".
+            // When it comes back, do NOT call it from here: this runs inside Mission.SpawnAgent's loop
+            // over behaviors, and a nested SpawnAgent re-enters that loop mid-dispatch. Queue the crew
+            // and spawn from OnMissionTick, the way MountDespawn defers its fades (#595).
             // TrySpawnHowdahCrew(machine, agent, crewFormation);
         }
         catch (Exception ex)

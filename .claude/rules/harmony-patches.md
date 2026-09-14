@@ -95,3 +95,24 @@ A latch (`_windowActive`, `_inflight`, `BattleLoadLoadingWindow`-style static fl
 3. **Verify "unconditional" at the OUTERMOST gate.** After fixing #2 inside the service, grep every CALLER of the fixed method — a hook-level `!svc.IsEnabled` early-out re-conditions the "unconditional" transition and the service-layer regression tests cannot see it. The fix is only done when the outermost gate on every call path passes state transitions through.
 
 **Why this rule exists:** RCA `docs/reviews/rca-tournament-exit-hang-2026-07-06.md` (findings 1, 2, 4) — the exit-window latch shipped with campaign-only closers for an any-mission opener plus toggle-gated closes; the service-layer fix for the toggle gate was then bypassed by hook-level gates, caught only by the Codex pass. Master record: `docs/reviews/LESSONS-LEARNED.md` "State, Lifecycle & Save" → "Diagnostics latches".
+
+## Which thread runs your target (MANDATORY before the first line of a patch)
+
+Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered
+from native, and native decides the thread. Verified on v1.4.8 (#592, #595):
+
+| Runs on | Engine entry points reached from it |
+|---|---|
+| Main thread | `Mission.OnTick` -> every `MissionBehavior.OnMissionTick`; native combat -> `Mission.OnAgentHit`, `OnAgentRemoved`, `OnAgentDeleted`; `OrderController` (player orders); `Mission.SpawnAgent` -> `OnAgentBuild`; `MissionAgentPanicHandler.OnPreMissionTick` -> `Mission.OnAgentFleeing` |
+| Async AI thread (`Mission.TickAgentsAndTeams`, an `[MBCallback]`) | `Agent.Tick` -> `AgentComponent.OnTick` (vanilla's `CommonAIComponent.OnTick` -> `Panic` -> `Mission.OnAgentPanicked` -> every `MissionBehavior.OnAgentPanicked`), `TickAsAI`; `Team.Tick` -> `TeamAI` -> `Formation.SetMovementOrder` / `SetTargetFormation` (also the retreat branch for the PLAYER's team); `Formation.Tick`; `MBSubModuleBase.AfterAsyncTickTick` |
+| TWParallel worker pool (`Mission.AgentTickMT`) | `Agent.TickParallel` -> `AgentComponent.OnTickParallel`, `HumanAIComponent.ParallelUpdateFormationMovement` -> `Agent.GetBaseFormationFrame` -> `Formation.GetOrderPositionOfUnit` |
+
+A patch on a target in the last two rows may run concurrently with the first row. Its shared state
+takes a lock (`FormationLayoutService`, `CavalryChargeService`, `TroopStanceManager` are the shape), it
+never registers a blow or spawns an agent, and a team filter is not a thread filter (Patch35 gated on
+`PlayerTeam` and still ran on the async tick whenever that team's formations were AI-controlled). The
+`??=` lazy-static pattern is tolerable there only for an idempotent resolve. A `MissionBehavior` callback
+is not main-thread by virtue of being a callback: `OnAgentPanicked` arrives on the async tick, and a native
+`[MBCallback]` whose caller is unknown (`Agent.OnAgentAlarmedStateChanged`) may. A behavior that owns
+main-thread collections asks `MissionThreadGuard.IsOnMainThread` and parks such a callback in a
+`DeferredCallbackQueue` for its next `OnMissionTick` (`BehaviorTreeMissionLogic` is the shape; #595).

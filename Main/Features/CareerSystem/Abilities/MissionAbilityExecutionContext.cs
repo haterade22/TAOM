@@ -4,6 +4,7 @@ using TAOM.Core.Logging;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.AdvancedCombat;
 
 namespace TAOM.Features.CareerSystem.Abilities;
 
@@ -129,6 +130,10 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
             var deltasCopy = ActiveBuffsAlgebra.Clone(buffTemplate);
             ScheduleRestore(() =>
             {
+                // The index may belong to someone else by now: a deleted ally's entry was already
+                // cleared on OnAgentDeleted, and the engine recycles the index (#592). Only the
+                // agent this contribution was applied to may have it subtracted (#595).
+                if (!AgentSlotIdentity.IsCurrentOccupant(allyRef)) return;
                 CareerAbilityBuffTracker.RemoveAllyContribution(allyIndex, deltasCopy);
                 if (allyRef.IsActive())
                     allyRef.UpdateAgentProperties();
@@ -143,7 +148,11 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
         ScheduleRestore(() =>
         {
             CareerAbilityBuffTracker.RemoveContribution(HeroStringId, heroDeltasCopy);
-            _agent?.UpdateAgentProperties();
+            // The caster's handle outlives the caster, and a recycled index would push the dead
+            // hero's stats onto whoever inherited the slot (#592, #595). Refresh only a live caster
+            // that still owns its index; the tracker entry is keyed by hero id and is safe either way.
+            if (_agent != null && _agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(_agent))
+                _agent.UpdateAgentProperties();
         }, duration);
     }
 

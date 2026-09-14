@@ -794,6 +794,13 @@ invariant".
 
 ## Changelog
 
+- 2026-09-13 (#595, Codex review 109): `TaomHowdahStandingPoint` requires slot identity for its own seated rider before
+  every teleport and release, and reads the elephant's position only through a handle that still owns its index.
+- 2026-09-13 (#595): `TaomHowdahMachine.OnTick` drops `elephantAgent`/`elephantRider`, releases and clears every
+  seat the moment the elephant is not alive AND the occupant of its own engine slot (`AgentSlotIdentity`): a dead
+  elephant's handle reads its recycled slot, so the platform would follow whatever agent inherited the index.
+  When `TrySpawnHowdahCrew` comes back it must NOT be called from `OnAgentBuild` (a nested `Mission.SpawnAgent`
+  re-enters the behavior loop mid-dispatch): queue the crew and spawn from `OnMissionTick`.
 - 2026-06-19 — War elephant (`harad_elephant_rider`) gated behind a special-resource recruit cost + per-day upkeep.
 - 2026-06-15 — Bow-armed rider (spear → second bodkin quiver) + lethal per-kind randomized damage (trample 50-100, tusk 50-75); service tests 16 → 24.
 - 2026-06-13 — Idle ear-fan authored + canter/gallop rebuilt as faster ambles from the refined walk (Blender-MCP).

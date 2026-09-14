@@ -31,6 +31,8 @@ public class AgentAdapter : IAgentAdapter
 
     public int Index => _agent.Index;
 
+    // Raw engine liveness only: every caller (the bone checks) gates on IsActive(), with its native
+    // slot-identity lookup, in the statement before this read, and this runs per target per frame.
     public IAgentVisualsAdapter AgentVisuals =>
         _agent != null && _agent.IsActive() && !_agent.IsFadingOut() && _agent.AgentVisuals != null
             ? new AgentVisualsAdapter(_agent.AgentVisuals)
@@ -59,7 +61,11 @@ public class AgentAdapter : IAgentAdapter
     public bool IsWarg() => WargConfig.IsWargMonster(_agent.Monster.StringId);
     public bool IsHorse() => _agent.Monster.StringId == "horse";
     public bool IsCamel() => _agent.Monster.StringId == "camel";
-    public bool IsActive() => _agent?.IsActive() ?? false;
+    // The engine's own IsActive() reads the agent's slot through a pointer captured at creation, so a
+    // deleted agent's handle answers for whoever inherited its index (#592). Active means: alive AND
+    // still the occupant of its slot. Adapters are held across frames (bone-check targets), which is
+    // exactly when a slot changes hands underneath one.
+    public bool IsActive() => _agent != null && _agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(_agent);
     public bool IsFadingOut() => _agent?.IsFadingOut() ?? false;
     public int Health => (int)(_agent?.Health ?? 0f);
     public AgentState State => _agent?.State ?? AgentState.Killed;
@@ -109,7 +115,37 @@ public class AgentAdapter : IAgentAdapter
                 break;
         }
         var action = ActionIndexCache.Create(projectionAnimation);
+        if (!HasClipForAction(action, nameof(ProjectAgent))) return;
         _agent.SetActionChannel(0, action, true, 0UL, 0f, 1, -0.2f, 0.4f, 0f, false, -0.2f, 0, true);
+    }
+
+    // Set once per adapter: one line per agent that ever fails the check, never a per-tick flood.
+    private bool _missingClipReported;
+
+    /// <summary>
+    /// True when this agent's action set has a clip for <paramref name="action"/>. Every
+    /// <c>SetActionChannel</c> in this class goes through here. A creature attack clip requested on
+    /// another monster (2026-09-13: <c>act_warg_attack_running</c> on <c>as_horse</c>, #592) means the
+    /// caller holds a stale handle; a human flinch clip missing from a humanoid creature's set is the
+    /// same class. Refuse the call and say so once, instead of handing the engine an action its set
+    /// lacks; what the engine does after its own "does not contain" warning is not known.
+    /// </summary>
+    private bool HasClipForAction(ActionIndexCache action, string caller)
+    {
+        MissionThreadGuard.NoteCall("AgentAdapter." + caller, _logger.LogError);
+
+        MBActionSet actionSet = _agent.ActionSet;
+        if (MBActionSet.CheckActionAnimationClipExists(actionSet, action)) return true;
+
+        if (!_missingClipReported)
+        {
+            _missingClipReported = true;
+            _logger.LogError($"AgentAdapter:{caller}: action set '{actionSet.GetName()}' of '{_agent.Name}' " +
+                             $"(monster '{_agent.Monster?.StringId ?? "?"}', index {_agent.Index}) has no clip for " +
+                             $"'{action.GetName()}'; {caller} skipped. A creature clip requested on another " +
+                             "monster means this agent handle is stale (#592).");
+        }
+        return false;
     }
 
     public bool IsAttackLikelyToHit(IAgentAdapter attacker, float coneAngle, float attackDistance)
@@ -143,12 +179,13 @@ public class AgentAdapter : IAgentAdapter
         Action<IAgentAdapter, IAgentAdapter, sbyte> onHitCallback,
         Action onExpirationCallback = null)
     {
-        if (_agent == null || !_agent.IsActive() || _agent.IsFadingOut())
+        if (!IsActive() || _agent.IsFadingOut())
         {
             _logger.LogWarning("AgentAdapter:CustomAttack: attempt to use on a null or dead agent.");
             return;
         }
 
+        if (!HasClipForAction(action, nameof(CustomAttack))) return;
         _agent.SetActionChannel(0, action, true);
 
         if (SpatialGrid.Instance == null)
@@ -196,12 +233,13 @@ public class AgentAdapter : IAgentAdapter
         float arcCenterBearingDeg,
         Action<IAgentAdapter, IAgentAdapter, sbyte> onHitCallback)
     {
-        if (_agent == null || !_agent.IsActive() || _agent.IsFadingOut())
+        if (!IsActive() || _agent.IsFadingOut())
         {
             _logger.LogWarning("AgentAdapter:RadialStrike: attempt to use on a null or dead agent.");
             return;
         }
 
+        if (!HasClipForAction(action, nameof(RadialStrike))) return;
         _agent.SetActionChannel(0, action, true);
 
         if (SpatialGrid.Instance == null)

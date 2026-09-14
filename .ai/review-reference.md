@@ -42,6 +42,17 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Runs the production allocator to print the collision it claims, and opens the caller of every
+  override a thread map lists** (2026-09-13, creature handles review 109): handed a slot map whose
+  eviction had just been added, it compiled `LayoutPositioner` and its model types into a PowerShell
+  `Add-Type` harness, forgot one index the way the new code does, and printed `first ranged=(1, -5);
+  first replacement=(1, -5); collision=True`. It then refuted the review's own thread map by opening
+  the caller nobody had opened: `Mission.OnAgentPanicked` is a plain managed call from
+  `CommonAIComponent.OnTick`, inside the asynchronous agent tick. It disputed five of nine handed
+  suspects with decompiled lines, including the objection that had held a registration swap back,
+  and reported that its sandbox could not evaluate MSBuild instead of claiming a run. When a fix
+  edits one side of an allocator, expect Codex to drive the other; when a thread map lists
+  callbacks, expect it to open each one's caller.
 - **Reads the widget's update loop past the bound field** (2026-09-13, supply search review 106):
   handed a scroll reset that wrote 0 into a two-way `ScrollbarWidget.ValueFloat`, it read
   `ScrollablePanel.UpdateScrollablePanel` after the value read and found the private wheel momentum

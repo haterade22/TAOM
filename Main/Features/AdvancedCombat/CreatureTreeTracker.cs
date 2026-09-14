@@ -11,9 +11,9 @@ namespace TAOM.Features.AdvancedCombat;
 /// (Spider / Elephant / Mûmakil — the warg predates the pattern and keeps its own wiring):
 /// dedup attach keyed on a creature predicate, late-spawn attach counting (custom-battle
 /// deployment spawns AFTER the first mission tick, so the first-tick scan typically reports 0
-/// and every creature arrives via <c>OnAgentBuild</c>), and dead-agent pruning (the engine's
-/// <c>Agent.Tick</c> auto-ticks each component — never tick them manually; only drop dead
-/// creatures from the shadow list). Extracted from the three formerly-identical per-feature
+/// and every creature arrives via <c>OnAgentBuild</c>), and dead-agent pruning
+/// (<c>BehaviorTreeMissionLogic.OnMissionTick</c> ticks every tree on the main thread, #592; never
+/// tick a component from a feature; only drop dead creatures from the shadow list). Extracted from the three formerly-identical per-feature
 /// copies (R4, 2026-07-01) so the attach discipline has one home — the copies had already
 /// drifted (Spider/Mûmakil gained late-attach telemetry the elephant copy never did).
 /// Boundary code (raw Agent/component); game-tested per ADR-008.
@@ -25,6 +25,7 @@ public sealed class CreatureTreeTracker
     private readonly Func<Agent, bool> _isCreature;
     private readonly IModLogger _logger;
     private readonly List<(Agent agent, BehaviorTreeAgentComponent comp)> _components = new();
+    private bool _attachFailureLogged;
 
     public CreatureTreeTracker(string treeName, string logTag, Func<Agent, bool> isCreature, IModLogger logger)
     {
@@ -51,14 +52,35 @@ public sealed class CreatureTreeTracker
         for (int i = 0; i < _components.Count; i++)
             if (_components[i].agent == agent) return false;   // already attached
 
-        var comp = new BehaviorTreeAgentComponent(agent, _treeName, Array.Empty<object>());
-        agent.AddComponent(comp);
-        if (comp.Tree != null)
+        // Called from OnAgentBuild, inside Mission.SpawnAgent's unguarded loop over behaviors: an
+        // exception here aborts the spawn for every later behavior (#595). Log once, keep spawning.
+        BehaviorTreeAgentComponent comp = null;
+        try
         {
-            _components.Add((agent, comp));
-            return true;
+            comp = new BehaviorTreeAgentComponent(agent, _treeName, Array.Empty<object>());
+            agent.AddComponent(comp);
+            if (comp.Tree != null)
+            {
+                _components.Add((agent, comp));
+                return true;
+            }
+            _logger.LogError($"{_logTag} BT build failed for {agent.Name} (Rider={agent.RiderAgent?.Name ?? "null"})");
         }
-        _logger.LogError($"{_logTag} BT build failed for {agent.Name} (Rider={agent.RiderAgent?.Name ?? "null"})");
+        catch (Exception ex)
+        {
+            // The constructor schedules a built tree before the component is attached. Mirror
+            // OnAgentRemoved here, or the orphan keeps ticking until mission end with nothing to stop it.
+            if (comp != null)
+            {
+                BehaviorTreeBannerlordWrapper.Instance.CurrentMissionLogic?.Unschedule(comp);
+                BehaviorTreeBannerlordWrapper.Instance.DisposeTree(agent);
+            }
+            if (!_attachFailureLogged)
+            {
+                _attachFailureLogged = true;
+                _logger.LogError($"{_logTag} attach threw {ex.GetType().Name}: {ex.Message}");
+            }
+        }
         return false;
     }
 
@@ -84,14 +106,25 @@ public sealed class CreatureTreeTracker
         return true;
     }
 
-    /// <summary>Drops dead creatures from the shadow list so it doesn't grow unbounded.</summary>
+    /// <summary>
+    /// Drops dead creatures from the shadow list so it doesn't grow unbounded. The engine's
+    /// IsActive() on a deleted agent answers for whoever inherited its slot, so a reused slot would
+    /// keep a ghost entry without the identity check (#592).
+    /// </summary>
     public void PruneDead()
     {
         for (int i = _components.Count - 1; i >= 0; i--)
-            if (!_components[i].agent.IsActive())
+        {
+            Agent agent = _components[i].agent;
+            if (!agent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(agent))
                 _components.RemoveAt(i);
+        }
     }
 
     /// <summary>Mission-end cleanup.</summary>
-    public void Clear() => _components.Clear();
+    public void Clear()
+    {
+        _components.Clear();
+        _attachFailureLogged = false;
+    }
 }

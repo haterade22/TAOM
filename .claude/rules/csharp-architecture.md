@@ -244,3 +244,29 @@ Long sessions edit many files. Cached `Read` content drifts: a teammate-agent ma
 - Soft signal to re-Read: you're about to make >1 edit to the same file, the file is in a hot area (Main/Adapters, GameModels), or it's been more than ~5 minutes wall-clock since you last looked.
 
 The re-Read costs nothing. The Edit failure plus diagnosis costs minutes.
+
+## Mission-scope agent handles and the engine's threads (MANDATORY)
+
+Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time feature (#592, #595; RCA
+`docs/reviews/rca-warg-clip-on-horse-2026-09-13.md`):
+
+1. **A deleted `Agent` is a live handle to whoever inherits its index.** The engine hands a deleted
+   agent's index to the next agent it builds, and the managed object keeps native pointers captured at
+   creation: `State`, `IsActive()`, `IsFadingOut()`, `Position`, velocity and `SetActionChannel` answer for
+   the slot's NEW tenant, while `Monster`, `Name`, `Character`, `Health` and `Team` stay the dead agent's.
+   So: never key mission state by `Agent.Index` without evicting in `OnAgentDeleted`; never hold an
+   `Agent` or `IAgentAdapter` across frames and trust `IsActive()` alone; gate every held handle with
+   `AgentSlotIdentity.IsCurrentOccupant(agent)` before it touches native state. The adapter cache is
+   keyed by object and evicted for you; a restore closure, a shadow list, a machine's target agent are not.
+2. **Single-player ticks agents on an asynchronous AI thread, and TWParallel workers under that.**
+   `AgentComponent.OnTick`, `TickAsAI`, `Team.Tick`, `TeamAI`, `Formation.SetMovementOrder` from the AI,
+   `Formation.GetOrderPositionOfUnit` for AI units (worker pool), and `MBSubModuleBase.AfterAsyncTickTick`
+   all run off the main thread while the engine's main-thread callbacks (`OnAgentRemoved`,
+   `OnAgentDeleted`, `OnAgentHit`) fire. Mission logic that registers blows, plays actions, spawns or
+   fades agents, or touches a collection those callbacks write belongs in `MissionBehavior.OnMissionTick`
+   (creature trees: `BehaviorTreeMissionLogic`). A store reachable from a patch on any of those engine
+   methods takes a lock. Engine callbacks are not all main-thread either: `OnAgentPanicked` arrives on the
+   asynchronous tick (`CommonAIComponent.OnTick` -> `Mission.OnAgentPanicked`), so a behavior that owns
+   main-thread collections asks `MissionThreadGuard.IsOnMainThread` and parks such a callback in a
+   `DeferredCallbackQueue` for its next `OnMissionTick`. `MissionThreadGuard.NoteCall` is the tripwire;
+   wire it into any new native write.

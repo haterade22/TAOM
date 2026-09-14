@@ -1,4 +1,5 @@
 using TAOM.Core.Logging;
+using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -85,7 +86,9 @@ internal class TaomHowdahStandingPoint : StandingPoint
         if (elephantAgent == null) return;
 
         bool missionEnded = Mission.Current != null && Mission.Current.MissionEnded;
-        if (!MovingAgent.IsActive() || missionEnded)
+        // The seated rider is a retained handle too: through a recycled slot IsActive answers for a
+        // stranger, so the seat would teleport whoever inherited the index (#595, Codex review 109).
+        if (!MovingAgent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(MovingAgent) || missionEnded)
         {
             _logger?.LogInfo(
                 $"[Howdah] Releasing {MovingAgent.Name}: isActive={MovingAgent.IsActive()} " +
@@ -115,7 +118,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
             _logger?.LogInfo(
                 $"[Howdah] OnTick FIRST FIRE — agent={MovingAgent.Name} " +
                 $"seatPos={GameEntity.GlobalPosition} agentPos={MovingAgent.Position} " +
-                $"elephantFeet={elephantAgent.Position.z:F1} " +
+                $"elephantFeet={(AgentSlotIdentity.IsCurrentOccupant(elephantAgent) ? elephantAgent.Position.z : float.NaN):F1} " +
                 $"isActive={MovingAgent.IsActive()} hasRanged={MovingAgent.HasRangedWeapon(false)} " +
                 $"action={MovingAgent.GetCurrentAction(0).GetName()}");
         }
@@ -142,12 +145,17 @@ internal class TaomHowdahStandingPoint : StandingPoint
     {
         if (MovingAgent == null) return;
         var agent = MovingAgent;
-        if (agent.IsActive())
+        if (agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(agent))
         {
             // Drop to elephant feet level (terrain Z) so the exit sequencer can pathfind normally.
             // TeleportToPosition calls MBAPI.SetPosition with no Z-snap; elephantAgent.Position
             // is already at terrain Z, so this correctly brings the agent down from the howdah.
-            var groundPos = elephantAgent?.Position ?? agent.Position;
+            // A dead elephant's handle reads its recycled engine slot, so its Position could be any
+            // agent's (#592, #595). Only a handle that still owns its index may place the rider.
+            Agent elephant = elephantAgent;
+            var groundPos = elephant != null && AgentSlotIdentity.IsCurrentOccupant(elephant)
+                ? elephant.Position
+                : agent.Position;
             agent.TeleportToPosition(groundPos);
             // Restore the formation we cleared in OnUse so the end-battle exit sequencer can move the agent.
             if (_previousFormation != null)

@@ -186,6 +186,16 @@ Debug-mode round-trip:
 
 ## Changelog
 
+- 2026-09-13 (#595): `FormationLayoutService.ForgetAgent(agentIndex)` drops the index from every cached
+  `SlotAssignment.ByAgentIndex`, called from `MixedFormationsMissionBehavior.OnAgentDeleted`, because the engine
+  hands a deleted agent's index to the next agent it builds and a reinforcement was inheriting the dead unit's
+  slot. Codex review 109 the same day: forgetting the mapping alone left `NextMeleeIndex`/`NextRangedIndex`
+  growing, so each replacement took a row deeper and, in the front/back layouts, landed on the other class's
+  rows; `SlotAssignment` now records each unit's class and holds a vacated slot for the next unit of that
+  class, and `AssignNextSlot` reclaims it before any counter advances (`RepeatedTurnover_...` pins it). Also
+  recorded: Patch30 runs on the TWParallel WORKER POOL (`HumanAIComponent.ParallelUpdateFormationMovement`
+  -> `Agent.GetBaseFormationFrame` -> `Formation.GetOrderPositionOfUnit`), not only the async tick thread; the
+  service's `_lock` is what keeps that safe. Never remove it.
 - 2026-05-13 — Added SmartCavalryAI × MixedFormations handshake tests (3 tests pinning the `RepresentativeIsCavalry` guards in `FormationLayoutService` so a refactor can't re-introduce the charge-line overwrite).
 - 2026-05-06 — Ported the external `MixedFormations` sibling module into `Main/Features/` (Patch30 Prefix on `Formation.GetOrderPositionOfUnit`, adapter/service/IoC pattern, 4 MCM settings, 36 unit tests); fixed Codex review findings (navmesh validation + thread-safety lock) and deep-review findings (hot-path service caching in Patch30 + `default:` guard in `LayoutPositioner` switch).
 

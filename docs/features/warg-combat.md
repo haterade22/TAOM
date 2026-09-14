@@ -82,7 +82,8 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 | `Main/Adapters/IAgentAdapter.cs` | Mission-scope agent interface (IsWarg, CustomAttack, ProjectAgent) |
 | `Main/Adapters/AgentAdapter.cs` | Wraps sealed Agent for mission-time operations |
 | `Main/Adapters/IMissionAdapterFactory.cs` | Factory creating IAgentAdapter instances |
-| `Main/Adapters/MissionAdapterFactory.cs` | ConcurrentDictionary cache by agent index |
+| `Main/Adapters/MissionAdapterFactory.cs` | Adapter cache keyed by agent OBJECT, evicted on `OnAgentDeleted`, logs index reuse (#592) |
+| `Main/Adapters/AgentAdapterCache.cs` | The pure store behind the factory: reference identity, eviction, reuse count |
 | `Main/Adapters/IAgentVisualsAdapter.cs` | Skeleton/frame access interface |
 | `Main/Adapters/AgentVisualsAdapter.cs` | Wraps MBAgentVisuals |
 | `Main/Adapters/DamageAnimation.cs` | Enum: Nothing, Flinch, Fall |
@@ -91,7 +92,9 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs` | Reflection-based Mission.RegisterBlow |
 | `Main/Features/AdvancedCombat/BoneCheck.cs` | Frame-by-frame bone collision |
 | `Main/Features/AdvancedCombat/BoneCheckDuringAnimation.cs` | Collision during action progress range |
-| `Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs` | MissionLogic: SpatialGrid + BoneCollision ticking |
+| `Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs` | MissionLogic: SpatialGrid + BoneCollision ticking; owns the adapter cache lifecycle (build, delete, mission end, #592) |
+| `Main/Features/AdvancedCombat/MissionThreadGuard.cs` | Marks the main mission thread; reports once per site when a blow or creature action runs off it (#592) |
+| `Main/Features/AdvancedCombat/AgentSlotIdentity.cs` | Is this managed `Agent` still its slot's occupant (`Mission.FindAgentWithIndex`); the guard behind `AgentAdapter.IsActive()` and `TakeDamage` (#592) |
 | `Main/Features/AdvancedCombat/AutonomousMovementPlayerController.cs` | [DefaultView] MissionView for rage mode |
 | `Main/Features/AdvancedCombat/AdvancedCombatIoC.cs` | Registers IBoneCollisionService, ISpatialGridDebugService |
 | `Main/Features/AdvancedCombat/TaomBTLogger.cs` | ILogger forwarding to IModLogger |
@@ -107,7 +110,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 
 ## Dependencies
 
-- `Main/BehaviorTrees/` + `Main/BehaviorTreeWrapper/` — TAOM-inlined BT framework (decompiled from formerly-vendored `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` on 2026-05-24, full source ownership; compiles into `TAOM.dll`)
+- `Main/BehaviorTrees/` + `Main/BehaviorTreeWrapper/`: TAOM-inlined BT framework; since #592 `BehaviorTreeMissionLogic.OnMissionTick` ticks every scheduled `BehaviorTreeAgentComponent` on the main thread and the component's engine-driven `OnTick` is a no-op (decompiled from formerly-vendored `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` on 2026-05-24, full source ownership; compiles into `TAOM.dll`)
 - `LOTRLOME_Armory` (external, untracked) - Monster id="warg", `as_warg` action sets, 80 `act_warg_*` types,
   the `warg` usage set, animations, sounds and the four warg items. Absorbed from the retired
   `Alliance.Wargs` module on 2026-08-28; ledger: [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md)
@@ -116,6 +119,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 
 ## Tests
 
+- **Adapter cache (#592):** `TAOM.Tests/Adapters/AgentAdapterCacheTests.cs` (15) and `MissionAdapterFactoryTests.cs` (6, on bare uninitialized `Agent` objects): reference identity, eviction, index-reuse count and the once-per-mission reuse log.
 - **Current:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs` — 7 tests covering the pure damage formula in `CalculateWargAttackDamage` via a testable subclass that stubs the sealed armor lookup.
 - **Coverage gap (tracked in #178):** `HandleWargTargetHit` and `WargAttack` accept sealed `Agent` directly in their signatures (ADR-007 violation), so they cannot be unit-tested without the engine runtime. Closing #178 requires refactoring `IWargAttackService` to accept `IAgentAdapter` instead; once that lands, the missing tests can be added.
 - **Other planned tests:** `TAOM.Tests/Features/AdvancedCombat/SpatialGridTests.cs` (still not present — Spatial grid logic uses live engine types and requires its own adapter work first).
@@ -137,6 +141,8 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 - **`WeakGameEntity` not `GameEntity`**: `Mission.RegisterBlow` parameter 3 is `WeakGameEntity` in 1.3.12, not `GameEntity`. Pass `WeakGameEntity.Invalid` (struct, not null).
 - **`MBAgentVisuals` not `AgentVisuals`**: `Agent.AgentVisuals` returns `MBAgentVisuals` in 1.3.12.
 - **`OnMainAgentChangedDelegate(Agent oldAgent)`**: Single parameter in 1.3.12, not `(object sender, PropertyChangedEventArgs e)`.
+- **Trees tick on the main thread (v1.4.8, #592)**: single-player runs `Agent.Tick`, and with it every `AgentComponent.OnTick`, on the engine's asynchronous AI thread (`MissionState.cs:201`, `Mission.TickAgentsAndTeams`). A tree that registers a blow from there runs the engine's hit pipeline and TAOM's own collections against the main thread's agent-removed callbacks; two player freezes. `BehaviorTreeAgentComponent.OnTick` is a no-op and `BehaviorTreeMissionLogic.OnMissionTick` ticks every scheduled tree. `MissionThreadGuard` logs once if a blow or creature action ever runs off the main thread. Behaviors run in reverse registration order, and `AdvancedCombatBehavior` is registered after the tree logic so its bone checks tick before the trees: a bite's first check lands next frame, as it did when the trees ran on the async thread (Codex review 109 recommended restoring that order because whether `GetCurrentAction(0)` reflects `SetActionChannel` in the same frame is unverified). The grid the tree scans, `SpatialGrid`, is main-thread-only too: rebuilt by replacing the map, evicted on deletion, tripwired. The third player freeze of 2026-09-13 had only warg trees running.
+- **Agent indices are recycled within a mission (v1.4.8, #592)**: a deleted agent's index goes to the next agent built, and the dead managed `Agent` keeps its native pointers on the recycled slot, so `IsActive()`, velocity and `SetActionChannel` act on the new occupant while `Monster` and `Name` describe the old one. Decide "is this a warg" from `agent.Monster?.StringId`, never from a cached adapter, and evict any index-keyed store in `OnAgentDeleted`. A handle held across frames (a bone check's targets) re-validates with `AgentSlotIdentity.IsCurrentOccupant` (`Mission.FindAgentWithIndex(index) == agent`) inside `AgentAdapter.IsActive()` and again in `CustomAttacksUtils.TakeDamage`. Every `SetActionChannel` in `AgentAdapter` refuses a clip the agent's action set lacks and logs it once.
 
 ## Performance
 
@@ -147,6 +153,12 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 
 ## Changelog
 
+- 2026-09-13 - #592: a reinforcement horse that inherited a dead warg's engine index was served the
+  warg's cached adapter, got a warg tree, and asked the engine to play `act_warg_attack_running` on
+  `as_horse` in the second a player's game froze. The adapter cache now keys by agent object, with
+  its lifecycle in `AdvancedCombatBehavior`; `IsActive()` and `TakeDamage` re-validate slot identity;
+  attach decisions read `Monster` directly; every `SetActionChannel` checks the clip exists first.
+  RCA: `../reviews/rca-warg-clip-on-horse-2026-09-13.md`.
 - 2026-08-28 - Absorbed the standalone `Alliance.Wargs` module into `LOTRLOME_Armory` so players no
   longer install it: Monster, `as_warg` action sets, 80 `act_warg_*` types, the `warg` usage set and its
   22 rider XSLT rows, physics/collision classes, 17 sound events, four items and the cooked asset pack.

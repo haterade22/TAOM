@@ -43,6 +43,170 @@ the total say 243. Suite 9027 green (2 skipped).
 
 Not-tested: the sliders in the live MCM screen and the repaint on the open map.
 
+### chore(armory-assets): the whole Armoury downsized in place, diffuse and normal to 1K, specular and height to 512
+
+`LOTRLOME_Armory/AssetSources/weapons` (243 PNGs, 1.2 GB, per-culture subfolders) with the editor open: 229
+files resized (86 diffuse and 69 normals to 1024, all 74 speculars to 512, five of those from 1024), the
+folder is 337 MB. The three `_tableumask` banner masks for the swan spear flags were left at 2048 (outside
+the three classes named), one height map was already 1K. 16-bit PNGs stayed 16-bit, the Dale bow sheets
+scaled proportionally to 1024x512 and 512x256, colour types preserved, originals backed up per file under
+`E:\taom-texture-backup-2026-09-13\LOTRLOME_Armory\AssetSources\`. Two things the stubs revealed: 93 of
+these textures are duplicates whose tracked copy (the source path the editor's stub records) lives in a
+per-culture weapons folder (erebor_weapons 29, gondor_weapons 19, arnor, dol_guldur, gundabad, rohan,
+dunland, mordor_props), so for those 93 the memory win only arrives when those folders get the same
+pass; and 64 stubs sit inside the source folder itself rather than under `Assets`, with 5 textures
+(two Iron Hills, three Thyrell) tracked by no stub at all. The editor picked up 24 changes on its own;
+the rest wait on a re-check in the editor, as with the map folders. File names untouched (66 carry
+capitals). `shield` (83 PNGs, 447 MB, 13 subfolders) followed with the same targets: 82 resized (42
+diffuse, 20 normal, 20 specular, all from 2048), 149 MB after; the 15 Dale shield sheets stayed 16-bit,
+and the one file outside the three classes, `t_rivendell_shield_a02_black_grayscale`, was left at 2048.
+The map pass turned out to have 36 textures the editor had never imported, the whole Tents kit under
+`Scenes/Tents/textures`, which is why 32 Scenes stubs never changed: there were none to change.
+The remaining 34 folders followed the same evening under a per-folder runner (dry-run, paced run, post-run
+dry-run that must plan zero, report row): 2,474 files resized in all across `LOTRLOME_Armory/AssetSources`,
+19 GB to 7.3 GB, every folder verified, no editor error. Height went to 512 on Mike's call. Files that no
+editor stub records as a source path were never touched and are listed per folder in
+`E:\taom-texture-backup-2026-09-13\armory_report.md` (153 in total: Rivendell 55, weapons 43, Isengard 33,
+mordor_props 18, creature 4), as were 42 files outside the four classes (tableau masks, packed Substance
+sheets, test images); the nine Rohan militia Substance sheets went BC and A to 1024, MRO to 512 on
+instruction. The Tents kit was removed by Mike rather than imported. Pacing lesson, measured: the editor
+imports in bursts when it is woken (19:12 to 19:16, then nothing until 19:53), so the runner waits on its
+`signal_package_item_change` lines only while it is actively confirming and otherwise moves on; a
+carried-over straggler must never count towards the next chunk, or the run degrades to one wait per file
+(39 waits for 98 files before that was fixed).
+
+### chore(map-assets): TAOM_Map source textures downsized in place, diffuse to 2K, normal / specular / height to 1K, dao_rocks to 1K, Scenes 4K to 2K
+
+Four `TAOM_Map/AssetSources` folders, edited with the editor open. `4K_Textures` (36 files, 1,017 MB,
+thirty of them 4096 square) holds the campaign map's terrain layers plus a few battle-scene layers:
+Main_map names 20 of them by name in its `scene.xscene`, 15 other scenes share the rest, 8 are
+referenced nowhere. 32 were resized: 13 diffuse to 2048 (Lanczos), 8 normals and 11 heights to 1024
+(area average); the folder is 157 MB and the 32 recompiled textures total 55 MB in `RuntimeDataCache`.
+`Campaign Map` (414 images under the per-faction Map Icons subfolders, 1.9 GB) had 177 over target:
+10 diffuse at 4K, 67 normals, 60 speculars and 40 heights, mostly 2K to 1K; it is 994 MB now. The
+Mordor icon set's Substance names were mapped by meaning (`_normal`, `_normal_opengl`, `_normal_pen`
+as normals, `_roughness` as specular); `_base_color`, `_emissive`, `_d2` and the two DDS were already
+at or under target and were not touched. `dao_rocks` (60 PNGs, 20 diffuse / normal / specular
+sets, all 2048) went to 1024 across the board on instruction, 416 MB to 114 MB. `Scenes` (824 images, 11 GB) had every 4K texture and decal brought
+to 2048, 254 files across the per-culture textures folders, Decals, Gondor/statues and the Rohan
+floor tiles, 11 GB to 6.9 GB; the six 8192-wide skybox panoramas, the terrain DDS and the
+4096x1024 `sky_osgiliath_02` strip were excluded by name and are untouched. Each PNG kept its storage type so the importer sees what it
+saw before: 8-bit RGB stays 8-bit RGB, the three TGA tree textures keep their channels, 16-bit greys and 16-bit RGB stay 16-bit (the stubs record them
+as `R16_UNORM`), palette heights are written as plain RGB, which is what their stubs already recorded
+(`B8G8R8`). Output went to a work folder on the same volume and was swapped in with an atomic
+replace. Every stub tpac kept its import settings (`for_terrain`; DXT1 albedo, BC5 normalmap, DXT1
+specularmap, BC4 heightmap). Two facts about the live editor, measured this pass: it re-imports a
+changed source about 18 s after the write and logs `rglAsset_manager::signal_package_item_change -
+<name>` per texture, and it drops change events that arrive while an import is running (3 of the
+first batch's 21 were picked up on their own, none of the 177 under the subfolders; a manual re-check
+in the editor queued the rest). File names were not changed: Mike does not want existing textures renamed (12 files in
+`4K_Textures` carry capitals, 5 of those names are referenced by name in the Main_map,
+`taom_dwarf_town_01` and `taom_gondor_castle_004` scenes; `Campaign Map` has none). Players see none of this until
+`AssetPackages` is re-published; the packs still date from 2026-09-11. Originals (per-file, relative
+tree kept), md5 manifest, script and log: `E:\taom-texture-backup-2026-09-13\`.
+
+### fix(creatures): the nine remaining stale-handle, off-thread and callback-phase hazards from the #592 audit (#595)
+
+Three reviewers hunted the two #592 defect classes across `Main/` the same day; every claim was
+re-read against the source before it was acted on. Stale handles: `FormationLayoutService.ForgetAgent`
+drops a deleted agent's slot from every cached mixed-formation assignment (a reinforcement was
+inheriting the dead unit's slot); the career restore closures check slot identity (the ally's
+before subtracting by its captured index, the caster's before refreshing stats through its
+handle); `TaomHowdahMachine` drops the elephant handle, releases and clears the seats the moment
+the elephant is not alive and the occupant of its slot, and a seat's release reads the elephant's
+position only through a handle that still owns its index; the dread source tracker prunes on slot
+identity, not only the engine's `IsActive()`. Off the main thread:
+`TroopStanceManager` and `CareerAbilityBuffTracker` take a lock (Patch35 runs on the async tick
+for the player's own team whenever a formation is AI-controlled, so its team filter was never a
+thread filter; the buff tracker sits behind a native callback of unknown thread), and Patch30 is
+recorded as running on the TWParallel worker pool with `FormationLayoutService._lock` load-bearing.
+Callback phase: `BehaviorTreeMissionLogic.NotifyAll` catches per listener, since it dispatches
+inside the engine's unguarded behavior loops in `OnAgentHit` and `OnAgentRemoved`; the six
+`OnAgentBuild` bodies that ran unguarded inside `Mission.SpawnAgent` now catch and log once
+(`CreatureTreeTracker.TryAttach` for the four creatures, `AdvancedCombatBehavior`, `CareerPerk`),
+and a tree attach that throws unschedules the component its constructor had already scheduled;
+the dormant howdah crew spawn and the field-commission fade carry the comment that explains the
+phase rule. Prevention lives where the next feature will read it: `.claude/rules/csharp-architecture.md`
+"Mission-scope agent handles and the engine's threads", `.claude/rules/harmony-patches.md` "Which
+thread runs your target" (the verified thread map), `.claude/rules/adapters.md` "Agent handles",
+`/deep-review` Agent 5 rule 5e, and the RCA's audit section. `docs/audits/cluster-cross-feature.md`
+rows 2 and 21 and `cluster-harmony-patches.md` B1/B2 were stale and are marked resolved. A second
+five-agent review of the finished set found the caster closure, the seat read and four smaller
+gaps; all are in this entry, and `MixedFormationsMissionBehavior` stays under the ADR-002 ceiling
+with its layout labels moved to `Models/FormationLayoutLabels.cs`. Codex (gpt-6-astra, ultra, review
+109) then found the one real regression in the set: `ForgetAgent` dropped a dead unit's slot but left
+the layout counters growing, so each replacement took a row deeper and landed on the other class's
+rows; a vacated slot now waits for the next unit of its class. It also showed that vanilla's
+`CommonAIComponent.OnTick` raises `Mission.OnAgentPanicked` from the asynchronous agent tick, so
+every engine callback into the tree logic parks itself in a `DeferredCallbackQueue` when it arrives
+off the main thread and is replayed from the next mission tick; the five global listener loops go
+through the guarded dispatch; the howdah seat gates its own rider; `SpatialGrid` rebuilds by
+replacing the map, evicts deleted agents and carries the thread tripwire; the adapter cache's
+`GetOrAdd` builds once under its lock; both warg attach sites share one helper; and
+`AdvancedCombatBehavior` registers after the tree logic again, so bone checks tick before trees.
+31 tests; suite 9045 green.
+
+### fix(creatures): behavior trees tick on the main thread, not the engine's asynchronous AI tick (#592)
+
+The player reproduced the freeze with mount despawn off. That log settled the first half of #592
+and exposed the second. Half of the spider bites in the freezing battle used the code's fallback
+damage (a flat 20, attacker's managed `Health` zero), every one from a riderless "spider-self"
+attacker and every one landing on the spider's own army: dead spiders' adapters were driving live
+spiders through recycled slots, fifteen seconds before the freeze. The last line was a spider's
+tree being disposed. In single-player the engine ticks agents on an asynchronous AI thread
+(`MissionState.cs:201`, `Mission.TickAgentsAndTeams` is the native callback that runs `Agent.Tick`
+there), and TAOM's creature trees ran inside that tick. The spider's tree registered blows from
+it, so the engine's whole hit pipeline (sound, `OnAgentHit`, `Die`, `OnAgentRemoved`) and the tree
+logic's collections were exercised on that thread while the main thread's agent-removed callbacks
+wrote the same collections. A `Dictionary` read racing a `Remove` can spin forever; the async tick
+then never completes, the main thread waits in `WaitTickCompletion`, and the worker pool spins at
+its barrier: no exception, no allocation, process alive, which is what all three logs show. The
+third, with no spider and four warg trees, ended on the order menu the main thread had just opened,
+heap frozen from that second on. Vanilla registers no blow from that tick and its AI touches only its
+own state there; TAOM's trees also read `SpatialGrid` from it while the main thread rebuilt the grid
+in place every two seconds. `BehaviorTreeAgentComponent.OnTick` is now a no-op; every tree is scheduled with
+`BehaviorTreeMissionLogic` on construction and ticked from its `OnMissionTick`, on the main thread
+where the bone checks and the engine's own behaviors already run, with the same cadence rule. A
+tripwire (`MissionThreadGuard`) marks the main thread each mission tick and logs once per site if a
+blow or creature action ever runs off it again, so the next player log proves the fix.
+`AgentAdapterCache` takes a lock, since the engine's built and deleted callbacks reach it from the
+main thread while anything left on the async tick could read it. 5 tests; suite 8996 green.
+
+### fix(adapters): a horse inheriting a dead warg's engine index no longer gets the warg's adapter (#592)
+
+A player on v2.0.27 froze mid-battle at the second the engine logged `as_horse does not contain
+act_warg_attack_running`: TAOM had asked a cavalry horse to play the warg bite clip. The
+`MissionAdapterFactory` cache was keyed by `Agent.Index`, the engine hands a deleted agent's index
+to the next agent it builds, and a deleted `Agent` keeps its native pointers on the recycled slot:
+`State`, `IsActive`, velocity and `SetActionChannel` all read and write the new occupant while
+`Monster`, `Name`, `Health` and `Team` stay the dead agent's. So a reinforcement horse spawning into
+a dead warg's slot was served the warg's adapter, `IsWarg()` said yes from the stale `Monster`, a
+warg behavior tree went onto the horse, and its first charge fired the bite. Dead-mount despawn (new
+in v2.0.27) frees a dead mount's slot within five seconds, which is what made the window routine.
+The cache is now `AgentAdapterCache`, keyed by the agent object with an explicit reference
+comparer; `AdvancedCombatBehavior`, the infrastructure every creature feature shares, counts each
+build that lands on a freed index in `OnAgentBuild`, evicts in `OnAgentDeleted` and clears at
+mission end, and the first reuse of every mission is one INFO line, so the engine fact the rule
+rests on shows up in every battle log. The deep review's data-flow pass found the second half: a
+bone check holds target adapters across frames, and every liveness guard they pass reads the
+recycled slot, so `AgentAdapter.IsActive()` and `CustomAttacksUtils.TakeDamage` now also require
+`Mission.FindAgentWithIndex(agent.Index)` to still return that object (`AgentSlotIdentity`), which
+is the one question a stale handle cannot answer; the creature shadow lists prune on it too, so a
+reused slot no longer keeps a ghost entry. The warg attach decision reads the agent's own
+`Monster.StringId`, the rule `CreatureTreeTracker` already used. Every `SetActionChannel` in
+`AgentAdapter` (attack, radial strike, flinch) now asks `MBActionSet.CheckActionAnimationClipExists`
+first and logs the agent, monster and set once instead of handing the engine an action its set
+lacks. Whether that mismatched request is what stopped the engine is not proven; it is the last
+engine call TAOM made, in the same second, unique in the session, and the player's hang dump settles
+it. 21 tests (`AgentAdapterCacheTests`, `MissionAdapterFactoryTests`, the latter on bare
+uninitialized `Agent` objects); suite 8991 green. The April 2026 Codex HIGH on this cache was fixed
+only for the cross-mission case; the intra-mission case was recorded in `mount-despawn.md` on
+2026-09-03 and routed around, not fixed. The outside analysis the player received blamed a
+late-spawned spider and a TAOM/TAOM.Dependencies build MISMATCH; the spider is incidental and
+`Dependencies/` did not change between v2.0.26 and v2.0.27 (#593). Riderless mounts read as enemies
+of everyone to spider and warg bites, a separate rule (#594). RCA:
+`docs/reviews/rca-warg-clip-on-horse-2026-09-13.md`.
+
 ### localization: the whole translator backlog cleared in one run, all three modules, 12 languages (#579, #534, #508, #498)
 
 Every row that still held English in any of the 12 languages is translated: 216 entries per

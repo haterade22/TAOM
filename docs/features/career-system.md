@@ -521,6 +521,11 @@ caller). Any new code path that assigns a career to a hero who may already have 
 explicitly whether the old choices should survive.
 
 ## Changelog
+- 2026-09-13 (#595): `CareerAbilityBuffTracker` takes a lock (its readers sit behind `TaomAgentStatCalculateModel`,
+  reached through `Agent.UpdateAgentProperties` from a native callback of unknown thread). The AoE ally-buff
+  restore closure now checks `AgentSlotIdentity.IsCurrentOccupant(ally)` before subtracting by the captured
+  index: a dead ally's index can belong to a newly buffed agent by the time the restore fires.
+  `CareerPerkMissionBehavior.OnAgentBuild` catches, because it runs inside `Mission.SpawnAgent`'s unguarded loop.
 - 2026-09-02: Career points never appeared on a new campaign: the legacy-save fallback ran before character creation and granted a placeholder-culture career whose root choice then ate the level-1 point permanently. Fallback moved to `OnGameLoadedEvent`, `ICareerDataService.ResetForNewCampaign` wired to `OnNewGameCreatedEvent`, and a `PruneForeignChoices` repair pass added at session launch for saves already carrying a ghost.
 
 - 2026-07-07 — All 49 enabled careers got ability icons (closes the #101 art gap): "named effect-icon" style — the ability's effect/emblem as a gritty oil painting with the name hand-lettered in the art (user-generated via Midjourney from per-ability prompts; 256x256; baked into the `ui_taom_career_system` atlas). Battle HUD compacted: panel 220x132→130x166, icon 64→110, career-name line and black backdrop removed (icon + "Press V" + charge bar only). Renamed the `cave_troll_master` ability "Troll Frenzy"→"Gundabad Berserker" (English source; the 12 translation files are stale for those 8 strings until the next `/localize` run). Battle-HUD render verified in-game; career-screen render uses the same sprite id (not separately eyeballed).

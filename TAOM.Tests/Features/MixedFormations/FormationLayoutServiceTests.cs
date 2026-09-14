@@ -449,4 +449,104 @@ public class FormationLayoutServiceTests
             if (i % 5 == 0) _sut.CycleLayouts(new List<IFormationAdapter> { f });
         }
     }
+
+    // -------- ForgetAgent (#595: the engine recycles a deleted agent's index) --------
+
+    [TestMethod]
+    public void ForgetAgent_ReturnsTheSlot_SoASameClassReplacementStandsWhereTheDeadUnitDid()
+    {
+        var f = MakeFormation(8, 6);
+        _sut.SetLayout(f, FormationLayoutType.InfantryFrontRangedBack);
+        var dead = _sut.ComputeUnitPlanePosition(f, agentIndex: 3, agentIsRanged: false);
+        Assert.IsNotNull(dead);
+        var again = _sut.ComputeUnitPlanePosition(f, agentIndex: 3, agentIsRanged: false);
+        Assert.AreEqual(dead, again, "a cached slot is stable for the same live agent");
+
+        _sut.ForgetAgent(3);
+        var replacement = _sut.ComputeUnitPlanePosition(f, agentIndex: 99, agentIsRanged: false);
+
+        Assert.AreEqual(dead, replacement, "the vacated melee slot goes to the next melee unit, not a fresh counter value");
+    }
+
+    [TestMethod]
+    public void ForgetAgent_AVacatedMeleeSlot_IsNotGivenToARangedNewcomer()
+    {
+        var f = MakeFormation(8, 6);
+        _sut.SetLayout(f, FormationLayoutType.InfantryFrontRangedBack);
+        var dead = _sut.ComputeUnitPlanePosition(f, agentIndex: 3, agentIsRanged: false);
+        _sut.ForgetAgent(3);
+
+        var archer = _sut.ComputeUnitPlanePosition(f, agentIndex: 99, agentIsRanged: true);
+        var later = _sut.ComputeUnitPlanePosition(f, agentIndex: 100, agentIsRanged: false);
+
+        Assert.AreNotEqual(dead, archer, "a ranged newcomer must not stand in the infantry block");
+        Assert.AreEqual(dead, later, "the vacated melee slot waits for the next melee unit");
+    }
+
+    [TestMethod]
+    public void ForgetAgent_UnknownIndex_IsANoOp()
+    {
+        var f = MakeFormation(8, 6);
+        _sut.SetLayout(f, FormationLayoutType.InfantryFrontRangedBack);
+        var before = _sut.ComputeUnitPlanePosition(f, agentIndex: 0, agentIsRanged: false);
+
+        _sut.ForgetAgent(12345);
+
+        Assert.AreEqual(before, _sut.ComputeUnitPlanePosition(f, agentIndex: 0, agentIsRanged: false));
+    }
+
+    [TestMethod]
+    public void ForgetAgent_ForgetsTheIndexInEveryCachedFormation()
+    {
+        var a = MakeFormation(8, 6);
+        var b = MakeFormation(8, 6);
+        _sut.SetLayout(a, FormationLayoutType.InfantryFrontRangedBack);
+        _sut.SetLayout(b, FormationLayoutType.RangedFrontInfantryBack);
+        var inA = _sut.ComputeUnitPlanePosition(a, agentIndex: 77, agentIsRanged: true);
+        var inB = _sut.ComputeUnitPlanePosition(b, agentIndex: 77, agentIsRanged: true);
+
+        _sut.ForgetAgent(77);
+
+        Assert.AreEqual(inA, _sut.ComputeUnitPlanePosition(a, agentIndex: 78, agentIsRanged: true), "formation A returned the slot");
+        Assert.AreEqual(inB, _sut.ComputeUnitPlanePosition(b, agentIndex: 78, agentIsRanged: true), "formation B returned the slot");
+    }
+
+    // Codex review 109 (2026-09-13): forgetting the mapping alone left the counters growing, so every
+    // casualty's replacement took a row deeper and landed on the other class's rows.
+    [TestMethod]
+    public void RepeatedTurnover_KeepsEveryLiveUnitOnAUniqueSlotInsideTheInitialFootprint()
+    {
+        var f = MakeFormation(10, 10);
+        _sut.SetLayout(f, FormationLayoutType.InfantryFrontRangedBack);
+        var initial = new HashSet<Vec2>();
+        for (var i = 0; i < 20; i++)
+            initial.Add(_sut.ComputeUnitPlanePosition(f, i, agentIsRanged: i >= 10)!.Value);
+        Assert.AreEqual(20, initial.Count, "the initial layout has no shared slots");
+
+        // Each cycle one unit of each class dies and a fresh index of the same class replaces it.
+        var live = new Dictionary<int, bool>();
+        for (var i = 0; i < 20; i++) live[i] = i >= 10;
+        var next = 1000;
+        for (var cycle = 0; cycle < 100; cycle++)
+        {
+            int meleeVictim = -1, rangedVictim = -1;
+            foreach (var pair in live)
+            {
+                if (!pair.Value && (meleeVictim < 0 || pair.Key < meleeVictim)) meleeVictim = pair.Key;
+                if (pair.Value && (rangedVictim < 0 || pair.Key < rangedVictim)) rangedVictim = pair.Key;
+            }
+            _sut.ForgetAgent(meleeVictim); live.Remove(meleeVictim);
+            _sut.ForgetAgent(rangedVictim); live.Remove(rangedVictim);
+            live[next++] = false;
+            live[next++] = true;
+
+            var positions = new HashSet<Vec2>();
+            foreach (var pair in live)
+            {
+                var pos = _sut.ComputeUnitPlanePosition(f, pair.Key, pair.Value)!.Value;
+                Assert.IsTrue(positions.Add(pos), $"cycle {cycle}: two live units share slot {pos}");
+                Assert.IsTrue(initial.Contains(pos), $"cycle {cycle}: unit {pair.Key} stands outside the initial footprint at {pos}");
+            }
+        }
+    }
 }

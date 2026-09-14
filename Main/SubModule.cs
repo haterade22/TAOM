@@ -1781,8 +1781,13 @@ public class SubModule : MBSubModuleBase
         if (Features.ShaderPrecompilation.ShaderPrecompileRunner.TryClaimMission(mission))
             AddTaomBehavior(new Features.ShaderPrecompilation.ShaderPrecompilePlayerAgentGuard(IoC.Resolve<IModLogger>()));
 
-        AddTaomBehavior(new AdvancedCombatBehavior());
+        // Behaviors tick in REVERSE registration order (Mission.OnTick walks MissionBehaviors from the
+        // end), so AdvancedCombatBehavior registered AFTER the tree logic ticks its bone checks before
+        // the trees each frame: a bite a tree starts is first checked next frame, the order that shipped
+        // while the trees ticked on the async thread. The two share no store, so their deletion and
+        // removal callbacks may run in either order (#595, Codex review 109).
         AddTaomBehavior(new BehaviorTreeMissionLogic());
+        AddTaomBehavior(new AdvancedCombatBehavior());
         AddTaomBehavior(new AutonomousMovementPlayerController());
         AddTaomBehavior(new WargMissionBehavior());
         AddTaomBehavior(new SpiderMissionBehavior());

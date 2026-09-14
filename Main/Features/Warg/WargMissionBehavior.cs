@@ -1,6 +1,5 @@
 using BehaviorTrees;
 using BehaviorTreeWrapper;
-using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.Services;
@@ -14,7 +13,6 @@ namespace TAOM.Features.Warg;
 
 public class WargMissionBehavior : MissionLogic
 {
-    private readonly IMissionAdapterFactory _adapterFactory;
     private readonly IBoneCollisionService _boneCollisionService;
     private readonly IModLogger _logger;
     private readonly HashSet<string> _loggedErrors = new();
@@ -37,7 +35,6 @@ public class WargMissionBehavior : MissionLogic
 
     public WargMissionBehavior()
     {
-        _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
         _boneCollisionService = IoC.Resolve<IBoneCollisionService>();
         _logger = IoC.Resolve<IModLogger>();
     }
@@ -103,38 +100,21 @@ public class WargMissionBehavior : MissionLogic
 
                 foreach (Agent agent in Mission.Current.AllAgents)
                 {
-                    if (_adapterFactory.GetAgentAdapter(agent).IsWarg())
-                    {
-                        var comp = new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>());
-                        agent.AddComponent(comp);
-
-                        if (comp.Tree != null)
-                        {
-                            _wargComponents.Add((agent, comp));
-                            wargCount++;
-                        }
-                        else
-                        {
-                            _logger.LogError($"[Warg] Tree build failed for {agent.Name} (Rider={agent.RiderAgent?.Name ?? "null"})");
-                        }
-                    }
+                    if (TryAttachWargTree(agent)) wargCount++;
                 }
                 _logger.LogInfo($"[Warg] Added behavior trees to {wargCount} wargs");
             }
 
             WargRiderHandManager.Tick();
 
-            // v1.4.5 Agent.Tick auto-calls component.OnTick(dt) on every active
-            // agent's components (Agent.cs:4768). The manual OnTick call that lived
-            // here pre-2026-05-24 was needed in v1.3.15 where component ticking was
-            // gated to AI-controlled agents (OnTickAsAI); after the v1.3->v1.4.5 rename
-            // it would have caused 2x ticks per frame (Codex review 2026-05-24 F1).
-            // The IsActive pruning still belongs to us — vanilla Tick doesn't drop
-            // dead wargs from our shadow list.
+            // Trees tick from BehaviorTreeMissionLogic.OnMissionTick, on the main thread (#592):
+            // the engine's Agent.Tick component call runs on its asynchronous AI thread in
+            // single-player and is a no-op for our component. The pruning below is ours.
+            // The engine's IsActive() on a deleted agent answers for whoever inherited its slot (#592).
             for (int i = _wargComponents.Count - 1; i >= 0; i--)
             {
                 var (warg, _) = _wargComponents[i];
-                if (!warg.IsActive())
+                if (!warg.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(warg))
                     _wargComponents.RemoveAt(i);
             }
         }
@@ -152,31 +132,49 @@ public class WargMissionBehavior : MissionLogic
 
         if (!_treesAdded || agent == null) return;
 
+        TryAttachWargTree(agent);
+    }
+
+    /// <summary>
+    /// Build and attach a warg tree, deciding from the agent's own Monster and never from a cached
+    /// adapter (a cache entry can outlive its agent, and the engine recycles indices, #592). The
+    /// component schedules itself with the tree logic in its constructor, before it is attached, so a
+    /// throw between the two mirrors OnAgentRemoved and unschedules it; the caller's loop, whether the
+    /// engine's unguarded spawn loop or the first-tick scan, goes on to the next agent (#595).
+    /// </summary>
+    private bool TryAttachWargTree(Agent agent)
+    {
+        if (!WargConfig.IsWargMonster(agent.Monster?.StringId)) return false;
+        BehaviorTreeAgentComponent comp = null;
         try
         {
-            if (_adapterFactory.GetAgentAdapter(agent).IsWarg())
+            comp = new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>());
+            agent.AddComponent(comp);
+            if (comp.Tree != null)
             {
-                var comp = new BehaviorTreeAgentComponent(agent, "WargTree", Array.Empty<object>());
-                agent.AddComponent(comp);
-
-                if (comp.Tree != null)
-                {
-                    _wargComponents.Add((agent, comp));
-                }
+                _wargComponents.Add((agent, comp));
+                return true;
             }
+            _logger.LogError($"[Warg] Tree build failed for {agent.Name} (Rider={agent.RiderAgent?.Name ?? "null"})");
         }
         catch (Exception ex)
         {
-            var errorKey = $"OnAgentBuild:{ex.GetType().Name}";
+            if (comp != null)
+            {
+                BehaviorTreeBannerlordWrapper.Instance.CurrentMissionLogic?.Unschedule(comp);
+                BehaviorTreeBannerlordWrapper.Instance.DisposeTree(agent);
+            }
+            var errorKey = $"AttachWargTree:{ex.GetType().Name}";
             if (_loggedErrors.Add(errorKey))
-                _logger.LogError($"[Warg] OnAgentBuild error: {ex.Message}");
+                _logger.LogError($"[Warg] tree attach threw {ex.GetType().Name}: {ex.Message}");
         }
+        return false;
     }
 
+    // The adapter cache's lifecycle (build, delete, mission end) is AdvancedCombatBehavior's (#592).
     public override void OnRemoveBehavior()
     {
         _wargComponents.Clear();
-        _adapterFactory.ClearCache();
         if (_managesCombatInfrastructure)
         {
             _boneCollisionService.Clear();

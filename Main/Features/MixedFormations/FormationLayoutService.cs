@@ -88,7 +88,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
             if (!assignment.ByAgentIndex.TryGetValue(agentIndex, out slot))
             {
                 slot = _positioner.AssignNextSlot(assignment, new FormationUnit(agentIndex, agentIsRanged));
-                assignment.ByAgentIndex[agentIndex] = slot;
+                assignment.Assign(agentIndex, agentIsRanged, slot);
             }
         }
 
@@ -164,6 +164,17 @@ public sealed class FormationLayoutService : IFormationLayoutService
         // composition changes, but the consumer (ApplyDefaultsToFormations) holds the lock for
         // the read-then-write itself.
         return IsMixedFormationInternal(formation);
+    }
+
+    public void ForgetAgent(int agentIndex)
+    {
+        lock (_lock)
+        {
+            // The slot goes back to its class's free list, so the replacement takes it instead of a
+            // fresh counter value a row deeper (#595, Codex review 109).
+            foreach (var assignment in _assignmentCache.Values)
+                assignment.Forget(agentIndex);
+        }
     }
 
     public void OnMissionEnd()

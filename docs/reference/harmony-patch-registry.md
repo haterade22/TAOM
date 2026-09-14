@@ -194,6 +194,12 @@ Per-culture default BodyProperties on CC screen + culture-stage-VM body re-apply
 
 ## Patch30_MixedFormations
 
+**Thread (verified v1.4.8, #595):** the prefix runs on the TWParallel WORKER POOL for AI units
+(`Agent.TickParallel` -> `HumanAIComponent.ParallelUpdateFormationMovement` -> `Agent.GetBaseFormationFrame`
+-> `Formation.GetOrderPositionOfUnit`), on the async tick thread via `Formation.Tick`, and on the main thread
+from `OrderController`. `FormationLayoutService._lock` is load-bearing; `ForgetAgent` evicts a deleted
+agent's slot because the engine recycles the index.
+
 **Target:** `Formation.GetOrderPositionOfUnit` (Prefix)
 
 Mixed ranged/melee formation layout — the Prefix replaces a unit's vanilla order position with the plane position computed by `IFormationLayoutService.ComputeUnitPlanePosition(formation, agentIndex, agentIsRanged)`, grounded via `Scene.GetGroundHeightAtPosition` and validated through `Mission.IsFormationUnitPositionAvailable` before overriding `__result` (Codex review #35 HIGH: vanilla's Hold path routes through that availability check to keep units off non-navigable terrain — an unavailable candidate falls through to vanilla so the engine's own `unit.GetWorldPosition()` fallback applies). Any null/missing-value/exception path returns `true` (vanilla). HOT PATH — fires per-unit per-formation-position-recalculation (up to ~40,000×/frame worst case in 200-unit formations), so the service singleton is cached in a static field per the harmony-patches hot-path rule. See `docs/features/mixed-formations.md`.
@@ -239,6 +245,11 @@ Equipment-preset save/load overlay on the inventory screen. The `RefreshValues` 
 Inventory "Sell All" multi-action menu + active-VM capture + per-save search-toggle apply + thread-static bypass for vanilla re-entry
 
 ## Patch35_CompanionTactics
+
+**Thread (verified v1.4.8, #595):** `Formation.SetMovementOrder` is called on the asynchronous agent tick for
+the PLAYER's team too (`Team.Tick`'s retreat branch, `Formation.Tick`'s substitute orders, `TeamAI` when a
+formation is AI-controlled), so the `PlayerTeam` filter is not a thread filter. `TroopStanceManager` takes a
+lock; the postfix keeps the filter for semantics.
 
 **Target:** `PartyCharacterVM.RefreshValues` (Postfix), `OrderOfBattleHeroItemVM.RefreshValues` (Postfix), `OrderOfBattleVM..ctor` (parameterless, Postfix) + `.OnFinalize` (Prefix), `MissionGauntletOrderOfBattleUIHandler.OnMissionScreenTick` (Postfix) + `.OnMissionScreenFinalize` (Postfix), `Mission.OnTick(float,float,bool,bool)` (Postfix); plus `OrderOfBattleHeroItemVM.GetCaptainTooltip` (private — **manual** Postfix wired in `SubModule.cs` via `AccessTools.Method`, attribute binding can't resolve it) and the `CancelStanceOnMove` Postfix on `Formation.SetMovementOrder(MovementOrder)` which registers under the shared `Patch_MissionTime_SetMovementOrder` category (see that section)
 

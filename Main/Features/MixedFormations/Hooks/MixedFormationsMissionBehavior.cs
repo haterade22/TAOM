@@ -59,6 +59,14 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
         HandleCycleHotkey();
     }
 
+    // The engine recycles a deleted agent's index; the slot map is keyed by it (#595).
+    public override void OnAgentDeleted(Agent affectedAgent)
+    {
+        base.OnAgentDeleted(affectedAgent);
+        if (affectedAgent != null)
+            _service.ForgetAgent(affectedAgent.Index);
+    }
+
     protected override void OnEndMission()
     {
         base.OnEndMission();
@@ -133,17 +141,8 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
         if (affected > 0)
         {
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[MixedFormations] Layout ({scope}) → {LayoutLabel(newLayout)}",
+                $"[MixedFormations] Layout ({scope}) → {Models.FormationLayoutLabels.Describe(newLayout)}",
                 Colors.Yellow));
         }
     }
-
-    private static string LayoutLabel(Models.FormationLayoutType layout) => layout switch
-    {
-        Models.FormationLayoutType.InfantryFrontRangedBack => "Infantry front, Ranged back",
-        Models.FormationLayoutType.RangedFrontInfantryBack => "Ranged front, Infantry back",
-        Models.FormationLayoutType.RangedWingsInfantryCenter => "Ranged wings, Infantry center",
-        Models.FormationLayoutType.Checkerboard => "Checkerboard",
-        _ => layout.ToString(),
-    };
 }

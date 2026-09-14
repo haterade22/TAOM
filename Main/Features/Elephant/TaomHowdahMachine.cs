@@ -5,6 +5,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.AdvancedCombat;
 
 namespace TAOM.Features.Elephant;
 
@@ -76,6 +77,20 @@ public class TaomHowdahMachine : UsableMachine
         }
 
         if (elephantAgent == null) return;
+        // A dead elephant's handle keeps reading its recycled engine slot, so the platform would
+        // follow whatever agent inherits the index (#592, #595). Drop everything the moment the
+        // elephant is no longer alive and the occupant of its own slot.
+        if (!elephantAgent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(elephantAgent))
+        {
+            _logger?.LogInfo($"[Howdah] Elephant '{elephantAgent.Name}' gone: releasing seats and clearing refs");
+            // Release first: a dead elephant that still owns its slot hands the seats the corpse
+            // position to drop to, and ReleaseAgent itself rejects a recycled handle.
+            ReleaseAllSeats();
+            ClearSeatRefs();
+            elephantAgent = null;
+            elephantRider = null;
+            return;
+        }
         RepositionToElephant();
 
         if (elephantRider?.MountAgent == null)
@@ -84,6 +99,19 @@ public class TaomHowdahMachine : UsableMachine
                 _logger?.LogInfo("[Howdah] Rider dismounted — clearing seat refs");
             elephantRider = null;
         }
+    }
+
+    private void ClearSeatRefs()
+    {
+        foreach (StandingPoint sp in StandingPoints)
+        {
+            if (sp is TaomHowdahStandingPoint seat)
+            {
+                seat.elephantAgent = null;
+                seat.elephantRider = null;
+            }
+        }
+        _seatsInitialized = false;
     }
 
     private void ReleaseAllSeats()

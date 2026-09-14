@@ -46,10 +46,11 @@ The behavior owns the engine handles; the service owns every timing decision and
 `int` and `float`. That split is what makes the scheduling rules unit-testable with no live
 `Mission`, and it is why this feature adds nothing to `IAgentAdapter`.
 
-Deliberately NOT routed through `IMissionAdapterFactory`: that cache is keyed on `agent.Index` and
-holds a strong `Agent` reference ([MissionAdapterFactory.cs:24](../../Main/Adapters/MissionAdapterFactory.cs#L24)),
-so pushing dead agents through it would keep cleared agents reachable and lean on index identity the
-cache cannot guarantee across a delete.
+Deliberately NOT routed through `IMissionAdapterFactory`: this feature needs indices and mission
+times, not adapters. Until #592 that cache was itself keyed on `agent.Index`, the exact hazard this
+section names, and a reinforcement horse in a dead warg's slot was served the warg's adapter; it now
+keys by agent object ([AgentAdapterCache.cs](../../Main/Adapters/AgentAdapterCache.cs)) and evicts
+from `AdvancedCombatBehavior.OnAgentDeleted`.
 
 ### Component Diagram
 

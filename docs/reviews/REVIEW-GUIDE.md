@@ -309,6 +309,18 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **Why it works:** a clone copies every attribute, and the tool reads two of them; the reviewer enumerates the ones it does not read against the troops that now carry them.
 **Prevention:** when a tool assigns an existing item to troops, the prompt names the item attributes the tool does NOT set (`item_usage`, flags, `culture`, `difficulty`, `is_merchandise`) and asks what each does to the troops that now carry it, mounted, shielded and by race. Data guard: `ranged_ladder.mount_barred_usages` + `RANGED_MOUNT_USAGE`.
 
+### SUCCESS-8: Compiles the production allocator into a harness and prints the collision it claims
+**Review:** Creature handles and threads, review 109 (2026-09-13)
+**What worked:** Handed a slot map whose eviction had just been added, Codex compiled `LayoutPositioner` and its model types into a PowerShell `Add-Type` harness, removed one index the way the new code does, called the real allocator, and printed `first ranged=(1, -5); first replacement=(1, -5); collision=True; replacement after 100 reuses=(10, 4)`. Two deep-review passes and the shipped test had read the eviction and not the next allocation.
+**Why it works:** an allocator has two sides; a fix that edits one is judged by driving the other, with the production code, not by reading it.
+**Prevention:** when a change evicts from a store that also allocates, the prompt asks what the next allocation returns after N evictions at a fixed population, and the test asserts the invariant (unique, in class, inside the footprint) over turnover, not the single step.
+
+### SUCCESS-9: Opens the caller of every override the thread map lists
+**Review:** Creature handles and threads, review 109 (2026-09-13)
+**What worked:** The review's thread map, built from `Mission.OnTick` and the native callbacks, called the tree logic main-thread-only. Codex opened the callers of the thirteen `MissionBehavior` overrides and found `Mission.OnAgentPanicked` is a plain managed call from `CommonAIComponent.OnTick`, inside the asynchronous agent tick; `OnAgentFleeing`, its twin, comes from `MissionAgentPanicHandler.OnPreMissionTick` on the main thread.
+**Why it works:** a callback's thread is its caller's thread, and a managed `Mission.OnX` is not an `[MBCallback]` just because it sits beside them.
+**Prevention:** every thread claim about a `MissionBehavior` override names the caller's file and line; an override whose caller is an agent, team or formation tick, or unknown native, defers itself (`DeferredCallbackQueue`) instead of touching main-thread state.
+
 ---
 
 ## Real Bugs Found (by source)

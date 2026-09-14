@@ -101,6 +101,11 @@ public class CustomAttacksUtils
     {
         if (victim == null || attacker == null) return;
 
+        // Registering a blow runs the engine's whole hit pipeline (sound, OnAgentHit, Die, removal);
+        // vanilla only ever does that on the main thread. Report, once per site, if we ever do not.
+        MissionThreadGuard.NoteCall("CustomAttacksUtils.TakeDamage",
+            m => TaleWorlds.Library.Debug.Print(m, 0, TaleWorlds.Library.Debug.DebugColor.Red));
+
         // Re-validate LIVE state at call time. The bone-collision callback fires several frames
         // after the CustomAttack sweep captured these agents, so the t-0 Health guard is stale —
         // an agent can despawn in the interim, and a despawning agent's native pointer is itself a
@@ -108,6 +113,17 @@ public class CustomAttacksUtils
         // healthy blow (every warg bite, every clean spider bite) passes unchanged.
         if (!victim.IsActive() || victim.IsFadingOut() || victim.Index < 0 || victim.Health <= 0) return;
         if (!attacker.IsActive() || attacker.IsFadingOut() || attacker.Index < 0) return;
+
+        // Every guard above reads the engine through a pointer captured at creation, and the engine
+        // recycles a deleted agent's index, so a handle captured frames ago by a bone check can pass
+        // all of them while its slot belongs to someone else; Health stays the dead agent's, which
+        // only helps when it died in combat rather than being deleted alive (#592). Only the slot's
+        // current occupant may take or deal a blow: RegisterBlow addresses agents by Index.
+        if (!AgentSlotIdentity.IsCurrentOccupant(victim) || !AgentSlotIdentity.IsCurrentOccupant(attacker))
+        {
+            ReportSkippedStaleBlow();
+            return;
+        }
 
         Blow blow = new(attacker.Index)
         {
@@ -193,6 +209,17 @@ public class CustomAttacksUtils
     }
 
     private static long _nonFiniteBlowSkips;
+    private static long _staleBlowSkips;
+
+    // Sample-gated like the non-finite report: one line for the first, then one per hundred.
+    private static void ReportSkippedStaleBlow()
+    {
+        long n = System.Threading.Interlocked.Increment(ref _staleBlowSkips);
+        if (n == 1 || n % 100 == 0)
+            TaleWorlds.Library.Debug.Print(
+                $"[TAOM] CustomAttacksUtils: skipped a blow whose attacker or victim no longer occupies its agent slot (total skipped: {n}, #592).",
+                0, TaleWorlds.Library.Debug.DebugColor.Yellow);
+    }
 
     /// <summary>
     /// True when a synthetic blow's geometry is safe to hand to the native blow processor: every

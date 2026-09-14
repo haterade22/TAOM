@@ -210,4 +210,23 @@ public class LayoutPositionerTests
 
         Assert.AreEqual(1, slot.row, "Ranged newcomer should land at the next ranged-block row");
     }
+
+    // Codex review 109 (2026-09-13): a vacated slot is reused by the next unit of its class.
+    [TestMethod]
+    public void AssignNextSlot_TakesAVacatedSlotOfTheSameClass_BeforeAdvancingACounter()
+    {
+        var f = MakeFormation(meleeCount: 6, rangedCount: 4, width: 6f, interval: 1f);
+        var asn = _sut.BuildInitialAssignment(f, FormationLayoutType.InfantryFrontRangedBack);
+        var vacated = asn.ByAgentIndex[2];
+        int meleeCounter = asn.NextMeleeIndex, rangedCounter = asn.NextRangedIndex;
+        asn.Forget(2);
+
+        var archer = _sut.AssignNextSlot(asn, new FormationUnit(50, isRanged: true));
+        var replacement = _sut.AssignNextSlot(asn, new FormationUnit(51, isRanged: false));
+
+        Assert.AreNotEqual(vacated, archer, "a ranged newcomer never takes an infantry slot");
+        Assert.AreEqual(rangedCounter + 1, asn.NextRangedIndex);
+        Assert.AreEqual(vacated, replacement, "the next melee unit stands where the dead one did");
+        Assert.AreEqual(meleeCounter, asn.NextMeleeIndex, "no counter advanced for a reclaimed slot");
+    }
 }

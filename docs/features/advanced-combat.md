@@ -16,7 +16,7 @@ Two problems arise simultaneously:
 2. Iterating `Mission.AllAgents` every tick for bone proximity checks against all targets is O(n²). At large battle sizes this is prohibitive.
 
 ### Solution Approach
-- `SpatialGrid` divides the map into 20-unit cells. `AdvancedCombatBehavior.OnMissionTick` rebuilds the grid every 2 seconds from `Mission.AllAgents`, keeping spatial lookups to O(agents-in-nearby-cells).
+- `SpatialGrid` divides the map into 20-unit cells. `AdvancedCombatBehavior.OnMissionTick` rebuilds the grid every 2 seconds from `Mission.AllAgents`, keeping spatial lookups to O(agents-in-nearby-cells). Since #595 the rebuild replaces the map (never cleared in place under a reader), `OnAgentDeleted` evicts the deleted agent, and both the rebuild and the query carry the `MissionThreadGuard` tripwire: every reader is on the mission tick, and the third player freeze of 2026-09-13 had only warg trees reading this grid from the asynchronous tick while it was rebuilt.
 - `BoneCheck` and `BoneCheckDuringAnimation` hold references to attacker and target lists (via `IAgentAdapter`), fetch skeleton transforms each tick, and compare world-space bone positions against a configurable radius.
 - `CustomAttacksUtils` caches the `Mission.RegisterBlow` delegate at static construction. It also exposes `TakeDamage` which builds a full `Blow`/`AttackCollisionData`/`CombatLogData` struct and feeds it to the cached delegate.
 - `AdvancedCombatBehavior` is a `MissionLogic` that owns the `BoneCollisionService`. External code (e.g., `WargMissionBehavior`) calls `AddBoneCheckComponent` to register an active check.

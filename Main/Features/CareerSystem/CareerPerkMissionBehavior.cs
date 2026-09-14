@@ -31,6 +31,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
     private bool _loggedMissionStart;
     private readonly List<MissionAbilityExecutionContext> _activeContexts = new List<MissionAbilityExecutionContext>();
+    private bool _buildFailureLogged;
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -111,20 +112,33 @@ public class CareerPerkMissionBehavior : MissionBehavior
     public override void OnAgentBuild(Agent agent, Banner banner)
     {
         if (agent == null || !agent.IsHero) return;
-        var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
-        if (string.IsNullOrEmpty(heroId)) return;
-
-        var bonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.Ammo);
-        if (bonus <= 0f) return;
-
-        for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
+        // Inside Mission.SpawnAgent's unguarded loop over behaviors: an exception here aborts the
+        // spawn for every later behavior (#595). Log once, keep spawning.
+        try
         {
-            var weapon = agent.Equipment[slot];
-            if (weapon.IsEmpty || !weapon.IsAnyAmmo()) continue;
+            var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
+            if (string.IsNullOrEmpty(heroId)) return;
 
-            int boosted = CareerPassiveMath.BoostAmmo(weapon.ModifiedMaxAmount, weapon.Amount, bonus);
-            if (boosted > weapon.Amount)
-                agent.SetWeaponAmountInSlot(slot, (short)boosted, enforcePrimaryItem: false);
+            var bonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.Ammo);
+            if (bonus <= 0f) return;
+
+            for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
+            {
+                var weapon = agent.Equipment[slot];
+                if (weapon.IsEmpty || !weapon.IsAnyAmmo()) continue;
+
+                int boosted = CareerPassiveMath.BoostAmmo(weapon.ModifiedMaxAmount, weapon.Amount, bonus);
+                if (boosted > weapon.Amount)
+                    agent.SetWeaponAmountInSlot(slot, (short)boosted, enforcePrimaryItem: false);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (!_buildFailureLogged)
+            {
+                _buildFailureLogged = true;
+                _logger.LogError($"[CareerSystem] OnAgentBuild threw {ex.GetType().Name}: {ex.Message}");
+            }
         }
     }
 

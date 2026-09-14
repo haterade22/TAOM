@@ -6,6 +6,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 109 | 2026-09-13 | Creature handles and threads (#592, #595): reference-keyed adapter cache, slot identity, trees on the mission tick, the nine-site audit, two deep-review passes | issues-found (0 P1, 1 P2, 3 P3, 3 observations) | agree (all fixed but one observation) | 1 P2 confirmed (`ForgetAgent` left the layout counters growing: replacements a row deeper, onto the other class's rows; vacancy reclaim per class) + 3 P3 (vanilla `CommonAIComponent.OnTick` raises `OnAgentPanicked` on the async tick, so the tree logic now defers off-thread callbacks; the howdah seat's own rider and `SpatialGrid` held ungated handles; five global listener loops outside the catch) + 2 observations fixed (atomic `GetOrAdd`; one warg attach helper) + the registration swap taken as a precaution. Disputed with evidence: 5 of 9 suspects, including the deletion-order objection that had held the swap back. One observation rejected (buff getters returning live objects). The player's third freeze the same evening (no spider, four wargs) folded into the RCA `rca-warg-clip-on-horse-2026-09-13.md` | 0 | 0 | v6 + 9 Known Suspects, gpt-6-astra at ultra |
 | 110 | 2026-09-13 | Nameplate relation MCM controls, second pass on commit fe266439 (#596): the four sliders composed with the #591 plate widget | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed) | 1 P2 confirmed (the text curve anchored on vanilla's 0.35 dimmed the name at close range for any opacity 10 to 34; now anchored on the plate's configured resting opacity) + 1 P3 (silent reversion of an invalid TAOM.json value; now one warning per property) + 2 RCA corrections (MCM's slider clamps; MCM raises a save-time event). Deep review before it: data flow found the same P2 independently, performance and compatibility clean | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra (explicit -c model/effort) |
 | 108 | 2026-09-13 | Nameplate relation MCM controls (#596): colour toggle, tint strength, neutral and coloured plate opacity, live through a validated settings provider, a static on the plate widget and the Patch38 postfix | (no Codex pass) | 5-agent deep review, ready | 1 LOW fixed (the alpha service interface's doc comment still described the #591 raise-only contract) | 1 (a dirty-check reorder that still read the settings on every frame; the per-frame read is the live-apply mechanism, MCM raises no event) | 0 | deep-review v5 |
 | 107 | 2026-09-13 | Settlement nameplate relation colours (#591): a custom container widget in the three nameplate prefabs paints bar, text and diamond frame from the VM's `Relation` int and mirrors the item widget's alpha (which `Widget.Render` never passes to children), enemy and allied plates raised to 0.5 in the Patch38 postfix | issues-found (0 P1, 1 P2, 2 P3, 1 observation) | agree (all fixed) | 1 P2 confirmed (a far tracked settlement kept an opaque tracked ring, and party / event icons sat at vanilla's pre-late-update lerp after the plate faded; ring, grid and events now follow the text alpha) + 1 P3 (a NaN already in a brush defeats a tolerance compare; `NeedsWrite`) + 1 P3 doc (a bad colour attribute is caught per attribute, not a blank movie) + 1 test gap (ancestor depth now pinned). Deep review before it: 3 confirmed (widget over 150 lines, banner `Brush` clone instead of `ReadOnlyBrush`, a caller guard making the policy's NaN branch unreachable), 0 false positives. RCA `rca-settlement-nameplate-relation-2026-09-13.md` | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra |
@@ -2913,6 +2914,49 @@ day; every build and test of this change ran there). 106 SmartCavalryAI tests. R
 `lessons/testing-qa.md` and `lessons/harmony-il.md`; one CLAUDE.md trap row.
 
 Owed: the in-game smoke in the feature doc; the toggle stays OFF by default until it passes.
+
+## Review 109: creature handles and threads (#592, #595), two 5-agent deep reviews and Codex gpt-6-astra ultra (2026-09-13)
+
+Three player freezes in one evening on v2.0.27, all the same shape: the main thread stops printing,
+the managed heap stops moving, no exception, the logger thread lives. The first ended on `as_horse
+does not contain act_warg_attack_running` (a horse in a dead warg's slot served the warg's adapter,
+index-keyed cache), the second on a spider tree's disposal (dead spiders' adapters driving live
+spiders; the spider tree registering blows from the engine's asynchronous agent tick), the third on
+the order menu opening with no spider and four warg trees in the battle. Two mechanisms, both
+TAOM's: stale agent handles through recycled indices, and creature trees on the wrong thread. The
+fix keys the cache by object, adds `AgentSlotIdentity.IsCurrentOccupant` to every held handle, moves
+every tree onto `BehaviorTreeMissionLogic.OnMissionTick`, and audits `Main/` for both classes (#595,
+nine more sites).
+
+**Deep review, twice.** The first pass (five agents plus a focused re-review of the threading change)
+found the bone-check adapters that still reached `RegisterBlow` through a recycled slot (HIGH), the
+one `SetActionChannel` left outside the clip guard, the scheduler's liveness guard, a documented but
+undefended re-entrancy invariant. The second pass over the finished audit found the caster's own
+restore closure ungated, the howdah seat reading the elephant's position before the machine cleared
+the handle, an attach that could leave a scheduled orphan, a one-shot flag consumed before a logger
+existed, seven dashes and a 157-line behavior.
+
+**Codex (gpt-6-astra, ultra, about 30 minutes): 1 P2, 3 P3, 3 observations, 5 of 9 suspects
+disputed with evidence.** The P2 was a regression in the audit itself: `ForgetAgent` dropped a dead
+unit's slot and left the layout counters growing, so every replacement stood a row deeper and, in
+the front/back layouts, on the other class's first row. Codex compiled the production allocator
+into a PowerShell harness and printed the collision; the shipped test's oracle ("a different
+coordinate") accepted the defect. A vacated slot now waits for the next unit of its class, and a
+turnover test pins uniqueness and footprint over 100 cycles. The P3 that mattered most refuted the
+review's own thread map: `Mission.OnAgentPanicked` is a plain managed call from
+`CommonAIComponent.OnTick`, inside the asynchronous agent tick, so the tree logic's override read
+its listener map off the main thread; every engine callback into that class now asks
+`MissionThreadGuard.IsOnMainThread` and parks itself in a `DeferredCallbackQueue` for the next tick.
+It also found the seat's own rider ungated, deleted agents lingering in `SpatialGrid` until the next
+rebuild, five global listener loops outside the new catch, a non-atomic `TryGet`/`Add`, and the
+warg's first-tick scan without the rollback. It disputed the deletion-order objection that had held
+the registration swap back, so bone checks tick before trees again. Its sandbox could not evaluate
+MSBuild and it said so instead of claiming a run.
+
+Suite 9045 green. RCA `rca-warg-clip-on-horse-2026-09-13.md` (three sessions, two mechanisms, the
+audit, both reviews, the Codex table); lessons in `lessons/adapters-taleworlds-api.md` and
+`lessons/state-lifecycle-save.md`; rules `csharp-architecture.md` and `harmony-patches.md`; one
+CLAUDE.md trap row. Owed: the player's hang dump, the in-game creature battle, a test build.
 
 ## Unlinked review artefacts (index)
 

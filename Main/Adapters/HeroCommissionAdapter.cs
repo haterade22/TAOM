@@ -191,6 +191,9 @@ public class HeroCommissionAdapter : IHeroCommissionAdapter
                 if (agent == null || !agent.IsActive() || !ReferenceEquals(agent.Character, character))
                     continue;
 
+                // FadeOut raises OnAgentDeleted only, never OnAgentRemoved, for the agent AND its mount
+                // (hideMount), so removal-keyed bookkeeping such as dead-mount despawn never sees
+                // that mount. Fine here: a dismissed companion in a settlement scene is on foot (#595).
                 agent.FadeOut(hideInstantly: true, hideMount: true);
                 return;
             }

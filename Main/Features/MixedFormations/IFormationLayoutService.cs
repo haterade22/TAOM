@@ -37,6 +37,14 @@ public interface IFormationLayoutService
     /// </summary>
     bool IsMixedFormation(IFormationAdapter formation);
 
+    /// <summary>
+    /// Drop every cached slot held under <paramref name="agentIndex"/> and hold each for the next unit
+    /// of the dead unit's class. Call from <c>MissionBehavior.OnAgentDeleted</c>: the engine hands a
+    /// deleted agent's index to the next agent it builds, so the index alone must never seat a newcomer,
+    /// while the slot itself stays in the formation's footprint instead of a counter growing it (#595).
+    /// </summary>
+    void ForgetAgent(int agentIndex);
+
     /// <summary>Clear all per-formation state. Called by the MissionBehavior at OnEndMission.</summary>
     void OnMissionEnd();
 }

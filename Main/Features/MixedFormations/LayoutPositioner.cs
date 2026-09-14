@@ -28,29 +28,29 @@ public sealed class LayoutPositioner : ILayoutPositioner
         switch (layout)
         {
             case FormationLayoutType.InfantryFrontRangedBack:
-                AssignBlock(melee, startRow: 0, filesPerRow, assignment.ByAgentIndex);
+                AssignBlock(melee, startRow: 0, filesPerRow, assignment);
                 assignment.NextMeleeIndex = melee.Count;
                 var rangedStartRow = (melee.Count + filesPerRow - 1) / Math.Max(1, filesPerRow);
-                AssignBlock(ranged, rangedStartRow, filesPerRow, assignment.ByAgentIndex);
+                AssignBlock(ranged, rangedStartRow, filesPerRow, assignment);
                 assignment.NextRangedIndex = ranged.Count;
                 break;
 
             case FormationLayoutType.RangedFrontInfantryBack:
-                AssignBlock(ranged, startRow: 0, filesPerRow, assignment.ByAgentIndex);
+                AssignBlock(ranged, startRow: 0, filesPerRow, assignment);
                 assignment.NextRangedIndex = ranged.Count;
                 var meleeStartRow = (ranged.Count + filesPerRow - 1) / Math.Max(1, filesPerRow);
-                AssignBlock(melee, meleeStartRow, filesPerRow, assignment.ByAgentIndex);
+                AssignBlock(melee, meleeStartRow, filesPerRow, assignment);
                 assignment.NextMeleeIndex = melee.Count;
                 break;
 
             case FormationLayoutType.RangedWingsInfantryCenter:
-                AssignWings(melee, ranged, filesPerRow, assignment.ByAgentIndex);
+                AssignWings(melee, ranged, filesPerRow, assignment);
                 assignment.NextMeleeIndex = melee.Count;
                 assignment.NextRangedIndex = ranged.Count;
                 break;
 
             case FormationLayoutType.Checkerboard:
-                AssignCheckerboard(melee, ranged, filesPerRow, assignment.ByAgentIndex);
+                AssignCheckerboard(melee, ranged, filesPerRow, assignment);
                 assignment.NextMeleeIndex = melee.Count;
                 assignment.NextRangedIndex = ranged.Count;
                 break;
@@ -73,6 +73,11 @@ public sealed class LayoutPositioner : ILayoutPositioner
     {
         var filesPerRow = Math.Max(1, assignment.FilesPerRow);
         var halfFiles = filesPerRow / 2;
+
+        // A slot a deleted unit of this class vacated comes back before any counter advances, so a
+        // replacement stands where its predecessor did and the footprint stays the initial one (#595).
+        if (assignment.TryReclaim(unit.IsRanged, out var reclaimed)) return reclaimed;
+
         int n;
         int rowOffset;
 
@@ -119,7 +124,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
         List<FormationUnit> group,
         int startRow,
         int filesPerRow,
-        Dictionary<int, (int row, int file)> map)
+        SlotAssignment assignment)
     {
         if (group.Count == 0) return;
         var halfFiles = filesPerRow / 2;
@@ -127,7 +132,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
         {
             var row = startRow + i / filesPerRow;
             var file = i % filesPerRow - halfFiles;
-            map[group[i].Index] = (row, file);
+            assignment.Assign(group[i].Index, group[i].IsRanged, (row, file));
         }
     }
 
@@ -135,7 +140,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
         List<FormationUnit> melee,
         List<FormationUnit> ranged,
         int filesPerRow,
-        Dictionary<int, (int row, int file)> map)
+        SlotAssignment assignment)
     {
         var wingFiles = Math.Max(1, Math.Min(filesPerRow / 4, Math.Max(1, ranged.Count)));
         var centerFiles = Math.Max(1, filesPerRow - wingFiles * 2);
@@ -145,7 +150,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
         {
             var row = i / centerFiles;
             var file = i % centerFiles - halfCenter;
-            map[melee[i].Index] = (row, file);
+            assignment.Assign(melee[i].Index, isRanged: false, (row, file));
         }
 
         var leftWingStart = -(centerFiles / 2) - wingFiles;
@@ -158,7 +163,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
             var row = pairIndex / wingFiles;
             var fileInWing = pairIndex % wingFiles;
             var file = leftSide ? leftWingStart + fileInWing : rightWingStart + fileInWing;
-            map[ranged[j].Index] = (row, file);
+            assignment.Assign(ranged[j].Index, isRanged: true, (row, file));
         }
     }
 
@@ -166,7 +171,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
         List<FormationUnit> melee,
         List<FormationUnit> ranged,
         int filesPerRow,
-        Dictionary<int, (int row, int file)> map)
+        SlotAssignment assignment)
     {
         var totalRows = (melee.Count + ranged.Count + filesPerRow - 1) / Math.Max(1, filesPerRow);
         var halfFiles = filesPerRow / 2;
@@ -192,7 +197,7 @@ public sealed class LayoutPositioner : ILayoutPositioner
                 }
 
                 if (!pick.HasValue) return;
-                map[pick.Value.Index] = (row, col - halfFiles);
+                assignment.Assign(pick.Value.Index, pick.Value.IsRanged, (row, col - halfFiles));
             }
         }
     }

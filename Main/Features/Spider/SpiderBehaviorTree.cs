@@ -30,7 +30,7 @@ public class SpiderBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTSpiderBlac
     public BTBlackboardValue<DateTime?> SideAttackLastFired { get; set; }
     public BTBlackboardValue<float> TargetBearing { get; set; }
 
-    // base(10): NOT a 10ms throttle — BehaviorTreeAgentComponent.OnTick divides by 1000 in INT math, so any
+    // base(10): NOT a 10ms throttle; BehaviorTreeAgentComponent.TickOnMissionThread divides by 1000 in INT math, so any
     // value <1000 truncates to 0 and the tree runs every component tick (warg/elephant parity). Pacing comes from
     // the cooldown decorators + SleepTask leaves below; don't tune cadence via this ctor arg.
     public SpiderBehaviorTree(Agent agent) : base(10)

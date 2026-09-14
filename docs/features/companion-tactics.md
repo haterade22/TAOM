@@ -204,6 +204,10 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Changelog
 
+- 2026-09-13 (#595): `TroopStanceManager` takes a lock. Patch35 clears a stance from `Formation.SetMovementOrder`,
+  which the engine calls on its asynchronous agent tick for the PLAYER's team whenever its formations are
+  AI-controlled (`Team.Tick`'s retreat branch, `Formation.Tick`'s substitute orders), so the existing team filter
+  was not a thread filter; the action bar reads and writes on the main thread.
 - 2026-06-21 — Fixed the Formation Preset save-corruption CTD: removed the unserializable `[SaveableField(3)] DateTime _createdAt` (id 3 retired), gated `EnableFormationPresets` off by default as WIP, and added `HoNFormationPresetSerializationTests` as a regression guard (#292).
 - 2026-05-25 — Wired `SetInputRestrictions()` on the OOB overlay and battle-action-bar `GauntletLayer`s so their buttons register with the MissionScreen input dispatcher (mouse clicks were silently dropped); fixed the latent twin in `BattleActionBarMissionView` (#225).
 - 2026-05-13 — Surfaced a player-facing `InformationManager` message on `SyncData` failure (was internal-log only) and added an explicit `Reset()` to `IFormationPresetService` instead of overloading the load path (#139).

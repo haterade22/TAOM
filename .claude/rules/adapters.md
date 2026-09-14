@@ -43,3 +43,12 @@ TaleWorlds' inventory and equipment APIs frequently expose **two parallel overlo
 The adapter interface boundary stays ADR-007 compliant — services see opaque snapshot tokens that internally carry the full element. See `Main/Adapters/PartyMountInventoryAdapter.cs` + `Main/Features/SiegeDismount/Models/MountSnapshot.cs` for the canonical pattern.
 
 **Anti-pattern (do NOT ship):** documenting "modifier/quality/cosmetic is lost on round-trip" as a known limitation in the feature doc without first verifying the limitation is inherent in the API. Codex review #34 (SiegeDismount, 2026-05-06) caught exactly this — the modifier-preserving overload existed; the adapter just used the wrong one.
+
+## Agent handles: identity is the object, liveness is the slot (MANDATORY)
+
+An adapter wrapping a deleted `Agent` keeps answering: its native-pointer members read the engine slot
+that agent's index now belongs to (#592). `MissionAdapterFactory` therefore keys by object reference,
+evicts on `OnAgentDeleted`, and `AgentAdapter.IsActive()` requires `AgentSlotIdentity.IsCurrentOccupant`.
+Do not add an index-keyed cache beside it, do not hold an `IAgentAdapter` across frames without
+re-asking `IsActive()`, and route every `SetActionChannel` through the clip-exists guard so a clip
+requested on the wrong monster is a TAOM log line, not a native warning of unknown consequence.

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.AdvancedCombat;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 
@@ -70,12 +71,17 @@ public sealed class DreadSourceTracker
         _sources.Add(new DreadSource(agent, now));
     }
 
+    /// <summary>
+    /// Drops sources whose agent is dead or no longer the occupant of its engine slot. The engine's
+    /// <c>IsActive()</c> on a deleted agent answers for whoever inherited the index (#592), and the
+    /// pulse runner's null-<c>Team</c> early-out was the only thing masking that here (#595).
+    /// </summary>
     public void Prune()
     {
         for (var i = _sources.Count - 1; i >= 0; i--)
         {
             var agent = _sources[i].Agent;
-            if (agent == null || !agent.IsActive())
+            if (agent == null || !agent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(agent))
                 _sources.RemoveAt(i);
         }
     }
