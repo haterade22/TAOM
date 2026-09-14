@@ -1,4 +1,4 @@
-﻿# CHANGELOG — TAOM (Tales From the Age of Men)
+\ufeff# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
@@ -95,6 +95,37 @@ Found by the new `PrefabElementTypeBindingTests`, landed with the prefab re-base
 name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead block never crashed,
 and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
 with v1.5.2's widget rename.
+
+### fix(ui): prefab clones re-based on the v1.5.2 vanilla files, and a gate for element names
+
+Ten of TAOM's 51 prefab clones shadow a vanilla file the update rewrote (the change-set oracle
+names 85 rewritten vanilla GUI XML). Each was diffed against the installed v1.5.2 file and every
+vanilla-only line traced to its consumer in the decompiled widget or view-model. Three things
+needed doing. v1.5.2 renamed `BoolStateChangerWidget` to `BoolStateChangerBrushWidget` (same five
+properties); the party screen, both party nameplates and the mission agent-status HUD still named
+the old type. Gauntlet does not fail a movie for an element it cannot name: `CreateBuiltinWidget`
+substitutes a plain `Widget` behind a release-silent `FailedAssert` and every attribute the
+substitute lacks is dropped, so the popup dim state on the party screen, the at-sea icon on both
+nameplates and the prioritised/passive shrink on the combat HUD would all have stopped, without a
+line in any log. `PartyNameplateItem.xml` also lacked the `NameBloodFeudContainer` that
+`PartyNameplateWidget.UpdateNameplatesVisibility` dereferences every late update since v1.5.0 (the
+archived port's fix, carried over: an NRE per frame the moment a party nameplate exists). And the
+party screen's `CharacterTableauWidget` now binds `IsTableauEnabled`, which v1.5.x's view toggles
+to pause the tableau; without the binding it would have rendered through states vanilla pauses.
+
+The other six clones are TAOM redesigns that stay as they are: the faction-map culture stage
+(TAOM swaps the movie for its own view-model), the clan encyclopedia page and the three settlement
+plates (every widget-path property the engine reads resolves inside TAOM's own tree; the missing
+pieces are v1.5's blood-feud icon and the clan page's Blood Feuds grid, data-bound sections whose
+absence renders nothing rather than crashing) and the party troop row. The blood-feud parity on
+those redesigns is owed, not broken.
+
+`PrefabElementTypeBindingTests` is the gate for the whole class: every element name in every
+TAOM prefab must resolve to a widget class in the loaded Gauntlet and TAOM assemblies or to a
+prefab basename in any module's `GUI/Prefabs` tree, comments ignored. It is what found the
+agent-status leftover above. `PrefabExtensionBindingTests` (from the archived port) proves every
+UIExtenderEx `[PrefabExtension]` XPath still matches the winning prefab on v1.5.2; both sit in
+`BindingVerification`.
 
 ### feat(aso): the Advanced Starting Options menu speaks Middle-earth
 

@@ -105,7 +105,7 @@
       <Children>
 
         <!--Center Tableau-->
-        <CharacterTableauWidget DataSource="{SelectedCharacter}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="550" SuggestedHeight="900" HorizontalAlignment="Center" VerticalAlignment="Center" BannerCodeText="@BannerCodeText" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" BodyProperties="@BodyProperties" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" Race="@Race" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" DoNotUseCustomScale="true">
+        <CharacterTableauWidget DataSource="{SelectedCharacter}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="550" SuggestedHeight="900" HorizontalAlignment="Center" VerticalAlignment="Center" BannerCodeText="@BannerCodeText" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" BodyProperties="@BodyProperties" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" Race="@Race" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IsTableauEnabled="@IsTableauEnabled" DoNotUseCustomScale="true">
           <Children>
           </Children>
         </CharacterTableauWidget>
@@ -189,7 +189,7 @@
         </Widget>
         -->
 
-        <BoolStateChangerWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" BooleanCheck="@IsAnyPopUpOpen" FalseState="Default" TargetWidget="..\TripleDialogCloseButtons" TrueState="Opened"/>
+        <BoolStateChangerBrushWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" BooleanCheck="@IsAnyPopUpOpen" FalseState="Default" TargetWidget="..\TripleDialogCloseButtons" TrueState="Opened"/>
         <Standard.TripleDialogCloseButtons VisualDefinition="BottomMenu" Id="TripleDialogCloseButtons" PositionYOffset="200" Parameter.CancelButtonAction="ExecuteCancelWithoutInquiry" Parameter.CancelButtonText="@CancelLbl" Parameter.CancelButtonDisabled="@IsCancelDisabled" Parameter.ResetInputKeyDataSource="{ResetInputKey}" Parameter.CancelInputKeyDataSource="{CancelInputKey}" Parameter.DoneButtonAction="ExecuteDone" Parameter.DoneButtonDisabled="@IsDoneDisabled" Parameter.DoneButtonText="@DoneLbl" Parameter.DoneInputKeyDataSource="{DoneInputKey}" Parameter.DoneButtonHintDataSource="{DoneHint}" Parameter.ResetButtonAction="ExecuteReset" Parameter.ResetButtonHintDataSource="{ResetHint}"/>
 
         <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="125" StackLayout.LayoutMethod="VerticalTopToBottom">
