@@ -13,8 +13,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.empire" text="酋長,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.empire" text="酋長{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="登蘭德的" />
-    <string id="taom_str_short_term_for_faction.empire" text="登蘭德" />
     <string id="taom_str_faction_formal_name_for_culture.empire" text="登蘭德諸部族" />
     <string id="taom_str_faction_informal_name_for_culture.empire" text="登蘭德" />
     <string id="taom_str_neutral_term_for_culture.empire" text="登蘭德人" />
@@ -25,8 +23,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="國王,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.vlandia" text="國王{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="洛汗的" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="驃騎" />
     <string id="taom_str_faction_formal_name_for_culture.vlandia" text="驃騎國" />
     <string id="taom_str_faction_informal_name_for_culture.vlandia" text="洛汗" />
     <string id="taom_str_neutral_term_for_culture.vlandia" text="洛汗人" />
@@ -37,8 +33,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.battania" text="領主,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.battania" text="領主{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="瓦瑞亞格的" />
-    <string id="taom_str_short_term_for_faction.battania" text="瓦瑞亞格" />
     <string id="taom_str_faction_formal_name_for_culture.battania" text="坎德的瓦瑞亞格人" />
     <string id="taom_str_faction_informal_name_for_culture.battania" text="坎德" />
     <string id="taom_str_neutral_term_for_culture.battania" text="瓦瑞亞格人" />
@@ -49,8 +43,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="軍閥,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.khuzait" text="軍閥{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}女爵{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="東方人" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="魯恩" />
     <string id="taom_str_faction_formal_name_for_culture.khuzait" text="魯恩的東方人" />
     <string id="taom_str_faction_informal_name_for_culture.khuzait" text="魯恩" />
     <string id="taom_str_neutral_term_for_culture.khuzait" text="東方人" />
@@ -61,8 +53,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.aserai" text="酋長,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.aserai" text="酋長{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}女爵{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="哈拉德林" />
-    <string id="taom_str_short_term_for_faction.aserai" text="哈拉德" />
     <string id="taom_str_faction_formal_name_for_culture.aserai" text="哈拉德王國" />
     <string id="taom_str_faction_informal_name_for_culture.aserai" text="哈拉德" />
     <string id="taom_str_neutral_term_for_culture.aserai" text="哈拉德林" />
@@ -73,8 +63,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="國王,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.sturgia" text="國王{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}女爵{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="巴丁" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="河谷國" />
     <string id="taom_str_faction_formal_name_for_culture.sturgia" text="河谷王國" />
     <string id="taom_str_faction_informal_name_for_culture.sturgia" text="河谷國" />
     <string id="taom_str_neutral_term_for_culture.sturgia" text="巴丁人" />
@@ -85,8 +73,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="督軍,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="督軍" />
     <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}女爵{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="哥多" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="多爾哥多" />
     <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="多爾哥多軍隊" />
     <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="多爾哥多" />
     <string id="taom_str_neutral_term_for_culture.dolguldur" text="多爾哥多僕從" />
@@ -97,8 +83,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.isengard" text="白手,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.isengard" text="白手{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="艾辛格" />
-    <string id="taom_str_short_term_for_faction.isengard" text="艾辛格" />
     <string id="taom_str_faction_formal_name_for_culture.isengard" text="艾辛格軍隊" />
     <string id="taom_str_faction_informal_name_for_culture.isengard" text="艾辛格" />
     <string id="taom_str_neutral_term_for_culture.isengard" text="艾辛格勢力" />
@@ -109,8 +93,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="戰爭領主,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gundabad" text="戰爭領主{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="剛達巴" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="剛達巴" />
     <string id="taom_str_faction_formal_name_for_culture.gundabad" text="剛達巴半獸人" />
     <string id="taom_str_faction_informal_name_for_culture.gundabad" text="剛達巴" />
     <string id="taom_str_neutral_term_for_culture.gundabad" text="剛達巴半獸人" />
@@ -121,8 +103,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.umbar" text="首領,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.umbar" text="首領{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="海盜" />
-    <string id="taom_str_short_term_for_faction.umbar" text="昂巴" />
     <string id="taom_str_faction_formal_name_for_culture.umbar" text="昂巴海盜" />
     <string id="taom_str_faction_informal_name_for_culture.umbar" text="昂巴" />
     <string id="taom_str_neutral_term_for_culture.umbar" text="海盜" />
@@ -133,8 +113,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}女宰相{?}宰相{\?}{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}女宰相{?}宰相{\?}{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="剛鐸的" />
-    <string id="taom_str_short_term_for_faction.gondor" text="剛鐸人" />
     <string id="taom_str_faction_formal_name_for_culture.gondor" text="剛鐸" />
     <string id="taom_str_faction_informal_name_for_culture.gondor" text="剛鐸人" />
     <string id="taom_str_neutral_term_for_culture.gondor" text="剛鐸人" />
@@ -145,8 +123,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}黑暗女君{?}黑暗魔君{\?}{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}黑暗女君{?}黑暗魔君{\?}{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}典獄長{?}監督{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="魔多的" />
-    <string id="taom_str_short_term_for_faction.mordor" text="魔多" />
     <string id="taom_str_faction_formal_name_for_culture.mordor" text="魔多" />
     <string id="taom_str_faction_informal_name_for_culture.mordor" text="索倫的僕從" />
     <string id="taom_str_neutral_term_for_culture.mordor" text="魔多" />
@@ -157,8 +133,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}女王{?}國王{\?}{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}女王{?}國王{\?}{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}典守{?}守護者{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="森林精靈的" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="森林精靈" />
     <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="幽暗密林王國" />
     <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="林地王國" />
     <string id="taom_str_neutral_term_for_culture.mirkwood" text="森林精靈" />
@@ -169,8 +143,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="加拉德林" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="精靈" />
     <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="金色森林" />
     <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="羅斯洛立安" />
     <string id="taom_str_neutral_term_for_culture.lothlorien" text="金色森林的精靈" />
@@ -181,8 +153,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="瑞文戴爾的" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="精靈" />
     <string id="taom_str_faction_formal_name_for_culture.rivendell" text="最後溫馨的家園" />
     <string id="taom_str_faction_informal_name_for_culture.rivendell" text="瑞文戴爾" />
     <string id="taom_str_neutral_term_for_culture.rivendell" text="瑞文戴爾的精靈" />
@@ -320,8 +290,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}山下女王{?}山下國王{\?},{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}山下女王{?}山下國王{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="伊魯柏的" />
-    <string id="taom_str_short_term_for_faction.erebor" text="矮人" />
     <string id="taom_str_faction_formal_name_for_culture.erebor" text="山下王國" />
     <string id="taom_str_faction_informal_name_for_culture.erebor" text="伊魯柏" />
     <string id="taom_str_neutral_term_for_culture.erebor" text="伊魯柏矮人" />
@@ -332,8 +300,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="查賈潘,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.abanissa" text="查賈潘 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.abanissa" text="阿巴尼薩" />
-    <string id="taom_str_short_term_for_faction.abanissa" text="阿巴尼薩" />
     <string id="taom_str_faction_formal_name_for_culture.abanissa" text="阿巴尼薩領地" />
     <string id="taom_str_faction_informal_name_for_culture.abanissa" text="阿巴尼薩" />
     <string id="taom_str_neutral_term_for_culture.abanissa" text="阿巴尼薩的哈拉德人" />
@@ -349,8 +315,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="塔斯克拉,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.shaghana" text="塔斯克拉 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.shaghana" text="沙加尼" />
-    <string id="taom_str_short_term_for_faction.shaghana" text="沙加尼" />
     <string id="taom_str_faction_formal_name_for_culture.shaghana" text="沙加納部族" />
     <string id="taom_str_faction_informal_name_for_culture.shaghana" text="沙加納" />
     <string id="taom_str_neutral_term_for_culture.shaghana" text="沙加納的哈拉德人" />
@@ -2031,8 +1995,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.goblin" text="軍閥,{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.goblin" text="軍閥{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.goblin" text="{?RULER.GENDER}女領主{?}領主{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.goblin" text="哥布林" />
-    <string id="taom_str_short_term_for_faction.goblin" text="哥布林" />
     <string id="taom_str_faction_formal_name_for_culture.goblin" text="哥布林鎮的哥布林" />
     <string id="taom_str_faction_informal_name_for_culture.goblin" text="哥布林" />
     <string id="taom_str_neutral_term_for_culture.goblin" text="哥布林" />
@@ -2065,8 +2027,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mistymountainorcs" text="軍閥{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mistymountainorcs" text="軍閥{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mistymountainorcs" text="{?RULER.GENDER}女領主{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mistymountainorcs" text="半獸人" />
-    <string id="taom_str_short_term_for_faction.mistymountainorcs" text="半獸人" />
     <string id="taom_str_faction_formal_name_for_culture.mistymountainorcs" text="迷霧山脈半獸人" />
     <string id="taom_str_faction_informal_name_for_culture.mistymountainorcs" text="半獸人" />
     <string id="taom_str_neutral_term_for_culture.mistymountainorcs" text="迷霧山脈半獸人" />
@@ -2428,8 +2388,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="林頓的" />
-    <string id="taom_str_short_term_for_faction.lindon" text="精靈" />
     <string id="taom_str_faction_formal_name_for_culture.lindon" text="灰港" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="林頓" />
     <string id="taom_str_neutral_term_for_culture.lindon" text="林頓的精靈" />
@@ -2445,8 +2403,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="軍閥{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="軍閥{RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="半獸人的" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="半獸人" />
     <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="藍崖的半獸人" />
     <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="半獸人" />
     <string id="taom_str_neutral_term_for_culture.bluecraig" text="半獸人" />

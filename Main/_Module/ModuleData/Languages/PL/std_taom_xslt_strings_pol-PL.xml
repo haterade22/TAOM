@@ -1103,7 +1103,6 @@
     <string id="TAOM_hero_1_24" text="Amrothos, najmłodszy syn Imrahila, jest jeszcze młody, lecz już przejawia rodzinny duch wojownika i szlachetny charakter." />
     <string id="TAOM_hero_1_44" text="Nemos jest kapitanem Straży Wieży, zaprzysiężonym obrońcą Namiestnika." />
     <string id="TAOM_hero_1_9" text="Imrahil II, Książę Dol Amroth, jest najznamienitszym rycerzem Gondoru. W jego rodzie płynie elfia krew, a mówi się, że jest najpiękniejszym z panów całego królestwa. Jego Rycerze Łabędzia są legendą całego Śródziemia." />
-    <string id="TAOM_hero_1_9_5" text="Lothwen, Księżna Dol Amroth, stała przy Imrahilu przez dziesięciolecia służby Gondorowi. Znana jest z wdzięku i cichej mądrości." />
     <string id="TAOM_hero_1_10" text="Aranel, żona Elphira, jest szlachetną damą Gondoru znaną z godności i bystrego umysłu." />
     <string id="TAOM_hero_1_35" text="Erchirion, drugi syn Imrahila, służy jako rycerz Dol Amroth. Śmiały w boju i wierny swemu domowi, jeździ z Rycerzami Łabędzia swego ojca." />
     <string id="TAOM_hero_1_25" text="Elphir, najstarszy syn Imrahila, jest dziedzicem Dol Amroth. Dowodzi Rycerzami Łabędzia z wojenną precyzją i nosi szlachetną postawę ojca." />
@@ -1125,7 +1124,6 @@
     <string id="TAOM_hero_1_57_1" text="Calathiel, żona Caldamira, jest młodą szlachetnie urodzoną panią z Lossarnach." />
     <string id="TAOM_hero_1_57_2" text="Imloth jest córką Baranora i uczy się obyczajów szlachty Gondoru w dolinach Lossarnach." />
     <string id="TAOM_hero_1_52" text="Hirluin Piękny, Pan Pinnath Gelin, prowadzi swych odzianych w zieleń wojowników ze wzgórz Gondoru. Znany jest z męstwa i wierności Namiestnikowi." />
-    <string id="TAOM_hero_1_52_4" text="Nauriel, żona Hirluina, jest Panią Pinnath Gelin, znaną ze stałości i troski o lud zielonych wzgórz." />
     <string id="TAOM_hero_1_52_1" text="Anariel, córka Hirluina, wyrosła wśród wojowników Pinnath Gelin i potrafi się obronić w boju." />
     <string id="TAOM_hero_1_52_2" text="Barandor, syn Hirluina, szkoli się, by kiedyś prowadzić wojowników Pinnath Gelin. Jeździ z zieloną kompanią swego ojca." />
     <string id="TAOM_hero_1_62" text="Oromar, mąż Anariel, wszedł do domu Halboronionath przez ich związek. Wiernie służy Panu Pinnath Gelin." />
@@ -1134,7 +1132,6 @@
     <string id="TAOM_hero_1_73" text="Narmir, młodszy brat Angbora, służy w obronie Lamedonu. Dzieli odwagę swego brata, choć nie jeszcze jego doświadczenie." />
     <string id="TAOM_hero_1_73_1" text="Belwen, żona Angbora, niezłomnie stoi przy boku męża w obronie Lamedonu." />
     <string id="TAOM_hero_1_71" text="Golasgil, władca Anfalas, strzeże długiego wybrzeża przed najazdami Korsarzy. To zahartowany pan morza, który od dziesięcioleci broni brzegów Gondoru." />
-    <string id="TAOM_hero_1_71_1" text="Laswen, żona Golasgila, nadzoruje nadmorskie osady Anfalas, gdy jej mąż pilnuje szlaków morskich." />
     <string id="TAOM_hero_WE8_c" text="Pelendur, syn Golasgila, jest szkolony, by kiedyś bronić wybrzeża Anfalas, jak czynił to jego ojciec." />
     <string id="TAOM_hero_WE8_u" text="Barandil, brat Golasgila, służy jako kapitan straży nadbrzeżnej Anfalas." />
     <string id="TAOM_hero_WE9_l" text="Duinhir, władca Morthondu, prowadzi swoich łuczników z Doliny Czarnego Korzenia w obronie Gondoru. Jest surowym i zdolnym dowódcą." />

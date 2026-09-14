@@ -8,7 +8,7 @@ Softens vanilla Bannerlord's revolt mechanic so LOTR's frequent settlement flips
 
 ## Why This Exists
 
-- **Vanilla behavior:** `DefaultSettlementLoyaltyModel` applies a brutal -3.0/day loyalty penalty when the owner's culture differs from the settlement's culture (and -1.0/day for different-culture governors). Settlements enter a "rebellious" visual state at loyalty ≤ 25 and actually revolt at loyalty ≤ 15, spawning an independent rebel clan via `RebellionsCampaignBehavior.StartRebellionEvent`.
+- **Vanilla behavior:** `DefaultSettlementLoyaltyModel` applies a brutal -3.0/day loyalty penalty when the owner's culture differs from the settlement's culture (the separate -1.0/day penalty for a different-culture governor existed through v1.4.8; v1.5.x removed it from the engine). Settlements enter a "rebellious" visual state at loyalty ≤ 25 and actually revolt at loyalty ≤ 15, spawning an independent rebel clan via `RebellionsCampaignBehavior.StartRebellionEvent`.
 - **TAOM requirement:** LOTR settings involve constant territory exchange (Gondor↔Mordor, Rohan↔Isengard, Dale↔Easterlings). Under vanilla rules a newly-conquered town hits the revolt threshold in roughly 28 days, which floods the map with rebel kingdoms and destabilizes the War of the Ring narrative.
 - **Without this feature:** Settlements captured during a war revolt before the conqueror can stabilize them, spawning new factions that dilute the intended 18-kingdom LOTR political landscape.
 
@@ -25,7 +25,7 @@ The feature therefore needs only a GameModel override, not a behavior hook. The 
 ### Solution Approach
 
 1. `RevoltTuning` feature owns the JSON config and provider (isolated from `CulturalFeats`).
-2. Existing `TaomSettlementLoyaltyModel` gains constructor injection of `IRevoltTuningConfigProvider` and four new property overrides that read values from the cached config.
+2. Existing `TaomSettlementLoyaltyModel` gains constructor injection of `IRevoltTuningConfigProvider` and property overrides that read values from the cached config: the two rebellion thresholds (which branch on the v1.5.x Civil Unrest starting option) and the owner-culture penalty.
 3. Cultural feat logic in `CalculateLoyaltyChange` stays untouched.
 
 ### Component Diagram
@@ -52,8 +52,9 @@ Newtonsoft JSON. Missing file or parse failure falls back to compiled defaults a
 |-------|------|---------|--------------|-------------|
 | `rebellionStartLoyaltyThreshold` | int | 15 | 5 | Actual rebellion fires at loyalty ≤ this value |
 | `rebelliousStateStartLoyaltyThreshold` | int | 25 | 10 | Rebellious warning state triggers at loyalty ≤ this value |
+| `highRebellionStartLoyaltyThreshold` | int | 50 | 17 | Rebellion threshold while the Civil Unrest starting option is on (v1.5.x, `IsHighRebellionEnabled`) |
+| `highRebellionRebelliousStateStartLoyaltyThreshold` | int | 60 | 24 | Rebellious warning threshold under Civil Unrest |
 | `settlementOwnerDifferentCultureLoyaltyEffect` | float | -3.0 | -1.0 | Daily loyalty change when owner's culture differs from settlement's |
-| `governorDifferentCultureLoyaltyEffect` | float | -1.0 | -0.5 | Daily loyalty change when governor's culture differs from settlement's |
 
 ### Current Values
 
@@ -67,7 +68,7 @@ The shipping values reflect the "soft tune" design: revolts stay possible but re
 | `Main/Features/RevoltTuning/IRevoltTuningConfigProvider.cs` | Provider interface |
 | `Main/Features/RevoltTuning/RevoltTuningConfigProvider.cs` | JSON loader with cache + fallback |
 | `Main/Features/RevoltTuning/RevoltTuningIoC.cs` | DryIoc singleton registration |
-| `Main/Features/CulturalFeats/Models/TaomSettlementLoyaltyModel.cs` | GameModel — consumes the config for four property overrides |
+| `Main/Features/CulturalFeats/Models/TaomSettlementLoyaltyModel.cs` | GameModel; consumes the config for its property overrides |
 | `Main/_Module/ModuleData/configs/revolt_tuning_config.json` | Tunable values |
 
 ## Dependencies
@@ -79,7 +80,7 @@ The shipping values reflect the "soft tune" design: revolts stay possible but re
 ## Tests
 
 - `TAOM.Tests/Features/RevoltTuning/RevoltTuningConfigProviderTests.cs` — 6 tests covering:
-  - Valid JSON parse (all four fields)
+  - Valid JSON parse (all fields)
   - Missing file → defaults + warning log
   - Malformed JSON → defaults + error log
   - Partial JSON → merges with defaults
@@ -91,10 +92,10 @@ The shipping values reflect the "soft tune" design: revolts stay possible but re
 ## How to Retune Revolt Frequency
 
 1. Open `Main/_Module/ModuleData/configs/revolt_tuning_config.json`
-2. Adjust any of the four fields (no recompile needed). **The provider caches on first load and holds for the Bannerlord process lifetime — you must fully quit and relaunch Bannerlord for JSON edits to take effect.** Switching campaigns or loading a save in the same session will continue to use the originally loaded values.
+2. Adjust any of the five fields (no recompile needed). **The provider caches on first load and holds for the Bannerlord process lifetime: you must fully quit and relaunch Bannerlord for JSON edits to take effect.** Switching campaigns or loading a save in the same session will continue to use the originally loaded values.
 3. To make revolts **rarer**: raise `rebellionStartLoyaltyThreshold` and `rebelliousStateStartLoyaltyThreshold` closer to vanilla (15/25), lower the penalty magnitudes closer to 0
-4. To make revolts **more common**: lower the thresholds (e.g., 2/5) and raise penalty magnitudes (e.g., -2.0/-1.0)
-5. To restore vanilla exactly: `{15, 25, -3.0, -1.0}`
+4. To make revolts **more common**: lower the thresholds (e.g., 2/5) and raise the penalty magnitude (e.g., -2.0)
+5. To restore vanilla exactly: `{15, 25, 50, 60, -3.0}`
 
 If you need to disable rebellions entirely, set `rebellionStartLoyaltyThreshold` to `0` (loyalty ≤ 0 never fires in practice).
 
@@ -104,7 +105,7 @@ If you need to disable rebellions entirely, set `rebellionStartLoyaltyThreshold`
 
 - Either threshold outside `[0, 100]` (loyalty range)
 - `rebelliousStateStartLoyaltyThreshold` lower than `rebellionStartLoyaltyThreshold` (ordering inversion — the "warning" state must gate before the actual trigger)
-- Positive value for either culture-penalty (these are daily penalties; a positive value would be a bonus and fight the feature's purpose)
+- Positive value for the culture penalty (it is a daily penalty; a positive value would be a bonus and fight the feature's purpose)
 
 Invalid individual fields are reverted to their compiled default; other fields in the file continue to be applied. A summary warning is emitted when any reversion occurs.
 
@@ -118,6 +119,8 @@ Invalid individual fields are reverted to their compiled default; other fields i
 ## Changelog
 
 - 2026-04-20 — Introduced the Revolt Tuning feature: `IRevoltTuningConfigProvider` (cached Newtonsoft JSON, fallback to defaults), `revolt_tuning_config.json`, and four `TaomSettlementLoyaltyModel` property overrides (rebellion threshold 15→5, rebellious-state 25→10, owner different-culture penalty -3.0→-1.0, governor -1.0→-0.5) with semantic validation and 13 unit tests.
+
+- 2026-09-14: realigned with the v1.5.x engine. Bannerlord v1.5.0 deleted the governor-culture loyalty term (`GovernorDifferentCultureLoyaltyEffect` no longer exists on the model), so the `governorDifferentCultureLoyaltyEffect` field is gone; the Civil Unrest pair (`highRebellion*`, 17/24 against vanilla's 50/60) arrived with the v1.5.0 port. Five fields.
 
 ## GitHub Issue
 

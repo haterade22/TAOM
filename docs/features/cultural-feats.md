@@ -136,7 +136,7 @@ Each culture has a `<cultural_feats>` block with 3 feat IDs:
 
 ### Terrain Movement-Speed Feats
 
-18 cultures gain a flat party movement-speed `AddFactor` bonus while on their "home" terrain. The bonus **stacks on top of** vanilla's terrain modifiers (e.g. vanilla forest is -30%, desert -10%, night -25%). Terrain is read each speed recalc in `TaomPartySpeedModel`, mapped from the sealed `TerrainType` to the TAOM-owned `TerrainKind` enum at the boundary (`TerrainType.Dune` folds into `Desert`); the Mordor night bonus keys off `Campaign.Current.IsNight` and is terrain-independent.
+18 cultures gain a flat party movement-speed `AddFactor` bonus while on their "home" terrain. The bonus **stacks on top of** vanilla's terrain modifiers (e.g. vanilla forest is -20% since v1.5.2, -30% before; desert -10%; night -25%). Terrain is read each speed recalc in `TaomPartySpeedModel`, mapped from the sealed `TerrainType` to the TAOM-owned `TerrainKind` enum at the boundary (`TerrainType.Dune` folds into `Desert`); the Mordor night bonus keys off `Campaign.Current.IsNight` and is terrain-independent.
 
 | Terrain | Cultures (culture StringId) | Feat IDs | Bonus |
 |---------|------------------------------|----------|-------|

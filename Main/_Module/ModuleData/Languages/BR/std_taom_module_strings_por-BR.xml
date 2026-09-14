@@ -13,8 +13,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.empire" text="o Chefe, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.empire" text="Chefe {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Lady{?}Lorde{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="Dunlendino" />
-    <string id="taom_str_short_term_for_faction.empire" text="Dunland" />
     <string id="taom_str_faction_formal_name_for_culture.empire" text="Clãs de Dunland" />
     <string id="taom_str_faction_informal_name_for_culture.empire" text="Dunland" />
     <string id="taom_str_neutral_term_for_culture.empire" text="Dunlendinos" />
@@ -25,8 +23,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="o Rei, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Rei {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Lady{?}Lorde{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="Rohírrico" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="Cavaleiro" />
     <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Riddermark" />
     <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Rohan" />
     <string id="taom_str_neutral_term_for_culture.vlandia" text="Rohirrim" />
@@ -37,8 +33,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.battania" text="o Senhor, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.battania" text="Senhor {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="Variag" />
-    <string id="taom_str_short_term_for_faction.battania" text="Variag" />
     <string id="taom_str_faction_formal_name_for_culture.battania" text="Variags de Khand" />
     <string id="taom_str_faction_informal_name_for_culture.battania" text="Khand" />
     <string id="taom_str_neutral_term_for_culture.battania" text="Variags" />
@@ -49,8 +43,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="o Senhor da Guerra, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Senhor da Guerra {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="Orientais" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="Rhun" />
     <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Orientais de Rhûn" />
     <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Rhûn" />
     <string id="taom_str_neutral_term_for_culture.khuzait" text="Orientais" />
@@ -61,8 +53,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.aserai" text="o Chefe, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.aserai" text="Chefe {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="Haradrim" />
-    <string id="taom_str_short_term_for_faction.aserai" text="Harad" />
     <string id="taom_str_faction_formal_name_for_culture.aserai" text="Reino de Harad" />
     <string id="taom_str_faction_informal_name_for_culture.aserai" text="Harad" />
     <string id="taom_str_neutral_term_for_culture.aserai" text="Haradrim" />
@@ -73,8 +63,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="o Rei, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Rei {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="Bardense" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="Valle" />
     <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Reino de Valle" />
     <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Valle" />
     <string id="taom_str_neutral_term_for_culture.sturgia" text="Bardenses" />
@@ -85,8 +73,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="o Supervisor, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Supervisor" />
     <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="Gulduriano" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="Dol Guldur" />
     <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Forças de Dol Guldur" />
     <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Dol Guldur" />
     <string id="taom_str_neutral_term_for_culture.dolguldur" text="Servos de Dol Guldur" />
@@ -97,8 +83,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.isengard" text="a Mão Branca, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.isengard" text="A Mão Branca {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="Isengard" />
-    <string id="taom_str_short_term_for_faction.isengard" text="Isengard" />
     <string id="taom_str_faction_formal_name_for_culture.isengard" text="Forças de Isengard" />
     <string id="taom_str_faction_informal_name_for_culture.isengard" text="Isengard" />
     <string id="taom_str_neutral_term_for_culture.isengard" text="Forças de Isengard" />
@@ -109,8 +93,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="o Senhor da Guerra, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Senhor da Guerra {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="Gundabad" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="Gundabad" />
     <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Orcs de Gundabad" />
     <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Gundabad" />
     <string id="taom_str_neutral_term_for_culture.gundabad" text="Orcs de Gundabad" />
@@ -121,8 +103,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.umbar" text="o Capitão, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.umbar" text="Capitão {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="Corsário" />
-    <string id="taom_str_short_term_for_faction.umbar" text="Umbar" />
     <string id="taom_str_faction_formal_name_for_culture.umbar" text="Corsários de Umbar" />
     <string id="taom_str_faction_informal_name_for_culture.umbar" text="Umbar" />
     <string id="taom_str_neutral_term_for_culture.umbar" text="Corsários" />
@@ -133,8 +113,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}a Dama Regente{?}o Regente{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Dama Regente{?}Regente{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Dama{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="Gondoriano" />
-    <string id="taom_str_short_term_for_faction.gondor" text="Gondoriano" />
     <string id="taom_str_faction_formal_name_for_culture.gondor" text="Gondoriano" />
     <string id="taom_str_faction_informal_name_for_culture.gondor" text="os Gondorianos" />
     <string id="taom_str_neutral_term_for_culture.gondor" text="Gondorianos" />
@@ -145,8 +123,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}a Dama Sombria{?}o Senhor do Escuro{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Dama Sombria{?}Senhor do Escuro{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Guardiã{?}Supervisor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="Mordor" />
-    <string id="taom_str_short_term_for_faction.mordor" text="Mordor" />
     <string id="taom_str_faction_formal_name_for_culture.mordor" text="Mordor" />
     <string id="taom_str_faction_informal_name_for_culture.mordor" text="os servos de Sauron" />
     <string id="taom_str_neutral_term_for_culture.mordor" text="Mordor" />
@@ -157,8 +133,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}a Rainha{?}o Rei{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Rainha{?}Rei{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Guardiã{?}Guardião{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="Élfico da Floresta" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="Elfo da Floresta" />
     <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Reino de Mirkwood" />
     <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="o Reino da Floresta" />
     <string id="taom_str_neutral_term_for_culture.mirkwood" text="Elfos da Floresta" />
@@ -169,8 +143,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}a Senhora{?}o Senhor{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="Galadhrim" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="Elfo" />
     <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Floresta Dourada" />
     <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Lothlórien" />
     <string id="taom_str_neutral_term_for_culture.lothlorien" text="Elfos da Floresta Dourada" />
@@ -181,8 +153,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}a Senhora{?}o Senhor{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="de Valfenda" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="Elfo" />
     <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Última Casa Acolhedora" />
     <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Valfenda" />
     <string id="taom_str_neutral_term_for_culture.rivendell" text="Elfos de Valfenda" />
@@ -320,8 +290,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}a Rainha Sob a Montanha{?}o Rei Sob a Montanha{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Rainha Sob a Montanha{?}Rei Sob a Montanha{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="Ereboriano" />
-    <string id="taom_str_short_term_for_faction.erebor" text="Anão" />
     <string id="taom_str_faction_formal_name_for_culture.erebor" text="Reino Sob a Montanha" />
     <string id="taom_str_faction_informal_name_for_culture.erebor" text="Erebor" />
     <string id="taom_str_neutral_term_for_culture.erebor" text="Anões de Erebor" />
@@ -332,8 +300,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="o Châjaphân, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Châjaphân {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.abanissa" text="Âbanissano" />
-    <string id="taom_str_short_term_for_faction.abanissa" text="Âbanissano" />
     <string id="taom_str_faction_formal_name_for_culture.abanissa" text="Domínio de Âbanissa" />
     <string id="taom_str_faction_informal_name_for_culture.abanissa" text="Âbanissa" />
     <string id="taom_str_neutral_term_for_culture.abanissa" text="Haradrim de Âbanissa" />
@@ -349,8 +315,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="o Taskral, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Taskral {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.shaghana" text="Shaghâni" />
-    <string id="taom_str_short_term_for_faction.shaghana" text="Shaghâni" />
     <string id="taom_str_faction_formal_name_for_culture.shaghana" text="Tribos de Shaghâna" />
     <string id="taom_str_faction_informal_name_for_culture.shaghana" text="Shaghâna" />
     <string id="taom_str_neutral_term_for_culture.shaghana" text="Haradrim de Shaghâna" />
@@ -2031,8 +1995,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.goblin" text="o Senhor da Guerra, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.goblin" text="Senhor da Guerra {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.goblin" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.goblin" text="Goblin" />
-    <string id="taom_str_short_term_for_faction.goblin" text="Goblin" />
     <string id="taom_str_faction_formal_name_for_culture.goblin" text="Goblins de Cidade-Goblin" />
     <string id="taom_str_faction_informal_name_for_culture.goblin" text="Goblin" />
     <string id="taom_str_neutral_term_for_culture.goblin" text="Goblins" />
@@ -2065,8 +2027,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mistymountainorcs" text="o Senhor da Guerra, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mistymountainorcs" text="Senhor da Guerra {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mistymountainorcs" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mistymountainorcs" text="Orc" />
-    <string id="taom_str_short_term_for_faction.mistymountainorcs" text="Orc" />
     <string id="taom_str_faction_formal_name_for_culture.mistymountainorcs" text="Orcs das Montanhas Sombrias" />
     <string id="taom_str_faction_informal_name_for_culture.mistymountainorcs" text="Orc" />
     <string id="taom_str_neutral_term_for_culture.mistymountainorcs" text="Orcs das Montanhas Sombrias" />
@@ -2428,8 +2388,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}a Senhora{?}o Senhor{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="lindoniano" />
-    <string id="taom_str_short_term_for_faction.lindon" text="Elfo" />
     <string id="taom_str_faction_formal_name_for_culture.lindon" text="Portos Cinzentos" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
     <string id="taom_str_neutral_term_for_culture.lindon" text="Elfos de Lindon" />
@@ -2445,8 +2403,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="o Senhor da Guerra, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Senhor da Guerra {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Senhora{?}Senhor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="goblin" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
     <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins de Blue Craig" />
     <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
     <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />

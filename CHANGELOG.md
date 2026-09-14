@@ -1,4 +1,4 @@
-\ufeff# CHANGELOG — TAOM (Tales From the Age of Men)
+﻿# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
@@ -78,23 +78,66 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
-### fix(career): the two HUD leftovers the 2026-08-06 import brought back are gone
+### fix(engine): body-diff verdicts, the recruitment-cost perks in their v1.5.2 shape, dead faction-keyed data
 
-`docs/features/career-system.md` has said since 2026-08-05 that the `AbilityHUD` panel and its
-prefab were deleted by #382 and that the energy bar lives in `CareerEnergyBarPrefab`, a UIExtenderEx
-insert into Native's `AgentStatus`. The repository disagreed. Commit `6c384e87` (2026-08-06,
-"Refactor code structure") swept two files in from the external reference package that the same
-doc's "install hygiene" note says had been copied into the live module: a 358-line
-`GUI/PreFabs/Mission/AgentStatus.xml` that is vanilla's file plus one `IsVisible="false"` block
-naming a `<CareerEnergyBarWidget>` class that has never existed in TAOM, and an "empty override"
-`AbilityHUD.xml` written from the reference module's point of view ("this module loads after
-TAOM"). Both are deleted. Nothing referenced either: the energy bar players see is the extension,
-which resolves against vanilla's prefab exactly as it did against the copy.
+The member-level body diff (v1.4.8 against v1.5.2, every engine member TAOM binds: 62 rows) went
+to six review agents. Four have reported: the three GameModel batches (every changed base method)
+and the first patch batch (ten patch classes on seven targets, plus the `Patch64` setter and
+`Patch88` getter checked by hand). Verdict so far: one DRIFT, everything else OK; the second patch
+batch and the constructor-patch / loader batch land in the next entry. The dominant engine theme
+is `BattleEnvironment`: most `PerkHelper.AddPerkBonusFor*` calls now
+take it explicitly and the scattered `!IsCurrentlyAtSea` guards moved into per-perk environment
+metadata, plus a new personality-trait effect system (`TraitEffectHelper`, valour renown, generosity
+morale and upkeep, honour recruit penalty). Every additive override (`base.` first, TAOM layered on
+top) inherits all of it for free; the full-replacement ones were the risk.
 
-Found by the new `PrefabElementTypeBindingTests`, landed with the prefab re-base that follows: Gauntlet builds an element it cannot
-name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead block never crashed,
-and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
-with v1.5.2's widget rename.
+- **The one drift, fixed:** `TaomPartyWageModel.GetTroopRecruitmentCost` replaces vanilla wholesale
+  and re-implemented the v1.4.8 buyer-perk shape (each discount on the BUYER's own perks, `Frugal`
+  gated on `IsPartyLeader`). v1.5.2 resolves the seven secondary-role discounts through
+  `PerkHelper.AddPerkBonusForParty` on the buyer's party, and every one of them (`HeadHunter`,
+  `ChinkInTheArmor`, `ShowOfStrength`, `HardyFrontline`, `RenownedArcher`, `Piercer`, `Frugal`)
+  has `SecondaryRole PartyLeader`: they are the party LEADER's perks, none for a buyer with no
+  party, and the `IsPartyLeader` gate is gone. The two mercenary trade perks stay Personal on the
+  buyer. `LimitMin(1f)` now sits outside the `buyerHero != null` block. Same shape here:
+  `RecruitmentPerkInputs` lost `IsPartyLeader`, the service floors a buyer-less cost too, and the
+  tests pin both. For the player buying for their own party nothing changes; a companion buying for
+  a party they do not lead now gets the leader's discounts, as vanilla does.
+- **Doc drift the same pass turned up, corrected:** `revolt-tuning.md` still described the
+  four-field config with a `governorDifferentCultureLoyaltyEffect` that v1.5.0 deleted from the
+  engine (the abstract `Governor*CultureLoyaltyEffect` members are gone) and never mentioned the
+  Civil Unrest pair; `cultural-feats.md` quoted vanilla's forest speed penalty as -30%, it is -20%
+  since v1.5.2 (snow -10% to -12.5%); `Patch88`'s comment said `LordPartyComponent` overrides
+  `CanHaveNavalNavigationCapability` to `true`, it is `_leader?.CanHaveFleet ?? true` now (the
+  conclusion holds: a complete override, never reaching the clan's template). Two engine changes
+  worth knowing without a fix: `DefaultTargetScoreCalculatingModel` dropped the 1.2x bonus for a
+  party whose `Objective` matches the mission type, and a new `IsRecruitmentRateModifierEnabled`
+  starting option multiplies volunteer production by 0.1, which `TaomVolunteerModel` inherits
+  because it calls `base.` first.
+- **Dead data removed:** v1.5.2 no longer reads the kingdom-keyed `str_adjective_for_faction.*`
+  and `str_short_term_for_faction.*` strings (faction naming is culture-keyed now, and TAOM already
+  covers `str_adjective_for_culture`, `str_faction_formal_name_for_culture`,
+  `str_faction_informal_name_for_culture` and `str_neutral_term_for_culture` for all 22 cultures),
+  so the 44 overrides in `taom_module_strings.xml`, the 16 suppression templates in
+  `module_strings.xslt` and their 528 translated rows are gone. Three `heroes.xslt` templates
+  (`lord_1_9_5`, `lord_1_52_4`, `lord_1_71_1`) had never matched on any version: those heroes are
+  TAOM's own, defined in `characters/heroes.xml`, and a module's stylesheet runs over the EARLIER
+  modules' merged document before its own XML is merged (`MBObjectManager.CreateMergedXmlFile`);
+  removed with their three registry rows and 36 translations. `characters/heroes.xml` is what
+  ships and always was.
+- **New gate:** `XsltTemplateCoverageTests` (BindingVerification) evaluates every non-identity
+  `<xsl:template match>` in `Main/_Module/ModuleData/**/*.xslt` against the union of the installed
+  vanilla files of the same basename and fails on a template that selects nothing. Its first draft
+  checked each vanilla file separately and reported 156 false positives (`Native` and `SandBox`
+  both ship a `module_strings.xml`); the engine merges them first, so the gate does too.
+
+- **This file:** the entry script behind `71484b8e` wrote the BOM as the six literal characters
+  `﻿` (a heredoc ate the escape), and the next two entries inherited it; a real BOM is back.
+  The `fix(career)` section that the `#481` rewrite duplicated above the `#481` entry is gone; the
+  chronological copy below stays.
+
+Research: `DefaultPartyWageModel.GetTroopRecruitmentCost`, `PerkHelper.AddPerkBonusForParty`,
+`MobileParty.HasPerk`, `PerkObject.Initialize` (the nine perks' roles and environments),
+`MBObjectManager.CreateMergedXmlFile`, all v1.5.2 against v1.4.8.
 
 ### fix(diagnostics): a player log names its engine and says whether the game crashed (#481, from the archived line)
 

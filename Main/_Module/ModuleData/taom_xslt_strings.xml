@@ -2246,7 +2246,6 @@
 
 	<string id="TAOM_hero_1_9" text="{=TAOM_hero_1_9}Imrahil II, Prince of Dol Amroth, is the greatest knight of Gondor. His line carries Elvish blood, and he is said to be the fairest lord in all the realm. His Swan Knights are legendary throughout Middle-earth." />
 
-	<string id="TAOM_hero_1_9_5" text="{=TAOM_hero_1_9_5}Lothwen, Princess of Dol Amroth, has stood beside Imrahil through decades of service to Gondor. She is known for her grace and quiet wisdom." />
 
 	<string id="TAOM_hero_1_10" text="{=TAOM_hero_1_10}Aranel, wife of Elphir, is a noble lady of Gondor known for her dignity and keen mind." />
 
@@ -2290,7 +2289,6 @@
 
 	<string id="TAOM_hero_1_52" text="{=TAOM_hero_1_52}Hirluin the Fair, Lord of Pinnath Gelin, leads his green-clad warriors from the hills of Gondor. He is known for his valor and loyalty to the Steward." />
 
-	<string id="TAOM_hero_1_52_4" text="{=TAOM_hero_1_52_4}Nauriel, wife of Hirluin, is the Lady of Pinnath Gelin, known for her steadfastness and care for the people of the green hills." />
 
 	<string id="TAOM_hero_1_52_1" text="{=TAOM_hero_1_52_1}Anariel, daughter of Hirluin, has grown up among the warriors of Pinnath Gelin and can hold her own in battle." />
 
@@ -2308,7 +2306,6 @@
 
 	<string id="TAOM_hero_1_71" text="{=TAOM_hero_1_71}Golasgil, Lord of Anfalas, commands the long coastline against Corsair raids. He is a weathered sea-lord who has defended Gondor's shores for decades." />
 
-	<string id="TAOM_hero_1_71_1" text="{=TAOM_hero_1_71_1}Laswen, wife of Golasgil, oversees the coastal settlements of Anfalas while her husband guards the sea lanes." />
 
 	<string id="TAOM_hero_WE8_c" text="{=TAOM_hero_WE8_c}Pelendur, son of Golasgil, is being trained to one day defend the coast of Anfalas as his father has done." />
 

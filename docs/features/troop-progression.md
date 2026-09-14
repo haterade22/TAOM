@@ -19,7 +19,7 @@ Three GameModel overrides handle the extension points:
 
 - `TaomCharacterStatsModel` — single-line override: `MaxCharacterTier => 10`.
 - `TaomVolunteerModel` — overrides `MaxVolunteerTier` (delegated to `IVolunteerTierService`) and `GetBasicVolunteer` (uses `IVolunteerRecruitmentService` with context from `IVolunteerContextAdapter`).
-- `TaomPartyWageModel` — overrides `GetCharacterWage` (tier-to-wage table via `ITroopCostService`), `GetTroopRecruitmentCost` (level-based cost table + horse cost), and `GetTotalWage` (applies cultural feat bonuses for Gondor, Erebor, Lothlorien, Isengard, Gundabad, Umbar, Mordor, Rohan).
+- `TaomPartyWageModel`: overrides `GetCharacterWage` (tier-to-wage table via `ITroopCostService`), `GetTroopRecruitmentCost` (level-based cost table + horse cost + vanilla's perk discounts, which since v1.5.2 belong to the buyer's party leader), and `GetTotalWage` (applies cultural feat bonuses for Gondor, Erebor, Lothlorien, Isengard, Gundabad, Umbar, Mordor, Rohan).
 
 `VolunteerRecruitmentService` holds three static dictionaries (SettlementMap, ClanMap, CultureMap) initialized at class-load time. `GetVolunteerTroopId` resolves by settlement id first, then bound-settlement id, then owner clan id, then culture id (fallback), then picks a weighted random troop from the pool. The context object (`VolunteerContext`) carries these four string keys and is built by `IVolunteerContextAdapter` from the live `Hero` object — keeping the service free of TaleWorlds sealed types.
 

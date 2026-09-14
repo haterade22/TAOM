@@ -34,12 +34,15 @@ namespace TAOM.Features.LordPartyTemplates.Hooks;
 /// <see cref="LordPartyTemplateResolution.Resolve"/>, pure and tested; this class only feeds it.
 ///
 /// THE WINDOW IS THE WHOLE CALL, not the one statement. Any read of the owner's clan template that
-/// runs synchronously inside either scope sees the swap. In the installed v1.4.8 engine nothing
-/// else does: <c>MobilePartyCreated</c> fires inside <c>MobileParty.CreateParty</c> while the scope
-/// is open and none of its three listeners reads the getter, and <c>LordPartyComponent</c> overrides
-/// <c>CanHaveNavalNavigationCapability</c> to <c>true</c>, so the clan's naval capability is not
-/// consulted there. A future listener or another mod's hook that reads it inside the window would
-/// see the override.
+/// runs synchronously inside either scope sees the swap. In the installed engine (re-checked on
+/// v1.5.2: the getter and both scoped readers are byte-identical to v1.4.8, and the 13 readers of
+/// <c>DefaultPartyTemplate</c> in the assembly are the same 13) nothing else does:
+/// <c>MobilePartyCreated</c> fires inside <c>MobileParty.CreateParty</c> while the scope is open and
+/// none of its three listeners reads the getter, and <c>LordPartyComponent</c> overrides
+/// <c>CanHaveNavalNavigationCapability</c> outright (<c>true</c> on v1.4.8,
+/// <c>_leader?.CanHaveFleet ?? true</c> since v1.5.x), never falling through to the clan's naval
+/// capability, which is the one path that would read the template. A future listener or another
+/// mod's hook that reads it inside the window would see the override.
 ///
 /// FAILURE. An id the JSON names but the object manager cannot resolve leaves vanilla's answer in
 /// place and warns once per hero, so a typo is a lord on his clan roster plus a log line, never a

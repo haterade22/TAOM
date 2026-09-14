@@ -13,8 +13,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.empire" text="Вождь {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.empire" text="Вождь {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="Дунландский" />
-    <string id="taom_str_short_term_for_faction.empire" text="Дунланд" />
     <string id="taom_str_faction_formal_name_for_culture.empire" text="Кланы Дунланда" />
     <string id="taom_str_faction_informal_name_for_culture.empire" text="Дунланд" />
     <string id="taom_str_neutral_term_for_culture.empire" text="Дунлендинги" />
@@ -25,8 +23,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="Король {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Король {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="Рохиррим" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="Всадник" />
     <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Ристания" />
     <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Рохан" />
     <string id="taom_str_neutral_term_for_culture.vlandia" text="Рохиррим" />
@@ -37,8 +33,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.battania" text="Лорд {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.battania" text="Лорд {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="Варягский" />
-    <string id="taom_str_short_term_for_faction.battania" text="Варяг" />
     <string id="taom_str_faction_formal_name_for_culture.battania" text="Варяги Кханда" />
     <string id="taom_str_faction_informal_name_for_culture.battania" text="Кханд" />
     <string id="taom_str_neutral_term_for_culture.battania" text="Варяги" />
@@ -49,8 +43,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="Военачальник {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Военачальник {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="Восточный" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="Рун" />
     <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Люди Востока из Руна" />
     <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Рун" />
     <string id="taom_str_neutral_term_for_culture.khuzait" text="Люди Востока" />
@@ -61,8 +53,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.aserai" text="Вождь {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.aserai" text="Вождь {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="Харадрим" />
-    <string id="taom_str_short_term_for_faction.aserai" text="Харад" />
     <string id="taom_str_faction_formal_name_for_culture.aserai" text="Королевство Харад" />
     <string id="taom_str_faction_informal_name_for_culture.aserai" text="Харад" />
     <string id="taom_str_neutral_term_for_culture.aserai" text="Харадрим" />
@@ -73,8 +63,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="Король {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Король {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="Бардингский" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="Дейл" />
     <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Королевство Дейл" />
     <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Дейл" />
     <string id="taom_str_neutral_term_for_culture.sturgia" text="Бардинги" />
@@ -85,8 +73,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="Надзиратель, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Надзиратель" />
     <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="Гулдурский" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="Дол Гулдур" />
     <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Силы Дол Гулдура" />
     <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Дол Гулдур" />
     <string id="taom_str_neutral_term_for_culture.dolguldur" text="Слуги Дол Гулдура" />
@@ -97,8 +83,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.isengard" text="Белая Рука, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.isengard" text="Белая Рука {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="Изенгардский" />
-    <string id="taom_str_short_term_for_faction.isengard" text="Изенгард" />
     <string id="taom_str_faction_formal_name_for_culture.isengard" text="Силы Изенгарда" />
     <string id="taom_str_faction_informal_name_for_culture.isengard" text="Изенгард" />
     <string id="taom_str_neutral_term_for_culture.isengard" text="Войска Изенгарда" />
@@ -109,8 +93,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="Военачальник, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Военачальник {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="Гундабадский" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="Гундабад" />
     <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Орки Гундабада" />
     <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Гундабад" />
     <string id="taom_str_neutral_term_for_culture.gundabad" text="Орки Гундабада" />
@@ -121,8 +103,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.umbar" text="Капитан, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.umbar" text="Капитан {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="Корсарский" />
-    <string id="taom_str_short_term_for_faction.umbar" text="Умбар" />
     <string id="taom_str_faction_formal_name_for_culture.umbar" text="Корсары Умбара" />
     <string id="taom_str_faction_informal_name_for_culture.umbar" text="Умбар" />
     <string id="taom_str_neutral_term_for_culture.umbar" text="Корсары" />
@@ -133,8 +113,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}Леди-Наместник{?}Наместник{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Леди-Наместник{?}Наместник{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="Гондорский" />
-    <string id="taom_str_short_term_for_faction.gondor" text="Гондорец" />
     <string id="taom_str_faction_formal_name_for_culture.gondor" text="Гондорский" />
     <string id="taom_str_faction_informal_name_for_culture.gondor" text="Гондорцы" />
     <string id="taom_str_neutral_term_for_culture.gondor" text="Гондорцы" />
@@ -145,8 +123,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}Темная Владычица{?}Темный Властелин{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Темная Владычица{?}Темный Властелин{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Надзирательница{?}Надсмотрщик{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="Мордорский" />
-    <string id="taom_str_short_term_for_faction.mordor" text="Мордор" />
     <string id="taom_str_faction_formal_name_for_culture.mordor" text="Мордор" />
     <string id="taom_str_faction_informal_name_for_culture.mordor" text="слуги Саурона" />
     <string id="taom_str_neutral_term_for_culture.mordor" text="Мордор" />
@@ -157,8 +133,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}Королева{?}Король{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Королева{?}Король{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Стражница{?}Хранитель{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="Лесных эльфов" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="Лесной эльф" />
     <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Королевство Лихолесья" />
     <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="Лесное королевство" />
     <string id="taom_str_neutral_term_for_culture.mirkwood" text="Лесные эльфы" />
@@ -169,8 +143,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="Галадрим" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="эльф" />
     <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Золотой Лес" />
     <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Лотлориэн" />
     <string id="taom_str_neutral_term_for_culture.lothlorien" text="эльфы Золотого Леса" />
@@ -181,8 +153,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="ривендельский" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="эльф" />
     <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Последний Приютный Дом" />
     <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Ривенделл" />
     <string id="taom_str_neutral_term_for_culture.rivendell" text="эльфы Ривенделла" />
@@ -320,8 +290,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}Королева Под Горой{?}Король Под Горой{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Королева Под Горой{?}Король Под Горой{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="Эреборский" />
-    <string id="taom_str_short_term_for_faction.erebor" text="Гном" />
     <string id="taom_str_faction_formal_name_for_culture.erebor" text="Королевство Под Горой" />
     <string id="taom_str_faction_informal_name_for_culture.erebor" text="Эребор" />
     <string id="taom_str_neutral_term_for_culture.erebor" text="Гномы Эребора" />
@@ -332,8 +300,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="Чаджафан, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Чаджафан {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.abanissa" text="абаниссанский" />
-    <string id="taom_str_short_term_for_faction.abanissa" text="абаниссанец" />
     <string id="taom_str_faction_formal_name_for_culture.abanissa" text="Владычество Абаниссы" />
     <string id="taom_str_faction_informal_name_for_culture.abanissa" text="Абанисса" />
     <string id="taom_str_neutral_term_for_culture.abanissa" text="харадрим Абаниссы" />
@@ -349,8 +315,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="Таскрал, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Таскрал {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.shaghana" text="шаганский" />
-    <string id="taom_str_short_term_for_faction.shaghana" text="шаганец" />
     <string id="taom_str_faction_formal_name_for_culture.shaghana" text="Племена Шаганы" />
     <string id="taom_str_faction_informal_name_for_culture.shaghana" text="Шагана" />
     <string id="taom_str_neutral_term_for_culture.shaghana" text="харадрим Шаганы" />
@@ -2031,8 +1995,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.goblin" text="Полководец {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.goblin" text="Полководец {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.goblin" text="{?RULER.GENDER}Госпожа{?}Господин{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.goblin" text="Гоблинский" />
-    <string id="taom_str_short_term_for_faction.goblin" text="Гоблин" />
     <string id="taom_str_faction_formal_name_for_culture.goblin" text="Гоблины Гоблинграда" />
     <string id="taom_str_faction_informal_name_for_culture.goblin" text="Гоблин" />
     <string id="taom_str_neutral_term_for_culture.goblin" text="Гоблины" />
@@ -2065,8 +2027,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mistymountainorcs" text="Военачальник, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mistymountainorcs" text="Военачальник {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mistymountainorcs" text="{?RULER.GENDER}Госпожа{?}Властелин{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mistymountainorcs" text="Орк" />
-    <string id="taom_str_short_term_for_faction.mistymountainorcs" text="Орк" />
     <string id="taom_str_faction_formal_name_for_culture.mistymountainorcs" text="Орки Мглистых гор" />
     <string id="taom_str_faction_informal_name_for_culture.mistymountainorcs" text="Орк" />
     <string id="taom_str_neutral_term_for_culture.mistymountainorcs" text="Орки Мглистых гор" />
@@ -2428,8 +2388,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="линдонский" />
-    <string id="taom_str_short_term_for_faction.lindon" text="эльф" />
     <string id="taom_str_faction_formal_name_for_culture.lindon" text="Серые Гавани" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="Линдон" />
     <string id="taom_str_neutral_term_for_culture.lindon" text="Эльфы Линдона" />
@@ -2445,8 +2403,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="военный вождь, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Военный вождь {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Госпожа{?}Господин{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="гоблинский" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="гоблин" />
     <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Гоблины Синей Скалы" />
     <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Гоблин" />
     <string id="taom_str_neutral_term_for_culture.bluecraig" text="Гоблины" />

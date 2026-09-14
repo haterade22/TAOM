@@ -13,8 +13,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.empire" text="Klan Reisi, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.empire" text="Klan Reisi {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="Dunlending" />
-    <string id="taom_str_short_term_for_faction.empire" text="Dunland" />
     <string id="taom_str_faction_formal_name_for_culture.empire" text="Dunland Klanları" />
     <string id="taom_str_faction_informal_name_for_culture.empire" text="Dunland" />
     <string id="taom_str_neutral_term_for_culture.empire" text="Dunlendingler" />
@@ -25,8 +23,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="Kral, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Kral {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="Rohirrik" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="Süvari" />
     <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Riddermark" />
     <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Rohan" />
     <string id="taom_str_neutral_term_for_culture.vlandia" text="Rohirrim" />
@@ -37,8 +33,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.battania" text="Lord, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.battania" text="Lord {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="Variag" />
-    <string id="taom_str_short_term_for_faction.battania" text="Variag" />
     <string id="taom_str_faction_formal_name_for_culture.battania" text="Khand Variagları" />
     <string id="taom_str_faction_informal_name_for_culture.battania" text="Khand" />
     <string id="taom_str_neutral_term_for_culture.battania" text="Variaglar" />
@@ -49,8 +43,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="Savaş Lordu, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Savaş Lordu {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="Doğulu" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="Rhun" />
     <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Rhûn Doğuluları" />
     <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Rhûn" />
     <string id="taom_str_neutral_term_for_culture.khuzait" text="Doğulular" />
@@ -61,8 +53,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.aserai" text="Kabile Reisi, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.aserai" text="Kabile Reisi {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="Haradrimli" />
-    <string id="taom_str_short_term_for_faction.aserai" text="Harad" />
     <string id="taom_str_faction_formal_name_for_culture.aserai" text="Harad Krallığı" />
     <string id="taom_str_faction_informal_name_for_culture.aserai" text="Harad" />
     <string id="taom_str_neutral_term_for_culture.aserai" text="Haradrim" />
@@ -73,8 +63,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="Kral, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Kral {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="Bardingli" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="Dale" />
     <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Dale Krallığı" />
     <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Dale" />
     <string id="taom_str_neutral_term_for_culture.sturgia" text="Bardinglar" />
@@ -85,8 +73,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="Gözetmen, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Gözetmen" />
     <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="Guldurlu" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="Dol Guldur" />
     <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Dol Guldur Güçleri" />
     <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Dol Guldur" />
     <string id="taom_str_neutral_term_for_culture.dolguldur" text="Dol Guldur Hizmetkârları" />
@@ -97,8 +83,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.isengard" text="Beyaz El, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.isengard" text="Beyaz El {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="Isengard" />
-    <string id="taom_str_short_term_for_faction.isengard" text="Isengard" />
     <string id="taom_str_faction_formal_name_for_culture.isengard" text="Isengard Güçleri" />
     <string id="taom_str_faction_informal_name_for_culture.isengard" text="Isengard" />
     <string id="taom_str_neutral_term_for_culture.isengard" text="Isengard Güçleri" />
@@ -109,8 +93,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="Savaş Lordu, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Savaş Lordu {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="Gundabad" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="Gundabad" />
     <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Gundabad Orklarİ" />
     <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Gundabad" />
     <string id="taom_str_neutral_term_for_culture.gundabad" text="Gundabad Orkları" />
@@ -121,8 +103,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.umbar" text="Kaptan, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.umbar" text="Kaptan {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="Korsan" />
-    <string id="taom_str_short_term_for_faction.umbar" text="Umbar" />
     <string id="taom_str_faction_formal_name_for_culture.umbar" text="Umbar Korsanları" />
     <string id="taom_str_faction_informal_name_for_culture.umbar" text="Umbar" />
     <string id="taom_str_neutral_term_for_culture.umbar" text="Korsanlar" />
@@ -133,8 +113,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}Leydi Kâhya{?}Kâhya{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Leydi Kâhya{?}Kâhya{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="Gondorlu" />
-    <string id="taom_str_short_term_for_faction.gondor" text="Gondorlu" />
     <string id="taom_str_faction_formal_name_for_culture.gondor" text="Gondorlu" />
     <string id="taom_str_faction_informal_name_for_culture.gondor" text="Gondorlular" />
     <string id="taom_str_neutral_term_for_culture.gondor" text="Gondorlular" />
@@ -145,8 +123,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}Karanlık Leydi{?}Karanlık Lord{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Karanlık Leydi{?}Karanlık Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Muhafız{?}Gözetmen{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="Mordor" />
-    <string id="taom_str_short_term_for_faction.mordor" text="Mordor" />
     <string id="taom_str_faction_formal_name_for_culture.mordor" text="Mordor" />
     <string id="taom_str_faction_informal_name_for_culture.mordor" text="Sauron'un hizmetkârları" />
     <string id="taom_str_neutral_term_for_culture.mordor" text="Mordor" />
@@ -157,8 +133,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}Kraliçe{?}Kral{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Kraliçe{?}Kral{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Bekçi{?}Muhafız{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="Orman-Elf" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="Orman-Elf" />
     <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Mirkwood Diyarı" />
     <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="Orman Diyarı" />
     <string id="taom_str_neutral_term_for_culture.mirkwood" text="Orman-Elfleri" />
@@ -169,8 +143,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="Galadhrim" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="Elf" />
     <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Altın Orman" />
     <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Lothlórien" />
     <string id="taom_str_neutral_term_for_culture.lothlorien" text="Altın Orman Elfleri" />
@@ -181,8 +153,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="Rivendellli" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="Elf" />
     <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Son Huzurlu Ev" />
     <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Rivendell" />
     <string id="taom_str_neutral_term_for_culture.rivendell" text="Rivendell Elfleri" />
@@ -320,8 +290,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}Dağın Altındaki Kraliçe{?}Dağın Altındaki Kral{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Dağın Altındaki Kraliçe{?}Dağın Altındaki Kral{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="Ereborlu" />
-    <string id="taom_str_short_term_for_faction.erebor" text="Cüce" />
     <string id="taom_str_faction_formal_name_for_culture.erebor" text="Dağın Altındaki Krallık" />
     <string id="taom_str_faction_informal_name_for_culture.erebor" text="Erebor" />
     <string id="taom_str_neutral_term_for_culture.erebor" text="Erebor Cüceleri" />
@@ -332,8 +300,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="Châjaphân {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Châjaphân {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.abanissa" text="Âbanissalı" />
-    <string id="taom_str_short_term_for_faction.abanissa" text="Âbanissalı" />
     <string id="taom_str_faction_formal_name_for_culture.abanissa" text="Âbanissa Hâkimiyeti" />
     <string id="taom_str_faction_informal_name_for_culture.abanissa" text="Âbanissa" />
     <string id="taom_str_neutral_term_for_culture.abanissa" text="Âbanissa Haradrimleri" />
@@ -349,8 +315,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="Taskral {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Taskral {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.shaghana" text="Shaghânalı" />
-    <string id="taom_str_short_term_for_faction.shaghana" text="Shaghânalı" />
     <string id="taom_str_faction_formal_name_for_culture.shaghana" text="Shaghâna Kabileleri" />
     <string id="taom_str_faction_informal_name_for_culture.shaghana" text="Shaghâna" />
     <string id="taom_str_neutral_term_for_culture.shaghana" text="Shaghâna Haradrimleri" />
@@ -2031,8 +1995,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.goblin" text="Savaş Lordu, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.goblin" text="Savaş Lordu {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.goblin" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.goblin" text="Goblin" />
-    <string id="taom_str_short_term_for_faction.goblin" text="Goblin" />
     <string id="taom_str_faction_formal_name_for_culture.goblin" text="Goblin-kasabası Goblinleri" />
     <string id="taom_str_faction_informal_name_for_culture.goblin" text="Goblin" />
     <string id="taom_str_neutral_term_for_culture.goblin" text="Goblinler" />
@@ -2065,8 +2027,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mistymountainorcs" text="Savaş Lordu, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mistymountainorcs" text="Savaş Lordu {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mistymountainorcs" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mistymountainorcs" text="Ork" />
-    <string id="taom_str_short_term_for_faction.mistymountainorcs" text="Ork" />
     <string id="taom_str_faction_formal_name_for_culture.mistymountainorcs" text="Sisli Dağlar Orkları" />
     <string id="taom_str_faction_informal_name_for_culture.mistymountainorcs" text="Ork" />
     <string id="taom_str_neutral_term_for_culture.mistymountainorcs" text="Sisli Dağ Orkları" />
@@ -2428,8 +2388,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="Lindonlu" />
-    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
     <string id="taom_str_faction_formal_name_for_culture.lindon" text="Gri Limanlar" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
     <string id="taom_str_neutral_term_for_culture.lindon" text="Lindon Elfleri" />
@@ -2445,8 +2403,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="Savaş Beyi {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Savaş Beyi {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
     <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Mavi Kaya Goblinleri" />
     <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
     <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblinler" />

@@ -71,14 +71,13 @@ public class WageModifierService : IWageModifierService
             AddNonZero(ref result, mountedCostFeats.RohanMountedCostBonus, cultureText);
         }
 
-        // Vanilla buyer-hero recruitment-cost perk discounts. AddFactor accumulates linearly
+        // Vanilla recruitment-cost perk discounts. AddFactor accumulates linearly
         // (SumOfFactors += value), so a single summed apply is identical to vanilla's sequential
-        // AddFactor calls. LimitMin(1f) mirrors vanilla's clamp inside the buyerHero != null block.
+        // AddFactor calls. LimitMin(1f) mirrors vanilla's clamp, which since v1.5.2 sits outside
+        // the buyerHero != null block and floors a buyer-less cost as well.
         if (buyerPerks.HasBuyer)
-        {
             result.AddFactor(SumBuyerPerkFactors(in buyerPerks));
-            result.LimitMin(1f);
-        }
+        result.LimitMin(1f);
 
         return (int)result.ResultNumber;
     }
@@ -102,8 +101,7 @@ public class WageModifierService : IWageModifierService
             sum += p.PiercerBonus;
         }
 
-        if (p.IsPartyLeader)
-            sum += p.FrugalBonus;
+        sum += p.FrugalBonus;
 
         if (p.IsMercenary)
         {

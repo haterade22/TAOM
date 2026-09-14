@@ -13,8 +13,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.empire" text="족장 {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.empire" text="족장 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="던랜드의" />
-    <string id="taom_str_short_term_for_faction.empire" text="던랜드" />
     <string id="taom_str_faction_formal_name_for_culture.empire" text="던랜드 부족 연합" />
     <string id="taom_str_faction_informal_name_for_culture.empire" text="던랜드" />
     <string id="taom_str_neutral_term_for_culture.empire" text="던랜드인" />
@@ -25,8 +23,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="왕 {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.vlandia" text="왕 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="로한의" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="기수" />
     <string id="taom_str_faction_formal_name_for_culture.vlandia" text="기수왕국" />
     <string id="taom_str_faction_informal_name_for_culture.vlandia" text="로한" />
     <string id="taom_str_neutral_term_for_culture.vlandia" text="로한 기병" />
@@ -37,8 +33,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.battania" text="군주 {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.battania" text="군주 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="바리아그의" />
-    <string id="taom_str_short_term_for_faction.battania" text="바리아그" />
     <string id="taom_str_faction_formal_name_for_culture.battania" text="칸드의 바리아그" />
     <string id="taom_str_faction_informal_name_for_culture.battania" text="칸드" />
     <string id="taom_str_neutral_term_for_culture.battania" text="바리아그인" />
@@ -49,8 +43,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="전쟁군주, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.khuzait" text="전쟁군주 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="동방인" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="룬" />
     <string id="taom_str_faction_formal_name_for_culture.khuzait" text="룬의 동방인" />
     <string id="taom_str_faction_informal_name_for_culture.khuzait" text="룬" />
     <string id="taom_str_neutral_term_for_culture.khuzait" text="동방인" />
@@ -61,8 +53,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.aserai" text="족장, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.aserai" text="족장 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="하라드림" />
-    <string id="taom_str_short_term_for_faction.aserai" text="하라드" />
     <string id="taom_str_faction_formal_name_for_culture.aserai" text="하라드 왕국" />
     <string id="taom_str_faction_informal_name_for_culture.aserai" text="하라드" />
     <string id="taom_str_neutral_term_for_culture.aserai" text="하라드림" />
@@ -73,8 +63,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="왕, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.sturgia" text="왕 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="바르드인" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="골짜기 마을" />
     <string id="taom_str_faction_formal_name_for_culture.sturgia" text="골짜기 마을 왕국" />
     <string id="taom_str_faction_informal_name_for_culture.sturgia" text="골짜기 마을" />
     <string id="taom_str_neutral_term_for_culture.sturgia" text="바르드인" />
@@ -85,8 +73,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="감독관, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="감독관" />
     <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="굴두르" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="돌 굴두르" />
     <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="돌 굴두르 군대" />
     <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="돌 굴두르" />
     <string id="taom_str_neutral_term_for_culture.dolguldur" text="돌 굴두르의 하인들" />
@@ -97,8 +83,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.isengard" text="흰 손, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.isengard" text="흰 손 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="아이센가드" />
-    <string id="taom_str_short_term_for_faction.isengard" text="아이센가드" />
     <string id="taom_str_faction_formal_name_for_culture.isengard" text="아이센가드 군대" />
     <string id="taom_str_faction_informal_name_for_culture.isengard" text="아이센가드" />
     <string id="taom_str_neutral_term_for_culture.isengard" text="아이센가드 세력" />
@@ -109,8 +93,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="전쟁군주, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gundabad" text="전쟁군주 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="군다바드" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="군다바드" />
     <string id="taom_str_faction_formal_name_for_culture.gundabad" text="군다바드 오크" />
     <string id="taom_str_faction_informal_name_for_culture.gundabad" text="군다바드" />
     <string id="taom_str_neutral_term_for_culture.gundabad" text="군다바드 오크들" />
@@ -121,8 +103,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.umbar" text="선장, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.umbar" text="선장 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="해적" />
-    <string id="taom_str_short_term_for_faction.umbar" text="움바르" />
     <string id="taom_str_faction_formal_name_for_culture.umbar" text="움바르 해적단" />
     <string id="taom_str_faction_informal_name_for_culture.umbar" text="움바르" />
     <string id="taom_str_neutral_term_for_culture.umbar" text="해적들" />
@@ -133,8 +113,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}여집정관{?}집정관{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}여집정관{?}집정관{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="곤도르의" />
-    <string id="taom_str_short_term_for_faction.gondor" text="곤도르" />
     <string id="taom_str_faction_formal_name_for_culture.gondor" text="곤도르" />
     <string id="taom_str_faction_informal_name_for_culture.gondor" text="곤도르인들" />
     <string id="taom_str_neutral_term_for_culture.gondor" text="곤도르인" />
@@ -145,8 +123,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}암흑여군주{?}암흑군주{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}암흑여군주{?}암흑군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}감시자{?}감독관{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="모르도르의" />
-    <string id="taom_str_short_term_for_faction.mordor" text="모르도르" />
     <string id="taom_str_faction_formal_name_for_culture.mordor" text="모르도르" />
     <string id="taom_str_faction_informal_name_for_culture.mordor" text="사우론의 하인들" />
     <string id="taom_str_neutral_term_for_culture.mordor" text="모르도르" />
@@ -157,8 +133,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}여왕{?}왕{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}여왕{?}왕{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}감시자{?}수호자{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="숲요정의" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="숲요정" />
     <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="어둠숲 왕국" />
     <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="숲의 왕국" />
     <string id="taom_str_neutral_term_for_culture.mirkwood" text="숲요정" />
@@ -169,8 +143,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="갈라드림" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="엘프" />
     <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="황금 숲" />
     <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="로스로리엔" />
     <string id="taom_str_neutral_term_for_culture.lothlorien" text="황금 숲의 엘프들" />
@@ -181,8 +153,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="리븐델의" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="엘프" />
     <string id="taom_str_faction_formal_name_for_culture.rivendell" text="마지막 아늑한 집" />
     <string id="taom_str_faction_informal_name_for_culture.rivendell" text="리븐델" />
     <string id="taom_str_neutral_term_for_culture.rivendell" text="리븐델의 엘프들" />
@@ -320,8 +290,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}산 아래 여왕{?}산 아래 왕{\?}, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}산 아래 여왕{?}산 아래 왕{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="에레보르의" />
-    <string id="taom_str_short_term_for_faction.erebor" text="드워프" />
     <string id="taom_str_faction_formal_name_for_culture.erebor" text="산 아래 왕국" />
     <string id="taom_str_faction_informal_name_for_culture.erebor" text="에레보르" />
     <string id="taom_str_neutral_term_for_culture.erebor" text="에레보르의 드워프들" />
@@ -332,8 +300,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="차자판, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.abanissa" text="차자판 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.abanissa" text="아바니사" />
-    <string id="taom_str_short_term_for_faction.abanissa" text="아바니사" />
     <string id="taom_str_faction_formal_name_for_culture.abanissa" text="아바니사 자치령" />
     <string id="taom_str_faction_informal_name_for_culture.abanissa" text="아바니사" />
     <string id="taom_str_neutral_term_for_culture.abanissa" text="아바니사의 하라드림" />
@@ -349,8 +315,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="타스크랄, {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.shaghana" text="타스크랄 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.shaghana" text="샤가니" />
-    <string id="taom_str_short_term_for_faction.shaghana" text="샤가니" />
     <string id="taom_str_faction_formal_name_for_culture.shaghana" text="샤가나 부족 연합" />
     <string id="taom_str_faction_informal_name_for_culture.shaghana" text="샤가나" />
     <string id="taom_str_neutral_term_for_culture.shaghana" text="샤가나의 하라드림" />
@@ -2031,8 +1995,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.goblin" text="전쟁군주 {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.goblin" text="전쟁군주 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.goblin" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.goblin" text="고블린" />
-    <string id="taom_str_short_term_for_faction.goblin" text="고블린" />
     <string id="taom_str_faction_formal_name_for_culture.goblin" text="고블린 마을의 고블린들" />
     <string id="taom_str_faction_informal_name_for_culture.goblin" text="고블린" />
     <string id="taom_str_neutral_term_for_culture.goblin" text="고블린들" />
@@ -2065,8 +2027,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.mistymountainorcs" text="대족장 {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.mistymountainorcs" text="대족장 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.mistymountainorcs" text="{?RULER.GENDER}여족장{?}족장{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mistymountainorcs" text="오크" />
-    <string id="taom_str_short_term_for_faction.mistymountainorcs" text="오크" />
     <string id="taom_str_faction_formal_name_for_culture.mistymountainorcs" text="안개산맥의 오크" />
     <string id="taom_str_faction_informal_name_for_culture.mistymountainorcs" text="오크" />
     <string id="taom_str_neutral_term_for_culture.mistymountainorcs" text="안개산맥 오크" />
@@ -2428,8 +2388,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="린돈의" />
-    <string id="taom_str_short_term_for_faction.lindon" text="요정" />
     <string id="taom_str_faction_formal_name_for_culture.lindon" text="회색항구" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="린돈" />
     <string id="taom_str_neutral_term_for_culture.lindon" text="린돈의 요정들" />
@@ -2445,8 +2403,6 @@
     <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="군벌 {RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="군벌 {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}여군주{?}군주{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="고블린의" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="고블린" />
     <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="청암의 고블린들" />
     <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="고블린" />
     <string id="taom_str_neutral_term_for_culture.bluecraig" text="고블린들" />

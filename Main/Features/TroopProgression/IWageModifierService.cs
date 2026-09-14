@@ -105,11 +105,13 @@ public readonly struct MountedCostFeatInputs
 }
 
 /// <summary>
-/// Pre-resolved buyer-hero recruitment-cost perk discounts, mirroring the
+/// Pre-resolved recruitment-cost perk discounts, mirroring the
 /// <c>if (buyerHero != null)</c> block in vanilla
-/// <c>DefaultPartyWageModel.GetTroopRecruitmentCost</c>. Each bonus float is resolved at the
-/// boundary as <c>buyerHero.GetPerkValue(perk) ? perk.SecondaryBonus : 0f</c> (PrimaryBonus for
-/// the two mercenary trade perks). The service owns the troop-type / tier / leader / mercenary
+/// <c>DefaultPartyWageModel.GetTroopRecruitmentCost</c> (v1.5.2). The seven secondary-role
+/// discounts are resolved at the boundary against the buyer's PARTY LEADER (vanilla routes them
+/// through <c>PerkHelper.AddPerkBonusForParty</c>, and every one has SecondaryRole PartyLeader), as
+/// <c>leader.GetPerkValue(perk) ? perk.SecondaryBonus : 0f</c>; the two mercenary trade perks stay
+/// Personal on the buyer (PrimaryBonus). The service owns the troop-type / tier / mercenary
 /// gating so the decision logic stays unit-testable, and keeps no TaleWorlds sealed types per
 /// ADR-007. Vanilla's <c>KhuzaitRecruitUpgradeFeat</c> is deliberately omitted — TAOM replaces
 /// the mounted-recruit cultural feat with the Isengard/Rohan mounted-cost feats (see
@@ -122,7 +124,6 @@ public readonly struct RecruitmentPerkInputs
     public readonly bool TierAtLeast2;
     public readonly bool IsInfantry;
     public readonly bool IsRanged;
-    public readonly bool IsPartyLeader;
     public readonly bool IsMercenary;
     public readonly float HeadHunterBonus;
     public readonly float ChinkInTheArmorBonus;
@@ -139,7 +140,6 @@ public readonly struct RecruitmentPerkInputs
         bool tierAtLeast2 = false,
         bool isInfantry = false,
         bool isRanged = false,
-        bool isPartyLeader = false,
         bool isMercenary = false,
         float headHunterBonus = 0f,
         float chinkInTheArmorBonus = 0f,
@@ -155,7 +155,6 @@ public readonly struct RecruitmentPerkInputs
         TierAtLeast2 = tierAtLeast2;
         IsInfantry = isInfantry;
         IsRanged = isRanged;
-        IsPartyLeader = isPartyLeader;
         IsMercenary = isMercenary;
         HeadHunterBonus = headHunterBonus;
         ChinkInTheArmorBonus = chinkInTheArmorBonus;

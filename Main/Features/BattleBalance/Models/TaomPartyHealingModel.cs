@@ -33,8 +33,9 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
         // hidden one-man party.
         //
         // Every survival bonus vanilla grants is read off the PASSED party:
-        // AddSurgeonSurvivalBonus(mobileParty, ...), the PhysicianOfPeople perk, and
-        // HasPerk(Medicine.CheatDeath, checkSecondaryRole: true). An enlisted player's party is
+        // AddSurgeonSurvivalBonus(mobileParty, ...), the PhysicianOfPeople perk, and CheatDeath
+        // (since v1.5.2 through PerkHelper.AddPerkBonusForParty, which still resolves the perk on
+        // the passed party's roles). An enlisted player's party is
         // one hero, parked and hidden, with no surgeon and no perks — so a soldier who goes
         // down in his commander's battle is rolled as if nobody were there to save him, and is
         // MORE likely to die than the same character freelancing. That is a silent, invisible

@@ -302,10 +302,11 @@ public class WageModifierServiceTests
         Assert.AreEqual(400, cost);
     }
 
-    // --- CalculateRecruitmentCost: buyer-hero perk discounts ---
-    // Mirrors the vanilla `if (buyerHero != null)` block in DefaultPartyWageModel.GetTroopRecruitmentCost.
-    // The model resolves each `buyerHero.GetPerkValue(perk) ? bonus : 0f` at the boundary; the service
-    // applies the troop-type / tier / leader / mercenary gating. One test per gate (skip-guard exhaustion).
+    // --- CalculateRecruitmentCost: recruitment perk discounts ---
+    // Mirrors the vanilla `if (buyerHero != null)` block in DefaultPartyWageModel.GetTroopRecruitmentCost
+    // (v1.5.2). The model resolves each bonus at the boundary (the seven secondary-role perks against
+    // the buyer's party leader, the two trade perks against the buyer); the service applies the
+    // troop-type / tier / mercenary gating. One test per gate (skip-guard exhaustion).
 
     [TestMethod]
     public void CalculateRecruitmentCost_NoBuyer_NoPerkFactorApplied()
@@ -427,11 +428,12 @@ public class WageModifierServiceTests
     }
 
     [TestMethod]
-    public void CalculateRecruitmentCost_PartyLeaderWithFrugal_Applied()
+    public void CalculateRecruitmentCost_FrugalBonus_AppliedWithNoLeaderGate()
     {
+        // v1.5.2 dropped vanilla's `buyerHero.IsPartyLeader` gate: Frugal now resolves like the other
+        // secondary perks, on the party leader, so a non-zero bonus is already leader-resolved.
         _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
-        var perks = new RecruitmentPerkInputs(
-            hasBuyer: true, isPartyLeader: true, frugalBonus: -0.1f);
+        var perks = new RecruitmentPerkInputs(hasBuyer: true, frugalBonus: -0.1f);
 
         var cost = _sut.CalculateRecruitmentCost(
             level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
@@ -441,17 +443,17 @@ public class WageModifierServiceTests
     }
 
     [TestMethod]
-    public void CalculateRecruitmentCost_NotPartyLeader_FrugalIgnored()
+    public void CalculateRecruitmentCost_NoBuyer_DeepMountedFeatDiscount_ClampedToMinimumOne()
     {
-        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
-        var perks = new RecruitmentPerkInputs(
-            hasBuyer: true, isPartyLeader: false, frugalBonus: -0.1f);
+        // Since v1.5.2 vanilla's LimitMin(1f) sits outside the buyerHero != null block.
+        _costService.GetTroopRecruitmentCost(30, false).Returns(1000);
+        var feats = new MountedCostFeatInputs(isengardMountedCostBonus: -5f, rohanMountedCostBonus: 0f);
 
         var cost = _sut.CalculateRecruitmentCost(
-            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
-            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+            level: 30, isMounted: true, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: feats, buyerPerks: RecruitmentPerkInputs.None, cultureText: null);
 
-        Assert.AreEqual(1000, cost);
+        Assert.AreEqual(1, cost);
     }
 
     [TestMethod]
@@ -505,8 +507,7 @@ public class WageModifierServiceTests
     {
         _costService.GetTroopRecruitmentCost(30, false).Returns(1000);
         var feats = new MountedCostFeatInputs(isengardMountedCostBonus: -0.15f, rohanMountedCostBonus: 0f);
-        var perks = new RecruitmentPerkInputs(
-            hasBuyer: true, isPartyLeader: true, frugalBonus: -0.1f);
+        var perks = new RecruitmentPerkInputs(hasBuyer: true, frugalBonus: -0.1f);
 
         var cost = _sut.CalculateRecruitmentCost(
             level: 30, isMounted: true, isMercenary: false, withoutItemCost: false,
