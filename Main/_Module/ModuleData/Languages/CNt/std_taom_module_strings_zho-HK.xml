@@ -2645,5 +2645,31 @@
     <string id="taom_res_badge_upkeep" text="每日維持費" />
     <string id="taom_res_badge_emissary" text="精銳使者價格" />
     <string id="taom_res_badge_paid_in" text="升級、招募與維持費均以你自己的 {RESOURCE} 支付" />
+    <string id="taom_aso_kingdom.empire" text="Dunland" />
+    <string id="taom_aso_kingdom.empire_w" text="Gondor" />
+    <string id="taom_aso_kingdom.empire_s" text="Mordor" />
+    <string id="taom_aso_kingdom.sturgia" text="Dale" />
+    <string id="taom_aso_kingdom.aserai" text="Harad" />
+    <string id="taom_aso_kingdom.vlandia" text="Rohan" />
+    <string id="taom_aso_kingdom.battania" text="Khand" />
+    <string id="taom_aso_kingdom.khuzait" text="Rhun" />
+    <string id="taom_aso_kingdom.erebor" text="Erebor" />
+    <string id="taom_aso_kingdom.rivendell" text="Imladris" />
+    <string id="taom_aso_kingdom.mirkwood" text="Lasgalen" />
+    <string id="taom_aso_kingdom.lothlorien" text="Lothlorien" />
+    <string id="taom_aso_kingdom.isengard" text="Isengard" />
+    <string id="taom_aso_kingdom.gundabad" text="Gundabad" />
+    <string id="taom_aso_kingdom.umbar" text="Umbar" />
+    <string id="taom_aso_kingdom.dolguldur" text="Dol Guldur" />
+    <string id="taom_aso_kingdom.shaghana" text="Shaghâna" />
+    <string id="taom_aso_kingdom.abanissa" text="Âbanissa" />
+    <string id="taom_aso_kingdom.goblin" text="Goblins" />
+    <string id="taom_aso_kingdom.mistymountainorcs" text="Misty Mountain Orcs" />
+    <string id="taom_aso_kingdom.lindon" text="Lindon" />
+    <string id="taom_aso_kingdom.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_aso_desc_invasion" text="The faction that rules the majority of Middle-earth." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
+    <string id="taom_aso_item_name_randomized" text="Randomized Middle-earth" />
+    <string id="taom_aso_item_desc_randomized" text="Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
   </strings>
 </base>

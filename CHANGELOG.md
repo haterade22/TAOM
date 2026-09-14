@@ -96,6 +96,42 @@ name as a plain `Widget` behind a release-silent `FailedAssert`, so the dead blo
 and the clone's only effect was to shadow every future vanilla change to the combat HUD, starting
 with v1.5.2's widget rename.
 
+### feat(aso): the Advanced Starting Options menu speaks Middle-earth
+
+Bannerlord v1.5.0's pre-campaign options screen (scenario, player start, modifiers, seed) is not
+data-driven: its faction pickers are a literal list of the eight vanilla kingdom ids, so TAOM's
+fourteen kingdoms were invisible and the eight that did appear resolved to the renamed vanilla
+ones, reading "Western Empire" and dropping the player into Gondor. `TaomStartOptionsProvider`
+(carried over from the archived v1.5.0 port, re-verified against v1.5.2) is a static method the
+engine discovers by `[StartOptionsProvider]` and binds with `Delegate.CreateDelegate`, no Harmony:
+it adds the fourteen kingdoms to every faction picker (King, Vassal, Mercenary, Last Stand,
+Invasion, Two Faction War) and removes the United Empire scenario, which merges the three
+imperial ids (Dunland, Gondor and Mordor here) into a "Calradian Empire" and, for two of its three
+unifier choices, leaves the player ruling an empty shell because its cleanup branches on
+`Culture.StringId == "empire"`.
+
+Forty-nine string overrides at the end of `taom_module_strings.xml` re-localise the menu: ASO
+reuses vanilla's own kingdom-name string ids, which `spkingdoms.xslt` never touched, and looks up
+each picker item by id, so every TAOM kingdom needs a name row or the menu shows an error string
+in its place. The `_item_name` family is the list entry and the `{Token}` interpolation inside
+scenario text; the `_value_name` family is what the in-game Escape menu's starting-options summary
+reads back from the saved choices. The 26 new translation keys are seeded into all 12 language
+files as English through the translator's own `sync_missing_ids`; the from-scratch rebuild was
+tried first and reverted, because it also rewrote 24 files and dropped in-place translations the
+cache never held (one German row went back to English). The translator run is parked with the
+others in #579.
+
+`TaomStartOptionsProviderTests` pins the kingdom list to `taom_spkingdoms.xml`, performs the
+engine's own `CreateDelegate` against the installed `AdvancedStartOptionsManager` delegate type so
+a signature drift fails offline instead of silently keeping eight factions, and, from the review's
+one finding, runs vanilla's provider and then TAOM's against one real `AdvancedStartOptions` (the
+order load order guarantees) and asserts every kingdom in all five pickers and United Empire gone.
+The data-flow review traced discovery, the picker keys and scenario ids, the item-condition
+polarity, all four string-id lookups (every TAOM kingdom has both rows it needs), the fief
+fallback for one-town kingdoms, and the NavalDLC refusal (`OnNordInvasionScenarioSelected` sits in
+core CampaignSystem and dereferences a `nord` kingdom unguarded; refusing the module is what keeps
+the scenario unselectable), all connected. `docs/features/advanced-start-options.md` is the doc.
+
 ### feat(diagnostics): the map-load timeline, renumbered Patch89 for the v1.5.x line
 
 The archived v1.5.0 port's map-load diagnostics come across in substance: a `[MapLoad]`
