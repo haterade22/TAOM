@@ -359,6 +359,12 @@ Check: `python tools/audit_scene_names.py`
 Takes effect: next save load
 Code: No code changes needed
 
+**7. Follow a scene-side rename or removal.** The one time an id changes is when the map author has already renamed or deleted the entity in the editor: the data row is then the orphan, and a campaign load NREs in `SettlementVisual.OnStartup`. [`tools/rename_map_settlements.py`](../../tools/rename_map_settlements.py) makes the data follow the scene from one table: `RENAMES` rewrites a village's id, name/text keys, component id, `bound` and position (from the new entity) in place, `REMOVALS` drops a settlement's block and its loc rows, and both refuse on a fortification that still has bound villages or on an old id still named anywhere under `Main/` that the tool does not rewrite (today only `recruitment_pools/gondor.json`). First use: #597, `castle_village_EW7_2/3` became `village_EW10_2/1` under Serelond and `hideout_desert_34` was retired. Run it before `add_map_villages.py` when one batch does both, and never while the editor is mid-save, because `SettlementPositionScript.OnSceneSave` rewrites the same file (it re-reads the file from disk first, so an edit made between saves survives).
+
+Check: `python tools/rename_map_settlements.py --check`
+Takes effect: new campaign only
+Code: No code changes needed
+
 ### Delete
 
 **Do not delete a settlement. Retag it or move it.** Nothing in the engine or in TAOM is built to lose one:
@@ -369,7 +375,7 @@ Code: No code changes needed
 4. **The last settlement of a culture makes that culture landless**, which is the crash the `LANDLESS_CULTURE` gate exists to stop: vanilla's lord-spawn code calls `Settlement.All.First(culture)` unguarded on the daily clan tick ([lord-spawn-guard.md](../features/lord-spawn-guard.md)).
 5. **The scene entity stays behind.** Removing the data leaves the map icon's entity in `scene.xscene` with nothing bound to it.
 
-What to do instead: retag the culture, reassign the owner, or move `posX` and `posY`. If a settlement genuinely must go, the supported shape is the one TAOM uses against vanilla's file, an XSLT template that matches the element and emits nothing, applied to a file you do not own. TAOM has never done this to one of its own settlements, so treat it as unexplored ground and start a new campaign.
+What to do instead: retag the culture, reassign the owner, or move `posX` and `posY`. If a settlement genuinely must go, the supported shape is the one TAOM uses against vanilla's file, an XSLT template that matches the element and emits nothing, applied to a file you do not own. For TAOM's own file the shape is recipe 7 above: once the map author has deleted the entity, `tools/rename_map_settlements.py` `REMOVALS` takes the block and its 12 loc rows, refuses a fortification that still has bound villages, and sweeps `Main/` for the id first. `hideout_desert_34` went that way under #597 (one of 34 Haradrim camps, no clan home, no code reference); a fortification has never been removed, so treat that as unexplored ground and start a new campaign.
 
 Check: `python tools/validate_moduledata.py`
 Takes effect: new campaign only

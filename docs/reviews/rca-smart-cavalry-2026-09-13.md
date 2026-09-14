@@ -166,3 +166,13 @@ after the write, and walk the engine's own caller before the entry point.
 ## Owed
 
 In-game smoke per the feature doc's checklist. The toggle stays OFF by default until it passes.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/smart-cavalry-ai.md](../features/smart-cavalry-ai.md)
+
+<!-- backlinks-end -->

@@ -274,5 +274,64 @@ class CheckTests(unittest.TestCase):
         self.assertIn("scene.xscene", findings[0])
 
 
+class BatchGeneralisationTests(unittest.TestCase):
+    """The EW batch (#597). One table now serves more than one culture and more than one parent:
+    gondor panel meshes, a per-row hearth, and a per-row insert anchor for the master and the loc
+    files, without touching the module constants that placed the Isengard batch."""
+
+    GONDOR = amv.Village("village_EW11_1", "Parth Mallen", "town_EW11", "wheat_farm", "gondor",
+                         "empire_village_a", hearth="350", after="town_EW11")
+
+    def test_gondor_meshes_are_registered(self):
+        el = ET.fromstring(amv.village_block(self.GONDOR, "1", "2", "\n"))
+        village = el.find("Components/Village")
+        self.assertEqual(el.get("culture"), "Culture.gondor")
+        self.assertEqual(village.get("background_mesh"), "gui_bg_village_empire")
+        self.assertEqual(village.get("wait_mesh"), "wait_empire_village")
+        self.assertEqual(village.get("castle_background_mesh"), "gui_bg_castle_empire")
+
+    def test_row_hearth_is_written_and_defaults_to_the_module_value(self):
+        gondor = ET.fromstring(amv.village_block(self.GONDOR, "1", "2", "\n")).find("Components/Village")
+        self.assertEqual(gondor.get("hearth"), "350")
+        isengard = ET.fromstring(amv.village_block(ROW, "1", "2", "\n")).find("Components/Village")
+        self.assertEqual(isengard.get("hearth"), amv.HEARTH)
+
+    def test_anchor_is_the_rows_own_or_the_module_default(self):
+        self.assertEqual(amv.anchor_of(self.GONDOR), "town_EW11")
+        self.assertEqual(amv.anchor_of(ROW), amv.INSERT_AFTER)
+
+    def test_rows_group_by_anchor_in_table_order(self):
+        a = self.GONDOR
+        b = a._replace(id="village_EW11_2", name="Nan Laeg")
+        c = a._replace(id="village_EW10_3", name="Aerlond", bound="town_EW10", after="town_EW10")
+        groups = amv.group_by_anchor([a, c, b])
+        self.assertEqual(list(groups), ["town_EW11", "town_EW10"])
+        self.assertEqual([v.id for v in groups["town_EW11"]], ["village_EW11_1", "village_EW11_2"])
+        self.assertEqual([v.id for v in groups["town_EW10"]], ["village_EW10_3"])
+
+    def test_shipped_table_carries_the_ew_batch(self):
+        by_id = {v.id: v for v in amv.VILLAGES}
+        self.assertEqual((by_id["village_EW10_3"].bound, by_id["village_EW10_3"].village_type,
+                          by_id["village_EW10_3"].culture), ("town_EW10", "fisherman", "gondor"))
+        for vid in ("village_EW11_1", "village_EW11_2", "village_EW11_3"):
+            self.assertEqual((by_id[vid].bound, by_id[vid].culture, by_id[vid].after),
+                             ("town_EW11", "gondor", "town_EW11"), vid)
+        food = {"wheat_farm", "cattle_farm", "sheep_farm", "swine_farm", "fisherman", "vineyard",
+                "date_farm", "olive_trees"}
+        for vid in ("village_EW11_1", "village_EW11_2", "village_EW11_3"):
+            self.assertIn(by_id[vid].village_type, food, vid)
+        # Framsburg's pair landed the same evening: castle-bound, Gundabad, both food, at that
+        # culture's 500 economy floor (the HEARTH default).
+        for vid in ("castle_village_G4_1", "castle_village_G4_2"):
+            self.assertEqual((by_id[vid].bound, by_id[vid].culture, by_id[vid].after, by_id[vid].hearth),
+                             ("castle_G4", "gundabad", "castle_G4", amv.HEARTH), vid)
+            self.assertIn(by_id[vid].village_type, food, vid)
+        # The renamed pair (castle_village_EW7_2/3 -> village_EW10_2/1) is NOT in this table: it is
+        # rename_map_settlements.py's contract, and listing it here would let an --apply run before
+        # the rename create a duplicate row under the new id.
+        self.assertNotIn("village_EW10_1", by_id)
+        self.assertNotIn("village_EW10_2", by_id)
+
+
 if __name__ == "__main__":
     unittest.main()

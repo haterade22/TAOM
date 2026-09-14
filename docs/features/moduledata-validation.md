@@ -182,6 +182,27 @@ Evidence: adding a culture whose fiefs sit below the floor produced 4 errors and
 spec reports `PASS`. Pinned by `SettlementEconomyFloorTests` and `SettlementEconomyRegistryTests` in
 `tools/tests/test_validate_moduledata.py`.
 
+## Fortification without village (`FORTIFICATION_WITHOUT_VILLAGE`)
+
+**Severity WARNING.** Fires for a town or castle in the world the game actually builds that no
+`<Village bound="Settlement.<id>">` names. Such a fief starts every campaign with no village trade,
+no villager parties and no rural notables, and its food runs on the fief alone. `town_EW10`
+(Serelond) and `town_EW11` (Methir) shipped that way until #597 (2026-09-13), and the only thing
+that noticed was a hand count over the LIVE `TAOM_Map/ModuleData/settlements.xml`, which is
+unversioned: this is the in-repo gate beside that external edit.
+
+The pass reads the `bound` field that `build_settlement_economy` now records per village, so it is
+skipped, never faked, without a game install. A warning rather than an error, because the fix is a
+map-editor placement plus a data row, not a commit, and the commit hook cannot see the file it is
+about anyway. Exemptions live in `Validator._VILLAGELESS_BY_DESIGN` with a reason each (none today:
+`castle_G4`, Framsburg, sat there for an hour on 2026-09-13 until its two villages were placed), and an entry rots two ways that
+both used to read as a pass: naming a fortification that is not in the world, or naming one that has
+villages again. Both are reported.
+
+Fix: place the village entities in the editor, then add rows with
+[`tools/add_map_villages.py`](../../tools/add_map_villages.py) or rebind a neighbour with
+[`tools/rename_map_settlements.py`](../../tools/rename_map_settlements.py).
+
 ## Mounted-dwarf check (`MOUNTED_DWARF`)
 
 **Severity ERROR.** Fires on an `NPCCharacter` with `race="dwarf"` that can reach a mount which is
@@ -714,6 +735,9 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-09-13: `FORTIFICATION_WITHOUT_VILLAGE` added (#597): every town and castle in the live world
+  must have a bound village, and `build_settlement_economy` now records `bound` per village. Found
+  Serelond, Methir and Framsburg empty; all three gained villages the same evening.
 - 2026-09-13: `GENERATOR_RETIRED_ITEM_REF` added: the tools/ generators' own item tables are now
   resolved against the live install, after seven of them were found writing 67 retired or
   never-defined ids. Standalone CLI `check_generator_item_refs.py` and a unittest gate carry the same

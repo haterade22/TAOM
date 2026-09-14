@@ -113,5 +113,6 @@ This patch runs at ~3000 calls/second on a populated map (60 FPS × ~50 visible 
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

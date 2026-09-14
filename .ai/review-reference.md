@@ -42,6 +42,15 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Refutes the prompt's premises before answering its questions** (2026-09-13, Gondor volunteer
+  pools review 110): two of eight handed suspects restated the author's own assumptions (Morlad's
+  pool "bowman-only" when the file holds bowman 50 / scout 50; the clan pools "only for unmapped
+  settlements" when a converted fief resolves its settlement culture's `CultureMap` entry first,
+  `VolunteerRecruitmentService.cs:92`). Codex reopened the JSON and the cascade, corrected both,
+  then answered the corrected question with a Markov estimate from the real roots and a per-case
+  conversion table; it also re-counted the live map (97, not the doc's 93) and recomputed every
+  mirror share by hand. When a suspect names a file, expect Codex to read the file before the
+  suspect; write suspects that survive that read, and treat a disputed premise as a finding.
 - **Runs the production allocator to print the collision it claims, and opens the caller of every
   override a thread map lists** (2026-09-13, creature handles review 109): handed a slot map whose
   eviction had just been added, it compiled `LayoutPositioner` and its model types into a PowerShell

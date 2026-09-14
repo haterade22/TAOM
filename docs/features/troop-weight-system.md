@@ -615,6 +615,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 - [docs/modding/balance-levers.md](../modding/balance-levers.md)
 - [docs/modding/configs-balance.md](../modding/configs-balance.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
 
 <!-- backlinks-end -->

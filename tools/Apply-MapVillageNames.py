@@ -283,6 +283,10 @@ NAMES = {
     "castle_village_EW6_4": "Doronlad",   # de-duped from second "Sardol" (timber village, Morlad)
     "village_EW6_1": "Falasbar",          # de-duped from second "Melgobas" (Anfalas coast fisher village)
     "castle_village_EW7_4": "Amon Gelin", # renamed from "Green Hills Steading Mouth" (vineyard, Bar-en-Siril)
+    "village_EW10_3": "Aerlond",       # fisherman; sea-haven, Serelond's third village (#597 batch, tools/add_map_villages.py)
+    "village_EW11_1": "Parth Mallen",  # wheat farm; golden field, Methir (#597 batch, tools/add_map_villages.py)
+    "village_EW11_2": "Nan Laeg",      # sheep farm; green vale, Methir (#597 batch, tools/add_map_villages.py)
+    "village_EW11_3": "Emyn Caran",    # olive trees; red hills, Methir, on the retired hideout_desert_34 site (#597 batch)
     "village_EW8_2": "Parthlann",         # Sindarized from Rohan-style "Cressfeld" (cattle pasture, Pinnath Gelin)
     "village_EW8_3": "Iaulad",            # Sindarized from Rohan-style "Cornworth" (wheat, Pinnath Gelin)
     "castle_village_EW9_1": "Faslond",    # de-placeholdered from "South Harbor" (fisher, Tolfalas/Belfalas coast)
@@ -336,6 +340,8 @@ NAMES = {
     "village_G2_2": "Gram-zâr",
     "village_G2_3": "Gram-mîr",
     "village_G2_4": "Gram-bash",
+    "castle_village_G4_1": "Fram-bûrz",   # wheat farm; Framsburg's Northman name kept by the orcs, dark (#597 batch, tools/add_map_villages.py)
+    "castle_village_G4_2": "Fram-bosh",   # swine farm; -bosh as Bagmosh and Gundbosh, the map's swine farms (#597 batch, tools/add_map_villages.py)
 
     # FH - Far Harad (Variag/Mongol-Arabic)
     "castle_village_FH1_1": "Archad-Khoth",

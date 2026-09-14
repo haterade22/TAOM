@@ -177,8 +177,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        // town_EW5 = Dol Amroth. Under the 80/20 standard the Belfalas regular line leads the pool and
-        // the Swan Knights are the 20% specific share, so roll 0 lands on bel_recruit.
+        // town_EW5 = Dol Amroth. Under the 60/40 town standard the Belfalas regular line leads the pool
+        // and the Swan Knights are the 40% household share, so roll 0 lands on bel_recruit.
         Assert.AreEqual("gondor_bel_recruit", result);
     }
 
@@ -270,22 +270,21 @@ public class VolunteerRecruitmentServiceTests
     // --- Weighted random selection ---
 
     [TestMethod]
-    // town_EW1 (Minas Tirith), mirroring gondor.json: five Anorien troops at 7 (70%), mt_trainee +
-    // mt_veteran at 5 (20%), ithilien_ranger at 5 (10%) = total 50.
-    // Cumulative: peasant 0-6, archer_militia 7-13, militia 14-20, footman 21-27, skirmisher 28-34,
-    // mt_trainee 35-39, mt_veteran 40-44, ranger 45-49.
-    [DataRow(0,  "gondor_ano_peasant")]
-    [DataRow(6,  "gondor_ano_peasant")]
-    [DataRow(7,  "gondor_ano_archer_militia")]
-    [DataRow(34, "gondor_ano_skirmisher")]
-    [DataRow(35, "gondor_mt_trainee")]
-    [DataRow(39, "gondor_mt_trainee")]
-    [DataRow(40, "gondor_mt_veteran")]
-    [DataRow(45, "gondor_ithilien_ranger")]
-    [DataRow(49, "gondor_ithilien_ranger")]
+    // town_EW1 (Minas Tirith), mirroring gondor.json: five Anorien troops at 1 (50%), mt_trainee +
+    // mt_veteran at 2 (40%), ithilien_ranger at 1 (10%) = total 10.
+    // Cumulative: peasant 0, archer_militia 1, militia 2, footman 3, skirmisher 4, mt_trainee 5-6,
+    // mt_veteran 7-8, ranger 9.
+    [DataRow(0, "gondor_ano_peasant")]
+    [DataRow(1, "gondor_ano_archer_militia")]
+    [DataRow(4, "gondor_ano_skirmisher")]
+    [DataRow(5, "gondor_mt_trainee")]
+    [DataRow(6, "gondor_mt_trainee")]
+    [DataRow(7, "gondor_mt_veteran")]
+    [DataRow(8, "gondor_mt_veteran")]
+    [DataRow(9, "gondor_ithilien_ranger")]
     public void GetVolunteerTroopId_MinasTirith_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
     {
-        _random.Next(50).Returns(roll);
+        _random.Next(10).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_EW1",
             boundSettlementId: null,
@@ -375,25 +374,25 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // town_EW2 / town_EW3 (West / East Osgiliath), mirroring gondor.json: five Anorien troops at 7
-    // (70%), osg_veteran + osg_skirmisher at 5 (20%), ithilien_ranger at 5 (10%) = total 50.
-    // Cumulative: peasant 0-6, archer_militia 7-13, militia 14-20, footman 21-27, skirmisher 28-34,
-    // osg_veteran 35-39, osg_skirmisher 40-44, ranger 45-49. The hand-written pool used to omit the
-    // ranger entirely while the live JSON offered it at 10%; both layers now carry it.
-    [DataRow("town_EW2", 0,  "gondor_ano_peasant")]
-    [DataRow("town_EW2", 34, "gondor_ano_skirmisher")]
-    [DataRow("town_EW2", 35, "gondor_osg_veteran")]
-    [DataRow("town_EW2", 40, "gondor_osg_skirmisher")]
-    [DataRow("town_EW2", 45, "gondor_ithilien_ranger")]
-    [DataRow("town_EW3", 0,  "gondor_ano_peasant")]
-    [DataRow("town_EW3", 34, "gondor_ano_skirmisher")]
-    [DataRow("town_EW3", 35, "gondor_osg_veteran")]
-    [DataRow("town_EW3", 40, "gondor_osg_skirmisher")]
-    [DataRow("town_EW3", 49, "gondor_ithilien_ranger")]
+    // town_EW2 / town_EW3 (West / East Osgiliath), mirroring gondor.json: five Anorien troops at 1
+    // (50%), osg_veteran + osg_skirmisher at 2 (40%), ithilien_ranger at 1 (10%) = total 10.
+    // Cumulative: peasant 0, archer_militia 1, militia 2, footman 3, skirmisher 4, osg_veteran 5-6,
+    // osg_skirmisher 7-8, ranger 9. The hand-written pool used to omit the ranger entirely while the
+    // live JSON offered it at 10%; both layers now carry it.
+    [DataRow("town_EW2", 0, "gondor_ano_peasant")]
+    [DataRow("town_EW2", 4, "gondor_ano_skirmisher")]
+    [DataRow("town_EW2", 5, "gondor_osg_veteran")]
+    [DataRow("town_EW2", 7, "gondor_osg_skirmisher")]
+    [DataRow("town_EW2", 9, "gondor_ithilien_ranger")]
+    [DataRow("town_EW3", 0, "gondor_ano_peasant")]
+    [DataRow("town_EW3", 4, "gondor_ano_skirmisher")]
+    [DataRow("town_EW3", 6, "gondor_osg_veteran")]
+    [DataRow("town_EW3", 8, "gondor_osg_skirmisher")]
+    [DataRow("town_EW3", 9, "gondor_ithilien_ranger")]
     public void GetVolunteerTroopId_OsgiliathSettlements_BoundaryRolls_ReturnExpectedTroop(
         string settlementId, int roll, string expectedTroopId)
     {
-        _random.Next(50).Returns(roll);
+        _random.Next(10).Returns(roll);
         var context = new VolunteerContext(
             settlementId: settlementId,
             boundSettlementId: null,
@@ -408,9 +407,10 @@ public class VolunteerRecruitmentServiceTests
     // --- Specific settlement verifications ---
 
     [TestMethod]
-    // Roll 0 always lands on the first entry, which under the 80/20 standard is the settlement's
-    // REGULAR line — the noble / specific line is the trailing 20% share. castle_EW10 moved from a
-    // Harondor pool to Belfalas: gondor.json groups it under "Imrazorionath, Garvirionath, and
+    // Roll 0 always lands on the first entry. In a town that is the REGULAR line (the household /
+    // specific line is the trailing 40% share); in a castle that has a household line it is that
+    // line's root, because since 2026-09-13 such a castle offers nothing else. castle_EW10 moved from
+    // a Harondor pool to Belfalas: gondor.json groups it under "Imrazorionath, Garvirionath, and
     // Hirilionath holdings ... Belfalas only", and the hand-written pool now agrees.
     [DataRow("town_EW1",    "gondor_ano_peasant")]
     [DataRow("town_EW4",    "gondor_leb_militia")]
@@ -419,13 +419,16 @@ public class VolunteerRecruitmentServiceTests
     [DataRow("town_EW9",    "gondor_lam_clansman")]
     [DataRow("town_EW10",   "gondor_anf_levy")]
     [DataRow("town_EW11",   "gondor_har_conscript")]
+    [DataRow("castle_EW2",  "gondor_ring_peasant")]
     [DataRow("castle_EW3",  "gondor_bel_recruit")]
-    [DataRow("castle_EW4",  "gondor_ano_peasant")]
+    [DataRow("castle_EW4",  "gondor_ca_noble")]
+    [DataRow("castle_EW6",  "gondor_brv_bowman")]
+    [DataRow("castle_EW7",  "gondor_ser_noble")]
     [DataRow("castle_EW8",  "gondor_pg_volunteer")]
     [DataRow("castle_EW10", "gondor_bel_recruit")]
     [DataRow("castle_EW11", "gondor_bel_recruit")]
-    [DataRow("castle_EW9",  "gondor_bel_recruit")]
-    [DataRow("castle_EW12", "gondor_bel_recruit")]
+    [DataRow("castle_EW9",  "gondor_tol_arbalest")]
+    [DataRow("castle_EW12", "gondor_lin_noble")]
     public void GetVolunteerTroopId_SpecificSettlements_ReturnExpectedRegularTroop(
         string settlementId, string expectedTroopId)
     {
@@ -1943,6 +1946,108 @@ public class VolunteerRecruitmentServiceTests
         Assert.IsTrue(rangerWeight > 0, $"{settlementId} JSON pool must include gondor_ithilien_ranger");
         double share = (double)rangerWeight / total;
         Assert.AreEqual(0.10, share, 1e-4, $"{settlementId}: ranger share {share:P2} should be 10%");
+    }
+
+    [TestMethod]
+    // Player feedback, 2026-09-13: the household lines (Swan Knights, Blackroot Vale bowmen, Methir
+    // archers) were too rare next to the regional levies, and four fiefs recruited the wrong region
+    // for where they stand. A castle that has a household line now offers ONLY that line, and a
+    // village named for a vale follows the vale (Upper Ringló and Vale Village were Lossarnach, the
+    // Blackroot villages were Pinnath Gelin or Belfalas). Drives the production gondor.json because
+    // the loader overwrites the hand-written pools at runtime.
+    [DataRow("castle_EW2",           "gondor_ring_")]                        // Glanhir: Ringlo Vale
+    [DataRow("castle_village_EW2_1", "gondor_ring_")]                        // Upper Ringló
+    [DataRow("castle_village_EW2_2", "gondor_ring_")]                        // Vale Village
+    [DataRow("castle_EW6",           "gondor_brv_")]                         // Morlad: Blackroot Vale
+    [DataRow("castle_village_EW6_1", "gondor_brv_")]
+    [DataRow("castle_village_EW6_2", "gondor_brv_")]
+    [DataRow("castle_village_EW6_3", "gondor_brv_")]
+    [DataRow("castle_village_EW6_4", "gondor_brv_")]
+    [DataRow("castle_village_EW3_3", "gondor_brv_")]                         // Blackroot Village Haven
+    [DataRow("castle_EW7",           "gondor_ser_")]                         // Bar-en-Siril: Serelond
+    [DataRow("castle_EW9",           "gondor_tol_")]                         // Caras Tolfalas
+    [DataRow("castle_EW12",          "gondor_lin_")]                         // Linhir
+    [DataRow("castle_EW4",           "gondor_ca_,gondor_ithilien_ranger")]   // Cair Andros keeps its 10% ranger
+    public void GondorJsonLoader_ProductionJson_HouseholdLinePools_OfferOnlyThatLine(
+        string settlementId, string allowedPrefixes)
+    {
+        var repoJsonPath = ResolveRepoJsonPath();
+        if (repoJsonPath == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/recruitment_pools/gondor.json relative to test bin");
+            return;
+        }
+
+        var captured = new Dictionary<string, (string troopId, int weight)[]>();
+        GondorRecruitmentJsonLoader.LoadFromPath(
+            path: repoJsonPath,
+            addSettlement: (id, entries) => captured[id] = entries,
+            addSettlementConditional: (_, __, ___) => { },
+            logger: _logger);
+
+        Assert.IsTrue(captured.ContainsKey(settlementId), $"{settlementId} must be a JSON settlement pool");
+
+        var allowed = allowedPrefixes.Split(',');
+        var strangers = new List<string>();
+        foreach (var (troopId, _) in captured[settlementId])
+        {
+            bool matchesALine = false;
+            foreach (var prefix in allowed)
+                if (troopId.StartsWith(prefix)) { matchesALine = true; break; }
+            if (!matchesALine)
+                strangers.Add(troopId);
+        }
+
+        Assert.AreEqual(0, strangers.Count,
+            $"{settlementId} must offer only [{allowedPrefixes}] troops; found: {string.Join(", ", strangers)}");
+    }
+
+    [TestMethod]
+    // The towns keep the regional line in the majority, but the household / settlement-specific line
+    // rises from 20% to 40% (player feedback, 2026-09-13; the 80/20 split dated from 2026-07-27). The
+    // Anórien capitals run 50 / 40 / 10, the Ithilien Ranger holding its 10% (pinned separately above).
+    [DataRow("town_EW1",  "gondor_mt_")]
+    [DataRow("town_EW2",  "gondor_osg_")]
+    [DataRow("town_EW3",  "gondor_osg_")]
+    [DataRow("town_EW4",  "gondor_pel_")]
+    [DataRow("town_EW5",  "gondor_da_")]
+    [DataRow("town_EW6",  "gondor_lg_")]
+    [DataRow("town_EW7",  "gondor_loss_noble")]
+    [DataRow("town_EW8",  "gondor_arn_")]
+    [DataRow("town_EW9",  "gondor_cal_")]
+    [DataRow("town_EW10", "gondor_ser_")]
+    [DataRow("town_EW11", "gondor_met_")]
+    public void GondorJsonLoader_ProductionJson_TownHouseholdLineShareIsFortyPercent(
+        string settlementId, string householdPrefix)
+    {
+        var repoJsonPath = ResolveRepoJsonPath();
+        if (repoJsonPath == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/recruitment_pools/gondor.json relative to test bin");
+            return;
+        }
+
+        var captured = new Dictionary<string, (string troopId, int weight)[]>();
+        GondorRecruitmentJsonLoader.LoadFromPath(
+            path: repoJsonPath,
+            addSettlement: (id, entries) => captured[id] = entries,
+            addSettlementConditional: (_, __, ___) => { },
+            logger: _logger);
+
+        Assert.IsTrue(captured.ContainsKey(settlementId), $"{settlementId} must be a JSON settlement pool");
+
+        int total = 0;
+        int householdWeight = 0;
+        foreach (var (troopId, weight) in captured[settlementId])
+        {
+            total += weight;
+            if (troopId.StartsWith(householdPrefix))
+                householdWeight += weight;
+        }
+
+        Assert.IsTrue(householdWeight > 0, $"{settlementId} JSON pool must include the {householdPrefix} line");
+        double share = (double)householdWeight / total;
+        Assert.AreEqual(0.40, share, 1e-4, $"{settlementId}: household share {share:P2} should be 40%");
     }
 
     [TestMethod]

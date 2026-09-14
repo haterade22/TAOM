@@ -269,3 +269,14 @@ roots; parsing every file cost 1.2 s).
 ## GitHub Issue
 
 [#582](https://github.com/haterade22/TAOM/issues/582)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+
+<!-- backlinks-end -->

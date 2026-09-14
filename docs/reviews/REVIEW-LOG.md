@@ -2958,6 +2958,46 @@ audit, both reviews, the Codex table); lessons in `lessons/adapters-taleworlds-a
 `lessons/state-lifecycle-save.md`; rules `csharp-architecture.md` and `harmony-patches.md`; one
 CLAUDE.md trap row. Owed: the player's hang dump, the in-game creature battle, a test build.
 
+## Review 110: Gondor volunteer pools, four vale fixes and the household-line retune, 5-agent deep-review + Codex gpt-6-astra ultra (2026-09-13)
+
+The user asked for four Gondor fiefs to recruit the vale they stand in (Glanhir and its Ringló
+villages were Lossarnach; Morlad's four villages Pinnath Gelin; Blackroot Village Haven Belfalas;
+Bar-en-Siril plain Anfalas beside Serelond's household line) and relayed a player's complaint that
+Swan Knights, Blackroot Vale bowmen and Methir archers were too rare against "endless" Belfalas and
+Pinnath Gelin levies. Data only: `gondor.json` regrouped and reweighted (castles with a household
+line exclusive to it, towns 60/40 instead of the 80/20 chosen on 2026-07-27, Minas Tirith and
+Osgiliath 50/40/10), the C# mirror held in lockstep, two production-JSON tests added, five roll tests
+re-derived. No troop id or settlement key added or removed.
+
+**Deep review, five agents:** clean on the runtime. Agent 1's eleven em dashes were all pre-existing
+lines (0 added lines carry one). Agent 2 verified seven signatures on the installed 1.4.8 DLLs and
+read both fill loops: the root is inserted unconditionally, the tier check gates only later
+promotion. Agent 5 traced eight flows with no gap, proved every live Gondor settlement resolves
+through `SettlementMap`, and recorded the one inconsistency: the clan fallback pools keep the old
+ratios and nothing reaches them. A self-check after the agents found the doc error none of them
+could see: the JSON's own `notes` claimed every non-vale village keeps its regional line while Bar
+Melui's three have shared the town's mixed group since before July; the note, the doc and the
+CHANGELOG now state the exception, and the data was left as found.
+
+**Codex (gpt-6-astra, ultra, about 25 minutes): no P1, P2 or P3; eight suspects disputed or reduced
+to observations with freshly decompiled lines, two by correcting the prompt's own premises** (Morlad's
+pool is bowman 50 / scout 50, not bowman-only; a converted fief resolves its settlement culture's
+`CultureMap` entry before the standard cascade, so the clan pools are not the converted path). It
+re-counted the live map at 97 EW settlements after #597 (the doc said 93, the mirror comment 66
+villages; both fixed), recomputed every mirror share by hand (largest error 6.7e-7 against the 1e-4
+tolerance), re-ran the reachability flood from the production JSON roots alone (181 of 189, the
+eight known exemptions), estimated in-slot maturation from the real roots (about 27.5% of untouched
+castle slots at tier 5 or 6 after 30 days at notable Power 100, capped at the level 31 veteran archer
+by `MaxVolunteerTier` 6) and pointed out that the CHANGELOG stated neither that nor the higher price
+of a level 16 root; three sentences added. It did not run the unit suite and said so.
+
+Volunteer suite 389 green after the follow-ups; full suite 9084 / 0 / 2 before the review. RCA
+[rca-gondor-recruitment-vales-2026-09-13.md](rca-gondor-recruitment-vales-2026-09-13.md) (F1 to F4
+plus the Codex table); lesson in `lessons/data-content-cultures.md`; `REVIEW-GUIDE.md` SUCCESS-10;
+prompt [codex-adversarial-gondor-recruitment-vales-2026-09-13.prompt.md](codex-adversarial-gondor-recruitment-vales-2026-09-13.prompt.md).
+Owed: the GitHub issue, a decision on Bar Melui's villages, a live-map coverage gate in
+`validate_moduledata.py` with the #597 session, the in-game recruit-screen check after a restart.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

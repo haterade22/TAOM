@@ -321,6 +321,12 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 **Why it works:** a callback's thread is its caller's thread, and a managed `Mission.OnX` is not an `[MBCallback]` just because it sits beside them.
 **Prevention:** every thread claim about a `MissionBehavior` override names the caller's file and line; an override whose caller is an agent, team or formation tick, or unknown native, defers itself (`DeferredCallbackQueue`) instead of touching main-thread state.
 
+### SUCCESS-10: Checks the prompt's own premises against the files before answering them
+**Review:** Gondor volunteer pools, review 110 (2026-09-13)
+**What worked:** Two Known Suspects were built on wrong premises. KS3 described Morlad's pool as bowman-only when the file holds bowman 50 / scout 50, and KS7 said the clan and culture pools fire only for settlements with no pool, when a converted fief resolves its settlement culture's `CultureMap` entry before the standard cascade (`VolunteerRecruitmentService.cs:92`). Codex reopened the JSON and the cascade, corrected both, then answered the corrected question: a Markov estimate of in-slot maturation from the real roots, and the conversion outcome per case.
+**Why it works:** the prompt writer built the changeset and carries its assumptions; a suspect that restates an assumption cannot catch its own error. Reading the file the suspect is about, first, does.
+**Prevention:** every Known Suspect names the file and line it is about, and the reviewer is told to refute the suspect's premise as well as its conclusion. The template's "Try to refute every claim below" already says so; keep it, and treat a disputed premise as a finding about the prompt, not noise.
+
 ---
 
 ## Real Bugs Found (by source)

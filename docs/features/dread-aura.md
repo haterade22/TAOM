@@ -393,7 +393,6 @@ Two consequences worth being deliberate about:
 - [docs/roadmap.md](../roadmap.md)
 
 <!-- backlinks-end -->
-
 ## Source pruning and slot reuse (2026-09-13, #595)
 
 2026-09-13 (#595): `DreadSourceTracker.Prune` requires `AgentSlotIdentity.IsCurrentOccupant` as well as the

@@ -437,6 +437,7 @@ The kingdom-cap curve (#583) has `tools/tests/test_kingdom_caps.py` (23 cases): 
 ## Referenced by
 
 - [docs/features/black-numenorean.md](./black-numenorean.md)
+- [docs/features/gondor-armor-revamp.md](./gondor-armor-revamp.md)
 - [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
 - [docs/modding/balance-levers.md](../modding/balance-levers.md)
 - [docs/modding/items-armor.md](../modding/items-armor.md)

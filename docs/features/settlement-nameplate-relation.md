@@ -220,3 +220,15 @@ per call to a path already running at ~3000 calls/sec.
 - **Issue:** #591 [feat(map-ui): settlement nameplates show relation colour and vanilla transparency](https://github.com/haterade22/TAOM/issues/591)
 - **Issue:** #596 [feat(map-ui): MCM controls for settlement nameplate relation colour and plate opacity](https://github.com/haterade22/TAOM/issues/596)
 - **Status:** Open (both await the in-game pass)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/settlement-nameplate-fade.md](./settlement-nameplate-fade.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

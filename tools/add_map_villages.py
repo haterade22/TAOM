@@ -14,9 +14,11 @@ while a PLACEHOLDER row has no scene entity, SettlementVisual.OnStartup NREs at 
 `--check` is the gate for that: it fails on any table id whose master row, loc row or scene entity
 is missing, or whose master position drifted from the scene transform.
 
-Rows are inserted right after INSERT_AFTER so a region's block stays contiguous; loc rows go after
-LOC_ANCHOR's last row in each language, same display name in all 12 (Tolkien proper nouns do not
-translate). Idempotent per id: an id already in the master is skipped. Byte discipline per
+Rows are inserted right after the row's own `after` anchor (default INSERT_AFTER) so a region's
+block stays contiguous; loc rows go after that anchor's last row in each language, same display
+name in all 12 (Tolkien proper nouns do not translate). `hearth` is per row too (default HEARTH):
+the #597 Gondor rows sit at 350 like their EW10/EW11 castle-village neighbours; the Isengard and
+Gundabad rows at those cultures' 500 floor. Idempotent per id: an id already in the master is skipped. Byte discipline per
 .claude/rules/moduledata-validation.md: binary read, each file's own BOM and newline preserved
 (the master carries a BOM and CRLF, the loc files no BOM and CR CR LF; both are detected, not assumed), a non-.xml backup before the
 write, and every written document is parsed first.
@@ -61,10 +63,13 @@ VALID_VILLAGE_TYPES = {
 # of that culture already uses in the live file.
 MESHES = {
     "isengard": ("gui_bg_village_empire", "wait_empire_village", "gui_bg_castle_empire"),
+    "gondor": ("gui_bg_village_empire", "wait_empire_village", "gui_bg_castle_empire"),
+    "gundabad": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
 }
 HEARTH = "500"  # the SETTLEMENT_ECONOMY_FLOOR for isengard (tools/settlement_economy_floor.json)
 
-Village = namedtuple("Village", "id name bound village_type culture scene")
+# hearth and after are optional per row: hearth defaults to HEARTH, after to INSERT_AFTER (anchor_of).
+Village = namedtuple("Village", "id name bound village_type culture scene hearth after", defaults=(HEARTH, None))
 
 # The batch. Bindings follow the sibling ids already in the file (castle_village_isengard_a is on
 # castle_orthanc_gate, village_isengard_a on town_isengard, castle_village_I2_1..3 on castle_I2).
@@ -80,9 +85,25 @@ VILLAGES = [
     Village("village_isengard_e",        "Nan Gwath",      "town_isengard",       "swine_farm", "isengard", "empire_village_g"),
     Village("village_isengard_f",        "Groth Morn",     "town_isengard",       "iron_mine",  "isengard", "empire_village_h"),
     Village("castle_village_I2_4",       "Angroth",        "castle_I2",           "iron_mine",  "isengard", "empire_village_i"),
+    # #597 (2026-09-13): Serelond (town_EW10) and Methir (town_EW11) held no village at all. The
+    # map author placed the entities first; village_EW11_3 had none at authoring time and lands as
+    # a PLACEHOLDER until the scene is saved. Sindarin names per the EW row of
+    # docs/reference/taom-map-settlement-naming.md; hearth 350 matches castle_village_EW10/EW11_*;
+    # scenes are the four taom_gondor_village_00N_forceatmo folders every EW village already uses.
+    # The two villages rebound from castle_EW7 (village_EW10_1/_2) belong to rename_map_settlements.py.
+    Village("village_EW10_3", "Aerlond",      "town_EW10", "fisherman",   "gondor", "taom_gondor_village_001_forceatmo", hearth="350", after="town_EW10"),
+    Village("village_EW11_1", "Parth Mallen", "town_EW11", "wheat_farm",  "gondor", "taom_gondor_village_003_forceatmo", hearth="350", after="town_EW11"),
+    Village("village_EW11_2", "Nan Laeg",     "town_EW11", "sheep_farm",  "gondor", "taom_gondor_village_004_forceatmo", hearth="350", after="town_EW11"),
+    Village("village_EW11_3", "Emyn Caran",   "town_EW11", "olive_trees", "gondor", "taom_gondor_village_002_forceatmo", hearth="350", after="town_EW11"),
+    # #597, same evening: Framsburg (castle_G4) was the third and last fortification with no village.
+    # Gundabad hearth is that culture's 500 economy floor (the HEARTH default); panel meshes and
+    # sturgia_village_* scenes as every G-region village; Black Speech names per the naming doc's G row.
+    # Each Gundabad fief's villages share a stem (Düglar-, Mazūg-, Shôrd-, Gund-, Gram-); Framsburg's is
+    # the Northman name the orcs kept. -bosh is what this map's swine farms carry (Bagmosh, Gundbosh).
+    Village("castle_village_G4_1", "Fram-bûrz", "castle_G4", "wheat_farm", "gundabad", "sturgia_village_g", after="castle_G4"),
+    Village("castle_village_G4_2", "Fram-bosh", "castle_G4", "swine_farm", "gundabad", "sturgia_village_h", after="castle_G4"),
 ]
-INSERT_AFTER = "village_isengard_a"   # last settlement of the Isengard block in the master file
-LOC_ANCHOR = "village_isengard_a"     # its last loc row in each language file
+INSERT_AFTER = "village_isengard_a"   # default anchor: last settlement of the Isengard block, and its last loc row
 
 PLACEHOLDER_STEP = (1.5, 1.0)  # map units per placeholder on the same parent
 
@@ -96,6 +117,19 @@ def comp_id(vid):
     raise ValueError(f"not a village id: {vid!r}")
 
 
+def anchor_of(v):
+    """The settlement whose block, and whose last loc row, this row lands after."""
+    return v.after or INSERT_AFTER
+
+
+def group_by_anchor(rows):
+    """{anchor: [rows]} in first-seen anchor order, rows in table order within each anchor."""
+    groups = {}
+    for v in rows:
+        groups.setdefault(anchor_of(v), []).append(v)
+    return groups
+
+
 def village_block(v, px, py, nl):
     if v.village_type not in VALID_VILLAGE_TYPES:
         raise ValueError(f"{v.id}: invalid VillageType id {v.village_type!r}")
@@ -105,7 +139,7 @@ def village_block(v, px, py, nl):
     return (
         f'  <Settlement id="{v.id}" name="{{=Settlements.Settlement.name.{v.id}}}{v.name}" posX="{px}" posY="{py}" culture="Culture.{v.culture}">\n'
         f'    <Components>\n'
-        f'      <Village id="{comp_id(v.id)}" village_type="VillageType.{v.village_type}" hearth="{HEARTH}" bound="Settlement.{v.bound}" background_crop_position="0.0" background_mesh="{bg}" wait_mesh="{wait}" castle_background_mesh="{castle_bg}" />\n'
+        f'      <Village id="{comp_id(v.id)}" village_type="VillageType.{v.village_type}" hearth="{v.hearth}" bound="Settlement.{v.bound}" background_crop_position="0.0" background_mesh="{bg}" wait_mesh="{wait}" castle_background_mesh="{castle_bg}" />\n'
         f'    </Components>\n'
         f'    <Locations complex_template="LocationComplexTemplate.village_complex">\n'
         f'      <Location id="village_center" scene_name="{v.scene}" />\n'
@@ -292,16 +326,16 @@ def main():
     loc_plan = plan_loc_rows(VILLAGES, loc_texts)
 
     nl = detect_newline(master)
-    blocks, placeholders, per_parent = [], 0, {}
-    print(f"Plan: +{len(todo)} village(s) after {INSERT_AFTER} ({len(VILLAGES) - len(todo)} already present)")
+    blocks, placeholders, per_parent = {}, 0, {}
+    print(f"Plan: +{len(todo)} village(s) ({len(VILLAGES) - len(todo)} already present)")
     for v in todo:
         k = per_parent.get(v.bound, 0)
         px, py, source = resolve_position(v, scene, master, k)
         if source == "PLACEHOLDER":
             per_parent[v.bound] = k + 1
             placeholders += 1
-        blocks.append(village_block(v, px, py, nl))
-        print(f"  {v.id:28} {v.name:15} -> bound {v.bound:20} {v.village_type:11} at {px}, {py}  [{source}]")
+        blocks.setdefault(anchor_of(v), []).append(village_block(v, px, py, nl))
+        print(f"  {v.id:28} {v.name:15} -> bound {v.bound:20} {v.village_type:11} at {px}, {py}  [{source}]  after {anchor_of(v)}")
     if placeholders:
         print(f"\n{placeholders} PLACEHOLDER position(s): the entity is not in the saved scene yet. Save the scene "
               f"before any campaign load; the editor writes the real posX/posY back. Then run --check.")
@@ -313,14 +347,21 @@ def main():
         return 0
 
     tag = "mapvillages_" + datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    n_blocks = sum(len(group) for group in blocks.values())
     if blocks:
-        _write(LIVE, master_bom, insert_after_settlement(master, INSERT_AFTER, blocks), tag)
+        text = master
+        for anchor, group in blocks.items():
+            text = insert_after_settlement(text, anchor, group)
+        _write(LIVE, master_bom, text, tag)
     written = []
+    by_id = {v.id: v for v in VILLAGES}
     for lang, (bom, text) in locs.items():
         if loc_plan[lang]:
-            _write(_loc_path(lang), bom, insert_loc_rows(text, LOC_ANCHOR, loc_plan[lang]), tag)
+            for anchor, group in group_by_anchor([by_id[sid] for sid, _ in loc_plan[lang]]).items():
+                text = insert_loc_rows(text, anchor, [(v.id, v.name) for v in group])
+            _write(_loc_path(lang), bom, text, tag)
             written.append(lang)
-    print(f"\nApplied: +{len(blocks)} settlement(s) in settlements.xml, +{sum(len(loc_plan[l]) for l in written)} loc row(s) "
+    print(f"\nApplied: +{n_blocks} settlement(s) in settlements.xml, +{sum(len(loc_plan[l]) for l in written)} loc row(s) "
           f"across {len(written)} of {len(locs)} languages ({', '.join(written) or 'none'}); "
           f"backups *.bak_{tag}; every written file re-parsed.")
     return 0

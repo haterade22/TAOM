@@ -478,6 +478,7 @@ Owed by the 2026-08-03 work specifically, none of it run:
 - [docs/features/hero-race.md](./hero-race.md)
 - [docs/features/player-possession.md](./player-possession.md)
 - [docs/features/player-switcher.md](./player-switcher.md)
+- [docs/features/smart-cavalry-ai.md](./smart-cavalry-ai.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
 - [docs/modding/module-dependencies.md](../modding/module-dependencies.md)

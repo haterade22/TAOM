@@ -87,9 +87,11 @@ PROSPERITY_CAP = 5600  # vanilla max; >6000 flips the housing-growth term negati
 HEARTH_CAP = 825
 ROUND_TO = 10
 
-# Known zero-bound-village fiefs (verified 2026-07-02); --pin-zero-village pins ANY fief the
-# parse finds with zero villages, this list is documentation.
-KNOWN_ZERO_VILLAGE = ("town_EW10", "town_EW11", "castle_G4")
+# Known zero-bound-village fiefs (verified 2026-07-02: town_EW10, town_EW11, castle_G4; all three
+# gained villages under #597 on 2026-09-13); --pin-zero-village pins ANY fief the parse finds with
+# zero villages, this list is documentation. validate_moduledata.py's FORTIFICATION_WITHOUT_VILLAGE
+# is the gate.
+KNOWN_ZERO_VILLAGE = ()
 
 
 def game_dir(cli_value=None):

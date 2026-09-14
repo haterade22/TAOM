@@ -4,6 +4,112 @@
 
 ## 2026-09-13
 
+### chore(armory-assets): LODs for the 28 Armoury meshes that had none, five levels each, generated in headless Blender
+
+A scan of the 679 Armoury geo tpacs (4.4 GB) against every mesh reference in the item XML found 32 references
+with no `.lodN` sibling of any naming shape (numeric, material-word or both), all armour and mounts; all 723
+crafting pieces and every weapon already had LODs. The first pass of that scan wrongly flagged the whole
+Dunland and Gundabad sets because it only knew the numeric form (`x.0.lod1`) and not the material-word form
+(`x.base.lod1`); Mike caught it in the editor. Of the 32, `clo_sk_northern_pauldron_cape_c` is cloth and
+stays LOD-less by rule, and `elephant_mesh` plus `sk_elephant_armor_a` belong to a tpac whose source is
+`ADOD_Beasts/AssetSources/elephants/adod_elephant.fbx`, not on this machine. The other 28 (Harad body set,
+Khamul, Legolas, six Rohan `lrd_horse_armour_*`, three Rivendell tier 1 hoods, gondor_king_crown,
+sauron_helmet_wearable, thenn_boots_fur, cts_roha_cape1, the elephant body in the Harad armour file, the
+mumakil base, a Rohan test gorget) got LOD 1 to 5 at 70, 50, 30, 12 and 4 percent of LOD 0 via a Decimate
+collapse in Blender 5.2.1 (Store app, driven headless through its launcher), each LOD keeping the armature
+modifier, vertex groups, parent and material slots. Every one of the 20 source FBX files was re-imported
+before and after and compared object by object (dimensions, triangles, skinning, UV layers, bone names): no
+pre-existing object changed, including the 152 in `thenn.fbx`. Two things the pilot taught: the editor
+assigns LOD records a material by matching the FBX material name to a material asset, so the exported slots
+are named after the engine materials read out of each mesh's existing tpac records (a GUID 8 bytes after the
+record name in most files, 40 bytes before it in the horse armours), and an FBX can carry a stray duplicate
+object (`roh_nbl_gorg_tst_6.002`) that a suffix-stripping matcher picks instead of the real one. The mumakil
+keeps its third slot `eye_mat` (no record) and the test gorget keeps its 16 FBX slot names (three records).
+Originals, scripts (`scan_lods.py`, `blender_add_lods.py`, `blender_inspect_fbx.py`, `run_lods_batch.py`,
+`swap_lods.py`) and reports (`lod_report.md`, `lods_batch_report.md`): `E:\taom-texture-backup-2026-09-13\`.
+
+### fix(map-data): Serelond, Methir and Framsburg get villages, two EW7 villages rebound, hideout_desert_34 retired (#597)
+
+Three of the map's 221 fortifications started every campaign with no bound village: town_EW10
+(Serelond), town_EW11 (Methir) and castle_G4 (Framsburg). The settlement-food entry of 2026-09-06
+had already called the villages misallocated rather than scarce. The map author did the scene half
+tonight in the editor, and the data now follows it in the LIVE TAOM_Map settlements.xml:
+castle_village_EW7_3 and castle_village_EW7_2 (both nearer Serelond than Bar-en-Siril, same clan)
+became village_EW10_1 and village_EW10_2 bound to town_EW10, names, hearth and types kept;
+village_EW10_3 (Aerlond, fisherman), village_EW11_1 (Parth Mallen, wheat), village_EW11_2 (Nan
+Laeg, sheep) and village_EW11_3 (Emyn Caran, olives) were added; castle_village_G4_1 (Fram-bûrz,
+wheat) and castle_village_G4_2 (Fram-bosh, swine) were added for Framsburg; and hideout_desert_34,
+which stood where Methir's third village now is, was removed (one of 34 Haradrim camps, no clan
+home, no code reference). 1,002 settlements, 622 bound villages, no fortification without one.
+
+Two tools carry it, both byte-faithful with backups and a `--check` gate. New
+`tools/rename_map_settlements.py` is the one sanctioned way to rename or remove a settlement id:
+only after the map author renamed or deleted the entity, when the data row is the orphan. It
+rewrites the whole block in place (id, name and text keys, component id, `bound`, position from the
+new entity), keeps every translated loc row under the new key, renames the ids in
+`recruitment_pools/gondor.json`, refuses a fortification that still has bound villages, and sweeps
+`Main/` for any other reference to an old id before it writes. `tools/add_map_villages.py` gained
+gondor and gundabad panel meshes and a per-row `hearth` and `after` anchor, so one table now serves
+more than one region and parent. 25 new tests for the rename tool, 5 for the batch generalisation.
+
+The in-repo gate beside the external edit is a new `validate_moduledata.py` warning,
+`FORTIFICATION_WITHOUT_VILLAGE`: every town and castle in the live world must have a bound village.
+`build_settlement_economy` now records `bound` per village, and an allowlist entry that names no
+fortification or one that has villages again is itself a finding (9 tests). It reported exactly the
+three fiefs before the data change and nothing after. `check_external_loc_coverage.py` moved by the
+six new proper-noun rows per language and the baseline is re-recorded at 3,000; the translator run
+stays parked with #579. Recruitment pools: village_EW10_3 joins the Anfalas-only group beside the
+two renamed ids, the three Methir villages join the Harondor-only group (same clan as castle_EW15
+and castle_EW16). `docs/scene-entities.md` regenerated from the live scene, 845 entities.
+
+Owed in game: rebuild the settlement distance cache (Options, Mod Options, TAOM, Map Tools, Rebuild
+Now), then a new campaign showing Serelond with three villages, Methir three, Framsburg two.
+
+### fix(recruitment): four Gondor fiefs recruit the vale they stand in, and the household lines are commoner
+
+Four fiefs recruited the wrong region for where they sit on the map. Glanhir's two villages, Upper
+Ringló and Vale Village, gave the Lossarnach line (the JSON group was even labelled as Ausirionath's,
+the Lossarnach house, though Barahirionath holds the castle), while the castle itself mixed Lamedon
+swordsmen with the Ringló Vale line. Morlad offered Blackroot Vale bowmen at one roll in five and its
+four villages were pure Pinnath Gelin. Blackroot Village Haven, Edhellond's village at the Morthond
+mouth, recruited Belfalas. Bar-en-Siril gave plain Anfalas levies while Serelond, the same house's
+city next door, raised the Serelond line. All four now follow the vale: Glanhir and both its villages
+are Ringló Vale only; Morlad, its four villages and Blackroot Village Haven are Blackroot Vale only;
+Bar-en-Siril is Serelond only.
+
+A player also reported the household lines as too rare next to the regional levies (13 Methir archers
+and 7 Sun Knights after a whole campaign, "endless" Belfalas and Pinnath Gelin), which is what the
+80/20 split of 2026-07-27 produces. Two changes, both in `recruitment_pools/gondor.json` with the
+hand-written mirror in `VolunteerRecruitmentService.Gondor.cs` held in lockstep. A castle that has a
+household line now offers only that line (Glanhir, Morlad, Bar-en-Siril, Caras Tolfalas, Linhir; Cair
+Andros keeps the Ithilien Ranger at 10% and gives its own line the other 90%). Towns run 60/40
+instead of 80/20, Minas Tirith and Osgiliath 50/40/10. Villages keep the regional levies (Bar Melui's
+three, which have always shared the town's group, are the one exception and were left as found), so
+the regulars still come from the countryside and the castle is where the lord's own line is raised, for
+the player and for AI lords alike, since castle recruitment (Patch42) drains the same pools. No troop
+id or settlement key was added or removed, so reachability is untouched. A concurrent session's
+re-binding of three Serelond and three Methir villages in the same file was kept exactly as found.
+
+Two consequences of exclusive castle pools, both pre-existing mechanics that are now the norm at six
+castles: a castle slot matures in place along its own line as far as tier 6 before it is bought
+(Morlad's bowman climbs to the level 31 veteran archer and never to the level 36 or 41 troops), and a
+household root is priced as the level 16 or higher troop it is, dearer than the levy it replaces.
+Save-compat: an existing save keeps the volunteers already rolled into its slots; only refills draw
+from the new pools.
+
+Reviews: five deep-review agents clean on the runtime (one dash finding disputed, every cited line
+pre-existing; one dormant clan-pool drift recorded, unreachable from the live map), then Codex
+gpt-6-astra at ultra: no defect, eight suspects disputed or reduced to observations with engine
+quotations, two of them by correcting the prompt's own premises. RCA
+`docs/reviews/rca-gondor-recruitment-vales-2026-09-13.md`.
+
+Tests: two new production-JSON tests pin the castle-exclusive and vale-village rules and the 40% town
+share; the roll-zero rows for the six castles and the Minas Tirith and Osgiliath boundary rolls were
+re-derived for the new buckets. Suite 9084 passed, 0 failed, 2 skipped.
+
+Not-tested: the recruit screen in a live campaign. The pool provider is a process singleton, so a
+running game needs a full restart to pick the new JSON up. No issue exists for this change yet.
+
 ### fix(map-ui): low nameplate opacities keep the name opaque, invalid settings warn once (#596)
 
 Second deep review plus a Codex `gpt-6-astra` ultra pass on the committed MCM controls. Both found the

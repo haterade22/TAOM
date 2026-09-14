@@ -268,3 +268,19 @@ Owed as of 2026-09-12 (new campaign, then a saved game):
 
 - **Issue:** #580, [Per-hero lord party templates](https://github.com/haterade22/TAOM/issues/580)
 - **Status:** Open (in-game verification owed)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/black-numenorean.md](./black-numenorean.md)
+- [docs/features/culture-playability-wiring.md](./culture-playability-wiring.md)
+- [docs/features/gondor-ithilien-ranger.md](./gondor-ithilien-ranger.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/party-templates.md](../modding/party-templates.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
+
+<!-- backlinks-end -->

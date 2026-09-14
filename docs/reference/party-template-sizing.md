@@ -367,6 +367,7 @@ min sum (47) and the 3500 target have not.
 - [docs/features/black-numenorean.md](../features/black-numenorean.md)
 - [docs/features/caravan-bandit-parity.md](../features/caravan-bandit-parity.md)
 - [docs/features/culture-playability-wiring.md](../features/culture-playability-wiring.md)
+- [docs/features/lord-party-templates.md](../features/lord-party-templates.md)
 - [docs/features/startup-resources.md](../features/startup-resources.md)
 - [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
 - [docs/INDEX.md](../INDEX.md)

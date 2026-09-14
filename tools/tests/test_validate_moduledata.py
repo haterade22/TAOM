@@ -1216,6 +1216,18 @@ class SettlementEconomyRegistryTests(unittest.TestCase):
         recs = {r["id"]: r["kind"] for r in ts.build_settlement_economy(self.modules)}
         self.assertEqual(recs, {"t": "town", "c": "castle", "v": "village"})
 
+    def test_village_record_carries_its_bound_fortification(self):
+        # FORTIFICATION_WITHOUT_VILLAGE (#597) reads it; a fortification is a town or castle that no
+        # village record names, so a parse that dropped the attribute would call every fief empty.
+        self._write_settlements("TAOM_Map",
+            '  <Settlement id="castle_EW7" culture="Culture.gondor">'
+            '<Components><Town is_castle="true" prosperity="980"/></Components></Settlement>\n'
+            '  <Settlement id="castle_village_EW7_1" culture="Culture.gondor">'
+            '<Components><Village hearth="603" bound="Settlement.castle_EW7"/></Components></Settlement>\n')
+        recs = {r["id"]: r for r in ts.build_settlement_economy(self.modules)}
+        self.assertEqual(recs["castle_village_EW7_1"]["bound"], "castle_EW7")
+        self.assertIsNone(recs["castle_EW7"]["bound"])
+
     def test_decimal_prosperity_is_kept(self):
         # Town.Deserialize uses float.Parse, so 4799.5 is legal data. A `(\\d+)` regex missed it
         # entirely and the fief evaded the floor check (Codex, 2026-08-14).
@@ -1237,6 +1249,83 @@ class SettlementEconomyRegistryTests(unittest.TestCase):
         self.assertNotIn("empty", recs)
         self.assertEqual(recs["real"]["culture"], "gundabad")
         self.assertEqual(recs["real"]["value"], 4800)
+
+
+class FortificationWithoutVillageTests(unittest.TestCase):
+    """FORTIFICATION_WITHOUT_VILLAGE (#597). A town or castle no village is bound to starts every
+    campaign with no village trade, no villager parties and no rural notables. town_EW10 and
+    town_EW11 shipped that way until 2026-09-13, and the only thing that noticed was a hand count.
+    The live map is unversioned, so this is the in-repo gate beside the external edit."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    @staticmethod
+    def _rec(sid, kind, bound=None):
+        return {"id": sid, "culture": "gondor", "kind": kind, "value": 500, "bound": bound}
+
+    def _issues(self, economy, allow=None):
+        regs = ts.Registries(
+            items={"None"}, item_def_files={}, npccharacters=set(),
+            cultures={"gondor"}, party_templates=set(),
+            settled_cultures={"gondor"}, settlement_economy=economy)
+        validator = ts.Validator(self.md, self.schemas, regs)
+        if allow is not None:
+            validator._VILLAGELESS_BY_DESIGN = allow
+        return [i for i in validator.run() if i.code == "FORTIFICATION_WITHOUT_VILLAGE"]
+
+    def test_fortification_with_no_bound_village_warns(self):
+        economy = [self._rec("town_EW10", "town"),
+                   self._rec("castle_EW7", "castle"),
+                   self._rec("castle_village_EW7_1", "village", "castle_EW7")]
+        found = self._issues(economy, allow={})
+        self.assertEqual([i.entry_id for i in found], ["town_EW10"])
+        self.assertEqual(found[0].severity, ts.Severity.WARNING)
+
+    def test_fortification_with_a_village_is_clean(self):
+        economy = [self._rec("town_EW10", "town"),
+                   self._rec("village_EW10_1", "village", "town_EW10")]
+        self.assertEqual(self._issues(economy, allow={}), [])
+
+    def test_allowlisted_fortification_is_clean(self):
+        economy = [self._rec("castle_G4", "castle")]
+        self.assertEqual(self._issues(economy, allow={"castle_G4": "no village entities yet"}), [])
+
+    def test_allowlist_entry_that_now_has_villages_is_reported(self):
+        # The entry has rotted the other way: the fix landed and nobody removed the exemption, so
+        # the gate would stay blind to that fief if its villages were ever rebound away again.
+        economy = [self._rec("castle_G4", "castle"),
+                   self._rec("castle_village_G4_1", "village", "castle_G4")]
+        found = self._issues(economy, allow={"castle_G4": "no village entities yet"})
+        self.assertEqual([i.entry_id for i in found], ["castle_G4"])
+        self.assertIn("allowlist", found[0].message)
+
+    def test_allowlist_entry_naming_no_fortification_is_reported(self):
+        economy = [self._rec("town_EW10", "town"),
+                   self._rec("village_EW10_1", "village", "town_EW10")]
+        found = self._issues(economy, allow={"castle_nowhere": "typo"})
+        self.assertEqual([i.entry_id for i in found], ["castle_nowhere"])
+
+    def test_records_without_a_bound_key_are_tolerated(self):
+        # Older fixtures and the economy-floor tests build records without the key.
+        economy = [{"id": "town_EW10", "culture": "gondor", "kind": "town", "value": 500},
+                   {"id": "village_EW10_1", "culture": "gondor", "kind": "village", "value": 350}]
+        found = self._issues(economy, allow={})
+        self.assertEqual([i.entry_id for i in found], ["town_EW10"])
+
+    def test_empty_registry_is_silent(self):
+        self.assertEqual(self._issues([], allow={}), [])
+
+    def test_shipped_allowlist_carries_a_reason_per_id(self):
+        for sid, reason in ts.Validator._VILLAGELESS_BY_DESIGN.items():
+            self.assertTrue(sid.startswith(("town_", "castle_")), sid)
+            self.assertTrue(isinstance(reason, str) and reason.strip(), sid)
 
 
 class SettlementEconomyFloorTests(unittest.TestCase):

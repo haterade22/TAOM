@@ -75,7 +75,7 @@ class Registries:
     mount_family_types: dict = field(default_factory=dict)    # Type="Horse" id -> Monster family_type (None = unknown)
     body_properties: set = field(default_factory=set)         # defined BodyProperty ids (face_key_template targets)
     settled_cultures: set = field(default_factory=set)        # cultures owning >=1 settlement in the live world
-    settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value) records
+    settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value, bound) records
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
     item_armour: dict = field(default_factory=dict)           # armour item id -> head+body+arm+leg (empty = unavailable)
     item_folder: dict = field(default_factory=dict)           # armour item id -> LOTRLOME_items folder (None = vanilla/repo)
@@ -226,6 +226,7 @@ class Validator:
         issues += self._education_coverage()
         issues += self._landless_cultures()
         issues += self._settlement_economy_floor()
+        issues += self._fortifications_without_villages()
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
         issues += self._armour_slot_coverage()
@@ -647,6 +648,62 @@ class Validator:
                     message=(f'culture "{culture}" is named in the floor spec but owns no '
                              f"settlement in the loaded world, so the floor gates nothing for it. "
                              f"Either the culture was retagged or the id is wrong."),
+                ))
+        return issues
+
+    # -- pass 4d: every town and castle has at least one bound village ------ #
+    # A fortification no village is bound to starts every campaign with no village
+    # trade, no villager parties and no rural notables, and its food runs on the
+    # fief alone. town_EW10 and town_EW11 shipped that way until #597 (2026-09-13),
+    # and the only thing that noticed was a hand count over the LIVE TAOM_Map
+    # settlements.xml, which is unversioned. A warning rather than an error: the
+    # fix is a map-editor placement plus a data row, not a commit, and the commit
+    # hook cannot see the file it is about anyway.
+    # id -> reason. Empty today: castle_G4 (Framsburg) sat here for an hour on 2026-09-13 until the
+    # map author placed its two villages the same evening (#597).
+    _VILLAGELESS_BY_DESIGN = {}
+    _LIVE_SETTLEMENTS = "Modules/TAOM_Map/ModuleData/settlements.xml"
+
+    def _fortifications_without_villages(self) -> list:
+        if not self.reg.settlement_economy:
+            return []  # registry unavailable (no game install); the CLI already exits 2
+        villages_of = {}
+        for r in self.reg.settlement_economy:
+            if r["kind"] == "village" and r.get("bound"):
+                villages_of[r["bound"]] = villages_of.get(r["bound"], 0) + 1
+        fortifications = {r["id"]: r["kind"] for r in self.reg.settlement_economy
+                          if r["kind"] in ("town", "castle")}
+        issues = []
+        for sid, kind in fortifications.items():
+            if villages_of.get(sid) or sid in self._VILLAGELESS_BY_DESIGN:
+                continue
+            issues.append(Issue(
+                severity=Severity.WARNING, code="FORTIFICATION_WITHOUT_VILLAGE",
+                file=self._LIVE_SETTLEMENTS, line=0, entry_id=sid,
+                message=(f"{kind} has no village bound to it, so it starts every campaign with no "
+                         f"village trade, villager parties or rural notables. Place village "
+                         f"entities in the map scene and add their rows with "
+                         f"tools/add_map_villages.py, rebind a neighbour with "
+                         f"tools/rename_map_settlements.py, or add it to _VILLAGELESS_BY_DESIGN "
+                         f"with a reason"),
+            ))
+        # An allowlist entry rots two ways, and both read as a clean run.
+        for sid, reason in sorted(self._VILLAGELESS_BY_DESIGN.items()):
+            if sid not in fortifications:
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="FORTIFICATION_WITHOUT_VILLAGE",
+                    file=self._LIVE_SETTLEMENTS, line=0, entry_id=sid,
+                    message=(f"_VILLAGELESS_BY_DESIGN names a fortification that is not in the "
+                             f"loaded world ({reason!r}): the id is wrong or the fief was retired, "
+                             f"so the entry covers nothing"),
+                ))
+            elif villages_of.get(sid):
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="FORTIFICATION_WITHOUT_VILLAGE",
+                    file=self._LIVE_SETTLEMENTS, line=0, entry_id=sid,
+                    message=(f"is in the _VILLAGELESS_BY_DESIGN allowlist but now has "
+                             f"{villages_of[sid]} bound village(s); remove the entry so the gate "
+                             f"covers it again"),
                 ))
         return issues
 
@@ -1914,11 +1971,14 @@ def build_settlement_economy(game_modules) -> list:
                 continue
             town = s.find(".//Town")
             village = s.find(".//Village")
+            bound = None
             if town is not None:
                 kind = "castle" if town.get("is_castle") == "true" else "town"
                 raw = town.get("prosperity")
             elif village is not None:
                 kind, raw = "village", village.get("hearth")
+                # FORTIFICATION_WITHOUT_VILLAGE reads it: the town or castle this village follows.
+                bound = (village.get("bound") or "").replace("Settlement.", "", 1) or None
             else:
                 continue  # hideouts and the like carry no economy component
             if raw is None:
@@ -1927,7 +1987,7 @@ def build_settlement_economy(game_modules) -> list:
                 value = float(raw)
             except ValueError:
                 continue
-            records.append({"id": sid, "culture": culture, "kind": kind, "value": value})
+            records.append({"id": sid, "culture": culture, "kind": kind, "value": value, "bound": bound})
     return records
 
 

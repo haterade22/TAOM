@@ -3,57 +3,46 @@
   "notes": [
     "Percentages total to 100 per settlement group.",
     "Base regional pools use the first 3 distinct troop level tiers.",
-    "Settlement-specific pools use the first 2 distinct troop level tiers.",
-    "Where both apply, the regular line totals 80 percent and the noble / settlement-specific line totals 20 percent.",
-    "The three Anorien capitals (Minas Tirith, Osgiliath, Cair Andros) run 70 regular / 20 specific / 10 Ithilien Ranger.",
+    "Settlement-specific (household) pools use the first 2 distinct troop level tiers.",
+    "In a TOWN where both apply, the regular line totals 60 percent and the household / settlement-specific line 40 percent (20 until 2026-09-13; raised on player feedback that the household lines were too rare next to the regional levies).",
+    "A CASTLE that has a household line offers only that line: Glanhir (Ringlo Vale), Morlad (Blackroot Vale), Bar-en-Siril (Serelond), Cair Andros, Caras Tolfalas, Linhir.",
+    "A village named for a vale follows the vale, not its region: Upper Ringló and Vale Village (Ringlo Vale), Morlad's four villages and Blackroot Village Haven (Blackroot Vale). Every other village keeps its regional line, except Bar Melui's three, which have shared the town's Lossarnach Regular + Noble group since before 2026-07-27 and were left as found.",
+    "The Anorien capitals Minas Tirith and Osgiliath run 50 regular / 40 specific / 10 Ithilien Ranger; Cair Andros runs 90 Cair Andros / 10 Ithilien Ranger.",
     "Where only one pool applies, that pool totals 100 percent.",
-    "Trailing remainders absorb into the last troop of a split (26.6667 / 26.6667 / 26.6666) so each group totals exactly 100.",
+    "Trailing remainders absorb into the last troop of a split (13.3333 / 13.3333 / 13.3334) so each group totals exactly 100.",
     "If a rule says only a settlement, only that town/castle receives the specific pool, not its bound villages.",
     "Ithil Guard applies to town_ES2 only when Minas Morgul / Minas Ithil is owned by Gondor."
   ],
   "chance_groups": [
     {
-      "description": "Glanhir: Lamedon + Ringlo Vale",
-      "settlements": ["castle_EW2"],
+      "description": "Glanhir and its Ringlo Vale villages (Upper Ringló, Vale Village): Ringlo Vale only",
+      "settlements": ["castle_EW2", "castle_village_EW2_1", "castle_village_EW2_2"],
       "troops": {
-        "gondor_lam_clansman": 26.6667,
-        "gondor_lam_footman": 26.6667,
-        "gondor_lam_swordman": 26.6666,
-        "gondor_ring_peasant": 10,
-        "gondor_ring_militia": 10
-      }
-    },
-    {
-      "description": "Ausirionath villages: Lossarnach Regular only",
-      "settlements": ["castle_village_EW2_1", "castle_village_EW2_2"],
-      "troops": {
-        "gondor_loss_lumberman": 25,
-        "gondor_loss_woodsman": 25,
-        "gondor_loss_axebearer": 25,
-        "gondor_loss_skirmisher": 25
+        "gondor_ring_peasant": 50,
+        "gondor_ring_militia": 50
       }
     },
     {
       "description": "Bar Melui and bound villages: Lossarnach Regular + Noble",
       "settlements": ["town_EW7", "village_EW7_1", "village_EW7_2", "village_EW7_3"],
       "troops": {
-        "gondor_loss_lumberman": 20,
-        "gondor_loss_woodsman": 20,
-        "gondor_loss_axebearer": 20,
-        "gondor_loss_skirmisher": 20,
-        "gondor_loss_noble": 20
+        "gondor_loss_lumberman": 15,
+        "gondor_loss_woodsman": 15,
+        "gondor_loss_axebearer": 15,
+        "gondor_loss_skirmisher": 15,
+        "gondor_loss_noble": 40
       }
     },
     {
       "description": "Pelargir: Lebennin + Pelargir",
       "settlements": ["town_EW4"],
       "troops": {
-        "gondor_leb_militia": 20,
-        "gondor_leb_skirmisher": 20,
-        "gondor_leb_archer": 20,
-        "gondor_leb_infantry": 20,
-        "gondor_pel_skirmisher": 10,
-        "gondor_pel_veteran": 10
+        "gondor_leb_militia": 15,
+        "gondor_leb_skirmisher": 15,
+        "gondor_leb_archer": 15,
+        "gondor_leb_infantry": 15,
+        "gondor_pel_skirmisher": 20,
+        "gondor_pel_veteran": 20
       }
     },
     {
@@ -70,11 +59,11 @@
       "description": "Calembel: Lamedon + Calembel",
       "settlements": ["town_EW9"],
       "troops": {
-        "gondor_lam_clansman": 26.6667,
-        "gondor_lam_footman": 26.6667,
-        "gondor_lam_swordman": 26.6666,
-        "gondor_cal_noble": 10,
-        "gondor_cal_swordsman": 10
+        "gondor_lam_clansman": 20,
+        "gondor_lam_footman": 20,
+        "gondor_lam_swordman": 20,
+        "gondor_cal_noble": 20,
+        "gondor_cal_swordsman": 20
       }
     },
     {
@@ -97,48 +86,37 @@
       "description": "Dol Amroth: Belfalas + Dol Amroth (Swan Knights) in the princes' seat",
       "settlements": ["town_EW5"],
       "troops": {
-        "gondor_bel_recruit": 16,
-        "gondor_bel_footman": 16,
-        "gondor_bel_hunter": 16,
-        "gondor_bel_bowman": 16,
-        "gondor_bel_soldier": 16,
-        "gondor_da_noble": 10,
-        "gondor_da_footman": 10
+        "gondor_bel_recruit": 12,
+        "gondor_bel_footman": 12,
+        "gondor_bel_hunter": 12,
+        "gondor_bel_bowman": 12,
+        "gondor_bel_soldier": 12,
+        "gondor_da_noble": 20,
+        "gondor_da_footman": 20
       }
     },
     {
-      "description": "Linhir: Belfalas + Linhir",
+      "description": "Linhir: Linhir only",
       "settlements": ["castle_EW12"],
       "troops": {
-        "gondor_bel_recruit": 16,
-        "gondor_bel_footman": 16,
-        "gondor_bel_hunter": 16,
-        "gondor_bel_bowman": 16,
-        "gondor_bel_soldier": 16,
-        "gondor_lin_noble": 10,
-        "gondor_lin_footman": 10
+        "gondor_lin_noble": 50,
+        "gondor_lin_footman": 50
       }
     },
     {
-      "description": "Caras Tolfalas: Belfalas + Tolfalas",
+      "description": "Caras Tolfalas: Tolfalas only",
       "settlements": ["castle_EW9"],
       "troops": {
-        "gondor_bel_recruit": 16,
-        "gondor_bel_footman": 16,
-        "gondor_bel_hunter": 16,
-        "gondor_bel_bowman": 16,
-        "gondor_bel_soldier": 16,
-        "gondor_tol_arbalest": 10,
-        "gondor_tol_crossbowman": 10
+        "gondor_tol_arbalest": 50,
+        "gondor_tol_crossbowman": 50
       }
     },
     {
-      "description": "Imrazorionath, Garvirionath, and Hirilionath holdings except Dol Amroth, Linhir, and Caras Tolfalas: Belfalas only",
+      "description": "Imrazorionath, Garvirionath, and Hirilionath holdings except Dol Amroth, Linhir, Caras Tolfalas, and Blackroot Village Haven: Belfalas only",
       "settlements": [
         "castle_EW3",
         "castle_village_EW3_1",
         "castle_village_EW3_2",
-        "castle_village_EW3_3",
         "castle_EW10",
         "castle_village_EW10_1",
         "castle_village_EW10_2",
@@ -167,22 +145,26 @@
       "description": "Ost Arndir: Pinnath Gelin + Arndir",
       "settlements": ["town_EW8"],
       "troops": {
-        "gondor_pg_volunteer": 26.6667,
-        "gondor_pg_militia": 26.6667,
-        "gondor_pg_footman": 26.6666,
-        "gondor_arn_noble": 10,
-        "gondor_arn_noble_t4": 10
+        "gondor_pg_volunteer": 20,
+        "gondor_pg_militia": 20,
+        "gondor_pg_footman": 20,
+        "gondor_arn_noble": 20,
+        "gondor_arn_noble_t4": 20
       }
     },
     {
-      "description": "Morlad: Pinnath Gelin + Blackroot Vale",
-      "settlements": ["castle_EW6"],
+      "description": "Morlad, its four villages, and Blackroot Village Haven (Edhellond's village at the Morthond mouth): Blackroot Vale only",
+      "settlements": [
+        "castle_EW6",
+        "castle_village_EW6_1",
+        "castle_village_EW6_2",
+        "castle_village_EW6_3",
+        "castle_village_EW6_4",
+        "castle_village_EW3_3"
+      ],
       "troops": {
-        "gondor_pg_volunteer": 26.6667,
-        "gondor_pg_militia": 26.6667,
-        "gondor_pg_footman": 26.6666,
-        "gondor_brv_bowman": 10,
-        "gondor_brv_scout": 10
+        "gondor_brv_bowman": 50,
+        "gondor_brv_scout": 50
       }
     },
     {
@@ -196,11 +178,7 @@
         "castle_village_EW8_2",
         "village_EW8_1",
         "village_EW8_2",
-        "village_EW8_3",
-        "castle_village_EW6_1",
-        "castle_village_EW6_2",
-        "castle_village_EW6_3",
-        "castle_village_EW6_4"
+        "village_EW8_3"
       ],
       "troops": {
         "gondor_pg_volunteer": 33.3333,
@@ -212,32 +190,40 @@
       "description": "Serelond: Anfalas + Serelond",
       "settlements": ["town_EW10"],
       "troops": {
-        "gondor_anf_levy": 26.6667,
-        "gondor_anf_militia": 26.6667,
-        "gondor_anf_footman": 26.6666,
-        "gondor_ser_noble": 10,
-        "gondor_ser_veteran": 10
+        "gondor_anf_levy": 20,
+        "gondor_anf_militia": 20,
+        "gondor_anf_footman": 20,
+        "gondor_ser_noble": 20,
+        "gondor_ser_veteran": 20
       }
     },
     {
       "description": "Lond Cirion: Anfalas + Lond-Galen",
       "settlements": ["town_EW6"],
       "troops": {
-        "gondor_anf_levy": 26.6667,
-        "gondor_anf_militia": 26.6667,
-        "gondor_anf_footman": 26.6666,
-        "gondor_lg_noble": 10,
-        "gondor_lg_crossbowman": 10
+        "gondor_anf_levy": 20,
+        "gondor_anf_militia": 20,
+        "gondor_anf_footman": 20,
+        "gondor_lg_noble": 20,
+        "gondor_lg_crossbowman": 20
       }
     },
     {
-      "description": "Olindurionath and Baranionath holdings except Serelond and Lond Cirion: Anfalas only",
+      "description": "Bar-en-Siril (Olindurionath's castle beside Serelond): Serelond only",
+      "settlements": ["castle_EW7"],
+      "troops": {
+        "gondor_ser_noble": 50,
+        "gondor_ser_veteran": 50
+      }
+    },
+    {
+      "description": "Olindurionath and Baranionath holdings except Serelond, Lond Cirion, and Bar-en-Siril: Anfalas only",
       "settlements": [
-        "castle_EW7",
         "castle_village_EW7_1",
-        "castle_village_EW7_2",
-        "castle_village_EW7_3",
         "castle_village_EW7_4",
+        "village_EW10_1",
+        "village_EW10_2",
+        "village_EW10_3",
         "village_EW6_1",
         "village_EW6_3",
         "village_EW6_4"
@@ -252,13 +238,13 @@
       "description": "Methir: Harondor + Methir",
       "settlements": ["town_EW11"],
       "troops": {
-        "gondor_har_conscript": 20,
-        "gondor_har_militia": 20,
-        "gondor_har_footman": 20,
-        "gondor_har_skirmisher": 20,
-        "gondor_met_noble": 6.6667,
-        "gondor_met_archer": 6.6667,
-        "gondor_met_glaiveman": 6.6666
+        "gondor_har_conscript": 15,
+        "gondor_har_militia": 15,
+        "gondor_har_footman": 15,
+        "gondor_har_skirmisher": 15,
+        "gondor_met_noble": 13.3333,
+        "gondor_met_archer": 13.3333,
+        "gondor_met_glaiveman": 13.3334
       }
     },
     {
@@ -271,7 +257,10 @@
         "castle_EW16",
         "castle_village_EW16_1",
         "castle_village_EW16_2",
-        "castle_village_EW16_3"
+        "castle_village_EW16_3",
+        "village_EW11_1",
+        "village_EW11_2",
+        "village_EW11_3"
       ],
       "troops": {
         "gondor_har_conscript": 25,
@@ -284,13 +273,13 @@
       "description": "Minas Tirith: Anorien + Citadel Guard",
       "settlements": ["town_EW1"],
       "troops": {
-        "gondor_ano_peasant": 14,
-        "gondor_ano_archer_militia": 14,
-        "gondor_ano_militia": 14,
-        "gondor_ano_footman": 14,
-        "gondor_ano_skirmisher": 14,
-        "gondor_mt_trainee": 10,
-        "gondor_mt_veteran": 10,
+        "gondor_ano_peasant": 10,
+        "gondor_ano_archer_militia": 10,
+        "gondor_ano_militia": 10,
+        "gondor_ano_footman": 10,
+        "gondor_ano_skirmisher": 10,
+        "gondor_mt_trainee": 20,
+        "gondor_mt_veteran": 20,
         "gondor_ithilien_ranger": 10
       }
     },
@@ -298,27 +287,22 @@
       "description": "Osgiliath: Anorien + Osgiliath",
       "settlements": ["town_EW2", "town_EW3"],
       "troops": {
-        "gondor_ano_peasant": 14,
-        "gondor_ano_archer_militia": 14,
-        "gondor_ano_militia": 14,
-        "gondor_ano_footman": 14,
-        "gondor_ano_skirmisher": 14,
-        "gondor_osg_veteran": 10,
-        "gondor_osg_skirmisher": 10,
+        "gondor_ano_peasant": 10,
+        "gondor_ano_archer_militia": 10,
+        "gondor_ano_militia": 10,
+        "gondor_ano_footman": 10,
+        "gondor_ano_skirmisher": 10,
+        "gondor_osg_veteran": 20,
+        "gondor_osg_skirmisher": 20,
         "gondor_ithilien_ranger": 10
       }
     },
     {
-      "description": "Cair Andros: Anorien + Cair Andros",
+      "description": "Cair Andros: Cair Andros + Ithilien Ranger",
       "settlements": ["castle_EW4"],
       "troops": {
-        "gondor_ano_peasant": 14,
-        "gondor_ano_archer_militia": 14,
-        "gondor_ano_militia": 14,
-        "gondor_ano_footman": 14,
-        "gondor_ano_skirmisher": 14,
-        "gondor_ca_noble": 10,
-        "gondor_ca_veteran": 10,
+        "gondor_ca_noble": 45,
+        "gondor_ca_veteran": 45,
         "gondor_ithilien_ranger": 10
       }
     },

@@ -594,6 +594,7 @@ out-armour two under-rostered Gondor troops.
 
 ## Referenced by
 
+- [docs/features/lord-party-templates.md](./lord-party-templates.md)
 - [docs/features/mesh-ref-validation.md](./mesh-ref-validation.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/id-cheatsheet.md](../modding/id-cheatsheet.md)
