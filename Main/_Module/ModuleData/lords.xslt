@@ -836,7 +836,7 @@
             <xsl:attribute name="name">{=aom_lord_1_14_name}Mouth of Sauron</xsl:attribute>
             <xsl:attribute name="age">42</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
@@ -1543,7 +1543,7 @@
             <xsl:attribute name="name">{=aom_lord_1_27_name_bn}Ugrukhôr</xsl:attribute>
             <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
@@ -1651,7 +1651,7 @@
             <xsl:attribute name="name">{=aom_lord_1_29_name}Herumarth</xsl:attribute>
             <xsl:attribute name="age">23</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
@@ -2469,7 +2469,7 @@
             <xsl:attribute name="name">{=aom_lord_1_47_name_bn}Ulbar</xsl:attribute>
             <xsl:attribute name="age">45</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
@@ -4761,7 +4761,7 @@
             <xsl:attribute name="name">{=aom_lord_1_27_1_name_bn}Nûlubêth</xsl:attribute>
             <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
@@ -4816,7 +4816,7 @@
             <xsl:attribute name="name">{=aom_lord_1_27_2_name_bn}Aganuzîr</xsl:attribute>
             <xsl:attribute name="age">18</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
@@ -20870,7 +20870,7 @@
             <xsl:attribute name="name">{=aom_lord_SE9_c2_name_bn}Zimrazîn</xsl:attribute>
             <xsl:attribute name="age">24</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
@@ -20925,7 +20925,7 @@
             <xsl:attribute name="name">{=aom_lord_SE9_l_name_bn}Zagarkhôr</xsl:attribute>
             <xsl:attribute name="age">58</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
-            <xsl:attribute name="default_group">Infantry</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>

@@ -3630,7 +3630,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_light_a" />
         <equipment slot="Horse" id="Item.t2_empire_horse" />
-        <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.sm_md_num_sword_1h_b" />
@@ -3642,7 +3642,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_light_a" />
         <equipment slot="Horse" id="Item.t2_empire_horse" />
-        <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_a" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -3681,7 +3681,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
-        <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
@@ -3693,7 +3693,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
-        <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -3732,7 +3732,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_heavy_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
-        <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
@@ -3744,7 +3744,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_heavy_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
-        <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_elite_b" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -3781,7 +3781,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
-        <equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
@@ -3793,7 +3793,7 @@
         <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
-        <equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+        <equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_b" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>

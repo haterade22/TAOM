@@ -4,6 +4,41 @@
 
 ## 2026-09-15
 
+### feat(armoury): Black Numenorean barding ladder, ten HorseHarness items and the cavalry re-point (#602)
+
+KEYforce's Black Numenorean barding set (13 metameshes in
+`LOTRLOME_Armory/Assets/mordor_barding/SK_MD_Num_Barding_A_geo.tpac`) had sat unreferenced since it
+landed, and Mordor's only horse cavalry rode in Rhun bardings (`lrd_horse_armour_5`, `_4`) and
+Sauron's `mordor_horse_armour_a`. Ten `Type="HorseHarness"` items now exist,
+`sm_md_num_barding_{light,med,heavy,elite,lord}_{a,b}`, on the spec ladder: light 25 (Leather,
+`modifier_group="leather"`), med 35 (Chainmail), heavy 45, elite 65, lord 80 (Plate), weights
+12/18/25/30/35, `culture="Culture.mordor"`, `family_type="1"`, `mane_cover_type="all"`, no
+`reins_mesh` (the art ships none and no TAOM harness sets one). The three `clo_*` overlays in the
+same tpac get no item, the standing rule since the H1 `clo_*` purge.
+
+The cavalry line wears them, one per roster so a troop's two rosters stay interchangeable slot by
+slot: L31 `mordor_num_cavalry` heavy_a, L36 `mordor_num_vet_cavalry` heavy_b, L41 `mordor_num_knight`
+elite_a / elite_b, L46 `mordor_num_temple_knight` lord_a / lord_b. Light and med are shop stock.
+Every BN lord rides too: the six `mordor_num_{bat,civ}_template_lord_{cav,inf,arc}` rosters carry
+`noble_horse_imperial` with lord_a (battle) / lord_b (civilian); the cav pair swapped off
+`mordor_horse_armour_a`, the inf and arc pairs had no mount and gained one. All 16 lords binding a
+BN roster now read `default_group="Cavalry"` (8 were `Infantry`), flipped in BOTH `characters/lords.xml`
+and `lords.xslt`, because the XSLT carries a template for every one of them including the ten the
+XML defines.
+
+Unversioned files changed, in the live install and byte-identically in the `lotraom-assets` mirror
+(left uncommitted there for its owner): `LOTRLOME_items/LOTRAOM_horses.xml` (+199 lines, 44 harnesses
+in the file now) and `Languages/loc_LOTRAOM_horses.xml` (+10 English rows; the 12-language translator
+run is deferred). Repo side: 8 `HorseHarness` lines in `troops_mordor.xml`, 12 lines in
+`taom_equipment_sets_mordor.xml`, 4 + 8 `default_group` flips in `characters/lords.xml` and `lords.xslt`,
+the feature doc's new "Barding ladder" section, and the catalogue regen (the ten rows flip to `referenced=Y`; the Mirkwood
+palace-guard tpac that tripped `ARMORY ART DRIFT` at session start added no mesh names and is
+re-baselined). Gates: `validate_moduledata.py` 0 errors / 101 pre-existing warnings, none on the
+line; `audit_armory_refs.py --regen-catalogue` CLEAN; full suite 9,220 passed, 0 failed, 2 skipped.
+Owed: full restart + custom battle (all four tiers barded, mane cover per tier, the cloth skirt on
+the `_a` light/med/lord meshes, a harness accepted on a horse in the inventory), the translator run,
+the mirror commit, close #602.
+
 ### fix(player-switcher): a taken-over non-leader now leads their clan, and Patch80 seam D closes a pre-concluded vote (#550)
 
 Players starting as Boromir or Faramir kept reporting the frozen kingdom-decision window that

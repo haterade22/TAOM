@@ -294,7 +294,7 @@
 			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
 			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
 			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
-			<Equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+			<Equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -308,6 +308,8 @@
 			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
 			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+			<Equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -321,6 +323,8 @@
 			<Equipment slot="Cape" id="Item.sm_md_num_arc_pauld_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_md_num_arc_bracer_lord_a" />
 			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+			<Equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -335,7 +339,7 @@
 			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
 			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
 			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
-			<Equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+			<Equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -349,6 +353,8 @@
 			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
 			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+			<Equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -362,6 +368,8 @@
 			<Equipment slot="Cape" id="Item.sm_md_num_arc_pauld_elite_a" />
 			<Equipment slot="Gloves" id="Item.sk_md_num_arc_bracer_lord_a" />
 			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+			<Equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 </EquipmentRosters>

@@ -24503,7 +24503,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.mordor -->
-    <NPCCharacter id="lord_1_27_1" name="{=aom_lord_1_27_1_name_bn}Nûlubêth" age="37" is_female="true" voice="softspoken" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
+    <NPCCharacter id="lord_1_27_1" name="{=aom_lord_1_27_1_name_bn}Nûlubêth" age="37" is_female="true" voice="softspoken" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
         <face>
             <!--face_key
 			value="000b6d22c0bc100679d8455aa9684859888735557c6493786867627857b28958000d8894038735d900001105000030a30000001f000000000000000000006000"
@@ -24551,7 +24551,7 @@
         	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_27_2" name="{=aom_lord_1_27_2_name_bn}Aganuzîr" age="18" voice="earnest" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
+    <NPCCharacter id="lord_1_27_2" name="{=aom_lord_1_27_2_name_bn}Aganuzîr" age="18" voice="earnest" is_hero="true" culture="Culture.mordor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
             <!--face_key
 			value="000b6d22c0bc100679d8455aa9684859888735557c6493786867627857b28958000d8894038735d900001105000030a30000001f000000000000000000006000"
@@ -25583,7 +25583,7 @@
             <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_l" name="{=aom_lord_SE9_l_name_bn}Zagarkhôr" age="30" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
+    <NPCCharacter id="lord_SE9_l" name="{=aom_lord_SE9_l_name_bn}Zagarkhôr" age="30" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_black_numenorean_skills">
         <face>
             <BodyProperties version="4" age="30" weight="0.0046" build="0.8032" key="0002940E40003A434868B38BD5266AA769489CA8213C7BCB79B7967577B9294800FC06030F7A927400000000000000000000000000000000000000003FF41142" />
             <hair_tags>
@@ -25724,7 +25724,7 @@
         	<EquipmentSet id="mordor_num_civ_template_lord_cav" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SE9_c2" name="{=aom_lord_SE9_c2_name_bn}Zimrazîn" age="24" is_female="true" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
+    <NPCCharacter id="lord_SE9_c2" name="{=aom_lord_SE9_c2_name_bn}Zimrazîn" age="24" is_female="true" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_bn_sorceress_skills">
         <face>
             <BodyProperties version="4" age="24" weight="0.0046" build="0.3356" key="0002A806C0000010CBD7CB989B8A41D5DAADA6D7DB9243548A5A4C587688468800A506030AB5D86300000000000000000000000000000000000000003F5C0042" />
             <hair_tags>

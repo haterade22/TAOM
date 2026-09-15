@@ -31,6 +31,7 @@ pass. Spec: `lotraom-assets/tools/mordor_armor_and_troops.md`, "Black Numenorean
 | Crafting pieces | 22 | `LOTRLOME_crafting_pieces.xml` |
 | Crafted weapons | 7 | `LOTRLOME_items/LOTRAOM_weapons.xml` (3 one-handed, 3 two-handed, 1 lance) |
 | Shields | 6 | `LOTRLOME_items/LOTRAOM_shields.xml` |
+| Bardings | 10 | `LOTRLOME_items/LOTRAOM_horses.xml` (#602, 2026-09-15; see "Barding ladder" below) |
 | Troops | 13 | `Main/_Module/ModuleData/troops/troops_mordor.xml` |
 | Party-template stacks | 13 x 16 | `taom_partyTemplates.xml` |
 
@@ -558,6 +559,70 @@ For scale: across the whole level-46-plus band this line ranks about 32nd, below
 Rivendell, Lindon, Erebor, Mirkwood and Rhun troop, and below Dol Guldur's Khamul guards and knights
 (259 and 252). Mordor did not get the best line in the game; it got a mid-pack one that happens to
 out-armour two under-rostered Gondor troops.
+
+## Barding ladder (#602, 2026-09-15)
+
+KEYforce's barding set landed as 13 metameshes in
+`LOTRLOME_Armory/Assets/mordor_barding/SK_MD_Num_Barding_A_geo.tpac`, every one `referenced=N` in
+the catalogue, while the cavalry line rode in Rhun bardings (`lrd_horse_armour_5`, `lrd_horse_armour_4`)
+and Sauron's `mordor_horse_armour_a`. Ten `Type="HorseHarness"` items now live in
+`LOTRLOME_items/LOTRAOM_horses.xml` under a header comment, beside `mordor_horse_armour_a`. The shape
+is the ram ladder's, not the vanilla template's: `culture="Culture.mordor"`, `is_merchandise="true"`,
+`appearance="0.65"`, `family_type="1"` (the mounts are `t2_empire_horse` and `noble_horse_imperial`),
+`mane_cover_type="all"`, and no `reins_mesh`, because the art ships none and none of the other 34
+TAOM harnesses sets one. Item id equals mesh name, as with every other Black Numenorean item.
+
+| Tier | Items | body_armor | material_type | modifier_group | weight | Worn by |
+|---|---|---:|---|---|---:|---|
+| light | `sm_md_num_barding_light_a` / `_b` | 25 | Leather | leather | 12 | nobody, shop stock |
+| med | `sm_md_num_barding_med_a` / `_b` | 35 | Chainmail | none | 18 | nobody, shop stock |
+| heavy | `sm_md_num_barding_heavy_a` / `_b` | 45 | Plate | none | 25 | `mordor_num_cavalry` (L31) `_a`, `mordor_num_vet_cavalry` (L36) `_b` |
+| elite | `sm_md_num_barding_elite_a` / `_b` | 65 | Plate | none | 30 | `mordor_num_knight` (L41), `_a` on roster 1, `_b` on roster 2 |
+| lord | `sm_md_num_barding_lord_a` / `_b` | 80 | Plate | none | 35 | `mordor_num_temple_knight` (L46), `_a` on roster 1, `_b` on roster 2; every BN lord roster, `_a` battle, `_b` civilian |
+
+Both rosters of each troop carry a barding, so the per-slot draw (`.claude/rules/troops.md`) can
+never leave the Horse slot without its harness. Names follow the greaves pattern (`Light Barding`,
+`Barding`, `Heavy Barding`, `Elite Barding`, `Lord Barding`, `I` for `_a` and `II` for `_b`) under
+`{=aom_<id>_name}` keys, with English rows in `Languages/loc_LOTRAOM_horses.xml`; the 12-language
+translator run is deferred.
+
+**Every Black Numenorean lord rides.** The six lord rosters in `taom_equipment_sets_mordor.xml`
+(`mordor_num_{bat,civ}_template_lord_{cav,inf,arc}`, bound by the human Mordor lords in
+`characters/lords.xml`) all carry `noble_horse_imperial` with the lord barding, `lord_a` on the three
+battle rosters and `lord_b` on the three civilian ones. The cav pair swapped off `mordor_horse_armour_a`;
+the inf and arc pairs had no mount at all and gained the two rows. The infantry lord's
+`sm_md_num_sword_2h_c` is a plain greatsword blade with no horseback restriction, so his kit is
+unchanged; the archer lord becomes a horse archer. A hero's formation class reads his battle
+equipment, not `default_group`, but the attribute was made to agree anyway: all 16 lords binding a
+BN roster now carry `default_group="Cavalry"`. Eight read `Infantry` before (`lord_1_27_1`,
+`lord_1_27_2`, `lord_SE9_l`, `lord_SE9_c2` in `characters/lords.xml`, and in `lords.xslt` those four
+again plus `lord_1_14` Mouth of Sauron, `lord_1_27`, `lord_1_29`, `lord_1_47`). Note the overlap:
+`lords.xslt` carries a template for every one of the 16, including the ten defined in
+`characters/lords.xml`, so a lord attribute has to be changed in BOTH files or the two copies
+disagree. Nobody binds the archer rosters.
+
+Two things deliberately not done:
+
+- **No items for `clo_sm_md_num_barding_{light,lord,med}_a`.** Those are the cloth-sim overlays of
+  the `_a` meshes. TAOM deleted every standalone `clo_*` item in 2026-H1 and 265 of the Armory's 266
+  `clo_*` metameshes are unreferenced by design; whether the skirt renders is a property of the
+  metamesh binding, which is the artist's side.
+- **`tools/generate_black_numenorean_armor.py` is untouched.** It owns the five `mordor/*_armors.xml`
+  files and knows nothing of barding; the items were written by hand into a file the generator does
+  not own, and the shipped XML is the source of truth.
+
+Both the live install and the `E:\repos\lotraom-assets\v1.4` mirror carry the edit byte-for-byte
+(`LOTRAOM_horses.xml` +199 lines, `loc_LOTRAOM_horses.xml` +10 rows); the mirror copy is left for its
+owner to commit. Gates on 2026-09-15: `validate_moduledata.py` 0 errors,
+`audit_armory_refs.py --regen-catalogue` CLEAN with the ten rows flipped to `referenced=Y`, full suite
+9,220 passed / 0 failed / 2 skipped.
+
+**Still owed, the in-game half:** full restart, then a custom battle with the Black Numenorean
+cavalry. All four tiers mounted in the new barding (a naked horse is an id or mesh typo); no bald
+neck where a tier leaves the crest exposed and no mane through a crinet (flip that tier's
+`mane_cover_type` to `none` if bald); the cloth skirt on the `_a` light, med and lord meshes moving;
+and any of the ten accepted when dragged onto a horse in the player inventory, which is
+`family_type` proven end to end.
 
 ## Owed Elsewhere
 
