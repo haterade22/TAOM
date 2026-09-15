@@ -54,6 +54,14 @@ VERDICT: CLEAN / ISSUES FOUND
   stopped one ordering short: the same timer reaching the NEXT live item, an NRE. When a seam fires
   early what vanilla fires from a timer or an edge, expect Codex to open the timer; write the second
   ordering (a different item bound by then) into the suspect yourself.
+- **Opens the class that owns the input, not the one that owns the flag** (2026-09-15, Gondor
+  Castar costs review 112): handed a recruit gate that greyed the Done button from a postfix on
+  `RecruitmentVM.RefreshPartyProperties`, it read `GauntletMenuRecruitVolunteersView.OnFrameTick`
+  and found the Confirm hotkey calling `ExecuteDone` with no look at `IsDoneEnabled`, then
+  `OnDone` rechecking gold alone; every `recruit_cost` troop had been recruitable past the gate by
+  hotkey since Patch51 shipped. Six Claude agents had read the VM and the patch. When a fix sets a
+  UI flag, expect Codex to list every path that commits without reading it; write the gate on the
+  commit method first.
 - **Refutes the prompt's premises before answering its questions** (2026-09-13, Gondor volunteer
   pools review 110): two of eight handed suspects restated the author's own assumptions (Morlad's
   pool "bowman-only" when the file holds bowman 50 / scout 50; the clan pools "only for unmapped

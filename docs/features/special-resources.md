@@ -142,13 +142,20 @@ giving any troop a `recruit_cost` gates + charges it with no code change.
 disables the Done button (with a `{=taom_recruit_needs_resource}` "Requires N <Resource>" hint) when the cart
 holds an unaffordable troop — mirroring vanilla's gold gate, only ever forcing the flag false. The matching
 deduction is on `OnUnitRecruitedEvent` (player-only; the AI/generic recruit path fires `OnTroopRecruited`
-instead, so AI lords are never charged).
+instead, so AI lords are never charged). **The greyed button is not the gate.** v1.5.3's
+`GauntletMenuRecruitVolunteersView.OnFrameTick` sends the Confirm hotkey straight to
+`RecruitmentVM.ExecuteDone`, which never reads `IsDoneEnabled`, and `OnDone` rechecks gold only, so until
+2026-09-15 the hotkey recruited an unaffordable cart and the charge floored at the balance (Codex review
+112, #600). `RecruitmentVM_ExecuteDone_Patch`, in the same category, re-runs the cart verdict as a prefix
+on `ExecuteDone` and skips the commit with the same line in red. `ExecuteDone` is the one public entry
+the button, the hotkey and the over-limit inquiry pass through; the quit path calls `ExecuteReset` first,
+so its cart is empty. Both patches fold the cart through the pure `RecruitCartGrouping`.
 
 ### Encyclopedia badge (#590)
 
 The encyclopedia troop tree (Home > Troops > a troop) marks every troop whose row carries an
 `upgrade_cost`, a `recruit_cost` or a `daily_upkeep` above zero with that troop's resource icon in the
-bottom-right corner of its card (27 rows on 2026-09-13). A row that only carries a `merchant_cost` is
+bottom-right corner of its card (27 rows on 2026-09-13, 43 since the Gondor wiring of 2026-09-15, #600). A row that only carries a `merchant_cost` is
 an ordinary tree troop the Elite Emissary sells and shows nothing. Hovering the badge lists the
 resource, then Upgrade, Recruit, Upkeep per day and Elite Emissary price where set, and adds a line
 naming the player's own resource when it is not the troop's, because those three charges land in the
@@ -185,11 +192,33 @@ gain passive; the battle payout is the base times the enemy-to-player size ratio
 | Plunder | 0.3 | 10 | 16 | 14 | 3 | 4 | 10 |
 | War Banners | 0.5 | 12 | 6 | 16 | 1 | 6 | 5 |
 
-`troop_resource_costs.xml` holds 77 rows: 27 carry a `daily_upkeep` (the 8 Mordor uruk elites at 0.05
-to 0.3, the 13 Black Numenoreans at 0.05 to 0.3 since the 2026-09-11 rescale, the 3 Ironpass rams at
-0.1 to 0.25, and the 3 creatures: spider 1, elephant 10, Mumakil 500) and 50 are merchant-only Elite
-Emissary offers across Gondor, Erebor and the Iron Hills, Dol Guldur, Isengard, Gundabad, Mirkwood,
-Rivendell, Rohan and Rhun. Only the 27 count as upkeep troops for desertion. The Mumakil's 500 a day is
+`troop_resource_costs.xml` holds 85 rows: 43 carry a `daily_upkeep` (the 8 Mordor uruk elites at 0.05
+to 0.3, the 13 Black Numenoreans at 0.03 to 0.15 since the second halving of 2026-09-15 (#600; the
+2026-09-11 rescale to 0.05 to 0.3 shipped in v2.0.29), the 16 Gondor elites at level 41 and above at
+0.2 to 0.4 (#600, the Mordor band: L41 upgrade 4 / upkeep 0.2, L46 5 / 0.3, L51 6 / 0.4), the 3
+Ironpass rams at 0.1 to 0.25, and the 3 creatures: spider 1, elephant 10, Mumakil 500) and 42 are
+merchant-only Elite Emissary offers across Erebor and the Iron Hills, Dol Guldur, Isengard, Gundabad,
+Mirkwood, Rivendell, Rohan and Rhun (Gondor's eight offers carry upkeep too since #600). Only the 43
+count as upkeep troops for desertion. `TroopResourceCostDataTests` pins two shapes of this file: every
+Gondor troop at level 41 or above carries both an `upgrade_cost` and a `daily_upkeep`, and no tree
+troop's `daily_upkeep` exceeds 0.4 (the creatures are exempt), so the 1.0 to 3.0 class cannot return
+unnoticed. The Black Numenorean values are exact two-decimal numbers because `FormatAmount` renders
+`0.##`: 0.025 would display as 0.03 while charging 0.025.
+
+**`upgrade_cost` does not cover a notable pick.** `TaomVolunteerModel.GetBasicVolunteer` seeds an
+EMPTY volunteer slot straight from the recruitment pools, and vanilla's `MaxVolunteerTier` cap in
+`RecruitmentCampaignBehavior` gates only the growth of an occupied slot, never the seed, so a pooled
+elite arrives at any level and never passes through Patch26. Two of the Gondor sixteen are pooled
+(the Ithilien Ranger at 10 percent in Minas Tirith and both Osgiliaths, the Fountain Guard in
+`clan_empire_west_1`'s pool and the vassal reward) and shipped for a day with no `recruit_cost`, so
+they were free to recruit and only ever cost upkeep. Both now carry a `recruit_cost` equal to their
+upgrade cost (6 and 5): a notable pick is a door into the rung, not the emissary's on-demand price,
+the Ranger has no incoming upgrade edge so this is the only price it ever pays, and the same attribute
+is charged per unit on prisoner recruits (ungated, #563), where an emissary-band price would drain the
+balance to zero in one screen and start desertion the next day; and
+`EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost` requires it of every pooled upkeep troop
+(hand-written pools through `VolunteerRecruitmentService.AllPooledTroopIds` plus every
+`recruitment_pools/*.json`). RCA: `docs/reviews/rca-gondor-castar-costs-2026-09-15.md`. The Mumakil's 500 a day is
 authored creature pricing (one unit eats about eighteen maximum battle payouts a day); it is a balance
 question, not a defect, and the daily toast now makes it visible.
 
@@ -218,7 +247,9 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/Hooks/PartyUpgradeResourceCheckHook.cs` | Upgrade hook implementation |
 | `Main/Features/SpecialResources/Hooks/IOnRecruitmentResourceGate.cs` | Recruit gate hook interface |
 | `Main/Features/SpecialResources/Hooks/RecruitmentResourceGateHook.cs` | Recruit gate hook implementation |
-| `Main/Features/SpecialResources/Hooks/RecruitmentVM_RecruitGate_Patch.cs` | Patch51: block Done button when recruit cost unaffordable |
+| `Main/Features/SpecialResources/Hooks/RecruitmentVM_RecruitGate_Patch.cs` | Patch51: block Done button when recruit cost unaffordable; `EvaluateCart` shared with the prefix |
+| `Main/Features/SpecialResources/Hooks/RecruitmentVM_ExecuteDone_Patch.cs` | Patch51: prefix on `ExecuteDone`, the commit boundary the Confirm hotkey reaches without the button (#600) |
+| `Main/Features/SpecialResources/Hooks/RecruitCartGrouping.cs` | Pure: cart of units to one `RecruitCartEntry` per troop id |
 | `Main/Features/SpecialResources/Cheats/SpecialResourceCheats.cs` | `taom.add_special_resources` console command |
 | `Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Map bar UIExtenderEx mixin |
 | `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
@@ -227,7 +258,7 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/UI/EncyclopediaUnitBadgeMixin.cs` | UIExtenderEx mixin on `EncyclopediaUnitVM`: badge visibility, icon sprite, lazy tooltip (#590) |
 | `Main/_Module/GUI/Prefabs/Encyclopedia/EncyclopediaSubPages/EncyclopediaUnitTreeNodeItem.xml` | TAOM clone of the vanilla troop-tree node; carries the badge widget beside the tier and type icons |
 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | 11 resource definitions |
-| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 77 cost rows: 27 with daily upkeep, 50 merchant-only emissary offers |
+| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 85 cost rows: 43 with daily upkeep, 42 merchant-only emissary offers |
 
 ## Dependencies
 
@@ -249,7 +280,8 @@ question, not a defect, and the daily toast now makes it visible.
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
 - `SpecialResourceTierServiceTests.cs` (14), `SpecialResourceConfigProviderTierTests.cs` (6, plus the 2 `GetById` tests for a known and an unknown or null id) and `ResourceTierTests.cs` (3): tier resolution by threshold, `<Tiers>` parsing and sort order, the domain record
 - `SpecialResourceTroopBadgeTests.cs`: 14 tests (#590). The predicate for each cost field alone, the merchant-only row shape and a null row; the rows for a captain, an elephant rider and a ram in their fixed order with zero fields omitted; the paid-in note only when the player's resource differs; no digit baked into any label
-- `TroopResourceCostDataTests.cs`: 2 tests reading the shipped XML: every `resource_id` names a configured resource, and every badged row reaches a `SpecialResources\` icon sprite
+- `RecruitGatePatchTests.cs`: 4 tests (#600). `RecruitCartGrouping` counts duplicates, skips nulls, keeps first-seen order; the `ExecuteDone` prefix carries Patch51's category and targets `ExecuteDone`
+- `TroopResourceCostDataTests.cs`: 5 tests reading the shipped XML: every `resource_id` names a configured resource, every badged row reaches a `SpecialResources\` icon sprite, every Gondor troop at level 41 or above carries an `upgrade_cost` and a `daily_upkeep`, no tree troop's `daily_upkeep` exceeds the 0.4 band ceiling, and every volunteer-pooled upkeep troop carries a `recruit_cost` (#600)
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
 ## Cheat Command
@@ -335,7 +367,7 @@ ends up controlling, resolving it from the character-creation culture and the li
 ## Desertion Mechanics
 
 - Triggers daily when resource balance is 0 and party has upkeep-costing troops
-- An upkeep-costing troop is one whose cost row has `daily_upkeep > 0`. The rule is applied in `CalculateDesertion` and in `GetDailyBreakdown`, never on the presence of a row: 50 of the 77 rows in `troop_resource_costs.xml` are merchant-only Elite Emissary offers, and until 2026-09-11 a party holding one of those at zero balance lost 10% of them a day to "your Gems are depleted" (#558)
+- An upkeep-costing troop is one whose cost row has `daily_upkeep > 0`. The rule is applied in `CalculateDesertion` and in `GetDailyBreakdown`, never on the presence of a row: 42 of the 85 rows in `troop_resource_costs.xml` are merchant-only Elite Emissary offers, and until 2026-09-11 a party holding one of those at zero balance lost 10% of them a day to "your Gems are depleted" (#558)
 - 10% of each troop type deserts per day (minimum 1 per type)
 - Center-screen notification: "X elite troops deserted — your [Resource] are depleted!"
 - Uses vanilla `TroopRoster.AddToCounts(character, -count)` for roster removal
@@ -352,6 +384,7 @@ ends up controlling, resolving it from the character-creation culture and the li
 
 ## Changelog
 
+- 2026-09-15 (#600): Gondor's 16 elites at level 41 and above cost Castar at the Mordor band (L41 upgrade 4 / upkeep 0.2 a day, L46 5 / 0.3, L51 6 / 0.4); until then Gondor's only rows were the eight merchant-only emissary prices, so a Gondor player promoted into Fountain Guards for gold and XP alone. The Black Numenorean line's upkeep halved again to 0.03 / 0.05 / 0.08 / 0.1 / 0.15 on player feedback that the line is hard to keep (the 2026-09-11 rescale had shipped in v2.0.29 the day before, so the report likely predates it). Three shipped-data tests pin the Gondor coverage, a 0.4 ceiling on tree-troop upkeep, and a `recruit_cost` on every volunteer-pooled upkeep troop: the deep review found the Ithilien Ranger and the Fountain Guard reachable from a notable for gold alone (the volunteer model seeds empty slots from the pools at any level), so both now carry one equal to their upgrade cost (6 / 5). Codex review 112 then found the recruit gate bypassable by the Confirm hotkey (`ExecuteDone` never reads `IsDoneEnabled`); `RecruitmentVM_ExecuteDone_Patch` closes it at the commit boundary. In-game smoke owed.
 - 2026-09-13 (#590): the encyclopedia troop tree badges every troop that costs a resource to upgrade, recruit or keep, with the troop's own resource icon and a hover tooltip of the costs; `ISpecialResourceConfigProvider.GetById`; the row's `resource_id` is now gated by `TroopResourceCostDataTests`; six `taom_res_badge_*` keys seeded as English in all 12 languages and translated the same day in the backlog run (#579). Verified in game the same day.
 - 2026-09-11 (#558): every outflow is visible. The tooltip renders the real daily breakdown (it had computed upkeep from an empty list since the first commit), with per-troop upkeep rows, days until depleted and a warning flag one day ahead of desertion; a daily income/upkeep line, an overdraft line, an upgrade-spend line and a recruit-charge line join the earning toast; troops whose row carries no `daily_upkeep` no longer desert; `taom.print_special_resources` prints the breakdown; 20 new `taom_res_*` keys, seeded as English in all 12 languages (translator run owed). Data: the 13 Black Numenorean rows rescaled to the Mordor line's upkeep ratio and merchant band. Codex (GPT-6-Astra at ultra, review 95) added three MEDIUM fixes the same day: measured debits behind the spend and charge lines, a range-checked countdown cast, and the zero-balance notice gated on the net.
 - 2026-08-03 — Earning is keyed on participation (`MapEvent.PlayerSide == WinningSide`) instead of commanding the winning side, which also fixes single-player: fighting inside an AI lord's army used to pay nothing. Added `SpecialResourceEarnPolicy` (pure, 8 tests) and a dedicated-server gate that suppresses all five earn paths.

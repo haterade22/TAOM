@@ -4,6 +4,66 @@
 
 ## 2026-09-15
 
+### balance(special-resources): Gondor elites cost Castar from level 41; Black Numenorean upkeep halved again (#600)
+
+Gondor's only rows in `troop_resource_costs.xml` were the eight merchant-only Elite Emissary prices,
+so a Gondor player promoted into Fountain Guards for gold and XP alone and nothing ever drained the
+Castar the map bar earns. Every Gondor troop at level 41 or above, 16 in all, now carries an
+`upgrade_cost` and a `daily_upkeep` at the Mordor band: L41 upgrade 4 / upkeep 0.2 a day (the twelve
+L41s, from the Citadel Guard Captain to the Pelargir Anchor Guard), L46 5 / 0.3 (Fountain Guard, Swan
+Knight, Moon Guard), L51 6 / 0.4 (Ithilien Ranger, one rung past the Mordor top). Level 36 and below
+stay free so the tree stays enterable. The party-screen upgrade is one way in; the two troops a
+notable can hand out directly also carry a `recruit_cost` (below). The eight emissary offers keep
+their price; the other eight get none. Chosen knowing Castar's battle
+base (8) is 57 percent of War Spoils' (14), so the same band costs a Gondor player about 1.75 times
+the battles.
+
+The Black Numenorean line's upkeep is halved again, to 0.03 / 0.05 / 0.08 / 0.1 / 0.15 a day by
+level, on player feedback that the line is hard to keep. The 2026-09-11 rescale (1.0 to 3.0 down to
+0.05 to 0.3, #558) shipped in v2.0.29 on 2026-09-14, so the report most likely comes from an earlier
+build; the halving is the maintainer's call regardless. The values are exact two-decimal numbers
+rather than 0.025 / 0.075 because `FormatAmount` renders `0.##` and the badge tooltip would otherwise
+show a number the tick does not charge. `tools/wire_black_numenorean_troops.py` carries the same
+table so a fresh run cannot write the old band.
+
+`TroopResourceCostDataTests` gains three shipped-data tests: every Gondor troop at level 41 or above
+carries both costs (RED on all 16 before the edit), no tree troop's `daily_upkeep` exceeds 0.4
+(creatures exempt), so the 1.0 to 3.0 class cannot return unnoticed, and every volunteer-pooled
+upkeep troop carries a `recruit_cost`. That last one came out of the deep review: the first cut
+claimed "L41+ is upgrade-only" because `MaxVolunteerTier` 6 stops a notable's slot at level 35, but
+that cap gates only the growth of an occupied slot; `TaomVolunteerModel` seeds an empty slot straight
+from the recruitment pools at any level, and the Ithilien Ranger (10 percent at Minas Tirith and
+both Osgiliaths) and the Fountain Guard (`clan_empire_west_1`, and the vassal reward) are pooled.
+`upgrade_cost` never fires on that path, so both were free to recruit; both now carry a
+`recruit_cost` equal to their upgrade cost (6 and 5), gated by Patch51 and charged on
+`OnUnitRecruited`. The first cut priced them at the emissary band (45 and 28, the Ironpass ram
+pairing) and was lowered the same day: a notable pick is a door into the rung, the Ranger has no
+incoming upgrade edge so this is the only price it ever pays, and the same attribute is charged per
+unit on prisoner recruits (ungated, #563), where 45 a head drains a balance to zero in one screen
+and starts desertion the next morning. The same review found `wire_black_numenorean_troops.py`
+claiming the line is not an emissary offer and writing rows without `merchant_cost`, which the
+emissary loader drops; the table now carries the price. Two pre-existing findings recorded, not
+fixed here: the troop-tree cost hint (`PartyUpgradeResourceCheckHook.GetUpgradeCost`) shows the raw
+cost while the clamp and the spend apply the career `SpecialResourceUpgradeCostModifier`, visible for
+Gondor for the first time; and desertion's "10 percent, at least 1 per type" rule now takes one of
+each of up to sixteen Gondor types a day at zero Castar. RCA
+`docs/reviews/rca-gondor-castar-costs-2026-09-15.md`. File shape now 85 rows, 43 with upkeep, 42
+merchant-only. `validate_moduledata.py` 0 errors. Owed: a Gondor campaign smoke (badge on a Fountain
+Guard, the greyed upgrade at 0 Castar, the Done button greyed on a Ranger at 0 Castar, the daily
+line) and a Black Numenorean party reading half of yesterday's daily line.
+
+Codex (GPT-6-Astra at ultra, review 112) then refuted the recruit gate itself: v1.5.3's
+`GauntletMenuRecruitVolunteersView.OnFrameTick` routes the Confirm hotkey straight to
+`RecruitmentVM.ExecuteDone` without reading `IsDoneEnabled`, and `OnDone` rechecks gold only, so the
+greyed Done button Patch51 sets was the whole gate: with 40 Castar and a 45 Ranger in the cart the
+hotkey recruited the Ranger and debited 40, and at zero it recruited for nothing. Pre-existing for
+the rams and the creatures, exposed to Gondor by these rows. `RecruitmentVM_ExecuteDone_Patch`
+(same category) re-runs the cart verdict at the commit boundary and skips the commit with the same
+"Requires N Castar" line in red; both patches share the pure `RecruitCartGrouping`, and
+`RecruitGatePatchTests` pins the grouping, the category and the target. Codex's LOW was a sentence
+in this entry still claiming "L41+ is upgrade-only", removed.
+
+
 ### fix(player-switcher): a taken-over non-leader now leads their clan, and Patch80 seam D closes a pre-concluded vote (#550)
 
 Players starting as Boromir or Faramir kept reporting the frozen kingdom-decision window that

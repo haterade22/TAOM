@@ -147,6 +147,12 @@ public class CoopVetoClassificationTests
             "Blocks an upgrade the local player cannot afford. Reads _taom_specialResources, which " +
             "is TAOM campaign state — but it gates the acting player's OWN party screen, and each " +
             "peer owns its own resources."),
+        ["RecruitmentVM_ExecuteDone_Patch"] = new(CoopVeto.ReviewedSafe,
+            "The commit-boundary twin of PartyScreenLogic_AddCommand_Patch: skips the local player's " +
+            "OWN recruit-screen commit when the cart is unaffordable in their special resource, the " +
+            "verdict the greyed Done button already shows (the Confirm hotkey bypasses the button, " +
+            "#600). Each peer owns its resources and its recruit screen; nothing replicated is " +
+            "decided here."),
         ["Patch71_HeroResetEquipmentsGuard"] = new(CoopVeto.ReviewedSafe,
             "Does skip a replicated campaign-state mutation (a fired wanderer's equipment reset), " +
             "so the second half of the question is what carries it: the condition is whether the " +
