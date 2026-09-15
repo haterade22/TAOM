@@ -78,6 +78,25 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### fix(module): TAOM.Dependencies listed first in both dependency blocks
+
+The maintainer moved `<DependedModule Id="TAOM.Dependencies" />` and its version-pinned
+`DependedModuleMetadata` mirror to the top of their blocks in `Main/_Module/SubModule.xml`, so the
+launcher shows the pairing first; the two explanatory comments now sit above the entries they
+describe instead of below them. The installed copy carries the same order.
+
+Same evening, the launcher refused to start TAOM with "Cannot find
+..\..\Modules\TAOM.Dependencies\bin\Win64_Shipping_Client\Bannerlord.UIExtenderEx.dll", then
+`Module.HandleSubmoduleLoadError` on the next try. The installed Dependencies bin held 26 files:
+`TAOM.Dependencies.dll` written at 16:58 by a deploy this session did not run, and no `0Harmony.dll`,
+`Bannerlord.UIExtenderEx.dll`, `Bannerlord.ButterLib.dll`, implementation or `MBOptionScreen`
+assemblies at all. Nothing was blocked (no DLL in the install or the repo carries a
+`Zone.Identifier` stream), the backup sweep quarantined no DLL, and the Recycle Bin holds only the
+four BUTR stub-module folders, deleted from `Modules\` at 18:14. What removed the assemblies is not
+established. `./build.ps1` with Bannerlord closed (19:40) restored the folder to 50 files: Harmony
+2.4.2, UIExtenderEx 2.13.3, MCMv5 5.12.3, ButterLib 2.12.0 with the 1.5.1 implementation, the
+stubs, and the server mirror. The v1.5.2 campaign-map load is still unverified.
+
 ### chore(release): TAOM v2.0.29, the first build for Bannerlord v1.5.2
 
 Every module reads `v2.0.29`: `Main/_Module/SubModule.xml`, `Dependencies/_Module/SubModule.xml`
