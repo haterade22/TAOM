@@ -1,7 +1,11 @@
 # Map-load diagnostics
 
 **Status:** shipped 2026-08-20 on the archived v1.5.0 line, where it did its job on the first run; re-landed
-on the v1.5.x line on 2026-09-14 as Patch89 (Patch66 belongs to Enlistment on trunk).
+on the v1.5.x line on 2026-09-14 as Patch89 (Patch66 belongs to Enlistment on trunk). On v1.5.2 with
+the re-baked `TAOM_Map` it recorded the healthy sequence the same evening (2026-09-14 20:17): scene
+ready flipped to True, `MapScreen.OnInitialize` 632 ms, the loading window lowered between the +10 s
+and +15 s heartbeats, 54 fps at Stop, time running from +90 s. The v1.5.0 hang is closed; the
+evidence table is in `docs/migration/v1.5.2-impact.md`.
 **Code:** [`Main/Features/MapLoadDiagnostics/`](../../Main/Features/MapLoadDiagnostics/)
 **Category:** `Patch89_MapLoadDiagnostics` (+ `_Lifecycle`, `_MapScreen`, `_SceneReady`)
 **Related:** the v1.5.2 entries in `CHANGELOG.md`; the v1.5.0 impact write-up lives on the archived branch
@@ -61,7 +65,9 @@ reported ready. Everything else was healthy: 68 fps, `MapScreen.OnInitialize` co
 first frame ticked, party count flat, clock correctly paused, one clean state on the stack.
 
 Not a TAOM defect: a terrain baked by pre-1.5 tools never satisfied the check. The v1.5.2 Modding Kit is
-what re-bakes it, which is why the v1.5.x line waited for it.
+what re-bakes it, which is why the v1.5.x line waited for it. Re-baked on 2026-09-14, the map loaded
+that evening, `ReadyToRender` flipping to True 231 s into the session and the loading window
+lowering within 15 s of `MapState`.
 
 ## Design notes worth keeping
 

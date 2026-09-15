@@ -144,7 +144,7 @@ the version that binary carried at the time, which is why `/native-crash-triage`
 `bin/Win64_Shipping_wEditor/Version.xml` before trusting a fault offset. The other direction
 happened at v1.5.0: the client moved on 2026-08-19 and the Kit stayed on v1.4.8, which is what
 parked the v1.5.0 port (the map could not be re-baked). On 2026-09-14 both moved to
-`v1.5.2.121216` together.
+`v1.5.2.121216` together, and the re-baked map loaded that evening.
 
 **Authoritative signatures** still come from `pwsh tools/taom-src.ps1 path <Type>` (runs `ilspycmd` on the
 *installed* shipping DLLs, auto-detects version). Use the decompiled folders for *browsing*; use `taom-src` for

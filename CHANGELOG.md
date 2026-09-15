@@ -78,6 +78,27 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### docs(engine): the campaign map loads on v1.5.2
+
+The one test that gated the whole v1.5.2 port passed on 2026-09-14 at 20:17. With `TAOM_Map`
+re-saved in the v1.5.2 Modding Kit and the v2.0.29 binaries deployed at 19:40, the maintainer
+started a new campaign (Gondor retainer, career captain of Osgiliath) and reached the map. The
+`[MapLoad]` instrument (Patch89) recorded the healthy sequence the v1.5.0 run never produced:
+`SCENE-READY ReadyToRender=True` 231 s into the session, `MapScreen.OnInitialize` in 632 ms,
+`loadingWindow` True on the +0, +5 and +10 s heartbeats and False from +15 s, 54 fps at Stop with
+2,091 parties, 4,879 heroes, 235 clans and 1,002 settlements, campaign time advancing from +90 s
+(fast-forward at 7 to 8 fps while the world filled to 3,042 parties), field battles auto-resolving,
+no errors and two benign warnings. Log:
+`bin/Win64_Shipping_Client/Logs/taom_debug_2026-09-14_20-08-36.log`.
+
+Docs that still called the load owed now record it: `docs/migration/v1.5.2-impact.md` (the
+"BLOCKER carried over" section becomes "The map loads" with the evidence table; the Owed list
+drops the map-load item, keeps the #480 checklist and the untested pre-1.5 save path, and notes
+the old branch is deletable but not deleted), `docs/migration/TRACKING.md`, `docs/INDEX.md`,
+`docs/features/map-load-diagnostics.md` (status line and the "why the line waited" paragraph),
+`docs/reference/bannerlord-engine-and-toolchain.md`, and the v2.0.29 release note, which now says
+a new campaign reaches the map. Still owed in game: the #480 checklist and a pre-1.5 save load.
+
 ### docs(readme): the player install list drops the separate Harmony and MCM
 
 `README.md` "Installing to Play" told players to install Harmony and MCM beside the TAOM modules.
