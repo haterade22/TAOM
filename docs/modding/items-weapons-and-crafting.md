@@ -414,8 +414,8 @@ The blade appears in `crafting_templates.xslt` under `OneHandedSword` (line 115)
     <Item
         id="highelf_longbowa"
         name="{=aom_highelf_longbowa_name}[Noldor] Longbow I"
-        body_name="bo_wm_elven_bow_v1"
-        mesh="wm_elven_bow_v1"
+        body_name="bo_wm_elven_bow_a01"
+        mesh="wm_elven_bow_a01"
         is_merchandise="true"
         culture="Culture.rivendell"
         weight="0.1"
