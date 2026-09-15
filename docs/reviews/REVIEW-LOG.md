@@ -2998,6 +2998,44 @@ prompt [codex-adversarial-gondor-recruitment-vales-2026-09-13.prompt.md](codex-a
 Owed: the GitHub issue, a decision on Bar Melui's villages, a live-map coverage gate in
 `validate_moduledata.py` with the #597 session, the in-game recruit-screen check after a restart.
 
+## Review 113: Player Switcher clan leadership (#550), 5-agent deep review + Codex gpt-6-astra ultra (2026-09-15)
+
+Players starting as Boromir or Faramir kept hitting the unclosable kingdom-decision window #547
+was meant to end. The screenshot named the mechanism: the support-form title (the player is not
+the chooser) and a seal already stamped (the vote concluded inside the view model's constructor).
+The takeover path had never reassigned clan leadership, so `Supporter.IsPlayer` was false for
+every election. Three changes: the takeover promotes through vanilla
+`ChangeClanLeaderAction.ApplyWithSelectedNewLeader` (the same call vanilla makes for an elected
+non-leader king and for the player's heir); a session-launch repair promotes a loaded save through
+an eight-row state table; Patch80 seam D closes a pre-concluded window at once through vanilla
+`ExecuteDone`.
+
+**Deep review, five agents:** standards, compatibility (24 verified, all four engine premises
+confirmed on v1.5.3), efficiency and completeness clean. Agent 5 found the one real gap: the
+repair's "dead" guard read `Hero.IsAlive`, which is only `!IsDead`, so a disabled hero would have
+reached vanilla succession while the doc claimed "dead or disabled"; the flag is now
+`IsHeroInPlay` (alive, spawned, not disabled). It also recorded the English-seeded translations,
+a deferral written into the CHANGELOG (no provider key in session).
+
+**Codex (gpt-6-astra, ultra, about 35 minutes, 256k tokens): P1 0, P2 0, P3 1.** Six of seven handed
+suspects disputed with decompiled lines (nested inquiries, the session-launch message's subscriber,
+`Kingdom.Leader` caches, party coherence after the promotion), one confirmed as a vanilla hazard
+this change does not touch. The P3 is the finding of the review: seam D closes before the popup
+widget's five-second timer fires, and nothing but that timer's own `ExecuteFinalDone` disarms it,
+so a `FinalDone` lands five seconds later on whatever item is bound. Codex traced the same-item
+ordering (a duplicate inquiry the query manager rejects) and rated it P3; the other ordering, the
+player opening the NEXT decision inside those five seconds, runs `ExecuteDone` on a live item and
+NREs on its null `_chosenOutcome`, so it is MED here and fixed as seam E, a prefix that runs
+`ExecuteDone` only when `IsActive && IsKingsDecisionOver`. Codex did not run the suite and said so.
+
+Full suite 9,206 / 0 / 2 before the reviews and 9,220 / 0 / 2 after seam E and its
+`CoopVetoClassificationTests` registry row (ReviewedSafe: view-model only). RCA
+[rca-player-switcher-clan-leadership-2026-09-15.md](rca-player-switcher-clan-leadership-2026-09-15.md);
+lessons in `lessons/adapters-taleworlds-api.md` and `lessons/harmony-il.md`; prompt
+[codex-adversarial-player-switcher-clan-leadership-2026-09-15.prompt.md](codex-adversarial-player-switcher-clan-leadership-2026-09-15.prompt.md).
+Owed: the in-game Boromir two-decision check, a pre-fix Boromir save through the repair, the
+translator run for `taom_ps_clan_leader_repaired`, closing #550.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

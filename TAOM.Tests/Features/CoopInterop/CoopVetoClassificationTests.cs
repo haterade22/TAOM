@@ -171,6 +171,14 @@ public class CoopVetoClassificationTests
             "can differ between peers (ShouldBeCancelled short-circuits on ProposerClan == PlayerClan, " +
             "which is peer-local), but each peer already owns its own Kingdom screen and the outcome " +
             "is only whether that peer sees a dead window it could never close."),
+        ["DecisionItemBaseVM_ExecuteDone_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Patch80 seam E (#550). Skips DecisionItemBaseVM.ExecuteDone unless the window is active " +
+            "and its election is over. ExecuteDone is view-model only: it hides the popup, shows the " +
+            "outcome inquiry, clears the concluded listener and, on OK, runs OnDecisionOver, which " +
+            "refreshes the kingdom screen and re-arms the decision queue. The election was already " +
+            "applied by whoever fired KingdomDecisionConcluded; nothing campaign-side is skipped. The " +
+            "two reads are peer-local view-model flags, and the only call this ever declines is the " +
+            "popup widget's late FinalDone after seam D closed the window early."),
         ["Patch58_SkipCampaignIntro"] = new(CoopVeto.ReviewedSafe,
             "New-game intro skip, before any session exists."),
         ["Campaign_InitializeScenes_Patch"] = new(CoopVeto.ReviewedSafe,

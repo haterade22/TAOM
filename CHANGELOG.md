@@ -2,6 +2,68 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-15
+
+### fix(player-switcher): a taken-over non-leader now leads their clan, and Patch80 seam D closes a pre-concluded vote (#550)
+
+Players starting as Boromir or Faramir kept reporting the frozen kingdom-decision window that
+#547 was meant to end, and the screenshot showed why it is a different mechanism: the popup title
+was the SUPPORT wording (`KingdomElection.GetTitle()` returns it only when the player is not the
+chooser) and the "Yes" scroll already carried the king's seal, which `OnKingdomDecisionConcluded`
+stamps. The vote was over before the window existed. The takeover path set `Hero.MainHero` and
+moved `Clan.PlayerClan` but never reassigned clan leadership, so `Clan.PlayerClan.Leader` stayed
+Denethor, `Supporter.IsPlayer` (`Clan.Leader.IsHumanPlayerCharacter`) was false for every
+election, and `StartElection()` resolved each one through `ReadyToAiChoose()` inside
+`DecisionItemBaseVM`'s own constructor (v1.5.3: listener at :358, `InitValues()` at :360, the
+election at :399). The popup's close is the widget's five-second timer, started only by the
+false-to-true edge of `KingdomDecisionPopupWidget.IsKingsDecisionDone`, which is reused across
+decisions and never reset, so the first pre-concluded window closed on the timer and every later
+one in the visit stayed open. Denethor himself (`lord_1_7`, owner of `clan_empire_west_1`) cannot
+reach this; a Denethor report would be a third route.
+
+Three changes, the invariant `Clan.PlayerClan.Leader == Hero.MainHero` behind all of them.
+`IPlayerIdentityAdapter.PromoteToClanLeader` wraps vanilla
+`ChangeClanLeaderAction.ApplyWithSelectedNewLeader`, the call vanilla itself makes for an elected
+non-leader king and for the player's heir; `HeroSwitchService` runs it right after
+`ReassignPlayerClan`, after the swap on purpose so a throw reads `SwitchedWithErrors` rather than a
+clean failure that had already re-headed a lore clan. Gold, party leadership, 70% of the old
+leader's relations and `OnClanLeaderChanged` all ride along, and because a kingdom's leader IS its
+ruling clan's leader, taking over Boromir now makes Boromir the Steward; Denethor stays alive as a
+clan member. A new `PlayerClanLeadershipService` repairs a loaded save at session launch through
+an eight-row state table (leader is the player; vanilla `player_faction`; the player's clan is not
+`Clan.PlayerClan`, warn; no leader, warn; dead, disabled or not spawned; co-op client; prisoner still
+repaired; otherwise
+promote, log, one `taom_ps_clan_leader_repaired` line), one test per row. And Patch80 gained seam D:
+a postfix on `KingdomDecisionsVM.RefreshWith` that, when the window just built is already
+`IsKingsDecisionOver`, runs vanilla's own `ExecuteDone` through a cached `MethodInfo`. Safe exactly
+where seam B's close is not (`_chosenOutcome` is set on this path), it hides the popup, shows the
+outcome, clears the concluded listener and runs `OnDecisionOver`; nothing is re-implemented.
+`ExecuteDone` stays out of the binding's `IsReady` so losing it on a bump disables seam D alone. A
+hit logs at warning level, since TAOM's own route in is closed; a warning in a player's log names a
+route nobody has traced. Codex review 113 then found the one thing seam D left behind: the bind
+still pushes `IsKingsDecisionOver` into the popup widget, whose latch arms its five-second timer,
+and nothing but that timer's own firing disarms it, so a seam D close leaves a `FinalDone` due
+five seconds later against whatever item is bound by then (the same closed item, a duplicate
+inquiry the query manager rejects; or the next live one, an NRE on a null `_chosenOutcome`). Seam E,
+a prefix on `ExecuteDone`, runs vanilla only on an active window whose election is over, which is
+every legitimate call.
+
+Tests: `HeroSwitchServiceTests` pins the new step, its position after the swap and before the
+removal, and that adoption never promotes; `PlayerClanLeadershipServiceTests` (13) covers the
+table; `PlayerSwitcherBindingTests` pins `ApplyWithSelectedNewLeader(Clan, Hero)`;
+`Patch80KingdomVoteDeadlockBindingTests` pins `ExecuteDone`'s shape, `StartElection` still calling
+`ReadyToAiChoose`, the category on all five seams, `SubModule` initializing seams D and E, seam E's
+string-named target, and IL call-presence for the `ExecuteDone` invoke and seam E's state reads;
+`ReflectionSiteBindingTests` gains the five Patch80 members (the four from #547 had only ever been
+pinned by the feature suite). Reviews: a 5-agent deep review (one MED fixed: the repair's "dead"
+guard read `Hero.IsAlive`, which is only `!IsDead`, so a disabled hero would have passed; the flag
+is now `IsHeroInPlay`) and Codex review 113 (P3 F1, fixed as seam E; every other suspect disputed
+with engine evidence), RCA `docs/reviews/rca-player-switcher-clan-leadership-2026-09-15.md`. Docs:
+`player-switcher.md` ("Clan leadership follows the player", handover step 4, smoke 17 and 18),
+`diplomacy.md`, the Patch80 registry entry, the reflection-site catalogue, the CLAUDE.md trap row,
+lessons in `lessons/harmony-il.md` and `lessons/adapters-taleworlds-api.md`. The new string is
+seeded in English in all twelve languages until a translator run picks it up.
+
 ## 2026-09-14
 
 ### fix(xslt): comment_strings overrides keep their variant tags
