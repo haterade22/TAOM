@@ -401,6 +401,24 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>().LogError($"[MapLoad] init failed, map-load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
         }
 
+        // Patch90_PreloadBodyGuard (#601): a collision-body name no loaded tpac ships spins
+        // PreloadHelper.WaitForMeshesToBeLoaded forever on the first frame of any mission that
+        // preloads a carrier (#352 twice, #599 the elf start). The prefix drains the names that
+        // cannot resolve, with a bounded wait, logs them, and lets vanilla's loop run against a set
+        // that can now empty. Applied here in OnSubModuleLoad: the education screen's OnFrameTick
+        // and the custom-battle preload call the same wait before any campaign initialises. Own
+        // try/catch: a guard must never be the thing that breaks the load it protects.
+        try
+        {
+            Features.PreloadBodyGuard.Hooks.PreloadHelper_WaitForMeshesToBeLoaded_Patch.Initialize(
+                IoC.Resolve<Features.PreloadBodyGuard.IPreloadBodyGuardService>(), IoC.Resolve<IModLogger>());
+            _harmony.PatchCategory("Patch90_PreloadBodyGuard");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[PreloadGuard] init failed, mission loads are unguarded against a missing collision body: {ex.GetType().Name}: {ex.Message}");
+        }
+
         // Patch62 — containment guard (#339): a heap-corruption AccessViolationException inside
         // the Tournament movie's WidgetTemplate release walk CTD'd a player session (fired in
         // Patch60's early release AND again uncaught at the pop-time re-walk of the leaked

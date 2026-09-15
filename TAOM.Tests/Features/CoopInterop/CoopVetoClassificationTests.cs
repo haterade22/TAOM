@@ -253,6 +253,13 @@ public class CoopVetoClassificationTests
             "battle during service. Local dialogue only."),
         ["LordConversationsAllyThanksConditionPatch"] = new(CoopVeto.ReviewedSafe,
             "Second ally-thanks variant. Local dialogue only."),
+        ["PreloadHelper_WaitForMeshesToBeLoaded_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Patch90 (#601). Never returns false: vanilla's wait always runs. Before it does, the " +
+            "prefix removes collision-body names that no loaded tpac ships from this peer's own " +
+            "PreloadHelper set, which is view-layer scratch state built per mission load and " +
+            "never replicated. Each peer resolves against its own install; a peer whose Armory " +
+            "copy carries the bad pair would otherwise freeze on that load, so gating the guard " +
+            "under co-op would restore the hang on exactly the peer that needs it."),
 
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
