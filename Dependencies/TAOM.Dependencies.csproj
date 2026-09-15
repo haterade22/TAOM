@@ -68,8 +68,8 @@
 		     <DependedModuleMetadata version="..."/>. See docs/migration/dr3-maintenance.md
 		     "Stub modules" section + .serena/memories/task_completion_checklist.md. -->
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
-		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" />
-		<PackageReference Include="Bannerlord.MCM" Version="5.12.1" />
+		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.3" />
+		<PackageReference Include="Bannerlord.MCM" Version="5.12.3" />
 	</ItemGroup>
 
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">

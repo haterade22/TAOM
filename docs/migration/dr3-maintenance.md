@@ -403,6 +403,8 @@ System.Numerics.Vectors.dll                                   (vendored — Butt
 System.Reflection.Metadata.dll                                (vendored — ButterLib dep)
 ```
 
+> **Refresh 2026-09-14 (the v1.5.2 engine bump).** ButterLib 2.11.0 to 2.12.0 (`Implementation.1.4.6`, `1.4.7`, `1.4.8` and `1.5.1` added beside the six 1.4.0 to 1.4.5 builds, all re-copied at 2.12.0), MBOptionScreen 5.12.1 to 5.12.3 (`v1.4.6` to `v1.4.8` and `v1.5.1` added) with `MCM.UI.Adapter.MCMv5.dll` at 5.12.3, NuGet pins `Bannerlord.MCM` 5.12.3 and `Bannerlord.UIExtenderEx` 2.13.3 in both csproj files, the ButterLib stub at `v2.12.99.0` (a minor bump). The CrashReport family, the Microsoft.Extensions and Serilog runtimes and the polyfills were byte-identical between the vendored copy and the Workshop and were left alone. On a v1.5.2 engine both meta-loaders now pick the 1.5.1 build; before this refresh they fell back to 1.4.5, which had carried the 1.4.8 line unchanged.
+>
 > **The 6 `BUTR.CrashReport*` DLLs are not optional and were missing from this inventory until 2026-07-16.** ButterLib references them in its metadata; without them, ButterLib's type enumeration throws `ReflectionTypeLoadException` at SubModule init — a crash this project has already shipped once. A maintainer following the old inventory would have rebuilt a bin folder that reproduces it.
 
 Count is intentionally not stated — it moves with the impl set. Compare against the folder.

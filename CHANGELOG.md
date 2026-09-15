@@ -78,6 +78,22 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### fix(deps): the BUTR stack refreshed for the 1.5.x line
+
+`TAOM.Dependencies` had not been touched by either 1.5 port. It shipped ButterLib 2.11.0 and
+MBOptionScreen 5.12.1 with per-engine implementation builds only up to game 1.4.5; both
+meta-loaders pick the highest build at or below the running engine, which is how 1.4.8 ran on the
+1.4.5 builds and how v1.5.2 would have. The subscribed Workshop copies carry the 1.5.x line
+(ButterLib 2.12.0, MCM 5.12.3, both with `1.4.6` to `1.4.8` and `1.5.1` builds), so the documented
+refresh in `docs/migration/dr3-maintenance.md` ran: the ButterLib core and all ten implementation
+builds re-vendored at 2.12.0, the ten MBOptionScreen builds and `MCM.UI.Adapter.MCMv5.dll` at
+5.12.3, NuGet `Bannerlord.MCM` 5.12.3 and `Bannerlord.UIExtenderEx` 2.13.3 in both csproj files,
+the ButterLib alias stub at `v2.12.99.0` (a minor bump under the v99 rule), the attribution notice
+and the maintenance record updated. The CrashReport family, the Microsoft.Extensions and Serilog
+runtimes and the polyfills were byte-identical to the Workshop and stay as they were.
+`BundledDependencyManifestTests` holds every pairing. The install gets the new DLLs on the next
+build with the game closed; nothing was deployed while it ran.
+
 ### docs(engine): the v1.5.2 impact record, the ranked body diff, and the target line moves to 1.5.2
 
 `docs/migration/v1.5.2-impact.md` is the bump's record in the shape of the v1.5.0 one: bottom
