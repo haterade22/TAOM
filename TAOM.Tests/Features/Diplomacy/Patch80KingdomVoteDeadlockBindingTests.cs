@@ -168,6 +168,54 @@ public class Patch80KingdomVoteDeadlockBindingTests
             "_onDecisionOver is no longer a parameterless Action — seam B invokes it directly.");
     }
 
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void MembersSeamDReads_Resolve()
+    {
+        RequireGame();
+
+        var decisionsVm = Resolve(DecisionsVmTypeName);
+        var itemVm = Resolve(ItemVmTypeName);
+
+        var current = AccessTools.PropertyGetter(decisionsVm, "CurrentDecision");
+        Assert.IsNotNull(current, "KingdomDecisionsVM.CurrentDecision is gone — seam D cannot find the window RefreshWith built.");
+
+        var over = AccessTools.PropertyGetter(itemVm, "IsKingsDecisionOver");
+        Assert.IsNotNull(over, "DecisionItemBaseVM.IsKingsDecisionOver is gone — seam D cannot tell a pre-concluded election.");
+        Assert.AreEqual(typeof(bool), over.ReturnType);
+
+        var active = AccessTools.PropertyGetter(itemVm, "IsActive");
+        Assert.IsNotNull(active, "DecisionItemBaseVM.IsActive has no getter.");
+
+        // Protected instance, no parameters, no return. Seam D invokes it through the cached
+        // MethodInfo; a signature change would surface as a TargetParameterCountException at
+        // runtime, inside the try, which is survivable but leaves the window stuck.
+        var executeDone = AccessTools.Method(itemVm, "ExecuteDone");
+        Assert.IsNotNull(executeDone, "DecisionItemBaseVM.ExecuteDone is gone — seam D has nothing to close the window with.");
+        Assert.IsFalse(executeDone.IsStatic, "ExecuteDone became static; the binding invokes it on the item view model.");
+        Assert.AreEqual(0, executeDone.GetParameters().Length, "ExecuteDone grew parameters; the binding passes none.");
+        Assert.AreEqual(typeof(void), executeDone.ReturnType);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ReadyToAiChoose_StillRunsInsideStartElection_WhichIsWhatSeamDCatches()
+    {
+        RequireGame();
+
+        // The premise of seam D: when the player is not a supporter, StartElection() resolves the
+        // election synchronously (ReadyToAiChoose -> ApplyChosenOutcome -> KingdomDecisionConcluded)
+        // while DecisionItemBaseVM's constructor is still running, so the window renders already
+        // decided. If StartElection stops calling ReadyToAiChoose, re-read before keeping seam D.
+        var method = AccessTools.Method(Resolve(ElectionTypeName), "StartElection");
+        Assert.IsNotNull(method, "KingdomElection.StartElection is gone.");
+
+        Assert.IsTrue(
+            CalledNames(method).Contains("ReadyToAiChoose"),
+            "KingdomElection.StartElection no longer calls ReadyToAiChoose — the pre-concluded window " +
+            "seam D closes may no longer be reachable this way.");
+    }
+
     // ---- The engine premises the fix rests on ----------------------------------------------
 
     [TestMethod]
@@ -220,6 +268,8 @@ public class Patch80KingdomVoteDeadlockBindingTests
                      typeof(KingdomDecisionsVM_RefreshWith_Patch),
                      typeof(KingdomDecisionsVM_HandleDecision_Patch),
                      typeof(DecisionItemBaseVM_ExecuteFinalSelection_Patch),
+                     typeof(KingdomDecisionsVM_RefreshWith_AutoResolved_Patch),
+                     typeof(DecisionItemBaseVM_ExecuteDone_Patch),
                  })
         {
             var attributes = type.GetCustomAttributes(typeof(HarmonyPatchCategory), inherit: false);
@@ -266,6 +316,64 @@ public class Patch80KingdomVoteDeadlockBindingTests
         AssertCalls(typeof(DecisionItemBaseVM_ExecuteFinalSelection_Patch), "Postfix", "get_IsCancelled");
         AssertCalls(typeof(DecisionItemBaseVM_ExecuteFinalSelection_Patch), "Postfix", "set_IsActive");
         AssertCalls(typeof(DecisionItemBaseVM_ExecuteFinalSelection_Patch), "Postfix", "GetOnDecisionOver");
+        AssertCalls(typeof(KingdomDecisionsVM_RefreshWith_AutoResolved_Patch), "Postfix", "get_CurrentDecision");
+        AssertCalls(typeof(KingdomDecisionsVM_RefreshWith_AutoResolved_Patch), "Postfix", "GetDecisionOf");
+        AssertCalls(typeof(KingdomDecisionsVM_RefreshWith_AutoResolved_Patch), "Postfix", "get_IsKingsDecisionOver");
+        AssertCalls(typeof(KingdomDecisionsVM_RefreshWith_AutoResolved_Patch), "Postfix", "get_IsActive");
+        AssertCalls(typeof(KingdomDecisionsVM_RefreshWith_AutoResolved_Patch), "Postfix", "CloseViaExecuteDone");
+        AssertCalls(typeof(DecisionItemBaseVM_ExecuteDone_Patch), "Prefix", "get_IsActive");
+        AssertCalls(typeof(DecisionItemBaseVM_ExecuteDone_Patch), "Prefix", "get_IsKingsDecisionOver");
+    }
+
+    [TestMethod]
+    public void SeamE_TargetsTheOnlyCloseVanillaHas()
+    {
+        // Seam E makes ExecuteDone single-shot and only-when-concluded, because seam D closes a
+        // window BEFORE the popup widget's five-second timer fires and nothing but that timer's own
+        // ExecuteFinalDone ever disarms it. A stray FinalDone then reaches whatever item is bound at
+        // the time: the same closed item (a duplicate inquiry, asserted away) or the NEXT live item
+        // (GetChosenOutcomeText on a null _chosenOutcome, an NRE inside OnLateUpdate). Codex review
+        // 113, F1. The attribute must name the method by string: it is protected.
+        var attributes = typeof(DecisionItemBaseVM_ExecuteDone_Patch)
+            .GetCustomAttributes(typeof(HarmonyPatch), inherit: false)
+            .Cast<HarmonyPatch>()
+            .ToArray();
+        Assert.AreEqual(1, attributes.Length, "seam E carries no [HarmonyPatch].");
+        Assert.AreEqual("ExecuteDone", attributes[0].info.methodName, "seam E no longer targets ExecuteDone.");
+        Assert.AreEqual("DecisionItemBaseVM", attributes[0].info.declaringType?.Name);
+    }
+
+    [TestMethod]
+    public void SeamD_ClosesThroughVanillaExecuteDone_NotAHandRolledCopy()
+    {
+        // Seam D closes a window whose election concluded inside the view model's own constructor.
+        // Unlike seam B's cancelled election, _chosenOutcome IS set here (ReadyToAiChoose assigned
+        // it before ApplyChosenOutcome fired the concluded event), so vanilla's ExecuteDone is safe
+        // and is the right thing to call: it hides the popup, shows the outcome, clears the
+        // concluded listener and runs OnDecisionOver. Re-implementing any of that is how seam B
+        // leaked the item view model (lessons/harmony-il.md, "Substituting for a vanilla method
+        // inherits every one of its responsibilities").
+        var close = typeof(KingdomVoteDeadlockBinding).GetMethod(
+            "CloseViaExecuteDone", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.IsNotNull(close, "KingdomVoteDeadlockBinding.CloseViaExecuteDone is gone.");
+
+        Assert.IsTrue(
+            CalledNames(close).Contains("Invoke"),
+            "CloseViaExecuteDone no longer invokes the cached ExecuteDone — seam D has been gutted.");
+    }
+
+    [TestMethod]
+    public void SubModule_InitializesSeamsDAndE()
+    {
+        var subModule = File.ReadAllText(Path.Combine(FindRepoRoot(), "Main", "SubModule.cs"));
+        StringAssert.Contains(
+            subModule,
+            "KingdomDecisionsVM_RefreshWith_AutoResolved_Patch.Initialize(",
+            "SubModule.cs never initializes seam D — its logger would be null and the category still applies it.");
+        StringAssert.Contains(
+            subModule,
+            "DecisionItemBaseVM_ExecuteDone_Patch.Initialize(",
+            "SubModule.cs never initializes seam E — its logger would be null and the category still applies it.");
     }
 
     [TestMethod]

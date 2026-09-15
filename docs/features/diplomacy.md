@@ -108,7 +108,46 @@ DecisionItemBaseVM.ExecuteFinalSelection -> Postfix: force-close a cancelled ele
                                             (via _onDecisionOver, never ExecuteDone)
         all three -> IKingdomVoteDeadlockService.ShouldSuppressBallot / AnnounceLapsedBallot
                   -> IKingdomBallotAdapter (ADR-007 boundary over KingdomDecision)
+KingdomDecisionsVM.RefreshWith           -> Postfix (seam D, #550): a window whose election
+                                            concluded inside the view model's constructor is
+                                            closed at once through vanilla ExecuteDone
+DecisionItemBaseVM.ExecuteDone           -> Prefix (seam E, #550): runs only on an active window
+                                            whose election is over, so the popup widget's timer,
+                                            which outlives a seam D close, cannot fire it twice
 ```
+
+**Seam D, the pre-concluded election (2026-09-15, #550).** A second mechanism produces the same
+stuck window and none of the three seams above can see it. When the player is not a supporter of
+the election (`Supporter.IsPlayer => Clan.Leader.IsHumanPlayerCharacter`, false whenever
+`Clan.PlayerClan.Leader != Hero.MainHero`), `KingdomElection.StartElection()` takes
+`ReadyToAiChoose()`, which applies the outcome and fires `KingdomDecisionConcluded` synchronously,
+inside `DecisionItemBaseVM`'s own constructor. The view model's own handler sets
+`IsKingsDecisionOver = true` before it is bound; `IsCancelled` stays false. The popup widget's
+`IsKingsDecisionDone` latch is edge-triggered, reused across decisions and never reset, so the
+first such window closes on the five-second timer and every later one in the same screen visit
+binds already-true, gets no edge, and stays open. `KingdomDecisionsVM_RefreshWith_AutoResolved_Patch`
+postfixes `RefreshWith`, matches `CurrentDecision` to the ballot this call built, and when
+`IsActive && IsKingsDecisionOver` already hold, runs vanilla's own `ExecuteDone` through the cached
+`MethodInfo` in `KingdomVoteDeadlockBinding`. `ExecuteDone` is exactly right here and exactly wrong
+on seam B: it opens with `GetChosenOutcomeText()` on `_chosenOutcome`, which `ReadyToAiChoose()`
+always assigns and a cancelled election never does. It hides the popup, shows the outcome, clears
+the concluded listener and runs `OnDecisionOver`; nothing is re-implemented. A hit is logged at
+warning level because TAOM's own route into this state, the Player Switcher's takeover of a king's
+spouse or child, is closed at the source (the takeover now promotes the lord to clan leader, and
+older saves are repaired at session launch, see [player-switcher.md](player-switcher.md)); a hit
+means some other route left the player outside their clan's leadership.
+
+**Seam E, the timer that outlives the close (Codex review 113, F1).** The bind pushes
+`IsKingsDecisionOver` into `KingdomDecisionPopupWidget`, whose latch arms its five-second timer,
+and only that timer's own `ExecuteFinalDone` ever disarms it. Seam D closes before it fires, so
+five seconds later the widget's `FinalDone` reaches whatever item is bound at the time: the same
+closed item (a duplicate inquiry, which `GauntletQueryManager.CreateQuery` rejects because the
+outcome lambda captures only `this` and the two delegates compare equal) or, if the player opened
+the next decision inside that window, a live item whose `_chosenOutcome` is null, where
+`GetChosenOutcomeText()` NREs inside `OnLateUpdate`. `DecisionItemBaseVM_ExecuteDone_Patch`
+prefixes `ExecuteDone` and lets vanilla run only when `IsActive && IsKingsDecisionOver`, which every
+legitimate call already satisfies (the timer arms only on the true edge; nothing but `ExecuteDone`
+clears `IsActive`). A skipped call is a debug line and is expected once per seam D close.
 
 ## Configuration
 
@@ -162,6 +201,8 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `Main/Features/Diplomacy/Hooks/KingdomDecisionsVM_RefreshWith_Patch.cs` | Harmony Prefix (`Patch80`): never build a decision window for a stale ballot |
 | `Main/Features/Diplomacy/Hooks/KingdomDecisionsVM_HandleDecision_Patch.cs` | Harmony Postfix (`Patch80`): re-arm the ballot queue vanilla leaves switched off |
 | `Main/Features/Diplomacy/Hooks/DecisionItemBaseVM_ExecuteFinalSelection_Patch.cs` | Harmony Postfix (`Patch80`, `Priority.Last`): force-close a window whose election is cancelled |
+| `Main/Features/Diplomacy/Hooks/KingdomDecisionsVM_RefreshWith_AutoResolved_Patch.cs` | Harmony Postfix (`Patch80` seam D, `Priority.Last`): close a window whose election concluded inside the view model's constructor, through vanilla `ExecuteDone` (#550) |
+| `Main/Features/Diplomacy/Hooks/DecisionItemBaseVM_ExecuteDone_Patch.cs` | Harmony Prefix (`Patch80` seam E): `ExecuteDone` runs only on an active, concluded window, so the widget timer a seam D close leaves armed cannot fire it on a closed or live item (#550) |
 | `Main/Adapters/KingdomBallotAdapter.cs` | ADR-007 boundary over one `KingdomDecision` (staleness, identity, title) |
 | `Main/Features/Diplomacy/Models/TaomAllianceModel.cs` | `DefaultAllianceModel` override: adds lore score modifier to alliance scoring |
 | `Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs` | `DefaultKingdomDecisionPermissionModel` override: blocks lore-Hostile alliance decisions (AI pairs) but allows any decision involving the player's kingdom (full freedom); also blocks war on permanent allies + peace during full War of the Ring |
@@ -192,7 +233,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs` | `ShouldPreventAllianceEnd` and `ShouldPreventWarDeclaration` for permanent vs non-permanent tiers |
 | `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs` | `ShouldPreventPeace` during active vs inactive War of the Ring |
 | `TAOM.Tests/Features/Diplomacy/KingdomVoteDeadlockServiceTests.cs` | Patch80 staleness verdict, null ballot, throwing staleness check (suppresses, does not defer), announce path, per-ballot dedupe, throwing presenter, bounded dedupe set |
-| `TAOM.Tests/Features/Diplomacy/Patch80KingdomVoteDeadlockBindingTests.cs` | Patch80 engine drift: the three patch targets and their parameter NAMES (Harmony binds by name), the four private members reached by reflection, the public members the bodies read, the category literal, `SubModule` applying it, and IL call-presence guards for the service calls, the listener clear and the fault-path withdraw |
+| `TAOM.Tests/Features/Diplomacy/Patch80KingdomVoteDeadlockBindingTests.cs` | Patch80 engine drift: the three patch targets and their parameter NAMES (Harmony binds by name), the five members reached by reflection (`ExecuteDone` for seam D), the public members the bodies read, `StartElection` still calling `ReadyToAiChoose` (seam D's premise), the category literal on all five seams, `SubModule` applying and initializing them, seam E's target name, and IL call-presence guards for the service calls, the listener clear, the fault-path withdraw, seam D's `ExecuteDone` invoke and seam E's two state reads |
 
 ## How to Add a New Kingdom Relationship
 
@@ -209,6 +250,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-09-15: Patch80 seams D and E (#550). A window built on an election that concluded inside the view model's constructor (the player is not their clan's leader, so `Supporter.IsPlayer` is false) is closed at once through vanilla `ExecuteDone` (D), and `ExecuteDone` itself runs only on an active, concluded window (E, from Codex review 113: the widget timer outlives a seam D close). The four earlier reflection sites plus `ExecuteDone` are now in the reflection-site catalogue. The Player Switcher route into that state is closed at the source in the same change.
 - 2026-09-06: `Patch80_KingdomVoteDeadlock` (#547), three seams so a vanilla kingdom decision popup can never become unclosable. Deep review found and fixed two HIGH defects in the first cut (a leaked `KingdomDecisionConcluded` listener, and a fault path that deferred to a vanilla branch which throws); RCA at [rca-kingdom-vote-deadlock-2026-09-06.md](../reviews/rca-kingdom-vote-deadlock-2026-09-06.md). Vote VOLUME is unchanged: `TaomAllianceModel.MaxNumberOfAlliances` is what turns one war declaration into a run of ballots.
 
 - 2026-06-17 — Instrumented player-alliance loss with `[Diplomacy][diag]` logging only; the durability war-block (`DiplomacyService.IsWarAllowed` branch) was reverted after review (it soft-locked the player out of the only alliance-exit path).
@@ -225,7 +267,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 ## GitHub Issue
 - **Issue:** Unknown for the original feature (commits reference `16f7f4e` for initial implementation; no issue number in messages)
 - **Kingdom vote deadlock guard (Patch80):** [#547](https://github.com/haterade22/TAOM/issues/547)
-- **Related, NOT covered by Patch80:** [#550](https://github.com/haterade22/TAOM/issues/550), the Player Switcher route to the same symptom. See [player-switcher.md](player-switcher.md).
+- **Seam D + the Player Switcher root fix:** [#550](https://github.com/haterade22/TAOM/issues/550), the second mechanism behind the same symptom. See [player-switcher.md](player-switcher.md) "Clan leadership follows the player".
 - **Status:** Active
 
 ---

@@ -89,6 +89,14 @@ public class ReflectionSiteBindingTests
     // on the abandoned character-creation clan, CharacterDeveloperVM throws enumerating its Heroes,
     // and KillCharacterAction's victim.Clan != Clan.PlayerClan guard stops that clan being destroyed.
     [DataRow("TaleWorlds.CampaignSystem.Campaign", "Campaign", "PlayerDefaultFaction", "Property", "PlayerIdentityAdapter.cs:34")]
+    // --- Diplomacy Patch80 kingdom-vote deadlock (#547, #550): the members KingdomVoteDeadlockBinding
+    // caches once in Initialize. Patch80KingdomVoteDeadlockBindingTests pins their shapes; these pin
+    // existence. ExecuteDone is protected and is what seam D runs on a pre-concluded election.
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.KingdomDecisionsVM", "KingdomDecisionsVM", "_examinedDecisionsSinceInit", "Field", "KingdomVoteDeadlockBinding.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.KingdomDecisionsVM", "KingdomDecisionsVM", "_shouldCheckForDecision", "Property", "KingdomVoteDeadlockBinding.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.ItemTypes.DecisionItemBaseVM", "DecisionItemBaseVM", "_decision", "Field", "KingdomVoteDeadlockBinding.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.ItemTypes.DecisionItemBaseVM", "DecisionItemBaseVM", "_onDecisionOver", "Field", "KingdomVoteDeadlockBinding.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.ItemTypes.DecisionItemBaseVM", "DecisionItemBaseVM", "ExecuteDone", "Method", "KingdomVoteDeadlockBinding.cs")]
     // --- BanditManagement hideout boss fight (#564): the three private fields Patch86_HideoutAmbushBossFight
     // injects as ____name parameters. HarmonyFieldInjectionNamingTests pins the underscore count; these pin
     // the members, and Patch86HideoutBossFightBindingTests pins their types.
