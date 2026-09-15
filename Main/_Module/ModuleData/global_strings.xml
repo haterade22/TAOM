@@ -24,4 +24,52 @@
 	<string id="str_key_name.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability}Career Ability (TAOM)" />
 	<string id="str_key_description.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability_desc}Activates your career ability during a battle once its energy bar is full. Defaults to V." />
 
+	<!-- Advanced Starting Options (v1.5.x main-menu screen), the MENU half (#604).
+	     Same contract as the keybinding rows above: the ASO screen runs before any campaign
+	     exists and every lookup it makes (option names, list items, the {LastStandKingdomId}
+	     interpolation) goes through Module.CurrentModule.GlobalTextManager, which reads THIS
+	     file and nothing else. These rows sat in taom_module_strings.xml for a while and the
+	     screen showed "ERROR: Text with id str_campaign_starting_options_item_name doesn't
+	     exist! Variation: rivendell" for every TAOM kingdom.
+
+	     Being in this file is necessary but not sufficient for the rows that reuse a VANILLA
+	     variation id (the eight renamed kingdoms and the four Calradia rewrites below): the
+	     loader appends a same-id row behind Native's and the lookup is a first-match scan, so
+	     Native's "Sturgia" would still win. No XSLT runs on this path either. SubModule.cs
+	     re-applies every row of this file through GameText.SetVariationWithId at load
+	     (GlobalStringsOverrides), which replaces Native's entry in place.
+
+	     The in-game half, str_advanced_start_value_name.<id> (Escape-menu summary), stays in
+	     taom_module_strings.xml: that reader uses the per-Game manager, which merges GameText
+	     XMLs by id. TaomStartOptionsProviderTests pins both placements. -->
+	<string id="str_campaign_starting_options_item_name.empire" text="{=taom_aso_kingdom.empire}Dunland" />
+	<string id="str_campaign_starting_options_item_name.empire_w" text="{=taom_aso_kingdom.empire_w}Gondor" />
+	<string id="str_campaign_starting_options_item_name.empire_s" text="{=taom_aso_kingdom.empire_s}Mordor" />
+	<string id="str_campaign_starting_options_item_name.sturgia" text="{=taom_aso_kingdom.sturgia}Dale" />
+	<string id="str_campaign_starting_options_item_name.aserai" text="{=taom_aso_kingdom.aserai}Harad" />
+	<string id="str_campaign_starting_options_item_name.vlandia" text="{=taom_aso_kingdom.vlandia}Rohan" />
+	<string id="str_campaign_starting_options_item_name.battania" text="{=taom_aso_kingdom.battania}Khand" />
+	<string id="str_campaign_starting_options_item_name.khuzait" text="{=taom_aso_kingdom.khuzait}Rhun" />
+	<string id="str_campaign_starting_options_item_name.erebor" text="{=taom_aso_kingdom.erebor}Erebor" />
+	<string id="str_campaign_starting_options_item_name.rivendell" text="{=taom_aso_kingdom.rivendell}Imladris" />
+	<string id="str_campaign_starting_options_item_name.mirkwood" text="{=taom_aso_kingdom.mirkwood}Lasgalen" />
+	<string id="str_campaign_starting_options_item_name.lothlorien" text="{=taom_aso_kingdom.lothlorien}Lothlorien" />
+	<string id="str_campaign_starting_options_item_name.isengard" text="{=taom_aso_kingdom.isengard}Isengard" />
+	<string id="str_campaign_starting_options_item_name.gundabad" text="{=taom_aso_kingdom.gundabad}Gundabad" />
+	<string id="str_campaign_starting_options_item_name.umbar" text="{=taom_aso_kingdom.umbar}Umbar" />
+	<string id="str_campaign_starting_options_item_name.dolguldur" text="{=taom_aso_kingdom.dolguldur}Dol Guldur" />
+	<string id="str_campaign_starting_options_item_name.shaghana" text="{=taom_aso_kingdom.shaghana}Shaghâna" />
+	<string id="str_campaign_starting_options_item_name.abanissa" text="{=taom_aso_kingdom.abanissa}Âbanissa" />
+	<string id="str_campaign_starting_options_item_name.goblin" text="{=taom_aso_kingdom.goblin}Goblins" />
+	<string id="str_campaign_starting_options_item_name.mistymountainorcs" text="{=taom_aso_kingdom.mistymountainorcs}Misty Mountain Orcs" />
+	<string id="str_campaign_starting_options_item_name.lindon" text="{=taom_aso_kingdom.lindon}Lindon" />
+	<string id="str_campaign_starting_options_item_name.bluecraig" text="{=taom_aso_kingdom.bluecraig}Goblins of Blue Craig" />
+
+	<!-- Scenario text that names Calradia directly. The United Empire scenario itself is
+	     removed by TaomStartOptionsProvider, so only the surviving scenarios are retitled. -->
+	<string id="str_campaign_starting_options_description.InvasionScenarioFactionId" text="{=taom_aso_desc_invasion}The faction that rules the majority of Middle-earth." />
+	<string id="str_campaign_starting_options_item_description.InvasionId" text="{=taom_aso_item_desc_invasion}{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
+	<string id="str_campaign_starting_options_item_name.alternativecalradia" text="{=taom_aso_item_name_randomized}Randomized Middle-earth" />
+	<string id="str_campaign_starting_options_item_description.alternativecalradia" text="{=taom_aso_item_desc_randomized}Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
+
 </strings>

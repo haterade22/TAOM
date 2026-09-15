@@ -270,6 +270,22 @@ public class SubModule : MBSubModuleBase
             logger0.LogError($"[LocalizationOverride] Failed to load overrides: {ex.Message}");
         }
 
+        // The main-menu GlobalTextManager reads only ModuleData/global_strings.xml, appends a same-id
+        // row behind Native's and returns the first match, so TAOM's rows there (the ASO kingdom
+        // names, #604) are re-applied with SetVariationWithId to replace Native's in place. Safe here:
+        // Module.Initialize ran LoadDefaultTexts before LoadSubModules.
+        try
+        {
+            var globalRows = GlobalStringsOverrides.ParseFromFile(
+                System.IO.Path.Combine(pathService0.ModuleDataPath, "global_strings.xml"));
+            var applied = GlobalStringsOverrides.Apply(Module.CurrentModule.GlobalTextManager, globalRows);
+            logger0.LogInfo($"[LocalizationOverride] Re-applied {applied} global_strings.xml rows over Native's");
+        }
+        catch (System.Exception ex)
+        {
+            logger0.LogError($"[LocalizationOverride] Failed to re-apply global_strings.xml: {ex.Message}");
+        }
+
         _harmony.PatchCategory("Patch18_CulturalFeats");
         _harmony.PatchCategory("Patch19_CustomBattles");
 

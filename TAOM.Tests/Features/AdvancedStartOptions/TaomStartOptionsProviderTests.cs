@@ -122,6 +122,79 @@ public class TaomStartOptionsProviderTests
         CollectionAssert.Contains(scenarios, "none", "The default scenario should survive the removal.");
     }
 
+    // ---- where the string rows live, which is the whole bug of #604 ----
+
+    // The eight playable kingdoms that keep vanilla StringIds (renamed in place by spkingdoms.xslt).
+    private static readonly string[] RenamedVanillaKingdomIds =
+        { "empire", "empire_w", "empire_s", "sturgia", "aserai", "vlandia", "battania", "khuzait" };
+
+    // Scenario text vanilla words as "Calradia"; TAOM re-words each of these for Middle-earth.
+    private static readonly string[] CalradiaRewriteIds =
+    {
+        "str_campaign_starting_options_description.InvasionScenarioFactionId",
+        "str_campaign_starting_options_item_description.InvasionId",
+        "str_campaign_starting_options_item_name.alternativecalradia",
+        "str_campaign_starting_options_item_description.alternativecalradia",
+    };
+
+    private static List<string> StringIds(string fileName)
+    {
+        var path = Path.Combine(CultureDataFixture.ModuleDataPath(), fileName);
+        Assert.IsTrue(File.Exists(path), fileName + " not found at " + path);
+        return XDocument.Load(path).Descendants("string")
+            .Select(s => (string)s.Attribute("id") ?? "")
+            .ToList();
+    }
+
+    [TestMethod]
+    public void EveryPickerKingdom_HasItsMenuNameInGlobalStrings()
+    {
+        // The ASO screen runs from the main menu and reads Module.CurrentModule.GlobalTextManager,
+        // which LoadDefaultTexts fills from the LITERAL path ModuleData/global_strings.xml of each
+        // module and nothing else. A row anywhere else renders as
+        // "ERROR: Text with id str_campaign_starting_options_item_name doesn't exist! Variation: <id>"
+        // (#604: fourteen of those, one per TAOM kingdom).
+        var ids = StringIds("global_strings.xml");
+        var missing = TaomStartOptionsProvider.TaomKingdomIds.Concat(RenamedVanillaKingdomIds)
+            .Select(k => "str_campaign_starting_options_item_name." + k)
+            .Concat(CalradiaRewriteIds)
+            .Where(id => !ids.Contains(id))
+            .ToList();
+        Assert.AreEqual(0, missing.Count,
+            "global_strings.xml lacks ASO menu rows; the picker shows the ERROR text or vanilla's name for: "
+            + string.Join(", ", missing));
+    }
+
+    [TestMethod]
+    public void EveryPickerKingdom_HasItsInGameValueNameInModuleStrings()
+    {
+        // The in-game Escape-menu summary reads str_advanced_start_value_name through
+        // GameTexts.FindText, the per-Game manager, which merges every GameText XML by id. That
+        // family belongs in the GameText XML, not in global_strings.xml.
+        var ids = StringIds("taom_module_strings.xml");
+        var missing = TaomStartOptionsProvider.TaomKingdomIds.Concat(RenamedVanillaKingdomIds)
+            .Select(k => "str_advanced_start_value_name." + k)
+            .Where(id => !ids.Contains(id))
+            .ToList();
+        Assert.AreEqual(0, missing.Count,
+            "taom_module_strings.xml lacks in-game value-name rows for: " + string.Join(", ", missing));
+    }
+
+    [TestMethod]
+    public void NoMenuFacingAsoRow_LivesInTheGameTextXml()
+    {
+        // A str_campaign_starting_options_* row in taom_module_strings.xml is dead: the only readers
+        // of that family are the main-menu classes, and they never see a GameText XML. This is the
+        // placement mistake #604 shipped; the row looks right, tests that scan the file find it, and
+        // the menu never does.
+        var stray = StringIds("taom_module_strings.xml")
+            .Where(id => id.StartsWith("str_campaign_starting_options", StringComparison.Ordinal))
+            .ToList();
+        Assert.AreEqual(0, stray.Count,
+            "Move these to global_strings.xml, the only file the main-menu GlobalTextManager reads: "
+            + string.Join(", ", stray));
+    }
+
     private static void InvokeProvider(Type providerType, Type attribute, object options)
     {
         var provider = providerType

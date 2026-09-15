@@ -4,6 +4,58 @@
 
 ## 2026-09-15
 
+### fix(aso): the Advanced Starting Options strings reach the main-menu GlobalTextManager (#604)
+
+**Symptom.** Main menu > Campaign > Advanced Starting Options > Last Stand: the Last Standing Faction list
+read "Sturgia", "Khuzait", "Aserai" for the renamed vanilla kingdoms and then fourteen rows of
+`ERROR: Text with id str_campaign_starting_options_item_name doesn't exist! Variation: rivendell`, one per
+TAOM kingdom, with the same sentence interpolated into the scenario description. The Invasion and
+Randomized texts still said Calradia. The 49 overrides existed, in `taom_module_strings.xml`, and the
+installed copy matched the repo byte for byte.
+
+**Cause, two engine facts.** `Module.CurrentModule.GlobalTextManager` (every pre-campaign screen) and
+`Game.GameTextManager` are different objects. The first is filled once by `LoadDefaultTexts` from the
+literal path `ModuleData/global_strings.xml` of every module and from nothing else (GameTextManager.cs:132-138);
+the SubModule.xml `GameText` nodes feed the second, which does not exist at the main menu. Second, that
+loader opens each file raw (no `MBObjectManager` merge, no XSLT) and `GameText.AddVariationWithId` appends
+a same-id variation whose text differs while `GetVariation` is a first-match scan, so a TAOM row that reuses
+a vanilla variation id (`sturgia` -> "Dale") trails Native's "Sturgia" even from the right file. The header
+of `global_strings.xml` had documented the first fact for keybinding names; the ASO block did not follow it.
+
+**Fix.** The 26 menu-facing rows (22 `str_campaign_starting_options_item_name.*`, 4 Calradia rewrites) move
+to `global_strings.xml`; the 23 `str_advanced_start_value_name.*` rows stay in `taom_module_strings.xml`,
+where the in-game Escape-menu reader (`GameTexts.FindText`, merge by id) already serves them. New
+`Main/Features/LocalizationOverride/GlobalStringsOverrides.cs` parses TAOM's `global_strings.xml` the way
+`LoadFromXML` does and re-applies every row through the public `GameText.SetVariationWithId`, which
+replaces Native's entry in place; `SubModule.OnSubModuleLoad` calls it once after the Patch25 loader
+(`LoadDefaultTexts` ran in `Module.Initialize` before `LoadSubModules`).
+
+**Audit.** Every other id family vanilla reads through `GlobalTextManager` (`str_key_*`, `str_hotkey_*`,
+`str_options_*`, `str_ok`, `str_option_*`, `str_gpu_*`, `str_exposure_*`, `str_brightness_*`,
+`str_config_save_result`, `str_dlc_*`, `str_content_*`) was checked against TAOM's ModuleData: none is
+overridden from a GameText XML. The ASO family was the only misplacement.
+
+**Tests.** `TaomStartOptionsProviderTests` gains three placement tests (every picker kingdom has its
+`_item_name` row in `global_strings.xml` and its `_value_name` row in `taom_module_strings.xml`; no
+`str_campaign_starting_options_*` row survives in the GameText XML, which is the shape of the bug).
+`GlobalStringsOverridesTests` pins, on the installed 1.5.3 DLLs, that `AddVariationWithId` appends and the
+first row wins, that `Apply` replaces in place, and that TAOM's real `global_strings.xml` re-applied over
+Native-shaped rows resolves all 22 picker kingdoms to TAOM text. `LanguageFileCoverageTests` stays green:
+the `{=taom_aso_*}` rows still sit in `std_taom_module_strings_*.xml`, and the engine folds every language
+file into one dictionary, so the move needs no translation change. Filtered run 67/67; `validate_moduledata.py`
+0 errors.
+
+**Rejected.** Reusing Patch25 (`MBTextManager.GetLocalizedText` prefix) by giving the 12 vanilla-id rows
+vanilla `{=key}` tokens: it rewrites English only. An XSLT on `global_strings.xml`: nothing applies one on
+that path. Registering `global_strings` as a GameText node as Native does: no in-game reader wants the
+moved family.
+
+**Noted, not fixed.** `rebuild_translation_files.py` lists no `global_strings.xml` source while
+`translate_with_claude.py:245` does, so a rebuild would drop the `taom_aso_*` rows from
+`std_taom_module_strings_*.xml` without re-homing them; `--sync-ids` on the translator is the run that does.
+
+**Owed.** The in-game picker and Escape-menu summary smoke (`docs/features/advanced-start-options.md`).
+
 ### data(custom-battle): four live siege scenes join the Custom Battle picker, villages move to the Village type (#603)
 
 `Main/_Module/ModuleData/custom_battle_scenes.xml` had 22 entries against 45 folders in the unversioned
