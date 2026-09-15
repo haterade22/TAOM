@@ -42,9 +42,10 @@ stub); the Honor trait rename binds nothing TAOM reads. Pin `v1.5.3`; Main's Nat
 CLAUDE.md and AGENTS.md; the API snapshot regenerated (46 models, 246 patches, no row moved);
 `/engine-bump` Phase 4 names the prefab-clone gate.
 
-Not run in game: the v1.5.3 campaign map has not been seen to load (the v1.5.2 load of 2026-09-14
-20:17 is the last one). v2.0.29 as tagged throws on every party nameplate under v1.5.3; the next
-cut is the maintainer's call. A second Claude session deployed a build of `70517552` to the install
+In game: a new campaign reached the v1.5.3 map at 09:01:22 on these prefabs
+(`taom_debug_2026-09-15_08-51-55.log`: loading window lowered by the +17 s heartbeat, 68 to 71 fps at
+Stop, no error or exception line). v2.0.29 as tagged throws on every party nameplate under v1.5.3;
+the next cut is the maintainer's call. A second Claude session deployed a build of `70517552` to the install
 at 08:22, six minutes after the update, so the install carried the broken clones until this commit's
 prefabs were copied over it.
 
