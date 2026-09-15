@@ -132,6 +132,28 @@ public class PlayerSwitcherBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void ChangeClanLeaderAction_ApplyWithSelectedNewLeader_StillTakesClanThenHero()
+    {
+        RequireGame();
+
+        // The whole of #550's root fix. Vanilla itself calls this for a non-leader elected king
+        // (KingSelectionKingdomDecision.ApplyChosenOutcome) and for the player's heir
+        // (ApplyHeirSelectionAction), which is why the takeover can lean on it for gold, party
+        // leadership, relations and the OnClanLeaderChanged event instead of hand-rolling SetLeader.
+        var action = Find("TaleWorlds.CampaignSystem.Actions.ChangeClanLeaderAction");
+        Assert.IsNotNull(action, "ChangeClanLeaderAction is gone; a taken-over non-leader can no longer be promoted");
+
+        var apply = action!.GetMethod("ApplyWithSelectedNewLeader", BindingFlags.Static | BindingFlags.Public);
+        Assert.IsNotNull(apply, "ChangeClanLeaderAction.ApplyWithSelectedNewLeader is gone");
+
+        var parameters = apply!.GetParameters();
+        Assert.AreEqual(2, parameters.Length, "ApplyWithSelectedNewLeader's arity changed");
+        Assert.AreEqual("Clan", parameters[0].ParameterType.Name, "first parameter is no longer the clan");
+        Assert.AreEqual("Hero", parameters[1].ParameterType.Name, "second parameter is no longer the new leader");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void TheRaceRepairSeam_StillResolves()
     {
         RequireGame();

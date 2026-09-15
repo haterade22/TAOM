@@ -82,4 +82,31 @@ public interface IPlayerIdentityAdapter
 
     /// <summary>Drops queued notifications addressed to a hero who no longer exists.</summary>
     void ClearPendingNotifications();
+
+    /// <summary>
+    /// Makes the hero the leader of the clan they already belong to, when they are not already,
+    /// through vanilla <c>ChangeClanLeaderAction.ApplyWithSelectedNewLeader</c>: the same call
+    /// vanilla makes when a king selection elects a non-leader and when the player's heir takes
+    /// over. Returns true when leadership actually changed hands.
+    ///
+    /// Everything vanilla succession does comes with it, on purpose: the old leader's gold moves to
+    /// the hero, the hero drops any governorship, their party (or the party they ride in) is
+    /// re-headed to them, they inherit 70% of the old leader's relations, and because a kingdom's
+    /// leader IS its ruling clan's leader, a taken-over spouse or child of a king becomes the king.
+    /// Do not trim those: a player who is not their clan's leader is a state the engine never
+    /// produces on its own and does not support. Every kingdom election keys the player's part
+    /// off <c>Clan.Leader.IsHumanPlayerCharacter</c> (#550), fief ownership reads the clan leader,
+    /// and the clan screen assumes it too.
+    ///
+    /// Refuses (returns false) when the hero or clan is missing, when the hero already leads, and
+    /// when the clan has no leader at all, because the vanilla action reads the outgoing leader's
+    /// gold unguarded.
+    /// </summary>
+    bool PromoteToClanLeader(string heroId);
+
+    /// <summary>
+    /// Who leads the player's clan right now, as ids. Read at session launch by the leadership
+    /// repair; never mutates anything.
+    /// </summary>
+    PlayerClanLeadership GetPlayerClanLeadership();
 }

@@ -123,6 +123,17 @@ public class HeroSwitchService : IHeroSwitchService
             // is what lets the abandoned clan (and the character-creation party still registered
             // to it) be swept automatically instead of lingering in the campaign.
             _identity.ReassignPlayerClan(ticket.TargetClanId);
+
+            // A king's spouse or child arrives here as an ordinary member of the ruling clan, and
+            // vanilla keys the player's part in every kingdom election off the clan LEADER
+            // (Supporter.IsPlayer => Clan.Leader.IsHumanPlayerCharacter). Left alone, every vote
+            // resolves without them inside the decision popup's own constructor and the popup can
+            // never close (#550). Vanilla succession makes them the leader, ruler included when
+            // the clan rules. After the swap on purpose: the main party already exists, and a
+            // throw here is reported as SwitchedWithErrors rather than as a clean failure that
+            // would have re-headed a lore clan behind the player's back.
+            if (_identity.PromoteToClanLeader(plan.HeroId))
+                _logger.LogInfo($"Player Switcher: '{plan.HeroId}' is now the leader of their clan");
         }
 
         if (plan.TransferGold)

@@ -64,6 +64,7 @@ public class HeroSwitchServiceTests
         _identity.DidNotReceive().AdoptIntoPlayerClan(Arg.Any<string>());
         _identity.DidNotReceive().AbsorbOriginalParty(Arg.Any<string>());
         _identity.DidNotReceive().TransferGold(Arg.Any<string>(), Arg.Any<string>());
+        _identity.DidNotReceive().PromoteToClanLeader(Arg.Any<string>());
         _career.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
     }
 
@@ -81,11 +82,77 @@ public class HeroSwitchServiceTests
             _identity.Capture(Target, Career);
             _identity.ApplyPlayerCharacter(Target);
             _identity.ReassignPlayerClan(TargetClan);
+            _identity.PromoteToClanLeader(Target);
             _career.OnCareerSelected(Target, Career);
             _identity.MarkClanAndKingdomKnown(Target);
             _identity.RemoveOriginalHero(Original);
             _identity.ClearPendingNotifications();
         });
+    }
+
+    // ---------- Clan leadership (#550) ----------
+
+    [TestMethod]
+    public void Takeover_PromotesTheLordToClanLeader_ExactlyOnce()
+    {
+        // A taken-over spouse or child of a king is otherwise left with the AI king as
+        // Clan.PlayerClan.Leader, and vanilla keys the player's vote off the clan LEADER
+        // (Supporter.IsPlayer => Clan.Leader.IsHumanPlayerCharacter), so every kingdom decision
+        // resolves without them and the popup can never close (#550).
+        _sut.Execute(TakeoverPlan());
+
+        _identity.Received(1).PromoteToClanLeader(Target);
+    }
+
+    [TestMethod]
+    public void Takeover_PromotesOnlyAfterTheSwapIsCommitted()
+    {
+        // The promotion mutates a real lore clan. If it ran before ApplyPlayerCharacter, a failure
+        // in between would leave that clan re-headed while the player is still the created
+        // character, and the outcome would still honestly read Failed. After the swap, a throw is
+        // SwitchedWithErrors, which is what the player would actually be seeing.
+        _identity.When(a => a.PromoteToClanLeader(Target))
+            .Do(_ => throw new System.InvalidOperationException("succession refused"));
+
+        var outcome = _sut.Execute(TakeoverPlan());
+
+        Assert.AreEqual(SwitchOutcome.SwitchedWithErrors, outcome);
+        Received.InOrder(() =>
+        {
+            _identity.ApplyPlayerCharacter(Target);
+            _identity.ReassignPlayerClan(TargetClan);
+            _identity.PromoteToClanLeader(Target);
+        });
+    }
+
+    [TestMethod]
+    public void Takeover_PromotesBeforeTheCreatedHeroIsRemoved()
+    {
+        _sut.Execute(TakeoverPlan());
+
+        Received.InOrder(() =>
+        {
+            _identity.PromoteToClanLeader(Target);
+            _identity.RemoveOriginalHero(Original);
+        });
+    }
+
+    [TestMethod]
+    public void Takeover_LogsWhenLeadershipActuallyChangedHands()
+    {
+        _identity.PromoteToClanLeader(Target).Returns(true);
+
+        _sut.Execute(TakeoverPlan());
+
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains(Target) && m.Contains("leader")));
+    }
+
+    [TestMethod]
+    public void Adoption_NeverPromotes_BecauseSetLeaderAlreadyRanOnThatPath()
+    {
+        _sut.Execute(AdoptionPlan());
+
+        _identity.DidNotReceive().PromoteToClanLeader(Arg.Any<string>());
     }
 
     [TestMethod]
