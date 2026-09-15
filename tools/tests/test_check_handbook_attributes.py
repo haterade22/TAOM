@@ -309,6 +309,21 @@ class ExtractReadsTests(unittest.TestCase):
         expected = {"Flags", "flags", "Capsules", "Buildings", "Armor", "Weapon", "CraftedItem"}
         self.assertEqual(expected, set(self.reads["elements"]))
 
+    def test_v153_required_helpers_bind_the_literal_at_the_call_site(self):
+        # Bannerlord v1.5.3 routes SubModule.xml reads through GetRequiredValueAttribute(node, "<Elem>",
+        # path), which selects the child element named by its second argument and reads that element's
+        # `value` attribute inside the helper, and GetRequiredAttribute(node, "<Attr>", "<what>", path).
+        # The literal lives at the call site, not in the helper body, so the call-site shape is the idiom.
+        src = FAKE_CS.replace(
+            '\t\tOffset = ReadVec3(node, "offset");\n',
+            '\t\tOffset = ReadVec3(node, "offset");\n'
+            '\t\tName = GetRequiredValueAttribute(node, "Name", path);\n'
+            '\t\tstring requiredAttribute = GetRequiredAttribute(childNode, "Id", "A <DependedModule> element", path);\n')
+        self.assertNotEqual(src, FAKE_CS)
+        reads = cha.extract_reads(src, "Deserialize")
+        self.assertIn("Name", reads["elements"])
+        self.assertIn("Id", reads["attributes"])
+
     def test_private_helpers_called_from_the_method_are_followed_transitively(self):
         self.assertIn("extra_attr", self.reads["attributes"])
         self.assertIn("deeper_attr", self.reads["attributes"])
@@ -716,7 +731,7 @@ class DumpRootResolutionTests(unittest.TestCase):
         self.assertEqual(cha.resolve_dump_root(None, env), Path(cha.DEFAULT_DUMP_ROOT))
 
     def test_default_names_the_v148_dump(self):
-        self.assertTrue(cha.DEFAULT_DUMP_ROOT.endswith("_categories_v1.5.2"))
+        self.assertTrue(cha.DEFAULT_DUMP_ROOT.endswith("_categories_v1.5.3"))
 
 
 class CliTests(_Tree):

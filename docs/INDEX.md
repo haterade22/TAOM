@@ -242,7 +242,8 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 ## Migration history (v1.2 → v1.3 → v1.4.x)
 
 - [migration/TRACKING.md](migration/TRACKING.md) — top-level migration audit trail
-- [migration/v1.5.2-impact.md](migration/v1.5.2-impact.md): **current bump (2026-09-14).** The re-port from trunk onto v1.5.2, the change-set oracle, the member-level body diff and its two findings, the map re-bake (blocker closed 2026-09-14: a new campaign reached the map), gates and owed. Ranked rows: [migration/v1.5.2-diff-ranked.md](migration/v1.5.2-diff-ranked.md)
+- [migration/v1.5.3-impact.md](migration/v1.5.3-impact.md): **current bump (2026-09-15).** A patch release with no signature change; the party nameplate clones lacked the ship-banner widgets the v1.5.3 widget dereferences unguarded, re-based and gated by `PrefabCloneWidgetReferenceTests`. RCA: [reviews/rca-v1.5.3-nameplate-clone-2026-09-15.md](reviews/rca-v1.5.3-nameplate-clone-2026-09-15.md)
+- [migration/v1.5.2-impact.md](migration/v1.5.2-impact.md): the v1.5.2 bump (2026-09-14). The re-port from trunk onto v1.5.2, the change-set oracle, the member-level body diff and its two findings, the map re-bake (blocker closed 2026-09-14: a new campaign reached the map), gates and owed. Ranked rows: [migration/v1.5.2-diff-ranked.md](migration/v1.5.2-diff-ranked.md)
 - [migration/v1.4.8-impact.md](migration/v1.4.8-impact.md): previous bump (2026-08-10). v1.4.8 changelog → TAOM surface → verdict matrix, the engine changes the changelog doesn't mention, and what the bump left owed. Before it: [migration/v1.4.7-impact.md](migration/v1.4.7-impact.md), same document shape
 - [migration/v1.4.x-overview.md](migration/v1.4.x-overview.md) — current target migration plan
 - [migration/api-diff-1.3.15-to-1.4.5.md](migration/api-diff-1.3.15-to-1.4.5.md) — API delta table

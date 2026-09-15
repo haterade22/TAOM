@@ -29,12 +29,12 @@
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
     <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.29" />
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.2.*" />
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.3.*" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
     <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
-         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.2) parses only
+         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.3) parses only
          DependedModules, ModulesToLoadAfterThis, IncompatibleModules and SubModules, with no branch
          for DependedModuleMetadatas at all. The engine-honoured pin is the <ModulesToLoadAfterThis>
          element below; this line is the BUTR-launcher mirror of it. Deliberately NOT a

@@ -1,4 +1,8 @@
 <Prefab>
+  <!-- TAOM clone of SandBox/GUI/Prefabs/Nameplate/PartyPlayerNameplateItem.xml, re-based on Bannerlord v1.5.3
+       (2026-09-15; the ship-banner widgets the v1.5.3 PartyPlayerNameplateWidget dereferences unguarded).
+       TAOM edits: troop-count font 20, padding 4, the player ring icon in place of the hero portrait, the arrow button hidden,
+       the tracker frame collapsed. PrefabCloneWidgetReferenceTests gates the widget references. -->
 	<Constants>
 		<Constant Name="MainHeroVisual.Padding" Value="4" />
 
@@ -8,10 +12,19 @@
 		<Constant Name="Party.Banner.Width.Scaled" MultiplyResult="0.20" Value="!Party.Banner.Width" />
 		<Constant Name="Party.Banner.Height.Scaled" MultiplyResult="0.20" Value="!Party.Banner.Height" />
 
+		<Constant Name="Ship.Banner.Size" Value="30" />
+
 	</Constants>
 	<Window>
-    <PartyPlayerNameplateWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="TutorialHighlightBrush" DisorganizedWidget="NameplateLayoutListPanel\NameplateLayoutWidget\StatusList\DisorganizedWidget" HeadPosition="@HeadPosition" IsArmy="@IsArmy" IsBehind="@IsBehind" IsHigh="@IsHigh" IsInArmy="@IsInArmy" IsInSettlement="@IsInSettlement" IsTargetedByTutorial="@IsTargetedByTutorial" IsVisibleOnMap="@IsVisibleOnMap" MainPartyArrowWidget="MainPartyArrowWidget" NameplateExtraInfoTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateExtraInfoTextWidget" NameplateFullNameTextWidget="HeadGroupWidget\NameSpeedContainer\NameplateFullNameTextWidget" SpeedTextWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget" SpeedIconWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget\SpeedIconWidget" ParleyIconWidget="HeadGroupWidget\ParleyIconWidget" NameplateLayoutListPanel="NameplateLayoutListPanel" NameplateTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateTextWidget" PartyBannerWidget="NameplateLayoutListPanel\NameplateLayoutWidget\PartyBannerWidget" Position="@Position" ShouldShowFullName="@ShouldShowFullName" CanParley="@CanParley" TrackerFrame="TrackerFrame" IsPrisoner="@IsPrisoner" IsDisorganized="@IsDisorganized" HeadGroupWidget="HeadGroupWidget">
+    <PartyPlayerNameplateWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="TutorialHighlightBrush" DisorganizedWidget="NameplateLayoutListPanel\NameplateLayoutWidget\StatusList\DisorganizedWidget" HeadPosition="@HeadPosition" IsArmy="@IsArmy" IsBehind="@IsBehind" IsHigh="@IsHigh" IsInArmy="@IsInArmy" IsInSettlement="@IsInSettlement" IsTargetedByTutorial="@IsTargetedByTutorial" IsVisibleOnMap="@IsVisibleOnMap" MainPartyArrowWidget="MainPartyArrowWidget" NameplateExtraInfoTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateExtraInfoTextWidget" NameplateFullNameTextWidget="HeadGroupWidget\NameSpeedContainer\NameplateFullNameTextWidget" SpeedTextWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget" SpeedIconWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget\SpeedIconWidget" ParleyIconWidget="HeadGroupWidget\ParleyIconWidget" NameplateLayoutListPanel="NameplateLayoutListPanel" NameplateTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateTextWidget" PartyBannerWidget="NameplateLayoutListPanel\NameplateLayoutWidget\PartyBannerWidget" ShipBannerWidget="ShipBannerContainerWidget\ShipBannerWidget" ShipBannerContainerWidget="ShipBannerContainerWidget" ShipBannerFrameWidget="ShipBannerContainerWidget\ShipBannerFrameWidget" ShipBannerPosition="@ShipBannerPosition" IsShipBannerVisible="@IsShipBannerVisible" Position="@Position" ShouldShowFullName="@ShouldShowFullName" CanParley="@CanParley" TrackerFrame="TrackerFrame" IsPrisoner="@IsPrisoner" IsDisorganized="@IsDisorganized" HeadGroupWidget="HeadGroupWidget">
 			<Children>
+
+        <Widget Id="ShipBannerContainerWidget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Ship.Banner.Size" SuggestedHeight="!Ship.Banner.Size">
+          <Children>
+            <MaskedTextureWidget Id="ShipBannerWidget" DataSource="{PartyBanner}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Nameplate.FlatBanner.Party" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" CircularClipEnabled="true" IsCircularClipRadiusHalfOfHeight="true" />
+            <BrushWidget Id="ShipBannerFrameWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Naval.Map.Party.Nameplate.Ship.Banner.Frame" />
+          </Children>
+        </Widget>
 
 				<ListPanel Id="NameplateLayoutListPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalCentered">
 					<Children>
@@ -77,7 +90,8 @@
 						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="68" SuggestedHeight="68" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Nameplates\player_ring_icon" IsEnabled="false" />
 					</Children>
 				</ButtonWidget>
-				<Widget Id="TrackerFrame" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="0" SuggestedHeight="0" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-7" Sprite="BlankWhiteSquare_9" AlphaFactor="0.0" IsEnabled="false" IsVisible="false" />
+
+        <Widget Id="TrackerFrame" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="0" SuggestedHeight="0" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-7" Sprite="BlankWhiteSquare_9" AlphaFactor="0.0" IsEnabled="false" IsVisible="false" />
 
 				<!-- Size Setter (used to keep a uniform size independent of which set of widgets visible currently.) -->
 				<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="81" SuggestedHeight="81" IsEnabled="false" />

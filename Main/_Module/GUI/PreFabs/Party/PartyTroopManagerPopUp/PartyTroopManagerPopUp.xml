@@ -11,7 +11,7 @@
   </Parameters>
   
   <Window>
-    <PartyManageTroopPopupWidget DataSource="*PanelDataSource" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsPrimaryActionAvailable="@IsPrimaryActionAvailable" IsSecondaryActionAvailable="@IsSecondaryActionAvailable" PrimaryInputKeyVisualParent="PrimaryInputKeyVisualParent" SecondaryInputKeyVisualParent="SecondaryInputKeyVisualParent" IsVisible="@IsOpen">
+    <PartyManageTroopPopupWidget DataSource="*PanelDataSource" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsPrimaryActionAvailable="@IsPrimaryActionAvailable" IsSecondaryActionAvailable="@IsSecondaryActionAvailable" IsTertiaryActionAvailable="@IsTertiaryActionAvailable" PrimaryInputKeyVisualParent="PrimaryInputKeyVisualParent" SecondaryInputKeyVisualParent="SecondaryInputKeyVisualParent" TertiaryInputKeyVisualParent="TertiaryInputKeyVisualParent" IsVisible="@IsOpen">
       <Children>
 
 				<NavigationForcedScopeCollectionTargeter CollectionID="PartyPopupCollection" CollectionParent="..\." />
@@ -209,6 +209,11 @@
           <Children>
             <InputKeyVisualWidget DataSource="{SecondaryActionInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" PositionXOffset="-20" PositionYOffset="-20" KeyID="@KeyID" IsVisible="@IsVisible"/>
           </Children>
+        </Widget>
+        <Widget Id="TertiaryInputKeyVisualParent" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" HorizontalAlignment="Left" IsVisible="false">
+         <Children>
+          <InputKeyVisualWidget DataSource="{TertiaryActionInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40" PositionXOffset="10" PositionYOffset="-20" KeyID="@KeyID" IsVisible="@IsVisible"/>
+         </Children>
         </Widget>
 
       </Children>

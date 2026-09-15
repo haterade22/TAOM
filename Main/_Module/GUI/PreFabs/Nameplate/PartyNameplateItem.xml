@@ -1,4 +1,7 @@
 <Prefab>
+  <!-- TAOM clone of SandBox/GUI/Prefabs/Nameplate/PartyNameplateItem.xml, re-based on Bannerlord v1.5.3
+       (2026-09-15; the ship-banner widgets the v1.5.3 PartyNameplateWidget dereferences unguarded).
+       TAOM edits: troop-count font 20 (vanilla 35) and the blood-feud comment. PrefabCloneWidgetReferenceTests gates the widget references. -->
 	<Constants>
 		<Constant Name="Party.Banner.Width" BrushLayer="Default" BrushName="Nameplate.FlatBanner.Party" BrushValueType="Width" />
 		<Constant Name="Party.Banner.Height" BrushLayer="Default" BrushName="Nameplate.FlatBanner.Party" BrushValueType="Height" />
@@ -6,10 +9,19 @@
 		<Constant Name="Party.Banner.Width.Scaled" MultiplyResult="0.20" Value="!Party.Banner.Width" />
 		<Constant Name="Party.Banner.Height.Scaled" MultiplyResult="0.20" Value="!Party.Banner.Height" />
 
+		<Constant Name="Ship.Banner.Size" Value="30" />
+
 	</Constants>
 	<Window>
-		<PartyNameplateWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="TutorialHighlightBrush" DisorganizedWidget="NameplateLayoutListPanel\NameplateLayoutWidget\StatusList\DisorganizedWidget" HeadPosition="@HeadPosition" IsArmy="@IsArmy" IsBehind="@IsBehind" IsHigh="@IsHigh" IsInArmy="@IsInArmy" IsInSettlement="@IsInSettlement" IsTargetedByTutorial="@IsTargetedByTutorial" IsVisibleOnMap="@IsVisibleOnMap" NameplateExtraInfoTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateExtraInfoTextWidget" NameplateFullNameTextWidget="HeadGroupWidget\NameSpeedContainer\NameBloodFeudContainer\NameplateFullNameTextWidget" BloodFeudIconWidget="HeadGroupWidget\NameSpeedContainer\NameBloodFeudContainer\BloodFeudWidget" HasBloodFeud="@HasBloodFeud" SpeedTextWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget" SpeedIconWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget\SpeedIconWidget" ParleyIconWidget="HeadGroupWidget\ParleyIconWidget" NameplateLayoutListPanel="NameplateLayoutListPanel" NameplateTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateTextWidget" PartyBannerWidget="NameplateLayoutListPanel\NameplateLayoutWidget\PartyBannerWidget" Position="@Position" ShouldShowFullName="@ShouldShowFullName" CanParley="@CanParley" TrackerFrame="TrackerFrame" IsDisorganized="@IsDisorganized" HeadGroupWidget="HeadGroupWidget">
+		<PartyNameplateWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="TutorialHighlightBrush" DisorganizedWidget="NameplateLayoutListPanel\NameplateLayoutWidget\StatusList\DisorganizedWidget" HeadPosition="@HeadPosition" IsArmy="@IsArmy" IsBehind="@IsBehind" IsHigh="@IsHigh" IsInArmy="@IsInArmy" IsInSettlement="@IsInSettlement" IsTargetedByTutorial="@IsTargetedByTutorial" IsVisibleOnMap="@IsVisibleOnMap" NameplateExtraInfoTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateExtraInfoTextWidget" NameplateFullNameTextWidget="HeadGroupWidget\NameSpeedContainer\NameBloodFeudContainer\NameplateFullNameTextWidget" BloodFeudIconWidget="HeadGroupWidget\NameSpeedContainer\NameBloodFeudContainer\BloodFeudWidget" SpeedTextWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget" SpeedIconWidget="HeadGroupWidget\NameSpeedContainer\SpeedTextWidget\SpeedIconWidget" ParleyIconWidget="HeadGroupWidget\ParleyIconWidget" NameplateLayoutListPanel="NameplateLayoutListPanel" NameplateTextWidget="NameplateLayoutListPanel\NameplateLayoutWidget\LabelsList\NameplateTextWidget" PartyBannerWidget="NameplateLayoutListPanel\NameplateLayoutWidget\PartyBannerWidget" ShipBannerWidget="ShipBannerContainerWidget\ShipBannerWidget" ShipBannerContainerWidget="ShipBannerContainerWidget" ShipBannerFrameWidget="ShipBannerContainerWidget\ShipBannerFrameWidget" ShipBannerPosition="@ShipBannerPosition" IsShipBannerVisible="@IsShipBannerVisible" Position="@Position" ShouldShowFullName="@ShouldShowFullName" CanParley="@CanParley" TrackerFrame="TrackerFrame" IsDisorganized="@IsDisorganized" HasBloodFeud="@HasBloodFeud" HeadGroupWidget="HeadGroupWidget">
 			<Children>
+
+        <Widget Id="ShipBannerContainerWidget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Ship.Banner.Size" SuggestedHeight="!Ship.Banner.Size">
+          <Children>
+            <MaskedTextureWidget Id="ShipBannerWidget" DataSource="{PartyBanner}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Nameplate.FlatBanner.Party" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" CircularClipEnabled="true" IsCircularClipRadiusHalfOfHeight="true" />
+            <BrushWidget Id="ShipBannerFrameWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Naval.Map.Party.Nameplate.Ship.Banner.Frame" />
+          </Children>
+        </Widget>
 
 				<ListPanel Id="NameplateLayoutListPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalCentered">
 					<Children>
@@ -67,9 +79,10 @@
                 <ListPanel Id="NameBloodFeudContainer" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center">
                   <Children>
                     <TextWidget Id="NameplateFullNameTextWidget" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MaxWidth="500" VerticalAlignment="Center" Brush="PartyNameplate.FullName.Text" Brush.FontColor="@FactionColor" Brush.TextHorizontalAlignment="Center" Text="@FullName" />
+
                     <Widget Id="BloodFeudWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="30" MarginLeft="5" VerticalAlignment="Center" Sprite="SPGeneral\blood_feud_icon" />
-                  </Children>
-                </ListPanel>
+              </Children>
+            </ListPanel>
               </Children>
             </ListPanel>
 

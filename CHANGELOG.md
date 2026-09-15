@@ -2,6 +2,52 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-15
+
+### fix(engine): Bannerlord v1.5.3, the party nameplate clones re-based, a gate for prefab clones
+
+Steam moved the install to **v1.5.3** (client and Modding Kit together, buildid 25302170, 08:15 to
+08:16). `/engine-bump` ran in full: both native DLLs snapshotted, the three v1.5.2 decompile folders
+archived as `_*_v1.5.2` and regenerated, a `_categories_v1.5.3` tree built. Compile against the new
+references 0 errors, 311 BindingVerification checks green, full suite 9,174 passed / 2 skipped / 0
+failed before any change. File-level diff 18 of 57 shipping assemblies (most by build number),
+member-level body diff of the 355 bound members: 3 changed, all verdict OK (`v1.5.3-impact.md`).
+
+**The one break was data.** v1.5.3's `PartyNameplateWidget` gained ship-banner widgets and
+dereferences `ShipBannerContainerWidget` in `OnUpdate` on the first frame and every frame after,
+unguarded. TAOM's clones of `PartyNameplateItem.xml` and `PartyPlayerNameplateItem.xml` (re-based
+on v1.5.2 the day before) never declare it, so every party nameplate threw on the campaign map:
+the v1.5.0 `BloodFeudIconWidget` failure again, on the same two files. Both clones are re-based on
+the v1.5.3 files with TAOM's edits re-applied (troop-count font 20, the player ring icon, the
+hidden arrow button, the collapsed tracker frame, padding 4).
+`TAOM.Tests/Migration/PrefabCloneWidgetReferenceTests.cs` (BindingVerification) now pairs every
+TAOM prefab with the vanilla prefab of the same basename and requires every Widget-typed property
+attribute vanilla declares to survive in the clone; value attributes TAOM changes on purpose are
+not checked. Its first run also found `PartyTroopManagerPopUp.xml` missing
+`TertiaryInputKeyVisualParent`, which the engine guards with an early return, so that popup's
+input-key hints had silently never shown; spliced in from vanilla.
+RCA `docs/reviews/rca-v1.5.3-nameplate-clone-2026-09-15.md`.
+
+Also in the bump: `ModuleInfo.LoadWithFullPath` and `XmlResource` now throw with line numbers on a
+manifest missing `Id`/`Name`/`Version`, an `XmlName` without `id`/`path`, a game-type row without
+`value` or a dependency row without `Id` (every TAOM manifest, stub and mbproj passes; comments
+inside `IncludedGameTypes` are now skipped rather than dereferenced; `MergeElements` unchanged).
+`tools/check_handbook_attributes.py` learned the two v1.5.3 call shapes
+(`GetRequiredValueAttribute(node, "<Element>", path)`, `GetRequiredAttribute(node, "<Attr>", what,
+path)`) that had produced eighteen phantom FABRICATIONs on that method, and its default dump root
+plus the manifest moved to `_categories_v1.5.3` (tool tests 83, gate 0 findings). The shield-arc
+parameter renames in `native_parameters.xml` touch no TAOM module (`TAOM_Map`'s copy is an empty
+stub); the Honor trait rename binds nothing TAOM reads. Pin `v1.5.3`; Main's Native metadata
+`v1.5.3.*` (the installed `TAOM_Map` and `LOTRLOME_Armory` manifests likewise); target line in
+CLAUDE.md and AGENTS.md; the API snapshot regenerated (46 models, 246 patches, no row moved);
+`/engine-bump` Phase 4 names the prefab-clone gate.
+
+Not run in game: the v1.5.3 campaign map has not been seen to load (the v1.5.2 load of 2026-09-14
+20:17 is the last one). v2.0.29 as tagged throws on every party nameplate under v1.5.3; the next
+cut is the maintainer's call. A second Claude session deployed a build of `70517552` to the install
+at 08:22, six minutes after the update, so the install carried the broken clones until this commit's
+prefabs were copied over it.
+
 ## 2026-09-14
 
 ### chore: Bannerlord v1.5.2 engine bump (in progress)
