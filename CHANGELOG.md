@@ -4,6 +4,38 @@
 
 ## 2026-09-15
 
+### data(custom-battle): four live siege scenes join the Custom Battle picker, villages move to the Village type (#603)
+
+`Main/_Module/ModuleData/custom_battle_scenes.xml` had 22 entries against 45 folders in the unversioned
+`TAOM_Map/SceneObj`, and four of the absent scenes are live settlement centres in the LIVE
+`TAOM_Map/ModuleData/settlements.xml`: `taom_dale_castle_001_forceatmo` (castle_S1 Westoft),
+`taom_dwarven_moria_w_forceatmo` (town_MM2 Western Moria), `taom_gondor_town_dolamroth_forceatmo`
+(town_EW5 Dol Amroth) and `taom_mordor_town_minas_forceatmo` (town_ES2 Minas Morgul). All four are now
+`is_siege_map="true"` entries. Each `scene.xscene` declares a `siege` level and carries CastleGate,
+WallSegment and the same engine kit as the registered `taom_gondor_castle_001_forceatmo` (4 SiegeLadder,
+1 BatteringRam, 2 SiegeTower), so nothing structural separates them from a known-good siege entry.
+
+The four `taom_gondor_village_00N_forceatmo` entries carried `is_siege_map="false"`, which in 1.5.3 is
+the Battle bucket: `CustomBattleMapSelectionGroupVM.PrepareMapLists` routes `is_village_map` to the
+Village dropdown first, then `is_siege_map` to Siege, and everything else to Battle. They now carry
+`is_village_map="true"` (vanilla's flag for every village scene), and `village_001` moved from under the
+Battle comment to sit with its siblings. Village and Battle both launch through `OpenCustomBattleMission`,
+so only the dropdown changes. `terrain` is not read by the non-naval `PrepareBattleData`; `Plain` stays.
+
+Left out on purpose, so the next diff does not re-derive it: the arena and tavern interiors
+(`taom_gondor_arena_001/002`, `taom_minas_morgul_arena`, `taom_minas_morgul_tavern`,
+`taom_mordor_arena_001`); the base-level-only stubs (`taom_gondor_town_londc`, `_londcirion`,
+`taom_haterade_erebor_town_z`, both `wip_*`, the four `mod_taom_*_kitbash`, `temp_mission_scene`); and
+three complete-looking scenes bound to no settlement, `taom_gondor_castle_004_forceatmo`,
+`taom_dwarf_town_01_forceatmo` and `taom_dwarves_battle_001_forceatmo`, which Mike adds by hand. The
+stale display names ("Barad Faen Castle" on the Harlond/Linhir/Amonost/Edhellond/Morlad/Caras Tolfalas
+scene, "Lossarnach Town" on Bar Melui) stay as they are by decision; the `{=aom_*_name}` keys remain
+unregistered in every language file, as the existing 22 already were. Gate: parse plus a per-id
+`scene.xscene` existence check, 26 rows / 14 siege / 4 village / 0 missing; `validate_moduledata.py`
+exit 0. OWED: in-game Custom Battle smoke of the four sieges (Westoft and Western Moria never loaded via
+this path) and one village; the four new siege scenes are also absent from `precompile_scenes.txt`,
+a separate #287/#560 follow-up.
+
 ### feat(armoury): Black Numenorean barding ladder, ten HorseHarness items and the cavalry re-point (#602)
 
 KEYforce's Black Numenorean barding set (13 metameshes in

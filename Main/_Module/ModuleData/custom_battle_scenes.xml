@@ -51,6 +51,26 @@
     name="{=aom_taom_mordor_town_goblin_town_forceatmo_name}[Mordor] Goblin Town"
     terrain="Plain"
     is_siege_map="true" />
+  <Scene
+    id="taom_gondor_town_dolamroth_forceatmo"
+    name="{=aom_taom_gondor_town_dolamroth_forceatmo_name}[Gondor] Dol Amroth"
+    terrain="Plain"
+    is_siege_map="true" />
+  <Scene
+    id="taom_mordor_town_minas_forceatmo"
+    name="{=aom_taom_mordor_town_minas_forceatmo_name}[Mordor] Minas Morgul"
+    terrain="Plain"
+    is_siege_map="true" />
+  <Scene
+    id="taom_dale_castle_001_forceatmo"
+    name="{=aom_taom_dale_castle_001_forceatmo_name}[Dale] Westoft Castle"
+    terrain="Plain"
+    is_siege_map="true" />
+  <Scene
+    id="taom_dwarven_moria_w_forceatmo"
+    name="{=aom_taom_dwarven_moria_w_forceatmo_name}[Misty Mountains] Western Moria"
+    terrain="Plain"
+    is_siege_map="true" />
   <!--Battle Scenes-->
   <Scene
     id="taom_rohan_battle_fords_of_isen_forceatmo"
@@ -65,11 +85,6 @@
   <Scene
     id="taom_mordor_battle_dead_marshes_forceatmo"
     name="{=aom_taom_mordor_battle_dead_marshes_forceatmo_name}[Mordor] Dead Marshes"
-    terrain="Plain"
-    is_siege_map="false" />
-  <Scene
-    id="taom_gondor_village_001_forceatmo"
-    name="{=aom_taom_gondor_village_001_forceatmo_name}[Gondor] Gondor Village A"
     terrain="Plain"
     is_siege_map="false" />
   <!-- lotrtaom_iron_hills_01_forceatmo removed: scene.xscene CTDs on load, 8/8 attempts
@@ -102,18 +117,23 @@
     is_siege_map="false" />
   <!--Village Scenes-->
   <Scene
+    id="taom_gondor_village_001_forceatmo"
+    name="{=aom_taom_gondor_village_001_forceatmo_name}[Gondor] Gondor Village A"
+    terrain="Plain"
+    is_village_map="true" />
+  <Scene
     id="taom_gondor_village_002_forceatmo"
     name="{=aom_taom_gondor_village_002_forceatmo_name}[Gondor] Camloth Village"
     terrain="Plain"
-    is_siege_map="false" />
+    is_village_map="true" />
   <Scene
     id="taom_gondor_village_003_forceatmo"
     name="{=aom_taom_gondor_village_003_forceatmo_name}[Gondor] Dinadab Village"
     terrain="Plain"
-    is_siege_map="false" />
+    is_village_map="true" />
   <Scene
     id="taom_gondor_village_004_forceatmo"
     name="{=aom_taom_gondor_village_004_forceatmo_name}[Gondor] Mereham Village"
     terrain="Plain"
-    is_siege_map="false" />
+    is_village_map="true" />
 </CustomBattleScenes>
