@@ -69,7 +69,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/_Module/Prefabs/taom_howdah_agent.xml` | cleared |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
-| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | UNKNOWN | comparison-only | (none) | uncleared |
+| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` `Coop` `CoopNightly` | BannerlordCoop Source Available License (MIT before 2026-06-17) | comparison-only | (none) | uncleared |
+| TAOM.CoopCompat (Sternab) | `TAOM.CoopCompat` `CoopCompat` | unpublished, terms not stated | comparison-only | (none) | uncleared |
 | external developer drop | `Features_fixed` | UNKNOWN | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | uncleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
 | TransferbuttonMenu | `TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
@@ -284,8 +285,40 @@ decompile ("`ilspycmd` 10.0.1 against the installed client assemblies, 6 DLLs in
 files") and four verified Harmony owner ids. By this register's own vocabulary that is
 `comparison-only`, the same classification ROT-Core gets, and it is why the row is `uncleared` rather
 than `n/a`. The reasoning recorded at the time was that BannerlordCoop is a public upstream project
-shipping generated sources in plaintext and carries no policy forbidding it, unlike BT. That
-reasoning is worth confirming against the project's actual licence rather than left as an inference.
+shipping generated sources in plaintext and carries no policy forbidding it, unlike BT.
+
+**That inference was checked on 2026-09-07 and is wrong in its premise.** The upstream repository's
+`LICENSE` is the **BannerlordCoop Source Available License**, and `NOTICE.md` records that new
+versions stopped being MIT on **2026-06-17** (versions released under MIT keep those terms). The
+licence permits viewing "for viewing, reference, education, security review, and contribution to the
+BannerlordCoop project only", and separately forbids using the source "in whole or in part, to
+create, contribute to, improve, support, or maintain a competing Mount & Blade II: Bannerlord
+multiplayer, co-op, networking, synchronization, or derivative mod without prior written
+permission". So "public upstream, no policy forbidding it" was true of the MIT era and is not true
+now.
+
+What that does and does not change: TAOM still derives nothing from BannerlordCoop, so
+`comparison-only` remains the correct derivation and no TAOM code is implicated. The row stays
+`uncleared` because whether a decompile-for-interop sits inside "reference" or outside it is a
+judgement for the maintainer, not for this register, and the cheap resolution is to ask the
+BannerlordCoop maintainers in writing. `docs/research/bannerlordcoop-internals.md` predates the
+relicensing (it analysed Coop v0.0.3, MIT era); nothing about it needs undoing, but a further
+decompile pass should settle the permission question first.
+
+### TAOM.CoopCompat, by Sternab (UNCLEARED)
+
+A third-party Bannerlord module that makes TAOM playable under BannerlordCoop. It is not TAOM's
+work, is not in this repository, and TAOM derives nothing from it: the derivation is
+`comparison-only` because TAOM read the shipped assemblies to document them, and TAOM ships no code,
+data or design taken from it.
+
+It is registered here because it exists, because it binds deeply into TAOM by reflection, and
+because the register's rule is that a named third party gets a row. It is `uncleared` because the
+module publishes no licence: the distribution carries a `HOST-REDISTRIBUTION-NOTICE.txt` governing
+what an operator may pass on, and nothing stating terms for the module itself.
+
+Full analysis, including every TAOM identifier it binds and the build-identity pin that couples it
+to one exact `TAOM.dll`: [`docs/research/taom-coopcompat.md`](../research/taom-coopcompat.md).
 
 ### external developer drop, `Downloads/Features_fixed/` (UNCLEARED)
 
@@ -475,6 +508,7 @@ import. There is no row for it because there is nothing to declare, and that is 
 - [docs/modding/modules-overview.md](../modding/modules-overview.md)
 - [docs/reference/asset-provenance.md](./asset-provenance.md)
 - [docs/reference/lotrlome-warg-changes.md](./lotrlome-warg-changes.md)
+- [docs/research/taom-coopcompat.md](../research/taom-coopcompat.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
 - [docs/reviews/adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md)
 

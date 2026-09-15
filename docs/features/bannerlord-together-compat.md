@@ -483,5 +483,6 @@ culprit diff for free.
 - [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
 - [docs/reference/provenance-register.md](../reference/provenance-register.md)
 - [docs/research/bannerlordcoop-internals.md](../research/bannerlordcoop-internals.md)
+- [docs/research/taom-coopcompat.md](../research/taom-coopcompat.md)
 
 <!-- backlinks-end -->

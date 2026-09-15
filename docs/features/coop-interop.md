@@ -245,7 +245,20 @@ save-backed field, but each peer keeps its own TAOM `SyncData` after join (see "
 so the flag reads naturally as *this peer's player has claimed it* — which is the intended meaning.
 The consequence to know: on a client the shared sweep never runs, so expired entries linger until
 `OnSiegeEnded` removes them. Harmless — the local half filters on `!Deadline.IsPast`, so a stale
-entry can never pay out. Pinned by three tests in `CoopAuthorityGateTests`.
+entry can never pay out. Pinned by two tests in `CoopAuthorityGateTests`
+(`SiegeDefense_OnHourlyTick_CoopClient_DoesNotTick`, `SiegeDefense_OnHourlyTick_Authority_Ticks`),
+both of which assert `OnHourlyTickShared`. **No test asserts `OnHourlyTickLocalPlayer` on either
+side of the gate**, and the local half is the one that lets a co-op client earn the reward. The
+client-side test name is also misleading: on a client the local half does run.
+
+**This table is not the whole gated surface.** Measured 2026-09-07: **37** files under
+`Main/Features/` reference a co-op provider across **14** feature directories (excluding
+`CoopInterop/` itself), and **19 of those 37** sit in three features this document never names at
+all: `Enlistment` (14 files, e.g. `Hooks/EnlistmentBehavior.cs:66,79,108,117`), `FieldCommission`
+(4 files, `Hooks/FieldCommissionBehavior.cs:71,94,107,121`) and `FiefGranting` (1 file,
+`Hooks/Patch70_FiefGrantDecisionSwap.cs:87`, which uses `ShouldDeferToHost`). Enlistment alone is a
+larger gated surface than every row above combined. Treat the table as the original eight, not as
+an inventory.
 
 ### Deliberately NOT gated
 
@@ -484,5 +497,6 @@ Owed by the 2026-08-03 work specifically, none of it run:
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/research/bannerlordcoop-internals.md](../research/bannerlordcoop-internals.md)
+- [docs/research/taom-coopcompat.md](../research/taom-coopcompat.md)
 
 <!-- backlinks-end -->

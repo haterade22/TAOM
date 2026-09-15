@@ -1,0 +1,914 @@
+{
+  "_note": "Mechanically extracted evidence for docs/research/taom-coopcompat.md. Derived facts only: no third-party source code is reproduced here. Regenerate by re-running the extraction described in that document.",
+  "subject": {
+    "module": "TAOM.CoopCompat",
+    "version": "0.3.15",
+    "author": "Sternab",
+    "tuple": {
+      "bannerlord": "v1.4.8",
+      "taom": "v2.0.26",
+      "coop": "v0.1.4",
+      "compat": "v0.3.15",
+      "variant": "compat-only"
+    },
+    "allPeersRequireExactCompat": true,
+    "protocols_declared_in_package_json": {
+      "authoritativePartyPosition": 2,
+      "careerAuthority": 1,
+      "fullWarDiplomacy": 1,
+      "specialResourceSpend": 2,
+      "taomServerSettings": 2
+    },
+    "createdUtc": "2026-09-05T12:46:26.1003996Z",
+    "status": "public-playtest-candidate"
+  },
+  "package_hygiene": {
+    "client_packageId": "TAOM-Coop-CompatOnly-Client-Playtest",
+    "host_packageId": "TAOM-Coop-CompatOnly-Client-Playtest",
+    "host_declares_client_id": true,
+    "liveAcceptance_total_fields": 43,
+    "liveAcceptance_false_fields": 42,
+    "liveAcceptance_true_fields": 0,
+    "liveAcceptance_boolean_fields": 42,
+    "liveAcceptance_booleans_all_false": true,
+    "liveAcceptance_non_boolean": {
+      "status": "v0.3.15-coop-v0.1.4-migration-runtime-unproven"
+    }
+  },
+  "shipped_binaries": {
+    "hashes": {
+      "Win64_Shipping_Client/TAOM.CoopCompat.dll": {
+        "sha256": "86acfbc45af5928d66fcd91aa0fbd274bf998e1ce10438e5fecc2cd0d5af53a4",
+        "bytes": 788992
+      },
+      "Win64_Shipping_Client/TAOM.CoopCompat.Bootstrap.dll": {
+        "sha256": "6eb31bcb677b924054d31ac8e1c10f6083309f81e37031faba26b535e79442e3",
+        "bytes": 14336
+      },
+      "Win64_Shipping_Server/TAOM.CoopCompat.dll": {
+        "sha256": "86acfbc45af5928d66fcd91aa0fbd274bf998e1ce10438e5fecc2cd0d5af53a4",
+        "bytes": 788992
+      },
+      "Win64_Shipping_Server/TAOM.CoopCompat.Bootstrap.dll": {
+        "sha256": "6eb31bcb677b924054d31ac8e1c10f6083309f81e37031faba26b535e79442e3",
+        "bytes": 14336
+      }
+    },
+    "client_server_byte_identical": true
+  },
+  "source_manifest": {
+    "total_files": 350,
+    "source_files": 228,
+    "test_files": 111,
+    "by_path": {
+      "src/TAOM.CoopCompat/Components": 95,
+      "tests/TAOM.CoopCompat.Tests": 86,
+      "src/TAOM.CoopCompat/Core": 72,
+      "src/TAOM.CoopCompat/Relay": 45,
+      "tests/fixtures/taom-2.0.20": 13,
+      "src/TAOM.CoopCompat": 10,
+      "src/TAOM.CoopCompat/Bootstrap": 4,
+      "tests/TAOM.CoopCompat.CrashGuardSmoke": 4,
+      "tests/TAOM.CoopCompat.BattleSpawnSmoke": 2,
+      "tests/TAOM.CoopCompat.HomeSettlementSmoke": 2,
+      "tests/TAOM.CoopCompat.SerializationSmoke": 2,
+      "src/TAOM.CoopCompat/.local": 1,
+      "src/TAOM.CoopCompat/_Module": 1,
+      "tests/Test-RepairTaomServerGameVersion.ps1": 1,
+      "tests/Test-StageTaomCoopServerWrapperArtifact.ps1": 1,
+      "tools/Export-Taom2026BattleTerrain.ps1": 1,
+      "tools/New-Coop013ReferenceImages.ps1": 1,
+      "tools/New-Coop014ReferenceImages.ps1": 1,
+      "tools/New-CoopCompat148ReferenceImages.ps1": 1,
+      "tools/New-Taom2023ReferenceImage.ps1": 1,
+      "tools/New-Taom2026ReferenceImage.ps1": 1,
+      "tools/New-TaomCoopWrapperQualification.ps1": 1,
+      "tools/Repair-TaomServerGameVersion.ps1": 1,
+      "tools/Set-TaomCoopInteropPolicy.ps1": 1,
+      "tools/Stage-TaomCoopServer.ps1": 1,
+      "tools/Start-TaomAnnatarBoot.ps1": 1
+    },
+    "note": "File names and SHA-256 only. The source tree itself was never available. The tests/ half is listed because it is evidence the module carries its own regression suite, including fixtures pinned to a TAOM version.",
+    "by_top_level": {
+      "src": 228,
+      "tests": 111,
+      "tools": 11
+    },
+    "tool_files": 11
+  },
+  "components": {
+    "total": 83,
+    "critical": 25,
+    "default_enabled": 77,
+    "default_observe": 6,
+    "implements_IDeactivatable": 29,
+    "critical_keys": [
+      "army-registration-repair",
+      "basic-character-skill-load-guard",
+      "battle-size-ceiling",
+      "battle-spawn-reliability",
+      "campaign-world-coalescer-window",
+      "career-authority",
+      "catch-up-drain-guard",
+      "coop-object-manager-null-guard",
+      "deterministic-battle-scene",
+      "elite-emissary-protocol",
+      "facegen",
+      "field-camp-coop-suppression",
+      "legacy-module-conflict",
+      "monster-registration",
+      "raid-loot-isolation",
+      "recruitment-volunteer-null-guard",
+      "server-boot-fault-blocker",
+      "server-gameplay-settings",
+      "server-log-sink",
+      "starting-gold-authority",
+      "transferred-save-troop-roster-migration",
+      "transferred-save-troop-training-guard",
+      "transferred-save-troop-wage-guard",
+      "transferred-save-troop-xp-guard",
+      "troop-weight-policy"
+    ],
+    "default_observe_keys": [
+      "battle-frame-hitch-probe",
+      "ghost-reference-sweep",
+      "join-baseline-repair",
+      "kingdom-decision-probe",
+      "settings-fingerprint",
+      "siege-defense-telemetry"
+    ],
+    "table": [
+      {
+        "key": "active-mission-map-event-guard",
+        "type": "ActiveMissionMapEventGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "agent-mount-state-probe",
+        "type": "AgentMountStateProbeComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "army-registration-repair",
+        "type": "ArmyRegistrationRepairComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "authoritative-party-position",
+        "type": "AuthoritativePartyPositionComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "barber-style-filter-probe",
+        "type": "BarberStyleFilterProbeComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "basic-character-skill-load-guard",
+        "type": "BasicCharacterSkillGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "battle-frame-hitch-probe",
+        "type": "BattleFrameHitchProbeComponent",
+        "default": "Observe",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "battle-order-timing-probe",
+        "type": "BattleOrderTimingProbeComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "battle-receiver-spike-hysteresis",
+        "type": "BattleReceiverSpikeHysteresisComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "battle-size-ceiling",
+        "type": "BattleSizeCeilingComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "battle-spawn-reliability",
+        "type": "BattleSpawnReliabilityComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "battle-uplink-guard",
+        "type": "BattleUplinkGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "call-to-war-outcome-authority",
+        "type": "CallToWarOutcomeAuthorityComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "campaign-world-coalescer-window",
+        "type": "CampaignWorldCoalescerComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "caravan-initargs-null-guard",
+        "type": "CaravanInitializationNullGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "career-authority",
+        "type": "CareerAuthorityComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "catch-up-drain-guard",
+        "type": "CatchUpDrainGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "chat-ribbon-placement",
+        "type": "ChatRibbonPlacementComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "compressed-hero-join-transfer",
+        "type": "CompressedHeroJoinTransferComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "control-mode-view-removal-guard",
+        "type": "ControlModeViewRemovalGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "coop-object-manager-null-guard",
+        "type": "CoopObjectManagerNullGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "deterministic-battle-scene",
+        "type": "DeterministicBattleSceneComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "donate-prisoner-garrison-guard",
+        "type": "DonatePrisonerGarrisonGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "edoras-player-path-repair",
+        "type": "EdorasPlayerPathRepairComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "elite-emissary-protocol",
+        "type": "EmissaryPurchaseProtocolComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "encounter-attack-condition-guard",
+        "type": "EncounterAttackConditionGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "encounter-map-event-recovery",
+        "type": "EncounterMapEventRecoveryComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "equipment-diagnostic-coalescer",
+        "type": "EquipmentDiagnosticCoalescerComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "exspouses-guard",
+        "type": "ExSpousesGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "facegen",
+        "type": "FaceGenComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "field-camp-coop-suppression",
+        "type": "FieldCampCoopSuppressionComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "formation-simulation-cache-guard",
+        "type": "FormationSimulationCacheGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "general-navigation-recovery",
+        "type": "GeneralNavigationRecoveryComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "ghost-reference-sweep",
+        "type": "GhostReferenceSweepComponent",
+        "default": "Observe",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "hero-home-settlement-diagnostic-coalescer",
+        "type": "HeroHomeSettlementDiagnosticCoalescerComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "invalid-path-target-guard",
+        "type": "InvalidPathTargetGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "item-grant-command",
+        "type": "ItemGrantCommandComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "join-baseline-reconciliation",
+        "type": "InactiveMainPartyBaselineComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "join-baseline-repair",
+        "type": "JoinBaselineRepairComponent",
+        "default": "Observe",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "kingdom-decision-hero-clan-repair",
+        "type": "KingdomDecisionEligibilityRepairComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "kingdom-decision-probe",
+        "type": "KingdomDecisionProbeComponent",
+        "default": "Observe",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "legacy-module-conflict",
+        "type": "LegacyModuleConflictComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "location-npc-equipment-sampling-guard",
+        "type": "LocationNpcEquipmentSamplingGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "mission-after-start-failure-probe",
+        "type": "MissionAfterStartFailureProbeComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "monster-registration",
+        "type": "MonsterRegistrationComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "nested-kingdom-decision-deferral",
+        "type": "NestedKingdomDecisionDeferralComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "null-map-event-encounter-end-guard",
+        "type": "NullMapEventEncounterEndGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "post-battle-speed-repair",
+        "type": "PostBattleSpeedRepairComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "puppet-initial-wield",
+        "type": "PuppetInitialWieldComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "raid-loot-isolation",
+        "type": "RaidLootIsolationComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "raid-post-battle-continuation",
+        "type": "RaidPostBattleContinuationComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "recruitment-volunteer-null-guard",
+        "type": "RecruitmentVolunteerNullGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "rivendell-ai-path-probe",
+        "type": "RivendellAiPathProbeComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "server-boot-fault-blocker",
+        "type": "ServerBootFaultBlockerComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "server-gameplay-settings",
+        "type": "TaomServerSettingsAuthorityComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "server-log-sink",
+        "type": "ServerLogSinkComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "server-warning-dump-suppression",
+        "type": "ServerWarningDumpSuppressionComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "settings-fingerprint",
+        "type": "SettingsFingerprintComponent",
+        "default": "Observe",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "settlement-entry-distance-repair",
+        "type": "SettlementEntryDistanceRepairComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "settlement-entry-retry-throttle",
+        "type": "SettlementEntryRetryThrottleComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "settlement-leave-menu-logger",
+        "type": "SettlementLeaveMenuLoggerComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "settlement-leave-routing",
+        "type": "SettlementLeaveRoutingComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "settlement-walk-around-context-repair",
+        "type": "SettlementWalkAroundContextRepairComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "siege-defense-telemetry",
+        "type": "SiegeDefenseTelemetryComponent",
+        "default": "Observe",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "siege-deployment-selection-guard",
+        "type": "SiegeDeploymentSelectionGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "siege-destructible-state-guard",
+        "type": "SiegeDestructibleStateGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "siege-formation-snapshot",
+        "type": "SiegeFormationSnapshotComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "special-resource-authority",
+        "type": "SpecialResourceAuthorityComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "stale-mission-relay-guard",
+        "type": "StaleMissionRelayGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "stale-settlement-menu-repair",
+        "type": "StaleSettlementMenuRepairComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "starting-gold-authority",
+        "type": "StartingGoldAuthorityComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "tournament-agent-removal-guard",
+        "type": "TournamentAgentRemovalGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "tournament-bracket",
+        "type": "TournamentBracketComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "transferred-save-troop-roster-migration",
+        "type": "TransferredSaveTroopRosterMigrationComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "transferred-save-troop-training-guard",
+        "type": "TransferredSaveTroopTrainingGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "transferred-save-troop-wage-guard",
+        "type": "TransferredSaveTroopWageGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "transferred-save-troop-xp-guard",
+        "type": "TransferredSaveTroopXpGuardComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": true
+      },
+      {
+        "key": "troop-grant-command",
+        "type": "TroopGrantCommandComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "troop-weight-policy",
+        "type": "TroopWeightPolicyComponent",
+        "default": "Enabled",
+        "critical": true,
+        "deactivatable": false
+      },
+      {
+        "key": "voice-bank-cache",
+        "type": "VoiceBankCacheComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "wanderer-introduction-null-template-guard",
+        "type": "WandererIntroductionNullGuardComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": false
+      },
+      {
+        "key": "wotr-full-war-reconciliation",
+        "type": "FullWarHostileReconciliationComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      },
+      {
+        "key": "wotr-momentum-relay",
+        "type": "WotrMomentumRelayComponent",
+        "default": "Enabled",
+        "critical": false,
+        "deactivatable": true
+      }
+    ]
+  },
+  "binary_identity_pins": {
+    "mvid": [
+      {
+        "guid": "3c2da906-f6ec-443d-afa8-aad1c8286c03",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/BasicCharacterSkillGuardComponent.cs",
+          "TAOM.CoopCompat.Components/CampaignWorldCoalescerComponent.cs",
+          "TAOM.CoopCompat.Components/CaravanInitializationNullGuardComponent.cs",
+          "TAOM.CoopCompat.Components/CoopObjectManagerNullGuardComponent.cs",
+          "TAOM.CoopCompat.Components/HeroHomeSettlementDiagnosticCoalescerComponent.cs",
+          "TAOM.CoopCompat.Components/InactiveMainPartyBaselineComponent.cs",
+          "TAOM.CoopCompat.Components/RaidLootIsolationComponent.cs",
+          "TAOM.CoopCompat.Components/TransferredSaveTroopWageGuardComponent.cs"
+        ]
+      },
+      {
+        "guid": "886629fe-6e60-40d7-9a57-8d46017179d9",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/RaidLootIsolationComponent.cs",
+          "TAOM.CoopCompat.Components/RecruitmentVolunteerNullGuardComponent.cs",
+          "TAOM.CoopCompat.Components/SiegeDefenseTelemetryComponent.cs",
+          "TAOM.CoopCompat.Components/TransferredSaveTroopTrainingGuardComponent.cs",
+          "TAOM.CoopCompat.Components/TransferredSaveTroopXpGuardComponent.cs"
+        ]
+      },
+      {
+        "guid": "03ff70df-eadc-46c9-a51e-b68e8c3336ef",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/CampaignWorldCoalescerComponent.cs",
+          "TAOM.CoopCompat.Components/CatchUpDrainGuardComponent.cs"
+        ]
+      },
+      {
+        "guid": "bd1af67e-d002-47d1-bf58-83e8967fd143",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/FieldCampCoopSuppressionComponent.cs",
+          "TAOM.CoopCompat.Components/SiegeDefenseTelemetryComponent.cs"
+        ]
+      },
+      {
+        "guid": "66f75064-7cf2-4bd5-b83c-d286de3e2f77",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/BattleSpawnReliabilityComponent.cs"
+        ]
+      },
+      {
+        "guid": "4267abec-e4ba-4746-94b7-47cbe3ba79f8",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/SiegeDestructibleStateGuardComponent.cs"
+        ]
+      },
+      {
+        "guid": "1bcf228e-dc3e-4af3-8e86-8d749905f4c2",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/SiegeDestructibleStateGuardComponent.cs"
+        ]
+      }
+    ],
+    "assembly_fullname": [
+      {
+        "identity": "Coop.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/CampaignWorldCoalescerComponent.cs",
+          "TAOM.CoopCompat.Components/CatchUpDrainGuardComponent.cs",
+          "TAOM.CoopCompat.Components/SettlementEntryDistanceRepairComponent.cs",
+          "TAOM.CoopCompat.Components/SettlementEntryRetryThrottleComponent.cs"
+        ]
+      },
+      {
+        "identity": "GameInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/BasicCharacterSkillGuardComponent.cs",
+          "TAOM.CoopCompat.Components/CaravanInitializationNullGuardComponent.cs",
+          "TAOM.CoopCompat.Components/CoopObjectManagerNullGuardComponent.cs",
+          "TAOM.CoopCompat.Components/DeterministicBattleSceneComponent.cs",
+          "TAOM.CoopCompat.Components/HeroHomeSettlementDiagnosticCoalescerComponent.cs",
+          "TAOM.CoopCompat.Components/InactiveMainPartyBaselineComponent.cs",
+          "TAOM.CoopCompat.Components/RaidLootIsolationComponent.cs",
+          "TAOM.CoopCompat.Components/TransferredSaveTroopWageGuardComponent.cs"
+        ]
+      },
+      {
+        "identity": "Missions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/BattleSpawnReliabilityComponent.cs"
+        ]
+      },
+      {
+        "identity": "TAOM, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/FieldCampCoopSuppressionComponent.cs",
+          "TAOM.CoopCompat.Components/SiegeDefenseTelemetryComponent.cs",
+          "TAOM.CoopCompat.Components/TroopWeightPolicyComponent.cs"
+        ]
+      },
+      {
+        "identity": "TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/RaidLootIsolationComponent.cs",
+          "TAOM.CoopCompat.Components/RecruitmentVolunteerNullGuardComponent.cs",
+          "TAOM.CoopCompat.Components/SettlementWalkAroundContextRepairComponent.cs",
+          "TAOM.CoopCompat.Components/SiegeDefenseTelemetryComponent.cs",
+          "TAOM.CoopCompat.Components/TransferredSaveTroopTrainingGuardComponent.cs",
+          "TAOM.CoopCompat.Components/TransferredSaveTroopXpGuardComponent.cs"
+        ]
+      },
+      {
+        "identity": "TaleWorlds.MountAndBlade, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "pinned_by": [
+          "TAOM.CoopCompat.Components/SiegeDestructibleStateGuardComponent.cs"
+        ]
+      }
+    ],
+    "il_length": [
+      {
+        "file": "TAOM.CoopCompat.Components/FieldCampCoopSuppressionComponent.cs",
+        "const": "ExpectedRefreshIlLength",
+        "value": 295
+      },
+      {
+        "file": "TAOM.CoopCompat.Components/FieldCampCoopSuppressionComponent.cs",
+        "const": "ExpectedExecuteIlLength",
+        "value": 54
+      },
+      {
+        "file": "TAOM.CoopCompat.Components/RecruitmentVolunteerNullGuardComponent.cs",
+        "const": "ExpectedIlLength",
+        "value": 574
+      },
+      {
+        "file": "TAOM.CoopCompat.Components/TransferredSaveTroopTrainingGuardComponent.cs",
+        "const": "ExpectedIlLength",
+        "value": 1072
+      },
+      {
+        "file": "TAOM.CoopCompat.Components/TransferredSaveTroopWageGuardComponent.cs",
+        "const": "ExpectedIlLength",
+        "value": 887
+      },
+      {
+        "file": "TAOM.CoopCompat.Components/TransferredSaveTroopXpGuardComponent.cs",
+        "const": "ExpectedIlLength",
+        "value": 159
+      }
+    ],
+    "il_length_note": "MaxDetailLength in CareerAuthorityPolicy.cs is excluded: it is a string cap, not an IL pin."
+  },
+  "unregistered_components": {
+    "_finding": "Five ICompatComponent implementations exist in the shipped 0.3.15 assembly but are never added to the registry, so they never install. Three are marked Critical. Verified by grep: each type name appears only in its own decompiled file.",
+    "registry_add_calls": 78,
+    "components_declared": 83,
+    "never_registered": [
+      {
+        "type": "ArmyRegistrationRepairComponent",
+        "key": "army-registration-repair",
+        "critical": true
+      },
+      {
+        "type": "BattleSizeCeilingComponent",
+        "key": "battle-size-ceiling",
+        "critical": true
+      },
+      {
+        "type": "BattleSpawnReliabilityComponent",
+        "key": "battle-spawn-reliability",
+        "critical": true
+      },
+      {
+        "type": "BattleUplinkGuardComponent",
+        "key": "battle-uplink-guard",
+        "critical": false
+      },
+      {
+        "type": "LocationNpcEquipmentSamplingGuardComponent",
+        "key": "location-npc-equipment-sampling-guard",
+        "critical": false
+      }
+    ],
+    "consequence": {
+      "BattleSpawnReliabilityActivation": "Enabled requires CanOpenSession, which requires _componentEnabled==1, set only by OpenComponent(), called only from the unregistered BattleSpawnReliabilityComponent:126. Permanently false. The client handler runs but every guard reads false.",
+      "BattleSizeAuthorityActivation": "Enabled requires _enabled==1, set only by Open(), called only from the unregistered BattleSizeCeilingComponent:63. Permanently false. BattleSizeAuthorityClientHandler, BattleSizeAuthorityServerHandler and BattleSizeAuthorityEndpoint all gate on it."
+    },
+    "NOT_affected": "The server-settings battle-size path is unaffected. CoopBattleSizeSettingsAdapter is installed by TaomServerSettingsAuthorityComponent (registered, key server-gameplay-settings) and gates on TaomServerSettingsActivation.Enabled, not on BattleSizeAuthorityActivation. The 0.3.15 field/siege/sally-out settings fix is live."
+  },
+  "protocol_version_disagreement": {
+    "package_json_taomServerSettings": 2,
+    "what_changed_txt_claims": 3,
+    "assembly_constant": 3,
+    "source_of_truth": "ServerGameplaySettingsPolicy.TaomProtocolVersion = 3, and both NetworkTaomServerSettings message constructors assign ProtocolVersion = 3. PACKAGE.json is stale."
+  }
+}

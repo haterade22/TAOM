@@ -278,6 +278,7 @@ These are recurring lessons the auto-memory system has captured. The memory file
 
 LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](research/README.md) for the structure and `/knowledge-compile` workflow.
 
+- [taom-coopcompat](research/taom-coopcompat.md): what the third-party `TAOM.CoopCompat` module (by Sternab) does to make TAOM playable under BannerlordCoop, decompiled and verified. Read it before cutting a release: the module pins TAOM's exact build identity, so a release that ignores it takes co-op down. Evidence: `docs/raw/taom-coopcompat/`.
 - [karpathy-autoresearch](research/karpathy-autoresearch.md) — full review of Karpathy's autoresearch repo (10 files, 52 patterns extracted) + Tier-1/2/3 adoption map for TAOM. Source: `docs/raw/ai-research/karpathy-autoresearch/`.
 - [reference/external-resources.md](reference/external-resources.md) — verified external resources to improve TAOM (official-vs-community Bannerlord docs hierarchy, BUTR deps, Harmony, LOTR/Tolkien lore + naming generators, comparable total-conversion mods, save-compat versioning). Cite this instead of re-searching the web.
 

@@ -4,6 +4,42 @@
 
 ## 2026-09-07
 
+### docs(research): what Sternab's co-op compatibility module does, and why our releases break it
+
+An outside developer ships `TAOM.CoopCompat`, a separate Bannerlord module that makes TAOM playable
+under BannerlordCoop. Nothing in this repository knew it existed: `git grep -li coopcompat` returned
+nothing. It is now documented at [`docs/research/taom-coopcompat.md`](docs/research/taom-coopcompat.md),
+from the two shipped assemblies (`ilspycmd`), the packaged provenance JSONs and the operator scripts.
+No source was available, so every claim is marked [Verified] or [Inference], and the mechanical
+extraction behind the tables is committed beside it in `docs/raw/taom-coopcompat/`.
+
+The finding that concerns us: the module pins our exact build identity.
+`FieldCampCoopSuppressionComponent` is `Critical` and refuses to install unless `TAOM.dll` carries
+ModuleVersionId `bd1af67e-d002-47d1-bf58-83e8967fd143`, and one critical component failing tears down
+all 78 registered components and blocks both hosting and joining. We are not close: four different
+MVIDs came off this repo in a single day. The cause is ours, and it is not the source changing.
+`Directory.Build.props:23` defaults `TaomBuildStamp` to `UtcNow` at second resolution and feeds it
+into `InformationalVersion`, which lands in the binary as a real attribute, so deterministic hashing
+produces a fresh MVID on every build including a rebuild of an unchanged tree. The comment three lines
+above it already names the fix: "Set TaomBuildStamp explicitly for a reproducible build." Nothing was
+changed here; the option is recorded for whoever decides it.
+
+Also found, and left as findings rather than fixes: five of the module's 83 components are never
+registered, three of them `Critical`, which leaves its battle-spawn-reliability and
+battle-size-authority protocols unreachable (its own settings path is unaffected). That is reported
+upward, not actionable here.
+
+Two corrections to our own docs came out of the pass. `coop-interop.md` said three tests pin the siege
+authority split; there are two, and neither covers the local half that lets a co-op client earn the
+reward. Its "Gated (host-only)" table reads as an inventory but names eight behaviours out of a
+37-file surface, omitting Enlistment, FieldCommission and FiefGranting entirely, 19 files between
+them. Both corrected in place. The provenance register's BannerlordCoop row carried license `UNKNOWN`
+with a note that the assumption behind it was worth checking: it was checked and the premise was
+wrong. BannerlordCoop stopped being MIT on 2026-06-17 and is now source-available, with a clause
+covering derivative co-op mods. TAOM still derives nothing from it, so the row stays
+`comparison-only`; the license is now recorded, and `TAOM.CoopCompat` has a row of its own.
+
+
 ### fix(siege): the game crashed on the way back to the map after helping take a town (#557)
 
 Crash bundle `d7d9f7d3`, reported as "loading in after battle". An enlisted soldier fought on the
