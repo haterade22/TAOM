@@ -55,13 +55,18 @@
        occupied slot, never the seed, so a pooled elite arrives at any level. Two of these are
        pooled: the Ithilien Ranger (10 percent at Minas Tirith and both Osgiliaths in
        recruitment_pools/gondor.json, plus two clans) and the Fountain Guard (clan_empire_west_1,
-       hand-written pool; also the vassal reward). Those two carry a recruit_cost equal to their
-       emissary price, the pairing the Ironpass rams use, so the notable path is gated by Patch51
-       and charged on OnUnitRecruited. EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost pins it.
+       hand-written pool; also the vassal reward). Those two carry a recruit_cost EQUAL TO THEIR
+       UPGRADE COST (6 / 5): a notable pick is a door into the rung, not the emissary's on-demand
+       convenience (45 / 28), and the Ranger has no incoming upgrade edge at all, so recruit_cost
+       is the only price it ever pays. The same attribute is charged per unit on prisoner recruits
+       (the engine raises OnUnitRecruited there too, ungated, #563), so a price at the emissary band
+       would drain a balance to zero in one screen and start desertion the next morning. Patch51
+       gates the volunteer path (button and Confirm hotkey) and OnUnitRecruited charges it.
+       EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost pins the pairing.
        The first eight are the Elite Emissary offers and keep their merchant_cost; the other
        eight are not offered, so no price (an unreachable offer is dead data). -->
-  <Troop id="gondor_ithilien_ranger" resource_id="caster" upgrade_cost="6" recruit_cost="45" daily_upkeep="0.4" merchant_cost="45" />
-  <Troop id="gondor_mt_fountain_guard" resource_id="caster" upgrade_cost="5" recruit_cost="28" daily_upkeep="0.3" merchant_cost="28" />
+  <Troop id="gondor_ithilien_ranger" resource_id="caster" upgrade_cost="6" recruit_cost="6" daily_upkeep="0.4" merchant_cost="45" />
+  <Troop id="gondor_mt_fountain_guard" resource_id="caster" upgrade_cost="5" recruit_cost="5" daily_upkeep="0.3" merchant_cost="28" />
   <Troop id="gondor_da_swan_knight" resource_id="caster" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
   <Troop id="gondor_ith_moon_guard" resource_id="caster" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
   <Troop id="gondor_mt_captain" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />

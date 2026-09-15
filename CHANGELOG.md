@@ -95,8 +95,12 @@ that cap gates only the growth of an occupied slot; `TaomVolunteerModel` seeds a
 from the recruitment pools at any level, and the Ithilien Ranger (10 percent at Minas Tirith and
 both Osgiliaths) and the Fountain Guard (`clan_empire_west_1`, and the vassal reward) are pooled.
 `upgrade_cost` never fires on that path, so both were free to recruit; both now carry a
-`recruit_cost` equal to their emissary price (45 and 28), the pairing the Ironpass rams use, gated by
-Patch51 and charged on `OnUnitRecruited`. The same review found `wire_black_numenorean_troops.py`
+`recruit_cost` equal to their upgrade cost (6 and 5), gated by Patch51 and charged on
+`OnUnitRecruited`. The first cut priced them at the emissary band (45 and 28, the Ironpass ram
+pairing) and was lowered the same day: a notable pick is a door into the rung, the Ranger has no
+incoming upgrade edge so this is the only price it ever pays, and the same attribute is charged per
+unit on prisoner recruits (ungated, #563), where 45 a head drains a balance to zero in one screen
+and starts desertion the next morning. The same review found `wire_black_numenorean_troops.py`
 claiming the line is not an emissary offer and writing rows without `merchant_cost`, which the
 emissary loader drops; the table now carries the price. Two pre-existing findings recorded, not
 fixed here: the troop-tree cost hint (`PartyUpgradeResourceCheckHook.GetUpgradeCost`) shows the raw
