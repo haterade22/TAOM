@@ -738,6 +738,13 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 - 2026-09-13: `FORTIFICATION_WITHOUT_VILLAGE` added (#597): every town and castle in the live world
   must have a bound village, and `build_settlement_economy` now records `bound` per village. Found
   Serelond, Methir and Framsburg empty; all three gained villages the same evening.
+- 2026-09-15: `MISSING_COLLISION_BODY` (error) and `MISSING_VISUAL_MESH` (warn) added (#599): the
+  `validate_mesh_refs.py` Tier B + C findings, emitted here so the commit hook, the MCP tool and
+  `/verify` see the #352 infinite-load class without a second command. The 2026-09-11 art drop
+  retired the elven bow bodies and 18 refs kept the old names; the elf start hung on every
+  tournament for two days. Hook allowlist carries the error; `CommitGateCoverageTests` now scans
+  both emitting files. The troop join and the committed report live in `tools/audit_armory_refs.py`
+  ([armory-ref-audit.md](armory-ref-audit.md)).
 - 2026-09-13: `GENERATOR_RETIRED_ITEM_REF` added: the tools/ generators' own item tables are now
   resolved against the live install, after seven of them were found writing 67 retired or
   never-defined ids. Standalone CLI `check_generator_item_refs.py` and a unittest gate carry the same

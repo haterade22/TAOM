@@ -42,6 +42,26 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Follows a bypassed trigger to what its own firing would have reset** (2026-09-15, Player
+  Switcher clan leadership review 113): handed a seam that closed a decision window at once through
+  vanilla `ExecuteDone`, it read the popup widget's `OnLateUpdate` and found that the bind had already
+  armed the five-second timer, that only the timer's own `ExecuteFinalDone` resets it, that hidden
+  widgets still receive late updates (`EventManager.cs:1044-1051`), and that the late `FinalDone`
+  would run `ExecuteDone` again; it then opened `GauntletQueryManager.CreateQuery` and
+  `InquiryData.HasSameContentWith` to say exactly what the duplicate does. It disputed six of seven
+  handed suspects with decompiled lines, including the prompt's own premise that a session-launch
+  message has no subscriber (`GauntletChatLogView` is a global layer, `MPChatVM.cs:537-547`). It
+  stopped one ordering short: the same timer reaching the NEXT live item, an NRE. When a seam fires
+  early what vanilla fires from a timer or an edge, expect Codex to open the timer; write the second
+  ordering (a different item bound by then) into the suspect yourself.
+- **Opens the class that owns the input, not the one that owns the flag** (2026-09-15, Gondor
+  Castar costs review 112): handed a recruit gate that greyed the Done button from a postfix on
+  `RecruitmentVM.RefreshPartyProperties`, it read `GauntletMenuRecruitVolunteersView.OnFrameTick`
+  and found the Confirm hotkey calling `ExecuteDone` with no look at `IsDoneEnabled`, then
+  `OnDone` rechecking gold alone; every `recruit_cost` troop had been recruitable past the gate by
+  hotkey since Patch51 shipped. Six Claude agents had read the VM and the patch. When a fix sets a
+  UI flag, expect Codex to list every path that commits without reading it; write the gate on the
+  commit method first.
 - **Refutes the prompt's premises before answering its questions** (2026-09-13, Gondor volunteer
   pools review 110): two of eight handed suspects restated the author's own assumptions (Morlad's
   pool "bowman-only" when the file holds bowman 50 / scout 50; the clan pools "only for unmapped

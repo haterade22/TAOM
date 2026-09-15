@@ -2998,6 +2998,115 @@ prompt [codex-adversarial-gondor-recruitment-vales-2026-09-13.prompt.md](codex-a
 Owed: the GitHub issue, a decision on Bar Melui's villages, a live-map coverage gate in
 `validate_moduledata.py` with the #597 session, the in-game recruit-screen check after a restart.
 
+## Review 111: Patch90_PreloadBodyGuard, the runtime guard for the infinite mission load on a missing collision body (#601), 5-agent deep review (2026-09-15)
+
+An elf start hung on the Rivendell tournament loading screen while a human in the same process
+played it. A full dump of the spinning game-loop thread put it in
+`PreloadHelper.WaitForMeshesToBeLoaded`, a do/while with no exit that counts every registered
+body name `PhysicsShape.GetFromResource(name, true)` returns null for; the 2026-09-11 Armory art
+drop had renamed the elven bows and 18 `body_name` refs kept the old names (#599, the data repair
+and the desk-side gates: `/armory-audit`, `MISSING_COLLISION_BODY`, `ARMORY ART DRIFT`). Patch90 is
+the runtime half: a prefix that receives the private set by `____` injection, drains the names
+that cannot resolve after a bounded 5 s poll through a pure service, logs each as `[PreloadGuard]`,
+and returns `true` so vanilla's loop runs against a set that can now empty.
+
+**Deep review, five agents:** 0 HIGH. Agent 2 verified all five engine members on the installed
+v1.5.3 DLLs, confirmed from the decompiled loop that a name removed before the wait can never add
+to `num`, that `Clear()` is order-independent, and that the preload queue for a dropped name has
+already run by the time the prefix drains it; six callers enumerated, all main thread. Agent 3's
+two MEDs both sit on the failure path: the `RemoveAll` predicate allocated a delegate per 1 ms
+pass (hoisted before the loop), and the per-name catch loses a thrown resolver's reason
+(accepted, the guard must not throw inside the load it protects; the log shape still separates the
+two cases). Agent 5 traced ten flows with no gap and one doc inconsistency: the education screen's
+`_startedRendering` latch calls the wait once per screen, so later option picks are outside the
+guard by vanilla's own coverage; a "Coverage follows the caller" subsection now says so. The one
+UNVERIFIED item, whether `ProcessPreloadQueue` is synchronous, was already stated as unproven in
+the feature doc. Agents 1 and 4 clean; the co-op veto gate caught the new bool prefix and it is
+classified `ReviewedSafe` with the reason.
+
+Feature and co-op tests 13/13 after the hoist; full suite 9,215 / 0 / 2 before the review. RCA
+[rca-preload-body-guard-2026-09-15.md](rca-preload-body-guard-2026-09-15.md); two lessons in
+`lessons/harmony-il.md`. Owed: the in-game probe (a bogus `body_name` on the player's kit loads a
+tournament after about five seconds with one `[PreloadGuard]` line), the commit.
+
+## Review 112: Gondor elites cost Castar from level 41, Black Numenorean upkeep halved again (#600), 6-agent deep review + Codex gpt-6-astra ultra (2026-09-15)
+
+The user asked for the level 31+ Gondor list, chose every troop at level 41 and above (16) at the
+Mordor band, halved the Black Numenorean upkeep a second time on player feedback, and asked for both
+reviews. Data plus tests: 16 rows gained `upgrade_cost` and `daily_upkeep`, 13 rows halved, the
+generator table synced, three shipped-data tests.
+
+**Deep review, six agents (standards, compatibility, efficiency, completeness, data flow, tooling):**
+two real findings, both fixed before Codex. Agents 2 and 5 independently refuted the author's own
+comment ("L41+ is upgrade-only") from the installed `RecruitmentCampaignBehavior`: the tier cap gates
+only the growth of an occupied slot and `TaomVolunteerModel` seeds empty slots from the pools at any
+level, so the Ithilien Ranger (10 percent at Minas Tirith, both Osgiliaths and Cair Andros) and the
+Fountain Guard (`clan_empire_west_1`, and the vassal reward) were free to recruit and only ever cost
+upkeep; both now carry a `recruit_cost` equal to their emissary price, the ram pairing, and
+`EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost` pins the pairing across the C# pools and every
+pool JSON. The tooling agent found the Black Numenorean generator claiming the line is not an emissary
+offer and writing rows without `merchant_cost`, which the loader drops; the table carries the price.
+Two pre-existing findings recorded (the troop-tree cost hint ignores the career modifier; per-type
+desertion now takes up to 16 Gondor types a day at zero).
+
+**Codex (gpt-6-astra, ultra, about 25 minutes, on the post-fix staged set): 0 HIGH, 1 MEDIUM, 1 LOW,
+both real.** M1: the recruit gate was a UI property. v1.5.3's `GauntletMenuRecruitVolunteersView.OnFrameTick`
+sends the Confirm hotkey to `RecruitmentVM.ExecuteDone`, which checks party capacity only, and
+`OnDone` rechecks gold only, so with 40 Castar and a 45 Ranger the hotkey recruited the Ranger and
+debited 40; live for every `recruit_cost` troop since Patch51 shipped on 2026-06-19. Fixed with
+`RecruitmentVM_ExecuteDone_Patch` (same category, prefix, skips the commit with the same red line),
+the pure `RecruitCartGrouping` shared by both patches, `RecruitGatePatchTests` (4), the registry row
+and the feature doc. L1: a sentence in the CHANGELOG entry still carried the disproved premise; fixed.
+Codex confirmed the seed reading, refuted the reward-debit suspect from the decompiled reward path,
+ran the generator's fresh-file path through fixtures, and said it did not build or run MSTest.
+
+Filtered classes 225 green after the fix (including `HarmonyPatchBindingTests` resolving
+`ExecuteDone` on the installed DLL); full suite before the Codex fix 9,205 / 2 / 1 with the one
+failure another session's unstaged Player Switcher string. RCA
+[rca-gondor-castar-costs-2026-09-15.md](rca-gondor-castar-costs-2026-09-15.md); lessons in
+`lessons/campaign-mechanics.md` and `lessons/localization-ui.md`; prompt
+[codex-adversarial-gondor-castar-costs-2026-09-15.prompt.md](codex-adversarial-gondor-castar-costs-2026-09-15.prompt.md).
+Owed: the commit, closing #600, the Gondor and Black Numenorean in-game smokes, and a decision on
+whether prisoners of the two pooled capstones should cost the emissary price (DESIGN, Codex suspect 1).
+
+## Review 113: Player Switcher clan leadership (#550), 5-agent deep review + Codex gpt-6-astra ultra (2026-09-15)
+
+Players starting as Boromir or Faramir kept hitting the unclosable kingdom-decision window #547
+was meant to end. The screenshot named the mechanism: the support-form title (the player is not
+the chooser) and a seal already stamped (the vote concluded inside the view model's constructor).
+The takeover path had never reassigned clan leadership, so `Supporter.IsPlayer` was false for
+every election. Three changes: the takeover promotes through vanilla
+`ChangeClanLeaderAction.ApplyWithSelectedNewLeader` (the same call vanilla makes for an elected
+non-leader king and for the player's heir); a session-launch repair promotes a loaded save through
+an eight-row state table; Patch80 seam D closes a pre-concluded window at once through vanilla
+`ExecuteDone`.
+
+**Deep review, five agents:** standards, compatibility (24 verified, all four engine premises
+confirmed on v1.5.3), efficiency and completeness clean. Agent 5 found the one real gap: the
+repair's "dead" guard read `Hero.IsAlive`, which is only `!IsDead`, so a disabled hero would have
+reached vanilla succession while the doc claimed "dead or disabled"; the flag is now
+`IsHeroInPlay` (alive, spawned, not disabled). It also recorded the English-seeded translations,
+a deferral written into the CHANGELOG (no provider key in session).
+
+**Codex (gpt-6-astra, ultra, about 35 minutes, 256k tokens): P1 0, P2 0, P3 1.** Six of seven handed
+suspects disputed with decompiled lines (nested inquiries, the session-launch message's subscriber,
+`Kingdom.Leader` caches, party coherence after the promotion), one confirmed as a vanilla hazard
+this change does not touch. The P3 is the finding of the review: seam D closes before the popup
+widget's five-second timer fires, and nothing but that timer's own `ExecuteFinalDone` disarms it,
+so a `FinalDone` lands five seconds later on whatever item is bound. Codex traced the same-item
+ordering (a duplicate inquiry the query manager rejects) and rated it P3; the other ordering, the
+player opening the NEXT decision inside those five seconds, runs `ExecuteDone` on a live item and
+NREs on its null `_chosenOutcome`, so it is MED here and fixed as seam E, a prefix that runs
+`ExecuteDone` only when `IsActive && IsKingsDecisionOver`. Codex did not run the suite and said so.
+
+Full suite 9,206 / 0 / 2 before the reviews and 9,220 / 0 / 2 after seam E and its
+`CoopVetoClassificationTests` registry row (ReviewedSafe: view-model only). RCA
+[rca-player-switcher-clan-leadership-2026-09-15.md](rca-player-switcher-clan-leadership-2026-09-15.md);
+lessons in `lessons/adapters-taleworlds-api.md` and `lessons/harmony-il.md`; prompt
+[codex-adversarial-player-switcher-clan-leadership-2026-09-15.prompt.md](codex-adversarial-player-switcher-clan-leadership-2026-09-15.prompt.md).
+Owed: the in-game Boromir two-decision check, a pre-fix Boromir save through the repair, the
+translator run for `taom_ps_clan_leader_repaired`, closing #550.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

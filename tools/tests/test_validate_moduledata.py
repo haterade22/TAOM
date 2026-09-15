@@ -2068,6 +2068,49 @@ class MountWithoutHarnessTests(unittest.TestCase):
         self.assertEqual(len(self._found(registries=degraded)), 1)
 
 
+class MissingCollisionBodyTests(unittest.TestCase):
+    """The #352 / #599 hang class as a validator ERROR: an item or crafting
+    piece whose `body_name` (or holster / collision body) names a PhysicsShape
+    no loaded tpac ships. `validate_mesh_refs.py` Tier C is the engine; this
+    pass only turns its MISSING_BODY findings into ERROR issues (and its
+    MISSING_MESH into WARNINGs) so the commit hook, the MCP tool and /verify see
+    them without anyone remembering a second command."""
+
+    def _fake_tier_c(self, codes):
+        import validate_mesh_refs as vmr
+        issues = []
+        for code, item, name in codes:
+            sev = vmr.Severity.ERROR if code in ("MISSING_BODY", "MISSING_MESH") else vmr.Severity.WARNING
+            issues.append(vmr.Issue(severity=sev, code=code, file="LOTRLOME_items/x.xml", line=7,
+                                    entry_id=item, message=f"{code}: {name} not in any tpac"))
+        return issues
+
+    def test_missing_body_becomes_error_and_missing_mesh_a_warning(self):
+        from unittest import mock
+        import validate_mesh_refs as vmr
+        fake = self._fake_tier_c([("MISSING_BODY", "starter_highelf_longbow", "bo_wm_elven_bow_v1"),
+                                  ("MISSING_MESH", "starter_highelf_longbow", "wm_elven_bow_v1"),
+                                  ("KNOWN_DEAD_MESH", "old_item", "old_mesh")])
+        with mock.patch.object(vmr, "extract_refs", return_value=[]),              mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])),              mock.patch.object(vmr, "classify", return_value=fake),              mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        by_code = {i.code: i for i in issues}
+        self.assertEqual(by_code[vm.BODY_CODE].severity, ts.Severity.ERROR)
+        self.assertIn("bo_wm_elven_bow_v1", by_code[vm.BODY_CODE].message)
+        self.assertIn("#352", by_code[vm.BODY_CODE].message)
+        self.assertEqual(by_code[vm.BODY_CODE].entry_id, "starter_highelf_longbow")
+        self.assertEqual(by_code[vm.MESH_CODE].severity, ts.Severity.WARNING)
+        self.assertNotIn("KNOWN_DEAD_MESH", by_code)          # allowlist noise stays in the sibling tool
+
+    def test_no_tpacs_is_a_finding_not_a_pass(self):
+        """A present-set built from zero packs would report every body missing
+        (or, filtered, nothing at all); either way it is not evidence."""
+        from unittest import mock
+        with mock.patch.object(vm, "_loaded_tpacs", return_value=[]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        self.assertEqual([i.code for i in issues], [vm.BODY_CODE])
+        self.assertIn("NOT verified", issues[0].message)
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced
@@ -2082,15 +2125,30 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     HOOK = Path(__file__).resolve().parents[2] / ".claude" / "hooks" / "check-moduledata-validation.sh"
     SCHEMA = Path(ts.__file__)
+    VALIDATOR = Path(vm.__file__)
+
+    @staticmethod
+    def _named_codes(src, severity):
+        """Codes emitted through a module constant: `code=BODY_CODE` where
+        `BODY_CODE = "MISSING_COLLISION_BODY"` is defined at module level."""
+        consts = dict(re.findall(r'^([A-Z_]+_CODE)\s*=\s*"([A-Z_]+)"', src, flags=re.M))
+        used = re.findall(r'severity=(?:ts\.)?Severity\.' + severity + r',\s*code=([A-Z_]+_CODE)\b', src)
+        return {consts[c] for c in used if c in consts}
 
     def _error_codes(self):
         """ERROR codes from BOTH shapes the module uses: an inline Issue(...) and
         the ref-sweep table, whose rows are `(..., Severity.ERROR, "CODE", ...)`.
         Scanning only the inline form is how the first version of this test read
         7 live codes as non-existent."""
-        src = self.SCHEMA.read_text(encoding="utf-8")
-        return (set(re.findall(r'severity=Severity\.ERROR,\s*code="([A-Z_]+)"', src))
-                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src)))
+        # Both files emit codes: taom_schema.py owns the ref sweep, and
+        # validate_moduledata.py adds the passes that call sibling tools
+        # (generators, collision bodies). Scanning one of them is how a code
+        # could be emitted and never enforced (#599 added the first ERROR to the
+        # second file).
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
+        return (set(re.findall(r'severity=(?:ts\.)?Severity\.ERROR,\s*code="([A-Z_]+)"', src))
+                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src))
+                | self._named_codes(src, "ERROR"))
 
     def _hook_codes(self):
         return set(re.findall(r"--code\s+([A-Z_]+)", self.HOOK.read_text(encoding="utf-8")))
@@ -2112,9 +2170,10 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     def test_the_hook_names_no_code_the_validator_cannot_emit(self):
         """A typo'd or retired code in the hook is a silently dead gate line."""
-        src = self.SCHEMA.read_text(encoding="utf-8")
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
         emitted = (set(re.findall(r'code="([A-Z_]+)"', src))
                    | set(re.findall(r'Severity\.(?:ERROR|WARNING),\s*"([A-Z_]+)"', src))
+                   | self._named_codes(src, "ERROR") | self._named_codes(src, "WARNING")
                    # the duplicate-id family is built as f"DUPLICATE_{kind}_ID"
                    | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
         unknown = sorted(self._hook_codes() - emitted)

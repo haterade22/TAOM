@@ -4,6 +4,121 @@
 
 ## 2026-09-15
 
+### fix(player-switcher): a taken-over non-leader now leads their clan, and Patch80 seam D closes a pre-concluded vote (#550)
+
+Players starting as Boromir or Faramir kept reporting the frozen kingdom-decision window that
+#547 was meant to end, and the screenshot showed why it is a different mechanism: the popup title
+was the SUPPORT wording (`KingdomElection.GetTitle()` returns it only when the player is not the
+chooser) and the "Yes" scroll already carried the king's seal, which `OnKingdomDecisionConcluded`
+stamps. The vote was over before the window existed. The takeover path set `Hero.MainHero` and
+moved `Clan.PlayerClan` but never reassigned clan leadership, so `Clan.PlayerClan.Leader` stayed
+Denethor, `Supporter.IsPlayer` (`Clan.Leader.IsHumanPlayerCharacter`) was false for every
+election, and `StartElection()` resolved each one through `ReadyToAiChoose()` inside
+`DecisionItemBaseVM`'s own constructor (v1.5.3: listener at :358, `InitValues()` at :360, the
+election at :399). The popup's close is the widget's five-second timer, started only by the
+false-to-true edge of `KingdomDecisionPopupWidget.IsKingsDecisionDone`, which is reused across
+decisions and never reset, so the first pre-concluded window closed on the timer and every later
+one in the visit stayed open. Denethor himself (`lord_1_7`, owner of `clan_empire_west_1`) cannot
+reach this; a Denethor report would be a third route.
+
+Three changes, the invariant `Clan.PlayerClan.Leader == Hero.MainHero` behind all of them.
+`IPlayerIdentityAdapter.PromoteToClanLeader` wraps vanilla
+`ChangeClanLeaderAction.ApplyWithSelectedNewLeader`, the call vanilla itself makes for an elected
+non-leader king and for the player's heir; `HeroSwitchService` runs it right after
+`ReassignPlayerClan`, after the swap on purpose so a throw reads `SwitchedWithErrors` rather than a
+clean failure that had already re-headed a lore clan. Gold, party leadership, 70% of the old
+leader's relations and `OnClanLeaderChanged` all ride along, and because a kingdom's leader IS its
+ruling clan's leader, taking over Boromir now makes Boromir the Steward; Denethor stays alive as a
+clan member. A new `PlayerClanLeadershipService` repairs a loaded save at session launch through
+an eight-row state table (leader is the player; vanilla `player_faction`; the player's clan is not
+`Clan.PlayerClan`, warn; no leader, warn; dead, disabled or not spawned; co-op client; prisoner still
+repaired; otherwise
+promote, log, one `taom_ps_clan_leader_repaired` line), one test per row. And Patch80 gained seam D:
+a postfix on `KingdomDecisionsVM.RefreshWith` that, when the window just built is already
+`IsKingsDecisionOver`, runs vanilla's own `ExecuteDone` through a cached `MethodInfo`. Safe exactly
+where seam B's close is not (`_chosenOutcome` is set on this path), it hides the popup, shows the
+outcome, clears the concluded listener and runs `OnDecisionOver`; nothing is re-implemented.
+`ExecuteDone` stays out of the binding's `IsReady` so losing it on a bump disables seam D alone. A
+hit logs at warning level, since TAOM's own route in is closed; a warning in a player's log names a
+route nobody has traced. Codex review 113 then found the one thing seam D left behind: the bind
+still pushes `IsKingsDecisionOver` into the popup widget, whose latch arms its five-second timer,
+and nothing but that timer's own firing disarms it, so a seam D close leaves a `FinalDone` due
+five seconds later against whatever item is bound by then (the same closed item, a duplicate
+inquiry the query manager rejects; or the next live one, an NRE on a null `_chosenOutcome`). Seam E,
+a prefix on `ExecuteDone`, runs vanilla only on an active window whose election is over, which is
+every legitimate call.
+
+Tests: `HeroSwitchServiceTests` pins the new step, its position after the swap and before the
+removal, and that adoption never promotes; `PlayerClanLeadershipServiceTests` (13) covers the
+table; `PlayerSwitcherBindingTests` pins `ApplyWithSelectedNewLeader(Clan, Hero)`;
+`Patch80KingdomVoteDeadlockBindingTests` pins `ExecuteDone`'s shape, `StartElection` still calling
+`ReadyToAiChoose`, the category on all five seams, `SubModule` initializing seams D and E, seam E's
+string-named target, and IL call-presence for the `ExecuteDone` invoke and seam E's state reads;
+`ReflectionSiteBindingTests` gains the five Patch80 members (the four from #547 had only ever been
+pinned by the feature suite). Reviews: a 5-agent deep review (one MED fixed: the repair's "dead"
+guard read `Hero.IsAlive`, which is only `!IsDead`, so a disabled hero would have passed; the flag
+is now `IsHeroInPlay`) and Codex review 113 (P3 F1, fixed as seam E; every other suspect disputed
+with engine evidence), RCA `docs/reviews/rca-player-switcher-clan-leadership-2026-09-15.md`. Docs:
+`player-switcher.md` ("Clan leadership follows the player", handover step 4, smoke 17 and 18),
+`diplomacy.md`, the Patch80 registry entry, the reflection-site catalogue, the CLAUDE.md trap row,
+lessons in `lessons/harmony-il.md` and `lessons/adapters-taleworlds-api.md`. The new string is
+seeded in English in all twelve languages until a translator run picks it up.
+
+### balance(special-resources): Gondor elites cost Castar from level 41; Black Numenorean upkeep halved again (#600)
+
+Gondor's only rows in `troop_resource_costs.xml` were the eight merchant-only Elite Emissary prices,
+so a Gondor player promoted into Fountain Guards for gold and XP alone and nothing ever drained the
+Castar the map bar earns. Every Gondor troop at level 41 or above, 16 in all, now carries an
+`upgrade_cost` and a `daily_upkeep` at the Mordor band: L41 upgrade 4 / upkeep 0.2 a day (the twelve
+L41s, from the Citadel Guard Captain to the Pelargir Anchor Guard), L46 5 / 0.3 (Fountain Guard, Swan
+Knight, Moon Guard), L51 6 / 0.4 (Ithilien Ranger, one rung past the Mordor top). Level 36 and below
+stay free so the tree stays enterable. The party-screen upgrade is one way in; the two troops a
+notable can hand out directly also carry a `recruit_cost` (below). The eight emissary offers keep
+their price; the other eight get none. Chosen knowing Castar's battle
+base (8) is 57 percent of War Spoils' (14), so the same band costs a Gondor player about 1.75 times
+the battles.
+
+The Black Numenorean line's upkeep is halved again, to 0.03 / 0.05 / 0.08 / 0.1 / 0.15 a day by
+level, on player feedback that the line is hard to keep. The 2026-09-11 rescale (1.0 to 3.0 down to
+0.05 to 0.3, #558) shipped in v2.0.29 on 2026-09-14, so the report most likely comes from an earlier
+build; the halving is the maintainer's call regardless. The values are exact two-decimal numbers
+rather than 0.025 / 0.075 because `FormatAmount` renders `0.##` and the badge tooltip would otherwise
+show a number the tick does not charge. `tools/wire_black_numenorean_troops.py` carries the same
+table so a fresh run cannot write the old band.
+
+`TroopResourceCostDataTests` gains three shipped-data tests: every Gondor troop at level 41 or above
+carries both costs (RED on all 16 before the edit), no tree troop's `daily_upkeep` exceeds 0.4
+(creatures exempt), so the 1.0 to 3.0 class cannot return unnoticed, and every volunteer-pooled
+upkeep troop carries a `recruit_cost`. That last one came out of the deep review: the first cut
+claimed "L41+ is upgrade-only" because `MaxVolunteerTier` 6 stops a notable's slot at level 35, but
+that cap gates only the growth of an occupied slot; `TaomVolunteerModel` seeds an empty slot straight
+from the recruitment pools at any level, and the Ithilien Ranger (10 percent at Minas Tirith and
+both Osgiliaths) and the Fountain Guard (`clan_empire_west_1`, and the vassal reward) are pooled.
+`upgrade_cost` never fires on that path, so both were free to recruit; both now carry a
+`recruit_cost` equal to their emissary price (45 and 28), the pairing the Ironpass rams use, gated by
+Patch51 and charged on `OnUnitRecruited`. The same review found `wire_black_numenorean_troops.py`
+claiming the line is not an emissary offer and writing rows without `merchant_cost`, which the
+emissary loader drops; the table now carries the price. Two pre-existing findings recorded, not
+fixed here: the troop-tree cost hint (`PartyUpgradeResourceCheckHook.GetUpgradeCost`) shows the raw
+cost while the clamp and the spend apply the career `SpecialResourceUpgradeCostModifier`, visible for
+Gondor for the first time; and desertion's "10 percent, at least 1 per type" rule now takes one of
+each of up to sixteen Gondor types a day at zero Castar. RCA
+`docs/reviews/rca-gondor-castar-costs-2026-09-15.md`. File shape now 85 rows, 43 with upkeep, 42
+merchant-only. `validate_moduledata.py` 0 errors. Owed: a Gondor campaign smoke (badge on a Fountain
+Guard, the greyed upgrade at 0 Castar, the Done button greyed on a Ranger at 0 Castar, the daily
+line) and a Black Numenorean party reading half of yesterday's daily line.
+
+Codex (GPT-6-Astra at ultra, review 112) then refuted the recruit gate itself: v1.5.3's
+`GauntletMenuRecruitVolunteersView.OnFrameTick` routes the Confirm hotkey straight to
+`RecruitmentVM.ExecuteDone` without reading `IsDoneEnabled`, and `OnDone` rechecks gold only, so the
+greyed Done button Patch51 sets was the whole gate: with 40 Castar and a 45 Ranger in the cart the
+hotkey recruited the Ranger and debited 40, and at zero it recruited for nothing. Pre-existing for
+the rams and the creatures, exposed to Gondor by these rows. `RecruitmentVM_ExecuteDone_Patch`
+(same category) re-runs the cart verdict at the commit boundary and skips the commit with the same
+"Requires N Castar" line in red; both patches share the pure `RecruitCartGrouping`, and
+`RecruitGatePatchTests` pins the grouping, the category and the target. Codex's LOW was a sentence
+in this entry still claiming "L41+ is upgrade-only", removed.
+
 ### fix(engine): Bannerlord v1.5.3, the party nameplate clones re-based, a gate for prefab clones
 
 Steam moved the install to **v1.5.3** (client and Modding Kit together, buildid 25302170, 08:15 to
@@ -48,6 +163,112 @@ Stop, no error or exception line). v2.0.29 as tagged throws on every party namep
 the next cut is the maintainer's call. A second Claude session deployed a build of `70517552` to the install
 at 08:22, six minutes after the update, so the install carried the broken clones until this commit's
 prefabs were copied over it.
+
+### feat(preload): Patch90, a runtime guard for the infinite mission load on a missing collision body (#601)
+
+Everything in #599 protects the desk. A player whose Armory copy already carries a bad pair
+still froze, and the artists will keep renaming meshes, so this is the guard at the point of
+failure. `PreloadHelper.WaitForMeshesToBeLoaded` is a do/while with no exit that counts, every
+pass, each registered body name that `PhysicsShape.GetFromResource(name, true)` returns null
+for, and null means "not loaded yet" and "no such body" alike (verified on the installed v1.5.3
+DLL; six callers, all main thread: campaign battles and sieges, tournaments, custom battle,
+multiplayer, naval, the education screen's `OnFrameTick`). The prefix repairs the precondition
+rather than replacing the method: it polls only the body names with the same 1 ms sleep for a
+bounded 5 s budget, removes what is still null from the set, logs each drop at ERROR as
+`[PreloadGuard]` with the repair command, and returns `true` so vanilla's loop runs unchanged
+against a set that can now empty. A healthy load resolves every name on the first pass and pays
+nothing; a broken one pays five seconds once and loads with that weapon carrying no collision
+shape, a visible, logged defect in place of a frozen game. The set arrives by Harmony field
+injection (`____uniqueDynamicPhysicsShapeName`); the decision is a pure service with the resolver,
+clock and sleep injected (7 tests, the budget measured against a fake clock, a throwing resolver
+counted as unresolved and never escaping); a binding test pins the field's name and type on the
+installed engine so a rename on the next bump is a red test rather than a category that quietly
+fails to apply. Applied in `OnSubModuleLoad` beside Patch89 in its own try/catch, registered in
+IoC and the patch registry. Binding sweep 325/325; full suite 9,215/9,215. Deep review (review 111): 0 HIGH,
+the per-pass `RemoveAll` delegate hoisted out of the polling loop, a coverage note for the education
+screen's once-per-screen latch, RCA `docs/reviews/rca-preload-body-guard-2026-09-15.md`. Owed: the
+in-game probe (a bogus `body_name`
+on the player's kit loads a tournament after about five seconds with one `[PreloadGuard]` line).
+
+### feat(tools): the Armory reference audit, and the hang class becomes a validator error (#599)
+
+Four gates could have caught the elven bow breakage and each had to be remembered separately;
+none ran after the sync. Now one command runs them and its report is committed:
+`tools/audit_armory_refs.py` composes `validate_mesh_refs` (Tier B meshes, Tier C collision
+bodies, over the WHOLE Armory ModuleData plus the repo's), the catalogue's rename-aware diff
+with the "referenced" flag re-derived from the LIVE refs (the committed flag is the state at the
+last regen, which is why `--diff` kept saying "18 will break" after the 18 were repaired),
+`audit_deleted_mesh_impact`'s item-to-troop join over five reference shapes (so every broken
+item names the troops, lords, rosters and configs carrying it, directly or through a standalone
+`<EquipmentSet id>`), the item registry for dead `Item.<id>` refs, the two scaffolders'
+`--verify`, and an exact-match "new art nothing uses" (the `--unreferenced` matcher is
+case-insensitive and called the new bows used). Report: `docs/audits/armory-ref-audit.md`,
+deterministic, so `git diff` after a re-run is the change log; `--regen-catalogue` rewrites the
+baseline. Exit 1 on any `MISSING_BODY`, `MISSING_MESH`, dead id or referenced delete; generator
+drift is a WARNING with its `DRIFT:` lines, because a verdict that stays BROKEN over a scaffolder
+disagreement trains readers to ignore it. Seven synthetic tests. First live run: CLEAN, one
+pre-existing warning (`starter_battered_kite_shield` absent from the Dunland starter kit, defined
+in the mercenary kit). Skill: `/armory-audit [check|regen]`. Feature doc:
+`docs/features/armory-ref-audit.md`.
+
+Two things that fire without anyone remembering. `validate_moduledata.py` gains
+`MISSING_COLLISION_BODY` (ERROR) and `MISSING_VISUAL_MESH` (WARNING), emitted from the same
+`validate_mesh_refs` engine, skipped never faked without the install, and a run that finds no
+tpacs to scan is itself the finding; the commit hook's `--code` allowlist carries the error, and
+`CommitGateCoverageTests` now scans both emitting files (it read only `taom_schema.py`, so a code
+emitted from the validator module could never have been required to have a hook line). Proven on
+real tpacs: a probe item with a bogus `body_name` produced exactly one ERROR naming the body,
+the item and the file; the full validator runs in 4.8 s. And `session-start.sh` prints
+`ARMORY ART DRIFT` when a `*_geo.tpac` under the live Armory is newer than the committed
+catalogue: one `find` bounded at 4 s, `_geo` only because every one of the 4,883 catalogue rows
+lives in a `_geo` pack and the editor re-saves `_tex`/`_mtl`/`_anm` packs constantly, and an
+explicit UNCHECKED line when the install does not resolve or the scan overruns. Hook suite
+208/208, tools suite 1,521/1,521. Docs: CLAUDE.md routing row, trap row and hook contract;
+`.claude/rules/moduledata-validation.md` code table; `tools/README.md`; `docs/INDEX.md`,
+`doc-lookup.md`, `feature-map.md`, `hooks-catalog.md`, `docs/audits/README.md`. CLAUDE.md was
+already 201 B over its 46,000 B budget before these rows and is 1,355 B further over now; a trim
+pass is owed. Not built: the runtime guard (a prefix on `PreloadHelper.WaitForMeshesToBeLoaded`
+that logs and drops unresolvable body names so a player's mission still loads), which is the
+only protection for an install that already ships a bad pair.
+
+### fix(armoury): the elven bow refs follow the 09-11 art drop, so an elf start loads again (#599)
+
+A new elf campaign hung on the Rivendell tournament loading screen; a human in the same process
+played the same tournament. Not a loading screen: the game-loop thread was spinning at 70 percent
+of a core in `PreloadHelper.WaitForMeshesToBeLoaded` under `ArenaPreloadView.OnSceneRenderingStarted`
+(full dump, procdump -ma, WinDbgX `!clrstack`; no TAOM frame). That loop counts every registered
+`body_name` that `PhysicsShape.GetFromResource` cannot resolve, on every pass, forever (the #352
+class). The elf starter bow `starter_highelf_longbow` named `bo_wm_elven_bow_v1`, and the
+2026-09-11 Armory art drop (mirror `24ccacee` + `0244af88`, synced 14 Sept) had replaced
+`weapons/bow/High Elven/wm_elven_bows_geo.tpac` (`wm_elven_bow_v1..v4`, bodies `bo_..._v1..v4`)
+with `elven_weapons/wm_elven_bows_a_geo.tpac` (`wm_elven_bow_a01..a04`, bodies `bo_..._a01..a04`)
+without repointing any XML. The player character is always first in
+`FightTournamentGame.GetParticipantCharacters`, which is the whole human-vs-elf difference; a
+garrison archer drawn into the bracket, or any field battle fielding the 31 affected troops, hangs
+a human too. A session had diagnosed exactly this on 2026-09-13 from a shader precompile walk and
+left it in a memory note; nothing runs the body gate after an Armory sync, so it sat for two days.
+
+Repaired on the current art, no tpac restored (Mike's call): 18 `body_name` and 14 `mesh` refs
+across `LOTRAOM_weapons.xml` (`highelf_longbow_starter`, `highelf_longbowa..d`, the three
+`sm_*_longbow_a` that borrow the v3 body), `rivendell/starter_kit.xml`, and the Rivendell, Dol
+Guldur and Rhûn `ranged_ladder.xml` now name `_a0N`; the three Swan Knight banner pieces
+(`wm_swan_knight_spear_banner`, `_gondor_banner`, `_pg_banner`, whose flags the same drop
+re-exported as `wm_gondor_flag_a01..a04` on one atlas) sit on a01..a03 by index with a comment,
+because which flag carries which heraldry is the artist's call (his own commit says "gotta fix
+new spears"). Applied to the live `LOTRLOME_Armory` and to the `lotraom-assets` mirror (working
+tree, uncommitted). The rest of the audit was already clean: KEYforce's `sm_dg_khml_shield_cav_hevy_a`
+rename and the plain Lossarnach axe pieces are repointed on his side, `validate_moduledata.py`
+finds 0 dead `Item.<id>` refs and 0 retired ids in generators, and the 40-odd new meshes (Rhûn and
+Khamûl 2h swords, Númenórean bardings, Gondor shields b1/b2, elven arrows) are all wired. Gates
+after the fix: `validate_mesh_refs.py --items <Armory>/ModuleData --scan-bodies` 0 MISSING_BODY /
+0 MISSING_MESH (was 18 / 14); `generate_armory_catalogue.py` regenerated, `--check` exact,
+`--diff` all zeros (the diff's "REFERENCED" flag on a deleted row is the committed 09-01 flag, so
+it kept saying 18 until the regen); `generate_ranged_ladder_items.py --verify` OK on both trees;
+`generate_starter_kit.py --verify` reports one pre-existing drift unrelated to this
+(`starter_battered_kite_shield` absent from the Dunland kit, present in the mercenary kit, so the
+id resolves). The handbook example for `highelf_longbowa` names the new mesh. Owed: in-game
+elf tournament load and a look at the four flags on a swan-knight spear. Dump and WinDbg logs
+under `E:\taom-hang-2026-09-15\`.
 
 ## 2026-09-14
 

@@ -73,10 +73,12 @@ unset _wa
 # as "no drift" when it actually means "never checked".
 DEFAULT_GAME_DIR="E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
 GAME_VERSION_XML=""
+GAME_DIR_RESOLVED=""
 for candidate in "${BANNERLORD_GAME_DIR}" "$DEFAULT_GAME_DIR"; do
   [[ -z "$candidate" ]] && continue
   if [[ -f "${candidate}/bin/Win64_Shipping_Client/Version.xml" ]]; then
     GAME_VERSION_XML="${candidate}/bin/Win64_Shipping_Client/Version.xml"
+    GAME_DIR_RESOLVED="$candidate"
     break
   fi
 done
@@ -92,6 +94,40 @@ elif [[ -f "$PIN_FILE" ]]; then
     echo ""
     echo "!!! GAME VERSION DRIFT: installed $INSTALLED but TAOM is pinned to $PINNED !!!"
     echo "!!! Steam likely force-updated. Run /engine-bump BEFORE trusting any test run. !!!"
+  fi
+fi
+
+# Armory art drift. The Armory is unversioned here and loads loose Assets/**/*.tpac, so an art
+# drop synced into the install (a KEYforce pull, a "TAOM Update" mirror commit, an editor
+# re-import) touches nothing the commit hook or CI can see. The 2026-09-11 drop re-exported the
+# elven bows under new names, 32 item refs kept the old ones, and a missing collision body is
+# the #352 infinite mission load; the elf start hung for two days (#599) because the only gate
+# was a separate command nobody ran after the sync. So: any tpac newer than the committed
+# catalogue means the catalogue (and every ref audit derived from it) is stale, and the audit is
+# owed. One bounded `find`, first hit wins, ~0.3 s over 4,400 files. Only `*_geo.tpac` counts:
+# every metamesh and physics shape in the catalogue sits in a _geo pack (4,883 of 4,883 on
+# 2026-09-15), and _tex / _mtl / _anm packs are re-saved by the editor constantly. Fail-open,
+# never silent: an unresolvable install or a killed find says "unchecked", because silence reads
+# as "no drift".
+CATALOGUE="docs/reference/armory-catalogue/catalogue.tsv"
+ARMORY_ASSETS=""
+[[ -n "$GAME_DIR_RESOLVED" && -d "${GAME_DIR_RESOLVED}/Modules/LOTRLOME_Armory/Assets" ]] \
+  && ARMORY_ASSETS="${GAME_DIR_RESOLVED}/Modules/LOTRLOME_Armory/Assets"
+if [[ -z "$ARMORY_ASSETS" || ! -f "$CATALOGUE" ]]; then
+  echo ""
+  echo "NOTE: Armory art drift UNCHECKED this session (no LOTRLOME_Armory/Assets under the install, or no $CATALOGUE)."
+else
+  NEWER_TPAC=$(timeout -k 1 4 find "$ARMORY_ASSETS" -name '*_geo.tpac' -newer "$CATALOGUE" -print -quit 2>/dev/null)
+  FIND_RC=$?
+  if [[ $FIND_RC -eq 124 ]]; then
+    echo ""
+    echo "NOTE: Armory art drift UNCHECKED this session (the tpac scan overran 4 s)."
+  elif [[ -n "$NEWER_TPAC" ]]; then
+    echo ""
+    echo "!!! ARMORY ART DRIFT: a tpac is newer than the committed catalogue !!!"
+    echo "!!!   ${NEWER_TPAC#$ARMORY_ASSETS/}"
+    echo "!!!   Run /armory-audit (python tools/audit_armory_refs.py --regen-catalogue) BEFORE any battle or"
+    echo "!!!   tournament smoke. A missing collision body is the #352 infinite load (#599)."
   fi
 fi
 

@@ -205,18 +205,19 @@ def do_costs(dry):
     # Scaled off the shipped Mordor elites, NOT invented: mordor_uruk_captain
     # (level 36) is upgrade 4 / upkeep 0.2 and mordor_uruk_baraddurguard (36) is
     # 5 / 0.3. The Black Numenorean T8/T9 sit at level 41 and 46, above both, so
-    # they take the top of the ladder.
+    # they take the top of the ladder. daily_upkeep is HALF that ratio since
+    # 2026-09-15 (#600, player feedback that the line is hard to keep); the
+    # values are exact two-decimal numbers because FormatAmount renders 0.##.
     #
-    # merchant_cost is deliberately omitted on every row. It only has meaning for
-    # troops listed in elite_emissary_config.xml <CultureOffers>, and this is a
-    # lord-party-only line that is not offered there. Writing a price for an
-    # unreachable offer would be dead data, and the file's own header band
-    # (L36 about 10-14, L41 about 18, L46 about 28) would make the obvious
-    # guesses wrong anyway. If these are ever added to <CultureOffers>, add
-    # merchant_cost then, using that band.
-    #   level -> (upgrade_cost, daily_upkeep)
-    tiers = {26: (1, "0.05"), 31: (2, "0.1"), 36: (3, "0.15"),
-             41: (4, "0.2"), 46: (5, "0.3")}
+    # merchant_cost: since 2026-09-11 all 13 ids are Mordor <CultureOffers> in
+    # elite_emissary_config.xml, priced on the file's header band (L36 12, L41 18,
+    # L46 28; the two rungs under the band at 6 and 8). An offer whose row has no
+    # merchant_cost is dropped with a warning at load, so a fresh run must write
+    # it too (deep review of #600 found this table without it while the shipped
+    # rows carried it).
+    #   level -> (upgrade_cost, daily_upkeep, merchant_cost)
+    tiers = {26: (1, "0.03", 6), 31: (2, "0.05", 8), 36: (3, "0.08", 12),
+             41: (4, "0.1", 18), 46: (5, "0.15", 28)}
     levels = {"mordor_num_initiate": 26, "mordor_num_cavalry": 31,
               "mordor_num_infantry": 31, "mordor_num_archer": 31,
               "mordor_num_vet_cavalry": 36, "mordor_num_vet_infantry": 36,
@@ -240,9 +241,9 @@ def do_costs(dry):
     rows = []
     rows.append(f'{indent}<!-- Black Numenorean line -->{eol}')
     for k in todo:
-        up, keep = tiers[levels[k]]
+        up, keep, price = tiers[levels[k]]
         rows.append(f'{indent}<Troop id="{k}" resource_id="war_spoils" '
-                    f'upgrade_cost="{up}" daily_upkeep="{keep}" />{eol}')
+                    f'upgrade_cost="{up}" daily_upkeep="{keep}" merchant_cost="{price}" />{eol}')
     print(f"  troop_resource_costs.xml: +{len(todo)}")
     if not dry:
         write(COSTS_XML, text[:line_start] + "".join(rows) + text[line_start:])

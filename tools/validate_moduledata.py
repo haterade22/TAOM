@@ -31,6 +31,12 @@ Checks (each maps to a recurring TAOM bug class):
                              live install does not define (warning; needs the install;
                              the generator list and the walk live in
                              check_generator_item_refs.py)
+  MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
+                             collision body names a PhysicsShape no loaded tpac ships.
+                             PreloadHelper.WaitForMeshesToBeLoaded polls that name forever:
+                             the #352 / #599 infinite mission load (needs the install;
+                             the tpac scan lives in validate_mesh_refs.py)
+  MISSING_VISUAL_MESH        same for a mesh / holster_mesh: an invisible item (warning)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -129,6 +135,72 @@ def generator_item_ref_issues(items: set) -> list:
                         f"no item in the live install ({shown}). A re-run would leave those "
                         f"slots empty. Replace them with ids the Armory defines; "
                         f"python tools/check_generator_item_refs.py lists them all"))
+    return issues
+
+
+BODY_CODE = "MISSING_COLLISION_BODY"
+MESH_CODE = "MISSING_VISUAL_MESH"
+# Every module whose packs the client loads for item art. The Armory ships loose
+# Assets/**/*.tpac and no cooked AssetPackages (2026-09); the vanilla three ship
+# cooked packs. validate_mesh_refs falls back the same way.
+_ART_MODULES = ("LOTRLOME_Armory", "Native", "SandBoxCore", "SandBox")
+
+
+def _loaded_tpacs(game_modules: Path) -> list:
+    out = []
+    for name in _ART_MODULES:
+        mod = game_modules / name
+        cooked = sorted((mod / "AssetPackages").glob("*.tpac"))
+        out += cooked if cooked else sorted((mod / "Assets").rglob("*.tpac"))
+    return out
+
+
+def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
+    """ERROR per collision-body ref no loaded tpac ships, WARNING per visual mesh.
+
+    A body the engine cannot resolve is not a warning class: `PreloadHelper.
+    WaitForMeshesToBeLoaded` (TaleWorlds.MountAndBlade.View) counts every
+    registered body name that `PhysicsShape.GetFromResource` returns null for,
+    on every pass of a do/while with no exit, so one bad `body_name` on any item
+    a mission preloads (every participant's kit, the player's first) spins the
+    game thread forever. Two body_name typos did it in #352; the 2026-09-11 art
+    drop that renamed the elven bows did it again in #599, and the elf start
+    hung for two days because the only gate for it was a separate command
+    nobody ran after the sync. This pass makes it part of the one validator the
+    commit hook, the MCP server and /verify already run.
+
+    validate_mesh_refs.py owns the ref extraction and the tpac TOC scan (Tier B
+    visual meshes, Tier C PhysicsShapes); this only turns its findings into
+    issues, over the Armory's WHOLE ModuleData plus this repo's (the #352 scope
+    lesson: crafting pieces live one level above LOTRLOME_items/). Its
+    KNOWN_DEAD_MESH allowlist and UNVERIFIED downgrades stay in that tool.
+
+    Skipped, never faked, without the install; and a run that found no packs to
+    scan is reported as a finding, because "every body missing" filtered to
+    nothing would read exactly like a clean run."""
+    import validate_mesh_refs as vmr
+    tpacs = _loaded_tpacs(game_modules)
+    if not tpacs:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
+            message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
+                    f"collision bodies were NOT verified this run")]
+    refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+    if moduledata.exists():
+        refs += vmr.extract_refs(moduledata)
+    present = vmr.build_present_set(tpacs)
+    issues = []
+    for i in vmr.classify(refs, present, None, scan_bodies=True, body_tpac_paths=tpacs):
+        if i.code == "MISSING_BODY":
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=BODY_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
+                message=f"{i.message}. Every mission that preloads a carrier of this item spins "
+                        f"forever in PreloadHelper.WaitForMeshesToBeLoaded (#352, #599). Repoint the "
+                        f"ref to the art that ships; python tools/audit_armory_refs.py names the troops"))
+        elif i.code == "MISSING_MESH":
+            issues.append(ts.Issue(
+                severity=ts.Severity.WARNING, code=MESH_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
+                message=f"{i.message}. The item renders invisible; repoint the mesh to the art that ships"))
     return issues
 
 

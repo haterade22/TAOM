@@ -42,6 +42,41 @@
   <Troop id="ironpass_ram_vanguard" resource_id="gems" upgrade_cost="3" recruit_cost="14" daily_upkeep="0.15" merchant_cost="14" />
   <Troop id="ironpass_ram_marshal" resource_id="gems" upgrade_cost="5" recruit_cost="18" daily_upkeep="0.25" merchant_cost="18" />
 
+  <!-- Gondor (Castar), level 41 and above (#600). Same band as the Mordor uruk and Black
+       Numenorean lines: L41 upgrade 4 / upkeep 0.2, L46 5 / 0.3, and L51 6 / 0.4 extrapolated one
+       rung past the Mordor top. Level 36 and below stay free so the tree stays enterable.
+       upgrade_cost charges the PLAYER only (Patch26), so AI lords still promote for free. Chosen
+       knowing Castar's battle base (8) is 57 percent of War Spoils' (14), so this band costs a
+       Gondor player about 1.75 times the battles.
+
+       upgrade_cost fires only on the party-screen upgrade. It does NOT cover a notable pick:
+       TaomVolunteerModel seeds an EMPTY volunteer slot straight from the recruitment pools, and
+       vanilla's MaxVolunteerTier cap (RecruitmentCampaignBehavior) gates only the growth of an
+       occupied slot, never the seed, so a pooled elite arrives at any level. Two of these are
+       pooled: the Ithilien Ranger (10 percent at Minas Tirith and both Osgiliaths in
+       recruitment_pools/gondor.json, plus two clans) and the Fountain Guard (clan_empire_west_1,
+       hand-written pool; also the vassal reward). Those two carry a recruit_cost equal to their
+       emissary price, the pairing the Ironpass rams use, so the notable path is gated by Patch51
+       and charged on OnUnitRecruited. EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost pins it.
+       The first eight are the Elite Emissary offers and keep their merchant_cost; the other
+       eight are not offered, so no price (an unreachable offer is dead data). -->
+  <Troop id="gondor_ithilien_ranger" resource_id="caster" upgrade_cost="6" recruit_cost="45" daily_upkeep="0.4" merchant_cost="45" />
+  <Troop id="gondor_mt_fountain_guard" resource_id="caster" upgrade_cost="5" recruit_cost="28" daily_upkeep="0.3" merchant_cost="28" />
+  <Troop id="gondor_da_swan_knight" resource_id="caster" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
+  <Troop id="gondor_ith_moon_guard" resource_id="caster" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
+  <Troop id="gondor_mt_captain" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="gondor_da_vet_knight" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="gondor_cal_vale_knight" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="gondor_ith_sharpshooter" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
+  <Troop id="gondor_mt_sharpshooter" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_da_swan_guard" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_ith_captain" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_arn_hill_knight" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_brv_shadowbow" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_lg_haven_guard" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_met_sun_knight" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="gondor_pel_anchor_guard" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+
   <!-- ============================================================================
        Elite Emissary merchant offers (merchant_cost = one-time price the faction
        emissary charges at a key settlement, in the SETTLEMENT OWNER's special
@@ -49,19 +84,10 @@
        so an elite that is also a volunteer is never double-charged across the two
        economies. Cost band by tier: L36≈10-14, L41≈18, L46≈28, L51≈45, creatures≈premium.
        Surfaced by elite_emissary/elite_emissary_config.xml. See docs/features/elite-emissary.md.
-       (mordor_uruk_captain/baraddurguard, harad_elephant_rider, taom_spider_creature
-       carry their merchant_cost on the rows above so their upgrade/recruit costs survive.)
+       (mordor_uruk_captain/baraddurguard, harad_elephant_rider, taom_spider_creature and
+       the eight gondor_* offers carry their merchant_cost on the rows above so their
+       upgrade/recruit costs survive.)
        ============================================================================ -->
-
-  <!-- Gondor (Castar) -->
-  <Troop id="gondor_ithilien_ranger" resource_id="caster" merchant_cost="45" />
-  <Troop id="gondor_mt_fountain_guard" resource_id="caster" merchant_cost="28" />
-  <Troop id="gondor_ith_moon_guard" resource_id="caster" merchant_cost="28" />
-  <Troop id="gondor_da_swan_knight" resource_id="caster" merchant_cost="28" />
-  <Troop id="gondor_mt_captain" resource_id="caster" merchant_cost="18" />
-  <Troop id="gondor_da_vet_knight" resource_id="caster" merchant_cost="18" />
-  <Troop id="gondor_cal_vale_knight" resource_id="caster" merchant_cost="18" />
-  <Troop id="gondor_ith_sharpshooter" resource_id="caster" merchant_cost="18" />
 
   <!-- Erebor + Iron Hills (Gems) -->
   <Troop id="erebor_noble_royal_warden" resource_id="gems" merchant_cost="28" />
@@ -120,24 +146,27 @@
   <Troop id="wainrider_warlord_chariot" resource_id="war_banners" merchant_cost="28" />
   <Troop id="dragon_wrath_ash_knight" resource_id="war_banners" merchant_cost="18" />
   <Troop id="loke_rim_gilded_champion" resource_id="war_banners" merchant_cost="12" />
-  <!-- Black Numenorean line (levels 26 / 31 / 36 / 41 / 46). daily_upkeep follows the Mordor uruk
-       line's ratio above (upgrade_cost 1 -> 0.05, 2 -> 0.1, 3 -> 0.15, 4 -> 0.2, 5 -> 0.3) and
+  <!-- Black Numenorean line (levels 26 / 31 / 36 / 41 / 46). daily_upkeep is HALF the Mordor uruk
+       line's ratio above (upgrade_cost 1 -> 0.03, 2 -> 0.05, 3 -> 0.08, 4 -> 0.1, 5 -> 0.15) and
        merchant_cost the band documented below (L36 12, L41 18, L46 28; the two rungs under the
        band at 6 and 8). Until 2026-09-11 these rows carried daily_upkeep 1.0 to 3.0 and
        merchant_cost 1 to 5: ten to twenty times the ratio of every other Mordor elite, reached by
        any faction's player through prisoner recruitment and charged in that player's own resource,
-       so forty of them drained 60 a day against a top battle payout of 28 (#558). -->
-  <Troop id="mordor_num_initiate" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="0.05" merchant_cost="6" />
-  <Troop id="mordor_num_cavalry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" merchant_cost="8" />
-  <Troop id="mordor_num_infantry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" merchant_cost="8" />
-  <Troop id="mordor_num_archer" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" merchant_cost="8" />
-  <Troop id="mordor_num_vet_cavalry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" merchant_cost="12" />
-  <Troop id="mordor_num_vet_infantry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" merchant_cost="12" />
-  <Troop id="mordor_num_vet_archer" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" merchant_cost="12" />
-  <Troop id="mordor_num_knight" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
-  <Troop id="mordor_num_warden" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
-  <Troop id="mordor_num_marksman" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="18" />
-  <Troop id="mordor_num_temple_knight" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
-  <Troop id="mordor_num_temple_guard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
-  <Troop id="mordor_num_shadowbow" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="28" />
+       so forty of them drained 60 a day against a top battle payout of 28 (#558). That rescale
+       (to 0.05 to 0.3) shipped in v2.0.29; halved again 2026-09-15 on player feedback that the
+       line is hard to keep (#600). Values are exact two-decimal numbers because FormatAmount
+       renders 0.##, so 0.025 would display as 0.03 while charging 0.025. -->
+  <Troop id="mordor_num_initiate" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="0.03" merchant_cost="6" />
+  <Troop id="mordor_num_cavalry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.05" merchant_cost="8" />
+  <Troop id="mordor_num_infantry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.05" merchant_cost="8" />
+  <Troop id="mordor_num_archer" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.05" merchant_cost="8" />
+  <Troop id="mordor_num_vet_cavalry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.08" merchant_cost="12" />
+  <Troop id="mordor_num_vet_infantry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.08" merchant_cost="12" />
+  <Troop id="mordor_num_vet_archer" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.08" merchant_cost="12" />
+  <Troop id="mordor_num_knight" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.1" merchant_cost="18" />
+  <Troop id="mordor_num_warden" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.1" merchant_cost="18" />
+  <Troop id="mordor_num_marksman" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.1" merchant_cost="18" />
+  <Troop id="mordor_num_temple_knight" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.15" merchant_cost="28" />
+  <Troop id="mordor_num_temple_guard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.15" merchant_cost="28" />
+  <Troop id="mordor_num_shadowbow" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.15" merchant_cost="28" />
 </TroopResourceCosts>
