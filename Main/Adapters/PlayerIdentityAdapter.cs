@@ -230,6 +230,51 @@ public class PlayerIdentityAdapter : IPlayerIdentityAdapter
         MBInformationManager.HideInformations();
     }
 
+    public bool PromoteToClanLeader(string heroId)
+    {
+        var hero = FindHero(heroId);
+        var clan = hero?.Clan;
+        if (hero == null || clan == null)
+            return false;
+
+        if (clan.Leader == hero)
+            return false;
+
+        if (clan.Leader == null)
+        {
+            // ChangeClanLeaderAction.ApplyInternal opens with GiveGoldAction on the OLD leader's
+            // gold, unguarded. A leaderless clan is transient in vanilla (KillCharacterAction
+            // promotes an heir in the same tick), so refuse rather than hand-roll SetLeader and
+            // skip every other succession effect.
+            _logger.LogWarning(
+                $"Player Switcher: clan '{clan.StringId}' has no leader; not promoting '{heroId}' through vanilla succession");
+            return false;
+        }
+
+        // The vanilla path for exactly this situation: KingSelectionKingdomDecision promotes an
+        // elected non-leader the same way, and ApplyHeirSelectionAction pairs it with
+        // ChangePlayerCharacterAction. Gold, governorship, party leadership, relations and the
+        // OnClanLeaderChanged event all ride along; see the interface doc for why none is trimmed.
+        ChangeClanLeaderAction.ApplyWithSelectedNewLeader(clan, hero);
+        return true;
+    }
+
+    public PlayerClanLeadership GetPlayerClanLeadership()
+    {
+        var hero = Hero.MainHero;
+        var playerClan = Clan.PlayerClan;
+        if (hero == null || playerClan == null)
+            return PlayerClanLeadership.None;
+
+        return new PlayerClanLeadership(
+            heroId: hero.StringId,
+            heroClanId: hero.Clan?.StringId ?? string.Empty,
+            playerClanId: playerClan.StringId,
+            playerClanName: playerClan.Name?.ToString() ?? string.Empty,
+            leaderId: playerClan.Leader?.StringId ?? string.Empty,
+            isHeroInPlay: hero.IsAlive && !hero.IsDisabled && !hero.IsNotSpawned);
+    }
+
     private static Hero? FindHero(string heroId)
         => string.IsNullOrEmpty(heroId)
             ? null

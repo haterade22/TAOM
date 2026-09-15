@@ -21,6 +21,10 @@
 	<string id="taom_ps_failed" text="{=taom_ps_failed}You could not take the place of {HERO}. Continuing as your own character." />
 	<string id="taom_ps_unavailable" text="{=taom_ps_unavailable}The player switcher could not start and is disabled for this session." />
 
+	<!-- Shown once, at session launch, when a campaign saved before #550 is repaired: the player
+	     was a member of the clan they took over and is promoted to its leader. -->
+	<string id="taom_ps_clan_leader_repaired" text="{=taom_ps_clan_leader_repaired}You now lead {CLAN}. Kingdom votes and clan decisions recognise you again." />
+
 	<!-- Kingdom-join offer, raised once after an adoption. The takeover path never sees this,
 	     because a taken-over lord already belongs to their clan's kingdom. -->
 	<string id="taom_ps_join_title" text="{=taom_ps_join_title}Swear to a king?" />

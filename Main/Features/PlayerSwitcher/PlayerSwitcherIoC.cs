@@ -16,6 +16,9 @@ public static class PlayerSwitcherIoC
         container.Register<IKingdomJoinOfferService, KingdomJoinOfferService>(Reuse.Singleton);
         container.Register<IPlayerSwitchPolicyProvider, PlayerSwitchPolicyProvider>(Reuse.Singleton);
         container.Register<INarrativeCareerFastPathService, NarrativeCareerFastPathService>(Reuse.Singleton);
+        // #550. Stateless: the repaired state lives in the engine's clan leader field, so there is no
+        // per-campaign state to reset between sessions.
+        container.Register<IPlayerClanLeadershipService, PlayerClanLeadershipService>(Reuse.Singleton);
 
         // One store, two faces. The reader goes to consumers that must observe the selection but
         // never change it (Patch9_RaceFilter); the writer goes to the picker and the patch that

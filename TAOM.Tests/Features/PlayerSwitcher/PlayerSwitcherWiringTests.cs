@@ -60,6 +60,28 @@ public class PlayerSwitcherWiringTests
     }
 
     [TestMethod]
+    public void TheLeadershipRepairResolves_WithItsCrossFeatureDependenciesRegistered()
+    {
+        // #550. The repair service depends on two registrations owned by other features
+        // (ICoopSessionProvider from CoopInterop, IInquiryAdapter from Enlistment). Registering
+        // substitutes for them here proves the switcher's own registration is complete and that
+        // the service can be built at all, which is what SubModule does at behavior-add time.
+        var container = NewContainer();
+        container.RegisterInstance(NSubstitute.Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
+        container.RegisterInstance(NSubstitute.Substitute.For<TAOM.Adapters.IInquiryAdapter>());
+        container.RegisterInstance(NSubstitute.Substitute.For<TAOM.Core.Logging.IModLogger>());
+        // The real adapter probes Campaign.PlayerDefaultFaction by reflection in its constructor,
+        // which needs the engine assemblies; this test is about the container, not the engine.
+        container.RegisterInstance(
+            NSubstitute.Substitute.For<TAOM.Adapters.IPlayerIdentityAdapter>(), IfAlreadyRegistered.Replace);
+
+        var service = container.Resolve<IPlayerClanLeadershipService>();
+
+        Assert.IsInstanceOfType(service, typeof(PlayerClanLeadershipService));
+        Assert.AreSame(service, container.Resolve<IPlayerClanLeadershipService>(), "the repair is stateless and a singleton");
+    }
+
+    [TestMethod]
     public void TheSessionIsASingletonAcrossResolves()
     {
         var container = NewContainer();

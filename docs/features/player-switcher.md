@@ -6,8 +6,9 @@ Issue [#514](https://github.com/haterade22/TAOM/issues/514). Branch `feat/player
 
 At the character creation face generator, a panel lists the existing lords of the culture you
 picked, in three groups: the ruling house, the clan leaders, and the wanderers. Choose one and you
-play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The
-character you built is set aside. The backstory questions are skipped for you, straight to the
+play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. A king's
+spouse or child is made the leader of the ruling clan, which in Bannerlord means the ruler (see
+"Clan leadership follows the player" below). The character you built is set aside. The backstory questions are skipped for you, straight to the
 career choice, because they only ever applied to the character being set aside.
 
 This is a reimplementation of a feature LOTRAOM shipped on Bannerlord 1.2.12. Two of its assets
@@ -84,19 +85,27 @@ corrupt a save if reversed.
    id, career id. Must be first; after the swap, `Hero.MainHero` and `Clan.PlayerClan` no longer
    describe the character the player built.
 2. `ApplyPlayerCharacter` calls `ChangePlayerCharacterAction.Apply`.
-3. `ReassignPlayerClan` writes `Campaign.PlayerDefaultFaction`. **This must precede step 6.**
-4. Optional gold transfer.
-5. Career re-key, then `MarkClanAndKingdomKnown`.
-6. `RemoveOriginalHero`. **This must follow step 2.**
-7. `ClearPendingNotifications`.
+3. `ReassignPlayerClan` writes `Campaign.PlayerDefaultFaction`. **This must precede step 7.**
+4. `PromoteToClanLeader` (#550): when the lord is not already their clan's leader, vanilla
+   `ChangeClanLeaderAction.ApplyWithSelectedNewLeader` makes them so. **This must follow step 2.**
+5. Optional gold transfer.
+6. Career re-key, then `MarkClanAndKingdomKnown`.
+7. `RemoveOriginalHero`. **This must follow step 2.**
+8. `ClearPendingNotifications`.
 
-**Why 3 before 6.** `KillCharacterAction.ApplyInternal` line 133 guards clan destruction on
+**Why 3 before 7.** `KillCharacterAction.ApplyInternal` line 133 guards clan destruction on
 `victim.Clan != Clan.PlayerClan`. Once the player clan pointer has moved to the target clan, the
 throwaway clan is no longer `Clan.PlayerClan`, the guard passes, and
 `DestroyClanAction.ApplyByClanLeaderDeath` runs. Reverse the two and the campaign keeps an orphan
 empty clan forever, which is save-visible.
 
-**Why 6 after 2.** `KillCharacterAction` takes its `victim == Hero.MainHero` branches and would run
+**Why 4 after 2.** The promotion mutates a real lore clan. Before the swap, a failure between the
+two steps would leave that clan re-headed while the player is still the created character, and the
+outcome would still read `Failed` ("continuing as your own character"), which would be true of the
+player and false of the world. After the swap the main party already exists, so
+`ChangeClanLeaderAction` never has to create one, and a throw is reported as `SwitchedWithErrors`.
+
+**Why 7 after 2.** `KillCharacterAction` takes its `victim == Hero.MainHero` branches and would run
 `MakeDead` against the live player character.
 
 **The leftover party is swept for free, but only on this path.**
@@ -341,33 +350,67 @@ relief are never granted to a player clan at any setting. Details and the engine
 [ai-party-size.md](ai-party-size.md) "Player clans". #530 stays open for the `Never` case, where the
 reduction is still silent and cache-timed rather than visible at the handover.
 
-## Interaction: kingdom votes, when the player is not their clan's leader
+## Clan leadership follows the player (#550)
 
 The picker offers a king's spouse or child as its `RulingHouse` group, checked BEFORE `IsClanLeader`
-([HeroPickerService.cs:59](../../Main/Features/PlayerSwitcher/HeroPickerService.cs#L59)). Those heroes
-have a clan, so [SwitchPlanner.cs:17](../../Main/Features/PlayerSwitcher/SwitchPlanner.cs#L17) routes
-them down `AssumeIdentity`, which sets `Hero.MainHero` and reassigns `Clan.PlayerClan` but never
-reassigns clan leadership. `Clan.SetLeader` is called in exactly one place,
-`PlayerIdentityAdapter.AdoptIntoPlayerClan` (:105), and that is the clanless path.
+([HeroPickerService.cs:59](../../Main/Features/PlayerSwitcher/HeroPickerService.cs#L59)), and
+[SwitchPlanner.cs:17](../../Main/Features/PlayerSwitcher/SwitchPlanner.cs#L17) routes anyone with a
+clan down `AssumeIdentity`. Until 2026-09-15 that path set `Hero.MainHero` and moved
+`Clan.PlayerClan` but never touched clan leadership, so after taking over Boromir or Faramir
+`Clan.PlayerClan.Leader` was still Denethor, a different `Hero` from `Hero.MainHero`.
 
-So after taking over a queen or a non-heir prince, **`Clan.PlayerClan.Leader` is still the AI king**,
-a different `Hero` from `Hero.MainHero`. That is not cosmetic. Vanilla keys player identity in a
-kingdom election off the CLAN LEADER, not off the player's clan:
-`Supporter.IsPlayer => Clan.Leader.IsHumanPlayerCharacter`. For such a player `IsPlayerSupporter` is
-false for every decision, permanently, so `KingdomElection.StartElection()` takes the
-`ReadyToAiChoose()` branch and resolves each decision synchronously inside
-`DecisionItemBaseVM.InitValues()`, before the view model has ever been bound to a widget. The window
-then renders for a vote that is already over, and the popup's auto-close edge can be missed, leaving
-it unclosable with map navigation locked.
+That is a state the engine never produces on its own and does not support. Vanilla keys the
+player's part in a kingdom election off the CLAN LEADER, not off the player's clan:
+`Supporter.IsPlayer => Clan.Leader.IsHumanPlayerCharacter` (`Supporter.cs:27`). For such a player
+`KingdomElection.IsPlayerSupporter` was false for every decision, `StartElection()` took the
+`ReadyToAiChoose()` branch (`KingdomElection.cs:98`), and the election resolved synchronously inside
+`DecisionItemBaseVM`'s own constructor, before the view model was bound. The window then rendered
+for a vote that was already over, with the seal already stamped and Done disabled. The popup's
+close is a five-second timer started by the false-to-true edge of the widget's `IsKingsDecisionDone`
+latch, which is reused across decisions and never reset, so the first such window closed on the
+timer and every later one in the same screen visit stayed open with map navigation locked. That is
+the "frozen game" players reported from Boromir and Faramir campaigns.
 
-Tracked as [#550](https://github.com/haterade22/TAOM/issues/550). **`Patch80_KingdomVoteDeadlock`
-(#547) does NOT cover this**: all three of its seams gate on `ShouldBeCancelled()` / `IsCancelled`, and
-`ReadyToAiChoose()` never sets `IsCancelled`. Two candidate fixes are laid out in the issue; the
-root fix (make the player their own clan's leader on takeover) would also correct every other vanilla
-path keyed on `Clan.Leader.IsHumanPlayerCharacter`, of which there are many.
+Three things now hold the invariant `Clan.PlayerClan.Leader == Hero.MainHero`:
 
-Anything else that reads `Clan.Leader.IsHumanPlayerCharacter` rather than `Clan == Clan.PlayerClan` is
-suspect for these players and has not been swept.
+- **The takeover promotes.** Step 4 of the handover runs vanilla
+  `ChangeClanLeaderAction.ApplyWithSelectedNewLeader(hero.Clan, hero)`, the same call vanilla makes
+  when a king selection elects a non-leader (`KingSelectionKingdomDecision.ApplyChosenOutcome`) and
+  when the player's heir takes over (`ApplyHeirSelectionAction`). Everything vanilla succession does
+  comes with it, on purpose: the old leader's gold moves to the hero, the hero drops any
+  governorship, their party is re-headed to them, they inherit 70% of the old leader's relations
+  (`DefaultDiplomacyModel.GetRelationChangeAfterClanLeaderIsDead`), and `OnClanLeaderChanged` fires.
+  Because a kingdom's leader IS its ruling clan's leader, **taking over Boromir makes Boromir the
+  Steward of Gondor; Denethor stays alive as a member of the clan.** That consequence was chosen
+  rather than tolerated: the alternative, a player who is not their clan's leader, is wrong in every
+  `Clan.Leader` consumer at once (votes, fief ownership, the clan screen). Denethor himself, or any
+  clan leader, is already the leader and the step is a no-op.
+- **A loaded save is repaired.** `PlayerClanLeadershipRepairBehavior` runs
+  `IPlayerClanLeadershipService.RepairIfNeeded()` at session launch. It promotes only in exactly the
+  state the old takeover left behind and declines everywhere else, one test per row:
+
+  | State | Repair? |
+  |---|---|
+  | leader is the player | no |
+  | `Clan.PlayerClan` is vanilla's `player_faction` (never a takeover; the same proxy AI party size uses) | no |
+  | the player's own clan is not `Clan.PlayerClan` (a takeover whose `ReassignPlayerClan` failed; promoting would call `SetLeader` on the wrong clan and drag the lord out of his house) | no, warn |
+  | the clan has no leader (`ChangeClanLeaderAction` reads the outgoing leader's gold unguarded) | no, warn |
+  | the player is dead, disabled or not spawned (`Hero.IsAlive` alone is `!IsDead`, so the adapter folds all three) | no |
+  | this peer is a co-op client (`ICoopSessionProvider.IsAuthority` false) | no |
+  | prisoner | yes; vanilla heir selection promotes a captive heir too |
+  | otherwise | promote, log, one on-screen line (`taom_ps_clan_leader_repaired`) |
+
+  On a new campaign the created character leads `player_faction` at session launch and character
+  creation has not run yet, so the table declines by itself; no new-versus-loaded flag is needed.
+- **Patch80 gained seams D and E.** Should any other route leave the player outside their clan's
+  leadership, `KingdomDecisionsVM_RefreshWith_AutoResolved_Patch` closes a window whose election
+  concluded inside the view model's constructor by running vanilla's own `ExecuteDone` at once, and
+  logs the hit at warning level; `DecisionItemBaseVM_ExecuteDone_Patch` keeps the popup widget's
+  timer, which outlives that close, from running `ExecuteDone` a second time. See
+  [diplomacy.md](diplomacy.md) "Kingdom vote deadlock guard".
+
+Tracked as [#550](https://github.com/haterade22/TAOM/issues/550); the cancelled-election route is
+[#547](https://github.com/haterade22/TAOM/issues/547).
 
 ## Interaction: the lord's army membership survives the takeover
 
@@ -480,6 +523,13 @@ Each step on a fresh campaign unless stated.
 16. **A low-population culture.** Any culture whose narrative menus are sparse. Correct: either the
     fast path runs, or it aborts with a logged warning and the player continues through the normal
     questions. A crash here would mean the zero-option abort is missing.
+17. **A non-leader of the ruling house (#550).** Gondor, pick Boromir. Correct on the map: the
+    Kingdom screen shows you as ruler, the clan screen shows Denethor as a member, `rgl_log` has
+    `is now the leader of their clan`. Open Kingdom and resolve two decisions back to back: both
+    windows close (the second is the one that used to stick). No `[KingdomVote]` warning line.
+18. **A pre-fix Boromir save.** Load one made before 2026-09-15. Correct: one
+    `You now lead ...` line on launch, the promotion logged with both names, and a second load of
+    the new save shows neither. Then repeat the two-decision check.
 
 ## In-game verification (2026-08-28)
 
