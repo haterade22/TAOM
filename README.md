@@ -167,13 +167,14 @@ TAOM is developed with a structured, AI-assisted engineering pipeline.
 
 ## Installing to Play (non-developers)
 
-TAOM ships as a set of modules. Required alongside the core `TAOM` module:
+TAOM ships as four modules, all at the same version: `TAOM`, `TAOM.Dependencies`, `TAOM_Map` and
+`LOTRLOME_Armory`. `TAOM.Dependencies` carries Harmony, ButterLib, UIExtenderEx and Mod
+Configuration Menu (MCM) inside it, so none of those is installed separately: a standalone Workshop
+or Nexus copy of any of them must be removed before TAOM is enabled.
 
-- Companion modules: **TAOM_Map**, **LOTRLOME_Armory**, **TAOM.Dependencies**
-- BUTR dependencies: **Harmony** and **Mod Configuration Menu (MCM)**
-
-Place all modules in your Bannerlord `Modules/` directory, enable them in the launcher, and start a
-**new campaign** — existing saves are not supported.
+Bannerlord **v1.5.2** is required (the Steam beta branch as of 2026-09-14). Place the four modules
+in your Bannerlord `Modules/` directory, enable them in the launcher, and start a **new campaign**:
+existing saves are not supported.
 
 ## Contributing
 

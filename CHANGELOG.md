@@ -78,6 +78,27 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### docs(readme): the player install list drops the separate Harmony and MCM
+
+`README.md` "Installing to Play" told players to install Harmony and MCM beside the TAOM modules.
+`TAOM.Dependencies` has bundled that whole stack since DR3 (2026-05-22): its bin holds 50 assemblies
+and its manifest loads UIExtenderEx, ButterLib, MCM and the module loader itself, and both
+`docs/migration/dr3-maintenance.md` and the v2.0.29 release note say the opposite of the README:
+remove any standalone copy. The section now lists the four modules, names what Dependencies carries,
+and states the v1.5.2 requirement. Install-side, the `TAOM_Map` and `LOTRLOME_Armory` manifests
+(unversioned, game folder only) still pinned `Native` at `v1.4.5.*` in their `DependedModuleMetadata`,
+which only BUTR launchers read; both now say `v1.5.2.*`, matching `Main/_Module/SubModule.xml`.
+
+Seen while checking, not fixed: the four BUTR alias stubs deploy to
+`Modules/<id>/_Module/SubModule.xml`, one level below where the engine looks. `ModuleManager`
+enumerates `Modules/*` and reads `SubModule.xml` at each module root (v1.5.2 decompile,
+`TaleWorlds.ModuleManager.cs:390`), so the launcher has never seen a stub since DR3 Phase 4 wrote the
+deploy target. Moving them to the root would not be enough either: each stub names
+`TAOM.Dependencies.dll` as its own SubModule DLL, which `Module.LoadSubModules` looks for under the
+stub's own bin folder, and a stub ships no bin, so an active stub would raise the same `Cannot find`
+box seen tonight (the second candidate path in that lookup was not read). This needs its own issue;
+nothing here touches the stubs.
+
 ### fix(module): TAOM.Dependencies listed first in both dependency blocks
 
 The maintainer moved `<DependedModule Id="TAOM.Dependencies" />` and its version-pinned
