@@ -881,6 +881,14 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IKingdomJoinOfferService>(),
             ccLogger));
 
+        // #550 — a campaign saved before the takeover reassigned clan leadership has the AI king as
+        // Clan.PlayerClan.Leader, so the player can never vote and every kingdom decision popup
+        // renders already resolved and unclosable. Promotes the player once, through vanilla
+        // succession, at session launch; declines in every other state.
+        campaignStarter.AddBehavior(new TAOM.Features.PlayerSwitcher.PlayerClanLeadershipRepairBehavior(
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerClanLeadershipService>(),
+            ccLogger));
+
         // Re-applies the character-creation package when a multiplayer join swaps the controlled
         // hero out from under it. Inert in single-player. Field report 2026-08-03 §1 + §7.
         campaignStarter.AddBehavior(new TAOM.Features.PlayerPossession.PlayerPossessionBehavior(
@@ -1409,6 +1417,12 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.Diplomacy.Hooks.KingdomDecisionsVM_RefreshWith_Patch.Initialize(IoC.Resolve<IModLogger>());
         TAOM.Features.Diplomacy.Hooks.KingdomDecisionsVM_HandleDecision_Patch.Initialize(IoC.Resolve<IModLogger>());
         TAOM.Features.Diplomacy.Hooks.DecisionItemBaseVM_ExecuteFinalSelection_Patch.Initialize(IoC.Resolve<IModLogger>());
+        // Seam D (#550): a window built on an election that concluded inside the view model's own
+        // constructor (the player is not their clan's leader) is closed through vanilla ExecuteDone.
+        TAOM.Features.Diplomacy.Hooks.KingdomDecisionsVM_RefreshWith_AutoResolved_Patch.Initialize(IoC.Resolve<IModLogger>());
+        // Seam E: ExecuteDone runs once and only on a concluded window, because seam D closes before
+        // the popup widget's five-second timer and nothing else ever disarms that timer.
+        TAOM.Features.Diplomacy.Hooks.DecisionItemBaseVM_ExecuteDone_Patch.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch80_KingdomVoteDeadlock");
 
         _harmony.PatchCategory("Patch14_Execution");

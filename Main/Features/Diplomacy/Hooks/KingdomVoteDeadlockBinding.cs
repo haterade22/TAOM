@@ -10,7 +10,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.
 namespace TAOM.Features.Diplomacy.Hooks;
 
 /// <summary>
-/// Shared state and cached reflection for the three <c>Patch80_KingdomVoteDeadlock</c> seams.
+/// Shared state and cached reflection for the four <c>Patch80_KingdomVoteDeadlock</c> seams.
 ///
 /// All reflection is resolved once in <see cref="Initialize"/> and never inside a patch body
 /// (harmony-patches.md: no reflection in hot paths — <c>HandleDecision</c> is reachable from
@@ -29,6 +29,7 @@ internal static class KingdomVoteDeadlockBinding
     private static MethodInfo _shouldCheckForDecisionSetter;
     private static FieldInfo _itemDecisionField;
     private static FieldInfo _onDecisionOverField;
+    private static MethodInfo _executeDone;
 
     /// <summary>
     /// False when any member failed to resolve. Every patch body checks it and defers to vanilla,
@@ -49,6 +50,7 @@ internal static class KingdomVoteDeadlockBinding
             AccessTools.PropertySetter(typeof(KingdomDecisionsVM), "_shouldCheckForDecision");
         _itemDecisionField = AccessTools.Field(typeof(DecisionItemBaseVM), "_decision");
         _onDecisionOverField = AccessTools.Field(typeof(DecisionItemBaseVM), "_onDecisionOver");
+        _executeDone = AccessTools.Method(typeof(DecisionItemBaseVM), "ExecuteDone");
 
         IsReady = _examinedDecisionsField != null
                   && _shouldCheckForDecisionSetter != null
@@ -61,6 +63,15 @@ internal static class KingdomVoteDeadlockBinding
                 "[KingdomVote] Patch80 disabled: a kingdom-decision view model member did not resolve " +
                 $"(examined={_examinedDecisionsField != null}, shouldCheck={_shouldCheckForDecisionSetter != null}, " +
                 $"decision={_itemDecisionField != null}, onDecisionOver={_onDecisionOverField != null}).");
+        }
+
+        // Seam D's only extra member, kept out of IsReady on purpose: losing ExecuteDone must not
+        // switch off the three #547 seams that never use it.
+        if (_executeDone == null)
+        {
+            _logger?.LogWarning(
+                "[KingdomVote] Patch80 seam D disabled: DecisionItemBaseVM.ExecuteDone did not resolve; " +
+                "a pre-concluded decision window will stay open.");
         }
     }
 
@@ -107,6 +118,34 @@ internal static class KingdomVoteDeadlockBinding
         {
             _logger?.LogWarning($"[KingdomVote] Could not read a decision window's ballot: {ex.Message}");
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Runs vanilla's own <c>DecisionItemBaseVM.ExecuteDone</c> on a window whose election has
+    /// ALREADY concluded, for seam D. Returns false when the invoke could not happen.
+    ///
+    /// <c>ExecuteDone</c> is protected, hence the cached <see cref="MethodInfo"/>. It is the right
+    /// close here and the wrong one for seam B: it opens with <c>GetChosenOutcomeText()</c> on the
+    /// election's <c>_chosenOutcome</c>, which a cancelled election never assigns but a
+    /// <c>ReadyToAiChoose()</c> election always does before it fires <c>KingdomDecisionConcluded</c>.
+    /// Everything it does is wanted as-is: <c>IsActive = false</c> hides the popup, the outcome
+    /// inquiry's OK runs <c>_onDecisionOver</c>, and the concluded listener is cleared, which is
+    /// the responsibility seam B had to replicate by hand and once forgot.
+    /// </summary>
+    internal static bool CloseViaExecuteDone(DecisionItemBaseVM item)
+    {
+        if (!IsReady || _executeDone == null || item == null) return false;
+
+        try
+        {
+            _executeDone.Invoke(item, null);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"[KingdomVote] Could not run ExecuteDone on a pre-concluded decision window: {ex.Message}");
+            return false;
         }
     }
 
