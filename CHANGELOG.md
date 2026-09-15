@@ -78,6 +78,27 @@ moves in the docs commit, and its pre-existing size overrun. Docs updated for th
 `ai-includes/patterns.md` and the three registries. `harmony-patches.md` Research First now asks for
 the caller list whenever a patch supplies an actor the signature does not carry.
 
+### chore(release): TAOM v2.0.29, the first build for Bannerlord v1.5.2
+
+Every module reads `v2.0.29`: `Main/_Module/SubModule.xml`, `Dependencies/_Module/SubModule.xml`
+(the assembly changed with the BUTR refresh, so the #371 pairing moves with it and Main's
+`DependedModuleMetadata` for `TAOM.Dependencies` says `v2.0.29` too), and the installed `TAOM_Map`
+and `LOTRLOME_Armory` manifests, which live only in the game folder. Tag `v2.0.29` on this commit;
+release note `docs/releases/v2.0.29-discord.md`. This departs from the line convention the v1.5.0
+port had set (1.4.8 builds as v2.0.x, 1.5.x builds as v2.1.x, so the first 1.5.2 release would have
+been v2.1.2): the maintainer chose to continue the v2.0.x sequence, and v2.1.0 and v2.1.1 stay the
+pushed, unmoved tags they are. Cut from `bannerlord-1.5.x` rather than trunk, because the 1.5.2
+line lives there.
+
+Verification for this cut: the no-copy build and the full suite ran green on the same tree
+(9,174 passed / 2 skipped / 0 failed), `BundledDependencyManifestTests` green against the bumped
+pairing, `sweep_module_backups.ps1` at 0 files after quarantining nine `TAOM_Map` scene backups from
+today's editor session (`E:\Bannerlord_Backups\module_bak_sweep_2026-09-14-b`, SHA256 manifest).
+`./build.ps1 -RunTests` itself was not run because Bannerlord was open and the install copy would
+have failed; the install receives the v2.0.29 binaries on the next build with the game closed. The
+campaign map on v1.5.2 has not been seen to load by this session; the release note says the save
+path is untested, and the in-game checklist (#480) stays owed.
+
 ### fix(deps): the BUTR stack refreshed for the 1.5.x line
 
 `TAOM.Dependencies` had not been touched by either 1.5 port. It shipped ButterLib 2.11.0 and
