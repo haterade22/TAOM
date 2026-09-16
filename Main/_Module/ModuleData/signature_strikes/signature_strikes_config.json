@@ -10,7 +10,7 @@
   "_comment_races": "FaceGen race names with signature strikes. The race axis is what finds Sauron in a Custom Battle, where the agent carries no hero. An unknown name is skipped with a warning in the log.",
   "races": [ "sauron" ],
 
-  "_comment_balance": "Cooldowns are per attacker and per kind, in mission seconds. Long on purpose: a Slam is guaranteed knockdown + ring + fear in one package, and Mike's standing instruction is that Sauron must not be overpowered. Range 0 to 120.",
+  "_comment_balance": "Cooldowns are per attacker and per kind, in mission seconds. Long on purpose: a Slam is guaranteed knockdown + ring + fear in one package, and Mike's standing instruction is that Sauron must not be overpowered. Range 0.5 to 120; the floor is what keeps a cleaving swing to one package.",
   "slamCooldownSeconds": 20,
   "sweepCooldownSeconds": 12,
 

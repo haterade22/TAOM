@@ -68,8 +68,14 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         if (victimBlocking)
             raw *= _configProvider.GetConfig().ShieldBlockedMultiplier;
 
-        // (int) of a float at or past int.MaxValue is int.MinValue on net472: gate the cast on
-        // the value, not on arithmetic after it (csharp-architecture.md, category 3).
+        return RoundToDamage(raw);
+    }
+
+    // (int) of a float at or past int.MaxValue is int.MinValue on net472: gate the cast on the
+    // value, not on arithmetic after it (csharp-architecture.md, category 3). One cast for both
+    // damage bases so the two cannot drift (Codex review 114, O2).
+    private static int RoundToDamage(float raw)
+    {
         if (!FiniteFloatValidator.IsFinite(raw) || !(raw < int.MaxValue) || !(raw >= 0f))
             return 0;
 
@@ -172,7 +178,7 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
                 // A shield block still computes damage (to the shield); a weapon block cancels it.
                 if (!context.AttackBlockedWithShield || !(context.InflictedDamage > 0))
                     return 0;
-                return (int)Math.Round(context.InflictedDamage * _configProvider.GetConfig().ShieldBlockedMultiplier);
+                return RoundToDamage(context.InflictedDamage * _configProvider.GetConfig().ShieldBlockedMultiplier);
 
             default:
                 return 0;

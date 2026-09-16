@@ -3107,6 +3107,51 @@ lessons in `lessons/adapters-taleworlds-api.md` and `lessons/harmony-il.md`; pro
 Owed: the in-game Boromir two-decision check, a pre-fix Boromir save through the repair, the
 translator run for `taom_ps_clan_leader_repaired`, closing #550.
 
+## Review 114: SignatureStrikes, Sauron's direction-mapped melee effects (#605), 5-agent deep review + Codex gpt-6-astra ultra (2026-09-16)
+
+Mike asked how siege equipment kills several agents at once and whether Sauron could have specific
+attacks the way the creature trees give wargs theirs. The engine's area damage is native-triggered
+for `AffectsArea` missiles only and a melee swing never knocks back, so the feature maps effects
+onto the swing direction the engine already animates: an overhead Slam (guaranteed knockdown on the
+struck agent, a boulder-falloff ring of knockdown and damage, a fear burst) and a side-swing Sweep
+(knock-back on the struck agent and the ring in front). One `MissionLogic` on `OnMeleeHit` that
+only enqueues, the ring on the next tick through `CustomAttacksUtils.TakeDamage`, two thin verdicts
+on `TaomCombatMechanicsModel`, no Harmony patch. Any melee weapon except thrown and ranged items;
+long cooldowns (20 s / 12 s) plus a live MCM multiplier, at Mike's instruction.
+
+**Deep review, five agents:** compatibility verified 38 engine members on the installed v1.5.3
+(none incompatible); Agent 1 caught the logic at 158 lines; Agent 3 one double settings read;
+Agent 5 the dropped first-tick scan the DreadAura and warg trackers carry, the untested pure halves
+of the Hooks classes, and three LOWs. All fixed before the first commit (`0700ca90`); RCA
+[rca-signature-strikes-2026-09-16.md](rca-signature-strikes-2026-09-16.md).
+
+**Codex (gpt-6-astra, ultra, explicit `-m` and `model_reasoning_effort=ultra`): P1 0, P2 1, P3 1,
+four P3 observations.** It disputed six of ten handed suspects with decompiled lines (the model
+cannot grant on a blocked or parried hit because `MeleeHitCallback` zeroes the collision damage
+before `CreateMeleeBlow`; a crafted Mace reports `OneHandedWeapon` through `Crafting.cs:852`; the
+morale sign; the stale-roster premise, because mission-end teardown never dispatches
+`OnAgentDeleted` and the roster is cleared from `OnEndMission` instead) and left three honestly
+UNVERIFIED: native honouring `KnockBack` on a synthetic blow, the thread of the native
+`MeleeHitCallback`, and whether a terrain hit carries a non-null `realHitEntity` (a ground slam is
+unproven until the smoke). The P2 is the finding of the review: `StandDown` disabled the logic and
+cleared the queue but left the roster populated, and `TaomCombatMechanicsModel` probes that same
+roster, so after one caught exception every overhead past the old stamp would have got a free
+knockdown with no ring and no renewed cooldown. The P3: `Enum.TryParse` plus `Enum.IsDefined`
+accepts `"1"` as Overhead, so a numeric typo became a live row instead of a dropped one. The
+observations: a NaN impact reached the native proximity query before any gate, the shield-basis
+cast lacked the ring cast's overflow guard, a zero cooldown defeated one-package-per-swing, and an
+effectless profile still queried and logged. All six fixed: the stand-down clears the roster,
+parsing is by member name only, a finiteness gate before the query, one `RoundToDamage` for both
+bases, a 0.5 s cooldown floor, and an inert effect skips the query and the log. Codex also
+corrected the RCA's row 7: `CombatCollisionResult.None` IS an engine member; the fallback arm is
+safe, not unreachable.
+
+Feature filter 192 green after the fixes, full suite below. Prompt
+[codex-adversarial-signature-strikes-2026-09-16.prompt.md](codex-adversarial-signature-strikes-2026-09-16.prompt.md);
+lesson in `lessons/state-lifecycle-save.md` (a stand-down must blind every consumer of the shared
+state, not only the owner's own callbacks). Owed: the in-game smoke (Route A/B in
+`docs/features/signature-strikes.md`), the three UNVERIFIED engine claims, closing #605.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

@@ -153,6 +153,38 @@ public class SignatureStrikesConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_ZeroSlamCooldown_RevertsBecauseTheFloorKeepsOnePackagePerSwing()
+    {
+        // Codex review 114, O3: with no cooldown the second body of one cleaving swing would
+        // ring again. The floor (0.5 s) is what makes "one package per swing" hold for every
+        // config the provider accepts.
+        WriteConfigWith(@"""slamCooldownSeconds"": 0");
+
+        Assert.AreEqual(20f, _sut.GetConfig().SlamCooldownSeconds, 0.001f);
+        AssertRejected("slamCooldownSeconds");
+    }
+
+    [TestMethod]
+    public void GetConfig_NumericDirectionKey_IsDroppedNotNormalised()
+    {
+        // Codex review 114, F2: "1" is StrikeDirection.Overhead by value; only the member name
+        // may address a row.
+        WriteConfigWith(@"""strikes"": { ""1"": { ""kind"": ""Slam"" } }");
+
+        Assert.AreEqual(0, _sut.GetConfig().Strikes.Count);
+        AssertRejected("'1'");
+    }
+
+    [TestMethod]
+    public void GetConfig_NumericKind_IsDroppedNotNormalised()
+    {
+        WriteConfigWith(@"""strikes"": { ""Overhead"": { ""kind"": ""1"" } }");
+
+        Assert.IsFalse(_sut.GetConfig().Strikes.ContainsKey("Overhead"));
+        AssertRejected("'1'");
+    }
+
+    [TestMethod]
     public void GetConfig_InfiniteSweepCooldown_Reverts()
     {
         WriteConfigWith(@"""sweepCooldownSeconds"": Infinity");

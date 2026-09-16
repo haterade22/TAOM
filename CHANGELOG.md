@@ -70,6 +70,17 @@ and item-type gate, the roster's null paths and the gate's null arm. `CombatMech
 and `SettingsFingerprint` (231 / 182, both docs updated) moved with the feature. Full suite 9,393
 green, 2 pre-existing skips.
 
+**Codex (review 114, gpt-6-astra ultra, follow-up commit).** P1 0, P2 1, P3 1, four P3
+observations, all fixed: `StandDown` now clears the roster too (the model probes the same
+singleton, so a caught exception would otherwise have granted a free knockdown on every overhead
+for the rest of the battle); direction and kind names parse by member name only (`"1"` no longer
+becomes a live Overhead row); a finiteness gate on the impact before the native proximity query;
+one `RoundToDamage` for both damage bases; a 0.5 s cooldown floor so one-package-per-swing holds
+for every accepted config; an effectless profile skips the query and the log. Six of ten handed
+suspects disputed with decompiled lines; three engine claims left UNVERIFIED for the smoke (native
+`KnockBack` on a synthetic blow, the native callback's thread, whether a terrain hit carries a
+`realHitEntity` at all). REVIEW-LOG 114.
+
 **Owed.** In-game smoke (`docs/features/signature-strikes.md` "Smoke"), in particular whether
 native honours `KnockBack` on a synthetic blow; the fallback is a low-magnitude `KnockDown` for
 the sweep ring. Numbers are first guesses until then.

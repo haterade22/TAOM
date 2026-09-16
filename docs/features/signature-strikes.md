@@ -91,7 +91,9 @@ A missile hit never reaches `OnMeleeHit` at all.
 **What does nothing:** a parry, a chamber block, a weapon block, a canceled hit (invulnerable
 victim), a horse charge, a thrust, a zero-damage hit, any hit inside the cooldown, any mission
 that is not `MissionCombatType.Combat` (arenas and tournaments out), any multiplayer session, the
-Combat Mechanics master toggle off. A shield block that still damages the shield fires the ring
+Combat Mechanics master toggle off, and everything for the rest of a mission in which the logic
+stood down on an exception (the stand-down clears the roster, so the model's verdicts stop with
+the ring; Codex review 114 F1). A shield block that still damages the shield fires the ring
 at `shieldBlockedMultiplier` of the shield damage and never knocks the blocker down; a
 zero-shield-damage block does nothing (the cleave rule's parity).
 
@@ -130,10 +132,10 @@ The MCM cooldown multiplier applies live.
 | `enabled` | bool | Feature switch; MCM overrides it |
 | `heroIds` | string[] | Hero StringIds with signature strikes. Empty is a legitimate "nobody on this axis"; `null` reverts |
 | `races` | string[] | FaceGen race names. Unknown names are skipped with a log warning at first use |
-| `slamCooldownSeconds` | float 0..120 | Per attacker, mission time |
-| `sweepCooldownSeconds` | float 0..120 | Per attacker, mission time |
+| `slamCooldownSeconds` | float 0.5..120 | Per attacker, mission time. The floor is what keeps a cleaving swing to one package |
+| `sweepCooldownSeconds` | float 0.5..120 | Per attacker, mission time |
 | `shieldBlockedMultiplier` | float 0..1 | Damage kept on a shield-blocked trigger and on a shield-blocking ring victim |
-| `strikes.<Direction>` | object | One profile per `Overhead`, `Left`, `Right`, `Thrust` (case-insensitive, normalised). A direction with no row is a plain hit; an unknown key or `kind` drops the row with a warning |
+| `strikes.<Direction>` | object | One profile per `Overhead`, `Left`, `Right`, `Thrust` (member name only, case-insensitive, normalised; a numeric string is dropped). A direction with no row is a plain hit; an unknown key or `kind` drops the row with a warning. A profile with no `damageFraction` and no `fearMorale` rings nothing and logs nothing |
 | `strikes.*.kind` | `Slam` or `Sweep` | The cooldown is per kind |
 | `strikes.*.outerRadius` / `innerRadius` | float 0.1..15 / 0..outer | Metres; full effect inside inner, one ninth at outer (the boulder curve) |
 | `strikes.*.damageFraction` | float 0..1 | Share of the hit's damage a ring victim takes before falloff |
@@ -226,7 +228,10 @@ runner; the service and the config validation are where the new field's gates go
   model is campaign-only, so expect ring falls with vanilla primary knockdown.
 - Negative: a tournament as Sauron shows no effect lines; `MissionThreadGuard` reports zero
   off-thread calls across a battle.
-- Unverified until smoked: native honouring `BlowFlags.KnockBack` on a synthetic blow.
+- Unverified until smoked (Codex review 114 left all three honestly open): whether a terrain hit
+  carries a non-null `realHitEntity` (if not, the engine cancels the callback and the ground slam
+  never fires); the thread of the native `MeleeHitCallback` (declared non-multithread-callable,
+  `MissionThreadGuard` is the tripwire); and native honouring `BlowFlags.KnockBack` on a synthetic blow.
   `Agent.HandleBlowAux` hands the whole `Blow` to native and the engine's own melee path sets the
   same bit, but TAOM has only ever set `KnockDown` this way. If no stagger shows, the fallback is
   a low-magnitude `KnockDown` for the ring while the model-side knock-back on the struck agent
@@ -234,6 +239,7 @@ runner; the service and the config validation are where the new field's gates go
 
 ## Changelog
 
+- 2026-09-16: Codex review 114 fixes (stand-down clears the roster, name-only enum parsing, impact finiteness gate, shared damage cast, 0.5 s cooldown floor, inert profiles skip).
 - 2026-09-16: feature landed (#605).
 
 ## GitHub Issue

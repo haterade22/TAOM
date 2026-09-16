@@ -32,6 +32,9 @@ public sealed class SignatureStrikesConfigProvider : ISignatureStrikesConfigProv
     // strike. Cooldowns above two minutes make a strike a once-per-battle event.
     private const float MinRadius = 0.1f;
     private const float MaxRadius = 15f;
+    // A swing's later cleave bodies land within a fraction of a second of the first; the floor is
+    // what keeps "one package per swing" true for every config the provider accepts (Codex 114, O3).
+    private const float MinCooldownSeconds = 0.5f;
     private const float MaxCooldownSeconds = 120f;
     private const float MaxMagnitude = 500f;
     private const float MaxFearMorale = 100f;
@@ -87,10 +90,10 @@ public sealed class SignatureStrikesConfigProvider : ISignatureStrikesConfigProv
             Races = ValidateList(parsed.Races, defaults.Races, "races", ref rejected),
             SlamCooldownSeconds = ValidateFloat(
                 parsed.SlamCooldownSeconds, defaults.SlamCooldownSeconds,
-                0f, MaxCooldownSeconds, "slamCooldownSeconds", ref rejected),
+                MinCooldownSeconds, MaxCooldownSeconds, "slamCooldownSeconds", ref rejected),
             SweepCooldownSeconds = ValidateFloat(
                 parsed.SweepCooldownSeconds, defaults.SweepCooldownSeconds,
-                0f, MaxCooldownSeconds, "sweepCooldownSeconds", ref rejected),
+                MinCooldownSeconds, MaxCooldownSeconds, "sweepCooldownSeconds", ref rejected),
             ShieldBlockedMultiplier = ValidateFloat(
                 parsed.ShieldBlockedMultiplier, defaults.ShieldBlockedMultiplier,
                 0f, 1f, "shieldBlockedMultiplier", ref rejected),

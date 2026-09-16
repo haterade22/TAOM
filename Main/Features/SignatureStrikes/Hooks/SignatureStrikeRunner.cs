@@ -1,4 +1,5 @@
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Hooks;
@@ -54,6 +55,15 @@ public sealed class SignatureStrikeRunner
 
         var effect = request.Effect;
         var impact = request.Impact.AsVec2;
+
+        // Nothing to apply (a profile with no damage share and no fear): no query, no log line.
+        if (!(effect.DamageFraction > 0f) && !(effect.FearMorale > 0f))
+            return;
+
+        // The impact is an engine float handed straight to a native query; gate it here, before
+        // the boundary, not after (csharp-architecture.md "Engine-Float Decision Gates").
+        if (!FiniteFloatValidator.IsFinite(impact.x) || !FiniteFloatValidator.IsFinite(impact.y))
+            return;
 
         // Enemy filtering happens native-side, so allies never enter the loop at all.
         _nearbyBuffer.Clear();

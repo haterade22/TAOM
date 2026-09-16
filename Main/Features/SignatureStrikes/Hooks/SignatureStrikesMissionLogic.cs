@@ -139,10 +139,14 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         _disabledForThisMission = false;
     }
 
+    // The roster is cleared too: TaomCombatMechanicsModel probes it for the primary-victim verdicts,
+    // and with the logic no longer stamping cooldowns a populated roster would grant a free
+    // knockdown on every overhead for the rest of the battle (Codex review 114, F1).
     private void StandDown(string reason)
     {
         _disabledForThisMission = true;
         _buffer.Clear();
+        _roster.Clear();
         _logger.LogError($"[SignatureStrikes] disabled for this mission after {reason}");
     }
 }

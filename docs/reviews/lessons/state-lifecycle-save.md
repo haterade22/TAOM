@@ -220,6 +220,12 @@ which is a worse bug than the one being fixed and leaves no trace. Two tests pin
 - **Prevent:** when a mission-scope tracker mirrors an existing one, keep every registration path the sibling has (build callback AND one-shot scan) unless the dropped path's safety is proven from the engine and stated in the class comment. A scan is one loop per mission; the proof costs more than the loop.
 - **Source:** `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 1.
 
+### A stand-down must blind every consumer of the state it stops maintaining, not only its own callbacks
+`SignatureStrikesMissionLogic.StandDown` (#605) set its disabled flag and cleared its queue, and left the agent roster populated. `TaomCombatMechanicsModel` probes that same singleton from inside `CreateMeleeBlow` for the primary-victim verdicts and reads the cooldown stamps the logic writes; with the logic no longer stamping, every overhead past the old stamp was granted a knockdown with no ring and no renewed cooldown, for the rest of the battle, after one caught exception. The five deep-review agents traced the roster's lifecycle through the logic's callbacks and found it clean; Codex asked what else reads it.
+- **Why missed:** the disable was written from the owner's point of view. Shared state has more than one reader, and a disable that stops the WRITER while the READER keeps consuming the last written values is the same class as the tournament-exit "outermost gate" bypass, seen from the other side.
+- **Prevent:** for any self-disable, stand-down or kill switch, list every consumer of the state the disabled component maintains (grep the singleton's interface for readers) and make the disable observable to each: clear the shared store, or expose the disabled flag on it. A store the owner stops updating is stale data to everyone else.
+- **Source:** Codex review 114 F1, `docs/reviews/rca-signature-strikes-2026-09-16.md` C1.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

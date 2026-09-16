@@ -24,12 +24,30 @@ prose, one of them put there by the Write tool itself.
 | 4 | MED | No tests for `SignatureAgentRoster`, `SignatureMissionGate`, `StrikeContextFactory` (the Hooks classes), against the 80% Hooks bar. | Test coverage | The author filed the whole Hooks folder as "needs a live `Agent`" and skipped it. Three of the four have pure halves: the two enum mirrors, the item-type gate, the roster's null and lifecycle paths. | `StrikeContextFactoryTests` (8), `SignatureAgentRosterTests` (5), `SignatureMissionGateTests` (1) added. The agent-reading halves stay on the binding tests and the smoke. |
 | 5 | LOW | JSON `enabled` is consulted only when MCM is absent; once MCM loads, the toggle owns it. Same as every sibling, but the JSON did not say so. | Config documentation | Pattern inherited silently. | `_comment_enabled` added to the shipped file. |
 | 6 | LOW | Shipped ids `lord_1_17` / `sauron` were pinned only as config strings, not against `lords.xslt`, so a lord regen dropping the race attribute would pass every test. | Cross-file pin | The DreadAura shipped test has no such pin either; UncapturableHeroes does. | `ShippedConfig_SauronStillCarriesTheSauronRaceInLordsXslt` reads the `lord_1_17` template block and asserts `race">sauron<`. |
-| 7 | LOW | `StrikeCollision.None` has a producer arm (`MapCollision` default) that the engine enum never reaches. | Dead code | Defensive default. | Kept: a future engine member falls into `None` and does nothing, which is the safe shape. |
+| 7 | LOW | `StrikeCollision.None` has a producer arm (`MapCollision` default). Codex (review 114) corrected the first wording here: `CombatCollisionResult.None` IS an engine member, so `None` maps to `None` by the explicit switch case and the default arm is what a future member would fall into. | Defensive default | Not a defect. | Kept: the safe shape. |
 | 8 | Self-caught | Two long dashes in produced prose: a rewritten model comment kept its old em dash, and `ShippedSignatureStrikesConfigTests` got literal en/em characters where the source was written as `\u2013\u2014`. | Output style | The Write and Edit tools decode `\uXXXX` in their parameters, so a C# escape typed into them lands as the character. The Bash heredoc eats one backslash round in the other direction. | Both fixed. Lesson below: build escape sequences from char codes in a script when a source file must contain a literal backslash-u. |
+
+## Codex pass (review 114, gpt-6-astra ultra, same day)
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| C1 | P2 | `StandDown` set `_disabledForThisMission` and cleared the queue but left the roster populated; `TaomCombatMechanicsModel` probes that roster for the primary-victim verdicts, so after one caught exception every overhead past the old stamp was granted with no ring and no renewed cooldown. | Stale state, shared consumer | The stand-down was written from the logic's point of view (its own callbacks stop) and never asked what else reads the state it stopped maintaining. The five deep-review agents traced the roster's lifecycle through the logic's callbacks only. Same class as the tournament-exit "outermost gate" lesson: a disable in one layer with a consumer in another. | `StandDown` clears the roster (registration and the scan are already gated on the flag, so nothing re-adds). Lesson in `lessons/state-lifecycle-save.md`. |
+| C2 | P3 | `StrikeNames` used `Enum.TryParse` + `Enum.IsDefined`; `"1"` parsed to Overhead and passed `IsDefined`, so a numeric typo became a live row. The comment claimed the opposite. | Validation | Assumed `IsDefined` rejects what `TryParse` accepts from a digit string; it does not (it checks the VALUE). No parser test existed. | Name-only matching over `Enum.GetNames`; `StrikeNamesTests` (10) plus two provider tests for numeric keys and kinds. |
+| C3 | P3 | A NaN `CollisionGlobalPosition` reached `GetNearbyEnemyAgents` before any finiteness gate. | Engine-float gate, category 2 | The falloff gated distance AFTER the native query; the boundary itself was the unguarded input. | Finite check on the impact before the query. |
+| C4 | P3 | The shield-basis cast `(int)Math.Round(damage * multiplier)` lacked the ring cast's overflow guard two methods away. | Float-to-int cast, category 3 | The guarded cast was written first and the second cast copied the arithmetic without it. | One `RoundToDamage` for both; `Evaluate_ShieldBlockBasisPastIntRange_ReturnsNull`. |
+| C5 | P3 | A configured cooldown of 0 (accepted by the [0, 120] range) defeats one-package-per-swing: a cleave's second body rings again. | Validation, ordering invariant | The range was chosen for "no negative", not for the invariant the doc promises. | 0.5 s floor; `GetConfig_ZeroSlamCooldown_Reverts...`. |
+| C6 | P3 | A profile with no damage share and no fear still queried the proximity map and wrote an INFO line per swing. | No-op path | The ring's per-victim `damage <= 0` skip hid that the whole effect was inert. | The runner returns before the query when the effect can apply nothing. |
+
+Codex disputed six of the ten handed suspects with decompiled evidence and left three honestly
+UNVERIFIED: whether native honours `BlowFlags.KnockBack` on a synthetic blow, the thread of the
+native `MeleeHitCallback` (the `[MBCallback(null, false)]` attribute declares it non-multithread
+callable, which supports the main-thread design without proving it), and whether a terrain hit
+carries a non-null `realHitEntity` (if it does not, `flag5` cancels the callback and the ground slam
+never fires). All three are smoke items, recorded in the feature doc.
 
 ## Root-cause pattern
 
-Findings 1, 3 and 5 share one shape: **a sibling was mirrored for its structure and not audited limb
+Findings 1, 3, 5 and C1 share one shape: **a sibling was mirrored for its structure and not audited limb
 by limb.** The DreadAura logic was the template for the mission logic, its settings provider for the
 provider, its config for the JSON comments. Each time a limb was dropped or simplified without a
 written reason (the scan, the hoisted instance read, the MCM note), and each dropped limb came back

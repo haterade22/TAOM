@@ -39,9 +39,19 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
+### Lessons From Prior Reviews (85 reviews, 188+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Follows a stand-down to every consumer of the state it leaves behind** (2026-09-16,
+  SignatureStrikes review 114): handed a `MissionLogic` that disables itself after a caught
+  exception, it asked what ELSE reads the roster that logic stopped stamping, found the GameModel
+  probing the same singleton from inside `CreateMeleeBlow`, and wrote the sequence in mission
+  seconds: old stamp at 10, stand-down, overhead at 30 granted, overhead at 31 granted, every
+  overhead granted thereafter with no ring. It disputed six of ten handed suspects with decompiled
+  lines (the collision damage is zeroed before the model sees a blocked hit; a crafted Mace is
+  `OneHandedWeapon` via `Crafting.cs:852`; mission-end teardown never dispatches `OnAgentDeleted`)
+  and kept three engine claims UNVERIFIED rather than voting. When a feature has a self-disable
+  path, write the suspect as "what shares state with the thing that stopped".
 - **Follows a bypassed trigger to what its own firing would have reset** (2026-09-15, Player
   Switcher clan leadership review 113): handed a seam that closed a decision window at once through
   vanilla `ExecuteDone`, it read the popup widget's `OnLateUpdate` and found that the bind had already

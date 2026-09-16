@@ -198,6 +198,21 @@ public class SignatureStrikeServiceTests
     }
 
     [TestMethod]
+    public void Evaluate_ShieldBlockBasisPastIntRange_ReturnsNull()
+    {
+        // Codex review 114, O2: the ring cast was guarded, the shield-basis cast was not. Both
+        // now go through one RoundToDamage.
+        _config.ShieldBlockedMultiplier = 1f;
+
+        Assert.IsNull(_sut.Evaluate(Overhead() with
+        {
+            Collision = StrikeCollision.Blocked,
+            AttackBlockedWithShield = true,
+            InflictedDamage = int.MaxValue,
+        }));
+    }
+
+    [TestMethod]
     public void Evaluate_ShieldBlockWithZeroShieldDamage_ReturnsNull()
     {
         Assert.IsNull(_sut.Evaluate(Overhead() with
