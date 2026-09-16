@@ -118,7 +118,9 @@ The default is `AutoRemountAfter` (value `3`). To change for new players (existi
 
 ## Performance
 
-State is mission-local and minimal (one snapshot, one bool). No per-tick overhead — only `OnBehaviorInitialize` and `OnEndMission` fire.
+State is mission-local and minimal (one snapshot, one bool). No per-tick overhead: only `AfterStart` and `OnEndMission` fire.
+
+**Why `AfterStart` (#606, 2026-09-16).** The behavior originally ran its start in `OnBehaviorInitialize`, which the engine dispatches BEFORE `SubModule.OnMissionBehaviorInitialize` adds TAOM's behaviors (`Mission.AfterStart`, v1.5.3 `Mission.cs:3827` then `:3831`), so it never ran at all. It would not have helped if it had: `Mission.IsSiegeBattle` reads `MissionTeamAIType`, which `MissionCombatantsLogic.EarlyStart` sets after every `OnBehaviorInitialize`. The feature was therefore inert from the port until this fix. `AfterStart` runs after every `EarlyStart` and before the spawn logic's first tick (`DefaultBattleMissionAgentSpawnLogic` spawns from `OnMissionTick`), so the mount is stripped before the player agent is built. An in-game siege as a mounted player is owed to confirm the dismount and the remount.
 
 **No known limitations on modifier preservation.** Earlier Phase 1 docs flagged `ItemModifier` loss as a known limitation; Codex review #1 (2026-05-06) caught that the modifier-aware [`ItemRoster.AddToCounts(EquipmentElement, int)`](../../Main/Adapters/PartyMountInventoryAdapter.cs) overload exists in the current engine API, and the snapshot was switched to carry the full `EquipmentElement`. A "Sharp" or "Damaged" horse round-trips correctly.
 
@@ -141,6 +143,9 @@ Disable round-trip:
 
 ## Changelog
 
+- 2026-09-16 (#606): `OnMissionStart` moved from `OnBehaviorInitialize` to `AfterStart`. The old callback never
+  fired for a TAOM-added behavior, and `IsSiegeBattle` was not yet set when it would have, so the feature
+  had been inert since the port. An in-game siege as a mounted player is owed.
 - 2026-05-13 — Added SiegeDismount MissionBehavior wiring tests (closes #193): asserts the `AddMissionBehavior` registration in `OnMissionBehaviorInitialize`, the IoC feature registration, and that the behavior inherits `MissionBehavior`.
 - 2026-05-06 — Ported the external SiegeDismount module into `Main/Features/SiegeDismount/` (adapter/service/IoC pattern, MCM under `Battle Tactics / Siege Dismount`, four behavior modes), then fixed deep-review and Codex adversarial HIGH findings — switched siege detection to `Mission.IsSiegeBattle` only (dropped false-positive scene-name matching) and preserved `ItemModifier` on the mount round-trip.
 

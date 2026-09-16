@@ -186,6 +186,9 @@ Debug-mode round-trip:
 
 ## Changelog
 
+- 2026-09-16 (#606): the per-mission MCM log moved from `OnBehaviorInitialize` (which the engine never
+  dispatches to a behavior added from `SubModule.OnMissionBehaviorInitialize`) to `AfterStart`. Diagnostic
+  only; the tick and the hotkey never depended on it.
 - 2026-09-13 (#595): `FormationLayoutService.ForgetAgent(agentIndex)` drops the index from every cached
   `SlotAssignment.ByAgentIndex`, called from `MixedFormationsMissionBehavior.OnAgentDeleted`, because the engine
   hands a deleted agent's index to the next agent it builds and a reinforcement was inheriting the dead unit's

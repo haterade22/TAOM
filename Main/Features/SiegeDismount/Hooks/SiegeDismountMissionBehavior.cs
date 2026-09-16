@@ -24,9 +24,15 @@ public class SiegeDismountMissionBehavior : MissionBehavior
         _logger = IoC.Resolve<IModLogger>();
     }
 
-    public override void OnBehaviorInitialize()
+    // AfterStart, for two reasons (#606). OnBehaviorInitialize never fires for a behavior TAOM adds
+    // (the engine dispatches it before SubModule.OnMissionBehaviorInitialize, Mission.AfterStart
+    // :3827 vs :3831). And IsSiegeBattle reads MissionTeamAIType, which MissionCombatantsLogic.EarlyStart
+    // sets, so even a firing OnBehaviorInitialize would have read false. AfterStart runs after every
+    // EarlyStart and before the spawn logic's first tick (DefaultBattleMissionAgentSpawnLogic
+    // spawns from OnMissionTick), so the mount is stripped before the player agent is built.
+    public override void AfterStart()
     {
-        base.OnBehaviorInitialize();
+        base.AfterStart();
 
         var mission = Mission.Current;
         var isSiegeBattle = mission?.IsSiegeBattle ?? false;

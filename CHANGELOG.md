@@ -31,6 +31,21 @@ firing set; the deep-review compatibility prompt now asks for the caller of ever
 lifecycle virtual. Second occurrence of the "read the virtual's caller, not its name" lesson in
 four days (`OnGameLoaded`, 2026-09-12); the lesson entry records both.
 
+### fix(mission): the three sibling behaviors leave the dead OnBehaviorInitialize (#606)
+
+`SmartCavalryAIMissionBehavior` and `MixedFormationsMissionBehavior` only logged their MCM state
+from the dead callback; both log lines move to `AfterStart`, which the engine does dispatch to a
+behavior added from `SubModule.OnMissionBehaviorInitialize` (`Mission.AfterStart`, `:3841`).
+`SiegeDismountMissionBehavior` was load-bearing: `OnMissionStart` (capture and strip the player's
+mount for a siege, restore it after) sat in the callback that never ran, and would have read
+`IsSiegeBattle == false` even if it had, because `MissionCombatantsLogic.EarlyStart` sets
+`MissionTeamAIType` after every `OnBehaviorInitialize`. So Siege Dismount had been inert since the
+2026-05-06 port. It now runs from `AfterStart`: after every `EarlyStart`, and before the first
+spawn (`DefaultBattleMissionAgentSpawnLogic` spawns from `OnMissionTick`), so the mount is stripped
+before the player agent is built. `MissionBehaviorLifecycleTests` shrinks to the one legitimate
+override (`CustomBattleTeamFixBehavior`, added before `AfterStart`). Owed: a mounted siege in game
+to confirm the dismount and the remount.
+
 ### feat(combat): SignatureStrikes, direction-mapped melee effects for Sauron (#605)
 
 **Why.** Mike wanted Sauron to have specific attacks the way the warg and mumak trees give

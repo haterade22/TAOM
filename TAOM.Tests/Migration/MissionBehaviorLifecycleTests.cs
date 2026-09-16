@@ -14,8 +14,8 @@ namespace TAOM.Tests.Migration;
 /// override and was inert in Mike's first battle with no log line to say why.
 ///
 /// This is a ratchet: every TAOM behavior that overrides the dead callback must be on the
-/// allowlist below with its reason, so a new one fails here rather than in a battle, and the list
-/// shrinks as the three known siblings move their setup to `OnCreated` / `AfterStart` / a lazy gate.
+/// allowlist below with its reason, so a new one fails here rather than in a battle. The three
+/// AddTaomBehavior siblings it started with moved their setup to `AfterStart` the same day.
 /// </summary>
 [TestClass]
 public class MissionBehaviorLifecycleTests
@@ -27,13 +27,9 @@ public class MissionBehaviorLifecycleTests
 
     private static readonly string[] KnownOverriders =
     {
-        // Added via AddTaomBehavior: the override is dead. Each needs its own read of what the
-        // setup was for before it moves (#606).
-        "SmartCavalryAIMissionBehavior",
-        "MixedFormationsMissionBehavior",
-        "SiegeDismountMissionBehavior",
         // Added from a postfix on the mission-opening call, BEFORE AfterStart, so it is in the
-        // list when :3827 runs and the override does fire. Legitimate.
+        // list when :3827 runs and the override does fire. Legitimate. The three AddTaomBehavior
+        // siblings that used to sit here moved to AfterStart on 2026-09-16 (#606).
         "CustomBattleTeamFixBehavior",
     };
 

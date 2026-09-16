@@ -285,6 +285,12 @@ compare and one lock; for a charge order it scans the enemy formations once for 
 
 ---
 
+## Changelog
+
+- 2026-09-16 (#606): the per-mission MCM log moved from `OnBehaviorInitialize` (which the engine never
+  dispatches to a behavior added from `SubModule.OnMissionBehaviorInitialize`) to `AfterStart`. Diagnostic
+  only; the tick's live `IsFieldBattle` read never depended on it.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

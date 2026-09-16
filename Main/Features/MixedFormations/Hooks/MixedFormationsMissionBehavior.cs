@@ -30,9 +30,11 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
         _logger = IoC.Resolve<IModLogger>();
     }
 
-    public override void OnBehaviorInitialize()
+    // AfterStart, not OnBehaviorInitialize: the engine dispatches the latter before
+    // SubModule.OnMissionBehaviorInitialize adds TAOM's behaviors, so it never ran here (#606).
+    public override void AfterStart()
     {
-        base.OnBehaviorInitialize();
+        base.AfterStart();
         if (!_settings.IsEnabled)
         {
             _logger.LogInfo("[MixedFormations] disabled via MCM — patches inert");
