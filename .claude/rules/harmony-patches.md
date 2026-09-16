@@ -101,6 +101,25 @@ A latch (`_windowActive`, `_inflight`, `BattleLoadLoadingWindow`-style static fl
 
 **Why this rule exists:** RCA `docs/reviews/rca-tournament-exit-hang-2026-07-06.md` (findings 1, 2, 4) — the exit-window latch shipped with campaign-only closers for an any-mission opener plus toggle-gated closes; the service-layer fix for the toggle gate was then bypassed by hook-level gates, caught only by the Codex pass. Master record: `docs/reviews/LESSONS-LEARNED.md` "State, Lifecycle & Save" → "Diagnostics latches".
 
+## MissionBehavior lifecycle for a behavior TAOM adds (MANDATORY before overriding a lifecycle virtual)
+
+Every TAOM mission behavior is added from `SubModule.OnMissionBehaviorInitialize` (`AddTaomBehavior`). On
+the installed v1.5.3, `Mission.AfterStart` runs `OnBehaviorInitialize` over the behaviors ALREADY in the
+list (`Mission.cs:3827`) and only then calls the submodules that add TAOM's (`:3831`); `AddMissionBehavior`
+calls only `OnCreated` (`:4699`). So for a TAOM behavior:
+
+| Virtual | Fires? | Use it for |
+|---|---|---|
+| `OnCreated` | yes, from `AddMissionBehavior` itself | per-mission state reset; `Mission` is already set |
+| `OnBehaviorInitialize` | **never** | nothing (#606; `MissionBehaviorLifecycleTests` fails a new override) |
+| `EarlyStart`, `AfterStart` | yes (`:3835`, `:3841`, after the add) | setup that needs the initialized mission; agents are not spawned yet |
+| a lazy first-use gate in `OnAgentBuild` / `OnMissionTick` | yes | a mission gate (`CombatType` is set by native `InitializeMission` before any of these) |
+
+A behavior added from a postfix on the mission-opening call (before `AfterStart`, the CustomBattles shape)
+IS in the list at `:3827` and does get the callback. The general rule, second occurrence in four days
+(`lessons/state-lifecycle-save.md`, "An engine lifecycle virtual's firing set is read from its caller"):
+open the caller of any lifecycle virtual before wiring it, and quote the line in the override's comment.
+
 ## Which thread runs your target (MANDATORY before the first line of a patch)
 
 Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered

@@ -11,10 +11,11 @@ namespace TAOM.Features.SignatureStrikes.Hooks;
 /// <summary>
 /// Entry point for signature strikes (#605): roster, enqueue a ring on a signature hero's melee
 /// hit, drain it one tick later, stand down on failure. Design: <c>docs/features/signature-strikes.md</c>.
-/// Inherits <see cref="MissionLogic"/>, NOT <see cref="MissionBehavior"/> (<c>rca-looter-battle-nre-2026-05-24.md</c>;
-/// pinned by SignatureStrikesBindingTests). <c>OnMeleeHit</c> only ENQUEUES: it runs inside the
-/// engine's <c>MeleeHitCallback</c> with the swing's momentum a live <c>ref</c>, so a blow
-/// registered there would re-enter the hit pipeline. The ring lands on the next <c>OnMissionTick</c>.
+/// Inherits <see cref="MissionLogic"/>, NOT <see cref="MissionBehavior"/> (<c>rca-looter-battle-nre-2026-05-24.md</c>).
+/// <c>OnMeleeHit</c> only ENQUEUES: it runs inside the engine's <c>MeleeHitCallback</c> with the
+/// swing's momentum a live <c>ref</c>; the ring lands on the next <c>OnMissionTick</c>.
+/// No <c>OnBehaviorInitialize</c>: the engine dispatches it before TAOM's behaviors are added, so
+/// it never runs for them (#606); the gate is read on first use, state resets in <c>OnCreated</c>.
 /// </summary>
 public sealed class SignatureStrikesMissionLogic : MissionLogic
 {
@@ -23,8 +24,7 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
     private readonly IModLogger _logger;
     private readonly SignatureStrikeRunner _runner;
     private readonly StrikeRequestBuffer _buffer = new StrikeRequestBuffer();
-
-    private bool _eligible;
+    private bool? _eligible;
     private bool _scanned;
     private bool _disabledForThisMission;
 
@@ -36,19 +36,12 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         _runner = new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger);
     }
 
-    public override void OnBehaviorInitialize()
-    {
-        base.OnBehaviorInitialize();
-        Reset();
-        _eligible = SignatureMissionGate.IsEligible(Mission);
-    }
+    public override void OnCreated() => Reset();
 
     public override void OnAgentBuild(Agent agent, Banner banner)
     {
-        base.OnAgentBuild(agent, banner);
-        if (!_eligible || _disabledForThisMission)
+        if (!Active())
             return;
-
         try
         {
             _roster.TryRegister(agent);
@@ -59,25 +52,22 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         }
     }
 
-    public override void OnAgentDeleted(Agent affectedAgent)
-    {
-        _roster.Remove(affectedAgent);
-    }
+    public override void OnAgentDeleted(Agent affectedAgent) => _roster.Remove(affectedAgent);
 
     public override void OnMeleeHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
     {
-        if (!_eligible || _disabledForThisMission || !_roster.TryGet(attacker, out var entry))
+        if (!Active() || !_roster.TryGet(attacker, out var entry))
             return;
         // Tripwire, not a lock: this callback shares the engine chain OnAgentHit runs on.
         MissionThreadGuard.NoteCall("SignatureStrikes.OnMeleeHit",
             m => TaleWorlds.Library.Debug.Print(m, 0, TaleWorlds.Library.Debug.DebugColor.Red));
-
         try
         {
             var now = Mission.CurrentTime;
             var context = StrikeContextFactory.FromMeleeCollision(
                 attacker, victim, in collisionData, isCanceled, BlowFlags.None, entry, now);
             var effect = _service.Evaluate(in context);
+            _logger.LogInfo($"[SignatureStrikes] hit by {attacker.Name}: {context.Direction} {context.Collision} dmg={context.InflictedDamage} weapon={context.HasMeleeWeapon} canceled={isCanceled} victim={(victim == null ? "ground" : victim.Name)} -> {(effect.HasValue ? effect.Value.Kind.ToString() : "no effect")}");
             if (!effect.HasValue)
                 return;
             // Stamp at enqueue: the later bodies of one cleaving swing read as inside the cooldown.
@@ -96,19 +86,16 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
 
     public override void OnMissionTick(float dt)
     {
-        base.OnMissionTick(dt);
-        if (!_eligible || _disabledForThisMission)
+        if (!Active())
             return;
-        // Patch37_CrashReport turns a per-frame throw into a crash-report flood: fail once, stand down.
         try
         {
-            // One-shot safety net for agents built before OnAgentBuild reached this behavior
-            // (the DreadAura and warg trackers carry the same scan). Idempotent.
+            // One-shot safety net for agents built before this behavior saw them. Idempotent.
             if (!_scanned)
             {
                 _scanned = true;
-                foreach (var agent in Mission.AllAgents)
-                    _roster.TryRegister(agent);
+                _roster.RegisterAll(Mission.AllAgents);
+                _logger.LogInfo($"[SignatureStrikes] first-tick scan: {_roster.Count} signature agent(s) on the field");
             }
             if (_buffer.PendingCount == 0)
                 return;
@@ -122,10 +109,15 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         }
     }
 
-    protected override void OnEndMission()
+    protected override void OnEndMission() => Reset();
+
+    // Read once per mission on first use; the combat type is set by native InitializeMission by then.
+    private bool Active()
     {
-        base.OnEndMission();
-        Reset();
+        if (_disabledForThisMission)
+            return false;
+        _eligible ??= SignatureMissionGate.IsEligible(Mission, _logger);
+        return _eligible.Value;
     }
 
     // Agent references must not outlive the mission (the roster is a process singleton).
@@ -134,14 +126,12 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         _roster.Clear();
         _buffer.Clear();
         _runner.Clear();
-        _eligible = false;
+        _eligible = null;
         _scanned = false;
         _disabledForThisMission = false;
     }
 
-    // The roster is cleared too: TaomCombatMechanicsModel probes it for the primary-victim verdicts,
-    // and with the logic no longer stamping cooldowns a populated roster would grant a free
-    // knockdown on every overhead for the rest of the battle (Codex review 114, F1).
+    // Clears the roster too: the model probes it and would grant free knockdowns (Codex 114, F1).
     private void StandDown(string reason)
     {
         _disabledForThisMission = true;

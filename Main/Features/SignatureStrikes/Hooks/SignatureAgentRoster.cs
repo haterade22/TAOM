@@ -46,6 +46,19 @@ public sealed class SignatureAgentRoster : ISignatureAgentRoster
         return true;
     }
 
+    public int RegisterAll(IEnumerable<Agent>? agents)
+    {
+        var added = 0;
+        if (agents == null)
+            return 0;
+        foreach (var agent in agents)
+        {
+            if (TryRegister(agent))
+                added++;
+        }
+        return added;
+    }
+
     public bool TryGet(Agent? agent, out SignatureAgentEntry entry)
     {
         if (agent != null)

@@ -45,6 +45,16 @@ callable, which supports the main-thread design without proving it), and whether
 carries a non-null `realHitEntity` (if it does not, `flag5` cancels the callback and the ground slam
 never fires). All three are smoke items, recorded in the feature doc.
 
+## In-game smoke, first attempt: inert, no log line (#606)
+
+Mike played Sauron alone against 36 looters (`taom_debug_2026-09-16_16-45-48.log`, 16:59:30 to
+17:01:09) and saw nothing. The log had the config load and the behavior added, then silence: no
+gate line, no registration, no stand-down. DreadAura registered him on the same identity axes.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| S1 | HIGH (shipped) | The mission gate and the state reset lived in `OnBehaviorInitialize`, which the engine dispatches to the behaviors already in the list (`Mission.AfterStart`, `Mission.cs:3827`) BEFORE `SubModule.OnMissionBehaviorInitialize` adds TAOM's (`:3831`); `AddMissionBehavior` calls only `OnCreated` (`:4699`). `_eligible` stayed false and every callback returned before its first log line. | Engine lifecycle virtual, firing set | The virtual's NAME was trusted. Five deep-review agents and a Codex ultra pass verified its signature and never asked whether it fires for a behavior added the way TAOM adds them. The DreadAura precedent reads its gate every tick and never overrides this virtual; the copy cached the gate at init as an improvement. **Repeat offender:** the same lesson was written four days earlier for `MBSubModuleBase.OnGameLoaded` (`lessons/state-lifecycle-save.md`). The grep for other overriders found SmartCavalryAI, MixedFormations and SiegeDismount in the same dead callback; their init log lines exist in no log on disk. | Gate read on first use, reset in `OnCreated`; stage logging at every step; `MissionBehaviorLifecycleTests` fails any new TAOM override of the dead virtual; `harmony-patches.md` states the firing set; the deep-review compatibility prompt asks for the caller of every overridden lifecycle virtual. The three siblings are #606's remaining work. |
+
 ## Root-cause pattern
 
 Findings 1, 3, 5 and C1 share one shape: **a sibling was mirrored for its structure and not audited limb

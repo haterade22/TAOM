@@ -1,3 +1,4 @@
+using TAOM.Core.Logging;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.SignatureStrikes.Hooks;
@@ -24,5 +25,13 @@ public static class SignatureMissionGate
 
         // ArenaCombat covers arenas and tournaments; NoCombat covers conversations and walkarounds.
         return mission.CombatType == Mission.MissionCombatType.Combat;
+    }
+
+    /// <summary>The decision plus the one log line that lets a replay prove it (#606).</summary>
+    public static bool IsEligible(Mission? mission, IModLogger logger)
+    {
+        var eligible = IsEligible(mission);
+        logger.LogInfo($"[SignatureStrikes] mission gate: eligible={eligible} combatType={mission?.CombatType} multiplayer={GameNetwork.IsSessionActive}");
+        return eligible;
     }
 }

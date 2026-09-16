@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.SignatureStrikes.Hooks;
@@ -20,6 +21,9 @@ public interface ISignatureAgentRoster
     /// <summary>Registers the agent if it is a signature hero (hero id or race). Idempotent;
     /// true only when this call added it, so a re-scan logs nothing twice.</summary>
     bool TryRegister(Agent? agent);
+
+    /// <summary>One pass over agents already on the field; returns how many this call added.</summary>
+    int RegisterAll(IEnumerable<Agent>? agents);
 
     bool TryGet(Agent? agent, out SignatureAgentEntry entry);
 

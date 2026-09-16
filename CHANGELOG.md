@@ -4,6 +4,33 @@
 
 ## 2026-09-16
 
+### fix(combat): the signature-strike mission gate never ran, and the callback it lived in is dead for every TAOM behavior (#606)
+
+**Symptom.** Mike played Sauron against 36 looters and nothing fired. The log had the config load
+and `SignatureStrikesMissionLogic` added, then not one `[SignatureStrikes]` line: no gate, no
+registration, no stand-down. DreadAura registered him on the identical identity axes.
+
+**Cause.** The gate and the reset lived in `MissionBehavior.OnBehaviorInitialize`. On v1.5.3
+`Mission.AfterStart` dispatches that virtual to the behaviors already in the list (`Mission.cs:3827`)
+BEFORE it calls `SubModule.OnMissionBehaviorInitialize` (`:3831`), where TAOM adds every one of its
+behaviors, and `AddMissionBehavior` itself calls only `OnCreated` (`:4699`). So the gate never
+ran, `_eligible` stayed false, and every callback returned silently. The same dead callback holds
+per-mission setup in `SmartCavalryAIMissionBehavior`, `MixedFormationsMissionBehavior` and
+`SiegeDismountMissionBehavior`, and their init log lines (`[SmartCavalryAI] mission init`,
+`[MixedFormations] disabled via MCM`) appear in no `taom_debug` log on disk this week. Those three
+are #606's remaining work, each needing its own read of what the override was for.
+
+**Fix.** The gate is read once on first use from whichever callback arrives first (the combat
+type comes from native `InitializeMission` before any of them), the state resets in `OnCreated`,
+and a log line marks every stage so the replay proves each one: the gate decision with the combat
+type, each registration, the first-tick scan count, one line per signature-hero hit with the
+direction and the verdict, one per ring. `MissionBehaviorLifecycleTests` fails any new TAOM
+override of the dead virtual (the three siblings and the legitimately-placed
+`CustomBattleTeamFixBehavior` are the allowlist); `.claude/rules/harmony-patches.md` states the
+firing set; the deep-review compatibility prompt now asks for the caller of every overridden
+lifecycle virtual. Second occurrence of the "read the virtual's caller, not its name" lesson in
+four days (`OnGameLoaded`, 2026-09-12); the lesson entry records both.
+
 ### feat(combat): SignatureStrikes, direction-mapped melee effects for Sauron (#605)
 
 **Why.** Mike wanted Sauron to have specific attacks the way the warg and mumak trees give

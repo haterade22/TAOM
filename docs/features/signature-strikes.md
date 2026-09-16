@@ -80,8 +80,15 @@ the race attribute) OR FaceGen race (finds the hero in a Custom Battle, where th
 never calls `GetRaceNameFromId`. The roster is keyed by `Agent` object reference, filled in
 `OnAgentBuild` plus a one-shot scan of `Mission.AllAgents` on the first tick (the safety net the
 DreadAura and warg trackers carry, for an agent built before the behavior could see it), evicted in
-`OnAgentDeleted` (the callback the engine recycles the index from), cleared at mission start and
-end (it is a process singleton because the model probes it). Never `Agent.Index` (#592).
+`OnAgentDeleted` (the callback the engine recycles the index from), cleared in `OnCreated` and
+`OnEndMission` (it is a process singleton because the model probes it). Never `Agent.Index` (#592).
+
+**No `OnBehaviorInitialize`.** The engine dispatches it to the behaviors already in the list
+(`Mission.AfterStart`, v1.5.3 `Mission.cs:3827`) BEFORE `SubModule.OnMissionBehaviorInitialize`
+adds TAOM's (`:3831`), and `AddMissionBehavior` calls only `OnCreated` (`:4699`), so it never runs
+for any TAOM behavior (#606; the first version gated the whole feature there and was inert in the
+first battle, with no log line). The mission gate is read once on first use from whichever
+callback arrives first; the combat type comes from native `InitializeMission` before any of them.
 
 **Weapon gate.** The attacker must hold a weapon whose ITEM type is not Bow, Crossbow, Sling,
 Thrown, Pistol, Musket or an ammo type. A javelin swung in melee mode has a melee usage but a
@@ -217,6 +224,23 @@ To change what a direction does, edit its `strikes` row; to add a Thrust effect,
 row. To add a NEW kind of effect (a different ring shape, a buff), extend `StrikeEffect` and the
 runner; the service and the config validation are where the new field's gates go.
 
+## Reading the log
+
+Every stage writes one line, so a replay proves each one (`bin/Win64_Shipping_Client/Logs/taom_debug_*.log`):
+
+| Line | Meaning |
+|---|---|
+| `SignatureStrikesConfigProvider: Loaded signature_strikes_config.json` | the shipped JSON parsed clean (a `contained invalid values` warning names the field otherwise) |
+| `[SignatureStrikes] mission gate: eligible=True combatType=Combat multiplayer=False` | the mission qualifies; `eligible=False` names why (ArenaCombat, NoCombat, multiplayer) |
+| `[SignatureStrikes] Sauron registered as a signature agent (race 14)` | identity resolved on hero id or race |
+| `[SignatureStrikes] first-tick scan: 1 signature agent(s) on the field` | the safety scan; the count is the roster size |
+| `[SignatureStrikes] hit by Sauron: Overhead StrikeAgent dmg=63 weapon=True canceled=False victim=Looter -> Slam` | one per signature-hero melee collision, with the direction the engine reported and the verdict (`-> no effect` with the reason readable off the fields: `Thrust`, `Parried`, `dmg=0`, `weapon=False`, or a cooldown) |
+| `[SignatureStrikes] Slam by Sauron: basis 63, ring=4 hit, 3 feared, 2 skipped` | the ring landed one tick later |
+| `[SignatureStrikes] disabled for this mission after ...` | a caught exception; the feature stands down for the battle |
+
+No `hit by` line while Sauron is swinging means the roster does not hold him (check the gate and
+registration lines); `hit by ... -> no effect` on every swing means the gates in the line itself.
+
 ## Smoke (owed)
 
 - Route A (everything): new campaign, PlayerSwitcher to Sauron (MCM "Allow Sauron and the Nazgul"
@@ -239,6 +263,7 @@ runner; the service and the config validation are where the new field's gates go
 
 ## Changelog
 
+- 2026-09-16: #606, the mission gate moved off the dead `OnBehaviorInitialize` (never fires for a TAOM-added behavior) to a first-use read; stage logging for the replay.
 - 2026-09-16: Codex review 114 fixes (stand-down clears the roster, name-only enum parsing, impact finiteness gate, shared damage cast, 0.5 s cooldown floor, inert profiles skip).
 - 2026-09-16: feature landed (#605).
 
