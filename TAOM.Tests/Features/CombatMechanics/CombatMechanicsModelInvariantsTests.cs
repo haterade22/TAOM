@@ -33,6 +33,10 @@ public class CombatMechanicsModelInvariantsTests
         "DecideAgentShrugOffBlow",
         "CalculateStaggerThresholdDamage",
         "DecideAgentKnockedDownByBlow",
+        // SignatureStrikes (#605, 2026-09-16): a signature hero's side swing knocks the struck
+        // agent back; vanilla never grants KnockBack to a melee swing, so this is the one place
+        // that verdict can come from. Every non-signature case falls through to base.
+        "DecideAgentKnockedBackByBlow",
         "DecideMissileWeaponFlags",
         "CalculateShieldDamage",
         "GetHorseChargePenetration",

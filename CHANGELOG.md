@@ -2,6 +2,78 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-16
+
+### feat(combat): SignatureStrikes, direction-mapped melee effects for Sauron (#605)
+
+**Why.** Mike wanted Sauron to have specific attacks the way the warg and mumak trees give
+creatures theirs: "when he hits with his mace it does X, Y, Z", widened mid-session to any weapon
+except a throw or a shot, with long cooldowns so he is not overpowered. The siege-equipment
+investigation that preceded it (v1.5.3 dump) settled the engine facts: a boulder kills several
+people because native calls `Mission.MissileAreaDamageCallback` for `AffectsArea` missiles (1.2 m
+ring, full damage inside 1.0 m, quadratic falloff to one ninth, every ring victim inheriting the
+primary blow's `KnockDown`), a ballista bolt passes through three agents via `MultiplePenetration`,
+both missile-only; a melee swing never knocks back and knocks down only inside the sweet spot when
+the damage clears an Athletics-scaled share of max HP; rams and towers damage nobody by contact.
+Sauron already cleaves and crush-throughs and his mace head carries `CanKnockDown`, so what was
+missing was the ring, the stagger, the fear and a knockdown that ignores the sweet spot.
+
+**What.** A new `Main/Features/SignatureStrikes/` module, no behavior tree and no Harmony patch.
+Effects key on the swing direction the engine already animated, so AI and player Sauron get the
+same attacks with no authored clip and no fight with the human combat AI: an overhead is a Slam
+(the struck agent always goes down, enemies within 4 m of the impact take 60% of the hit with the
+engine's boulder falloff and fall, a 15-morale fear burst drains them; also on an overhead into the
+ground, so a player can deliberately slam), a side swing is a Sweep (the struck agent and the
+enemies within 3 m in front are staggered back with `BlowFlags.KnockBack`), a thrust is a plain
+hit. `SignatureStrikesMissionLogic : MissionLogic` listens on `MissionBehavior.OnMeleeHit`, only
+ENQUEUES a value-type request (that callback runs inside the engine's `MeleeHitCallback` with the
+swing momentum a live `ref`), and rings the enemies on the next `OnMissionTick` through the
+existing `CustomAttacksUtils.TakeDamage`, which gains a trailing `BlowFlags extraFlags` (the flag
+composition is extracted to a pure, tested `ComposeBlowFlags`). `TaomCombatMechanicsModel` gains
+two thin delegations behind optional ctor params (the `IRefugeDefenseService` precedent): the
+non-charge `DecideAgentKnockedDownByBlow` and a new `DecideAgentKnockedBackByBlow` ask
+`ISignatureStrikeService` first and fall through to `base` for horse charges, mounted or non-human
+victims, shrug-offs, blocks and zero damage. One package per swing: the cooldown is stamped at
+enqueue per attacker and per kind, the verdicts read the same stamps, so a cleave's second body is
+a vanilla hit. Identity is the DreadAura two-axis pattern (hero id OR race, id-keyed, no
+`GetRaceNameFromId` on the hot path), the roster is keyed by agent reference and evicted on
+delete (#592), the fear burst reuses `DreadAgentGate`, `IDreadRegistry.ResolveResist` and the
+`BattleMoraleModel` call but not Dread's toggle-gated drain. Gated out: parries, chamber and weapon
+blocks, kicks and bashes, bare hands, thrown and ranged items even when swung, missiles, horse
+charges, arenas and tournaments, multiplayer. A shield block that damages the shield rings at a
+quarter and never floors the blocker.
+
+**Config and balance.** `Main/_Module/ModuleData/signature_strikes/signature_strikes_config.json`,
+validated field by field (NaN and Infinity rejected before every range check, `innerRadius <=
+outerRadius`, unknown direction or kind rows dropped with a warning): shipped `lord_1_17` /
+`sauron` only, Slam cooldown 20 s, Sweep 12 s. MCM (Combat Mechanics group): a `Signature
+Strikes` toggle and a live `Signature Strike Cooldown Multiplier` (0.5x to 5x). The Combat
+Mechanics master toggle folds in.
+
+**Review.** `/deep-review` (five agents) returned one HIGH, one standards breach, two MEDIUMs and
+three LOWs, all fixed the same session and recorded in
+`docs/reviews/rca-signature-strikes-2026-09-16.md`: a one-shot first-tick scan of the agents already
+on the field (the limb the DreadAura and warg trackers carry and this logic had dropped), the
+mission logic trimmed from 158 to 148 lines, one `TaomSettings.Instance` read per hit instead of
+two, tests for the pure halves of the Hooks classes, a `lords.xslt` cross-file pin on Sauron's race,
+and the JSON note that MCM owns `enabled` once loaded. Compatibility verified 38 engine members
+against the installed v1.5.3 DLLs, none incompatible. Two lessons appended
+(`lessons/state-lifecycle-save.md`, `lessons/build-tooling-workflow.md`).
+
+**Tests.** 207 new or moved: the pure service (every rejection, both bases, the cooldown boundary
+and NaN cases, the verdict matrix, ring damage rounding and the int-cast overflow, fear headroom
+and the -1 sentinel), the falloff curve, the registry, one test per config rule, the shipped-file
+pin, the swap buffer, the flag composer, and a binding class pinning `OnMeleeHit`,
+`GetNearbyEnemyAgents`, `DecideAgentKnockedBackByBlow`, `BlowFlags.KnockBack == 0x10`, the two
+enum mirrors, `: MissionLogic` and the `SubModule.cs` call site, plus the factory's enum mirrors
+and item-type gate, the roster's null paths and the gate's null arm. `CombatMechanicsModelInvariants`
+and `SettingsFingerprint` (231 / 182, both docs updated) moved with the feature. Full suite 9,393
+green, 2 pre-existing skips.
+
+**Owed.** In-game smoke (`docs/features/signature-strikes.md` "Smoke"), in particular whether
+native honours `KnockBack` on a synthetic blow; the fallback is a low-magnitude `KnockDown` for
+the sweep ring. Numbers are first guesses until then.
+
 ## 2026-09-15
 
 ### fix(aso): the Advanced Starting Options strings reach the main-menu GlobalTextManager (#604)

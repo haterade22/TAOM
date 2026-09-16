@@ -1041,6 +1041,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down regardless of resistance (mumakil vs man is ~125). Default 8. Lower = heavy cavalry flattens infantry more often. Values below the neutral weight ratio (default 6 = ordinary horse+rider vs man) are treated as the neutral ratio so every plain horse charge doesn't auto-floor.")]
     public int ChargeAutoKnockdownWeightRatio { get; set; } = 8;
 
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Signature Strikes", Order = 11, RequireRestart = false,
+        HintText = "Configured heroes (shipped: Sauron) get direction-mapped effects on any melee hit: an overhead is a Slam (the struck foe always goes down, enemies in a ring around the impact are knocked down and take part of the damage, a burst of fear drains their morale; also fires on an overhead into the ground), a side swing is a Sweep (the struck foe and enemies in front are staggered back). Never on a throw, a shot, a kick or bare hands. Cooldowns and radii live in signature_strikes_config.json.")]
+    public bool EnableSignatureStrikes { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyFloatingInteger("Signature Strike Cooldown Multiplier", 0.5f, 5f, "0.0x", Order = 12, RequireRestart = false,
+        HintText = "Multiplies both signature-strike cooldowns (shipped: Slam 20 s, Sweep 12 s). Raise it if Sauron feels overpowered; the JSON values need a full restart, this slider applies live.")]
+    public float SignatureStrikeCooldownMultiplier { get; set; } = 1f;
+
     // --- Aura of Dread ---
 
     [SettingPropertyGroup("Aura of Dread", GroupOrder = 34)]

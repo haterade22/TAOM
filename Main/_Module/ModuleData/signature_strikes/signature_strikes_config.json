@@ -1,0 +1,56 @@
+{
+  "_comment_feature": "Signature strikes (#605): direction-mapped effects when a configured hero lands a melee hit with any weapon except thrown and ranged. Overhead = Slam, Left/Right = Sweep, Thrust = a plain hit. Keys are case-insensitive. Full design and every gate: docs/features/signature-strikes.md. A full Bannerlord restart is needed for changes here; the MCM cooldown multiplier applies live.",
+
+  "_comment_enabled": "Read only when MCM is absent. Once MCM has loaded, the Combat Mechanics group's Signature Strikes toggle (default on) owns this switch and the value here is not consulted.",
+  "enabled": true,
+
+  "_comment_heroIds": "Hero StringIds with signature strikes. lord_1_17 is Sauron. He is listed here AND by race so the feature survives a data change that drops his race attribute.",
+  "heroIds": [ "lord_1_17" ],
+
+  "_comment_races": "FaceGen race names with signature strikes. The race axis is what finds Sauron in a Custom Battle, where the agent carries no hero. An unknown name is skipped with a warning in the log.",
+  "races": [ "sauron" ],
+
+  "_comment_balance": "Cooldowns are per attacker and per kind, in mission seconds. Long on purpose: a Slam is guaranteed knockdown + ring + fear in one package, and Mike's standing instruction is that Sauron must not be overpowered. Range 0 to 120.",
+  "slamCooldownSeconds": 20,
+  "sweepCooldownSeconds": 12,
+
+  "_comment_shieldBlockedMultiplier": "Fraction of the damage basis kept when the triggering hit landed on a shield, and of a ring victim's damage while that victim is shield-blocking (a blocking victim is never knocked down). 0 to 1.",
+  "shieldBlockedMultiplier": 0.25,
+
+  "_comment_strikes": "One profile per swing direction. kind: Slam or Sweep (the cooldown is per kind). outerRadius / innerRadius in metres (0.1 to 15, inner <= outer): full effect inside inner, one ninth at outer, the engine's own boulder curve. damageFraction (0 to 1): share of the hit's damage a ring victim takes before falloff. worldHitBaseDamage (0 to 500): damage basis when the swing hits the ground instead of a foe, 0 = a ground hit does nothing. magnitude (0 to 500): blow impulse on ring victims. knockDown: ring victims fall (riders are dismounted) and the struck foe always falls. knockBack: ring victims and the struck foe are staggered back. fearMorale (0 to 100): one-shot morale drain on ring victims before tier and race resistance, 0 = none.",
+  "strikes": {
+    "Overhead": {
+      "kind": "Slam",
+      "outerRadius": 4.0,
+      "innerRadius": 1.5,
+      "damageFraction": 0.6,
+      "worldHitBaseDamage": 60,
+      "magnitude": 80,
+      "knockDown": true,
+      "knockBack": false,
+      "fearMorale": 15
+    },
+    "Left": {
+      "kind": "Sweep",
+      "outerRadius": 3.0,
+      "innerRadius": 1.5,
+      "damageFraction": 0.25,
+      "worldHitBaseDamage": 0,
+      "magnitude": 60,
+      "knockDown": false,
+      "knockBack": true,
+      "fearMorale": 0
+    },
+    "Right": {
+      "kind": "Sweep",
+      "outerRadius": 3.0,
+      "innerRadius": 1.5,
+      "damageFraction": 0.25,
+      "worldHitBaseDamage": 0,
+      "magnitude": 60,
+      "knockDown": false,
+      "knockBack": true,
+      "fearMorale": 0
+    }
+  }
+}

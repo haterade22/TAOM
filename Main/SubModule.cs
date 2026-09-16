@@ -1216,7 +1216,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CombatMechanics.IShieldPenetrationService>(),
             IoC.Resolve<Features.CombatMechanics.ICombatMechanicsConfigProvider>(),
             IoC.Resolve<Features.CombatMechanics.ICombatMechanicsSettingsProvider>(),
-            IoC.Resolve<Features.Refuge.IRefugeDefenseService>()));
+            IoC.Resolve<Features.Refuge.IRefugeDefenseService>(),
+            // SignatureStrikes (#605): the guaranteed knockdown / knock-back on the struck agent.
+            // Optional params on the model, so the two resolves here are what turn them on.
+            IoC.Resolve<Features.SignatureStrikes.ISignatureStrikeService>(),
+            IoC.Resolve<Features.SignatureStrikes.Hooks.ISignatureAgentRoster>()));
         campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
         // BannerBearers: the engine's BannerBearerLogic already runs in every field battle,
         // sally-out and siege — this model supplies TAOM's policy (bearers per formation, the
@@ -1958,6 +1962,9 @@ public class SubModule : MBSubModuleBase
         // OnBehaviorInitialize. No AddModel counterpart: the aura drives CommonAIComponent morale
         // directly and CALLS the registered BattleMoraleModel rather than overriding it.
         AddTaomBehavior(new Features.DreadAura.Hooks.DreadAuraMissionLogic());
+        // SignatureStrikes (#605): a configured hero's melee hit rings the enemies around the
+        // impact. Registered unconditionally; SignatureMissionGate self-gates per mission.
+        AddTaomBehavior(new Features.SignatureStrikes.Hooks.SignatureStrikesMissionLogic());
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

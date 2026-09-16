@@ -97,7 +97,7 @@ public class CustomAttacksUtils
         TakeDamage(victim, victim, damage, magnitude, knockDown);
     }
 
-    public static void TakeDamage(Agent victim, Agent attacker, int damage, float magnitude = 50f, bool knockDown = false)
+    public static void TakeDamage(Agent victim, Agent attacker, int damage, float magnitude = 50f, bool knockDown = false, BlowFlags extraFlags = BlowFlags.None)
     {
         if (victim == null || attacker == null) return;
 
@@ -142,11 +142,7 @@ public class CustomAttacksUtils
         blow.SwingDirection.Normalize();
         blow.Direction = blow.SwingDirection;
         blow.DamageCalculated = true;
-        if (knockDown)
-        {
-            if (victim.HasMount) blow.BlowFlag |= BlowFlags.CanDismount;
-            else blow.BlowFlag |= BlowFlags.KnockDown;
-        }
+        blow.BlowFlag |= ComposeBlowFlags(knockDown, victim.HasMount, extraFlags);
 
         // Native-boundary geometry guard (spider auto-bite crash RCA 2026-06-14). GlobalPosition /
         // SwingDirection / BaseMagnitude are the ONLY TAOM-supplied floats that reach native code
@@ -206,6 +202,21 @@ public class CustomAttacksUtils
         CombatLogData combatLogData = new(false, attacker.IsHuman, attacker.IsMine, attacker.RiderAgent != null, attacker.RiderAgent != null && attacker.RiderAgent.IsMine, attacker.IsMount, victim.IsHuman, victim.IsMine, victim.Health <= 0f, victim.RiderAgent != null, victim.RiderAgent != null && victim.RiderAgent.IsMine, victim.IsMount, null, victim.RiderAgent == victim, knockDown, false, 0f);
         MissionWeapon weapon = MissionWeapon.Invalid;
         RegisterBlow(attacker, victim, WeakGameEntity.Invalid, blow, ref attackCollisionDataForDebugPurpose, in weapon, ref combatLogData);
+    }
+
+    /// <summary>
+    /// The flags a synthetic blow carries. A knockdown on a mounted victim becomes a dismount (the
+    /// engine's own rule for a rider). <paramref name="extraFlags"/> lets a caller add
+    /// <see cref="BlowFlags.KnockBack"/> (SignatureStrikes #605); the engine grants that stagger
+    /// only to an unmounted human (Mission.CreateMeleeBlow, v1.5.3 Mission.cs:5634), so it is
+    /// stripped for a rider here as well. Pure, pinned by CustomAttacksUtilsBlowFlagsTests.
+    /// </summary>
+    public static BlowFlags ComposeBlowFlags(bool knockDown, bool victimHasMount, BlowFlags extraFlags)
+    {
+        var flags = extraFlags;
+        if (victimHasMount) flags &= ~BlowFlags.KnockBack;
+        if (knockDown) flags |= victimHasMount ? BlowFlags.CanDismount : BlowFlags.KnockDown;
+        return flags;
     }
 
     private static long _nonFiniteBlowSkips;

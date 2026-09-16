@@ -500,6 +500,12 @@ absence, which is why `lord_4_6` and `lord_WE8_c` are listed there by id.
   actually wins at runtime, `characters/lords.xml`, has no regenerator and therefore no guard.
 - **Source:** 2026-08-28, `a00086da`.
 
+### The Write and Edit tools decode `\uXXXX`; a source file that needs a literal backslash-u escape is built from char codes
+A C# regex written as `"[\u2013\u2014]"` through the Write tool landed in the file as the two dash characters themselves, because the tool decodes the escape in its parameter. The Edit tool did the same and refused the fix as "no change". The Bash heredoc has the opposite defect (it eats one backslash round, memory `topics/bash-heredoc-backslashes`), so a Python heredoc carrying the same escape failed to parse. The only reliable shape was a script FILE composing `chr(92) + "u2013"`.
+- **Why missed:** the file compiled and the test passed either way (a literal dash inside a regex character class matches the same text), so only the output-style dash scan noticed, and it noticed a `.cs` file the markdown linter does not read.
+- **Prevent:** when a source file must contain a literal `\u` escape (or any backslash sequence the tools interpret), write it via a script file that builds the backslash from `chr(92)`, then grep the file for the characters you did NOT want. Run the dash scan over changed `.cs` and `.json` files too, not only markdown.
+- **Source:** `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 8.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

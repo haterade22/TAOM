@@ -6,6 +6,8 @@ using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Domain;
 using TAOM.Features.Refuge;
+using TAOM.Features.SignatureStrikes;
+using TAOM.Features.SignatureStrikes.Hooks;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.Party;
 
@@ -29,6 +31,8 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     private readonly ICombatMechanicsConfigProvider _configProvider;
     private readonly ICombatMechanicsSettingsProvider _settingsProvider;
     private readonly IRefugeDefenseService _refugeDefense;
+    private readonly ISignatureStrikeService _signatureStrikes;
+    private readonly ISignatureAgentRoster _signatureRoster;
 
     public TaomCombatMechanicsModel(
         ICareerAgentStatService careerAgentStatService,
@@ -38,7 +42,9 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         IShieldPenetrationService shieldPenetrationService,
         ICombatMechanicsConfigProvider configProvider,
         ICombatMechanicsSettingsProvider settingsProvider,
-        IRefugeDefenseService refugeDefense = null)
+        IRefugeDefenseService refugeDefense = null,
+        ISignatureStrikeService signatureStrikes = null,
+        ISignatureAgentRoster signatureRoster = null)
         : base(careerAgentStatService)
     {
         _crushThroughService = crushThroughService;
@@ -48,6 +54,8 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         _configProvider = configProvider;
         _settingsProvider = settingsProvider;
         _refugeDefense = refugeDefense;
+        _signatureStrikes = signatureStrikes;
+        _signatureRoster = signatureRoster;
     }
 
     // Refuge (#507): defenders of a ready refuge take reduced real-time damage. base runs the
@@ -116,13 +124,28 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     public override bool DecideAgentKnockedDownByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
     {
         // Guard keeps the boundary extraction (incl. the stat-model resistance read) off the
-        // ordinary melee path — the service only owns horse-charge verdicts.
+        // ordinary melee path: the charge service only owns horse-charge verdicts. The melee
+        // path asks SignatureStrikes (#605) first: a signature hero's slam floors the struck
+        // agent regardless of the sweet spot; every other hit is base.
         if (!collisionData.IsHorseCharge)
-            return base.DecideAgentKnockedDownByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow);
+            return SignatureVerdict(attackerAgent, victimAgent, in collisionData, in blow, knockdown: true)
+                ?? base.DecideAgentKnockedDownByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow);
 
         var context = BuildChargeKnockdownContext(attackerAgent, victimAgent, in collisionData, in blow);
         return _chargeKnockdownService.DecideChargeKnockdown(in context)
             ?? base.DecideAgentKnockedDownByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow);
+    }
+
+    // Vanilla never grants KnockBack to a melee swing (SandboxAgentApplyDamageModel.CanWeaponKnockback
+    // returns false for swings), so a signature hero's sweep is the only true this can produce;
+    // horse charges and every non-signature hit stay base (the 0.7-dot glancing gate is untouched).
+    public override bool DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
+    {
+        if (collisionData.IsHorseCharge)
+            return base.DecideAgentKnockedBackByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow);
+
+        return SignatureVerdict(attackerAgent, victimAgent, in collisionData, in blow, knockdown: false)
+            ?? base.DecideAgentKnockedBackByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow);
     }
 
     public override void DecideMissileWeaponFlags(Agent attackerAgent, in MissionWeapon missileWeapon, ref WeaponFlags missileWeaponFlags)
@@ -157,6 +180,19 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
             : base.GetHorseChargePenetration();
 
     // Primitive extractors — pure boundary conversion, no decisions (parent-model idiom).
+
+    // Null service or roster = feature absent (the optional-param contract). The roster probe is
+    // one dictionary lookup, so the non-signature 99.9% of hits pay nothing further.
+    private bool? SignatureVerdict(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, in Blow blow, bool knockdown)
+    {
+        if (_signatureStrikes == null || _signatureRoster == null || !_signatureRoster.TryGet(attackerAgent, out var entry))
+            return null;
+
+        var context = StrikeContextFactory.FromMeleeCollision(
+            attackerAgent, victimAgent, in collisionData, isCanceled: false, blow.BlowFlag, entry,
+            Mission.Current?.CurrentTime ?? float.NaN);
+        return knockdown ? _signatureStrikes.DecideKnockdown(in context) : _signatureStrikes.DecideKnockback(in context);
+    }
 
     private CrushThroughContext BuildCrushThroughContext(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsageHit)
     {

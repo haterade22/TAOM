@@ -214,6 +214,12 @@ which is a worse bug than the one being fixed and leaves no trace. Two tests pin
 
 **Source:** `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #1 (deep-review data-flow agent, lifecycle trace).
 
+### A sibling tracker's scan is a limb, not a redundancy: carry it or write down why the callback set is complete
+`SignatureStrikesMissionLogic` (#605) was modelled on `DreadAuraMissionLogic` and `WargMissionBehavior` and registered agents through `OnAgentBuild` alone; both siblings also scan the agents already on the field once, for an agent built before the behavior could see it. The scan was dropped as redundant on the reasoning that behaviors initialize before spawns. That reasoning was never written down or proven, and the failure it guards against is silent: the one hero the feature exists for is simply never on the roster, and no log line says so.
+- **Why missed:** the sibling was copied for its structure, and the limb whose purpose was not obvious was the one left out. `/deep-review` Agent 5's lifecycle matrix caught it; nothing before the review asked "which callbacks can miss an agent".
+- **Prevent:** when a mission-scope tracker mirrors an existing one, keep every registration path the sibling has (build callback AND one-shot scan) unless the dropped path's safety is proven from the engine and stated in the class comment. A scan is one loop per mission; the proof costs more than the loop.
+- **Source:** `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 1.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

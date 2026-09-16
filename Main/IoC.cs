@@ -8,6 +8,7 @@ using TAOM.Features.BannerBearers;
 using TAOM.Features.BannerColorPersistence;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.DreadAura;
+using TAOM.Features.SignatureStrikes;
 using TAOM.Features.HeroRace;
 using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
@@ -146,6 +147,7 @@ public static class IoC
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         BannerBearersIoC.RegisterBannerBearersFeature(container);
         DreadAuraIoC.RegisterDreadAuraFeature(container);
+        SignatureStrikesIoC.RegisterSignatureStrikesFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
         MessengerIoC.RegisterMessengerFeature(container);
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);
