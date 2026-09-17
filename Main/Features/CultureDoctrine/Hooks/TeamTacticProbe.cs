@@ -65,7 +65,13 @@ public static class TeamTacticProbe
                 sb.Append(", ");
             first = false;
             var active = formation.AI?.ActiveBehavior;
-            sb.Append(formation.FormationIndex).Append(':').Append(formation.CountOfUnits)
+            // slot/class: the slot is where the units were put; the class is what the engine's
+            // ratios say they are (a slot named Cavalry can hold a merged infantry mass, and
+            // riders without mounts read as infantry).
+            sb.Append(formation.FormationIndex);
+            if (formation.PhysicalClass != formation.FormationIndex)
+                sb.Append('/').Append(formation.PhysicalClass);
+            sb.Append(':').Append(formation.CountOfUnits)
               .Append(' ').Append(active?.GetType().Name ?? "none");
             // A TAOM behaviour also shows its stage or stance (Marching, Square, Reforming, failed: ...).
             if (active is TaomBehaviorBase taom && taom.Status.Length > 0)

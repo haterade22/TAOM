@@ -38,12 +38,20 @@ public sealed class HighGroundAnchor
     private const float ArrivedDistance = 10f;
     private const float MinLockRadius = 30f;
 
+    private static readonly string[] StatusNames = { "Undecided", "Marching", "Holding", "Arrived" };
+    private static readonly string[] Suffixes = { ":Undecided", ":Marching", ":Holding", ":Arrived" };
+
     private readonly List<float> _enemyEtas = new List<float>(8);
     private State _state;
     private Formation? _for;
     private WorldPosition _position = WorldPosition.Invalid;
 
-    public string Status => _state.ToString();
+    /// <summary>The state's name, a constant per state: the status line compares it by
+    /// reference once a second to see whether the tactic's line needs rebuilding.</summary>
+    public string Status => StatusNames[(int)_state];
+
+    /// <summary>The same with the colon, for the tactic's status line.</summary>
+    public string Suffix => Suffixes[(int)_state];
 
     /// <summary>The position to defend, decided or re-checked at a phase apply.
     /// <paramref name="anchor"/> is the formation whose high ground is meant (the archers for a

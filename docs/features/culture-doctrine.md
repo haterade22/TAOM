@@ -415,7 +415,7 @@ active behaviour and arrangement. Works in Custom Battle.
 ```
 [Doctrine] team=1 side=Defender player=no culture=erebor doctrine=erebor troops=300 tacticsSkill=0 morale=never-rout/bravery +15 registered=[ShieldWall*1.00, TwoLineWall*1.00, Charge*0.30, ...]
 [Doctrine] formation routing subscribed (GetAgentTroopClass_Override)
-[Doctrine] t=+65s team=1 side=Defender player=no tactic=TaomTacticShieldWall formations=[Infantry:210 BehaviorBracedDefend:ShieldWall/ShieldWall/FireAtWill, Ranged:60 BehaviorSkirmishLine/Scatter/HoldYourFire, Cavalry:30 BehaviorProtectFlank/Line/FireAtWill] taom=[TaomTacticShieldWall:Defend:Arrived]
+[Doctrine] t=+65s team=1 side=Defender player=no tactic=TaomTacticShieldWall formations=[Infantry:210 BehaviorBracedDefend:ShieldWall/ShieldWall/FireAtWill, Ranged:60 BehaviorSkirmishLine/Scatter/HoldYourFire, Cavalry/Infantry:95 BehaviorFootCharge:Charging/Line/FireAtWill] taom=[TaomTacticShieldWall:Defend:Arrived]
 [Doctrine] off: vanilla tactics stay (status line on)
 [Doctrine] disabled for this mission after <exception>
 [MissionPerf] t=+65s frames=300 fps=60.0 avgMs=16.67 p95Ms=25.50 maxMs=40.3 agents=812 active=640 formations=9 gc0=12 gc1=3 gc2=1
@@ -427,7 +427,13 @@ stage or stance after its name (`BehaviorCycleCharge:Reforming`, `BehaviorBraced
 `BehaviorFootCharge:Charging` or `:Square`, `BehaviorInfantrySkirmish:Committed`, or
 `failed: ...`), then the arrangement and the firing order; an Elven tactic under volley control
 ends its status with `:Hold` or `:Loose`; a wall or ring tactic ends with `:Marching`,
-`:Holding` or `:Arrived` (the high-ground race).
+`:Holding` or `:Arrived` (the high-ground race, refreshed the second the anchor moves, not only
+at the next apply). A formation prints as `slot:count`, or `slot/class:count` when the engine's
+class ratios disagree with the slot: the slot is where the units were put and the engine's
+consolidation moves units between slots freely (an infantry mass can sit in the `Cavalry`
+slot), and riders without a live mount count as infantry (`QueryLibrary.IsCavalry` needs
+`Agent.HasMount`), which is why a "Cavalry" slot can read `/Infantry` and be merged into the
+foot.
 
 ## Key Files
 
@@ -629,8 +635,18 @@ Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and
 - The first Custom Battle A/B (Erebor defender v Mordor, 300 v 300, 2026-09-17) ran clean:
   registration on both sides, routing subscribed, no failed latch, 172 to 183 fps at 661 agents,
   gen 2 collections zero. Its two failures (the wall marching 95 s to a far hill, the foot
-  chasing the horse) are the engagement slice above; the second A/B, with the two cells it
-  added, is owed, and the toggle stays off until it passes.
+  chasing the horse) are the engagement slice above. The second (120 v 120, 12:29, on the
+  engagement slice) had the dwarf wall in ShieldWall within five seconds of F6 and standing
+  there for the battle; Mordor's mass charged it and died to the last (never-rout dwarves lost
+  18 of 120). Two things it showed: the tactic's status line kept saying `Marching` for 85 s on
+  a wall that stood (the anchor moved to Arrived without a re-apply; fixed, the line refreshes
+  on the anchor's own tick), and Mordor's two mounted slots stood on `BehaviorStop` for 30 s
+  under Envelop and were then merged into the foot mass: the engine's class ratios read them as
+  infantry, so no cavalry row seated them and a formation the plan does not seat kept stale
+  weights (fixed: every unseated formation gets vanilla's defaults, as every vanilla tactic
+  does). Whether those riders had mounts at all is the open question the `slot/class` status
+  now answers. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
+  until they pass.
 - The high-ground march is decided once: `Holding` is terminal, so a wall that formed where it
   stood at the first decision (the enemy foot inside 50 m, or no slope worth having inside 60 m)
   does not march later when the picture changes. Deliberate: a wall that walks off mid-battle is

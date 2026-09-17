@@ -78,6 +78,23 @@ public class DoctrineSwitchInvariantTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void TaomTacticBase_GivesEveryUnseatedFormationVanillasDefaults()
+    {
+        RequireGame();
+
+        // Every vanilla tactic gives every formation the default rows; a formation the plan did
+        // not seat must not keep stale weights (Mordor's horse stood on BehaviorStop for 30 s
+        // in the second A/B). The base's Apply must reach ApplyDefaults, and ApplyDefaults must
+        // reset then call SetDefaultBehaviorWeights.
+        var apply = PatchProcessor.ReadMethodBody(AccessTools.Method(typeof(TaomTacticBase), "Apply")).Select(i => i.Value as MethodInfo).Where(m => m != null).ToList();
+        Assert.IsTrue(apply.Any(m => m!.Name == nameof(BehaviorWeightApplier.ApplyDefaults)), "TaomTacticBase.Apply no longer calls ApplyDefaults");
+        var defaults = Body(typeof(BehaviorWeightApplier), nameof(BehaviorWeightApplier.ApplyDefaults)).Select(i => i.Value as MethodInfo).Where(m => m != null).Select(m => m!.Name).ToList();
+        CollectionAssert.Contains(defaults, "ResetBehaviorWeights");
+        CollectionAssert.Contains(defaults, "SetDefaultBehaviorWeights");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void BehaviorWeightApplier_TargetsOnlyBehavioursTeamAIGeneralRegisters()
     {
         RequireGame();

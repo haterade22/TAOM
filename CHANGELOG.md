@@ -4,6 +4,24 @@
 
 ## 2026-09-17
 
+### fix(combat): the status line refreshes with the march, unseated formations get vanilla's rows (#608)
+
+The second Custom Battle A/B (Erebor v Mordor, 120 v 120, 12:29): the dwarf wall stood in
+ShieldWall within five seconds of F6 and never left it; Mordor's mass charged it and died to the
+last (the never-rout dwarves lost 18). Two defects in the log. The tactic status read `Marching`
+for 85 s on a wall that stood: `HighGroundAnchor.Tick` moves Marching to Arrived or Holding
+without a re-apply, and the status line was rebuilt only at an apply; the base now rebuilds it
+the second the anchor's suffix changes (the suffix is a constant per state, so the check is a
+reference compare). And Mordor's two mounted slots stood on `BehaviorStop` for 30 s under
+Envelop, then merged into the foot mass at the next tactic: the engine's class ratios read them
+as infantry, so no cavalry row seated them, and `TaomTacticBase.Apply` touched only the seated
+formations; every vanilla tactic gives every formation its default rows
+(`SetDefaultBehaviorWeights`), and the base now does the same for every formation with units the
+plan did not seat (`BehaviorWeightApplier.ApplyDefaults`, IL-pinned). Whether those riders had
+mounts at all (`QueryLibrary.IsCavalry` needs `Agent.HasMount`) is what the status line now
+shows: a formation prints `slot/class:count` when the engine's class disagrees with its slot.
+Suite 9,776 green, 2 pre-existing skips.
+
 ### feat(spider): Brown Spider and Pale Spider, the goblin Spider Rider fields three skins (#616)
 
 **Why.** The artist delivered the giant spider with three materials (`m_mordor_spider_a1` brown,

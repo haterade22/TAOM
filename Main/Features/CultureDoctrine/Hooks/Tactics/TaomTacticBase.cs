@@ -52,6 +52,7 @@ public abstract class TaomTacticBase : TacticComponent
     private bool _joined;
     private volatile bool _failed;
     private volatile string _status = "idle";
+    private string _statusSuffix = "";
 
     protected TaomTacticBase(Team team, DoctrinePlan plan, float multiplier)
         : base(team)
@@ -158,7 +159,13 @@ public abstract class TaomTacticBase : TacticComponent
             if (_plan.HasVolleyControl && _volley.Tick(_archers, _plan.Volley))
                 _status = StatusLine(current.Value);
             if (!OnPhaseTick(current.Value))
+            {
+                // The anchor moves Marching to Arrived or Holding without a re-apply; the
+                // first A/B showed "Marching" for 85 s on a wall that stood in ShieldWall.
+                if (!ReferenceEquals(StatusSuffix, _statusSuffix) && StatusSuffix != _statusSuffix)
+                    _status = StatusLine(current.Value);
                 return;
+            }
             phase = current;
         }
         else
@@ -173,8 +180,12 @@ public abstract class TaomTacticBase : TacticComponent
         _status = StatusLine(phase.Value);
     }
 
-    private string StatusLine(TacticPhase phase) =>
-        phase + StatusSuffix + (_plan.HasVolleyControl ? ":" + _volley.Status : "");
+    private string StatusLine(TacticPhase phase)
+    {
+        var suffix = StatusSuffix;
+        _statusSuffix = suffix;
+        return phase + suffix + (_plan.HasVolleyControl ? ":" + _volley.Status : "");
+    }
 
     protected override void ManageFormationCounts()
     {
@@ -270,9 +281,26 @@ public abstract class TaomTacticBase : TacticComponent
             if (formation != null)
                 BehaviorWeightApplier.Apply(formation, formations[i], this);
         }
+        // Every other formation with units gets vanilla's defaults, as every vanilla tactic
+        // gives every formation (TacticDefensiveEngagement.Engage loops them all): a formation
+        // the split left without a seat (a horse formation the class ratios read as foot, a
+        // third infantry block before the split) otherwise keeps stale weights and stands on
+        // BehaviorStop for the phase, which the first A/B showed for 30 s of Mordor's horse.
+        var all = FormationsIncludingEmpty;
+        for (var i = 0; i < all.Count; i++)
+        {
+            var formation = all[i];
+            if (formation.CountOfUnits > 0 && !Seated(formation))
+                BehaviorWeightApplier.ApplyDefaults(formation);
+        }
         if (_plan.HasVolleyControl)
             _volley.Tick(_archers, _plan.Volley);
     }
+
+    private bool Seated(Formation formation) =>
+        formation == _mainInfantry || formation == _secondInfantry || formation == _leftWing || formation == _rightWing
+        || formation == _archers || formation == _leftCavalry || formation == _rightCavalry || formation == _cavalry
+        || formation == _rangedCavalry || formation == _vanguard;
 
     private Formation? FormationFor(FormationRole role)
     {

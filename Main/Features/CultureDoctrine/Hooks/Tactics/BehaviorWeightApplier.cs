@@ -89,6 +89,15 @@ public static class BehaviorWeightApplier
         }
     }
 
+    /// <summary>Vanilla's own weights for a formation the plan did not seat: reset, then Charge,
+    /// PullBack, Stop and Reserve at 1 (`TacticComponent.cs:581-587`), so it fights as a
+    /// vanilla tactic would have it instead of standing on stale weights.</summary>
+    public static void ApplyDefaults(Formation formation)
+    {
+        formation.AI.ResetBehaviorWeights();
+        TacticComponent.SetDefaultBehaviorWeights(formation);
+    }
+
     /// <summary><c>SetDefaultBehaviorWeights</c> arms <c>BehaviorCharge</c> at 1 on every apply
     /// (`TacticComponent.cs:581-587`), and it charges <c>CachedClosestEnemyFormation</c> of any
     /// class; on a row that carries <c>FootCharge</c> it is the eored chase coming back through

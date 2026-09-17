@@ -25,7 +25,7 @@ public sealed class TaomTacticTwoLineWall : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.TwoLineWall(in snapshot);
 
-    protected override string StatusSuffix => ":" + _anchor.Status;
+    protected override string StatusSuffix => _anchor.Suffix;
 
     // The front line races to the high ground as the single wall does; the second line stands a
     // gap behind it on the side away from the enemy.
@@ -77,7 +77,7 @@ public sealed class TaomTacticDisciplinedLine : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.DisciplinedLine(in snapshot);
 
-    protected override string StatusSuffix => _defender ? ":" + _anchor.Status : "";
+    protected override string StatusSuffix => _defender ? _anchor.Suffix : "";
 
     protected override void BeforeApply(TacticPhase phase)
     {
@@ -115,7 +115,7 @@ public sealed class TaomTacticEoredScreen : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.EoredScreen(in snapshot);
 
-    protected override string StatusSuffix => ":" + _anchor.Status;
+    protected override string StatusSuffix => _anchor.Suffix;
 
     protected override void BeforeApply(TacticPhase phase)
     {

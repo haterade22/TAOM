@@ -25,7 +25,7 @@ public sealed class TaomTacticShieldWall : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.ShieldWall(in snapshot);
 
-    protected override string StatusSuffix => _defender ? ":" + _anchor.Status : "";
+    protected override string StatusSuffix => _defender ? _anchor.Suffix : "";
 
     // The defender's wall stands on the navmesh high ground if the foot can get there and form
     // before the enemy's foot does, otherwise where it stands (HighGroundAnchor); the attacker's
@@ -80,7 +80,7 @@ public sealed class TaomTacticArcherRing : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.ArcherRing(in snapshot);
 
-    protected override string StatusSuffix => ":" + _anchor.Status;
+    protected override string StatusSuffix => _anchor.Suffix;
 
     // The ring stands on the high ground nearest the foreseen battleground if the infantry can
     // ring the archers there before the enemy's foot arrives, otherwise where the infantry
