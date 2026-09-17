@@ -4,63 +4,6 @@
 
 ## 2026-09-17
 
-### fix(career): typed resistance masks, javelin ammo, and `taom.career_perks` diagnostics (#613)
-
-**Why.** A wiring audit of every career passive consumer after #611, asking of each write where the
-engine READS it. Three defects. Four "blunt resistance" pips and one "cut resistance" pip authored
-`attack_type_mask="Blunt"` / `"Cut"`, which the `[Flags]` enum did not have, and `ParseEnum` fell
-back to `All` in silence, so they resisted every hit. The Ammo refill gated on `IsAnyAmmo`, which is
-"consumable and not a weapon" (arrows, bolts), so the nine Ammo pips on the three javelineer careers
-("never out of javelins") did nothing. And nothing in a play session showed whether a mission-side
-perk worked at all, which is how #611's phantom lived three months. A fourth finding got its own
-issue: the 49 `StealthBonus` pips ride `GetPartySpottingRatioForMainPartySeeingRange`, whose only
-engine caller decides whether an AI party is visible to the PLAYER, so they have never applied
-(#614, replan pending; Mike: the stealth pips are not correct).
-
-**What.** `AttackTypeMask` gains a damage-kind axis (`Cut`, `Pierce`, `Blunt`, from the engine's
-`AttackCollisionData.DamageType`); a pip matches a hit per axis (`AttackTypeMaskMatch`), so `Blunt`
-means blunt by any delivery, `Melee` keeps meaning any melee kind, `Melee, Blunt` needs both, and
-`All` is unchanged. Mask strings parse by name (comma or pipe separated); an unknown name or a
-digit string warns and leaves the pip inert, and the shipped-XML test refuses a `None` mask. The
-five kind pips are now what they say, and the hit kind follows vanilla's own correction (a bare-hand
-hit, a hit off the weapon's attach bone, a kick or bash, fall damage and a horse charge count as
-Blunt; `MissionCombatMechanicsHelper.GetAttackCollisionResults:200` sets a local it never writes
-back, so a model reading the raw field would miss a trample). The ammo refill moved to the seam
-vanilla's own extra-ammo perks use: `TaomAgentStatCalculateModel.InitializeMissionEquipment`, before
-build, through `MissionEquipment.SetAmountOfSlot(…, addOverflowToMaxAmount: true)`, which raises the
-stack's max with the amount (`CareerAmmoApplier`); the old `OnAgentBuild` refill pushed an amount
-above an unchanged max through the native setter, which the engine caps everywhere else, so a full
-stack may never have taken it since June. And it gates on `IsAnyConsumable`. Diagnostics:
-`taom.career_perks` lists every passive the player holds with its consumer, the effective Damage
-and Resistance magnitude per hit kind, the campaign numbers that carry a Career line, and in a
-battle the player agent's driven properties, the mount's, the consumable slots and the live buff;
-every line also lands in the TAOM debug log as `[CareerPerks]`, beside new runtime lines: agent
-stat application once per distinct set of values, mount application, the ammo refill, per-hit
-amplification and reduction at DEBUG with the hit mask and the terms, and the event-scoped
-campaign passives (renown, upgrade cost, hero healing, smithing) when they apply. The tuning XML
-comments no longer call the Ranged and Cavalry buffs "self" buffs.
-
-Also noted, unchanged: ten keystone choices carry an undescribed Melee `Resistance` passive;
-`ActiveBuffs.ArmorReduction` and `ApplyStealthMode` are dead surface; the `ChargeType` enum's
-non-cooldown values are never fed (abilities are cooldown-only by design).
-
-**Tests.** `AttackTypeMaskTests` (per-axis matrix, hit-mask builder, name-only parsing),
-`CareerPassiveServiceTests` (a Blunt pip by either delivery), `CareerConfigProviderTests` (kind
-masks parse, unknown warns and goes inert), `CareerChoicesIntegrationTests` (no `None` mask ships;
-the five kinded pips pinned by id), `CareerMountBonusBindingTests` (the refill gates on
-`IsAnyConsumable`), `CareerPerkReportTests`, `CareerAgentStatServiceTests` (the log lines and
-their dedupe and the mission-end reset). Owed: `taom.career_perks` in a campaign and in a battle;
-a blunt-resistance career under a mace, a sword and a horse; a javelineer's stack at spawn above
-its printed max.
-
-**Deep review.** Five agents. Two HIGHs inside the fix, both the #611 shape again (the value with
-the right name is not the value the engine uses): the raw `DamageType` read, and the ammo setter
-above the cap; both fixed as above. One MEDIUM: the `[CareerPerks]` dedupe on the singleton service
-never reset, so a second battle would have logged nothing at spawn; `ResetDiagnostics()` from the
-mission behaviour's teardown. Two kindless probe masks added to the report. RCA
-`docs/reviews/rca-career-perks-2026-09-17.md`, lessons in `adapters-taleworlds-api.md` and
-`testing-qa.md`.
-
 ### balance(mounts): the ten creature mounts get speed, maneuver and charge retuned (#615)
 
 **Why.** The mount ledger pulled today put every TAOM creature below the vanilla horses TAOM
@@ -99,6 +42,50 @@ speed and charge compound (a brown warg lands about 3.2x its old magnitude at th
 and the career cavalry self-buff and ally-buff stack 1.44x on one mount with no clamp (#611
 design, needs a call). The stale `WargConfig` table in `warg-combat.md` is fixed. RCA:
 `docs/reviews/rca-creature-mount-retune-2026-09-17.md`.
+
+### fix(field-commission): every soldier race can be promoted (#612)
+
+**Why.** A player running Isengard reported that battlefield promotions never fire, found
+`allowedRaceNames: ["human", "dwarf", "elf"]` in `field_commission_config.json`, and added
+`uruk_hai` and `orc` by hand. The list was deliberate: #376 named "orcs promotable into the player
+clan" as a donor-mod design that was unacceptable, on the premise of a Free Peoples player. That
+premise never held. Character creation offers `uruk`, `orc`, `uruk_hai`, `berserker`, `pale_uruk`,
+`dg_uruk` and `goblin` across six evil cultures, and in every one of those campaigns
+`CanPromote` failed the player's own troops: merit banked after each won battle, no offer ever
+queued, nothing logged.
+
+**What.** The default is now the ten soldier races (the three above plus the seven evil ones). The
+five left out are the creatures and unique heroes (`cave_troll`, `hill_troll`, `nazghul`, `saruman`,
+`sauron`), which is the part of the original list worth keeping. The mechanism is unchanged:
+allow-list, fail-closed on an unknown race id, JSON-only. No alignment gate: wanderer allegiance
+(#575) decided TAOM's own companion minting is not gated on the player's side, and a Free Peoples
+player who fields recruited orcs may promote one.
+
+The default lives in three places (the JSON, `FieldCommissionConfigProvider.DefaultAllowedRaceNames`
+for a missing field, the `FieldCommissionConfig` constructor). Two new tests pin them: the shipped
+JSON must equal both compiled copies, and every name must be a race `raceage/race_age_config.json`
+knows, so a typo can no longer sit in the shipped list silently.
+
+**Deep review (five agents, 0 HIGH).** Two fixes from it. A player's own typo in the JSON had the
+same silent outcome the shipped list had, so `FieldCommissionMeritService` now checks every
+configured name against the engine's race table once per process and warns, naming the entry
+(the config-provider validation rule's "string the consumer branches on" case; the provider has
+no race table, so the check sits at the consumer). And the `RepoPath` test helper existed as three
+identical private copies; it is now `TAOM.Tests/Infrastructure/RepoPaths.cs`. The compatibility
+pass proved the engine side from the v1.5.3 DLLs: `BasicCharacterObject.FillFrom` copies `Race`,
+so an orc troop promotes into an orc companion, and `DefaultHeroCreationModel` generates its body
+from the troop race's own range. Known limitation from the data-flow pass: `BasicTableauRaceGuard`
+has verified only `uruk` for the agentless tableau renderer, so the new races show a human-headed
+clan-screen thumbnail (already true of every orc lord; not a crash). RCA:
+`docs/reviews/rca-field-commission-races-2026-09-17.md`. FieldCommission suite plus the Enlistment
+diagnostics tests that share the moved helper: 274 passed.
+
+**Existing saves.** Merit accrues regardless of race, so an evil-faction save with hours of play
+already holds banked merit and will start offering on its next won fair battle, capped by
+`maxOffersPerBattle` (2). Full restart needed: the JSON provider is a process singleton.
+
+**Owed.** In-game smoke: an Isengard campaign, Uruk-hai kills to the threshold, the inquiry and an
+Uruk companion in the troop's kit; the same on a Mordor orc.
 
 ### fix(career): the cavalry mount bonuses reach the mount (#611)
 

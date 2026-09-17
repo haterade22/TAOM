@@ -29,6 +29,7 @@ public class FieldCommissionMeritService : IFieldCommissionMeritService
     private readonly List<string> _promotedHeroIds = new List<string>();
 
     private bool _eligible;
+    private bool _raceNamesChecked;
 
     public FieldCommissionMeritService(
         ITroopRosterQueryAdapter roster,
@@ -276,7 +277,26 @@ public class FieldCommissionMeritService : IFieldCommissionMeritService
 
         var raceName = _raceManager.GetRaceNameFromId(info.RaceId);
         var allowed = _configProvider.GetConfig().AllowedRaceNames;
+        WarnUnknownRaceNamesOnce(allowed);
         return allowed != null && allowed.Any(name => string.Equals(name, raceName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // A configured race name the engine does not know never matches a troop, so that race is
+    // silently unpromotable (the #612 symptom, from a typo instead of a short list). The config
+    // provider has no race table (FaceGen's), so the check lives here. allowedRaceNames is
+    // JSON-only, constant for the process, so once per service instance is enough.
+    private void WarnUnknownRaceNamesOnce(List<string> allowed)
+    {
+        if (_raceNamesChecked || allowed == null)
+            return;
+        _raceNamesChecked = true;
+
+        foreach (var name in allowed)
+        {
+            if (!_raceManager.IsValidRaceName(name))
+                _logger?.LogWarning($"[FieldCommission] allowedRaceNames entry '{name}' is not a race the engine knows; " +
+                                    "no troop will ever match it. The race table is in the RaceManager init line above.");
+        }
     }
 
     public void RecordPromotedHero(string heroId)

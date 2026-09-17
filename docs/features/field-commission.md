@@ -100,12 +100,29 @@ FieldCommissionBehavior (CampaignBehaviorBase)   FieldCommissionMissionLogic (Mi
 
 ## TAOM-Specific Gates (new, not from the donor)
 
-- **Race allow-list** (`allowedRaceNames`, default `["human","dwarf","elf"]`) — validated via
+- **Race allow-list** (`allowedRaceNames`, default: every soldier race, `human`, `dwarf`, `elf`,
+  `orc`, `uruk`, `uruk_hai`, `pale_uruk`, `dg_uruk`, `goblin`, `berserker`). Validated via
   `IRaceManager.IsValidRaceId` BEFORE `GetRaceNameFromId` (validate-before-lookup rule: an
   unresolvable race id fails closed, never falls through to whatever fallback name the lookup
-  returns). Reading the design brief, this allow-list is the SAME mechanism that keeps creature
-  troops (cave trolls, berserkers) unpromotable — their race id fails the allow-list, not a
-  separate hardcoded troop-id blacklist.
+  returns). The five races left out (`cave_troll`, `hill_troll`, `nazghul`, `saruman`, `sauron`) are
+  the creatures and unique heroes: their race fails the allow-list, so there is no separate
+  troop-id blacklist. Until #612 (2026-09-17) the default was `human`/`dwarf`/`elf`, written in
+  #376 on the premise of a Free Peoples player. Character creation offers seven evil races, and
+  for every one of those campaigns the feature was inert: merit banked, no offer ever queued. A
+  Free Peoples player who fields recruited orcs can promote one; TAOM's own companion minting is
+  not alignment-gated (decided for [wanderer allegiance](wanderer-allegiance.md), #575). The
+  default is copied in the JSON, `FieldCommissionConfigProvider.DefaultAllowedRaceNames` and the
+  `FieldCommissionConfig` constructor; `ShippedJson_AllowedRaceNames_MatchCompiledDefault` pins
+  the three together and `ShippedJson_AllowedRaceNames_AreAllKnownRaces` pins every name to
+  `raceage/race_age_config.json`. A player's or pack author's typo in the list is caught at
+  runtime instead: `FieldCommissionMeritService` checks each configured name against
+  `IRaceManager.IsValidRaceName` once per process and logs a `[FieldCommission]` warning naming
+  the entry, because an unknown name never matches a troop and the race is otherwise silently
+  unpromotable. Known limitation: `BasicTableauRaceGuard` has verified only `uruk` as safe for the
+  agentless `BasicCharacterTableau` renderer, so a promoted orc, goblin, Uruk-hai or berserker
+  companion shows a human-headed thumbnail on the clan screen and in the encyclopedia until that
+  race passes the per-race render test ([hero-race](hero-race.md)); not a crash, and the same is
+  already true of every orc lord.
 - **Enlisted suppression** — while `IEnlistmentStateQuery.IsEnlisted`, battle eligibility is forced
   `false` (the player's "own party" health count isn't a trustworthy fair-fight signal while
   enlisted) and the offer pump defers. No merit accrues from enlisted battles at all.
@@ -138,7 +155,7 @@ FieldCommissionBehavior (CampaignBehaviorBase)   FieldCommissionMissionLogic (Mi
 | `retainerAllowance` | int | Extra companions allowed beyond the clan-tier limit before offers defer. Must be ≥ 0. |
 | `maxOffersPerBattle` | int | Hard ceiling on promotion offers queued by ONE won battle, across all troop types. Must be ≥ 1. Default 2. Merit above the cap is kept and re-queues after the next won battle. |
 | `skillPointsPerLevel` | int | Skill-value budget granted per hero level (see Commission Skill Budget above). Must be ≥ 1. |
-| `allowedRaceNames` | string[] | Race names (matched via `IRaceManager`) eligible for promotion. Blank/whitespace entries are sanitized out; a missing/null field defaults to `["human","dwarf","elf"]`. |
+| `allowedRaceNames` | string[] | Race names (matched via `IRaceManager`) eligible for promotion. Blank/whitespace entries are sanitized out; a missing/null field defaults to the ten soldier races listed under "Race allow-list" above. |
 
 ### Current Values
 
@@ -321,6 +338,10 @@ ever fielded — not a concern at any realistic party size.
 - 2026-09-04: **Dismissal back to the ranks** (#540). A promoted companion can be sent back through
   their own dialogue line or a settlement-menu picker; the hero is removed and one origin soldier
   rejoins the party. See the section below.
+- 2026-09-17: **Race allow-list widened to every soldier race** (#612). A player running Isengard
+  reported no promotions and found the `human`/`dwarf`/`elf` list; the seven evil races from
+  character creation join it. An existing evil-faction save already holds banked merit, so it
+  starts offering on its next won fair battle, capped by `maxOffersPerBattle`.
 
 ## Firing a promoted companion (#486)
 

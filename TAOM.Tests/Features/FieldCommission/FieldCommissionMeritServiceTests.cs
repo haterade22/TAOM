@@ -683,6 +683,23 @@ public class FieldCommissionMeritServiceTests
     // --- CanPromote (race gate, fail-closed) ---
 
     [TestMethod]
+    public void CanPromote_ConfiguredRaceNameUnknownToEngine_WarnsOnceNamingTheEntry()
+    {
+        // A misspelt allowedRaceNames entry never matches a troop, so that race is silently
+        // unpromotable: the #612 symptom. The service owns the race table, so it says so once.
+        _config.AllowedRaceNames = new List<string> { "human", "orkc" };
+        _raceManager.IsValidRaceName("human").Returns(true);
+        _raceManager.IsValidRaceName("orkc").Returns(false);
+        SetupHumanTroop("troop_a");
+
+        _sut.CanPromote("troop_a");
+        _sut.CanPromote("troop_a");
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("orkc")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("'human'")));
+    }
+
+    [TestMethod]
     public void CanPromote_UnknownRaceId_FailsClosedAndNeverCallsNameLookup()
     {
         _roster.GetTroopInfo("troop_a").Returns(new TroopInfo("troop_a", "Troop A", false, false, 99, 10));

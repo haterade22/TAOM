@@ -214,7 +214,7 @@ A missing file means all defaults and no exclusions, which is not the same as th
 | `maxOffersPerBattle` | int | 2 | at least 1 | yes | `FieldCommissionConfigProvider.cs:126` |
 | `skillPointsPerLevel` | int | 5 | at least 1 | no, JSON only | `FieldCommissionConfigProvider.cs:110` |
 | `diagnostics` | bool | `false` | either | yes | `FieldCommissionSettingsProvider.cs:104` |
-| `allowedRaceNames` | string[] | human, dwarf, elf | blank entries dropped | no, JSON only | `FieldCommissionConfigProvider.cs:133, 143` |
+| `allowedRaceNames` | string[] | the ten soldier races (human, dwarf, elf, orc, uruk, uruk_hai, pale_uruk, dg_uruk, goblin, berserker); creatures and unique heroes out | blank entries dropped; every name must be a race `raceage/race_age_config.json` knows (test-pinned) | no, JSON only | `FieldCommissionConfigProvider.cs:137, 150` |
 
 The six MCM-exposed fields are the ones a pack author cannot rely on. The two JSON-only fields are carried through the merge by reference so a merge cannot re-admit a race the author excluded (`FieldCommissionSettingsProvider.cs:108-109`).
 

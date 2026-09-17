@@ -1,8 +1,7 @@
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Enlistment;
+using static TAOM.Tests.Infrastructure.RepoPaths;
 
 namespace TAOM.Tests.Features.Enlistment;
 
@@ -89,15 +88,4 @@ public class EnlistmentDiagnosticsSettingsProviderTests
             "EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `??` fallback must encode the " +
             "same posture. Flip both or neither.");
     }
-
-    // Locates a repo file from THIS source file's compile-time path, so the test does not depend on
-    // the test assembly's output layout (bin/Debug/net472 depth) staying what it is today.
-    private static string RepoPath(params string[] parts)
-    {
-        // THREE levels: <repo>/TAOM.Tests/Features/Enlistment -> Features -> TAOM.Tests -> <repo>.
-        var repoRoot = Path.GetFullPath(Path.Combine(ThisFile(), "..", "..", ".."));
-        return Path.Combine(new[] { repoRoot }.Concat(parts).ToArray());
-    }
-
-    private static string ThisFile([CallerFilePath] string path = "") => Path.GetDirectoryName(path)!;
 }

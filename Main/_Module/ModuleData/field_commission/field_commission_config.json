@@ -7,5 +7,5 @@
   "maxOffersPerBattle": 2,
   "skillPointsPerLevel": 5,
   "diagnostics": false,
-  "allowedRaceNames": ["human", "dwarf", "elf"]
+  "allowedRaceNames": ["human", "dwarf", "elf", "orc", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "goblin", "berserker"]
 }

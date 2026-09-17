@@ -18,7 +18,11 @@ namespace TAOM.Features.FieldCommission;
 /// </summary>
 public class FieldCommissionConfigProvider : IFieldCommissionConfigProvider
 {
-    private static readonly string[] DefaultAllowedRaceNames = { "human", "dwarf", "elf" };
+    // Every soldier race (#612). Left out: cave_troll, hill_troll, nazghul, saruman, sauron, the
+    // creatures and unique heroes. Must equal the shipped JSON and the FieldCommissionConfig
+    // constructor default; ShippedJson_AllowedRaceNames_MatchCompiledDefault pins all three.
+    private static readonly string[] DefaultAllowedRaceNames =
+        { "human", "dwarf", "elf", "orc", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "goblin", "berserker" };
 
     // Replace, not append-merge: Json.NET's default ObjectCreationHandling appends JSON list
     // entries onto the constructor-populated default AllowedRaceNames list (a JSON
