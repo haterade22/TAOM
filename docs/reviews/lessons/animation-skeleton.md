@@ -578,24 +578,33 @@ not colour. Set `colorspace_settings.name = 'Non-Color'` and the scene view tran
 with gamma 1.0 before saving, or Blender applies a filmic transform to the buffer and produces a
 creature with subtly wrong lighting that nobody can explain later.
 
-### The two hash fields in a tpac are xxHash64, and a stale one renders a clone invisible
+### A hand-built tpac package is invisible to the game until the Modding Kit has cooked its RuntimeDataCache entry
 
 **2026-09-17, spider skin variants (#616).** A tool cloned the proven split spider meshes under new
-names with a different material: geometry verbatim, names and material GUID rewritten, fresh item
-and segment GUIDs. Every validator passed, the catalogue parsed the clones, the engine logged no
-`Unable to find` and no dependency error, and the inventory tableau drew nothing. The clone had
-kept the source's 8-byte per-segment field on the rewritten binding segment and the source's item
-checksum. Both are xxHash64 (seed 0): the segment field over the DECOMPRESSED payload (entry offset
-56; 16 of 17 live segments match, the skeleton's user-data segment being the odd one) and the item
-checksum over the int64 metadata length plus the metadata (all four live items match). Recomputing
-both is the fix under test; the reading below is what the evidence supports.
+names with a different material: geometry verbatim, names and material GUID rewritten, fresh item,
+segment and package GUIDs. Every validator passed, the catalogue parsed the clones, the engine logged
+no `Unable to find` and no dependency error, and the inventory tableau drew nothing. Two rounds of
+file-level suspicion followed (the item checksum and the per-segment hash, both cracked as xxHash64
+seed 0, both recomputed, both irrelevant to the symptom) before a probe package that redefined the
+live `sk_spider_forest_c` produced no `Overriding item` line. The client had never registered a
+single item from either hand-built package. The August native-commit audit had already settled why:
+the shipping client renders from `<module>/RuntimeDataCache/<package GUID>.rdc` and carries no code
+to write one; every write string lives in the editor binary. A census made it concrete: of 526
+mesh-bearing Armoury packages, the only two without an entry were the hand-built ones. Opening the
+Armoury in the Modding Kit and saving cooked the entry and the meshes appeared.
 
-**Rule.** Any tool that rewrites bytes inside a tpac segment recomputes that segment's xxHash64, and
-any tool that rewrites item metadata recomputes the item checksum, then re-parses its output and
-asserts both formulas hold; `tools/tpac_clone_metamesh.py` and its test carry the reference
-implementation. A silent render (no log line, no crash, nothing on screen) is the symptom of a stale
-hash, and no gate that reads the file rather than the renderer can catch it. The mechanism that fits
-both observations is a content-keyed lookup rather than validation: the 2026-06-11 byte-patched
-clips carry stale hashes that collide with nothing and load, while the clone's stale hash equalled
-a segment already loaded from the source bundle and resolved to that one. The in-game retest of the
-rebuilt tpac is what proves it; until then this is the best-supported reading, not a verified one.
+**Rule.** A tpac written or patched outside the Kit is not done until the Kit has saved the module
+and `RuntimeDataCache/<package GUID>.rdc` exists for it; check the entry by name before any in-game
+test, because the failure mode has no log line and looks exactly like broken bytes. The package
+GUID is the key, so a rebuild under a fresh GUID needs a fresh cook. Ship the entry with the module
+(the mirror tracks `RuntimeDataCache/`). And when a hand-built package fails, probe the loader before
+the bytes: redefine an existing item name in a throwaway package and look for `Overriding item` in
+`rgl_log`; its absence means the package was skipped whole, and no amount of byte work will change
+that.
+
+**Format facts that came out of it, still true.** Each segment entry carries xxHash64 (seed 0) of its
+decompressed payload at offset 56, and the item checksum is xxHash64 over the int64 metadata length
+plus the metadata; `tools/tpac_clone_metamesh.py` and its tests carry the reference implementation,
+and the Kit's own resave of the clones rewrote the checksums to the same values. The 2026-06-11
+byte-patched clips with copied hashes loaded because their packages already had cache entries from
+the Kit; that precedent says nothing about hash validation either way.

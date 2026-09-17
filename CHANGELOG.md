@@ -137,14 +137,21 @@ nothing in code changed. Live install and the `lotraom-assets` v1.5 mirror carry
 `docs/reference/lotrlome-spider-mount-changes.md` (rebuild command, rollback), the `horse_body` row in
 `docs/ai-includes/creature-mount-authoring.md`, the regenerated Armoury catalogue (4 rows), `tools/README.md`.
 
-**Same-day correction: the clones rendered invisible.** The engine logged nothing, the inventory
-tableau just drew no spider. The first cut had kept the source's 8-byte segment hash on the
-rewritten binding segment and the source's item checksum, on the belief that the engine never reads
-them. Both fields are xxHash64 (seed 0), the segment one over the decompressed payload and the item
-one over the int64 metadata length plus the metadata, verified against every item and segment of the
-live bundle. The tool now recomputes both, two tests pin the formulas against the live file, and the
-variants tpac was rebuilt on the install and the mirror. Lesson in
-`docs/reviews/lessons/animation-skeleton.md`; the warg ledger's "algorithm not known" note is corrected.
+**Same-day correction: the clones rendered invisible, and the cause was the RuntimeDataCache.**
+The engine logged nothing; the inventory tableau drew no spider. The first suspect was the two
+8-byte fields the tool had left stale, and cracking them was worth it: both are xxHash64 (seed 0),
+the segment one over the decompressed payload and the item one over the int64 metadata length plus
+the metadata, verified against every item and segment of the live bundle and, later, against the
+Kit's own re-serialisation of the clones. The tool recomputes both and two tests pin the formulas.
+It was not the cause. A probe package redefining the live `sk_spider_forest_c` produced no
+`Overriding item` line, so the client had registered nothing from either hand-built package, and a
+census showed why: of 526 mesh-bearing Armoury packages, the only two without a
+`RuntimeDataCache/<package GUID>.rdc` were these. The August native-commit audit had already
+established that the shipping client reads that cache and only the editor writes it. Opening the
+Armoury in the Modding Kit and saving cooked the entry and all three spiders appeared; the Kit's
+resave of both spider tpacs kept every geometry blob and the skeleton physics payload byte-identical.
+Lesson in `docs/reviews/lessons/animation-skeleton.md`; the warg ledger's "algorithm not known" note
+is corrected.
 
 **Verification.** `python -m unittest tools.tests.test_tpac_clone_metamesh` 16 passed;
 `generate_armory_catalogue.py` 4 NEW rows, all parsed and referenced; `audit_armory_refs.py` CLEAN;

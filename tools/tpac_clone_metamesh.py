@@ -35,10 +35,19 @@ What a clone changes, and only that: a same-length name (TOC name field, every m
 the binding segment), a same-length material name in the binding segment, the material item GUID in
 the metadata, a fresh item GUID, package GUID and segment GUIDs (a GUID collision between two
 loaded items crashed the engine in 2026-06-14, see tpac_skeleton_extract.py), and the two hashes
-recomputed: the binding segment's xxHash64 and the item checksum. Geometry segments are copied
-verbatim with their hashes. THE HASHES ARE LOAD-BEARING: the first cut of this tool kept c's
-values and the clones rendered invisible in game (2026-09-17, #616), the engine keying segment data
-by content hash so the rewritten bindings never reached the clone.
+recomputed: the binding segment's xxHash64 and the item checksum (the Kit re-serialises the clones
+unchanged apart from zeroing a spurious second material slot the June export left on the `_2`
+halves, which is how the formulas were confirmed on its output). Geometry segments are copied
+verbatim with their hashes.
+
+THE OUTPUT IS INVISIBLE TO THE GAME UNTIL THE MODDING KIT HAS SAVED THE MODULE ONCE. The shipping
+client renders meshes from `<module>/RuntimeDataCache/<package GUID>.rdc`, which only the editor
+writes (docs/investigations/native-commit-audit-2026-08.md). A package without its entry is skipped
+whole: no log line, no `Overriding item`, items never registered, blank inventory icons. That is
+what the first run of this tool looked like on 2026-09-17 (#616); opening the Armoury in the Kit
+and saving cooked `E83E3AF3-....rdc` and the four meshes appeared. The package GUID this tool
+assigns is what the Kit names the entry after, so keep it stable across rebuilds only if you also
+delete the stale entry.
 
 Usage:
   python tools/tpac_clone_metamesh.py <src_geo.tpac> --out <new_geo.tpac> \
