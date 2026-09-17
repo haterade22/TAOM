@@ -577,3 +577,25 @@ is exactly the shape that produces a lookup miss.
 not colour. Set `colorspace_settings.name = 'Non-Color'` and the scene view transform to `Standard`
 with gamma 1.0 before saving, or Blender applies a filmic transform to the buffer and produces a
 creature with subtly wrong lighting that nobody can explain later.
+
+### The two hash fields in a tpac are xxHash64, and a stale one renders a clone invisible
+
+**2026-09-17, spider skin variants (#616).** A tool cloned the proven split spider meshes under new
+names with a different material: geometry verbatim, names and material GUID rewritten, fresh item
+and segment GUIDs. Every validator passed, the catalogue parsed the clones, the engine logged no
+`Unable to find` and no dependency error, and the inventory tableau drew nothing. The clone had
+kept the source's 8-byte per-segment field on the rewritten binding segment and the source's item
+checksum. Both are xxHash64 (seed 0): the segment field over the DECOMPRESSED payload (entry offset
+56; 16 of 17 live segments match, the skeleton's user-data segment being the odd one) and the item
+checksum over the int64 metadata length plus the metadata (all four live items match). Recomputing
+both is the fix under test; the reading below is what the evidence supports.
+
+**Rule.** Any tool that rewrites bytes inside a tpac segment recomputes that segment's xxHash64, and
+any tool that rewrites item metadata recomputes the item checksum, then re-parses its output and
+asserts both formulas hold; `tools/tpac_clone_metamesh.py` and its test carry the reference
+implementation. A silent render (no log line, no crash, nothing on screen) is the symptom of a stale
+hash, and no gate that reads the file rather than the renderer can catch it. The mechanism that fits
+both observations is a content-keyed lookup rather than validation: the 2026-06-11 byte-patched
+clips carry stale hashes that collide with nothing and load, while the clone's stale hash equalled
+a segment already loaded from the source bundle and resolved to that one. The in-game retest of the
+rebuilt tpac is what proves it; until then this is the best-supported reading, not a verified one.

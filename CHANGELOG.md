@@ -4,6 +4,28 @@
 
 ## 2026-09-17
 
+### docs(tools): the Fab cave troll pack, a UE export script for creature packs, and why "Add To Project" listed nothing
+
+Mike bought the Fab "Cave Troll Lightweight" pack for troll clips and the launcher's Fab Library
+offered no project to add it to. Read off disk: the Epic launcher had been running since 11:28,
+`E:\UE_5.4` and `E:\UE_5.3` were installed after that, and `LauncherInstalled.dat` still listed
+only 5.7, so the 5.4 editor registered itself as a custom build (a GUID `EngineAssociation` on
+both projects it created) and the launcher then looked for its projects in
+`E:/UE_5.4/Engine/Saved/Config` instead of `%LOCALAPPDATA%\UnrealEngine\5.4`, found none, and
+never mentioned the word Troll in its log. The in-editor Fab plugin (installed on all three
+engines) sidesteps the launcher; the launcher route is a relaunch plus "Switch Unreal Engine
+version". New `tools/oneoff/ue_export_cave_troll.py`, a sibling of the Rivendell exporter for
+the skeletal family: `inventory.json` first, then SkeletalMesh and AnimSequence to FBX (the
+preview mesh riding along, because `UAnimSequenceExporterFBX::ExportBinary` refuses a clip whose
+skeleton has none, verified in the 5.4.4 sources along with every `FbxExportOption` field the
+script sets), Texture2D to TGA, the material-binding walker; roots by env var, staging under
+`E:\LOTRAOMAssets\_export\`, never the Armory, read-only on the project. Untested against the
+real pack until it is in the project. Docs: a "Fab acquisition and skeletal export" section in
+`ue-to-bannerlord-asset-pipeline.md`, a `tools/README.md` row, a source-clip note in the ARP
+retarget workflow, and a `pending-license` row in the provenance register (creator and Fab tier
+still to be copied from the product page; Rivendell and the tents have no row either, noted as
+open).
+
 ### fix(combat): the status line refreshes with the march, unseated formations get vanilla's rows (#608)
 
 The second Custom Battle A/B (Erebor v Mordor, 120 v 120, 12:29): the dwarf wall stood in
@@ -70,7 +92,16 @@ nothing in code changed. Live install and the `lotraom-assets` v1.5 mirror carry
 `docs/reference/lotrlome-spider-mount-changes.md` (rebuild command, rollback), the `horse_body` row in
 `docs/ai-includes/creature-mount-authoring.md`, the regenerated Armoury catalogue (4 rows), `tools/README.md`.
 
-**Verification.** `python -m unittest tools.tests.test_tpac_clone_metamesh` 14 passed;
+**Same-day correction: the clones rendered invisible.** The engine logged nothing, the inventory
+tableau just drew no spider. The first cut had kept the source's 8-byte segment hash on the
+rewritten binding segment and the source's item checksum, on the belief that the engine never reads
+them. Both fields are xxHash64 (seed 0), the segment one over the decompressed payload and the item
+one over the int64 metadata length plus the metadata, verified against every item and segment of the
+live bundle. The tool now recomputes both, two tests pin the formulas against the live file, and the
+variants tpac was rebuilt on the install and the mirror. Lesson in
+`docs/reviews/lessons/animation-skeleton.md`; the warg ledger's "algorithm not known" note is corrected.
+
+**Verification.** `python -m unittest tools.tests.test_tpac_clone_metamesh` 16 passed;
 `generate_armory_catalogue.py` 4 NEW rows, all parsed and referenced; `audit_armory_refs.py` CLEAN;
 `validate_moduledata.py` 0 errors; `dotnet test TAOM.Tests` 9,775 passed, 0 failed. Owed: a full
 restart and a Custom Battle with Spider Riders (three colours, both halves of each spider the same

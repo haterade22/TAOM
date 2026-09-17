@@ -21,8 +21,11 @@ game loads today):
   Item entry: type GUID(16) item GUID(16) [uint32 when version > 1] int32 name-len + name
               int64 meta-len + metadata, 8-byte checksum, int32 seg count, seg entries (69 each),
               int32 user-data count + 48 bytes each
-  Segment entry: uint64 offset, uint64 actual size, uint64 storage size, GUID(16), 4-byte type tag,
-              12 constant bytes, 8-byte hash, 4 zero bytes, 1 byte
+  Segment entry: uint64 offset, uint64 actual size, uint64 storage size, segment GUID(16),
+              segment TYPE guid(16; its first 4 bytes are the tag below), uint64 xxHash64 (seed 0)
+              of the DECOMPRESSED payload, 4 zero bytes, 1 byte
+  Item checksum: uint64 xxHash64 (seed 0) over the int64 metadata length plus the metadata bytes.
+  Both formulas verified on every item and segment of the live spider bundle (2026-09-17).
   A metamesh (type 978b8fa0...) has one geometry segment per LOD (tag 5f98413d) plus one LZ4
   "binding" segment (tag f6304064) listing `[count][len+meshname][len+material]` per LOD by NAME.
   Its metadata carries, per LOD, the segment GUID, the length-prefixed LOD name and the material's
@@ -30,10 +33,12 @@ game loads today):
 
 What a clone changes, and only that: a same-length name (TOC name field, every metadata LOD name,
 the binding segment), a same-length material name in the binding segment, the material item GUID in
-the metadata, and a fresh item GUID, package GUID and segment GUIDs (a GUID collision between two
-loaded items crashed the engine in 2026-06-14, see tpac_skeleton_extract.py). Geometry segments are
-copied verbatim; the item's 8-byte checksum is kept (the engine does not verify it: the byte-patched
-an_spi_*_anm.tpac clips carry copied hashes and load).
+the metadata, a fresh item GUID, package GUID and segment GUIDs (a GUID collision between two
+loaded items crashed the engine in 2026-06-14, see tpac_skeleton_extract.py), and the two hashes
+recomputed: the binding segment's xxHash64 and the item checksum. Geometry segments are copied
+verbatim with their hashes. THE HASHES ARE LOAD-BEARING: the first cut of this tool kept c's
+values and the clones rendered invisible in game (2026-09-17, #616), the engine keying segment data
+by content hash so the rewritten bindings never reached the clone.
 
 Usage:
   python tools/tpac_clone_metamesh.py <src_geo.tpac> --out <new_geo.tpac> \
@@ -54,6 +59,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import lz4.block
+import xxhash
 
 MAGIC = b"TPAC"
 HEADER_SIZE = 36
@@ -143,6 +149,8 @@ def parse(data: bytes) -> Package:
     if data[:4] != MAGIC:
         raise CloneError(f"not a tpac (magic is {data[:4]!r})")
     version = struct.unpack_from("<I", data, 4)[0]
+    if version != 2:
+        raise CloneError(f"tpac version {version}; this tool knows the version-2 item layout only")
     package_guid = data[8:24]
     count = struct.unpack_from("<I", data, 24)[0]
     pos = HEADER_SIZE
@@ -191,6 +199,27 @@ def segment_payload(item: Item, seg: Segment) -> bytes:
     if not seg.is_compressed:
         return blob
     return lz4.block.decompress(blob, uncompressed_size=seg.actual)
+
+
+def segment_hash(item: Item, seg: Segment) -> int:
+    """The uint64 at entry offset 56: xxHash64 (seed 0) of the decompressed payload."""
+    return struct.unpack_from("<Q", item.toc, seg.entry_pos + 56)[0]
+
+
+def _metadata_span(item: Item) -> tuple[int, int]:
+    """(start, end) of the int64-length-prefixed metadata inside a version-2 item TOC:
+    type guid(16) item guid(16) uint32 version field, then the sized name, then the metadata."""
+    pos = 36
+    name_len = struct.unpack_from("<i", item.toc, pos)[0]
+    pos += 4 + name_len
+    meta_len = struct.unpack_from("<q", item.toc, pos)[0]
+    return pos, pos + 8 + meta_len
+
+
+def expected_checksum(item: Item) -> bytes:
+    """xxHash64 (seed 0) over the metadata length prefix plus the metadata, as the Kit writes it."""
+    start, end = _metadata_span(item)
+    return struct.pack("<Q", xxhash.xxh64(bytes(item.toc[start:end]), seed=0).intdigest())
 
 
 def _replace_names(buf: bytes, old: str, new: str) -> tuple[bytes, int]:
@@ -270,10 +299,16 @@ def clone_metamesh(pkg: Package, src_name: str, new_name: str,
     idx = src.segments.index(binding)
     blobs[idx] = stored
     struct.pack_into("<Q", toc, binding.entry_pos + 16, len(stored))   # storage size field
+    struct.pack_into("<Q", toc, binding.entry_pos + 56, xxhash.xxh64(raw, seed=0).intdigest())
 
     clone = _reparse(toc, blobs, pkg.version)
+    start, end = _metadata_span(clone)
+    clone.toc[end:end + 8] = expected_checksum(clone)
+    clone = _reparse(clone.toc, blobs, pkg.version)
     if clone.name != new_name or clone.item_guid != new_item_guid:
         raise CloneError("clone did not re-parse to the requested name and guid")
+    if clone.checksum != expected_checksum(clone) or segment_hash(clone, clone.segments[idx]) != xxhash.xxh64(raw, seed=0).intdigest():
+        raise CloneError("clone hashes did not land")
     return clone
 
 

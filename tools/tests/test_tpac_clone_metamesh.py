@@ -20,6 +20,7 @@ import uuid
 from pathlib import Path
 
 import lz4.block
+import xxhash
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -47,9 +48,11 @@ def _sized(s: str) -> bytes:
     return struct.pack("<i", len(b)) + b
 
 
-def _seg_entry(offset: int, actual: int, storage: int, guid: bytes, tag: bytes, const: bytes) -> bytes:
+def _seg_entry(offset: int, actual: int, storage: int, guid: bytes, tag: bytes, const: bytes, payload: bytes) -> bytes:
+    """Segment entry as the Kit writes it: the 8 bytes after the 16-byte segment type are
+    xxHash64 (seed 0) of the DECOMPRESSED payload (verified on the live spider bundle)."""
     return (struct.pack("<QQQ", offset, actual, storage) + guid + tag + const
-            + b"\x11" * 8 + b"\0" * 4 + b"\x01")
+            + struct.pack("<Q", xxhash.xxh64(payload, seed=0).intdigest()) + b"\0" * 4 + b"\x01")
 
 
 def build_metamesh(name: str, lods: int, item_guid: bytes, mat_guid: bytes, lod_blobs: list):
@@ -65,21 +68,25 @@ def build_metamesh(name: str, lods: int, item_guid: bytes, mat_guid: bytes, lod_
     for lod_name in lod_names:
         binding_raw += _sized(lod_name) + _sized("m_test_mat_a3")
     binding_blob = lz4.block.compress(binding_raw, store_size=False)
-    segs = [(g, LOD_TAG, LOD_CONST, blob, len(blob)) for g, blob in zip(seg_guids, lod_blobs)]
-    segs.append((item_guid, BIND_TAG, BIND_CONST, binding_blob, len(binding_raw)))
+    segs = [(g, LOD_TAG, LOD_CONST, blob, blob) for g, blob in zip(seg_guids, lod_blobs)]
+    segs.append((item_guid, BIND_TAG, BIND_CONST, binding_blob, binding_raw))
     return meta, segs
 
 
 def build_tpac(pkg_guid: bytes, items: list) -> bytes:
-    """items: [(type_guid, item_guid, version_field, name, meta, checksum, segs)] with segs as
-    build_metamesh returns them. Lays segment data out contiguously in TOC order."""
+    """items: [(type_guid, item_guid, version_field, name, meta, segs)] with segs as
+    build_metamesh returns them (each segment carries its stored blob AND its decompressed
+    payload). Lays segment data out contiguously in TOC order. The item checksum is written the
+    way the Kit writes it: xxHash64 (seed 0) over the int64 metadata length plus the metadata."""
     tocs = []
     blobs = []
-    for type_guid, item_guid, ver_field, name, meta, checksum, segs in items:
+    for type_guid, item_guid, ver_field, name, meta, segs in items:
+        sized_meta = struct.pack("<q", len(meta)) + meta
+        checksum = struct.pack("<Q", xxhash.xxh64(sized_meta, seed=0).intdigest())
         toc = type_guid + item_guid + struct.pack("<I", ver_field) + _sized(name)
-        toc += struct.pack("<q", len(meta)) + meta + checksum + struct.pack("<i", len(segs))
-        for guid, tag, const, blob, actual in segs:
-            toc += _seg_entry(0, actual, len(blob), guid, tag, const)
+        toc += sized_meta + checksum + struct.pack("<i", len(segs))
+        for guid, tag, const, blob, payload in segs:
+            toc += _seg_entry(0, len(payload), len(blob), guid, tag, const, payload)
             blobs.append(blob)
         toc += struct.pack("<i", 0)
         tocs.append(bytearray(toc))
@@ -87,7 +94,7 @@ def build_tpac(pkg_guid: bytes, items: list) -> bytes:
     # second pass: write the real offsets (segment entries are the last 69*n + 4 bytes of each toc)
     cur = 36 + toc_size
     blob_iter = iter(blobs)
-    for (_, _, _, _, _, _, segs), toc in zip(items, tocs):
+    for (_, _, _, _, _, segs), toc in zip(items, tocs):
         seg_start = len(toc) - 4 - 69 * len(segs)
         for i in range(len(segs)):
             struct.pack_into("<Q", toc, seg_start + 69 * i, cur)
@@ -103,10 +110,10 @@ class SyntheticFixture(unittest.TestCase):
         self.lod_blobs = [os.urandom(300), os.urandom(120), os.urandom(40)]
         meta, segs = build_metamesh("sk_test_body_c", 3, self.mesh_guid, OLD_MAT, self.lod_blobs)
         other_meta = b"\x01\0\0\0" + FBX_GUID
-        other_segs = [(FBX_GUID, bytes.fromhex("f83d7de9"), b"\0" * 12, b"raw-fbx-bytes", len(b"raw-fbx-bytes"))]
+        other_segs = [(FBX_GUID, bytes.fromhex("f83d7de9"), b"\0" * 12, b"raw-fbx-bytes", b"raw-fbx-bytes")]
         self.items = [
-            (METAMESH, self.mesh_guid, 1, "sk_test_body_c", meta, b"\xab" * 8, segs),
-            (OTHER_TYPE, FBX_GUID, 0, "sk_test_body_c.fbx", other_meta, b"\xcd" * 8, other_segs),
+            (METAMESH, self.mesh_guid, 1, "sk_test_body_c", meta, segs),
+            (OTHER_TYPE, FBX_GUID, 0, "sk_test_body_c.fbx", other_meta, other_segs),
         ]
         self.data = build_tpac(self.pkg, self.items)
         self.materials = {"m_test_mat_a3": OLD_MAT, "m_test_mat_a1": NEW_MAT}
@@ -178,14 +185,40 @@ class CloneContract(SyntheticFixture):
         self.assertNotIn(src.item_guid, bytes(clone.toc))
         self.assertIn(FBX_GUID, bytes(clone.toc))  # the source-asset link is left alone
 
-    def test_clone_copies_lod_geometry_verbatim_and_keeps_the_checksum(self):
+    def test_clone_copies_lod_geometry_verbatim_with_their_hashes(self):
         pkg, clone = self._clone()
         src = pkg.items[0]
         for s_seg, c_seg, blob in zip(src.segments[:-1], clone.segments[:-1], self.lod_blobs):
             self.assertEqual(tcm.segment_bytes(clone, c_seg), blob)
             self.assertEqual((c_seg.actual, c_seg.storage), (s_seg.actual, s_seg.storage))
             self.assertEqual(c_seg.tag, LOD_TAG)
-        self.assertEqual(clone.checksum, src.checksum)
+            self.assertEqual(tcm.segment_hash(clone, c_seg), tcm.segment_hash(src, s_seg))
+
+    def test_clone_recomputes_the_binding_segment_hash_and_the_item_checksum(self):
+        """The engine keys segment data by xxHash64 of the payload and the item by xxHash64 of its
+        metadata. A clone that keeps c's values renders INVISIBLE in game (2026-09-17): the rewritten
+        binding segment resolves to c's, whose LOD names match nothing in the clone."""
+        pkg, clone = self._clone()
+        src = pkg.items[0]
+        binding = clone.segments[-1]
+        self.assertNotEqual(tcm.segment_hash(clone, binding), tcm.segment_hash(src, src.segments[-1]))
+        self.assertEqual(tcm.segment_hash(clone, binding),
+                         xxhash.xxh64(tcm.segment_payload(clone, binding), seed=0).intdigest())
+        self.assertNotEqual(clone.checksum, src.checksum)
+        self.assertEqual(clone.checksum, tcm.expected_checksum(clone))
+        self.assertEqual(src.checksum, tcm.expected_checksum(src))  # the formula holds for the source too
+
+    @unittest.skipUnless(LIVE_SPIDER.exists(), "live spider bundle not installed on this machine")
+    def test_live_bundle_hashes_follow_the_formulas(self):
+        pkg = tcm.parse(LIVE_SPIDER.read_bytes())
+        for it in pkg.items:
+            self.assertEqual(it.checksum, tcm.expected_checksum(it), it.name)
+            for seg in it.segments:
+                if seg.tag == bytes.fromhex("6dc06a9b"):
+                    continue  # the skeleton's user-data segment stores differently; not a mesh concern
+                self.assertEqual(tcm.segment_hash(it, seg),
+                                 xxhash.xxh64(tcm.segment_payload(it, seg), seed=0).intdigest(),
+                                 f"{it.name} {seg.guid.hex()}")
 
     def test_written_package_reparses_with_a_fresh_package_guid_and_correct_toc_size(self):
         pkg, clone_a = self._clone()
@@ -236,8 +269,8 @@ class MaterialLookup(unittest.TestCase):
     def test_material_item_guid_is_read_from_the_mtl_tpac_toc_not_the_filename(self):
         guid = uuid.uuid4().bytes
         mtl = build_tpac(uuid.uuid4().bytes, [
-            (bytes.fromhex("9313b01d0269194f83bab37a39830717"), guid, 0, "m_real_name", b"\0" * 4, b"\0" * 8,
-             [(guid, b"\0\0\0\0", b"\0" * 12, b"x", 1)]),
+            (bytes.fromhex("9313b01d0269194f83bab37a39830717"), guid, 0, "m_real_name", b"\0" * 4,
+             [(guid, b"\0\0\0\0", b"\0" * 12, b"x", b"x")]),
         ])
         with tempfile.TemporaryDirectory() as tmp:
             Path(tmp, "m_other_file_mtl.tpac").write_bytes(mtl)
@@ -255,8 +288,8 @@ class CommandLine(SyntheticFixture):
             mats.mkdir()
             for name, guid in self.materials.items():
                 mtl = build_tpac(uuid.uuid4().bytes, [
-                    (bytes.fromhex("9313b01d0269194f83bab37a39830717"), guid, 0, name, b"\0" * 4, b"\0" * 8,
-                     [(guid, b"\0\0\0\0", b"\0" * 12, b"x", 1)]),
+                    (bytes.fromhex("9313b01d0269194f83bab37a39830717"), guid, 0, name, b"\0" * 4,
+                     [(guid, b"\0\0\0\0", b"\0" * 12, b"x", b"x")]),
                 ])
                 Path(mats, f"{name}_mtl.tpac").write_bytes(mtl)
             out = Path(tmp, "variants_geo.tpac")

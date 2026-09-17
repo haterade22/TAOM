@@ -526,8 +526,14 @@ with the warg. Folder semantics:
 Fixing this outside the Kit would mean inserting a material reference, not substituting one. The
 metadata lengths differ between the two versions of the same mesh (1,317 bytes against 1,349 on the
 dark variant), so there is no slot to overwrite. That runs into the same wall as the Owner Skeleton
-in section 11: adding content invalidates the item's 8-byte checksum, whose algorithm is not known
-here, and the Kit then discards the edit silently. The assignments were made in the Modding Kit.
+in section 11: adding content invalidates the item's 8-byte checksum, whose algorithm was not known
+here at the time, and the Kit then discards the edit silently. The assignments were made in the Modding Kit.
+
+> **Known since 2026-09-17 (#616):** the item checksum is xxHash64 (seed 0) over the int64 metadata
+> length plus the metadata bytes, and each segment entry carries xxHash64 of its decompressed
+> payload; `tools/tpac_clone_metamesh.py` recomputes both and its tests pin the formulas against the
+> live spider bundle. A metadata insert from files is therefore possible now. The Owner Skeleton
+> case in section 11 has not been retried.
 
 ### Residual
 
