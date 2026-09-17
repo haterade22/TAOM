@@ -2916,6 +2916,7 @@
   <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorCycleCharge" text="{=taom_behavior.cycle_charge}Charge through, reform, and charge again" />
   <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorEnvelopWing" text="{=taom_behavior.envelop_wing}Swing round their flank and strike from the side" />
   <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorFootCharge" text="{=taom_behavior.foot_charge}Charge their foot; square up if horse come at you" />
+  <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorArcherFlank" text="{=taom_behavior.archer_flank}Stand beside the wall and shoot; fall in behind it if they come for you" />
   <!-- MissionOrderVM.OnDelegateCommandToAI (F6): "Infantry are ..." keyed str_formation_ai_behavior_text on the behaviour type name;
        the vanilla rows carry TROOP_NAMES_BEGIN / TROOP_NAMES_END / IS_PLURAL, set by the view model before the lookup. -->
   <string id="str_formation_ai_behavior_text.BehaviorBracedDefend" text="{=taom_behavior_f6.braced_defend}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
@@ -2924,5 +2925,6 @@
   <string id="str_formation_ai_behavior_text.BehaviorCycleCharge" text="{=taom_behavior_f6.cycle_charge}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
   <string id="str_formation_ai_behavior_text.BehaviorEnvelopWing" text="{=taom_behavior_f6.envelop_wing}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
   <string id="str_formation_ai_behavior_text.BehaviorFootCharge" text="{=taom_behavior_f6.foot_charge}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
+  <string id="str_formation_ai_behavior_text.BehaviorArcherFlank" text="{=taom_behavior_f6.archer_flank}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
 
 </strings>

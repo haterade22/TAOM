@@ -2662,11 +2662,13 @@
     <string id="taom_behavior.cycle_charge" text="돌파하고 재정비한 뒤 다시 돌격하라" />
     <string id="taom_behavior.envelop_wing" text="적의 측면을 돌아 옆에서 타격하라" />
     <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
+    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
     <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 방벽을 이루어 버티고 있습니다." />
     <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 방벽을 이루어 전진하고 있습니다." />
     <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 투척 후 물러나고 있습니다." />
     <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 반복 돌격을 하고 있습니다." />
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 측면을 돌아 우회하고 있습니다." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
   </strings>
 </base>

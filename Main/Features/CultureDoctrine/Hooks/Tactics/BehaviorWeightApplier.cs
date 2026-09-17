@@ -84,6 +84,10 @@ public static class BehaviorWeightApplier
                     ai.SetBehaviorWeight<BehaviorFootCharge>(w);
                     DisarmVanillaCharge(ai);
                     break;
+                case BehaviorKind.ArcherFlank:
+                    Ensure(formation, f => new BehaviorArcherFlank(f), owner);
+                    ai.SetBehaviorWeight<BehaviorArcherFlank>(w).Wall = owner.MainInfantry;
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(plan), weights[i].Kind, "no behaviour type for this kind");
             }
         }

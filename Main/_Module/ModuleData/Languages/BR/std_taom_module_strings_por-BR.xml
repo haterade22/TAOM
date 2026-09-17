@@ -2662,11 +2662,13 @@
     <string id="taom_behavior.cycle_charge" text="Carreguem através, reagrupem e carreguem de novo" />
     <string id="taom_behavior.envelop_wing" text="Contornem o flanco deles e ataquem pelo lado" />
     <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
+    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
     <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
     <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
     <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
     <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
   </strings>
 </base>

@@ -41,6 +41,12 @@ public static class TeamTacticProbe
         catch { return null; }
     }
 
+    private static string ArrangementName(IFormationArrangement arrangement)
+    {
+        var name = arrangement.GetType().Name;
+        return name.EndsWith("Formation") ? name.Substring(0, name.Length - "Formation".Length) : name;
+    }
+
     private static void AppendArmedRows(StringBuilder sb, FormationAI ai)
     {
         if (Behaviors == null)
@@ -123,8 +129,14 @@ public static class TeamTacticProbe
             // A TAOM behaviour also shows its stage or stance (Marching, Square, Reforming, failed: ...).
             if (active is TaomBehaviorBase taom && taom.Status.Length > 0)
                 sb.Append(':').Append(taom.Status);
-            sb.Append('/').Append(formation.ArrangementOrder.OrderEnum)
-              .Append('/').Append(formation.FiringOrder.OrderEnum)
+            sb.Append('/').Append(formation.ArrangementOrder.OrderEnum);
+            // The ORDER says Square; the engine's arrangement object says what the men are
+            // actually in (RectilinearSchiltron for Square) and how wide and deep it is, which
+            // the fourth A/B needed: a wall ordered Square that looked like a line.
+            var arrangement = formation.Arrangement;
+            if (arrangement != null && formation.ArrangementOrder.OrderEnum != ArrangementOrder.ArrangementOrderEnum.Line)
+                sb.Append('(').Append(ArrangementName(arrangement)).Append(' ').Append((int)arrangement.Width).Append('x').Append((int)arrangement.Depth).Append(')');
+            sb.Append('/').Append(formation.FiringOrder.OrderEnum)
               .Append(formation.IsAIControlled ? "" : "(player)");
             if (formation.AI != null)
                 AppendArmedRows(sb, formation.AI);

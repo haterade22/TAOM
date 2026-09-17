@@ -26,6 +26,30 @@ retarget workflow, and a `pending-license` row in the provenance register (creat
 still to be copied from the product page; Rivendell and the tents have no row either, noted as
 open).
 
+### feat(combat): archers on the flank of the wall, the players' own placement (#608)
+
+Mike, after the fourth A/B (Erebor's 122 archers behind the wall lost 116 to 224 Rohirrim):
+players put the infantry in a shield wall and the archers to one side of it, slightly farther
+back; the enemy AI goes for the closer wall, the bows keep an unobstructed line, and they are not
+the first thing a charge meets, instead of vanilla's skirmish ahead of the wall and back through
+it. `BehaviorArcherFlank` (TAOM, on `ArcherFlankGeometry`, pure): beside the main infantry's
+order position, a 10 m gap out from the wall's end and 8 m back, the side chosen once where
+fewer enemy formations stand, Loose, fire at will, facing the enemy; while an enemy formation
+is inside 30 m of the archers and closer to them than to the wall they stand 15 m behind the
+wall, and return beyond 45 m. The wall is the tactic's main infantry, handed over by the
+applier as `BehaviorHoldHighGround.RangedAllyFormation` is; without one the row weighs 0 and
+the skirmish rows, now 0.6, take the archers. Every wall doctrine's archer row leads with it
+(ShieldWall both sides, TwoLineWall, DisciplinedLine both sides, EoredScreen); the ring keeps
+its archers inside, the mass and the envelopment skirmish, the Elven advance walks behind its
+bows. Ten geometry tests, a plan invariant, the three string tables seeded in the twelve
+languages.
+
+The status line also prints the engine's actual arrangement object and its size after any
+arrangement order other than Line (`Square(RectilinearSchiltron 10x10)`): the fourth battle's
+wall was ordered Square (`ArrangementOrder.OnApply` builds a `RectilinearSchiltronFormation`,
+the most compact block the count allows) and looked like a line, and the log could not say
+whether the men were in the block. Doctrine and localization tests 325 green.
+
 ### fix(combat): the status line refreshes with the march, unseated formations get vanilla's rows (#608)
 
 The second Custom Battle A/B (Erebor v Mordor, 120 v 120, 12:29): the dwarf wall stood in

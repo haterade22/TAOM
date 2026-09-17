@@ -41,6 +41,10 @@ public enum BehaviorKind
     /// <summary>TAOM: a foot charge at the nearest enemy foot formation, braced against
     /// horse (<c>BehaviorFootCharge</c>). Every foot row's charge.</summary>
     FootCharge,
+
+    /// <summary>TAOM: archers on the flank of the main infantry, set a little back, behind it
+    /// while an enemy closes on them (<c>BehaviorArcherFlank</c>); weighs 0 with no wall.</summary>
+    ArcherFlank,
 }
 
 /// <summary>The formation slots a tactic assigns. <c>LeftCavalry</c>/<c>RightCavalry</c> exist

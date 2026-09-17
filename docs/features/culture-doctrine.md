@@ -8,9 +8,10 @@ authored in `culture_doctrines.json`: the nine vanilla tactics with per-culture 
 multipliers, plus eleven TAOM tactics (a Dwarven shield wall and its two-line variant, an
 orcish infantry mass and its envelopment, Rohan's cavalry lead and its defending screen, an
 Elven archer ring and archer advance, a disciplined line for Gondor, Rhun and Dale, Dunland's
-hit-and-run, Harad's mumakil vanguard) built on six TAOM formation behaviours (a braced wall
+hit-and-run, Harad's mumakil vanguard) built on seven TAOM formation behaviours (a braced wall
 holding and advancing, a foot charge that goes for the enemy foot and squares up against horse,
-a cavalry cycle charge, a throwing-infantry skirmish, an enveloping wing). The engine still picks the highest-weight tactic every 5 seconds and every formation
+archers on the flank of the wall, a cavalry cycle charge, a throwing-infantry skirmish, an
+enveloping wing). The engine still picks the highest-weight tactic every 5 seconds and every formation
 still picks its own behaviour every 0.5 seconds; the doctrine changes what is on the menu and
 how much each option weighs. Below the tactics, the same file says who never routs and how
 brave each culture starts (the battle morale model), how each culture's soldiers fight the
@@ -271,6 +272,7 @@ skirmish, not the wall.
 |---|---|---|---|
 | `BehaviorBracedDefend` | 1 | `BehaviorDefend` with the anti-cavalry square: walks loosely to `DefensePosition`, faces its foot target (the horse while braced), closes into ShieldWall on arrival (Line without shields, Loose under fire at a distance), and goes Square while horse ride at it inside `cavalryMattersMetres` or did in the last 3 s, standing on the point where the brace began. Arrangement is re-issued only on a change of stance (`SetArrangementOrder` expires the query cache on every real change) | enemy class flags, `CachedCurrentVelocity` and medians, `HasShield`, `UnderRangedAttackRatio`, `CachedClosestEnemyFormation` |
 | `BehaviorBracedAdvance` | 1 | `BehaviorAdvance` with the square: a line at its foot target's main body (its median plus half its depth), ShieldWall or Loose inside vanilla's 10 to 80 m band under fire, Square and stand (on the brace point) while horse are on it; vanilla only stops and re-forms five metres on when the horse is 30 m out | the same, plus `IsUnderRangedAttack`, `MedianTargetFormation` as the fallback |
+| `BehaviorArcherFlank` | 1 with a wall, 0 without | Archers on the flank of the main infantry (`ArcherFlankGeometry`): beside the wall's order position, a 10 m gap out from its end and 8 m back, the side chosen once where fewer enemy formations stand, Loose, fire at will, facing the enemy. While an enemy formation is inside 30 m of the archers and closer to them than to the wall they stand 15 m straight behind the wall, and return once it is beyond 45 m. The players' answer to cavalry and to bows caught in the open (Mike, 2026-09-17): the enemy AI goes for the closer wall and the bows keep a clear line, instead of vanilla's skirmish ahead of the wall and back through it. The wall is set by the tactic (`owner.MainInfantry`); every wall doctrine's archer row leads with it, the skirmish rows at 0.6 as the fallback for a wall that is gone | enemy medians, `Team.AverageEnemyPosition`, the wall's `OrderPosition`, `Width`, `Direction` |
 | `BehaviorFootCharge` | vanilla's infantry charge curve against its own target (`ChargeWeight`: 0.8 ten seconds out, 1 at four, times 1.2 inside the 1.5 to 4 s window, times 1.2 when the target is not coming for us, half against horse; the navmesh slope term is dropped), 0.2 with an enemy but no target. Against `FormationAI`'s 1.2x hold on the active behaviour a row at 1 wins only close and against a target busy elsewhere (1.44), so the Engage rows sit at 1 and the Defend rows at 0.3 | `BehaviorCharge` with the target from `TargetSelection`: `ChargeToTarget` the nearest enemy foot formation, the nearest horse when no foot is left, vanilla's plain charge when nothing is known; Square and stand while horse are on it, then charge on. Every foot row's charge | enemy class flags, medians and velocities |
 | `BehaviorCycleCharge` | 1 for cavalry with an enemy, else 0 | `CycleChargeMachine`: `ChargeToTarget` the closest significant enemy (Skein); once the formation's average has passed through it, or after 10 s in the melee, ride clear to a reform point beyond the enemy at the charge's stop distance (35 to 60 m; vanilla's 20 to 50 m was written for infantry); gather in a Line facing it (2 s minimum, 8 s maximum, or sooner if the enemy comes within half the stop distance); charge again. It is the machine `BehaviorTacticalCharge` carries and short-circuits for cavalry (`BehaviorTacticalCharge.cs:149-153`). The navmesh penalty is off, as vanilla's charges have it | `CachedFormationIntegrityData` (gathered = deviation under half the average top speed), positions, velocity |
 | `BehaviorInfantrySkirmish` | `0.1 + 0.9 * min(throwing share, 0.5) * 2`, 0 once spent | `InfantrySkirmishMachine`, `BehaviorSkirmish`'s dance with vanilla's thresholds: approach to the longest throw, throw (Loose), fall back from foot inside 40 percent of the average throw, and once nobody has thrown for the can't-shoot window (5 to 10 s by size) while inside 60 percent of the average throw, `Committed`: the behaviour weighs 0 and the plan's melee rows take the line. `Committed` survives a plan re-apply (`ResetBehaviorWeights` calls `ResetBehavior` on every behaviour, and a formation-set change elsewhere on the team re-applies the plan): javelins do not come back. The line it dances with is its foot target | `HasThrowingUnitRatio`, `MaximumMissileRange`, `MissileRangeAdjusted`, `MakingRangedAttackRatio`, `CachedCurrentVelocity` |
@@ -432,7 +434,11 @@ at the next apply). A formation prints as `slot:count[seat]`, or `slot/class:cou
 the engine's class ratios disagree with the slot, where the seat is the one the current TAOM
 tactic gave it at its last recount (`M` main infantry, `S` second line, `L`/`R` wings, `A`
 archers, `LC`/`RC`/`C` cavalry, `HA` horse archers, `V` vanguard, `-` none: an unseated
-formation runs vanilla's default rows): the slot is where the units were put and the engine's
+formation runs vanilla's default rows); an arrangement order other than Line is followed by
+the engine's actual arrangement object and its size, `Square(RectilinearSchiltron 10x10)`,
+because the order and the arrangement the men are in are two different things (the fourth
+battle's wall was ordered Square and looked like a line); and each formation ends with its
+armed rows, `{BracedDefend=1,FootCharge=0.3}`, or `{none}`: the slot is where the units were put and the engine's
 consolidation moves units between slots freely (an infantry mass can sit in the `Cavalry`
 slot), and riders without a live mount count as infantry (`QueryLibrary.IsCavalry` needs
 `Agent.HasMount`), which is why a "Cavalry" slot can read `/Infantry` and be merged into the
@@ -453,9 +459,9 @@ foot.
 | `Main/Features/CultureDoctrine/Hooks/Tactics/FormationSlots.cs`, `VolleyControl.cs` | Slot assignment per split (second line, wings, vanguard); the archers' firing order |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/HighGroundAnchor.cs`, `Doctrines/HighGroundRace.cs` | Where a position-holding tactic stands: the race, the re-check, the lock |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/BehaviorWeightApplier.cs`, `TeamQuerySnapshotFactory.cs`, `TacticFactory.cs` | The three engine-type switches; `Ensure<T>` adds a TAOM behaviour to a formation |
-| `Main/Features/CultureDoctrine/Hooks/Behaviors/TaomBehaviorBase.cs`, `BehaviorBracedDefend.cs`, `BehaviorBracedAdvance.cs`, `BehaviorFootCharge.cs`, `BehaviorCycleCharge.cs`, `BehaviorInfantrySkirmish.cs`, `BehaviorEnvelopWing.cs`, `WallStances.cs`, `EnemyScan.cs` | The six TAOM formation behaviours, their wrapped lifecycle, and the enemy walk they target through |
+| `Main/Features/CultureDoctrine/Hooks/Behaviors/TaomBehaviorBase.cs`, `BehaviorBracedDefend.cs`, `BehaviorBracedAdvance.cs`, `BehaviorFootCharge.cs`, `BehaviorArcherFlank.cs`, `BehaviorCycleCharge.cs`, `BehaviorInfantrySkirmish.cs`, `BehaviorEnvelopWing.cs`, `WallStances.cs`, `EnemyScan.cs` | The seven TAOM formation behaviours, their wrapped lifecycle, and the enemy walk they target through |
 | `Main/Features/CultureDoctrine/Doctrines/DoctrinePlan.cs`, `DoctrinePlans.cs`, `DoctrineWeights.cs`, `TacticPhaseMachine.cs` | Pure plans, weights, ring geometry, phase machine |
-| `Main/Features/CultureDoctrine/Doctrines/TargetSelection.cs`, `ChargeWeight.cs`, `Domain/EngagementTunables.cs`, `Hooks/Behaviors/EnemyScan.cs`, `BehaviorFootCharge.cs` | The foot-first target rule, the engagement distances from the `engagement` block, and the enemy-formation walk that feeds them |
+| `Main/Features/CultureDoctrine/Doctrines/TargetSelection.cs`, `ChargeWeight.cs`, `ArcherFlankGeometry.cs`, `Domain/EngagementTunables.cs`, `Hooks/Behaviors/EnemyScan.cs`, `BehaviorFootCharge.cs` | The foot-first target rule, the engagement distances from the `engagement` block, and the enemy-formation walk that feeds them |
 | `Main/Features/CultureDoctrine/Doctrines/BraceDecision.cs`, `CavalryThreat.cs`, `CycleChargeMachine.cs`, `InfantrySkirmishMachine.cs`, `EnvelopGeometry.cs`, `VolleyDecision.cs` | The pure cores the behaviours and the volley control step |
 | `Main/Features/CultureDoctrine/Domain/CultureMorale.cs`, `CultureAggression.cs`, `FormationRouting.cs`, `FormationRoutingRule.cs` | The three per-culture blocks below the tactics, and the routing rule |
 | `Main/Features/CultureDoctrine/CultureMoraleService.cs`, `CultureAggressionService.cs` | The two services the models read (catalog lookups behind the sub-toggles) |
@@ -550,6 +556,10 @@ Phase C and D add cells, all 300 v 300, three runs, the toggles above per tier:
 - Harad (attacker) vs Gondor with `harad_mumakil_rider` in the roster: the registration line
   shows the routing subscribed, the status line a `HeavyCavalry` formation, and
   `TaomTacticMumakVanguard` current.
+- Archers on the flank (Erebor or Gondor defending): the archer formation reads
+  `BehaviorArcherFlank:Flank` beside the wall, a gap out and a little back, from the first
+  Defend apply; `:Behind` while an enemy formation is closing on the archers rather than the
+  wall, `:Flank` again once it is 45 m off; the enemy foot goes for the wall, not the bows.
 - Foot never chases horse (any matchup with cavalry on one side): a TAOM foot formation's
   status never reads `Charging` toward a horse formation while an enemy foot formation
   stands; a line with melee cavalry riding at it inside 100 m reads `:Square` with time to
@@ -666,7 +676,12 @@ Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and
   it, and horse were always inside 150 m); the 122 archers behind the wall had no cover and
   were cut down; and the front square itself did not hold against 224 heavy horse. Whether a
   dwarf square should beat that many Rohirrim is a numbers question; the second line and the
-  archers are doctrine questions, open. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
+  archers are doctrine questions; the archers' answer is `BehaviorArcherFlank` (the players'
+  own placement, above), the second line's is open.
+- `MixedFormations` (`Patch30_FormationGetOrderPositionOfUnit`) replaces the engine's unit slots
+  for a player-team formation that holds a non-vanilla layout while it holds position, so a
+  doctrine arrangement on such a formation is overridden. Mike does not use layouts, and the
+  toggle should be OFF for the A/B; a doctrine-side guard is not written. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
   until they pass.
 - The high-ground march is decided once: `Holding` is terminal, so a wall that formed where it
   stood at the first decision (the enemy foot inside 50 m, or no slope worth having inside 60 m)

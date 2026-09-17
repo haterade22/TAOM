@@ -111,6 +111,33 @@ public class DoctrinePlansTests
     }
 
     [TestMethod]
+    public void WallDoctrines_PutTheArchersOnTheFlankOfTheWall_TheRestDoNot()
+    {
+        // Mike, 2026-09-17: the wall in front, the archers beside it and a little back, so the
+        // enemy goes for the closer wall and the bows have a clear line. The ring keeps its
+        // archers inside, the mass and the envelopment skirmish, the Elven advance walks behind
+        // its bows, the javelin line has no wall.
+        var walls = new[] { DoctrinePlans.ShieldWallDefender, DoctrinePlans.ShieldWallAttacker, DoctrinePlans.TwoLineWall, DoctrinePlans.EoredScreen, DoctrinePlans.DisciplinedLineDefender, DoctrinePlans.DisciplinedLineAttacker };
+        foreach (var plan in All)
+            foreach (var phase in new[] { plan.Defend, plan.Engage })
+            {
+                var archers = phase.Formations.SingleOrDefault(f => f.Role == FormationRole.Archers);
+                if (archers == null)
+                    continue;
+                var flank = archers.Weights.FirstOrDefault(w => w.Kind == BehaviorKind.ArcherFlank);
+                if (walls.Contains(plan))
+                {
+                    Assert.AreEqual(1f, flank.Weight, plan.Name + " archers lead with ArcherFlank");
+                    Assert.IsTrue(archers.Weights.Where(w => w.Kind != BehaviorKind.ArcherFlank).All(w => w.Weight < 1f), plan.Name + ": the skirmish rows are the fallback for a wall that is gone");
+                }
+                else
+                {
+                    Assert.AreEqual(0f, flank.Weight, plan.Name + " has no wall to flank");
+                }
+            }
+    }
+
+    [TestMethod]
     public void EveryPlan_HasADistinctName()
     {
         var names = All.Select(p => p.Name).ToList();
