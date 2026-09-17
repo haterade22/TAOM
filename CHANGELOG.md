@@ -4,6 +4,47 @@
 
 ## 2026-09-17
 
+### feat(spider): Brown Spider and Pale Spider, the goblin Spider Rider fields three skins (#616)
+
+**Why.** The artist delivered the giant spider with three materials (`m_mordor_spider_a1` brown,
+`a2` pale grey, `a3` dark), and only a3 ever shipped: every Dol Guldur spider formation was one
+colour while the wargs already mix `warg_brown` / `warg_dark` / `warg_albino` across their rider
+rosters. The a1 and a2 materials and textures had been live in `Assets/creature/spider/textures/`
+since April with nothing using them.
+
+**Why not the engine's recolour.** The vanilla horses and `warg_dark` change colour through a
+`<Materials>` block on the Horse item. `MountVisualCreator.SetMaterialProperties` applies that
+material with `SetMaterialToSubMeshesWithTag(mat, "horse_body")` on the base mesh alone; additional
+meshes get a colour factor and nothing else. Byak0's `warg_low` carries the `horse_body` tag (3 hits
+in its tpac). The spider meshes carry none (0 hits, live tpac and the May backup), so the block would
+have done nothing, silently, and the `_c_2` half would have stayed dark in any case. The artist's own
+un-split a/b meshes are not an option either: the single 58-bone mesh AV'd `PreloadForRendering` in
+June and their backup tpac carries a second `spider_skeleton`.
+
+**What.** A new tool, `tools/tpac_clone_metamesh.py`, clones a metamesh from files under a new
+same-length name bound to a different material: LOD geometry verbatim, the name rewritten in the
+TOC, the metadata LOD names and the LZ4 binding segment, the material item GUID swapped (read from
+the `*_mtl.tpac` TOC, never a filename), fresh item, segment and package GUIDs. Its test re-serialises
+the live spider bundle and proves byte identity before anything else. It produced
+`spider_variants_geo.tpac` beside the untouched `spider_correct_geo.tpac`: `sk_spider_forest_a` +
+`_a_2` on a1 and `sk_spider_forest_b` + `_b_2` on a2, the artist's own a/b/c naming. Two items in
+`LOTRAOM_horses.xml`, `spider_mount_brown` and `spider_mount_pale`, copy `spider_mount_a`'s Horse
+block (Monster.spider, the #615 numbers) with the new meshes; two English rows in
+`loc_LOTRAOM_horses.xml`; the Spider Rider's three rosters carry one skin each, so a formation mixes
+them the warg way. Every C# seam (the tree, Patch47/48, the mount lock) keys on `Monster.spider`, so
+nothing in code changed. Live install and the `lotraom-assets` v1.5 mirror carry the same bytes.
+
+**Docs.** `docs/features/spider.md` (mount items, skin variants, rider rows), the change ledger
+`docs/reference/lotrlome-spider-mount-changes.md` (rebuild command, rollback), the `horse_body` row in
+`docs/ai-includes/creature-mount-authoring.md`, the regenerated Armoury catalogue (4 rows), `tools/README.md`.
+
+**Verification.** `python -m unittest tools.tests.test_tpac_clone_metamesh` 14 passed;
+`generate_armory_catalogue.py` 4 NEW rows, all parsed and referenced; `audit_armory_refs.py` CLEAN;
+`validate_moduledata.py` 0 errors; `dotnet test TAOM.Tests` 9,775 passed, 0 failed. Owed: a full
+restart and a Custom Battle with Spider Riders (three colours, both halves of each spider the same
+colour, the thumbnail and inventory tableaus), the campaign recruit smoke, and the paid translator
+run for the two names.
+
 ### balance(mounts): the ten creature mounts get speed, maneuver and charge retuned (#615)
 
 **Why.** The mount ledger pulled today put every TAOM creature below the vanilla horses TAOM

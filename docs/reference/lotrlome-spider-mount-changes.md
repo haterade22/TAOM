@@ -146,6 +146,21 @@ points — then the byte-patched files (and their `.bak-untagged` siblings) can 
 the per-category flag recipes from the pipeline doc §3c to the attack/death clips at the same
 time. After the spider ships, sweep all `.bak-*` files.
 
+## 2026-09-17: Brown and Pale Spider, the a1/a2 skins ship (#616)
+
+Three files changed in the module, one added, none of the June data touched.
+
+| Change | Why | Rollback |
+|---|---|---|
+| NEW `Assets/creature/spider/animations/spider_variants_geo.tpac` (5.56 MB, 4 metamesh items: `sk_spider_forest_a` + `_a_2` bound to `m_mordor_spider_a1`, `sk_spider_forest_b` + `_b_2` bound to `m_mordor_spider_a2`) | The artist's three skins are one body with three materials; a1 and a2 had sat unused in `textures/` since April. The engine's own recolour, `<Materials>` on the Horse item, is applied by `MountVisualCreator.SetMaterialProperties` through `SetMaterialToSubMeshesWithTag(mat, "horse_body")` on the base mesh alone, and the spider meshes carry no `horse_body` tag (0 hits in the live tpac and the backup; Byak0's `warg_low` has 3), so the XML route is a silent no-op and would leave the `_c_2` half dark regardless. The un-split a/b meshes in the May backup must not ship either (the single mesh AV'd `PreloadForRendering`; that tpac carries a second `spider_skeleton`). So the proven split c halves were cloned per skin from files: `python tools/tpac_clone_metamesh.py spider_correct_geo.tpac --out spider_variants_geo.tpac --clone sk_spider_forest_c=sk_spider_forest_a,m_mordor_spider_a3=m_mordor_spider_a1 --clone sk_spider_forest_c_2=sk_spider_forest_a_2,m_mordor_spider_a3=m_mordor_spider_a1 --clone sk_spider_forest_c=sk_spider_forest_b,m_mordor_spider_a3=m_mordor_spider_a2 --clone sk_spider_forest_c_2=sk_spider_forest_b_2,m_mordor_spider_a3=m_mordor_spider_a2 --apply`. The clone keeps every LOD geometry blob verbatim and rewrites only the name (TOC, metadata LOD names, binding segment), the material item GUID, the binding segment's material name, and the item, segment and package GUIDs. `spider_correct_geo.tpac` is byte-identical before and after (sha256 `4f8cad6f...`) | delete the one file |
+| `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml`: `spider_mount_brown` (mesh a, additional `_a_2`, "Brown Spider") and `spider_mount_pale` (mesh b, `_b_2`, "Pale Spider") after `spider_mount_a`; same Horse block (Monster.spider, 85/65/15/100), no `<Materials>` | Warg-shaped items (`warg_brown` / `warg_dark` / `warg_albino`): one id per skin so rosters can name them | remove the two `<Item>` blocks |
+| `ModuleData/Languages/loc_LOTRAOM_horses.xml`: two English rows | the per-language files are seeded and translated by `translate_with_claude.py --module Armory --sync-ids` (paid run, owed) | remove the two rows |
+| TAOM `characters/spider_creature.xml` (repo, not this module): rosters 2 and 3 carry the new mounts | one skin per roster; the engine draws each slot from an independently chosen roster, so a formation mixes the three | git |
+
+Mirror: the tpac and the horses edit were copied to `E:\repos\lotraom-assets\v1.5` (same sha256 on both sides); the mirror commit is Mike's call.
+
+Verification: `python -m unittest tools.tests.test_tpac_clone_metamesh` (14, including the live bundle re-serialising byte-identical), `generate_armory_catalogue.py` (4 NEW rows, all `parsed`, referenced), `audit_armory_refs.py` CLEAN, `validate_moduledata.py` 0 errors, `dotnet test TAOM.Tests` 9,775 passed. In-game Custom Battle check owed at the time of writing.
+
 ## Verification trail (what each change fixed, in order)
 
 1. Mesh split + children + mount surface → thumbnail still AV'd (led to the probe battery).

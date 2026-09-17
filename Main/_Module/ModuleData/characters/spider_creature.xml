@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
-  <!-- Spider Rider: goblin cavalry troop that rides the Giant Spider mount (spider_mount_a).
+  <!-- Spider Rider: goblin cavalry troop that rides the Giant Spider mount. Its three rosters
+       carry one skin each (spider_mount_a dark, spider_mount_brown, spider_mount_pale; #616), the
+       warg pattern: the engine draws each slot from an independently chosen roster, so a formation
+       mixes the three colours. All three items ride Monster.spider and share every stat.
        Replaces the old detached-spider anchor (dg_uruk race, Wanderer) with the horse-slot
        mount pattern — same as taom_war_elephant / harad_mahout. The engine spawns TWO agents:
          1. The goblin rider (FromCharacterObj, humanoid, race=goblin)
@@ -46,13 +49,13 @@
         <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a03" />
         <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
         <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
-        <equipment slot="Horse" id="Item.spider_mount_a" />
+        <equipment slot="Horse" id="Item.spider_mount_brown" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
         <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
         <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
-        <equipment slot="Horse" id="Item.spider_mount_a" />
+        <equipment slot="Horse" id="Item.spider_mount_pale" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>

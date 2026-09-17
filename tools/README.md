@@ -236,6 +236,7 @@ Binary editors for compiled `.tpac` assets. Read
 | `tpac_skeleton_swap.py` | replace a Skeleton item with the same-named one from a known-good compile, keeping the donor item verbatim. Use when an older compile of the skeleton survives |
 | `tpac_skeleton_transplant.py` | synthesise default bodies and d6 constraints when no good compile survives |
 | `tpac_skeleton_inject.py` | add a Skeleton into a mesh tpac that lacks one (the proven bundled layout) |
+| `tpac_clone_metamesh.py` | clone a metamesh under a new same-length name, bound to a different material, into a NEW tpac (dry run by default, `--apply`, never overwrites). Geometry blobs verbatim; rewrites the name in the TOC, the metadata LOD names and the LZ4 binding segment, the material item GUID (read from the `*_mtl.tpac` TOC, never a filename), and gives the clone fresh item, segment and package GUIDs. Exists because the engine's `<Materials>` recolour only touches `horse_body`-tagged sub-meshes of the base mesh, which a hand-authored creature lacks (the spider, #616). Its test re-serialises the live spider bundle and proves byte identity, the contract every tpac writer here carries |
 | `tpac_skeleton_extract.py` | **DEPRECATED.** A standalone skeleton-only tpac caused a guid collision and a recursive native AV |
 | `tpac_clipinfo.py` | animation clip metadata |
 
