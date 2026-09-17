@@ -151,7 +151,7 @@ established that the shipping client reads that cache and only the editor writes
 Armoury in the Modding Kit and saving cooked the entry and all three spiders appeared; the Kit's
 resave of both spider tpacs kept every geometry blob and the skeleton physics payload byte-identical.
 Lesson in `docs/reviews/lessons/animation-skeleton.md`; the warg ledger's "algorithm not known" note
-is corrected.
+is corrected. A CLAUDE.md Traps row now carries the one-liner.
 
 **The rider line.** The Spider Rider is now three rungs in the warg line's shape:
 `taom_spider_creature` Spider Rider (L20, Giant Spider, light uruk kit) upgrades to
