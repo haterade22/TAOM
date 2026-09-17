@@ -54,16 +54,17 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 |----------|-------|-------------|
 | `WargAttackRange` | 1.0f | Attack hit range |
 | `SleepAfterAttack` | 3 | Seconds idle after non-rage attack |
+| `TargetDetectionRange` | 20f | Target scan radius (m) |
 | `MaxSpeedDamage` | 20 | Maximum speed-based damage component |
 | `MaxBaseDamage` | 40 | Maximum base damage component |
-| `SpeedForMaxDamage` | 8.0f | Velocity for max speed damage |
+| `SpeedForMaxDamage` | 20f | Velocity (m/s) for max speed damage |
 | `DamageToFlinch` | 10 | Damage threshold for flinch animation |
-| `DamageToFall` | 20 | Damage threshold for fall animation |
+| `DamageToFall` | 40 | Damage threshold for fall animation |
 | `rageChance` | 0.1 | 10% chance to enter rage on hit |
 | `minDamageReceivedForRage` | 10 | Minimum damage to trigger rage roll |
 | `minRageAttacks` | 2 | Minimum attacks in rage mode |
 | `maxRageAttacks` | 3 | Maximum attacks in rage mode |
-| `maxDistanceFromWargToRollForRage` | 10.0f | Max distance from attacker for rage |
+| `maxDistanceFromWargToRollForRage` | 20 | Max distance from attacker for rage |
 
 ### Rage Mode Flow
 

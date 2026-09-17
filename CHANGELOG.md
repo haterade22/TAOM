@@ -92,6 +92,14 @@ untouched. `docs/features/spider.md` and `chariot.md` stat lines updated (the sp
 been stale since before this change). Nothing pins these values: `audit_mount_parity.py` reads
 Monster attributes, not the item. Owed: a Custom Battle smoke, a warg line beside a charger line.
 
+Deep review, six agents (standards, engine consumption on the installed DLLs, tooling correctness
+of the edit script, completeness, data flow, XML integrity and mirror parity): 0 findings in the
+change. Surfaced by the consumer trace: charge blow magnitude is quadratic in closing speed, so
+speed and charge compound (a brown warg lands about 3.2x its old magnitude at the same angle),
+and the career cavalry self-buff and ally-buff stack 1.44x on one mount with no clamp (#611
+design, needs a call). The stale `WargConfig` table in `warg-combat.md` is fixed. RCA:
+`docs/reviews/rca-creature-mount-retune-2026-09-17.md`.
+
 ### fix(career): the cavalry mount bonuses reach the mount (#611)
 
 **Why.** Found under #610 while establishing which agent the engine reads `MountChargeDamage`

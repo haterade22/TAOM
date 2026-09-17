@@ -3261,6 +3261,28 @@ another session's mid-edit work). Codex: not dispatched. Owed: the second A/B wi
 cells, the translator run, closing #608.
 
 
+## Review 118: creature mount retune (#615), 6-agent deep review of a data-only change (2026-09-17)
+
+Mike pulled the mount ledger (every rideable mount, item stats plus the engine's m/s), set new
+speed / maneuver / charge on the ten creature mounts, and asked for a deep review "even for the
+xml changes". The change lives in the live Armory's `LOTRAOM_horses.xml` and the v1.5 mirror;
+commit `0f57f29f` carries the CHANGELOG entry and two doc stat lines.
+
+**Deep review, six agents (standards, engine consumption on the installed v1.5.3, tooling
+correctness of the edit script, completeness, data flow, XML integrity and mirror parity):**
+0 findings in the change. Integrity: ten blocks, +5 bytes, BOM and LF intact, 54 items parse in
+both copies, no duplicate id in the Armory tree, validator 0 errors. Engine: every field an
+unclamped `int`, `Difficulty` untouched, no managed Monster cap on `MountSpeed` (native
+UNVERIFIED). Surfaced by the consumer trace, none in the diff: charge blow magnitude is quadratic
+in closing speed, so speed and charge compound (a brown warg lands about 3.2x its old magnitude);
+the career cavalry self-buff and ally-buff stack 1.44x on one mount with no clamp (#611 design,
+needs a call); the `warg-combat.md` `WargConfig` table was stale against the code (fixed); the
+spider's `SpeedForMaxDamage` cap is now reached at its baseline speed. One agent claim refuted
+on read (the warg term does not saturate; its cap is 20 m/s). RCA
+[rca-creature-mount-retune-2026-09-17.md](rca-creature-mount-retune-2026-09-17.md); one lesson
+appended. Codex: not dispatched. Owed: Custom Battle smoke, push, mirror commit, closing #615.
+
+
 Every file below is a real review artefact that nothing linked to, so the doc graph
 counted it as an orphan and no reader would ever have found it. Indexed here on
 2026-08-31 after the doc-graph ratchet went over baseline and took CI down with it:

@@ -1425,3 +1425,23 @@ The Armory names its meshes by tier (`_light_`, `_med_`, `_heavy_`, `_elite_`, `
 - **Why missed:** nothing tied a mesh tier to a troop level, so the fan-out was "more variety" and the #583 overview listed such kit as observations for a roster pass that never ran. The inventory tooltip was the first surface to put the two items side by side.
 - **Prevent:** the ladder is data (`rebalance_armor.MESH_TIER_LADDER`, lord kit for level 41+ or lords) and `ARMOUR_MESH_TIER_LADDER` warns on both directions. A demotion must pick its target with the anchor in mind: the tier at or below the troop's stat band first (a level-11 troop in `_med_a` anchors that variant to the light band, the same bug one notch down), and among variants the one already priced at the troop's band (two `_med_` chests can sit two bands apart, and the first apply regressed nine upgrade edges by ignoring that), and a picker that ranks by an anchor must update the anchor as it places, lowest troop first, or the second troop is placed against a world the first already changed (the deep review found a level-16 and six level-21 troops stacked on one variant). Re-derive and restat after any roster swap, because the anchors move.
 - **Source:** #609, `docs/features/armor-balance.md` "Mesh-tier ladder", `docs/reviews/rca-armour-mesh-ladder-2026-09-16.md`, 2026-09-16.
+
+### A mount item's speed has consumers outside the item: the charge formula squares it and creature configs threshold it
+
+A retune of `speed` and `charge_damage` on the ten creature mounts (#615) was planned as "data only,
+no C# moves", which was true, and the plan stopped there. The review's consumer trace then found
+that the engine's charge blow is `(closing speed x dot)^2 x dot x MountChargeDamage`
+(`MissionCombatMechanicsHelper.cs:711`), so raising both on one item compounds (a brown warg about
+3.2x its old magnitude at the same angle), and that `WargConfig.SpeedForMaxDamage`,
+`SpiderConfig.SpeedForMaxDamage` and `SpiderConfig.ChargeVelocityThreshold` read the mount's live
+velocity against fixed m/s caps (the spider now sits at its cap).
+
+**Why missed:** the plan priced the change by the two attributes it edited and never opened the
+formula or grepped the creature configs; nothing in the item file points at either.
+
+**Prevent:** before retuning a mount item's `speed` or `charge_damage`, quote the charge formula,
+grep `Main/Features/<Creature>/*Config.cs` for `SpeedForMaxDamage` / `*VelocityThreshold`, and
+state the compounded charge effect in the plan. `MountSpeed = env x 0.22 x (speed + 2)` m/s is the
+conversion (`SandboxAgentStatCalculateModel.UpdateHorseStats`).
+
+**Source:** `docs/reviews/rca-creature-mount-retune-2026-09-17.md` (#615, 2026-09-17).
