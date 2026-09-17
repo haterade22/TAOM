@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="林頓" />
     <string id="taom_aso_kingdom.bluecraig" text="藍岩半獸人" />
     <string id="taom_aso_item_name_randomized" text="隨機化的中土世界" />
+    <string id="taom_aso_desc_invasion" text="統治中土世界大部分地區的派系。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} 支配著中土世界的絕大部分地區。" />
+    <string id="taom_aso_item_desc_randomized" text="在合理範圍內，依你選擇的程度隨機化中土世界的初始狀態。" />
     <string id="taom_tactic.shield_wall" text="我們的計畫是結成盾牆，堅守陣地。" />
     <string id="taom_tactic.infantry_mass" text="我們的計畫是以人數優勢淹沒他們。" />
     <string id="taom_tactic.cavalry_dominance" text="我們的計畫是以騎兵衝散他們，再由步兵收尾。" />

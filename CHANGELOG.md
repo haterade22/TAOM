@@ -4,6 +4,24 @@
 
 ## 2026-09-17
 
+### fix(localization): the three ASO description rows return to the twelve language files (#604)
+
+`303bf2a7` regenerated every `std_taom_module_strings_*.xml` and dropped
+`taom_aso_desc_invasion`, `taom_aso_item_desc_invasion` and `taom_aso_item_desc_randomized`
+from all twelve, so `LanguageFileCoverageTests` failed on `origin`: their English source moved
+to `global_strings.xml` in #604, which the translator maps to the keybind file, while their
+twenty-three `taom_aso_*` siblings stayed in the module-strings file. Restored beside the
+siblings, with the translations the tool's own cache already held (German, French, Japanese and
+the rest, not English placeholders). A translator run that regenerates the module-strings file
+from `taom_module_strings.xml` alone will drop them again; the durable fix is the tool's source
+map, which belongs to the localization work.
+
+Also `DoctrinePopupStringsTests.DelegateCommandRows_KeepTheVanillaVariablesInEveryLanguage`:
+the F6 rows (`str_formation_ai_behavior_text`) carry `{TROOP_NAMES_BEGIN}`, `{?IS_PLURAL}`,
+`{?}`, `{\?}` and `{TROOP_NAMES_END}`, which a translation can mangle into a broken message;
+every language file is now checked, not only the English source. Full suite at `3f75217d` plus
+this: 9,733 green, 2 pre-existing skips.
+
 ### feat(localization): troop, lord, clan, and kingdom names join the translation pipeline (#572)
 
 **What.** `tools/generate_name_localization_strings.py` closes the "Case B" gap

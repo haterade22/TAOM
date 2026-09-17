@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="リンドン" />
     <string id="taom_aso_kingdom.bluecraig" text="青岩のゴブリン" />
     <string id="taom_aso_item_name_randomized" text="ランダム化された中つ国" />
+    <string id="taom_aso_desc_invasion" text="中つ国の大部分を支配する勢力。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}が中つ国の圧倒的大部分を支配している。" />
+    <string id="taom_aso_item_desc_randomized" text="中つ国の初期状態を、常識の範囲内であなたの選んだ度合いでランダム化します。" />
     <string id="taom_tactic.shield_wall" text="我らの策は盾を並べ、陣地を守り抜くことだ。" />
     <string id="taom_tactic.infantry_mass" text="我らの策は数にものを言わせて押し潰すことだ。" />
     <string id="taom_tactic.cavalry_dominance" text="我らの策は騎馬で蹴散らし、歩兵がそれを仕留めることだ。" />

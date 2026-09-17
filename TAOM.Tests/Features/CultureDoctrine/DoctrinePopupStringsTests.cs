@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CultureDoctrine.Hooks.Behaviors;
@@ -86,5 +87,35 @@ public class DoctrinePopupStringsTests
             StringAssert.Contains(text, "{TROOP_NAMES_BEGIN}", (string)row.Attribute("id"));
             StringAssert.Contains(text, "{TROOP_NAMES_END}", (string)row.Attribute("id"));
         }
+    }
+
+    [TestMethod]
+    public void DelegateCommandRows_KeepTheVanillaVariablesInEveryLanguage()
+    {
+        // The translator rewrites the twelve language files; a translation that drops or
+        // mangles {TROOP_NAMES_BEGIN}, {?IS_PLURAL} and {?}{\?} renders a broken F6 message.
+        var keys = XDocument.Load(StringsPath).Descendants("string")
+            .Where(r => ((string)r.Attribute("id") ?? "").StartsWith("str_formation_ai_behavior_text.", StringComparison.Ordinal))
+            .Select(r => Regex.Match((string)r.Attribute("text") ?? "", @"^\{=([^}]+)\}").Groups[1].Value)
+            .Where(k => k.Length > 0).ToList();
+        Assert.IsTrue(keys.Count >= 6);
+        var languages = Path.Combine(RepoRoot, @"Main\_Module\ModuleData\Languages");
+        var failures = new List<string>();
+        foreach (var dir in Directory.GetDirectories(languages))
+        {
+            var rows = Directory.GetFiles(dir, "std_taom_*.xml")
+                .SelectMany(f => XDocument.Load(f).Descendants("string"))
+                .GroupBy(r => (string)r.Attribute("id") ?? "", StringComparer.Ordinal)
+                .ToDictionary(g => g.Key, g => (string)g.First().Attribute("text") ?? "", StringComparer.Ordinal);
+            foreach (var key in keys)
+            {
+                if (!rows.TryGetValue(key, out var text))
+                    continue; // coverage is LanguageFileCoverageTests' job
+                foreach (var token in new[] { "{TROOP_NAMES_BEGIN}", "{TROOP_NAMES_END}", "{?IS_PLURAL}", "{?}", "{\\?}" })
+                    if (!text.Contains(token))
+                        failures.Add(Path.GetFileName(dir) + " " + key + " lacks " + token);
+            }
+        }
+        Assert.AreEqual(0, failures.Count, string.Join("; ", failures));
     }
 }

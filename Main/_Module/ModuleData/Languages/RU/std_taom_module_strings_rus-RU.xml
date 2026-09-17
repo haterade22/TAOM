@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Линдон" />
     <string id="taom_aso_kingdom.bluecraig" text="Гоблины Синей скалы" />
     <string id="taom_aso_item_name_randomized" text="Случайное Средиземье" />
+    <string id="taom_aso_desc_invasion" text="Фракция, правящая большей частью Средиземья." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} господствует над подавляющей частью Средиземья." />
+    <string id="taom_aso_item_desc_randomized" text="Случайным образом задаёт начальное состояние Средиземья в выбранной вами степени, в разумных пределах." />
     <string id="taom_tactic.shield_wall" text="Наш план — сомкнуть щиты и удержать позиции." />
     <string id="taom_tactic.infantry_mass" text="Наш план — задавить их числом." />
     <string id="taom_tactic.cavalry_dominance" text="Наш план — стоптать их конницей, а пехота довершит начатое." />

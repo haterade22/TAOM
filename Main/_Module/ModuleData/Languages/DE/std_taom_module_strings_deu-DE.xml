@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Goblins vom Blauen Fels" />
     <string id="taom_aso_item_name_randomized" text="Zufälliges Mittelerde" />
+    <string id="taom_aso_desc_invasion" text="Die Fraktion, die den größten Teil Mittelerdes beherrscht." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} beherrscht den überwiegenden Teil Mittelerdes." />
+    <string id="taom_aso_item_desc_randomized" text="Randomisiert den Ausgangszustand Mittelerdes in dem von dir gewählten Maße, im Rahmen des Sinnvollen." />
     <string id="taom_tactic.shield_wall" text="Unser Plan ist es, die Schilde zu schließen und die Stellung zu halten." />
     <string id="taom_tactic.infantry_mass" text="Unser Plan ist es, sie mit unserer Überzahl zu überrennen." />
     <string id="taom_tactic.cavalry_dominance" text="Unser Plan ist es, sie niederzureiten und das Fußvolk vollenden zu lassen, was die Reiter beginnen." />

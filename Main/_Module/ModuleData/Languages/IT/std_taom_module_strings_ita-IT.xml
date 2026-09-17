@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Goblin della Rupe Azzurra" />
     <string id="taom_aso_item_name_randomized" text="Terra di Mezzo casuale" />
+    <string id="taom_aso_desc_invasion" text="La fazione che domina la maggior parte della Terra di Mezzo." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina la gran parte della Terra di Mezzo." />
+    <string id="taom_aso_item_desc_randomized" text="Rende casuale lo stato iniziale della Terra di Mezzo nella misura che preferisci, entro limiti ragionevoli." />
     <string id="taom_tactic.shield_wall" text="Il nostro piano è serrare gli scudi e tenere la posizione." />
     <string id="taom_tactic.infantry_mass" text="Il nostro piano è sommergerli col nostro numero." />
     <string id="taom_tactic.cavalry_dominance" text="Il nostro piano è travolgerli a cavallo e lasciare che la fanteria finisca ciò che i cavalli iniziano." />

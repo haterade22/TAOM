@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Gobliny z Błękitnej Skały" />
     <string id="taom_aso_item_name_randomized" text="Losowe Śródziemie" />
+    <string id="taom_aso_desc_invasion" text="Frakcja, która włada większością Śródziemia." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} panuje nad przeważającą częścią Śródziemia." />
+    <string id="taom_aso_item_desc_randomized" text="Losuje stan początkowy Śródziemia w wybranym przez ciebie stopniu, w granicach rozsądku." />
     <string id="taom_tactic.shield_wall" text="Naszym planem jest zewrzeć tarcze i utrzymać pozycję." />
     <string id="taom_tactic.infantry_mass" text="Naszym planem jest zalać ich naszą liczebnością." />
     <string id="taom_tactic.cavalry_dominance" text="Naszym planem jest stratować ich konnicą, a piechota dokończy to, co zaczną konie." />

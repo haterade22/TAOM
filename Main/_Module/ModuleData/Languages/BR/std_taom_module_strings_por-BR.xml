@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Gobelins do Rochedo Azul" />
     <string id="taom_aso_item_name_randomized" text="Terra-média Aleatória" />
+    <string id="taom_aso_desc_invasion" text="A facção que domina a maior parte da Terra-média." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina a imensa maioria da Terra-média." />
+    <string id="taom_aso_item_desc_randomized" text="Torna aleatório o estado inicial da Terra-média no grau que você escolher, dentro do razoável." />
     <string id="taom_tactic.shield_wall" text="Nosso plano é travar os escudos e manter a posição." />
     <string id="taom_tactic.infantry_mass" text="Nosso plano é sufocá-los com nosso número." />
     <string id="taom_tactic.cavalry_dominance" text="Nosso plano é atropelá-los e deixar que a infantaria termine o que os cavalos começarem." />

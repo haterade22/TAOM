@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Gobelins du Roc Bleu" />
     <string id="taom_aso_item_name_randomized" text="Terre du Milieu aléatoire" />
+    <string id="taom_aso_desc_invasion" text="La faction qui domine la majeure partie de la Terre du Milieu." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domine la très grande majorité de la Terre du Milieu." />
+    <string id="taom_aso_item_desc_randomized" text="Rend aléatoire l'état initial de la Terre du Milieu selon le degré de votre choix, dans la limite du raisonnable." />
     <string id="taom_tactic.shield_wall" text="Notre plan est de verrouiller les boucliers et de tenir notre position." />
     <string id="taom_tactic.infantry_mass" text="Notre plan est de les submerger par le nombre." />
     <string id="taom_tactic.cavalry_dominance" text="Notre plan est de les piétiner et de laisser l'infanterie achever ce que la cavalerie commence." />

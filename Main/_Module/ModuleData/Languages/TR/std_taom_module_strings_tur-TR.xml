@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Mavi Kaya Goblinleri" />
     <string id="taom_aso_item_name_randomized" text="Rastgele Orta Dünya" />
+    <string id="taom_aso_desc_invasion" text="Orta Dünya'nın büyük bölümünü yöneten hizip." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} Orta Dünya'nın çok büyük bir kısmına hükmediyor." />
+    <string id="taom_aso_item_desc_randomized" text="Orta Dünya'nın başlangıç durumunu, makul sınırlar içinde, istediğiniz ölçüde rastgeleleştirir." />
     <string id="taom_tactic.shield_wall" text="Planımız kalkanları kilitleyip yerimizi korumak." />
     <string id="taom_tactic.infantry_mass" text="Planımız sayımızla onların üzerine akın etmek." />
     <string id="taom_tactic.cavalry_dominance" text="Planımız onları atla ezmek ve atlıların başlattığını piyadenin bitirmesi." />

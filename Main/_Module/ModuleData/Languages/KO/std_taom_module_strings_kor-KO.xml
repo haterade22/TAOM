@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="린돈" />
     <string id="taom_aso_kingdom.bluecraig" text="푸른 암벽의 고블린" />
     <string id="taom_aso_item_name_randomized" text="무작위 가운데땅" />
+    <string id="taom_aso_desc_invasion" text="가운데땅의 대부분을 지배하는 세력입니다." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}이(가) 가운데땅의 대부분을 지배합니다." />
+    <string id="taom_aso_item_desc_randomized" text="합리적인 범위 내에서, 원하는 정도만큼 가운데땅의 시작 상태를 무작위로 설정합니다." />
     <string id="taom_tactic.shield_wall" text="우리의 계획은 방패를 맞물려 진지를 지키는 것이다." />
     <string id="taom_tactic.infantry_mass" text="우리의 계획은 수로 밀어붙여 적을 덮치는 것이다." />
     <string id="taom_tactic.cavalry_dominance" text="우리의 계획은 기병으로 짓밟고, 기병이 시작한 일을 보병이 끝내는 것이다." />

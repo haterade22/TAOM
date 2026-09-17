@@ -2642,6 +2642,9 @@
     <string id="taom_aso_kingdom.lindon" text="林顿" />
     <string id="taom_aso_kingdom.bluecraig" text="蓝岩半兽人" />
     <string id="taom_aso_item_name_randomized" text="随机化的中土世界" />
+    <string id="taom_aso_desc_invasion" text="统治中洲大部分地区的阵营。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}统治着中洲的绝大部分地区。" />
+    <string id="taom_aso_item_desc_randomized" text="在合理范围内，按你选择的程度随机化中洲的初始局势。" />
     <string id="taom_tactic.shield_wall" text="我们的计划是紧锁盾牌，坚守阵地。" />
     <string id="taom_tactic.infantry_mass" text="我们的计划是以人数优势将他们淹没。" />
     <string id="taom_tactic.cavalry_dominance" text="我们的计划是骑兵冲垮他们，再由步兵收尾。" />
