@@ -649,8 +649,24 @@ Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and
   weights (fixed: every unseated formation gets vanilla's defaults, as every vanilla tactic
   does). Mike confirmed Mordor fielded no mounted troops that battle, so the two slots were
   Envelop's own three-way infantry split landing in the empty Cavalry and HorseArcher slots
-  (the engine takes any empty slot as a split target) and then not seated as wings, which the
-  `[seat]` and `slot/class` markers on the status line now show directly. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
+  (the engine takes any empty slot as a split target). The `[seat]` marker then showed them
+  seated, and the standing is the DEPLOYMENT PHASE: `DeploymentMissionController` applies the
+  AI team's tactic once from `ResetTactic` while `Mission.AllowAiTicking` is false, the first
+  decision has no closest enemy cached (vanilla's battle-joined test reads that as joined, so
+  the Engage rows go on first), and nothing ticks again until the player starts the battle;
+  rows that weigh by the closest enemy read 0 until then. Vanilla stands the same way. The
+  status line's `{armed rows}` list makes this readable in the log.
+- The third and fourth battles (Mordor v Gondor 310 v 313; Erebor v Rohirrim 301 v 256, both
+  13:00 to 13:12): Gondor's `DisciplinedLine` held (Defend, archers on SkirmishLine, cavalry
+  ProtectFlank) and Mordor's mass died on it. Erebor's two-line wall stood in ShieldWall within
+  five seconds, went `Square` on both lines the moment the 224 Rohirrim came in, released to
+  ShieldWall as they passed and squared again, exactly as designed, and lost 299 of 301 for
+  about 26 riders. Three things to weigh: the second line stayed braced in its own square 12 m
+  behind the front for the whole fight and never fought (FootCharge holds while horse are on
+  it, and horse were always inside 150 m); the 122 archers behind the wall had no cover and
+  were cut down; and the front square itself did not hold against 224 heavy horse. Whether a
+  dwarf square should beat that many Rohirrim is a numbers question; the second line and the
+  archers are doctrine questions, open. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
   until they pass.
 - The high-ground march is decided once: `Holding` is terminal, so a wall that formed where it
   stood at the first decision (the enemy foot inside 50 m, or no slope worth having inside 60 m)

@@ -30,6 +30,44 @@ public static class TeamTacticProbe
         catch { return null; }
     }
 
+    // The formation's behaviour list (FormationAI.cs:41, private, no getter): the status line
+    // prints every behaviour whose weight factor a tactic set above 0, so "which rows are armed"
+    // is readable from the log without a debugger. Plain float reads, no weigh calls.
+    private static readonly AccessTools.FieldRef<FormationAI, List<BehaviorComponent>>? Behaviors = BindBehaviors();
+
+    private static AccessTools.FieldRef<FormationAI, List<BehaviorComponent>>? BindBehaviors()
+    {
+        try { return AccessTools.FieldRefAccess<FormationAI, List<BehaviorComponent>>("_behaviors"); }
+        catch { return null; }
+    }
+
+    private static void AppendArmedRows(StringBuilder sb, FormationAI ai)
+    {
+        if (Behaviors == null)
+            return;
+        var list = Behaviors(ai);
+        if (list == null)
+            return;
+        var any = false;
+        for (var i = 0; i < list.Count; i++)
+        {
+            var b = list[i];
+            var failed = b is TaomBehaviorBase taom && taom.Failed;
+            if (!(b.WeightFactor > 0f) && !failed)
+                continue;
+            sb.Append(any ? "," : "{").Append(b.GetType().Name.StartsWith("Behavior") ? b.GetType().Name.Substring(8) : b.GetType().Name)
+              .Append('=').Append(b.WeightFactor.ToString("0.##", CultureInfo.InvariantCulture));
+            // A TAOM behaviour that threw weighs 0 for good; its status says why.
+            if (failed)
+                sb.Append('!').Append(((TaomBehaviorBase)b).Status);
+            any = true;
+        }
+        if (any)
+            sb.Append('}');
+        else
+            sb.Append("{none}");
+    }
+
     public static string CurrentTacticName(Team team)
     {
         var ai = team.TeamAI;
@@ -88,6 +126,8 @@ public static class TeamTacticProbe
             sb.Append('/').Append(formation.ArrangementOrder.OrderEnum)
               .Append('/').Append(formation.FiringOrder.OrderEnum)
               .Append(formation.IsAIControlled ? "" : "(player)");
+            if (formation.AI != null)
+                AppendArmedRows(sb, formation.AI);
         }
         sb.Append(']');
         if (taomTactics != null)

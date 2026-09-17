@@ -20,11 +20,21 @@ formations; every vanilla tactic gives every formation its default rows
 plan did not seat (`BehaviorWeightApplier.ApplyDefaults`, IL-pinned). Whether those riders had
 mounts at all (`QueryLibrary.IsCavalry` needs `Agent.HasMount`) was the first reading; Mike
 confirmed Mordor fielded no mounted troops, so the two slots were Envelop's three-way infantry
-split landing in the empty Cavalry and HorseArcher slots and then not seated as wings, for a
-reason the log could not show. The status line now prints `slot/class:count[seat]`: the class
-when the engine's ratios disagree with the slot, and the seat the current TAOM tactic gave the
-formation (`M`, `S`, `L`, `R`, `A`, `LC`, `RC`, `C`, `HA`, `V`, or `-` for none), so the next
-log says which. Suite 9,776 green, 2 pre-existing skips.
+split landing in the empty Cavalry and HorseArcher slots. The status line now prints
+`slot/class:count[seat]`: the class when the engine's ratios disagree with the slot, and the
+seat the current TAOM tactic gave the formation (`M`, `S`, `L`, `R`, `A`, `LC`, `RC`, `C`,
+`HA`, `V`, or `-` for none). The third and fourth battles then showed the wings and the cavalry
+seated (`[L]`, `[R]`, `[LC]`, `[RC]`, `[C]`) and still on `BehaviorStop`, and the reason is the
+DEPLOYMENT PHASE, not seating: `DeploymentMissionController.SetupAIOfEnemyTeam` applies the AI
+team's tactic once, from `ResetTactic`, while `Mission.AllowAiTicking` is false, so no tactic
+ticks again until the player starts the battle; the first decision is made with no closest
+enemy cached, which vanilla's battle-joined test reads as "joined", so the Engage rows go on
+first and every row that weighs by the closest enemy reads 0 until the battle starts and the
+next tick re-applies. Vanilla's formations stand the same way during deployment. The
+default-rows change stays as vanilla parity; the "unseated" reading in the two entries above
+was wrong. The status line also prints each formation's armed rows (`{Advance=1,Vanguard=1}`,
+`{none}`, a failed TAOM behaviour with `!` and its reason), read from `FormationAI._behaviors`
+by the same reflection the tactic probe already uses. Suite 9,776 green, 2 pre-existing skips.
 
 ### feat(spider): Brown Spider and Pale Spider, the goblin Spider Rider fields three skins (#616)
 
