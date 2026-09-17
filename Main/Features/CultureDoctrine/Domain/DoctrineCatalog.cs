@@ -20,13 +20,21 @@ public sealed class DoctrineCatalog
         Enabled = enabled;
         Default = @default ?? throw new ArgumentNullException(nameof(@default));
         _byCulture = new Dictionary<string, Doctrine>(StringComparer.OrdinalIgnoreCase);
+        HasFormationRouting = !Default.Formations.IsEmpty;
         foreach (var doctrine in cultures ?? Array.Empty<Doctrine>())
+        {
             _byCulture[doctrine.CultureId] = doctrine;
+            HasFormationRouting |= !doctrine.Formations.IsEmpty;
+        }
     }
 
     public bool Enabled { get; }
     public Doctrine Default { get; }
     public IReadOnlyCollection<string> CultureIds => _byCulture.Keys;
+
+    /// <summary>Any doctrine routes a troop into a formation of its own; without one the
+    /// mission never subscribes to <c>GetAgentTroopClass_Override</c>.</summary>
+    public bool HasFormationRouting { get; }
 
     public Doctrine Resolve(string? cultureId) =>
         cultureId != null && _byCulture.TryGetValue(cultureId, out var doctrine) ? doctrine : Default;

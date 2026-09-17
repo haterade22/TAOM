@@ -3195,6 +3195,45 @@ wall now follows `BehaviorHoldHighGround`'s lock rule. Prompt
 re-dispatch owed. Full suite 9,534 green, 2 pre-existing skips. Owed: the Custom Battle A/B
 (protocol in the feature doc), the translator run for the four popup strings, closing #608.
 
+## Review 116: Culture doctrines, Phase C and D (#608), 6-agent deep review plus the systems analysis (2026-09-17)
+
+Mike asked for the whole per-culture backlog ("implement all of these behaviours"), his morale
+rule (Gundabad, Isengard, Dol Guldur, Dwarves and Elves never rout; everyone else does), Rhun as
+heavy cavalry with better foot and bow, and "a deep analysis of these systems so that maybe we
+could even rewrite them entirely". The slice: five TAOM `BehaviorComponent`s on a wrapped base
+(the braced wall holding and marching, the cavalry cycle charge, the throwing-infantry skirmish,
+the enveloping wing), seven tactics (TwoLineWall, Envelop, DisciplinedLine, ArcherAdvance,
+EoredScreen, HitAndRun, MumakVanguard), volley control, and three per-culture tiers below the
+tactics (morale through two battle morale models, aggression through the agent-stat models,
+troop-to-formation routing through `GetAgentTroopClass_Override`). `docs/features/culture-doctrine.md`.
+
+**Deep review, six agents (standards, engine fidelity, performance and threads, battle logic and
+tests, lifecycle and state matrix, systems analysis on Opus):** about 160 engine members verified
+on the installed v1.5.3, none incompatible; standards clean; no HIGH in performance or threads.
+Ten findings, all fixed: the TwoLineWall and Envelop gates read the largest infantry formation,
+which their own split halves or thirds, so on 80 to 179 foot the tactic cancelled itself at the
+next decision (HIGH, analysis agent); their 1.05x and 1.1x edges sat under the engine's 1.5x
+hysteresis, a one-way ratchet (HIGH, logic agent); the cycle charge's reform ended on its first
+tick for a charge that began inside 30 m (HIGH, logic agent); the brace saw only a charge the wall
+already faced, because the engine query it read is scoped by our facing and one formation (HIGH,
+logic and engine agents); a plan re-apply un-committed a spent javelin line (MED); any vanilla
+tactic being current first folded the routed mumakil (MED, lifecycle and engine agents; fixed with
+the engine's own `enforceNotSplittableByAI` exemption); a formation the player took back kept the
+volley hold (LOW); the braced walls stood on a drifting average (LOW); four doc facts (24
+behaviours not 27, `PrecalculateMovementOrder` only on a candidate beating the maximum, the
+transfer-populated registration path, the morale and aggression tiers running in every mission
+type); the aggression post-pass also runs on the async AI thread. New guards: TAOM-versus-TAOM
+ordering for gated pairs and for Rhun's two doctrines, the post-split gate test, the reform test,
+`CavalryThreatTests`, two skirmish branches, two config fields, the null formations map. The
+analysis (engine cost model at 800 v 800, fourteen ceilings, four rewrite options, verdict: do not
+rewrite; a shared battle picture, explicit decisions and per-formation keys are the path) is
+[analysis-battle-ai-2026-09-17.md](analysis-battle-ai-2026-09-17.md). RCA
+[rca-culture-doctrine-phase-c-2026-09-17.md](rca-culture-doctrine-phase-c-2026-09-17.md); five
+lessons appended. Codex: not dispatched (the ChatGPT usage window from review 115 had not
+reopened); the re-dispatch prompt should now list the Phase C files. Full suite green after the
+fixes (count in the commit). Owed: the Custom Battle A/B with the eight new cells, the translator
+run for the twelve popup strings, closing #608.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph

@@ -1,5 +1,7 @@
 using System;
 using TAOM.Features.CultureDoctrine.Doctrines;
+using TAOM.Features.CultureDoctrine.Hooks.Behaviors;
+using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.CultureDoctrine.Hooks.Tactics;
@@ -9,11 +11,15 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Tactics;
 /// sequence (<c>ResetBehaviorWeights</c>, <c>SetDefaultBehaviorWeights</c>, then one
 /// <c>SetBehaviorWeight&lt;T&gt;</c> per row) with the parameter each behaviour exposes set the way
 /// vanilla's tactics set it. The switch is the only place a <see cref="BehaviorKind"/> meets a
-/// concrete engine type. Runs on the team-AI tick inside the owning tactic's try/catch;
-/// <c>SetBehaviorWeight&lt;T&gt;</c> throws <c>MBException</c> for a behaviour the formation was
-/// never given, and a <see cref="BehaviorKind"/> with no case throws too, so a new enum member
-/// cannot silently leave a behaviour at its default weight; both land in the failed-tactic
-/// latch rather than a native unwind. <c>DoctrineSwitchInvariantTests</c> pins the switch.
+/// concrete engine type. A TAOM behaviour (<see cref="TaomBehaviorBase"/>) is not among the
+/// twenty-four the engine registers at spawn (`TeamAIGeneral.cs:63-86`), so its row first adds it to the formation's
+/// <c>FormationAI</c> the first time a plan names it (<see cref="Ensure{T}"/>); adding happens on
+/// the same team-AI tick that reads the list, and never again for that formation. Runs inside
+/// the owning tactic's try/catch; <c>SetBehaviorWeight&lt;T&gt;</c> throws <c>MBException</c> for
+/// a behaviour the formation was never given, and a <see cref="BehaviorKind"/> with no case
+/// throws too, so a new enum member cannot silently leave a behaviour at its default weight;
+/// both land in the failed-tactic latch rather than a native unwind.
+/// <c>DoctrineSwitchInvariantTests</c> pins the switch.
 /// </summary>
 public static class BehaviorWeightApplier
 {
@@ -33,7 +39,7 @@ public static class BehaviorWeightApplier
                 case BehaviorKind.Advance: ai.SetBehaviorWeight<BehaviorAdvance>(w); break;
                 case BehaviorKind.CautiousAdvance: ai.SetBehaviorWeight<BehaviorCautiousAdvance>(w); break;
                 case BehaviorKind.HoldHighGround: ai.SetBehaviorWeight<BehaviorHoldHighGround>(w).RangedAllyFormation = owner.Archers; break;
-                case BehaviorKind.Defend: ai.SetBehaviorWeight<BehaviorDefend>(w).DefensePosition = owner.DefensePosition; break;
+                case BehaviorKind.Defend: ai.SetBehaviorWeight<BehaviorDefend>(w).DefensePosition = PositionFor(plan.Role, owner); break;
                 case BehaviorKind.DefensiveRing: ai.SetBehaviorWeight<BehaviorDefensiveRing>(w).TacticalDefendPosition = owner.RingPosition; break;
                 case BehaviorKind.FireFromInfantryCover: ai.SetBehaviorWeight<BehaviorFireFromInfantryCover>(w); break;
                 case BehaviorKind.Skirmish: ai.SetBehaviorWeight<BehaviorSkirmish>(w); break;
@@ -53,8 +59,47 @@ public static class BehaviorWeightApplier
                 case BehaviorKind.Reserve: ai.SetBehaviorWeight<BehaviorReserve>(w); break;
                 case BehaviorKind.Retreat: ai.SetBehaviorWeight<BehaviorRetreat>(w); break;
                 case BehaviorKind.Stop: ai.SetBehaviorWeight<BehaviorStop>(w); break;
+                case BehaviorKind.BracedDefend:
+                    Ensure(formation, f => new BehaviorBracedDefend(f));
+                    ai.SetBehaviorWeight<BehaviorBracedDefend>(w).DefensePosition = PositionFor(plan.Role, owner);
+                    break;
+                case BehaviorKind.BracedAdvance:
+                    Ensure(formation, f => new BehaviorBracedAdvance(f));
+                    ai.SetBehaviorWeight<BehaviorBracedAdvance>(w);
+                    break;
+                case BehaviorKind.InfantrySkirmish:
+                    Ensure(formation, f => new BehaviorInfantrySkirmish(f));
+                    ai.SetBehaviorWeight<BehaviorInfantrySkirmish>(w);
+                    break;
+                case BehaviorKind.CycleCharge:
+                    Ensure(formation, f => new BehaviorCycleCharge(f));
+                    ai.SetBehaviorWeight<BehaviorCycleCharge>(w);
+                    break;
+                case BehaviorKind.EnvelopWing:
+                    Ensure(formation, f => new BehaviorEnvelopWing(f));
+                    ai.SetBehaviorWeight<BehaviorEnvelopWing>(w);
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(plan), weights[i].Kind, "no behaviour type for this kind");
             }
         }
     }
+
+    /// <summary>Adds the TAOM behaviour to the formation once. <c>GetBehavior&lt;T&gt;</c> is a
+    /// linear scan of the formation's list (24 entries plus ours), run once per row per apply.
+    /// A full scene reset (<c>Team.Reset</c>, a Custom Battle restart) rebuilds every
+    /// <c>FormationAI</c> and drops the instance with its stage; the next apply adds a fresh one.</summary>
+    public static T Ensure<T>(Formation formation, Func<Formation, T> create) where T : TaomBehaviorBase
+    {
+        var existing = formation.AI.GetBehavior<T>();
+        if (existing != null)
+            return existing;
+        var behavior = create(formation);
+        formation.AI.AddAiBehavior(behavior);
+        return behavior;
+    }
+
+    // The front line and the second line stand in different places; every other role gets the
+    // plan's one defence position.
+    private static WorldPosition PositionFor(FormationRole role, TaomTacticBase owner) =>
+        role == FormationRole.SecondInfantry ? owner.SecondLinePosition : owner.DefensePosition;
 }

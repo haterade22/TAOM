@@ -98,6 +98,86 @@ public class ShippedCultureDoctrinesConfigTests
         Assert.AreEqual(DoctrineSide.Defender, ring!.Side, "the ring is a defender's tactic; attacking Elves use the weighted vanilla set");
     }
 
+    /// <summary>Mike, 2026-09-16: Gundabad, Isengard and Dol Guldur never rout (their hatred of
+    /// men and elves is too great); Dwarves and Elves never rout (pride); Rohan, Gondor, Mordor,
+    /// Rhun, Harad, Dale, Dunland and the rest rout.</summary>
+    [TestMethod]
+    public void ShippedConfig_NeverRoutCultures_AreTheOnesMikeNamed()
+    {
+        var catalog = _sut.GetCatalog();
+        var neverRout = new[] { "gundabad", "gundabad_raiders", "isengard", "dolguldur", "erebor", "erebor_warriors", "lindon", "lothlorien", "mirkwood", "mirkwood_stalkers", "rivendell" };
+        var rout = new[] { "vlandia", "gondor", "gondor_soldiers", "mordor", "khuzait", "aserai", "umbar", "sturgia", "empire", "dunland_raiders", "battania", "goblin", "mistymountainorcs" };
+
+        foreach (var id in neverRout)
+            Assert.IsTrue(catalog.Resolve(id).Morale.NeverRout, id + " should never rout");
+        foreach (var id in rout)
+            Assert.IsFalse(catalog.Resolve(id).Morale.NeverRout, id + " should rout");
+        Assert.IsFalse(catalog.Default.Morale.NeverRout, "an unlisted culture routs");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_NeverRoutCultures_CarryNoRetreatRow()
+    {
+        var catalog = _sut.GetCatalog();
+        foreach (var id in catalog.CultureIds)
+        {
+            var doctrine = catalog.Resolve(id);
+            if (doctrine.Morale.NeverRout)
+                Assert.IsFalse(doctrine.Tactics.Any(t => t.Tactic == DoctrineTactic.CoordinatedRetreat), id + " never routs but registers CoordinatedRetreat");
+        }
+    }
+
+    [TestMethod]
+    public void ShippedConfig_EveryCultureCarriesAnAggressionProfile_WithinRange()
+    {
+        var catalog = _sut.GetCatalog();
+        foreach (var id in catalog.CultureIds)
+        {
+            var a = catalog.Resolve(id).Aggression;
+            foreach (var m in new[] { a.Attack, a.Shield, a.ShooterError, a.ChargeDistance })
+                Assert.IsTrue(m >= CultureAggression.MinMultiplier && m <= CultureAggression.MaxMultiplier, id);
+        }
+        Assert.IsTrue(catalog.Resolve("mordor").Aggression.Attack > 1f, "orcs attack on sight");
+        Assert.IsTrue(catalog.Resolve("lindon").Aggression.ShooterError < 1f, "elves shoot straighter");
+        Assert.IsTrue(catalog.Resolve("erebor").Aggression.Shield > 1f, "dwarves raise shields");
+        Assert.IsTrue(catalog.Resolve("vlandia").Aggression.ChargeDistance > 1f, "Rohan commits from further out");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_PhaseC_TacticsAreOnTheCulturesAndSidesTheyWereWrittenFor()
+    {
+        var catalog = _sut.GetCatalog();
+
+        Assert.AreEqual(DoctrineSide.Defender, catalog.Resolve("erebor").Tactics.Single(t => t.Tactic == DoctrineTactic.TwoLineWall).Side);
+        foreach (var orc in new[] { "mordor", "dolguldur", "gundabad", "gundabad_raiders", "mistymountainorcs", "goblin" })
+            Assert.IsTrue(catalog.Resolve(orc).Tactics.Any(t => t.Tactic == DoctrineTactic.Envelop), orc + " carries Envelop");
+        Assert.IsTrue(catalog.Resolve("isengard").Tactics.Any(t => t.Tactic == DoctrineTactic.ShieldWall), "Uruks are disciplined: the wall, not the mob");
+        Assert.IsFalse(catalog.Resolve("isengard").Tactics.Any(t => t.Tactic == DoctrineTactic.InfantryMass));
+        Assert.AreEqual(DoctrineSide.Attacker, catalog.Resolve("dunland_raiders").Tactics.Single(t => t.Tactic == DoctrineTactic.InfantryMass).Side, "the mob moved to the raiders");
+        Assert.AreEqual(DoctrineSide.Attacker, catalog.Resolve("empire").Tactics.Single(t => t.Tactic == DoctrineTactic.HitAndRun).Side);
+        Assert.AreEqual(DoctrineSide.Defender, catalog.Resolve("vlandia").Tactics.Single(t => t.Tactic == DoctrineTactic.EoredScreen).Side);
+        foreach (var elf in new[] { "lindon", "lothlorien", "mirkwood", "mirkwood_stalkers", "rivendell" })
+            Assert.AreEqual(DoctrineSide.Attacker, catalog.Resolve(elf).Tactics.Single(t => t.Tactic == DoctrineTactic.ArcherAdvance).Side, elf);
+        Assert.IsTrue(catalog.Resolve("gondor").Tactics.Any(t => t.Tactic == DoctrineTactic.DisciplinedLine));
+        Assert.IsTrue(catalog.Resolve("sturgia").Tactics.Any(t => t.Tactic == DoctrineTactic.ShieldWall) && catalog.Resolve("sturgia").Tactics.Any(t => t.Tactic == DoctrineTactic.DisciplinedLine), "Dale");
+        // Rhun (Mike, 2026-09-16): heavy cavalry like Rohan, better foot and bow, few horse archers.
+        Assert.IsTrue(catalog.Resolve("khuzait").Tactics.Any(t => t.Tactic == DoctrineTactic.CavalryDominance) && catalog.Resolve("khuzait").Tactics.Any(t => t.Tactic == DoctrineTactic.DisciplinedLine), "Rhun");
+        Assert.IsTrue(catalog.Resolve("battania").Tactics.Any(t => t.Tactic == DoctrineTactic.CavalryDominance), "Khand");
+        Assert.AreEqual(DoctrineSide.Attacker, catalog.Resolve("aserai").Tactics.Single(t => t.Tactic == DoctrineTactic.MumakVanguard).Side, "Harad");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_HaradRoutesTheMumakilRiderToHeavyCavalry_AndNobodyElseRoutes()
+    {
+        var catalog = _sut.GetCatalog();
+
+        Assert.IsTrue(catalog.HasFormationRouting);
+        Assert.IsTrue(catalog.Resolve("aserai").Formations.TryRoute("harad_mumakil_rider", out var c));
+        Assert.AreEqual(TaleWorlds.Core.FormationClass.HeavyCavalry, c);
+        foreach (var id in catalog.CultureIds.Where(i => i != "aserai"))
+            Assert.IsTrue(catalog.Resolve(id).Formations.IsEmpty, id);
+    }
+
     [TestMethod]
     public void ShippedConfig_EveryTaomTacticEntry_HasNoSkillFloor()
     {

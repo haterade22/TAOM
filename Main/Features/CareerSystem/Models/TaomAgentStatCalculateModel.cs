@@ -2,6 +2,8 @@ using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CultureDoctrine;
+using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.Elephant;
 using TAOM.Features.Mumakil;
 using TAOM.Features.Spider;
@@ -19,19 +21,29 @@ namespace TAOM.Features.CareerSystem.Models;
 // 2026-06-12: the Rhûn war chariot (issue #279) deliberately has NO mount-lock — maintainer wants
 // chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
 // 2026-06-29: same lock extended to the ridden Mûmakil (IMumakilAttackService.IsMumakilMonster) — scaled-up elephant.
+// 2026-09-17: the same slot carries the culture aggression post-pass (#608, CultureDoctrine):
+// after base and the career modifiers have set the AI decision values, the soldier's culture
+// profile scales them (AgentAggressionApplier). One AgentStatCalculateModel slot, four rules.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
     private readonly IElephantAttackService _elephant;
     private readonly ISpiderAttackService _spider;
     private readonly IMumakilAttackService _mumakil;
+    private readonly ICultureAggressionService? _aggression;
 
     public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil)
+        : this(agentStatService, elephant, spider, mumakil, null)
+    {
+    }
+
+    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil, ICultureAggressionService? aggression)
     {
         _agentStatService = agentStatService;
         _elephant = elephant;
         _spider = spider;
         _mumakil = mumakil;
+        _aggression = aggression;
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)
@@ -73,5 +85,8 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
                 : _mumakil.IsCreatureMonster(agent?.Monster?.StringId)
                     ? MumakilConfig.MountDifficulty
                     : agentDrivenProperties.MountDifficulty;
+
+        if (_aggression != null)
+            AgentAggressionApplier.Apply(agentDrivenProperties, _aggression.Profile(AgentAggressionApplier.CultureOf(agent)));
     }
 }

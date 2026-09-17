@@ -2903,5 +2903,17 @@
   <string id="str_team_ai_tactic_text.TaomTacticInfantryMass" text="{=taom_tactic.infantry_mass}Our plan is to swarm them with our numbers." />
   <string id="str_team_ai_tactic_text.TaomTacticCavalryDominance" text="{=taom_tactic.cavalry_dominance}Our plan is to ride them down and let the foot finish what the horse begins." />
   <string id="str_team_ai_tactic_text.TaomTacticArcherRing" text="{=taom_tactic.archer_ring}Our plan is to ring our archers with spears and let the arrows do the work." />
+  <string id="str_team_ai_tactic_text.TaomTacticTwoLineWall" text="{=taom_tactic.two_line_wall}Our plan is to hold two lines: the front stands, the second waits, then strikes." />
+  <string id="str_team_ai_tactic_text.TaomTacticEnvelop" text="{=taom_tactic.envelop}Our plan is to come at them from three sides and close the jaws." />
+  <string id="str_team_ai_tactic_text.TaomTacticDisciplinedLine" text="{=taom_tactic.disciplined_line}Our plan is to hold the line until they commit, then advance as one." />
+  <string id="str_team_ai_tactic_text.TaomTacticArcherAdvance" text="{=taom_tactic.archer_advance}Our plan is to advance behind the bows and let the arrows open the way." />
+  <string id="str_team_ai_tactic_text.TaomTacticEoredScreen" text="{=taom_tactic.eored_screen}Our plan is to screen the flanks with our riders and charge once they commit." />
+  <string id="str_team_ai_tactic_text.TaomTacticHitAndRun" text="{=taom_tactic.hit_and_run}Our plan is to throw, fall back, and throw again until their line breaks." />
+  <string id="str_team_ai_tactic_text.TaomTacticMumakVanguard" text="{=taom_tactic.mumak_vanguard}Our plan is to send the mumakil in first and follow in their wake." />
+  <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorBracedDefend" text="{=taom_behavior.braced_defend}Hold your position; square up against horse" />
+  <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorBracedAdvance" text="{=taom_behavior.braced_advance}Advance in a wall; square up against horse" />
+  <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorInfantrySkirmish" text="{=taom_behavior.infantry_skirmish}Close to throwing range, throw, and fall back" />
+  <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorCycleCharge" text="{=taom_behavior.cycle_charge}Charge through, reform, and charge again" />
+  <string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorEnvelopWing" text="{=taom_behavior.envelop_wing}Swing round their flank and strike from the side" />
 
 </strings>

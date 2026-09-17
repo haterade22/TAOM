@@ -985,3 +985,15 @@ The `[Doctrine]` status line, the only per-battle record of which tactic each te
 - **Why missed:** the flag was set where the code path was convenient rather than where the protocol needed it, and the protocol was written after the code.
 - **Prevent:** a diagnostic that an A/B protocol reads is gated on its own debug toggle only, never on the feature toggle; when writing the protocol, name the line each arm produces and check the code path that produces it in the arm where the feature is off.
 - **Source:** `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 2 (data-flow agent), #608.
+
+### A gate that reads what the gated action changes cancels itself at the next decision
+`TwoLineWall` and `Envelop` returned 0 under 80 and 60 infantry, read from the LARGEST infantry formation. Both tactics split the infantry on apply (2/1/2/1, 3/1/2/1), so at the next 5 s `MakeDecision` the largest formation held half or a third, the gate read 0, the plain tactic took the team and its 1/1/2/1 recount merged the lines back. On 80 to 179 foot the doctrine could never hold for more than one decision. The ordering test passed because its canonical snapshot carried the pre-split total.
+- **Why missed:** the snapshot field was written for "is there infantry" and reused for "how much", and nobody asked what the tactic itself does to the number it gates on. The A/B cells were all above the bands.
+- **Prevent:** for every gate on a count or ratio, ask whether the gated action moves that number (a split, a merge, a transfer, a charge that thins the front) and gate on the invariant (the class total, the team's count) instead. Add the post-action snapshot to the tests: build the state the action leaves behind and assert the gate still passes.
+- **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 1 (analysis agent), #608.
+
+### A TAOM tactic that refines another TAOM tactic needs an edge above the engine's hysteresis, and the ordering test must compare TAOM to TAOM
+`TwoLineWall = ShieldWall * 1.05` and `Envelop = InfantryMass * 1.1` were written as tie-breaks. `TeamAIComponent.MakeDecision` keeps the current tactic unless a challenger beats it by 1.5x (`TeamAIComponent.cs:301`), so the moment the plain tactic held the team the variant could never take it back: a one-way ratchet with no error. `ShippedDoctrineOrderingTests` compared every TAOM row against the VANILLA rows only.
+- **Why missed:** the sticky factor was in the test for the vanilla competition and treated as a vanilla concern; two TAOM tactics on one culture were a new shape.
+- **Prevent:** a variant that should win while its gate passes gets an edge above 1.5x (`GatedEdge`), and the ordering test has a TAOM-versus-TAOM section: for each pair on one culture, the intended winner at each canonical army beats the other by the sticky factor, and a closed gate is exactly 0.
+- **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 2 (logic agent), #608.

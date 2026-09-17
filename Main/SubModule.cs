@@ -44,6 +44,8 @@ using TAOM.Features.NazgulFamily;
 using TAOM.Features.NazgulFamily.Models;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
+using TAOM.Features.CultureDoctrine;
+using TAOM.Features.CultureDoctrine.Models;
 using TAOM.Features.Warg;
 using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
@@ -809,6 +811,8 @@ public class SubModule : MBSubModuleBase
         }
         catch { /* diagnostic is best-effort, never break OnGameStart */ }
 
+        RegisterCustomBattleModels(gameStarterObject);
+
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
             // Registration order is preserved exactly from the pre-extraction inline block:
@@ -1204,7 +1208,10 @@ public class SubModule : MBSubModuleBase
         var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
         var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
         var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
-        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
+        // CultureDoctrine (#608): the same slot scales each soldier's AI decision values by his
+        // culture's aggression profile after the career and creature rules have run.
+        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService,
+            IoC.Resolve<ICultureAggressionService>()));
         // CombatMechanics (2026-07-02): TaomCombatMechanicsModel DERIVES from the (now abstract)
         // TaomAgentApplyDamageModel — one AgentApplyDamageModel slot, career passives via
         // inheritance + the combat feel pack on top (docs/features/combat-mechanics.md).
@@ -1236,6 +1243,25 @@ public class SubModule : MBSubModuleBase
         // above; the override returns base for every battle that is not enlisted service.
         campaignStarter.AddModel<BattleInitializationModel>(new TaomBattleInitializationModel(
             IoC.Resolve<Features.Enlistment.IEnlistmentDeploymentService>()));
+        // CultureDoctrine (#608): who routs and who does not, per culture, over the sandbox
+        // morale model. Same last-registered-wins resolution; CanPanicDueToMorale is asked on
+        // the engine's worker threads, so the service behind it is a dictionary lookup.
+        campaignStarter.AddModel<BattleMoraleModel>(new TaomBattleMoraleModel(IoC.Resolve<ICultureMoraleService>()));
+    }
+
+    /// <summary>
+    /// Custom Battle (and the editor's test battle) hand a BasicGameStarter here after the game
+    /// type has added its own models (CustomGame.OnInitialize: InitializeGameModels, then
+    /// GameManager.OnGameStart), so a model added now is the one MissionGameModels resolves.
+    /// Only the culture doctrine's mission-side models are mirrored: they are what the Custom
+    /// Battle A/B measures. Every other TAOM model stays campaign-only.
+    /// </summary>
+    private static void RegisterCustomBattleModels(IGameStarter gameStarterObject)
+    {
+        if (gameStarterObject is CampaignGameStarter || !(gameStarterObject is BasicGameStarter basicStarter))
+            return;
+        basicStarter.AddModel<BattleMoraleModel>(new TaomCustomBattleMoraleModel(IoC.Resolve<ICultureMoraleService>()));
+        basicStarter.AddModel<AgentStatCalculateModel>(new TaomCustomBattleAgentStatCalculateModel(IoC.Resolve<ICultureAggressionService>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +

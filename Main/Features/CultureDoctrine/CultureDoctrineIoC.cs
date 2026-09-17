@@ -8,5 +8,7 @@ public static class CultureDoctrineIoC
     {
         container.Register<ICultureDoctrineConfigProvider, CultureDoctrineConfigProvider>(Reuse.Singleton);
         container.Register<ICultureDoctrineSettingsProvider, CultureDoctrineSettingsProvider>(Reuse.Singleton);
+        container.Register<ICultureMoraleService, CultureMoraleService>(Reuse.Singleton);
+        container.Register<ICultureAggressionService, CultureAggressionService>(Reuse.Singleton);
     }
 }

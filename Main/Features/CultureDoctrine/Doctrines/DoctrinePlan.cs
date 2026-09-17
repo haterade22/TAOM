@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace TAOM.Features.CultureDoctrine.Doctrines;
 
-/// <summary>The vanilla behaviours a plan may weight. Each maps to one <c>Behavior*</c> type the
-/// engine registers on every field formation (<c>TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime</c>);
-/// the mapping lives in one place, <c>BehaviorWeightApplier</c>.</summary>
+/// <summary>The behaviours a plan may weight. The first twenty-two map to the <c>Behavior*</c>
+/// types the engine registers on every field formation
+/// (<c>TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime</c>); the last five are TAOM's own
+/// <c>BehaviorComponent</c>s, which the applier adds to a formation the first time a plan names
+/// them. The mapping lives in one place, <c>BehaviorWeightApplier</c>.</summary>
 public enum BehaviorKind
 {
     Charge,
@@ -30,10 +32,17 @@ public enum BehaviorKind
     Reserve,
     Retreat,
     Stop,
+    BracedDefend,
+    BracedAdvance,
+    InfantrySkirmish,
+    CycleCharge,
+    EnvelopWing,
 }
 
 /// <summary>The formation slots a tactic assigns. <c>LeftCavalry</c>/<c>RightCavalry</c> exist
-/// under the 1/1/2/1 split, <c>Cavalry</c> under 1/1/1/1.</summary>
+/// under the 1/1/2/1 split, <c>Cavalry</c> under 1/1/1/1, <c>SecondInfantry</c> under 2/1/2/1
+/// and <c>LeftWing</c>/<c>RightWing</c> under 3/1/2/1, <c>Vanguard</c> under the mumakil split
+/// (the team's HeavyCavalry formation, kept out of the cavalry consolidation).</summary>
 public enum FormationRole
 {
     MainInfantry,
@@ -42,15 +51,24 @@ public enum FormationRole
     RightCavalry,
     Cavalry,
     RangedCavalry,
+    SecondInfantry,
+    LeftWing,
+    RightWing,
+    Vanguard,
 }
 
 /// <summary>How many formations of each class the tactic keeps (infantry/ranged/cavalry/horse
-/// archers): vanilla's default <c>AssignTacticFormations1121</c>, or the cavalry-led 1/1/1/1 of
-/// <c>TacticFrontalCavalryCharge</c>.</summary>
+/// archers): vanilla's default <c>AssignTacticFormations1121</c>, the cavalry-led 1/1/1/1 of
+/// <c>TacticFrontalCavalryCharge</c>, TAOM's two-line 2/1/2/1, the three-block 3/1/2/1 of the
+/// envelopment (centre plus two wings), and 1/1/2/1 with the HeavyCavalry formation kept apart
+/// as a vanguard.</summary>
 public enum FormationSplit
 {
     OneOneTwoOne,
     OneOneOneOne,
+    TwoOneTwoOne,
+    ThreeOneTwoOne,
+    OneOneTwoOneVanguard,
 }
 
 public enum TacticPhase
@@ -100,11 +118,16 @@ public sealed class PhasePlan
 public sealed class DoctrinePlan
 {
     public DoctrinePlan(string name, FormationSplit split, bool alwaysEngaged, float battleJoinedSeconds, PhasePlan defend, PhasePlan engage)
-        : this(name, split, alwaysEngaged, battleJoinedSeconds, defend, engage, DefaultRace)
+        : this(name, split, alwaysEngaged, battleJoinedSeconds, defend, engage, DefaultRace, VolleyTunables.FireAtWill)
     {
     }
 
     public DoctrinePlan(string name, FormationSplit split, bool alwaysEngaged, float battleJoinedSeconds, PhasePlan defend, PhasePlan engage, RaceTunables race)
+        : this(name, split, alwaysEngaged, battleJoinedSeconds, defend, engage, race, VolleyTunables.FireAtWill)
+    {
+    }
+
+    public DoctrinePlan(string name, FormationSplit split, bool alwaysEngaged, float battleJoinedSeconds, PhasePlan defend, PhasePlan engage, RaceTunables race, VolleyTunables volley)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Split = split;
@@ -113,6 +136,7 @@ public sealed class DoctrinePlan
         Defend = defend ?? throw new ArgumentNullException(nameof(defend));
         Engage = engage ?? throw new ArgumentNullException(nameof(engage));
         Race = race;
+        Volley = volley;
     }
 
     /// <summary>A line forms in about six seconds plus three per hundred men; three seconds of
@@ -135,4 +159,10 @@ public sealed class DoctrinePlan
     /// <summary>How the plan's position-holding tactics decide between marching to the high
     /// ground and forming where they stand (<see cref="HighGroundRace"/>).</summary>
     public RaceTunables Race { get; }
+
+    /// <summary>When the plan's archers may loose (<see cref="VolleyDecision"/>); fire at will
+    /// unless the plan says otherwise.</summary>
+    public VolleyTunables Volley { get; }
+
+    public bool HasVolleyControl => !Volley.IsFireAtWill;
 }

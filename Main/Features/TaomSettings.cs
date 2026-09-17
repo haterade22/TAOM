@@ -759,6 +759,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Write a [Doctrine] status line to the TAOM log every 5 seconds of battle time: each team's current tactic and every formation's active behaviour and arrangement. The console command taom.tactic_status prints the same line on demand. Nothing is drawn on the HUD.")]
     public bool CultureDoctrineDebug { get; set; } = false;
 
+    [SettingPropertyGroup("Battle Tactics/Culture Doctrine")]
+    [SettingPropertyBool("Culture Morale", Order = 2, RequireRestart = false,
+        HintText = "Each culture's soldiers hold under fear their own way: Dwarves, Elves, Isengard, Gundabad and Dol Guldur never rout (pride, or a hatred too great), the free peoples of Rohan, Gondor and Dale and the men of the East and South break as vanilla does, and every culture carries a bravery offset on its starting morale. Needs Enable Culture Doctrine. Applies from the next battle; tuning in culture_doctrines.json.")]
+    public bool CultureDoctrineMorale { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Culture Doctrine")]
+    [SettingPropertyBool("Culture Aggression", Order = 3, RequireRestart = false,
+        HintText = "Each culture's soldiers fight the melee their own way: orcs attack on sight and rarely cover with a shield, Dwarves and Gondor raise shields and hold, Elves shoot straighter, Rohan commits to a charge from further out. Multiplies the engine's per-soldier AI decision values after skill has set them. Needs Enable Culture Doctrine. Applies to soldiers spawned from the next battle; tuning in culture_doctrines.json.")]
+    public bool CultureDoctrineAggression { get; set; } = true;
+
     // --- Performance / Dead Mount Cleanup ---
     // GroupOrder 49: 10, 15, 20-48 and 100 were taken as of 2026-09-03.
 

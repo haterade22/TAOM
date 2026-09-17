@@ -482,3 +482,21 @@ To decide which parties count toward the player's ally team, the doctrine used `
 - **Why missed:** the helper's name described the question being asked, it was public, and the design critique had recommended it. Nobody opened the engine's consumer of the same decision.
 - **Prevent:** when a TAOM rule must agree with how the engine assigns, groups or partitions something, decompile the engine's consumer (the method that performs the assignment) and apply its predicate per element; a public accessor that returns one element is a convenience for the engine's own UI path, not the rule.
 - **Source:** `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 3 (data-flow agent), #608.
+
+### An engine query named for the threat is scoped by its own facing clause and its one formation: read the delegate, not the name
+`FormationQuerySystem.IsUnderCavalryChargeFromFront` evaluates only `ClosestSignificantlyLargeEnemyFormation` and returns true only when that formation is cavalry, rides at us, arrives within 15 s, AND we already face it within about 41 degrees or stand in a circle or square (`FormationQuerySystem.cs:646-663`). The anti-cavalry brace read it as "a charge is inbound"; a horse round a flank behind an infantry screen never tripped it and the wall took the charge in ShieldWall.
+- **Why missed:** the delegate was read for its cache period and its ETA rule; "from front" was read as the charge's front. The name matched the feature's need, so the scope was assumed.
+- **Prevent:** before using a cached engine query as a decision input, list its inputs (which formation, which facing, which arrangement) against the cases the decision must cover. When the query is narrower, write the pure test over the same geometry without the clause (`CavalryThreat`) and OR the two.
+- **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 4, #608.
+
+### A formation routed into a class of its own is folded by every tactic that does not own it; the engine's exemption is `enforceNotSplittableByAI`
+`GetAgentTroopClass_Override` put the Harad mumakil into `HeavyCavalry`; only `TaomTacticMumakVanguard` kept that slot apart in its split. Every other tactic on the team, the nine vanilla wrappers included, runs a 1/1/2/1 consolidation on its first tick and merged the mumakil into the cavalry for good. `SplitFormationClassIntoGivenNumber` skips a formation whose `IsAIOwned` is false (`TacticComponent.cs:243`), and `Formation.SetControlledByAI(true, enforceNotSplittableByAI: true)` is the engine's way to say that for an AI formation (`Formation.cs:326-347`); the flag is read by nothing else in the field. `SetControlledByAI` returns early on an unchanged control flag, so set it by toggling control off and on while the formation is still empty.
+- **Why missed:** the routing seam and the vanguard split were designed as a pair; the other tactics sharing the team were out of the picture.
+- **Prevent:** anything that makes a formation special (a routed class, a reserved slot) is enforced at the engine level the consolidation reads, not inside one tactic. Grep `IsAIOwned`, `IsSplittableByAI`, `_enforceNotSplittableByAI` before inventing a TAOM-side guard.
+- **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 6 (lifecycle and engine agents), #608.
+
+### Constants lifted from a vanilla path the engine has disabled carry the bugs nobody hit
+`BehaviorTacticalCharge` carries a charge-through, ride-out, reform machine and short-circuits cavalry past it (`:149-153`), so its constants (a 20 to 50 m stop distance, a 30 m contact distance) have only ever run for infantry. Copied for horse, a reform point at 20 m sat inside the 30 m contact test and every reform that began inside 30 m ended on its first tick.
+- **Why missed:** "vanilla wrote it" stood in for "vanilla ran it". Each constant was checked against its source line; the two were never checked against each other.
+- **Prevent:** when lifting a machine from a path the engine does not exercise for your case, write the invariant between its constants (here: the floor exceeds the contact threshold) as a test before the first battle, and prefer a derived threshold (half the stop distance) to a second absolute.
+- **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 3, #608.

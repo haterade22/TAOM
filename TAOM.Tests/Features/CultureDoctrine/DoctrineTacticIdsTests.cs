@@ -36,7 +36,7 @@ public class DoctrineTacticIdsTests
     }
 
     [TestMethod]
-    public void IsVanilla_SplitsTheNineEngineTacticsFromTheFourTaomOnes()
+    public void IsVanilla_SplitsTheNineEngineTacticsFromTheElevenTaomOnes()
     {
         var vanilla = DoctrineTacticIds.All.Where(DoctrineTacticIds.IsVanilla).ToList();
         var taom = DoctrineTacticIds.All.Where(t => !DoctrineTacticIds.IsVanilla(t)).ToList();
@@ -50,6 +50,8 @@ public class DoctrineTacticIdsTests
         CollectionAssert.AreEquivalent(new[]
         {
             DoctrineTactic.ShieldWall, DoctrineTactic.InfantryMass, DoctrineTactic.CavalryDominance, DoctrineTactic.ArcherRing,
+            DoctrineTactic.TwoLineWall, DoctrineTactic.Envelop, DoctrineTactic.DisciplinedLine, DoctrineTactic.ArcherAdvance,
+            DoctrineTactic.EoredScreen, DoctrineTactic.HitAndRun, DoctrineTactic.MumakVanguard,
         }, taom);
     }
 

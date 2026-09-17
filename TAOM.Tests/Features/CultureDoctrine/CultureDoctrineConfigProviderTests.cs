@@ -280,6 +280,142 @@ public class CultureDoctrineConfigProviderTests
     }
 
     [TestMethod]
+    public void GetCatalog_NoMoraleAggressionOrFormationsBlock_IsVanilla()
+    {
+        WriteConfigWithCulture(@"""mordor"": { ""tactics"": [ { ""id"": ""Charge"" } ] }");
+
+        var doctrine = _sut.GetCatalog().Resolve("mordor");
+
+        Assert.IsTrue(doctrine.Morale.CanPanic);
+        Assert.AreEqual(0f, doctrine.Morale.Bravery);
+        Assert.IsTrue(doctrine.Aggression.IsVanilla);
+        Assert.IsTrue(doctrine.Formations.IsEmpty);
+        Assert.IsFalse(_sut.GetCatalog().HasFormationRouting);
+    }
+
+    [TestMethod]
+    public void GetCatalog_MoraleBlock_IsRead()
+    {
+        WriteConfigWithCulture(@"""erebor"": { ""tactics"": [], ""morale"": { ""neverRout"": true, ""bravery"": 15 } }");
+
+        var morale = _sut.GetCatalog().Resolve("erebor").Morale;
+
+        Assert.IsFalse(morale.CanPanic);
+        Assert.AreEqual(15f, morale.Bravery);
+    }
+
+    [TestMethod]
+    public void GetCatalog_BraveryOutOfRange_RevertsToZeroAndWarns()
+    {
+        WriteConfigWithCulture(@"""erebor"": { ""tactics"": [], ""morale"": { ""neverRout"": true, ""bravery"": 200 } }");
+
+        var morale = _sut.GetCatalog().Resolve("erebor").Morale;
+
+        Assert.AreEqual(0f, morale.Bravery);
+        Assert.IsFalse(morale.CanPanic, "the valid half of the block survives");
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("morale.bravery")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_BraveryNaN_RevertsToZeroAndWarns()
+    {
+        WriteConfigWithCulture(@"""erebor"": { ""tactics"": [], ""morale"": { ""bravery"": NaN } }");
+
+        Assert.AreEqual(0f, _sut.GetCatalog().Resolve("erebor").Morale.Bravery);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("morale.bravery")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_AggressionBlock_IsRead()
+    {
+        WriteConfigWithCulture(@"""mordor"": { ""tactics"": [], ""aggression"": { ""attack"": 1.5, ""shield"": 0.7, ""shooterError"": 1.3, ""chargeDistance"": 1.1 } }");
+
+        var a = _sut.GetCatalog().Resolve("mordor").Aggression;
+
+        Assert.AreEqual(1.5f, a.Attack);
+        Assert.AreEqual(0.7f, a.Shield);
+        Assert.AreEqual(1.3f, a.ShooterError);
+        Assert.AreEqual(1.1f, a.ChargeDistance);
+    }
+
+    [TestMethod]
+    public void GetCatalog_AggressionMultiplierOutOfRange_RevertsToOneAndWarns()
+    {
+        WriteConfigWithCulture(@"""mordor"": { ""tactics"": [], ""aggression"": { ""attack"": 10, ""shield"": 0.7 } }");
+
+        var a = _sut.GetCatalog().Resolve("mordor").Aggression;
+
+        Assert.AreEqual(1f, a.Attack);
+        Assert.AreEqual(0.7f, a.Shield, "the valid multipliers survive");
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("aggression.attack")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_AggressionMultiplierNaN_RevertsToOneAndWarns()
+    {
+        WriteConfigWithCulture(@"""mordor"": { ""tactics"": [], ""aggression"": { ""shooterError"": NaN } }");
+
+        Assert.AreEqual(1f, _sut.GetCatalog().Resolve("mordor").Aggression.ShooterError);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("aggression.shooterError")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_AggressionShieldAndChargeDistance_AreValidatedLikeTheOthers()
+    {
+        WriteConfigWithCulture(@"""mordor"": { ""tactics"": [], ""aggression"": { ""shield"": 0.1, ""chargeDistance"": NaN } }");
+
+        var a = _sut.GetCatalog().Resolve("mordor").Aggression;
+
+        Assert.AreEqual(1f, a.Shield);
+        Assert.AreEqual(1f, a.ChargeDistance);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("aggression.shield")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("aggression.chargeDistance")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_FormationsNull_IsNoRouting()
+    {
+        WriteConfigWithCulture(@"""aserai"": { ""tactics"": [], ""formations"": null }");
+
+        Assert.IsTrue(_sut.GetCatalog().Resolve("aserai").Formations.IsEmpty);
+        Assert.IsFalse(_sut.GetCatalog().HasFormationRouting);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("formations")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_FormationsBlock_IsRead_AndFlagsTheCatalog()
+    {
+        WriteConfigWithCulture(@"""aserai"": { ""tactics"": [], ""formations"": { ""harad_mumakil_rider"": ""heavycavalry"" } }");
+
+        var catalog = _sut.GetCatalog();
+
+        Assert.IsTrue(catalog.HasFormationRouting);
+        Assert.IsTrue(catalog.Resolve("aserai").Formations.TryRoute("harad_mumakil_rider", out var c));
+        Assert.AreEqual(TaleWorlds.Core.FormationClass.HeavyCavalry, c);
+    }
+
+    [TestMethod]
+    public void GetCatalog_FormationsUnknownClass_DropsTheRowAndWarns()
+    {
+        WriteConfigWithCulture(@"""aserai"": { ""tactics"": [], ""formations"": { ""harad_mumakil_rider"": ""Elephants"", ""other"": ""Infantry"" } }");
+
+        var formations = _sut.GetCatalog().Resolve("aserai").Formations;
+
+        Assert.IsFalse(formations.TryRoute("harad_mumakil_rider", out _));
+        Assert.IsTrue(formations.TryRoute("other", out _), "the valid row survives");
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("formations['harad_mumakil_rider']") && m.Contains("Elephants")));
+    }
+
+    [TestMethod]
+    public void GetCatalog_FormationsEmptyTroopId_DropsTheRowAndWarns()
+    {
+        WriteConfigWithCulture(@"""aserai"": { ""tactics"": [], ""formations"": { "" "": ""Infantry"" } }");
+
+        Assert.IsTrue(_sut.GetCatalog().Resolve("aserai").Formations.IsEmpty);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("empty troop id")));
+    }
+
+    [TestMethod]
     public void GetCatalog_CalledTwice_LoadsOnce()
     {
         WriteConfigWithCulture(@"""mordor"": { ""tactics"": [ { ""id"": ""Charge"" } ] }");

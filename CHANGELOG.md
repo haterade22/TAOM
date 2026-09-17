@@ -2,6 +2,111 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-17
+
+### feat(combat): every kingdom's doctrine: seven tactics, five formation behaviours, who routs, how they fight (#608)
+
+**What.** Phase C and D of the culture doctrine, the whole per-culture backlog from the
+2026-09-16 design session, plus Mike's morale rule. Five TAOM `BehaviorComponent`s on a shared
+`TaomBehaviorBase` (the wrapped lifecycle the tactics have, a throw becomes a failed behaviour at
+weight 0): `BehaviorBracedDefend` and `BehaviorBracedAdvance`, the wall holding or marching that
+goes Square while `IsUnderCavalryChargeFromFront` reads true and for 4 s after (vanilla's wall
+receives a charge in the open line it stood in); `BehaviorCycleCharge`, the cavalry machine
+`BehaviorTacticalCharge` carries and short-circuits for cavalry, lifted out and made pure: charge
+through, ride clear to a reform point beyond the enemy, gather, charge again, with a 10 s cap on
+the melee; `BehaviorInfantrySkirmish`, `BehaviorSkirmish`'s dance keyed on the throwing share
+instead of the ranged class share (0 for a javelin line) and with a fourth stage, `Committed`,
+when nobody has thrown for the window inside 60 percent of the average throw, so the plan's
+melee rows take the line; `BehaviorEnvelopWing`, a deep line to a point beside the enemy body on
+its own flank, then the charge (vanilla's `BehaviorFlank` weighs 0 whenever the enemy's closest
+formation is the flanker). Seven tactics on top: `TwoLineWall` (Dwarves defending with 80 foot:
+a second line twelve paces back that commits once joined), `Envelop` (the orc horde with 1.2x
+numbers: centre plus two wings, a 3/1/2/1 split), `DisciplinedLine` (Gondor, Rhun, Dale: hold or
+creep until joined, then the line and the charge, cavalry held until Engage), `ArcherAdvance`
+(attacking Elves: cautious advance behind the archer line), `EoredScreen` (Rohan defending: both
+cavalry blocks screen, then cycle-charge), `HitAndRun` (Dunland attacking, on the skirmish),
+`MumakVanguard` (Harad attacking with the mumakil routed to `HeavyCavalry` and ridden ahead).
+Volley control on the Elven plans: the archers hold until the enemy is inside 80 percent of
+their adjusted range, loose until 95 percent; the tactic owns the firing order and re-asserts it
+every second because every vanilla archer behaviour resets fire-at-will on activation.
+
+**Below the tactics.** Three per-culture blocks in `culture_doctrines.json`. `morale`:
+`neverRout` answers `BattleMoraleModel.CanPanicDueToMorale` false (Gundabad, Isengard, Dol
+Guldur, their hatred too great; Dwarves and Elves, pride; everyone else routs as vanilla does,
+Mike's rule), and `bravery` (-30..30) rides on `GetEffectiveInitialMorale`; a never-rout culture
+carries no `CoordinatedRetreat` row either. `TaomBattleMoraleModel` over the sandbox model and
+`TaomCustomBattleMoraleModel` over the Custom Battle one, both registered last; the panic seam
+runs on the worker tick, so the service is a lookup behind a bool. `aggression`: four
+multipliers on the engine's per-soldier AI decision values after skill has set them (attack on
+`AIAttackOnDecideChance`, shield on the two shield chances, shooterError on the five error
+terms, chargeDistance on `AiChargeHorsebackTargetDistFactor`), as a post-pass in
+`TaomAgentStatCalculateModel` (one slot, four rules now) and a new
+`TaomCustomBattleAgentStatCalculateModel`; `Agent.Defensiveness` untouched, it is the
+formation's own channel. Both tiers are per soldier and follow him into every mission type;
+only the tactic tier is field-battle-only. `formations`: troop id to formation class through
+`Mission.GetAgentTroopClass_Override`, subscribed at `EarlyStart` only when a doctrine routes a
+troop, reproducing the engine body it replaces (the dismount rule) and released at mission end.
+Two MCM sub-toggles (`CultureDoctrineMorale`, `CultureDoctrineAggression`, both on under the
+master) so the A/B can attribute; settings census 250 total / 185 relevant.
+
+**Data.** Rhun is heavy cavalry like Rohan with better foot and bow (Mike): `CavalryDominance`
+and `DisciplinedLine`, no horse-archer doctrine. Khand `CavalryDominance`. Isengard the wall,
+not the mob; the mob moved to `dunland_raiders` (attacker), where a big band swarms and a small
+one hits and runs. Dale the wall and the line. Mirkwood `DefensiveLine` 0.8 (the forest bias
+vanilla's own scoring carries). Goblins and Misty Mountains `HoldChokePoint` 0.6, the most the
+ordering allows. Gondor's defensive rows 0.8 and choke point 0.7 so the line is reachable. Every
+shipped TAOM row still beats its vanilla neighbours by the engine's 1.5x sticky factor at its
+canonical army (`ShippedDoctrineOrderingTests`, seven new canonical armies).
+
+**Engine facts, verified on the installed v1.5.3.** `FormationAI.TickOccasionally` calls
+`PrecalculateMovementOrder` on every candidate and ticks only the active behaviour, cancelling
+the old one on a switch (`FormationAI.cs:49-69, 240-256`), which is why a TAOM behaviour steps
+its machine in the active tick only and restores orders in `Canceled`. `GetBehavior<T>` matches
+with `is T`, which is why a TAOM behaviour never derives from a vanilla concrete type. The engine
+never registers ours, so the applier's `Ensure<T>` adds one the first time a plan names it.
+`Formation.SetArrangementOrder` expires the query cache and recomputes on every real change, so
+a stance is re-issued only when it changes. `CommonAIComponent.CanPanic` asks the morale model
+from `OnTickParallel`. The troop-class override replaces the engine's body rather than filtering
+its result. Every engine member the slice binds to is pinned in
+`CultureDoctrinePhaseCBindingTests` and `DoctrineSwitchInvariantTests`.
+
+**Tests.** `BraceDecisionTests`, `CycleChargeMachineTests`, `InfantrySkirmishMachineTests`,
+`EnvelopGeometryTests`, `VolleyDecisionTests`, `CultureMoraleTests`, `CultureAggressionTests`,
+`FormationRoutingTests`, the two service tests, ten config validation tests for the three
+blocks, seven plan tests, seven weight tests, five shipped-config tests (the never-rout set, no
+retreat row on a never-rout culture, aggression in range, every Phase C tactic on its side, the
+Harad routing), nine Phase C binding tests. Twelve sergeant-popup strings seeded in the twelve
+language files in English pending the translator run. Full suite 9,661: 9,659 green, 2
+pre-existing skips.
+
+**Review.** Six agents before commit (standards, engine fidelity against the installed DLLs,
+performance and threads, battle logic and tests, lifecycle and state matrix, and the systems
+analysis Mike asked for). Standards, API (about 160 members, 0 incompatible), performance (no
+HIGH, the whole decision layer is microseconds per second) and threads (no HIGH) came back
+clean. Fixed: the TwoLineWall and Envelop gates read the largest infantry formation, which
+their own 2/1/2/1 and 3/1/2/1 splits halve or third, so on 80 to 179 foot the tactic cancelled
+itself at the next 5 s decision and the team merged back (`InfantryTotal` in the snapshot);
+their 1.05x and 1.1x edges could never beat the engine's 1.5x sticky factor once the plain
+tactic held the team (now 1.6x, one switch per gate crossing); the cycle charge's reform ended
+on its first tick whenever the charge began inside 30 m, because the reform point sat inside the
+contact distance (stop 35 to 60 m for horse, contact half of it); the brace saw only a charge
+the wall already faced, since the engine query reads one formation and needs the facing
+(`CavalryThreat` scans every enemy cavalry formation's velocity and ETA); a plan re-apply, which
+any formation-set change on the team triggers, re-armed a spent javelin line; any vanilla tactic
+being current first folded the routed mumakil into the cavalry for good (`RoutedFormationGuard`
+marks a routed formation `enforceNotSplittableByAI`, the engine's own exemption); a formation the
+player took back kept the volley hold; the braced walls now stand on the point where the brace
+began instead of a drifting average; the behaviour count is 24, not 27, and
+`PrecalculateMovementOrder` runs only on a candidate that beats the running maximum. The
+analysis, with the engine's cost model at 800 v 800, the fourteen ceilings of the engine layer,
+four rewrite options and the verdict (do not rewrite; a shared battle picture, explicit
+decisions and per-formation keys are the path), is
+`docs/reviews/analysis-battle-ai-2026-09-17.md`.
+
+**Not in game yet.** The A/B protocol in `docs/features/culture-doctrine.md` gained eight cells
+(the brace against a Rohan charge, the cycle, the javelin line, the envelopment, the volley, the
+mumakil, morale on and off, aggression on and off); the toggle ships off until it passes.
+
 ## 2026-09-16
 
 ### fix(armour): a mesh-tier ladder keeps low troops out of lord kit, and the lord line gets its stats back (#609)

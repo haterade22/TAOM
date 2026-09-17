@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using HarmonyLib;
+using TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 using TAOM.Features.CultureDoctrine.Hooks.Tactics;
 using TaleWorlds.MountAndBlade;
 
@@ -63,9 +64,14 @@ public static class TeamTacticProbe
             if (!first)
                 sb.Append(", ");
             first = false;
+            var active = formation.AI?.ActiveBehavior;
             sb.Append(formation.FormationIndex).Append(':').Append(formation.CountOfUnits)
-              .Append(' ').Append(formation.AI?.ActiveBehavior?.GetType().Name ?? "none")
-              .Append('/').Append(formation.ArrangementOrder.OrderEnum)
+              .Append(' ').Append(active?.GetType().Name ?? "none");
+            // A TAOM behaviour also shows its stage or stance (Marching, Square, Reforming, failed: ...).
+            if (active is TaomBehaviorBase taom && taom.Status.Length > 0)
+                sb.Append(':').Append(taom.Status);
+            sb.Append('/').Append(formation.ArrangementOrder.OrderEnum)
+              .Append('/').Append(formation.FiringOrder.OrderEnum)
               .Append(formation.IsAIControlled ? "" : "(player)");
         }
         sb.Append(']');

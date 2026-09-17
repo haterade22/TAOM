@@ -24,6 +24,35 @@ public class CultureDoctrineConfig
 public class DoctrineConfig
 {
     public List<TacticEntryConfig> Tactics { get; set; } = new List<TacticEntryConfig>();
+
+    /// <summary>Absent means vanilla: everyone can rout, bravery 0.</summary>
+    public MoraleConfig? Morale { get; set; }
+
+    /// <summary>Absent means vanilla: every multiplier 1.</summary>
+    public AggressionConfig? Aggression { get; set; }
+
+    /// <summary>Troop StringId to formation class name (<c>Infantry</c>, <c>Ranged</c>,
+    /// <c>Cavalry</c>, <c>HorseArcher</c>, <c>Skirmisher</c>, <c>HeavyInfantry</c>,
+    /// <c>LightCavalry</c>, <c>HeavyCavalry</c>). Absent means the engine's own class.</summary>
+    public Dictionary<string, string>? Formations { get; set; }
+}
+
+public class MoraleConfig
+{
+    /// <summary>The culture's soldiers never flee from a broken morale bar.</summary>
+    public bool NeverRout { get; set; }
+
+    /// <summary>Added to every soldier's initial morale, -30 to 30.</summary>
+    public float Bravery { get; set; }
+}
+
+public class AggressionConfig
+{
+    /// <summary>Multipliers on the engine's AI decision values, 0.25 to 4 each.</summary>
+    public float Attack { get; set; } = 1f;
+    public float Shield { get; set; } = 1f;
+    public float ShooterError { get; set; } = 1f;
+    public float ChargeDistance { get; set; } = 1f;
 }
 
 public class TacticEntryConfig

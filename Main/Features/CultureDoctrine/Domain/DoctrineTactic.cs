@@ -5,7 +5,9 @@ namespace TAOM.Features.CultureDoctrine.Domain;
 
 /// <summary>
 /// The closed set of tactics a doctrine may register. The first nine are the engine's field
-/// tactics (the id is the type name without its <c>Tactic</c> prefix); the rest are TAOM's own.
+/// tactics (the id is the type name without its <c>Tactic</c> prefix); the rest are TAOM's own:
+/// the four Phase B tactics, then the Phase C set (a two-line wall, an envelopment, a
+/// disciplined line, an archer advance, a cavalry screen, a hit-and-run, a mumakil vanguard).
 /// Growing the set is one enum member, its class, and one <c>TacticFactory</c> case.
 /// </summary>
 public enum DoctrineTactic
@@ -23,6 +25,13 @@ public enum DoctrineTactic
     InfantryMass,
     CavalryDominance,
     ArcherRing,
+    TwoLineWall,
+    Envelop,
+    DisciplinedLine,
+    ArcherAdvance,
+    EoredScreen,
+    HitAndRun,
+    MumakVanguard,
 }
 
 /// <summary>Which battle side an entry applies to. <c>Any</c> is the JSON default.</summary>

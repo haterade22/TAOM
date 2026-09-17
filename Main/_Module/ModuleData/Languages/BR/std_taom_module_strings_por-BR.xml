@@ -2631,5 +2631,17 @@
     <string id="taom_tactic.infantry_mass" text="Our plan is to swarm them with our numbers." />
     <string id="taom_tactic.cavalry_dominance" text="Our plan is to ride them down and let the foot finish what the horse begins." />
     <string id="taom_tactic.archer_ring" text="Our plan is to ring our archers with spears and let the arrows do the work." />
+    <string id="taom_tactic.two_line_wall" text="Our plan is to hold two lines: the front stands, the second waits, then strikes." />
+    <string id="taom_tactic.envelop" text="Our plan is to come at them from three sides and close the jaws." />
+    <string id="taom_tactic.disciplined_line" text="Our plan is to hold the line until they commit, then advance as one." />
+    <string id="taom_tactic.archer_advance" text="Our plan is to advance behind the bows and let the arrows open the way." />
+    <string id="taom_tactic.eored_screen" text="Our plan is to screen the flanks with our riders and charge once they commit." />
+    <string id="taom_tactic.hit_and_run" text="Our plan is to throw, fall back, and throw again until their line breaks." />
+    <string id="taom_tactic.mumak_vanguard" text="Our plan is to send the mumakil in first and follow in their wake." />
+    <string id="taom_behavior.braced_defend" text="Hold your position; square up against horse" />
+    <string id="taom_behavior.braced_advance" text="Advance in a wall; square up against horse" />
+    <string id="taom_behavior.infantry_skirmish" text="Close to throwing range, throw, and fall back" />
+    <string id="taom_behavior.cycle_charge" text="Charge through, reform, and charge again" />
+    <string id="taom_behavior.envelop_wing" text="Swing round their flank and strike from the side" />
   </strings>
 </base>

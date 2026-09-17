@@ -42,19 +42,76 @@ public class ShippedDoctrineOrderingTests
     private static TeamQuerySnapshot Canonical(DoctrineTactic taomTactic, bool defender)
     {
         float inf, rng, cav, rangedCav;
+        int members = 200, enemies = 200;
+        var throwing = 0f;
+        var vanguard = false;
         switch (taomTactic)
         {
             case DoctrineTactic.ShieldWall: inf = 0.70f; rng = 0.20f; cav = 0.10f; rangedCav = 0f; break;
-            case DoctrineTactic.ArcherRing: inf = 0.45f; rng = 0.45f; cav = 0.10f; rangedCav = 0f; break;
-            case DoctrineTactic.CavalryDominance: inf = 0.30f; rng = 0.10f; cav = 0.50f; rangedCav = 0.10f; break;
+            case DoctrineTactic.TwoLineWall: inf = 0.70f; rng = 0.20f; cav = 0.10f; rangedCav = 0f; members = 300; break;
+            case DoctrineTactic.ArcherRing:
+            case DoctrineTactic.ArcherAdvance: inf = 0.45f; rng = 0.45f; cav = 0.10f; rangedCav = 0f; break;
+            case DoctrineTactic.CavalryDominance:
+            case DoctrineTactic.EoredScreen: inf = 0.30f; rng = 0.10f; cav = 0.50f; rangedCav = 0.10f; break;
             case DoctrineTactic.InfantryMass: inf = 0.75f; rng = 0.15f; cav = 0.10f; rangedCav = 0f; break;
+            case DoctrineTactic.Envelop: inf = 0.75f; rng = 0.15f; cav = 0.10f; rangedCav = 0f; members = 300; break;
+            case DoctrineTactic.DisciplinedLine: inf = 0.55f; rng = 0.25f; cav = 0.20f; rangedCav = 0f; break;
+            case DoctrineTactic.HitAndRun: inf = 0.60f; rng = 0.20f; cav = 0.20f; rangedCav = 0f; throwing = 0.6f; break;
+            case DoctrineTactic.MumakVanguard: inf = 0.50f; rng = 0.30f; cav = 0.20f; rangedCav = 0f; vanguard = true; break;
             default: throw new ArgumentOutOfRangeException(nameof(taomTactic), taomTactic, "no canonical army");
         }
         return new TeamQuerySnapshot(
-            memberCount: 200, enemyUnitCount: 200, infantryRatio: inf, rangedRatio: rng, cavalryRatio: cav,
+            memberCount: members, enemyUnitCount: enemies, infantryRatio: inf, rangedRatio: rng, cavalryRatio: cav,
             rangedCavalryRatio: rangedCav, remainingPowerRatio: 1f, notEngagingAdvantage: 1f,
             hasInfantry: true, hasArchers: true, hasCavalry: true, isDefenseApplicable: true, ringFits: true,
-            isDefender: defender);
+            isDefender: defender, infantryCount: (int)(members * inf), throwingRatio: throwing, hasVanguard: vanguard,
+            infantryTotal: (int)(members * inf));
+    }
+
+    /// <summary>A gated variant refines a plain tactic the same culture carries: while its gate
+    /// passes it must beat the plain one by the sticky factor (or it can never take the team
+    /// back once the plain one holds it), and when the gate fails it is 0 and yields.</summary>
+    [TestMethod]
+    public void GatedVariants_BeatTheTacticTheyRefineByTheStickyFactor_AndYieldWhenTheirGateFails()
+    {
+        var catalog = LoadShipped();
+        foreach (var (culture, variant, plain) in new[]
+        {
+            ("erebor", DoctrineTactic.TwoLineWall, DoctrineTactic.ShieldWall),
+            ("mordor", DoctrineTactic.Envelop, DoctrineTactic.InfantryMass),
+            ("gundabad", DoctrineTactic.Envelop, DoctrineTactic.InfantryMass),
+        })
+        {
+            var rows = catalog.Resolve(culture).Tactics;
+            var v = rows.Single(t => t.Tactic == variant);
+            var p = rows.Single(t => t.Tactic == plain);
+            var open = Canonical(variant, defender: true);
+            Assert.IsTrue(VanillaTacticWeightReference.TaomWeight(variant, in open) * v.Multiplier
+                > VanillaTacticWeightReference.TaomWeight(plain, in open) * p.Multiplier * StickyFactor, $"{culture}: {variant} does not beat {plain} by {StickyFactor} while its gate passes");
+            // The gate closed: too few foot for two lines, or no numbers edge for the envelopment.
+            var closed = new TeamQuerySnapshot(
+                memberCount: 100, enemyUnitCount: 100, infantryRatio: 0.7f, rangedRatio: 0.2f, cavalryRatio: 0.1f,
+                rangedCavalryRatio: 0f, remainingPowerRatio: 1f, notEngagingAdvantage: 1f,
+                hasInfantry: true, hasArchers: true, hasCavalry: true, isDefenseApplicable: true, ringFits: true,
+                isDefender: true, infantryCount: 70, throwingRatio: 0f, hasVanguard: false, infantryTotal: 70);
+            Assert.AreEqual(0f, VanillaTacticWeightReference.TaomWeight(variant, in closed), $"{culture}: {variant} should be 0 with its gate closed");
+            Assert.IsTrue(VanillaTacticWeightReference.TaomWeight(plain, in closed) > 0f, $"{culture}: {plain} still stands when the variant's gate is closed");
+        }
+    }
+
+    /// <summary>Rhun carries the cavalry lead and the line on both sides; which wins is the
+    /// army's shape, and both shapes are pinned (Mike, 2026-09-16: heavy cavalry like Rohan,
+    /// better foot and bow).</summary>
+    [TestMethod]
+    public void Rhun_CavalryHeavyArmyLeadsWithCavalry_FootHeavyArmyHoldsTheLine()
+    {
+        var rows = LoadShipped().Resolve("khuzait").Tactics;
+        var cavalry = rows.Single(t => t.Tactic == DoctrineTactic.CavalryDominance).Multiplier;
+        var line = rows.Single(t => t.Tactic == DoctrineTactic.DisciplinedLine).Multiplier;
+        var mounted = Canonical(DoctrineTactic.CavalryDominance, defender: false);
+        var foot = Canonical(DoctrineTactic.DisciplinedLine, defender: false);
+        Assert.IsTrue(DoctrineWeights.CavalryDominance(in mounted) * cavalry > DoctrineWeights.DisciplinedLine(in mounted) * line);
+        Assert.IsTrue(DoctrineWeights.DisciplinedLine(in foot) * line > DoctrineWeights.CavalryDominance(in foot) * cavalry);
     }
 
     private static IEnumerable<(string culture, TacticEntry taom, DoctrineSide side)> ShippedTaomRows(DoctrineCatalog catalog)

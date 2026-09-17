@@ -34,6 +34,13 @@ public static class TacticFactory
             case DoctrineTactic.InfantryMass: return new TaomTacticInfantryMass(team, m);
             case DoctrineTactic.CavalryDominance: return new TaomTacticCavalryDominance(team, m);
             case DoctrineTactic.ArcherRing: return new TaomTacticArcherRing(team, m);
+            case DoctrineTactic.TwoLineWall: return new TaomTacticTwoLineWall(team, m);
+            case DoctrineTactic.Envelop: return new TaomTacticEnvelop(team, m);
+            case DoctrineTactic.DisciplinedLine: return new TaomTacticDisciplinedLine(team, m);
+            case DoctrineTactic.ArcherAdvance: return new TaomTacticArcherAdvance(team, m);
+            case DoctrineTactic.EoredScreen: return new TaomTacticEoredScreen(team, m);
+            case DoctrineTactic.HitAndRun: return new TaomTacticHitAndRun(team, m);
+            case DoctrineTactic.MumakVanguard: return new TaomTacticMumakVanguard(team, m);
             default: throw new ArgumentOutOfRangeException(nameof(entry), entry.Tactic, "no tactic class for this doctrine id");
         }
     }

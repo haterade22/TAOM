@@ -97,7 +97,10 @@ public sealed class CultureDoctrineConfigProvider : ICultureDoctrineConfigProvid
             }
 
             var isDefault = key == DoctrineCatalog.DefaultKey;
-            var doctrine = new Doctrine(key!, ValidateRows(key!, pair.Value.Tactics, ref rejected), isDefault);
+            var doctrine = new Doctrine(key!, ValidateRows(key!, pair.Value.Tactics, ref rejected), isDefault,
+                ValidateMorale(key!, pair.Value.Morale, ref rejected),
+                ValidateAggression(key!, pair.Value.Aggression, ref rejected),
+                ValidateFormations(key!, pair.Value.Formations, ref rejected));
             if (isDefault)
                 fallback = doctrine;
             else
@@ -166,5 +169,64 @@ public sealed class CultureDoctrineConfigProvider : ICultureDoctrineConfigProvid
             kept.Add(new TacticEntry(tactic, multiplier, minTactics, side));
         }
         return kept;
+    }
+
+    private CultureMorale ValidateMorale(string culture, MoraleConfig? morale, ref bool rejected)
+    {
+        if (morale == null)
+            return CultureMorale.Vanilla;
+        var bravery = morale.Bravery;
+        if (!FiniteFloatValidator.IsFiniteInRange(bravery, CultureMorale.MinBravery, CultureMorale.MaxBravery))
+        {
+            _logger.LogWarning($"CultureDoctrineConfigProvider: doctrines['{culture}'].morale.bravery = {bravery} is not a finite value in [{CultureMorale.MinBravery}, {CultureMorale.MaxBravery}], reverting to 0");
+            rejected = true;
+            bravery = 0f;
+        }
+        return new CultureMorale(morale.NeverRout, bravery);
+    }
+
+    private CultureAggression ValidateAggression(string culture, AggressionConfig? aggression, ref bool rejected)
+    {
+        if (aggression == null)
+            return CultureAggression.Vanilla;
+        return new CultureAggression(
+            Multiplier(culture, "attack", aggression.Attack, ref rejected),
+            Multiplier(culture, "shield", aggression.Shield, ref rejected),
+            Multiplier(culture, "shooterError", aggression.ShooterError, ref rejected),
+            Multiplier(culture, "chargeDistance", aggression.ChargeDistance, ref rejected));
+    }
+
+    private float Multiplier(string culture, string name, float value, ref bool rejected)
+    {
+        if (FiniteFloatValidator.IsFiniteInRange(value, CultureAggression.MinMultiplier, CultureAggression.MaxMultiplier))
+            return value;
+        _logger.LogWarning($"CultureDoctrineConfigProvider: doctrines['{culture}'].aggression.{name} = {value} is not a finite value in [{CultureAggression.MinMultiplier}, {CultureAggression.MaxMultiplier}], reverting to 1");
+        rejected = true;
+        return 1f;
+    }
+
+    private FormationRouting ValidateFormations(string culture, Dictionary<string, string>? formations, ref bool rejected)
+    {
+        if (formations == null || formations.Count == 0)
+            return FormationRouting.None;
+        var kept = new Dictionary<string, TaleWorlds.Core.FormationClass>(StringComparer.Ordinal);
+        foreach (var pair in formations)
+        {
+            var troop = pair.Key?.Trim();
+            if (string.IsNullOrEmpty(troop))
+            {
+                _logger.LogWarning($"CultureDoctrineConfigProvider: doctrines['{culture}'].formations has an empty troop id, dropping the row");
+                rejected = true;
+                continue;
+            }
+            if (!FormationRouting.TryParseClass(pair.Value, out var formationClass))
+            {
+                _logger.LogWarning($"CultureDoctrineConfigProvider: doctrines['{culture}'].formations['{troop}'] = '{pair.Value}' is not a formation class ({string.Join(", ", FormationRouting.RoutableNames)}), dropping the row");
+                rejected = true;
+                continue;
+            }
+            kept[troop!] = formationClass;
+        }
+        return new FormationRouting(kept);
     }
 }

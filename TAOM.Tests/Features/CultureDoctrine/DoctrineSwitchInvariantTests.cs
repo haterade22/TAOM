@@ -7,6 +7,7 @@ using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CultureDoctrine.Doctrines;
 using TAOM.Features.CultureDoctrine.Domain;
+using TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 using TAOM.Features.CultureDoctrine.Hooks.Tactics;
 using TAOM.Tests.Migration;
 
@@ -16,10 +17,11 @@ namespace TAOM.Tests.Features.CultureDoctrine;
 /// The two switches where a doctrine enum meets an engine type cannot be enumerated by
 /// reflection, so their bodies are read as IL (the way <c>CultureDoctrineBindingTests</c> reads
 /// <c>MakeDecision</c>): every <see cref="BehaviorKind"/> must reach a
-/// <c>SetBehaviorWeight&lt;T&gt;</c> whose T <c>TeamAIGeneral</c> registers on every field
-/// formation, and every <see cref="DoctrineTactic"/> must reach a constructor of the type its
-/// engine name promises. An enum member added without its case is otherwise a silent no-op
-/// (the applier) or a mission-time throw (the factory).
+/// <c>SetBehaviorWeight&lt;T&gt;</c> whose T either <c>TeamAIGeneral</c> registers on every
+/// field formation or the applier itself adds first (a TAOM behaviour, through
+/// <c>Ensure&lt;T&gt;</c>), and every <see cref="DoctrineTactic"/> must reach a constructor of
+/// the type its engine name promises. An enum member added without its case is otherwise a
+/// silent no-op (the applier) or a mission-time throw (the factory).
 /// </summary>
 [TestClass]
 public class DoctrineSwitchInvariantTests
@@ -70,15 +72,47 @@ public class DoctrineSwitchInvariantTests
             .Select(c => c!.DeclaringType!.Name)
             .ToHashSet();
 
-        var targeted = Body(typeof(BehaviorWeightApplier), nameof(BehaviorWeightApplier.Apply))
+        var body = Body(typeof(BehaviorWeightApplier), nameof(BehaviorWeightApplier.Apply)).ToList();
+        var targeted = body
             .Select(i => i.Value as MethodInfo)
             .Where(m => m != null && m.Name == "SetBehaviorWeight" && m.IsGenericMethod)
-            .Select(m => m!.GetGenericArguments()[0].Name)
+            .Select(m => m!.GetGenericArguments()[0])
             .ToList();
+        var ensured = body
+            .Select(i => i.Value as MethodInfo)
+            .Where(m => m != null && m.Name == nameof(BehaviorWeightApplier.Ensure) && m.IsGenericMethod)
+            .Select(m => m!.GetGenericArguments()[0].Name)
+            .ToHashSet();
 
-        var missing = targeted.Where(t => !registered.Contains(t)).Distinct().ToList();
+        var missing = targeted
+            .Where(t => !registered.Contains(t.Name) && !(typeof(TaomBehaviorBase).IsAssignableFrom(t) && ensured.Contains(t.Name)))
+            .Select(t => t.Name)
+            .Distinct()
+            .ToList();
         Assert.AreEqual(0, missing.Count,
-            "SetBehaviorWeight<T> throws MBException for a T the formation never received; TeamAIGeneral does not register: " + string.Join(", ", missing));
+            "SetBehaviorWeight<T> throws MBException for a T the formation never received; neither TeamAIGeneral registers nor the applier ensures: " + string.Join(", ", missing));
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void EveryTaomBehaviour_DerivesFromBehaviorComponentDirectly_ThroughTheTaomBase()
+    {
+        RequireGame();
+
+        // GetBehavior<T> and SetBehaviorWeight<T> match with `is T` (FormationAI.cs:120-155): a
+        // TAOM behaviour under a vanilla concrete type would be picked up by every vanilla tactic
+        // that weights that type.
+        var behaviours = typeof(TaomBehaviorBase).Assembly.GetTypes()
+            .Where(t => !t.IsAbstract && typeof(TaomBehaviorBase).IsAssignableFrom(t))
+            .ToList();
+        Assert.IsTrue(behaviours.Count >= 5, "expected the five Phase C behaviours");
+        var behaviorComponent = AccessTools.TypeByName("TaleWorlds.MountAndBlade.BehaviorComponent");
+        foreach (var t in behaviours)
+        {
+            Assert.AreSame(behaviorComponent, typeof(TaomBehaviorBase).BaseType, "TaomBehaviorBase must sit directly on BehaviorComponent");
+            Assert.AreSame(typeof(TaomBehaviorBase), t.BaseType, t.Name + " must derive from TaomBehaviorBase, not a vanilla behaviour");
+            Assert.IsNotNull(t.GetConstructor(new[] { AccessTools.TypeByName("TaleWorlds.MountAndBlade.Formation") }), t.Name + " needs a (Formation) constructor for Ensure<T>");
+        }
     }
 
     [TestMethod]

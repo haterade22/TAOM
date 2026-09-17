@@ -13,4 +13,12 @@ public interface ICultureDoctrineSettingsProvider
 
     /// <summary>Emit the per-team status line every 5 s of mission time.</summary>
     bool IsDebug { get; }
+
+    /// <summary><see cref="IsEnabled"/> and the morale sub-toggle. Read per call from the
+    /// morale model, on the engine's worker threads: a bool read, nothing else.</summary>
+    bool IsMoraleEnabled { get; }
+
+    /// <summary><see cref="IsEnabled"/> and the aggression sub-toggle. Read per agent property
+    /// refresh from the agent-stat model, on the main thread.</summary>
+    bool IsAggressionEnabled { get; }
 }

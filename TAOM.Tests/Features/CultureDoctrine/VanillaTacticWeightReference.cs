@@ -90,6 +90,13 @@ public static class VanillaTacticWeightReference
             case DoctrineTactic.InfantryMass: return DoctrineWeights.InfantryMass(in s);
             case DoctrineTactic.CavalryDominance: return DoctrineWeights.CavalryDominance(in s);
             case DoctrineTactic.ArcherRing: return DoctrineWeights.ArcherRing(in s);
+            case DoctrineTactic.TwoLineWall: return DoctrineWeights.TwoLineWall(in s);
+            case DoctrineTactic.Envelop: return DoctrineWeights.Envelop(in s);
+            case DoctrineTactic.DisciplinedLine: return DoctrineWeights.DisciplinedLine(in s);
+            case DoctrineTactic.ArcherAdvance: return DoctrineWeights.ArcherAdvance(in s);
+            case DoctrineTactic.EoredScreen: return DoctrineWeights.EoredScreen(in s);
+            case DoctrineTactic.HitAndRun: return DoctrineWeights.HitAndRun(in s);
+            case DoctrineTactic.MumakVanguard: return DoctrineWeights.MumakVanguard(in s);
             default: throw new ArgumentOutOfRangeException(nameof(tactic), tactic, "not a TAOM tactic");
         }
     }

@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using TAOM.Features.CultureDoctrine.Doctrines;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
@@ -29,11 +29,11 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Tactics;
 /// </para>
 ///
 /// <para>
-/// 210 lines against ADR-002's 150: this is the one place the vanilla tactic lifecycle exists in
-/// TAOM (vanilla's are 180 to 370 lines each) and the four tactics on top are 15 to 40 lines.
-/// The formation-slot code writes <c>TacticComponent</c>'s protected fields and cannot leave the
-/// class; the decisions it makes are in <see cref="TacticPhaseMachine"/>, <see cref="DoctrineWeights"/>
-/// and <see cref="BehaviorWeightApplier"/>.
+/// Over ADR-002's 150 lines: this is the one place the vanilla tactic lifecycle exists in TAOM
+/// (vanilla's are 180 to 370 lines each) and the eleven tactics on top are 15 to 45 lines. The
+/// split code writes <c>TacticComponent</c>'s protected fields and cannot leave the class; the
+/// decisions are in <see cref="TacticPhaseMachine"/>, <see cref="DoctrineWeights"/>,
+/// <see cref="FormationSlots"/>, <see cref="VolleyControl"/> and <see cref="BehaviorWeightApplier"/>.
 /// </para>
 /// </summary>
 public abstract class TaomTacticBase : TacticComponent
@@ -41,7 +41,12 @@ public abstract class TaomTacticBase : TacticComponent
     private readonly DoctrinePlan _plan;
     private readonly float _multiplier;
     private readonly TacticPhaseMachine _machine = new TacticPhaseMachine();
+    private readonly VolleyControl _volley = new VolleyControl();
     private Formation? _cavalry;
+    private Formation? _secondInfantry;
+    private Formation? _leftWing;
+    private Formation? _rightWing;
+    private Formation? _vanguard;
     private bool _joined;
     private volatile bool _failed;
     private volatile string _status = "idle";
@@ -58,10 +63,15 @@ public abstract class TaomTacticBase : TacticComponent
     public string Status => _status;
 
     internal Formation? MainInfantry => _mainInfantry;
+    internal Formation? SecondInfantry => _secondInfantry;
     internal Formation? Archers => _archers;
+    internal Formation? Vanguard => _vanguard;
 
-    /// <summary>Set in <see cref="BeforeApply"/> by a tactic that uses <c>BehaviorDefend</c>.</summary>
+    /// <summary>Set in <see cref="BeforeApply"/> by a tactic whose infantry holds a position.</summary>
     internal WorldPosition DefensePosition { get; set; } = WorldPosition.Invalid;
+
+    /// <summary>Set in <see cref="BeforeApply"/> by a tactic with a second infantry line.</summary>
+    internal WorldPosition SecondLinePosition { get; set; } = WorldPosition.Invalid;
 
     /// <summary>Set in <see cref="BeforeApply"/> by a tactic that uses <c>BehaviorDefensiveRing</c>.</summary>
     internal TacticalPosition? RingPosition { get; set; }
@@ -112,6 +122,20 @@ public abstract class TaomTacticBase : TacticComponent
         base.TickOccasionally();
     }
 
+    // Another tactic takes the team: the archers get their firing order back.
+    protected override void OnCancel()
+    {
+        try
+        {
+            _volley.Release();
+        }
+        catch (Exception ex)
+        {
+            Fail(ex);
+        }
+        base.OnCancel();
+    }
+
     private void Tick()
     {
         if (!AreFormationsCreated)
@@ -122,7 +146,11 @@ public abstract class TaomTacticBase : TacticComponent
         if (!phase.HasValue)
         {
             var current = _machine.Current;
-            if (!current.HasValue || !OnPhaseTick(current.Value))
+            if (!current.HasValue)
+                return;
+            if (_plan.HasVolleyControl && _volley.Tick(_archers, _plan.Volley))
+                _status = StatusLine(current.Value);
+            if (!OnPhaseTick(current.Value))
                 return;
             phase = current;
         }
@@ -135,34 +163,67 @@ public abstract class TaomTacticBase : TacticComponent
         BeforeApply(phase.Value);
         Apply(phase.Value == TacticPhase.Engage ? _plan.Engage : _plan.Defend, phase.Value);
         IsTacticReapplyNeeded = false;
-        _status = phase.Value + StatusSuffix;
+        _status = StatusLine(phase.Value);
     }
+
+    private string StatusLine(TacticPhase phase) =>
+        phase + StatusSuffix + (_plan.HasVolleyControl ? ":" + _volley.Status : "");
 
     protected override void ManageFormationCounts()
     {
-        if (_plan.Split == FormationSplit.OneOneTwoOne)
+        var formations = FormationsIncludingEmpty;
+        Formation? vanguard = null;
+        switch (_plan.Split)
         {
-            AssignTacticFormations1121();
-            _cavalry = null;
-            return;
+            case FormationSplit.OneOneOneOne:
+                // TacticFrontalCavalryCharge.ManageFormationCounts: one block per class.
+                ManageFormationCounts(1, 1, 1, 1);
+                break;
+            case FormationSplit.TwoOneTwoOne:
+                ManageFormationCounts(2, 1, 2, 1);
+                break;
+            case FormationSplit.ThreeOneTwoOne:
+                ManageFormationCounts(3, 1, 2, 1);
+                break;
+            case FormationSplit.OneOneTwoOneVanguard:
+                // The HeavyCavalry formation is left out of the cavalry consolidation so the
+                // routed troops (FormationRouting) stay a block of their own. An EMPTY one is
+                // not: the engine's split takes any empty formation as a transfer target
+                // before it asks the predicate (`TacticComponent.cs:229-259`), and a slot that
+                // holds no vanguard is just the vanilla 1/1/2/1 with the weight already 0.
+                vanguard = FormationSlots.VanguardOf(formations);
+                if (vanguard == null)
+                {
+                    ManageFormationCounts(1, 1, 2, 1);
+                    break;
+                }
+                SplitFormationClassIntoGivenNumber(f => f.QuerySystem.IsInfantryFormation, 1);
+                SplitFormationClassIntoGivenNumber(f => f.QuerySystem.IsRangedFormation, 1);
+                SplitFormationClassIntoGivenNumber(f => f.QuerySystem.IsCavalryFormation && f != vanguard, 2);
+                SplitFormationClassIntoGivenNumber(f => f.QuerySystem.IsRangedCavalryFormation, 1);
+                vanguard = FormationSlots.VanguardOf(formations);
+                break;
+            default:
+                ManageFormationCounts(1, 1, 2, 1);
+                break;
         }
-        // TacticFrontalCavalryCharge.ManageFormationCounts, verbatim: one block per class, the
-        // main infantry flagged, no Side written (the 1/1/2/1 split is the one that sets sides).
-        ManageFormationCounts(1, 1, 1, 1);
-        _mainInfantry = Pick(f => f.QuerySystem.IsInfantryFormation);
-        if (_mainInfantry != null)
-            _mainInfantry.AI.IsMainFormation = true;
-        _archers = Pick(f => f.QuerySystem.IsRangedFormation);
-        _cavalry = Pick(f => f.QuerySystem.IsCavalryFormation);
-        _rangedCavalry = Pick(f => f.QuerySystem.IsRangedCavalryFormation);
-        _leftCavalry = null;
-        _rightCavalry = null;
+        var slots = FormationSlots.Assign(formations, InfantrySlots(_plan.Split), _plan.Split == FormationSplit.OneOneOneOne, vanguard);
+        _mainInfantry = slots.MainInfantry;
+        _secondInfantry = slots.SecondInfantry;
+        _leftWing = slots.LeftWing;
+        _rightWing = slots.RightWing;
+        _archers = slots.Archers;
+        _leftCavalry = slots.LeftCavalry;
+        _rightCavalry = slots.RightCavalry;
+        _cavalry = slots.Cavalry;
+        _rangedCavalry = slots.RangedCavalry;
+        _vanguard = slots.Vanguard;
     }
 
-    private Formation? Pick(Func<Formation, bool> isClass) =>
-        ChooseAndSortByPriority(FormationsIncludingEmpty, f => f.CountOfUnits > 0 && isClass(f), f => f.IsAIControlled, f => f.QuerySystem.FormationPower).FirstOrDefault();
+    private static int InfantrySlots(FormationSplit split) =>
+        split == FormationSplit.TwoOneTwoOne ? 2 : split == FormationSplit.ThreeOneTwoOne ? 3 : 1;
 
-    // Vanilla's test, extended with the single cavalry slot.
+    // Vanilla's test, extended with every TAOM slot.
     protected override bool CheckAndSetAvailableFormationsChanged()
     {
         var count = Team.GetAIControlledFormationCount();
@@ -172,13 +233,13 @@ public abstract class TaomTacticBase : TacticComponent
             IsTacticReapplyNeeded = true;
             return true;
         }
-        return !Holds(_mainInfantry, q => q.IsInfantryFormation) || !Holds(_archers, q => q.IsRangedFormation)
-            || !Holds(_leftCavalry, q => q.IsCavalryFormation) || !Holds(_rightCavalry, q => q.IsCavalryFormation)
-            || !Holds(_cavalry, q => q.IsCavalryFormation) || !Holds(_rangedCavalry, q => q.IsRangedCavalryFormation);
+        return !FormationSlots.Holds(_mainInfantry, q => q.IsInfantryFormation) || !FormationSlots.Holds(_secondInfantry, q => q.IsInfantryFormation)
+            || !FormationSlots.Holds(_leftWing, q => q.IsInfantryFormation) || !FormationSlots.Holds(_rightWing, q => q.IsInfantryFormation)
+            || !FormationSlots.Holds(_archers, q => q.IsRangedFormation)
+            || !FormationSlots.Holds(_leftCavalry, q => q.IsCavalryFormation) || !FormationSlots.Holds(_rightCavalry, q => q.IsCavalryFormation)
+            || !FormationSlots.Holds(_cavalry, q => q.IsCavalryFormation) || !FormationSlots.Holds(_rangedCavalry, q => q.IsRangedCavalryFormation)
+            || !FormationSlots.Holds(_vanguard, q => true);
     }
-
-    private static bool Holds(Formation? formation, Func<FormationQuerySystem, bool> isClass) =>
-        formation == null || (formation.CountOfUnits != 0 && isClass(formation.QuerySystem));
 
     // Vanilla's test on the leading formation, with the plan's threshold and its doubling once joined.
     private bool HasBattleBeenJoined()
@@ -202,6 +263,8 @@ public abstract class TaomTacticBase : TacticComponent
             if (formation != null)
                 BehaviorWeightApplier.Apply(formation, formations[i], this);
         }
+        if (_plan.HasVolleyControl)
+            _volley.Tick(_archers, _plan.Volley);
     }
 
     private Formation? FormationFor(FormationRole role)
@@ -209,11 +272,15 @@ public abstract class TaomTacticBase : TacticComponent
         switch (role)
         {
             case FormationRole.MainInfantry: return _mainInfantry;
+            case FormationRole.SecondInfantry: return _secondInfantry;
+            case FormationRole.LeftWing: return _leftWing;
+            case FormationRole.RightWing: return _rightWing;
             case FormationRole.Archers: return _archers;
             case FormationRole.LeftCavalry: return _leftCavalry;
             case FormationRole.RightCavalry: return _rightCavalry;
             case FormationRole.Cavalry: return _cavalry;
             case FormationRole.RangedCavalry: return _rangedCavalry;
+            case FormationRole.Vanguard: return _vanguard;
             default: return null;
         }
     }

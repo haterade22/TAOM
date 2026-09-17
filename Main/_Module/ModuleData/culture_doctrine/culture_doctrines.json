@@ -1,6 +1,6 @@
 {
-  "_comment": "Field-battle doctrine per culture (#608). Each doctrine is the list of team tactics that culture registers INSTEAD of vanilla's set; the engine still picks the max-weight tactic every 5 s, so a multiplier is a preference, not a script. 'multiplier' scales the tactic's own weight (0 keeps the row but never picks it, 5 is the cap); 'minTactics' is the commander Tactics skill the side needs for the row (vanilla gates at 20 and 50; a doctrine's own tactic should stay at 0); 'side' is any (default), attacker or defender. Charge is always registered even if a doctrine omits it. Reloads on game restart only.",
-  "_comment_ids": "Vanilla ids: Charge, FullScaleAttack, DefensiveEngagement, DefensiveLine, DefensiveRing, FrontalCavalryCharge, RangedHarrassmentOffensive, HoldChokePoint, CoordinatedRetreat. TAOM ids: ShieldWall (hold the high ground in a wall, advance in a wall when attacking), InfantryMass (numbers-scaled infantry charge), CavalryDominance (cavalry leads, infantry follows), ArcherRing (infantry ring around the archers, defender only). DefensiveLine, HoldChokePoint and DefensiveRing need TacticalPosition entities in the scene; DefensiveEngagement and ShieldWall use the navmesh high ground and work everywhere.",
+  "_comment": "Field-battle doctrine per culture (#608). Each doctrine is the list of team tactics that culture registers INSTEAD of vanilla's set; the engine still picks the max-weight tactic every 5 s, so a multiplier is a preference, not a script. 'multiplier' scales the tactic's own weight (0 keeps the row but never picks it, 5 is the cap); 'minTactics' is the commander Tactics skill the side needs for the row (vanilla gates at 20 and 50; a doctrine's own tactic should stay at 0); 'side' is any (default), attacker or defender. Charge is always registered even if a doctrine omits it. 'morale' is { neverRout, bravery -30..30 }: a never-rout culture's soldiers stand at zero morale (and carries no CoordinatedRetreat row), bravery is added to every soldier's starting morale. 'aggression' is four multipliers 0.25..4 on the engine's per-soldier AI values (attack: attack-on-decide chance; shield: defend-with-shield and shield-against-missiles; shooterError: below 1 shoots straighter; chargeDistance: a rider commits to a charge from further). 'formations' maps a troop id to the formation it spawns into (Infantry, Ranged, Cavalry, HorseArcher, Skirmisher, HeavyInfantry, LightCavalry, HeavyCavalry); only a TAOM tactic that keeps that slot (MumakVanguard keeps HeavyCavalry) stops vanilla folding it back. Reloads on game restart only.",
+  "_comment_ids": "Vanilla ids: Charge, FullScaleAttack, DefensiveEngagement, DefensiveLine, DefensiveRing, FrontalCavalryCharge, RangedHarrassmentOffensive, HoldChokePoint, CoordinatedRetreat. TAOM ids: ShieldWall (hold the high ground in a wall that squares up against horse, advance in a wall when attacking), TwoLineWall (the wall with a second line that commits once joined; defender, needs 80 foot), InfantryMass (numbers-scaled infantry charge), Envelop (centre plus two wings round the flanks; needs 60 foot and 1.2x numbers), CavalryDominance (cavalry leads, cycle-charges, infantry follows), EoredScreen (defender: cavalry screens the flanks then cycle-charges), ArcherRing (infantry ring around the archers, defender only, volley control), ArcherAdvance (attacker: cautious advance behind an archer line, volley control), DisciplinedLine (hold or cautious advance until joined, then the line and the charge), HitAndRun (throwing infantry closes, throws, falls back, charges when spent), MumakVanguard (attacker: the HeavyCavalry formation rides ahead; needs a routed troop). DefensiveLine, HoldChokePoint and DefensiveRing need TacticalPosition entities in the scene; DefensiveEngagement, ShieldWall, TwoLineWall, DisciplinedLine and EoredScreen use the navmesh high ground and work everywhere.",
   "_comment_culture_ids": "KEYS ARE StringIds, NOT display names. TAOM re-skins the six vanilla cultures via spcultures.xslt, which overrides <name> but NEVER the id: Rohirrim = 'vlandia', Dunlendings = 'empire', Haradrim = 'aserai', Easterlings/Rhun = 'khuzait', Barding/Dale = 'sturgia', Variag/Khand = 'battania'. A doctrine keyed on the LOTR name silently applies to nobody. Cultures without a row use 'default'.",
   "enabled": true,
   "doctrines": {
@@ -21,6 +21,7 @@
     "erebor": {
       "tactics": [
         { "id": "ShieldWall" },
+        { "id": "TwoLineWall", "side": "defender" },
         { "id": "Charge", "multiplier": 0.3 },
         { "id": "FullScaleAttack", "multiplier": 0.5 },
         { "id": "DefensiveEngagement", "multiplier": 0.5, "side": "defender" },
@@ -28,13 +29,15 @@
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 0.5, "side": "attacker" },
-        { "id": "FrontalCavalryCharge", "multiplier": 0.2 },
-        { "id": "CoordinatedRetreat", "multiplier": 0.5, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "FrontalCavalryCharge", "multiplier": 0.2 }
+      ],
+      "morale": { "neverRout": true, "bravery": 15 },
+      "aggression": { "attack": 0.9, "shield": 1.5, "shooterError": 1.0, "chargeDistance": 1.0 }
     },
     "erebor_warriors": {
       "tactics": [
         { "id": "ShieldWall" },
+        { "id": "TwoLineWall", "side": "defender" },
         { "id": "Charge", "multiplier": 0.3 },
         { "id": "FullScaleAttack", "multiplier": 0.5 },
         { "id": "DefensiveEngagement", "multiplier": 0.5, "side": "defender" },
@@ -42,81 +45,94 @@
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 0.5, "side": "attacker" },
-        { "id": "FrontalCavalryCharge", "multiplier": 0.2 },
-        { "id": "CoordinatedRetreat", "multiplier": 0.5, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "FrontalCavalryCharge", "multiplier": 0.2 }
+      ],
+      "morale": { "neverRout": true, "bravery": 15 },
+      "aggression": { "attack": 0.9, "shield": 1.5, "shooterError": 1.0, "chargeDistance": 1.0 }
     },
 
     "lindon": {
       "tactics": [
         { "id": "ArcherRing", "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 2.0, "side": "attacker" },
+        { "id": "ArcherAdvance", "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 0.7, "side": "defender" },
         { "id": "DefensiveLine", "multiplier": 0.7, "side": "defender" },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
         { "id": "Charge", "multiplier": 0.3 },
-        { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
-        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "FrontalCavalryCharge", "multiplier": 0.5 }
+      ],
+      "morale": { "neverRout": true, "bravery": 10 },
+      "aggression": { "attack": 1.0, "shield": 1.0, "shooterError": 0.5, "chargeDistance": 1.0 }
     },
     "lothlorien": {
       "tactics": [
         { "id": "ArcherRing", "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 2.0, "side": "attacker" },
+        { "id": "ArcherAdvance", "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 0.7, "side": "defender" },
         { "id": "DefensiveLine", "multiplier": 0.7, "side": "defender" },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
         { "id": "Charge", "multiplier": 0.3 },
-        { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
-        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "FrontalCavalryCharge", "multiplier": 0.5 }
+      ],
+      "morale": { "neverRout": true, "bravery": 10 },
+      "aggression": { "attack": 1.0, "shield": 1.0, "shooterError": 0.5, "chargeDistance": 1.0 }
     },
     "mirkwood": {
       "tactics": [
         { "id": "ArcherRing", "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 2.0, "side": "attacker" },
+        { "id": "ArcherAdvance", "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 0.7, "side": "defender" },
-        { "id": "DefensiveLine", "multiplier": 0.7, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.8, "side": "defender" },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
         { "id": "Charge", "multiplier": 0.3 },
-        { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
-        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "FrontalCavalryCharge", "multiplier": 0.5 }
+      ],
+      "morale": { "neverRout": true, "bravery": 10 },
+      "aggression": { "attack": 1.0, "shield": 1.0, "shooterError": 0.5, "chargeDistance": 1.0 }
     },
     "mirkwood_stalkers": {
       "tactics": [
         { "id": "ArcherRing", "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 2.0, "side": "attacker" },
+        { "id": "ArcherAdvance", "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 0.7, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.8, "side": "defender" },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
-        { "id": "Charge", "multiplier": 0.3 },
-        { "id": "CoordinatedRetreat", "multiplier": 1.5, "side": "attacker" }
-      ]
+        { "id": "Charge", "multiplier": 0.3 }
+      ],
+      "morale": { "neverRout": true, "bravery": 10 },
+      "aggression": { "attack": 1.0, "shield": 1.0, "shooterError": 0.5, "chargeDistance": 1.0 }
     },
     "rivendell": {
       "tactics": [
         { "id": "ArcherRing", "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 1.5, "side": "attacker" },
+        { "id": "ArcherAdvance", "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 0.7, "side": "defender" },
         { "id": "DefensiveLine", "multiplier": 0.7, "side": "defender" },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
-        { "id": "FullScaleAttack", "multiplier": 1.0 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
         { "id": "Charge", "multiplier": 0.3 },
-        { "id": "FrontalCavalryCharge", "multiplier": 1.0 },
-        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "FrontalCavalryCharge", "multiplier": 0.8 }
+      ],
+      "morale": { "neverRout": true, "bravery": 10 },
+      "aggression": { "attack": 1.0, "shield": 1.0, "shooterError": 0.5, "chargeDistance": 1.0 }
     },
 
     "vlandia": {
       "tactics": [
         { "id": "CavalryDominance" },
+        { "id": "EoredScreen", "side": "defender" },
         { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
         { "id": "FullScaleAttack", "multiplier": 1.0 },
         { "id": "Charge", "multiplier": 0.8 },
@@ -126,12 +142,47 @@
         { "id": "DefensiveRing", "multiplier": 0.3, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "CoordinatedRetreat", "multiplier": 0.7, "minTactics": 50, "side": "attacker" }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": 5 },
+      "aggression": { "attack": 1.2, "shield": 1.0, "shooterError": 1.0, "chargeDistance": 1.3 }
+    },
+    "khuzait": {
+      "tactics": [
+        { "id": "CavalryDominance" },
+        { "id": "DisciplinedLine" },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "Charge", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.6, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.6, "side": "defender" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 0.7, "side": "attacker" },
+        { "id": "DefensiveRing", "multiplier": 0.3, "side": "defender" },
+        { "id": "CoordinatedRetreat", "multiplier": 0.8, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.1, "shield": 1.2, "shooterError": 1.0, "chargeDistance": 1.2 }
+    },
+    "battania": {
+      "tactics": [
+        { "id": "CavalryDominance" },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "Charge", "multiplier": 0.9 },
+        { "id": "DefensiveEngagement", "multiplier": 0.5, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.5, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 0.6, "side": "attacker" },
+        { "id": "CoordinatedRetreat", "multiplier": 0.8, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.2, "shield": 1.0, "shooterError": 1.0, "chargeDistance": 1.2 }
     },
 
     "mordor": {
       "tactics": [
         { "id": "InfantryMass" },
+        { "id": "Envelop" },
         { "id": "Charge", "multiplier": 2.0 },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
         { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
@@ -141,11 +192,14 @@
         { "id": "DefensiveRing", "multiplier": 0.2, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
         { "id": "CoordinatedRetreat", "multiplier": 0.3, "minTactics": 50, "side": "attacker" }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.5, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
     "dolguldur": {
       "tactics": [
         { "id": "InfantryMass" },
+        { "id": "Envelop" },
         { "id": "Charge", "multiplier": 2.0 },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
         { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
@@ -153,13 +207,15 @@
         { "id": "DefensiveLine", "multiplier": 0.3, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 0.3, "side": "attacker" },
         { "id": "DefensiveRing", "multiplier": 0.2, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
-        { "id": "CoordinatedRetreat", "multiplier": 0.3, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" }
+      ],
+      "morale": { "neverRout": true, "bravery": 0 },
+      "aggression": { "attack": 1.5, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
     "gundabad": {
       "tactics": [
         { "id": "InfantryMass" },
+        { "id": "Envelop" },
         { "id": "Charge", "multiplier": 2.0 },
         { "id": "FullScaleAttack", "multiplier": 0.6 },
         { "id": "FrontalCavalryCharge", "multiplier": 0.8 },
@@ -167,105 +223,178 @@
         { "id": "DefensiveLine", "multiplier": 0.3, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 0.2, "side": "attacker" },
         { "id": "DefensiveRing", "multiplier": 0.2, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
-        { "id": "CoordinatedRetreat", "multiplier": 0.3, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" }
+      ],
+      "morale": { "neverRout": true, "bravery": 0 },
+      "aggression": { "attack": 1.4, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
     "gundabad_raiders": {
       "tactics": [
         { "id": "InfantryMass" },
+        { "id": "Envelop" },
         { "id": "Charge", "multiplier": 2.0 },
         { "id": "FullScaleAttack", "multiplier": 0.5 },
         { "id": "FrontalCavalryCharge", "multiplier": 0.8 },
-        { "id": "DefensiveEngagement", "multiplier": 0.3, "side": "defender" },
-        { "id": "CoordinatedRetreat", "multiplier": 0.5, "side": "attacker" }
-      ]
+        { "id": "DefensiveEngagement", "multiplier": 0.3, "side": "defender" }
+      ],
+      "morale": { "neverRout": true, "bravery": 0 },
+      "aggression": { "attack": 1.4, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
     "mistymountainorcs": {
       "tactics": [
         { "id": "InfantryMass" },
+        { "id": "Envelop" },
         { "id": "Charge", "multiplier": 2.0 },
         { "id": "FullScaleAttack", "multiplier": 0.5 },
         { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
         { "id": "DefensiveEngagement", "multiplier": 0.3, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.6, "side": "defender" },
         { "id": "CoordinatedRetreat", "multiplier": 0.5, "side": "attacker" }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": -5 },
+      "aggression": { "attack": 1.4, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
     "goblin": {
       "tactics": [
         { "id": "InfantryMass" },
+        { "id": "Envelop" },
         { "id": "Charge", "multiplier": 2.0 },
         { "id": "FullScaleAttack", "multiplier": 0.4 },
         { "id": "DefensiveEngagement", "multiplier": 0.2, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
-        { "id": "CoordinatedRetreat", "multiplier": 0.5, "side": "attacker" }
-      ]
+        { "id": "HoldChokePoint", "multiplier": 0.6, "side": "defender" },
+        { "id": "CoordinatedRetreat", "multiplier": 0.7, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": -10 },
+      "aggression": { "attack": 1.4, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
     "isengard": {
       "tactics": [
-        { "id": "InfantryMass" },
-        { "id": "Charge", "multiplier": 1.5 },
-        { "id": "FullScaleAttack", "multiplier": 0.7 },
-        { "id": "FrontalCavalryCharge", "multiplier": 1.0 },
+        { "id": "ShieldWall" },
+        { "id": "Charge", "multiplier": 1.0 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.8 },
         { "id": "DefensiveEngagement", "multiplier": 0.4, "side": "defender" },
         { "id": "DefensiveLine", "multiplier": 0.4, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 0.5, "side": "attacker" },
         { "id": "DefensiveRing", "multiplier": 0.3, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" },
-        { "id": "CoordinatedRetreat", "multiplier": 0.3, "minTactics": 50, "side": "attacker" }
-      ]
+        { "id": "HoldChokePoint", "multiplier": 0.5, "side": "defender" }
+      ],
+      "morale": { "neverRout": true, "bravery": 0 },
+      "aggression": { "attack": 1.3, "shield": 1.0, "shooterError": 1.1, "chargeDistance": 1.0 }
     },
 
     "empire": {
       "tactics": [
+        { "id": "HitAndRun", "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 2.0, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 2.0, "side": "defender" },
         { "id": "DefensiveLine", "multiplier": 1.5, "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 1.5, "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.2, "side": "attacker" },
         { "id": "CoordinatedRetreat", "multiplier": 1.5, "side": "attacker" },
         { "id": "Charge", "multiplier": 0.7 },
         { "id": "FullScaleAttack", "multiplier": 0.7 },
         { "id": "FrontalCavalryCharge", "multiplier": 0.3 },
         { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": -5 },
+      "aggression": { "attack": 1.3, "shield": 0.8, "shooterError": 1.0, "chargeDistance": 1.0 }
     },
     "dunland_raiders": {
       "tactics": [
+        { "id": "HitAndRun", "side": "attacker" },
+        { "id": "InfantryMass", "side": "attacker" },
         { "id": "DefensiveEngagement", "multiplier": 2.0, "side": "defender" },
         { "id": "HoldChokePoint", "multiplier": 2.0, "side": "defender" },
-        { "id": "RangedHarrassmentOffensive", "multiplier": 1.5, "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.2, "side": "attacker" },
         { "id": "CoordinatedRetreat", "multiplier": 1.5, "side": "attacker" },
         { "id": "Charge", "multiplier": 0.7 },
         { "id": "FullScaleAttack", "multiplier": 0.5 }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": -5 },
+      "aggression": { "attack": 1.3, "shield": 0.8, "shooterError": 1.0, "chargeDistance": 1.0 }
     },
 
     "gondor": {
       "tactics": [
+        { "id": "DisciplinedLine" },
         { "id": "Charge", "multiplier": 0.7 },
-        { "id": "FullScaleAttack", "multiplier": 1.3 },
-        { "id": "DefensiveEngagement", "multiplier": 1.2, "side": "defender" },
-        { "id": "DefensiveLine", "multiplier": 1.3, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 1.3, "side": "defender" },
-        { "id": "DefensiveRing", "multiplier": 1.0, "side": "defender" },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.8, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.8, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.7, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.8, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "FrontalCavalryCharge", "multiplier": 0.8 },
         { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": 5 },
+      "aggression": { "attack": 1.0, "shield": 1.3, "shooterError": 1.0, "chargeDistance": 1.0 }
     },
     "gondor_soldiers": {
       "tactics": [
+        { "id": "DisciplinedLine" },
         { "id": "Charge", "multiplier": 0.7 },
-        { "id": "FullScaleAttack", "multiplier": 1.3 },
-        { "id": "DefensiveEngagement", "multiplier": 1.2, "side": "defender" },
-        { "id": "DefensiveLine", "multiplier": 1.3, "side": "defender" },
-        { "id": "HoldChokePoint", "multiplier": 1.3, "side": "defender" },
-        { "id": "DefensiveRing", "multiplier": 1.0, "side": "defender" },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.8, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.8, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.7, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.8, "side": "defender" },
         { "id": "RangedHarrassmentOffensive", "multiplier": 1.0, "side": "attacker" },
         { "id": "FrontalCavalryCharge", "multiplier": 0.8 },
         { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
-      ]
+      ],
+      "morale": { "neverRout": false, "bravery": 5 },
+      "aggression": { "attack": 1.0, "shield": 1.3, "shooterError": 1.0, "chargeDistance": 1.0 }
+    },
+    "sturgia": {
+      "tactics": [
+        { "id": "ShieldWall" },
+        { "id": "DisciplinedLine" },
+        { "id": "Charge", "multiplier": 0.6 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.6, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 0.8, "side": "attacker" },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.6 },
+        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.0, "shield": 1.2, "shooterError": 1.0, "chargeDistance": 1.0 }
+    },
+
+    "aserai": {
+      "tactics": [
+        { "id": "MumakVanguard", "side": "attacker" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.5, "side": "attacker" },
+        { "id": "FullScaleAttack", "multiplier": 1.0 },
+        { "id": "Charge", "multiplier": 0.9 },
+        { "id": "FrontalCavalryCharge", "multiplier": 1.0 },
+        { "id": "DefensiveEngagement", "multiplier": 0.8, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.8, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.7, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
+        { "id": "CoordinatedRetreat", "multiplier": 1.3, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.1, "shield": 1.0, "shooterError": 0.8, "chargeDistance": 1.0 },
+      "formations": { "harad_mumakil_rider": "HeavyCavalry" }
+    },
+    "umbar": {
+      "tactics": [
+        { "id": "RangedHarrassmentOffensive", "multiplier": 1.3, "side": "attacker" },
+        { "id": "FullScaleAttack", "multiplier": 1.0 },
+        { "id": "Charge", "multiplier": 1.0 },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.5 },
+        { "id": "DefensiveEngagement", "multiplier": 0.8, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.8, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.8, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
+        { "id": "CoordinatedRetreat", "multiplier": 1.3, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.1, "shield": 1.0, "shooterError": 0.9, "chargeDistance": 1.0 }
     }
   }
 }
