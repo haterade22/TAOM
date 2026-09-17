@@ -66,6 +66,9 @@ public static class CoopSettingsRelevance
         // (EnableEnlistment, EnableFieldCommission) are gameplay and stay relevant; these two
         // are the log half of the same pair, which is the trap this list exists for.
         "EnableEnlistmentDiagnostics", "EnableFieldCommissionDiagnostics",
+        // The doctrine status line and the [MissionPerf] heartbeat; EnableCultureDoctrine itself
+        // changes which tactics an AI team can pick and stays relevant.
+        "CultureDoctrineDebug", "EnableMissionPerfHeartbeat",
     };
 
     /// <summary>

@@ -49,6 +49,28 @@ the **max-weight tactic** (`MaxBy(weight × 1.5 sticky-bonus-if-current)`, :301)
 per-formation **`BehaviorComponent`**s, which call `Formation.SetMovementOrder`/etc. `AddTacticOption` (:129),
 `StrategicArea`s (:54).
 
+### The tactic layer in v1.5.3 (verified 2026-09-16 for #608)
+
+Re-read against the v1.5.3 dump; none of these types changed between 1.4.8 and 1.5.3 (file-list and
+content diff of `Tactic*`, `Behavior*`, `TeamAI*`, `FormationAI`; only the two query systems renamed
+their time source and ranged-hit members).
+
+| Fact | Where |
+|---|---|
+| Field battles: every team gets `new TeamAIGeneral(mission, team)`; the tactic set is registered per team gated ONLY by the side's best commander Tactics skill (`Charge`; >= 20 `FullScaleAttack` + defender `DefensiveEngagement`/`DefensiveLine` or attacker `RangedHarrassmentOffensive`; >= 50 `FrontalCavalryCharge` + defender `DefensiveRing`/`HoldChokePoint` or attacker `CoordinatedRetreat`), then `QuerySystem.Expire()` + `ResetTactic()`. Nothing reads `Culture`. | `MissionCombatantsLogic.cs:109-238` |
+| `MakeDecision` every hard-coded 5 s: `MaxBy(GetTacticWeight() * (current ? 1.5 : 1))`, forced `TacticCharge` (tested with `is`) when no enemy formation remains, `FirstOrDefault` fallback; `TickOccasionally` every 1 s drives the current tactic; the sergeant popup keys `str_team_ai_tactic_text` on `GetType().Name` | `TeamAIComponent.cs:196-344` |
+| `_availableTactics` is a private unlocked `List` with no getter; `Team.AddTacticOption / RemoveTacticOption(Type) / ClearTacticOptions / ResetTactic` are public forwarders; `Team.AddTeamAI` is public and replaces the component and its list | `Team.cs:427-477`, `TeamAIComponent.cs:129-142` |
+| Every field tactic is `public class`, unsealed, `(Team)`-constructible, `protected internal override float GetTacticWeight()`; the base exposes protected `_mainInfantry/_archers/_leftCavalry/_rightCavalry/_rangedCavalry`, `IsTacticReapplyNeeded`, `AreFormationsCreated`, `AssignTacticFormations1121`, `ManageFormationCounts(int,int,int,int)`, virtual `ManageFormationCounts()`, `CheckAndSetAvailableFormationsChanged()`, `ChooseAndSortByPriority`, static `CalculateNotEngagingTacticalAdvantage`, public static `SetDefaultBehaviorWeights` | `TacticComponent.cs` |
+| The three defensive tactics return 0 unless `IsDefenseApplicable`, which is false for any non-Defender; `DefensiveLine`/`HoldChokePoint` need scene `TacticalPosition`s, `DefensiveRing` an insurmountable one; `DefensiveEngagement` and `BehaviorHoldHighGround` use the navmesh `FormationQuerySystem.HighGroundCloseToForeseenBattleGround` (Vec2, 10 s cache) and need no scene entity | `TeamAIComponent.cs:215-247`, `TacticDefensiveRing.cs:115-143` |
+| `TacticalPosition` has a public runtime ctor `(WorldPosition, Vec2, float width, float slope, bool isInsurmountable, ...)` that vanilla itself uses; `TeamAIComponent.TacticalPositions` is a public mutable list | `TacticalPosition.cs:105`, `TacticDefensiveRing.cs:180` |
+| `FormationAI.Tick` every 0.5 s (staggered), winner = `GetAIWeight() * WeightFactor` with 1.2 to 2.0 hysteresis over 10 s, orders applied only if `IsAIControlled`; `SetBehaviorWeight<T>` throws `MBException` for an unregistered T; `GetBehavior<T>`/`SetBehaviorWeight<T>` match with `is T`, so a TAOM behaviour derives from `BehaviorComponent` directly | `FormationAI.cs:120-155, 175, 245, 286` |
+| `TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime` registers the 27 field behaviours per formation on its first unit (from `Formation.AddUnit`), which misses formations populated by `TransferUnits` during a split | `TeamAIGeneral.cs`, `Formation.cs:2326`, `TacticComponent.cs:306,332,427` |
+| THREAD: `Team.Tick` -> `TeamAI.Tick` -> tactics -> `Formation.Tick` -> `FormationAI.Tick` -> behaviours all run on the async AI thread; `EarlyStart`/`AfterStart`/`OnDeploymentFinished`/`OnAgentBuild` are main thread. `DeploymentMissionController` holds `AllowAiTicking = false` through deployment and `Team.Tick` gates on it, so the first decision sees every initial agent | `Mission.cs:3757-3760`, `Team.cs:591-606`, `harmony-patches.md` thread table |
+| `MissionCombatantsLogic.GetAllCombatants()`, `SupportsAllyTeamOnPlayerSide(out)`, `GetCultureForPlayerSide()` are public; `IBattleCombatant` carries `Side`, `BasicCulture`, `GetNumberOfMissionReadyTroops()`, `GetTacticsSkillAmount()`; `CustomBattleCombatant.GetTacticsSkillAmount` is the roster max (0 for TAOM troops) | `MissionCombatantsLogic.cs:51-75, 245`, `CustomBattleCombatant.cs:63-70` |
+| `Mission.GetAgentTroopClass_Override` (public event, consulted first) remains unsubscribed in vanilla and TAOM: the patch-free seam for routing troops into `FormationClass.Skirmisher/HeavyInfantry/LightCavalry/HeavyCavalry` | `Mission.cs:1564, 2557` |
+
+TAOM's consumer: `docs/features/culture-doctrine.md` (#608).
+
 ### Agent ↔ Formation ↔ Detachment (Agent.cs)
 **`Agent.Formation`** setter (Agent.cs:1098) (de)registers the agent with the formation + recomputes its
 **`Detachment`** (`IDetachment`, :1014 — the Phase 12 `UsableMachine` link: an agent's "use this machine" assignment

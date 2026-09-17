@@ -2897,4 +2897,11 @@
   <string id="str_advanced_start_value_name.alternativecalradia" text="{=taom_aso_item_name_randomized}Randomized Middle-earth" />
   <!-- TAOM-ASO:END -->
 
+  <!-- Culture doctrine (#608): the team-AI tactic line shown to a player fighting as a sergeant
+       (TeamAIComponent.MakeDecision keys str_team_ai_tactic_text on the tactic type name). -->
+  <string id="str_team_ai_tactic_text.TaomTacticShieldWall" text="{=taom_tactic.shield_wall}Our plan is to lock shields and hold our ground." />
+  <string id="str_team_ai_tactic_text.TaomTacticInfantryMass" text="{=taom_tactic.infantry_mass}Our plan is to swarm them with our numbers." />
+  <string id="str_team_ai_tactic_text.TaomTacticCavalryDominance" text="{=taom_tactic.cavalry_dominance}Our plan is to ride them down and let the foot finish what the horse begins." />
+  <string id="str_team_ai_tactic_text.TaomTacticArcherRing" text="{=taom_tactic.archer_ring}Our plan is to ring our archers with spears and let the arrows do the work." />
+
 </strings>

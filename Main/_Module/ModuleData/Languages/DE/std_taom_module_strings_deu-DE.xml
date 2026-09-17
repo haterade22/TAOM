@@ -2627,5 +2627,9 @@
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
     <string id="taom_aso_item_name_randomized" text="Randomized Middle-earth" />
     <string id="taom_aso_item_desc_randomized" text="Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
+    <string id="taom_tactic.shield_wall" text="Our plan is to lock shields and hold our ground." />
+    <string id="taom_tactic.infantry_mass" text="Our plan is to swarm them with our numbers." />
+    <string id="taom_tactic.cavalry_dominance" text="Our plan is to ride them down and let the foot finish what the horse begins." />
+    <string id="taom_tactic.archer_ring" text="Our plan is to ring our archers with spears and let the arrows do the work." />
   </strings>
 </base>

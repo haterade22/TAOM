@@ -148,6 +148,7 @@ public static class IoC
         BannerBearersIoC.RegisterBannerBearersFeature(container);
         DreadAuraIoC.RegisterDreadAuraFeature(container);
         SignatureStrikesIoC.RegisterSignatureStrikesFeature(container);
+        Features.CultureDoctrine.CultureDoctrineIoC.RegisterCultureDoctrineFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
         MessengerIoC.RegisterMessengerFeature(container);
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);

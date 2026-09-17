@@ -49,4 +49,9 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyInteger("Sample Interval (seconds)", 10, 120, Order = 1, RequireRestart = false,
         HintText = "Seconds between [MemSample] lines. Default 30s (~120 lines per hour of play). Takes effect on the next sample — no restart needed.")]
     public int MemorySampleIntervalSeconds { get; set; } = 30;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Mission Frame-Time Heartbeat", Order = 0, RequireRestart = false,
+        HintText = "Writes a [MissionPerf] line to the TAOM debug log every 5 seconds while a mission runs: frames, fps, average / p95 / max frame time in ms, agent and formation counts, garbage collections. This is the in-mission counterpart of [MemSample] and the measurement an AI or content change is judged against. Cost is one timestamp per frame. Default ON.")]
+    public bool EnableMissionPerfHeartbeat { get; set; } = true;
 }

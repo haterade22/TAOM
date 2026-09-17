@@ -4,6 +4,92 @@
 
 ## 2026-09-16
 
+### feat(combat): culture doctrines for field-battle AI, Phase A + B (#608)
+
+**What.** Each culture's AI now fights field battles with its own doctrine. A new `MissionLogic`
+(`CultureDoctrineMissionLogic`) runs at `EarlyStart`, after `MissionCombatantsLogic.EarlyStart` has
+created the team AIs and registered vanilla's tactics, and replaces every AI team's tactic list
+with the one `culture_doctrine/culture_doctrines.json` authors for the side's majority culture:
+the nine vanilla tactics as subclasses that scale `GetTacticWeight` by a per-culture multiplier
+(no Harmony; `GetTacticWeight` is `protected internal virtual` and every field tactic overrides
+it), plus four TAOM tactics on a shared `TaomTacticBase`: `TaomTacticShieldWall` (Dwarves hold
+the navmesh high ground in a wall, or advance as one body when attacking), `TaomTacticInfantryMass`
+(Mordor, Gundabad, Isengard: numbers-scaled infantry charge from the first tick),
+`TaomTacticCavalryDominance` (Rohan: one cavalry block leads, then charges and flanks) and
+`TaomTacticArcherRing` (Elves defending: infantry ring around the archers on a runtime
+`TacticalPosition`, no scene entity needed). Dunland and Gondor get weighted vanilla sets; every
+other culture keeps vanilla's set at multiplier 1. The engine still picks the max-weight tactic
+every 5 s and each formation its behaviour every 0.5 s: the doctrine changes the menu and the
+weights, not the decision loop. Sieges untouched. MCM `Battle Tactics/Culture Doctrine`, OFF
+until the in-game A/B passes; `taom.tactic_status` prints each team's current tactic and every
+formation's behaviour and arrangement.
+
+**Why this layer.** The per-agent behaviour trees the creatures use were the wrong tool for
+doctrine: per-frame evaluation, per-frame allocation and ticking on the engine's async AI thread
+(#592). The team and formation layer is a dozen formations per side, already cached by the
+engine at 2.5 s to 15 s, and public in 1.5.3; TAOM had no code there. Everything past
+`EarlyStart` runs on the async AI thread where vanilla's own tactics run, under that thread's
+rules: immutable state captured in the constructor, no IoC, no settings, no logger, every
+override wrapped so a throw becomes a failed tactic (weight 0) instead of a native unwind. The
+tactic list is edited once, before the first `Team.Tick`, because `_availableTactics` is an
+unlocked list read every 5 s; the toggle applies from the next battle.
+
+**Why TAOM tactics and not only multipliers.** Vanilla's three defensive tactics return 0 for any
+non-Defender (`IsDefenseApplicable`) and two of them need scene `TacticalPosition`s, so weighting
+alone cannot make an attacking Dwarven army hold or an Elven army ring its archers.
+
+**Also.** `[MissionPerf]`: a frame-time heartbeat every 5 s of wall clock in every mission (frames,
+fps, avg / p95 / max ms, agents, formations, GC counts) on the Battle Load Diagnostics page, the
+measurement the doctrine A/B and any later battle-AI change is judged against; TAOM had no
+in-mission frame-time record. The two new debug toggles are excluded from the co-op settings
+fingerprint, `EnableCultureDoctrine` is simulation-relevant and included; the settings census is
+now 248 total / 183 relevant. Four sergeant-popup strings (`str_team_ai_tactic_text.TaomTactic*`)
+seeded into the 12 language files with English text; the translator run needs an API key this
+session did not have.
+
+**Engine facts recorded** in `docs/reference/engine/formations-and-team-ai.md` (a v1.5.3 tactic-layer
+table) and `docs/features/culture-doctrine.md` (the possibilities map, the plan, the A/B
+protocol, the Phase C to E roadmap). `docs/features/mission-perf-heartbeat.md` for the heartbeat.
+
+**Tests.** 116 new: domain (ids, side profile, roster with vanilla-equivalence at skill 0/20/50),
+config provider (one test per validation rule), the shipped JSON (parses clean, keys Rohan as
+`vlandia` and Dunland as `empire`, every culture carries its TAOM tactic on the right side), plan
+tables, weight functions (zero cases, monotonicity, clamps, NaN and zero-power inputs), the phase
+machine, frame stats, and a `BindingVerification` class pinning the nine tactic types, the
+protected `TacticComponent` surface, `_currentTactic`, the public combatant accessors, the
+behaviour parameter fields, the `TacticalPosition` runtime ctor and the query members. Full
+suite 9,519 green, 2 pre-existing skips. Not yet smoke-tested in game.
+
+**Deep review (seven agents: the five core passes plus thread safety and extensibility, Mike's
+request), twelve findings, all fixed before the Codex pass; record in
+`docs/reviews/rca-culture-doctrine-2026-09-16.md`.** The ones that changed behaviour: the
+`[MissionPerf]` heartbeat read the MCM instance every frame (a scan over every registered
+settings container), now once a second; the `[Doctrine]` status line was gated behind the
+feature toggle, so the A/B's off arm had no instrument, now it runs in every field battle
+when the debug toggle is on; the ally-team partition used `SupportsAllyTeamOnPlayerSide` (the
+first qualifying party) where the engine assigns every troop by "neither under the player's
+command nor in the player's army" (`Mission.GetAgentTeam`), and the ally team registered with
+one party's Tactics skill instead of the side maximum, both now the engine's rule; the shipped
+multipliers made two doctrine tactics unreachable (Rohan's `FrontalCavalryCharge*2.0` over
+`CavalryDominance`, the Elven `DefensiveEngagement*1.5` over the ring) and are retuned to a new
+`ShippedDoctrineOrderingTests`, which reproduces the nine vanilla weight formulas test-side and
+asserts every shipped TAOM row beats its vanilla neighbours by the engine's 1.5x sticky factor;
+`ClearTacticOptions` swept away the `TacticDefensiveLine` vanilla's caravan handler adds, now
+preserved through `CaravanTacticsRule`. Also: both enum-to-engine switches throw on an unmapped
+member and `DoctrineSwitchInvariantTests` reads their IL to pin every member; the 1/1/1/1 split
+no longer writes `Side`; the thread comments say "team-AI tick, usually async, main during
+deployment"; `ConsoleCommandBindingTests` loads the game folders itself instead of relying on
+class order. Full suite 9,534 green, 2 pre-existing skips. The Codex pass (gpt-6-astra, ultra) hit the ChatGPT usage limit after about
+110k tokens and returned no report; its three interim observations were verified and applied
+(`TacticCharge` sums casualties on both sides; three vanilla tactics return true from
+`ResetTacticalPositions`; the ring offset is vanilla parity), and the question it was on when it
+stopped is closed: the Dwarven wall now re-reads its high-ground position only while the closest
+enemy is beyond `max(0.8 * archers' missile range, 30 m)`, `BehaviorHoldHighGround`'s own lock
+rule, so an Engage re-apply cannot walk the wall into an enemy already on it. Re-dispatch owed
+when credits allow (`docs/reviews/REVIEW-LOG.md` Review 115).
+
+
+
 ### fix(combat): the signature-strike mission gate never ran, and the callback it lived in is dead for every TAOM behavior (#606)
 
 **Symptom.** Mike played Sauron against 36 looters and nothing fired. The log had the config load

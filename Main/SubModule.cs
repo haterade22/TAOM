@@ -1965,6 +1965,13 @@ public class SubModule : MBSubModuleBase
         // SignatureStrikes (#605): a configured hero's melee hit rings the enemies around the
         // impact. Registered unconditionally; SignatureMissionGate self-gates per mission.
         AddTaomBehavior(new Features.SignatureStrikes.Hooks.SignatureStrikesMissionLogic());
+        // CultureDoctrine (#608): at EarlyStart, each AI team's vanilla tactic list becomes its
+        // culture's. Registered unconditionally; the MCM toggle and Mission.IsFieldBattle are read
+        // there, after MissionCombatantsLogic.EarlyStart has registered vanilla's set.
+        AddTaomBehavior(new Features.CultureDoctrine.Hooks.CultureDoctrineMissionLogic());
+        // [MissionPerf] frame-time heartbeat every 5 s; the measurement the doctrine A/B and any
+        // later battle-AI change is judged against. Self-gates on its BattleLoadDiagnostics toggle.
+        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

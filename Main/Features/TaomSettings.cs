@@ -746,6 +746,19 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Also write every intercepted charge order and the state it produced to the TAOM log file. State transitions are logged regardless. Nothing is drawn on the HUD.")]
     public bool SmartCavalryDebug { get; set; } = false;
 
+    // --- Battle Tactics / Culture Doctrine ---
+    // GroupOrder 52: 10, 15, 20-51 and 100 were taken as of 2026-09-16.
+
+    [SettingPropertyGroup("Battle Tactics/Culture Doctrine", GroupOrder = 52)]
+    [SettingPropertyBool("Enable Culture Doctrine", Order = 0, RequireRestart = false,
+        HintText = "Each culture's AI fights field battles with its own doctrine: Dwarves hold a shield wall on the high ground, Elves ring their archers with infantry, Rohan leads with cavalry, Mordor and Gundabad mass their infantry. Replaces the tactic list the engine's team AI chooses from; the AI still picks by weight every 5 seconds. Applies from the NEXT battle (the list cannot change once a battle has started). Your own orders are never touched; when you delegate command (F6) your army fights with its culture's doctrine. Off by default until the in-game A/B passes; tuning lives in ModuleData/culture_doctrine/culture_doctrines.json, which reloads on game restart only.")]
+    public bool EnableCultureDoctrine { get; set; } = false;
+
+    [SettingPropertyGroup("Battle Tactics/Culture Doctrine")]
+    [SettingPropertyBool("Culture Doctrine Debug Mode", Order = 1, RequireRestart = false,
+        HintText = "Write a [Doctrine] status line to the TAOM log every 5 seconds of battle time: each team's current tactic and every formation's active behaviour and arrangement. The console command taom.tactic_status prints the same line on demand. Nothing is drawn on the HUD.")]
+    public bool CultureDoctrineDebug { get; set; } = false;
+
     // --- Performance / Dead Mount Cleanup ---
     // GroupOrder 49: 10, 15, 20-48 and 100 were taken as of 2026-09-03.
 

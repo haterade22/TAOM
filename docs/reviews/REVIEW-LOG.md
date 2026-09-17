@@ -3152,6 +3152,49 @@ lesson in `lessons/state-lifecycle-save.md` (a stand-down must blind every consu
 state, not only the owner's own callbacks). Owed: the in-game smoke (Route A/B in
 `docs/features/signature-strikes.md`), the three UNVERIFIED engine claims, closing #605.
 
+## Review 115: Culture doctrines for field-battle AI, Phase A + B (#608), 7-agent deep review + Codex gpt-6-astra ultra (partial) (2026-09-16)
+
+Mike wants each culture to fight field battles with its own doctrine (Dwarves in a wall on the
+high ground, Elves ringing their archers, Rohan leading with cavalry, Mordor and Gundabad in an
+infantry mass) without the per-agent behaviour-tree cost the 1.2.12 donor mods paid. The engine
+already owns a doctrine layer (`TeamAIComponent` picks the max-weight `TacticComponent` every 5 s),
+it is public in 1.5.3 and reads nothing about culture, so the feature swaps each AI team's tactic
+list at `EarlyStart` for the one `culture_doctrines.json` authors: nine vanilla tactics subclassed
+to scale `GetTacticWeight` by a per-culture multiplier (no Harmony) plus four TAOM tactics on a
+shared `TaomTacticBase` that reproduces the vanilla lifecycle and drives vanilla behaviours from
+pure plan tables. A `[MissionPerf]` heartbeat is the A/B's perf instrument. Toggle OFF until the
+in-game A/B. Plan approved in plan mode; issue #608; `docs/features/culture-doctrine.md`.
+
+**Deep review, seven agents (Mike asked for tailored passes; thread safety and extensibility ran
+on Opus beside the five core):** 88 engine members verified on the installed v1.5.3, none
+incompatible; standards clean; thread model confirmed with two corrections (the first decision
+runs on the main thread from `DeploymentMissionController.SetupAIOfEnemyTeam`; `OnMissionTick`
+never overlaps the async tick). Twelve findings, all fixed: the heartbeat read the MCM instance
+every frame (HIGH); the status line was gated behind the feature toggle, blinding the A/B's off
+arm (MED); the ally-team partition used `SupportsAllyTeamOnPlayerSide` where the engine assigns
+per troop by `Mission.GetAgentTeam`, and the ally team got one party's Tactics skill instead of
+the side maximum (MED); the shipped multipliers made `CavalryDominance` unreachable and the Elven
+ring lose in its nominal case (MED; the extensibility agent computed the competition nobody had);
+`ClearTacticOptions` swept away the caravan `DefensiveLine` vanilla adds from SandBox (LOW); plus
+six comment, template and test-rigour items. New guards: `ShippedDoctrineOrderingTests` over a
+test-side `VanillaTacticWeightReference`, `DoctrineSwitchInvariantTests` reading both
+enum-to-engine switches as IL, `TeamCombatantSelectorTests`, and `ConsoleCommandBindingTests`
+now loads the game folders itself instead of relying on class order. RCA
+[rca-culture-doctrine-2026-09-16.md](rca-culture-doctrine-2026-09-16.md); four lessons appended
+(`lessons/testing-qa.md`, `lessons/adapters-taleworlds-api.md`).
+
+**Codex (gpt-6-astra, ultra): PARTIAL.** The run hit the ChatGPT usage limit after about 110k
+tokens of decompile work and returned no report (retry window Sep 19 04:28, or credits). Three
+interim observations survived in the transcript and were verified and applied: `TacticCharge`
+sums casualties on both sides, so the handover to a charge tracks total attrition; three vanilla
+tactics return true from `ResetTacticalPositions` (the base comment had said none); the ring's
+centre-behind-order-position offset is vanilla's own pairing. Codex was mid-way through the one
+open question, the wall's re-read `DefensePosition` at the Engage apply, when it stopped; the
+wall now follows `BehaviorHoldHighGround`'s lock rule. Prompt
+[codex-adversarial-culture-doctrine-2026-09-16.prompt.md](codex-adversarial-culture-doctrine-2026-09-16.prompt.md);
+re-dispatch owed. Full suite 9,534 green, 2 pre-existing skips. Owed: the Custom Battle A/B
+(protocol in the feature doc), the translator run for the four popup strings, closing #608.
+
 ## Unlinked review artefacts (index)
 
 Every file below is a real review artefact that nothing linked to, so the doc graph
