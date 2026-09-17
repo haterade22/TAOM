@@ -99,29 +99,23 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithMountChargeDamagePassive_ScalesMountChargeDamage()
+    public void ApplyAgentStatModifiers_Human_NeverTouchesTheMountProperties()
     {
+        // #611: MountChargeDamage and MountSpeed live on the MOUNT agent's properties (the base
+        // writes them only in UpdateHorseStats and the engine reads them off the horse). A rider-side
+        // multiply scales a value nobody wrote and nobody reads; it moved to ApplyMountStatModifiers.
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { MountSpeedBonus = 0.25f, ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(1, new ActiveBuffs { MountSpeedBonus = 0.15f, ChargeDamageBonus = 0.20f });
 
         var props = new AgentDrivenProperties();
+        props.MountSpeed = 1f;
         props.MountChargeDamage = 100f;
 
         _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
 
-        Assert.AreEqual(115f, props.MountChargeDamage, 0.01f);
-    }
-
-    [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithZeroMountChargeDamage_DoesNotMutateMountChargeDamage()
-    {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0f);
-
-        var props = new AgentDrivenProperties();
-        props.MountChargeDamage = 80f;
-
-        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
-
-        Assert.AreEqual(80f, props.MountChargeDamage, 0.01f);
+        Assert.AreEqual(1f, props.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -154,28 +148,9 @@ public class CareerAgentStatServiceTests
         Assert.AreEqual(0.15f, props.DamageMultiplierBonus, 0.001f);
         Assert.AreEqual(0.8f, props.ArmorEncumbrance, 0.001f);
         Assert.AreEqual(1.08f, props.ThrustOrRangedReadySpeedMultiplier, 0.001f);
-        Assert.AreEqual(1.25f, props.MountSpeed, 0.001f);
-        Assert.AreEqual(130f, props.MountChargeDamage, 0.01f);
-    }
-
-    [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithZeroMountSpeedBonus_DoesNotMutateMountSpeed()
-    {
-        // Mount stats only mutate when buff value is non-zero — preserve vanilla 0f.
-        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs
-        {
-            MountSpeedBonus = 0f,
-            ChargeDamageBonus = 0f,
-        });
-
-        var props = new AgentDrivenProperties();
-        props.MountSpeed = 7f;
-        props.MountChargeDamage = 50f;
-
-        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
-
-        Assert.AreEqual(7f, props.MountSpeed);
-        Assert.AreEqual(50f, props.MountChargeDamage);
+        // The two mount fields of the same buff apply on the MOUNT (#611), not here.
+        Assert.AreEqual(1f, props.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -206,8 +181,9 @@ public class CareerAgentStatServiceTests
         Assert.AreEqual(1.05f, props.MaxSpeedMultiplier, 0.001f);
         Assert.AreEqual(1.04f, props.CombatMaxSpeedMultiplier, 0.001f);
         Assert.AreEqual(1.02f, props.ThrustOrRangedReadySpeedMultiplier, 0.001f);
-        Assert.AreEqual(1.15f, props.MountSpeed, 0.001f);
-        Assert.AreEqual(120f, props.MountChargeDamage, 0.01f);
+        // The two mount fields of the same buff apply on the MOUNT (#611), not here.
+        Assert.AreEqual(1f, props.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -239,6 +215,137 @@ public class CareerAgentStatServiceTests
         _sut.ApplyAgentStatModifiers(heroId: null, agentIndex: 3, isHuman: true, isHero: true, props);
 
         Assert.AreEqual(0.25f, props.DamageMultiplierBonus, 0.001f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // ApplyMountStatModifiers (#611): the rider's MountChargeDamage passive and the Cavalry
+    // ability's two mount fields, applied on the MOUNT's properties via the rider's ids.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderHeroWithMountChargeDamagePassive_ScalesTheMountsChargeDamage()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 100f;
+        mount.MountSpeed = 1f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(115f, mount.MountChargeDamage, 0.01f);
+        Assert.AreEqual(1f, mount.MountSpeed, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderHeroWithZeroPassiveAndNoBuff_LeavesTheMountUntouched()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0f);
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 80f;
+        mount.MountSpeed = 7f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(80f, mount.MountChargeDamage, 0.01f);
+        Assert.AreEqual(7f, mount.MountSpeed, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderSelfBuff_ScalesMountSpeedAndChargeMultiplicatively()
+    {
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { MountSpeedBonus = 0.25f, ChargeDamageBonus = 0.30f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 1f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(1.25f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(130f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NonHeroRiderWithAllyBuff_AppliesTheAllyFieldsByRiderIndex()
+    {
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { MountSpeedBonus = 0.15f, ChargeDamageBonus = 0.20f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 1f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: null, riderAgentIndex: 42, mount);
+
+        Assert.AreEqual(1.15f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(120f, mount.MountChargeDamage, 0.01f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_PassiveSelfBuffAndAllyBuff_StackMultiplicatively()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 7, mount);
+
+        // 100 x 1.10 x 1.30 x 1.20
+        Assert.AreEqual(171.6f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_HeroRiderWithoutIndex_AppliesPassiveAndSelfBuffOnly()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: null, mount);
+
+        // 100 x 1.10 x 1.30; the ally entry under index 7 is never consulted without an index.
+        Assert.AreEqual(143f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NegativeBonus_ScalesDown()
+    {
+        // A malus is a legal tuning value: 1 + (-0.25) = 0.75.
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { MountSpeedBonus = -0.25f, ChargeDamageBonus = -0.5f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 4f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: null, mount);
+
+        Assert.AreEqual(3f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(50f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NoRider_IsNoOpAndDoesNotQuery()
+    {
+        // A riderless horse, or a human agent (the model passes null for both ids off a non-mount).
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 3f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: null, riderAgentIndex: null, mount);
+
+        Assert.AreEqual(3f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, mount.MountChargeDamage, 0.01f);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
     }
 

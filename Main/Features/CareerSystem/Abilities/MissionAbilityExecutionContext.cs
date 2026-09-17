@@ -124,6 +124,8 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
             // when the last restore fires, so GetAllyBuff means "buffed right now".
             CareerAbilityBuffTracker.AddAllyContribution(ally.Index, buffTemplate);
             ally.UpdateAgentProperties();
+            // #611: the buff's mount fields live on the horse's properties; refresh it too.
+            ally.MountAgent?.UpdateAgentProperties();
 
             var allyIndex = ally.Index;
             var allyRef = ally;
@@ -136,13 +138,17 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
                 if (!AgentSlotIdentity.IsCurrentOccupant(allyRef)) return;
                 CareerAbilityBuffTracker.RemoveAllyContribution(allyIndex, deltasCopy);
                 if (allyRef.IsActive())
+                {
                     allyRef.UpdateAgentProperties();
+                    allyRef.MountAgent?.UpdateAgentProperties();
+                }
             }, duration);
         }
 
         // Apply to the caster via the hero buff path (also contribution-counted)
         CareerAbilityBuffTracker.AddContribution(HeroStringId, buffTemplate);
         _agent.UpdateAgentProperties();
+        _agent.MountAgent?.UpdateAgentProperties();
 
         var heroDeltasCopy = ActiveBuffsAlgebra.Clone(buffTemplate);
         ScheduleRestore(() =>
@@ -152,7 +158,10 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
             // hero's stats onto whoever inherited the slot (#592, #595). Refresh only a live caster
             // that still owns its index; the tracker entry is keyed by hero id and is safe either way.
             if (_agent != null && _agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(_agent))
+            {
                 _agent.UpdateAgentProperties();
+                _agent.MountAgent?.UpdateAgentProperties();
+            }
         }, duration);
     }
 

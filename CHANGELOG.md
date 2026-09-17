@@ -4,6 +4,44 @@
 
 ## 2026-09-17
 
+### fix(career): the cavalry mount bonuses reach the mount (#611)
+
+**Why.** Found under #610 while establishing which agent the engine reads `MountChargeDamage`
+from. `CareerAgentStatService` multiplied `MountChargeDamage` and `MountSpeed` on the RIDER's
+driven properties, at three sites (the `MountChargeDamage` passive, the Cavalry ability's self
+buff, its ally buff), all under `if (!isHuman) return;`. No base model writes either property on a
+human (`SandboxAgentStatCalculateModel` sets both inside `UpdateHorseStats`, `:1266/:1271/:1280`;
+Custom Battle at `:48/:386/:391`), so the rider's copies stayed at 0 and `0 x (1 + bonus)` is 0. The
+engine reads the mount's: `AttackInformation.cs:342` takes the charge property from the attacker
+and `Mission.ChargeDamageCallback`'s attacker is the horse (`Mission.cs:6103`). The passive pip and
+the mount half of the Cavalry ability had never done anything, while `PassiveEffectConsumers`
+listed the passive as consumed: the #394 blind spot ("read, but not where the engine looks"), third
+instance.
+
+**What.** `ICareerAgentStatService.ApplyMountStatModifiers(riderHeroId, riderAgentIndex,
+mountProps)` applies the passive and the two buff sources on the MOUNT's properties;
+`TaomAgentStatCalculateModel.UpdateAgentStats` extracts the rider off a mount (a mount's own
+`Character` is null) and delegates, after base rewrote both properties; the three rider-side
+multiplies are gone. `MissionAbilityExecutionContext.ApplyAoeBuff`, its scheduled restores and
+`CareerPerkMissionBehavior`'s clear-on-death loop refresh `MountAgent` beside the human, so the
+horse recomputes when a buff lands or ends. Docs corrected: the career-system consumer table and
+history, the combat-mechanics `GetHorseChargePenetration` row (MCM-live since #610, not a config
+constant), the model registry rows, the `gamemodels.md` override table, the consumers file note.
+
+**Tests.** `CareerAgentStatServiceTests`: the three sources on the mount, stacking, no rider, a
+non-hero rider with an ally buff, and the human path leaving both mount properties untouched;
+`CareerMountBonusBindingTests` pins at the IL level that the model calls the new method through
+`RiderAgent`, that the buff path reaches `MountAgent`, and that no human-path helper writes a mount
+property. Owed: a Cavalry-career hero's ability in the combat log (charge and speed), a
+`MountChargeDamage` pip in the same log.
+
+**Deep review.** Five agents, no HIGH. One deferred MEDIUM, recorded in the doc: the bonus keys on
+the horse's current rider at recompute time, as vanilla's own Riding-skill bonuses on the horse
+do, so a rider who dies or swaps horses mid-buff leaves the first horse on its last numbers until
+the engine recomputes it; parity with vanilla, and snapshotting the horse would mean captured
+agent handles across frames. Two edge-case tests added. Section appended to
+`docs/reviews/rca-cavalry-charge-2026-09-17.md`.
+
 ### docs: the doctrine docs catch up with the engagement slice, and three docs stop calling v1.5.2 current
 
 `docs/features/culture-doctrine.md`: six behaviours, not five (the overview, the key-files row, the

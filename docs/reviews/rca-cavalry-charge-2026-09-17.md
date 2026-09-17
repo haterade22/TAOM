@@ -68,8 +68,27 @@ without a decompile behind it, against `evidence-over-claims.md` C.
   Battle) gets every new rule in both, placed per BASE model's write site, and a binding test pins
   both placements.
 
+## Follow-up: #611, the career mount bonuses (same day)
+
+Finding 8 above became #611 and was fixed the same session: `ApplyMountStatModifiers` applies the
+`MountChargeDamage` passive and the Cavalry ability's mount speed and charge on the MOUNT's
+properties through the rider's ids; the three rider-side multiplies are gone; the buff apply and
+restore paths refresh `MountAgent` beside the human. Five-agent review of that change:
+
+| # | Sev | Finding | Why missed / decision |
+|---|---|---|---|
+| 9 | MED (data flow), deferred | The refresh sites target the rider's CURRENT mount; a rider who dies or swaps horses mid-buff leaves the first horse on its last computed numbers unless the engine recomputes that horse on a rider change, which managed code cannot prove (`OnMount` / `OnDismount` recompute the rider). | Not fixed, by decision: the bonus keys on the current rider exactly as vanilla's own Riding-skill bonuses on the horse do (`UpdateHorseStats` reads `agent.RiderAgent`), so it gets whatever refresh they get and is stale only where vanilla is. Snapshotting the specific horse in the restore closures means captured agent handles across frames (the #592 class) for a case bounded by parity; rejected under the simplicity criterion. Recorded in `career-system.md` and as a smoke item. |
+| 10 | LOW | Two edge cases untested: a hero rider id with no index (ally buff must not be consulted), and a negative bonus. | Added. |
+| 11 | LOW | The `gamemodels.md` override row did not cite #611. | Added. |
+
+Standards, compatibility (5 engine claims verified, 0 incompatible), efficiency (the tracker was
+already lock-guarded; the extra mount refresh fires only on ability events) and completeness
+passed. The change carries the same lesson as finding 1: a mount agent is not a human agent with
+a horse skin, and a value the engine reads off the horse must be written on the horse.
+
 ## Verification
 
 - `dotnet test TAOM.Tests --filter "FullyQualifiedName~CombatMechanics|FullyQualifiedName~SettingsFingerprint|FullyQualifiedName~GameModelOverrideBinding|FullyQualifiedName~CultureDoctrine"`: 458 passed, 0 failed (after the re-check fix).
+- #611: `--filter "FullyQualifiedName~CareerSystem|FullyQualifiedName~CombatMechanics"`: 661 passed, 0 failed.
 - Full suite: see the CHANGELOG entry for the run quoted at commit time (the other session's
   in-flight CultureDoctrine work carries its own failures, none in CombatMechanics).

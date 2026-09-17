@@ -2,7 +2,7 @@
 
 ## Overview
 
-Seven battle-feel mechanics layered onto the single `AgentApplyDamageModel` slot: skill-based crush-through-block, monster auto-crush-through, orc shield-crush-through, creature cleave, creature stagger immunity (unstoppable), weight-driven charge knockdown, and config-granted shield penetration — plus a per-race combat-modifier table (dwarf/elf/orc flavor) that feeds several of them. All config/MCM-toggleable; master toggle off restores exactly the pre-feature behavior.
+Seven battle-feel mechanics layered onto the single `AgentApplyDamageModel` slot: skill-based crush-through-block, monster auto-crush-through, orc shield-crush-through, creature cleave, creature stagger immunity (unstoppable), weight-driven charge knockdown, and config-granted shield penetration, plus a per-race combat-modifier table (dwarf/elf/orc flavor) that feeds several of them. All config/MCM-toggleable; master toggle off restores exactly the pre-feature behavior. An eighth mechanic since #610 rides the `AgentStatCalculateModel` slot instead: the per-culture cavalry charge multiplier (`IChargeDamageService` + `MountChargeDamageApplier`, applied from both the campaign and the Custom Battle stat model).
 
 **Design notes:** mechanics specified as behavioral facts and implemented in TAOM's own architecture (no external code). The weight-driven charge knockdown and the race-modifier table are TAOM-original designs.
 
@@ -35,7 +35,7 @@ Thin model → four pure services (ADR-002/007; gamemodels.md rule 4): every ove
 | `DecideAgentKnockedDownByBlow` | `ChargeKnockdownService` | weight-driven two-branch (below); non-charge hits short-circuit to base |
 | `DecideMissileWeaponFlags` | `ShieldPenetrationService` | after base (preserves vanilla Javelin+Impale grant): OR-in `CanPenetrateShield`/`MultiplePenetration` for config-listed ids/classes. **SHIPS OFF since 2026-08-17, lists empty** (see "Shield penetration ships off" below) |
 | `CalculateShieldDamage` | `ShieldPenetrationService` | ÷0.3 correction when penetration was granted at runtime only. **SHIPS OFF since 2026-08-17**: the underestimation premise was disproved against 1.4.8 |
-| `GetHorseChargePenetration` | (config constant) | single source for the 0.4 constant — feeds both the vanilla fall-through and TAOM's Branch B; folds the mechanic toggle (disabled → vanilla `base` value, so a tuned value doesn't survive the feature being off) |
+| `GetHorseChargePenetration` | `ICombatMechanicsSettingsProvider.ChargeHorsePenetration` | single source for the penetration (JSON 0.4, MCM-live since #610): feeds both the vanilla fall-through and TAOM's Branch B; folds the mechanic toggle (disabled: vanilla `base` value 0.4, so a tuned value doesn't survive the feature being off) |
 
 `DecideAgentKnockedBackByBlow` was deliberately NOT overridden until 2026-09-16 (vanilla 0.7-dot glancing gate kept; the engine calls KnockedDown unconditionally on the charge path, so Branch A works without it). It now IS overridden, for one case only: a signature hero's side swing on an unmounted human (SignatureStrikes, #605) returns true, because vanilla never grants KnockBack to a melee swing. Horse charges and every non-signature hit still return `base`, so the glancing gate is untouched. The same feature's optional `ISignatureStrikeService` is asked first on the non-charge branch of `DecideAgentKnockedDownByBlow` (a signature overhead always floors the struck agent). See `docs/features/signature-strikes.md`.
 
@@ -166,7 +166,9 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 17 members as of 2026-09-17: the 
 
 | File | Purpose |
 |---|---|
-| `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | The 9 thin overrides + boundary extractors |
+| `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | The 11 thin overrides + boundary extractors (`CombatMechanicsModelInvariantsTests` pins the exact set) |
+| `Main/Features/CombatMechanics/ChargeDamageService.cs` | Per-culture charge multiplier table (#610): case-insensitive, built once, 1.0 for null/unlisted/off |
+| `Main/Features/CombatMechanics/Hooks/MountChargeDamageApplier.cs` | The mount-side post-pass shared by both `AgentStatCalculateModel` slots; the rider hop (`RiderAgent`) with the engine evidence |
 | `Main/Features/CombatMechanics/CrushThroughService.cs` | Skill CTB curve + monster auto-CTB + orc shield-CTB |
 | `Main/Features/CombatMechanics/ChargeKnockdownService.cs` | Weight-driven two-branch charge knockdown |
 | `Main/Features/CombatMechanics/CreatureCombatService.cs` | Cleave (momentum + reaction), unstoppable, stagger multiplier |
@@ -176,12 +178,12 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 17 members as of 2026-09-17: the 
 | `Main/Features/CombatMechanics/CombatMechanicsSettingsProvider.cs` | MCM-over-JSON merge, master-toggle folding |
 | `Main/Features/CombatMechanics/Domain/*.cs` | `CrushThroughContext`, `ChargeKnockdownContext`, `RaceCombatModifiers` |
 | `Main/Features/CareerSystem/Models/TaomAgentApplyDamageModel.cs` | Parent (abstract since 2026-07-02) |
-| `Main/SubModule.cs` (:913) | Single registration: `AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))` |
+| `Main/SubModule.cs` (:1219) | Single registration: `AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))`; the charge service is passed to `TaomAgentStatCalculateModel` (:1214) and to the Custom Battle stat model (`RegisterCustomBattleModels`) |
 | `TAOM.Tests/Features/CombatMechanics/*` | Service/provider/resolver tests + `CombatMechanicsModelInvariantsTests` (derivation + abstract parent + exact override set pins) |
 
 ## Dependencies
 
-`IRaceManager` (race validation), `ICareerAgentStatService` (inherited career passives), `IPathService`/`IModLogger`, `FiniteFloatValidator`/`SettingClamp`, `Monster.Weight` + `RelativeSpeedLimitForCharge` from monsters.xml (Native + LOTRLOME; the warg Monster moved into LOTRLOME on 2026-08-28).
+`IRaceManager` (race validation), `ICareerAgentStatService` (inherited career passives; since #611 also the mount-side career bonuses on the stat model, beside the culture multiplier), `IPathService`/`IModLogger`, `FiniteFloatValidator`/`SettingClamp`, `Monster.Weight` + `RelativeSpeedLimitForCharge` from monsters.xml (Native + LOTRLOME; the warg Monster moved into LOTRLOME on 2026-08-28).
 
 ## Tests
 
@@ -205,7 +207,7 @@ All overrides are per-hit. Services precompute lookups at construction (monster-
 - Monster-id lists (`monsterCrushMonsterIds`, `cleaveMonsterIds`, `unstoppableDamageThresholds` keys) and `orcShieldCrushRaces` are syntax-cleaned but not resolvability-validated — a typoed id is inert (never matches) and logs no warning, unlike `raceModifiers` keys which get lazy unknown-name warnings. Deliberate (Codex P3, 2026-07-02): the monster registry is engine state, and adding an adapter for a typo diagnostic fails the simplicity criterion. Double-check ids against the Monster XMLs when editing.
 - Cleave chains through shield blocks only when the block takes damage — a zero-shield-damage block (`InflictedDamage == 0`) keeps vanilla's Bounced termination (Codex P3; MCM hint wording matches).
 - Per-race `knockdownResistanceMultiplier` applies only to the owned charge branch in v1; extending it to vanilla weapon knockdowns belongs in `TaomAgentStatCalculateModel.GetKnockDownResistance`.
-- Troll Monster weight (160) equals uruk — if horse-vs-troll knockdowns still feel too likely, raise troll weights in LOTRLOME `monsters.xml` (data change, separate commit).
+- Troll Monster weight (160) equals uruk, so weight alone cannot tell them apart; since #610 the `cave_troll` / `hill_troll` race rows carry `knockdownResistanceMultiplier` 4.0 and the min penetration factor 1.0 gives every heavy victim vanilla's rule, so a horse floors an uruk like a man and never a troll. Raising troll weights in LOTRLOME `monsters.xml` is no longer needed for this.
 - Creature synthetic blows (spider/elephant BT via `RegisterBlow`) bypass `DecideCrushedThrough` but do route through the shrug-off/knockdown deciders — spot-check in control battles that unstoppable thresholds don't neuter the creatures' own received-stagger feel.
 
 ---

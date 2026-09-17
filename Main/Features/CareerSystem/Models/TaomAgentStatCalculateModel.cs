@@ -28,7 +28,9 @@ namespace TAOM.Features.CareerSystem.Models;
 // profile scales them (AgentAggressionApplier). One AgentStatCalculateModel slot, four rules.
 // 2026-09-17: and the per-culture cavalry charge multiplier (#610, CombatMechanics) on mounts,
 // keyed on the RIDER's culture: a mount agent's own Character is null (MountChargeDamageApplier
-// has the engine evidence). Five rules.
+// has the engine evidence). Five rules. Same day, #611: the career mount bonuses (the
+// MountChargeDamage passive, the Cavalry ability's mount speed and charge) moved from the rider's
+// properties, where nothing reads them, to the mount's, through the same rider hop.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
@@ -95,6 +97,15 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
         if (_aggression != null)
             AgentAggressionApplier.Apply(agentDrivenProperties, _aggression.Profile(AgentAggressionApplier.CultureOf(agent)));
+
+        // Mount-side career bonuses (#611) and the culture charge multiplier (#610) both ride the
+        // MOUNT's properties, after base rewrote them; the rider is the identity (a mount's own
+        // Character is null). Non-mounts pass two nulls and the service returns at once.
+        var mountRider = agent.IsMount ? agent.RiderAgent : null;
+        _agentStatService.ApplyMountStatModifiers(
+            riderHeroId: (mountRider != null && mountRider.IsHero) ? (mountRider.Character as CharacterObject)?.HeroObject?.StringId : null,
+            riderAgentIndex: mountRider?.Index,
+            agentDrivenProperties);
 
         if (_chargeDamage != null)
             MountChargeDamageApplier.Apply(agent, agentDrivenProperties, _chargeDamage);

@@ -49,6 +49,24 @@ public class CareerAgentStatService : ICareerAgentStatService
         return mountHealth != 0f ? baseHealth * (1f + mountHealth) : baseHealth;
     }
 
+    // #611: the mount-side bonuses. Until 2026-09-17 these three multiplies sat on the HUMAN path
+    // (ApplyHeroPassives / ApplyHeroSelfBuff / ApplyAllyBuff) and scaled the rider's own copies of
+    // MountChargeDamage and MountSpeed, which no base model writes and no engine path reads; the
+    // horse's copies are the ones that matter. The rider's ids come from the mount's RiderAgent.
+    public void ApplyMountStatModifiers(string? riderHeroId, int? riderAgentIndex, AgentDrivenProperties mountProps)
+    {
+        if (!string.IsNullOrEmpty(riderHeroId))
+        {
+            var chargeBonus = _passives.GetPassiveMagnitude(riderHeroId!, PassiveEffectType.MountChargeDamage);
+            if (chargeBonus != 0f) mountProps.MountChargeDamage *= (1f + chargeBonus);
+
+            ApplyMountBuff(CareerAbilityBuffTracker.GetBuff(riderHeroId!), mountProps);
+        }
+
+        if (riderAgentIndex.HasValue)
+            ApplyMountBuff(CareerAbilityBuffTracker.GetAllyBuff(riderAgentIndex.Value), mountProps);
+    }
+
     public float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
     {
         var result = baseResult;
@@ -139,8 +157,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         var speedBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
         if (speedBonus != 0f) props.MaxSpeedMultiplier += speedBonus;
 
-        var chargeBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.MountChargeDamage);
-        if (chargeBonus != 0f) props.MountChargeDamage *= (1f + chargeBonus);
+        // The MountChargeDamage passive is a MOUNT property: ApplyMountStatModifiers (#611).
     }
 
     private static void ApplyHeroSelfBuff(string heroId, AgentDrivenProperties props)
@@ -153,11 +170,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         props.DamageMultiplierBonus += buffs.DamageBonus;
         props.ArmorEncumbrance -= buffs.ArmorReduction;
         props.ThrustOrRangedReadySpeedMultiplier += buffs.DrawSpeedBonus;
-        // Mount stats: multiplicative scaling — engine values are pre-normalized.
-        if (buffs.MountSpeedBonus != 0f)
-            props.MountSpeed *= (1f + buffs.MountSpeedBonus);
-        if (buffs.ChargeDamageBonus != 0f)
-            props.MountChargeDamage *= (1f + buffs.ChargeDamageBonus);
+        // MountSpeedBonus / ChargeDamageBonus are MOUNT properties: ApplyMountStatModifiers (#611).
     }
 
     private static void ApplyAllyBuff(int agentIndex, AgentDrivenProperties props)
@@ -172,9 +185,16 @@ public class CareerAgentStatService : ICareerAgentStatService
         props.MaxSpeedMultiplier += allyBuffs.SpeedMultiplier;
         props.CombatMaxSpeedMultiplier += allyBuffs.CombatSpeedMultiplier;
         props.ThrustOrRangedReadySpeedMultiplier += allyBuffs.DrawSpeedBonus;
-        if (allyBuffs.MountSpeedBonus != 0f)
-            props.MountSpeed *= (1f + allyBuffs.MountSpeedBonus);
-        if (allyBuffs.ChargeDamageBonus != 0f)
-            props.MountChargeDamage *= (1f + allyBuffs.ChargeDamageBonus);
+        // MountSpeedBonus / ChargeDamageBonus are MOUNT properties: ApplyMountStatModifiers (#611).
+    }
+
+    // Mount stats: multiplicative scaling, the engine values are pre-normalized.
+    private static void ApplyMountBuff(ActiveBuffs? buffs, AgentDrivenProperties mountProps)
+    {
+        if (buffs == null) return;
+        if (buffs.MountSpeedBonus != 0f)
+            mountProps.MountSpeed *= (1f + buffs.MountSpeedBonus);
+        if (buffs.ChargeDamageBonus != 0f)
+            mountProps.MountChargeDamage *= (1f + buffs.ChargeDamageBonus);
     }
 }
