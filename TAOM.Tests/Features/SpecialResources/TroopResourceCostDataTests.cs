@@ -107,7 +107,7 @@ public class TroopResourceCostDataTests
     [TestMethod]
     public void NoTreeTroopUpkeep_ExceedsTheBandCeiling()
     {
-        var creatures = new HashSet<string> { "harad_elephant_rider", "harad_mumakil_rider", "taom_spider_creature" };
+        var creatures = new HashSet<string> { "harad_elephant_rider", "harad_mumakil_rider", "taom_spider_creature", "taom_spider_rider_brown", "taom_spider_rider_pale" };
         var rows = CostRows().Where(r => r.DailyUpkeep > 0f && !creatures.Contains(r.TroopId)).ToList();
         Assert.IsTrue(rows.Count > 0, "no tree troop carries a daily_upkeep, so the ceiling gates nothing");
 

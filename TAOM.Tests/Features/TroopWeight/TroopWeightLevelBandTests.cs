@@ -31,6 +31,8 @@ public class TroopWeightLevelBandTests
     {
         "harad_elephant_rider",
         "taom_spider_creature",
+        "taom_spider_rider_brown",
+        "taom_spider_rider_pale",
     };
 
     private static Dictionary<string, float> _weights = null!;

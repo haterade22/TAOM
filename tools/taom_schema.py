@@ -976,6 +976,16 @@ class Validator:
             "with no saddle geometry, the same defect class as the war ram. Delete this "
             "entry when a spider_saddle harness item lands"
         ),
+        "taom_spider_rider_brown": (
+            "the Spider Rider's second rung (#616), same open gap as taom_spider_creature: "
+            "the Brown Spider is the same body with another skin and a HorseHarness surface "
+            "was never authored for it. Delete with the base entry"
+        ),
+        "taom_spider_rider_pale": (
+            "the Spider Rider's third rung (#616), same open gap as taom_spider_creature: "
+            "the Pale Spider is the same body with another skin and a HorseHarness surface "
+            "was never authored for it. Delete with the base entry"
+        ),
     }
 
     _BODYLESS_BY_DESIGN = {

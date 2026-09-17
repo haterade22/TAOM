@@ -153,9 +153,20 @@ resave of both spider tpacs kept every geometry blob and the skeleton physics pa
 Lesson in `docs/reviews/lessons/animation-skeleton.md`; the warg ledger's "algorithm not known" note
 is corrected.
 
+**The rider line.** The Spider Rider is now three rungs in the warg line's shape:
+`taom_spider_creature` Spider Rider (L20, Giant Spider, light uruk kit) upgrades to
+`taom_spider_rider_brown` Brown Spider Rider (L25, medium kit and a shield) upgrades to
+`taom_spider_rider_pale` Pale Spider Rider (L30, heavy kit). Size is the tier: `body_length` 100 /
+110 / 125 on the three items, which the engine turns into `SetInitialAgentScale` 1.0 / 1.10 / 1.25
+at build (`Mission.cs:4056`), so each rung's spider reads 10 and 25 percent bigger while speed,
+maneuver, charge and the bite stay shared. Every roster of a rung carries that rung's mount. Only
+the base stays pooled; the rungs cost 2 and 3 War Spoils on the party screen at the creature upkeep
+(`troop_resource_costs.xml`), weigh 4.0 like the base (`troop_weights.xml`), and join
+`_HARNESSLESS_BY_DESIGN` beside it, with the two shipped-data test allowlists widened to match.
+
 **Verification.** `python -m unittest tools.tests.test_tpac_clone_metamesh` 16 passed;
 `generate_armory_catalogue.py` 4 NEW rows, all parsed and referenced; `audit_armory_refs.py` CLEAN;
-`validate_moduledata.py` 0 errors; `dotnet test TAOM.Tests` 9,775 passed, 0 failed. Owed: a full
+`validate_moduledata.py` 0 errors; `dotnet test TAOM.Tests` 9,788 passed, 0 failed. Owed: a full
 restart and a Custom Battle with Spider Riders (three colours, both halves of each spider the same
 colour, the thumbnail and inventory tableaus), the campaign recruit smoke, and the paid translator
 run for the two names.

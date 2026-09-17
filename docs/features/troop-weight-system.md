@@ -500,7 +500,7 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 | Weight | Count | Troop ids |
 |--------|-------|-----------|
 | 10.0 | 1 | `harad_elephant_rider` |
-| 4.0 | 1 | `taom_spider_creature` (`cave_troll` would be the second, but is commented out) |
+| 4.0 | 3 | `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` (the three Spider Rider rungs, #616; `cave_troll` would be the fourth, but is commented out) |
 | 3.0 | 51 | Every listed troop at level 41 or above: the Rivendell Gondolin line (5) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
 | 2.0 | 52 | Every listed troop below level 41: the lower Imladris/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry` |
 | 1.0 | default | Every unlisted troop, stated in the file's own header comment, and there is no other default anywhere |

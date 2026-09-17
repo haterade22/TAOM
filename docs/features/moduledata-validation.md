@@ -331,7 +331,7 @@ renamed troop rots silently.
 | Owner | Why |
 |---|---|
 | `harad_mumakil_rider` | A `HorseHarness` **suppresses the Horse item's `<AdditionalMeshes>`** (native mount compositing), and `taom_mumakil` keeps its war-platform there. Equipping one would delete the howdah. This is an engine constraint, not a preference |
-| `taom_spider_creature` | **An open gap, not a design choice.** No spider `HorseHarness` item has ever been authored, so there is nothing to equip and the rider sits on the spider with no saddle geometry: the same defect class as the ram, recorded as a known limitation when the troop landed and still open. Delete this entry when a `spider_saddle` harness item lands |
+| `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` | **An open gap, not a design choice.** No spider `HorseHarness` item has ever been authored, so there is nothing to equip and the rider sits on the spider with no saddle geometry: the same defect class as the ram, recorded as a known limitation when the troop landed and still open. Delete this entry when a `spider_saddle` harness item lands |
 
 Shipped twice, which is why the rule is not scoped. `ironpass_ram_herder` was authored with no
 harness on all four sets, on purpose, on the reading that a bare ram was merely unarmoured, and

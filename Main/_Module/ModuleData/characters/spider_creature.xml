@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
-  <!-- Spider Rider: goblin cavalry troop that rides the Giant Spider mount. Its three rosters
-       carry one skin each (spider_mount_a dark, spider_mount_brown, spider_mount_pale; #616), the
-       warg pattern: the engine draws each slot from an independently chosen roster, so a formation
-       mixes the three colours. All three items ride Monster.spider and share every stat.
+  <!-- Spider Rider line: three goblin cavalry rungs, one skin each (#616, 2026-09-17), the warg
+       line's shape (dg_warg_scout -> raider -> skirmisher). Spider Rider (L20) rides the Giant
+       Spider (spider_mount_a, dark, scale 1.0); Brown Spider Rider (L25) the Brown Spider
+       (spider_mount_brown, scale 1.10); Pale Spider Rider (L30) the Pale Spider (spider_mount_pale,
+       scale 1.25). Size lives on the ITEM (body_length), the three items share Monster.spider and
+       every speed stat, and every C# spider seam keys on the Monster, so the rungs differ in
+       rider kit, skills and mount size only. Five levels per rung keeps the engine tier rising
+       (UPGRADE_TIER_COLLAPSE); the kit follows the mesh-tier ladder (light at 20, medium at 25,
+       heavy at 30) and the warg line's own choices at 21/26/31.
        Replaces the old detached-spider anchor (dg_uruk race, Wanderer) with the horse-slot
        mount pattern — same as taom_war_elephant / harad_mahout. The engine spawns TWO agents:
          1. The goblin rider (FromCharacterObj, humanoid, race=goblin)
@@ -38,6 +43,9 @@
       <skill id="OneHanded" value="100" />
       <skill id="Polearm" value="80" />
     </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.taom_spider_rider_brown" />
+    </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a03" />
@@ -49,12 +57,113 @@
         <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a03" />
         <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
         <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
-        <equipment slot="Horse" id="Item.spider_mount_brown" />
+        <equipment slot="Horse" id="Item.spider_mount_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
         <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
         <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+        <equipment slot="Horse" id="Item.spider_mount_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter id="taom_spider_rider_brown"
+                race="goblin"
+                default_group="Cavalry"
+                level="25"
+                is_hero="false"
+                is_basic_troop="false"
+                occupation="Soldier"
+                culture="Culture.dolguldur"
+                name="{=taom_spider_rider_brown_name}Brown Spider Rider">
+    <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
+    <skills>
+      <skill id="Athletics" value="100" />
+      <skill id="Riding" value="130" />
+      <skill id="OneHanded" value="140" />
+      <skill id="Polearm" value="110" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.taom_spider_rider_pale" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+        <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_g" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
+        <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_c" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_c" />
+        <equipment slot="Horse" id="Item.spider_mount_brown" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+        <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_h" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_d" />
+        <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_c" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_c" />
+        <equipment slot="Horse" id="Item.spider_mount_brown" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+        <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_g" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_d" />
+        <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+        <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_c" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_c" />
+        <equipment slot="Horse" id="Item.spider_mount_brown" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter id="taom_spider_rider_pale"
+                race="goblin"
+                default_group="Cavalry"
+                level="30"
+                is_hero="false"
+                is_basic_troop="false"
+                occupation="Soldier"
+                culture="Culture.dolguldur"
+                name="{=taom_spider_rider_pale_name}Pale Spider Rider">
+    <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
+    <skills>
+      <skill id="Athletics" value="120" />
+      <skill id="Riding" value="160" />
+      <skill id="OneHanded" value="180" />
+      <skill id="Polearm" value="140" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_g" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_c" />
+        <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
+        <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_d" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_f" />
+        <equipment slot="Horse" id="Item.spider_mount_pale" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_g" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_c" />
+        <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
+        <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_d" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_f" />
+        <equipment slot="Horse" id="Item.spider_mount_pale" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_g" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_c" />
+        <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
+        <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_d" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_f" />
         <equipment slot="Horse" id="Item.spider_mount_pale" />
       </EquipmentRoster>
     </Equipments>

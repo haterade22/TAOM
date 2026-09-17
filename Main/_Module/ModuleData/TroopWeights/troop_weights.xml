@@ -112,6 +112,8 @@
     <!-- ===== DOL GULDUR ===== -->
     <!-- Spider Rider package (Weight 3.0): 2 (giant spider mount) + 1 (goblin rider) — elephant precedent (7.0 = 2+1+4) -->
     <TroopWeight id="taom_spider_creature" weight="4.0" />
+    <TroopWeight id="taom_spider_rider_brown" weight="4.0" />
+    <TroopWeight id="taom_spider_rider_pale" weight="4.0" />
 
     <!-- Khamul's Shadow Line: level 41 and 46, all 3.0 -->
     <TroopWeight id="dg_khamul_shadow_knight" weight="3.0" />

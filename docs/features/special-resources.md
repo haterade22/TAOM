@@ -122,6 +122,8 @@ Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (ma
 <!-- Recruitable volunteer: charged at recruitment (Patch51), not upgrade -->
 <Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" />
 <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" />
+<!-- Its upgrade rungs (#616): the climb costs War Spoils, the upkeep stays the creature rate -->
+<Troop id="taom_spider_rider_brown" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="1" />
 ```
 
 Three cost fields, any combination allowed per troop:
