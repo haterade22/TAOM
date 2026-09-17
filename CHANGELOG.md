@@ -26,6 +26,27 @@ retarget workflow, and a `pending-license` row in the provenance register (creat
 still to be copied from the product page; Rivendell and the tents have no row either, noted as
 open).
 
+### fix(combat): the popup strings load in Custom Battle; archers fall back early from horse (#608)
+
+Every TAOM popup row (`str_team_ai_tactic_text`, both `str_formation_ai_*` tables) rendered
+`ERROR: Text with id` in Custom Battle through five A/B runs while the rows sat in
+`taom_module_strings.xml` all along: `GameTextManager` loads a module's GameText files through
+`GetMergedXmlForManaged` with the running game type, and `SubModule.xml` registered the file for
+`Campaign` and `CampaignStoryMode` only. `CustomGame` and `EditorGame` added, as the wanderer
+strings already had; `DoctrinePopupStringsTests` pins the four game types. Vanilla's own
+`module_strings` carries no restriction.
+
+Fifth A/B (Erebor v Rohirrim, 120 v 120): the archers took the right flank of the wall from the
+first line and the wall's Square was a real block this time (`Square(RectilinearSchiltron 5x5)`
+in the log, a 48-man block five metres wide, the engine's most compact schiltron). The eored
+went for the bows anyway and the 30 m fall-back trigger fired after they were among them
+(horse cover 30 m in three seconds), so the archers now use the wall's own brace rule as well:
+melee cavalry of real size riding at them inside `cavalryMattersMetres` sends them behind the
+wall, released at 1.5x. The battle itself says nothing about the doctrine: the roster was
+`[Erebor] Militia Spearman` and `Militia Archer` against `[Rohan] East Emnet Veteran Lancer`
+with Rohan's 1.5x charge damage, 120 lost for no rider; the next run needs matched tiers and an
+OFF control.
+
 ### feat(combat): archers on the flank of the wall, the players' own placement (#608)
 
 Mike, after the fourth A/B (Erebor's 122 archers behind the wall lost 116 to 224 Rohirrim):

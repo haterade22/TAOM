@@ -9,8 +9,10 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 /// Archers on the flank of a wall (<see cref="ArcherFlankGeometry"/>): beside the main infantry's
 /// order position, a gap out and a little back, facing the enemy, Loose, fire at will, the
 /// side chosen once at activation where fewer enemy formations stand. While an enemy formation
-/// is closing on the archers rather than on the wall they stand straight behind the wall, and
-/// return once it is well away. The wall is <see cref="Wall"/>, set by the tactic before the
+/// is closing on the archers rather than on the wall, or melee cavalry of real size is riding
+/// at them inside <c>CavalryMattersMetres</c> (the fifth A/B: the 30 m trigger fired after the
+/// eored was already among the bows, horse cover 30 m in three seconds), they stand straight
+/// behind the wall, and return once it is well away. The wall is <see cref="Wall"/>, set by the tactic before the
 /// plan is applied (as <c>BehaviorHoldHighGround.RangedAllyFormation</c> is); without one, or
 /// once it is empty, the behaviour weighs 0 and the plan's <c>SkirmishLine</c> row takes the
 /// archers. The enemy walk runs on the active tick only; the plan reads what it left.
@@ -79,6 +81,8 @@ public sealed class BehaviorArcherFlank : TaomBehaviorBase
         var wallCentre = wall.CachedAveragePosition;
         var nearest = float.PositiveInfinity;
         var nearestToWall = float.PositiveInfinity;
+        var nearestThreatHorse = float.PositiveInfinity;
+        var ourCount = formation.CountOfUnits;
         var teams = formation.Team.Mission.Teams;
         for (var t = 0; t < teams.Count; t++)
         {
@@ -99,6 +103,9 @@ public sealed class BehaviorArcherFlank : TaomBehaviorBase
                     nearest = d;
                     nearestToWall = wallCentre.Distance(p);
                 }
+                if (f.QuerySystem.IsCavalryFormation && CavalryThreat.IsSignificant(f.CountOfUnits, ourCount)
+                    && (CavalryThreat.IsOnUs(d) || CavalryThreat.IsInbound(ours, p, f.CachedCurrentVelocity)) && d < nearestThreatHorse)
+                    nearestThreatHorse = d;
             }
         }
         if (!_sideChosen)
@@ -107,7 +114,10 @@ public sealed class BehaviorArcherFlank : TaomBehaviorBase
             _side = ArcherFlankGeometry.ChooseSide(wallCentre, toEnemy.LengthSquared > 1e-4f ? toEnemy.Normalized() : wall.Direction, _enemyPositions);
             _sideChosen = true;
         }
-        var fallingBack = ArcherFlankGeometry.ShouldFallBack(nearest, nearestToWall, ArcherFlankGeometry.FallBackTrigger, _fallingBack);
+        // The same distance and release as the wall's own brace: horse riding at the bows inside
+        // CavalryMattersMetres send them behind the wall, and they come back out beyond 1.5x.
+        var horseOnUs = nearestThreatHorse <= Engagement.CavalryMattersMetres * (_fallingBack ? TargetSelection.ReleaseFactor : 1f);
+        var fallingBack = horseOnUs || ArcherFlankGeometry.ShouldFallBack(nearest, nearestToWall, ArcherFlankGeometry.FallBackTrigger, _fallingBack);
         if (fallingBack == _fallingBack)
             return;
         _fallingBack = fallingBack;

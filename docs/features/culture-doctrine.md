@@ -678,6 +678,15 @@ Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and
   dwarf square should beat that many Rohirrim is a numbers question; the second line and the
   archers are doctrine questions; the archers' answer is `BehaviorArcherFlank` (the players'
   own placement, above), the second line's is open.
+- The fifth battle (Erebor v Rohirrim, 120 v 120, 13:51): the archers took the right flank from
+  the first line, the wall's Square was a real block (`RectilinearSchiltron 5x5`, the engine's
+  most compact form for 48 men), the eored went for the bows anyway and the 30 m trigger was
+  late (fixed: the archers fall back on the wall's brace rule too). The roster was Erebor
+  militia against Rohan veteran lancers with 1.5x charge damage and the outcome (120 for 0) is
+  the roster's; a doctrine A/B needs matched tiers and an OFF control run.
+- `taom_module_strings.xml` was registered for `Campaign` and `CampaignStoryMode` only, so every
+  popup row was missing in Custom Battle through five runs; `CustomGame` and `EditorGame` added
+  and pinned by `DoctrinePopupStringsTests`.
 - `MixedFormations` (`Patch30_FormationGetOrderPositionOfUnit`) replaces the engine's unit slots
   for a player-team formation that holds a non-vanilla layout while it holds position, so a
   doctrine arrangement on such a formation is overridden. Mike does not use layouts, and the

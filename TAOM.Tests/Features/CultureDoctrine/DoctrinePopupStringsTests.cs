@@ -118,4 +118,20 @@ public class DoctrinePopupStringsTests
         }
         Assert.AreEqual(0, failures.Count, string.Join("; ", failures));
     }
+
+    [TestMethod]
+    public void PopupStringsFile_IsLoadedInCustomBattleAndTheEditorToo()
+    {
+        // GameTextManager loads a module's GameText files through GetMergedXmlForManaged with
+        // the running game type, so a file registered for Campaign only is absent in Custom
+        // Battle and every TAOM popup row renders "ERROR: Text with id"; the fifth A/B showed it
+        // for BehaviorBracedDefend and BehaviorArcherFlank. Vanilla's own module_strings carries
+        // no restriction; ours must at least name the game types a battle can run under.
+        var subModule = XDocument.Load(Path.Combine(RepoRoot, @"Main\_Module\SubModule.xml"));
+        var node = subModule.Descendants("XmlNode")
+            .Single(n => (string)n.Element("XmlName")?.Attribute("id") == "GameText" && (string)n.Element("XmlName")?.Attribute("path") == "taom_module_strings");
+        var types = node.Element("IncludedGameTypes")?.Elements("GameType").Select(g => ((string)g.Attribute("value") ?? "").Trim()).ToList() ?? new List<string>();
+        foreach (var required in new[] { "Campaign", "CampaignStoryMode", "CustomGame", "EditorGame" })
+            CollectionAssert.Contains(types, required, "taom_module_strings.xml is not loaded under " + required);
+    }
 }
