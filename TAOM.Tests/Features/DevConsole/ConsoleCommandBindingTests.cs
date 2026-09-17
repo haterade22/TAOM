@@ -38,6 +38,14 @@ namespace TAOM.Tests.Features.DevConsole;
 [TestClass]
 public class ConsoleCommandBindingTests
 {
+    // The attribute scan below resolves every attribute type on every static method in Main, and
+    // TaomStartOptionsProvider.AddStartOptions carries one from SandBox.dll, which is not copied to
+    // the test bin. .NET caches a failed bind for the life of the process, so the game folders
+    // must be on the resolver BEFORE the scan, whatever class order MSTest picks (2026-09-16: the
+    // class ran first in a filtered run and every test here failed on that bind).
+    [ClassInitialize]
+    public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => TAOM.Tests.Migration.GameAssemblies.EnsureLoaded();
+
     // Read-only output uses `print_` and nothing else. Enumerated across all 130 commands in the
     // v1.4.7 dump: `print_` appears 9 times in the campaign group, `dump_` zero times anywhere.
     // Admitting synonyms is how the convention drifts, so they fail the build instead of review.
