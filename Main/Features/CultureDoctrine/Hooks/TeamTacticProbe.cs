@@ -55,6 +55,7 @@ public static class TeamTacticProbe
           .Append(" tactic=").Append(CurrentTacticName(team))
           .Append(" formations=[");
         var first = true;
+        var current = team.TeamAI == null || CurrentTactic == null ? null : CurrentTactic(team.TeamAI) as TaomTacticBase;
         var formations = team.FormationsIncludingEmpty;
         for (var i = 0; i < formations.Count; i++)
         {
@@ -71,8 +72,16 @@ public static class TeamTacticProbe
             sb.Append(formation.FormationIndex);
             if (formation.PhysicalClass != formation.FormationIndex)
                 sb.Append('/').Append(formation.PhysicalClass);
-            sb.Append(':').Append(formation.CountOfUnits)
-              .Append(' ').Append(active?.GetType().Name ?? "none");
+            sb.Append(':').Append(formation.CountOfUnits);
+            // The seat the current TAOM tactic gave it ([M], [L], [A], ...) or [-] for none:
+            // an unseated formation runs vanilla's default rows, and the second A/B's log
+            // could not tell a seat from a class.
+            if (current != null)
+            {
+                var seat = current.SeatOf(formation);
+                sb.Append('[').Append(seat.Length == 0 ? "-" : seat).Append(']');
+            }
+            sb.Append(' ').Append(active?.GetType().Name ?? "none");
             // A TAOM behaviour also shows its stage or stance (Marching, Square, Reforming, failed: ...).
             if (active is TaomBehaviorBase taom && taom.Status.Length > 0)
                 sb.Append(':').Append(taom.Status);

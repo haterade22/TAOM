@@ -18,9 +18,13 @@ as infantry, so no cavalry row seated them, and `TaomTacticBase.Apply` touched o
 formations; every vanilla tactic gives every formation its default rows
 (`SetDefaultBehaviorWeights`), and the base now does the same for every formation with units the
 plan did not seat (`BehaviorWeightApplier.ApplyDefaults`, IL-pinned). Whether those riders had
-mounts at all (`QueryLibrary.IsCavalry` needs `Agent.HasMount`) is what the status line now
-shows: a formation prints `slot/class:count` when the engine's class disagrees with its slot.
-Suite 9,776 green, 2 pre-existing skips.
+mounts at all (`QueryLibrary.IsCavalry` needs `Agent.HasMount`) was the first reading; Mike
+confirmed Mordor fielded no mounted troops, so the two slots were Envelop's three-way infantry
+split landing in the empty Cavalry and HorseArcher slots and then not seated as wings, for a
+reason the log could not show. The status line now prints `slot/class:count[seat]`: the class
+when the engine's ratios disagree with the slot, and the seat the current TAOM tactic gave the
+formation (`M`, `S`, `L`, `R`, `A`, `LC`, `RC`, `C`, `HA`, `V`, or `-` for none), so the next
+log says which. Suite 9,776 green, 2 pre-existing skips.
 
 ### feat(spider): Brown Spider and Pale Spider, the goblin Spider Rider fields three skins (#616)
 

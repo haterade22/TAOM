@@ -297,6 +297,24 @@ public abstract class TaomTacticBase : TacticComponent
             _volley.Tick(_archers, _plan.Volley);
     }
 
+    /// <summary>The seat this tactic gave a formation at its last recount, for the status
+    /// line: M (main infantry), S (second line), L/R (wings), A (archers), LC/RC/C (cavalry),
+    /// HA (horse archers), V (vanguard), or empty when the plan did not seat it.</summary>
+    internal string SeatOf(Formation formation)
+    {
+        if (formation == _mainInfantry) return "M";
+        if (formation == _secondInfantry) return "S";
+        if (formation == _leftWing) return "L";
+        if (formation == _rightWing) return "R";
+        if (formation == _archers) return "A";
+        if (formation == _leftCavalry) return "LC";
+        if (formation == _rightCavalry) return "RC";
+        if (formation == _cavalry) return "C";
+        if (formation == _rangedCavalry) return "HA";
+        if (formation == _vanguard) return "V";
+        return "";
+    }
+
     private bool Seated(Formation formation) =>
         formation == _mainInfantry || formation == _secondInfantry || formation == _leftWing || formation == _rightWing
         || formation == _archers || formation == _leftCavalry || formation == _rightCavalry || formation == _cavalry

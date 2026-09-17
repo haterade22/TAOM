@@ -428,8 +428,11 @@ stage or stance after its name (`BehaviorCycleCharge:Reforming`, `BehaviorBraced
 `failed: ...`), then the arrangement and the firing order; an Elven tactic under volley control
 ends its status with `:Hold` or `:Loose`; a wall or ring tactic ends with `:Marching`,
 `:Holding` or `:Arrived` (the high-ground race, refreshed the second the anchor moves, not only
-at the next apply). A formation prints as `slot:count`, or `slot/class:count` when the engine's
-class ratios disagree with the slot: the slot is where the units were put and the engine's
+at the next apply). A formation prints as `slot:count[seat]`, or `slot/class:count[seat]` when
+the engine's class ratios disagree with the slot, where the seat is the one the current TAOM
+tactic gave it at its last recount (`M` main infantry, `S` second line, `L`/`R` wings, `A`
+archers, `LC`/`RC`/`C` cavalry, `HA` horse archers, `V` vanguard, `-` none: an unseated
+formation runs vanilla's default rows): the slot is where the units were put and the engine's
 consolidation moves units between slots freely (an infantry mass can sit in the `Cavalry`
 slot), and riders without a live mount count as infantry (`QueryLibrary.IsCavalry` needs
 `Agent.HasMount`), which is why a "Cavalry" slot can read `/Infantry` and be merged into the
@@ -644,8 +647,10 @@ Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and
   under Envelop and were then merged into the foot mass: the engine's class ratios read them as
   infantry, so no cavalry row seated them and a formation the plan does not seat kept stale
   weights (fixed: every unseated formation gets vanilla's defaults, as every vanilla tactic
-  does). Whether those riders had mounts at all is the open question the `slot/class` status
-  now answers. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
+  does). Mike confirmed Mordor fielded no mounted troops that battle, so the two slots were
+  Envelop's own three-way infantry split landing in the empty Cavalry and HorseArcher slots
+  (the engine takes any empty slot as a split target) and then not seated as wings, which the
+  `[seat]` and `slot/class` markers on the status line now show directly. The cavalry cells (Erebor v Rohirrim) are still owed, and the toggle stays off
   until they pass.
 - The high-ground march is decided once: `Holding` is terminal, so a wall that formed where it
   stood at the first decision (the enemy foot inside 50 m, or no slope worth having inside 60 m)
