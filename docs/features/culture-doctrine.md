@@ -8,9 +8,9 @@ authored in `culture_doctrines.json`: the nine vanilla tactics with per-culture 
 multipliers, plus eleven TAOM tactics (a Dwarven shield wall and its two-line variant, an
 orcish infantry mass and its envelopment, Rohan's cavalry lead and its defending screen, an
 Elven archer ring and archer advance, a disciplined line for Gondor, Rhun and Dale, Dunland's
-hit-and-run, Harad's mumakil vanguard) built on five TAOM formation behaviours (a braced wall
-holding and advancing, a cavalry cycle charge, a throwing-infantry skirmish, an enveloping
-wing). The engine still picks the highest-weight tactic every 5 seconds and every formation
+hit-and-run, Harad's mumakil vanguard) built on six TAOM formation behaviours (a braced wall
+holding and advancing, a foot charge that goes for the enemy foot and squares up against horse,
+a cavalry cycle charge, a throwing-infantry skirmish, an enveloping wing). The engine still picks the highest-weight tactic every 5 seconds and every formation
 still picks its own behaviour every 0.5 seconds; the doctrine changes what is on the menu and
 how much each option weighs. Below the tactics, the same file says who never routs and how
 brave each culture starts (the battle morale model), how each culture's soldiers fight the
@@ -424,8 +424,10 @@ active behaviour and arrangement. Works in Custom Battle.
 A TAOM tactic that throws on the AI thread reports `taom=[TaomTacticArcherRing:failed: ...]`
 and weighs 0 from then on; the team falls back to its next tactic. A TAOM behaviour shows its
 stage or stance after its name (`BehaviorCycleCharge:Reforming`, `BehaviorBracedDefend:Square`,
-`BehaviorInfantrySkirmish:Committed`, or `failed: ...`), then the arrangement and the firing
-order; an Elven tactic under volley control ends its status with `:Hold` or `:Loose`.
+`BehaviorFootCharge:Charging` or `:Square`, `BehaviorInfantrySkirmish:Committed`, or
+`failed: ...`), then the arrangement and the firing order; an Elven tactic under volley control
+ends its status with `:Hold` or `:Loose`; a wall or ring tactic ends with `:Marching`,
+`:Holding` or `:Arrived` (the high-ground race).
 
 ## Key Files
 
@@ -442,7 +444,7 @@ order; an Elven tactic under volley control ends its status with `:Hold` or `:Lo
 | `Main/Features/CultureDoctrine/Hooks/Tactics/FormationSlots.cs`, `VolleyControl.cs` | Slot assignment per split (second line, wings, vanguard); the archers' firing order |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/HighGroundAnchor.cs`, `Doctrines/HighGroundRace.cs` | Where a position-holding tactic stands: the race, the re-check, the lock |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/BehaviorWeightApplier.cs`, `TeamQuerySnapshotFactory.cs`, `TacticFactory.cs` | The three engine-type switches; `Ensure<T>` adds a TAOM behaviour to a formation |
-| `Main/Features/CultureDoctrine/Hooks/Behaviors/TaomBehaviorBase.cs`, `BehaviorBracedDefend.cs`, `BehaviorBracedAdvance.cs`, `BehaviorCycleCharge.cs`, `BehaviorInfantrySkirmish.cs`, `BehaviorEnvelopWing.cs`, `WallStances.cs` | The five TAOM formation behaviours and their wrapped lifecycle |
+| `Main/Features/CultureDoctrine/Hooks/Behaviors/TaomBehaviorBase.cs`, `BehaviorBracedDefend.cs`, `BehaviorBracedAdvance.cs`, `BehaviorFootCharge.cs`, `BehaviorCycleCharge.cs`, `BehaviorInfantrySkirmish.cs`, `BehaviorEnvelopWing.cs`, `WallStances.cs`, `EnemyScan.cs` | The six TAOM formation behaviours, their wrapped lifecycle, and the enemy walk they target through |
 | `Main/Features/CultureDoctrine/Doctrines/DoctrinePlan.cs`, `DoctrinePlans.cs`, `DoctrineWeights.cs`, `TacticPhaseMachine.cs` | Pure plans, weights, ring geometry, phase machine |
 | `Main/Features/CultureDoctrine/Doctrines/TargetSelection.cs`, `ChargeWeight.cs`, `Domain/EngagementTunables.cs`, `Hooks/Behaviors/EnemyScan.cs`, `BehaviorFootCharge.cs` | The foot-first target rule, the engagement distances from the `engagement` block, and the enemy-formation walk that feeds them |
 | `Main/Features/CultureDoctrine/Doctrines/BraceDecision.cs`, `CavalryThreat.cs`, `CycleChargeMachine.cs`, `InfantrySkirmishMachine.cs`, `EnvelopGeometry.cs`, `VolleyDecision.cs` | The pure cores the behaviours and the volley control step |
@@ -557,10 +559,11 @@ Phase C and D add cells, all 300 v 300, three runs, the toggles above per tier:
 Pass: over the steady window (30 s after F6 to the first rout) the median average frame ms on vs
 off within 3 percent and p95 within 5 percent at 800 v 800, GC gen 2 not higher; the doctrine
 side's current tactic is in its preferred set for at least 70 percent of samples on and at least
-30 points less off; at 60 s Erebor's infantry holds the high ground in ShieldWall or Line,
-Rohan's cavalry shows `BehaviorTacticalCharge` or `BehaviorFlank`, Lindon's infantry is a Circle
-around a Square of archers, attacking Erebor's infantry shows `BehaviorAdvance` and never
-`BehaviorCharge` before contact.
+30 points less off; at 60 s Erebor's infantry stands in ShieldWall or Line where it formed (or
+on a slope inside 60 m it reached first), Rohan's cavalry shows `BehaviorCycleCharge` once joined
+(`BehaviorTacticalCharge` or `BehaviorFlank` before), Lindon's infantry is a Circle around a
+Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and never
+`BehaviorCharge` or a `BehaviorFootCharge` at horse before contact.
 
 ## Limitations and open items
 
@@ -578,9 +581,12 @@ around a Square of archers, attacking Erebor's infantry shows `BehaviorAdvance` 
   cavalry (`RoutedFormationGuard`); a formation the player took back kept the volley hold.
   The analysis, with the engine cost model and the rewrite verdict (do not), is
   `docs/reviews/analysis-battle-ai-2026-09-17.md`.
-- The sergeant popup strings (eleven tactics, five behaviours) are seeded in the 12 language
-  files with English text; run `tools/translate_with_claude.py --lang <L> --module TAOM
-  --sync-ids --apply` with an API key to translate them.
+- The popup strings are three tables (eleven tactic rows, six sergeant-instruction rows, six F6
+  rows). The tactic and sergeant rows were translated by the localization pass in `303bf2a7`;
+  the six F6 rows and the FootCharge rows still carry English text in the 12 language files;
+  run `tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` with an API
+  key. `DoctrinePopupStringsTests` checks that every language file's F6 rows keep the vanilla
+  `{TROOP_NAMES_BEGIN}`/`{?IS_PLURAL}`/`{TROOP_NAMES_END}` variables after such a run.
 - `BracedDefend` shows a shield wall only when `FormationQuerySystem.HasShield` (40 percent of
   the formation with shields); a Dwarven line below that stands in Line, which is also what the
   Uruk pikes want. The square is the engine's `SquareFormation`; whether the arrangement
@@ -588,7 +594,7 @@ around a Square of archers, attacking Erebor's infantry shows `BehaviorAdvance` 
 - The Elven ring is the engine's circle, not a hollow square; `SquareFormation` builds four
   sides with `MaxRank = (UnitCountOfOuterSide + 1) / 2` and whether its centre stays hollow is
   unverified.
-- `TaomTacticBase` is about 260 lines: it is the one place the vanilla lifecycle exists in TAOM
+- `TaomTacticBase` is about 300 lines: it is the one place the vanilla lifecycle exists in TAOM
   (vanilla's tactics are 180 to 370 lines each) and the eleven tactics on top of it are 15 to
   45 lines. The slot code that writes `TacticComponent`'s protected fields cannot leave the
   class; the picking (`FormationSlots`), the volley (`VolleyControl`) and every decision
@@ -608,8 +614,11 @@ around a Square of archers, attacking Erebor's infantry shows `BehaviorAdvance` 
   Battle models here are last-registered; the scene editor's test battle takes the same path.
 - The status line's console twin (`taom.tactic_status`) can run while an async tick is in flight;
   every read is a reference, an int or a 4-byte enum, so the worst case is one stale line.
-- Review record: `docs/reviews/rca-culture-doctrine-2026-09-16.md` (seven-agent deep review,
-  twelve findings, all fixed). The Codex adversarial pass
+- Review record: `docs/reviews/rca-culture-doctrine-2026-09-16.md` (Phase A and B, seven agents,
+  twelve findings), `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` (Phase C and D, six
+  agents, ten findings) and `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md` (the
+  engagement slice after the first A/B, six agents, thirteen findings), all fixed before their
+  commits. The Codex adversarial pass
   (`docs/reviews/codex-adversarial-culture-doctrine-2026-09-16.prompt.md`) ran out of ChatGPT
   usage after about 110k tokens of decompile work and returned no report; its three interim
   observations (both-side attrition in `TacticCharge`, `ResetTacticalPositions` true for three
@@ -617,6 +626,15 @@ around a Square of archers, attacking Erebor's infantry shows `BehaviorAdvance` 
   own pairing shares) are folded in above. Re-dispatch with the same prompt when credits allow.
 - Per-formation flavour is still absent: a Rohan cavalry formation inside a Gondor army fights
   under Gondor's doctrine, morale and aggression (the side's majority culture decides).
+- The first Custom Battle A/B (Erebor defender v Mordor, 300 v 300, 2026-09-17) ran clean:
+  registration on both sides, routing subscribed, no failed latch, 172 to 183 fps at 661 agents,
+  gen 2 collections zero. Its two failures (the wall marching 95 s to a far hill, the foot
+  chasing the horse) are the engagement slice above; the second A/B, with the two cells it
+  added, is owed, and the toggle stays off until it passes.
+- The high-ground march is decided once: `Holding` is terminal, so a wall that formed where it
+  stood at the first decision (the enemy foot inside 50 m, or no slope worth having inside 60 m)
+  does not march later when the picture changes. Deliberate: a wall that walks off mid-battle is
+  the failure the race exists to prevent.
 
 ## Roadmap after this slice
 
@@ -658,7 +676,8 @@ What each culture carries after Phase C and D (2026-09-17), with the Phase B sta
 3. Write the class in `Hooks/Behaviors/` on `TaomBehaviorBase`: `Weigh()`, `Plan()`,
    `Activate()`, `OnActiveTick()`; a `(Formation)` constructor; no engine mutation outside the
    order setters; stages advance in `OnActiveTick()` only.
-4. Add its case in `BehaviorWeightApplier.Apply`: `Ensure(formation, f => new ...)` then
+4. Add its case in `BehaviorWeightApplier.Apply`: `Ensure(formation, f => new ..., owner)` (the
+   three-argument overload, which hands the behaviour the tactic's `Engagement` distances) then
    `SetBehaviorWeight<T>`; `DoctrineSwitchInvariantTests` reads the IL and fails without both.
 5. Add `str_formation_ai_sergeant_instruction_behavior_text.<TypeName>` AND
    `str_formation_ai_behavior_text.<TypeName>` (the F6 message, with the vanilla

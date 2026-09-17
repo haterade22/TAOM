@@ -709,3 +709,19 @@ the decision explicit and let the engine's picker execute it, key rows per forma
 then, if the 5 s cadence measurably loses fights, take over `TeamAIGeneral.Tick` with a subclass.
 Each kingdom's character is a decision table over that picture plus its aggression and morale
 tiers; that grows by adding rules and rows, not by rewriting the stack.
+
+### Status after the first A/B (added 2026-09-17, later the same day)
+
+The first Custom Battle A/B ran (Erebor v Mordor, 300 v 300): 172 to 183 fps at 661 agents, gen 2
+collections zero, so section 1.8's cost model held. Its two failures were in the decision model,
+as section 3.2 predicted, and both landed the same day (`39e3c8b5`): a foot formation's target is
+now a stated rule (`TargetSelection`: nearest infantry, archers only when no infantry is within
+1.5x their distance, horse only when no foot is left) rather than the engine's closest-anything,
+and the brace is a stated rule over every enemy melee cavalry formation (real size, riding at us
+or among us, inside 100 m, released at 150 m) rather than one engine query. That is the first
+piece of item 3 (the shared picture) built per formation, and it retired weakness (b) for good
+(the engine query is no longer read). Item 14 gained two gates: the high ground is now searched
+inside a 60 m cap with the engine's own slope search, and only enemy foot inside 50 m ends the
+march. Still open in the order given: the per-team picture (3), reaction rules (4), weights as
+decisions (5), the event-driven volley (6), per-formation keys (8). The `TeamAIGeneral` subclass
+(4B) is no nearer: nothing in the first battle was lost to the 5 s cadence.

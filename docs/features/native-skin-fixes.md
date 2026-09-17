@@ -128,8 +128,8 @@ All 7 signatures were authored + statically verified against Bannerlord v1.4.6's
 `TaleWorlds.Native.dll` (each was a single match at the RVA below). See the
 "v1.4.6 native port" section below for the method and the RVA/verification map.
 
-**They have not been re-verified since. The engine is now v1.5.2, four bumps past the v1.4.6 the
-patterns were authored against (v1.4.6 → v1.4.7 → v1.4.8 → v1.5.0 → v1.5.2).** `Signatures.h:29`
+**They have not been re-verified since. The engine is now v1.5.3, five bumps past the v1.4.6 the
+patterns were authored against (v1.4.6 → v1.4.7 → v1.4.8 → v1.5.0 → v1.5.2 → v1.5.3).** `Signatures.h:29`
 still heads its shipped values "AUTHORED FOR BANNERLORD v1.4.6 (2026-06-30)", and the client
 `bin\Win64_Shipping_Client\TaleWorlds.Native.dll` those patterns scan was rewritten by the v1.4.8
 update on 2026-08-10 (14,185,944 bytes) and again by the v1.5.2 update on 2026-09-14 at 12:12

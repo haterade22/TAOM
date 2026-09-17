@@ -534,7 +534,7 @@ Code: No code changes needed
   `GetModules` returns `_loadedModules.Values` (`ModuleHelper.cs:178-189`). The topological
   `GetSortedModules` (`ModuleHelper.cs:271`) has exactly two callers, `CustomBattleServer.cs:208` and
   `LobbyClient.cs:474`, both multiplayer. Fix a merge-order problem in the launcher list. The
-  `version="v1.4.5.*"` pin on line 15 is likewise stale against the installed v1.5.2.
+  `version="v1.4.5.*"` pin on line 15 is likewise stale against the installed v1.5.3.
 - **Stale names are a live category here.** All 8 `Atmospheres/` files still carry the old `lotraom_`
   and `lotrtaom_` prefixes while every `SceneObj` folder is now `taom_*`, and that exact class has
   bitten once (`lotraom_e_osgiliath` against on-disk `lotrtaom_e_osgiliath`). Nine `text=` values in

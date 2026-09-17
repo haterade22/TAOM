@@ -4,6 +4,23 @@
 
 ## 2026-09-17
 
+### docs: the doctrine docs catch up with the engagement slice, and three docs stop calling v1.5.2 current
+
+`docs/features/culture-doctrine.md`: six behaviours, not five (the overview, the key-files row, the
+feature map); the pass criteria name `BehaviorBracedAdvance`, `BehaviorCycleCharge` and a wall
+that stands where it formed; the three popup string tables and which rows are still English; the
+three review records; the first A/B's numbers; `Holding` as a terminal state, on purpose; the F6
+and FootCharge status words in the log-lines section; the three-argument `Ensure` in the how-to.
+`docs/reference/engine/formations-and-team-ai.md`: 24 field behaviours, not 27, and a formation
+populated by `TransferUnits` gets them too (`Agent.Formation`'s setter calls `AddUnit`); the
+ten-slot `FormationsIncludingSpecialAndEmpty` beside the eight-slot list, with which walk uses
+which. The Phase C lesson that said "OR the engine query" records that the OR lasted one review.
+`docs/reviews/analysis-battle-ai-2026-09-17.md` gains a dated status: which of its ranked items
+the engagement slice covered and which stay open. `docs/ai-includes/agent-operating-manual.md`,
+`docs/features/native-skin-fixes.md`, `docs/modding/module-armory.md` and
+`docs/modding/module-map.md` said v1.5.2 was the installed engine; it is v1.5.3 since 2026-09-15
+(`.claude/pinned-game-version.txt`), and the lint's stale-version section is empty again.
+
 ### fix(localization): the three ASO description rows return to the twelve language files (#604)
 
 `303bf2a7` regenerated every `std_taom_module_strings_*.xml` and dropped
