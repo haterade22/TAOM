@@ -728,7 +728,7 @@
                     id="Item.dunland_wulf_helmet_medium_a" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_heavy_c" />
+                    id="Item.dunland_wulf_scalemail_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_medium_f" />
@@ -772,7 +772,7 @@
                 <equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
                 <equipment slot="Item1" id="Item.dunland_wulf_shield_medium_f" />
                 <equipment slot="Item2" id="Item.northern_javelin_2_t3" />
-                <equipment slot="Head" id="Item.dunland_wulf_helmet_heavy_f" />
+                <equipment slot="Head" id="Item.dunland_wulf_helmet_medium_b" />
                 <equipment slot="Body" id="Item.dunland_wulf_scalemail_heavy_f" />
                 <equipment slot="Leg" id="Item.dunland_wulf_boots_medium_f" />
                 <equipment slot="Gloves" id="Item.dunland_wulf_bracer_medium_f" />
@@ -835,7 +835,7 @@
                     id="Item.northern_javelin_2_t3" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_heavy_f" />
+                    id="Item.dunland_wulf_helmet_medium_b" />
                 <equipment
                     slot="Body"
                     id="Item.dunland_wulf_scalemail_heavy_f" />
@@ -909,10 +909,10 @@
                     id="Item.northern_javelin_2_t3" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_elite_f" />
+                    id="Item.dunland_wulf_helmet_heavy_f" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_elite_f" />
+                    id="Item.dunland_wulf_scalemail_heavy_f" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_f" />
@@ -986,7 +986,7 @@
                     id="Item.dunland_wulf_helmet_elite_f" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_lord_d" />
+                    id="Item.dunland_wulf_scalemail_elite_d" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_f" />
@@ -1056,7 +1056,7 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_heavy_e" />
+                    id="Item.dunland_wulf_helmet_medium_b" />
                 <equipment
                     slot="Body"
                     id="Item.dunland_wulf_scalemail_heavy_e" />
@@ -1130,10 +1130,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_elite_e" />
+                    id="Item.dunland_wulf_helmet_heavy_e" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_elite_a" />
+                    id="Item.dunland_wulf_scalemail_heavy_a" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_d" />
@@ -1204,7 +1204,7 @@
                     id="Item.dunland_wulf_helmet_elite_e" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_lord_a" />
+                    id="Item.dunland_wulf_scalemail_elite_d" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_f" />
@@ -1357,10 +1357,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_caerdh_helmet_elite_a" />
+                    id="Item.dunland_caerdh_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_caerdh_chainmail_elite_a" />
+                    id="Item.dunland_caerdh_chainmail_heavy_a" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_caerdh_boots_medium_a" />
@@ -1434,10 +1434,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_caerdh_helmet_lord_a" />
+                    id="Item.dunland_caerdh_helmet_elite_c" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_caerdh_chainmail_lord_a" />
+                    id="Item.dunland_caerdh_chainmail_elite_c" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_caerdh_boots_heavy_a" />
@@ -1596,10 +1596,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_caerdh_helmet_elite_e" />
+                    id="Item.dunland_caerdh_helmet_heavy_d" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_caerdh_chainmail_elite_b" />
+                    id="Item.dunland_caerdh_chainmail_heavy_b" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_caerdh_boots_medium_b" />
@@ -1608,7 +1608,7 @@
                     id="Item.dunland_caerdh_bracer_medium_b" />
                 <equipment
                     slot="Cape"
-                    id="Item.dunland_caerdh_pauldron_elite_cape_a" />
+                    id="Item.dunland_caerdh_pauldron_heavy_cape_a" />
             </EquipmentRoster>
             <EquipmentSet
                 id="battania_troop_civilian_template_t2"
@@ -1673,10 +1673,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_caerdh_helmet_lord_e" />
+                    id="Item.dunland_caerdh_helmet_elite_d" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_caerdh_chainmail_lord_b" />
+                    id="Item.dunland_caerdh_chainmail_elite_c" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_caerdh_boots_heavy_b" />
@@ -1982,10 +1982,10 @@
                     id="Item.dunland_caerdh_axe_1h_b" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_caerdh_helmet_elite_f" />
+                    id="Item.dunland_caerdh_helmet_heavy_f" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_caerdh_chainmail_elite_a" />
+                    id="Item.dunland_caerdh_chainmail_heavy_a" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_caerdh_boots_heavy_d" />
@@ -2056,7 +2056,7 @@
                     id="Item.dunland_caerdh_axe_1h_b" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_caerdh_helmet_lord_h" />
+                    id="Item.dunland_caerdh_helmet_elite_d" />
                 <equipment
                     slot="Body"
                     id="Item.dunland_caerdh_chainmail_elite_a" />
@@ -2221,7 +2221,7 @@
                     id="Item.dunland_caerdh_helmet_heavy_c" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_caerdh_chainmail_elite_e" />
+                    id="Item.dunland_caerdh_chainmail_heavy_e" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_caerdh_boots_medium_a" />
@@ -2462,7 +2462,7 @@
                     id="Item.dunland_wulf_helmet_medium_b" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_heavy_e" />
+                    id="Item.dunland_wulf_scalemail_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_medium_d" />
@@ -2538,16 +2538,16 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_heavy_e" />
+                    id="Item.dunland_wulf_helmet_medium_b" />
                 <equipment
                     slot="Body"
                     id="Item.dunland_wulf_scalemail_heavy_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.dunland_wulf_boots_heavy_e" />
+                    id="Item.dunland_wulf_boots_medium_e" />
                 <equipment
                     slot="Gloves"
-                    id="Item.dunland_wulf_bracer_heavy_c" />
+                    id="Item.dunland_wulf_bracer_medium_b" />
                 <equipment
                     slot="Cape"
                     id="Item.dunland_wulf_pauldron_cape_short_c" />
@@ -2615,10 +2615,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_elite_e" />
+                    id="Item.dunland_wulf_helmet_heavy_e" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_elite_c" />
+                    id="Item.dunland_wulf_scalemail_heavy_b" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_e" />
@@ -2689,10 +2689,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_lord_e" />
+                    id="Item.dunland_wulf_helmet_elite_d" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_lord_c" />
+                    id="Item.dunland_wulf_scalemail_elite_d" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_e" />
@@ -2768,7 +2768,7 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_heavy_b" />
+                    id="Item.dunland_wulf_helmet_medium_b" />
                 <equipment
                     slot="Body"
                     id="Item.dunland_wulf_scalemail_heavy_b" />
@@ -2845,10 +2845,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_elite_b" />
+                    id="Item.dunland_wulf_helmet_heavy_b" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_elite_b" />
+                    id="Item.dunland_wulf_scalemail_heavy_b" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_b" />
@@ -2919,10 +2919,10 @@
                     id="Item.northern_javelin_3_t4" />
                 <equipment
                     slot="Head"
-                    id="Item.dunland_wulf_helmet_lord_d" />
+                    id="Item.dunland_wulf_helmet_elite_d" />
                 <equipment
                     slot="Body"
-                    id="Item.dunland_wulf_scalemail_lord_b" />
+                    id="Item.dunland_wulf_scalemail_elite_d" />
                 <equipment
                     slot="Leg"
                     id="Item.dunland_wulf_boots_heavy_c" />

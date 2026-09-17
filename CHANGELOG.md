@@ -4,6 +4,59 @@
 
 ## 2026-09-16
 
+### fix(armour): a mesh-tier ladder keeps low troops out of lord kit, and the lord line gets its stats back (#609)
+
+**What.** Inventory showed `[Gundabad] Uruk Medium Chest IV` at 31 body armour beside
+`[Gundabad] Uruk Lord Chest III` at 20 under a 25 kg plate mesh. The kingdom-cap curve (#583)
+prices an item by its LOWEST battle-troop wearer, and the six `sk_gb_uruk_chest_lord_*` were worn
+by the level-11 snaga and hunter: the 2026-05-19 roster fan-out (`b88a25e7`) had padded three
+low troops with the whole lord line as extra battle sets. "Lord" is the mesh the artist named;
+nothing tied it to a troop level. Now there is a ladder (`rebalance_armor.MESH_TIER_LADDER`, the
+maintainer's table: light to 6, light/medium to 16, medium to 21, heavy to 26, heavy/elite to
+31, elite to 36, elite/lord from 41; lord kit is for level 41+ troops or lords), a fixer, and a
+gate.
+
+- `tools/fix_armour_mesh_ladder.py` (dry-run default, `--apply`): swaps each over-dressed
+  (troop, item) pair to the SAME line at the substitute tier. Three rules, each because the naive
+  choice recreated the bug: the tier at or below the troop's STAT band first (a level-11 troop in
+  `_med_a` anchors that variant to the light band, one notch down), among variants the one whose
+  current anchor band is nearest the troop's (two `_med_` chests can sit two bands apart; the
+  first apply ignored that and regressed nine upgrade edges), then the same suffix. Troops place
+  lowest first and each pick moves the anchor it lands on (deep review: one snapshot stacked the
+  level-16 grunt and the level-21 orcs on one variant), and a pick landing off the troop's band
+  is marked on its row. Same old item to same new item in every set. No variant at an allowed
+  tier: reported, hand decision. Under-dressed: reported, never written. Byte-faithful through
+  the sibling's writer (git is the backup for the troop XML), re-checks from disk, idempotent.
+- `ARMOUR_MESH_TIER_LADDER` (warn) in `validate_moduledata.py`, both directions in the message,
+  one pure function (`rebalance_armor.mesh_ladder_violations`) with the fixer; needs no install.
+  `derive_armor_tiers.id_keyword_tier` is now an alias of `rebalance_armor.mesh_tier_of`.
+- The pass: 186 pairs swapped over 118 troops in 11 troop files (249 equipment lines); the Uruk
+  warrior's nine capeless sets given the cape it already wore in the tenth (its heavy chest had
+  masked the gap); 60 Armory items restatted on the live install AND the `lotraom-assets` v1.5
+  mirror, weights and materials untouched, `.bak-meshladder-609` beside each Armory file: the six
+  Gundabad lord chests 20 to 49, Iron Hills heavy chests 28 to 59, the Noldor gold heavy torso 44
+  to 68, the Mordor orc heavy chests 15 to 32, five Gondor heavy helmets 33 to 43. One item down,
+  `sk_md_orc_inf_chest_med_d` 24 to 15: no light variant in that line, so the level-11 goblins
+  took the unworn medium one and nobody else pays. `CROSS_CULTURE_ARMOUR_INVERSION` unchanged at
+  7 cells. Six-agent deep review, 0 HIGH: the token split now accepts a digit after the tier
+  (`rivendell_torso_lord3_silver`), the placement order and anchor update above, per-culture
+  totals on the change table. RCA: `docs/reviews/rca-armour-mesh-ladder-2026-09-16.md`.
+- `tools/apply_gundabad_troop_revamp.py`: Bolg's Ironfang template said `chest_lord_b` at level
+  36; the shipped file already had `elite_b`. Repointed so a re-run cannot bring it back.
+
+**Owed.** 65 hand decisions (over-dressed with no variant in the line at an allowed tier: Dunland's
+whole tree named one notch high, Gondor level-6 peasants with no light Anorien helmet, Rhun and
+Iron Hills lines with no medium greaves or chest), listed in `docs/features/armor-balance.md`.
+1,283 under-dressed pairs, the next roster pass; four `UPGRADE_ARMOUR_REGRESSION` warnings are
+that class surfacing (parents' freed meshes climbed; the level-36 goblin veterans and the
+Imladris guardsmen sit below them). The inherited-ratio secondaries (#583): the medium chest's arm
+armour 41 still reads above the lord chest's 25. Restart plus party-screen and Custom Battle
+smoke on Gundabad.
+
+**Tests.** `tools/tests/test_mesh_tier_ladder.py` (12), `test_fix_armour_mesh_ladder.py` (20),
+`ArmourMeshTierLadderTests` (4) in `test_validate_moduledata.py`; the tools suite green.
+
+
 ### feat(combat): the Dwarven wall and the Elven ring race the enemy foot to the high ground (#608)
 
 **What.** A position-holding doctrine tactic no longer marches to the navmesh high ground on

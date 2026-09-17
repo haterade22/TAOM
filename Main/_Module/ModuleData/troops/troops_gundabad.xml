@@ -102,7 +102,7 @@
                     id="Item.sk_gb_uruk_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_a" />
+                    id="Item.sk_gb_uruk_chest_light_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
@@ -116,7 +116,7 @@
                     id="Item.sk_gb_uruk_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_b" />
+                    id="Item.sk_gb_uruk_chest_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
@@ -130,7 +130,7 @@
                     id="Item.sk_gb_uruk_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_c" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
@@ -144,7 +144,7 @@
                     id="Item.sk_gb_uruk_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_d" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
@@ -158,7 +158,7 @@
                     id="Item.sk_gb_uruk_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_e" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
@@ -172,7 +172,7 @@
                     id="Item.sk_gb_uruk_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_f" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
@@ -340,7 +340,7 @@
                     id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_a" />
+                    id="Item.sk_gb_uruk_chest_light_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
@@ -363,7 +363,7 @@
                     id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_b" />
+                    id="Item.sk_gb_uruk_chest_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
@@ -386,7 +386,7 @@
                     id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_c" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
@@ -409,7 +409,7 @@
                     id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_d" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
@@ -432,7 +432,7 @@
                     id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_e" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
@@ -455,7 +455,7 @@
                     id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_f" />
+                    id="Item.sk_gb_uruk_chest_light_c" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
@@ -578,7 +578,7 @@
                     id="Item.sk_gb_uruk_helmet_light_c" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_a" />
+                    id="Item.sk_gb_uruk_chest_med_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_med_c" />
@@ -595,7 +595,7 @@
                     id="Item.sk_gb_uruk_helmet_light_c" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_b" />
+                    id="Item.sk_gb_uruk_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_med_c" />
@@ -612,7 +612,7 @@
                     id="Item.sk_gb_uruk_helmet_light_c" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_c" />
+                    id="Item.sk_gb_uruk_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_med_c" />
@@ -629,7 +629,7 @@
                     id="Item.sk_gb_uruk_helmet_light_c" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_d" />
+                    id="Item.sk_gb_uruk_chest_med_d" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_med_c" />
@@ -646,7 +646,7 @@
                     id="Item.sk_gb_uruk_helmet_light_c" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_e" />
+                    id="Item.sk_gb_uruk_chest_med_e" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_med_c" />
@@ -663,7 +663,7 @@
                     id="Item.sk_gb_uruk_helmet_light_c" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_lord_f" />
+                    id="Item.sk_gb_uruk_chest_med_f" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_med_c" />
@@ -1119,7 +1119,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -1151,7 +1151,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -1183,7 +1183,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -1215,7 +1215,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -1247,7 +1247,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -1979,7 +1979,7 @@
                     id="Item.sk_gb_uruk_bracer_med_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_f" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -2196,7 +2196,7 @@
               <equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
-              <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_a" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
@@ -2252,7 +2252,7 @@
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
-              <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_a" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_cape_b" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
@@ -2593,7 +2593,7 @@
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.wm_gundabad_mace_b01" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
-              <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_a" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
@@ -3604,7 +3604,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -3636,7 +3636,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -3668,7 +3668,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -3700,7 +3700,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />
@@ -3732,7 +3732,7 @@
                     id="Item.sk_gb_uruk_bracer_med_c" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_gb_uruk_boots_heavy_b" />
+                    id="Item.sk_gb_uruk_boots_med_c" />
                 <equipment
                     slot="Horse"
                     id="Item.warg_brown" />

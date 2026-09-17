@@ -259,7 +259,7 @@ NEW_TROOPS_XML = """
         <equipment slot="Item0" id="Item.wm_gundabad_mace_a01" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_b" />
-        <equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_b" />
+        <equipment slot="Body" id="Item.sk_gb_uruk_chest_elite_b" />
         <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_b" />
         <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
         <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />

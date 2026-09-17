@@ -4729,7 +4729,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_c1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_a" />
+                    id="Item.sk_dwarf_iron_chest_light_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_gloves_a" />
@@ -4749,7 +4749,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_c2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_b" />
+                    id="Item.sk_dwarf_iron_chest_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dwarf_iron_boots_med_a1" />
@@ -4766,7 +4766,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_a1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_b" />
+                    id="Item.sk_dwarf_iron_chest_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dwarf_iron_boots_light_a" />
@@ -4783,7 +4783,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_b2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_a" />
+                    id="Item.sk_dwarf_iron_chest_light_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dwarf_iron_boots_med_a1" />
@@ -4859,7 +4859,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_c2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_b" />
+                    id="Item.sk_dwarf_iron_chest_light_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_iron_pauldron_light_a" />
@@ -4882,7 +4882,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_b1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_a" />
+                    id="Item.sk_dwarf_iron_chest_light_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dwarf_iron_boots_med_a1" />
@@ -4899,7 +4899,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_c1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_b" />
+                    id="Item.sk_dwarf_iron_chest_light_b" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dwarf_iron_boots_light_a" />
@@ -4916,7 +4916,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_d1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_a" />
+                    id="Item.sk_dwarf_iron_chest_light_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_dwarf_iron_boots_med_a1" />
@@ -4999,7 +4999,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_b2" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_a1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -5022,7 +5022,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_c1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -5068,7 +5068,7 @@
                     id="Item.sk_dwarf_iron_gloves_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -5624,7 +5624,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_b3" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -5650,7 +5650,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_a1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -5702,7 +5702,7 @@
                     id="Item.sk_dwarf_iron_gloves_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_c1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -6094,7 +6094,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_c1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_a" />
+                    id="Item.sk_dwarf_iron_chest_light_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_gloves_a" />
@@ -6123,7 +6123,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_a1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_b" />
+                    id="Item.sk_dwarf_iron_chest_light_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_gloves_a" />
@@ -6152,7 +6152,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_a1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_a" />
+                    id="Item.sk_dwarf_iron_chest_light_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_gloves_a" />
@@ -6181,7 +6181,7 @@
                     id="Item.sk_dwarf_iron_helmet_light_c1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_b" />
+                    id="Item.sk_dwarf_iron_chest_light_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_gloves_a" />
@@ -6265,7 +6265,7 @@
                     id="Item.sk_dwarf_iron_bracer_med_b1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_a" />
@@ -6297,7 +6297,7 @@
                     id="Item.sk_dwarf_iron_bracer_med_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_b" />
@@ -6329,7 +6329,7 @@
                     id="Item.sk_dwarf_iron_bracer_med_b1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_a" />
@@ -6361,7 +6361,7 @@
                     id="Item.sk_dwarf_iron_bracer_med_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_ram_b" />
@@ -7131,7 +7131,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_c1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_c1" />
+                    id="Item.sk_dwarf_iron_boots_med_c1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -7203,7 +7203,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_c2" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_c1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -7413,7 +7413,7 @@
                     id="Item.sk_dwarf_iron_bracer_light_c3" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_c1" />
+                    id="Item.sk_dwarf_iron_boots_med_b1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

@@ -1652,6 +1652,68 @@ class CrossCultureArmourInversionTests(unittest.TestCase):
         for tid, reason in ts.Validator._ARMOUR_LADDER_EXEMPT.items():
             self.assertTrue(reason.strip(), f"{tid} is exempt without a stated reason")
 
+
+class ArmourMeshTierLadderTests(unittest.TestCase):
+    """ARMOUR_MESH_TIER_LADDER (#609): a troop wears only the artist mesh tiers its level
+    allows (rebalance_armor.MESH_TIER_LADDER). Over-dressed (a level-11 snaga in a `_lord_`
+    chest) anchors the whole lord line to the light band under the kingdom-cap curve, which is
+    how the Gundabad uruk lord chest reached 20 body armour; under-dressed is cosmetic. Both
+    warn, with the direction in the message. Needs no install: the tier is in the id."""
+
+    TROOPS = """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="{id}" level="{level}" default_group="Infantry">
+    <Equipments>
+      <EquipmentRoster><equipment slot="Body" id="Item.{body}" /></EquipmentRoster>
+      <EquipmentRoster civilian="true"><equipment slot="Body" id="Item.sk_x_chest_lord_z" /></EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+</NPCCharacters>
+"""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, level, body, tid="x_troop", file="troops/troops_x.xml"):
+        _write(self.md / file, self.TROOPS.format(id=tid, level=level, body=body))
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set())
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run()
+                if i.code == "ARMOUR_MESH_TIER_LADDER"]
+
+    def test_over_dressed_recruit_warns_with_the_direction_and_the_repair(self):
+        issues = self._run(11, "sk_x_chest_lord_a")
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+        self.assertEqual(issues[0].entry_id, "x_troop")
+        self.assertIn("over-dressed", issues[0].message)
+        self.assertIn("sk_x_chest_lord_a", issues[0].message)
+        self.assertIn("light/medium", issues[0].message)
+        self.assertIn("fix_armour_mesh_ladder", issues[0].message)
+
+    def test_under_dressed_capstone_warns_as_cosmetic(self):
+        issues = self._run(41, "sk_x_chest_med_a")
+        self.assertEqual(len(issues), 1)
+        self.assertIn("under-dressed", issues[0].message)
+
+    def test_within_the_ladder_civilian_and_untokened_kit_are_clean(self):
+        self.assertEqual(self._run(41, "sk_x_chest_lord_a"), [])
+        self.assertEqual(self._run(11, "sk_x_chest_med_a"), [])
+        self.assertEqual(self._run(6, "sk_x_civ_heavy_coat_a"), [])
+        self.assertEqual(self._run(6, "sk_dale_chest_a03"), [])
+
+    def test_exempt_troops_and_villagers_are_left_out(self):
+        exempt = sorted(ts.Validator._ARMOUR_LADDER_EXEMPT)[0]
+        self.assertEqual(self._run(6, "sk_x_chest_lord_a", tid=exempt), [])
+        (self.md / "characters").mkdir()
+        self.assertEqual(self._run(6, "sk_x_chest_lord_a", tid="villager_x", file="characters/npcs_x.xml"), [])
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 

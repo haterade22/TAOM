@@ -2895,10 +2895,10 @@
                     id="Item.wm_isengard_shield_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_is_orc_sly_helmet_heavy_a" />
+                    id="Item.sk_is_orc_sly_helmet_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_b" />
@@ -2964,10 +2964,10 @@
                     id="Item.isengard_2h_axe_a" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_is_orc_brt_helmet_heavy_a" />
+                    id="Item.sk_is_orc_brt_helmet_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_a" />
@@ -3030,10 +3030,10 @@
                     id="Item.wm_isengard_shield_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_is_orc_inf_helmet_heavy_a" />
+                    id="Item.sk_is_orc_inf_helmet_med_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_b" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_md_orc_pauldron_med_b" />

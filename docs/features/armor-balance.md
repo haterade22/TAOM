@@ -404,6 +404,181 @@ form: a chest cap per kingdom with fixed slot and band ratios, applied to the wh
 re-curve exposed. The gate scales every item to the 57 reference cap of its own line since
 then, because kingdoms now differ in armour power by design.
 
+## Mesh-tier ladder: which artist tier a troop level may wear (2026-09-16, #609)
+
+A screenshot: `[Gundabad] Uruk Medium Chest IV` at 31 body armour (tier 6, 14.9 kg) beside
+`[Gundabad] Uruk Lord Chest III` at 20 (tier 4, 25.3 kg). The kingdom-cap curve above had priced
+both correctly for the rosters it was given: the six `sk_gb_uruk_chest_lord_*` were worn by the
+level-11 snaga and hunter (the 2026-05-19 fan-out, `b88a25e7`, padded three low troops with the
+whole lord line as extra battle sets), so the line anchored at the light band, 49 x 0.40 = 20,
+while the medium line, worn from level 16, sat at 31. "Lord" is the mesh the artist named. Nothing
+tied it to a troop level, so the plate chest was gutted to fit the recruit and the level-41 rider
+fought in it.
+
+**The ladder** (`rebalance_armor.MESH_TIER_LADDER`, the maintainer's table). The tier is read
+from the id token (`mesh_tier_of`: `_light_`, `_med_`/`_medium_`, `_heavy_`, `_elite_`, `_lord_`;
+`_civ`/`civilian` is off the ladder, an id with no token is not judged). Rows are inclusive upper
+bounds; TAOM levels run 6, 11, 16 ... so a level between rows takes the row above it.
+
+| Troop level | Allowed mesh tiers |
+|---|---|
+| <= 6 | light |
+| <= 16 | light, medium |
+| <= 21 | medium |
+| <= 26 | heavy |
+| <= 31 | heavy, elite |
+| <= 36 | elite |
+| >= 41 | elite, lord |
+
+Lord kit is for level 41+ troops or lords; hero kit never anchors and is out of scope. The
+ladder-exempt and bare-chested-by-design troops are skipped, as are civilian sets. Only
+`troops/troops_*.xml` is judged (villagers and notables are not on the ladder).
+
+**Two directions, one gate.** Over-dressed (the tier above the highest allowed) is the harmful
+one: the low wearer anchors the mesh, so every higher troop in it loses armour. Under-dressed
+(below the lowest allowed) is cosmetic; the troop-level gates already price it. The validator's
+`ARMOUR_MESH_TIER_LADDER` warning reports both with the direction in the message; the pure function
+is `rebalance_armor.mesh_ladder_violations`, shared with the fixer, and it needs no install because
+the tier is in the id. Baseline on 2026-09-16 before the fix: 251 over-dressed (troop, item) pairs
+over 147 troops in 9 cultures, 1,283 under-dressed over 344 troops.
+
+**The fixer**, `tools/fix_armour_mesh_ladder.py` (dry-run default, `--apply`), swaps each
+over-dressed pair to the SAME line (the id up to its tier token, in the same slot file, so a helmet
+is never offered as a chest) at the substitute tier, the same old item becoming the same new item
+in every set of the troop so its sets stay interchangeable. Three rules decide the target, in
+order, and each exists because the naive choice recreated the bug:
+
+1. **Tier**: `substitute_mesh_tiers(level)`, the allowed tiers not above the troop's STAT band
+   (`level_to_band`) highest first, then the allowed tiers above it lowest first. A level-11 troop
+   may wear medium, but its band is light: put in `_med_a` it anchors that variant to the light
+   band, one notch down from the original bug. So light first; medium stays on the list because a
+   line with no light variant (the Mordor orc infantry chest) still has a ladder-legal swap, and a
+   medium mesh dragged to the light band beats a heavy one left there.
+2. **Variant**: among a tier's variants, the one whose current anchor band (`line_anchors`, the
+   lowest in-scope wearer) is nearest the troop's band wins; at equal distance, below beats above.
+   Two `_med_` chests can be two bands apart, because each is priced by its own lowest wearer: the
+   first apply put a level-21 guardsman on `anf_inf_helmet_med_a` (a level-11 wearer, 21) when
+   `med_b` sat beside it at 33, and nine upgrade edges regressed. Troops are placed lowest level
+   first and every pick moves the anchor it lands on, so two troops converging on an unworn
+   variant in one run see each other (the deep review found the level-16 grunt and the level-21
+   orcs stacked on `sk_md_orc_inf_chest_med_d`; one run now spreads them over `med_b`/`med_c`).
+   A pick that lands off the troop's band because the line has nothing at it is marked on its
+   row (`anchor L16, a band below`), 85 of 186 on 2026-09-16, most of them level-21 troops whose
+   only ladder-legal mesh is medium while their stat band is heavy.
+3. **Suffix**: same variant letter, else the nearest one of the same shape (`_cape_a` before `_a`).
+   A digit may follow the tier token (`rivendell_torso_lord3_silver`, `thenn_armor_med1`), so the
+   split reads every id `mesh_tier_of` tiers; a token followed by a letter (`_lordly`) is not a tier.
+
+A line with nothing at any allowed tier is REPORTED and left alone (hand decision). Under-dressed is
+reported, never written (`--report-under` lists the rows). After `--apply` the rosters are re-read
+and the run exits 1 if an over-dressed pair with a substitute remains. Then re-derive and restat,
+because the anchors moved:
+
+```
+python tools/fix_armour_mesh_ladder.py            # read the table
+python tools/fix_armour_mesh_ladder.py --apply
+python tools/derive_armor_tiers.py
+python tools/rebalance_armor.py --dry-run --all --tier-source roster-first --keep-weights --keep-material-type
+python tools/rebalance_armor.py --apply   --all --tier-source roster-first --keep-weights --keep-material-type --backup-tag <tag>
+python tools/rebalance_armor.py --apply   ... --armory-path "E:\repos\lotraom-assets\v1.5\LOTRLOME_Armory\ModuleData\LOTRLOME_items"
+```
+
+**What the 2026-09-16 pass did.** 186 over-dressed pairs swapped over 118 troops in 11 troop
+files (249 equipment lines), the Uruk warrior's nine capeless sets given the `pauldron_medium_b` it
+already wore in the tenth (its demoted heavy chest had been masking the gap as an upgrade
+regression), 60 Armory items restatted on the live install and the `lotraom-assets` v1.5 mirror
+(weights and materials untouched; `.bak-meshladder-609` beside each Armory file): the six Gundabad
+lord chests 20 to 49, Iron Hills heavy chests 28 to 59, the Noldor gold heavy torso 44 to 68, the
+Mordor orc heavy chests 15 to 32, five Gondor heavy helmets 33 to 43, and so on. One item went
+down, `sk_md_orc_inf_chest_med_d` 24 to 15: the line has no light variant, the level-11 goblin
+snaga and hunter had to land on a medium mesh, and the picker gave them the unworn one, so nobody
+else pays. `CROSS_CULTURE_ARMOUR_INVERSION` stayed at the same 7 cells. Four
+`UPGRADE_ARMOUR_REGRESSION` warnings appeared, all pre-existing under-dress that surfaced when the
+parent's freed mesh climbed to its real band (the level-36 goblin veterans in `_heavy_` helmets
+under a parent whose `arc_helmet_heavy_a` rose 29 to 34; the Imladris and Lindon guardsmen in
+untokened tier-3 kit under a swordguard whose `torso_heavy_tier1` rose 44 to 68); they belong to
+the under-dressed pass, not to `fix_upgrade_armour_regressions.py`, whose cascade would re-dress
+the capstone's lord torsos and push the beastmaster into medium mesh.
+
+**65 hand decisions** (over-dressed, nothing in the line at an allowed tier). Dunland's whole tree
+sits one notch high because the artist named that kit a tier up (`heavy` is its mid mesh); Gondor's
+level-6 peasants have no light helmet in the Anorien infantry line; the Rhun and Iron Hills lines
+have no medium greaves or chest. The choices are: author the missing mesh tier, accept the
+kit and add the troop to `_ARMOUR_LADDER_EXEMPT` with a reason, or move the troop to another line.
+
+| Culture | Troop | L | Slot | Item | Mesh | Allowed |
+|---|---|---|---|---|---|---|
+| rhun_new | `black_sun_scout` | L21 | Leg | `sk_rh_drag_grvs_heavy_a` | heavy | medium |
+| rhun_new | `darkhun_horseman` | L21 | Leg | `sk_dg_khml_grvs_scale_heavy_a` | heavy | medium |
+| rhun_new | `darkhun_infantry` | L21 | Leg | `sk_dg_khml_grvs_hplate_heavy_a` | heavy | medium |
+| dunland | `dunland_bear_chosen` | L21 | Body | `dunland_wulf_scalemail_heavy_e` | heavy | medium |
+| dunland | `dunland_boar_spearman` | L21 | Body | `dunland_wulf_scalemail_heavy_c` | heavy | medium |
+| dunland | `dunland_dragon_crossbowman` | L21 | Body | `dunland_caerdh_chainmail_heavy_f` | heavy | medium |
+| dunland | `dunland_dragon_crossbowman` | L21 | Cape | `dunland_caerdh_pauldron_heavy_cape_a` | heavy | medium |
+| dunland | `dunland_dragon_crossbowman` | L21 | Head | `dunland_caerdh_helmet_heavy_d` | heavy | medium |
+| dunland | `dunland_falcon_archer` | L21 | Head | `dunland_caerdh_helmet_heavy_e` | heavy | medium |
+| dunland | `dunland_lizard_horseman` | L21 | Body | `dunland_caerdh_chainmail_heavy_b` | heavy | medium |
+| dunland | `dunland_lizard_horseman` | L21 | Cape | `dunland_caerdh_pauldron_heavy_cape_a` | heavy | medium |
+| dunland | `dunland_lizard_horseman` | L21 | Head | `dunland_caerdh_helmet_elite_b` | elite | medium |
+| dunland | `dunland_ox_pikeman` | L21 | Body | `dunland_wulf_scalemail_heavy_b` | heavy | medium |
+| dunland | `dunland_raiders_boss` | L21 | Body | `dunland_wulf_scalemail_heavy_f` | heavy | medium |
+| dunland | `dunland_raven_archer` | L21 | Body | `dunland_caerdh_chainmail_heavy_a` | heavy | medium |
+| dunland | `dunland_raven_archer` | L21 | Head | `dunland_caerdh_helmet_heavy_f` | heavy | medium |
+| dunland | `dunland_raven_warrior` | L16 | Head | `dunland_caerdh_helmet_heavy_e` | heavy | light/medium |
+| dunland | `dunland_stag_lancer` | L21 | Body | `dunland_caerdh_chainmail_heavy_a` | heavy | medium |
+| dunland | `dunland_stag_lancer` | L21 | Cape | `dunland_caerdh_pauldron_heavy_cape_b` | heavy | medium |
+| dunland | `dunland_stag_lancer` | L21 | Head | `dunland_caerdh_helmet_elite_a` | elite | medium |
+| dunland | `dunland_wolf_raider` | L21 | Body | `dunland_wulf_scalemail_heavy_f` | heavy | medium |
+| rhun_new | `far_rhun_cavalry` | L21 | Leg | `sk_rh_loke_grvs_heavy_a` | heavy | medium |
+| rhun_new | `far_rhun_horse_master` | L21 | Leg | `sk_rh_loke_grvs_heavy_a` | heavy | medium |
+| rhun_new | `far_rhun_infantry` | L21 | Leg | `sk_rh_loke_grvs_heavy_a` | heavy | medium |
+| gondor | `gondor_anf_cavalry` | L21 | Head | `sk_gd_anf_cav_helmet_heavy_a` | heavy | medium |
+| gondor | `gondor_anf_cavalry` | L21 | Head | `sk_gd_anf_cav_helmet_heavy_b` | heavy | medium |
+| gondor | `gondor_anf_infantry` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | heavy |
+| gondor | `gondor_anf_levy` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_ano_mt_cavalry` | L21 | Head | `sk_gd_ano_cav_helmet_heavy_a` | heavy | medium |
+| gondor | `gondor_ano_peasant` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_bel_infantry` | L21 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | medium |
+| gondor | `gondor_bel_recruit` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_bel_recruit_merc` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_bel_vet_infantry` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_b` | elite | heavy |
+| gondor | `gondor_lam_hill_warden` | L31 | Head | `sk_gd_lam_nob_helmet_lord_a` | lord | heavy/elite |
+| gondor | `gondor_lam_hill_warden` | L31 | Head | `sk_gd_lam_nob_helmet_lord_b` | lord | heavy/elite |
+| gondor | `gondor_lam_hill_warden` | L31 | Head | `sk_gd_lam_nob_helmet_lord_c` | lord | heavy/elite |
+| gondor | `gondor_lam_hill_warden` | L31 | Head | `sk_gd_lam_nob_helmet_lord_d` | lord | heavy/elite |
+| gondor | `gondor_lam_vet_swordman` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | heavy |
+| gondor | `gondor_leb_infantry` | L21 | Head | `sk_gd_ano_cav_helmet_heavy_a` | heavy | medium |
+| gondor | `gondor_loss_axe_thrower` | L21 | Cape | `sk_gd_los_pauld_inf_heavy_a` | heavy | medium |
+| gondor | `gondor_loss_lumberman` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_loss_lumberman_merc` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_loss_noble` | L16 | Cape | `sk_gd_los_pauld_nob_heavy_a` | heavy | light/medium |
+| gondor | `gondor_loss_noble_captain` | L36 | Body | `sk_gd_los_nob_chest_lord_a` | lord | elite |
+| gondor | `gondor_loss_noble_veteran` | L21 | Cape | `sk_gd_los_pauld_nob_heavy_a` | heavy | medium |
+| gondor | `gondor_loss_vet_axebearer` | L21 | Cape | `sk_gd_los_pauld_inf_heavy_a` | heavy | medium |
+| gondor | `gondor_osg_archer` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | heavy |
+| gondor | `gondor_osg_infantry` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | heavy |
+| gondor | `gondor_pg_archer` | L21 | Head | `sk_gd_pin_arc_helmet_heavy_a` | heavy | medium |
+| gondor | `gondor_pg_cavalry` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | heavy |
+| gondor | `gondor_pg_spearman` | L21 | Cape | `sk_gd_osg_pauld_cape_inf_elite_a` | elite | medium |
+| gondor | `gondor_pg_spearman` | L21 | Head | `sk_gd_pin_spear_helmet_heavy_a` | heavy | medium |
+| gondor | `gondor_pg_vet_spearman` | L26 | Cape | `sk_gd_osg_pauld_cape_inf_elite_b` | elite | heavy |
+| gondor | `gondor_pg_volunteer` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_ring_peasant` | L6 | Head | `sk_gd_ano_inf_helmet_med_a` | medium | light |
+| gondor | `gondor_ser_noble` | L16 | Head | `sk_gd_sere_helmet_heavy_a` | heavy | light/medium |
+| gondor | `gondor_ser_veteran` | L21 | Head | `sk_gd_sere_helmet_heavy_a` | heavy | medium |
+| erebor | `ironpass_arbalest` | L21 | Body | `sk_dwarf_iron_chest_heavy_a` | heavy | medium |
+| erebor | `ironpass_arbalest` | L21 | Body | `sk_dwarf_iron_chest_heavy_b` | heavy | medium |
+| erebor | `ironpass_arbalest` | L21 | Body | `sk_dwarf_iron_chest_heavy_c` | heavy | medium |
+| erebor | `ironpass_infantry` | L21 | Body | `sk_dwarf_iron_chest_heavy_a` | heavy | medium |
+| erebor | `ironpass_infantry` | L21 | Body | `sk_dwarf_iron_chest_heavy_b` | heavy | medium |
+| erebor | `ironpass_infantry` | L21 | Body | `sk_dwarf_iron_chest_heavy_c` | heavy | medium |
+| erebor | `ironpass_ram_rider` | L21 | Body | `sk_dwarf_iron_chest_heavy_c` | heavy | medium |
+
+**Not fixed here, known:** the inherited-ratio secondaries (#583, Codex review 104): the medium
+chest's arm armour (41) still reads above the lord chest's (25) in the tooltip, because secondaries
+scale with the primary at each item's legacy proportion; a secondary floor per band is a curve
+decision. The under-dressed direction (1,283 pairs) is the next roster pass.
+
 ## Dependencies
 
 - `rebalance_armor.py` (curve) — the analyzer imports it.

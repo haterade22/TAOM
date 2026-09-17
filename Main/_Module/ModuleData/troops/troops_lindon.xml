@@ -10980,7 +10980,7 @@
                     id="Item.rivendell_helmet_infantry_tier3" />
                 <equipment
                     slot="Body"
-                    id="Item.rivendell_torso_heavy_tier1" />
+                    id="Item.rivendell_torso_light_armored_tier1" />
                 <equipment
                     slot="Gloves"
                     id="Item.rivendell_vambraces_2" />

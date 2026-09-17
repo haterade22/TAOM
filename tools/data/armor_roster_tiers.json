@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13 08:41:32",
+  "generatedAt": "2026-09-16 21:13:38",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -5338,25 +5338,20 @@
       "culture": "dol_guldur",
       "slot": "head",
       "name": "[Dol Guldur] Uruk Elite Helmet I",
-      "current": 35,
+      "current": 41,
       "weight": 5.5,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 35,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 41,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dg_goblin_fellbow",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "sk_dg_uruk_helmet_elite_b": {
       "culture": "dol_guldur",
@@ -5491,7 +5486,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 35,
@@ -5500,6 +5495,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "dg_goblin_fellbow",
+          "level": 26
+        },
         {
           "troop": "dg_orc_archer",
           "level": 26
@@ -7690,22 +7689,18 @@
       "name": "[Dol Guldur] Heavy Bracer III",
       "current": 23,
       "weight": 5.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 23,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dg_warg_raider",
-          "level": 21
-        },
         {
           "troop": "dg_orc_archer",
           "level": 26
@@ -7933,7 +7928,7 @@
       "anchorLevel": 16,
       "maxLevel": 26,
       "levelSpan": 10,
-      "wearerCount": 11,
+      "wearerCount": 12,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 18,
@@ -7972,6 +7967,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_warg_raider",
           "level": 21
         },
         {
@@ -8105,9 +8104,9 @@
       "current": 23,
       "weight": 4.4,
       "anchorLevel": 31,
-      "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 23,
@@ -8119,6 +8118,10 @@
         {
           "troop": "dg_warg_red_fang",
           "level": 31
+        },
+        {
+          "troop": "dg_fell_warg_rider",
+          "level": 36
         }
       ]
     },
@@ -8263,22 +8266,18 @@
       "name": "[Dol Guldur] Uruk Heavy Boots V",
       "current": 19,
       "weight": 3.9,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 19,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dg_warg_raider",
-          "level": 21
-        },
         {
           "troop": "dg_orc_archer",
           "level": 26
@@ -8455,23 +8454,18 @@
       "name": "[Dol Guldur] Uruk Lord Boots V",
       "current": 23,
       "weight": 4.4,
-      "anchorLevel": 36,
-      "maxLevel": 36,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L36)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 23,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dg_fell_warg_rider",
-          "level": 36
-        }
-      ]
+      "wearers": []
     },
     "sk_dg_uruk_boots_lord_f": {
       "culture": "dol_guldur",
@@ -8629,7 +8623,7 @@
       "anchorLevel": 16,
       "maxLevel": 26,
       "levelSpan": 10,
-      "wearerCount": 11,
+      "wearerCount": 12,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 15,
@@ -8672,6 +8666,10 @@
         },
         {
           "troop": "dg_orc_scout",
+          "level": 21
+        },
+        {
+          "troop": "dg_warg_raider",
           "level": 21
         },
         {
@@ -9187,9 +9185,9 @@
       "current": 30,
       "weight": 3.8,
       "anchorLevel": 21,
-      "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 21,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 30,
@@ -9201,10 +9199,6 @@
         {
           "troop": "dunland_stag_lancer",
           "level": 21
-        },
-        {
-          "troop": "dunland_stag_rider",
-          "level": 26
         }
       ]
     },
@@ -9241,7 +9235,7 @@
       "anchorLevel": 31,
       "maxLevel": 31,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 36,
@@ -9250,6 +9244,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "dunland_stag_noble_lancer",
+          "level": 31
+        },
         {
           "troop": "dunland_falcon_noble_horse_archer",
           "level": 31
@@ -9265,7 +9263,7 @@
       "anchorLevel": 31,
       "maxLevel": 31,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 3,
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 36,
@@ -9274,6 +9272,14 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "dunland_lizard_noble_cavalry",
+          "level": 31
+        },
+        {
+          "troop": "dunland_raven_master_ranger",
+          "level": 31
+        },
         {
           "troop": "dunland_dragon_sniper",
           "level": 31
@@ -9284,49 +9290,39 @@
       "culture": "dunland",
       "slot": "head",
       "name": "[Dunland] Elite Caerdh Helmet V",
-      "current": 30,
+      "current": 36,
       "weight": 3.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 30,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_lizard_outrider",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_helmet_elite_f": {
       "culture": "dunland",
       "slot": "head",
       "name": "[Dunland] Elite Caerdh Helmet VI",
-      "current": 30,
+      "current": 36,
       "weight": 3.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 30,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_raven_ranger",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_helmet_heavy_a": {
       "culture": "dunland",
@@ -9334,18 +9330,23 @@
       "name": "[Dunland] Heavy Caerdh Helmet I",
       "current": 30,
       "weight": 3.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L26)",
       "target": 30,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "dunland_stag_rider",
+          "level": 26
+        }
+      ]
     },
     "dunland_caerdh_helmet_heavy_b": {
       "culture": "dunland",
@@ -9399,7 +9400,7 @@
       "anchorLevel": 21,
       "maxLevel": 26,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 30,
@@ -9411,6 +9412,10 @@
         {
           "troop": "dunland_dragon_crossbowman",
           "level": 21
+        },
+        {
+          "troop": "dunland_lizard_outrider",
+          "level": 26
         },
         {
           "troop": "dunland_dragon_firebolt",
@@ -9453,9 +9458,9 @@
       "current": 30,
       "weight": 3.0,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 30,
@@ -9467,6 +9472,10 @@
         {
           "troop": "dunland_raven_archer",
           "level": 21
+        },
+        {
+          "troop": "dunland_raven_ranger",
+          "level": 26
         }
       ]
     },
@@ -9476,23 +9485,18 @@
       "name": "[Dunland] Caerdh Lord's Helmet I",
       "current": 36,
       "weight": 3.8,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_stag_noble_lancer",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_helmet_lord_b": {
       "culture": "dunland",
@@ -9557,23 +9561,18 @@
       "name": "[Dunland] Caerdh Lord's Helmet V",
       "current": 36,
       "weight": 3.8,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_lizard_noble_cavalry",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_helmet_lord_f": {
       "culture": "dunland",
@@ -9619,23 +9618,18 @@
       "name": "[Dunland] Caerdh Lord's Helmet VIII",
       "current": 36,
       "weight": 3.8,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_raven_master_ranger",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_helmet_elite_a": {
       "culture": "dunland",
@@ -9660,25 +9654,20 @@
       "culture": "dunland",
       "slot": "head",
       "name": "[Dunland] Elite Wulf Helmet II",
-      "current": 30,
+      "current": 36,
       "weight": 3.8,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 30,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 36,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_ox_guard",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_helmet_elite_c": {
       "culture": "dunland",
@@ -9705,45 +9694,46 @@
       "name": "[Dunland] Elite Wulf Helmet IV",
       "current": 36,
       "weight": 3.8,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "elite",
-      "tierSource": "id-keyword",
-      "target": 36,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "dunland_wulf_helmet_elite_e": {
-      "culture": "dunland",
-      "slot": "head",
-      "name": "[Dunland] Elite Wulf Helmet V",
-      "current": 30,
-      "weight": 3.8,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 30,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
         {
-          "troop": "dunland_bear_berserker",
-          "level": 26
+          "troop": "dunland_boar_warlord",
+          "level": 31
         },
         {
-          "troop": "dunland_boar_boar_warrior",
-          "level": 26
-        },
+          "troop": "dunland_ox_iron_wall",
+          "level": 31
+        }
+      ]
+    },
+    "dunland_wulf_helmet_elite_e": {
+      "culture": "dunland",
+      "slot": "head",
+      "name": "[Dunland] Elite Wulf Helmet V",
+      "current": 36,
+      "weight": 3.8,
+      "anchorLevel": 31,
+      "maxLevel": 31,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 36,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
         {
           "troop": "dunland_bear_executioner",
           "level": 31
@@ -9754,24 +9744,20 @@
       "culture": "dunland",
       "slot": "head",
       "name": "[Dunland] Elite Wulf Helmet VI",
-      "current": 30,
+      "current": 36,
       "weight": 3.8,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 30,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_wolf_axeman",
-          "level": 26
-        },
         {
           "troop": "dunland_wolf_champion",
           "level": 31
@@ -9803,12 +9789,12 @@
       "name": "[Dunland] Heavy Wulf Helmet II",
       "current": 30,
       "weight": 3.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
       "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 30,
       "delta": 0,
       "status": "match",
@@ -9816,8 +9802,8 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dunland_ox_pikeman",
-          "level": 21
+          "troop": "dunland_ox_guard",
+          "level": 26
         }
       ]
     },
@@ -9865,12 +9851,12 @@
       "name": "[Dunland] Heavy Wulf Helmet V",
       "current": 30,
       "weight": 3.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
       "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 30,
       "delta": 0,
       "status": "match",
@@ -9878,12 +9864,12 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dunland_bear_chosen",
-          "level": 21
+          "troop": "dunland_bear_berserker",
+          "level": 26
         },
         {
-          "troop": "dunland_boar_spearman",
-          "level": 21
+          "troop": "dunland_boar_boar_warrior",
+          "level": 26
         }
       ]
     },
@@ -9893,12 +9879,12 @@
       "name": "[Dunland] Heavy Wulf Helmet VI",
       "current": 30,
       "weight": 3.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 30,
       "delta": 0,
       "status": "match",
@@ -9906,12 +9892,8 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "dunland_raiders_boss",
-          "level": 21
-        },
-        {
-          "troop": "dunland_wolf_raider",
-          "level": 21
+          "troop": "dunland_wolf_axeman",
+          "level": 26
         }
       ]
     },
@@ -9978,23 +9960,18 @@
       "name": "[Dunland] Wulf Lord's Helmet V",
       "current": 36,
       "weight": 3.8,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_ox_iron_wall",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_helmet_lord_e": {
       "culture": "dunland",
@@ -10002,23 +9979,18 @@
       "name": "[Dunland] Wulf Lord's Helmet VI",
       "current": 36,
       "weight": 3.8,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_boar_warlord",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_helmet_lord_f": {
       "culture": "dunland",
@@ -10074,9 +10046,9 @@
       "current": 14,
       "weight": 2.1,
       "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 21,
+      "levelSpan": 10,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 14,
@@ -10092,6 +10064,26 @@
         {
           "troop": "dunland_boar_warrior",
           "level": 16
+        },
+        {
+          "troop": "dunland_raiders_boss",
+          "level": 21
+        },
+        {
+          "troop": "dunland_wolf_raider",
+          "level": 21
+        },
+        {
+          "troop": "dunland_bear_chosen",
+          "level": 21
+        },
+        {
+          "troop": "dunland_boar_spearman",
+          "level": 21
+        },
+        {
+          "troop": "dunland_ox_pikeman",
+          "level": 21
         }
       ]
     },
@@ -10099,28 +10091,20 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Caerdh Chainmail I",
-      "current": 34,
+      "current": 40,
       "weight": 18.7,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 34,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 40,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_stag_rider",
-          "level": 26
-        },
-        {
-          "troop": "dunland_raven_ranger",
-          "level": 26
-        },
         {
           "troop": "dunland_raven_master_ranger",
           "level": 31
@@ -10131,30 +10115,6 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Caerdh Chainmail II",
-      "current": 34,
-      "weight": 18.7,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 34,
-      "delta": 0,
-      "status": "match",
-      "line": "b",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_lizard_outrider",
-          "level": 26
-        }
-      ]
-    },
-    "dunland_caerdh_chainmail_elite_c": {
-      "culture": "dunland",
-      "slot": "body",
-      "name": "[Dunland] Elite Caerdh Chainmail III",
       "current": 40,
       "weight": 18.7,
       "anchorLevel": null,
@@ -10166,9 +10126,37 @@
       "target": 40,
       "delta": 0,
       "status": "match",
-      "line": null,
+      "line": "b",
       "shared": false,
       "wearers": []
+    },
+    "dunland_caerdh_chainmail_elite_c": {
+      "culture": "dunland",
+      "slot": "body",
+      "name": "[Dunland] Elite Caerdh Chainmail III",
+      "current": 40,
+      "weight": 18.7,
+      "anchorLevel": 31,
+      "maxLevel": 31,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 40,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dunland_stag_noble_lancer",
+          "level": 31
+        },
+        {
+          "troop": "dunland_lizard_noble_cavalry",
+          "level": 31
+        }
+      ]
     },
     "dunland_caerdh_chainmail_elite_d": {
       "culture": "dunland",
@@ -10193,24 +10181,20 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Caerdh Chainmail V",
-      "current": 34,
+      "current": 40,
       "weight": 18.7,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 34,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 40,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_falcon_wildrider",
-          "level": 26
-        },
         {
           "troop": "dunland_falcon_noble_horse_archer",
           "level": 31
@@ -10243,9 +10227,9 @@
       "current": 34,
       "weight": 15.3,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 34,
@@ -10261,6 +10245,14 @@
         {
           "troop": "dunland_raven_archer",
           "level": 21
+        },
+        {
+          "troop": "dunland_stag_rider",
+          "level": 26
+        },
+        {
+          "troop": "dunland_raven_ranger",
+          "level": 26
         }
       ]
     },
@@ -10273,7 +10265,7 @@
       "anchorLevel": 21,
       "maxLevel": 31,
       "levelSpan": 10,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 34,
@@ -10285,6 +10277,10 @@
         {
           "troop": "dunland_lizard_horseman",
           "level": 21
+        },
+        {
+          "troop": "dunland_lizard_outrider",
+          "level": 26
         },
         {
           "troop": "dunland_dragon_sniper",
@@ -10341,18 +10337,23 @@
       "name": "[Dunland] Heavy Caerdh Chainmail V",
       "current": 34,
       "weight": 15.3,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 26,
+      "maxLevel": 26,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L26)",
       "target": 34,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "dunland_falcon_wildrider",
+          "level": 26
+        }
+      ]
     },
     "dunland_caerdh_chainmail_heavy_f": {
       "culture": "dunland",
@@ -10436,23 +10437,18 @@
       "name": "[Dunland] Caerdh Lord's Chainmail I",
       "current": 40,
       "weight": 18.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 40,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_stag_noble_lancer",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_chainmail_lord_b": {
       "culture": "dunland",
@@ -10460,23 +10456,18 @@
       "name": "[Dunland] Caerdh Lord's Chainmail II",
       "current": 40,
       "weight": 18.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 40,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_lizard_noble_cavalry",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_chainmail_lord_c": {
       "culture": "dunland",
@@ -10520,78 +10511,44 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Wulf Scalemail I",
-      "current": 34,
+      "current": 40,
       "weight": 18.7,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 34,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 40,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_bear_berserker",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_scalemail_elite_b": {
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Wulf Scalemail II",
-      "current": 34,
+      "current": 40,
       "weight": 18.7,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 34,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 40,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_ox_guard",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_scalemail_elite_c": {
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Wulf Scalemail III",
-      "current": 34,
-      "weight": 18.7,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 34,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_boar_boar_warrior",
-          "level": 26
-        }
-      ]
-    },
-    "dunland_wulf_scalemail_elite_d": {
-      "culture": "dunland",
-      "slot": "body",
-      "name": "[Dunland] Elite Wulf Scalemail IV",
       "current": 40,
       "weight": 18.7,
       "anchorLevel": null,
@@ -10606,6 +10563,42 @@
       "line": null,
       "shared": false,
       "wearers": []
+    },
+    "dunland_wulf_scalemail_elite_d": {
+      "culture": "dunland",
+      "slot": "body",
+      "name": "[Dunland] Elite Wulf Scalemail IV",
+      "current": 40,
+      "weight": 18.7,
+      "anchorLevel": 31,
+      "maxLevel": 31,
+      "levelSpan": 0,
+      "wearerCount": 4,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 40,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dunland_wolf_champion",
+          "level": 31
+        },
+        {
+          "troop": "dunland_bear_executioner",
+          "level": 31
+        },
+        {
+          "troop": "dunland_boar_warlord",
+          "level": 31
+        },
+        {
+          "troop": "dunland_ox_iron_wall",
+          "level": 31
+        }
+      ]
     },
     "dunland_wulf_scalemail_elite_e": {
       "culture": "dunland",
@@ -10630,8 +10623,27 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Elite Wulf Scalemail VI",
-      "current": 34,
+      "current": 40,
       "weight": 18.7,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 40,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "dunland_wulf_scalemail_heavy_a": {
+      "culture": "dunland",
+      "slot": "body",
+      "name": "[Dunland] Heavy Wulf Scalemail I",
+      "current": 34,
+      "weight": 15.3,
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
@@ -10641,33 +10653,14 @@
       "target": 34,
       "delta": 0,
       "status": "match",
-      "line": null,
+      "line": "a",
       "shared": false,
       "wearers": [
         {
-          "troop": "dunland_wolf_axeman",
+          "troop": "dunland_bear_berserker",
           "level": 26
         }
       ]
-    },
-    "dunland_wulf_scalemail_heavy_a": {
-      "culture": "dunland",
-      "slot": "body",
-      "name": "[Dunland] Heavy Wulf Scalemail I",
-      "current": 34,
-      "weight": 15.3,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 34,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": []
     },
     "dunland_wulf_scalemail_heavy_b": {
       "culture": "dunland",
@@ -10676,9 +10669,9 @@
       "current": 34,
       "weight": 15.3,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 34,
@@ -10690,6 +10683,14 @@
         {
           "troop": "dunland_ox_pikeman",
           "level": 21
+        },
+        {
+          "troop": "dunland_boar_boar_warrior",
+          "level": 26
+        },
+        {
+          "troop": "dunland_ox_guard",
+          "level": 26
         }
       ]
     },
@@ -10697,24 +10698,20 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Heavy Wulf Scalemail III",
-      "current": 26,
+      "current": 34,
       "weight": 15.3,
-      "anchorLevel": 16,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 34,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_clan_warrior",
-          "level": 16
-        },
         {
           "troop": "dunland_boar_spearman",
           "level": 21
@@ -10744,24 +10741,20 @@
       "culture": "dunland",
       "slot": "body",
       "name": "[Dunland] Heavy Wulf Scalemail V",
-      "current": 26,
+      "current": 34,
       "weight": 15.3,
-      "anchorLevel": 16,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 34,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_boar_warrior",
-          "level": 16
-        },
         {
           "troop": "dunland_bear_chosen",
           "level": 21
@@ -10775,9 +10768,9 @@
       "current": 34,
       "weight": 15.3,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 34,
@@ -10793,6 +10786,10 @@
         {
           "troop": "dunland_wolf_raider",
           "level": 21
+        },
+        {
+          "troop": "dunland_wolf_axeman",
+          "level": 26
         }
       ]
     },
@@ -10827,9 +10824,9 @@
       "current": 16,
       "weight": 6.8,
       "anchorLevel": 11,
-      "maxLevel": 11,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 16,
@@ -10841,6 +10838,14 @@
         {
           "troop": "dunland_boar_noble_son",
           "level": 11
+        },
+        {
+          "troop": "dunland_clan_warrior",
+          "level": 16
+        },
+        {
+          "troop": "dunland_boar_warrior",
+          "level": 16
         }
       ]
     },
@@ -10850,23 +10855,18 @@
       "name": "[Dunland] Wulf Lord's Scalemail I",
       "current": 40,
       "weight": 18.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 40,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_bear_executioner",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_scalemail_lord_b": {
       "culture": "dunland",
@@ -10874,23 +10874,18 @@
       "name": "[Dunland] Wulf Lord's Scalemail II",
       "current": 40,
       "weight": 18.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 40,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_ox_iron_wall",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_scalemail_lord_c": {
       "culture": "dunland",
@@ -10898,23 +10893,18 @@
       "name": "[Dunland] Wulf Lord's Scalemail III",
       "current": 40,
       "weight": 18.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 40,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_boar_warlord",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_wulf_scalemail_lord_d": {
       "culture": "dunland",
@@ -10922,23 +10912,18 @@
       "name": "[Dunland] Wulf Lord's Scalemail IV",
       "current": 40,
       "weight": 18.7,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 40,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "dunland_wolf_champion",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "dunland_caerdh_bracer_light_a": {
       "culture": "dunland",
@@ -11332,22 +11317,18 @@
       "name": "[Dunland] Heavy Wulf Bracers III",
       "current": 20,
       "weight": 1.3,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 20,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_boar_spearman",
-          "level": 21
-        },
         {
           "troop": "dunland_bear_berserker",
           "level": 26
@@ -11462,7 +11443,7 @@
       "anchorLevel": 21,
       "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 20,
@@ -11471,6 +11452,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "dunland_boar_spearman",
+          "level": 21
+        },
         {
           "troop": "dunland_ox_pikeman",
           "level": 21
@@ -11993,20 +11978,25 @@
       "culture": "dunland",
       "slot": "leg",
       "name": "[Dunland] Medium Wulf Boots V",
-      "current": 13,
+      "current": 17,
       "weight": 2.1,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 13,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 17,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "dunland_boar_spearman",
+          "level": 21
+        }
+      ]
     },
     "dunland_wulf_boots_medium_f": {
       "culture": "dunland",
@@ -12141,22 +12131,18 @@
       "name": "[Dunland] Heavy Wulf Greaves V",
       "current": 17,
       "weight": 3.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 17,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_boar_spearman",
-          "level": 21
-        },
         {
           "troop": "dunland_boar_boar_warrior",
           "level": 26
@@ -12337,24 +12323,20 @@
       "culture": "dunland",
       "slot": "shoulder",
       "name": "[Dunland] Elite Caerdh Cape I",
-      "current": 20,
+      "current": 24,
       "weight": 7.6,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 20,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 24,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dunland_lizard_outrider",
-          "level": 26
-        },
         {
           "troop": "dunland_stag_noble_lancer",
           "level": 31
@@ -12391,9 +12373,9 @@
       "current": 20,
       "weight": 6.0,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 20,
@@ -12409,6 +12391,10 @@
         {
           "troop": "dunland_dragon_crossbowman",
           "level": 21
+        },
+        {
+          "troop": "dunland_lizard_outrider",
+          "level": 26
         }
       ]
     },
@@ -17226,7 +17212,7 @@
       "anchorLevel": 6,
       "maxLevel": 21,
       "levelSpan": 15,
-      "wearerCount": 28,
+      "wearerCount": 43,
       "tier": "light",
       "tierSource": "roster(L6)",
       "target": 21,
@@ -17344,30 +17330,6 @@
           "level": 16
         },
         {
-          "troop": "gondor_leb_archer",
-          "level": 21
-        }
-      ]
-    },
-    "sk_gd_ano_inf_helmet_heavy_a": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Anorien Infantry Heavy Helmet",
-      "current": 33,
-      "weight": 3.5,
-      "anchorLevel": 16,
-      "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 48,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": true,
-      "wearers": [
-        {
           "troop": "gondor_militia_veteran_spearman",
           "level": 16
         },
@@ -17381,6 +17343,10 @@
         },
         {
           "troop": "gondor_loss_vet_axebearer",
+          "level": 21
+        },
+        {
+          "troop": "gondor_leb_archer",
           "level": 21
         },
         {
@@ -17426,7 +17392,27 @@
         {
           "troop": "gondor_ano_bowman",
           "level": 21
-        },
+        }
+      ]
+    },
+    "sk_gd_ano_inf_helmet_heavy_a": {
+      "culture": "gondor",
+      "slot": "head",
+      "name": "[Gondor] Anorien Infantry Heavy Helmet",
+      "current": 43,
+      "weight": 3.5,
+      "anchorLevel": 26,
+      "maxLevel": 41,
+      "levelSpan": 15,
+      "wearerCount": 33,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 43,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": true,
+      "wearers": [
         {
           "troop": "gondor_loss_vet_axe_thrower",
           "level": 26
@@ -18292,9 +18278,9 @@
       "current": 21,
       "weight": 2.5,
       "anchorLevel": 11,
-      "maxLevel": 11,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 21,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 21,
@@ -18306,27 +18292,7 @@
         {
           "troop": "gondor_har_militia",
           "level": 11
-        }
-      ]
-    },
-    "sk_gd_har_inf_helmet_heavy_a": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Harondor Heavy Helmet A",
-      "current": 33,
-      "weight": 3.5,
-      "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
+        },
         {
           "troop": "gondor_har_footman",
           "level": 16
@@ -18334,27 +18300,7 @@
         {
           "troop": "gondor_har_skirmisher",
           "level": 16
-        }
-      ]
-    },
-    "sk_gd_har_inf_helmet_heavy_b": {
-      "culture": "gondor",
-      "slot": "head",
-      "name": "[Gondor] Harondor Heavy Helmet B",
-      "current": 43,
-      "weight": 3.5,
-      "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 43,
-      "delta": 0,
-      "status": "match",
-      "line": "b",
-      "shared": false,
-      "wearers": [
+        },
         {
           "troop": "gondor_har_guardsman",
           "level": 21
@@ -18365,12 +18311,31 @@
         }
       ]
     },
-    "sk_gd_har_inf_helmet_elite_a": {
+    "sk_gd_har_inf_helmet_heavy_a": {
       "culture": "gondor",
       "slot": "head",
-      "name": "[Gondor] Harondor Elite Helmet A",
+      "name": "[Gondor] Harondor Heavy Helmet A",
       "current": 43,
-      "weight": 4.5,
+      "weight": 3.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 43,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": []
+    },
+    "sk_gd_har_inf_helmet_heavy_b": {
+      "culture": "gondor",
+      "slot": "head",
+      "name": "[Gondor] Harondor Heavy Helmet B",
+      "current": 43,
+      "weight": 3.5,
       "anchorLevel": 26,
       "maxLevel": 26,
       "levelSpan": 0,
@@ -18380,7 +18345,7 @@
       "target": 43,
       "delta": 0,
       "status": "match",
-      "line": "a",
+      "line": "b",
       "shared": false,
       "wearers": [
         {
@@ -18392,6 +18357,25 @@
           "level": 26
         }
       ]
+    },
+    "sk_gd_har_inf_helmet_elite_a": {
+      "culture": "gondor",
+      "slot": "head",
+      "name": "[Gondor] Harondor Elite Helmet A",
+      "current": 51,
+      "weight": 4.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 51,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": []
     },
     "sk_gd_har_inf_helmet_elite_b": {
       "culture": "gondor",
@@ -18448,9 +18432,9 @@
       "current": 33,
       "weight": 2.5,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 33,
@@ -18462,6 +18446,10 @@
         {
           "troop": "gondor_anf_footman",
           "level": 16
+        },
+        {
+          "troop": "gondor_anf_guardsman",
+          "level": 21
         }
       ]
     },
@@ -18471,23 +18459,18 @@
       "name": "[Gondor] Anfalas Infantry Heavy Helmet A",
       "current": 43,
       "weight": 3.5,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "id-keyword",
       "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_anf_guardsman",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_anf_inf_helmet_heavy_b": {
       "culture": "gondor",
@@ -18592,9 +18575,9 @@
       "current": 33,
       "weight": 3.5,
       "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 33,
@@ -18610,6 +18593,14 @@
         {
           "troop": "gondor_ser_veteran",
           "level": 21
+        },
+        {
+          "troop": "gondor_ser_pikeman",
+          "level": 26
+        },
+        {
+          "troop": "gondor_ser_maceman",
+          "level": 26
         }
       ]
     },
@@ -18617,25 +18608,20 @@
       "culture": "gondor",
       "slot": "head",
       "name": "[Gondor] Serelond Elite Helmet A",
-      "current": 43,
+      "current": 51,
       "weight": 4.5,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 43,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 51,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_ser_maceman",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_sere_helmet_elite_b": {
       "culture": "gondor",
@@ -18669,24 +18655,20 @@
       "culture": "gondor",
       "slot": "head",
       "name": "[Gondor] Serelond Elite Helmet C",
-      "current": 43,
+      "current": 51,
       "weight": 4.5,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 43,
+      "levelSpan": 5,
+      "wearerCount": 2,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 51,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "gondor_ser_pikeman",
-          "level": 26
-        },
         {
           "troop": "gondor_ser_pikewarden",
           "level": 31
@@ -18732,9 +18714,9 @@
       "current": 21,
       "weight": 2.5,
       "anchorLevel": 11,
-      "maxLevel": 11,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 21,
@@ -18746,6 +18728,10 @@
         {
           "troop": "gondor_lam_footman",
           "level": 11
+        },
+        {
+          "troop": "gondor_lam_swordman",
+          "level": 16
         }
       ]
     },
@@ -18756,9 +18742,9 @@
       "current": 21,
       "weight": 2.5,
       "anchorLevel": 11,
-      "maxLevel": 11,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 21,
@@ -18770,6 +18756,10 @@
         {
           "troop": "gondor_lam_footman",
           "level": 11
+        },
+        {
+          "troop": "gondor_lam_swordman",
+          "level": 16
         }
       ]
     },
@@ -18777,73 +18767,58 @@
       "culture": "gondor",
       "slot": "head",
       "name": "[Gondor] Lamedon Heavy Helmet A",
-      "current": 33,
+      "current": 43,
       "weight": 3.5,
-      "anchorLevel": 16,
-      "maxLevel": 16,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_lam_swordman",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_lam_inf_helmet_heavy_b1": {
       "culture": "gondor",
       "slot": "head",
       "name": "[Gondor] Lamedon Heavy Helmet B",
-      "current": 33,
+      "current": 43,
       "weight": 3.5,
-      "anchorLevel": 16,
-      "maxLevel": 16,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_lam_swordman",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_lam_inf_helmet_heavy_c1": {
       "culture": "gondor",
       "slot": "head",
       "name": "[Gondor] Lamedon Heavy Helmet C",
-      "current": 33,
+      "current": 43,
       "weight": 3.5,
-      "anchorLevel": 16,
-      "maxLevel": 16,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_lam_swordman",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_lam_inf_helmet_heavy_a2": {
       "culture": "gondor",
@@ -19674,7 +19649,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 33,
@@ -19692,6 +19667,10 @@
           "level": 16
         },
         {
+          "troop": "gondor_da_footman",
+          "level": 21
+        },
+        {
           "troop": "gondor_lin_footman",
           "level": 21
         }
@@ -19703,22 +19682,18 @@
       "name": "[Gondor] Dol Amroth Heavy Helmet A",
       "current": 43,
       "weight": 3.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "gondor_da_footman",
-          "level": 21
-        },
         {
           "troop": "gondor_da_infantry",
           "level": 26
@@ -21609,9 +21584,9 @@
       "current": 23,
       "weight": 13.0,
       "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "maxLevel": 21,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 23,
@@ -21631,6 +21606,14 @@
         {
           "troop": "gondor_har_skirmisher",
           "level": 16
+        },
+        {
+          "troop": "gondor_har_guardsman",
+          "level": 21
+        },
+        {
+          "troop": "gondor_har_vet_skirmisher",
+          "level": 21
         }
       ]
     },
@@ -21640,26 +21623,18 @@
       "name": "[Gondor] Harondor Heavy Armour",
       "current": 48,
       "weight": 18.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 48,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "gondor_har_guardsman",
-          "level": 21
-        },
-        {
-          "troop": "gondor_har_vet_skirmisher",
-          "level": 21
-        },
         {
           "troop": "gondor_har_infantry",
           "level": 26
@@ -22404,23 +22379,18 @@
       "name": "[Gondor] Lamedon Lord Armour",
       "current": 57,
       "weight": 22.0,
-      "anchorLevel": 31,
-      "maxLevel": 31,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L31)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 57,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_lam_hill_warden",
-          "level": 31
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_los_nob_chainmail_a": {
       "culture": "gondor",
@@ -25822,7 +25792,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 14,
+      "wearerCount": 22,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 22,
@@ -25831,6 +25801,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "gondor_lam_swordman",
+          "level": 16
+        },
         {
           "troop": "gondor_bel_bowman",
           "level": 16
@@ -25864,55 +25838,11 @@
           "level": 21
         },
         {
-          "troop": "gondor_tol_crossbowman",
-          "level": 21
-        },
-        {
-          "troop": "gondor_met_noble",
-          "level": 21
-        },
-        {
-          "troop": "gondor_ca_veteran",
-          "level": 21
-        },
-        {
-          "troop": "gondor_ano_guardsman",
-          "level": 21
-        },
-        {
-          "troop": "gondor_ano_mt_cavalry",
-          "level": 21
-        },
-        {
-          "troop": "gondor_ano_bowman",
-          "level": 21
-        }
-      ]
-    },
-    "sk_gd_ano_pauld_inf_heavy_a": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Anorien Infantry Heavy Pauldron",
-      "current": 22,
-      "weight": 7.0,
-      "anchorLevel": 16,
-      "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 22,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 22,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_lam_swordman",
-          "level": 16
-        },
-        {
           "troop": "gondor_bel_archer",
+          "level": 21
+        },
+        {
+          "troop": "gondor_tol_crossbowman",
           "level": 21
         },
         {
@@ -25936,9 +25866,49 @@
           "level": 21
         },
         {
+          "troop": "gondor_met_noble",
+          "level": 21
+        },
+        {
+          "troop": "gondor_ca_veteran",
+          "level": 21
+        },
+        {
           "troop": "gondor_osg_skirmisher",
           "level": 21
         },
+        {
+          "troop": "gondor_ano_guardsman",
+          "level": 21
+        },
+        {
+          "troop": "gondor_ano_mt_cavalry",
+          "level": 21
+        },
+        {
+          "troop": "gondor_ano_bowman",
+          "level": 21
+        }
+      ]
+    },
+    "sk_gd_ano_pauld_inf_heavy_a": {
+      "culture": "gondor",
+      "slot": "shoulder",
+      "name": "[Gondor] Anorien Infantry Heavy Pauldron",
+      "current": 29,
+      "weight": 7.0,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 16,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 29,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
           "troop": "gondor_leb_vet_infantry",
           "level": 26
@@ -25957,6 +25927,14 @@
         },
         {
           "troop": "gondor_tol_vet_crossbowman",
+          "level": 26
+        },
+        {
+          "troop": "gondor_pg_vet_archer",
+          "level": 26
+        },
+        {
+          "troop": "gondor_anf_vet_cavalry",
           "level": 26
         },
         {
@@ -26001,28 +25979,20 @@
       "culture": "gondor",
       "slot": "shoulder",
       "name": "[Gondor] Anorien Infantry Elite Pauldron",
-      "current": 29,
+      "current": 34,
       "weight": 9.0,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 41,
-      "levelSpan": 15,
-      "wearerCount": 24,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 29,
+      "levelSpan": 10,
+      "wearerCount": 22,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 34,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "gondor_pg_vet_archer",
-          "level": 26
-        },
-        {
-          "troop": "gondor_anf_vet_cavalry",
-          "level": 26
-        },
         {
           "troop": "gondor_pel_infantry",
           "level": 31
@@ -26692,9 +26662,9 @@
       "current": 29,
       "weight": 7.0,
       "anchorLevel": 21,
-      "maxLevel": 21,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 29,
@@ -26710,27 +26680,7 @@
         {
           "troop": "gondor_loss_vet_axebearer",
           "level": 21
-        }
-      ]
-    },
-    "sk_gd_los_pauld_inf_elite_a": {
-      "culture": "gondor",
-      "slot": "shoulder",
-      "name": "[Gondor] Lossarnach Elite Pauldron",
-      "current": 29,
-      "weight": 9.0,
-      "anchorLevel": 26,
-      "maxLevel": 26,
-      "levelSpan": 0,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 29,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
+        },
         {
           "troop": "gondor_loss_vet_axe_thrower",
           "level": 26
@@ -26740,6 +26690,25 @@
           "level": 26
         }
       ]
+    },
+    "sk_gd_los_pauld_inf_elite_a": {
+      "culture": "gondor",
+      "slot": "shoulder",
+      "name": "[Gondor] Lossarnach Elite Pauldron",
+      "current": 34,
+      "weight": 9.0,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 34,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": []
     },
     "sk_gd_los_pauld_cape_inf_elite_a": {
       "culture": "gondor",
@@ -26944,9 +26913,9 @@
       "current": 22,
       "weight": 7.0,
       "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 22,
@@ -26962,6 +26931,10 @@
         {
           "troop": "gondor_loss_noble_veteran",
           "level": 21
+        },
+        {
+          "troop": "gondor_loss_noble_sergeant",
+          "level": 26
         }
       ]
     },
@@ -26969,25 +26942,20 @@
       "culture": "gondor",
       "slot": "shoulder",
       "name": "[Gondor] Lossarnach Noble Elite Pauldron",
-      "current": 29,
+      "current": 34,
       "weight": 9.0,
-      "anchorLevel": 26,
-      "maxLevel": 26,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 29,
+      "wearerCount": 0,
+      "tier": "elite",
+      "tierSource": "id-keyword",
+      "target": 34,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_loss_noble_sergeant",
-          "level": 26
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_los_pauld_cape_nob_elite_a": {
       "culture": "gondor",
@@ -26996,9 +26964,9 @@
       "current": 34,
       "weight": 9.0,
       "anchorLevel": 31,
-      "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 36,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 34,
@@ -27010,6 +26978,10 @@
         {
           "troop": "gondor_loss_noble_warden",
           "level": 31
+        },
+        {
+          "troop": "gondor_loss_noble_captain",
+          "level": 36
         }
       ]
     },
@@ -27019,23 +26991,18 @@
       "name": "[Gondor] Lossarnach Noble Lord Cape Pauldron",
       "current": 34,
       "weight": 9.0,
-      "anchorLevel": 36,
-      "maxLevel": 36,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
-      "tier": "elite",
-      "tierSource": "roster(L36)",
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
       "target": 34,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gondor_loss_noble_captain",
-          "level": 36
-        }
-      ]
+      "wearers": []
     },
     "sk_gd_pin_pauld_noble_med_a": {
       "culture": "gondor",
@@ -28459,32 +28426,20 @@
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Elite Chest I",
-      "current": 41,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 21,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 4,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 41,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "gundabad_fighter",
-          "level": 21
-        },
-        {
-          "troop": "gundabad_guard",
-          "level": 21
-        },
-        {
-          "troop": "gundabad_sword_warrior",
-          "level": 26
-        },
         {
           "troop": "gundabad_veteran_berserker",
           "level": 36
@@ -28672,7 +28627,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 5,
+      "wearerCount": 6,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 41,
@@ -28691,6 +28646,10 @@
         },
         {
           "troop": "gundabad_brute",
+          "level": 26
+        },
+        {
+          "troop": "gundabad_sword_warrior",
           "level": 26
         },
         {
@@ -28823,7 +28782,7 @@
       "anchorLevel": 11,
       "maxLevel": 11,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 20,
@@ -28834,6 +28793,10 @@
       "wearers": [
         {
           "troop": "gundabad_snaga",
+          "level": 11
+        },
+        {
+          "troop": "gundabad_hunter",
           "level": 11
         },
         {
@@ -28855,7 +28818,7 @@
       "anchorLevel": 11,
       "maxLevel": 11,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 20,
@@ -28866,6 +28829,10 @@
       "wearers": [
         {
           "troop": "gundabad_snaga",
+          "level": 11
+        },
+        {
+          "troop": "gundabad_hunter",
           "level": 11
         },
         {
@@ -28887,7 +28854,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 5,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 20,
@@ -28896,6 +28863,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_snaga",
+          "level": 11
+        },
         {
           "troop": "gundabad_hunter",
           "level": 11
@@ -28942,96 +28913,58 @@
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Lord Chest I",
-      "current": 20,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 20,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gundabad_snaga",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_hunter",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_grunt",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gb_uruk_chest_lord_b": {
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Lord Chest II",
-      "current": 20,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 20,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gundabad_snaga",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_hunter",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_grunt",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gb_uruk_chest_lord_c": {
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Lord Chest III",
-      "current": 20,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 11,
+      "anchorLevel": 41,
       "maxLevel": 41,
-      "levelSpan": 30,
-      "wearerCount": 4,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 20,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L41)",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "gundabad_snaga",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_hunter",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_grunt",
-          "level": 16
-        },
         {
           "troop": "gundabad_dread_rider_of_the_tower",
           "level": 41
@@ -29042,97 +28975,58 @@
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Lord Chest IV",
-      "current": 20,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 20,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gundabad_snaga",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_hunter",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_grunt",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gb_uruk_chest_lord_e": {
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Lord Chest V",
-      "current": 20,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 20,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gundabad_snaga",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_hunter",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_grunt",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gb_uruk_chest_lord_f": {
       "culture": "gundabad",
       "slot": "body",
       "name": "[Gundabad] Uruk Lord Chest VI",
-      "current": 20,
+      "current": 49,
       "weight": 25.3,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 20,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "lord",
+      "tierSource": "id-keyword",
+      "target": 49,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "gundabad_snaga",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_hunter",
-          "level": 11
-        },
-        {
-          "troop": "gundabad_grunt",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "sk_gb_uruk_chest_med_a": {
       "culture": "gundabad",
@@ -29141,9 +29035,9 @@
       "current": 31,
       "weight": 14.9,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 31,
@@ -29153,12 +29047,24 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "gundabad_grunt",
+          "level": 16
+        },
+        {
           "troop": "gundabad_militia_veteran_spearman",
           "level": 16
         },
         {
           "troop": "gundabad_militia_veteran_archer",
           "level": 16
+        },
+        {
+          "troop": "gundabad_fighter",
+          "level": 21
+        },
+        {
+          "troop": "gundabad_guard",
+          "level": 21
         }
       ]
     },
@@ -29171,7 +29077,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 31,
@@ -29180,6 +29086,10 @@
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_grunt",
+          "level": 16
+        },
         {
           "troop": "gundabad_militia_veteran_spearman",
           "level": 16
@@ -29203,7 +29113,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 31,
@@ -29212,6 +29122,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_grunt",
+          "level": 16
+        },
         {
           "troop": "gundabad_militia_veteran_spearman",
           "level": 16
@@ -29235,7 +29149,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 31,
@@ -29244,6 +29158,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_grunt",
+          "level": 16
+        },
         {
           "troop": "gundabad_lurker",
           "level": 16
@@ -29267,7 +29185,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 31,
@@ -29276,6 +29194,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_grunt",
+          "level": 16
+        },
         {
           "troop": "gundabad_lurker",
           "level": 16
@@ -29299,7 +29221,7 @@
       "anchorLevel": 16,
       "maxLevel": 21,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 31,
@@ -29308,6 +29230,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_grunt",
+          "level": 16
+        },
         {
           "troop": "gundabad_lurker",
           "level": 16
@@ -29808,26 +29734,18 @@
       "name": "[Gundabad] Uruk Heavy Boots II",
       "current": 21,
       "weight": 4.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 21,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "gundabad_scout",
-          "level": 21
-        },
-        {
-          "troop": "gundabad_scout_merc",
-          "level": 21
-        },
         {
           "troop": "gundabad_raiders_boss",
           "level": 26
@@ -29930,24 +29848,20 @@
       "culture": "gundabad",
       "slot": "leg",
       "name": "[Gundabad] Uruk Heavy Boots VI",
-      "current": 21,
+      "current": 25,
       "weight": 4.0,
-      "anchorLevel": 21,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 2,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 21,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 25,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "gundabad_sentry",
-          "level": 21
-        },
         {
           "troop": "gundabad_veteran_spear_warrior",
           "level": 31
@@ -30102,20 +30016,33 @@
       "culture": "gundabad",
       "slot": "leg",
       "name": "[Gundabad] Uruk Medium Boots III",
-      "current": 16,
+      "current": 21,
       "weight": 2.9,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 16,
+      "wearerCount": 3,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 21,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "gundabad_scout",
+          "level": 21
+        },
+        {
+          "troop": "gundabad_sentry",
+          "level": 21
+        },
+        {
+          "troop": "gundabad_scout_merc",
+          "level": 21
+        }
+      ]
     },
     "sk_gb_uruk_cape_a": {
       "culture": "gundabad",
@@ -34013,32 +33940,20 @@
       "culture": "iron_hills",
       "slot": "body",
       "name": "[Iron Hills] Heavy Armour A",
-      "current": 28,
+      "current": 59,
       "weight": 23.0,
-      "anchorLevel": 11,
+      "anchorLevel": 21,
       "maxLevel": 26,
-      "levelSpan": 15,
-      "wearerCount": 7,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 28,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 59,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "ironpass_recruit",
-          "level": 11
-        },
-        {
-          "troop": "ironpass_warrior",
-          "level": 16
-        },
-        {
-          "troop": "ironpass_ram_herder",
-          "level": 16
-        },
         {
           "troop": "ironpass_infantry",
           "level": 21
@@ -34061,32 +33976,20 @@
       "culture": "iron_hills",
       "slot": "body",
       "name": "[Iron Hills] Heavy Armour B",
-      "current": 28,
+      "current": 59,
       "weight": 24.0,
-      "anchorLevel": 11,
+      "anchorLevel": 21,
       "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 5,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 28,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 59,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "ironpass_recruit",
-          "level": 11
-        },
-        {
-          "troop": "ironpass_warrior",
-          "level": 16
-        },
-        {
-          "troop": "ironpass_ram_herder",
-          "level": 16
-        },
         {
           "troop": "ironpass_infantry",
           "level": 21
@@ -34286,7 +34189,7 @@
       "anchorLevel": 11,
       "maxLevel": 21,
       "levelSpan": 10,
-      "wearerCount": 4,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 28,
@@ -34300,7 +34203,19 @@
           "level": 11
         },
         {
+          "troop": "ironpass_recruit",
+          "level": 11
+        },
+        {
           "troop": "iron_hills_reg_militia",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         },
         {
@@ -34322,7 +34237,7 @@
       "anchorLevel": 11,
       "maxLevel": 21,
       "levelSpan": 10,
-      "wearerCount": 4,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 28,
@@ -34336,7 +34251,19 @@
           "level": 11
         },
         {
+          "troop": "ironpass_recruit",
+          "level": 11
+        },
+        {
           "troop": "iron_hills_reg_militia",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "ironpass_ram_herder",
           "level": 16
         },
         {
@@ -35856,26 +35783,18 @@
       "name": "[Iron Hills] Heavy Boots A1",
       "current": 29,
       "weight": 3.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 29,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "ironpass_infantry",
-          "level": 21
-        },
-        {
-          "troop": "ironpass_arbalest",
-          "level": 21
-        },
         {
           "troop": "ironpass_axeman",
           "level": 26
@@ -35960,30 +35879,18 @@
       "name": "[Iron Hills] Heavy Boots B1",
       "current": 29,
       "weight": 3.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 8,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 29,
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "ironpass_infantry",
-          "level": 21
-        },
-        {
-          "troop": "ironpass_arbalest",
-          "level": 21
-        },
-        {
-          "troop": "ironpass_ram_rider",
-          "level": 21
-        },
         {
           "troop": "ironpass_axeman",
           "level": 26
@@ -36012,22 +35919,18 @@
       "name": "[Iron Hills] Heavy Boots B2",
       "current": 29,
       "weight": 3.6,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 6,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 29,
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "ironpass_ram_rider",
-          "level": 21
-        },
         {
           "troop": "ironpass_goat_charger",
           "level": 26
@@ -36082,41 +35985,20 @@
       "culture": "iron_hills",
       "slot": "leg",
       "name": "[Iron Hills] Heavy Boots C1",
-      "current": 22,
+      "current": 29,
       "weight": 3.5,
-      "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 5,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 22,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 29,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "iron_hills_noble",
-          "level": 16
-        },
-        {
-          "troop": "ironpass_infantry",
-          "level": 21
-        },
-        {
-          "troop": "ironpass_arbalest",
-          "level": 21
-        },
-        {
-          "troop": "iron_hills_noble_scout",
-          "level": 21
-        },
-        {
-          "troop": "iron_hills_noble_swordsman",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_dwarf_iron_boots_heavy_c2": {
       "culture": "iron_hills",
@@ -36224,18 +36106,38 @@
       "name": "[Iron Hills] Medium Boots B1",
       "current": 29,
       "weight": 2.7,
-      "anchorLevel": 26,
+      "anchorLevel": 21,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 10,
+      "wearerCount": 9,
       "tier": "heavy",
-      "tierSource": "roster(L26)",
+      "tierSource": "roster(L21)",
       "target": 29,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_infantry",
+          "level": 21
+        },
+        {
+          "troop": "ironpass_arbalest",
+          "level": 21
+        },
+        {
+          "troop": "ironpass_ram_rider",
+          "level": 21
+        },
+        {
+          "troop": "iron_hills_noble_scout",
+          "level": 21
+        },
+        {
+          "troop": "iron_hills_noble_swordsman",
+          "level": 21
+        },
         {
           "troop": "iron_hills_reg_bowman",
           "level": 26
@@ -36263,7 +36165,7 @@
       "anchorLevel": 16,
       "maxLevel": 31,
       "levelSpan": 15,
-      "wearerCount": 7,
+      "wearerCount": 8,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 22,
@@ -36274,6 +36176,10 @@
       "wearers": [
         {
           "troop": "ironpass_warrior",
+          "level": 16
+        },
+        {
+          "troop": "iron_hills_noble",
           "level": 16
         },
         {
@@ -38839,9 +38745,9 @@
       "current": 26,
       "weight": 2.9,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 26,
@@ -38853,6 +38759,10 @@
         {
           "troop": "isengard_orc_butcher",
           "level": 16
+        },
+        {
+          "troop": "isengard_orc_slayer",
+          "level": 21
         }
       ]
     },
@@ -38862,23 +38772,18 @@
       "name": "[Isengard] Isengard Orc Brute Heavy Helmet",
       "current": 34,
       "weight": 4.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "id-keyword",
       "target": 34,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "isengard_orc_slayer",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_is_orc_inf_helmet_med_a": {
       "culture": "isengard",
@@ -38887,9 +38792,9 @@
       "current": 16,
       "weight": 2.9,
       "anchorLevel": 11,
-      "maxLevel": 11,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 21,
+      "levelSpan": 10,
+      "wearerCount": 2,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 16,
@@ -38901,6 +38806,10 @@
         {
           "troop": "isengard_orc_warrior",
           "level": 11
+        },
+        {
+          "troop": "isengard_orc_reaver",
+          "level": 21
         }
       ]
     },
@@ -38910,23 +38819,18 @@
       "name": "[Isengard] Isengard Orc Infantry Heavy Helmet",
       "current": 34,
       "weight": 4.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "id-keyword",
       "target": 34,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "isengard_orc_reaver",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_is_orc_mrd_helmet_light_a": {
       "culture": "isengard",
@@ -38978,9 +38882,9 @@
       "current": 26,
       "weight": 2.9,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 26,
@@ -38992,6 +38896,10 @@
         {
           "troop": "isengard_orc_warg_raider_v2",
           "level": 16
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "level": 21
         }
       ]
     },
@@ -39001,23 +38909,18 @@
       "name": "[Isengard] Isengard Orc Sallet Heavy Helmet",
       "current": 34,
       "weight": 4.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "id-keyword",
       "target": 34,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "isengard_orc_warg_ravager_v2",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_is_orc_vgd_helmet_med_a": {
       "culture": "isengard",
@@ -43084,18 +42987,35 @@
       "name": "[Mordor] Medium Plate Helmet IV",
       "current": 25,
       "weight": 2.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
+      "anchorLevel": 16,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "tier": "medium",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L16)",
       "target": 25,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mordor_militia_veteran_archer",
+          "level": 16
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "level": 21
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "level": 21
+        }
+      ]
     },
     "sk_uruk_mordor_helmet_medium_c1": {
       "culture": "mordor",
@@ -43197,33 +43117,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Heavy Plate Helmet I",
-      "current": 25,
+      "current": 33,
       "weight": 3.0,
-      "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 25,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 33,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "mordor_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mordor_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "mordor_uruk_warrior",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_uruk_mordor_helmet_heavy_a2": {
       "culture": "mordor",
@@ -43257,28 +43164,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Heavy Plate Helmet III",
-      "current": 25,
+      "current": 33,
       "weight": 3.0,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 15,
-      "wearerCount": 5,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 25,
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 33,
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mordor_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "mordor_uruk_shieldbearer",
           "level": 26
@@ -43329,24 +43228,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Heavy Plate Helmet V",
-      "current": 25,
+      "current": 33,
       "weight": 3.0,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 15,
-      "wearerCount": 4,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 25,
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 33,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "mordor_uruk_infantry",
           "level": 26
@@ -43367,22 +43262,18 @@
       "name": "[Mordor] Heavy Plate Helmet VI",
       "current": 33,
       "weight": 3.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 4,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 33,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_skirmisher",
-          "level": 21
-        },
         {
           "troop": "mordor_uruk_infantry",
           "level": 26
@@ -43401,36 +43292,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Heavy Plate Helmet VII",
-      "current": 15,
+      "current": 33,
       "weight": 3.0,
-      "anchorLevel": 11,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 20,
-      "wearerCount": 7,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 15,
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 33,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_grunt",
-          "level": 11
-        },
-        {
-          "troop": "mordor_uruk_grunt_merc",
-          "level": 11
-        },
-        {
-          "troop": "mordor_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "mordor_uruk_warrior",
-          "level": 21
-        },
         {
           "troop": "mordor_uruk_infantry",
           "level": 26
@@ -43454,7 +43329,7 @@
       "anchorLevel": 26,
       "maxLevel": 31,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 33,
@@ -43463,6 +43338,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "mordor_uruk_archer",
+          "level": 26
+        },
         {
           "troop": "mordor_uruk_shieldbearer",
           "level": 26
@@ -43633,28 +43512,20 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Elite Plate Helmet VII",
-      "current": 33,
+      "current": 39,
       "weight": 3.5,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 5,
-      "wearerCount": 3,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 33,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 39,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_archer",
-          "level": 26
-        },
-        {
-          "troop": "mordor_uruk_shieldbearer",
-          "level": 26
-        },
         {
           "troop": "mordor_uruk_heavy_crossbow",
           "level": 31
@@ -44764,31 +44635,12 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Mordor Orc Archer Helmet",
-      "current": 22,
-      "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 22,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": []
-    },
-    "sk_md_orc_arc_helmet_heavy_a": {
-      "culture": "mordor",
-      "slot": "head",
-      "name": "[Mordor] Mordor Orc Archer Heavy Helmet",
       "current": 29,
-      "weight": 3.5,
+      "weight": 2.5,
       "anchorLevel": 21,
-      "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 4,
+      "maxLevel": 21,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
       "tierSource": "roster(L21)",
       "target": 29,
@@ -44800,7 +44652,27 @@
         {
           "troop": "mordor_orc_archer",
           "level": 21
-        },
+        }
+      ]
+    },
+    "sk_md_orc_arc_helmet_heavy_a": {
+      "culture": "mordor",
+      "slot": "head",
+      "name": "[Mordor] Mordor Orc Archer Heavy Helmet",
+      "current": 34,
+      "weight": 3.5,
+      "anchorLevel": 31,
+      "maxLevel": 31,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 34,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
         {
           "troop": "goblin_berserker",
           "level": 31
@@ -44900,9 +44772,9 @@
       "current": 22,
       "weight": 2.5,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 3,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 22,
@@ -44922,6 +44794,14 @@
         {
           "troop": "mordor_orc_warrior",
           "level": 16
+        },
+        {
+          "troop": "mordor_orc_infantry",
+          "level": 21
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "level": 21
         }
       ]
     },
@@ -44931,26 +44811,18 @@
       "name": "[Mordor] Mordor Orc Infantry Heavy Helmet",
       "current": 29,
       "weight": 3.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 6,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 29,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_orc_infantry",
-          "level": 21
-        },
-        {
-          "troop": "mordor_warg_ravager",
-          "level": 21
-        },
         {
           "troop": "goblin_archer",
           "level": 26
@@ -45113,20 +44985,25 @@
       "culture": "mordor",
       "slot": "head",
       "name": "[Mordor] Mordor Orc Vanguard Helmet",
-      "current": 22,
+      "current": 29,
       "weight": 2.5,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 22,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 29,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "mordor_orc_reaver",
+          "level": 21
+        }
+      ]
     },
     "sk_md_orc_vgd_helmet_heavy_a": {
       "culture": "mordor",
@@ -45134,22 +45011,18 @@
       "name": "[Mordor] Mordor Orc Vanguard Heavy Helmet",
       "current": 29,
       "weight": 3.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 7,
+      "levelSpan": 10,
+      "wearerCount": 6,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 29,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_orc_reaver",
-          "level": 21
-        },
         {
           "troop": "goblin_archer",
           "level": 26
@@ -46706,7 +46579,7 @@
       "anchorLevel": 11,
       "maxLevel": 26,
       "levelSpan": 15,
-      "wearerCount": 5,
+      "wearerCount": 6,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 17,
@@ -46732,6 +46605,10 @@
           "level": 16
         },
         {
+          "troop": "mordor_uruk_warrior",
+          "level": 21
+        },
+        {
           "troop": "mordor_uruk_archer",
           "level": 26
         }
@@ -46741,6 +46618,50 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Medium Chainmail Armour III",
+      "current": 17,
+      "weight": 9.5,
+      "anchorLevel": 11,
+      "maxLevel": 26,
+      "levelSpan": 15,
+      "wearerCount": 6,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": true,
+      "wearers": [
+        {
+          "troop": "mordor_uruk_grunt",
+          "level": 11
+        },
+        {
+          "troop": "mordor_uruk_grunt_merc",
+          "level": 11
+        },
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "level": 21
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "level": 21
+        },
+        {
+          "troop": "mordor_uruk_archer",
+          "level": 26
+        }
+      ]
+    },
+    "sk_uruk_mordor_chainmail_medium_d1": {
+      "culture": "mordor",
+      "slot": "body",
+      "name": "[Mordor] Medium Chainmail Armour IV",
       "current": 17,
       "weight": 9.5,
       "anchorLevel": 11,
@@ -46764,48 +46685,12 @@
           "level": 11
         },
         {
-          "troop": "mordor_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mordor_uruk_skirmisher",
-          "level": 21
-        },
-        {
-          "troop": "mordor_uruk_archer",
-          "level": 26
-        }
-      ]
-    },
-    "sk_uruk_mordor_chainmail_medium_d1": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Medium Chainmail Armour IV",
-      "current": 17,
-      "weight": 9.5,
-      "anchorLevel": 11,
-      "maxLevel": 26,
-      "levelSpan": 15,
-      "wearerCount": 4,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 17,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": true,
-      "wearers": [
-        {
-          "troop": "mordor_uruk_grunt",
-          "level": 11
-        },
-        {
-          "troop": "mordor_uruk_grunt_merc",
-          "level": 11
-        },
-        {
           "troop": "mordor_militia_veteran_archer",
           "level": 16
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "level": 21
         },
         {
           "troop": "mordor_uruk_archer",
@@ -46947,22 +46832,18 @@
       "name": "[Mordor] Heavy Chainmail Armour I",
       "current": 36,
       "weight": 9.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_warrior",
-          "level": 21
-        },
         {
           "troop": "mordor_uruk_shieldbearer",
           "level": 26
@@ -47007,22 +46888,18 @@
       "name": "[Mordor] Heavy Chainmail Armour III",
       "current": 36,
       "weight": 9.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_warrior",
-          "level": 21
-        },
         {
           "troop": "mordor_uruk_shieldbearer",
           "level": 26
@@ -47067,22 +46944,18 @@
       "name": "[Mordor] Heavy Chainmail Armour V",
       "current": 36,
       "weight": 9.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 0,
+      "wearerCount": 3,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_warrior",
-          "level": 21
-        },
         {
           "troop": "mordor_uruk_archer",
           "level": 26
@@ -47127,22 +47000,18 @@
       "name": "[Mordor] Heavy Chainmail Armour VII",
       "current": 36,
       "weight": 9.5,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_uruk_warrior",
-          "level": 21
-        },
         {
           "troop": "mordor_uruk_infantry",
           "level": 26
@@ -47952,20 +47821,25 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Mordor Orc Scale Chest",
-      "current": 24,
+      "current": 32,
       "weight": 13.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 24,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 32,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "mordor_orc_archer",
+          "level": 21
+        }
+      ]
     },
     "sk_md_orc_arc_chest_med_c": {
       "culture": "mordor",
@@ -47997,22 +47871,18 @@
       "name": "[Mordor] Mordor Orc Heavy Leather Chest I",
       "current": 32,
       "weight": 18.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 32,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "mordor_orc_archer",
-          "level": 21
-        },
         {
           "troop": "goblin_archer",
           "level": 26
@@ -48218,7 +48088,7 @@
       "anchorLevel": 11,
       "maxLevel": 16,
       "levelSpan": 5,
-      "wearerCount": 5,
+      "wearerCount": 7,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 15,
@@ -48227,6 +48097,14 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "goblin_snaga",
+          "level": 11
+        },
+        {
+          "troop": "goblin_hunter",
+          "level": 11
+        },
         {
           "troop": "isengard_orc_warrior",
           "level": 11
@@ -48258,7 +48136,7 @@
       "anchorLevel": 16,
       "maxLevel": 36,
       "levelSpan": 20,
-      "wearerCount": 17,
+      "wearerCount": 23,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 24,
@@ -48267,6 +48145,10 @@
       "line": "b",
       "shared": true,
       "wearers": [
+        {
+          "troop": "goblin_grunt",
+          "level": 16
+        },
         {
           "troop": "goblin_lurker",
           "level": 16
@@ -48301,6 +48183,26 @@
         },
         {
           "troop": "goblin_fighter_merc",
+          "level": 21
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "level": 21
+        },
+        {
+          "troop": "isengard_orc_slayer",
+          "level": 21
+        },
+        {
+          "troop": "isengard_orc_reaver",
+          "level": 21
+        },
+        {
+          "troop": "mordor_orc_infantry",
+          "level": 21
+        },
+        {
+          "troop": "mordor_warg_ravager",
           "level": 21
         },
         {
@@ -48344,9 +48246,9 @@
       "current": 24,
       "weight": 13.0,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 24,
@@ -48356,8 +48258,16 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "goblin_grunt",
+          "level": 16
+        },
+        {
           "troop": "isengard_orc_marauder",
           "level": 16
+        },
+        {
+          "troop": "mordor_orc_reaver",
+          "level": 21
         }
       ]
     },
@@ -48367,35 +48277,16 @@
       "name": "[Mordor] Mordor Orc Chain+Plate II",
       "current": 24,
       "weight": 13.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 24,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
-    "sk_md_orc_inf_chest_heavy_a": {
-      "culture": "mordor",
-      "slot": "body",
-      "name": "[Mordor] Mordor Orc Chain+Leather Heavy I",
-      "current": 15,
-      "weight": 18.0,
       "anchorLevel": 11,
-      "maxLevel": 21,
-      "levelSpan": 10,
-      "wearerCount": 7,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 15,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
+      "delta": 9,
+      "status": "over",
+      "line": null,
       "shared": false,
       "wearers": [
         {
@@ -48405,28 +48296,27 @@
         {
           "troop": "goblin_hunter",
           "level": 11
-        },
-        {
-          "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "isengard_orc_warg_ravager_v2",
-          "level": 21
-        },
-        {
-          "troop": "isengard_orc_slayer",
-          "level": 21
-        },
-        {
-          "troop": "mordor_orc_infantry",
-          "level": 21
-        },
-        {
-          "troop": "mordor_warg_ravager",
-          "level": 21
         }
       ]
+    },
+    "sk_md_orc_inf_chest_heavy_a": {
+      "culture": "mordor",
+      "slot": "body",
+      "name": "[Mordor] Mordor Orc Chain+Leather Heavy I",
+      "current": 32,
+      "weight": 18.0,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 32,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": []
     },
     "sk_md_orc_inf_chest_heavy_b": {
       "culture": "mordor",
@@ -48434,23 +48324,18 @@
       "name": "[Mordor] Mordor Orc Chain+Leather Heavy II",
       "current": 32,
       "weight": 18.0,
-      "anchorLevel": 21,
-      "maxLevel": 21,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "id-keyword",
       "target": 32,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
-      "wearers": [
-        {
-          "troop": "isengard_orc_reaver",
-          "level": 21
-        }
-      ]
+      "wearers": []
     },
     "sk_md_orc_inf_chest_heavy_c": {
       "culture": "mordor",
@@ -48494,36 +48379,20 @@
       "culture": "mordor",
       "slot": "body",
       "name": "[Mordor] Mordor Orc Chain+Plate Heavy I",
-      "current": 15,
+      "current": 32,
       "weight": 18.0,
-      "anchorLevel": 11,
+      "anchorLevel": 26,
       "maxLevel": 36,
-      "levelSpan": 25,
-      "wearerCount": 9,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 15,
+      "levelSpan": 10,
+      "wearerCount": 5,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 32,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "goblin_snaga",
-          "level": 11
-        },
-        {
-          "troop": "goblin_hunter",
-          "level": 11
-        },
-        {
-          "troop": "goblin_grunt",
-          "level": 16
-        },
-        {
-          "troop": "mordor_orc_reaver",
-          "level": 21
-        },
         {
           "troop": "mordor_warg_beastmaster",
           "level": 26
@@ -54971,9 +54840,9 @@
       "current": 33,
       "weight": 2.2,
       "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 3,
+      "maxLevel": 21,
+      "levelSpan": 5,
+      "wearerCount": 17,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 33,
@@ -54982,6 +54851,14 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "far_rhun_footman",
+          "level": 16
+        },
+        {
+          "troop": "far_rhun_horseman",
+          "level": 16
+        },
         {
           "troop": "kharaghul_rider",
           "level": 16
@@ -54993,30 +54870,6 @@
         {
           "troop": "rhun_militia_veteran_spearman",
           "level": 16
-        }
-      ]
-    },
-    "sk_rh_loke_helmet_east_heavy_a": {
-      "culture": "rhun",
-      "slot": "head",
-      "name": "[Rh\u00fbn] Loke-Rim Heavy Leather Helmet",
-      "current": 33,
-      "weight": 3.1,
-      "anchorLevel": 16,
-      "maxLevel": 21,
-      "levelSpan": 5,
-      "wearerCount": 7,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "far_rhun_footman",
-          "level": 16
         },
         {
           "troop": "balcoth_axeman",
@@ -55024,6 +54877,18 @@
         },
         {
           "troop": "balcoth_archer",
+          "level": 21
+        },
+        {
+          "troop": "far_rhun_infantry",
+          "level": 21
+        },
+        {
+          "troop": "far_rhun_cavalry",
+          "level": 21
+        },
+        {
+          "troop": "far_rhun_horse_master",
           "level": 21
         },
         {
@@ -55035,7 +54900,19 @@
           "level": 21
         },
         {
+          "troop": "kharaghul_horse_scout",
+          "level": 21
+        },
+        {
           "troop": "easterling_swordsman_new",
+          "level": 21
+        },
+        {
+          "troop": "easterling_halberdier_new",
+          "level": 21
+        },
+        {
+          "troop": "easterling_cavalry_new",
           "level": 21
         },
         {
@@ -55044,40 +54921,43 @@
         }
       ]
     },
+    "sk_rh_loke_helmet_east_heavy_a": {
+      "culture": "rhun",
+      "slot": "head",
+      "name": "[Rh\u00fbn] Loke-Rim Heavy Leather Helmet",
+      "current": 43,
+      "weight": 3.1,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 43,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": []
+    },
     "sk_rh_loke_helmet_east_heavy_b": {
       "culture": "rhun",
       "slot": "head",
       "name": "[Rh\u00fbn] Loke-Rim Heavy Leather Helmet II",
-      "current": 33,
+      "current": 43,
       "weight": 3.1,
-      "anchorLevel": 16,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 10,
-      "wearerCount": 9,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "far_rhun_horseman",
-          "level": 16
-        },
-        {
-          "troop": "balcoth_archer",
-          "level": 21
-        },
-        {
-          "troop": "far_rhun_infantry",
-          "level": 21
-        },
-        {
-          "troop": "easterling_halberdier_new",
-          "level": 21
-        },
         {
           "troop": "balcoth_horse_archer",
           "level": 26
@@ -55106,12 +54986,12 @@
       "name": "[Rh\u00fbn] Loke-Rim Heavy Leather Helmet III",
       "current": 43,
       "weight": 3.1,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 26,
-      "levelSpan": 5,
-      "wearerCount": 7,
+      "levelSpan": 0,
+      "wearerCount": 6,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 43,
       "delta": 0,
       "status": "match",
@@ -55119,23 +54999,19 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "far_rhun_cavalry",
-          "level": 21
-        },
-        {
-          "troop": "far_rhun_horse_master",
-          "level": 21
-        },
-        {
-          "troop": "kharaghul_horse_scout",
-          "level": 21
-        },
-        {
-          "troop": "easterling_cavalry_new",
-          "level": 21
-        },
-        {
           "troop": "wainrider_veteran_archer",
+          "level": 26
+        },
+        {
+          "troop": "far_rhun_gate_guard",
+          "level": 26
+        },
+        {
+          "troop": "far_rhun_cataphract",
+          "level": 26
+        },
+        {
+          "troop": "kharaghul_horse_archer",
           "level": 26
         },
         {
@@ -55152,32 +55028,20 @@
       "culture": "rhun",
       "slot": "head",
       "name": "[Rh\u00fbn] Loke-Rim Elite Leather Helmet",
-      "current": 43,
+      "current": 51,
       "weight": 4.0,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 11,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 43,
+      "levelSpan": 5,
+      "wearerCount": 8,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 51,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "far_rhun_gate_guard",
-          "level": 26
-        },
-        {
-          "troop": "far_rhun_cataphract",
-          "level": 26
-        },
-        {
-          "troop": "kharaghul_horse_archer",
-          "level": 26
-        },
         {
           "troop": "balcoth_farshot_horse_archer",
           "level": 31
@@ -55347,9 +55211,9 @@
       "current": 21,
       "weight": 2.2,
       "anchorLevel": 11,
-      "maxLevel": 11,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 21,
@@ -55361,6 +55225,10 @@
         {
           "troop": "sagarun_deckhand",
           "level": 11
+        },
+        {
+          "troop": "sagarun_watchman",
+          "level": 16
         }
       ]
     },
@@ -55368,24 +55236,20 @@
       "culture": "rhun",
       "slot": "head",
       "name": "[Rh\u00fbn] Loke-Rim Heavy Cultist Helmet",
-      "current": 33,
+      "current": 51,
       "weight": 3.1,
-      "anchorLevel": 16,
+      "anchorLevel": 31,
       "maxLevel": 31,
-      "levelSpan": 15,
-      "wearerCount": 2,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 33,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 51,
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "sagarun_watchman",
-          "level": 16
-        },
         {
           "troop": "loke_rim_maceman",
           "level": 31
@@ -57180,20 +57044,25 @@
       "culture": "rhun",
       "slot": "head",
       "name": "[Rh\u00fbn] Dragon Wrath Ranger Hood",
-      "current": 33,
+      "current": 43,
       "weight": 2.2,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 33,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "black_sun_scout",
+          "level": 21
+        }
+      ]
     },
     "sk_rh_drag_hood_med_b": {
       "culture": "rhun",
@@ -57220,22 +57089,18 @@
       "name": "[Rh\u00fbn] Dragon Wrath Heavy Ranger Hood",
       "current": 43,
       "weight": 3.1,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 31,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 43,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "black_sun_scout",
-          "level": 21
-        },
         {
           "troop": "black_sun_archer",
           "level": 26
@@ -62298,20 +62163,25 @@
       "culture": "rhun",
       "slot": "body",
       "name": "[Rh\u00fbn] Khamul Spiky Armor III",
-      "current": 29,
+      "current": 39,
       "weight": 9.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 21,
+      "maxLevel": 21,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "tier": "medium",
-      "tierSource": "id-keyword",
-      "target": 29,
+      "wearerCount": 1,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 39,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "darkhun_horseman",
+          "level": 21
+        }
+      ]
     },
     "sk_dg_khml_chest_med_d": {
       "culture": "rhun",
@@ -62338,22 +62208,18 @@
       "name": "[Rh\u00fbn] Khamul Heavy Spiky Armor",
       "current": 39,
       "weight": 14.0,
-      "anchorLevel": 21,
+      "anchorLevel": 26,
       "maxLevel": 46,
-      "levelSpan": 25,
-      "wearerCount": 5,
+      "levelSpan": 20,
+      "wearerCount": 4,
       "tier": "heavy",
-      "tierSource": "roster(L21)",
+      "tierSource": "roster(L26)",
       "target": 39,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": true,
       "wearers": [
-        {
-          "troop": "darkhun_horseman",
-          "level": 21
-        },
         {
           "troop": "darkhun_cavalry",
           "level": 26
@@ -70152,28 +70018,20 @@
       "culture": "rivendell",
       "slot": "body",
       "name": "[Noldor] Gold Heavy Armor I",
-      "current": 44,
+      "current": 68,
       "weight": 12.6,
-      "anchorLevel": 16,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 6,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 44,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 68,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "lindon_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "rivendell_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "lindon_imladris_swordguard",
           "level": 31
@@ -70449,7 +70307,7 @@
       "anchorLevel": 16,
       "maxLevel": 36,
       "levelSpan": 20,
-      "wearerCount": 6,
+      "wearerCount": 8,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 44,
@@ -70459,7 +70317,15 @@
       "shared": true,
       "wearers": [
         {
+          "troop": "lindon_militia_veteran_spearman",
+          "level": 16
+        },
+        {
           "troop": "lindon_militia_veteran_archer",
+          "level": 16
+        },
+        {
+          "troop": "rivendell_militia_veteran_spearman",
           "level": 16
         },
         {

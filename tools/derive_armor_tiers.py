@@ -69,18 +69,9 @@ TIER_ORDER = ['light', 'medium', 'heavy', 'elite', 'lord']
 level_to_tier = ra.level_to_band
 
 
-def id_keyword_tier(item_id):
-    """Return the tier the item id explicitly encodes, or None."""
-    idl = item_id.lower()
-    # Civilian first: a `_civ_` id may also carry a tier word (`_civ_heavy_coat`), and civilian kit
-    # is off the combat curve whatever its wearer's level.
-    if '_civ' in idl or 'civilian' in idl:
-        return 'civilian'
-    for kw, tier in (('_lord', 'lord'), ('_elite', 'elite'), ('_heavy', 'heavy'),
-                     ('_medium', 'medium'), ('_med', 'medium'), ('_light', 'light')):
-        if kw in idl:
-            return tier
-    return None
+# The tier an item id explicitly encodes, or None. One function with the writer, the mesh-tier
+# ladder (#609) and the validator, so a token read differently in one place cannot happen.
+id_keyword_tier = ra.mesh_tier_of
 
 
 def line_suffix(item_id):

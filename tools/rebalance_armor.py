@@ -279,6 +279,115 @@ def cap_value(cap, slot_type, tier):
     """round-half-up of cap x slot ratio x band ratio."""
     return int(math.floor(cap * SLOT_CAP_RATIO[slot_type] * BAND_RATIO[tier] + 0.5))
 
+
+# =============================================================================
+# Mesh-tier ladder (#609): which artist tiers a troop LEVEL may wear
+# =============================================================================
+#
+# The stat band above prices an item by its lowest wearer. That is right for the item and wrong
+# for the roster that put a recruit in it: six Gundabad `_lord_` chests, fanned out onto the
+# level-11 snaga in 2026-05, anchored the whole lord line at 20 body armour (the medium line,
+# worn from level 16, sat at 31). "Lord" is the mesh the artist named; nothing tied it to a
+# level until this table (the maintainer's, 2026-09-16). Rows are inclusive upper bounds; TAOM
+# levels run 6, 11, 16 ... so a level between rows takes the row above it. Lord kit is for
+# level 41+ troops or lords (hero kit never anchors and is out of scope here).
+MESH_TIER_ORDER = ('light', 'medium', 'heavy', 'elite', 'lord')
+MESH_TIER_LADDER = (
+    (6, ('light',)),
+    (16, ('light', 'medium')),
+    (21, ('medium',)),
+    (26, ('heavy',)),
+    (31, ('heavy', 'elite')),
+    (36, ('elite',)),
+    (10 ** 6, ('elite', 'lord')),
+)
+MESH_LADDER_SLOTS = ('Head', 'Body', 'Cape', 'Gloves', 'Leg')
+
+
+def allowed_mesh_tiers(level):
+    """The mesh tiers a troop of this level may wear, as a frozenset."""
+    for bound, tiers in MESH_TIER_LADDER:
+        if level <= bound:
+            return frozenset(tiers)
+    return frozenset(MESH_TIER_LADDER[-1][1])
+
+
+def mesh_tier_of(item_id):
+    """The tier an armour item's id encodes: light/medium/heavy/elite/lord, 'civilian' for `_civ`
+    kit (off the ladder whoever wears it, checked first because `_civ_heavy_coat` exists), or
+    None when the id carries no tier token (Dale's `_a03` lines)."""
+    idl = (item_id or '').lower()
+    if not idl:
+        return None
+    if '_civ' in idl or 'civilian' in idl:
+        return 'civilian'
+    for kw, tier in (('_lord', 'lord'), ('_elite', 'elite'), ('_heavy', 'heavy'),
+                     ('_medium', 'medium'), ('_med', 'medium'), ('_light', 'light')):
+        if kw in idl:
+            return tier
+    return None
+
+
+def substitute_mesh_tiers(level):
+    """The tiers to swap an over-dressed troop's item to, best first: every allowed tier that is
+    not above the troop's STAT band (`level_to_band`), highest first, then the allowed tiers
+    above the band, lowest first. A level-11 troop may wear medium, but its band is light, and
+    a snaga put in `_med_a` anchors that medium variant to the light band, which is the bug
+    this ladder exists to stop; so light comes first. Medium stays on the list because a line
+    with no light variant still has a ladder-legal swap, and a medium mesh dragged to the
+    light band beats a heavy one left there."""
+    band = level_to_band(level)
+    # The lord band prices as the elite band (BAND_RATIO), so lord kit is not above it.
+    ceiling = MESH_TIER_ORDER.index('lord' if band == 'elite' else band)
+    allowed = allowed_mesh_tiers(level)
+    below = [t for t in reversed(MESH_TIER_ORDER) if t in allowed and MESH_TIER_ORDER.index(t) <= ceiling]
+    above = [t for t in MESH_TIER_ORDER if t in allowed and MESH_TIER_ORDER.index(t) > ceiling]
+    return tuple(below + above)
+
+
+def mesh_ladder_violations(troops, exempt=()):
+    """Every (troop, slot, item) where a battle set wears a tier the troop's level does not allow.
+
+    `troops` is {id: {'level': int|None, 'sets': [{slot: item_id}], ...}}, the shape both the
+    validator's troop index and fix_upgrade_armour_regressions.load_troops produce; a record's
+    'file' and 'line' are carried through when present. Unlevelled and exempt troops are skipped,
+    so are civilian-token and token-less items and non-armour slots. One row per distinct
+    (troop, slot, item) with the number of sets wearing it; 'over' means the tier is above the
+    highest allowed (it drags the mesh's stats down for every troop above), 'under' below the
+    lowest (cosmetic). Sorted by troop, slot, item.
+    """
+    rows = []
+    for tid in sorted(troops):
+        rec = troops[tid]
+        level = rec.get('level')
+        if level is None or tid in exempt:
+            continue
+        allowed = allowed_mesh_tiers(int(level))
+        order = [MESH_TIER_ORDER.index(t) for t in allowed]
+        lo, hi = min(order), max(order)
+        seen = {}
+        for st in rec.get('sets') or ():
+            for slot in MESH_LADDER_SLOTS:
+                iid = st.get(slot)
+                if not iid:
+                    continue
+                tier = mesh_tier_of(iid)
+                if tier is None or tier == 'civilian' or tier in allowed:
+                    continue
+                key = (slot, iid)
+                if key in seen:
+                    seen[key]['sets'] += 1
+                    continue
+                seen[key] = {
+                    'troop': tid, 'level': int(level), 'file': rec.get('file'), 'line': rec.get('line'),
+                    'slot': slot, 'item': iid, 'tier': tier,
+                    'allowed': tuple(t for t in MESH_TIER_ORDER if t in allowed),
+                    'direction': 'over' if MESH_TIER_ORDER.index(tier) > hi else 'under',
+                    'sets': 1,
+                }
+        rows.extend(seen[k] for k in sorted(seen))
+    return rows
+
 # =============================================================================
 # Material Type Mapping (strict tier-based)
 # =============================================================================

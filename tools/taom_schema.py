@@ -233,6 +233,7 @@ class Validator:
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
         issues += self._cross_culture_armour_inversions()
+        issues += self._armour_mesh_tier_ladder()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
         issues.sort(key=lambda i: i.sort_key())
@@ -1476,6 +1477,49 @@ class Validator:
                     f"tools/analyze_kingdom_armour.py for the culture x tier picture, or add the "
                     f"troop to _ARMOUR_LADDER_EXEMPT with a reason if the kit is off the ladder "
                     f"on purpose"
+                ),
+            ))
+        return issues
+
+    # -- ARMOUR_MESH_TIER_LADDER --------------------------------------------- #
+    # An item id carries the tier the artist modelled (_light_ ... _lord_); the ladder
+    # (rebalance_armor.MESH_TIER_LADDER, the maintainer's table 2026-09-16) says which of
+    # those a troop LEVEL may wear. The stat curve prices an item by its lowest wearer, so a
+    # level-11 snaga put in the six Gundabad `_lord_` chests by the 2026-05 fan-out anchored
+    # the whole lord line to the light band: 20 body armour under a 25 kg plate mesh while
+    # the medium line sat at 31 (#609). Over-dressed drags the mesh down for every troop
+    # above it; under-dressed is cosmetic (1,283 rows pre-exist), which is why both warn.
+    # Needs no install: the tier is in the id. Troop files only; hero kit is meant to be lord
+    # kit, and the same exempt troops as the cross-culture gate never take part.
+    def _armour_mesh_tier_ladder(self) -> list:
+        ra = _curve()
+        if ra is None or not hasattr(ra, "mesh_ladder_violations"):
+            return []
+        troops, _ = self._upgrade_troop_index()
+        scoped = {}
+        for tid, rec in troops.items():
+            fname = re.split(r"[\\/]", rec["file"])[-1]
+            if not fname.startswith("troops_") or not fname.endswith(".xml"):
+                continue
+            scoped[tid] = rec
+        exempt = set(self._ARMOUR_LADDER_EXEMPT) | set(self._BODYLESS_BY_DESIGN)
+        issues = []
+        for hit in ra.mesh_ladder_violations(scoped, exempt=exempt):
+            over = hit["direction"] == "over"
+            issues.append(Issue(
+                severity=Severity.WARNING, code="ARMOUR_MESH_TIER_LADDER",
+                file=hit["file"], line=hit["line"], entry_id=hit["troop"],
+                message=(
+                    f'{"over" if over else "under"}-dressed: level {hit["level"]} wears '
+                    f'{hit["item"]} ({hit["tier"]} mesh) in {hit["sets"]} battle set(s) of slot '
+                    f'{hit["slot"]}; the ladder allows {"/".join(hit["allowed"])} at that level. '
+                    + ("A low wearer anchors the whole line to its band under the kingdom-cap "
+                       "curve, so every higher troop in that mesh loses armour: run "
+                       "tools/fix_armour_mesh_ladder.py (dry-run, then --apply), then re-derive "
+                       "and restat"
+                       if over else
+                       "Cosmetic; the troop-level gates already price it. A roster swap up the "
+                       "same line is the fix, or the ladder row if the kit is right")
                 ),
             ))
         return issues

@@ -102,7 +102,7 @@
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -116,7 +116,7 @@
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -130,7 +130,7 @@
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -144,7 +144,7 @@
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -158,7 +158,7 @@
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -172,7 +172,7 @@
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -338,7 +338,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -361,7 +361,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -384,7 +384,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -407,7 +407,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -430,7 +430,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -453,7 +453,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -576,7 +576,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -593,7 +593,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -610,7 +610,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -627,7 +627,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -644,7 +644,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -661,7 +661,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
