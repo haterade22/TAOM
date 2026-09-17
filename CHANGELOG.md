@@ -154,9 +154,9 @@ Lesson in `docs/reviews/lessons/animation-skeleton.md`; the warg ledger's "algor
 is corrected. A CLAUDE.md Traps row now carries the one-liner.
 
 **The rider line.** The Spider Rider is now three rungs in the warg line's shape:
-`taom_spider_creature` Spider Rider (L20, Giant Spider, light uruk kit) upgrades to
-`taom_spider_rider_brown` Brown Spider Rider (L25, medium kit and a shield) upgrades to
-`taom_spider_rider_pale` Pale Spider Rider (L30, heavy kit). Size is the tier: `body_length` 100 /
+`taom_spider_creature` Spider Rider (L21, Giant Spider, light uruk kit) upgrades to
+`taom_spider_rider_brown` Brown Spider Rider (L26, medium kit and a shield) upgrades to
+`taom_spider_rider_pale` Pale Spider Rider (L31, heavy kit), the warg line's own levels. Size is the tier: `body_length` 100 /
 110 / 125 on the three items, which the engine turns into `SetInitialAgentScale` 1.0 / 1.10 / 1.25
 at build (`Mission.cs:4056`), so each rung's spider reads 10 and 25 percent bigger while speed,
 maneuver, charge and the bite stay shared. Every roster of a rung carries that rung's mount. Only
