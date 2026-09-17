@@ -35,6 +35,8 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
     // No JSON sibling — the race table itself is the JSON side; this is a pure MCM kill switch.
     public bool RaceCombatModifiersEnabled => MasterEnabled && (TaomSettings.Instance?.EnableRaceCombatModifiers ?? true);
 
+    public bool CultureChargeDamageEnabled => MasterEnabled && (TaomSettings.Instance?.EnableCultureChargeDamage ?? _defaults.ChargeDamage.Enabled);
+
     public float CrushThroughMaxChance
         => SettingClamp.Clamp(TaomSettings.Instance?.CrushThroughMaxChance, _defaults.CrushThrough.MaxSkillChance, 0f, 1f);
 
@@ -50,8 +52,29 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
             if (!mcm.HasValue)
                 return _defaults.ChargeKnockdown.AutoKnockdownWeightRatio;
 
-            var neutralFloor = Math.Max(2, (int)Math.Ceiling(_defaults.ChargeKnockdown.NeutralWeightRatio));
-            return SettingClamp.Clamp(mcm.Value, 8, neutralFloor, 30);
+            // The floor follows the LIVE neutral ratio (#610): both are sliders now, and the
+            // invariant is between the two values the player set, not the JSON ones.
+            return SettingClamp.Clamp(mcm.Value, 6, AutoKnockdownFloor(ChargeNeutralWeightRatio), 30);
         }
+    }
+
+    // #610: the three Branch B knobs. Slider bounds mirror TaomSettings; the JSON may go wider.
+    public float ChargeNeutralWeightRatio
+        => SettingClamp.Clamp(TaomSettings.Instance?.ChargeNeutralWeightRatio, _defaults.ChargeKnockdown.NeutralWeightRatio, 1f, 30f);
+
+    public float ChargeHorsePenetration
+        => SettingClamp.Clamp(TaomSettings.Instance?.ChargeHorsePenetration, _defaults.ChargeKnockdown.HorseChargePenetration, 0f, 1f);
+
+    // Clamped to the JSON max so the min <= max invariant holds at both surfaces.
+    public float ChargeMinPenetrationFactor
+        => SettingClamp.Clamp(TaomSettings.Instance?.ChargeMinPenetrationFactor, _defaults.ChargeKnockdown.MinPenetrationFactor, 0f, _defaults.ChargeKnockdown.MaxPenetrationFactor);
+
+    /// <summary>The auto-knockdown slider's floor: the neutral ratio rounded up, never below 2.
+    /// NaN reads as the minimum so a poisoned value cannot unlock Branch A on ordinary charges.</summary>
+    public static int AutoKnockdownFloor(float neutralWeightRatio)
+    {
+        if (!FiniteFloatValidator.IsFinite(neutralWeightRatio))
+            return 2;
+        return Math.Max(2, (int)Math.Ceiling(neutralWeightRatio));
     }
 }

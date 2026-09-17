@@ -45,6 +45,68 @@ public class ShippedCombatMechanicsConfigTests
         _sut = new CombatMechanicsConfigProvider(pathService, _logger);
     }
 
+    // ---- Cavalry (#610) ------------------------------------------------------------------------
+
+    [TestMethod]
+    public void ShippedConfig_ChargeKnockdown_IsVanillaParityWithAnyAngleAutoFloor()
+    {
+        // Mike, 2026-09-17: every ordinary victim gets vanilla's rule (the floor never scales the
+        // penetration below it) and a full-speed horse + man contact floors a man from any angle
+        // (auto ratio 6 == horse 400 + rider 80 over man 80). Change these with a control battle.
+        var c = _sut.GetConfig().ChargeKnockdown;
+
+        Assert.AreEqual(6f, c.NeutralWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(1f, c.MinPenetrationFactor, 0.0001f);
+        Assert.AreEqual(0.4f, c.HorseChargePenetration, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_OnlyTrollsDwarvesAndSauronResistAHorse()
+    {
+        // Once the weight term stops protecting the 160-weight victims, the race rows are the
+        // only thing keeping a troll on its feet; uruk-hai deliberately lost theirs (parity).
+        var races = _sut.GetConfig().RaceModifiers;
+
+        Assert.AreEqual(4f, races["cave_troll"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(4f, races["hill_troll"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(2.5f, races["dwarf"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(3f, races["sauron"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(1f, races["uruk_hai"].KnockdownResistanceMultiplier, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_ChargeDamage_MatchesMikesKingdomTable()
+    {
+        var m = _sut.GetConfig().ChargeDamage.CultureMultipliers;
+
+        foreach (var elf in new[] { "mirkwood", "lothlorien", "rivendell", "lindon" })
+            Assert.AreEqual(1.6f, m[elf], 0.0001f, elf);
+        Assert.AreEqual(1.5f, m["vlandia"], 0.0001f, "Rohan");
+        Assert.AreEqual(1.4f, m["khuzait"], 0.0001f, "Rhun");
+        Assert.AreEqual(1.3f, m["gondor"], 0.0001f);
+        Assert.AreEqual(1.2f, m["sturgia"], 0.0001f, "Dale");
+        foreach (var orc in new[] { "mordor", "isengard", "gundabad", "dolguldur", "umbar" })
+            Assert.AreEqual(1.2f, m[orc], 0.0001f, orc);
+        Assert.AreEqual(1f, m["erebor"], 0.0001f, "dwarves do not ride");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_EveryChargeDamageKeyIsAShippedCultureId()
+    {
+        // xml-data.md "Config ID Cross-Reference": a dead dictionary key is silent at every layer.
+        // Custom cultures come from taom_spcultures.xml; the six XSLT cultures keep vanilla ids.
+        var xml = File.ReadAllText(Path.Combine(ModuleDataPath, "taom_spcultures.xml"));
+        var custom = System.Text.RegularExpressions.Regex.Matches(xml, "<Culture\\s[^>]*?\\bid=\"([^\"]+)\"", System.Text.RegularExpressions.RegexOptions.Singleline);
+        var known = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal)
+            { "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania" };
+        foreach (System.Text.RegularExpressions.Match match in custom)
+            known.Add(match.Groups[1].Value);
+
+        foreach (var key in _sut.GetConfig().ChargeDamage.CultureMultipliers.Keys)
+            Assert.IsTrue(known.Contains(key), $"'{key}' is not a shipped culture id (rohan is vlandia, dunland is empire).");
+    }
+
     [TestMethod]
     public void ShippedConfig_FileExists()
         => Assert.IsTrue(File.Exists(ConfigPath), $"Shipped config missing at {ConfigPath}");

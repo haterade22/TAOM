@@ -50,7 +50,7 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         Assert.AreEqual(4, c.Creatures.CleaveMonsterIds.Count);
-        Assert.AreEqual(5, c.RaceModifiers.Count);
+        Assert.AreEqual(7, c.RaceModifiers.Count);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
 
@@ -88,7 +88,7 @@ public class CombatMechanicsConfigProviderTests
         var c = _sut.GetConfig();
 
         Assert.AreEqual(25f, c.CrushThrough.ExtraCrushThroughEnergyThreshold, 0.0001f);
-        Assert.AreEqual(8f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
         _logger.Received().LogError(Arg.Is<string>(s => s.Contains("Failed to parse")));
     }
 
@@ -127,7 +127,7 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
         Assert.AreEqual(6, c.CrushThrough.MonsterCrushMonsterIds.Count);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
-        Assert.AreEqual(5, c.RaceModifiers.Count);
+        Assert.AreEqual(7, c.RaceModifiers.Count);
     }
 
     [TestMethod]
@@ -201,7 +201,7 @@ public class CombatMechanicsConfigProviderTests
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(8f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("autoKnockdownWeightRatio")));
     }
@@ -214,7 +214,7 @@ public class CombatMechanicsConfigProviderTests
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(8f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("neutralWeightRatio")));
     }
@@ -226,9 +226,82 @@ public class CombatMechanicsConfigProviderTests
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(0.25f, c.ChargeKnockdown.MinPenetrationFactor, 0.0001f);
+        Assert.AreEqual(1f, c.ChargeKnockdown.MinPenetrationFactor, 0.0001f);
         Assert.AreEqual(2.5f, c.ChargeKnockdown.MaxPenetrationFactor, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("minPenetrationFactor")));
+    }
+
+    // ---- chargeDamage (#610) --------------------------------------------------------------------
+
+    [TestMethod]
+    public void GetConfig_MissingFile_ChargeDamageDefaultsShipTheKingdomTable()
+    {
+        var c = _sut.GetConfig();
+
+        Assert.IsTrue(c.ChargeDamage.Enabled);
+        Assert.AreEqual(1.5f, c.ChargeDamage.CultureMultipliers["vlandia"], 0.0001f);
+        Assert.AreEqual(1.6f, c.ChargeDamage.CultureMultipliers["rivendell"], 0.0001f);
+        Assert.AreEqual(1f, c.ChargeDamage.CultureMultipliers["erebor"], 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetConfig_ChargeDamageMultiplierNaN_DropsTheEntryAndWarns()
+    {
+        WriteConfig(@"{ ""chargeDamage"": { ""cultureMultipliers"": { ""vlandia"": NaN, ""gondor"": 1.3 } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.IsFalse(c.ChargeDamage.CultureMultipliers.ContainsKey("vlandia"));
+        Assert.AreEqual(1.3f, c.ChargeDamage.CultureMultipliers["gondor"], 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cultureMultipliers['vlandia']")));
+    }
+
+    [TestMethod]
+    public void GetConfig_ChargeDamageMultiplierOutOfRange_DropsTheEntryAndWarns()
+    {
+        // A multiplier of 0 would make a culture's cavalry harmless, 50 would one-shot; both are
+        // typos, not tuning. Range 0.1 to 5.
+        WriteConfig(@"{ ""chargeDamage"": { ""cultureMultipliers"": { ""vlandia"": 0, ""gondor"": 50 } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.IsFalse(c.ChargeDamage.CultureMultipliers.ContainsKey("vlandia"));
+        Assert.IsFalse(c.ChargeDamage.CultureMultipliers.ContainsKey("gondor"));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("contained invalid values")));
+    }
+
+    [TestMethod]
+    public void GetConfig_ChargeDamageMapReplacesTheDefaultsRatherThanAppending()
+    {
+        WriteConfig(@"{ ""chargeDamage"": { ""cultureMultipliers"": { ""gondor"": 2.0 } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(1, c.ChargeDamage.CultureMultipliers.Count);
+        Assert.AreEqual(2f, c.ChargeDamage.CultureMultipliers["gondor"], 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetConfig_NullChargeDamageMap_RevertsToDefaultsAndWarns()
+    {
+        WriteConfig(@"{ ""chargeDamage"": { ""cultureMultipliers"": null } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(1.5f, c.ChargeDamage.CultureMultipliers["vlandia"], 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cultureMultipliers")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NullChargeDamageSection_RevertsToDefaultsAndWarns()
+    {
+        WriteConfig(@"{ ""chargeDamage"": null }");
+
+        var c = _sut.GetConfig();
+
+        Assert.IsTrue(c.ChargeDamage.Enabled);
+        Assert.AreEqual(1.5f, c.ChargeDamage.CultureMultipliers["vlandia"], 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("chargeDamage")));
     }
 
     [TestMethod]
@@ -404,5 +477,34 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(2.0f, c.RaceModifiers["dwarf"].KnockdownResistanceMultiplier, 0.0001f);
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded")));
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_ChargeDamageMultiplierInfinite_DropsBothSignsAndWarns()
+    {
+        // Infinity passes a bare "< min || > max" check (it IS > max) but -Infinity passes only the
+        // second; FiniteFloatValidator runs first so neither reaches the table.
+        WriteConfig(@"{ ""chargeDamage"": { ""cultureMultipliers"": { ""vlandia"": Infinity, ""gondor"": -Infinity, ""erebor"": 1.0 } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.IsFalse(c.ChargeDamage.CultureMultipliers.ContainsKey("vlandia"));
+        Assert.IsFalse(c.ChargeDamage.CultureMultipliers.ContainsKey("gondor"));
+        Assert.AreEqual(1f, c.ChargeDamage.CultureMultipliers["erebor"], 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cultureMultipliers['vlandia']")));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cultureMultipliers['gondor']")));
+    }
+
+    [TestMethod]
+    public void GetConfig_ChargeDamageMultiplierAtTheBounds_KeepsBothEnds()
+    {
+        // The range is inclusive: 0.1 (a tenth of vanilla) and 5 (five times) are legal tuning.
+        WriteConfig(@"{ ""chargeDamage"": { ""cultureMultipliers"": { ""vlandia"": 0.1, ""gondor"": 5.0 } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(0.1f, c.ChargeDamage.CultureMultipliers["vlandia"], 0.0001f);
+        Assert.AreEqual(5f, c.ChargeDamage.CultureMultipliers["gondor"], 0.0001f);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("cultureMultipliers")));
     }
 }

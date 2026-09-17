@@ -231,6 +231,69 @@ decisions and per-formation keys are the path), is
 (the brace against a Rohan charge, the cycle, the javelin line, the envelopment, the volley, the
 mumakil, morale on and off, aggression on and off); the toggle ships off until it passes.
 
+## 2026-09-17
+
+### feat(combat): cavalry knocks down like vanilla again, any-angle auto-floor, live sliders, per-culture charge damage (#610)
+
+**Why.** Mike: cavalry should have a lot more knockdown. The investigation (installed v1.5.3)
+found the engine permissive and TAOM's own 2026-07-02 override the brake. Vanilla grants knock-back
+on a head-on contact (`dot >= 0.7`) and then knock-down when `damage >= maxHP x 0.001 x Athletics`,
+6 to 13 damage for an ordinary troop, because its flat 0.4 penetration cancels the 0.4 base
+resistance; weight, speed and race play no part. `ChargeKnockdownService` scaled that penetration
+by `clamp(weightRatio / 6, 0.25, 2.5) x speedFactor`, and with the Armory's weights (orc 140,
+uruk / goblin / trolls 160, uruk-hai 180 against a horse + man of 480) a horse-vs-orc-kind
+knockdown needed 30 to 52 damage on hits that deal 5 to 15: four to seven times harder than
+vanilla, effectively never. The "a horse can't floor a troll" rule had landed on every uruk
+because trolls and uruks share weight 160.
+
+**What.** `minPenetrationFactor` 0.25 to 1.0, so the weight term never scales the penetration
+below vanilla (every heavy victim gets vanilla's rule, lighter ones keep the bonus);
+`autoKnockdownWeightRatio` 8 to 6 in the JSON and the MCM default, so a full-speed horse + man
+contact (ratio exactly 6.0) floors a man from any angle; race rows do the resisting: `cave_troll`
+and `hill_troll` 4.0 (new), `dwarf` 2.5 and `sauron` 3.0 unchanged, `uruk_hai` loses its 1.25.
+The three Branch B knobs become live MCM sliders (Charge Neutral Weight Ratio, Charge Penetration,
+Charge Min Penetration Factor) read per hit by the service; the auto slider's floor follows the
+live neutral value; `GetHorseChargePenetration` reads the live value too. The auto-ratio hint says
+an existing `TAOM.json` keeps 8 until the slider moves (MCM persists per property).
+
+**Charge damage by culture.** The engine reads charge damage from the horse item plus the harness
+(`MountChargeDamage = (charge_damage + charge_bonus) x 0.004`), never from a Monster, and TAOM's
+cavalry ride shared vanilla horses, so the kingdom feel is a multiplier: `chargeDamage.cultureMultipliers`
+in `combat_mechanics_config.json`, keyed by the rider's culture id, applied by a new
+`IChargeDamageService` through `MountChargeDamageApplier` from both `AgentStatCalculateModel`
+slots (campaign and Custom Battle) on mounts after base, keyed on the RIDER through
+`Agent.RiderAgent`: a mount agent is built with a null `Character` (`Mission.cs:4611`), and the
+engine reads `MountChargeDamage` off the mount per hit (`AttackInformation.cs:342`). Mike's table: elves 1.6 (mirkwood,
+lothlorien, rivendell, lindon), Rohan (`vlandia`) 1.5, Rhun (`khuzait`) 1.4, `gondor` 1.3, Dale
+(`sturgia`) 1.2, the orc kingdoms and Dunland / Harad / Khand 1.2, `erebor` 1.0. Range 0.1 to 5,
+bad rows dropped with a warning, every key pinned against the culture registry. MCM toggle
+`Culture Charge Damage`.
+
+**Tests.** `ChargeKnockdownServiceTests` (the heavy-victim case flips to parity; the floor, the
+auto ratio 6 without the KnockBack flag, the troll row, live reads of the neutral ratio and the
+penetration), new `ChargeDamageServiceTests` and `CombatMechanicsSettingsProviderTests`, the
+provider's `chargeDamage` rules, `ShippedCombatMechanicsConfigTests` pins on the v2 numbers, the
+race rows, the kingdom table and the culture-id cross-reference; `SettingsFingerprint` 239 / 189
+(both docs). Owed: a Rohirrim charge into a Mordor line, into trolls, into dwarves; the combat
+log for the damage multiplier.
+
+**Deep review.** Five agents, one HIGH that three found independently: the first cut looked the
+culture up with `agent.Character` on the MOUNT, which is null on every battle horse, so the
+multiplier was 1.0 everywhere and the comment and doc said the opposite. A repeat of the
+2026-06-26 "a mount has no Origin" lesson, now widened to every identity field. Also fixed: the
+Custom Battle stat model never got the service (MED); the min-factor slider hint did not say its
+ceiling is the JSON maximum; the doc's MCM summary listed 4 of 17 members; three edge-case tests
+(infinite multipliers, the inclusive bounds, the Branch B max clamp). `MountChargeDamageBindingTests`
+pins the rider hop at the IL level in both models. The one-agent re-check of the fix then caught
+the fix compounding in Custom Battle: that base writes `MountChargeDamage` once in
+`InitializeAgentStats` (`:48`) and never in `UpdateHorseStats`, unlike the Sandbox model (`:1280`,
+every call), so the Custom Battle model now multiplies from its own `InitializeAgentStats` override
+and the binding test pins the placement per model. RCA `docs/reviews/rca-cavalry-charge-2026-09-17.md`,
+lessons in `adapters-taleworlds-api.md` and `gamemodels-services.md`. Found on the way, not fixed
+here: the career `MountChargeDamage` passive and the two charge buffs multiply the RIDER's driven
+properties (`CareerAgentStatService.cs:143,160,178`) and the engine only reads the mount's, the
+#394 blind spot; needs its own issue.
+
 ## 2026-09-16
 
 ### fix(armour): a mesh-tier ladder keeps low troops out of lord kit, and the lord line gets its stats back (#609)

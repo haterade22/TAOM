@@ -11,6 +11,7 @@ public class CombatMechanicsConfig
     public bool Enabled { get; set; } = true;
     public CrushThroughConfig CrushThrough { get; set; } = new CrushThroughConfig();
     public ChargeKnockdownConfig ChargeKnockdown { get; set; } = new ChargeKnockdownConfig();
+    public ChargeDamageConfig ChargeDamage { get; set; } = new ChargeDamageConfig();
     public CreatureCombatConfig Creatures { get; set; } = new CreatureCombatConfig();
     public ShieldPenetrationConfig ShieldPenetration { get; set; } = new ShieldPenetrationConfig();
 
@@ -27,7 +28,13 @@ public class CombatMechanicsConfig
         // Dark Lord keeps elf Monster weight 80, so the resistance row is what stops horse-bowling.
         ["sauron"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true, KnockdownResistanceMultiplier = 3.0f, SwingEnergyBonusFactor = 0.20f },
         ["orc"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.15f },
-        ["uruk_hai"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.10f, KnockdownResistanceMultiplier = 1.25f },
+        // #610: uruk-hai lost their 1.25 knockdown row (vanilla parity with the other orc-kind).
+        ["uruk_hai"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.10f },
+        // #610: trolls share weight 160 with uruks, so once the weight term stops protecting the
+        // heavy victims (MinPenetrationFactor 1.0) the race row is what keeps a troll on its feet
+        // against a horse: 4.0 puts the threshold far above any horse charge; a mumak is Branch A.
+        ["cave_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f },
+        ["hill_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f },
     };
 }
 
@@ -57,6 +64,38 @@ public class CrushThroughConfig
     };
 }
 
+/// <summary>
+/// Per-culture cavalry charge damage (#610): a multiplier on the mount's <c>MountChargeDamage</c>
+/// keyed by the rider's culture StringId (custom cultures by their own id, the six XSLT cultures
+/// by their vanilla id: vlandia is Rohan, khuzait is Rhun, sturgia is Dale). Mike's table,
+/// 2026-09-17; every key is pinned against the culture registry by ShippedCombatMechanicsConfigTests.
+/// </summary>
+public class ChargeDamageConfig
+{
+    public bool Enabled { get; set; } = true;
+
+    public Dictionary<string, float> CultureMultipliers { get; set; } = new Dictionary<string, float>
+    {
+        ["mirkwood"] = 1.6f,
+        ["lothlorien"] = 1.6f,
+        ["rivendell"] = 1.6f,
+        ["lindon"] = 1.6f,
+        ["vlandia"] = 1.5f,
+        ["khuzait"] = 1.4f,
+        ["gondor"] = 1.3f,
+        ["sturgia"] = 1.2f,
+        ["mordor"] = 1.2f,
+        ["isengard"] = 1.2f,
+        ["gundabad"] = 1.2f,
+        ["dolguldur"] = 1.2f,
+        ["umbar"] = 1.2f,
+        ["empire"] = 1.2f,
+        ["aserai"] = 1.2f,
+        ["battania"] = 1.2f,
+        ["erebor"] = 1.0f,
+    };
+}
+
 public class ChargeKnockdownConfig
 {
     public bool Enabled { get; set; } = true;
@@ -64,13 +103,19 @@ public class ChargeKnockdownConfig
 
     // 6.0 = Native (horse 400 + rider 80) / human 80 — keeps an unmodified horse-vs-man charge ≈ vanilla.
     public float NeutralWeightRatio { get; set; } = 6f;
-    public float AutoKnockdownWeightRatio { get; set; } = 8f;
+
+    // #610: 6.0, the horse + man vs man ratio exactly, so a full-speed contact floors a man from
+    // any angle (Branch A never consults the 0.7-dot flag). Was 8 (wargs, chariots, mumakil only).
+    public float AutoKnockdownWeightRatio { get; set; } = 6f;
     public float AutoKnockdownMinSpeedFactor { get; set; } = 0.4f;
 
     // Used when the charger's Monster has no relative_speed_limit_for_charge (engine default float.MaxValue).
     // 4.3 = Native horse.
     public float DefaultChargeSpeedReference { get; set; } = 4.3f;
-    public float MinPenetrationFactor { get; set; } = 0.25f;
+    // #610: 1.0, so the weight term never scales the penetration BELOW vanilla; every victim
+    // heavier than the charger gets vanilla's rule and the race rows do the resisting. Was 0.25,
+    // which made a horse-vs-uruk knockdown four times harder than vanilla.
+    public float MinPenetrationFactor { get; set; } = 1f;
     public float MaxPenetrationFactor { get; set; } = 2.5f;
 
     // Vanilla SandBox value; also exposed via the GetHorseChargePenetration() override so the

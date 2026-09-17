@@ -1061,8 +1061,28 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyInteger("Auto-Knockdown Weight Ratio", 2, 30, Order = 10, RequireRestart = false,
-        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down regardless of resistance (mumakil vs man is ~125). Default 8. Lower = heavy cavalry flattens infantry more often. Values below the neutral weight ratio (default 6 = ordinary horse+rider vs man) are treated as the neutral ratio so every plain horse charge doesn't auto-floor.")]
-    public int ChargeAutoKnockdownWeightRatio { get; set; } = 8;
+        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down, from any angle, regardless of resistance (mumakil vs man is ~125, warg + orc vs man 8, horse + man vs man exactly 6). Default 6 since 2026-09-17, so a full-speed horse contact floors a man; raise it to 7 or 8 to give that back to wargs and chariots only. Values below the neutral weight ratio are treated as the neutral ratio. An existing TAOM.json keeps the old value (8) until you move the slider or reset the group.")]
+    public int ChargeAutoKnockdownWeightRatio { get; set; } = 6;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyFloatingInteger("Charge Neutral Weight Ratio", 1f, 30f, "0.0", Order = 13, RequireRestart = false,
+        HintText = "Charger-to-victim weight ratio at which a charge knocks down exactly as vanilla does (needs about 8 damage on a head-on hit). Heavier chargers than this ratio get MORE penetration, lighter ones less, down to the min factor. Default 6 = horse + man vs man. Lower it and every charge hits harder; raise it and only the heavy mounts do.")]
+    public float ChargeNeutralWeightRatio { get; set; } = 6f;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyFloatingInteger("Charge Penetration", 0f, 1f, "0.00", Order = 14, RequireRestart = false,
+        HintText = "The base knockdown penetration of a charge at the neutral ratio and full speed. Default 0.4, vanilla's value, which cancels a troop's 0.4 base resistance so only Athletics protects him. 0.5 and up floors an ordinary man on any head-on hit that does damage; 0.3 needs a hard hit.")]
+    public float ChargeHorsePenetration { get; set; } = 0.4f;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyFloatingInteger("Charge Min Penetration Factor", 0f, 2.5f, "0.00", Order = 15, RequireRestart = false,
+        HintText = "How far below vanilla the weight term may push a light charger's penetration against a heavy victim. Default 1.0 = never below vanilla (uruks and trolls fall like men; the troll, dwarf and Sauron race rows do the resisting). 0.25 restores the pre-2026-09-17 feel where a horse could not floor anything heavier than a man. The ceiling is the JSON's maxPenetrationFactor (shipped 2.5); a slider value above it is treated as that maximum.")]
+    public float ChargeMinPenetrationFactor { get; set; } = 1f;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Culture Charge Damage", Order = 16, RequireRestart = false,
+        HintText = "Cavalry charge damage scales by the rider's culture (elves 1.6x, Rohan 1.5x, Rhun 1.4x, Gondor 1.3x, Dale and the orc kingdoms 1.2x, Erebor 1.0x). The table lives in combat_mechanics_config.json; this switch turns the whole thing off.")]
+    public bool EnableCultureChargeDamage { get; set; } = true;
 
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyBool("Signature Strikes", Order = 11, RequireRestart = false,

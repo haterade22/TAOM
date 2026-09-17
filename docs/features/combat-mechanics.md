@@ -93,25 +93,74 @@ The empty grant lists are the second line of defence: `IsGranted` matches nothin
 inert even with a stale toggle. Pinned by
 `ShieldPenetrationServiceTests.ShippedDefaults_MechanicToggledOn_StillGrantsNothingAndLeavesShieldDamageAlone`.
 
-### Charge knockdown formula (v1)
+### Charge knockdown formula (v2, #610)
 
 ```
 speedRef    = charger Monster relative_speed_limit_for_charge if sane, else 4.3 (Native horse)
 speedFactor = clamp01(chargeVelocity / speedRef)
 weightRatio = (chargerWeight + riderWeight) / max(victimWeight, 1)        // Monster.Weight from monsters.xml
-Branch A: weightRatio ≥ 8 && speedFactor ≥ 0.4                → knock down (ignores the 0.7-dot gate)
+Branch A: weightRatio >= auto (MCM, default 6) && speedFactor >= 0.4   -> knock down (ignores the 0.7-dot gate)
 Branch B: requires BlowFlags.KnockBack (0.7-dot parity);
-          pen = 0.4 × clamp(weightRatio / 6.0, 0.25, 2.5) × speedFactor
-          knock down iff damage ≥ maxHealth × max(0, knockDownRes × raceResist − pen)
+          pen = penetration (MCM, 0.4) x clamp(weightRatio / neutral (MCM, 6.0), minFactor (MCM, 1.0), 2.5) x speedFactor
+          knock down iff damage >= maxHealth x max(0, knockDownRes x raceResist - pen)
 ```
 
-Calibration: neutral 6.0 = Native (horse 400 + rider 80)/human 80 → horse-vs-man ≈ vanilla; mûmakil (9999) vs man ≈ ratio 125 → Branch A; horse vs troll (160) = ratio 3 → penetration halved; dwarf `raceResist` 2.5. Branch B's `false` is an owned verdict — deliberately stricter than vanilla for light chargers. `ChargeKnockdownContext` is the designated extension point for the planned future factors (collision angle, tiers, perks, attacker race).
+**What vanilla does, for reference (installed v1.5.3):** knock-back needs a head-on contact
+(`ChargeDamageDotProduct >= 0.7`, `MissionCombatMechanicsHelper.cs:56-61`); knock-down is asked
+only then and is `damage >= maxHP x max(0, (0.4 + 0.001 x Athletics) - 0.4)`
+(`:76-96,344-348`, `SandboxAgentStatCalculateModel.cs:437-456`), i.e. `maxHP x 0.001 x Athletics`,
+6 to 13 damage for an ordinary troop. Weight, speed and race play no part.
+
+**Calibration since 2026-09-17 (#610, Mike: "cavalry should have a lot more knockdown").** The v1
+floor of 0.25 scaled the penetration DOWN for every victim heavier than the charger, and TAOM's
+enemies are heavy (orc 140, uruk / goblin / trolls 160, uruk-hai 180 against a horse + man of 480),
+so a horse-vs-uruk knockdown needed 30 to 52 damage against vanilla's 7.8, four to seven times
+harder, on hits that deal 5 to 15. The "a horse can't floor a troll" intent had landed on every
+uruk because trolls and uruks share weight 160. v2: `minPenetrationFactor` 1.0 (never below
+vanilla for a heavy victim; lighter victims keep the bonus up to 2.5x), `autoKnockdownWeightRatio`
+6 (horse + man vs man is exactly 6.0, so a full-speed contact floors a man from ANY angle), the
+race rows do the resisting: `cave_troll` / `hill_troll` 4.0 (threshold about 200 damage, above any
+horse; a mumak is Branch A), `dwarf` 2.5, `sauron` 3.0, `uruk_hai` no longer 1.25. Branch B's
+`false` is still an owned verdict. The three Branch B knobs are MCM sliders (Combat Mechanics
+group) read per hit, so the feel is tunable in a running game; the auto slider's floor follows
+the live neutral value. An existing `TAOM.json` keeps the old auto-ratio (8) until the slider is
+moved or the group reset (MCM persists per property). `ChargeKnockdownContext` stays the extension
+point for future factors (collision angle, tiers, perks, attacker race).
+
+### Charge damage by culture (#610)
+
+The engine builds `MountChargeDamage` from the horse item's `charge_damage` plus the harness
+`charge_bonus` times 0.004 (`SandboxAgentStatCalculateModel.cs:1280`, `EquipmentElement.cs:411-429`);
+a Monster carries no charge attribute. TAOM cavalry mostly ride shared vanilla horses
+(`noble_horse_southern` on 258 rosters), so the kingdom feel is a multiplier on that value:
+`chargeDamage.cultureMultipliers` in the JSON, keyed by the RIDER's culture id, applied by
+`MountChargeDamageApplier` from both `AgentStatCalculateModel` slots (campaign
+`TaomAgentStatCalculateModel`, Custom Battle `TaomCustomBattleAgentStatCalculateModel`) on mount
+agents after base. The lookup hops through `Agent.RiderAgent`: a mount agent's own `Character` is
+null (`Mission.CreateHorseAgentFromRosterElements` passes `null` to `CreateAgent`, v1.5.3
+`Mission.cs:4611`), the same hop vanilla's `UpdateHorseStats` makes for the Riding skill. The
+engine reads `MountChargeDamage` off the MOUNT per charge hit (`AttackInformation` takes it from
+the attacker, and `Mission.ChargeDamageCallback`'s attacker is the horse, `Mission.cs:6103`), so
+the multiply belongs on the mount's properties; a riderless horse gets 1.0. Placement follows the
+BASE model's write site, because the applier is a plain `*=`: the Sandbox model rewrites the
+property on every `UpdateAgentStats` (`:1280`), so the campaign model multiplies there and the
+factor follows the current rider; the Custom Battle base writes it once in `InitializeAgentStats`
+(`:48`) and never again, so the Custom Battle model multiplies from its own `InitializeAgentStats`
+override and the factor follows the spawn rider (a multiply from `UpdateAgentStats` there compounds
+on every re-run, which is what the second review caught). The first cut read the mount's own
+`Character` and was a no-op in every battle (RCA `docs/reviews/rca-cavalry-charge-2026-09-17.md`).
+Shipped (Mike, 2026-09-17): elves (`mirkwood`, `lothlorien`, `rivendell`, `lindon`)
+1.6, Rohan (`vlandia`) 1.5, Rhun (`khuzait`) 1.4, `gondor` 1.3, Dale (`sturgia`) 1.2, the orc
+kingdoms and Dunland / Harad / Khand 1.2, `erebor` 1.0. Range 0.1 to 5, a bad row is dropped with
+a warning, every key is pinned against the culture registry by `ShippedCombatMechanicsConfigTests`.
+MCM toggle `Culture Charge Damage` (folds the master). Harness `charge_bonus` on per-culture
+barding remains the data lever for elite units on top of this.
 
 ## Configuration
 
 `Main/_Module/ModuleData/combat_mechanics/combat_mechanics_config.json` — per-mechanic enables, all curve constants, creature id lists, unstoppable damage thresholds, shield-pen item/class lists, and the `raceModifiers` table (keyed by race NAME, `raceage/race_age_config.json` precedent). Validated by `CombatMechanicsConfigProvider` (`FiniteFloatValidator` before every range check; ordering invariants; unknown `weaponClasses` entries skipped via `Enum.TryParse<WeaponClass>`; revert-to-default + summary warning). Deserialized with `ObjectCreationHandling.Replace` so JSON lists/dicts replace compiled defaults instead of append-merging. **Reload scope: full application restart** (Singleton provider).
 
-MCM: "Combat Mechanics" group (GroupOrder 24) — master + 8 per-mechanic toggles + `CrushThroughMaxChance` slider + `ChargeAutoKnockdownWeightRatio` slider. MCM merges over JSON per read (`CombatMechanicsSettingsProvider`, `SettingClamp`).
+MCM: "Combat Mechanics" group (GroupOrder 24), 17 members as of 2026-09-17: the master, 10 per-mechanic toggles (skill crush-through, monster crush-through, orc shield crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers, culture charge damage, signature strikes) and 6 sliders (`CrushThroughMaxChance`, `ChargeAutoKnockdownWeightRatio`, `ChargeNeutralWeightRatio`, `ChargeHorsePenetration`, `ChargeMinPenetrationFactor`, `SignatureStrikeCooldownMultiplier`). MCM merges over JSON per read (`CombatMechanicsSettingsProvider`, `SettingClamp`).
 
 ## Key Files
 
@@ -143,7 +192,8 @@ MCM: "Combat Mechanics" group (GroupOrder 24) — master + 8 per-mechanic toggle
 - **Add a creature to cleave/unstoppable/monster-CTB**: add its `Monster.StringId` to the relevant list/dict in the JSON. Settlement variants (`X_settlement*`) are normalized automatically.
 - **Add race flavor** (e.g. tree-spirits dig in): add a `raceModifiers` row — data, not code. Unknown race names are skipped with a warning.
 - **Make a weapon pierce shields**: set `shieldPenetration.enabled` true, flip the "Shield Penetration" MCM toggle on, and add the item id to `shieldPenetration.itemIds` (preferred) or its class to `weaponClasses`. All three ship off/empty. Prefer item ids: a class grant hits every weapon of that class in every culture, player and AI alike. Leave `runtimeShieldDamageCorrectionEnabled` off unless you have measured a native underestimation for that specific class in `ComputeBlowDamageOnShield`. It does not exist for `Javelin` or `ThrowingAxe`, which the engine multiplies by class.
-- **Tune charge knockdown**: `neutralWeightRatio` anchors "vanilla feel" (horse+rider vs man); `autoKnockdownWeightRatio` (also an MCM slider) sets the bowled-over threshold; per-race resistance in `raceModifiers`.
+- **Tune charge knockdown**: four MCM sliders, live: `Charge Neutral Weight Ratio` (where the weight term equals vanilla), `Charge Penetration` (the base; 0.5 and up floors an ordinary man on any head-on hit that does damage), `Charge Min Penetration Factor` (1.0 = never below vanilla for heavy victims; 0.25 = the old feel), `Auto-Knockdown Weight Ratio` (6 = horse + man vs man from any angle; 8 = wargs and chariots only). Per-race resistance stays in `raceModifiers` (JSON, restart).
+- **Tune charge damage by culture**: `chargeDamage.cultureMultipliers` in the JSON (restart); the `Culture Charge Damage` toggle turns the table off live.
 
 ## Performance
 

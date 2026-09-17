@@ -2,6 +2,8 @@ using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CombatMechanics;
+using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CultureDoctrine;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.Elephant;
@@ -24,6 +26,9 @@ namespace TAOM.Features.CareerSystem.Models;
 // 2026-09-17: the same slot carries the culture aggression post-pass (#608, CultureDoctrine):
 // after base and the career modifiers have set the AI decision values, the soldier's culture
 // profile scales them (AgentAggressionApplier). One AgentStatCalculateModel slot, four rules.
+// 2026-09-17: and the per-culture cavalry charge multiplier (#610, CombatMechanics) on mounts,
+// keyed on the RIDER's culture: a mount agent's own Character is null (MountChargeDamageApplier
+// has the engine evidence). Five rules.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
@@ -31,19 +36,21 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     private readonly ISpiderAttackService _spider;
     private readonly IMumakilAttackService _mumakil;
     private readonly ICultureAggressionService? _aggression;
+    private readonly IChargeDamageService? _chargeDamage;
 
     public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil)
-        : this(agentStatService, elephant, spider, mumakil, null)
+        : this(agentStatService, elephant, spider, mumakil, null, null)
     {
     }
 
-    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil, ICultureAggressionService? aggression)
+    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil, ICultureAggressionService? aggression, IChargeDamageService? chargeDamage = null)
     {
         _agentStatService = agentStatService;
         _elephant = elephant;
         _spider = spider;
         _mumakil = mumakil;
         _aggression = aggression;
+        _chargeDamage = chargeDamage;
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)
@@ -88,5 +95,8 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
         if (_aggression != null)
             AgentAggressionApplier.Apply(agentDrivenProperties, _aggression.Profile(AgentAggressionApplier.CultureOf(agent)));
+
+        if (_chargeDamage != null)
+            MountChargeDamageApplier.Apply(agent, agentDrivenProperties, _chargeDamage);
     }
 }

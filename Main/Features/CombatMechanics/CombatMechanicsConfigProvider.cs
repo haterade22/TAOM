@@ -72,6 +72,7 @@ public class CombatMechanicsConfigProvider : ICombatMechanicsConfigProvider
             Enabled = parsed.Enabled,
             CrushThrough = ValidateCrushThrough(parsed.CrushThrough, ref rejected),
             ChargeKnockdown = ValidateChargeKnockdown(parsed.ChargeKnockdown, ref rejected),
+            ChargeDamage = ValidateChargeDamage(parsed.ChargeDamage, ref rejected),
             Creatures = ValidateCreatures(parsed.Creatures, ref rejected),
             ShieldPenetration = ValidateShieldPenetration(parsed.ShieldPenetration, ref rejected),
             RaceModifiers = ValidateRaceModifiers(parsed.RaceModifiers, ref rejected),
@@ -178,6 +179,41 @@ public class CombatMechanicsConfigProvider : ICombatMechanicsConfigProvider
         }
 
         return sanitized;
+    }
+
+    // #610. A factor of 0 makes a culture's cavalry harmless and 50 one-shots; both are typos, not
+    // tuning, so the row is DROPPED with a warning rather than clamped (the author must see it).
+    private ChargeDamageConfig ValidateChargeDamage(ChargeDamageConfig parsed, ref bool rejected)
+    {
+        var defaults = new ChargeDamageConfig();
+        if (parsed == null)
+        {
+            _logger.LogWarning("CombatMechanicsConfigProvider: chargeDamage section is null, reverting to defaults");
+            rejected = true;
+            return defaults;
+        }
+
+        if (parsed.CultureMultipliers == null)
+        {
+            _logger.LogWarning("CombatMechanicsConfigProvider: chargeDamage.cultureMultipliers is null, reverting to defaults");
+            rejected = true;
+            return new ChargeDamageConfig { Enabled = parsed.Enabled, CultureMultipliers = defaults.CultureMultipliers };
+        }
+
+        var kept = new Dictionary<string, float>();
+        foreach (var pair in parsed.CultureMultipliers)
+        {
+            if (string.IsNullOrEmpty(pair.Key) || !FiniteFloatValidator.IsFiniteInRange(pair.Value, 0.1f, 5f))
+            {
+                _logger.LogWarning($"CombatMechanicsConfigProvider: chargeDamage.cultureMultipliers['{pair.Key}'] = {pair.Value} is not a finite value in [0.1, 5], dropping the entry");
+                rejected = true;
+                continue;
+            }
+
+            kept[pair.Key] = pair.Value;
+        }
+
+        return new ChargeDamageConfig { Enabled = parsed.Enabled, CultureMultipliers = kept };
     }
 
     private CreatureCombatConfig ValidateCreatures(CreatureCombatConfig parsed, ref bool rejected)

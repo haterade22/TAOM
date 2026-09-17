@@ -18,12 +18,26 @@
     "enabled": true,
     "includeRiderWeight": true,
     "neutralWeightRatio": 6.0,
-    "autoKnockdownWeightRatio": 8.0,
+    "autoKnockdownWeightRatio": 6.0,
     "autoKnockdownMinSpeedFactor": 0.4,
     "defaultChargeSpeedReference": 4.3,
-    "minPenetrationFactor": 0.25,
+    "minPenetrationFactor": 1.0,
     "maxPenetrationFactor": 2.5,
     "horseChargePenetration": 0.4
+  },
+  "_comment_chargeDamage": "Cavalry charge damage multiplier by the RIDER's culture id (#610): custom cultures by their own id, the six XSLT cultures by their vanilla id (vlandia = Rohan, khuzait = Rhun, sturgia = Dale, empire = Dunland, aserai = Harad, battania = Khand). Applied on the mount's MountChargeDamage after the career passives. Range 0.1 to 5; a bad row is dropped with a warning. The MCM toggle Culture Charge Damage turns the whole table off.",
+  "chargeDamage": {
+    "enabled": true,
+    "cultureMultipliers": {
+      "mirkwood": 1.6, "lothlorien": 1.6, "rivendell": 1.6, "lindon": 1.6,
+      "vlandia": 1.5,
+      "khuzait": 1.4,
+      "gondor": 1.3,
+      "sturgia": 1.2,
+      "mordor": 1.2, "isengard": 1.2, "gundabad": 1.2, "dolguldur": 1.2, "umbar": 1.2,
+      "empire": 1.2, "aserai": 1.2, "battania": 1.2,
+      "erebor": 1.0
+    }
   },
   "creatures": {
     "cleaveEnabled": true,
@@ -51,6 +65,8 @@
     "elf": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
     "sauron": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true, "knockdownResistanceMultiplier": 3.0, "swingEnergyBonusFactor": 0.20 },
     "orc": { "swingEnergyBonusFactor": 0.15 },
-    "uruk_hai": { "swingEnergyBonusFactor": 0.10, "knockdownResistanceMultiplier": 1.25 }
+    "uruk_hai": { "swingEnergyBonusFactor": 0.10 },
+    "cave_troll": { "knockdownResistanceMultiplier": 4.0 },
+    "hill_troll": { "knockdownResistanceMultiplier": 4.0 }
   }
 }

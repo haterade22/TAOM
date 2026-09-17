@@ -73,9 +73,10 @@ public class ChargeKnockdownService : IChargeKnockdownService
         if (!context.HasKnockBackFlag)
             return null;
 
+        // #610: neutral ratio, penetration and the floor are MCM-live, read per hit; the max stays JSON.
         float raceResist = _raceModifiers.Resolve(context.VictimRaceId).KnockdownResistanceMultiplier;
-        float penetration = _config.HorseChargePenetration
-            * Clamp(weightRatio / _config.NeutralWeightRatio, _config.MinPenetrationFactor, _config.MaxPenetrationFactor)
+        float penetration = _settings.ChargeHorsePenetration
+            * Clamp(weightRatio / _settings.ChargeNeutralWeightRatio, _settings.ChargeMinPenetrationFactor, _config.MaxPenetrationFactor)
             * speedFactor;
 
         // false here is an OWNED verdict — deliberately stricter than vanilla for light chargers;

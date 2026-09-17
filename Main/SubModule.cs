@@ -1210,8 +1210,9 @@ public class SubModule : MBSubModuleBase
         var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
         // CultureDoctrine (#608): the same slot scales each soldier's AI decision values by his
         // culture's aggression profile after the career and creature rules have run.
+        // CombatMechanics (#610): the same slot multiplies a mount's charge damage by its rider's culture.
         campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService,
-            IoC.Resolve<ICultureAggressionService>()));
+            IoC.Resolve<ICultureAggressionService>(), IoC.Resolve<Features.CombatMechanics.IChargeDamageService>()));
         // CombatMechanics (2026-07-02): TaomCombatMechanicsModel DERIVES from the (now abstract)
         // TaomAgentApplyDamageModel — one AgentApplyDamageModel slot, career passives via
         // inheritance + the combat feel pack on top (docs/features/combat-mechanics.md).
@@ -1261,7 +1262,9 @@ public class SubModule : MBSubModuleBase
         if (gameStarterObject is CampaignGameStarter || !(gameStarterObject is BasicGameStarter basicStarter))
             return;
         basicStarter.AddModel<BattleMoraleModel>(new TaomCustomBattleMoraleModel(IoC.Resolve<ICultureMoraleService>()));
-        basicStarter.AddModel<AgentStatCalculateModel>(new TaomCustomBattleAgentStatCalculateModel(IoC.Resolve<ICultureAggressionService>()));
+        // CombatMechanics (#610): the Custom Battle slot carries the mount charge multiplier too.
+        basicStarter.AddModel<AgentStatCalculateModel>(new TaomCustomBattleAgentStatCalculateModel(
+            IoC.Resolve<ICultureAggressionService>(), IoC.Resolve<Features.CombatMechanics.IChargeDamageService>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +

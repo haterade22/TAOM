@@ -11,6 +11,7 @@ public static class CombatMechanicsIoC
         container.Register<IRaceCombatModifiersResolver, RaceCombatModifiersResolver>(Reuse.Singleton);
         container.Register<ICrushThroughService, CrushThroughService>(Reuse.Singleton);
         container.Register<IChargeKnockdownService, ChargeKnockdownService>(Reuse.Singleton);
+        container.Register<IChargeDamageService, ChargeDamageService>(Reuse.Singleton);
         container.Register<ICreatureCombatService, CreatureCombatService>(Reuse.Singleton);
         container.Register<IShieldPenetrationService, ShieldPenetrationService>(Reuse.Singleton);
     }

@@ -176,7 +176,7 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     // "master off = exactly pre-feature behavior" (ChargeKnockdownEnabled folds the master).
     public override float GetHorseChargePenetration()
         => _settingsProvider.ChargeKnockdownEnabled
-            ? _configProvider.GetConfig().ChargeKnockdown.HorseChargePenetration
+            ? _settingsProvider.ChargeHorsePenetration
             : base.GetHorseChargePenetration();
 
     // Primitive extractors — pure boundary conversion, no decisions (parent-model idiom).
