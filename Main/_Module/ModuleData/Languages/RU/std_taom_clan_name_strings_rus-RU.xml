@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="aom_clan_bluecraig_1_name" text="Дружина Синей Скалы" />
+    <string id="aom_clan_bluecraig_2_name" text="Отродье утёса" />
+    <string id="aom_clan_bluecraig_3_name" text="Луннские скрытни" />
+    <string id="aom_clan_bluecraig_4_name" text="Разбойники Эред Луин" />
+    <string id="aom_clan_bluecraig_5_name" text="Племя Мрачного Камня" />
+    <string id="aom_clan_dolguldur_10_name" text="Друзгул" />
+    <string id="aom_clan_dolguldur_11_name" text="Врукмог" />
+    <string id="aom_clan_dolguldur_12_name" text="Хлакурз" />
+    <string id="aom_clan_dolguldur_13_name" text="Тробуз" />
+    <string id="aom_clan_dolguldur_14_name" text="Разгор" />
+    <string id="aom_clan_dolguldur_15_name" text="Узгул" />
+    <string id="aom_clan_dolguldur_1_name" text="Хиондрус" />
+    <string id="aom_clan_dolguldur_2_name" text="Гурзрак" />
+    <string id="aom_clan_dolguldur_3_name" text="Маугдур" />
+    <string id="aom_clan_dolguldur_4_name" text="Дурзан" />
+    <string id="aom_clan_dolguldur_5_name" text="Кразгот" />
+    <string id="aom_clan_dolguldur_6_name" text="Зурбак" />
+    <string id="aom_clan_dolguldur_7_name" text="Гашруз" />
+    <string id="aom_clan_dolguldur_8_name" text="Морбхак" />
+    <string id="aom_clan_dolguldur_9_name" text="Скулгат" />
+    <string id="aom_clan_empire_south_10_name" text="Арки" />
+    <string id="aom_clan_empire_south_11_name" text="Икхон" />
+    <string id="aom_clan_empire_south_12_name" text="Акхет" />
+    <string id="aom_clan_empire_south_13_name" text="Заруник" />
+    <string id="aom_clan_empire_south_14_name" text="Уграхур" />
+    <string id="aom_clan_empire_south_15_name" text="Бругаш" />
+    <string id="aom_clan_empire_west_10_name" text="Дом Хьяртулионат" />
+    <string id="aom_clan_empire_west_11_name" text="Дом Каладионат" />
+    <string id="aom_clan_empire_west_12_name" text="Дом Гарвирионат" />
+    <string id="aom_clan_empire_west_13_name" text="Дом Хирилионат" />
+    <string id="aom_clan_empire_west_14_name" text="Дом Баранионат" />
+    <string id="aom_clan_erebor_1_name" text="Бит Дурин" />
+    <string id="aom_clan_erebor_2_name" text="Бит Лони" />
+    <string id="aom_clan_erebor_3_name" text="Бит Рар" />
+    <string id="aom_clan_erebor_4_name" text="Бит Грор" />
+    <string id="aom_clan_erebor_5_name" text="Бит Горли" />
+    <string id="aom_clan_erebor_6_name" text="Бит Рори" />
+    <string id="aom_clan_erebor_7_name" text="Бит Норин" />
+    <string id="aom_clan_goblin_1_name" text="Скритак" />
+    <string id="aom_clan_goblin_2_name" text="Ягул" />
+    <string id="aom_clan_goblin_3_name" text="Горкил" />
+    <string id="aom_clan_goblin_4_name" text="Снага-воинство" />
+    <string id="aom_clan_goblin_5_name" text="Муграт" />
+    <string id="aom_clan_gundabad_10_name" text="Трокмав" />
+    <string id="aom_clan_gundabad_1_name" text="Ашмог" />
+    <string id="aom_clan_gundabad_2_name" text="Гундрук" />
+    <string id="aom_clan_gundabad_3_name" text="Зарбаг" />
+    <string id="aom_clan_gundabad_4_name" text="Морзуг" />
+    <string id="aom_clan_gundabad_5_name" text="Кругаш" />
+    <string id="aom_clan_gundabad_6_name" text="Гришук" />
+    <string id="aom_clan_gundabad_7_name" text="Лугдуш" />
+    <string id="aom_clan_gundabad_8_name" text="Маукрим" />
+    <string id="aom_clan_gundabad_9_name" text="Скарзаг" />
+    <string id="aom_clan_isengard_10_name" text="Пепельная стража" />
+    <string id="aom_clan_isengard_11_name" text="Камнеломы" />
+    <string id="aom_clan_isengard_1_name" text="Белая Рука" />
+    <string id="aom_clan_isengard_2_name" text="Красный эшелон" />
+    <string id="aom_clan_isengard_3_name" text="Чёрный эшелон" />
+    <string id="aom_clan_isengard_4_name" text="Чёрная Пасть" />
+    <string id="aom_clan_isengard_5_name" text="Железный Кулак" />
+    <string id="aom_clan_isengard_6_name" text="Кровавая стража" />
+    <string id="aom_clan_isengard_7_name" text="Теневые грабители" />
+    <string id="aom_clan_isengard_8_name" text="Череподробители" />
+    <string id="aom_clan_isengard_9_name" text="Псы войны" />
+    <string id="aom_clan_khuzait_10_name" text="Иллнория" />
+    <string id="aom_clan_khuzait_11_name" text="Шахалиан" />
+    <string id="aom_clan_khuzait_12_name" text="Хуз" />
+    <string id="aom_clan_khuzait_13_name" text="Адекиг" />
+    <string id="aom_clan_khuzait_14_name" text="Цильзерон" />
+    <string id="aom_clan_khuzait_15_name" text="Калкиан" />
+    <string id="aom_clan_khuzait_16_name" text="Зориан" />
+    <string id="aom_clan_khuzait_17_name" text="Митрунтай" />
+    <string id="aom_clan_khuzait_18_name" text="Вазевиан" />
+    <string id="aom_clan_khuzait_19_name" text="Бозорганит" />
+    <string id="aom_clan_lindon_1_name" text="Фалатрим" />
+    <string id="aom_clan_lindon_2_name" text="Эдиль Митлонд" />
+    <string id="aom_clan_lothlorien_1_name" text="Нос Финарфин" />
+    <string id="aom_clan_lothlorien_2_name" text="Стражи Нейта" />
+    <string id="aom_clan_lothlorien_3_name" text="Нос Малгалад" />
+    <string id="aom_clan_mirkwood_1_name" text="Нос Ласгален" />
+    <string id="aom_clan_mirkwood_2_name" text="Нос Орофер" />
+    <string id="aom_clan_mirkwood_3_name" text="Нос Таурион" />
+    <string id="aom_clan_mirkwood_4_name" text="Нос Галенгрим" />
+    <string id="aom_clan_mirkwood_5_name" text="Нос Алленвэ" />
+    <string id="aom_clan_mirkwood_6_name" text="Нос Иминьэ" />
+    <string id="aom_clan_mistymountainorcs_10_name" text="Лугбурз" />
+    <string id="aom_clan_mistymountainorcs_11_name" text="Хракдур" />
+    <string id="aom_clan_mistymountainorcs_12_name" text="Узгнаш" />
+    <string id="aom_clan_mistymountainorcs_13_name" text="Вракмо" />
+    <string id="aom_clan_mistymountainorcs_14_name" text="Гашрим" />
+    <string id="aom_clan_mistymountainorcs_15_name" text="Морзûк" />
+    <string id="aom_clan_mistymountainorcs_1_name" text="Бûрзгâш" />
+    <string id="aom_clan_mistymountainorcs_2_name" text="Кримпâш" />
+    <string id="aom_clan_mistymountainorcs_3_name" text="Душнакх" />
+    <string id="aom_clan_mistymountainorcs_4_name" text="Моргрим" />
+    <string id="aom_clan_mistymountainorcs_5_name" text="Варгрим" />
+    <string id="aom_clan_mistymountainorcs_6_name" text="Гробûрз" />
+    <string id="aom_clan_mistymountainorcs_7_name" text="Скарнâк" />
+    <string id="aom_clan_mistymountainorcs_8_name" text="Маугâш" />
+    <string id="aom_clan_mistymountainorcs_9_name" text="Трогмо" />
+    <string id="aom_clan_rivendell_1_name" text="Нос Передхель" />
+    <string id="aom_clan_rivendell_2_name" text="Нос Глорфиндэль" />
+    <string id="aom_clan_rivendell_3_name" text="Элен-Нольмарэ" />
+    <string id="aom_clan_umbar_1_name" text="Дом Касимирионе" />
+    <string id="aom_clan_vlandia_12_name" text="Дом Эльфвигингов" />
+    <string id="aom_clan_vlandia_13_name" text="Дом Кельмундингов" />
+    <string id="aom_clan_vlandia_14_name" text="Дом Видмундингов" />
+    <string id="aom_clan_vlandia_15_name" text="Дом Ордгарингов" />
+    <string id="aom_clan_vlandia_16_name" text="Дом Хунтхельмингов" />
+    <string id="aom_clan_vlandia_17_name" text="Дом Брегданингов" />
+    <string id="aom_clan_vlandia_18_name" text="Дом Деафрингов" />
+    <string id="aom_clan_vlandia_19_name" text="Дом Мархадов" />
+    <string id="aom_clan_vlandia_20_name" text="Дом Моркаргов" />
+    <string id="aom_clan_vlandia_21_name" text="Дом Халетрингов" />
+    <string id="aom_clan_vlandia_22_name" text="Дом Рунгарингов" />
+  </strings>
+</base>

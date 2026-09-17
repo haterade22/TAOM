@@ -986,6 +986,43 @@
         <GameType value="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Generated troop/lord/clan/kingdom-name strings — tools/generate_name_localization_strings.py.
+         Case B pipeline extension (docs/features/localization.md "Known Limitations"): these names
+         already carry {=KEY}default inline in troops/*.xml, characters/lords.xml,
+         characters/clans.xml and taom_spkingdoms.xml, but had no registered English row anywhere
+         in the translation pipeline, so no language ever showed a translation for them (#572). -->
+    <XmlNode>
+      <XmlName id="GameText" path="taom_troop_name_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="taom_lord_name_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="taom_clan_name_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="taom_kingdom_name_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <XmlNode>
       <XmlName id="BannerIcons" path="banner_icons"/>
     </XmlNode>

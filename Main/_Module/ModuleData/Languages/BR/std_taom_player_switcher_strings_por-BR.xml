@@ -18,6 +18,6 @@
     <string id="taom_ps_join_yes" text="Fazer o juramento" />
     <string id="taom_ps_join_no" text="Permanecer independente" />
     <string id="taom_ps_partial" text="Agora você é {HERO}, mas parte da transferência não foi concluída. Veja o registro." />
-    <string id="taom_ps_clan_leader_repaired" text="You now lead {CLAN}. Kingdom votes and clan decisions recognise you again." />
+    <string id="taom_ps_clan_leader_repaired" text="Agora você lidera o {CLAN}. Votos do reino e decisões do clã voltam a reconhecê-lo." />
   </strings>
 </base>

@@ -18,6 +18,6 @@
     <string id="taom_ps_join_yes" text="宣誓效忠" />
     <string id="taom_ps_join_no" text="保持独立" />
     <string id="taom_ps_partial" text="你现在是{HERO},但交接过程未能全部完成。请查看日志。" />
-    <string id="taom_ps_clan_leader_repaired" text="You now lead {CLAN}. Kingdom votes and clan decisions recognise you again." />
+    <string id="taom_ps_clan_leader_repaired" text="你现在统领{CLAN}。王国投票与家族决议再次承认你的身份。" />
   </strings>
 </base>

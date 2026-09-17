@@ -306,25 +306,28 @@ result is byte-identical to the original before letting the tool near real data.
 
 ## Localization Pipeline
 
-Four scripts that together produce, translate, validate, and inject loc XMLs across all 12 supported languages × 3 modules (TAOM + TAOM_Map + LOTRLOME_Armory). Per-language full coverage is **~12,000 strings** across 28 files (8 TAOM + 1 Map + 19 Armory).
+Four scripts that together produce, translate, validate, and inject loc XMLs across all 12 supported languages × 3 modules (TAOM + TAOM_Map + LOTRLOME_Armory). Per-language full coverage is **~15,000 strings** across 37 files (17 TAOM + 1 Map + 19 Armory), as of 2026-09-17 (`tools/generate_name_localization_strings.py` added 4 TAOM files; this section previously undercounted TAOM at 8 when it was already 13).
 
 | Script | Purpose | Output |
 |--------|---------|--------|
-| `generate_translation_template.py` | Generate English templates for a target language across the 8 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
-| `translate_with_claude.py` | AI first-draft translation. 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. `--sync-ids` seeds a language file with rows the English source declares but it lacks — **required before translating newly-registered keys**, since `write_back` substitutes by id and silently discards a translation with nowhere to land. `--provider anthropic` (default, `claude-opus-5`) \| `deepseek` \| `openrouter`; the last two speak `/chat/completions` over stdlib HTTP and **need no SDK installed**. `--model`, `--price-in`, `--price-out` override the provider table (prices feed the printed estimate only). `--batch` is the Anthropic Batches API and is refused for the others. **`--module all` and `--module TAOM_Map\|Armory` now require the install** — they read it, so a root that is not there exits 2 naming the folder instead of reporting 0 entries at $0.00; `--module TAOM` still needs no game at all. | All 28 language XMLs for `<LANG>` |
+| `generate_translation_template.py` | Generate English templates for a target language across the 10 of 17 TAOM source XMLs in its `SOURCES` list (the other 7, messenger, lotr_issue, xslt, wotr, emissary, player_switcher, keybind, are seeded another way; see `tools/generate_name_localization_strings.py` below) | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
+| `generate_name_localization_strings.py` | Extract every troop/lord/clan/kingdom `{=KEY}default` name key with no row registered anywhere else in the pipeline (excludes whatever `taom_xslt_strings.xml` / `taom_module_strings.xml` already carry, so re-running after new content only picks up the new keys) | `taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml` at ModuleData root |
+| `translate_with_claude.py` | AI first-draft translation. 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. `--sync-ids` seeds a language file with rows the English source declares but it lacks (**required before translating newly-registered keys**, since `write_back` substitutes by id and silently discards a translation with nowhere to land). `--provider anthropic` (default, `claude-opus-5`) \| `deepseek` \| `openrouter`; the last two speak `/chat/completions` over stdlib HTTP and **need no SDK installed**. `--model`, `--price-in`, `--price-out` override the provider table (prices feed the printed estimate only). `--batch` is the Anthropic Batches API and is refused for the others. **`--module all` and `--module TAOM_Map\|Armory` now require the install**: they read it, so a root that is not there exits 2 naming the folder instead of reporting 0 entries at $0.00; `--module TAOM` still needs no game at all. | All 37 language XMLs for `<LANG>` |
 | `harvest_literal_loc_keys.py` | Register every `{=taom_*}` key C# declares as a literal but no ModuleData XML carries a row for, lifting the English default straight out of the source literal. Idempotent; routes by key prefix. Pairs with `UnregisteredLocalizationKeyBaselineTests`. | `taom_module_strings.xml`, `taom_cc_strings.xml`, `taom_emissary_strings.xml` |
-| `rebuild_translation_files.py` | Inject cached translations into XML files from scratch (rebuilds the language file structure using English source + overrides + cache). Use after API runs to apply translations cleanly. | All 28 language XMLs for `<LANG>` (or `--all` for every language) |
+| `rebuild_translation_files.py` | Inject cached translations into XML files from scratch (rebuilds the language file structure using English source + overrides + cache). Use after API runs to apply translations cleanly. | All 37 language XMLs for `<LANG>` (or `--all` for every language) |
 | `translation_status.sh` | One-shot status dashboard: per-language cache size + last batch line + running process count. | (stdout) |
 
-**Source XMLs** (the engine's English fallback + translator's discoverable list):
-- `Main/_Module/ModuleData/taom_module_strings.xml` (~2,104 — faction names, UI labels)
-- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,337 — wanderer backstories)
-- `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` (~126 — Aragorn etc.)
-- `Main/_Module/ModuleData/taom_cc_strings.xml` (~772 — CC narratives)
-- `Main/_Module/ModuleData/taom_career_strings.xml` (~2,050 — career names + tooltips)
-- `Main/_Module/ModuleData/taom_messenger_strings.xml` (~29 — Messenger UI)
-- `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` (~308 — LOTR custom-issue titles, descriptions, giver dialog, objectives)
-- `Main/_Module/ModuleData/taom_xslt_strings.xml` (~1,431 — kingdom/culture/clan/lord/hero descriptions extracted from XSLT)
+**Source XMLs** (the engine's English fallback + translator's discoverable list, 17 total):
+- `Main/_Module/ModuleData/taom_module_strings.xml` (~2,657, faction names, UI labels)
+- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,337, wanderer backstories)
+- `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` (~119, Aragorn etc.)
+- `Main/_Module/ModuleData/taom_cc_strings.xml` (~966, CC narratives)
+- `Main/_Module/ModuleData/taom_career_strings.xml` (~2,050, career names + tooltips)
+- `Main/_Module/ModuleData/taom_messenger_strings.xml` (~29, Messenger UI)
+- `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` (~308, LOTR custom-issue titles, descriptions, giver dialog, objectives)
+- `Main/_Module/ModuleData/taom_xslt_strings.xml` (~1,446, kingdom/culture/clan/lord/hero descriptions extracted from XSLT)
+- `Main/_Module/ModuleData/taom_wotr_strings.xml` (~24), `taom_emissary_strings.xml` (~22), `taom_enlistment_strings.xml` (~252), `taom_player_switcher_strings.xml` (~13), `global_strings.xml` (~34, keybind labels)
+- `Main/_Module/ModuleData/taom_troop_name_strings.xml` (836), `taom_lord_name_strings.xml` (988), `taom_clan_name_strings.xml` (115), `taom_kingdom_name_strings.xml` (60): added 2026-09-17, generated, see `generate_name_localization_strings.py` above
 
 **External-module source XMLs** (not in repo, in game install — already include English text with inline `{=KEY}`):
 - `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` (~1,102 settlement names)
@@ -334,7 +337,7 @@ Four scripts that together produce, translate, validate, and inject loc XMLs acr
 - Overrides (hand-curated canonical translations, e.g. Tolkien proper nouns): `tools/translation_overrides/<lang>.json` — git-tracked, edit freely
 - Cache (machine-written API results): `tools/translation_cache/<lang>.json` — git-tracked, ~700KB-1.3MB per language
 
-**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~12,000 strings). Cache makes re-runs effectively free.
+**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~15,000 strings). Cache makes re-runs effectively free.
 
 **Usage:**
 ```bash
@@ -344,7 +347,7 @@ python tools/translate_with_claude.py --lang RU --dry-run
 # Pilot a small batch first to validate prompt quality:
 python tools/translate_with_claude.py --lang RU --module TAOM --max-entries 50 --apply
 
-# Full run for a language (all 27 files across 3 modules):
+# Full run for a language (all 37 files across 3 modules):
 python tools/translate_with_claude.py --lang RU --apply
 
 # Translate just one module:

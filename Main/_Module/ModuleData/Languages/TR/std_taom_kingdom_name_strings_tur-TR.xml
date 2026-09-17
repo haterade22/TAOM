@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Uzak batıdaki Mavi Dağlar'ın (Ered Luin) Mavi Kaya goblin inleri, Lindon'daki Gri Limanlar'ın hemen yanında yer alır. Puslu Dağlar'daki Goblin Kasabası kuzenlerinden ayrı, kendine özgü ve sayısız bir goblin ordusu olarak batı kayalıklarını sarar ve batı kıyısının Elfleri'ni rahatsız ederler." />
+    <string id="taom_bluecraig_name" text="Mavi Kaya Goblinleri" />
+    <string id="taom_bluecraig_ruler_title" text="Büyük Goblin" />
+    <string id="taom_bluecraig_short_name" text="Mavi Kaya" />
+    <string id="taom_bluecraig_title" text="Mavi Kaya Goblin Diyarı" />
+    <string id="taom_dolguldur_desc" text="Gölge ve umutsuzluğun kalesi Dol Guldur, Nekromantik'in karanlık iradesinin tehditkâr bir işareti olarak yükselir. Derinliklerinde yaşayan Orklar ve iğrenç yaratıklar herkesin kalbine korku salar." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Dehşet Efendisi" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Dol Guldur Nekromantikliği" />
+    <string id="taom_erebor_desc" text="Yalnız Dağ, Erebor, kuzeydeki Cüce krallıklarının en büyüğü olarak yükselir. Altın ve mithril bakımından zengin olan bu diyar, Durin soyunun yurdudur. Erebor Cüceleri ünlü zanaatkârlar ve yiğit savaşçılardır; salonları atalarının türküleriyle yankılanır." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="Kral" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Erebor Krallığı" />
+    <string id="taom_goblin_desc" text="Yüce Geçit'in Goblinleri, Puslu Dağlar'ın altındaki tünellerde kaynaşır; bir zamanlar Büyük Goblin'in cücelere ve yolculara karşı yönettiği ordunun dölleridir. Sayısız ve gaddar olan bu yaratıklar, dağ yollarını yağmalamak için Goblin-şehri'nden akın eder." />
+    <string id="taom_goblin_name" text="Goblinler" />
+    <string id="taom_goblin_ruler_title" text="Büyük Goblin" />
+    <string id="taom_goblin_short_name" text="Goblinler" />
+    <string id="taom_goblin_title" text="Yüce Geçit Goblin Diyarı" />
+    <string id="taom_gundabad_desc" text="Gundabad, Orkların kadim ve ürkütücü kalesi, vahşetin ve tahakkümün burcu olarak yükselir. Savaş ve kaos için yetiştirilen Gundabad Orkları, kana bulanmış sancaklar altında toplanır." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Savaş Lordu" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengard, Ak Büyücü Saruman'ın kalesi, güç ve hırsın burcu olarak yükselir. Uruk-hai'ler Ak El sancağı altında yürüyüşe geçer; disiplinleri ve vahşetleri eşsizdir." />
+    <string id="taom_isengard_name" text="Isengard" />
+    <string id="taom_isengard_ruler_title" text="Savaş Lordu" />
+    <string id="taom_isengard_short_name" text="Isengard" />
+    <string id="taom_isengard_title" text="Isengard Hükümranlığı" />
+    <string id="taom_lindon_desc" text="Mavi Dağlar'ın batısındaki yeşil diyar Lindon, Orta Dünya kıyılarındaki Yüce Elflerin son krallığıdır. Mithlond'un Gri Limanları'ndan ak gemiler Batı'ya yelken açarken, Gemi Ustası Círdan Eldar'ın sönen ışığını gözetler." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Limanlar Lordu" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Lindon Yüce Krallığı" />
+    <string id="taom_lothlorien_desc" text="Altın Orman, Gümüşdamar ile yüce Anduin arasında kurulmuştur. Galadriel ve Celeborn'un iradesiyle korunan bu diyar, Elf zarafetinin ve direnişinin burcudur; zamanın dokunmadığı, yaprakların dökülmediği bir ülkedir." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Hanımefendi" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Lóthlorien Krallığı" />
+    <string id="taom_mirkwood_desc" text="Karanlık Orman'ın Orman Krallığı yıllar içinde pek çok sıkıntıya göğüs germiştir. Thranduil'in önderliğinde Orman Elfleri içine kapanmış ve yabancılara karşı temkinli hale gelmiştir. Yine de Thranduil'in kalbinde Birinci Çağ'ın kadim günlerinde tutuşmuş bir ateş için için yanar." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Karanlık Orman" />
+    <string id="taom_mirkwood_title" text="Karanlık Orman Krallığı" />
+    <string id="taom_mistymountainorcs_desc" text="Puslu Dağlar'ın ork ordusu, Gram Dağı'ndan Moria kapılarına dek yüksek yerleri ve derin kazıları elinde tutar. Soğuk zirvelerde savaş için yetiştirilmiş olan bu orklar, Gölge'nin çağrısına yanıt verir ve dağları kendilerine geri almaya susamışlardır." />
+    <string id="taom_mistymountainorcs_name" text="Puslu Dağ Orkları" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Savaş Lordu" />
+    <string id="taom_mistymountainorcs_short_name" text="Puslu Orklar" />
+    <string id="taom_mistymountainorcs_title" text="Puslu Dağlar Ork Ordusu" />
+    <string id="taom_rivendell_desc" text="Puslu Dağlar'ın yarıklarında derinlere gizlenmiş olan Ayrıkvadi, Deniz'in Doğusundaki Son Konuksever Ev'dir. Yarı-elf Elrond tarafından kurulan bu yer, toplanan karanlığa karşı bir sığınak; şifa, bilgelik ve sessiz gücün mekânıdır." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Lord" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Imladris Sığınağı" />
+    <string id="taom_umbar_desc" text="Korsanların karanlık limanı Umbar, denizcilik gücüne ve hain ihtiraslara gömülmüş bir diyardır. Korsanlar, hızlı gemileriyle korku salarak Orta Dünya'nın kıyılarını yağmalarlar." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Korsan Kralı" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Umbar Limanı" />
+  </strings>
+</base>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Generated kingdom-identity strings (name/short_name/title/ruler_title/text): extracted from taom_spkingdoms.xml by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator after adding a kingdom. -->
+	<string id="taom_bluecraig_desc" text="{=taom_bluecraig_desc}The goblin-warrens of Blue Craig in the Blue Mountains (Ered Luin) of the far west, hard by the Grey Havens of Lindon. A distinct, numberless host of goblin-kind — separate from their Misty Mountains cousins of Goblin Town — they swarm the western crags and trouble the Elves of the western shore." />
+	<string id="taom_bluecraig_name" text="{=taom_bluecraig_name}Goblins of Blue Craig" />
+	<string id="taom_bluecraig_ruler_title" text="{=taom_bluecraig_ruler_title}Great Goblin" />
+	<string id="taom_bluecraig_short_name" text="{=taom_bluecraig_short_name}Blue Craig" />
+	<string id="taom_bluecraig_title" text="{=taom_bluecraig_title}Goblin-Realm of Blue Craig" />
+	<string id="taom_dolguldur_desc" text="{=taom_dolguldur_desc}Dol Guldur, the fortress of shadow and despair, stands as a menacing beacon of the Necromancer's dark will. The Orcs and foul creatures that inhabit its depths strike fear into the hearts of all." />
+	<string id="taom_dolguldur_name" text="{=taom_dolguldur_name}Dol Guldur" />
+	<string id="taom_dolguldur_ruler_title" text="{=taom_dolguldur_ruler_title}Dread-Lord" />
+	<string id="taom_dolguldur_short_name" text="{=taom_dolguldur_short_name}Dol Guldur" />
+	<string id="taom_dolguldur_title" text="{=taom_dolguldur_title}Necromancy of Dol Guldur" />
+	<string id="taom_erebor_desc" text="{=taom_erebor_desc}The Lonely Mountain, Erebor, stands as the greatest of the Dwarven kingdoms in the north. Rich in gold and mithril, it is home to the line of Durin. The Dwarves of Erebor are renowned craftsmen and fierce warriors, their halls echoing with the songs of their ancestors." />
+	<string id="taom_erebor_name" text="{=taom_erebor_name}Erebor" />
+	<string id="taom_erebor_ruler_title" text="{=taom_erebor_ruler_title}King" />
+	<string id="taom_erebor_short_name" text="{=taom_erebor_short_name}Erebor" />
+	<string id="taom_erebor_title" text="{=taom_erebor_title}Kingdom of Erebor" />
+	<string id="taom_goblin_desc" text="{=taom_goblin_desc}The Goblins of the High Pass swarm the tunnels beneath the Misty Mountains, the spawn of the host the Great Goblin once led against dwarf and wayfarer alike. Numberless and vicious, they pour from Goblin-town to raid the mountain roads." />
+	<string id="taom_goblin_name" text="{=taom_goblin_name}Goblins" />
+	<string id="taom_goblin_ruler_title" text="{=taom_goblin_ruler_title}Great Goblin" />
+	<string id="taom_goblin_short_name" text="{=taom_goblin_short_name}Goblins" />
+	<string id="taom_goblin_title" text="{=taom_goblin_title}Goblin-Realm of the High Pass" />
+	<string id="taom_gundabad_desc" text="{=taom_gundabad_desc}Gundabad, the ancient and foreboding stronghold of the Orcs, stands as a bastion of savagery and domination. The Orcs of Gundabad, bred for war and chaos, rally under bloodied banners." />
+	<string id="taom_gundabad_name" text="{=taom_gundabad_name}Gundabad" />
+	<string id="taom_gundabad_ruler_title" text="{=taom_gundabad_ruler_title}Warlord" />
+	<string id="taom_gundabad_short_name" text="{=taom_gundabad_short_name}Gundabad" />
+	<string id="taom_gundabad_title" text="{=taom_gundabad_title}Gundabad" />
+	<string id="taom_isengard_desc" text="{=taom_isengard_desc}Isengard, the stronghold of the White Wizard Saruman, stands as a bastion of power and ambition. The Uruk-hai march forth under the banner of the White Hand, their discipline and savagery unmatched." />
+	<string id="taom_isengard_name" text="{=taom_isengard_name}Isengard" />
+	<string id="taom_isengard_ruler_title" text="{=taom_isengard_ruler_title}Warlord" />
+	<string id="taom_isengard_short_name" text="{=taom_isengard_short_name}Isengard" />
+	<string id="taom_isengard_title" text="{=taom_isengard_title}Overlordship of Isengard" />
+	<string id="taom_lindon_desc" text="{=taom_lindon_desc}Lindon, the green land west of the Blue Mountains, is the last realm of the High Elves upon the shores of Middle-earth. From the Grey Havens of Mithlond the white ships sail into the West, while Círdan the Shipwright keeps watch over the fading light of the Eldar." />
+	<string id="taom_lindon_name" text="{=taom_lindon_name}Lindon" />
+	<string id="taom_lindon_ruler_title" text="{=taom_lindon_ruler_title}Lord of the Havens" />
+	<string id="taom_lindon_short_name" text="{=taom_lindon_short_name}Lindon" />
+	<string id="taom_lindon_title" text="{=taom_lindon_title}High Kingdom of Lindon" />
+	<string id="taom_lothlorien_desc" text="{=taom_lothlorien_desc}The Golden Wood lies nestled between the Silverlode and the mighty Anduin. Guarded by the will of Galadriel and Celeborn, it stands as a bastion of Elven grace and defiance - a land untouched by time, where the leaves do not fall." />
+	<string id="taom_lothlorien_name" text="{=taom_lothlorien_name}Lothlorien" />
+	<string id="taom_lothlorien_ruler_title" text="{=taom_lothlorien_ruler_title}Lady" />
+	<string id="taom_lothlorien_short_name" text="{=taom_lothlorien_short_name}Lothlorien" />
+	<string id="taom_lothlorien_title" text="{=taom_lothlorien_title}Kingdom of Lóthlorien" />
+	<string id="taom_mirkwood_desc" text="{=taom_mirkwood_desc}The Woodland Realm of Mirkwood has endured much hardship over the years. Under the leadership of Thranduil, the Woodelves have become reclusive and wary of strangers. Yet in the heart of Thranduil lingers a fire kindled in the ancient days of the First Age." />
+	<string id="taom_mirkwood_name" text="{=taom_mirkwood_name}Lasgalen" />
+	<string id="taom_mirkwood_ruler_title" text="{=taom_mirkwood_ruler_title}Aran" />
+	<string id="taom_mirkwood_short_name" text="{=taom_mirkwood_short_name}Mirkwood" />
+	<string id="taom_mirkwood_title" text="{=taom_mirkwood_title}Mirkwood Realm" />
+	<string id="taom_mistymountainorcs_desc" text="{=taom_mistymountainorcs_desc}The orc-host of the Misty Mountains holds the high places and deep delvings from Mount Gram to the gates of Moria. Bred for war in the cold peaks, they answer the call of the Shadow and hunger to reclaim the mountains for their own." />
+	<string id="taom_mistymountainorcs_name" text="{=taom_mistymountainorcs_name}Misty Mountain Orcs" />
+	<string id="taom_mistymountainorcs_ruler_title" text="{=taom_mistymountainorcs_ruler_title}Warlord" />
+	<string id="taom_mistymountainorcs_short_name" text="{=taom_mistymountainorcs_short_name}Misty Orcs" />
+	<string id="taom_mistymountainorcs_title" text="{=taom_mistymountainorcs_title}Orc-Host of the Misty Mountains" />
+	<string id="taom_rivendell_desc" text="{=taom_rivendell_desc}Hidden deep within the clefts of the Misty Mountains, Rivendell is the Last Homely House East of the Sea. Founded by Elrond Half-elven, it is a refuge against the gathering dark, a place of healing, lore, and quiet strength." />
+	<string id="taom_rivendell_name" text="{=taom_rivendell_name}Imladris" />
+	<string id="taom_rivendell_ruler_title" text="{=taom_rivendell_ruler_title}Lord" />
+	<string id="taom_rivendell_short_name" text="{=taom_rivendell_short_name}Imladris" />
+	<string id="taom_rivendell_title" text="{=taom_rivendell_title}Refuge of Imladris" />
+	<string id="taom_umbar_desc" text="{=taom_umbar_desc}Umbar, the dark haven of the Corsairs, is a realm steeped in maritime power and treacherous ambition. The Corsairs raid the coasts of Middle-earth, spreading fear with their swift ships." />
+	<string id="taom_umbar_name" text="{=taom_umbar_name}Umbar" />
+	<string id="taom_umbar_ruler_title" text="{=taom_umbar_ruler_title}Corsair King" />
+	<string id="taom_umbar_short_name" text="{=taom_umbar_short_name}Umbar" />
+	<string id="taom_umbar_title" text="{=taom_umbar_title}Haven of Umbar" />
+
+</strings>

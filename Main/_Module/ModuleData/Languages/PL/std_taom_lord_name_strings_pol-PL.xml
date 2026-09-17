@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="aom_lord_1_11_1_name" text="Calion" />
+    <string id="aom_lord_1_11_2_name" text="Silwen" />
+    <string id="aom_lord_1_11_3_name" text="Ainarauta" />
+    <string id="aom_lord_1_11_4_name" text="Ivriniel" />
+    <string id="aom_lord_1_11_5_name" text="Narniel" />
+    <string id="aom_lord_1_40_2_name" text="Eleniel" />
+    <string id="aom_lord_1_45_4_name" text="Loreth" />
+    <string id="aom_lord_1_45_5_name" text="Belwen" />
+    <string id="aom_lord_1_45_6_name" text="Brithwen" />
+    <string id="aom_lord_1_52_3_name" text="Ivriniel" />
+    <string id="aom_lord_1_52_4_name" text="Nauriel" />
+    <string id="aom_lord_1_53_1_name" text="Calaniel" />
+    <string id="aom_lord_1_53_2_name" text="Ciriondir" />
+    <string id="aom_lord_1_53_3_name" text="Ancalimú" />
+    <string id="aom_lord_1_59_1_name" text="Rondiel" />
+    <string id="aom_lord_1_59_2_name" text="Silmador" />
+    <string id="aom_lord_1_59_3_name" text="Galinwen" />
+    <string id="aom_lord_1_59_4_name" text="Galdirion" />
+    <string id="aom_lord_1_59_name" text="Rondamir" />
+    <string id="aom_lord_1_60_1_name" text="Nimriel" />
+    <string id="aom_lord_1_60_2_name" text="Orlathiel" />
+    <string id="aom_lord_1_60_3_name" text="Orlendir" />
+    <string id="aom_lord_1_60_name" text="Eldorion" />
+    <string id="aom_lord_1_71_1_name" text="Laswen" />
+    <string id="aom_lord_1_9_1_name" text="Elphir" />
+    <string id="aom_lord_1_9_2_name" text="Erchirion" />
+    <string id="aom_lord_1_9_3_name" text="Amrothos" />
+    <string id="aom_lord_1_9_4_name" text="Lothíriel" />
+    <string id="aom_lord_1_9_5_name" text="Lothwen" />
+    <string id="aom_lord_1_9_6_name" text="Lothériel" />
+    <string id="aom_lord_4_16_2_name" text="Herubrand Felánding" />
+    <string id="aom_lord_4_21_1_name" text="Siegeberht Ordlacing" />
+    <string id="aom_lord_4_21_2_name" text="Elfhild Ordlacing" />
+    <string id="aom_lord_4_21_3_name" text="Ulfeytel Ordlacing" />
+    <string id="aom_lord_4_21_4_name" text="Eadgifu Ordlacing" />
+    <string id="aom_lord_4_27_2_name" text="Ælfstan Æthellafing" />
+    <string id="aom_lord_4_27_3_name" text="Ælfwynn Æthellafing" />
+    <string id="aom_lord_4_27_4_name" text="Sæweald Æthellafing" />
+    <string id="aom_lord_4_28_3_name" text="Rynelda" />
+    <string id="aom_lord_4_29_1_name" text="Octreda Ælfwiging" />
+    <string id="aom_lord_4_29_2_name" text="Eadweald Ælfwiging" />
+    <string id="aom_lord_4_29_name" text="Eadfrith Ælfwiging" />
+    <string id="aom_lord_4_3_2_name" text="Éowyn Eoforing" />
+    <string id="aom_lord_4_3_3_name" text="Théodwyn Eoforing" />
+    <string id="aom_lord_4_6_2_name" text="Elfgrim Grimingas" />
+    <string id="aom_lord_6_23_1_name" text="Borlach Hûz" />
+    <string id="aom_lord_6_23_2_name" text="Armaga Hûz" />
+    <string id="aom_lord_6_23_3_name" text="Borthand Hûz" />
+    <string id="aom_lord_6_23_4_name" text="Cotota Hûz" />
+    <string id="aom_lord_6_23_5_name" text="Ulfast Hûz" />
+    <string id="aom_lord_6_23_6_name" text="Ulwarth Hûz" />
+    <string id="aom_lord_6_23_7_name" text="Uldor Hûz" />
+    <string id="aom_lord_6_23_8_name" text="Chinua Hûz" />
+    <string id="aom_lord_6_23_9_name" text="Gerel Hûz" />
+    <string id="aom_lord_6_24_1_name" text="Lorgan Adekig" />
+    <string id="aom_lord_6_24_2_name" text="Goksun Adekig" />
+    <string id="aom_lord_6_24_3_name" text="Böri Adekig" />
+    <string id="aom_lord_6_24_4_name" text="Khulan Adekig" />
+    <string id="aom_lord_6_24_5_name" text="Kustîg Adekig" />
+    <string id="aom_lord_6_24_6_name" text="Yumruk Adekig" />
+    <string id="aom_lord_6_24_7_name" text="Adarkidai Adekig" />
+    <string id="aom_lord_6_24_8_name" text="Konsha Adekig" />
+    <string id="aom_lord_6_24_9_name" text="Samga Adekig" />
+    <string id="aom_lord_6_25_1_name" text="Ganbaatar Cilzeron" />
+    <string id="aom_lord_6_25_2_name" text="Sarnai Cilzeron" />
+    <string id="aom_lord_6_25_3_name" text="Gantulga Cilzeron" />
+    <string id="aom_lord_6_25_4_name" text="Sertac Cilzeron" />
+    <string id="aom_lord_6_25_5_name" text="Khenbish Cilzeron" />
+    <string id="aom_lord_6_25_6_name" text="Muunokhoi Cilzeron" />
+    <string id="aom_lord_6_25_7_name" text="Subetai Cilzeron" />
+    <string id="aom_lord_6_25_8_name" text="Suna Cilzeron" />
+    <string id="aom_lord_6_25_9_name" text="Tsetseg Cilzeron" />
+    <string id="aom_lord_6_25_name" text="Ethacali Cilzeron" />
+    <string id="aom_lord_6_26_1_name" text="Jelme Kalkian" />
+    <string id="aom_lord_6_26_2_name" text="Tuya Kalkian" />
+    <string id="aom_lord_6_26_3_name" text="Boroghul Kalkian" />
+    <string id="aom_lord_6_26_4_name" text="Yesugen Kalkian" />
+    <string id="aom_lord_6_26_5_name" text="Mukhali Kalkian" />
+    <string id="aom_lord_6_26_6_name" text="Chilaun Kalkian" />
+    <string id="aom_lord_6_26_7_name" text="Berke Kalkian" />
+    <string id="aom_lord_6_26_8_name" text="Yosma Kalkian" />
+    <string id="aom_lord_6_26_9_name" text="Aigiarn Kalkian" />
+    <string id="aom_lord_6_26_name" text="Leôrdinoth Kalkian" />
+    <string id="aom_lord_6_27_1_name" text="Toqto Zorian" />
+    <string id="aom_lord_6_27_2_name" text="Alagh Zorian" />
+    <string id="aom_lord_6_27_3_name" text="Arghun Zorian" />
+    <string id="aom_lord_6_27_4_name" text="Alaqai Zorian" />
+    <string id="aom_lord_6_27_5_name" text="Baidar Zorian" />
+    <string id="aom_lord_6_27_6_name" text="Kadan Zorian" />
+    <string id="aom_lord_6_27_7_name" text="Orda Zorian" />
+    <string id="aom_lord_6_27_8_name" text="Altani Zorian" />
+    <string id="aom_lord_6_27_9_name" text="Bayalun Zorian" />
+    <string id="aom_lord_6_27_name" text="Neida Zorian" />
+    <string id="aom_lord_6_28_1_name" text="Sartaq Mithruntai" />
+    <string id="aom_lord_6_28_2_name" text="Börte Mithruntai" />
+    <string id="aom_lord_6_28_3_name" text="Nogai Mithruntai" />
+    <string id="aom_lord_6_28_4_name" text="Bulgan Mithruntai" />
+    <string id="aom_lord_6_28_5_name" text="Tamir Mithruntai" />
+    <string id="aom_lord_6_28_6_name" text="Otgon Mithruntai" />
+    <string id="aom_lord_6_28_7_name" text="Temur Mithruntai" />
+    <string id="aom_lord_6_28_8_name" text="Chimeg Mithruntai" />
+    <string id="aom_lord_6_28_9_name" text="Doquz Mithruntai" />
+    <string id="aom_lord_6_28_name" text="Tulrok Mithruntai" />
+    <string id="aom_lord_6_29_1_name" text="Achiq Vazevian" />
+    <string id="aom_lord_6_29_2_name" text="Enkhtuya Vazevian" />
+    <string id="aom_lord_6_29_3_name" text="Qutlugh Vazevian" />
+    <string id="aom_lord_6_29_4_name" text="Oyuun Vazevian" />
+    <string id="aom_lord_6_29_5_name" text="Vethkar Vazevian" />
+    <string id="aom_lord_6_29_6_name" text="Aurzan Vazevian" />
+    <string id="aom_lord_6_29_7_name" text="Khorlug Vazevian" />
+    <string id="aom_lord_6_29_8_name" text="Sarangerel Vazevian" />
+    <string id="aom_lord_6_29_9_name" text="Tselmeg Vazevian" />
+    <string id="aom_lord_6_29_name" text="Yurzal Vazevian" />
+    <string id="aom_lord_6_30_1_name" text="Saghost Bozorganith" />
+    <string id="aom_lord_6_30_2_name" text="Udval Bozorganith" />
+    <string id="aom_lord_6_30_3_name" text="Dûrkan Bozorganith" />
+    <string id="aom_lord_6_30_4_name" text="Zaya Bozorganith" />
+    <string id="aom_lord_6_30_5_name" text="Mazdûr Bozorganith" />
+    <string id="aom_lord_6_30_6_name" text="Hethûl Bozorganith" />
+    <string id="aom_lord_6_30_7_name" text="Taurkan Bozorganith" />
+    <string id="aom_lord_6_30_8_name" text="Nergui Bozorganith" />
+    <string id="aom_lord_6_30_9_name" text="Narangerel Bozorganith" />
+    <string id="aom_lord_6_30_name" text="Rurazaur Bozorganith" />
+    <string id="aom_lord_AB1_10_name" text="Hûria" />
+    <string id="aom_lord_AB1_2_name" text="Karûn" />
+    <string id="aom_lord_AB1_3_name" text="Lohrâs" />
+    <string id="aom_lord_AB1_4_name" text="Mihrak" />
+    <string id="aom_lord_AB1_5_name" text="Nûzar" />
+    <string id="aom_lord_AB1_6_name" text="Ohrmûz" />
+    <string id="aom_lord_AB1_7_name" text="Dûria" />
+    <string id="aom_lord_AB1_8_name" text="Farâh" />
+    <string id="aom_lord_AB1_9_name" text="Gûlbahar" />
+    <string id="aom_lord_AB2_10_name" text="Narghîs" />
+    <string id="aom_lord_AB2_2_name" text="Pirûn" />
+    <string id="aom_lord_AB2_3_name" text="Rûzbeh" />
+    <string id="aom_lord_AB2_4_name" text="Siyâk" />
+    <string id="aom_lord_AB2_5_name" text="Tûsar" />
+    <string id="aom_lord_AB2_6_name" text="Ardûsh" />
+    <string id="aom_lord_AB2_7_name" text="Jahâna" />
+    <string id="aom_lord_AB2_8_name" text="Kûrina" />
+    <string id="aom_lord_AB2_9_name" text="Mihrî" />
+    <string id="aom_lord_AB3_10_name" text="Tûrana" />
+    <string id="aom_lord_AB3_2_name" text="Bahmûr" />
+    <string id="aom_lord_AB3_3_name" text="Farrûk" />
+    <string id="aom_lord_AB3_4_name" text="Garshûp" />
+    <string id="aom_lord_AB3_5_name" text="Hûman" />
+    <string id="aom_lord_AB3_6_name" text="Isfanar" />
+    <string id="aom_lord_AB3_7_name" text="Parvâneh" />
+    <string id="aom_lord_AB3_8_name" text="Rûshanâ" />
+    <string id="aom_lord_AB3_9_name" text="Sûsan" />
+    <string id="aom_lord_AB4_10_name" text="Âbâna" />
+    <string id="aom_lord_AB4_2_name" text="Kûrash" />
+    <string id="aom_lord_AB4_3_name" text="Mazdûk" />
+    <string id="aom_lord_AB4_4_name" text="Narseh" />
+    <string id="aom_lord_AB4_5_name" text="Orodûn" />
+    <string id="aom_lord_AB4_6_name" text="Pakûr" />
+    <string id="aom_lord_AB4_7_name" text="Vîda" />
+    <string id="aom_lord_AB4_8_name" text="Yaldâ" />
+    <string id="aom_lord_AB4_9_name" text="Zûleikha" />
+    <string id="aom_lord_AB5_10_name" text="Farzâneh" />
+    <string id="aom_lord_AB5_2_name" text="Rashnûr" />
+    <string id="aom_lord_AB5_3_name" text="Shahrûm" />
+    <string id="aom_lord_AB5_4_name" text="Tirdûn" />
+    <string id="aom_lord_AB5_5_name" text="Vologar" />
+    <string id="aom_lord_AB5_6_name" text="Zamûsp" />
+    <string id="aom_lord_AB5_7_name" text="Banîn" />
+    <string id="aom_lord_AB5_8_name" text="Châhra" />
+    <string id="aom_lord_AB5_9_name" text="Delkash" />
+    <string id="aom_lord_AB6_10_name" text="Kûlsûm" />
+    <string id="aom_lord_AB6_2_name" text="Azarûn" />
+    <string id="aom_lord_AB6_3_name" text="Borzûy" />
+    <string id="aom_lord_AB6_4_name" text="Dânûsh" />
+    <string id="aom_lord_AB6_5_name" text="Farûhar" />
+    <string id="aom_lord_AB6_6_name" text="Gûdarz" />
+    <string id="aom_lord_AB6_7_name" text="Gûhara" />
+    <string id="aom_lord_AB6_8_name" text="Hûma" />
+    <string id="aom_lord_AB6_9_name" text="Jasmûna" />
+    <string id="aom_lord_AB7_10_name" text="Rûshan" />
+    <string id="aom_lord_AB7_2_name" text="Hûtan" />
+    <string id="aom_lord_AB7_3_name" text="Kûhram" />
+    <string id="aom_lord_AB7_4_name" text="Mahûz" />
+    <string id="aom_lord_AB7_5_name" text="Nastûr" />
+    <string id="aom_lord_AB7_6_name" text="Pûlvand" />
+    <string id="aom_lord_AB7_7_name" text="Mehrî" />
+    <string id="aom_lord_AB7_8_name" text="Nasrîn" />
+    <string id="aom_lord_AB7_9_name" text="Pârmida" />
+    <string id="aom_lord_AB8_10_name" text="Yâra" />
+    <string id="aom_lord_AB8_2_name" text="Sâveh" />
+    <string id="aom_lord_AB8_3_name" text="Tûmar" />
+    <string id="aom_lord_AB8_4_name" text="Vârazûn" />
+    <string id="aom_lord_AB8_5_name" text="Zangûr" />
+    <string id="aom_lord_AB8_6_name" text="Aspûr" />
+    <string id="aom_lord_AB8_7_name" text="Saharâ" />
+    <string id="aom_lord_AB8_8_name" text="Tûba" />
+    <string id="aom_lord_AB8_9_name" text="Zhâleh" />
+    <string id="aom_lord_BC1_1_name" text="Morgrub" />
+    <string id="aom_lord_BC1_2_name" text="Snagbut" />
+    <string id="aom_lord_BC1_3_name" text="Hrakdush" />
+    <string id="aom_lord_BC1_4_name" text="Boldog" />
+    <string id="aom_lord_BC1_5_name" text="Lugbol" />
+    <string id="aom_lord_BC1_6_name" text="Grizznak" />
+    <string id="aom_lord_BC1_7_name" text="Gnarla" />
+    <string id="aom_lord_BC1_8_name" text="Vugza" />
+    <string id="aom_lord_BC2_1_name" text="Grizznak" />
+    <string id="aom_lord_BC2_2_name" text="Frakû" />
+    <string id="aom_lord_BC2_3_name" text="Mughash" />
+    <string id="aom_lord_BC2_4_name" text="Grishnák" />
+    <string id="aom_lord_BC2_5_name" text="Muzgash" />
+    <string id="aom_lord_BC2_6_name" text="Lugdush" />
+    <string id="aom_lord_BC2_7_name" text="Urshza" />
+    <string id="aom_lord_BC2_8_name" text="Lazgha" />
+    <string id="aom_lord_BC3_1_name" text="Lugdush" />
+    <string id="aom_lord_BC3_2_name" text="Radbug" />
+    <string id="aom_lord_BC3_3_name" text="Gorbag" />
+    <string id="aom_lord_BC3_4_name" text="Shagrat" />
+    <string id="aom_lord_BC3_5_name" text="Ufthak" />
+    <string id="aom_lord_BC3_6_name" text="Lagduf" />
+    <string id="aom_lord_BC3_7_name" text="Ulga" />
+    <string id="aom_lord_BC3_8_name" text="Brakza" />
+    <string id="aom_lord_BC4_1_name" text="Lagduf" />
+    <string id="aom_lord_BC4_2_name" text="Orcobal" />
+    <string id="aom_lord_BC4_3_name" text="Yazneg" />
+    <string id="aom_lord_BC4_4_name" text="Narzug" />
+    <string id="aom_lord_BC4_5_name" text="Grukhash" />
+    <string id="aom_lord_BC4_6_name" text="Mauhur" />
+    <string id="aom_lord_BC4_7_name" text="Hagza" />
+    <string id="aom_lord_BC4_8_name" text="Mogra" />
+    <string id="aom_lord_BC5_1_name" text="Mauhur" />
+    <string id="aom_lord_BC5_2_name" text="Uglûk" />
+    <string id="aom_lord_BC5_3_name" text="Bûrzum" />
+    <string id="aom_lord_BC5_4_name" text="Throkmaw" />
+    <string id="aom_lord_BC5_5_name" text="Skarsnik" />
+    <string id="aom_lord_BC5_6_name" text="Gnashrak" />
+    <string id="aom_lord_BC5_7_name" text="Gralza" />
+    <string id="aom_lord_BC5_8_name" text="Shelza" />
+    <string id="aom_lord_D10_1_name" text="Vrâkmug" />
+    <string id="aom_lord_D10_2_name" text="Shâgthul" />
+    <string id="aom_lord_D10_3_name" text="Gûrnak" />
+    <string id="aom_lord_D10_4_name" text="Brôzag" />
+    <string id="aom_lord_D10_5_name" text="Ghâzla" />
+    <string id="aom_lord_D10_6_name" text="Uzrina" />
+    <string id="aom_lord_D10_7_name" text="Hlûrza" />
+    <string id="aom_lord_D11_1_name" text="Thûrzog" />
+    <string id="aom_lord_D11_2_name" text="Mokrash" />
+    <string id="aom_lord_D11_3_name" text="Azgûrth" />
+    <string id="aom_lord_D11_4_name" text="Hûzmog" />
+    <string id="aom_lord_D11_5_name" text="Vûlna" />
+    <string id="aom_lord_D11_6_name" text="Drâzga" />
+    <string id="aom_lord_D12_1_name" text="Skarvûk" />
+    <string id="aom_lord_D12_2_name" text="Lûghnar" />
+    <string id="aom_lord_D12_3_name" text="Vorgûl" />
+    <string id="aom_lord_D12_4_name" text="Nûrgha" />
+    <string id="aom_lord_D12_5_name" text="Skûzla" />
+    <string id="aom_lord_D13_1_name" text="Dramthak" />
+    <string id="aom_lord_D13_2_name" text="Ghûlbag" />
+    <string id="aom_lord_D13_3_name" text="Rûkmash" />
+    <string id="aom_lord_D13_4_name" text="Throzgûr" />
+    <string id="aom_lord_D13_5_name" text="Bûlzag" />
+    <string id="aom_lord_D13_6_name" text="Mhargza" />
+    <string id="aom_lord_D13_7_name" text="Ghûlna" />
+    <string id="aom_lord_D13_8_name" text="Râzgha" />
+    <string id="aom_lord_D13_9_name" text="Bûlzna" />
+    <string id="aom_lord_D14_1_name" text="Nûrghak" />
+    <string id="aom_lord_D14_2_name" text="Slagthûm" />
+    <string id="aom_lord_D14_3_name" text="Hrûkdan" />
+    <string id="aom_lord_D14_4_name" text="Mazgûth" />
+    <string id="aom_lord_D14_5_name" text="Throzga" />
+    <string id="aom_lord_D14_6_name" text="Uzghla" />
+    <string id="aom_lord_D14_7_name" text="Lûkzha" />
+    <string id="aom_lord_D15_1_name" text="Olghûr" />
+    <string id="aom_lord_D15_2_name" text="Gûthrak" />
+    <string id="aom_lord_D15_3_name" text="Zhâgmor" />
+    <string id="aom_lord_D15_4_name" text="Drûbnash" />
+    <string id="aom_lord_D15_5_name" text="Vrâgna" />
+    <string id="aom_lord_D15_6_name" text="Dhûrza" />
+    <string id="aom_lord_D1_10_name" text="Narsha" />
+    <string id="aom_lord_D1_2_name" text="Thrangul" />
+    <string id="aom_lord_D1_3_name" text="Morgulash" />
+    <string id="aom_lord_D1_4_name" text="Drazgor" />
+    <string id="aom_lord_D1_5_name" text="Zarkash" />
+    <string id="aom_lord_D1_6_name" text="Gorzag" />
+    <string id="aom_lord_D1_7_name" text="Ulthrak" />
+    <string id="aom_lord_D1_8_name" text="Vorthak" />
+    <string id="aom_lord_D1_9_name" text="Thrulza" />
+    <string id="aom_lord_D2_10_name" text="Durzha" />
+    <string id="aom_lord_D2_1_name" text="Narzugh" />
+    <string id="aom_lord_D2_2_name" text="Durkar" />
+    <string id="aom_lord_D2_3_name" text="Thrargol" />
+    <string id="aom_lord_D2_4_name" text="Kazrag" />
+    <string id="aom_lord_D2_5_name" text="Zorgrul" />
+    <string id="aom_lord_D2_6_name" text="Morzag" />
+    <string id="aom_lord_D2_7_name" text="Druzhak" />
+    <string id="aom_lord_D2_8_name" text="Grasha" />
+    <string id="aom_lord_D2_9_name" text="Kzha" />
+    <string id="aom_lord_D3_10_name" text="Thalka" />
+    <string id="aom_lord_D3_1_name" text="Lorgath" />
+    <string id="aom_lord_D3_2_name" text="Nargrash" />
+    <string id="aom_lord_D3_3_name" text="Urzok" />
+    <string id="aom_lord_D3_4_name" text="Vorzul" />
+    <string id="aom_lord_D3_5_name" text="Gralzuk" />
+    <string id="aom_lord_D3_6_name" text="Durmorg" />
+    <string id="aom_lord_D3_7_name" text="Thorzag" />
+    <string id="aom_lord_D3_8_name" text="Krozar" />
+    <string id="aom_lord_D3_9_name" text="Zargra" />
+    <string id="aom_lord_D4_10_name" text="Vorzul" />
+    <string id="aom_lord_D4_1_name" text="Urzara" />
+    <string id="aom_lord_D4_2_name" text="Druznia" />
+    <string id="aom_lord_D4_3_name" text="Vorgria" />
+    <string id="aom_lord_D4_4_name" text="Thrulzia" />
+    <string id="aom_lord_D4_5_name" text="Zulgora" />
+    <string id="aom_lord_D4_6_name" text="Narzia" />
+    <string id="aom_lord_D4_7_name" text="Kazria" />
+    <string id="aom_lord_D4_8_name" text="Gralzia" />
+    <string id="aom_lord_D4_9_name" text="Urzok" />
+    <string id="aom_lord_D5_10_name" text="Ulzra" />
+    <string id="aom_lord_D5_1_name" text="Throrgash" />
+    <string id="aom_lord_D5_2_name" text="Gorvash" />
+    <string id="aom_lord_D5_3_name" text="Narduk" />
+    <string id="aom_lord_D5_4_name" text="Zulgor" />
+    <string id="aom_lord_D5_5_name" text="Dulruk" />
+    <string id="aom_lord_D5_6_name" text="Thrugash" />
+    <string id="aom_lord_D5_7_name" text="Kargul" />
+    <string id="aom_lord_D5_8_name" text="Ulzar" />
+    <string id="aom_lord_D5_9_name" text="Morgra" />
+    <string id="aom_lord_D6_10_name" text="Kazla" />
+    <string id="aom_lord_D6_1_name" text="Thrurg" />
+    <string id="aom_lord_D6_2_name" text="Zarlug" />
+    <string id="aom_lord_D6_3_name" text="Muzrak" />
+    <string id="aom_lord_D6_4_name" text="Kaznia" />
+    <string id="aom_lord_D6_5_name" text="Lurzia" />
+    <string id="aom_lord_D6_6_name" text="Durla" />
+    <string id="aom_lord_D6_7_name" text="Gralnia" />
+    <string id="aom_lord_D6_8_name" text="Thalka" />
+    <string id="aom_lord_D6_9_name" text="Vorla" />
+    <string id="aom_lord_D7_10_name" text="Vrûzga" />
+    <string id="aom_lord_D7_1_name" text="Lugmor" />
+    <string id="aom_lord_D7_2_name" text="Vrûkash" />
+    <string id="aom_lord_D7_3_name" text="Druzgûl" />
+    <string id="aom_lord_D7_4_name" text="Throgma" />
+    <string id="aom_lord_D7_5_name" text="Bûrzghash" />
+    <string id="aom_lord_D7_6_name" text="Ghâshnak" />
+    <string id="aom_lord_D7_7_name" text="Mwhazga" />
+    <string id="aom_lord_D7_8_name" text="Skûrla" />
+    <string id="aom_lord_D7_9_name" text="Ghûrnia" />
+    <string id="aom_lord_D8_1_name" text="Skûlgar" />
+    <string id="aom_lord_D8_2_name" text="Morbhûl" />
+    <string id="aom_lord_D8_3_name" text="Rhâzgar" />
+    <string id="aom_lord_D8_4_name" text="Uzgûth" />
+    <string id="aom_lord_D8_5_name" text="Mauthak" />
+    <string id="aom_lord_D8_6_name" text="Naghza" />
+    <string id="aom_lord_D8_7_name" text="Dûrnia" />
+    <string id="aom_lord_D8_8_name" text="Lûrgha" />
+    <string id="aom_lord_D8_9_name" text="Thûzga" />
+    <string id="aom_lord_D9_1_name" text="Naltûr" />
+    <string id="aom_lord_D9_2_name" text="Grishûl" />
+    <string id="aom_lord_D9_3_name" text="Hlakûm" />
+    <string id="aom_lord_D9_4_name" text="Zûrghan" />
+    <string id="aom_lord_D9_5_name" text="Dûlmash" />
+    <string id="aom_lord_D9_6_name" text="Morgza" />
+    <string id="aom_lord_D9_7_name" text="Skâlna" />
+    <string id="aom_lord_D9_8_name" text="Brûzha" />
+    <string id="aom_lord_E1_11_name" text="Thris" />
+    <string id="aom_lord_E1_1_name" text="Dáin II Żelazna Stopa" />
+    <string id="aom_lord_E1_2_name" text="Thorin Kamienny Hełm" />
+    <string id="aom_lord_E1_3_name" text="Dísa" />
+    <string id="aom_lord_E1_4_name" text="Náin" />
+    <string id="aom_lord_E1_5_name" text="Durin" />
+    <string id="aom_lord_E1_6_name" text="Fin" />
+    <string id="aom_lord_E2_11_name" text="Dworin" />
+    <string id="aom_lord_E2_1_name" text="Náth" />
+    <string id="aom_lord_E2_2_name" text="Iridi" />
+    <string id="aom_lord_E2_3_name" text="Rúni" />
+    <string id="aom_lord_E2_4_name" text="Lómi" />
+    <string id="aom_lord_E3_11_name" text="Druin" />
+    <string id="aom_lord_E3_1_name" text="Gárjan" />
+    <string id="aom_lord_E3_2_name" text="Thálfi" />
+    <string id="aom_lord_E3_3_name" text="Imák" />
+    <string id="aom_lord_E3_4_name" text="Níli" />
+    <string id="aom_lord_E3_5_name" text="Mary" />
+    <string id="aom_lord_E4_11_name" text="Ôrn" />
+    <string id="aom_lord_E4_1_name" text="Nár" />
+    <string id="aom_lord_E4_2_name" text="Tíli" />
+    <string id="aom_lord_E4_3_name" text="Nali" />
+    <string id="aom_lord_E4_4_name" text="Táli" />
+    <string id="aom_lord_E5_11_name" text="Thélor" />
+    <string id="aom_lord_E5_1_name" text="Górli" />
+    <string id="aom_lord_E5_2_name" text="Girda" />
+    <string id="aom_lord_E5_3_name" text="Gaín" />
+    <string id="aom_lord_E5_4_name" text="Frar" />
+    <string id="aom_lord_E5_5_name" text="Frerin" />
+    <string id="aom_lord_E6_11_name" text="Thrân" />
+    <string id="aom_lord_E6_1_name" text="Flói" />
+    <string id="aom_lord_E6_2_name" text="Dráli" />
+    <string id="aom_lord_E6_3_name" text="Flási" />
+    <string id="aom_lord_E6_4_name" text="Idrún" />
+    <string id="aom_lord_E7_11_name" text="Thália" />
+    <string id="aom_lord_E7_1_name" text="Náran" />
+    <string id="aom_lord_EW_10_name" text="Uinilme" />
+    <string id="aom_lord_EW_11_name" text="Eldacar" />
+    <string id="aom_lord_EW_12_name" text="Melyanna" />
+    <string id="aom_lord_EW_13_name" text="Istion" />
+    <string id="aom_lord_EW_14_1_name" text="Silmariel" />
+    <string id="aom_lord_EW_14_2_name" text="Nimethil" />
+    <string id="aom_lord_EW_14_3_name" text="Rúmen" />
+    <string id="aom_lord_EW_14_name" text="Vorondir" />
+    <string id="aom_lord_EW_15_name" text="Morwen" />
+    <string id="aom_lord_EW_16_name" text="Saenes" />
+    <string id="aom_lord_EW_17_name" text="Estelien" />
+    <string id="aom_lord_EW_18_name" text="Filigod" />
+    <string id="aom_lord_EW_19_name" text="Falandur" />
+    <string id="aom_lord_EW_1_1_name" text="Ciriel" />
+    <string id="aom_lord_EW_1_2_name" text="Pelamir" />
+    <string id="aom_lord_EW_1_3_name" text="Dorwen" />
+    <string id="aom_lord_EW_1_4_name" text="Sarnion" />
+    <string id="aom_lord_EW_1_name" text="Amandir" />
+    <string id="aom_lord_EW_20_name" text="Balatar" />
+    <string id="aom_lord_EW_21_name" text="Belegorn" />
+    <string id="aom_lord_EW_22_name" text="Nessanie" />
+    <string id="aom_lord_EW_23_name" text="Anaratan" />
+    <string id="aom_lord_EW_24_name" text="Belwen" />
+    <string id="aom_lord_EW_25_name" text="Argeleb" />
+    <string id="aom_lord_EW_26_name" text="Berenor" />
+    <string id="aom_lord_EW_27_name" text="Arniel" />
+    <string id="aom_lord_EW_28_name" text="Emeldir" />
+    <string id="aom_lord_EW_2_name" text="Virinar" />
+    <string id="aom_lord_EW_3_name" text="Virinehtar" />
+    <string id="aom_lord_EW_4_name" text="Valandur" />
+    <string id="aom_lord_EW_5_name" text="Valaryna" />
+    <string id="aom_lord_EW_6_1_name" text="Falathwen" />
+    <string id="aom_lord_EW_6_2_name" text="Orweniel" />
+    <string id="aom_lord_EW_6_3_name" text="Talendir" />
+    <string id="aom_lord_EW_6_name" text="Orondir" />
+    <string id="aom_lord_EW_7_name" text="Dorien" />
+    <string id="aom_lord_EW_8_name" text="Beregar" />
+    <string id="aom_lord_EW_9_name" text="Thingol" />
+    <string id="aom_lord_G10_10_name" text="Maghra" />
+    <string id="aom_lord_G10_1_name" text="Buzgra" />
+    <string id="aom_lord_G10_2_name" text="Hrakgar" />
+    <string id="aom_lord_G10_3_name" text="Molghor" />
+    <string id="aom_lord_G10_4_name" text="Snagduf" />
+    <string id="aom_lord_G10_5_name" text="Wruk" />
+    <string id="aom_lord_G10_6_name" text="Drubog" />
+    <string id="aom_lord_G10_7_name" text="Zogra" />
+    <string id="aom_lord_G10_8_name" text="Lakhza" />
+    <string id="aom_lord_G10_9_name" text="Urzga" />
+    <string id="aom_lord_G1_10_name" text="Thurka" />
+    <string id="aom_lord_G1_1_name" text="Azgar" />
+    <string id="aom_lord_G1_2_name" text="Drozmak" />
+    <string id="aom_lord_G1_3_name" text="Kargoth" />
+    <string id="aom_lord_G1_4_name" text="Thrazak" />
+    <string id="aom_lord_G1_5_name" text="Ulgrim" />
+    <string id="aom_lord_G1_6_name" text="Zorgath" />
+    <string id="aom_lord_G1_7_name" text="Gragor" />
+    <string id="aom_lord_G1_8_name" text="Durmash" />
+    <string id="aom_lord_G1_9_name" text="Gralza" />
+    <string id="aom_lord_G2_10_name" text="Vorzha" />
+    <string id="aom_lord_G2_1_name" text="Vorgoth" />
+    <string id="aom_lord_G2_2_name" text="Mugzun" />
+    <string id="aom_lord_G2_3_name" text="Lurzok" />
+    <string id="aom_lord_G2_4_name" text="Zorgha" />
+    <string id="aom_lord_G2_5_name" text="Thrumak" />
+    <string id="aom_lord_G2_6_name" text="Nargoth" />
+    <string id="aom_lord_G2_7_name" text="Borzak" />
+    <string id="aom_lord_G2_8_name" text="Druznar" />
+    <string id="aom_lord_G2_9_name" text="Zulgara" />
+    <string id="aom_lord_G3_10_name" text="Nargra" />
+    <string id="aom_lord_G3_1_name" text="Kragloth" />
+    <string id="aom_lord_G3_2_name" text="Vurzag" />
+    <string id="aom_lord_G3_3_name" text="Narlog" />
+    <string id="aom_lord_G3_4_name" text="Thalrug" />
+    <string id="aom_lord_G3_5_name" text="Urzul" />
+    <string id="aom_lord_G3_6_name" text="Gralthak" />
+    <string id="aom_lord_G3_7_name" text="Vorgrim" />
+    <string id="aom_lord_G3_8_name" text="Mazkor" />
+    <string id="aom_lord_G3_9_name" text="Durga" />
+    <string id="aom_lord_G4_10_name" text="Muzra" />
+    <string id="aom_lord_G4_1_name" text="Bolgath" />
+    <string id="aom_lord_G4_2_name" text="Lurthak" />
+    <string id="aom_lord_G4_3_name" text="Thrugol" />
+    <string id="aom_lord_G4_4_name" text="Narzuk" />
+    <string id="aom_lord_G4_5_name" text="Kruznor" />
+    <string id="aom_lord_G4_6_name" text="Thrazgul" />
+    <string id="aom_lord_G4_7_name" text="Durzak" />
+    <string id="aom_lord_G4_8_name" text="Zulgoth" />
+    <string id="aom_lord_G4_9_name" text="Thrulza" />
+    <string id="aom_lord_G5_10_name" text="Ulzara" />
+    <string id="aom_lord_G5_1_name" text="Vorzak" />
+    <string id="aom_lord_G5_2_name" text="Krogar" />
+    <string id="aom_lord_G5_3_name" text="Thrunak" />
+    <string id="aom_lord_G5_4_name" text="Grazar" />
+    <string id="aom_lord_G5_5_name" text="Narzog" />
+    <string id="aom_lord_G5_6_name" text="Ulgrim" />
+    <string id="aom_lord_G5_7_name" text="Vurlak" />
+    <string id="aom_lord_G5_8_name" text="Borzak" />
+    <string id="aom_lord_G5_9_name" text="Kralza" />
+    <string id="aom_lord_G6_10_name" text="Ghaaz" />
+    <string id="aom_lord_G6_1_name" text="Grok" />
+    <string id="aom_lord_G6_2_name" text="Muzgash" />
+    <string id="aom_lord_G6_3_name" text="Gorbag" />
+    <string id="aom_lord_G6_4_name" text="Shagrat" />
+    <string id="aom_lord_G6_5_name" text="Ufthak" />
+    <string id="aom_lord_G6_6_name" text="Radbug" />
+    <string id="aom_lord_G6_7_name" text="Gorza" />
+    <string id="aom_lord_G6_8_name" text="Murza" />
+    <string id="aom_lord_G6_9_name" text="Shelka" />
+    <string id="aom_lord_G7_10_name" text="Skarla" />
+    <string id="aom_lord_G7_1_name" text="Mauhur" />
+    <string id="aom_lord_G7_2_name" text="Uglûk" />
+    <string id="aom_lord_G7_3_name" text="Yazneg" />
+    <string id="aom_lord_G7_4_name" text="Brogg" />
+    <string id="aom_lord_G7_5_name" text="Durbuz" />
+    <string id="aom_lord_G7_6_name" text="Hrog" />
+    <string id="aom_lord_G7_7_name" text="Brakka" />
+    <string id="aom_lord_G7_8_name" text="Uzdra" />
+    <string id="aom_lord_G7_9_name" text="Lurgza" />
+    <string id="aom_lord_G8_10_name" text="Druzga" />
+    <string id="aom_lord_G8_1_name" text="Mogdar" />
+    <string id="aom_lord_G8_2_name" text="Skraat" />
+    <string id="aom_lord_G8_3_name" text="Vrasku" />
+    <string id="aom_lord_G8_4_name" text="Lagduf" />
+    <string id="aom_lord_G8_5_name" text="Muzgur" />
+    <string id="aom_lord_G8_6_name" text="Orbug" />
+    <string id="aom_lord_G8_7_name" text="Vroka" />
+    <string id="aom_lord_G8_8_name" text="Murga" />
+    <string id="aom_lord_G8_9_name" text="Throga" />
+    <string id="aom_lord_G9_10_name" text="Ushka" />
+    <string id="aom_lord_G9_1_name" text="Zogdush" />
+    <string id="aom_lord_G9_2_name" text="Karash" />
+    <string id="aom_lord_G9_3_name" text="Dushgar" />
+    <string id="aom_lord_G9_4_name" text="Gribnak" />
+    <string id="aom_lord_G9_5_name" text="Rukhash" />
+    <string id="aom_lord_G9_6_name" text="Targ" />
+    <string id="aom_lord_G9_7_name" text="Nazga" />
+    <string id="aom_lord_G9_8_name" text="Bolga" />
+    <string id="aom_lord_G9_9_name" text="Grisha" />
+    <string id="aom_lord_GB1_1_name" text="Muzgash" />
+    <string id="aom_lord_GB1_2_name" text="Lugdush" />
+    <string id="aom_lord_GB1_3_name" text="Radbug" />
+    <string id="aom_lord_GB1_4_name" text="Gorbag" />
+    <string id="aom_lord_GB1_5_name" text="Shagrat" />
+    <string id="aom_lord_GB1_6_name" text="Ufthak" />
+    <string id="aom_lord_GB1_7_name" text="Hagza" />
+    <string id="aom_lord_GB1_8_name" text="Mogra" />
+    <string id="aom_lord_GB2_1_name" text="Ufthak" />
+    <string id="aom_lord_GB2_2_name" text="Lagduf" />
+    <string id="aom_lord_GB2_3_name" text="Orcobal" />
+    <string id="aom_lord_GB2_4_name" text="Yazneg" />
+    <string id="aom_lord_GB2_5_name" text="Narzug" />
+    <string id="aom_lord_GB2_6_name" text="Grukhash" />
+    <string id="aom_lord_GB2_7_name" text="Gralza" />
+    <string id="aom_lord_GB2_8_name" text="Shelza" />
+    <string id="aom_lord_GB3_1_name" text="Grukhash" />
+    <string id="aom_lord_GB3_2_name" text="Mauhur" />
+    <string id="aom_lord_GB3_3_name" text="Uglûk" />
+    <string id="aom_lord_GB3_4_name" text="Bûrzum" />
+    <string id="aom_lord_GB3_5_name" text="Throkmaw" />
+    <string id="aom_lord_GB3_6_name" text="Skarsnik" />
+    <string id="aom_lord_GB3_7_name" text="Vugza" />
+    <string id="aom_lord_GB3_8_name" text="Skralga" />
+    <string id="aom_lord_GB4_1_name" text="Skarsnik" />
+    <string id="aom_lord_GB4_2_name" text="Gnashrak" />
+    <string id="aom_lord_GB4_3_name" text="Vrakthar" />
+    <string id="aom_lord_GB4_4_name" text="Dushgar" />
+    <string id="aom_lord_GB4_5_name" text="Krimpük" />
+    <string id="aom_lord_GB4_6_name" text="Gashnar" />
+    <string id="aom_lord_GB4_7_name" text="Lazgha" />
+    <string id="aom_lord_GB4_8_name" text="Burza" />
+    <string id="aom_lord_GB5_1_name" text="Gashnar" />
+    <string id="aom_lord_GB5_2_name" text="Morgrub" />
+    <string id="aom_lord_GB5_3_name" text="Snagbut" />
+    <string id="aom_lord_GB5_4_name" text="Hrakdush" />
+    <string id="aom_lord_GB5_5_name" text="Boldog" />
+    <string id="aom_lord_GB5_6_name" text="Lugbol" />
+    <string id="aom_lord_GB5_7_name" text="Brakza" />
+    <string id="aom_lord_GB5_8_name" text="Gnarla" />
+    <string id="aom_lord_I1_10_name" text="Krazdra" />
+    <string id="aom_lord_I1_11_name" text="Dziecko Uglúka" />
+    <string id="aom_lord_I1_13_name" text="Ughasha" />
+    <string id="aom_lord_I1_14_name" text="Bolga" />
+    <string id="aom_lord_I1_15_name" text="Snarla" />
+    <string id="aom_lord_I1_1_name" text="Uglúk, wódz Isengardu" />
+    <string id="aom_lord_I1_2_name" text="Zorlag" />
+    <string id="aom_lord_I1_31_name" text="Vrothgar" />
+    <string id="aom_lord_I1_3_name" text="Gurzod, zbrojmistrz Uruk-hai" />
+    <string id="aom_lord_I1_4_name" text="Grisnak, łupieżca Uruk-hai" />
+    <string id="aom_lord_I1_5_name" text="Muzgash, kapitan berserkerów Uruk-hai" />
+    <string id="aom_lord_I1_6_name" text="Morgash, dowódca zwiadu Uruk-hai" />
+    <string id="aom_lord_I1_7_name" text="Krûklash, egzekutor Uruk-hai" />
+    <string id="aom_lord_I1_8_name" text="Dûshrat, czempion Uruk-hai" />
+    <string id="aom_lord_I1_9_name" text="Gashnak" />
+    <string id="aom_lord_I2_10_name" text="Radzga" />
+    <string id="aom_lord_I2_11_name" text="Dziecko Mauhúra" />
+    <string id="aom_lord_I2_12_name" text="Lugara" />
+    <string id="aom_lord_I2_1_name" text="Mauhúr, wodzirej wojenny Uruk-hai" />
+    <string id="aom_lord_I2_2_name" text="Lugburz, mistrz zwiadu Uruk-hai" />
+    <string id="aom_lord_I2_31_name" text="Gurzod" />
+    <string id="aom_lord_I2_3_name" text="Sharku, Dowódca Jeźdźców Wargów" />
+    <string id="aom_lord_I2_4_name" text="Shank, Tropiciel Uruk-hai" />
+    <string id="aom_lord_I2_5_name" text="Urbash, Zabójca Uruk-hai" />
+    <string id="aom_lord_I2_6_name" text="Ufthak, Grabieżca Uruk-hai" />
+    <string id="aom_lord_I2_7_name" text="Gragnor, Łowca Uruk-hai" />
+    <string id="aom_lord_I2_8_name" text="Narzug, Przywódca Sfory Uruk-hai" />
+    <string id="aom_lord_I2_9_name" text="Muzgura" />
+    <string id="aom_lord_I3_11_name" text="Dziecko Lugdusha" />
+    <string id="aom_lord_I3_1_name" text="Lugdush" />
+    <string id="aom_lord_I3_21_name" text="Rukthar" />
+    <string id="aom_lord_I3_2_name" text="Korgul, Porucznik Uruk-hai" />
+    <string id="aom_lord_I3_31_name" text="Bruzgash" />
+    <string id="aom_lord_I3_3_name" text="Tharzog, Mistrz Bitwy Uruk-hai" />
+    <string id="aom_lord_I3_4_name" text="Sharlug" />
+    <string id="aom_lord_I3_5_name" text="Grisha" />
+    <string id="aom_lord_I4_11_name" text="Dziecko Lurtza" />
+    <string id="aom_lord_I4_1_name" text="Lurtz, Dowódca Uruk-hai" />
+    <string id="aom_lord_I4_21_name" text="Zorzod" />
+    <string id="aom_lord_I4_2_name" text="Zargoth, Mistrz Oblężeń Uruk-hai" />
+    <string id="aom_lord_I4_31_name" text="Drûgash" />
+    <string id="aom_lord_I4_3_name" text="Thrakgul, Nadzorca Uruk-hai" />
+    <string id="aom_lord_I4_41_name" text="Durghash" />
+    <string id="aom_lord_I4_4_name" text="Gorlag, Mistrz Kuźni Uruk-hai" />
+    <string id="aom_lord_I4_5_name" text="Thraka" />
+    <string id="aom_lord_L1_1_name" text="Galadriela, Pani Lothlórien" />
+    <string id="aom_lord_L1_2_name" text="Celeborn, Pan Lothlórien" />
+    <string id="aom_lord_L1_3_name" text="Galadion" />
+    <string id="aom_lord_L2_1_name" text="Caurmínas" />
+    <string id="aom_lord_L2_2_name" text="Thandirion" />
+    <string id="aom_lord_L2_3_name" text="Baranthir" />
+    <string id="aom_lord_L2_4_name" text="Aeglossen" />
+    <string id="aom_lord_L2_5_name" text="Nimlothiel" />
+    <string id="aom_lord_L3_1_name" text="Malthorn" />
+    <string id="aom_lord_L3_2_name" text="Galuvir" />
+    <string id="aom_lord_L3_3_name" text="Silivren" />
+    <string id="aom_lord_LN1_1_name" text="Círdan" />
+    <string id="aom_lord_LN1_2_name" text="Calemir" />
+    <string id="aom_lord_LN1_3_name" text="Nárdir" />
+    <string id="aom_lord_LN1_4_name" text="Lhúnedhel" />
+    <string id="aom_lord_LN1_5_name" text="Nimwen" />
+    <string id="aom_lord_LN1_6_name" text="Lindis" />
+    <string id="aom_lord_LN2_1_name" text="Aeglir" />
+    <string id="aom_lord_LN2_2_name" text="Celebrin" />
+    <string id="aom_lord_LN2_3_name" text="Edronil" />
+    <string id="aom_lord_LN2_4_name" text="Nárwen" />
+    <string id="aom_lord_M10_11_name" text="Gulzag" />
+    <string id="aom_lord_M10_1_name" text="Mauhoshat" />
+    <string id="aom_lord_M11_11_name" text="Krogash" />
+    <string id="aom_lord_M11_1_name" text="Maugrukh" />
+    <string id="aom_lord_M12_11_name" text="Uzbag" />
+    <string id="aom_lord_M12_1_name" text="Rûklash" />
+    <string id="aom_lord_M13_11_name" text="Gûdrak" />
+    <string id="aom_lord_M13_12_name" text="Shelgra" />
+    <string id="aom_lord_M13_13_name" text="Brûga" />
+    <string id="aom_lord_M13_14_name" text="Nazgra" />
+    <string id="aom_lord_M13_15_name" text="Ushka" />
+    <string id="aom_lord_M13_1_name" text="Thûrak" />
+    <string id="aom_lord_M13_2_name" text="Grublat" />
+    <string id="aom_lord_M13_3_name" text="Mazgûr" />
+    <string id="aom_lord_M13_4_name" text="Ufthak" />
+    <string id="aom_lord_M13_5_name" text="Lugrod" />
+    <string id="aom_lord_M14_11_name" text="Mâgzûk" />
+    <string id="aom_lord_M14_12_name" text="Vûshka" />
+    <string id="aom_lord_M14_13_name" text="Krimpa" />
+    <string id="aom_lord_M14_14_name" text="Lhakra" />
+    <string id="aom_lord_M14_15_name" text="Grisha" />
+    <string id="aom_lord_M14_1_name" text="Uznash" />
+    <string id="aom_lord_M14_2_name" text="Durbgûl" />
+    <string id="aom_lord_M14_3_name" text="Snagrat" />
+    <string id="aom_lord_M14_4_name" text="Hrakmaw" />
+    <string id="aom_lord_M14_5_name" text="Gorbûz" />
+    <string id="aom_lord_M15_11_name" text="Rûzkhan" />
+    <string id="aom_lord_M15_12_name" text="Yagûl" />
+    <string id="aom_lord_M15_13_name" text="Skraa" />
+    <string id="aom_lord_M15_14_name" text="Murgha" />
+    <string id="aom_lord_M15_15_name" text="Lozka" />
+    <string id="aom_lord_M15_1_name" text="Dûrzan" />
+    <string id="aom_lord_M15_2_name" text="Razhûk" />
+    <string id="aom_lord_M15_3_name" text="Mûzgash" />
+    <string id="aom_lord_M15_4_name" text="Bolgrat" />
+    <string id="aom_lord_M15_5_name" text="Throkka" />
+    <string id="aom_lord_M16_11_name" text="Ushgar" />
+    <string id="aom_lord_M16_1_name" text="Gûlnak" />
+    <string id="aom_lord_M17_11_name" text="Gûltor" />
+    <string id="aom_lord_M17_1_name" text="Thûlnar" />
+    <string id="aom_lord_M18_11_name" text="Lûrtag" />
+    <string id="aom_lord_M18_1_name" text="Kûragh" />
+    <string id="aom_lord_M1_11_name" text="Legolas" />
+    <string id="aom_lord_M1_12_name" text="Calenor" />
+    <string id="aom_lord_M1_1_name" text="Thranduil" />
+    <string id="aom_lord_M1_2_name" text="Lothuial" />
+    <string id="aom_lord_M1_3_name" text="Feren" />
+    <string id="aom_lord_M1_4_name" text="Galion" />
+    <string id="aom_lord_M1_5_name" text="Nimrodel" />
+    <string id="aom_lord_M2_1_name" text="Oropherion" />
+    <string id="aom_lord_M2_2_name" text="Ailinel" />
+    <string id="aom_lord_M2_3_name" text="Beleg" />
+    <string id="aom_lord_M2_4_name" text="Anairë" />
+    <string id="aom_lord_M2_5_name" text="Daeron" />
+    <string id="aom_lord_M3_1_name" text="Taurion" />
+    <string id="aom_lord_M3_2_name" text="Finduilas" />
+    <string id="aom_lord_M3_3_name" text="Haldir" />
+    <string id="aom_lord_M3_4_name" text="Aredhel" />
+    <string id="aom_lord_M4_1_name" text="Galenor" />
+    <string id="aom_lord_M4_2_name" text="Amarië" />
+    <string id="aom_lord_M4_3_name" text="Rumil" />
+    <string id="aom_lord_M4_4_name" text="Nellas" />
+    <string id="aom_lord_M4_5_name" text="Orophin" />
+    <string id="aom_lord_M5_1_name" text="Alenon" />
+    <string id="aom_lord_M5_2_name" text="Calathiel" />
+    <string id="aom_lord_M5_3_name" text="Thalion" />
+    <string id="aom_lord_M5_4_name" text="Arien" />
+    <string id="aom_lord_M6_1_name" text="Iminyar" />
+    <string id="aom_lord_M6_2_name" text="Elbereth" />
+    <string id="aom_lord_M6_3_name" text="Dagnir" />
+    <string id="aom_lord_M6_4_name" text="Arindor" />
+    <string id="aom_lord_M6_5_name" text="Nimrien" />
+    <string id="aom_lord_MM10_10_name" text="Durza" />
+    <string id="aom_lord_MM10_1_name" text="Brakghash" />
+    <string id="aom_lord_MM10_2_name" text="Morznak" />
+    <string id="aom_lord_MM10_3_name" text="Gashzur" />
+    <string id="aom_lord_MM10_4_name" text="Druzhak" />
+    <string id="aom_lord_MM10_5_name" text="Krumbash" />
+    <string id="aom_lord_MM10_6_name" text="Nargrim" />
+    <string id="aom_lord_MM10_7_name" text="Hrunza" />
+    <string id="aom_lord_MM10_8_name" text="Uzga" />
+    <string id="aom_lord_MM10_9_name" text="Gashka" />
+    <string id="aom_lord_MM11_10_name" text="Skarza" />
+    <string id="aom_lord_MM11_1_name" text="Skrunak" />
+    <string id="aom_lord_MM11_2_name" text="Vughar" />
+    <string id="aom_lord_MM11_3_name" text="Lazgar" />
+    <string id="aom_lord_MM11_4_name" text="Hrokmaw" />
+    <string id="aom_lord_MM11_5_name" text="Buzgar" />
+    <string id="aom_lord_MM11_6_name" text="Maukrim" />
+    <string id="aom_lord_MM11_7_name" text="Naghza" />
+    <string id="aom_lord_MM11_8_name" text="Vrelga" />
+    <string id="aom_lord_MM11_9_name" text="Hroza" />
+    <string id="aom_lord_MM12_10_name" text="Gulza" />
+    <string id="aom_lord_MM12_1_name" text="Throkdush" />
+    <string id="aom_lord_MM12_2_name" text="Gorash" />
+    <string id="aom_lord_MM12_3_name" text="Maukhash" />
+    <string id="aom_lord_MM12_4_name" text="Skarnash" />
+    <string id="aom_lord_MM12_5_name" text="Throgash" />
+    <string id="aom_lord_MM12_6_name" text="Lugash" />
+    <string id="aom_lord_MM12_7_name" text="Lazga" />
+    <string id="aom_lord_MM12_8_name" text="Brughza" />
+    <string id="aom_lord_MM12_9_name" text="Nurzga" />
+    <string id="aom_lord_MM13_10_name" text="Krunza" />
+    <string id="aom_lord_MM13_1_name" text="Burzash" />
+    <string id="aom_lord_MM13_2_name" text="Hrakash" />
+    <string id="aom_lord_MM13_3_name" text="Uzash" />
+    <string id="aom_lord_MM13_4_name" text="Grishash" />
+    <string id="aom_lord_MM13_5_name" text="Mogash" />
+    <string id="aom_lord_MM13_6_name" text="Nazash" />
+    <string id="aom_lord_MM13_7_name" text="Razga" />
+    <string id="aom_lord_MM13_8_name" text="Mughza" />
+    <string id="aom_lord_MM13_9_name" text="Drozga" />
+    <string id="aom_lord_MM14_10_name" text="Hralga" />
+    <string id="aom_lord_MM14_1_name" text="Vrakash" />
+    <string id="aom_lord_MM14_2_name" text="Durbash" />
+    <string id="aom_lord_MM14_3_name" text="Krithash" />
+    <string id="aom_lord_MM14_4_name" text="Lurtash" />
+    <string id="aom_lord_MM14_5_name" text="Ufthash" />
+    <string id="aom_lord_MM14_6_name" text="Brakash" />
+    <string id="aom_lord_MM14_7_name" text="Nashga" />
+    <string id="aom_lord_MM14_8_name" text="Vughza" />
+    <string id="aom_lord_MM14_9_name" text="Snurga" />
+    <string id="aom_lord_MM15_10_name" text="Maukhza" />
+    <string id="aom_lord_MM15_1_name" text="Morzash" />
+    <string id="aom_lord_MM15_2_name" text="Gashash" />
+    <string id="aom_lord_MM15_3_name" text="Snagash" />
+    <string id="aom_lord_MM15_4_name" text="Lagdash" />
+    <string id="aom_lord_MM15_5_name" text="Shagash" />
+    <string id="aom_lord_MM15_6_name" text="Gromash" />
+    <string id="aom_lord_MM15_7_name" text="Bolzga" />
+    <string id="aom_lord_MM15_8_name" text="Ufza" />
+    <string id="aom_lord_MM15_9_name" text="Gorza" />
+    <string id="aom_lord_MM1_10_name" text="Throgza" />
+    <string id="aom_lord_MM1_1_name" text="Bûrzum" />
+    <string id="aom_lord_MM1_2_name" text="Throkmaw" />
+    <string id="aom_lord_MM1_3_name" text="Skarsnik" />
+    <string id="aom_lord_MM1_4_name" text="Gnashrak" />
+    <string id="aom_lord_MM1_5_name" text="Vrakthar" />
+    <string id="aom_lord_MM1_6_name" text="Dushgar" />
+    <string id="aom_lord_MM1_7_name" text="Mogra" />
+    <string id="aom_lord_MM1_8_name" text="Urshza" />
+    <string id="aom_lord_MM1_9_name" text="Skarnza" />
+    <string id="aom_lord_MM2_10_name" text="Hrakza" />
+    <string id="aom_lord_MM2_1_name" text="Dushgar" />
+    <string id="aom_lord_MM2_2_name" text="Krimpük" />
+    <string id="aom_lord_MM2_3_name" text="Gashnar" />
+    <string id="aom_lord_MM2_4_name" text="Morgrub" />
+    <string id="aom_lord_MM2_5_name" text="Snagbut" />
+    <string id="aom_lord_MM2_6_name" text="Hrakdush" />
+    <string id="aom_lord_MM2_7_name" text="Shelza" />
+    <string id="aom_lord_MM2_8_name" text="Ulga" />
+    <string id="aom_lord_MM2_9_name" text="Burzza" />
+    <string id="aom_lord_MM3_10_name" text="Grishza" />
+    <string id="aom_lord_MM3_1_name" text="Hrakdush" />
+    <string id="aom_lord_MM3_2_name" text="Boldog" />
+    <string id="aom_lord_MM3_3_name" text="Lugbol" />
+    <string id="aom_lord_MM3_4_name" text="Grizznak" />
+    <string id="aom_lord_MM3_5_name" text="Frakû" />
+    <string id="aom_lord_MM3_6_name" text="Mughash" />
+    <string id="aom_lord_MM3_7_name" text="Skralga" />
+    <string id="aom_lord_MM3_8_name" text="Hagza" />
+    <string id="aom_lord_MM3_9_name" text="Uzza" />
+    <string id="aom_lord_MM4_10_name" text="Vrakza" />
+    <string id="aom_lord_MM4_1_name" text="Mughash" />
+    <string id="aom_lord_MM4_2_name" text="Grishnák" />
+    <string id="aom_lord_MM4_3_name" text="Muzgash" />
+    <string id="aom_lord_MM4_4_name" text="Lugdush" />
+    <string id="aom_lord_MM4_5_name" text="Radbug" />
+    <string id="aom_lord_MM4_6_name" text="Gorbag" />
+    <string id="aom_lord_MM4_7_name" text="Burza" />
+    <string id="aom_lord_MM4_8_name" text="Gralza" />
+    <string id="aom_lord_MM4_9_name" text="Nazza" />
+    <string id="aom_lord_MM5_10_name" text="Krithza" />
+    <string id="aom_lord_MM5_1_name" text="Gorbag" />
+    <string id="aom_lord_MM5_2_name" text="Shagrat" />
+    <string id="aom_lord_MM5_3_name" text="Ufthak" />
+    <string id="aom_lord_MM5_4_name" text="Lagduf" />
+    <string id="aom_lord_MM5_5_name" text="Orcobal" />
+    <string id="aom_lord_MM5_6_name" text="Yazneg" />
+    <string id="aom_lord_MM5_7_name" text="Gnarla" />
+    <string id="aom_lord_MM5_8_name" text="Vugza" />
+    <string id="aom_lord_MM5_9_name" text="Durbza" />
+    <string id="aom_lord_MM6_10_name" text="Ulzga" />
+    <string id="aom_lord_MM6_1_name" text="Grishnak" />
+    <string id="aom_lord_MM6_2_name" text="Ugluk" />
+    <string id="aom_lord_MM6_3_name" text="Mauhur" />
+    <string id="aom_lord_MM6_4_name" text="Grukhash" />
+    <string id="aom_lord_MM6_5_name" text="Bolg" />
+    <string id="aom_lord_MM6_6_name" text="Othrod" />
+    <string id="aom_lord_MM6_7_name" text="Mogza" />
+    <string id="aom_lord_MM6_8_name" text="Urgha" />
+    <string id="aom_lord_MM6_9_name" text="Shazga" />
+    <string id="aom_lord_MM7_10_name" text="Gralka" />
+    <string id="aom_lord_MM7_1_name" text="Golfimbul" />
+    <string id="aom_lord_MM7_2_name" text="Grakmaw" />
+    <string id="aom_lord_MM7_3_name" text="Skardush" />
+    <string id="aom_lord_MM7_4_name" text="Throgar" />
+    <string id="aom_lord_MM7_5_name" text="Burzlug" />
+    <string id="aom_lord_MM7_6_name" text="Mokrash" />
+    <string id="aom_lord_MM7_7_name" text="Skrelga" />
+    <string id="aom_lord_MM7_8_name" text="Hagra" />
+    <string id="aom_lord_MM7_9_name" text="Burzga" />
+    <string id="aom_lord_MM8_10_name" text="Snazga" />
+    <string id="aom_lord_MM8_1_name" text="Naglur" />
+    <string id="aom_lord_MM8_2_name" text="Vrakdush" />
+    <string id="aom_lord_MM8_3_name" text="Hrumgash" />
+    <string id="aom_lord_MM8_4_name" text="Uzdur" />
+    <string id="aom_lord_MM8_5_name" text="Gorlak" />
+    <string id="aom_lord_MM8_6_name" text="Snagrat" />
+    <string id="aom_lord_MM8_7_name" text="Gnasha" />
+    <string id="aom_lord_MM8_8_name" text="Vugra" />
+    <string id="aom_lord_MM8_9_name" text="Mauza" />
+    <string id="aom_lord_MM9_10_name" text="Bargha" />
+    <string id="aom_lord_MM9_1_name" text="Durbghash" />
+    <string id="aom_lord_MM9_2_name" text="Mughrim" />
+    <string id="aom_lord_MM9_3_name" text="Krithak" />
+    <string id="aom_lord_MM9_4_name" text="Lurtzag" />
+    <string id="aom_lord_MM9_5_name" text="Naznur" />
+    <string id="aom_lord_MM9_6_name" text="Ufgrish" />
+    <string id="aom_lord_MM9_7_name" text="Krimza" />
+    <string id="aom_lord_MM9_8_name" text="Throga" />
+    <string id="aom_lord_MM9_9_name" text="Lugza" />
+    <string id="aom_lord_R1_11_name" text="Argon" />
+    <string id="aom_lord_R1_1_name" text="Elrond" />
+    <string id="aom_lord_R1_2_name" text="Celebrían" />
+    <string id="aom_lord_R1_3_name" text="Elladan" />
+    <string id="aom_lord_R1_4_name" text="Elrohir" />
+    <string id="aom_lord_R1_5_name" text="Arwena" />
+    <string id="aom_lord_R2_11_name" text="Istilmo" />
+    <string id="aom_lord_R2_1_name" text="Glorfindel" />
+    <string id="aom_lord_R2_2_name" text="Gildor" />
+    <string id="aom_lord_R2_3_name" text="Erestor" />
+    <string id="aom_lord_R2_4_name" text="Lindir" />
+    <string id="aom_lord_R3_1_name" text="Chägermeister" />
+    <string id="aom_lord_SH1_10_name" text="Manîzheh" />
+    <string id="aom_lord_SH1_2_name" text="Suladân" />
+    <string id="aom_lord_SH1_3_name" text="Farzûk" />
+    <string id="aom_lord_SH1_4_name" text="Azimûr" />
+    <string id="aom_lord_SH1_5_name" text="Bahram" />
+    <string id="aom_lord_SH1_6_name" text="Khorzan" />
+    <string id="aom_lord_SH1_7_name" text="Banûshad" />
+    <string id="aom_lord_SH1_8_name" text="Roshanak" />
+    <string id="aom_lord_SH1_9_name" text="Gordâfar" />
+    <string id="aom_lord_SH2_10_name" text="Sûdabeh" />
+    <string id="aom_lord_SH2_2_name" text="Rastûm" />
+    <string id="aom_lord_SH2_3_name" text="Sohrak" />
+    <string id="aom_lord_SH2_4_name" text="Kavûs" />
+    <string id="aom_lord_SH2_5_name" text="Tahmûr" />
+    <string id="aom_lord_SH2_6_name" text="Faramûz" />
+    <string id="aom_lord_SH2_7_name" text="Farangîs" />
+    <string id="aom_lord_SH2_8_name" text="Katayûn" />
+    <string id="aom_lord_SH2_9_name" text="Rûdabeh" />
+    <string id="aom_lord_SH3_10_name" text="Azadeh" />
+    <string id="aom_lord_SH3_2_name" text="Goshtân" />
+    <string id="aom_lord_SH3_3_name" text="Zahhûk" />
+    <string id="aom_lord_SH3_4_name" text="Mardûk" />
+    <string id="aom_lord_SH3_5_name" text="Sargûn" />
+    <string id="aom_lord_SH3_6_name" text="Ashûr" />
+    <string id="aom_lord_SH3_7_name" text="Tahmîneh" />
+    <string id="aom_lord_SH3_8_name" text="Sindûkht" />
+    <string id="aom_lord_SH3_9_name" text="Shîrîn" />
+    <string id="aom_lord_SH4_10_name" text="Banûra" />
+    <string id="aom_lord_SH4_2_name" text="Nabûz" />
+    <string id="aom_lord_SH4_3_name" text="Sennûr" />
+    <string id="aom_lord_SH4_4_name" text="Tigharos" />
+    <string id="aom_lord_SH4_5_name" text="Hammûr" />
+    <string id="aom_lord_SH4_6_name" text="Kambûz" />
+    <string id="aom_lord_SH4_7_name" text="Gûlnar" />
+    <string id="aom_lord_SH4_8_name" text="Pûrandar" />
+    <string id="aom_lord_SH4_9_name" text="Âzarmî" />
+    <string id="aom_lord_SH5_10_name" text="Gûlrukh" />
+    <string id="aom_lord_SH5_2_name" text="Cyrûn" />
+    <string id="aom_lord_SH5_3_name" text="Xerûk" />
+    <string id="aom_lord_SH5_4_name" text="Dariûsh" />
+    <string id="aom_lord_SH5_5_name" text="Behnûm" />
+    <string id="aom_lord_SH5_6_name" text="Farzâd" />
+    <string id="aom_lord_SH5_7_name" text="Delâram" />
+    <string id="aom_lord_SH5_8_name" text="Estharâ" />
+    <string id="aom_lord_SH5_9_name" text="Faranak" />
+    <string id="aom_lord_SH6_10_name" text="Lâleh" />
+    <string id="aom_lord_SH6_2_name" text="Hormûz" />
+    <string id="aom_lord_SH6_3_name" text="Jahûn" />
+    <string id="aom_lord_SH6_4_name" text="Kasrûn" />
+    <string id="aom_lord_SH6_5_name" text="Manûchar" />
+    <string id="aom_lord_SH6_6_name" text="Narîman" />
+    <string id="aom_lord_SH6_7_name" text="Homâra" />
+    <string id="aom_lord_SH6_8_name" text="Jârya" />
+    <string id="aom_lord_SH6_9_name" text="Kûshyâra" />
+    <string id="aom_lord_SH7_10_name" text="Rûzâ" />
+    <string id="aom_lord_SH7_2_name" text="Parvîz" />
+    <string id="aom_lord_SH7_3_name" text="Qobâd" />
+    <string id="aom_lord_SH7_4_name" text="Sâsan" />
+    <string id="aom_lord_SH7_5_name" text="Shapûr" />
+    <string id="aom_lord_SH7_6_name" text="Tûranos" />
+    <string id="aom_lord_SH7_7_name" text="Mahsâ" />
+    <string id="aom_lord_SH7_8_name" text="Nâhid" />
+    <string id="aom_lord_SH7_9_name" text="Parisâ" />
+    <string id="aom_lord_SH8_10_name" text="Yâsmin" />
+    <string id="aom_lord_SH8_2_name" text="Varûz" />
+    <string id="aom_lord_SH8_3_name" text="Yazdâr" />
+    <string id="aom_lord_SH8_4_name" text="Zalûk" />
+    <string id="aom_lord_SH8_5_name" text="Anûsh" />
+    <string id="aom_lord_SH8_6_name" text="Bîjan" />
+    <string id="aom_lord_SH8_7_name" text="Shahrnâz" />
+    <string id="aom_lord_SH8_8_name" text="Tûraja" />
+    <string id="aom_lord_SH8_9_name" text="Vâshti" />
+    <string id="aom_lord_SH9_10_name" text="Cyrâ" />
+    <string id="aom_lord_SH9_2_name" text="Esfanos" />
+    <string id="aom_lord_SH9_3_name" text="Gîvar" />
+    <string id="aom_lord_SH9_4_name" text="Hûshang" />
+    <string id="aom_lord_SH9_5_name" text="Irâj" />
+    <string id="aom_lord_SH9_6_name" text="Jamshûd" />
+    <string id="aom_lord_SH9_7_name" text="Zarrîn" />
+    <string id="aom_lord_SH9_8_name" text="Anâhita" />
+    <string id="aom_lord_SH9_9_name" text="Bahâra" />
+    <string id="aom_lord_U1_11_name" text="Lord Gimilzôr" />
+    <string id="aom_lord_U1_12_name" text="Gimilthôn" />
+    <string id="aom_lord_U1_13_name" text="Pharazôn" />
+    <string id="aom_lord_U1_1_name" text="Ar-Gimilkhâd" />
+    <string id="aom_lord_U1_2_name" text="Zimraphel" />
+    <string id="aom_lord_U2_1_name" text="Azraphel" />
+    <string id="aom_lord_U3_1_name" text="Belkazar" />
+    <string id="aom_lord_U4_1_name" text="Pharakhôn" />
+    <string id="aom_lord_U5_1_name" text="Inkaldôr" />
+    <string id="aom_lord_U6_1_name" text="Zimrathôr" />
+    <string id="aom_lord_V11_l_1_name" text="Wynnðryð Deáfringas" />
+    <string id="aom_lord_V11_l_2_name" text="Léothen Deáfringas" />
+    <string id="aom_lord_V11_l_3_name" text="Léobrand Deáfringas" />
+    <string id="aom_lord_V11_l_4_name" text="Léowynn Deáfringas" />
+    <string id="aom_lord_WE8_1_name" text="Dorwen" />
+    <string id="aom_lord_WE8_2_name" text="Eleneth" />
+    <string id="aom_lord_WE8_3_name" text="Hirilwen" />
+    <string id="aom_lord_WE8_4_name" text="Talborin" />
+    <string id="aom_lord_WE9_3_name" text="Derufin" />
+    <string id="aom_lord_WE9_l_1_name" text="Duilin" />
+    <string id="aom_lord_rohan_10_1_name" text="Éomund Eoforing" />
+    <string id="aom_lord_rohan_11_1_name" text="Cadda Tordaging" />
+    <string id="aom_lord_rohan_13_1_name" text="Wulf Celmunding" />
+    <string id="aom_lord_rohan_14_1_name" text="Widmund Widmunding" />
+    <string id="aom_lord_rohan_15_1_name" text="Fróda Ordgaring" />
+    <string id="aom_lord_rohan_16_1_name" text="Eofolda Hunthelming" />
+    <string id="aom_lord_rohan_17_1_name" text="Waldæg Bregdaning" />
+    <string id="aom_lord_rohan_21_1_name" text="Haleth Halethring" />
+    <string id="aom_lord_rohan_22_1_name" text="Béowyrt Rungaring" />
+    <string id="aom_lord_rohan_2_1_name" text="Isenmund Cerdicing" />
+    <string id="aom_lord_rohan_5_1_name" text="Eadwig Oscyteling" />
+    <string id="aom_lord_rohan_9_1_name" text="Dúnhere Dúning" />
+  </strings>
+</base>

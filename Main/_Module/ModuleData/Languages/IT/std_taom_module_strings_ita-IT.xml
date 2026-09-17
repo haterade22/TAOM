@@ -324,6 +324,7 @@
     <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
     <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
     <string id="0aXG8dvJ" text="Fai pace con {KINGDOM_NAME}. Nessun tributo sarà pagato." />
+    <string id="0bPb5btR" text="{LORD.NAME} è un membro di {CLAN_NAME}, {CLAN_DESCRIPTION} di {FACTION_NAME} che sostiene {RULER} nella guerra civile. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="0CsbbwtN" text="Chiama {CALLED_KINGDOM} in Guerra Contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
     <string id="0nhqJewP" text="{RULER.NAME} di {KINGDOM} concede {SETTLEMENT} a {LEADER.NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM} con il sostegno del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
@@ -333,20 +334,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME} fu creato nel {CREATION_YEAR} da {RULER.NAME}, un {CULTURE_ADJECTIVE} signore della guerra in ascesa." />
     <string id="22LCyCoA" text="Posso offrire al vostro reame {GOLD}{GOLD_ICON} per dichiarare guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="2b1xZGaQ" text="Fai pace con {KINGDOM_NAME}. Il nostro regno pagherà {TRIBUTE_AMOUNT} di tributo giornaliero per {TRIBUTE_DURATION} giorni." />
+    <string id="2BVDp7Tg" text="{KINGDOM} cesserà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="Le devastazioni di {NEARBY_ENEMY_FACTION} hanno costretto molti contadini ad abbandonare le loro case. Coloro che possiedono terre di solito vi ritornano, ma molti dei più poveri cercano un nuovo luogo dove vivere. Parli con alcuni accampati alla periferia del tuo villaggio. Non c'è terra per loro. Sembrano desiderosi di lavorare come affittuari, ma c'è sempre la possibilità di tensioni con le famiglie più consolidate del villaggio." />
+    <string id="2mVZORaE" text="un servitore di {FACTION_NAME}" />
     <string id="4fXpOe4N" text="Giunge un messaggero da {CLAN_NAME}. Detengono {CAPTIVE_HERO.NAME} e richiedono {GOLD_AMOUNT}{GOLD_ICON} come riscatto." />
     <string id="4GgfFDWG" text="Fare pace con {KINGDOM_NAME}" />
     <string id="4JSzHkpt" text="Come {?IS_FEMALE}regina{?}re{\?}, devi decidere se dichiarare guerra a {KINGDOM_NAME}" />
+    <string id="4pmvrnmN" text="Il castello di {SETTLEMENT_LINK} è posseduto da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {KEEP_INFO}" />
     <string id="4z1t75be" text="{FIRSTNAME} di {CLAN_NAME}" />
     <string id="5bBAOHmC" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
     <string id="5bza9sDs" text="Mi dispiace molto sentirlo. Non troverete datori di lavoro migliori di {FACTION_NAME}, state certi." />
     <string id="5DdbkWLu" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM}, con il {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
     <string id="5pOKmHsf" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno della metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
+    <string id="6d4ZTvGv" text="{LORD.NAME} è {TITLE} di {FACTION_NAME} e capo di {CLAN_NAME}, {CLAN_DESCRIPTION} del reame. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} ha occupato le nostre terre ancestrali e opprime i nostri consanguinei." />
     <string id="7ouzFASf" text="Giunge un messaggero, recante un messaggio da {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Ella{?}Egli{\?} osserva la vostra crescente reputazione e chiede se considerereste di giurare come vassallo di {OFFERED_KINGDOM_NAME}. Dovreste parlare di persona se siete interessati." />
     <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM} con il sostegno del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="940TwBPs" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} nonostante le obiezioni del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} è un membro di {CLAN_NAME}, {CLAN_DESCRIPTION} dalle terre di {FACTION_NAME}. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM}." />
     <string id="aE7OQDMS" text="Forma alleanza con {KINGDOM_NAME}." />
     <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM}, con il {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
@@ -387,6 +393,7 @@
     <string id="eTylgLCc" text="È arrivato un corriere da {KINGDOM_NAME}. Ti offrono un'alleanza. Il tuo regno voterà se accettare l'offerta." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM} non è più in guerra con {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="F7CMsDyG" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
+    <string id="faUooB7V" text="{KINGDOM} non sarà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="FNCq25P1" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="FuNbouTu" text="È arrivato un corriere da {KINGDOM_NAME}. Chiamano il tuo regno alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Il tuo regno voterà se accettare l'offerta." />
@@ -397,6 +404,7 @@
     <string id="gNf0ALKw" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono una pace bianca. Il tuo regno voterà se accettare l'offerta." />
     <string id="h5eTEYON" text="{RULER.NAME} ha espulso il clan {CLAN} da {KINGDOM}." />
     <string id="h9bWTLgK" text="È tempo di unirci ai nostri alleati, {KINGDOM_NAME}, nella loro guerra." />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} è un capo di {CLAN_NAME}, {CLAN_DESCRIPTION} dalle terre di {FACTION_NAME}. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="IB1xsVEr" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono una pace bianca. I tuoi vassalli hanno lasciato la decisione a te." />
     <string id="INfHUqxT" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME}." />
     <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha scelto di non fare pace con {KINGDOM} nonostante le obiezioni del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
@@ -406,8 +414,10 @@
     <string id="jaioXYDc" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} con il sostegno di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM} nonostante l'opposizione del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="JJQ0Hp4m" text="È arrivato un corriere da {MAP_FACTION_NAME}. {MAP_FACTION_NAME} pagherà {GOLD_AMOUNT} {GOLD_ICON} in tributo ogni giorno per porre fine alla guerra tra i vostri regni. I vostri vassalli hanno lasciato la decisione a voi." />
+    <string id="jnYwiCAz" text="{KINGDOM} continuerà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} è attualmente più potente di noi. Abbiamo bisogno di tempo per rafforzare le nostre forze." />
     <string id="JQligd8z" text="Il consiglio di {KINGDOM} ha scelto {KING.NAME} come nuovo sovrano." />
+    <string id="JuPUG5wX" text="{LORD.NAME} è {TITLE} di {FACTION_NAME} e capo di {CLAN_NAME}, {CLAN_DESCRIPTION} che sostiene {RULER} nella guerra civile. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="JY717hPW" text="Non ho l'autorità per fare pace a nome di {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} e il {?ENEMY_RULER.GENDER}suo{?}suo{\?} consiglio dovrebbero decidere se offrire la pace e quali saranno i termini." />
     <string id="K5w135N9" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione è stata presa contro il consiglio del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="KFHj7ckm" text="Come sovrano, devi decidere se fare pace con {KINGDOM_NAME}" />
@@ -418,6 +428,7 @@
     <string id="L802I9W2" text="Sì, mi unirò a {FACTION_NAME}." />
     <string id="L81DPSom" text="Come {RULER_NAME_AND_TITLE}, devi decidere se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}." />
     <string id="Lalj0T1i" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
+    <string id="Lbs2bNlg" text="{KINGDOM} inizierà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="Il tuo regno è in guerra con {KINGDOM_NAME}." />
     <string id="LVX2x6Jf" text="Vorrei terminare il mio contratto con {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} deciderà se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Puoi scegliere la tua posizione riguardo questa decisione." />
@@ -434,6 +445,7 @@
     <string id="nkvT88r2" text="Non hai abbastanza denaro per chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="NuYzgBZB" text="Stai andando troppo oltre. {KINGDOM} non sopporterà la distruzione delle sue carovane." />
     <string id="o4IxXHnB" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME}." />
+    <string id="o5AUljbW" text="{LORD.NAME} è un membro di {CLAN_NAME}, {CLAN_DESCRIPTION} di {FACTION_NAME}. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK} non è più il capo di {CLAN_NAME}. {NEW_LEADER.LINK} ha assunto il controllo come sovrano del clan." />
     <string id="O9XpB5Ah" text="Come sovrano, devi decidere se stipulare un accordo commerciale con {KINGDOM}" />
     <string id="oAw74q3r" text="Come {RULER_NAME_AND_TITLE}, devi decidere se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
@@ -444,6 +456,7 @@
     <string id="PneX4Ayw" text="Un corriere che porta un'offerta di chiamata alla guerra da {KINGDOM_NAME} contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} è arrivato alla corte del tuo regno." />
     <string id="PP7KD7OC" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM}, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
     <string id="PutoRsWp" text="Arriva un corriere da {CLAN_NAME}. Ti offrono {GOLD_AMOUNT}{GOLD_ICON} come riscatto se libererai {CAPTIVE_HERO.NAME}." />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} è governata da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {KEEP_INFO}" />
     <string id="q9DnHVcZ" text="Non è nel nostro interesse unirci a {KINGDOM_NAME} nella loro guerra." />
     <string id="qa4FlTWS" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="qgN9o2ip" text="È tempo di chiamare il nostro alleato {KINGDOM_NAME} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Il tuo regno voterà se proporre loro un accordo di chiamata alle armi." />
@@ -454,16 +467,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM} con il sostegno di metà del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="rJIuQ0hc" text="{RULER.NAME} di {KINGDOM} ha scelto di non firmare un accordo commerciale con {OTHER_KINGDOM} contro le obiezioni del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="rtfoywJl" text="Dichiara guerra a {KINGDOM_NAME}" />
+    <string id="RVDojUOM" text="Le terre attorno a {SETTLEMENT_LINK} sono possedute principalmente da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="Un corriere è arrivato da {MAP_FACTION_NAME}. Ti offrono la pace se accetti di pagare un tributo giornaliero di {GOLD_AMOUNT} {GOLD_ICON}. Il tuo regno voterà se accettare l'offerta." />
     <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM}." />
     <string id="SR9FC5jH" text="Un corriere è arrivato da {MAP_FACTION_NAME} portando un'offerta di pace. {MAP_FACTION_NAME} pagherà {GOLD_AMOUNT} {GOLD_ICON} in tributo ogni giorno per porre fine alla guerra tra i vostri regni. Il tuo regno voterà se accettare l'offerta." />
     <string id="syGyjjKE" text="Rispondi alla chiamata di {CALLING_KINGDOM} e dichiara guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+    <string id="TauRjAud" text="{NAME} di {FACTION}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} ti offre lavoro come mercenario, pagando {GOLD_AMOUNT}{GOLD_ICON} per punto influenza che guadagneresti combattendo per loro conto. Accetti?" />
     <string id="uc4M4bhG" text="Ebbene, c'è qualcosa che voglio. C'è un {?TARGET_HERO.GENDER}dama{?}signore{\?} di {TARGET_FACTION} con cui ho una lunga, lunga relazione. E non amichevole. Ora che siamo in guerra, finché {?TARGET_HERO.GENDER}ella{?}egli{\?} è libero, so che la mia vita e le mie terre non sono al sicuro. Come dico, non sarà affatto facile. Ma chiunque riesca a farlo, a portarmelo {?TARGET_HERO.GENDER}la{?}lo{\?} vivo, oltre ad avere la mia gratitudine, diventerà davvero un uomo molto ricco.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con il sostegno di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="UQq4ekeu" text="{RULER.NAME} di {KINGDOM} ha scelto di non firmare un accordo commerciale con {OTHER_KINGDOM}." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} ha chiamato {CALLED_KINGDOM_LINK} a dichiarare guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME} era un membro di {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} è governata da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME} è a capo di {CLAN_NAME}, un nuovo clan emergente. {?LORD.GENDER}Lei{?}Lui{\?} sta ancora costruendo la {?LORD.GENDER}sua{?}sua{\?} reputazione." />
     <string id="vf2pb7Ts" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER} deciderà se {KINGDOM} firmerà un accordo commerciale con {OTHER_KINGDOM}. Puoi scegliere la tua posizione riguardo a questa decisione." />
@@ -476,7 +492,9 @@
     <string id="xhK4zMec" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="xKev8i5B" text="La chiamata che {CALLING_KINGDOM_LINK} ha emesso a {CALLED_KINGDOM_LINK}, per entrare in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, è terminata." />
     <string id="xM97H0oR" text="Vota per dichiarare guerra a {KINGDOM_NAME}." />
+    <string id="yAOQnMVw" text="Sei di {FACTION}, giusto? Ciò significa che sei mio prigioniero." />
     <string id="yBL3TzXw" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
+    <string id="YT4OvaAG" text="Molto bene. Puoi considerarti sotto la protezione di {FACTION_NAME}. Hai tempo fino a domani a quest'ora per completare il tuo viaggio, o potremmo chiederti un altro pagamento." />
     <string id="yUYNlQhU" text="Bene, farò scrivere ai miei uomini un semplice contratto. A nome di {KINGDOM_FORMAL_NAME}, ti do il benvenuto. Possa tu usare bene la tua spada contro i nostri nemici." />
     <string id="Zckbdm4Z" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="zd9sawl9" text="Sei già alleato con {KINGDOM_NAME}." />
@@ -2064,6 +2082,7 @@
     <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
     <string id="taom_ai_party_size" text="Schiera del Signore della Guerra" />
     <string id="taom_ai_garrison_size" text="Reame fortificato" />
+    <string id="taom_caravan_escort" text="Scorta della carovana" />
     <string id="taom_ai_forage" text="Foraggiamento in campagna" />
     <string id="taom_ai_levy" text="Servizio di leva" />
     <string id="taom_res_desertion" text="{COUNT} truppe d'elite hanno disertato — le tue {RESOURCE} sono esaurite!" />
@@ -2564,84 +2583,87 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME} (Grado {TIER}, promuovi a ufficiale)" />
     <string id="taom_rf_warden_lost" text="Il tuo rifugio ha perso il suo custode. La guarnigione mantiene il campo, ma ora esso può soltanto essere smantellato." />
     <string id="taom_sl_lord_dispatched" text="{LORD} invia rinforzi, sono in arrivo." />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO} non può essere trattenuto. Sfugge dal campo prima di poter essere catturato." />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO} non può essere trattenuto. È già scomparso prima che i tuoi uomini lo raggiungano." />
-    <string id="taom_caravan_escort" text="Scorta della carovana" />
-    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} di entrate, -{UPKEEP} di mantenimento ({BALANCE} rimasti)" />
-    <string id="taom_res_upkeep_overdraft" text="Il mantenimento di {UPKEEP} {RESOURCE} ha superato i tuoi {BALANCE}; non ne resta nulla" />
-    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spesi in miglioramenti ({BALANCE} rimasti)" />
-    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} per {COUNT} {TROOP}" />
-    <string id="taom_res_tt_tier" text="Livello" />
-    <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
-    <string id="taom_res_tt_next_tier" text="Livello successivo a" />
-    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
-    <string id="taom_res_tt_daily_change" text="Variazione giornaliera" />
-    <string id="taom_res_tt_income" text="Entrate ({TOWNS} città)" />
-    <string id="taom_res_tt_upkeep" text="Mantenimento delle élite ({TYPES} tipi di truppa)" />
-    <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
-    <string id="taom_res_tt_net" text="Netto" />
-    <string id="taom_res_tt_depleted_in" text="Esaurito tra" />
-    <string id="taom_res_tt_days" text="{DAYS} giorni" />
-    <string id="taom_res_tt_deserting" text="Le truppe d'élite disertano ogni giorno finché non hai {RESOURCE}" />
-    <string id="taom_res_tt_per_battle" text="Per battaglia" />
-    <string id="taom_res_tt_per_raid" text="Per razzia" />
-    <string id="taom_res_tt_per_siege" text="Per assedio" />
-    <string id="taom_res_tt_per_prisoner" text="Per prigioniero" />
-    <string id="taom_wa_refuse_free" text="No. So per chi combatti la tua guerra, e non impugnerò una lama per l'Ombra, a nessun prezzo. Trovati un'altra spada." />
-    <string id="taom_wa_refuse_evil" text="Tu marci con gli Amici degli Elfi. La mia stessa gente mi vorrebbe la testa se accettassi il tuo denaro, e i tuoi preferirebbero vedermi impiccato piuttosto che armato. No." />
-    <string id="taom_sl_search_placeholder" text="Cerca merci in ogni mercato" />
-    <string id="taom_sl_search_none" text="Nessuna fonte ne ha in magazzino." />
-    <string id="taom_sl_search_capped" text="Risultati: {COUNT}, mostrati i {SHOWN} più vicini. Restringi la ricerca." />
-    <string id="taom_sl_search_count" text="Risultati: {COUNT}, dal più vicino." />
-    <string id="taom_sl_hit_row" text="{ITEM} a {SOURCE}" />
-    <string id="taom_sl_hit_detail" text="{STOCK} in magazzino, {PRICE} denari, a {DISTANCE} di distanza" />
-    <string id="taom_res_badge_title" text="Richiede {RESOURCE}" />
-    <string id="taom_res_badge_upgrade" text="Miglioramento" />
-    <string id="taom_res_badge_recruit" text="Reclutamento" />
-    <string id="taom_res_badge_upkeep" text="Mantenimento al giorno" />
-    <string id="taom_res_badge_emissary" text="Prezzo dell'Emissario d'élite" />
-    <string id="taom_res_badge_paid_in" text="Miglioramenti, reclute e mantenimento si pagano con i tuoi {RESOURCE}" />
-    <string id="taom_aso_kingdom.empire" text="Dunland" />
-    <string id="taom_aso_kingdom.empire_w" text="Gondor" />
-    <string id="taom_aso_kingdom.empire_s" text="Mordor" />
-    <string id="taom_aso_kingdom.sturgia" text="Dale" />
-    <string id="taom_aso_kingdom.aserai" text="Harad" />
-    <string id="taom_aso_kingdom.vlandia" text="Rohan" />
-    <string id="taom_aso_kingdom.battania" text="Khand" />
-    <string id="taom_aso_kingdom.khuzait" text="Rhun" />
-    <string id="taom_aso_kingdom.erebor" text="Erebor" />
-    <string id="taom_aso_kingdom.rivendell" text="Imladris" />
-    <string id="taom_aso_kingdom.mirkwood" text="Lasgalen" />
-    <string id="taom_aso_kingdom.lothlorien" text="Lothlorien" />
-    <string id="taom_aso_kingdom.isengard" text="Isengard" />
-    <string id="taom_aso_kingdom.gundabad" text="Gundabad" />
-    <string id="taom_aso_kingdom.umbar" text="Umbar" />
-    <string id="taom_aso_kingdom.dolguldur" text="Dol Guldur" />
-    <string id="taom_aso_kingdom.shaghana" text="Shaghâna" />
-    <string id="taom_aso_kingdom.abanissa" text="Âbanissa" />
-    <string id="taom_aso_kingdom.goblin" text="Goblins" />
-    <string id="taom_aso_kingdom.mistymountainorcs" text="Misty Mountain Orcs" />
-    <string id="taom_aso_kingdom.lindon" text="Lindon" />
-    <string id="taom_aso_kingdom.bluecraig" text="Goblins of Blue Craig" />
-    <string id="taom_aso_desc_invasion" text="The faction that rules the majority of Middle-earth." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
-    <string id="taom_aso_item_name_randomized" text="Randomized Middle-earth" />
-    <string id="taom_aso_item_desc_randomized" text="Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
-    <string id="taom_tactic.shield_wall" text="Our plan is to lock shields and hold our ground." />
-    <string id="taom_tactic.infantry_mass" text="Our plan is to swarm them with our numbers." />
-    <string id="taom_tactic.cavalry_dominance" text="Our plan is to ride them down and let the foot finish what the horse begins." />
-    <string id="taom_tactic.archer_ring" text="Our plan is to ring our archers with spears and let the arrows do the work." />
-    <string id="taom_tactic.two_line_wall" text="Our plan is to hold two lines: the front stands, the second waits, then strikes." />
-    <string id="taom_tactic.envelop" text="Our plan is to come at them from three sides and close the jaws." />
-    <string id="taom_tactic.disciplined_line" text="Our plan is to hold the line until they commit, then advance as one." />
-    <string id="taom_tactic.archer_advance" text="Our plan is to advance behind the bows and let the arrows open the way." />
-    <string id="taom_tactic.eored_screen" text="Our plan is to screen the flanks with our riders and charge once they commit." />
-    <string id="taom_tactic.hit_and_run" text="Our plan is to throw, fall back, and throw again until their line breaks." />
-    <string id="taom_tactic.mumak_vanguard" text="Our plan is to send the mumakil in first and follow in their wake." />
-    <string id="taom_behavior.braced_defend" text="Hold your position; square up against horse" />
-    <string id="taom_behavior.braced_advance" text="Advance in a wall; square up against horse" />
-    <string id="taom_behavior.infantry_skirmish" text="Close to throwing range, throw, and fall back" />
-    <string id="taom_behavior.cycle_charge" text="Charge through, reform, and charge again" />
-    <string id="taom_behavior.envelop_wing" text="Swing round their flank and strike from the side" />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO} non può essere trattenuto. Sfugge dal campo prima di poter essere catturato." />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO} non può essere trattenuto. È già scomparso prima che i tuoi uomini lo raggiungano." />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}: +{INCOME} di entrate, -{UPKEEP} di mantenimento ({BALANCE} rimasti)" />
+    <string id="taom_res_upkeep_overdraft" text="Il mantenimento di {UPKEEP} {RESOURCE} ha superato i tuoi {BALANCE}; non ne resta nulla" />
+    <string id="taom_res_upgrade_spend" text="-{AMOUNT} {RESOURCE} spesi in miglioramenti ({BALANCE} rimasti)" />
+    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE} per {COUNT} {TROOP}" />
+    <string id="taom_res_tt_tier" text="Livello" />
+    <string id="taom_res_tt_tier_value" text="{LEVEL} ({NAME})" />
+    <string id="taom_res_tt_next_tier" text="Livello successivo a" />
+    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD} ({NAME})" />
+    <string id="taom_res_tt_daily_change" text="Variazione giornaliera" />
+    <string id="taom_res_tt_income" text="Entrate ({TOWNS} città)" />
+    <string id="taom_res_tt_upkeep" text="Mantenimento delle élite ({TYPES} tipi di truppa)" />
+    <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
+    <string id="taom_res_tt_net" text="Netto" />
+    <string id="taom_res_tt_depleted_in" text="Esaurito tra" />
+    <string id="taom_res_tt_days" text="{DAYS} giorni" />
+    <string id="taom_res_tt_deserting" text="Le truppe d'élite disertano ogni giorno finché non hai {RESOURCE}" />
+    <string id="taom_res_tt_per_battle" text="Per battaglia" />
+    <string id="taom_res_tt_per_raid" text="Per razzia" />
+    <string id="taom_res_tt_per_siege" text="Per assedio" />
+    <string id="taom_res_tt_per_prisoner" text="Per prigioniero" />
+    <string id="taom_wa_refuse_free" text="No. So per chi combatti la tua guerra, e non impugnerò una lama per l'Ombra, a nessun prezzo. Trovati un'altra spada." />
+    <string id="taom_wa_refuse_evil" text="Tu marci con gli Amici degli Elfi. La mia stessa gente mi vorrebbe la testa se accettassi il tuo denaro, e i tuoi preferirebbero vedermi impiccato piuttosto che armato. No." />
+    <string id="taom_sl_search_placeholder" text="Cerca merci in ogni mercato" />
+    <string id="taom_sl_search_none" text="Nessuna fonte ne ha in magazzino." />
+    <string id="taom_sl_search_capped" text="Risultati: {COUNT}, mostrati i {SHOWN} più vicini. Restringi la ricerca." />
+    <string id="taom_sl_search_count" text="Risultati: {COUNT}, dal più vicino." />
+    <string id="taom_sl_hit_row" text="{ITEM} a {SOURCE}" />
+    <string id="taom_sl_hit_detail" text="{STOCK} in magazzino, {PRICE} denari, a {DISTANCE} di distanza" />
+    <string id="taom_res_badge_title" text="Richiede {RESOURCE}" />
+    <string id="taom_res_badge_upgrade" text="Miglioramento" />
+    <string id="taom_res_badge_recruit" text="Reclutamento" />
+    <string id="taom_res_badge_upkeep" text="Mantenimento al giorno" />
+    <string id="taom_res_badge_emissary" text="Prezzo dell'Emissario d'élite" />
+    <string id="taom_res_badge_paid_in" text="Miglioramenti, reclute e mantenimento si pagano con i tuoi {RESOURCE}" />
+    <string id="taom_aso_kingdom.empire" text="Dunland" />
+    <string id="taom_aso_kingdom.empire_w" text="Gondor" />
+    <string id="taom_aso_kingdom.empire_s" text="Mordor" />
+    <string id="taom_aso_kingdom.sturgia" text="Dale" />
+    <string id="taom_aso_kingdom.aserai" text="Harad" />
+    <string id="taom_aso_kingdom.vlandia" text="Rohan" />
+    <string id="taom_aso_kingdom.battania" text="Khand" />
+    <string id="taom_aso_kingdom.khuzait" text="Rhûn" />
+    <string id="taom_aso_kingdom.erebor" text="Erebor" />
+    <string id="taom_aso_kingdom.rivendell" text="Imladris" />
+    <string id="taom_aso_kingdom.mirkwood" text="Lasgalen" />
+    <string id="taom_aso_kingdom.lothlorien" text="Lothlórien" />
+    <string id="taom_aso_kingdom.isengard" text="Isengard" />
+    <string id="taom_aso_kingdom.gundabad" text="Gundabad" />
+    <string id="taom_aso_kingdom.umbar" text="Umbar" />
+    <string id="taom_aso_kingdom.dolguldur" text="Dol Guldur" />
+    <string id="taom_aso_kingdom.shaghana" text="Shaghâna" />
+    <string id="taom_aso_kingdom.abanissa" text="Âbanissa" />
+    <string id="taom_aso_kingdom.goblin" text="Goblin" />
+    <string id="taom_aso_kingdom.mistymountainorcs" text="Orchi dei Monti Nebbiosi" />
+    <string id="taom_aso_kingdom.lindon" text="Lindon" />
+    <string id="taom_aso_kingdom.bluecraig" text="Goblin della Rupe Azzurra" />
+    <string id="taom_aso_item_name_randomized" text="Terra di Mezzo casuale" />
+    <string id="taom_tactic.shield_wall" text="Il nostro piano è serrare gli scudi e tenere la posizione." />
+    <string id="taom_tactic.infantry_mass" text="Il nostro piano è sommergerli col nostro numero." />
+    <string id="taom_tactic.cavalry_dominance" text="Il nostro piano è travolgerli a cavallo e lasciare che la fanteria finisca ciò che i cavalli iniziano." />
+    <string id="taom_tactic.archer_ring" text="Il nostro piano è cingere gli arcieri di lance e lasciare che le frecce facciano il lavoro." />
+    <string id="taom_tactic.two_line_wall" text="Il nostro piano è tenere due linee: la prima resiste, la seconda attende e poi colpisce." />
+    <string id="taom_tactic.envelop" text="Il nostro piano è assalirli da tre lati e chiudere le mascelle." />
+    <string id="taom_tactic.disciplined_line" text="Il nostro piano è tenere la linea finché non si impegnano, poi avanzare come un solo uomo." />
+    <string id="taom_tactic.archer_advance" text="Il nostro piano è avanzare dietro gli archi e lasciare che le frecce aprano la via." />
+    <string id="taom_tactic.eored_screen" text="Il nostro piano è coprire i fianchi con i nostri cavalieri e caricare quando si impegnano." />
+    <string id="taom_tactic.hit_and_run" text="Il nostro piano è scagliare, ritirarci e scagliare di nuovo finché la loro linea non cede." />
+    <string id="taom_tactic.mumak_vanguard" text="Il nostro piano è mandare avanti i mûmakil e seguirli nella loro scia." />
+    <string id="taom_behavior.braced_defend" text="Tenete la posizione; in guardia contro la cavalleria" />
+    <string id="taom_behavior.braced_advance" text="Avanzate in muro; in guardia contro la cavalleria" />
+    <string id="taom_behavior.infantry_skirmish" text="Avvicinatevi a distanza di lancio, scagliate e ritiratevi" />
+    <string id="taom_behavior.cycle_charge" text="Caricate attraverso, riordinatevi e caricate di nuovo" />
+    <string id="taom_behavior.envelop_wing" text="Aggirate il loro fianco e colpite di lato" />
+    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
   </strings>
 </base>

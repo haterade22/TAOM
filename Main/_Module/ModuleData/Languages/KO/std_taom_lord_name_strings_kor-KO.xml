@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="aom_lord_1_11_1_name" text="칼리온" />
+    <string id="aom_lord_1_11_2_name" text="실웬" />
+    <string id="aom_lord_1_11_3_name" text="아이나라우타" />
+    <string id="aom_lord_1_11_4_name" text="이브리니엘" />
+    <string id="aom_lord_1_11_5_name" text="나르니엘" />
+    <string id="aom_lord_1_40_2_name" text="엘레니엘" />
+    <string id="aom_lord_1_45_4_name" text="로레스" />
+    <string id="aom_lord_1_45_5_name" text="벨웬" />
+    <string id="aom_lord_1_45_6_name" text="브리스웬" />
+    <string id="aom_lord_1_52_3_name" text="이브리니엘" />
+    <string id="aom_lord_1_52_4_name" text="나우리엘" />
+    <string id="aom_lord_1_53_1_name" text="칼라니엘" />
+    <string id="aom_lord_1_53_2_name" text="키리온디르" />
+    <string id="aom_lord_1_53_3_name" text="안칼리무" />
+    <string id="aom_lord_1_59_1_name" text="론디엘" />
+    <string id="aom_lord_1_59_2_name" text="실마도르" />
+    <string id="aom_lord_1_59_3_name" text="갈린웬" />
+    <string id="aom_lord_1_59_4_name" text="갈디리온" />
+    <string id="aom_lord_1_59_name" text="론다미르" />
+    <string id="aom_lord_1_60_1_name" text="님리엘" />
+    <string id="aom_lord_1_60_2_name" text="오를라시엘" />
+    <string id="aom_lord_1_60_3_name" text="오를렌디르" />
+    <string id="aom_lord_1_60_name" text="엘도리온" />
+    <string id="aom_lord_1_71_1_name" text="라스웬" />
+    <string id="aom_lord_1_9_1_name" text="엘피르" />
+    <string id="aom_lord_1_9_2_name" text="에르키리온" />
+    <string id="aom_lord_1_9_3_name" text="암로소스" />
+    <string id="aom_lord_1_9_4_name" text="로시리엘" />
+    <string id="aom_lord_1_9_5_name" text="로스웬" />
+    <string id="aom_lord_1_9_6_name" text="로세리엘" />
+    <string id="aom_lord_4_16_2_name" text="헤루브란드 펠란딩" />
+    <string id="aom_lord_4_21_1_name" text="시에게베르흐트 오르들라킹" />
+    <string id="aom_lord_4_21_2_name" text="엘프힐드 오르들라킹" />
+    <string id="aom_lord_4_21_3_name" text="울페이텔 오르들라킹" />
+    <string id="aom_lord_4_21_4_name" text="에아드기푸 오르들라킹" />
+    <string id="aom_lord_4_27_2_name" text="엘프스탄 에셀라핑" />
+    <string id="aom_lord_4_27_3_name" text="엘프윈 에델라핑" />
+    <string id="aom_lord_4_27_4_name" text="새웨알드 에델라핑" />
+    <string id="aom_lord_4_28_3_name" text="리넬다" />
+    <string id="aom_lord_4_29_1_name" text="옥트레다 엘프위깅" />
+    <string id="aom_lord_4_29_2_name" text="에아드웨알드 엘프위깅" />
+    <string id="aom_lord_4_29_name" text="에아드프리스 엘프위깅" />
+    <string id="aom_lord_4_3_2_name" text="에오윈 에오포링" />
+    <string id="aom_lord_4_3_3_name" text="세오드윈 에오포링" />
+    <string id="aom_lord_4_6_2_name" text="엘프그림 그리밍가스" />
+    <string id="aom_lord_6_23_1_name" text="보를라크 후즈" />
+    <string id="aom_lord_6_23_2_name" text="아르마가 후즈" />
+    <string id="aom_lord_6_23_3_name" text="보르한드 후즈" />
+    <string id="aom_lord_6_23_4_name" text="코토타 후즈" />
+    <string id="aom_lord_6_23_5_name" text="울파스트 후즈" />
+    <string id="aom_lord_6_23_6_name" text="울워스 후즈" />
+    <string id="aom_lord_6_23_7_name" text="울도르 후즈" />
+    <string id="aom_lord_6_23_8_name" text="치누아 후즈" />
+    <string id="aom_lord_6_23_9_name" text="게렐 후즈" />
+    <string id="aom_lord_6_24_1_name" text="로르간 아데키그" />
+    <string id="aom_lord_6_24_2_name" text="곡순 아데키그" />
+    <string id="aom_lord_6_24_3_name" text="뵈리 아데키그" />
+    <string id="aom_lord_6_24_4_name" text="훌란 아데키그" />
+    <string id="aom_lord_6_24_5_name" text="쿠스티그 아데키그" />
+    <string id="aom_lord_6_24_6_name" text="윰루크 아데키그" />
+    <string id="aom_lord_6_24_7_name" text="아다르키다이 아데키그" />
+    <string id="aom_lord_6_24_8_name" text="콘샤 아데키그" />
+    <string id="aom_lord_6_24_9_name" text="삼가 아데키그" />
+    <string id="aom_lord_6_25_1_name" text="간바타르 킬제론" />
+    <string id="aom_lord_6_25_2_name" text="사르나이 킬제론" />
+    <string id="aom_lord_6_25_3_name" text="간툴가 킬제론" />
+    <string id="aom_lord_6_25_4_name" text="세르타치 킬제론" />
+    <string id="aom_lord_6_25_5_name" text="헨비시 킬제론" />
+    <string id="aom_lord_6_25_6_name" text="무노코이 킬제론" />
+    <string id="aom_lord_6_25_7_name" text="수베타이 킬제론" />
+    <string id="aom_lord_6_25_8_name" text="수나 킬제론" />
+    <string id="aom_lord_6_25_9_name" text="체체그 킬제론" />
+    <string id="aom_lord_6_25_name" text="에타칼리 킬제론" />
+    <string id="aom_lord_6_26_1_name" text="젤메 칼키안" />
+    <string id="aom_lord_6_26_2_name" text="투야 칼키안" />
+    <string id="aom_lord_6_26_3_name" text="보로굴 칼키안" />
+    <string id="aom_lord_6_26_4_name" text="예수겐 칼키안" />
+    <string id="aom_lord_6_26_5_name" text="무칼리 칼키안" />
+    <string id="aom_lord_6_26_6_name" text="칠라운 칼키안" />
+    <string id="aom_lord_6_26_7_name" text="베르케 칼키안" />
+    <string id="aom_lord_6_26_8_name" text="요스마 칼키안" />
+    <string id="aom_lord_6_26_9_name" text="아이기아른 칼키안" />
+    <string id="aom_lord_6_26_name" text="레오르디노스 칼키안" />
+    <string id="aom_lord_6_27_1_name" text="토크토 조리안" />
+    <string id="aom_lord_6_27_2_name" text="알라그 조리안" />
+    <string id="aom_lord_6_27_3_name" text="아르군 조리안" />
+    <string id="aom_lord_6_27_4_name" text="알라카이 조리안" />
+    <string id="aom_lord_6_27_5_name" text="바이다르 조리안" />
+    <string id="aom_lord_6_27_6_name" text="카단 조리안" />
+    <string id="aom_lord_6_27_7_name" text="오르다 조리안" />
+    <string id="aom_lord_6_27_8_name" text="알타니 조리안" />
+    <string id="aom_lord_6_27_9_name" text="바얄룬 조리안" />
+    <string id="aom_lord_6_27_name" text="네이다 조리안" />
+    <string id="aom_lord_6_28_1_name" text="사르타크 미스룬타이" />
+    <string id="aom_lord_6_28_2_name" text="뵈르테 미스룬타이" />
+    <string id="aom_lord_6_28_3_name" text="노가이 미스룬타이" />
+    <string id="aom_lord_6_28_4_name" text="불간 미스룬타이" />
+    <string id="aom_lord_6_28_5_name" text="타미르 미스룬타이" />
+    <string id="aom_lord_6_28_6_name" text="오트곤 미스룬타이" />
+    <string id="aom_lord_6_28_7_name" text="테무르 미스룬타이" />
+    <string id="aom_lord_6_28_8_name" text="치메그 미스룬타이" />
+    <string id="aom_lord_6_28_9_name" text="도쿠즈 미스룬타이" />
+    <string id="aom_lord_6_28_name" text="툴로크 미스룬타이" />
+    <string id="aom_lord_6_29_1_name" text="아치크 바제비안" />
+    <string id="aom_lord_6_29_2_name" text="엥흐투야 바제비안" />
+    <string id="aom_lord_6_29_3_name" text="쿠틀루그 바제비안" />
+    <string id="aom_lord_6_29_4_name" text="오윤 바제비안" />
+    <string id="aom_lord_6_29_5_name" text="베스카르 바제비안" />
+    <string id="aom_lord_6_29_6_name" text="아우르잔 바제비안" />
+    <string id="aom_lord_6_29_7_name" text="코를루그 바제비안" />
+    <string id="aom_lord_6_29_8_name" text="사랑게렐 바제비안" />
+    <string id="aom_lord_6_29_9_name" text="첼메그 바제비안" />
+    <string id="aom_lord_6_29_name" text="유르잘 바제비안" />
+    <string id="aom_lord_6_30_1_name" text="사고스트 보조르가니스" />
+    <string id="aom_lord_6_30_2_name" text="우드발 보조르가니스" />
+    <string id="aom_lord_6_30_3_name" text="두르칸 보조르가니스" />
+    <string id="aom_lord_6_30_4_name" text="자야 보조르가니스" />
+    <string id="aom_lord_6_30_5_name" text="마즈두르 보조르가니스" />
+    <string id="aom_lord_6_30_6_name" text="헤스울 보조르가니스" />
+    <string id="aom_lord_6_30_7_name" text="타우르칸 보조르가니스" />
+    <string id="aom_lord_6_30_8_name" text="네르구이 보조르가니스" />
+    <string id="aom_lord_6_30_9_name" text="나란게렐 보조르가니스" />
+    <string id="aom_lord_6_30_name" text="루라자우르 보조르가니스" />
+    <string id="aom_lord_AB1_10_name" text="후리아" />
+    <string id="aom_lord_AB1_2_name" text="카룬" />
+    <string id="aom_lord_AB1_3_name" text="로흐라스" />
+    <string id="aom_lord_AB1_4_name" text="미흐라크" />
+    <string id="aom_lord_AB1_5_name" text="누자르" />
+    <string id="aom_lord_AB1_6_name" text="오흐무즈" />
+    <string id="aom_lord_AB1_7_name" text="두리아" />
+    <string id="aom_lord_AB1_8_name" text="파라흐" />
+    <string id="aom_lord_AB1_9_name" text="굴바하르" />
+    <string id="aom_lord_AB2_10_name" text="나르기스" />
+    <string id="aom_lord_AB2_2_name" text="피룬" />
+    <string id="aom_lord_AB2_3_name" text="루즈베흐" />
+    <string id="aom_lord_AB2_4_name" text="시야크" />
+    <string id="aom_lord_AB2_5_name" text="투사르" />
+    <string id="aom_lord_AB2_6_name" text="아르두시" />
+    <string id="aom_lord_AB2_7_name" text="자하나" />
+    <string id="aom_lord_AB2_8_name" text="쿠리나" />
+    <string id="aom_lord_AB2_9_name" text="미흐리" />
+    <string id="aom_lord_AB3_10_name" text="투라나" />
+    <string id="aom_lord_AB3_2_name" text="바흐무르" />
+    <string id="aom_lord_AB3_3_name" text="파룩" />
+    <string id="aom_lord_AB3_4_name" text="가르슈프" />
+    <string id="aom_lord_AB3_5_name" text="후만" />
+    <string id="aom_lord_AB3_6_name" text="이스파나르" />
+    <string id="aom_lord_AB3_7_name" text="파르바네" />
+    <string id="aom_lord_AB3_8_name" text="루샤나" />
+    <string id="aom_lord_AB3_9_name" text="수산" />
+    <string id="aom_lord_AB4_10_name" text="아바나" />
+    <string id="aom_lord_AB4_2_name" text="쿠라시" />
+    <string id="aom_lord_AB4_3_name" text="마즈두크" />
+    <string id="aom_lord_AB4_4_name" text="나르세" />
+    <string id="aom_lord_AB4_5_name" text="오로둔" />
+    <string id="aom_lord_AB4_6_name" text="파쿠르" />
+    <string id="aom_lord_AB4_7_name" text="비다" />
+    <string id="aom_lord_AB4_8_name" text="얄다" />
+    <string id="aom_lord_AB4_9_name" text="줄레이카" />
+    <string id="aom_lord_AB5_10_name" text="파르자네" />
+    <string id="aom_lord_AB5_2_name" text="라쉬누르" />
+    <string id="aom_lord_AB5_3_name" text="샤흐룸" />
+    <string id="aom_lord_AB5_4_name" text="티르둔" />
+    <string id="aom_lord_AB5_5_name" text="볼로가르" />
+    <string id="aom_lord_AB5_6_name" text="자무스프" />
+    <string id="aom_lord_AB5_7_name" text="바닌" />
+    <string id="aom_lord_AB5_8_name" text="차흐라" />
+    <string id="aom_lord_AB5_9_name" text="델카쉬" />
+    <string id="aom_lord_AB6_10_name" text="쿨숨" />
+    <string id="aom_lord_AB6_2_name" text="아자룬" />
+    <string id="aom_lord_AB6_3_name" text="보르주이" />
+    <string id="aom_lord_AB6_4_name" text="다누쉬" />
+    <string id="aom_lord_AB6_5_name" text="파루하르" />
+    <string id="aom_lord_AB6_6_name" text="구다르즈" />
+    <string id="aom_lord_AB6_7_name" text="구하라" />
+    <string id="aom_lord_AB6_8_name" text="후마" />
+    <string id="aom_lord_AB6_9_name" text="자스무나" />
+    <string id="aom_lord_AB7_10_name" text="루샨" />
+    <string id="aom_lord_AB7_2_name" text="후탄" />
+    <string id="aom_lord_AB7_3_name" text="쿠흐람" />
+    <string id="aom_lord_AB7_4_name" text="마후즈" />
+    <string id="aom_lord_AB7_5_name" text="나스투르" />
+    <string id="aom_lord_AB7_6_name" text="풀반드" />
+    <string id="aom_lord_AB7_7_name" text="메흐리" />
+    <string id="aom_lord_AB7_8_name" text="나스린" />
+    <string id="aom_lord_AB7_9_name" text="파르미다" />
+    <string id="aom_lord_AB8_10_name" text="야라" />
+    <string id="aom_lord_AB8_2_name" text="사베" />
+    <string id="aom_lord_AB8_3_name" text="투마르" />
+    <string id="aom_lord_AB8_4_name" text="바라준" />
+    <string id="aom_lord_AB8_5_name" text="장구르" />
+    <string id="aom_lord_AB8_6_name" text="아스푸르" />
+    <string id="aom_lord_AB8_7_name" text="사하라" />
+    <string id="aom_lord_AB8_8_name" text="투바" />
+    <string id="aom_lord_AB8_9_name" text="잘레" />
+    <string id="aom_lord_BC1_1_name" text="모르그루브" />
+    <string id="aom_lord_BC1_2_name" text="스나그부트" />
+    <string id="aom_lord_BC1_3_name" text="흐라크두시" />
+    <string id="aom_lord_BC1_4_name" text="볼도그" />
+    <string id="aom_lord_BC1_5_name" text="루그볼" />
+    <string id="aom_lord_BC1_6_name" text="그리즈낙" />
+    <string id="aom_lord_BC1_7_name" text="그나를라" />
+    <string id="aom_lord_BC1_8_name" text="부그자" />
+    <string id="aom_lord_BC2_1_name" text="그리즈낙" />
+    <string id="aom_lord_BC2_2_name" text="프라쿠" />
+    <string id="aom_lord_BC2_3_name" text="무가시" />
+    <string id="aom_lord_BC2_4_name" text="그리시나크" />
+    <string id="aom_lord_BC2_5_name" text="무즈가시" />
+    <string id="aom_lord_BC2_6_name" text="루그두시" />
+    <string id="aom_lord_BC2_7_name" text="우르시자" />
+    <string id="aom_lord_BC2_8_name" text="라즈가" />
+    <string id="aom_lord_BC3_1_name" text="루그두시" />
+    <string id="aom_lord_BC3_2_name" text="라드부그" />
+    <string id="aom_lord_BC3_3_name" text="고르바그" />
+    <string id="aom_lord_BC3_4_name" text="샤그라트" />
+    <string id="aom_lord_BC3_5_name" text="우프타크" />
+    <string id="aom_lord_BC3_6_name" text="라그두프" />
+    <string id="aom_lord_BC3_7_name" text="울가" />
+    <string id="aom_lord_BC3_8_name" text="브라크자" />
+    <string id="aom_lord_BC4_1_name" text="라그두프" />
+    <string id="aom_lord_BC4_2_name" text="오르코발" />
+    <string id="aom_lord_BC4_3_name" text="야즈네그" />
+    <string id="aom_lord_BC4_4_name" text="나르주그" />
+    <string id="aom_lord_BC4_5_name" text="그루카시" />
+    <string id="aom_lord_BC4_6_name" text="마우후르" />
+    <string id="aom_lord_BC4_7_name" text="하그자" />
+    <string id="aom_lord_BC4_8_name" text="모그라" />
+    <string id="aom_lord_BC5_1_name" text="마우후르" />
+    <string id="aom_lord_BC5_2_name" text="우글루크" />
+    <string id="aom_lord_BC5_3_name" text="부르줌" />
+    <string id="aom_lord_BC5_4_name" text="트로크모" />
+    <string id="aom_lord_BC5_5_name" text="스카르스닉" />
+    <string id="aom_lord_BC5_6_name" text="그나시라크" />
+    <string id="aom_lord_BC5_7_name" text="그랄자" />
+    <string id="aom_lord_BC5_8_name" text="셸자" />
+    <string id="aom_lord_D10_1_name" text="브라크무그" />
+    <string id="aom_lord_D10_2_name" text="샤그툴" />
+    <string id="aom_lord_D10_3_name" text="구르낙" />
+    <string id="aom_lord_D10_4_name" text="브로자그" />
+    <string id="aom_lord_D10_5_name" text="가즐라" />
+    <string id="aom_lord_D10_6_name" text="우즈리나" />
+    <string id="aom_lord_D10_7_name" text="흘루르자" />
+    <string id="aom_lord_D11_1_name" text="투르조그" />
+    <string id="aom_lord_D11_2_name" text="모크라쉬" />
+    <string id="aom_lord_D11_3_name" text="아즈구르스" />
+    <string id="aom_lord_D11_4_name" text="후즈모그" />
+    <string id="aom_lord_D11_5_name" text="불나" />
+    <string id="aom_lord_D11_6_name" text="드라즈가" />
+    <string id="aom_lord_D12_1_name" text="스카르부크" />
+    <string id="aom_lord_D12_2_name" text="루그나르" />
+    <string id="aom_lord_D12_3_name" text="보르굴" />
+    <string id="aom_lord_D12_4_name" text="누르가" />
+    <string id="aom_lord_D12_5_name" text="스쿠즐라" />
+    <string id="aom_lord_D13_1_name" text="드람타크" />
+    <string id="aom_lord_D13_2_name" text="굴바그" />
+    <string id="aom_lord_D13_3_name" text="루크마쉬" />
+    <string id="aom_lord_D13_4_name" text="스로즈구르" />
+    <string id="aom_lord_D13_5_name" text="불자그" />
+    <string id="aom_lord_D13_6_name" text="마르그자" />
+    <string id="aom_lord_D13_7_name" text="굴나" />
+    <string id="aom_lord_D13_8_name" text="라즈가" />
+    <string id="aom_lord_D13_9_name" text="불즈나" />
+    <string id="aom_lord_D14_1_name" text="누르각" />
+    <string id="aom_lord_D14_2_name" text="슬라그툼" />
+    <string id="aom_lord_D14_3_name" text="흐루크단" />
+    <string id="aom_lord_D14_4_name" text="마즈구스" />
+    <string id="aom_lord_D14_5_name" text="스로즈가" />
+    <string id="aom_lord_D14_6_name" text="우즈글라" />
+    <string id="aom_lord_D14_7_name" text="루크자" />
+    <string id="aom_lord_D15_1_name" text="올구르" />
+    <string id="aom_lord_D15_2_name" text="구스라크" />
+    <string id="aom_lord_D15_3_name" text="자그모르" />
+    <string id="aom_lord_D15_4_name" text="드루브나쉬" />
+    <string id="aom_lord_D15_5_name" text="브라그나" />
+    <string id="aom_lord_D15_6_name" text="두르자" />
+    <string id="aom_lord_D1_10_name" text="나르샤" />
+    <string id="aom_lord_D1_2_name" text="스랑굴" />
+    <string id="aom_lord_D1_3_name" text="모르굴라쉬" />
+    <string id="aom_lord_D1_4_name" text="드라즈고르" />
+    <string id="aom_lord_D1_5_name" text="자르카쉬" />
+    <string id="aom_lord_D1_6_name" text="고르자그" />
+    <string id="aom_lord_D1_7_name" text="울스라크" />
+    <string id="aom_lord_D1_8_name" text="보르사크" />
+    <string id="aom_lord_D1_9_name" text="스룰자" />
+    <string id="aom_lord_D2_10_name" text="두르자" />
+    <string id="aom_lord_D2_1_name" text="나르주그" />
+    <string id="aom_lord_D2_2_name" text="두르카르" />
+    <string id="aom_lord_D2_3_name" text="스라르골" />
+    <string id="aom_lord_D2_4_name" text="카즈라그" />
+    <string id="aom_lord_D2_5_name" text="조르그룰" />
+    <string id="aom_lord_D2_6_name" text="모르자그" />
+    <string id="aom_lord_D2_7_name" text="드루자크" />
+    <string id="aom_lord_D2_8_name" text="그라샤" />
+    <string id="aom_lord_D2_9_name" text="크자" />
+    <string id="aom_lord_D3_10_name" text="살카" />
+    <string id="aom_lord_D3_1_name" text="로르가스" />
+    <string id="aom_lord_D3_2_name" text="나르그라쉬" />
+    <string id="aom_lord_D3_3_name" text="우르조크" />
+    <string id="aom_lord_D3_4_name" text="보르줄" />
+    <string id="aom_lord_D3_5_name" text="그랄주크" />
+    <string id="aom_lord_D3_6_name" text="두르모르그" />
+    <string id="aom_lord_D3_7_name" text="소르자그" />
+    <string id="aom_lord_D3_8_name" text="크로자르" />
+    <string id="aom_lord_D3_9_name" text="자르그라" />
+    <string id="aom_lord_D4_10_name" text="보르줄" />
+    <string id="aom_lord_D4_1_name" text="우르자라" />
+    <string id="aom_lord_D4_2_name" text="드루즈니아" />
+    <string id="aom_lord_D4_3_name" text="보르그리아" />
+    <string id="aom_lord_D4_4_name" text="스룰지아" />
+    <string id="aom_lord_D4_5_name" text="줄고라" />
+    <string id="aom_lord_D4_6_name" text="나르지아" />
+    <string id="aom_lord_D4_7_name" text="카즈리아" />
+    <string id="aom_lord_D4_8_name" text="그랄지아" />
+    <string id="aom_lord_D4_9_name" text="우르조크" />
+    <string id="aom_lord_D5_10_name" text="울즈라" />
+    <string id="aom_lord_D5_1_name" text="스로르가쉬" />
+    <string id="aom_lord_D5_2_name" text="고르바쉬" />
+    <string id="aom_lord_D5_3_name" text="나르두크" />
+    <string id="aom_lord_D5_4_name" text="줄고르" />
+    <string id="aom_lord_D5_5_name" text="둘루크" />
+    <string id="aom_lord_D5_6_name" text="트루가쉬" />
+    <string id="aom_lord_D5_7_name" text="카르굴" />
+    <string id="aom_lord_D5_8_name" text="울자르" />
+    <string id="aom_lord_D5_9_name" text="모르그라" />
+    <string id="aom_lord_D6_10_name" text="카즐라" />
+    <string id="aom_lord_D6_1_name" text="트루르그" />
+    <string id="aom_lord_D6_2_name" text="자를루그" />
+    <string id="aom_lord_D6_3_name" text="무즈라크" />
+    <string id="aom_lord_D6_4_name" text="카즈니아" />
+    <string id="aom_lord_D6_5_name" text="루르지아" />
+    <string id="aom_lord_D6_6_name" text="두를라" />
+    <string id="aom_lord_D6_7_name" text="그랄니아" />
+    <string id="aom_lord_D6_8_name" text="탈카" />
+    <string id="aom_lord_D6_9_name" text="보를라" />
+    <string id="aom_lord_D7_10_name" text="브루즈가" />
+    <string id="aom_lord_D7_1_name" text="루그모르" />
+    <string id="aom_lord_D7_2_name" text="브루카쉬" />
+    <string id="aom_lord_D7_3_name" text="드루즈굴" />
+    <string id="aom_lord_D7_4_name" text="트로그마" />
+    <string id="aom_lord_D7_5_name" text="부르즈가쉬" />
+    <string id="aom_lord_D7_6_name" text="가쉬나크" />
+    <string id="aom_lord_D7_7_name" text="므와즈가" />
+    <string id="aom_lord_D7_8_name" text="스쿠를라" />
+    <string id="aom_lord_D7_9_name" text="구르니아" />
+    <string id="aom_lord_D8_1_name" text="스쿨가르" />
+    <string id="aom_lord_D8_2_name" text="모르불" />
+    <string id="aom_lord_D8_3_name" text="라즈가르" />
+    <string id="aom_lord_D8_4_name" text="우즈구스" />
+    <string id="aom_lord_D8_5_name" text="마우타크" />
+    <string id="aom_lord_D8_6_name" text="나그자" />
+    <string id="aom_lord_D8_7_name" text="두르니아" />
+    <string id="aom_lord_D8_8_name" text="루르가" />
+    <string id="aom_lord_D8_9_name" text="투즈가" />
+    <string id="aom_lord_D9_1_name" text="날투르" />
+    <string id="aom_lord_D9_2_name" text="그리슐" />
+    <string id="aom_lord_D9_3_name" text="흘라쿰" />
+    <string id="aom_lord_D9_4_name" text="주르간" />
+    <string id="aom_lord_D9_5_name" text="둘마시" />
+    <string id="aom_lord_D9_6_name" text="모르그자" />
+    <string id="aom_lord_D9_7_name" text="스칼나" />
+    <string id="aom_lord_D9_8_name" text="브루자" />
+    <string id="aom_lord_E1_11_name" text="스리스" />
+    <string id="aom_lord_E1_1_name" text="다인 2세 무쇠발" />
+    <string id="aom_lord_E1_2_name" text="소린 돌투구" />
+    <string id="aom_lord_E1_3_name" text="디사" />
+    <string id="aom_lord_E1_4_name" text="나인" />
+    <string id="aom_lord_E1_5_name" text="두린" />
+    <string id="aom_lord_E1_6_name" text="핀" />
+    <string id="aom_lord_E2_11_name" text="드워린" />
+    <string id="aom_lord_E2_1_name" text="나스" />
+    <string id="aom_lord_E2_2_name" text="이리디" />
+    <string id="aom_lord_E2_3_name" text="루니" />
+    <string id="aom_lord_E2_4_name" text="로미" />
+    <string id="aom_lord_E3_11_name" text="드루인" />
+    <string id="aom_lord_E3_1_name" text="가르잔" />
+    <string id="aom_lord_E3_2_name" text="살피" />
+    <string id="aom_lord_E3_3_name" text="이마크" />
+    <string id="aom_lord_E3_4_name" text="닐리" />
+    <string id="aom_lord_E3_5_name" text="메리" />
+    <string id="aom_lord_E4_11_name" text="오른" />
+    <string id="aom_lord_E4_1_name" text="나르" />
+    <string id="aom_lord_E4_2_name" text="틸리" />
+    <string id="aom_lord_E4_3_name" text="날리" />
+    <string id="aom_lord_E4_4_name" text="탈리" />
+    <string id="aom_lord_E5_11_name" text="셀로르" />
+    <string id="aom_lord_E5_1_name" text="고를리" />
+    <string id="aom_lord_E5_2_name" text="기르다" />
+    <string id="aom_lord_E5_3_name" text="가인" />
+    <string id="aom_lord_E5_4_name" text="프라르" />
+    <string id="aom_lord_E5_5_name" text="프레린" />
+    <string id="aom_lord_E6_11_name" text="스란" />
+    <string id="aom_lord_E6_1_name" text="플로이" />
+    <string id="aom_lord_E6_2_name" text="드랄리" />
+    <string id="aom_lord_E6_3_name" text="플라시" />
+    <string id="aom_lord_E6_4_name" text="이드룬" />
+    <string id="aom_lord_E7_11_name" text="살리아" />
+    <string id="aom_lord_E7_1_name" text="나란" />
+    <string id="aom_lord_EW_10_name" text="우이닐메" />
+    <string id="aom_lord_EW_11_name" text="엘다카르" />
+    <string id="aom_lord_EW_12_name" text="멜리안나" />
+    <string id="aom_lord_EW_13_name" text="이스티온" />
+    <string id="aom_lord_EW_14_1_name" text="실마리엘" />
+    <string id="aom_lord_EW_14_2_name" text="니메실" />
+    <string id="aom_lord_EW_14_3_name" text="루멘" />
+    <string id="aom_lord_EW_14_name" text="보론디르" />
+    <string id="aom_lord_EW_15_name" text="모르웬" />
+    <string id="aom_lord_EW_16_name" text="사에네스" />
+    <string id="aom_lord_EW_17_name" text="에스텔리엔" />
+    <string id="aom_lord_EW_18_name" text="필리고드" />
+    <string id="aom_lord_EW_19_name" text="팔란두르" />
+    <string id="aom_lord_EW_1_1_name" text="키리엘" />
+    <string id="aom_lord_EW_1_2_name" text="펠라미르" />
+    <string id="aom_lord_EW_1_3_name" text="도르웬" />
+    <string id="aom_lord_EW_1_4_name" text="사르니온" />
+    <string id="aom_lord_EW_1_name" text="아만디르" />
+    <string id="aom_lord_EW_20_name" text="발라타르" />
+    <string id="aom_lord_EW_21_name" text="벨레고른" />
+    <string id="aom_lord_EW_22_name" text="네사니에" />
+    <string id="aom_lord_EW_23_name" text="아나라탄" />
+    <string id="aom_lord_EW_24_name" text="벨웬" />
+    <string id="aom_lord_EW_25_name" text="아르겔레브" />
+    <string id="aom_lord_EW_26_name" text="베레노르" />
+    <string id="aom_lord_EW_27_name" text="아르니엘" />
+    <string id="aom_lord_EW_28_name" text="에멜디르" />
+    <string id="aom_lord_EW_2_name" text="비리나르" />
+    <string id="aom_lord_EW_3_name" text="비리네흐타르" />
+    <string id="aom_lord_EW_4_name" text="발란두르" />
+    <string id="aom_lord_EW_5_name" text="발라리나" />
+    <string id="aom_lord_EW_6_1_name" text="팔라스웬" />
+    <string id="aom_lord_EW_6_2_name" text="오르웨니엘" />
+    <string id="aom_lord_EW_6_3_name" text="탈렌디르" />
+    <string id="aom_lord_EW_6_name" text="오론디르" />
+    <string id="aom_lord_EW_7_name" text="도리엔" />
+    <string id="aom_lord_EW_8_name" text="베레가르" />
+    <string id="aom_lord_EW_9_name" text="싱골" />
+    <string id="aom_lord_G10_10_name" text="마그라" />
+    <string id="aom_lord_G10_1_name" text="부즈그라" />
+    <string id="aom_lord_G10_2_name" text="흐라크가르" />
+    <string id="aom_lord_G10_3_name" text="몰그호르" />
+    <string id="aom_lord_G10_4_name" text="스나그두프" />
+    <string id="aom_lord_G10_5_name" text="우루크" />
+    <string id="aom_lord_G10_6_name" text="드루보그" />
+    <string id="aom_lord_G10_7_name" text="조그라" />
+    <string id="aom_lord_G10_8_name" text="라크자" />
+    <string id="aom_lord_G10_9_name" text="우르즈가" />
+    <string id="aom_lord_G1_10_name" text="투르카" />
+    <string id="aom_lord_G1_1_name" text="아즈가르" />
+    <string id="aom_lord_G1_2_name" text="드로즈마크" />
+    <string id="aom_lord_G1_3_name" text="카르고스" />
+    <string id="aom_lord_G1_4_name" text="트라자크" />
+    <string id="aom_lord_G1_5_name" text="울그림" />
+    <string id="aom_lord_G1_6_name" text="조르가스" />
+    <string id="aom_lord_G1_7_name" text="그라고르" />
+    <string id="aom_lord_G1_8_name" text="두르마쉬" />
+    <string id="aom_lord_G1_9_name" text="그랄자" />
+    <string id="aom_lord_G2_10_name" text="보르자" />
+    <string id="aom_lord_G2_1_name" text="보르고스" />
+    <string id="aom_lord_G2_2_name" text="무그준" />
+    <string id="aom_lord_G2_3_name" text="루르조크" />
+    <string id="aom_lord_G2_4_name" text="조르가" />
+    <string id="aom_lord_G2_5_name" text="트루마크" />
+    <string id="aom_lord_G2_6_name" text="나르고스" />
+    <string id="aom_lord_G2_7_name" text="보르자크" />
+    <string id="aom_lord_G2_8_name" text="드루즈나르" />
+    <string id="aom_lord_G2_9_name" text="줄가라" />
+    <string id="aom_lord_G3_10_name" text="나르그라" />
+    <string id="aom_lord_G3_1_name" text="크라글로스" />
+    <string id="aom_lord_G3_2_name" text="부르자그" />
+    <string id="aom_lord_G3_3_name" text="나를로그" />
+    <string id="aom_lord_G3_4_name" text="탈루그" />
+    <string id="aom_lord_G3_5_name" text="우르줄" />
+    <string id="aom_lord_G3_6_name" text="그랄타크" />
+    <string id="aom_lord_G3_7_name" text="보르그림" />
+    <string id="aom_lord_G3_8_name" text="마즈코르" />
+    <string id="aom_lord_G3_9_name" text="두르가" />
+    <string id="aom_lord_G4_10_name" text="무즈라" />
+    <string id="aom_lord_G4_1_name" text="볼가스" />
+    <string id="aom_lord_G4_2_name" text="루르삭" />
+    <string id="aom_lord_G4_3_name" text="스루골" />
+    <string id="aom_lord_G4_4_name" text="나르주크" />
+    <string id="aom_lord_G4_5_name" text="크루즈노르" />
+    <string id="aom_lord_G4_6_name" text="스라즈굴" />
+    <string id="aom_lord_G4_7_name" text="두르자크" />
+    <string id="aom_lord_G4_8_name" text="줄고스" />
+    <string id="aom_lord_G4_9_name" text="스룰자" />
+    <string id="aom_lord_G5_10_name" text="울자라" />
+    <string id="aom_lord_G5_1_name" text="보르자크" />
+    <string id="aom_lord_G5_2_name" text="크로가르" />
+    <string id="aom_lord_G5_3_name" text="스루나크" />
+    <string id="aom_lord_G5_4_name" text="그라자르" />
+    <string id="aom_lord_G5_5_name" text="나르조그" />
+    <string id="aom_lord_G5_6_name" text="울그림" />
+    <string id="aom_lord_G5_7_name" text="부르라크" />
+    <string id="aom_lord_G5_8_name" text="보르자크" />
+    <string id="aom_lord_G5_9_name" text="크랄자" />
+    <string id="aom_lord_G6_10_name" text="가즈" />
+    <string id="aom_lord_G6_1_name" text="그로크" />
+    <string id="aom_lord_G6_2_name" text="무즈가쉬" />
+    <string id="aom_lord_G6_3_name" text="고르바그" />
+    <string id="aom_lord_G6_4_name" text="샤그라트" />
+    <string id="aom_lord_G6_5_name" text="우프타크" />
+    <string id="aom_lord_G6_6_name" text="라드부그" />
+    <string id="aom_lord_G6_7_name" text="고르자" />
+    <string id="aom_lord_G6_8_name" text="무르자" />
+    <string id="aom_lord_G6_9_name" text="셸카" />
+    <string id="aom_lord_G7_10_name" text="스카를라" />
+    <string id="aom_lord_G7_1_name" text="마우후르" />
+    <string id="aom_lord_G7_2_name" text="우글루크" />
+    <string id="aom_lord_G7_3_name" text="야즈네그" />
+    <string id="aom_lord_G7_4_name" text="브로그" />
+    <string id="aom_lord_G7_5_name" text="두르부즈" />
+    <string id="aom_lord_G7_6_name" text="흐로그" />
+    <string id="aom_lord_G7_7_name" text="브라카" />
+    <string id="aom_lord_G7_8_name" text="우즈드라" />
+    <string id="aom_lord_G7_9_name" text="루르그자" />
+    <string id="aom_lord_G8_10_name" text="드루즈가" />
+    <string id="aom_lord_G8_1_name" text="모그다르" />
+    <string id="aom_lord_G8_2_name" text="스크라트" />
+    <string id="aom_lord_G8_3_name" text="브라스쿠" />
+    <string id="aom_lord_G8_4_name" text="라그두프" />
+    <string id="aom_lord_G8_5_name" text="무즈구르" />
+    <string id="aom_lord_G8_6_name" text="오르부그" />
+    <string id="aom_lord_G8_7_name" text="브로카" />
+    <string id="aom_lord_G8_8_name" text="무르가" />
+    <string id="aom_lord_G8_9_name" text="스로가" />
+    <string id="aom_lord_G9_10_name" text="우슈카" />
+    <string id="aom_lord_G9_1_name" text="조그두쉬" />
+    <string id="aom_lord_G9_2_name" text="카라쉬" />
+    <string id="aom_lord_G9_3_name" text="두쉬가르" />
+    <string id="aom_lord_G9_4_name" text="그리브나크" />
+    <string id="aom_lord_G9_5_name" text="루카쉬" />
+    <string id="aom_lord_G9_6_name" text="타르그" />
+    <string id="aom_lord_G9_7_name" text="나즈가" />
+    <string id="aom_lord_G9_8_name" text="볼가" />
+    <string id="aom_lord_G9_9_name" text="그리샤" />
+    <string id="aom_lord_GB1_1_name" text="무즈가쉬" />
+    <string id="aom_lord_GB1_2_name" text="루그두쉬" />
+    <string id="aom_lord_GB1_3_name" text="라드부그" />
+    <string id="aom_lord_GB1_4_name" text="고르바그" />
+    <string id="aom_lord_GB1_5_name" text="샤그라트" />
+    <string id="aom_lord_GB1_6_name" text="우프타크" />
+    <string id="aom_lord_GB1_7_name" text="하그자" />
+    <string id="aom_lord_GB1_8_name" text="모그라" />
+    <string id="aom_lord_GB2_1_name" text="우프타크" />
+    <string id="aom_lord_GB2_2_name" text="라그두프" />
+    <string id="aom_lord_GB2_3_name" text="오르코발" />
+    <string id="aom_lord_GB2_4_name" text="야즈네그" />
+    <string id="aom_lord_GB2_5_name" text="나르주그" />
+    <string id="aom_lord_GB2_6_name" text="그루카쉬" />
+    <string id="aom_lord_GB2_7_name" text="그랄자" />
+    <string id="aom_lord_GB2_8_name" text="셸자" />
+    <string id="aom_lord_GB3_1_name" text="그루카쉬" />
+    <string id="aom_lord_GB3_2_name" text="마우후르" />
+    <string id="aom_lord_GB3_3_name" text="우글루크" />
+    <string id="aom_lord_GB3_4_name" text="부르줌" />
+    <string id="aom_lord_GB3_5_name" text="스로크모" />
+    <string id="aom_lord_GB3_6_name" text="스카르스닉" />
+    <string id="aom_lord_GB3_7_name" text="부그자" />
+    <string id="aom_lord_GB3_8_name" text="스크랄가" />
+    <string id="aom_lord_GB4_1_name" text="스카르스닉" />
+    <string id="aom_lord_GB4_2_name" text="그나슈락" />
+    <string id="aom_lord_GB4_3_name" text="브락타르" />
+    <string id="aom_lord_GB4_4_name" text="두슈가르" />
+    <string id="aom_lord_GB4_5_name" text="크림퓌크" />
+    <string id="aom_lord_GB4_6_name" text="가슈나르" />
+    <string id="aom_lord_GB4_7_name" text="라즈하" />
+    <string id="aom_lord_GB4_8_name" text="부르자" />
+    <string id="aom_lord_GB5_1_name" text="가슈나르" />
+    <string id="aom_lord_GB5_2_name" text="모르그룹" />
+    <string id="aom_lord_GB5_3_name" text="스나그붓" />
+    <string id="aom_lord_GB5_4_name" text="흐락두슈" />
+    <string id="aom_lord_GB5_5_name" text="볼도그" />
+    <string id="aom_lord_GB5_6_name" text="루그볼" />
+    <string id="aom_lord_GB5_7_name" text="브락자" />
+    <string id="aom_lord_GB5_8_name" text="그나를라" />
+    <string id="aom_lord_I1_10_name" text="크라즈드라" />
+    <string id="aom_lord_I1_11_name" text="우글룩의 자식" />
+    <string id="aom_lord_I1_13_name" text="우가샤" />
+    <string id="aom_lord_I1_14_name" text="볼가" />
+    <string id="aom_lord_I1_15_name" text="스나를라" />
+    <string id="aom_lord_I1_1_name" text="아이센가드의 족장, 우글룩" />
+    <string id="aom_lord_I1_2_name" text="조를라그" />
+    <string id="aom_lord_I1_31_name" text="브로트가르" />
+    <string id="aom_lord_I1_3_name" text="구르조드, 우루크하이 무기장인" />
+    <string id="aom_lord_I1_4_name" text="그리스나크, 우루크하이 약탈자" />
+    <string id="aom_lord_I1_5_name" text="무즈가슈, 우루크하이 광전사 대장" />
+    <string id="aom_lord_I1_6_name" text="모르가슈, 우루크하이 정찰대장" />
+    <string id="aom_lord_I1_7_name" text="크루클라슈, 우루크하이 집행자" />
+    <string id="aom_lord_I1_8_name" text="두슈랏, 우루크하이 용사" />
+    <string id="aom_lord_I1_9_name" text="가슈나크" />
+    <string id="aom_lord_I2_10_name" text="라드즈가" />
+    <string id="aom_lord_I2_11_name" text="마우후르의 자식" />
+    <string id="aom_lord_I2_12_name" text="루가라" />
+    <string id="aom_lord_I2_1_name" text="마우후르, 우루크하이 전쟁군주" />
+    <string id="aom_lord_I2_2_name" text="루그부르즈, 우루크하이 정찰단장" />
+    <string id="aom_lord_I2_31_name" text="구르조드" />
+    <string id="aom_lord_I2_3_name" text="샤르쿠, 와르그 기수 지휘관" />
+    <string id="aom_lord_I2_4_name" text="샹크, 우루크하이 추적자" />
+    <string id="aom_lord_I2_5_name" text="우르바시, 우루크하이 학살자" />
+    <string id="aom_lord_I2_6_name" text="우프타크, 우루크하이 약탈자" />
+    <string id="aom_lord_I2_7_name" text="그라그노르, 우루크하이 사냥꾼" />
+    <string id="aom_lord_I2_8_name" text="나르주그, 우루크하이 무리 두목" />
+    <string id="aom_lord_I2_9_name" text="무즈구라" />
+    <string id="aom_lord_I3_11_name" text="루그두시의 자식" />
+    <string id="aom_lord_I3_1_name" text="루그두시" />
+    <string id="aom_lord_I3_21_name" text="루크타르" />
+    <string id="aom_lord_I3_2_name" text="코르굴, 우루크하이 부관" />
+    <string id="aom_lord_I3_31_name" text="브루즈가시" />
+    <string id="aom_lord_I3_3_name" text="타르조그, 우루크하이 전투대장" />
+    <string id="aom_lord_I3_4_name" text="샤를루그" />
+    <string id="aom_lord_I3_5_name" text="그리샤" />
+    <string id="aom_lord_I4_11_name" text="루르츠의 자식" />
+    <string id="aom_lord_I4_1_name" text="루르츠, 우루크하이 지휘관" />
+    <string id="aom_lord_I4_21_name" text="조르조드" />
+    <string id="aom_lord_I4_2_name" text="자르고스, 우루크하이 공성대장" />
+    <string id="aom_lord_I4_31_name" text="드루가시" />
+    <string id="aom_lord_I4_3_name" text="트라크굴, 우루크하이 감독관" />
+    <string id="aom_lord_I4_41_name" text="두르가시" />
+    <string id="aom_lord_I4_4_name" text="고를라그, 우루크하이 대장장이 장인" />
+    <string id="aom_lord_I4_5_name" text="트라카" />
+    <string id="aom_lord_L1_1_name" text="갈라드리엘, 로슬로리엔의 여주" />
+    <string id="aom_lord_L1_2_name" text="켈레보른, 로슬로리엔의 영주" />
+    <string id="aom_lord_L1_3_name" text="갈라디온" />
+    <string id="aom_lord_L2_1_name" text="카우르미나스" />
+    <string id="aom_lord_L2_2_name" text="탄디리온" />
+    <string id="aom_lord_L2_3_name" text="바란티르" />
+    <string id="aom_lord_L2_4_name" text="아에글로센" />
+    <string id="aom_lord_L2_5_name" text="님로시엘" />
+    <string id="aom_lord_L3_1_name" text="말소른" />
+    <string id="aom_lord_L3_2_name" text="갈루비르" />
+    <string id="aom_lord_L3_3_name" text="실리브렌" />
+    <string id="aom_lord_LN1_1_name" text="키르단" />
+    <string id="aom_lord_LN1_2_name" text="칼레미르" />
+    <string id="aom_lord_LN1_3_name" text="나르디르" />
+    <string id="aom_lord_LN1_4_name" text="루네델" />
+    <string id="aom_lord_LN1_5_name" text="님웬" />
+    <string id="aom_lord_LN1_6_name" text="린디스" />
+    <string id="aom_lord_LN2_1_name" text="아에글리르" />
+    <string id="aom_lord_LN2_2_name" text="켈레브린" />
+    <string id="aom_lord_LN2_3_name" text="에드로닐" />
+    <string id="aom_lord_LN2_4_name" text="나르웬" />
+    <string id="aom_lord_M10_11_name" text="굴자그" />
+    <string id="aom_lord_M10_1_name" text="마우호샤트" />
+    <string id="aom_lord_M11_11_name" text="크로가쉬" />
+    <string id="aom_lord_M11_1_name" text="마우그루크" />
+    <string id="aom_lord_M12_11_name" text="우즈바그" />
+    <string id="aom_lord_M12_1_name" text="루클라쉬" />
+    <string id="aom_lord_M13_11_name" text="구드라크" />
+    <string id="aom_lord_M13_12_name" text="셸그라" />
+    <string id="aom_lord_M13_13_name" text="브루가" />
+    <string id="aom_lord_M13_14_name" text="나즈그라" />
+    <string id="aom_lord_M13_15_name" text="우쉬카" />
+    <string id="aom_lord_M13_1_name" text="투라크" />
+    <string id="aom_lord_M13_2_name" text="그루블라트" />
+    <string id="aom_lord_M13_3_name" text="마즈구르" />
+    <string id="aom_lord_M13_4_name" text="우프타크" />
+    <string id="aom_lord_M13_5_name" text="루그로드" />
+    <string id="aom_lord_M14_11_name" text="마그주크" />
+    <string id="aom_lord_M14_12_name" text="부쉬카" />
+    <string id="aom_lord_M14_13_name" text="크림파" />
+    <string id="aom_lord_M14_14_name" text="흘라크라" />
+    <string id="aom_lord_M14_15_name" text="그리샤" />
+    <string id="aom_lord_M14_1_name" text="우즈나쉬" />
+    <string id="aom_lord_M14_2_name" text="두르브굴" />
+    <string id="aom_lord_M14_3_name" text="스나그라트" />
+    <string id="aom_lord_M14_4_name" text="흐라크마우" />
+    <string id="aom_lord_M14_5_name" text="고르부즈" />
+    <string id="aom_lord_M15_11_name" text="루즈칸" />
+    <string id="aom_lord_M15_12_name" text="야굴" />
+    <string id="aom_lord_M15_13_name" text="스크라아" />
+    <string id="aom_lord_M15_14_name" text="무르가" />
+    <string id="aom_lord_M15_15_name" text="로즈카" />
+    <string id="aom_lord_M15_1_name" text="두르잔" />
+    <string id="aom_lord_M15_2_name" text="라주크" />
+    <string id="aom_lord_M15_3_name" text="무즈가쉬" />
+    <string id="aom_lord_M15_4_name" text="볼그라트" />
+    <string id="aom_lord_M15_5_name" text="스로카" />
+    <string id="aom_lord_M16_11_name" text="우쉬가르" />
+    <string id="aom_lord_M16_1_name" text="굴나크" />
+    <string id="aom_lord_M17_11_name" text="굴토르" />
+    <string id="aom_lord_M17_1_name" text="술나르" />
+    <string id="aom_lord_M18_11_name" text="루르타그" />
+    <string id="aom_lord_M18_1_name" text="쿠라그" />
+    <string id="aom_lord_M1_11_name" text="레골라스" />
+    <string id="aom_lord_M1_12_name" text="칼레노르" />
+    <string id="aom_lord_M1_1_name" text="스란두일" />
+    <string id="aom_lord_M1_2_name" text="로수이알" />
+    <string id="aom_lord_M1_3_name" text="페렌" />
+    <string id="aom_lord_M1_4_name" text="갈리온" />
+    <string id="aom_lord_M1_5_name" text="님로델" />
+    <string id="aom_lord_M2_1_name" text="오로페리온" />
+    <string id="aom_lord_M2_2_name" text="아일리넬" />
+    <string id="aom_lord_M2_3_name" text="벨렉" />
+    <string id="aom_lord_M2_4_name" text="아나이레" />
+    <string id="aom_lord_M2_5_name" text="다에론" />
+    <string id="aom_lord_M3_1_name" text="타우리온" />
+    <string id="aom_lord_M3_2_name" text="핀두일라스" />
+    <string id="aom_lord_M3_3_name" text="할디르" />
+    <string id="aom_lord_M3_4_name" text="아레델" />
+    <string id="aom_lord_M4_1_name" text="갈레노르" />
+    <string id="aom_lord_M4_2_name" text="아마리에" />
+    <string id="aom_lord_M4_3_name" text="루밀" />
+    <string id="aom_lord_M4_4_name" text="넬라스" />
+    <string id="aom_lord_M4_5_name" text="오로핀" />
+    <string id="aom_lord_M5_1_name" text="알레논" />
+    <string id="aom_lord_M5_2_name" text="칼라시엘" />
+    <string id="aom_lord_M5_3_name" text="살리온" />
+    <string id="aom_lord_M5_4_name" text="아리엔" />
+    <string id="aom_lord_M6_1_name" text="이미냐르" />
+    <string id="aom_lord_M6_2_name" text="엘베레스" />
+    <string id="aom_lord_M6_3_name" text="다그니르" />
+    <string id="aom_lord_M6_4_name" text="아린도르" />
+    <string id="aom_lord_M6_5_name" text="님리엔" />
+    <string id="aom_lord_MM10_10_name" text="두르자" />
+    <string id="aom_lord_MM10_1_name" text="브라크가쉬" />
+    <string id="aom_lord_MM10_2_name" text="모르즈나크" />
+    <string id="aom_lord_MM10_3_name" text="가시주르" />
+    <string id="aom_lord_MM10_4_name" text="드루자크" />
+    <string id="aom_lord_MM10_5_name" text="크룸바시" />
+    <string id="aom_lord_MM10_6_name" text="나르그림" />
+    <string id="aom_lord_MM10_7_name" text="흐룬자" />
+    <string id="aom_lord_MM10_8_name" text="우즈가" />
+    <string id="aom_lord_MM10_9_name" text="가시카" />
+    <string id="aom_lord_MM11_10_name" text="스카르자" />
+    <string id="aom_lord_MM11_1_name" text="스크루나크" />
+    <string id="aom_lord_MM11_2_name" text="부가르" />
+    <string id="aom_lord_MM11_3_name" text="라즈가르" />
+    <string id="aom_lord_MM11_4_name" text="흐로크모" />
+    <string id="aom_lord_MM11_5_name" text="부즈가르" />
+    <string id="aom_lord_MM11_6_name" text="마우크림" />
+    <string id="aom_lord_MM11_7_name" text="나그자" />
+    <string id="aom_lord_MM11_8_name" text="브렐가" />
+    <string id="aom_lord_MM11_9_name" text="흐로자" />
+    <string id="aom_lord_MM12_10_name" text="굴자" />
+    <string id="aom_lord_MM12_1_name" text="스로크두시" />
+    <string id="aom_lord_MM12_2_name" text="고라시" />
+    <string id="aom_lord_MM12_3_name" text="마우크하시" />
+    <string id="aom_lord_MM12_4_name" text="스카르나시" />
+    <string id="aom_lord_MM12_5_name" text="스로가시" />
+    <string id="aom_lord_MM12_6_name" text="루가시" />
+    <string id="aom_lord_MM12_7_name" text="라즈가" />
+    <string id="aom_lord_MM12_8_name" text="브루그자" />
+    <string id="aom_lord_MM12_9_name" text="누르즈가" />
+    <string id="aom_lord_MM13_10_name" text="크룬자" />
+    <string id="aom_lord_MM13_1_name" text="부르자시" />
+    <string id="aom_lord_MM13_2_name" text="흐라카시" />
+    <string id="aom_lord_MM13_3_name" text="우자시" />
+    <string id="aom_lord_MM13_4_name" text="그리샤시" />
+    <string id="aom_lord_MM13_5_name" text="모가시" />
+    <string id="aom_lord_MM13_6_name" text="나자시" />
+    <string id="aom_lord_MM13_7_name" text="라즈가" />
+    <string id="aom_lord_MM13_8_name" text="무그자" />
+    <string id="aom_lord_MM13_9_name" text="드로즈가" />
+    <string id="aom_lord_MM14_10_name" text="흐랄가" />
+    <string id="aom_lord_MM14_1_name" text="브라카시" />
+    <string id="aom_lord_MM14_2_name" text="두르바시" />
+    <string id="aom_lord_MM14_3_name" text="크리타쉬" />
+    <string id="aom_lord_MM14_4_name" text="루르타쉬" />
+    <string id="aom_lord_MM14_5_name" text="우프타쉬" />
+    <string id="aom_lord_MM14_6_name" text="브라카쉬" />
+    <string id="aom_lord_MM14_7_name" text="나쉬가" />
+    <string id="aom_lord_MM14_8_name" text="부그자" />
+    <string id="aom_lord_MM14_9_name" text="스누르가" />
+    <string id="aom_lord_MM15_10_name" text="마우크자" />
+    <string id="aom_lord_MM15_1_name" text="모르자쉬" />
+    <string id="aom_lord_MM15_2_name" text="가샤쉬" />
+    <string id="aom_lord_MM15_3_name" text="스나가쉬" />
+    <string id="aom_lord_MM15_4_name" text="라그다쉬" />
+    <string id="aom_lord_MM15_5_name" text="샤가쉬" />
+    <string id="aom_lord_MM15_6_name" text="그로마쉬" />
+    <string id="aom_lord_MM15_7_name" text="볼즈가" />
+    <string id="aom_lord_MM15_8_name" text="우프자" />
+    <string id="aom_lord_MM15_9_name" text="고르자" />
+    <string id="aom_lord_MM1_10_name" text="트로그자" />
+    <string id="aom_lord_MM1_1_name" text="부르줌" />
+    <string id="aom_lord_MM1_2_name" text="트로크모" />
+    <string id="aom_lord_MM1_3_name" text="스카르스닉" />
+    <string id="aom_lord_MM1_4_name" text="나쉬라크" />
+    <string id="aom_lord_MM1_5_name" text="브라크타르" />
+    <string id="aom_lord_MM1_6_name" text="두쉬가르" />
+    <string id="aom_lord_MM1_7_name" text="모그라" />
+    <string id="aom_lord_MM1_8_name" text="우르쉬자" />
+    <string id="aom_lord_MM1_9_name" text="스카른자" />
+    <string id="aom_lord_MM2_10_name" text="흐라크자" />
+    <string id="aom_lord_MM2_1_name" text="두쉬가르" />
+    <string id="aom_lord_MM2_2_name" text="크림퓌크" />
+    <string id="aom_lord_MM2_3_name" text="가쉬나르" />
+    <string id="aom_lord_MM2_4_name" text="모르그루브" />
+    <string id="aom_lord_MM2_5_name" text="스나그부트" />
+    <string id="aom_lord_MM2_6_name" text="흐라크두쉬" />
+    <string id="aom_lord_MM2_7_name" text="쉘자" />
+    <string id="aom_lord_MM2_8_name" text="울가" />
+    <string id="aom_lord_MM2_9_name" text="부르자" />
+    <string id="aom_lord_MM3_10_name" text="그리쉬자" />
+    <string id="aom_lord_MM3_1_name" text="흐라크두쉬" />
+    <string id="aom_lord_MM3_2_name" text="볼도그" />
+    <string id="aom_lord_MM3_3_name" text="루그볼" />
+    <string id="aom_lord_MM3_4_name" text="그리즈낙" />
+    <string id="aom_lord_MM3_5_name" text="프라쿠" />
+    <string id="aom_lord_MM3_6_name" text="무가쉬" />
+    <string id="aom_lord_MM3_7_name" text="스크랄가" />
+    <string id="aom_lord_MM3_8_name" text="하그자" />
+    <string id="aom_lord_MM3_9_name" text="우자" />
+    <string id="aom_lord_MM4_10_name" text="브락자" />
+    <string id="aom_lord_MM4_1_name" text="무가쉬" />
+    <string id="aom_lord_MM4_2_name" text="그리쉬나크" />
+    <string id="aom_lord_MM4_3_name" text="무즈가쉬" />
+    <string id="aom_lord_MM4_4_name" text="루그두쉬" />
+    <string id="aom_lord_MM4_5_name" text="라드부그" />
+    <string id="aom_lord_MM4_6_name" text="고르바그" />
+    <string id="aom_lord_MM4_7_name" text="부르자" />
+    <string id="aom_lord_MM4_8_name" text="그랄자" />
+    <string id="aom_lord_MM4_9_name" text="나자" />
+    <string id="aom_lord_MM5_10_name" text="크리스자" />
+    <string id="aom_lord_MM5_1_name" text="고르바그" />
+    <string id="aom_lord_MM5_2_name" text="샤그랏" />
+    <string id="aom_lord_MM5_3_name" text="우프타크" />
+    <string id="aom_lord_MM5_4_name" text="라그두프" />
+    <string id="aom_lord_MM5_5_name" text="오르코발" />
+    <string id="aom_lord_MM5_6_name" text="야즈네그" />
+    <string id="aom_lord_MM5_7_name" text="그나를라" />
+    <string id="aom_lord_MM5_8_name" text="부그자" />
+    <string id="aom_lord_MM5_9_name" text="두르브자" />
+    <string id="aom_lord_MM6_10_name" text="울즈가" />
+    <string id="aom_lord_MM6_1_name" text="그리쉬나크" />
+    <string id="aom_lord_MM6_2_name" text="우글루크" />
+    <string id="aom_lord_MM6_3_name" text="마우후르" />
+    <string id="aom_lord_MM6_4_name" text="그루카쉬" />
+    <string id="aom_lord_MM6_5_name" text="볼그" />
+    <string id="aom_lord_MM6_6_name" text="오스로드" />
+    <string id="aom_lord_MM6_7_name" text="모그자" />
+    <string id="aom_lord_MM6_8_name" text="우르가" />
+    <string id="aom_lord_MM6_9_name" text="샤즈가" />
+    <string id="aom_lord_MM7_10_name" text="그랄카" />
+    <string id="aom_lord_MM7_1_name" text="골핌불" />
+    <string id="aom_lord_MM7_2_name" text="그라크모" />
+    <string id="aom_lord_MM7_3_name" text="스카르두쉬" />
+    <string id="aom_lord_MM7_4_name" text="스로가르" />
+    <string id="aom_lord_MM7_5_name" text="부르즐루그" />
+    <string id="aom_lord_MM7_6_name" text="모크라쉬" />
+    <string id="aom_lord_MM7_7_name" text="스크렐가" />
+    <string id="aom_lord_MM7_8_name" text="하그라" />
+    <string id="aom_lord_MM7_9_name" text="부르즈가" />
+    <string id="aom_lord_MM8_10_name" text="스나즈가" />
+    <string id="aom_lord_MM8_1_name" text="나글루르" />
+    <string id="aom_lord_MM8_2_name" text="브라크두쉬" />
+    <string id="aom_lord_MM8_3_name" text="흐룸가쉬" />
+    <string id="aom_lord_MM8_4_name" text="우즈두르" />
+    <string id="aom_lord_MM8_5_name" text="고를라크" />
+    <string id="aom_lord_MM8_6_name" text="스나그라트" />
+    <string id="aom_lord_MM8_7_name" text="그나샤" />
+    <string id="aom_lord_MM8_8_name" text="부그라" />
+    <string id="aom_lord_MM8_9_name" text="마우자" />
+    <string id="aom_lord_MM9_10_name" text="바르가" />
+    <string id="aom_lord_MM9_1_name" text="두르브가쉬" />
+    <string id="aom_lord_MM9_2_name" text="무그림" />
+    <string id="aom_lord_MM9_3_name" text="크리타크" />
+    <string id="aom_lord_MM9_4_name" text="루르차그" />
+    <string id="aom_lord_MM9_5_name" text="나즈누르" />
+    <string id="aom_lord_MM9_6_name" text="우프그리쉬" />
+    <string id="aom_lord_MM9_7_name" text="크림자" />
+    <string id="aom_lord_MM9_8_name" text="스로가" />
+    <string id="aom_lord_MM9_9_name" text="루그자" />
+    <string id="aom_lord_R1_11_name" text="아르곤" />
+    <string id="aom_lord_R1_1_name" text="엘론드" />
+    <string id="aom_lord_R1_2_name" text="켈레브리안" />
+    <string id="aom_lord_R1_3_name" text="엘라단" />
+    <string id="aom_lord_R1_4_name" text="엘로히르" />
+    <string id="aom_lord_R1_5_name" text="아르웬" />
+    <string id="aom_lord_R2_11_name" text="이스틸모" />
+    <string id="aom_lord_R2_1_name" text="글로르핀델" />
+    <string id="aom_lord_R2_2_name" text="길도르" />
+    <string id="aom_lord_R2_3_name" text="에레스토르" />
+    <string id="aom_lord_R2_4_name" text="린디르" />
+    <string id="aom_lord_R3_1_name" text="셰거마이스터" />
+    <string id="aom_lord_SH1_10_name" text="마니제" />
+    <string id="aom_lord_SH1_2_name" text="술라단" />
+    <string id="aom_lord_SH1_3_name" text="파르주크" />
+    <string id="aom_lord_SH1_4_name" text="아지무르" />
+    <string id="aom_lord_SH1_5_name" text="바흐람" />
+    <string id="aom_lord_SH1_6_name" text="코르잔" />
+    <string id="aom_lord_SH1_7_name" text="바누샤드" />
+    <string id="aom_lord_SH1_8_name" text="로샤나크" />
+    <string id="aom_lord_SH1_9_name" text="고르다파르" />
+    <string id="aom_lord_SH2_10_name" text="수다베" />
+    <string id="aom_lord_SH2_2_name" text="라스툼" />
+    <string id="aom_lord_SH2_3_name" text="소흐라크" />
+    <string id="aom_lord_SH2_4_name" text="카부스" />
+    <string id="aom_lord_SH2_5_name" text="타흐무르" />
+    <string id="aom_lord_SH2_6_name" text="파라무즈" />
+    <string id="aom_lord_SH2_7_name" text="파랑기스" />
+    <string id="aom_lord_SH2_8_name" text="카타윤" />
+    <string id="aom_lord_SH2_9_name" text="루다베" />
+    <string id="aom_lord_SH3_10_name" text="아자데" />
+    <string id="aom_lord_SH3_2_name" text="고슈탄" />
+    <string id="aom_lord_SH3_3_name" text="자후크" />
+    <string id="aom_lord_SH3_4_name" text="마르두크" />
+    <string id="aom_lord_SH3_5_name" text="사르군" />
+    <string id="aom_lord_SH3_6_name" text="아슈르" />
+    <string id="aom_lord_SH3_7_name" text="타흐미네" />
+    <string id="aom_lord_SH3_8_name" text="신두크트" />
+    <string id="aom_lord_SH3_9_name" text="시린" />
+    <string id="aom_lord_SH4_10_name" text="바누라" />
+    <string id="aom_lord_SH4_2_name" text="나부즈" />
+    <string id="aom_lord_SH4_3_name" text="센누르" />
+    <string id="aom_lord_SH4_4_name" text="티가로스" />
+    <string id="aom_lord_SH4_5_name" text="함무르" />
+    <string id="aom_lord_SH4_6_name" text="캄부즈" />
+    <string id="aom_lord_SH4_7_name" text="굴나르" />
+    <string id="aom_lord_SH4_8_name" text="푸란다르" />
+    <string id="aom_lord_SH4_9_name" text="아자르미" />
+    <string id="aom_lord_SH5_10_name" text="굴루크" />
+    <string id="aom_lord_SH5_2_name" text="키룬" />
+    <string id="aom_lord_SH5_3_name" text="제루크" />
+    <string id="aom_lord_SH5_4_name" text="다리우슈" />
+    <string id="aom_lord_SH5_5_name" text="베흐눔" />
+    <string id="aom_lord_SH5_6_name" text="파르자드" />
+    <string id="aom_lord_SH5_7_name" text="델라람" />
+    <string id="aom_lord_SH5_8_name" text="에스타라" />
+    <string id="aom_lord_SH5_9_name" text="파라낙" />
+    <string id="aom_lord_SH6_10_name" text="랄레" />
+    <string id="aom_lord_SH6_2_name" text="호르무즈" />
+    <string id="aom_lord_SH6_3_name" text="자훈" />
+    <string id="aom_lord_SH6_4_name" text="카스룬" />
+    <string id="aom_lord_SH6_5_name" text="마누차르" />
+    <string id="aom_lord_SH6_6_name" text="나리만" />
+    <string id="aom_lord_SH6_7_name" text="호마라" />
+    <string id="aom_lord_SH6_8_name" text="자리아" />
+    <string id="aom_lord_SH6_9_name" text="쿠시아라" />
+    <string id="aom_lord_SH7_10_name" text="루자" />
+    <string id="aom_lord_SH7_2_name" text="파르비즈" />
+    <string id="aom_lord_SH7_3_name" text="코바드" />
+    <string id="aom_lord_SH7_4_name" text="사산" />
+    <string id="aom_lord_SH7_5_name" text="샤푸르" />
+    <string id="aom_lord_SH7_6_name" text="투라노스" />
+    <string id="aom_lord_SH7_7_name" text="마사" />
+    <string id="aom_lord_SH7_8_name" text="나히드" />
+    <string id="aom_lord_SH7_9_name" text="파리사" />
+    <string id="aom_lord_SH8_10_name" text="야스민" />
+    <string id="aom_lord_SH8_2_name" text="바루즈" />
+    <string id="aom_lord_SH8_3_name" text="야즈다르" />
+    <string id="aom_lord_SH8_4_name" text="잘루크" />
+    <string id="aom_lord_SH8_5_name" text="아누시" />
+    <string id="aom_lord_SH8_6_name" text="비잔" />
+    <string id="aom_lord_SH8_7_name" text="샤르나즈" />
+    <string id="aom_lord_SH8_8_name" text="투라자" />
+    <string id="aom_lord_SH8_9_name" text="바슈티" />
+    <string id="aom_lord_SH9_10_name" text="키라" />
+    <string id="aom_lord_SH9_2_name" text="에스파노스" />
+    <string id="aom_lord_SH9_3_name" text="기바르" />
+    <string id="aom_lord_SH9_4_name" text="후샹" />
+    <string id="aom_lord_SH9_5_name" text="이라지" />
+    <string id="aom_lord_SH9_6_name" text="잠슈드" />
+    <string id="aom_lord_SH9_7_name" text="자린" />
+    <string id="aom_lord_SH9_8_name" text="아나히타" />
+    <string id="aom_lord_SH9_9_name" text="바하라" />
+    <string id="aom_lord_U1_11_name" text="기밀조르 공" />
+    <string id="aom_lord_U1_12_name" text="기밀톤" />
+    <string id="aom_lord_U1_13_name" text="파라존" />
+    <string id="aom_lord_U1_1_name" text="아르기밀카드" />
+    <string id="aom_lord_U1_2_name" text="짐라펠" />
+    <string id="aom_lord_U2_1_name" text="아즈라펠" />
+    <string id="aom_lord_U3_1_name" text="벨카자르" />
+    <string id="aom_lord_U4_1_name" text="파라콘" />
+    <string id="aom_lord_U5_1_name" text="인칼도르" />
+    <string id="aom_lord_U6_1_name" text="짐라토르" />
+    <string id="aom_lord_V11_l_1_name" text="윈드리드 데아프링가스" />
+    <string id="aom_lord_V11_l_2_name" text="레오덴 데아프링가스" />
+    <string id="aom_lord_V11_l_3_name" text="레오브란드 데아프링가스" />
+    <string id="aom_lord_V11_l_4_name" text="레오윈 데아프링가스" />
+    <string id="aom_lord_WE8_1_name" text="도르웬" />
+    <string id="aom_lord_WE8_2_name" text="엘레네스" />
+    <string id="aom_lord_WE8_3_name" text="히릴웬" />
+    <string id="aom_lord_WE8_4_name" text="탈보린" />
+    <string id="aom_lord_WE9_3_name" text="데루핀" />
+    <string id="aom_lord_WE9_l_1_name" text="두일린" />
+    <string id="aom_lord_rohan_10_1_name" text="에오문드 에오포링" />
+    <string id="aom_lord_rohan_11_1_name" text="카다 토르다깅" />
+    <string id="aom_lord_rohan_13_1_name" text="울프 켈문딩" />
+    <string id="aom_lord_rohan_14_1_name" text="위드문드 위드문딩" />
+    <string id="aom_lord_rohan_15_1_name" text="프로다 오르드가링" />
+    <string id="aom_lord_rohan_16_1_name" text="에오폴다 훈텔밍" />
+    <string id="aom_lord_rohan_17_1_name" text="발대그 브레그다닝" />
+    <string id="aom_lord_rohan_21_1_name" text="할레스 할레스링" />
+    <string id="aom_lord_rohan_22_1_name" text="베오위르트 룽가링" />
+    <string id="aom_lord_rohan_2_1_name" text="이센문드 케르디킹" />
+    <string id="aom_lord_rohan_5_1_name" text="에아드위그 오스키텔링" />
+    <string id="aom_lord_rohan_9_1_name" text="둔헤레 두닝" />
+  </strings>
+</base>

@@ -18,6 +18,6 @@
     <string id="taom_ps_join_yes" text="Yemini et" />
     <string id="taom_ps_join_no" text="Bağımsız kal" />
     <string id="taom_ps_partial" text="Artık {HERO}'sun, ancak devir teslimin bir kısmı tamamlanmadı. Kayda bak." />
-    <string id="taom_ps_clan_leader_repaired" text="You now lead {CLAN}. Kingdom votes and clan decisions recognise you again." />
+    <string id="taom_ps_clan_leader_repaired" text="Artık {CLAN} klanının lideri sensin. Krallık oylamaları ve klan kararları seni yeniden tanıyor." />
   </strings>
 </base>

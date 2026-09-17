@@ -324,6 +324,7 @@
     <string id="taom_str_player_father_name.shaghana" text="扎尔坎" />
     <string id="taom_str_player_mother_name.shaghana" text="汉萨" />
     <string id="0aXG8dvJ" text="与{KINGDOM_NAME}议和。不支付任何贡品。" />
+    <string id="0bPb5btR" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}，在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="0CsbbwtN" text="召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战" />
     <string id="0nhqJewP" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,将{SETTLEMENT}授予{LEADER.NAME}。" />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{KINGDOM}议和。" />
@@ -333,20 +334,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}由崛起的{CULTURE_ADJECTIVE}军阀{RULER.NAME}于{CREATION_YEAR}年建立。" />
     <string id="22LCyCoA" text="我可以向你的王国提供{GOLD}{GOLD_ICON},以对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="2b1xZGaQ" text="与{KINGDOM_NAME}议和。我们的王国将每日支付{TRIBUTE_AMOUNT}贡金,持续{TRIBUTE_DURATION}天。" />
+    <string id="2BVDp7Tg" text="{KINGDOM}将停止{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}的掠夺迫使许多农民离开家园。拥有土地的人通常会返回,但许多贫困者正在寻找新的定居地。你在村庄外围与几个扎营的人交谈。这里没有土地给他们。他们似乎渴望作为佃农工作,但这总是有可能与村里更老的家族产生矛盾。" />
+    <string id="2mVZORaE" text="{FACTION_NAME}的仆从" />
     <string id="4fXpOe4N" text="一名信使从{CLAN_NAME}前来。他们扣押了{CAPTIVE_HERO.NAME},要求{GOLD_AMOUNT}{GOLD_ICON}的赎金。" />
     <string id="4GgfFDWG" text="与{KINGDOM_NAME}议和" />
     <string id="4JSzHkpt" text="作为{?IS_FEMALE}女王{?}国王{\?},你必须决定是否对{KINGDOM_NAME}宣战" />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}城堡由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}的{FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="5bza9sDs" text="很遗憾听到这个消息。要知道你找不到比{FACTION_NAME}更好的雇主了。" />
     <string id="5DdbkWLu" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,选择不与{KINGDOM}开战。" />
     <string id="5pOKmHsf" text="{RULER.NAME}决定召集{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。这个决定得到了{?RULER.GENDER}她{?}他{\?}半数议会的支持。" />
+    <string id="6d4ZTvGv" text="{LORD.NAME}是{FACTION_NAME}的{TITLE}，{CLAN_NAME}家族的族长，该家族是王国的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}占据了我们的祖传土地,并压迫我们的同胞。" />
     <string id="7ouzFASf" text="一名信使送来了{OFFERED_KINGDOM_LEADER.NAME}的信函。{?OFFERED_KINGDOM_LEADER.GENDER}她{?}他{\?}提到你日益增长的声望,并询问你是否愿意考虑成为{OFFERED_KINGDOM_NAME}的封臣。如果你有兴趣,应该亲自去谈。" />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会支持下,选择不与{KINGDOM}开战。" />
     <string id="940TwBPs" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不将{CLAN}家族从{KINGDOM}驱逐。" />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的成员，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}选择不与{KINGDOM}开战。" />
     <string id="aE7OQDMS" text="与{KINGDOM_NAME}结盟。" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,决定与{KINGDOM}议和。" />
@@ -387,6 +393,7 @@
     <string id="eTylgLCc" text="一位信使从{KINGDOM_NAME}赶来。他们向你提议结盟。你的王国将投票决定是否接受该提议。" />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}已不再与{KINGDOM_TO_CALL_TO_WAR_AGAINST}交战。" />
     <string id="F7CMsDyG" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定不与{KINGDOM_NAME}结盟。" />
+    <string id="faUooB7V" text="{KINGDOM}将不会{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。该决定得到了{?RULER.GENDER}她的{?}他的{\?}议会的支持。" />
     <string id="FNCq25P1" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下决定与{KINGDOM_NAME}结盟。" />
     <string id="FuNbouTu" text="一位信使从{KINGDOM_NAME}赶来。他们号召你的王国对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你的王国将投票决定是否接受该提议。" />
@@ -397,6 +404,7 @@
     <string id="gNf0ALKw" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的王国将投票决定是否接受该提议。" />
     <string id="h5eTEYON" text="{RULER.NAME}将{CLAN}家族逐出{KINGDOM}。" />
     <string id="h9bWTLgK" text="是时候加入我们的盟友{KINGDOM_NAME}的战争了。" />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的族长，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="IB1xsVEr" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的封臣将决定权留给了你。" />
     <string id="INfHUqxT" text="{RULER.NAME}决定与{KINGDOM_NAME}结盟。" />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}不顾{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会的反对,选择不与{KINGDOM}议和。" />
@@ -406,8 +414,10 @@
     <string id="jaioXYDc" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}半数议会成员支持下决定不与{KINGDOM_NAME}结盟。" />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}决定与{KINGDOM}议和,尽管{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
     <string id="JJQ0Hp4m" text="一名信使从{MAP_FACTION_NAME}前来。{MAP_FACTION_NAME}愿意每日支付{GOLD_AMOUNT}{GOLD_ICON}作为贡金以结束你们领地间的战争。你的封臣将决定权交给了你。" />
+    <string id="jnYwiCAz" text="{KINGDOM}将继续{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我们更强大。我们需要时间来增强实力。" />
     <string id="JQligd8z" text="{KINGDOM}的议会选择{KING.NAME}为新的统治者。" />
+    <string id="JuPUG5wX" text="{LORD.NAME}是{FACTION_NAME}的{TITLE},同时也是{CLAN_NAME}的首领,{CLAN_DESCRIPTION},在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}而闻名。" />
     <string id="JY717hPW" text="我没有权力代表{ENEMY_INFORMAL_NAME}议和。应当由{ENEMY_RULER.NAME}和{?ENEMY_RULER.GENDER}她的{?}他的{\?}议会决定是否提议和平,以及条件如何。" />
     <string id="K5w135N9" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定违背了{?RULER.GENDER}她的{?}他的{\?}议会的建议。" />
     <string id="KFHj7ckm" text="作为统治者,你必须决定是否与{KINGDOM_NAME}议和" />
@@ -418,6 +428,7 @@
     <string id="L802I9W2" text="好,我会加入{FACTION_NAME}。" />
     <string id="L81DPSom" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_COST}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="Lalj0T1i" text="{RULER.NAME}响应了{CALLING_KINGDOM}的号召,对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战,尽管{?RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
+    <string id="Lbs2bNlg" text="{KINGDOM}将开始{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="你的领地正与{KINGDOM_NAME}交战。" />
     <string id="LVX2x6Jf" text="我想终止与{SERVED_FACTION}的契约。" />
     <string id="m69pvful" text="{KINGDOM_LEADER}将决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你可以选择你对此决定的立场。" />
@@ -434,6 +445,7 @@
     <string id="nkvT88r2" text="你没有足够的金钱来号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="NuYzgBZB" text="你做得太过分了。{KINGDOM}不会容忍其商队遭到破坏。" />
     <string id="o4IxXHnB" text="{RULER.NAME}决定不与{KINGDOM_NAME}结成同盟。" />
+    <string id="o5AUljbW" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的首领。{NEW_LEADER.LINK}已接任为氏族的统治者。" />
     <string id="O9XpB5Ah" text="作为统治者,你必须决定是否与{KINGDOM}签订贸易协定" />
     <string id="oAw74q3r" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
@@ -444,6 +456,7 @@
     <string id="PneX4Ayw" text="一名信使带着来自{KINGDOM_NAME}的宣战号召抵达你领地的朝廷,号召对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="PP7KD7OC" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定,{?RULER.GENDER}她的{?}他的{\?}议会对此意见均分。" />
     <string id="PutoRsWp" text="一名信使从{CLAN_NAME}前来。如果你愿意释放{CAPTIVE_HERO.NAME},他们愿意支付{GOLD_AMOUNT}{GOLD_ICON}作为赎金。" />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{KEEP_INFO}" />
     <string id="q9DnHVcZ" text="加入{KINGDOM_NAME}的战争不符合我们的利益。" />
     <string id="qa4FlTWS" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="qgN9o2ip" text="是时候召唤我们的盟友{KINGDOM_NAME}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战了!你的王国将投票决定是否向他们提议参战协议。" />
@@ -454,16 +467,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM}宣战。" />
     <string id="rJIuQ0hc" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="rtfoywJl" text="向{KINGDOM_NAME}宣战" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周围的土地主要由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="一名信使从{MAP_FACTION_NAME}送来消息。如果你同意每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金,他们愿意与你议和。你的王国将投票决定是否接受这一提议。" />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}向{KINGDOM}宣战。" />
     <string id="SR9FC5jH" text="一名信使从{MAP_FACTION_NAME}带来和平提议。{MAP_FACTION_NAME}将每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金以结束双方的战争。你的王国将投票决定是否接受这一提议。" />
     <string id="syGyjjKE" text="响应{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+    <string id="TauRjAud" text="{FACTION}的{NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}正向你提供雇佣工作,为你代表他们作战所获得的每点影响力支付{GOLD_AMOUNT}{GOLD_ICON}。你接受吗?" />
     <string id="uc4M4bhG" text="嗯，我确实有个心愿。{TARGET_FACTION}有一位{?TARGET_HERO.GENDER}女领主{?}领主{\?}，我与此人有着漫长的恩怨，绝非友善的交情。如今我们已然开战，只要{?TARGET_HERO.GENDER}她{?}他{\?}还逍遥在外，我的性命与领地便不得安宁。我说过，这绝非易事。但若有谁能将{?TARGET_HERO.GENDER}她{?}他{\?}活着带到我面前，除了我的感激之外，此人必将富甲一方。[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}选择不与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}召唤{CALLED_KINGDOM_LINK}向{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}宣战。" />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的成员。{FURTHER_DETAILS}。" />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{PROSPERITY_INFO}{MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}是{CLAN_NAME}的首领,这是一个新兴氏族。{?LORD.GENDER}她{?}他{\?}仍在建立{?LORD.GENDER}她的{?}他的{\?}声望。" />
     <string id="vf2pb7Ts" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}将决定{KINGDOM}是否与{OTHER_KINGDOM}签署贸易协定。你可以选择你对此决定的立场。" />
@@ -476,7 +492,9 @@
     <string id="xhK4zMec" text="{RULER.NAME}决定召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}发出的对{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}开战的召唤已结束。" />
     <string id="xM97H0oR" text="投票决定是否向{KINGDOM_NAME}宣战。" />
+    <string id="yAOQnMVw" text="你是{FACTION}的人，对吧？这意味着你是我的俘虏。" />
     <string id="yBL3TzXw" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下选择不将{CLAN}氏族驱逐出{KINGDOM}。" />
+    <string id="YT4OvaAG" text="很好。你可以认为自己处于{FACTION_NAME}的保护之下。你有到明天这个时候完成旅程的时间，否则我们可能会向你索取另一笔费用。" />
     <string id="yUYNlQhU" text="很好,我会让手下起草一份简单的契约。我代表{KINGDOM_FORMAL_NAME}欢迎你。愿你的剑能很好地对付我们的敌人。" />
     <string id="Zckbdm4Z" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="zd9sawl9" text="你已经与{KINGDOM_NAME}结盟了。" />
@@ -632,7 +650,7 @@
     <string id="taom_player_alliance_formed" text="{PLAYER_KINGDOM}与{TARGET_KINGDOM}之间结成了同盟。" />
     <string id="taom_alliance_blocked" text="这些王国永远无法结盟。" />
     <string id="taom_war_blocked" text="这些王国被牢不可破的盟约束缚。" />
-    <string id="taom_vote_lapsed" text="关于“{VOTE}”的表决已不再适用，因此被撤回。" />
+    <string id="taom_vote_lapsed" text="关于“{VOTE}”的投票已不再适用，已被撤回。" />
     <string id="taom_wotr_no_peace" text="魔戒圣战正在肆虐。此时不可能有和平。" />
     <string id="taom_precompile_shaders" text="预编译着色器" />
     <string id="taom_precompile_hint" text="预先编译兵种与装备着色器，使首场战斗不再卡顿或停滞。每次更改模组列表后请重新运行：模组列表变动时游戏会清除已编译的着色器。" />
@@ -2064,6 +2082,7 @@
     <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
     <string id="taom_ai_party_size" text="军阀的大军" />
     <string id="taom_ai_garrison_size" text="固守的国度" />
+    <string id="taom_caravan_escort" text="商队护卫" />
     <string id="taom_ai_forage" text="征战觅粮" />
     <string id="taom_ai_levy" text="征召兵役" />
     <string id="taom_res_desertion" text="{COUNT}名精锐士兵逃亡了——你的{RESOURCE}已耗尽！" />
@@ -2564,84 +2583,87 @@
     <string id="taom_rf_promote_entry_tier" text="{NAME}（{TIER} 级，晋升为军官）" />
     <string id="taom_rf_warden_lost" text="你的避难所失去了守护者。守军仍据守营地，但如今只能将其拆除。" />
     <string id="taom_sl_lord_dispatched" text="{LORD} 派出了援军，他们正在路上。" />
-    <string id="taom_uncapturable_escapes_battle" text="{HERO}无法被擒。他在被俘之前便已溜出战场。" />
-    <string id="taom_uncapturable_escapes_capture" text="{HERO}无法被擒。你的人还没赶到,他就已不见踪影。" />
-    <string id="taom_caravan_escort" text="商队护卫" />
-    <string id="taom_res_daily_upkeep" text="{RESOURCE}：+{INCOME} 收入，-{UPKEEP} 维护（剩余 {BALANCE}）" />
-    <string id="taom_res_upkeep_overdraft" text="{UPKEEP} 点 {RESOURCE} 的维护费超出了你的 {BALANCE}；已消耗殆尽" />
-    <string id="taom_res_upgrade_spend" text="升级花费 -{AMOUNT} {RESOURCE}（剩余 {BALANCE}）" />
-    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE}，用于招募 {COUNT} 名 {TROOP}" />
-    <string id="taom_res_tt_tier" text="等级" />
-    <string id="taom_res_tt_tier_value" text="{LEVEL}（{NAME}）" />
-    <string id="taom_res_tt_next_tier" text="下一等级于" />
-    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD}（{NAME}）" />
-    <string id="taom_res_tt_daily_change" text="每日变化" />
-    <string id="taom_res_tt_income" text="收入（{TOWNS} 座城镇）" />
-    <string id="taom_res_tt_upkeep" text="精锐维护（{TYPES} 种兵种）" />
-    <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
-    <string id="taom_res_tt_net" text="净额" />
-    <string id="taom_res_tt_depleted_in" text="耗尽剩余" />
-    <string id="taom_res_tt_days" text="{DAYS} 天" />
-    <string id="taom_res_tt_deserting" text="当你没有 {RESOURCE} 时，精锐部队每日都会逃亡" />
-    <string id="taom_res_tt_per_battle" text="每场战斗" />
-    <string id="taom_res_tt_per_raid" text="每次劫掠" />
-    <string id="taom_res_tt_per_siege" text="每次攻城" />
-    <string id="taom_res_tt_per_prisoner" text="每名俘虏" />
-    <string id="taom_wa_refuse_free" text="不。我知道你为谁而战，我绝不为黑影执刃，出多少价也不行。另找刀剑去吧。" />
-    <string id="taom_wa_refuse_evil" text="你与精灵之友同行。我的族人会因我收你的钱而取我项上人头，而你的人宁可看我被绞死，也不愿让我持械。不行。" />
-    <string id="taom_sl_search_placeholder" text="搜索所有市场中的货物" />
-    <string id="taom_sl_search_none" text="没有任何货源存有此物。" />
-    <string id="taom_sl_search_capped" text="匹配：{COUNT}，显示最近的 {SHOWN} 个。请缩小搜索范围。" />
-    <string id="taom_sl_search_count" text="匹配：{COUNT}，由近及远排列。" />
-    <string id="taom_sl_hit_row" text="{ITEM} 位于 {SOURCE}" />
-    <string id="taom_sl_hit_detail" text="库存 {STOCK}，{PRICE} 第纳尔，距离 {DISTANCE}" />
-    <string id="taom_res_badge_title" text="需要 {RESOURCE}" />
-    <string id="taom_res_badge_upgrade" text="升级" />
-    <string id="taom_res_badge_recruit" text="招募" />
-    <string id="taom_res_badge_upkeep" text="每日维护" />
-    <string id="taom_res_badge_emissary" text="精锐使者价格" />
-    <string id="taom_res_badge_paid_in" text="升级、招募与维护均以你自己的 {RESOURCE} 支付" />
-    <string id="taom_aso_kingdom.empire" text="Dunland" />
-    <string id="taom_aso_kingdom.empire_w" text="Gondor" />
-    <string id="taom_aso_kingdom.empire_s" text="Mordor" />
-    <string id="taom_aso_kingdom.sturgia" text="Dale" />
-    <string id="taom_aso_kingdom.aserai" text="Harad" />
-    <string id="taom_aso_kingdom.vlandia" text="Rohan" />
-    <string id="taom_aso_kingdom.battania" text="Khand" />
-    <string id="taom_aso_kingdom.khuzait" text="Rhun" />
-    <string id="taom_aso_kingdom.erebor" text="Erebor" />
-    <string id="taom_aso_kingdom.rivendell" text="Imladris" />
-    <string id="taom_aso_kingdom.mirkwood" text="Lasgalen" />
-    <string id="taom_aso_kingdom.lothlorien" text="Lothlorien" />
-    <string id="taom_aso_kingdom.isengard" text="Isengard" />
-    <string id="taom_aso_kingdom.gundabad" text="Gundabad" />
-    <string id="taom_aso_kingdom.umbar" text="Umbar" />
-    <string id="taom_aso_kingdom.dolguldur" text="Dol Guldur" />
-    <string id="taom_aso_kingdom.shaghana" text="Shaghâna" />
-    <string id="taom_aso_kingdom.abanissa" text="Âbanissa" />
-    <string id="taom_aso_kingdom.goblin" text="Goblins" />
-    <string id="taom_aso_kingdom.mistymountainorcs" text="Misty Mountain Orcs" />
-    <string id="taom_aso_kingdom.lindon" text="Lindon" />
-    <string id="taom_aso_kingdom.bluecraig" text="Goblins of Blue Craig" />
-    <string id="taom_aso_desc_invasion" text="The faction that rules the majority of Middle-earth." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
-    <string id="taom_aso_item_name_randomized" text="Randomized Middle-earth" />
-    <string id="taom_aso_item_desc_randomized" text="Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
-    <string id="taom_tactic.shield_wall" text="Our plan is to lock shields and hold our ground." />
-    <string id="taom_tactic.infantry_mass" text="Our plan is to swarm them with our numbers." />
-    <string id="taom_tactic.cavalry_dominance" text="Our plan is to ride them down and let the foot finish what the horse begins." />
-    <string id="taom_tactic.archer_ring" text="Our plan is to ring our archers with spears and let the arrows do the work." />
-    <string id="taom_tactic.two_line_wall" text="Our plan is to hold two lines: the front stands, the second waits, then strikes." />
-    <string id="taom_tactic.envelop" text="Our plan is to come at them from three sides and close the jaws." />
-    <string id="taom_tactic.disciplined_line" text="Our plan is to hold the line until they commit, then advance as one." />
-    <string id="taom_tactic.archer_advance" text="Our plan is to advance behind the bows and let the arrows open the way." />
-    <string id="taom_tactic.eored_screen" text="Our plan is to screen the flanks with our riders and charge once they commit." />
-    <string id="taom_tactic.hit_and_run" text="Our plan is to throw, fall back, and throw again until their line breaks." />
-    <string id="taom_tactic.mumak_vanguard" text="Our plan is to send the mumakil in first and follow in their wake." />
-    <string id="taom_behavior.braced_defend" text="Hold your position; square up against horse" />
-    <string id="taom_behavior.braced_advance" text="Advance in a wall; square up against horse" />
-    <string id="taom_behavior.infantry_skirmish" text="Close to throwing range, throw, and fall back" />
-    <string id="taom_behavior.cycle_charge" text="Charge through, reform, and charge again" />
-    <string id="taom_behavior.envelop_wing" text="Swing round their flank and strike from the side" />
+    <string id="taom_uncapturable_escapes_battle" text="{HERO}无法被擒。他在被俘之前便已溜出战场。" />
+    <string id="taom_uncapturable_escapes_capture" text="{HERO}无法被擒。你的人还没赶到,他就已不见踪影。" />
+    <string id="taom_res_daily_upkeep" text="{RESOURCE}：+{INCOME} 收入，-{UPKEEP} 维护（剩余 {BALANCE}）" />
+    <string id="taom_res_upkeep_overdraft" text="{UPKEEP} 点 {RESOURCE} 的维护费超出了你的 {BALANCE}；已消耗殆尽" />
+    <string id="taom_res_upgrade_spend" text="升级花费 -{AMOUNT} {RESOURCE}（剩余 {BALANCE}）" />
+    <string id="taom_res_recruit_charge" text="-{AMOUNT} {RESOURCE}，用于招募 {COUNT} 名 {TROOP}" />
+    <string id="taom_res_tt_tier" text="等级" />
+    <string id="taom_res_tt_tier_value" text="{LEVEL}（{NAME}）" />
+    <string id="taom_res_tt_next_tier" text="下一等级于" />
+    <string id="taom_res_tt_next_tier_value" text="{THRESHOLD}（{NAME}）" />
+    <string id="taom_res_tt_daily_change" text="每日变化" />
+    <string id="taom_res_tt_income" text="收入（{TOWNS} 座城镇）" />
+    <string id="taom_res_tt_upkeep" text="精锐维护（{TYPES} 种兵种）" />
+    <string id="taom_res_tt_troop_line" text="{TROOP} x{COUNT}" />
+    <string id="taom_res_tt_net" text="净额" />
+    <string id="taom_res_tt_depleted_in" text="耗尽剩余" />
+    <string id="taom_res_tt_days" text="{DAYS} 天" />
+    <string id="taom_res_tt_deserting" text="当你没有 {RESOURCE} 时，精锐部队每日都会逃亡" />
+    <string id="taom_res_tt_per_battle" text="每场战斗" />
+    <string id="taom_res_tt_per_raid" text="每次劫掠" />
+    <string id="taom_res_tt_per_siege" text="每次攻城" />
+    <string id="taom_res_tt_per_prisoner" text="每名俘虏" />
+    <string id="taom_wa_refuse_free" text="不。我知道你为谁而战，我绝不为黑影执刃，出多少价也不行。另找刀剑去吧。" />
+    <string id="taom_wa_refuse_evil" text="你与精灵之友同行。我的族人会因我收你的钱而取我项上人头，而你的人宁可看我被绞死，也不愿让我持械。不行。" />
+    <string id="taom_sl_search_placeholder" text="搜索所有市场中的货物" />
+    <string id="taom_sl_search_none" text="没有任何货源存有此物。" />
+    <string id="taom_sl_search_capped" text="匹配：{COUNT}，显示最近的 {SHOWN} 个。请缩小搜索范围。" />
+    <string id="taom_sl_search_count" text="匹配：{COUNT}，由近及远排列。" />
+    <string id="taom_sl_hit_row" text="{ITEM} 位于 {SOURCE}" />
+    <string id="taom_sl_hit_detail" text="库存 {STOCK}，{PRICE} 第纳尔，距离 {DISTANCE}" />
+    <string id="taom_res_badge_title" text="需要 {RESOURCE}" />
+    <string id="taom_res_badge_upgrade" text="升级" />
+    <string id="taom_res_badge_recruit" text="招募" />
+    <string id="taom_res_badge_upkeep" text="每日维护" />
+    <string id="taom_res_badge_emissary" text="精锐使者价格" />
+    <string id="taom_res_badge_paid_in" text="升级、招募与维护均以你自己的 {RESOURCE} 支付" />
+    <string id="taom_aso_kingdom.empire" text="登兰德" />
+    <string id="taom_aso_kingdom.empire_w" text="刚铎" />
+    <string id="taom_aso_kingdom.empire_s" text="魔多" />
+    <string id="taom_aso_kingdom.sturgia" text="河谷邦" />
+    <string id="taom_aso_kingdom.aserai" text="哈拉德" />
+    <string id="taom_aso_kingdom.vlandia" text="洛汗" />
+    <string id="taom_aso_kingdom.battania" text="康德" />
+    <string id="taom_aso_kingdom.khuzait" text="鲁恩" />
+    <string id="taom_aso_kingdom.erebor" text="埃瑞博" />
+    <string id="taom_aso_kingdom.rivendell" text="伊姆拉缀斯" />
+    <string id="taom_aso_kingdom.mirkwood" text="拉斯加伦" />
+    <string id="taom_aso_kingdom.lothlorien" text="罗斯洛立安" />
+    <string id="taom_aso_kingdom.isengard" text="艾森加德" />
+    <string id="taom_aso_kingdom.gundabad" text="刚达巴" />
+    <string id="taom_aso_kingdom.umbar" text="翁巴" />
+    <string id="taom_aso_kingdom.dolguldur" text="多古尔都" />
+    <string id="taom_aso_kingdom.shaghana" text="沙迦纳" />
+    <string id="taom_aso_kingdom.abanissa" text="阿巴尼萨" />
+    <string id="taom_aso_kingdom.goblin" text="半兽人" />
+    <string id="taom_aso_kingdom.mistymountainorcs" text="迷雾山脉半兽人" />
+    <string id="taom_aso_kingdom.lindon" text="林顿" />
+    <string id="taom_aso_kingdom.bluecraig" text="蓝岩半兽人" />
+    <string id="taom_aso_item_name_randomized" text="随机化的中土世界" />
+    <string id="taom_tactic.shield_wall" text="我们的计划是紧锁盾牌，坚守阵地。" />
+    <string id="taom_tactic.infantry_mass" text="我们的计划是以人数优势将他们淹没。" />
+    <string id="taom_tactic.cavalry_dominance" text="我们的计划是骑兵冲垮他们，再由步兵收尾。" />
+    <string id="taom_tactic.archer_ring" text="我们的计划是以长枪环护弓手，让箭矢建功。" />
+    <string id="taom_tactic.two_line_wall" text="我们的计划是布下两道阵线：前排坚守，第二排等待时机再出击。" />
+    <string id="taom_tactic.envelop" text="我们的计划是三面夹击，合拢包围。" />
+    <string id="taom_tactic.disciplined_line" text="我们的计划是坚守阵线，待敌投入后齐步推进。" />
+    <string id="taom_tactic.archer_advance" text="我们的计划是紧随弓手推进，让箭矢开路。" />
+    <string id="taom_tactic.eored_screen" text="我们的计划是以骑兵掩护两翼，待敌投入后发起冲锋。" />
+    <string id="taom_tactic.hit_and_run" text="我们的计划是投掷、后撤、再投掷，直到他们的阵线崩溃。" />
+    <string id="taom_tactic.mumak_vanguard" text="我们的计划是先派猛犸开路，随后跟进。" />
+    <string id="taom_behavior.braced_defend" text="坚守阵地；严阵以待骑兵" />
+    <string id="taom_behavior.braced_advance" text="结墙推进；严阵以待骑兵" />
+    <string id="taom_behavior.infantry_skirmish" text="接近投掷距离，投掷后后撤" />
+    <string id="taom_behavior.cycle_charge" text="冲锋穿透，重整队形，再次冲锋" />
+    <string id="taom_behavior.envelop_wing" text="绕至其侧翼，从侧面打击" />
+    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
   </strings>
 </base>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Portuguese (Brazilian)" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Os covis de gobelins de Blue Craig, nas Montanhas Azuis (Ered Luin) do extremo oeste, próximas aos Portos Cinzentos de Lindon. Uma hoste distinta e incontável de gobelins — separada de seus primos das Montanhas Nevoentas da Cidade dos Gobelins — eles infestam os penhascos ocidentais e atormentam os Elfos da costa oeste." />
+    <string id="taom_bluecraig_name" text="Gobelins de Blue Craig" />
+    <string id="taom_bluecraig_ruler_title" text="Grande Gobelin" />
+    <string id="taom_bluecraig_short_name" text="Blue Craig" />
+    <string id="taom_bluecraig_title" text="Reino Gobelin de Blue Craig" />
+    <string id="taom_dolguldur_desc" text="Dol Guldur, a fortaleza da sombra e do desespero, ergue-se como um farol ameaçador da vontade sombria do Necromante. Os Orques e as criaturas imundas que habitam suas profundezas semeiam o medo no coração de todos." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Senhor do Pavor" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Necromancia de Dol Guldur" />
+    <string id="taom_erebor_desc" text="A Montanha Solitária, Erebor, ergue-se como o maior dos reinos dos Anãos no norte. Rica em ouro e mithril, é o lar da linhagem de Durin. Os Anãos de Erebor são artesãos renomados e guerreiros ferozes, e seus salões ecoam com as canções de seus ancestrais." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="Rei" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Reino de Erebor" />
+    <string id="taom_goblin_desc" text="Os Gobelins do Passo Alto infestam os túneis sob as Montanhas Nevoentas, a prole da hoste que o Grande Gobelin outrora conduziu contra anões e viajantes. Incontáveis e cruéis, eles jorram de Gobelinvila para saquear as estradas das montanhas." />
+    <string id="taom_goblin_name" text="Gobelins" />
+    <string id="taom_goblin_ruler_title" text="Grande Gobelin" />
+    <string id="taom_goblin_short_name" text="Gobelins" />
+    <string id="taom_goblin_title" text="Reino Gobelin do Passo Alto" />
+    <string id="taom_gundabad_desc" text="Gundabad, a antiga e sombria fortaleza dos Orques, ergue-se como um bastião de selvageria e domínio. Os Orques de Gundabad, criados para a guerra e o caos, reúnem-se sob estandartes ensanguentados." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Senhor da Guerra" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengard, a fortaleza do Mago Branco Saruman, ergue-se como um bastião de poder e ambição. Os Uruk-hai marcham sob o estandarte da Mão Branca, com disciplina e selvageria sem igual." />
+    <string id="taom_isengard_name" text="Isengard" />
+    <string id="taom_isengard_ruler_title" text="Senhor da Guerra" />
+    <string id="taom_isengard_short_name" text="Isengard" />
+    <string id="taom_isengard_title" text="Soberania de Isengard" />
+    <string id="taom_lindon_desc" text="Lindon, a terra verde ao oeste das Montanhas Azuis, é o último reino dos Altos Elfos nas costas da Terra-média. Dos Portos Cinzentos de Mithlond os navios brancos partem para o Oeste, enquanto Círdan, o Armador, vigia a luz que se apaga dos Eldar." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Senhor dos Portos" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Alto Reino de Lindon" />
+    <string id="taom_lothlorien_desc" text="A Floresta Dourada repousa entre o Veiaprata e o poderoso Anduin. Guardada pela vontade de Galadriel e Celeborn, ergue-se como um bastião da graça e do desafio élficos — uma terra intocada pelo tempo, onde as folhas não caem." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Senhora" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Reino de Lóthlorien" />
+    <string id="taom_mirkwood_desc" text="O Reino Silvestre da Floresta das Trevas suportou muitas provações ao longo dos anos. Sob a liderança de Thranduil, os Elfos da Floresta tornaram-se reclusos e desconfiados de estranhos. Contudo, no coração de Thranduil ainda arde um fogo aceso nos dias antigos da Primeira Era." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Floresta das Trevas" />
+    <string id="taom_mirkwood_title" text="Reino da Floresta das Trevas" />
+    <string id="taom_mistymountainorcs_desc" text="A hoste órquica das Montanhas Nevoentas domina as alturas e as escavações profundas desde o Monte Gram até os portões de Moria. Criados para a guerra nos picos frios, atendem ao chamado da Sombra e anseiam por reclamar as montanhas para si." />
+    <string id="taom_mistymountainorcs_name" text="Orques das Montanhas Nevoentas" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Senhor da Guerra" />
+    <string id="taom_mistymountainorcs_short_name" text="Orques Nevoentos" />
+    <string id="taom_mistymountainorcs_title" text="Hoste Órquica das Montanhas Nevoentas" />
+    <string id="taom_rivendell_desc" text="Oculta nas profundas fendas das Montanhas Nevoentas, Valfenda é a Última Casa Acolhedora a Leste do Mar. Fundada por Elrond Meio-elfo, é um refúgio contra a escuridão que se reúne, um lugar de cura, sabedoria e força serena." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Senhor" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Refúgio de Imladris" />
+    <string id="taom_umbar_desc" text="Umbar, o sombrio porto dos Corsários, é um reino imerso em poder marítimo e ambição traiçoeira. Os Corsários saqueiam as costas da Terra-média, espalhando o medo com seus navios velozes." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Rei Corsário" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Porto de Umbar" />
+  </strings>
+</base>

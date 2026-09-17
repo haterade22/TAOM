@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Generated clan-name strings: extracted from characters/clans.xml name= attributes by tools/generate_name_localization_strings.py. Keys already registered via taom_module_strings.xml (abanissa/shaghana/bandit clusters) are excluded on purpose. Do not hand-edit; re-run the generator instead. -->
+	<string id="aom_clan_bluecraig_1_name" text="{=aom_clan_bluecraig_1_name}Blue Craig Warband" />
+	<string id="aom_clan_bluecraig_2_name" text="{=aom_clan_bluecraig_2_name}Crag-spawn" />
+	<string id="aom_clan_bluecraig_3_name" text="{=aom_clan_bluecraig_3_name}Lune-skulkers" />
+	<string id="aom_clan_bluecraig_4_name" text="{=aom_clan_bluecraig_4_name}Ered Luin Raiders" />
+	<string id="aom_clan_bluecraig_5_name" text="{=aom_clan_bluecraig_5_name}Mirkstone Tribe" />
+	<string id="aom_clan_dolguldur_10_name" text="{=aom_clan_dolguldur_10_name}Drûzgûl" />
+	<string id="aom_clan_dolguldur_11_name" text="{=aom_clan_dolguldur_11_name}Vrûkmog" />
+	<string id="aom_clan_dolguldur_12_name" text="{=aom_clan_dolguldur_12_name}Hlakûrz" />
+	<string id="aom_clan_dolguldur_13_name" text="{=aom_clan_dolguldur_13_name}Throzbûz" />
+	<string id="aom_clan_dolguldur_14_name" text="{=aom_clan_dolguldur_14_name}Rhâzgor" />
+	<string id="aom_clan_dolguldur_15_name" text="{=aom_clan_dolguldur_15_name}Uzghûl" />
+	<string id="aom_clan_dolguldur_1_name" text="{=aom_clan_dolguldur_1_name}Hîondrûs" />
+	<string id="aom_clan_dolguldur_2_name" text="{=aom_clan_dolguldur_2_name}Gûrzrak" />
+	<string id="aom_clan_dolguldur_3_name" text="{=aom_clan_dolguldur_3_name}Maugdur" />
+	<string id="aom_clan_dolguldur_4_name" text="{=aom_clan_dolguldur_4_name}Dûrzan" />
+	<string id="aom_clan_dolguldur_5_name" text="{=aom_clan_dolguldur_5_name}Krâzgoth" />
+	<string id="aom_clan_dolguldur_6_name" text="{=aom_clan_dolguldur_6_name}Zûrbak" />
+	<string id="aom_clan_dolguldur_7_name" text="{=aom_clan_dolguldur_7_name}Ghâshrûz" />
+	<string id="aom_clan_dolguldur_8_name" text="{=aom_clan_dolguldur_8_name}Morbhak" />
+	<string id="aom_clan_dolguldur_9_name" text="{=aom_clan_dolguldur_9_name}Skûlgath" />
+	<string id="aom_clan_empire_south_10_name" text="{=aom_clan_empire_south_10_name}Ârki" />
+	<string id="aom_clan_empire_south_11_name" text="{=aom_clan_empire_south_11_name}Îkhon" />
+	<string id="aom_clan_empire_south_12_name" text="{=aom_clan_empire_south_12_name}Akheth" />
+	<string id="aom_clan_empire_south_13_name" text="{=aom_clan_empire_south_13_name}Zarûnik" />
+	<string id="aom_clan_empire_south_14_name" text="{=aom_clan_empire_south_14_name}Ûgrakhûr" />
+	<string id="aom_clan_empire_south_15_name" text="{=aom_clan_empire_south_15_name}Brughash" />
+	<string id="aom_clan_empire_west_10_name" text="{=aom_clan_empire_west_10_name}House of Hýarthulionath" />
+	<string id="aom_clan_empire_west_11_name" text="{=aom_clan_empire_west_11_name}House of Caladionath" />
+	<string id="aom_clan_empire_west_12_name" text="{=aom_clan_empire_west_12_name}House of Garvirionath" />
+	<string id="aom_clan_empire_west_13_name" text="{=aom_clan_empire_west_13_name}House of Hirilionath" />
+	<string id="aom_clan_empire_west_14_name" text="{=aom_clan_empire_west_14_name}House of Baranionath" />
+	<string id="aom_clan_erebor_1_name" text="{=aom_clan_erebor_1_name}Bit Durin" />
+	<string id="aom_clan_erebor_2_name" text="{=aom_clan_erebor_2_name}Bit Lóni" />
+	<string id="aom_clan_erebor_3_name" text="{=aom_clan_erebor_3_name}Bit Rár" />
+	<string id="aom_clan_erebor_4_name" text="{=aom_clan_erebor_4_name}Bit Gror" />
+	<string id="aom_clan_erebor_5_name" text="{=aom_clan_erebor_5_name}Bit Górli" />
+	<string id="aom_clan_erebor_6_name" text="{=aom_clan_erebor_6_name}Bit Róri" />
+	<string id="aom_clan_erebor_7_name" text="{=aom_clan_erebor_7_name}Bit Nórin" />
+	<string id="aom_clan_goblin_1_name" text="{=aom_clan_goblin_1_name}Skrithak" />
+	<string id="aom_clan_goblin_2_name" text="{=aom_clan_goblin_2_name}Yaghûl" />
+	<string id="aom_clan_goblin_3_name" text="{=aom_clan_goblin_3_name}Gorkil" />
+	<string id="aom_clan_goblin_4_name" text="{=aom_clan_goblin_4_name}Snaga-host" />
+	<string id="aom_clan_goblin_5_name" text="{=aom_clan_goblin_5_name}Mughrat" />
+	<string id="aom_clan_gundabad_10_name" text="{=aom_clan_gundabad_10_name}Throkmaw" />
+	<string id="aom_clan_gundabad_1_name" text="{=aom_clan_gundabad_1_name}Ashmog" />
+	<string id="aom_clan_gundabad_2_name" text="{=aom_clan_gundabad_2_name}Gundruk" />
+	<string id="aom_clan_gundabad_3_name" text="{=aom_clan_gundabad_3_name}Zarbag" />
+	<string id="aom_clan_gundabad_4_name" text="{=aom_clan_gundabad_4_name}Morzûg" />
+	<string id="aom_clan_gundabad_5_name" text="{=aom_clan_gundabad_5_name}Krûgash" />
+	<string id="aom_clan_gundabad_6_name" text="{=aom_clan_gundabad_6_name}Grishûk" />
+	<string id="aom_clan_gundabad_7_name" text="{=aom_clan_gundabad_7_name}Lugdush" />
+	<string id="aom_clan_gundabad_8_name" text="{=aom_clan_gundabad_8_name}Maukrim" />
+	<string id="aom_clan_gundabad_9_name" text="{=aom_clan_gundabad_9_name}Skarzag" />
+	<string id="aom_clan_isengard_10_name" text="{=aom_clan_isengard_10_name}The Ash Guard" />
+	<string id="aom_clan_isengard_11_name" text="{=aom_clan_isengard_11_name}The Stone Breakers" />
+	<string id="aom_clan_isengard_1_name" text="{=aom_clan_isengard_1_name}The White Hand" />
+	<string id="aom_clan_isengard_2_name" text="{=aom_clan_isengard_2_name}The Red Echelon" />
+	<string id="aom_clan_isengard_3_name" text="{=aom_clan_isengard_3_name}The Black Echelon" />
+	<string id="aom_clan_isengard_4_name" text="{=aom_clan_isengard_4_name}The Black Maw" />
+	<string id="aom_clan_isengard_5_name" text="{=aom_clan_isengard_5_name}The Iron Fist" />
+	<string id="aom_clan_isengard_6_name" text="{=aom_clan_isengard_6_name}The Blood Guard" />
+	<string id="aom_clan_isengard_7_name" text="{=aom_clan_isengard_7_name}The Shadow Reavers" />
+	<string id="aom_clan_isengard_8_name" text="{=aom_clan_isengard_8_name}The Skull Crushers" />
+	<string id="aom_clan_isengard_9_name" text="{=aom_clan_isengard_9_name}The War Hounds" />
+	<string id="aom_clan_khuzait_10_name" text="{=aom_clan_khuzait_10_name}Illnoria" />
+	<string id="aom_clan_khuzait_11_name" text="{=aom_clan_khuzait_11_name}Shakhalian" />
+	<string id="aom_clan_khuzait_12_name" text="{=aom_clan_khuzait_12_name}Hûz" />
+	<string id="aom_clan_khuzait_13_name" text="{=aom_clan_khuzait_13_name}Adekig" />
+	<string id="aom_clan_khuzait_14_name" text="{=aom_clan_khuzait_14_name}Cilzeron" />
+	<string id="aom_clan_khuzait_15_name" text="{=aom_clan_khuzait_15_name}Kalkian" />
+	<string id="aom_clan_khuzait_16_name" text="{=aom_clan_khuzait_16_name}Zorian" />
+	<string id="aom_clan_khuzait_17_name" text="{=aom_clan_khuzait_17_name}Mithruntai" />
+	<string id="aom_clan_khuzait_18_name" text="{=aom_clan_khuzait_18_name}Vazevian" />
+	<string id="aom_clan_khuzait_19_name" text="{=aom_clan_khuzait_19_name}Bozorganith" />
+	<string id="aom_clan_lindon_1_name" text="{=aom_clan_lindon_1_name}Falathrim" />
+	<string id="aom_clan_lindon_2_name" text="{=aom_clan_lindon_2_name}Edhil Mithlond" />
+	<string id="aom_clan_lothlorien_1_name" text="{=aom_clan_lothlorien_1_name}Nos Finarfin" />
+	<string id="aom_clan_lothlorien_2_name" text="{=aom_clan_lothlorien_2_name}Wardens of the Naith" />
+	<string id="aom_clan_lothlorien_3_name" text="{=aom_clan_lothlorien_3_name}Nos Malgalad" />
+	<string id="aom_clan_mirkwood_1_name" text="{=aom_clan_mirkwood_1_name}Nos Lasgalen" />
+	<string id="aom_clan_mirkwood_2_name" text="{=aom_clan_mirkwood_2_name}Nos Oropher" />
+	<string id="aom_clan_mirkwood_3_name" text="{=aom_clan_mirkwood_3_name}Nos Taurion" />
+	<string id="aom_clan_mirkwood_4_name" text="{=aom_clan_mirkwood_4_name}Nos Galengrim" />
+	<string id="aom_clan_mirkwood_5_name" text="{=aom_clan_mirkwood_5_name}Nos Alenwé" />
+	<string id="aom_clan_mirkwood_6_name" text="{=aom_clan_mirkwood_6_name}Nos Iminyé" />
+	<string id="aom_clan_mistymountainorcs_10_name" text="{=aom_clan_mistymountainorcs_10_name}Lugbúrz" />
+	<string id="aom_clan_mistymountainorcs_11_name" text="{=aom_clan_mistymountainorcs_11_name}Hrakdûr" />
+	<string id="aom_clan_mistymountainorcs_12_name" text="{=aom_clan_mistymountainorcs_12_name}Uzgnâsh" />
+	<string id="aom_clan_mistymountainorcs_13_name" text="{=aom_clan_mistymountainorcs_13_name}Vrakmaw" />
+	<string id="aom_clan_mistymountainorcs_14_name" text="{=aom_clan_mistymountainorcs_14_name}Gashrim" />
+	<string id="aom_clan_mistymountainorcs_15_name" text="{=aom_clan_mistymountainorcs_15_name}Morzûk" />
+	<string id="aom_clan_mistymountainorcs_1_name" text="{=aom_clan_mistymountainorcs_1_name}Bûrzghâsh" />
+	<string id="aom_clan_mistymountainorcs_2_name" text="{=aom_clan_mistymountainorcs_2_name}Krimpâsh" />
+	<string id="aom_clan_mistymountainorcs_3_name" text="{=aom_clan_mistymountainorcs_3_name}Dushnakh" />
+	<string id="aom_clan_mistymountainorcs_4_name" text="{=aom_clan_mistymountainorcs_4_name}Morgrim" />
+	<string id="aom_clan_mistymountainorcs_5_name" text="{=aom_clan_mistymountainorcs_5_name}Vargrim" />
+	<string id="aom_clan_mistymountainorcs_6_name" text="{=aom_clan_mistymountainorcs_6_name}Grobûrz" />
+	<string id="aom_clan_mistymountainorcs_7_name" text="{=aom_clan_mistymountainorcs_7_name}Skarnâk" />
+	<string id="aom_clan_mistymountainorcs_8_name" text="{=aom_clan_mistymountainorcs_8_name}Maughâsh" />
+	<string id="aom_clan_mistymountainorcs_9_name" text="{=aom_clan_mistymountainorcs_9_name}Throgmaw" />
+	<string id="aom_clan_rivendell_1_name" text="{=aom_clan_rivendell_1_name}Nos Peredhel" />
+	<string id="aom_clan_rivendell_2_name" text="{=aom_clan_rivendell_2_name}Nos Glorfindel" />
+	<string id="aom_clan_rivendell_3_name" text="{=aom_clan_rivendell_3_name}Elen-Nolmarë" />
+	<string id="aom_clan_umbar_1_name" text="{=aom_clan_umbar_1_name}House of Casîmirionî" />
+	<string id="aom_clan_vlandia_12_name" text="{=aom_clan_vlandia_12_name}House of Ælfwiging" />
+	<string id="aom_clan_vlandia_13_name" text="{=aom_clan_vlandia_13_name}House of Celmunding" />
+	<string id="aom_clan_vlandia_14_name" text="{=aom_clan_vlandia_14_name}House of Widmunding" />
+	<string id="aom_clan_vlandia_15_name" text="{=aom_clan_vlandia_15_name}House of Ordgaring" />
+	<string id="aom_clan_vlandia_16_name" text="{=aom_clan_vlandia_16_name}House of Hunthelming" />
+	<string id="aom_clan_vlandia_17_name" text="{=aom_clan_vlandia_17_name}House of Bregdaning" />
+	<string id="aom_clan_vlandia_18_name" text="{=aom_clan_vlandia_18_name}House of Deáfringas" />
+	<string id="aom_clan_vlandia_19_name" text="{=aom_clan_vlandia_19_name}House of Marhad" />
+	<string id="aom_clan_vlandia_20_name" text="{=aom_clan_vlandia_20_name}House of Morcargas" />
+	<string id="aom_clan_vlandia_21_name" text="{=aom_clan_vlandia_21_name}House of Halethring" />
+	<string id="aom_clan_vlandia_22_name" text="{=aom_clan_vlandia_22_name}House of Rungaring" />
+
+</strings>

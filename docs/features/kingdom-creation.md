@@ -86,6 +86,15 @@ Follow this sequence exactly. Each file depends on the previous ones being corre
 
 Add all localizable strings for the kingdom before touching any other file. Required groups:
 
+**Safety net, added 2026-09-17:** if a kingdom/lord/clan/troop name key ships inline-only and this
+step gets skipped, it is no longer a permanent gap. `tools/generate_name_localization_strings.py`
+re-scans `taom_spkingdoms.xml`, `characters/lords.xml`, `characters/clans.xml`, and
+`troops/troops_*.xml` for any `{=KEY}default` name key with no row registered anywhere in the
+pipeline, and writes the unregistered ones into `taom_kingdom_name_strings.xml` /
+`taom_lord_name_strings.xml` / `taom_clan_name_strings.xml` / `taom_troop_name_strings.xml`. Still
+do this step proactively (the generator only catches it on its next run, which means English-only
+in the interim), but a missed key is now recoverable rather than lost.
+
 **Kingdom strings** (referenced by `TAOM_spkingdoms.xml`):
 ```xml
 <string id="taom_{id}_name"        text="{=taom_{id}_name}Full Kingdom Name" />

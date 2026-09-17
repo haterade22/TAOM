@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Generated lord-name strings: extracted from characters/lords.xml name= attributes by tools/generate_name_localization_strings.py. Keys already registered via taom_xslt_strings.xml are excluded on purpose - see the generator's registered_ids(). Do not hand-edit; re-run the generator instead. -->
+	<string id="aom_lord_1_11_1_name" text="{=aom_lord_1_11_1_name}Calion" />
+	<string id="aom_lord_1_11_2_name" text="{=aom_lord_1_11_2_name}Silwen" />
+	<string id="aom_lord_1_11_3_name" text="{=aom_lord_1_11_3_name}Ainarauta" />
+	<string id="aom_lord_1_11_4_name" text="{=aom_lord_1_11_4_name}Ivriniel" />
+	<string id="aom_lord_1_11_5_name" text="{=aom_lord_1_11_5_name}Narniel" />
+	<string id="aom_lord_1_40_2_name" text="{=aom_lord_1_40_2_name}Eleniel" />
+	<string id="aom_lord_1_45_4_name" text="{=aom_lord_1_45_4_name}Loreth" />
+	<string id="aom_lord_1_45_5_name" text="{=aom_lord_1_45_5_name}Belwen" />
+	<string id="aom_lord_1_45_6_name" text="{=aom_lord_1_45_6_name}Brithwen" />
+	<string id="aom_lord_1_52_3_name" text="{=aom_lord_1_52_3_name}Ivriniel" />
+	<string id="aom_lord_1_52_4_name" text="{=aom_lord_1_52_4_name}Nauriel" />
+	<string id="aom_lord_1_53_1_name" text="{=aom_lord_1_53_1_name}Calaniel" />
+	<string id="aom_lord_1_53_2_name" text="{=aom_lord_1_53_2_name}Ciriondir" />
+	<string id="aom_lord_1_53_3_name" text="{=aom_lord_1_53_3_name}Ancalimú" />
+	<string id="aom_lord_1_59_1_name" text="{=aom_lord_1_59_1_name}Rondiel" />
+	<string id="aom_lord_1_59_2_name" text="{=aom_lord_1_59_2_name}Silmador" />
+	<string id="aom_lord_1_59_3_name" text="{=aom_lord_1_59_3_name}Galinwen" />
+	<string id="aom_lord_1_59_4_name" text="{=aom_lord_1_59_4_name}Galdirion" />
+	<string id="aom_lord_1_59_name" text="{=aom_lord_1_59_name}Rondamir" />
+	<string id="aom_lord_1_60_1_name" text="{=aom_lord_1_60_1_name}Nimriel" />
+	<string id="aom_lord_1_60_2_name" text="{=aom_lord_1_60_2_name}Orlathiel" />
+	<string id="aom_lord_1_60_3_name" text="{=aom_lord_1_60_3_name}Orlendir" />
+	<string id="aom_lord_1_60_name" text="{=aom_lord_1_60_name}Eldorion" />
+	<string id="aom_lord_1_71_1_name" text="{=aom_lord_1_71_1_name}Laswen" />
+	<string id="aom_lord_1_9_1_name" text="{=aom_lord_1_9_1_name}Elphir" />
+	<string id="aom_lord_1_9_2_name" text="{=aom_lord_1_9_2_name}Erchirion" />
+	<string id="aom_lord_1_9_3_name" text="{=aom_lord_1_9_3_name}Amrothos" />
+	<string id="aom_lord_1_9_4_name" text="{=aom_lord_1_9_4_name}Lothiriel" />
+	<string id="aom_lord_1_9_5_name" text="{=aom_lord_1_9_5_name}Lothwen" />
+	<string id="aom_lord_1_9_6_name" text="{=aom_lord_1_9_6_name}Lothériel" />
+	<string id="aom_lord_4_16_2_name" text="{=aom_lord_4_16_2_name}Herubrand Felánding" />
+	<string id="aom_lord_4_21_1_name" text="{=aom_lord_4_21_1_name}Siegeberht Ordlacing" />
+	<string id="aom_lord_4_21_2_name" text="{=aom_lord_4_21_2_name}Elfhild Ordlacing" />
+	<string id="aom_lord_4_21_3_name" text="{=aom_lord_4_21_3_name}Ulfeytel Ordlacing" />
+	<string id="aom_lord_4_21_4_name" text="{=aom_lord_4_21_4_name}Eadgifu Ordlacing" />
+	<string id="aom_lord_4_27_2_name" text="{=aom_lord_4_27_2_name}Ælfstan Æthellafing" />
+	<string id="aom_lord_4_27_3_name" text="{=aom_lord_4_27_3_name}Ælfwynn Æthellafing" />
+	<string id="aom_lord_4_27_4_name" text="{=aom_lord_4_27_4_name}Sæweald Æthellafing" />
+	<string id="aom_lord_4_28_3_name" text="{=aom_lord_4_28_3_name}Rynelda" />
+	<string id="aom_lord_4_29_1_name" text="{=aom_lord_4_29_1_name}Octreda Ælfwiging" />
+	<string id="aom_lord_4_29_2_name" text="{=aom_lord_4_29_2_name}Eadweald Ælfwiging" />
+	<string id="aom_lord_4_29_name" text="{=aom_lord_4_29_name}Eadfrith Ælfwiging" />
+	<string id="aom_lord_4_3_2_name" text="{=aom_lord_4_3_2_name}Éowyn Eoforing" />
+	<string id="aom_lord_4_3_3_name" text="{=aom_lord_4_3_3_name}Théodwyn Eoforing" />
+	<string id="aom_lord_4_6_2_name" text="{=aom_lord_4_6_2_name}Elfgrim Grimingas" />
+	<string id="aom_lord_6_23_1_name" text="{=aom_lord_6_23_1_name}Borlach Hûz" />
+	<string id="aom_lord_6_23_2_name" text="{=aom_lord_6_23_2_name}Armaga Hûz" />
+	<string id="aom_lord_6_23_3_name" text="{=aom_lord_6_23_3_name}Borthand Hûz" />
+	<string id="aom_lord_6_23_4_name" text="{=aom_lord_6_23_4_name}Cotota Hûz" />
+	<string id="aom_lord_6_23_5_name" text="{=aom_lord_6_23_5_name}Ulfast Hûz" />
+	<string id="aom_lord_6_23_6_name" text="{=aom_lord_6_23_6_name}Ulwarth Hûz" />
+	<string id="aom_lord_6_23_7_name" text="{=aom_lord_6_23_7_name}Uldor Hûz" />
+	<string id="aom_lord_6_23_8_name" text="{=aom_lord_6_23_8_name}Chinua Hûz" />
+	<string id="aom_lord_6_23_9_name" text="{=aom_lord_6_23_9_name}Gerel Hûz" />
+	<string id="aom_lord_6_24_1_name" text="{=aom_lord_6_24_1_name}Lorgan Adekig" />
+	<string id="aom_lord_6_24_2_name" text="{=aom_lord_6_24_2_name}Goksun Adekig" />
+	<string id="aom_lord_6_24_3_name" text="{=aom_lord_6_24_3_name}Böri Adekig" />
+	<string id="aom_lord_6_24_4_name" text="{=aom_lord_6_24_4_name}Khulan Adekig" />
+	<string id="aom_lord_6_24_5_name" text="{=aom_lord_6_24_5_name}Kustîg Adekig" />
+	<string id="aom_lord_6_24_6_name" text="{=aom_lord_6_24_6_name}Yumruk Adekig" />
+	<string id="aom_lord_6_24_7_name" text="{=aom_lord_6_24_7_name}Adarkidai Adekig" />
+	<string id="aom_lord_6_24_8_name" text="{=aom_lord_6_24_8_name}Konsha Adekig" />
+	<string id="aom_lord_6_24_9_name" text="{=aom_lord_6_24_9_name}Samga Adekig" />
+	<string id="aom_lord_6_25_1_name" text="{=aom_lord_6_25_1_name}Ganbaatar Cilzeron" />
+	<string id="aom_lord_6_25_2_name" text="{=aom_lord_6_25_2_name}Sarnai Cilzeron" />
+	<string id="aom_lord_6_25_3_name" text="{=aom_lord_6_25_3_name}Gantulga Cilzeron" />
+	<string id="aom_lord_6_25_4_name" text="{=aom_lord_6_25_4_name}Sertac Cilzeron" />
+	<string id="aom_lord_6_25_5_name" text="{=aom_lord_6_25_5_name}Khenbish Cilzeron" />
+	<string id="aom_lord_6_25_6_name" text="{=aom_lord_6_25_6_name}Muunokhoi Cilzeron" />
+	<string id="aom_lord_6_25_7_name" text="{=aom_lord_6_25_7_name}Subetai Cilzeron" />
+	<string id="aom_lord_6_25_8_name" text="{=aom_lord_6_25_8_name}Suna Cilzeron" />
+	<string id="aom_lord_6_25_9_name" text="{=aom_lord_6_25_9_name}Tsetseg Cilzeron" />
+	<string id="aom_lord_6_25_name" text="{=aom_lord_6_25_name}Ethacali Cilzeron" />
+	<string id="aom_lord_6_26_1_name" text="{=aom_lord_6_26_1_name}Jelme Kalkian" />
+	<string id="aom_lord_6_26_2_name" text="{=aom_lord_6_26_2_name}Tuya Kalkian" />
+	<string id="aom_lord_6_26_3_name" text="{=aom_lord_6_26_3_name}Boroghul Kalkian" />
+	<string id="aom_lord_6_26_4_name" text="{=aom_lord_6_26_4_name}Yesugen Kalkian" />
+	<string id="aom_lord_6_26_5_name" text="{=aom_lord_6_26_5_name}Mukhali Kalkian" />
+	<string id="aom_lord_6_26_6_name" text="{=aom_lord_6_26_6_name}Chilaun Kalkian" />
+	<string id="aom_lord_6_26_7_name" text="{=aom_lord_6_26_7_name}Berke Kalkian" />
+	<string id="aom_lord_6_26_8_name" text="{=aom_lord_6_26_8_name}Yosma Kalkian" />
+	<string id="aom_lord_6_26_9_name" text="{=aom_lord_6_26_9_name}Aigiarn Kalkian" />
+	<string id="aom_lord_6_26_name" text="{=aom_lord_6_26_name}Leôrdinoth Kalkian" />
+	<string id="aom_lord_6_27_1_name" text="{=aom_lord_6_27_1_name}Toqto Zorian" />
+	<string id="aom_lord_6_27_2_name" text="{=aom_lord_6_27_2_name}Alagh Zorian" />
+	<string id="aom_lord_6_27_3_name" text="{=aom_lord_6_27_3_name}Arghun Zorian" />
+	<string id="aom_lord_6_27_4_name" text="{=aom_lord_6_27_4_name}Alaqai Zorian" />
+	<string id="aom_lord_6_27_5_name" text="{=aom_lord_6_27_5_name}Baidar Zorian" />
+	<string id="aom_lord_6_27_6_name" text="{=aom_lord_6_27_6_name}Kadan Zorian" />
+	<string id="aom_lord_6_27_7_name" text="{=aom_lord_6_27_7_name}Orda Zorian" />
+	<string id="aom_lord_6_27_8_name" text="{=aom_lord_6_27_8_name}Altani Zorian" />
+	<string id="aom_lord_6_27_9_name" text="{=aom_lord_6_27_9_name}Bayalun Zorian" />
+	<string id="aom_lord_6_27_name" text="{=aom_lord_6_27_name}Neida Zorian" />
+	<string id="aom_lord_6_28_1_name" text="{=aom_lord_6_28_1_name}Sartaq Mithruntai" />
+	<string id="aom_lord_6_28_2_name" text="{=aom_lord_6_28_2_name}Börte Mithruntai" />
+	<string id="aom_lord_6_28_3_name" text="{=aom_lord_6_28_3_name}Nogai Mithruntai" />
+	<string id="aom_lord_6_28_4_name" text="{=aom_lord_6_28_4_name}Bulgan Mithruntai" />
+	<string id="aom_lord_6_28_5_name" text="{=aom_lord_6_28_5_name}Tamir Mithruntai" />
+	<string id="aom_lord_6_28_6_name" text="{=aom_lord_6_28_6_name}Otgon Mithruntai" />
+	<string id="aom_lord_6_28_7_name" text="{=aom_lord_6_28_7_name}Temur Mithruntai" />
+	<string id="aom_lord_6_28_8_name" text="{=aom_lord_6_28_8_name}Chimeg Mithruntai" />
+	<string id="aom_lord_6_28_9_name" text="{=aom_lord_6_28_9_name}Doquz Mithruntai" />
+	<string id="aom_lord_6_28_name" text="{=aom_lord_6_28_name}Tulrok Mithruntai" />
+	<string id="aom_lord_6_29_1_name" text="{=aom_lord_6_29_1_name}Achiq Vazevian" />
+	<string id="aom_lord_6_29_2_name" text="{=aom_lord_6_29_2_name}Enkhtuya Vazevian" />
+	<string id="aom_lord_6_29_3_name" text="{=aom_lord_6_29_3_name}Qutlugh Vazevian" />
+	<string id="aom_lord_6_29_4_name" text="{=aom_lord_6_29_4_name}Oyuun Vazevian" />
+	<string id="aom_lord_6_29_5_name" text="{=aom_lord_6_29_5_name}Vethkar Vazevian" />
+	<string id="aom_lord_6_29_6_name" text="{=aom_lord_6_29_6_name}Aurzan Vazevian" />
+	<string id="aom_lord_6_29_7_name" text="{=aom_lord_6_29_7_name}Khorlug Vazevian" />
+	<string id="aom_lord_6_29_8_name" text="{=aom_lord_6_29_8_name}Sarangerel Vazevian" />
+	<string id="aom_lord_6_29_9_name" text="{=aom_lord_6_29_9_name}Tselmeg Vazevian" />
+	<string id="aom_lord_6_29_name" text="{=aom_lord_6_29_name}Yurzal Vazevian" />
+	<string id="aom_lord_6_30_1_name" text="{=aom_lord_6_30_1_name}Saghost Bozorganith" />
+	<string id="aom_lord_6_30_2_name" text="{=aom_lord_6_30_2_name}Udval Bozorganith" />
+	<string id="aom_lord_6_30_3_name" text="{=aom_lord_6_30_3_name}Dûrkan Bozorganith" />
+	<string id="aom_lord_6_30_4_name" text="{=aom_lord_6_30_4_name}Zaya Bozorganith" />
+	<string id="aom_lord_6_30_5_name" text="{=aom_lord_6_30_5_name}Mazdûr Bozorganith" />
+	<string id="aom_lord_6_30_6_name" text="{=aom_lord_6_30_6_name}Hethûl Bozorganith" />
+	<string id="aom_lord_6_30_7_name" text="{=aom_lord_6_30_7_name}Taurkan Bozorganith" />
+	<string id="aom_lord_6_30_8_name" text="{=aom_lord_6_30_8_name}Nergui Bozorganith" />
+	<string id="aom_lord_6_30_9_name" text="{=aom_lord_6_30_9_name}Narangerel Bozorganith" />
+	<string id="aom_lord_6_30_name" text="{=aom_lord_6_30_name}Rurazaur Bozorganith" />
+	<string id="aom_lord_AB1_10_name" text="{=aom_lord_AB1_10_name}Hûria" />
+	<string id="aom_lord_AB1_2_name" text="{=aom_lord_AB1_2_name}Karûn" />
+	<string id="aom_lord_AB1_3_name" text="{=aom_lord_AB1_3_name}Lohrâs" />
+	<string id="aom_lord_AB1_4_name" text="{=aom_lord_AB1_4_name}Mihrak" />
+	<string id="aom_lord_AB1_5_name" text="{=aom_lord_AB1_5_name}Nûzar" />
+	<string id="aom_lord_AB1_6_name" text="{=aom_lord_AB1_6_name}Ohrmûz" />
+	<string id="aom_lord_AB1_7_name" text="{=aom_lord_AB1_7_name}Dûria" />
+	<string id="aom_lord_AB1_8_name" text="{=aom_lord_AB1_8_name}Farâh" />
+	<string id="aom_lord_AB1_9_name" text="{=aom_lord_AB1_9_name}Gûlbahar" />
+	<string id="aom_lord_AB2_10_name" text="{=aom_lord_AB2_10_name}Narghîs" />
+	<string id="aom_lord_AB2_2_name" text="{=aom_lord_AB2_2_name}Pirûn" />
+	<string id="aom_lord_AB2_3_name" text="{=aom_lord_AB2_3_name}Rûzbeh" />
+	<string id="aom_lord_AB2_4_name" text="{=aom_lord_AB2_4_name}Siyâk" />
+	<string id="aom_lord_AB2_5_name" text="{=aom_lord_AB2_5_name}Tûsar" />
+	<string id="aom_lord_AB2_6_name" text="{=aom_lord_AB2_6_name}Ardûsh" />
+	<string id="aom_lord_AB2_7_name" text="{=aom_lord_AB2_7_name}Jahâna" />
+	<string id="aom_lord_AB2_8_name" text="{=aom_lord_AB2_8_name}Kûrina" />
+	<string id="aom_lord_AB2_9_name" text="{=aom_lord_AB2_9_name}Mihrî" />
+	<string id="aom_lord_AB3_10_name" text="{=aom_lord_AB3_10_name}Tûrana" />
+	<string id="aom_lord_AB3_2_name" text="{=aom_lord_AB3_2_name}Bahmûr" />
+	<string id="aom_lord_AB3_3_name" text="{=aom_lord_AB3_3_name}Farrûk" />
+	<string id="aom_lord_AB3_4_name" text="{=aom_lord_AB3_4_name}Garshûp" />
+	<string id="aom_lord_AB3_5_name" text="{=aom_lord_AB3_5_name}Hûman" />
+	<string id="aom_lord_AB3_6_name" text="{=aom_lord_AB3_6_name}Isfanar" />
+	<string id="aom_lord_AB3_7_name" text="{=aom_lord_AB3_7_name}Parvâneh" />
+	<string id="aom_lord_AB3_8_name" text="{=aom_lord_AB3_8_name}Rûshanâ" />
+	<string id="aom_lord_AB3_9_name" text="{=aom_lord_AB3_9_name}Sûsan" />
+	<string id="aom_lord_AB4_10_name" text="{=aom_lord_AB4_10_name}Âbâna" />
+	<string id="aom_lord_AB4_2_name" text="{=aom_lord_AB4_2_name}Kûrash" />
+	<string id="aom_lord_AB4_3_name" text="{=aom_lord_AB4_3_name}Mazdûk" />
+	<string id="aom_lord_AB4_4_name" text="{=aom_lord_AB4_4_name}Narseh" />
+	<string id="aom_lord_AB4_5_name" text="{=aom_lord_AB4_5_name}Orodûn" />
+	<string id="aom_lord_AB4_6_name" text="{=aom_lord_AB4_6_name}Pakûr" />
+	<string id="aom_lord_AB4_7_name" text="{=aom_lord_AB4_7_name}Vîda" />
+	<string id="aom_lord_AB4_8_name" text="{=aom_lord_AB4_8_name}Yaldâ" />
+	<string id="aom_lord_AB4_9_name" text="{=aom_lord_AB4_9_name}Zûleikha" />
+	<string id="aom_lord_AB5_10_name" text="{=aom_lord_AB5_10_name}Farzâneh" />
+	<string id="aom_lord_AB5_2_name" text="{=aom_lord_AB5_2_name}Rashnûr" />
+	<string id="aom_lord_AB5_3_name" text="{=aom_lord_AB5_3_name}Shahrûm" />
+	<string id="aom_lord_AB5_4_name" text="{=aom_lord_AB5_4_name}Tirdûn" />
+	<string id="aom_lord_AB5_5_name" text="{=aom_lord_AB5_5_name}Vologar" />
+	<string id="aom_lord_AB5_6_name" text="{=aom_lord_AB5_6_name}Zamûsp" />
+	<string id="aom_lord_AB5_7_name" text="{=aom_lord_AB5_7_name}Banîn" />
+	<string id="aom_lord_AB5_8_name" text="{=aom_lord_AB5_8_name}Châhra" />
+	<string id="aom_lord_AB5_9_name" text="{=aom_lord_AB5_9_name}Delkash" />
+	<string id="aom_lord_AB6_10_name" text="{=aom_lord_AB6_10_name}Kûlsûm" />
+	<string id="aom_lord_AB6_2_name" text="{=aom_lord_AB6_2_name}Azarûn" />
+	<string id="aom_lord_AB6_3_name" text="{=aom_lord_AB6_3_name}Borzûy" />
+	<string id="aom_lord_AB6_4_name" text="{=aom_lord_AB6_4_name}Dânûsh" />
+	<string id="aom_lord_AB6_5_name" text="{=aom_lord_AB6_5_name}Farûhar" />
+	<string id="aom_lord_AB6_6_name" text="{=aom_lord_AB6_6_name}Gûdarz" />
+	<string id="aom_lord_AB6_7_name" text="{=aom_lord_AB6_7_name}Gûhara" />
+	<string id="aom_lord_AB6_8_name" text="{=aom_lord_AB6_8_name}Hûma" />
+	<string id="aom_lord_AB6_9_name" text="{=aom_lord_AB6_9_name}Jasmûna" />
+	<string id="aom_lord_AB7_10_name" text="{=aom_lord_AB7_10_name}Rûshan" />
+	<string id="aom_lord_AB7_2_name" text="{=aom_lord_AB7_2_name}Hûtan" />
+	<string id="aom_lord_AB7_3_name" text="{=aom_lord_AB7_3_name}Kûhram" />
+	<string id="aom_lord_AB7_4_name" text="{=aom_lord_AB7_4_name}Mahûz" />
+	<string id="aom_lord_AB7_5_name" text="{=aom_lord_AB7_5_name}Nastûr" />
+	<string id="aom_lord_AB7_6_name" text="{=aom_lord_AB7_6_name}Pûlvand" />
+	<string id="aom_lord_AB7_7_name" text="{=aom_lord_AB7_7_name}Mehrî" />
+	<string id="aom_lord_AB7_8_name" text="{=aom_lord_AB7_8_name}Nasrîn" />
+	<string id="aom_lord_AB7_9_name" text="{=aom_lord_AB7_9_name}Pârmida" />
+	<string id="aom_lord_AB8_10_name" text="{=aom_lord_AB8_10_name}Yâra" />
+	<string id="aom_lord_AB8_2_name" text="{=aom_lord_AB8_2_name}Sâveh" />
+	<string id="aom_lord_AB8_3_name" text="{=aom_lord_AB8_3_name}Tûmar" />
+	<string id="aom_lord_AB8_4_name" text="{=aom_lord_AB8_4_name}Vârazûn" />
+	<string id="aom_lord_AB8_5_name" text="{=aom_lord_AB8_5_name}Zangûr" />
+	<string id="aom_lord_AB8_6_name" text="{=aom_lord_AB8_6_name}Aspûr" />
+	<string id="aom_lord_AB8_7_name" text="{=aom_lord_AB8_7_name}Saharâ" />
+	<string id="aom_lord_AB8_8_name" text="{=aom_lord_AB8_8_name}Tûba" />
+	<string id="aom_lord_AB8_9_name" text="{=aom_lord_AB8_9_name}Zhâleh" />
+	<string id="aom_lord_BC1_1_name" text="{=aom_lord_BC1_1_name}Morgrub" />
+	<string id="aom_lord_BC1_2_name" text="{=aom_lord_BC1_2_name}Snagbut" />
+	<string id="aom_lord_BC1_3_name" text="{=aom_lord_BC1_3_name}Hrakdush" />
+	<string id="aom_lord_BC1_4_name" text="{=aom_lord_BC1_4_name}Boldog" />
+	<string id="aom_lord_BC1_5_name" text="{=aom_lord_BC1_5_name}Lugbol" />
+	<string id="aom_lord_BC1_6_name" text="{=aom_lord_BC1_6_name}Grizznak" />
+	<string id="aom_lord_BC1_7_name" text="{=aom_lord_BC1_7_name}Gnarla" />
+	<string id="aom_lord_BC1_8_name" text="{=aom_lord_BC1_8_name}Vugza" />
+	<string id="aom_lord_BC2_1_name" text="{=aom_lord_BC2_1_name}Grizznak" />
+	<string id="aom_lord_BC2_2_name" text="{=aom_lord_BC2_2_name}Frakû" />
+	<string id="aom_lord_BC2_3_name" text="{=aom_lord_BC2_3_name}Mughash" />
+	<string id="aom_lord_BC2_4_name" text="{=aom_lord_BC2_4_name}Grishnák" />
+	<string id="aom_lord_BC2_5_name" text="{=aom_lord_BC2_5_name}Muzgash" />
+	<string id="aom_lord_BC2_6_name" text="{=aom_lord_BC2_6_name}Lugdush" />
+	<string id="aom_lord_BC2_7_name" text="{=aom_lord_BC2_7_name}Urshza" />
+	<string id="aom_lord_BC2_8_name" text="{=aom_lord_BC2_8_name}Lazgha" />
+	<string id="aom_lord_BC3_1_name" text="{=aom_lord_BC3_1_name}Lugdush" />
+	<string id="aom_lord_BC3_2_name" text="{=aom_lord_BC3_2_name}Radbug" />
+	<string id="aom_lord_BC3_3_name" text="{=aom_lord_BC3_3_name}Gorbag" />
+	<string id="aom_lord_BC3_4_name" text="{=aom_lord_BC3_4_name}Shagrat" />
+	<string id="aom_lord_BC3_5_name" text="{=aom_lord_BC3_5_name}Ufthak" />
+	<string id="aom_lord_BC3_6_name" text="{=aom_lord_BC3_6_name}Lagduf" />
+	<string id="aom_lord_BC3_7_name" text="{=aom_lord_BC3_7_name}Ulga" />
+	<string id="aom_lord_BC3_8_name" text="{=aom_lord_BC3_8_name}Brakza" />
+	<string id="aom_lord_BC4_1_name" text="{=aom_lord_BC4_1_name}Lagduf" />
+	<string id="aom_lord_BC4_2_name" text="{=aom_lord_BC4_2_name}Orcobal" />
+	<string id="aom_lord_BC4_3_name" text="{=aom_lord_BC4_3_name}Yazneg" />
+	<string id="aom_lord_BC4_4_name" text="{=aom_lord_BC4_4_name}Narzug" />
+	<string id="aom_lord_BC4_5_name" text="{=aom_lord_BC4_5_name}Grukhash" />
+	<string id="aom_lord_BC4_6_name" text="{=aom_lord_BC4_6_name}Mauhur" />
+	<string id="aom_lord_BC4_7_name" text="{=aom_lord_BC4_7_name}Hagza" />
+	<string id="aom_lord_BC4_8_name" text="{=aom_lord_BC4_8_name}Mogra" />
+	<string id="aom_lord_BC5_1_name" text="{=aom_lord_BC5_1_name}Mauhur" />
+	<string id="aom_lord_BC5_2_name" text="{=aom_lord_BC5_2_name}Uglûk" />
+	<string id="aom_lord_BC5_3_name" text="{=aom_lord_BC5_3_name}Bûrzum" />
+	<string id="aom_lord_BC5_4_name" text="{=aom_lord_BC5_4_name}Throkmaw" />
+	<string id="aom_lord_BC5_5_name" text="{=aom_lord_BC5_5_name}Skarsnik" />
+	<string id="aom_lord_BC5_6_name" text="{=aom_lord_BC5_6_name}Gnashrak" />
+	<string id="aom_lord_BC5_7_name" text="{=aom_lord_BC5_7_name}Gralza" />
+	<string id="aom_lord_BC5_8_name" text="{=aom_lord_BC5_8_name}Shelza" />
+	<string id="aom_lord_D10_1_name" text="{=aom_lord_D10_1_name}Vrâkmug" />
+	<string id="aom_lord_D10_2_name" text="{=aom_lord_D10_2_name}Shâgthul" />
+	<string id="aom_lord_D10_3_name" text="{=aom_lord_D10_3_name}Gûrnak" />
+	<string id="aom_lord_D10_4_name" text="{=aom_lord_D10_4_name}Brôzag" />
+	<string id="aom_lord_D10_5_name" text="{=aom_lord_D10_5_name}Ghâzla" />
+	<string id="aom_lord_D10_6_name" text="{=aom_lord_D10_6_name}Uzrina" />
+	<string id="aom_lord_D10_7_name" text="{=aom_lord_D10_7_name}Hlûrza" />
+	<string id="aom_lord_D11_1_name" text="{=aom_lord_D11_1_name}Thûrzog" />
+	<string id="aom_lord_D11_2_name" text="{=aom_lord_D11_2_name}Mokrash" />
+	<string id="aom_lord_D11_3_name" text="{=aom_lord_D11_3_name}Azgûrth" />
+	<string id="aom_lord_D11_4_name" text="{=aom_lord_D11_4_name}Hûzmog" />
+	<string id="aom_lord_D11_5_name" text="{=aom_lord_D11_5_name}Vûlna" />
+	<string id="aom_lord_D11_6_name" text="{=aom_lord_D11_6_name}Drâzga" />
+	<string id="aom_lord_D12_1_name" text="{=aom_lord_D12_1_name}Skarvûk" />
+	<string id="aom_lord_D12_2_name" text="{=aom_lord_D12_2_name}Lûghnar" />
+	<string id="aom_lord_D12_3_name" text="{=aom_lord_D12_3_name}Vorgûl" />
+	<string id="aom_lord_D12_4_name" text="{=aom_lord_D12_4_name}Nûrgha" />
+	<string id="aom_lord_D12_5_name" text="{=aom_lord_D12_5_name}Skûzla" />
+	<string id="aom_lord_D13_1_name" text="{=aom_lord_D13_1_name}Dramthak" />
+	<string id="aom_lord_D13_2_name" text="{=aom_lord_D13_2_name}Ghûlbag" />
+	<string id="aom_lord_D13_3_name" text="{=aom_lord_D13_3_name}Rûkmash" />
+	<string id="aom_lord_D13_4_name" text="{=aom_lord_D13_4_name}Throzgûr" />
+	<string id="aom_lord_D13_5_name" text="{=aom_lord_D13_5_name}Bûlzag" />
+	<string id="aom_lord_D13_6_name" text="{=aom_lord_D13_6_name}Mhargza" />
+	<string id="aom_lord_D13_7_name" text="{=aom_lord_D13_7_name}Ghûlna" />
+	<string id="aom_lord_D13_8_name" text="{=aom_lord_D13_8_name}Râzgha" />
+	<string id="aom_lord_D13_9_name" text="{=aom_lord_D13_9_name}Bûlzna" />
+	<string id="aom_lord_D14_1_name" text="{=aom_lord_D14_1_name}Nûrghak" />
+	<string id="aom_lord_D14_2_name" text="{=aom_lord_D14_2_name}Slagthûm" />
+	<string id="aom_lord_D14_3_name" text="{=aom_lord_D14_3_name}Hrûkdan" />
+	<string id="aom_lord_D14_4_name" text="{=aom_lord_D14_4_name}Mazgûth" />
+	<string id="aom_lord_D14_5_name" text="{=aom_lord_D14_5_name}Throzga" />
+	<string id="aom_lord_D14_6_name" text="{=aom_lord_D14_6_name}Uzghla" />
+	<string id="aom_lord_D14_7_name" text="{=aom_lord_D14_7_name}Lûkzha" />
+	<string id="aom_lord_D15_1_name" text="{=aom_lord_D15_1_name}Olghûr" />
+	<string id="aom_lord_D15_2_name" text="{=aom_lord_D15_2_name}Gûthrak" />
+	<string id="aom_lord_D15_3_name" text="{=aom_lord_D15_3_name}Zhâgmor" />
+	<string id="aom_lord_D15_4_name" text="{=aom_lord_D15_4_name}Drûbnash" />
+	<string id="aom_lord_D15_5_name" text="{=aom_lord_D15_5_name}Vrâgna" />
+	<string id="aom_lord_D15_6_name" text="{=aom_lord_D15_6_name}Dhûrza" />
+	<string id="aom_lord_D1_10_name" text="{=aom_lord_D1_10_name}Narsha" />
+	<string id="aom_lord_D1_2_name" text="{=aom_lord_D1_2_name}Thrangul" />
+	<string id="aom_lord_D1_3_name" text="{=aom_lord_D1_3_name}Morgulash" />
+	<string id="aom_lord_D1_4_name" text="{=aom_lord_D1_4_name}Drazgor" />
+	<string id="aom_lord_D1_5_name" text="{=aom_lord_D1_5_name}Zarkash" />
+	<string id="aom_lord_D1_6_name" text="{=aom_lord_D1_6_name}Gorzag" />
+	<string id="aom_lord_D1_7_name" text="{=aom_lord_D1_7_name}Ulthrak" />
+	<string id="aom_lord_D1_8_name" text="{=aom_lord_D1_8_name}Vorthak" />
+	<string id="aom_lord_D1_9_name" text="{=aom_lord_D1_9_name}Thrulza" />
+	<string id="aom_lord_D2_10_name" text="{=aom_lord_D2_10_name}Durzha" />
+	<string id="aom_lord_D2_1_name" text="{=aom_lord_D2_1_name}Narzugh" />
+	<string id="aom_lord_D2_2_name" text="{=aom_lord_D2_2_name}Durkar" />
+	<string id="aom_lord_D2_3_name" text="{=aom_lord_D2_3_name}Thrargol" />
+	<string id="aom_lord_D2_4_name" text="{=aom_lord_D2_4_name}Kazrag" />
+	<string id="aom_lord_D2_5_name" text="{=aom_lord_D2_5_name}Zorgrul" />
+	<string id="aom_lord_D2_6_name" text="{=aom_lord_D2_6_name}Morzag" />
+	<string id="aom_lord_D2_7_name" text="{=aom_lord_D2_7_name}Druzhak" />
+	<string id="aom_lord_D2_8_name" text="{=aom_lord_D2_8_name}Grasha" />
+	<string id="aom_lord_D2_9_name" text="{=aom_lord_D2_9_name}Kzha" />
+	<string id="aom_lord_D3_10_name" text="{=aom_lord_D3_10_name}Thalka" />
+	<string id="aom_lord_D3_1_name" text="{=aom_lord_D3_1_name}Lorgath" />
+	<string id="aom_lord_D3_2_name" text="{=aom_lord_D3_2_name}Nargrash" />
+	<string id="aom_lord_D3_3_name" text="{=aom_lord_D3_3_name}Urzok" />
+	<string id="aom_lord_D3_4_name" text="{=aom_lord_D3_4_name}Vorzul" />
+	<string id="aom_lord_D3_5_name" text="{=aom_lord_D3_5_name}Gralzuk" />
+	<string id="aom_lord_D3_6_name" text="{=aom_lord_D3_6_name}Durmorg" />
+	<string id="aom_lord_D3_7_name" text="{=aom_lord_D3_7_name}Thorzag" />
+	<string id="aom_lord_D3_8_name" text="{=aom_lord_D3_8_name}Krozar" />
+	<string id="aom_lord_D3_9_name" text="{=aom_lord_D3_9_name}Zargra" />
+	<string id="aom_lord_D4_10_name" text="{=aom_lord_D4_10_name}Vorzul" />
+	<string id="aom_lord_D4_1_name" text="{=aom_lord_D4_1_name}Urzara" />
+	<string id="aom_lord_D4_2_name" text="{=aom_lord_D4_2_name}Druznia" />
+	<string id="aom_lord_D4_3_name" text="{=aom_lord_D4_3_name}Vorgria" />
+	<string id="aom_lord_D4_4_name" text="{=aom_lord_D4_4_name}Thrulzia" />
+	<string id="aom_lord_D4_5_name" text="{=aom_lord_D4_5_name}Zulgora" />
+	<string id="aom_lord_D4_6_name" text="{=aom_lord_D4_6_name}Narzia" />
+	<string id="aom_lord_D4_7_name" text="{=aom_lord_D4_7_name}Kazria" />
+	<string id="aom_lord_D4_8_name" text="{=aom_lord_D4_8_name}Gralzia" />
+	<string id="aom_lord_D4_9_name" text="{=aom_lord_D4_9_name}Urzok" />
+	<string id="aom_lord_D5_10_name" text="{=aom_lord_D5_10_name}Ulzra" />
+	<string id="aom_lord_D5_1_name" text="{=aom_lord_D5_1_name}Throrgash" />
+	<string id="aom_lord_D5_2_name" text="{=aom_lord_D5_2_name}Gorvash" />
+	<string id="aom_lord_D5_3_name" text="{=aom_lord_D5_3_name}Narduk" />
+	<string id="aom_lord_D5_4_name" text="{=aom_lord_D5_4_name}Zulgor" />
+	<string id="aom_lord_D5_5_name" text="{=aom_lord_D5_5_name}Dulruk" />
+	<string id="aom_lord_D5_6_name" text="{=aom_lord_D5_6_name}Thrugash" />
+	<string id="aom_lord_D5_7_name" text="{=aom_lord_D5_7_name}Kargul" />
+	<string id="aom_lord_D5_8_name" text="{=aom_lord_D5_8_name}Ulzar" />
+	<string id="aom_lord_D5_9_name" text="{=aom_lord_D5_9_name}Morgra" />
+	<string id="aom_lord_D6_10_name" text="{=aom_lord_D6_10_name}Kazla" />
+	<string id="aom_lord_D6_1_name" text="{=aom_lord_D6_1_name}Thrurg" />
+	<string id="aom_lord_D6_2_name" text="{=aom_lord_D6_2_name}Zarlug" />
+	<string id="aom_lord_D6_3_name" text="{=aom_lord_D6_3_name}Muzrak" />
+	<string id="aom_lord_D6_4_name" text="{=aom_lord_D6_4_name}Kaznia" />
+	<string id="aom_lord_D6_5_name" text="{=aom_lord_D6_5_name}Lurzia" />
+	<string id="aom_lord_D6_6_name" text="{=aom_lord_D6_6_name}Durla" />
+	<string id="aom_lord_D6_7_name" text="{=aom_lord_D6_7_name}Gralnia" />
+	<string id="aom_lord_D6_8_name" text="{=aom_lord_D6_8_name}Thalka" />
+	<string id="aom_lord_D6_9_name" text="{=aom_lord_D6_9_name}Vorla" />
+	<string id="aom_lord_D7_10_name" text="{=aom_lord_D7_10_name}Vrûzga" />
+	<string id="aom_lord_D7_1_name" text="{=aom_lord_D7_1_name}Lugmor" />
+	<string id="aom_lord_D7_2_name" text="{=aom_lord_D7_2_name}Vrûkash" />
+	<string id="aom_lord_D7_3_name" text="{=aom_lord_D7_3_name}Druzgûl" />
+	<string id="aom_lord_D7_4_name" text="{=aom_lord_D7_4_name}Throgma" />
+	<string id="aom_lord_D7_5_name" text="{=aom_lord_D7_5_name}Bûrzghash" />
+	<string id="aom_lord_D7_6_name" text="{=aom_lord_D7_6_name}Ghâshnak" />
+	<string id="aom_lord_D7_7_name" text="{=aom_lord_D7_7_name}Mwhazga" />
+	<string id="aom_lord_D7_8_name" text="{=aom_lord_D7_8_name}Skûrla" />
+	<string id="aom_lord_D7_9_name" text="{=aom_lord_D7_9_name}Ghûrnia" />
+	<string id="aom_lord_D8_1_name" text="{=aom_lord_D8_1_name}Skûlgar" />
+	<string id="aom_lord_D8_2_name" text="{=aom_lord_D8_2_name}Morbhûl" />
+	<string id="aom_lord_D8_3_name" text="{=aom_lord_D8_3_name}Rhâzgar" />
+	<string id="aom_lord_D8_4_name" text="{=aom_lord_D8_4_name}Uzgûth" />
+	<string id="aom_lord_D8_5_name" text="{=aom_lord_D8_5_name}Mauthak" />
+	<string id="aom_lord_D8_6_name" text="{=aom_lord_D8_6_name}Naghza" />
+	<string id="aom_lord_D8_7_name" text="{=aom_lord_D8_7_name}Dûrnia" />
+	<string id="aom_lord_D8_8_name" text="{=aom_lord_D8_8_name}Lûrgha" />
+	<string id="aom_lord_D8_9_name" text="{=aom_lord_D8_9_name}Thûzga" />
+	<string id="aom_lord_D9_1_name" text="{=aom_lord_D9_1_name}Naltûr" />
+	<string id="aom_lord_D9_2_name" text="{=aom_lord_D9_2_name}Grishûl" />
+	<string id="aom_lord_D9_3_name" text="{=aom_lord_D9_3_name}Hlakûm" />
+	<string id="aom_lord_D9_4_name" text="{=aom_lord_D9_4_name}Zûrghan" />
+	<string id="aom_lord_D9_5_name" text="{=aom_lord_D9_5_name}Dûlmash" />
+	<string id="aom_lord_D9_6_name" text="{=aom_lord_D9_6_name}Morgza" />
+	<string id="aom_lord_D9_7_name" text="{=aom_lord_D9_7_name}Skâlna" />
+	<string id="aom_lord_D9_8_name" text="{=aom_lord_D9_8_name}Brûzha" />
+	<string id="aom_lord_E1_11_name" text="{=aom_lord_E1_11_name}Thris" />
+	<string id="aom_lord_E1_1_name" text="{=aom_lord_E1_1_name}Dáin II Ironfoot" />
+	<string id="aom_lord_E1_2_name" text="{=aom_lord_E1_2_name}Thorin Stonehelm" />
+	<string id="aom_lord_E1_3_name" text="{=aom_lord_E1_3_name}Dísa" />
+	<string id="aom_lord_E1_4_name" text="{=aom_lord_E1_4_name}Náin" />
+	<string id="aom_lord_E1_5_name" text="{=aom_lord_E1_5_name}Durin" />
+	<string id="aom_lord_E1_6_name" text="{=aom_lord_E1_6_name}Fin" />
+	<string id="aom_lord_E2_11_name" text="{=aom_lord_E2_11_name}Dworin" />
+	<string id="aom_lord_E2_1_name" text="{=aom_lord_E2_1_name}Náth" />
+	<string id="aom_lord_E2_2_name" text="{=aom_lord_E2_2_name}Iridi" />
+	<string id="aom_lord_E2_3_name" text="{=aom_lord_E2_3_name}Rúni" />
+	<string id="aom_lord_E2_4_name" text="{=aom_lord_E2_4_name}Lómi" />
+	<string id="aom_lord_E3_11_name" text="{=aom_lord_E3_11_name}Druin" />
+	<string id="aom_lord_E3_1_name" text="{=aom_lord_E3_1_name}Gárjan" />
+	<string id="aom_lord_E3_2_name" text="{=aom_lord_E3_2_name}Thálfi" />
+	<string id="aom_lord_E3_3_name" text="{=aom_lord_E3_3_name}Imák" />
+	<string id="aom_lord_E3_4_name" text="{=aom_lord_E3_4_name}Níli" />
+	<string id="aom_lord_E3_5_name" text="{=aom_lord_E3_5_name}Mary" />
+	<string id="aom_lord_E4_11_name" text="{=aom_lord_E4_11_name}Ôrn" />
+	<string id="aom_lord_E4_1_name" text="{=aom_lord_E4_1_name}Nár" />
+	<string id="aom_lord_E4_2_name" text="{=aom_lord_E4_2_name}Tíli" />
+	<string id="aom_lord_E4_3_name" text="{=aom_lord_E4_3_name}Nali" />
+	<string id="aom_lord_E4_4_name" text="{=aom_lord_E4_4_name}Táli" />
+	<string id="aom_lord_E5_11_name" text="{=aom_lord_E5_11_name}Thélor" />
+	<string id="aom_lord_E5_1_name" text="{=aom_lord_E5_1_name}Górli" />
+	<string id="aom_lord_E5_2_name" text="{=aom_lord_E5_2_name}Girda" />
+	<string id="aom_lord_E5_3_name" text="{=aom_lord_E5_3_name}Gaín" />
+	<string id="aom_lord_E5_4_name" text="{=aom_lord_E5_4_name}Frar" />
+	<string id="aom_lord_E5_5_name" text="{=aom_lord_E5_5_name}Frerin" />
+	<string id="aom_lord_E6_11_name" text="{=aom_lord_E6_11_name}Thrân" />
+	<string id="aom_lord_E6_1_name" text="{=aom_lord_E6_1_name}Flói" />
+	<string id="aom_lord_E6_2_name" text="{=aom_lord_E6_2_name}Dráli" />
+	<string id="aom_lord_E6_3_name" text="{=aom_lord_E6_3_name}Flási" />
+	<string id="aom_lord_E6_4_name" text="{=aom_lord_E6_4_name}Idrún" />
+	<string id="aom_lord_E7_11_name" text="{=aom_lord_E7_11_name}Thália" />
+	<string id="aom_lord_E7_1_name" text="{=aom_lord_E7_1_name}Náran" />
+	<string id="aom_lord_EW_10_name" text="{=aom_lord_EW_10_name}Uinilme" />
+	<string id="aom_lord_EW_11_name" text="{=aom_lord_EW_11_name}Eldacar" />
+	<string id="aom_lord_EW_12_name" text="{=aom_lord_EW_12_name}Melyanna" />
+	<string id="aom_lord_EW_13_name" text="{=aom_lord_EW_13_name}Istion" />
+	<string id="aom_lord_EW_14_1_name" text="{=aom_lord_EW_14_1_name}Silmariel" />
+	<string id="aom_lord_EW_14_2_name" text="{=aom_lord_EW_14_2_name}Nimethil" />
+	<string id="aom_lord_EW_14_3_name" text="{=aom_lord_EW_14_3_name}Rúmen" />
+	<string id="aom_lord_EW_14_name" text="{=aom_lord_EW_14_name}Vorondir" />
+	<string id="aom_lord_EW_15_name" text="{=aom_lord_EW_15_name}Morwen" />
+	<string id="aom_lord_EW_16_name" text="{=aom_lord_EW_16_name}Saenes" />
+	<string id="aom_lord_EW_17_name" text="{=aom_lord_EW_17_name}Estelien" />
+	<string id="aom_lord_EW_18_name" text="{=aom_lord_EW_18_name}Filigod" />
+	<string id="aom_lord_EW_19_name" text="{=aom_lord_EW_19_name}Falandur" />
+	<string id="aom_lord_EW_1_1_name" text="{=aom_lord_EW_1_1_name}Ciriel" />
+	<string id="aom_lord_EW_1_2_name" text="{=aom_lord_EW_1_2_name}Pelamir" />
+	<string id="aom_lord_EW_1_3_name" text="{=aom_lord_EW_1_3_name}Dorwen" />
+	<string id="aom_lord_EW_1_4_name" text="{=aom_lord_EW_1_4_name}Sarnion" />
+	<string id="aom_lord_EW_1_name" text="{=aom_lord_EW_1_name}Amandir" />
+	<string id="aom_lord_EW_20_name" text="{=aom_lord_EW_20_name}Balatar" />
+	<string id="aom_lord_EW_21_name" text="{=aom_lord_EW_21_name}Belegorn" />
+	<string id="aom_lord_EW_22_name" text="{=aom_lord_EW_22_name}Nessanie" />
+	<string id="aom_lord_EW_23_name" text="{=aom_lord_EW_23_name}Anaratan" />
+	<string id="aom_lord_EW_24_name" text="{=aom_lord_EW_24_name}Belwen" />
+	<string id="aom_lord_EW_25_name" text="{=aom_lord_EW_25_name}Argeleb" />
+	<string id="aom_lord_EW_26_name" text="{=aom_lord_EW_26_name}Berenor" />
+	<string id="aom_lord_EW_27_name" text="{=aom_lord_EW_27_name}Arniel" />
+	<string id="aom_lord_EW_28_name" text="{=aom_lord_EW_28_name}Emeldir" />
+	<string id="aom_lord_EW_2_name" text="{=aom_lord_EW_2_name}Virinar" />
+	<string id="aom_lord_EW_3_name" text="{=aom_lord_EW_3_name}Virinehtar" />
+	<string id="aom_lord_EW_4_name" text="{=aom_lord_EW_4_name}Valandur" />
+	<string id="aom_lord_EW_5_name" text="{=aom_lord_EW_5_name}Valaryna" />
+	<string id="aom_lord_EW_6_1_name" text="{=aom_lord_EW_6_1_name}Falathwen" />
+	<string id="aom_lord_EW_6_2_name" text="{=aom_lord_EW_6_2_name}Orweniel" />
+	<string id="aom_lord_EW_6_3_name" text="{=aom_lord_EW_6_3_name}Talendir" />
+	<string id="aom_lord_EW_6_name" text="{=aom_lord_EW_6_name}Orondir" />
+	<string id="aom_lord_EW_7_name" text="{=aom_lord_EW_7_name}Dorien" />
+	<string id="aom_lord_EW_8_name" text="{=aom_lord_EW_8_name}Beregar" />
+	<string id="aom_lord_EW_9_name" text="{=aom_lord_EW_9_name}Thingol" />
+	<string id="aom_lord_G10_10_name" text="{=aom_lord_G10_10_name}Maghra" />
+	<string id="aom_lord_G10_1_name" text="{=aom_lord_G10_1_name}Buzgra" />
+	<string id="aom_lord_G10_2_name" text="{=aom_lord_G10_2_name}Hrakgar" />
+	<string id="aom_lord_G10_3_name" text="{=aom_lord_G10_3_name}Molghor" />
+	<string id="aom_lord_G10_4_name" text="{=aom_lord_G10_4_name}Snagduf" />
+	<string id="aom_lord_G10_5_name" text="{=aom_lord_G10_5_name}Wruk" />
+	<string id="aom_lord_G10_6_name" text="{=aom_lord_G10_6_name}Drubog" />
+	<string id="aom_lord_G10_7_name" text="{=aom_lord_G10_7_name}Zogra" />
+	<string id="aom_lord_G10_8_name" text="{=aom_lord_G10_8_name}Lakhza" />
+	<string id="aom_lord_G10_9_name" text="{=aom_lord_G10_9_name}Urzga" />
+	<string id="aom_lord_G1_10_name" text="{=aom_lord_G1_10_name}Thurka" />
+	<string id="aom_lord_G1_1_name" text="{=aom_lord_G1_1_name}Azgar" />
+	<string id="aom_lord_G1_2_name" text="{=aom_lord_G1_2_name}Drozmak" />
+	<string id="aom_lord_G1_3_name" text="{=aom_lord_G1_3_name}Kargoth" />
+	<string id="aom_lord_G1_4_name" text="{=aom_lord_G1_4_name}Thrazak" />
+	<string id="aom_lord_G1_5_name" text="{=aom_lord_G1_5_name}Ulgrim" />
+	<string id="aom_lord_G1_6_name" text="{=aom_lord_G1_6_name}Zorgath" />
+	<string id="aom_lord_G1_7_name" text="{=aom_lord_G1_7_name}Gragor" />
+	<string id="aom_lord_G1_8_name" text="{=aom_lord_G1_8_name}Durmash" />
+	<string id="aom_lord_G1_9_name" text="{=aom_lord_G1_9_name}Gralza" />
+	<string id="aom_lord_G2_10_name" text="{=aom_lord_G2_10_name}Vorzha" />
+	<string id="aom_lord_G2_1_name" text="{=aom_lord_G2_1_name}Vorgoth" />
+	<string id="aom_lord_G2_2_name" text="{=aom_lord_G2_2_name}Mugzun" />
+	<string id="aom_lord_G2_3_name" text="{=aom_lord_G2_3_name}Lurzok" />
+	<string id="aom_lord_G2_4_name" text="{=aom_lord_G2_4_name}Zorgha" />
+	<string id="aom_lord_G2_5_name" text="{=aom_lord_G2_5_name}Thrumak" />
+	<string id="aom_lord_G2_6_name" text="{=aom_lord_G2_6_name}Nargoth" />
+	<string id="aom_lord_G2_7_name" text="{=aom_lord_G2_7_name}Borzak" />
+	<string id="aom_lord_G2_8_name" text="{=aom_lord_G2_8_name}Druznar" />
+	<string id="aom_lord_G2_9_name" text="{=aom_lord_G2_9_name}Zulgara" />
+	<string id="aom_lord_G3_10_name" text="{=aom_lord_G3_10_name}Nargra" />
+	<string id="aom_lord_G3_1_name" text="{=aom_lord_G3_1_name}Kragloth" />
+	<string id="aom_lord_G3_2_name" text="{=aom_lord_G3_2_name}Vurzag" />
+	<string id="aom_lord_G3_3_name" text="{=aom_lord_G3_3_name}Narlog" />
+	<string id="aom_lord_G3_4_name" text="{=aom_lord_G3_4_name}Thalrug" />
+	<string id="aom_lord_G3_5_name" text="{=aom_lord_G3_5_name}Urzul" />
+	<string id="aom_lord_G3_6_name" text="{=aom_lord_G3_6_name}Gralthak" />
+	<string id="aom_lord_G3_7_name" text="{=aom_lord_G3_7_name}Vorgrim" />
+	<string id="aom_lord_G3_8_name" text="{=aom_lord_G3_8_name}Mazkor" />
+	<string id="aom_lord_G3_9_name" text="{=aom_lord_G3_9_name}Durga" />
+	<string id="aom_lord_G4_10_name" text="{=aom_lord_G4_10_name}Muzra" />
+	<string id="aom_lord_G4_1_name" text="{=aom_lord_G4_1_name}Bolgath" />
+	<string id="aom_lord_G4_2_name" text="{=aom_lord_G4_2_name}Lurthak" />
+	<string id="aom_lord_G4_3_name" text="{=aom_lord_G4_3_name}Thrugol" />
+	<string id="aom_lord_G4_4_name" text="{=aom_lord_G4_4_name}Narzuk" />
+	<string id="aom_lord_G4_5_name" text="{=aom_lord_G4_5_name}Kruznor" />
+	<string id="aom_lord_G4_6_name" text="{=aom_lord_G4_6_name}Thrazgul" />
+	<string id="aom_lord_G4_7_name" text="{=aom_lord_G4_7_name}Durzak" />
+	<string id="aom_lord_G4_8_name" text="{=aom_lord_G4_8_name}Zulgoth" />
+	<string id="aom_lord_G4_9_name" text="{=aom_lord_G4_9_name}Thrulza" />
+	<string id="aom_lord_G5_10_name" text="{=aom_lord_G5_10_name}Ulzara" />
+	<string id="aom_lord_G5_1_name" text="{=aom_lord_G5_1_name}Vorzak" />
+	<string id="aom_lord_G5_2_name" text="{=aom_lord_G5_2_name}Krogar" />
+	<string id="aom_lord_G5_3_name" text="{=aom_lord_G5_3_name}Thrunak" />
+	<string id="aom_lord_G5_4_name" text="{=aom_lord_G5_4_name}Grazar" />
+	<string id="aom_lord_G5_5_name" text="{=aom_lord_G5_5_name}Narzog" />
+	<string id="aom_lord_G5_6_name" text="{=aom_lord_G5_6_name}Ulgrim" />
+	<string id="aom_lord_G5_7_name" text="{=aom_lord_G5_7_name}Vurlak" />
+	<string id="aom_lord_G5_8_name" text="{=aom_lord_G5_8_name}Borzak" />
+	<string id="aom_lord_G5_9_name" text="{=aom_lord_G5_9_name}Kralza" />
+	<string id="aom_lord_G6_10_name" text="{=aom_lord_G6_10_name}Ghaaz" />
+	<string id="aom_lord_G6_1_name" text="{=aom_lord_G6_1_name}Grok" />
+	<string id="aom_lord_G6_2_name" text="{=aom_lord_G6_2_name}Muzgash" />
+	<string id="aom_lord_G6_3_name" text="{=aom_lord_G6_3_name}Gorbag" />
+	<string id="aom_lord_G6_4_name" text="{=aom_lord_G6_4_name}Shagrat" />
+	<string id="aom_lord_G6_5_name" text="{=aom_lord_G6_5_name}Ufthak" />
+	<string id="aom_lord_G6_6_name" text="{=aom_lord_G6_6_name}Radbug" />
+	<string id="aom_lord_G6_7_name" text="{=aom_lord_G6_7_name}Gorza" />
+	<string id="aom_lord_G6_8_name" text="{=aom_lord_G6_8_name}Murza" />
+	<string id="aom_lord_G6_9_name" text="{=aom_lord_G6_9_name}Shelka" />
+	<string id="aom_lord_G7_10_name" text="{=aom_lord_G7_10_name}Skarla" />
+	<string id="aom_lord_G7_1_name" text="{=aom_lord_G7_1_name}Mauhur" />
+	<string id="aom_lord_G7_2_name" text="{=aom_lord_G7_2_name}Uglûk" />
+	<string id="aom_lord_G7_3_name" text="{=aom_lord_G7_3_name}Yazneg" />
+	<string id="aom_lord_G7_4_name" text="{=aom_lord_G7_4_name}Brogg" />
+	<string id="aom_lord_G7_5_name" text="{=aom_lord_G7_5_name}Durbuz" />
+	<string id="aom_lord_G7_6_name" text="{=aom_lord_G7_6_name}Hrog" />
+	<string id="aom_lord_G7_7_name" text="{=aom_lord_G7_7_name}Brakka" />
+	<string id="aom_lord_G7_8_name" text="{=aom_lord_G7_8_name}Uzdra" />
+	<string id="aom_lord_G7_9_name" text="{=aom_lord_G7_9_name}Lurgza" />
+	<string id="aom_lord_G8_10_name" text="{=aom_lord_G8_10_name}Druzga" />
+	<string id="aom_lord_G8_1_name" text="{=aom_lord_G8_1_name}Mogdar" />
+	<string id="aom_lord_G8_2_name" text="{=aom_lord_G8_2_name}Skraat" />
+	<string id="aom_lord_G8_3_name" text="{=aom_lord_G8_3_name}Vrasku" />
+	<string id="aom_lord_G8_4_name" text="{=aom_lord_G8_4_name}Lagduf" />
+	<string id="aom_lord_G8_5_name" text="{=aom_lord_G8_5_name}Muzgur" />
+	<string id="aom_lord_G8_6_name" text="{=aom_lord_G8_6_name}Orbug" />
+	<string id="aom_lord_G8_7_name" text="{=aom_lord_G8_7_name}Vroka" />
+	<string id="aom_lord_G8_8_name" text="{=aom_lord_G8_8_name}Murga" />
+	<string id="aom_lord_G8_9_name" text="{=aom_lord_G8_9_name}Throga" />
+	<string id="aom_lord_G9_10_name" text="{=aom_lord_G9_10_name}Ushka" />
+	<string id="aom_lord_G9_1_name" text="{=aom_lord_G9_1_name}Zogdush" />
+	<string id="aom_lord_G9_2_name" text="{=aom_lord_G9_2_name}Karash" />
+	<string id="aom_lord_G9_3_name" text="{=aom_lord_G9_3_name}Dushgar" />
+	<string id="aom_lord_G9_4_name" text="{=aom_lord_G9_4_name}Gribnak" />
+	<string id="aom_lord_G9_5_name" text="{=aom_lord_G9_5_name}Rukhash" />
+	<string id="aom_lord_G9_6_name" text="{=aom_lord_G9_6_name}Targ" />
+	<string id="aom_lord_G9_7_name" text="{=aom_lord_G9_7_name}Nazga" />
+	<string id="aom_lord_G9_8_name" text="{=aom_lord_G9_8_name}Bolga" />
+	<string id="aom_lord_G9_9_name" text="{=aom_lord_G9_9_name}Grisha" />
+	<string id="aom_lord_GB1_1_name" text="{=aom_lord_GB1_1_name}Muzgash" />
+	<string id="aom_lord_GB1_2_name" text="{=aom_lord_GB1_2_name}Lugdush" />
+	<string id="aom_lord_GB1_3_name" text="{=aom_lord_GB1_3_name}Radbug" />
+	<string id="aom_lord_GB1_4_name" text="{=aom_lord_GB1_4_name}Gorbag" />
+	<string id="aom_lord_GB1_5_name" text="{=aom_lord_GB1_5_name}Shagrat" />
+	<string id="aom_lord_GB1_6_name" text="{=aom_lord_GB1_6_name}Ufthak" />
+	<string id="aom_lord_GB1_7_name" text="{=aom_lord_GB1_7_name}Hagza" />
+	<string id="aom_lord_GB1_8_name" text="{=aom_lord_GB1_8_name}Mogra" />
+	<string id="aom_lord_GB2_1_name" text="{=aom_lord_GB2_1_name}Ufthak" />
+	<string id="aom_lord_GB2_2_name" text="{=aom_lord_GB2_2_name}Lagduf" />
+	<string id="aom_lord_GB2_3_name" text="{=aom_lord_GB2_3_name}Orcobal" />
+	<string id="aom_lord_GB2_4_name" text="{=aom_lord_GB2_4_name}Yazneg" />
+	<string id="aom_lord_GB2_5_name" text="{=aom_lord_GB2_5_name}Narzug" />
+	<string id="aom_lord_GB2_6_name" text="{=aom_lord_GB2_6_name}Grukhash" />
+	<string id="aom_lord_GB2_7_name" text="{=aom_lord_GB2_7_name}Gralza" />
+	<string id="aom_lord_GB2_8_name" text="{=aom_lord_GB2_8_name}Shelza" />
+	<string id="aom_lord_GB3_1_name" text="{=aom_lord_GB3_1_name}Grukhash" />
+	<string id="aom_lord_GB3_2_name" text="{=aom_lord_GB3_2_name}Mauhur" />
+	<string id="aom_lord_GB3_3_name" text="{=aom_lord_GB3_3_name}Uglûk" />
+	<string id="aom_lord_GB3_4_name" text="{=aom_lord_GB3_4_name}Bûrzum" />
+	<string id="aom_lord_GB3_5_name" text="{=aom_lord_GB3_5_name}Throkmaw" />
+	<string id="aom_lord_GB3_6_name" text="{=aom_lord_GB3_6_name}Skarsnik" />
+	<string id="aom_lord_GB3_7_name" text="{=aom_lord_GB3_7_name}Vugza" />
+	<string id="aom_lord_GB3_8_name" text="{=aom_lord_GB3_8_name}Skralga" />
+	<string id="aom_lord_GB4_1_name" text="{=aom_lord_GB4_1_name}Skarsnik" />
+	<string id="aom_lord_GB4_2_name" text="{=aom_lord_GB4_2_name}Gnashrak" />
+	<string id="aom_lord_GB4_3_name" text="{=aom_lord_GB4_3_name}Vrakthar" />
+	<string id="aom_lord_GB4_4_name" text="{=aom_lord_GB4_4_name}Dushgar" />
+	<string id="aom_lord_GB4_5_name" text="{=aom_lord_GB4_5_name}Krimpük" />
+	<string id="aom_lord_GB4_6_name" text="{=aom_lord_GB4_6_name}Gashnar" />
+	<string id="aom_lord_GB4_7_name" text="{=aom_lord_GB4_7_name}Lazgha" />
+	<string id="aom_lord_GB4_8_name" text="{=aom_lord_GB4_8_name}Burza" />
+	<string id="aom_lord_GB5_1_name" text="{=aom_lord_GB5_1_name}Gashnar" />
+	<string id="aom_lord_GB5_2_name" text="{=aom_lord_GB5_2_name}Morgrub" />
+	<string id="aom_lord_GB5_3_name" text="{=aom_lord_GB5_3_name}Snagbut" />
+	<string id="aom_lord_GB5_4_name" text="{=aom_lord_GB5_4_name}Hrakdush" />
+	<string id="aom_lord_GB5_5_name" text="{=aom_lord_GB5_5_name}Boldog" />
+	<string id="aom_lord_GB5_6_name" text="{=aom_lord_GB5_6_name}Lugbol" />
+	<string id="aom_lord_GB5_7_name" text="{=aom_lord_GB5_7_name}Brakza" />
+	<string id="aom_lord_GB5_8_name" text="{=aom_lord_GB5_8_name}Gnarla" />
+	<string id="aom_lord_I1_10_name" text="{=aom_lord_I1_10_name}Krazdra" />
+	<string id="aom_lord_I1_11_name" text="{=aom_lord_I1_11_name}Uglúk Child" />
+	<string id="aom_lord_I1_13_name" text="{=aom_lord_I1_13_name}Ughasha" />
+	<string id="aom_lord_I1_14_name" text="{=aom_lord_I1_14_name}Bolga" />
+	<string id="aom_lord_I1_15_name" text="{=aom_lord_I1_15_name}Snarla" />
+	<string id="aom_lord_I1_1_name" text="{=aom_lord_I1_1_name}Uglúk, Chieftain of Isengard" />
+	<string id="aom_lord_I1_2_name" text="{=aom_lord_I1_2_name}Zorlag" />
+	<string id="aom_lord_I1_31_name" text="{=aom_lord_I1_31_name}Vrothgar" />
+	<string id="aom_lord_I1_3_name" text="{=aom_lord_I1_3_name}Gurzod, Uruk-hai Armorer" />
+	<string id="aom_lord_I1_4_name" text="{=aom_lord_I1_4_name}Grisnak, Uruk-hai Raider" />
+	<string id="aom_lord_I1_5_name" text="{=aom_lord_I1_5_name}Muzgash, Uruk-hai Berserker Captain" />
+	<string id="aom_lord_I1_6_name" text="{=aom_lord_I1_6_name}Morgash, Uruk-hai Scout Commander" />
+	<string id="aom_lord_I1_7_name" text="{=aom_lord_I1_7_name}Krûklash, Uruk-hai Enforcer" />
+	<string id="aom_lord_I1_8_name" text="{=aom_lord_I1_8_name}Dûshrat, Uruk-hai Champion" />
+	<string id="aom_lord_I1_9_name" text="{=aom_lord_I1_9_name}Gashnak" />
+	<string id="aom_lord_I2_10_name" text="{=aom_lord_I2_10_name}Radzga" />
+	<string id="aom_lord_I2_11_name" text="{=aom_lord_I2_11_name}Mauhúr Child" />
+	<string id="aom_lord_I2_12_name" text="{=aom_lord_I2_12_name}Lugara" />
+	<string id="aom_lord_I2_1_name" text="{=aom_lord_I2_1_name}Mauhúr, Uruk-Hai Warlord" />
+	<string id="aom_lord_I2_2_name" text="{=aom_lord_I2_2_name}Lugburz, Uruk-hai Scoutmaster" />
+	<string id="aom_lord_I2_31_name" text="{=aom_lord_I2_31_name}Gurzod" />
+	<string id="aom_lord_I2_3_name" text="{=aom_lord_I2_3_name}Sharku, Warg-Rider Commander" />
+	<string id="aom_lord_I2_4_name" text="{=aom_lord_I2_4_name}Shank, Uruk-hai Tracker" />
+	<string id="aom_lord_I2_5_name" text="{=aom_lord_I2_5_name}Urbash, Uruk-hai Slayer" />
+	<string id="aom_lord_I2_6_name" text="{=aom_lord_I2_6_name}Ufthak, Uruk-hai Marauder" />
+	<string id="aom_lord_I2_7_name" text="{=aom_lord_I2_7_name}Gragnor, Uruk-hai Hunter" />
+	<string id="aom_lord_I2_8_name" text="{=aom_lord_I2_8_name}Narzug, Uruk-hai Pack Leader" />
+	<string id="aom_lord_I2_9_name" text="{=aom_lord_I2_9_name}Muzgura" />
+	<string id="aom_lord_I3_11_name" text="{=aom_lord_I3_11_name}Lugdush Child" />
+	<string id="aom_lord_I3_1_name" text="{=aom_lord_I3_1_name}Lugdush" />
+	<string id="aom_lord_I3_21_name" text="{=aom_lord_I3_21_name}Rukthar" />
+	<string id="aom_lord_I3_2_name" text="{=aom_lord_I3_2_name}Korgul, Uruk-hai Lieutenant" />
+	<string id="aom_lord_I3_31_name" text="{=aom_lord_I3_31_name}Bruzgash" />
+	<string id="aom_lord_I3_3_name" text="{=aom_lord_I3_3_name}Tharzog, Uruk-hai Battlemaster" />
+	<string id="aom_lord_I3_4_name" text="{=aom_lord_I3_4_name}Sharlug" />
+	<string id="aom_lord_I3_5_name" text="{=aom_lord_I3_5_name}Grisha" />
+	<string id="aom_lord_I4_11_name" text="{=aom_lord_I4_11_name}Lurtz Child" />
+	<string id="aom_lord_I4_1_name" text="{=aom_lord_I4_1_name}Lurtz, Uruk-hai Commander" />
+	<string id="aom_lord_I4_21_name" text="{=aom_lord_I4_21_name}Zorzod" />
+	<string id="aom_lord_I4_2_name" text="{=aom_lord_I4_2_name}Zargoth, Uruk-hai Siege-master" />
+	<string id="aom_lord_I4_31_name" text="{=aom_lord_I4_31_name}Drûgash" />
+	<string id="aom_lord_I4_3_name" text="{=aom_lord_I4_3_name}Thrakgul, Uruk-hai Overseer" />
+	<string id="aom_lord_I4_41_name" text="{=aom_lord_I4_41_name}Durghash" />
+	<string id="aom_lord_I4_4_name" text="{=aom_lord_I4_4_name}Gorlag, Uruk-hai Forgemaster" />
+	<string id="aom_lord_I4_5_name" text="{=aom_lord_I4_5_name}Thraka" />
+	<string id="aom_lord_L1_1_name" text="{=aom_lord_L1_1_name}Galadriel, Lady of Lothlórien" />
+	<string id="aom_lord_L1_2_name" text="{=aom_lord_L1_2_name}Celeborn, Lord of Lothlórien" />
+	<string id="aom_lord_L1_3_name" text="{=aom_lord_L1_3_name}Galadion" />
+	<string id="aom_lord_L2_1_name" text="{=aom_lord_L2_1_name}Caurmínas" />
+	<string id="aom_lord_L2_2_name" text="{=aom_lord_L2_2_name}Thandirion" />
+	<string id="aom_lord_L2_3_name" text="{=aom_lord_L2_3_name}Baranthir" />
+	<string id="aom_lord_L2_4_name" text="{=aom_lord_L2_4_name}Aeglossen" />
+	<string id="aom_lord_L2_5_name" text="{=aom_lord_L2_5_name}Nimlothiel" />
+	<string id="aom_lord_L3_1_name" text="{=aom_lord_L3_1_name}Malthorn" />
+	<string id="aom_lord_L3_2_name" text="{=aom_lord_L3_2_name}Galuvir" />
+	<string id="aom_lord_L3_3_name" text="{=aom_lord_L3_3_name}Silivren" />
+	<string id="aom_lord_LN1_1_name" text="{=aom_lord_LN1_1_name}Círdan" />
+	<string id="aom_lord_LN1_2_name" text="{=aom_lord_LN1_2_name}Calemir" />
+	<string id="aom_lord_LN1_3_name" text="{=aom_lord_LN1_3_name}Nárdir" />
+	<string id="aom_lord_LN1_4_name" text="{=aom_lord_LN1_4_name}Lhúnedhel" />
+	<string id="aom_lord_LN1_5_name" text="{=aom_lord_LN1_5_name}Nimwen" />
+	<string id="aom_lord_LN1_6_name" text="{=aom_lord_LN1_6_name}Lindis" />
+	<string id="aom_lord_LN2_1_name" text="{=aom_lord_LN2_1_name}Aeglir" />
+	<string id="aom_lord_LN2_2_name" text="{=aom_lord_LN2_2_name}Celebrin" />
+	<string id="aom_lord_LN2_3_name" text="{=aom_lord_LN2_3_name}Edronil" />
+	<string id="aom_lord_LN2_4_name" text="{=aom_lord_LN2_4_name}Nárwen" />
+	<string id="aom_lord_M10_11_name" text="{=aom_lord_M10_11_name}Gulzag" />
+	<string id="aom_lord_M10_1_name" text="{=aom_lord_M10_1_name}Mauhoshat" />
+	<string id="aom_lord_M11_11_name" text="{=aom_lord_M11_11_name}Krogash" />
+	<string id="aom_lord_M11_1_name" text="{=aom_lord_M11_1_name}Maugrukh" />
+	<string id="aom_lord_M12_11_name" text="{=aom_lord_M12_11_name}Uzbag" />
+	<string id="aom_lord_M12_1_name" text="{=aom_lord_M12_1_name}Rûklash" />
+	<string id="aom_lord_M13_11_name" text="{=aom_lord_M13_11_name}Gûdrak" />
+	<string id="aom_lord_M13_12_name" text="{=aom_lord_M13_12_name}Shelgra" />
+	<string id="aom_lord_M13_13_name" text="{=aom_lord_M13_13_name}Brûga" />
+	<string id="aom_lord_M13_14_name" text="{=aom_lord_M13_14_name}Nazgra" />
+	<string id="aom_lord_M13_15_name" text="{=aom_lord_M13_15_name}Ushka" />
+	<string id="aom_lord_M13_1_name" text="{=aom_lord_M13_1_name}Thûrak" />
+	<string id="aom_lord_M13_2_name" text="{=aom_lord_M13_2_name}Grublat" />
+	<string id="aom_lord_M13_3_name" text="{=aom_lord_M13_3_name}Mazgûr" />
+	<string id="aom_lord_M13_4_name" text="{=aom_lord_M13_4_name}Ufthak" />
+	<string id="aom_lord_M13_5_name" text="{=aom_lord_M13_5_name}Lugrod" />
+	<string id="aom_lord_M14_11_name" text="{=aom_lord_M14_11_name}Mâgzûk" />
+	<string id="aom_lord_M14_12_name" text="{=aom_lord_M14_12_name}Vûshka" />
+	<string id="aom_lord_M14_13_name" text="{=aom_lord_M14_13_name}Krimpa" />
+	<string id="aom_lord_M14_14_name" text="{=aom_lord_M14_14_name}Lhakra" />
+	<string id="aom_lord_M14_15_name" text="{=aom_lord_M14_15_name}Grisha" />
+	<string id="aom_lord_M14_1_name" text="{=aom_lord_M14_1_name}Uznash" />
+	<string id="aom_lord_M14_2_name" text="{=aom_lord_M14_2_name}Durbgûl" />
+	<string id="aom_lord_M14_3_name" text="{=aom_lord_M14_3_name}Snagrat" />
+	<string id="aom_lord_M14_4_name" text="{=aom_lord_M14_4_name}Hrakmaw" />
+	<string id="aom_lord_M14_5_name" text="{=aom_lord_M14_5_name}Gorbûz" />
+	<string id="aom_lord_M15_11_name" text="{=aom_lord_M15_11_name}Rûzkhan" />
+	<string id="aom_lord_M15_12_name" text="{=aom_lord_M15_12_name}Yagûl" />
+	<string id="aom_lord_M15_13_name" text="{=aom_lord_M15_13_name}Skraa" />
+	<string id="aom_lord_M15_14_name" text="{=aom_lord_M15_14_name}Murgha" />
+	<string id="aom_lord_M15_15_name" text="{=aom_lord_M15_15_name}Lozka" />
+	<string id="aom_lord_M15_1_name" text="{=aom_lord_M15_1_name}Dûrzan" />
+	<string id="aom_lord_M15_2_name" text="{=aom_lord_M15_2_name}Razhûk" />
+	<string id="aom_lord_M15_3_name" text="{=aom_lord_M15_3_name}Mûzgash" />
+	<string id="aom_lord_M15_4_name" text="{=aom_lord_M15_4_name}Bolgrat" />
+	<string id="aom_lord_M15_5_name" text="{=aom_lord_M15_5_name}Throkka" />
+	<string id="aom_lord_M16_11_name" text="{=aom_lord_M16_11_name}Ushgar" />
+	<string id="aom_lord_M16_1_name" text="{=aom_lord_M16_1_name}Gûlnak" />
+	<string id="aom_lord_M17_11_name" text="{=aom_lord_M17_11_name}Gûltor" />
+	<string id="aom_lord_M17_1_name" text="{=aom_lord_M17_1_name}Thûlnar" />
+	<string id="aom_lord_M18_11_name" text="{=aom_lord_M18_11_name}Lûrtag" />
+	<string id="aom_lord_M18_1_name" text="{=aom_lord_M18_1_name}Kûragh" />
+	<string id="aom_lord_M1_11_name" text="{=aom_lord_M1_11_name}Legolas" />
+	<string id="aom_lord_M1_12_name" text="{=aom_lord_M1_12_name}Calenor" />
+	<string id="aom_lord_M1_1_name" text="{=aom_lord_M1_1_name}Thranduil" />
+	<string id="aom_lord_M1_2_name" text="{=aom_lord_M1_2_name}Lothuial" />
+	<string id="aom_lord_M1_3_name" text="{=aom_lord_M1_3_name}Feren" />
+	<string id="aom_lord_M1_4_name" text="{=aom_lord_M1_4_name}Galion" />
+	<string id="aom_lord_M1_5_name" text="{=aom_lord_M1_5_name}Nimrodel" />
+	<string id="aom_lord_M2_1_name" text="{=aom_lord_M2_1_name}Oropherion" />
+	<string id="aom_lord_M2_2_name" text="{=aom_lord_M2_2_name}Ailinel" />
+	<string id="aom_lord_M2_3_name" text="{=aom_lord_M2_3_name}Beleg" />
+	<string id="aom_lord_M2_4_name" text="{=aom_lord_M2_4_name}Anairë" />
+	<string id="aom_lord_M2_5_name" text="{=aom_lord_M2_5_name}Daeron" />
+	<string id="aom_lord_M3_1_name" text="{=aom_lord_M3_1_name}Taurion" />
+	<string id="aom_lord_M3_2_name" text="{=aom_lord_M3_2_name}Finduilas" />
+	<string id="aom_lord_M3_3_name" text="{=aom_lord_M3_3_name}Haldir" />
+	<string id="aom_lord_M3_4_name" text="{=aom_lord_M3_4_name}Aredhel" />
+	<string id="aom_lord_M4_1_name" text="{=aom_lord_M4_1_name}Galenor" />
+	<string id="aom_lord_M4_2_name" text="{=aom_lord_M4_2_name}Amarië" />
+	<string id="aom_lord_M4_3_name" text="{=aom_lord_M4_3_name}Rumil" />
+	<string id="aom_lord_M4_4_name" text="{=aom_lord_M4_4_name}Nellas" />
+	<string id="aom_lord_M4_5_name" text="{=aom_lord_M4_5_name}Orophin" />
+	<string id="aom_lord_M5_1_name" text="{=aom_lord_M5_1_name}Alenon" />
+	<string id="aom_lord_M5_2_name" text="{=aom_lord_M5_2_name}Calathiel" />
+	<string id="aom_lord_M5_3_name" text="{=aom_lord_M5_3_name}Thalion" />
+	<string id="aom_lord_M5_4_name" text="{=aom_lord_M5_4_name}Arien" />
+	<string id="aom_lord_M6_1_name" text="{=aom_lord_M6_1_name}Iminyar" />
+	<string id="aom_lord_M6_2_name" text="{=aom_lord_M6_2_name}Elbereth" />
+	<string id="aom_lord_M6_3_name" text="{=aom_lord_M6_3_name}Dagnir" />
+	<string id="aom_lord_M6_4_name" text="{=aom_lord_M6_4_name}Arindor" />
+	<string id="aom_lord_M6_5_name" text="{=aom_lord_M6_5_name}Nimrien" />
+	<string id="aom_lord_MM10_10_name" text="{=aom_lord_MM10_10_name}Durza" />
+	<string id="aom_lord_MM10_1_name" text="{=aom_lord_MM10_1_name}Brakghash" />
+	<string id="aom_lord_MM10_2_name" text="{=aom_lord_MM10_2_name}Morznak" />
+	<string id="aom_lord_MM10_3_name" text="{=aom_lord_MM10_3_name}Gashzur" />
+	<string id="aom_lord_MM10_4_name" text="{=aom_lord_MM10_4_name}Druzhak" />
+	<string id="aom_lord_MM10_5_name" text="{=aom_lord_MM10_5_name}Krumbash" />
+	<string id="aom_lord_MM10_6_name" text="{=aom_lord_MM10_6_name}Nargrim" />
+	<string id="aom_lord_MM10_7_name" text="{=aom_lord_MM10_7_name}Hrunza" />
+	<string id="aom_lord_MM10_8_name" text="{=aom_lord_MM10_8_name}Uzga" />
+	<string id="aom_lord_MM10_9_name" text="{=aom_lord_MM10_9_name}Gashka" />
+	<string id="aom_lord_MM11_10_name" text="{=aom_lord_MM11_10_name}Skarza" />
+	<string id="aom_lord_MM11_1_name" text="{=aom_lord_MM11_1_name}Skrunak" />
+	<string id="aom_lord_MM11_2_name" text="{=aom_lord_MM11_2_name}Vughar" />
+	<string id="aom_lord_MM11_3_name" text="{=aom_lord_MM11_3_name}Lazgar" />
+	<string id="aom_lord_MM11_4_name" text="{=aom_lord_MM11_4_name}Hrokmaw" />
+	<string id="aom_lord_MM11_5_name" text="{=aom_lord_MM11_5_name}Buzgar" />
+	<string id="aom_lord_MM11_6_name" text="{=aom_lord_MM11_6_name}Maukrim" />
+	<string id="aom_lord_MM11_7_name" text="{=aom_lord_MM11_7_name}Naghza" />
+	<string id="aom_lord_MM11_8_name" text="{=aom_lord_MM11_8_name}Vrelga" />
+	<string id="aom_lord_MM11_9_name" text="{=aom_lord_MM11_9_name}Hroza" />
+	<string id="aom_lord_MM12_10_name" text="{=aom_lord_MM12_10_name}Gulza" />
+	<string id="aom_lord_MM12_1_name" text="{=aom_lord_MM12_1_name}Throkdush" />
+	<string id="aom_lord_MM12_2_name" text="{=aom_lord_MM12_2_name}Gorash" />
+	<string id="aom_lord_MM12_3_name" text="{=aom_lord_MM12_3_name}Maukhash" />
+	<string id="aom_lord_MM12_4_name" text="{=aom_lord_MM12_4_name}Skarnash" />
+	<string id="aom_lord_MM12_5_name" text="{=aom_lord_MM12_5_name}Throgash" />
+	<string id="aom_lord_MM12_6_name" text="{=aom_lord_MM12_6_name}Lugash" />
+	<string id="aom_lord_MM12_7_name" text="{=aom_lord_MM12_7_name}Lazga" />
+	<string id="aom_lord_MM12_8_name" text="{=aom_lord_MM12_8_name}Brughza" />
+	<string id="aom_lord_MM12_9_name" text="{=aom_lord_MM12_9_name}Nurzga" />
+	<string id="aom_lord_MM13_10_name" text="{=aom_lord_MM13_10_name}Krunza" />
+	<string id="aom_lord_MM13_1_name" text="{=aom_lord_MM13_1_name}Burzash" />
+	<string id="aom_lord_MM13_2_name" text="{=aom_lord_MM13_2_name}Hrakash" />
+	<string id="aom_lord_MM13_3_name" text="{=aom_lord_MM13_3_name}Uzash" />
+	<string id="aom_lord_MM13_4_name" text="{=aom_lord_MM13_4_name}Grishash" />
+	<string id="aom_lord_MM13_5_name" text="{=aom_lord_MM13_5_name}Mogash" />
+	<string id="aom_lord_MM13_6_name" text="{=aom_lord_MM13_6_name}Nazash" />
+	<string id="aom_lord_MM13_7_name" text="{=aom_lord_MM13_7_name}Razga" />
+	<string id="aom_lord_MM13_8_name" text="{=aom_lord_MM13_8_name}Mughza" />
+	<string id="aom_lord_MM13_9_name" text="{=aom_lord_MM13_9_name}Drozga" />
+	<string id="aom_lord_MM14_10_name" text="{=aom_lord_MM14_10_name}Hralga" />
+	<string id="aom_lord_MM14_1_name" text="{=aom_lord_MM14_1_name}Vrakash" />
+	<string id="aom_lord_MM14_2_name" text="{=aom_lord_MM14_2_name}Durbash" />
+	<string id="aom_lord_MM14_3_name" text="{=aom_lord_MM14_3_name}Krithash" />
+	<string id="aom_lord_MM14_4_name" text="{=aom_lord_MM14_4_name}Lurtash" />
+	<string id="aom_lord_MM14_5_name" text="{=aom_lord_MM14_5_name}Ufthash" />
+	<string id="aom_lord_MM14_6_name" text="{=aom_lord_MM14_6_name}Brakash" />
+	<string id="aom_lord_MM14_7_name" text="{=aom_lord_MM14_7_name}Nashga" />
+	<string id="aom_lord_MM14_8_name" text="{=aom_lord_MM14_8_name}Vughza" />
+	<string id="aom_lord_MM14_9_name" text="{=aom_lord_MM14_9_name}Snurga" />
+	<string id="aom_lord_MM15_10_name" text="{=aom_lord_MM15_10_name}Maukhza" />
+	<string id="aom_lord_MM15_1_name" text="{=aom_lord_MM15_1_name}Morzash" />
+	<string id="aom_lord_MM15_2_name" text="{=aom_lord_MM15_2_name}Gashash" />
+	<string id="aom_lord_MM15_3_name" text="{=aom_lord_MM15_3_name}Snagash" />
+	<string id="aom_lord_MM15_4_name" text="{=aom_lord_MM15_4_name}Lagdash" />
+	<string id="aom_lord_MM15_5_name" text="{=aom_lord_MM15_5_name}Shagash" />
+	<string id="aom_lord_MM15_6_name" text="{=aom_lord_MM15_6_name}Gromash" />
+	<string id="aom_lord_MM15_7_name" text="{=aom_lord_MM15_7_name}Bolzga" />
+	<string id="aom_lord_MM15_8_name" text="{=aom_lord_MM15_8_name}Ufza" />
+	<string id="aom_lord_MM15_9_name" text="{=aom_lord_MM15_9_name}Gorza" />
+	<string id="aom_lord_MM1_10_name" text="{=aom_lord_MM1_10_name}Throgza" />
+	<string id="aom_lord_MM1_1_name" text="{=aom_lord_MM1_1_name}Bûrzum" />
+	<string id="aom_lord_MM1_2_name" text="{=aom_lord_MM1_2_name}Throkmaw" />
+	<string id="aom_lord_MM1_3_name" text="{=aom_lord_MM1_3_name}Skarsnik" />
+	<string id="aom_lord_MM1_4_name" text="{=aom_lord_MM1_4_name}Gnashrak" />
+	<string id="aom_lord_MM1_5_name" text="{=aom_lord_MM1_5_name}Vrakthar" />
+	<string id="aom_lord_MM1_6_name" text="{=aom_lord_MM1_6_name}Dushgar" />
+	<string id="aom_lord_MM1_7_name" text="{=aom_lord_MM1_7_name}Mogra" />
+	<string id="aom_lord_MM1_8_name" text="{=aom_lord_MM1_8_name}Urshza" />
+	<string id="aom_lord_MM1_9_name" text="{=aom_lord_MM1_9_name}Skarnza" />
+	<string id="aom_lord_MM2_10_name" text="{=aom_lord_MM2_10_name}Hrakza" />
+	<string id="aom_lord_MM2_1_name" text="{=aom_lord_MM2_1_name}Dushgar" />
+	<string id="aom_lord_MM2_2_name" text="{=aom_lord_MM2_2_name}Krimpük" />
+	<string id="aom_lord_MM2_3_name" text="{=aom_lord_MM2_3_name}Gashnar" />
+	<string id="aom_lord_MM2_4_name" text="{=aom_lord_MM2_4_name}Morgrub" />
+	<string id="aom_lord_MM2_5_name" text="{=aom_lord_MM2_5_name}Snagbut" />
+	<string id="aom_lord_MM2_6_name" text="{=aom_lord_MM2_6_name}Hrakdush" />
+	<string id="aom_lord_MM2_7_name" text="{=aom_lord_MM2_7_name}Shelza" />
+	<string id="aom_lord_MM2_8_name" text="{=aom_lord_MM2_8_name}Ulga" />
+	<string id="aom_lord_MM2_9_name" text="{=aom_lord_MM2_9_name}Burzza" />
+	<string id="aom_lord_MM3_10_name" text="{=aom_lord_MM3_10_name}Grishza" />
+	<string id="aom_lord_MM3_1_name" text="{=aom_lord_MM3_1_name}Hrakdush" />
+	<string id="aom_lord_MM3_2_name" text="{=aom_lord_MM3_2_name}Boldog" />
+	<string id="aom_lord_MM3_3_name" text="{=aom_lord_MM3_3_name}Lugbol" />
+	<string id="aom_lord_MM3_4_name" text="{=aom_lord_MM3_4_name}Grizznak" />
+	<string id="aom_lord_MM3_5_name" text="{=aom_lord_MM3_5_name}Frakû" />
+	<string id="aom_lord_MM3_6_name" text="{=aom_lord_MM3_6_name}Mughash" />
+	<string id="aom_lord_MM3_7_name" text="{=aom_lord_MM3_7_name}Skralga" />
+	<string id="aom_lord_MM3_8_name" text="{=aom_lord_MM3_8_name}Hagza" />
+	<string id="aom_lord_MM3_9_name" text="{=aom_lord_MM3_9_name}Uzza" />
+	<string id="aom_lord_MM4_10_name" text="{=aom_lord_MM4_10_name}Vrakza" />
+	<string id="aom_lord_MM4_1_name" text="{=aom_lord_MM4_1_name}Mughash" />
+	<string id="aom_lord_MM4_2_name" text="{=aom_lord_MM4_2_name}Grishnák" />
+	<string id="aom_lord_MM4_3_name" text="{=aom_lord_MM4_3_name}Muzgash" />
+	<string id="aom_lord_MM4_4_name" text="{=aom_lord_MM4_4_name}Lugdush" />
+	<string id="aom_lord_MM4_5_name" text="{=aom_lord_MM4_5_name}Radbug" />
+	<string id="aom_lord_MM4_6_name" text="{=aom_lord_MM4_6_name}Gorbag" />
+	<string id="aom_lord_MM4_7_name" text="{=aom_lord_MM4_7_name}Burza" />
+	<string id="aom_lord_MM4_8_name" text="{=aom_lord_MM4_8_name}Gralza" />
+	<string id="aom_lord_MM4_9_name" text="{=aom_lord_MM4_9_name}Nazza" />
+	<string id="aom_lord_MM5_10_name" text="{=aom_lord_MM5_10_name}Krithza" />
+	<string id="aom_lord_MM5_1_name" text="{=aom_lord_MM5_1_name}Gorbag" />
+	<string id="aom_lord_MM5_2_name" text="{=aom_lord_MM5_2_name}Shagrat" />
+	<string id="aom_lord_MM5_3_name" text="{=aom_lord_MM5_3_name}Ufthak" />
+	<string id="aom_lord_MM5_4_name" text="{=aom_lord_MM5_4_name}Lagduf" />
+	<string id="aom_lord_MM5_5_name" text="{=aom_lord_MM5_5_name}Orcobal" />
+	<string id="aom_lord_MM5_6_name" text="{=aom_lord_MM5_6_name}Yazneg" />
+	<string id="aom_lord_MM5_7_name" text="{=aom_lord_MM5_7_name}Gnarla" />
+	<string id="aom_lord_MM5_8_name" text="{=aom_lord_MM5_8_name}Vugza" />
+	<string id="aom_lord_MM5_9_name" text="{=aom_lord_MM5_9_name}Durbza" />
+	<string id="aom_lord_MM6_10_name" text="{=aom_lord_MM6_10_name}Ulzga" />
+	<string id="aom_lord_MM6_1_name" text="{=aom_lord_MM6_1_name}Grishnak" />
+	<string id="aom_lord_MM6_2_name" text="{=aom_lord_MM6_2_name}Ugluk" />
+	<string id="aom_lord_MM6_3_name" text="{=aom_lord_MM6_3_name}Mauhur" />
+	<string id="aom_lord_MM6_4_name" text="{=aom_lord_MM6_4_name}Grukhash" />
+	<string id="aom_lord_MM6_5_name" text="{=aom_lord_MM6_5_name}Bolg" />
+	<string id="aom_lord_MM6_6_name" text="{=aom_lord_MM6_6_name}Othrod" />
+	<string id="aom_lord_MM6_7_name" text="{=aom_lord_MM6_7_name}Mogza" />
+	<string id="aom_lord_MM6_8_name" text="{=aom_lord_MM6_8_name}Urgha" />
+	<string id="aom_lord_MM6_9_name" text="{=aom_lord_MM6_9_name}Shazga" />
+	<string id="aom_lord_MM7_10_name" text="{=aom_lord_MM7_10_name}Gralka" />
+	<string id="aom_lord_MM7_1_name" text="{=aom_lord_MM7_1_name}Golfimbul" />
+	<string id="aom_lord_MM7_2_name" text="{=aom_lord_MM7_2_name}Grakmaw" />
+	<string id="aom_lord_MM7_3_name" text="{=aom_lord_MM7_3_name}Skardush" />
+	<string id="aom_lord_MM7_4_name" text="{=aom_lord_MM7_4_name}Throgar" />
+	<string id="aom_lord_MM7_5_name" text="{=aom_lord_MM7_5_name}Burzlug" />
+	<string id="aom_lord_MM7_6_name" text="{=aom_lord_MM7_6_name}Mokrash" />
+	<string id="aom_lord_MM7_7_name" text="{=aom_lord_MM7_7_name}Skrelga" />
+	<string id="aom_lord_MM7_8_name" text="{=aom_lord_MM7_8_name}Hagra" />
+	<string id="aom_lord_MM7_9_name" text="{=aom_lord_MM7_9_name}Burzga" />
+	<string id="aom_lord_MM8_10_name" text="{=aom_lord_MM8_10_name}Snazga" />
+	<string id="aom_lord_MM8_1_name" text="{=aom_lord_MM8_1_name}Naglur" />
+	<string id="aom_lord_MM8_2_name" text="{=aom_lord_MM8_2_name}Vrakdush" />
+	<string id="aom_lord_MM8_3_name" text="{=aom_lord_MM8_3_name}Hrumgash" />
+	<string id="aom_lord_MM8_4_name" text="{=aom_lord_MM8_4_name}Uzdur" />
+	<string id="aom_lord_MM8_5_name" text="{=aom_lord_MM8_5_name}Gorlak" />
+	<string id="aom_lord_MM8_6_name" text="{=aom_lord_MM8_6_name}Snagrat" />
+	<string id="aom_lord_MM8_7_name" text="{=aom_lord_MM8_7_name}Gnasha" />
+	<string id="aom_lord_MM8_8_name" text="{=aom_lord_MM8_8_name}Vugra" />
+	<string id="aom_lord_MM8_9_name" text="{=aom_lord_MM8_9_name}Mauza" />
+	<string id="aom_lord_MM9_10_name" text="{=aom_lord_MM9_10_name}Bargha" />
+	<string id="aom_lord_MM9_1_name" text="{=aom_lord_MM9_1_name}Durbghash" />
+	<string id="aom_lord_MM9_2_name" text="{=aom_lord_MM9_2_name}Mughrim" />
+	<string id="aom_lord_MM9_3_name" text="{=aom_lord_MM9_3_name}Krithak" />
+	<string id="aom_lord_MM9_4_name" text="{=aom_lord_MM9_4_name}Lurtzag" />
+	<string id="aom_lord_MM9_5_name" text="{=aom_lord_MM9_5_name}Naznur" />
+	<string id="aom_lord_MM9_6_name" text="{=aom_lord_MM9_6_name}Ufgrish" />
+	<string id="aom_lord_MM9_7_name" text="{=aom_lord_MM9_7_name}Krimza" />
+	<string id="aom_lord_MM9_8_name" text="{=aom_lord_MM9_8_name}Throga" />
+	<string id="aom_lord_MM9_9_name" text="{=aom_lord_MM9_9_name}Lugza" />
+	<string id="aom_lord_R1_11_name" text="{=aom_lord_R1_11_name}Argon" />
+	<string id="aom_lord_R1_1_name" text="{=aom_lord_R1_1_name}Elrond" />
+	<string id="aom_lord_R1_2_name" text="{=aom_lord_R1_2_name}Celebrían" />
+	<string id="aom_lord_R1_3_name" text="{=aom_lord_R1_3_name}Elladan" />
+	<string id="aom_lord_R1_4_name" text="{=aom_lord_R1_4_name}Elrohir" />
+	<string id="aom_lord_R1_5_name" text="{=aom_lord_R1_5_name}Arwen" />
+	<string id="aom_lord_R2_11_name" text="{=aom_lord_R2_11_name}Istilmo" />
+	<string id="aom_lord_R2_1_name" text="{=aom_lord_R2_1_name}Glorfindel" />
+	<string id="aom_lord_R2_2_name" text="{=aom_lord_R2_2_name}Gildor" />
+	<string id="aom_lord_R2_3_name" text="{=aom_lord_R2_3_name}Erestor" />
+	<string id="aom_lord_R2_4_name" text="{=aom_lord_R2_4_name}Lindir" />
+	<string id="aom_lord_R3_1_name" text="{=aom_lord_R3_1_name}Chägermeister" />
+	<string id="aom_lord_SH1_10_name" text="{=aom_lord_SH1_10_name}Manîzheh" />
+	<string id="aom_lord_SH1_2_name" text="{=aom_lord_SH1_2_name}Suladân" />
+	<string id="aom_lord_SH1_3_name" text="{=aom_lord_SH1_3_name}Farzûk" />
+	<string id="aom_lord_SH1_4_name" text="{=aom_lord_SH1_4_name}Azimûr" />
+	<string id="aom_lord_SH1_5_name" text="{=aom_lord_SH1_5_name}Bahram" />
+	<string id="aom_lord_SH1_6_name" text="{=aom_lord_SH1_6_name}Khorzan" />
+	<string id="aom_lord_SH1_7_name" text="{=aom_lord_SH1_7_name}Banûshad" />
+	<string id="aom_lord_SH1_8_name" text="{=aom_lord_SH1_8_name}Roshanak" />
+	<string id="aom_lord_SH1_9_name" text="{=aom_lord_SH1_9_name}Gordâfar" />
+	<string id="aom_lord_SH2_10_name" text="{=aom_lord_SH2_10_name}Sûdabeh" />
+	<string id="aom_lord_SH2_2_name" text="{=aom_lord_SH2_2_name}Rastûm" />
+	<string id="aom_lord_SH2_3_name" text="{=aom_lord_SH2_3_name}Sohrak" />
+	<string id="aom_lord_SH2_4_name" text="{=aom_lord_SH2_4_name}Kavûs" />
+	<string id="aom_lord_SH2_5_name" text="{=aom_lord_SH2_5_name}Tahmûr" />
+	<string id="aom_lord_SH2_6_name" text="{=aom_lord_SH2_6_name}Faramûz" />
+	<string id="aom_lord_SH2_7_name" text="{=aom_lord_SH2_7_name}Farangîs" />
+	<string id="aom_lord_SH2_8_name" text="{=aom_lord_SH2_8_name}Katayûn" />
+	<string id="aom_lord_SH2_9_name" text="{=aom_lord_SH2_9_name}Rûdabeh" />
+	<string id="aom_lord_SH3_10_name" text="{=aom_lord_SH3_10_name}Azadeh" />
+	<string id="aom_lord_SH3_2_name" text="{=aom_lord_SH3_2_name}Goshtân" />
+	<string id="aom_lord_SH3_3_name" text="{=aom_lord_SH3_3_name}Zahhûk" />
+	<string id="aom_lord_SH3_4_name" text="{=aom_lord_SH3_4_name}Mardûk" />
+	<string id="aom_lord_SH3_5_name" text="{=aom_lord_SH3_5_name}Sargûn" />
+	<string id="aom_lord_SH3_6_name" text="{=aom_lord_SH3_6_name}Ashûr" />
+	<string id="aom_lord_SH3_7_name" text="{=aom_lord_SH3_7_name}Tahmîneh" />
+	<string id="aom_lord_SH3_8_name" text="{=aom_lord_SH3_8_name}Sindûkht" />
+	<string id="aom_lord_SH3_9_name" text="{=aom_lord_SH3_9_name}Shîrîn" />
+	<string id="aom_lord_SH4_10_name" text="{=aom_lord_SH4_10_name}Banûra" />
+	<string id="aom_lord_SH4_2_name" text="{=aom_lord_SH4_2_name}Nabûz" />
+	<string id="aom_lord_SH4_3_name" text="{=aom_lord_SH4_3_name}Sennûr" />
+	<string id="aom_lord_SH4_4_name" text="{=aom_lord_SH4_4_name}Tigharos" />
+	<string id="aom_lord_SH4_5_name" text="{=aom_lord_SH4_5_name}Hammûr" />
+	<string id="aom_lord_SH4_6_name" text="{=aom_lord_SH4_6_name}Kambûz" />
+	<string id="aom_lord_SH4_7_name" text="{=aom_lord_SH4_7_name}Gûlnar" />
+	<string id="aom_lord_SH4_8_name" text="{=aom_lord_SH4_8_name}Pûrandar" />
+	<string id="aom_lord_SH4_9_name" text="{=aom_lord_SH4_9_name}Âzarmî" />
+	<string id="aom_lord_SH5_10_name" text="{=aom_lord_SH5_10_name}Gûlrukh" />
+	<string id="aom_lord_SH5_2_name" text="{=aom_lord_SH5_2_name}Cyrûn" />
+	<string id="aom_lord_SH5_3_name" text="{=aom_lord_SH5_3_name}Xerûk" />
+	<string id="aom_lord_SH5_4_name" text="{=aom_lord_SH5_4_name}Dariûsh" />
+	<string id="aom_lord_SH5_5_name" text="{=aom_lord_SH5_5_name}Behnûm" />
+	<string id="aom_lord_SH5_6_name" text="{=aom_lord_SH5_6_name}Farzâd" />
+	<string id="aom_lord_SH5_7_name" text="{=aom_lord_SH5_7_name}Delâram" />
+	<string id="aom_lord_SH5_8_name" text="{=aom_lord_SH5_8_name}Estharâ" />
+	<string id="aom_lord_SH5_9_name" text="{=aom_lord_SH5_9_name}Faranak" />
+	<string id="aom_lord_SH6_10_name" text="{=aom_lord_SH6_10_name}Lâleh" />
+	<string id="aom_lord_SH6_2_name" text="{=aom_lord_SH6_2_name}Hormûz" />
+	<string id="aom_lord_SH6_3_name" text="{=aom_lord_SH6_3_name}Jahûn" />
+	<string id="aom_lord_SH6_4_name" text="{=aom_lord_SH6_4_name}Kasrûn" />
+	<string id="aom_lord_SH6_5_name" text="{=aom_lord_SH6_5_name}Manûchar" />
+	<string id="aom_lord_SH6_6_name" text="{=aom_lord_SH6_6_name}Narîman" />
+	<string id="aom_lord_SH6_7_name" text="{=aom_lord_SH6_7_name}Homâra" />
+	<string id="aom_lord_SH6_8_name" text="{=aom_lord_SH6_8_name}Jârya" />
+	<string id="aom_lord_SH6_9_name" text="{=aom_lord_SH6_9_name}Kûshyâra" />
+	<string id="aom_lord_SH7_10_name" text="{=aom_lord_SH7_10_name}Rûzâ" />
+	<string id="aom_lord_SH7_2_name" text="{=aom_lord_SH7_2_name}Parvîz" />
+	<string id="aom_lord_SH7_3_name" text="{=aom_lord_SH7_3_name}Qobâd" />
+	<string id="aom_lord_SH7_4_name" text="{=aom_lord_SH7_4_name}Sâsan" />
+	<string id="aom_lord_SH7_5_name" text="{=aom_lord_SH7_5_name}Shapûr" />
+	<string id="aom_lord_SH7_6_name" text="{=aom_lord_SH7_6_name}Tûranos" />
+	<string id="aom_lord_SH7_7_name" text="{=aom_lord_SH7_7_name}Mahsâ" />
+	<string id="aom_lord_SH7_8_name" text="{=aom_lord_SH7_8_name}Nâhid" />
+	<string id="aom_lord_SH7_9_name" text="{=aom_lord_SH7_9_name}Parisâ" />
+	<string id="aom_lord_SH8_10_name" text="{=aom_lord_SH8_10_name}Yâsmin" />
+	<string id="aom_lord_SH8_2_name" text="{=aom_lord_SH8_2_name}Varûz" />
+	<string id="aom_lord_SH8_3_name" text="{=aom_lord_SH8_3_name}Yazdâr" />
+	<string id="aom_lord_SH8_4_name" text="{=aom_lord_SH8_4_name}Zalûk" />
+	<string id="aom_lord_SH8_5_name" text="{=aom_lord_SH8_5_name}Anûsh" />
+	<string id="aom_lord_SH8_6_name" text="{=aom_lord_SH8_6_name}Bîjan" />
+	<string id="aom_lord_SH8_7_name" text="{=aom_lord_SH8_7_name}Shahrnâz" />
+	<string id="aom_lord_SH8_8_name" text="{=aom_lord_SH8_8_name}Tûraja" />
+	<string id="aom_lord_SH8_9_name" text="{=aom_lord_SH8_9_name}Vâshti" />
+	<string id="aom_lord_SH9_10_name" text="{=aom_lord_SH9_10_name}Cyrâ" />
+	<string id="aom_lord_SH9_2_name" text="{=aom_lord_SH9_2_name}Esfanos" />
+	<string id="aom_lord_SH9_3_name" text="{=aom_lord_SH9_3_name}Gîvar" />
+	<string id="aom_lord_SH9_4_name" text="{=aom_lord_SH9_4_name}Hûshang" />
+	<string id="aom_lord_SH9_5_name" text="{=aom_lord_SH9_5_name}Irâj" />
+	<string id="aom_lord_SH9_6_name" text="{=aom_lord_SH9_6_name}Jamshûd" />
+	<string id="aom_lord_SH9_7_name" text="{=aom_lord_SH9_7_name}Zarrîn" />
+	<string id="aom_lord_SH9_8_name" text="{=aom_lord_SH9_8_name}Anâhita" />
+	<string id="aom_lord_SH9_9_name" text="{=aom_lord_SH9_9_name}Bahâra" />
+	<string id="aom_lord_U1_11_name" text="{=aom_lord_U1_11_name}Lord Gimilzôr" />
+	<string id="aom_lord_U1_12_name" text="{=aom_lord_U1_12_name}Gimilthôn" />
+	<string id="aom_lord_U1_13_name" text="{=aom_lord_U1_13_name}Pharazôn" />
+	<string id="aom_lord_U1_1_name" text="{=aom_lord_U1_1_name}Ar-Gimilkhâd" />
+	<string id="aom_lord_U1_2_name" text="{=aom_lord_U1_2_name}Zimraphel" />
+	<string id="aom_lord_U2_1_name" text="{=aom_lord_U2_1_name}Azraphel" />
+	<string id="aom_lord_U3_1_name" text="{=aom_lord_U3_1_name}Belkazar" />
+	<string id="aom_lord_U4_1_name" text="{=aom_lord_U4_1_name}Pharakhôn" />
+	<string id="aom_lord_U5_1_name" text="{=aom_lord_U5_1_name}Inkaldôr" />
+	<string id="aom_lord_U6_1_name" text="{=aom_lord_U6_1_name}Zimrathôr" />
+	<string id="aom_lord_V11_l_1_name" text="{=aom_lord_V11_l_1_name}Wynnðryð Deáfringas" />
+	<string id="aom_lord_V11_l_2_name" text="{=aom_lord_V11_l_2_name}Léothen Deáfringas" />
+	<string id="aom_lord_V11_l_3_name" text="{=aom_lord_V11_l_3_name}Léobrand Deáfringas" />
+	<string id="aom_lord_V11_l_4_name" text="{=aom_lord_V11_l_4_name}Léowynn Deáfringas" />
+	<string id="aom_lord_WE8_1_name" text="{=aom_lord_WE8_1_name}Dorwen" />
+	<string id="aom_lord_WE8_2_name" text="{=aom_lord_WE8_2_name}Eleneth" />
+	<string id="aom_lord_WE8_3_name" text="{=aom_lord_WE8_3_name}Hirilwen" />
+	<string id="aom_lord_WE8_4_name" text="{=aom_lord_WE8_4_name}Talborin" />
+	<string id="aom_lord_WE9_3_name" text="{=aom_lord_WE9_3_name}Derufin" />
+	<string id="aom_lord_WE9_l_1_name" text="{=aom_lord_WE9_l_1_name}Duilin" />
+	<string id="aom_lord_rohan_10_1_name" text="{=aom_lord_rohan_10_1_name}Éomund Eoforing" />
+	<string id="aom_lord_rohan_11_1_name" text="{=aom_lord_rohan_11_1_name}Cadda Tordaging" />
+	<string id="aom_lord_rohan_13_1_name" text="{=aom_lord_rohan_13_1_name}Wulf Celmunding" />
+	<string id="aom_lord_rohan_14_1_name" text="{=aom_lord_rohan_14_1_name}Widmund Widmunding" />
+	<string id="aom_lord_rohan_15_1_name" text="{=aom_lord_rohan_15_1_name}Fróda Ordgaring" />
+	<string id="aom_lord_rohan_16_1_name" text="{=aom_lord_rohan_16_1_name}Eofolda Hunthelming" />
+	<string id="aom_lord_rohan_17_1_name" text="{=aom_lord_rohan_17_1_name}Waldæg Bregdaning" />
+	<string id="aom_lord_rohan_21_1_name" text="{=aom_lord_rohan_21_1_name}Haleth Halethring" />
+	<string id="aom_lord_rohan_22_1_name" text="{=aom_lord_rohan_22_1_name}Béowyrt Rungaring" />
+	<string id="aom_lord_rohan_2_1_name" text="{=aom_lord_rohan_2_1_name}Isenmund Cerdicing" />
+	<string id="aom_lord_rohan_5_1_name" text="{=aom_lord_rohan_5_1_name}Eadwig Oscyteling" />
+	<string id="aom_lord_rohan_9_1_name" text="{=aom_lord_rohan_9_1_name}Dúnhere Dúning" />
+
+</strings>

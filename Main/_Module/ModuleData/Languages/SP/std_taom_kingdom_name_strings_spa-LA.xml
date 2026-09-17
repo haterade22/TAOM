@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Spanish (LA)" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Las madrigueras trasgas de Risco Azul, en las Montañas Azules (Ered Luin) del lejano oeste, muy cerca de los Puertos Grises de Lindon. Una hueste innumerable y distinta de la raza trasga —separada de sus primos de Ciudad de los Trasgos en las Montañas Nubladas—, que infesta los riscos occidentales y atormenta a los Elfos de la costa oeste." />
+    <string id="taom_bluecraig_name" text="Trasgos de Risco Azul" />
+    <string id="taom_bluecraig_ruler_title" text="Gran Trasgo" />
+    <string id="taom_bluecraig_short_name" text="Risco Azul" />
+    <string id="taom_bluecraig_title" text="Reino Trasgo de Risco Azul" />
+    <string id="taom_dolguldur_desc" text="Dol Guldur, la fortaleza de la sombra y la desesperación, se alza como un faro amenazante de la voluntad oscura del Nigromante. Los Orcos y las criaturas inmundas que habitan sus profundidades siembran el terror en todos los corazones." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Señor del Terror" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Nigromancia de Dol Guldur" />
+    <string id="taom_erebor_desc" text="La Montaña Solitaria, Erebor, se alza como el mayor de los reinos Enanos del norte. Rica en oro y mithril, es el hogar del linaje de Durin. Los Enanos de Erebor son artesanos renombrados y guerreros feroces, y sus salones resuenan con los cantos de sus antepasados." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="Rey" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Reino de Erebor" />
+    <string id="taom_goblin_desc" text="Los trasgos del Paso Alto pululan por los túneles bajo las Montañas Nubladas, engendro de la hueste que el Gran Trasgo condujo antaño contra enanos y viajeros por igual. Innumerables y feroces, se derraman desde la Ciudad de los Trasgos para asolar los caminos de la montaña." />
+    <string id="taom_goblin_name" text="Trasgos" />
+    <string id="taom_goblin_ruler_title" text="Gran Trasgo" />
+    <string id="taom_goblin_short_name" text="Trasgos" />
+    <string id="taom_goblin_title" text="Reino Trasgo del Paso Alto" />
+    <string id="taom_gundabad_desc" text="Gundabad, la antigua y siniestra fortaleza de los orcos, se alza como bastión de salvajismo y dominio. Los orcos de Gundabad, criados para la guerra y el caos, se reúnen bajo estandartes ensangrentados." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Señor de la Guerra" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengard, la fortaleza del Mago Blanco Saruman, se alza como bastión de poder y ambición. Los uruk-hai marchan bajo el estandarte de la Mano Blanca, con una disciplina y un salvajismo sin igual." />
+    <string id="taom_isengard_name" text="Isengard" />
+    <string id="taom_isengard_ruler_title" text="Señor de la Guerra" />
+    <string id="taom_isengard_short_name" text="Isengard" />
+    <string id="taom_isengard_title" text="Señorío de Isengard" />
+    <string id="taom_lindon_desc" text="Lindon, la tierra verde al oeste de las Montañas Azules, es el último reino de los Altos Elfos en las costas de la Tierra Media. Desde los Puertos Grises de Mithlond las naves blancas parten hacia el Oeste, mientras Círdan el Carpintero de Barcos vela por la luz declinante de los Eldar." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Señor de los Puertos" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Reino Supremo de Lindon" />
+    <string id="taom_lothlorien_desc" text="El Bosque de Oro se extiende entre el Cauce de Plata y el poderoso Anduin. Guardado por la voluntad de Galadriel y Celeborn, se alza como bastión de la gracia y el desafío elfos: una tierra que el tiempo no toca, donde las hojas no caen." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Dama" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Reino de Lóthlorien" />
+    <string id="taom_mirkwood_desc" text="El Reino del Bosque del Bosque Negro ha soportado muchas penurias con los años. Bajo el liderazgo de Thranduil, los Elfos Silvanos se han vuelto reclusos y desconfiados de los extraños. Sin embargo, en el corazón de Thranduil perdura un fuego encendido en los días antiguos de la Primera Edad." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Bosque Negro" />
+    <string id="taom_mirkwood_title" text="Reino del Bosque Negro" />
+    <string id="taom_mistymountainorcs_desc" text="La hueste orca de las Montañas Nubladas domina las cumbres y las profundas galerías desde el Monte Gram hasta las puertas de Moria. Criados para la guerra en los picos helados, responden al llamado de la Sombra y ansían reclamar las montañas para sí." />
+    <string id="taom_mistymountainorcs_name" text="Orcos de las Montañas Nubladas" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Señor de la Guerra" />
+    <string id="taom_mistymountainorcs_short_name" text="Orcos Nublados" />
+    <string id="taom_mistymountainorcs_title" text="Hueste Orca de las Montañas Nubladas" />
+    <string id="taom_rivendell_desc" text="Oculto en lo profundo de las quebradas de las Montañas Nubladas, Rivendel es la Última Morada al Este del Mar. Fundada por Elrond Medio Elfo, es un refugio contra la oscuridad que se reúne, un lugar de curación, sabiduría y fuerza serena." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Señor" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Refugio de Imladris" />
+    <string id="taom_umbar_desc" text="Umbar, el oscuro puerto de los Corsarios, es un reino imbuido de poder marítimo y de ambiciones traicioneras. Los Corsarios saquean las costas de la Tierra Media, sembrando el miedo con sus veloces naves." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Rey Corsario" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Puerto de Umbar" />
+  </strings>
+</base>

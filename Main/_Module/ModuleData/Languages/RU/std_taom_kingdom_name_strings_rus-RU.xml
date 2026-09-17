@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Гоблинские норы Синей Скалы в Синих горах (Эред Луин) на дальнем западе, близ Серых Гаваней Линдона. Особое, бесчисленное воинство гоблинов — отдельное от их сородичей из Гоблинского города в Мглистых горах — они кишат на западных утёсах и тревожат эльфов западного побережья." />
+    <string id="taom_bluecraig_name" text="Гоблины Синей Скалы" />
+    <string id="taom_bluecraig_ruler_title" text="Великий гоблин" />
+    <string id="taom_bluecraig_short_name" text="Синяя Скала" />
+    <string id="taom_bluecraig_title" text="Гоблинское королевство Синей Скалы" />
+    <string id="taom_dolguldur_desc" text="Дол Гулдур, крепость тьмы и отчаяния, стоит зловещим знамением чёрной воли Некроманта. Орки и мерзкие твари, населяющие его глубины, вселяют ужас в сердца всех." />
+    <string id="taom_dolguldur_name" text="Дол Гулдур" />
+    <string id="taom_dolguldur_ruler_title" text="Владыка Ужаса" />
+    <string id="taom_dolguldur_short_name" text="Дол Гулдур" />
+    <string id="taom_dolguldur_title" text="Некромантия Дол Гулдура" />
+    <string id="taom_erebor_desc" text="Одинокая гора, Эребор, — величайшее из гномьих королевств Севера. Богатый золотом и мифрилом, он дом рода Дурина. Гномы Эребора — прославленные мастера и яростные воины, и в их чертогах звучат песни предков." />
+    <string id="taom_erebor_name" text="Эребор" />
+    <string id="taom_erebor_ruler_title" text="Король" />
+    <string id="taom_erebor_short_name" text="Эребор" />
+    <string id="taom_erebor_title" text="Королевство Эребор" />
+    <string id="taom_goblin_desc" text="Гоблины Высокого перевала кишат в туннелях под Мглистыми горами — потомки того войска, что Великий гоблин некогда вёл против гномов и путников. Бесчисленные и злобные, они выплёскиваются из Гоблинского города, чтобы грабить горные дороги." />
+    <string id="taom_goblin_name" text="Гоблины" />
+    <string id="taom_goblin_ruler_title" text="Великий гоблин" />
+    <string id="taom_goblin_short_name" text="Гоблины" />
+    <string id="taom_goblin_title" text="Гоблинское владение Высокого перевала" />
+    <string id="taom_gundabad_desc" text="Гундабад, древняя и грозная крепость орков, стоит как бастион дикости и владычества. Орки Гундабада, взращённые для войны и хаоса, собираются под окровавленными знамёнами." />
+    <string id="taom_gundabad_name" text="Гундабад" />
+    <string id="taom_gundabad_ruler_title" text="Военачальник" />
+    <string id="taom_gundabad_short_name" text="Гундабад" />
+    <string id="taom_gundabad_title" text="Гундабад" />
+    <string id="taom_isengard_desc" text="Изенгард, твердыня Белого Волшебника Сарумана, стоит как бастион мощи и честолюбия. Урук-хай выступают под знаменем Белой Руки, и нет равных их выучке и свирепости." />
+    <string id="taom_isengard_name" text="Изенгард" />
+    <string id="taom_isengard_ruler_title" text="Военачальник" />
+    <string id="taom_isengard_short_name" text="Изенгард" />
+    <string id="taom_isengard_title" text="Владычество Изенгарда" />
+    <string id="taom_lindon_desc" text="Линдон, зелёная земля к западу от Синих гор, — последнее королевство Высоких эльфов на берегах Средиземья. Из Серых Пристаней Митлонда белые корабли уходят на Запад, а Кирдан Корабел бережёт угасающий свет эльдар." />
+    <string id="taom_lindon_name" text="Линдон" />
+    <string id="taom_lindon_ruler_title" text="Владыка Пристаней" />
+    <string id="taom_lindon_short_name" text="Линдон" />
+    <string id="taom_lindon_title" text="Верховное королевство Линдон" />
+    <string id="taom_lothlorien_desc" text="Златой Лес лежит меж Серебрянкой и могучим Андуином. Хранимый волей Галадриэли и Келеборна, он стоит как бастион эльфийской благодати и непокорности — земля, не тронутая временем, где не падают листья." />
+    <string id="taom_lothlorien_name" text="Лотлориэн" />
+    <string id="taom_lothlorien_ruler_title" text="Владычица" />
+    <string id="taom_lothlorien_short_name" text="Лотлориэн" />
+    <string id="taom_lothlorien_title" text="Королевство Лотлориэн" />
+    <string id="taom_mirkwood_desc" text="Лесное королевство Лихолесья претерпело за годы немало бед. Под властью Трандуила лесные эльфы стали замкнуты и недоверчивы к чужакам. Но в сердце Трандуила ещё тлеет огонь, зажжённый в древние дни Первой Эпохи." />
+    <string id="taom_mirkwood_name" text="Ласгален" />
+    <string id="taom_mirkwood_ruler_title" text="Аран" />
+    <string id="taom_mirkwood_short_name" text="Лихолесье" />
+    <string id="taom_mirkwood_title" text="Королевство Лихолесья" />
+    <string id="taom_mistymountainorcs_desc" text="Орочье войско Мглистых гор держит вершины и глубокие подземелья от горы Грам до врат Мории. Взращённые для войны в холодных пиках, они отвечают на зов Тени и жаждут вернуть горы себе." />
+    <string id="taom_mistymountainorcs_name" text="Орки Мглистых гор" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Военачальник" />
+    <string id="taom_mistymountainorcs_short_name" text="Мглистые орки" />
+    <string id="taom_mistymountainorcs_title" text="Орочье войско Мглистых гор" />
+    <string id="taom_rivendell_desc" text="Укрытый глубоко в расселинах Мглистых гор, Ривенделл — Последний Приют к востоку от Моря. Основанный Элрондом Полуэльфом, он служит убежищем от сгущающейся тьмы, местом исцеления, знаний и тихой силы." />
+    <string id="taom_rivendell_name" text="Имладрис" />
+    <string id="taom_rivendell_ruler_title" text="Владыка" />
+    <string id="taom_rivendell_short_name" text="Имладрис" />
+    <string id="taom_rivendell_title" text="Убежище Имладрис" />
+    <string id="taom_umbar_desc" text="Умбар, тёмная гавань корсаров, — это держава, пропитанная морской мощью и коварным честолюбием. Корсары разоряют берега Средиземья, сея страх своими быстрыми кораблями." />
+    <string id="taom_umbar_name" text="Умбар" />
+    <string id="taom_umbar_ruler_title" text="Король корсаров" />
+    <string id="taom_umbar_short_name" text="Умбар" />
+    <string id="taom_umbar_title" text="Гавань Умбара" />
+  </strings>
+</base>

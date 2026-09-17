@@ -47,18 +47,25 @@ sibling-independent, and none of those nine files shares a single id with a TAOM
 `LordFamilyTransformTests` feeding `lords.xml` in isolation gives the same per-id answer. Re-check
 that if a future vanilla patch adds ids in those files.
 
-## Two localization tiers that do not interoperate
+## Localization tiers: names now interoperate, biographies still don't (updated 2026-09-17)
 
-| File | Keys | Registered in `taom_xslt_strings.xml` | Translated ×12 |
+| File | Keys | Registered | Translated ×12 |
 |---|---|---|---|
-| `lords.xslt` names | 396 | all | yes |
-| `heroes.xslt` biographies | 399 | all | yes |
-| `characters/lords.xml` names | 1184 | the 179 overlap ids plus a few | partly |
+| `lords.xslt` names | 396 | all, in `taom_xslt_strings.xml` | yes |
+| `heroes.xslt` biographies | 399 | all, in `taom_xslt_strings.xml` | yes |
+| `characters/lords.xml` names | 1184 | 179 in `taom_xslt_strings.xml` + 988 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 179 overlap) | yes, ~1167/1184 |
 | `characters/heroes.xml` biographies | 456 | **none** | **no, English-only** |
 
-So an edit confined to `characters/*.xml` has zero locale ripple, and an edit to either stylesheet
-touches a key twelve languages already carry. There is no English `Languages/` folder, so the
-inline literal **is** the English text.
+Through 2026-09-16 an edit confined to `characters/lords.xml` had zero locale ripple. As of
+2026-09-17 that is no longer true for NAMES: `taom_lord_name_strings.xml` is a third tier,
+generated (not hand-authored) by walking `characters/lords.xml` for `{=KEY}default` name
+attributes and excluding whatever `taom_xslt_strings.xml` already carries, so a name edit there
+still needs the generator re-run (or a manual row) before it reaches the new tier; it is not
+automatic. `characters/heroes.xml` BIOGRAPHIES remain the real "zero locale ripple" case: that
+file carries no `name=` attribute at all (hero names come from procedural generation elsewhere),
+only `text=` biography keys, none of them registered anywhere. There is no English `Languages/`
+folder for any of this, so an unregistered key's inline literal **is** the English text shown in
+every locale.
 
 `taom_xslt_strings.xml` is generated from `lords.xslt`, not an independent authority, and it can
 drift from the locales on its own: for `lord_1_30_2` and `lord_1_30_3` the registry said Mogra and

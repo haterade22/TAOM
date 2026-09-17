@@ -4,22 +4,31 @@ This guide is for anyone translating TAOM (Tales From the Age of Men) into anoth
 
 ## Overview
 
-TAOM ships with translatable strings across **three modules** and **eight file types**. Total: ~12,000 strings per language.
+TAOM ships with translatable strings across **three modules** and **seventeen file types** (13 pre-existing + 4 added 2026-09-17 for troop/lord/clan/kingdom names). Total: ~14,000 strings per language.
 
-### TAOM module (8 files, ~8,157 strings)
+### TAOM module (17 files, ~11,209 strings)
 
 Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 
 | File | What it contains | Entries |
 |------|------------------|---------|
-| `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~2,104 |
+| `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~2,652 |
 | `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,337 |
-| `std_taom_named_companion_strings_{locale}.xml` | Named companion dialog (Aragorn, Legolas, Gimli, etc.) | ~126 |
-| `std_taom_cc_strings_{locale}.xml` | Character creation narratives (parents, childhood, youth, education, adulthood) | ~772 |
+| `std_taom_named_companion_strings_{locale}.xml` | Named companion dialog (Aragorn, Legolas, Gimli, etc.) | ~119 |
+| `std_taom_cc_strings_{locale}.xml` | Character creation narratives (parents, childhood, youth, education, adulthood) | ~966 |
 | `std_taom_career_strings_{locale}.xml` | Career system names, descriptions, ability tooltips, choices | ~2,050 |
 | `std_taom_messenger_strings_{locale}.xml` | Messenger feature UI | ~29 |
 | `std_taom_lotr_issue_strings_{locale}.xml` | LOTR custom-issue text — issue/quest titles, descriptions, giver dialog, objectives | ~308 |
 | `std_taom_xslt_strings_{locale}.xml` | Kingdom/culture/clan/lord/hero descriptions injected via XSLT (Encyclopedia content) | ~1,431 |
+| `std_taom_emissary_strings_{locale}.xml` | Elite Emissary feature UI | ~22 |
+| `std_taom_wotr_strings_{locale}.xml` | War of the Ring momentum UI + event strings | ~24 |
+| `std_taom_enlistment_strings_{locale}.xml` | Enlistment + field-commission strings | ~252 |
+| `std_taom_keybind_strings_{locale}.xml` | Options-screen keybinding labels (from `global_strings.xml`) | ~8 |
+| `std_taom_player_switcher_strings_{locale}.xml` | Player Switcher feature UI | ~13 |
+| `std_taom_troop_name_strings_{locale}.xml` | Troop names, generated from `troops/troops_*.xml` (added 2026-09-17, Case B) | 836 |
+| `std_taom_lord_name_strings_{locale}.xml` | Lord names not already covered via XSLT strings, generated from `characters/lords.xml` (added 2026-09-17) | 988 |
+| `std_taom_clan_name_strings_{locale}.xml` | Clan names not already covered via module strings, generated from `characters/clans.xml` (added 2026-09-17) | 115 |
+| `std_taom_kingdom_name_strings_{locale}.xml` | Original-12-kingdom identity text (name/short_name/title/ruler_title/desc), generated from `taom_spkingdoms.xml` (added 2026-09-17) | 60 |
 
 ### TAOM_Map module (1 file, ~1,102 strings)
 
@@ -460,7 +469,8 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
-- **Troop names are outside the pipeline.** Every `{=aom_*_name}` in `Main/_Module/ModuleData/troops/*.xml` is an inline default with no row in any strings source, language file or cache, so every language shows the English troop name (found 2026-09-13 while investigating #572, which assumed stale translations that never existed). Localizing them is a Case B pipeline extension: a generated troop-name strings file, registration in `SubModule.xml`, all 12 `language_data.xml` files, the translator's source list and the language-file count test, then a translator run.
+- **Troop/lord/clan/kingdom names were outside the pipeline; closed 2026-09-17.** Every `{=aom_*_name}` in `troops/*.xml`, most of `characters/lords.xml` (179/1184 had been registered via `taom_xslt_strings.xml`), most of `characters/clans.xml` (25/140 via `taom_module_strings.xml`), and all of the original 12 LOTR kingdoms' identity text in `taom_spkingdoms.xml` (name/short_name/title/ruler_title/text) were inline defaults with no row in any strings source, language file or cache (found 2026-09-13 for troops while investigating #572, which assumed stale translations that never existed). `tools/generate_name_localization_strings.py` is the Case B pipeline extension: it extracts every such key, excludes whatever is already registered elsewhere (so a lord already covered via XSLT strings doesn't get a duplicate row), and writes four generated English master files (`taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml`) wired into `SubModule.xml`, all 12 `language_data.xml` files, the translator's source list, and `LanguageDataXmlTests`. 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) across all 12 languages.
+- **Two related gaps remain OPEN, found during the same 2026-09-17 pass, not fixed by it:** custom clan-hero biographies in `characters/heroes.xml` (`text=` attribute; the file carries no `name=` at all, so hero names come from procedural generation elsewhere) sit at 6/465 keys registered, tracked by no GitHub issue. Female notable names (22 inline `NPCCharacter` names with no strings row) are tracked by #478 (open) and are a different source file (notable templates, not lords/troops/clans/kingdoms); the generator above does not reach either.
 - **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping.
 
 ---

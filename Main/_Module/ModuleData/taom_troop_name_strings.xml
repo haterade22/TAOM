@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Generated troop-name strings: extracted from troops/troops_*.xml name= attributes by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator after adding troops. -->
+	<string id="aom_aux_basic_name" text="{=aom_aux_basic_name}[Umbar] Auxiliary Recruit" />
+	<string id="aom_balcoth_archer_name" text="{=aom_balcoth_archer_name}[Rhûn] Balcoth Archer" />
+	<string id="aom_balcoth_axeman_name" text="{=aom_balcoth_axeman_name}[Rhûn] Balcoth Axeman" />
+	<string id="aom_balcoth_farshot_horse_archer_name" text="{=aom_balcoth_farshot_horse_archer_name}[Rhûn] Balcoth Farshot Horse Archer" />
+	<string id="aom_balcoth_footman_name" text="{=aom_balcoth_footman_name}[Rhûn] Balcoth Footman" />
+	<string id="aom_balcoth_horse_archer_name" text="{=aom_balcoth_horse_archer_name}[Rhûn] Balcoth Horse Archer" />
+	<string id="aom_balcoth_veteran_axeman_name" text="{=aom_balcoth_veteran_axeman_name}[Rhûn] Balcoth Veteran Axeman" />
+	<string id="aom_balcoth_volunteer_name" text="{=aom_balcoth_volunteer_name}[Rhûn] Balcoth Volunteer" />
+	<string id="aom_battlemaster_of_the_first_age_name" text="{=aom_battlemaster_of_the_first_age_name}[Lindon] Battlemaster of the First Age" />
+	<string id="aom_black_sun_archer_name" text="{=aom_black_sun_archer_name}[Rhûn] Black Sun Archer" />
+	<string id="aom_black_sun_chosen_marksman_name" text="{=aom_black_sun_chosen_marksman_name}[Rhûn] Black Sun Chosen Marksman" />
+	<string id="aom_black_sun_executioner_name" text="{=aom_black_sun_executioner_name}[Rhûn] Black Sun Executioner" />
+	<string id="aom_black_sun_footman_name" text="{=aom_black_sun_footman_name}[Rhûn] Black Sun Footman" />
+	<string id="aom_black_sun_longbowman_name" text="{=aom_black_sun_longbowman_name}[Rhûn] Black Sun Longbowman" />
+	<string id="aom_black_sun_marksman_name" text="{=aom_black_sun_marksman_name}[Rhûn] Black Sun Marksman" />
+	<string id="aom_black_sun_raider_name" text="{=aom_black_sun_raider_name}[Rhûn] Black Sun Raider" />
+	<string id="aom_black_sun_reaver_name" text="{=aom_black_sun_reaver_name}[Rhûn] Black Sun Reaver" />
+	<string id="aom_black_sun_scourge_name" text="{=aom_black_sun_scourge_name}[Rhûn] Black Sun Scourge" />
+	<string id="aom_black_sun_scout_name" text="{=aom_black_sun_scout_name}[Rhûn] Black Sun Scout" />
+	<string id="aom_black_sun_trainee_name" text="{=aom_black_sun_trainee_name}[Rhûn] Black Sun Trainee" />
+	<string id="aom_bluecraig_bolgs_ironfang_name" text="{=aom_bluecraig_bolgs_ironfang_name}[Goblin] Skarnak's Ironfang" />
+	<string id="aom_cave_troll_name" text="{=aom_cave_troll_name}[AMordor] Armored Troll" />
+	<string id="aom_dale_black_arrow_marksman_name" text="{=aom_dale_black_arrow_marksman_name}[Dale] Dalian Barding" />
+	<string id="aom_dale_bowman_name" text="{=aom_dale_bowman_name}[Dale] Dalian Yeoman" />
+	<string id="aom_dale_crossbowman_name" text="{=aom_dale_crossbowman_name}[Dale] Dalian Crossbowman" />
+	<string id="aom_dale_dalian_mariner_name" text="{=aom_dale_dalian_mariner_name}[Dale] Dalian Mariner" />
+	<string id="aom_dale_footman_name" text="{=aom_dale_footman_name}[Dale] Lake-Town Patrolman" />
+	<string id="aom_dale_guardsman_name" text="{=aom_dale_guardsman_name}[Dale] Dalian Guardsman" />
+	<string id="aom_dale_kings_guard_name" text="{=aom_dale_kings_guard_name}[Dale] Dalian King's Guard" />
+	<string id="aom_dale_kinsman_of_eorl_name" text="{=aom_dale_kinsman_of_eorl_name}[Dale] Dalian Heavy Cavalry" />
+	<string id="aom_dale_knight_name" text="{=aom_dale_knight_name}[Dale] Dalian Northman Scout" />
+	<string id="aom_dale_lake_town_hearthguard_name" text="{=aom_dale_lake_town_hearthguard_name}[Dale] Lake-Town Hearthguard" />
+	<string id="aom_dale_lake_town_mariner_name" text="{=aom_dale_lake_town_mariner_name}[Dale] Lake-Town Veteran Watchman" />
+	<string id="aom_dale_lake_town_skirmisher_name" text="{=aom_dale_lake_town_skirmisher_name}[Dale] Lake-Town Watchman" />
+	<string id="aom_dale_lake_town_veteran_name" text="{=aom_dale_lake_town_veteran_name}[Dale] Lake-Town Officer of the Watch" />
+	<string id="aom_dale_longbowman_name" text="{=aom_dale_longbowman_name}[Dale] Dalian Bowman" />
+	<string id="aom_dale_man_at_arms_name" text="{=aom_dale_man_at_arms_name}[Dale] Dalian Militia" />
+	<string id="aom_dale_master_crossbowman_name" text="{=aom_dale_master_crossbowman_name}[Dale] Dalian Royal Crossbowman" />
+	<string id="aom_dale_militia_archer_name" text="{=aom_dale_militia_archer_name}[Dale] Militia Archer" />
+	<string id="aom_dale_militia_name" text="{=aom_dale_militia_name}[Dale] Lake-Town Militia" />
+	<string id="aom_dale_militia_spearman_name" text="{=aom_dale_militia_spearman_name}[Dale] Militia Spearman" />
+	<string id="aom_dale_militia_veteran_archer_name" text="{=aom_dale_militia_veteran_archer_name}[Dale] Veteran Militia Archer" />
+	<string id="aom_dale_militia_veteran_spearman_name" text="{=aom_dale_militia_veteran_spearman_name}[Dale] Veteran Militia Spearman" />
+	<string id="aom_dale_outrider_name" text="{=aom_dale_outrider_name}[Dale] Dalian Merchant Guard" />
+	<string id="aom_dale_recruit_name" text="{=aom_dale_recruit_name}[Dale] Lake-Town Peasant" />
+	<string id="aom_dale_riverman_name" text="{=aom_dale_riverman_name}[Dale] Dalian Riverman" />
+	<string id="aom_dale_royal_archer_name" text="{=aom_dale_royal_archer_name}[Dale] Dalian Marksman" />
+	<string id="aom_dale_royal_cavalier_name" text="{=aom_dale_royal_cavalier_name}[Dale] Dalian Cavalry" />
+	<string id="aom_dale_royal_crossbowman_name" text="{=aom_dale_royal_crossbowman_name}[Dale] Dalian Master Crossbowman" />
+	<string id="aom_dale_royal_guard_name" text="{=aom_dale_royal_guard_name}[Dale] Dalian Swordsman" />
+	<string id="aom_dale_running_river_warden_name" text="{=aom_dale_running_river_warden_name}[Dale] Dalian Royal Swordsman" />
+	<string id="aom_dale_shipman_name" text="{=aom_dale_shipman_name}[Dale] Dalian Shipman" />
+	<string id="aom_dale_spearman_name" text="{=aom_dale_spearman_name}[Dale] Lake-Town Pikeman" />
+	<string id="aom_dale_squire_name" text="{=aom_dale_squire_name}[Dale] Dalian Levy" />
+	<string id="aom_dale_veteran_crossbowman_name" text="{=aom_dale_veteran_crossbowman_name}[Dale] Dalian Veteran Crossbowman" />
+	<string id="aom_dale_veteran_northman_scout_name" text="{=aom_dale_veteran_northman_scout_name}[Dale] Dalian Veteran Northman Scout" />
+	<string id="aom_dale_veteran_spearman_name" text="{=aom_dale_veteran_spearman_name}[Dale] Lake-Town Veteran Pikeman" />
+	<string id="aom_darkhun_cavalry_name" text="{=aom_darkhun_cavalry_name}[Rhûn] Darkhûn Cavalry" />
+	<string id="aom_darkhun_cultist_knight_name" text="{=aom_darkhun_cultist_knight_name}[Rhûn] Darkhûn Cultist Knight" />
+	<string id="aom_darkhun_footman_name" text="{=aom_darkhun_footman_name}[Rhûn] Darkhûn Footman" />
+	<string id="aom_darkhun_guard_name" text="{=aom_darkhun_guard_name}[Rhûn] Darkhûn Guard" />
+	<string id="aom_darkhun_horseman_name" text="{=aom_darkhun_horseman_name}[Rhûn] Darkhûn Horseman" />
+	<string id="aom_darkhun_infantry_name" text="{=aom_darkhun_infantry_name}[Rhûn] Darkhûn Infantry" />
+	<string id="aom_darkhun_ironbound_name" text="{=aom_darkhun_ironbound_name}[Rhûn] Darkhûn Ironbound" />
+	<string id="aom_darkhun_knight_name" text="{=aom_darkhun_knight_name}[Rhûn] Darkhûn Knight" />
+	<string id="aom_darkhun_recruit_name" text="{=aom_darkhun_recruit_name}[Rhûn] Darkhûn Recruit" />
+	<string id="aom_darkhun_veteran_cavalry_name" text="{=aom_darkhun_veteran_cavalry_name}[Rhûn] Darkhûn Veteran Cavalry" />
+	<string id="aom_darkhun_veteran_infantry_name" text="{=aom_darkhun_veteran_infantry_name}[Rhûn] Darkhûn Veteran Infantry" />
+	<string id="aom_dg_fell_warg_rider_name" text="{=aom_dg_fell_warg_rider_name}[Dol Guldur] Fell Ravager" />
+	<string id="aom_dg_goblin_archer_name" text="{=aom_dg_goblin_archer_name}[Dol Guldur] Goblin Archer" />
+	<string id="aom_dg_goblin_crawler_name" text="{=aom_dg_goblin_crawler_name}[Dol Guldur] Goblin Crawler" />
+	<string id="aom_dg_goblin_fellbow_name" text="{=aom_dg_goblin_fellbow_name}[Dol Guldur] Goblin Fellbow" />
+	<string id="aom_dg_goblin_harrier_name" text="{=aom_dg_goblin_harrier_name}[Dol Guldur] Goblin Harrier" />
+	<string id="aom_dg_goblin_hunter_name" text="{=aom_dg_goblin_hunter_name}[Dol Guldur] Goblin Hunter" />
+	<string id="aom_dg_goblin_impaler_name" text="{=aom_dg_goblin_impaler_name}[Dol Guldur] Goblin Impaler" />
+	<string id="aom_dg_goblin_skirmisher_name" text="{=aom_dg_goblin_skirmisher_name}[Dol Guldur] Goblin Skirmisher" />
+	<string id="aom_dg_goblin_slave_name" text="{=aom_dg_goblin_slave_name}[Dol Guldur] Goblin Runt" />
+	<string id="aom_dg_khamul_shadow_archer_name" text="{=aom_dg_khamul_shadow_archer_name}[Dol Guldur] Shadow Archer" />
+	<string id="aom_dg_khamul_shadow_bowman_name" text="{=aom_dg_khamul_shadow_bowman_name}[Dol Guldur] Khamûl's Shadowbow" />
+	<string id="aom_dg_khamul_shadow_disciple_name" text="{=aom_dg_khamul_shadow_disciple_name}[Dol Guldur] Shadow Disciple" />
+	<string id="aom_dg_khamul_shadow_guard_name" text="{=aom_dg_khamul_shadow_guard_name}[Dol Guldur] Khamûl's Shadow-Guard" />
+	<string id="aom_dg_khamul_shadow_infantry_name" text="{=aom_dg_khamul_shadow_infantry_name}[Dol Guldur] Shadow Infantry" />
+	<string id="aom_dg_khamul_shadow_initiate_name" text="{=aom_dg_khamul_shadow_initiate_name}[Dol Guldur] Shadow Initiate" />
+	<string id="aom_dg_khamul_shadow_knight_name" text="{=aom_dg_khamul_shadow_knight_name}[Dol Guldur] Khamûl's Shadow-Knight" />
+	<string id="aom_dg_khamul_shadow_marksman_name" text="{=aom_dg_khamul_shadow_marksman_name}[Dol Guldur] Shadow Marksman" />
+	<string id="aom_dg_khamul_shadow_reaper_name" text="{=aom_dg_khamul_shadow_reaper_name}[Dol Guldur] Khamûl's Shadow-Reaper" />
+	<string id="aom_dg_khamul_shadow_warden_name" text="{=aom_dg_khamul_shadow_warden_name}[Dol Guldur] Shadow Warden" />
+	<string id="aom_dg_khamul_veiled_guard_name" text="{=aom_dg_khamul_veiled_guard_name}[Dol Guldur] Khamûl's Veiled Guard" />
+	<string id="aom_dg_khamul_veiled_knight_name" text="{=aom_dg_khamul_veiled_knight_name}[Dol Guldur] Khamûl's Veiled Knight" />
+	<string id="aom_dg_khamul_veiled_marksman_name" text="{=aom_dg_khamul_veiled_marksman_name}[Dol Guldur] Khamûl's Veiled Marksman" />
+	<string id="aom_dg_khamul_veiled_reaper_name" text="{=aom_dg_khamul_veiled_reaper_name}[Dol Guldur] Khamûl's Veiled Reaper" />
+	<string id="aom_dg_militia_archer" text="{=aom_dg_militia_archer}Dol Guldur Militia Archer" />
+	<string id="aom_dg_militia_spearman" text="{=aom_dg_militia_spearman}Dol Guldur Militia Spearman" />
+	<string id="aom_dg_militia_vet_archer" text="{=aom_dg_militia_vet_archer}Dol Guldur Militia Veteran Archer" />
+	<string id="aom_dg_militia_vet_spear" text="{=aom_dg_militia_vet_spear}Dol Guldur Militia Veteran Spearman" />
+	<string id="aom_dg_orc_archer_name" text="{=aom_dg_orc_archer_name}[Dol Guldur] Orc Archer" />
+	<string id="aom_dg_orc_gnasher_name" text="{=aom_dg_orc_gnasher_name}[Dol Guldur] Orc Gnasher" />
+	<string id="aom_dg_orc_reaver_name" text="{=aom_dg_orc_reaver_name}[Dol Guldur] Orc Reaver" />
+	<string id="aom_dg_orc_recruit_name" text="{=aom_dg_orc_recruit_name}[Dol Guldur] Orc Recruit" />
+	<string id="aom_dg_orc_scout_name" text="{=aom_dg_orc_scout_name}[Dol Guldur] Orc Scout" />
+	<string id="aom_dg_orc_warrior_name" text="{=aom_dg_orc_warrior_name}[Dol Guldur] Orc Warrior" />
+	<string id="aom_dg_uruk_black_guard_name" text="{=aom_dg_uruk_black_guard_name}[Dol Guldur] Uruk Black Guard" />
+	<string id="aom_dg_uruk_black_sharpshooter_name" text="{=aom_dg_uruk_black_sharpshooter_name}[Dol Guldur] Uruk Black Sharpshooter" />
+	<string id="aom_dg_uruk_black_slayer_name" text="{=aom_dg_uruk_black_slayer_name}[Dol Guldur] Uruk Black Slayer" />
+	<string id="aom_dg_uruk_bowman_name" text="{=aom_dg_uruk_bowman_name}[Dol Guldur] Uruk Bowman" />
+	<string id="aom_dg_uruk_fell_archer_name" text="{=aom_dg_uruk_fell_archer_name}[Dol Guldur] Uruk Fell Archer" />
+	<string id="aom_dg_uruk_fell_fang_name" text="{=aom_dg_uruk_fell_fang_name}[Dol Guldur] Uruk Fell Fang" />
+	<string id="aom_dg_uruk_fell_infantry_name" text="{=aom_dg_uruk_fell_infantry_name}[Dol Guldur] Uruk Fell Infantry" />
+	<string id="aom_dg_uruk_foul_name" text="{=aom_dg_uruk_foul_name}[Dol Guldur] Uruk Foul" />
+	<string id="aom_dg_uruk_skirmisher_name" text="{=aom_dg_uruk_skirmisher_name}[Dol Guldur] Uruk Skirmisher" />
+	<string id="aom_dg_uruk_swordsman_name" text="{=aom_dg_uruk_swordsman_name}[Dol Guldur] Uruk Swordsman" />
+	<string id="aom_dg_uruk_veteran_warrior_name" text="{=aom_dg_uruk_veteran_warrior_name}[Dol Guldur] Uruk Warrior" />
+	<string id="aom_dg_uruk_warrior_name" text="{=aom_dg_uruk_warrior_name}[Dol Guldur] Uruk Fighter" />
+	<string id="aom_dg_warg_raider_name" text="{=aom_dg_warg_raider_name}[Dol Guldur] Warg Rider" />
+	<string id="aom_dg_warg_red_fang_name" text="{=aom_dg_warg_red_fang_name}[Dol Guldur] Warg Fang" />
+	<string id="aom_dg_warg_scout_name" text="{=aom_dg_warg_scout_name}[Dol Guldur] Warg Tracker" />
+	<string id="aom_dg_warg_skirmisher_name" text="{=aom_dg_warg_skirmisher_name}[Dol Guldur] Warg Ravager" />
+	<string id="aom_dragon_wrath_acolyte_name" text="{=aom_dragon_wrath_acolyte_name}[Rhûn] Dragon-Wrath Acolyte" />
+	<string id="aom_dragon_wrath_archer_name" text="{=aom_dragon_wrath_archer_name}[Rhûn] Dragon-Wrath Archer" />
+	<string id="aom_dragon_wrath_ash_executioner_name" text="{=aom_dragon_wrath_ash_executioner_name}[Rhûn] Dragon-Wrath Ash Executioner" />
+	<string id="aom_dragon_wrath_ash_knight_name" text="{=aom_dragon_wrath_ash_knight_name}[Rhûn] Dragon-Wrath Ash Knight" />
+	<string id="aom_dragon_wrath_ash_marksman_name" text="{=aom_dragon_wrath_ash_marksman_name}[Rhûn] Dragon-Wrath Ash Marksman" />
+	<string id="aom_dragon_wrath_ash_shieldguard_name" text="{=aom_dragon_wrath_ash_shieldguard_name}[Rhûn] Dragon-Wrath Ash Shieldguard" />
+	<string id="aom_dragon_wrath_disciple_name" text="{=aom_dragon_wrath_disciple_name}[Rhûn] Dragon-Wrath Disciple" />
+	<string id="aom_dragon_wrath_infantry_name" text="{=aom_dragon_wrath_infantry_name}[Rhûn] Dragon-Wrath Infantry" />
+	<string id="aom_dragon_wrath_lancer_name" text="{=aom_dragon_wrath_lancer_name}[Rhûn] Dragon-Wrath Lancer" />
+	<string id="aom_dragon_wrath_longbowman_name" text="{=aom_dragon_wrath_longbowman_name}[Rhûn] Dragon-Wrath Longbowman" />
+	<string id="aom_dragon_wrath_obsidian_knight_name" text="{=aom_dragon_wrath_obsidian_knight_name}[Rhûn] Dragon-Wrath Obsidian Knight" />
+	<string id="aom_dragon_wrath_obsidian_shieldmaster_name" text="{=aom_dragon_wrath_obsidian_shieldmaster_name}[Rhûn] Dragon-Wrath Obsidian Shieldmaster" />
+	<string id="aom_dragon_wrath_obsidian_war_reaver_name" text="{=aom_dragon_wrath_obsidian_war_reaver_name}[Rhûn] Dragon-Wrath Obsidian War-Reaver" />
+	<string id="aom_dragon_wrath_obsidian_warbow_name" text="{=aom_dragon_wrath_obsidian_warbow_name}[Rhûn] Dragon-Wrath Obsidian Warbow" />
+	<string id="aom_dunland_bear_berserker_name" text="{=aom_dunland_bear_berserker_name}[Dunland] Arth-lûth Berserker" />
+	<string id="aom_dunland_bear_chosen_name" text="{=aom_dunland_bear_chosen_name}[Dunland] Arth-lûth Chosen" />
+	<string id="aom_dunland_bear_executioner_name" text="{=aom_dunland_bear_executioner_name}[Dunland] Arth-lûth Executioner" />
+	<string id="aom_dunland_boar_boar_warrior_name" text="{=aom_dunland_boar_boar_warrior_name}[Dunland] Turch-lûth Ironhide" />
+	<string id="aom_dunland_boar_noble_son_name" text="{=aom_dunland_boar_noble_son_name}[Dunland] Turch-lûth Noble Son" />
+	<string id="aom_dunland_boar_spearman_name" text="{=aom_dunland_boar_spearman_name}[Dunland] Turch-lûth Goreblade" />
+	<string id="aom_dunland_boar_warlord_name" text="{=aom_dunland_boar_warlord_name}[Dunland] Turch-lûth Huskarl" />
+	<string id="aom_dunland_boar_warrior_name" text="{=aom_dunland_boar_warrior_name}[Dunland] Turch-lûth Tuskrunner" />
+	<string id="aom_dunland_clan_warrior_name" text="{=aom_dunland_clan_warrior_name}[Dunland] Blaidd-lûth Warrior" />
+	<string id="aom_dunland_dragon_crossbowman_name" text="{=aom_dunland_dragon_crossbowman_name}[Dunland] Draig-lûth Crossbowman" />
+	<string id="aom_dunland_dragon_firebolt_name" text="{=aom_dunland_dragon_firebolt_name}[Dunland] Draig-lûth Firebolt" />
+	<string id="aom_dunland_dragon_sniper_name" text="{=aom_dunland_dragon_sniper_name}[Dunland] Draig-lûth Sharpshooter" />
+	<string id="aom_dunland_falcon_archer_name" text="{=aom_dunland_falcon_archer_name}[Dunland] Hebog-lûth Scout" />
+	<string id="aom_dunland_falcon_noble_horse_archer_name" text="{=aom_dunland_falcon_noble_horse_archer_name}[Dunland] Hebog-lûth Noble Horse Archer" />
+	<string id="aom_dunland_falcon_wildrider_name" text="{=aom_dunland_falcon_wildrider_name}[Dunland] Hebog-lûth Horse Archer" />
+	<string id="aom_dunland_hunter_name" text="{=aom_dunland_hunter_name}[Dunland] Tribal Hunter" />
+	<string id="aom_dunland_lizard_horseman_name" text="{=aom_dunland_lizard_horseman_name}[Dunland] Avanc-lûth Horseman" />
+	<string id="aom_dunland_lizard_noble_cavalry_name" text="{=aom_dunland_lizard_noble_cavalry_name}[Dunland] Avanc-lûth Noble Cavalry" />
+	<string id="aom_dunland_lizard_outrider_name" text="{=aom_dunland_lizard_outrider_name}[Dunland] Avanc-lûth Outrider" />
+	<string id="aom_dunland_militia_archer_name" text="{=aom_dunland_militia_archer_name}[Dunland] Militia Archer" />
+	<string id="aom_dunland_militia_spearman_name" text="{=aom_dunland_militia_spearman_name}[Dunland] Militia Spearman" />
+	<string id="aom_dunland_militia_vet_arch_name" text="{=aom_dunland_militia_vet_arch_name}[Dunland] Militia Veteran Archer" />
+	<string id="aom_dunland_militia_vet_spear_name" text="{=aom_dunland_militia_vet_spear_name}[Dunland] Militia Veteran Spearman" />
+	<string id="aom_dunland_noble_son_name" text="{=aom_dunland_noble_son_name}[Dunland] Blaidd-lûth Noble Son" />
+	<string id="aom_dunland_ox_guard_name" text="{=aom_dunland_ox_guard_name}[Dunland] Uch-lûth Bodyguard" />
+	<string id="aom_dunland_ox_iron_wall_name" text="{=aom_dunland_ox_iron_wall_name}[Dunland] Uch-lûth Iron Wall" />
+	<string id="aom_dunland_ox_pikeman_name" text="{=aom_dunland_ox_pikeman_name}[Dunland] Uch-lûth Pikeman" />
+	<string id="aom_dunland_peasant_name" text="{=aom_dunland_peasant_name}[Dunland] Peasant" />
+	<string id="aom_dunland_raider_name" text="{=aom_dunland_raider_name}[Dunland] Tribal Raider" />
+	<string id="aom_dunland_raven_archer_name" text="{=aom_dunland_raven_archer_name}[Dunland] Cigfran-lûth Archer" />
+	<string id="aom_dunland_raven_master_ranger_name" text="{=aom_dunland_raven_master_ranger_name}[Dunland] Cigfran-lûth Master Ranger" />
+	<string id="aom_dunland_raven_noble_son_name" text="{=aom_dunland_raven_noble_son_name}[Dunland] Cigfran-lûth Hunter" />
+	<string id="aom_dunland_raven_ranger_name" text="{=aom_dunland_raven_ranger_name}[Dunland] Cigfran-lûth Ranger" />
+	<string id="aom_dunland_raven_warrior_name" text="{=aom_dunland_raven_warrior_name}[Dunland] Cigfran-lûth Skirmisher" />
+	<string id="aom_dunland_skirmisher_name" text="{=aom_dunland_skirmisher_name}[Dunland] Tribal Skirmisher" />
+	<string id="aom_dunland_spearman_name" text="{=aom_dunland_spearman_name}[Dunland] Tribal Spearman" />
+	<string id="aom_dunland_stag_lancer_name" text="{=aom_dunland_stag_lancer_name}[Dunland] Caru-lûth Lancer" />
+	<string id="aom_dunland_stag_noble_lancer_name" text="{=aom_dunland_stag_noble_lancer_name}[Dunland] Caru-lûth Noble Lancer" />
+	<string id="aom_dunland_stag_rider_name" text="{=aom_dunland_stag_rider_name}[Dunland] Caru-lûth Rider" />
+	<string id="aom_dunland_swordsman_name" text="{=aom_dunland_swordsman_name}[Dunland] Tribal Swordsman" />
+	<string id="aom_dunland_veteran_spearman_name" text="{=aom_dunland_veteran_spearman_name}[Dunland] Wild-man Spearman" />
+	<string id="aom_dunland_veteran_swordman_name" text="{=aom_dunland_veteran_swordman_name}[Dunland] Wild-man Swordman" />
+	<string id="aom_dunland_wolf_axeman_name" text="{=aom_dunland_wolf_axeman_name}[Dunland] Blaidd-lûth Axeman" />
+	<string id="aom_dunland_wolf_champion_name" text="{=aom_dunland_wolf_champion_name}[Dunland] Blaidd-lûth Champion" />
+	<string id="aom_dunland_wolf_raider_name" text="{=aom_dunland_wolf_raider_name}[Dunland] Blaidd-lûth Raider" />
+	<string id="aom_easterling_archer_new_name" text="{=aom_easterling_archer_new_name}[Rhûn] Easterling Archer" />
+	<string id="aom_easterling_bowman_name" text="{=aom_easterling_bowman_name}[Rhûn] Easterling Bowman" />
+	<string id="aom_easterling_cavalry_new_name" text="{=aom_easterling_cavalry_new_name}[Rhûn] Easterling Cavalry" />
+	<string id="aom_easterling_footman_new_name" text="{=aom_easterling_footman_new_name}[Rhûn] Easterling Footman" />
+	<string id="aom_easterling_halberdier_new_name" text="{=aom_easterling_halberdier_new_name}[Rhûn] Easterling Halberdier" />
+	<string id="aom_easterling_militia_name" text="{=aom_easterling_militia_name}[Rhûn] Easterling Militia" />
+	<string id="aom_easterling_recruit_name" text="{=aom_easterling_recruit_name}[Rhûn] Easterling Recruit" />
+	<string id="aom_easterling_skirmisher_new_name" text="{=aom_easterling_skirmisher_new_name}[Rhûn] Easterling Skirmisher" />
+	<string id="aom_easterling_swordsman_new_name" text="{=aom_easterling_swordsman_new_name}[Rhûn] Easterling Swordsman" />
+	<string id="aom_easterling_veteran_archer_new_name" text="{=aom_easterling_veteran_archer_new_name}[Rhûn] Easterling Veteran Archer" />
+	<string id="aom_easterling_veteran_cavalry_name" text="{=aom_easterling_veteran_cavalry_name}[Rhûn] Easterling Veteran Cavalry" />
+	<string id="aom_easterling_veteran_halberdier_new_name" text="{=aom_easterling_veteran_halberdier_new_name}[Rhûn] Easterling Veteran Halberdier" />
+	<string id="aom_easterling_veteran_swordsman_new_name" text="{=aom_easterling_veteran_swordsman_new_name}[Rhûn] Easterling Veteran Swordsman" />
+	<string id="aom_er_militia_archer" text="{=aom_er_militia_archer}[Erebor] Militia Archer" />
+	<string id="aom_er_militia_spear" text="{=aom_er_militia_spear}[Erebor] Militia Spearman" />
+	<string id="aom_er_militia_vet_archer" text="{=aom_er_militia_vet_archer}[Erebor] Militia Veteran Archer" />
+	<string id="aom_er_militia_vet_spear" text="{=aom_er_militia_vet_spear}[Erebor] Militia Veteran Spearman" />
+	<string id="aom_erebor_noble_archer_name" text="{=aom_erebor_noble_archer_name}[Erebor] Archer" />
+	<string id="aom_erebor_noble_axe_guard_name" text="{=aom_erebor_noble_axe_guard_name}[Erebor] Axe-Guard" />
+	<string id="aom_erebor_noble_gate_warden_name" text="{=aom_erebor_noble_gate_warden_name}[Erebor] Gate Warden" />
+	<string id="aom_erebor_noble_guard_name" text="{=aom_erebor_noble_guard_name}[Erebor] Guard" />
+	<string id="aom_erebor_noble_infantry_name" text="{=aom_erebor_noble_infantry_name}[Erebor] Infantry" />
+	<string id="aom_erebor_noble_longbeard_name" text="{=aom_erebor_noble_longbeard_name}[Erebor] Longbeard" />
+	<string id="aom_erebor_noble_name" text="{=aom_erebor_noble_name}[Erebor] Noble" />
+	<string id="aom_erebor_noble_ranger_name" text="{=aom_erebor_noble_ranger_name}[Erebor] Ranger" />
+	<string id="aom_erebor_noble_royal_warden_name" text="{=aom_erebor_noble_royal_warden_name}[Erebor] Royal Warden" />
+	<string id="aom_erebor_noble_shield_breaker_name" text="{=aom_erebor_noble_shield_breaker_name}[Erebor] Shield-Breaker" />
+	<string id="aom_erebor_noble_shield_guard_name" text="{=aom_erebor_noble_shield_guard_name}[Erebor] Shield-Guard" />
+	<string id="aom_erebor_noble_veteran_archer_name" text="{=aom_erebor_noble_veteran_archer_name}[Erebor] Veteran Archer" />
+	<string id="aom_erebor_noble_veteran_axe_guard_name" text="{=aom_erebor_noble_veteran_axe_guard_name}[Erebor] Veteran Axe-Guard" />
+	<string id="aom_erebor_oathsworn_legionary_name" text="{=aom_erebor_oathsworn_legionary_name}[Erebor] Legionary" />
+	<string id="aom_erebor_oathsworn_name" text="{=aom_erebor_oathsworn_name}[Erebor] Oathsworn" />
+	<string id="aom_erebor_oathsworn_royal_legionary_name" text="{=aom_erebor_oathsworn_royal_legionary_name}[Erebor] Royal Legionary" />
+	<string id="aom_erebor_reg_bowman_name" text="{=aom_erebor_reg_bowman_name}[Erebor] Bowman" />
+	<string id="aom_erebor_reg_company_name" text="{=aom_erebor_reg_company_name}[Erebor] Company" />
+	<string id="aom_erebor_reg_fighter_name" text="{=aom_erebor_reg_fighter_name}[Erebor] Fighter" />
+	<string id="aom_erebor_reg_mattock_warrior_name" text="{=aom_erebor_reg_mattock_warrior_name}[Erebor] Mattock Warrior" />
+	<string id="aom_erebor_reg_militia_name" text="{=aom_erebor_reg_militia_name}[Erebor] Militia" />
+	<string id="aom_erebor_reg_miner_name" text="{=aom_erebor_reg_miner_name}[Erebor] Miner" />
+	<string id="aom_erebor_reg_skirmisher_name" text="{=aom_erebor_reg_skirmisher_name}[Erebor] Skirmisher" />
+	<string id="aom_erebor_reg_warrior_name" text="{=aom_erebor_reg_warrior_name}[Erebor] Warrior" />
+	<string id="aom_far_rhun_cataphract_name" text="{=aom_far_rhun_cataphract_name}[Rhûn] Far-Rhun Kataphract" />
+	<string id="aom_far_rhun_cavalry_name" text="{=aom_far_rhun_cavalry_name}[Rhûn] Far-Rhun Cavalry" />
+	<string id="aom_far_rhun_footman_name" text="{=aom_far_rhun_footman_name}[Rhûn] Far-Rhun Footman" />
+	<string id="aom_far_rhun_gate_guard_name" text="{=aom_far_rhun_gate_guard_name}[Rhûn] Far-Rhun Gate Guard" />
+	<string id="aom_far_rhun_horse_master_name" text="{=aom_far_rhun_horse_master_name}[Rhûn] Far-Rhun Horse Master" />
+	<string id="aom_far_rhun_horseman_name" text="{=aom_far_rhun_horseman_name}[Rhûn] Far-Rhun Horseman" />
+	<string id="aom_far_rhun_infantry_name" text="{=aom_far_rhun_infantry_name}[Rhûn] Far-Rhun Infantry" />
+	<string id="aom_far_rhun_iron_cataphract_name" text="{=aom_far_rhun_iron_cataphract_name}[Rhûn] Far-Rhun Iron Kataphract" />
+	<string id="aom_far_rhun_iron_legionary_name" text="{=aom_far_rhun_iron_legionary_name}[Rhûn] Far-Rhun Iron Legionary" />
+	<string id="aom_far_rhun_levy_name" text="{=aom_far_rhun_levy_name}[Rhûn] Far-Rhun Levy" />
+	<string id="aom_gb_militia_archer" text="{=aom_gb_militia_archer}[Gundabad] Militia Archer" />
+	<string id="aom_gb_militia_spear" text="{=aom_gb_militia_spear}[Gundabad] Militia Spearman" />
+	<string id="aom_gb_militia_vet_archer" text="{=aom_gb_militia_vet_archer}[Gundabad] Militia Veteran Archer" />
+	<string id="aom_gb_militia_vet_spear" text="{=aom_gb_militia_vet_spear}[Gundabad] Militia Veteran Spearman" />
+	<string id="aom_gob_militia_archer" text="{=aom_gob_militia_archer}[Goblin] Militia Archer" />
+	<string id="aom_gob_militia_spear" text="{=aom_gob_militia_spear}[Goblin] Militia Spearman" />
+	<string id="aom_gob_militia_vet_archer" text="{=aom_gob_militia_vet_archer}[Goblin] Militia Veteran Archer" />
+	<string id="aom_gob_militia_vet_spear" text="{=aom_gob_militia_vet_spear}[Goblin] Militia Veteran Spearman" />
+	<string id="aom_goblin_archer_name" text="{=aom_goblin_archer_name}[Goblin] Archer" />
+	<string id="aom_goblin_berserker_name" text="{=aom_goblin_berserker_name}[Goblin] Goblin Bone Breaker" />
+	<string id="aom_goblin_bolgs_ironfang_name" text="{=aom_goblin_bolgs_ironfang_name}[Goblin] Bolg's Ironfang" />
+	<string id="aom_goblin_brute_name" text="{=aom_goblin_brute_name}[Goblin] Goblin Ravager" />
+	<string id="aom_goblin_chosen_of_tharzog_name" text="{=aom_goblin_chosen_of_tharzog_name}[Goblin] Goblin Mountain Guard" />
+	<string id="aom_goblin_fighter_name" text="{=aom_goblin_fighter_name}[Goblin] Goblin Raider" />
+	<string id="aom_goblin_grunt_name" text="{=aom_goblin_grunt_name}[Goblin] Goblin Brawler" />
+	<string id="aom_goblin_guard_name" text="{=aom_goblin_guard_name}[Goblin] Goblin Impaler" />
+	<string id="aom_goblin_guardian_of_the_tower_name" text="{=aom_goblin_guardian_of_the_tower_name}[Goblin] Goblin War-Pike" />
+	<string id="aom_goblin_hunter_name" text="{=aom_goblin_hunter_name}[Goblin] Hunter" />
+	<string id="aom_goblin_lurker_name" text="{=aom_goblin_lurker_name}[Goblin] Lurker" />
+	<string id="aom_goblin_sentry_name" text="{=aom_goblin_sentry_name}[Goblin] Sentry" />
+	<string id="aom_goblin_snaga_name" text="{=aom_goblin_snaga_name}[Goblin] Goblin Warrior" />
+	<string id="aom_goblin_spear_warrior_name" text="{=aom_goblin_spear_warrior_name}[Goblin] Goblin Spearman" />
+	<string id="aom_goblin_sword_warrior_name" text="{=aom_goblin_sword_warrior_name}[Goblin] Goblin Mauler" />
+	<string id="aom_goblin_veteran_berserker_name" text="{=aom_goblin_veteran_berserker_name}[Goblin] Goblin Skull Crusher" />
+	<string id="aom_goblin_veteran_spear_warrior_name" text="{=aom_goblin_veteran_spear_warrior_name}[Goblin] Goblin Pike-Reaver" />
+	<string id="aom_goblin_veteran_sword_warrior_name" text="{=aom_goblin_veteran_sword_warrior_name}[Goblin] Goblin Infantry" />
+	<string id="aom_gondor_anf_cavalry_name" text="{=aom_gondor_anf_cavalry_name}[Gondor] Anfalas Cavalry" />
+	<string id="aom_gondor_anf_footman_name" text="{=aom_gondor_anf_footman_name}[Gondor] Anfalas Footman" />
+	<string id="aom_gondor_anf_guardsman_name" text="{=aom_gondor_anf_guardsman_name}[Gondor] Anfalas Guardsman" />
+	<string id="aom_gondor_anf_infantry_name" text="{=aom_gondor_anf_infantry_name}[Gondor] Anfalas Infantry" />
+	<string id="aom_gondor_anf_levy_name" text="{=aom_gondor_anf_levy_name}[Gondor] Anfalas Levy" />
+	<string id="aom_gondor_anf_militia_name" text="{=aom_gondor_anf_militia_name}[Gondor] Anfalas Militia" />
+	<string id="aom_gondor_anf_vet_cavalry_name" text="{=aom_gondor_anf_vet_cavalry_name}[Gondor] Anfalas Veteran Cavalry" />
+	<string id="aom_gondor_anf_vet_infantry_name" text="{=aom_gondor_anf_vet_infantry_name}[Gondor] Anfalas Veteran Infantry" />
+	<string id="aom_gondor_ano_archer_militia_name" text="{=aom_gondor_ano_archer_militia_name}[Gondor] Anórien Archer Militia" />
+	<string id="aom_gondor_ano_archer_name" text="{=aom_gondor_ano_archer_name}[Gondor] Anórien Archer" />
+	<string id="aom_gondor_ano_bowman_name" text="{=aom_gondor_ano_bowman_name}[Gondor] Anórien Bowman" />
+	<string id="aom_gondor_ano_footman_name" text="{=aom_gondor_ano_footman_name}[Gondor] Anórien Footman" />
+	<string id="aom_gondor_ano_guardsman_name" text="{=aom_gondor_ano_guardsman_name}[Gondor] Anórien Guardsman" />
+	<string id="aom_gondor_ano_infantry_name" text="{=aom_gondor_ano_infantry_name}[Gondor] Anórien Infantry" />
+	<string id="aom_gondor_ano_militia_name" text="{=aom_gondor_ano_militia_name}[Gondor] Anórien Militia" />
+	<string id="aom_gondor_ano_mt_cavalry_name" text="{=aom_gondor_ano_mt_cavalry_name}[Gondor] Anórien Cavalry" />
+	<string id="aom_gondor_ano_mt_heavy_cavalry_name" text="{=aom_gondor_ano_mt_heavy_cavalry_name}[Gondor] Anórien Heavy Cavalry" />
+	<string id="aom_gondor_ano_mt_knight_name" text="{=aom_gondor_ano_mt_knight_name}[Gondor] Anórien Knight" />
+	<string id="aom_gondor_ano_peasant_name" text="{=aom_gondor_ano_peasant_name}[Gondor] Anórien Peasant" />
+	<string id="aom_gondor_ano_skirmisher_name" text="{=aom_gondor_ano_skirmisher_name}[Gondor] Anorien Skirmisher" />
+	<string id="aom_gondor_ano_vet_infantry_name" text="{=aom_gondor_ano_vet_infantry_name}[Gondor] Anórien Veteran Infantry" />
+	<string id="aom_gondor_arn_cavalry_name" text="{=aom_gondor_arn_cavalry_name}[Gondor] Arndir Cavalry" />
+	<string id="aom_gondor_arn_foot_knight_name" text="{=aom_gondor_arn_foot_knight_name}[Gondor] Arndir Foot-Knight" />
+	<string id="aom_gondor_arn_hill_knight_name" text="{=aom_gondor_arn_hill_knight_name}[Gondor] Arndir Hill-Knight" />
+	<string id="aom_gondor_arn_infantry_name" text="{=aom_gondor_arn_infantry_name}[Gondor] Arndir Infantry" />
+	<string id="aom_gondor_arn_knight_name" text="{=aom_gondor_arn_knight_name}[Gondor] Arndir Knight" />
+	<string id="aom_gondor_arn_noble_name" text="{=aom_gondor_arn_noble_name}[Gondor] Arndir Noble" />
+	<string id="aom_gondor_arn_noble_t4_name" text="{=aom_gondor_arn_noble_t4_name}[Gondor] Arndir Noble" />
+	<string id="aom_gondor_arn_vet_infantry_name" text="{=aom_gondor_arn_vet_infantry_name}[Gondor] Arndir Veteran Infantry" />
+	<string id="aom_gondor_arn_vet_knight_name" text="{=aom_gondor_arn_vet_knight_name}[Gondor] Arndir Veteran Knight" />
+	<string id="aom_gondor_bel_archer_name" text="{=aom_gondor_bel_archer_name}[Gondor] Belfalas Archer" />
+	<string id="aom_gondor_bel_bowman_name" text="{=aom_gondor_bel_bowman_name}[Gondor] Belfalas Bowman" />
+	<string id="aom_gondor_bel_coastguard_name" text="{=aom_gondor_bel_coastguard_name}[Gondor] Belfalas Coastguard" />
+	<string id="aom_gondor_bel_footman_name" text="{=aom_gondor_bel_footman_name}[Gondor] Belfalas Footman" />
+	<string id="aom_gondor_bel_hunter_name" text="{=aom_gondor_bel_hunter_name}[Gondor] Belfalas Hunter" />
+	<string id="aom_gondor_bel_infantry_name" text="{=aom_gondor_bel_infantry_name}[Gondor] Belfalas Infantry" />
+	<string id="aom_gondor_bel_recruit_name" text="{=aom_gondor_bel_recruit_name}[Gondor] Belfalas Recruit" />
+	<string id="aom_gondor_bel_soldier_name" text="{=aom_gondor_bel_soldier_name}[Gondor] Belfalas Soldier" />
+	<string id="aom_gondor_bel_vet_archer_name" text="{=aom_gondor_bel_vet_archer_name}[Gondor] Belfalas Veteran Archer" />
+	<string id="aom_gondor_bel_vet_infantry_name" text="{=aom_gondor_bel_vet_infantry_name}[Gondor] Belfalas Veteran Infantry" />
+	<string id="aom_gondor_brv_archer_name" text="{=aom_gondor_brv_archer_name}[Gondor] Blackroot Vale Archer" />
+	<string id="aom_gondor_brv_bowman_name" text="{=aom_gondor_brv_bowman_name}[Gondor] Blackroot Vale Bowman" />
+	<string id="aom_gondor_brv_ranger_name" text="{=aom_gondor_brv_ranger_name}[Gondor] Blackroot Vale Shadowbow" />
+	<string id="aom_gondor_brv_scout_name" text="{=aom_gondor_brv_scout_name}[Gondor] Blackroot Vale Scout" />
+	<string id="aom_gondor_brv_shadowbow_name" text="{=aom_gondor_brv_shadowbow_name}[Gondor] Blackroot Vale Shadowhunter" />
+	<string id="aom_gondor_brv_shadowhunter_name" text="{=aom_gondor_brv_shadowhunter_name}[Gondor] Blackroot Vale Vanguard" />
+	<string id="aom_gondor_brv_vet_archer_name" text="{=aom_gondor_brv_vet_archer_name}[Gondor] Blackroot Vale Veteran Archer" />
+	<string id="aom_gondor_ca_guard_name" text="{=aom_gondor_ca_guard_name}[Gondor] Cair Andros Guard" />
+	<string id="aom_gondor_ca_infantry_name" text="{=aom_gondor_ca_infantry_name}[Gondor] Cair Andros Infantry" />
+	<string id="aom_gondor_ca_noble_name" text="{=aom_gondor_ca_noble_name}[Gondor] Cair Andros Noble" />
+	<string id="aom_gondor_ca_pikeman_name" text="{=aom_gondor_ca_pikeman_name}[Gondor] Cair Andros Pikeman" />
+	<string id="aom_gondor_ca_pikewarden_name" text="{=aom_gondor_ca_pikewarden_name}[Gondor] Cair Andros Pikewarden" />
+	<string id="aom_gondor_ca_spearman_name" text="{=aom_gondor_ca_spearman_name}[Gondor] Cair Andros Spearman" />
+	<string id="aom_gondor_ca_veteran_name" text="{=aom_gondor_ca_veteran_name}[Gondor] Cair Andros Veteran" />
+	<string id="aom_gondor_ca_warden_name" text="{=aom_gondor_ca_warden_name}[Gondor] Cair Andros Warden" />
+	<string id="aom_gondor_cal_heavy_swordsman_name" text="{=aom_gondor_cal_heavy_swordsman_name}[Gondor] Calembel Heavy Swordsman" />
+	<string id="aom_gondor_cal_noble_name" text="{=aom_gondor_cal_noble_name}[Gondor] Calembel Noble" />
+	<string id="aom_gondor_cal_sergeant_name" text="{=aom_gondor_cal_sergeant_name}[Gondor] Calembel Sergeant" />
+	<string id="aom_gondor_cal_swordsman_name" text="{=aom_gondor_cal_swordsman_name}[Gondor] Calembel Swordsman" />
+	<string id="aom_gondor_cal_vale_knight_name" text="{=aom_gondor_cal_vale_knight_name}[Gondor] Calembel Vale-Knight" />
+	<string id="aom_gondor_da_cavalry_name" text="{=aom_gondor_da_cavalry_name}[Gondor] Dol Amroth Cavalry" />
+	<string id="aom_gondor_da_foot_knight_name" text="{=aom_gondor_da_foot_knight_name}[Gondor] Dol Amroth Foot Knight" />
+	<string id="aom_gondor_da_footman_name" text="{=aom_gondor_da_footman_name}[Gondor] Dol Amroth Footman" />
+	<string id="aom_gondor_da_infantry_name" text="{=aom_gondor_da_infantry_name}[Gondor] Dol Amroth Infantry" />
+	<string id="aom_gondor_da_knight_name" text="{=aom_gondor_da_knight_name}[Gondor] Dol Amroth Knight" />
+	<string id="aom_gondor_da_noble_name" text="{=aom_gondor_da_noble_name}[Gondor] Dol Amroth Noble" />
+	<string id="aom_gondor_da_squire_name" text="{=aom_gondor_da_squire_name}[Gondor] Dol Amroth Squire" />
+	<string id="aom_gondor_da_swan_guard_name" text="{=aom_gondor_da_swan_guard_name}[Gondor] Dol Amroth Swan Guard" />
+	<string id="aom_gondor_da_swan_knight_name" text="{=aom_gondor_da_swan_knight_name}[Gondor] Swan Knight" />
+	<string id="aom_gondor_da_vet_infantry_name" text="{=aom_gondor_da_vet_infantry_name}[Gondor] Dol Amroth Veteran Infantry" />
+	<string id="aom_gondor_da_vet_knight_name" text="{=aom_gondor_da_vet_knight_name}[Gondor] Dol Amroth Veteran Knight" />
+	<string id="aom_gondor_har_conscript_name" text="{=aom_gondor_har_conscript_name}[Gondor] Harondor Conscript" />
+	<string id="aom_gondor_har_footman_name" text="{=aom_gondor_har_footman_name}[Gondor] Harondor Footman" />
+	<string id="aom_gondor_har_frontier_guard_name" text="{=aom_gondor_har_frontier_guard_name}[Gondor] Harondor Frontier Guard" />
+	<string id="aom_gondor_har_guardsman_name" text="{=aom_gondor_har_guardsman_name}[Gondor] Harondor Guardsman" />
+	<string id="aom_gondor_har_infantry_name" text="{=aom_gondor_har_infantry_name}[Gondor] Harondor Infantry" />
+	<string id="aom_gondor_har_javelineer_name" text="{=aom_gondor_har_javelineer_name}[Gondor] Harondor Javelineer" />
+	<string id="aom_gondor_har_militia_name" text="{=aom_gondor_har_militia_name}[Gondor] Harondor Militia" />
+	<string id="aom_gondor_har_skirmisher_name" text="{=aom_gondor_har_skirmisher_name}[Gondor] Harondor Skirmisher" />
+	<string id="aom_gondor_har_vet_skirmisher_name" text="{=aom_gondor_har_vet_skirmisher_name}[Gondor] Harondor Veteran Skirmisher" />
+	<string id="aom_gondor_ith_captain_name" text="{=aom_gondor_ith_captain_name}[Gondor] Ithil Guard Captain" />
+	<string id="aom_gondor_ith_longbowman_name" text="{=aom_gondor_ith_longbowman_name}[Gondor] Ithil Guard Longbowman" />
+	<string id="aom_gondor_ith_moon_guard_name" text="{=aom_gondor_ith_moon_guard_name}[Gondor] Moon Guard" />
+	<string id="aom_gondor_ith_sergeant_name" text="{=aom_gondor_ith_sergeant_name}[Gondor] Ithil Guard Sergeant" />
+	<string id="aom_gondor_ith_sharpshooter_name" text="{=aom_gondor_ith_sharpshooter_name}[Gondor] Ithil Guard Sharpshooter" />
+	<string id="aom_gondor_ith_veteran_name" text="{=aom_gondor_ith_veteran_name}[Gondor] Ithil Guard Veteran" />
+	<string id="aom_gondor_ith_watcher_name" text="{=aom_gondor_ith_watcher_name}[Gondor] Ithil Guard Watcher" />
+	<string id="aom_gondor_ithilien_ranger_name" text="{=aom_gondor_ithilien_ranger_name}[Gondor] Ithilien Ranger" />
+	<string id="aom_gondor_lam_clansman_name" text="{=aom_gondor_lam_clansman_name}[Gondor] Lamedon Clansman" />
+	<string id="aom_gondor_lam_footman_name" text="{=aom_gondor_lam_footman_name}[Gondor] Lamedon Footman" />
+	<string id="aom_gondor_lam_hill_warden_name" text="{=aom_gondor_lam_hill_warden_name}[Gondor] Lamedon Hill-Warden" />
+	<string id="aom_gondor_lam_swordman_name" text="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordman" />
+	<string id="aom_gondor_lam_vet_swordman_name" text="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordman" />
+	<string id="aom_gondor_leb_archer_name" text="{=aom_gondor_leb_archer_name}[Gondor] Lebennin Archer" />
+	<string id="aom_gondor_leb_infantry_name" text="{=aom_gondor_leb_infantry_name}[Gondor] Lebennin Infantry" />
+	<string id="aom_gondor_leb_longbowman_name" text="{=aom_gondor_leb_longbowman_name}[Gondor] Lebennin Longbowman" />
+	<string id="aom_gondor_leb_militia_name" text="{=aom_gondor_leb_militia_name}[Gondor] Lebennin Militia" />
+	<string id="aom_gondor_leb_sea_guard_name" text="{=aom_gondor_leb_sea_guard_name}[Gondor] Lebennin Sea Guard" />
+	<string id="aom_gondor_leb_skirmisher_name" text="{=aom_gondor_leb_skirmisher_name}[Gondor] Lebennin Skirmisher" />
+	<string id="aom_gondor_leb_vet_archer_name" text="{=aom_gondor_leb_vet_archer_name}[Gondor] Lebennin Veteran Archer" />
+	<string id="aom_gondor_leb_vet_infantry_name" text="{=aom_gondor_leb_vet_infantry_name}[Gondor] Lebennin Veteran Infantry" />
+	<string id="aom_gondor_lg_crossbowman_name" text="{=aom_gondor_lg_crossbowman_name}[Gondor] Lond-Galen Crossbowman" />
+	<string id="aom_gondor_lg_haven_guard_name" text="{=aom_gondor_lg_haven_guard_name}[Gondor] Lond-Galen Haven Guard" />
+	<string id="aom_gondor_lg_noble_name" text="{=aom_gondor_lg_noble_name}[Gondor] Lond-Galen Noble" />
+	<string id="aom_gondor_lg_pavise_crossbowman_name" text="{=aom_gondor_lg_pavise_crossbowman_name}[Gondor] Lond-Galen Pavise Crossbowman" />
+	<string id="aom_gondor_lg_pavise_guard_name" text="{=aom_gondor_lg_pavise_guard_name}[Gondor] Lond-Galen Pavise Guard" />
+	<string id="aom_gondor_lin_footman_name" text="{=aom_gondor_lin_footman_name}[Gondor] Linhir Footman" />
+	<string id="aom_gondor_lin_high_guard_name" text="{=aom_gondor_lin_high_guard_name}[Gondor] Linhir High Guard" />
+	<string id="aom_gondor_lin_noble_name" text="{=aom_gondor_lin_noble_name}[Gondor] Linhir Noble" />
+	<string id="aom_gondor_lin_spearman_name" text="{=aom_gondor_lin_spearman_name}[Gondor] Linhir Spearman" />
+	<string id="aom_gondor_lin_vet_spearman_name" text="{=aom_gondor_lin_vet_spearman_name}[Gondor] Linhir Veteran Spearman" />
+	<string id="aom_gondor_loss_axe_thrower_name" text="{=aom_gondor_loss_axe_thrower_name}[Gondor] Lossarnach Axe-Thrower" />
+	<string id="aom_gondor_loss_axebearer_name" text="{=aom_gondor_loss_axebearer_name}[Gondor] Lossarnach Axebearer" />
+	<string id="aom_gondor_loss_guard_name" text="{=aom_gondor_loss_guard_name}[Gondor] Lossarnach Guard" />
+	<string id="aom_gondor_loss_lumberman_name" text="{=aom_gondor_loss_lumberman_name}[Gondor] Lossarnach Lumberman" />
+	<string id="aom_gondor_loss_noble_captain_name" text="{=aom_gondor_loss_noble_captain_name}[Gondor] Lossarnach Noble Captain" />
+	<string id="aom_gondor_loss_noble_name" text="{=aom_gondor_loss_noble_name}[Gondor] Lossarnach Noble" />
+	<string id="aom_gondor_loss_noble_sergeant_name" text="{=aom_gondor_loss_noble_sergeant_name}[Gondor] Lossarnach Noble Sergeant" />
+	<string id="aom_gondor_loss_noble_veteran_name" text="{=aom_gondor_loss_noble_veteran_name}[Gondor] Lossarnach Noble Veteran" />
+	<string id="aom_gondor_loss_noble_warden_name" text="{=aom_gondor_loss_noble_warden_name}[Gondor] Lossarnach Noble Warden" />
+	<string id="aom_gondor_loss_skirmisher_name" text="{=aom_gondor_loss_skirmisher_name}[Gondor] Lossarnach Skirmisher" />
+	<string id="aom_gondor_loss_vet_axe_thrower_name" text="{=aom_gondor_loss_vet_axe_thrower_name}[Gondor] Lossarnach Veteran Axe-Thrower" />
+	<string id="aom_gondor_loss_vet_axebearer_name" text="{=aom_gondor_loss_vet_axebearer_name}[Gondor] Lossarnach Veteran Axebearer" />
+	<string id="aom_gondor_loss_vet_guard_name" text="{=aom_gondor_loss_vet_guard_name}[Gondor] Lossarnach Veteran Guard" />
+	<string id="aom_gondor_loss_woodsman_name" text="{=aom_gondor_loss_woodsman_name}[Gondor] Lossarnach Woodsman" />
+	<string id="aom_gondor_met_archer_name" text="{=aom_gondor_met_archer_name}[Gondor] Methir Archer" />
+	<string id="aom_gondor_met_composite_archer_name" text="{=aom_gondor_met_composite_archer_name}[Gondor] Methir Composite Archer" />
+	<string id="aom_gondor_met_glaive_guard_name" text="{=aom_gondor_met_glaive_guard_name}[Gondor] Methir Glaive Guard" />
+	<string id="aom_gondor_met_glaiveman_name" text="{=aom_gondor_met_glaiveman_name}[Gondor] Methir Glaiveman" />
+	<string id="aom_gondor_met_noble_name" text="{=aom_gondor_met_noble_name}[Gondor] Methir Noble" />
+	<string id="aom_gondor_met_sun_knight_name" text="{=aom_gondor_met_sun_knight_name}[Gondor] Methir Sun Knight" />
+	<string id="aom_gondor_met_sun_warden_name" text="{=aom_gondor_met_sun_warden_name}[Gondor] Methir Sun Warden" />
+	<string id="aom_gondor_met_vet_archer_name" text="{=aom_gondor_met_vet_archer_name}[Gondor] Methir Veteran Archer" />
+	<string id="aom_gondor_militia_archer_name" text="{=aom_gondor_militia_archer_name}[Gondor] Gondor Militia Archer" />
+	<string id="aom_gondor_militia_spearman_name" text="{=aom_gondor_militia_spearman_name}[Gondor] Gondor Militia Spearman" />
+	<string id="aom_gondor_militia_veteran_archer_name" text="{=aom_gondor_militia_veteran_archer_name}[Gondor] Gondor Veteran Militia Archer" />
+	<string id="aom_gondor_militia_veteran_spearman_name" text="{=aom_gondor_militia_veteran_spearman_name}[Gondor] Gondor Veteran Militia Spearman" />
+	<string id="aom_gondor_mt_captain_name" text="{=aom_gondor_mt_captain_name}[Gondor] Citadel Guard Captain" />
+	<string id="aom_gondor_mt_fountain_guard_name" text="{=aom_gondor_mt_fountain_guard_name}[Gondor] Fountain Guard" />
+	<string id="aom_gondor_mt_longbowman_name" text="{=aom_gondor_mt_longbowman_name}[Gondor] Citadel Guard Longbowman" />
+	<string id="aom_gondor_mt_sergeant_name" text="{=aom_gondor_mt_sergeant_name}[Gondor] Citadel Guard Sergeant" />
+	<string id="aom_gondor_mt_sharpshooter_name" text="{=aom_gondor_mt_sharpshooter_name}[Gondor] Citadel Guard Sharpshooter" />
+	<string id="aom_gondor_mt_trainee_name" text="{=aom_gondor_mt_trainee_name}[Gondor] Citadel Guard Trainee" />
+	<string id="aom_gondor_mt_veteran_name" text="{=aom_gondor_mt_veteran_name}[Gondor] Citadel Guard Veteran" />
+	<string id="aom_gondor_osg_archer_name" text="{=aom_gondor_osg_archer_name}[Gondor] Osgiliath Archer" />
+	<string id="aom_gondor_osg_dome_guard_name" text="{=aom_gondor_osg_dome_guard_name}[Gondor] Osgiliath Dome Guard" />
+	<string id="aom_gondor_osg_guard_name" text="{=aom_gondor_osg_guard_name}[Gondor] Osgiliath Guard" />
+	<string id="aom_gondor_osg_infantry_name" text="{=aom_gondor_osg_infantry_name}[Gondor] Osgiliath Infantry" />
+	<string id="aom_gondor_osg_longbowman_name" text="{=aom_gondor_osg_longbowman_name}[Gondor] Osgiliath Longbowman" />
+	<string id="aom_gondor_osg_skirmisher_name" text="{=aom_gondor_osg_skirmisher_name}[Gondor] Osgiliath Skirmisher" />
+	<string id="aom_gondor_osg_veteran_name" text="{=aom_gondor_osg_veteran_name}[Gondor] Osgiliath Veteran" />
+	<string id="aom_gondor_pel_anchor_guard_name" text="{=aom_gondor_pel_anchor_guard_name}[Gondor] Pelargir Anchor Guard" />
+	<string id="aom_gondor_pel_infantry_name" text="{=aom_gondor_pel_infantry_name}[Gondor] Pelargir Infantry" />
+	<string id="aom_gondor_pel_skirmisher_name" text="{=aom_gondor_pel_skirmisher_name}[Gondor] Pelargir Skirmisher" />
+	<string id="aom_gondor_pel_vet_infantry_name" text="{=aom_gondor_pel_vet_infantry_name}[Gondor] Pelargir Veteran Infantry" />
+	<string id="aom_gondor_pel_veteran_name" text="{=aom_gondor_pel_veteran_name}[Gondor] Pelargir Veteran" />
+	<string id="aom_gondor_pg_archer_name" text="{=aom_gondor_pg_archer_name}[Gondor] Pinnath Gelin Archer" />
+	<string id="aom_gondor_pg_cavalry_name" text="{=aom_gondor_pg_cavalry_name}[Gondor] Pinnath Gelin Light Horseman" />
+	<string id="aom_gondor_pg_footman_name" text="{=aom_gondor_pg_footman_name}[Gondor] Pinnath Gelin Footman" />
+	<string id="aom_gondor_pg_militia_name" text="{=aom_gondor_pg_militia_name}[Gondor] Pinnath Gelin Militia" />
+	<string id="aom_gondor_pg_spearman_name" text="{=aom_gondor_pg_spearman_name}[Gondor] Pinnath Gelin Spearman" />
+	<string id="aom_gondor_pg_spearwarden_name" text="{=aom_gondor_pg_spearwarden_name}[Gondor] Pinnath Gelin Spearwarden" />
+	<string id="aom_gondor_pg_vet_archer_name" text="{=aom_gondor_pg_vet_archer_name}[Gondor] Pinnath Gelin Veteran Archer" />
+	<string id="aom_gondor_pg_vet_cavalry_name" text="{=aom_gondor_pg_vet_cavalry_name}[Gondor] Pinnath Gelin Veteran Horseman" />
+	<string id="aom_gondor_pg_vet_spearman_name" text="{=aom_gondor_pg_vet_spearman_name}[Gondor] Pinnath Gelin Veteran Spearman" />
+	<string id="aom_gondor_pg_volunteer_name" text="{=aom_gondor_pg_volunteer_name}[Gondor] Pinnath Gelin Volunteer" />
+	<string id="aom_gondor_ring_footman_name" text="{=aom_gondor_ring_footman_name}[Gondor] Ringlo Vale Footman" />
+	<string id="aom_gondor_ring_guardsman_name" text="{=aom_gondor_ring_guardsman_name}[Gondor] Ringlo Vale Guardsman" />
+	<string id="aom_gondor_ring_militia_name" text="{=aom_gondor_ring_militia_name}[Gondor] Ringlo Vale Militia" />
+	<string id="aom_gondor_ring_peasant_name" text="{=aom_gondor_ring_peasant_name}[Gondor] Ringlo Vale Peasant" />
+	<string id="aom_gondor_ring_spearman_name" text="{=aom_gondor_ring_spearman_name}[Gondor] Ringlo Vale Spearman" />
+	<string id="aom_gondor_ring_warden_name" text="{=aom_gondor_ring_warden_name}[Gondor] Ringlo Vale Warden" />
+	<string id="aom_gondor_ser_coastwarden_name" text="{=aom_gondor_ser_coastwarden_name}[Gondor] Serelond Coastwarden" />
+	<string id="aom_gondor_ser_maceman_name" text="{=aom_gondor_ser_maceman_name}[Gondor] Serelond Maceman" />
+	<string id="aom_gondor_ser_noble_name" text="{=aom_gondor_ser_noble_name}[Gondor] Serelond Noble" />
+	<string id="aom_gondor_ser_phalanx_name" text="{=aom_gondor_ser_phalanx_name}[Gondor] Serelond Phalanx" />
+	<string id="aom_gondor_ser_pikeman_name" text="{=aom_gondor_ser_pikeman_name}[Gondor] Serelond Pikeman" />
+	<string id="aom_gondor_ser_pikewarden_name" text="{=aom_gondor_ser_pikewarden_name}[Gondor] Serelond Pikewarden" />
+	<string id="aom_gondor_ser_vet_maceman_name" text="{=aom_gondor_ser_vet_maceman_name}[Gondor] Serelond Veteran Maceman" />
+	<string id="aom_gondor_ser_veteran_name" text="{=aom_gondor_ser_veteran_name}[Gondor] Serelond Veteran" />
+	<string id="aom_gondor_tol_arbalest_name" text="{=aom_gondor_tol_arbalest_name}[Gondor] Tolfalas Arbalest" />
+	<string id="aom_gondor_tol_crossbowman_name" text="{=aom_gondor_tol_crossbowman_name}[Gondor] Tolfalas Crossbowman" />
+	<string id="aom_gondor_tol_marksman_name" text="{=aom_gondor_tol_marksman_name}[Gondor] Tolfalas Marksman" />
+	<string id="aom_gondor_tol_sharpshooter_name" text="{=aom_gondor_tol_sharpshooter_name}[Gondor] Tolfalas Sharpshooter" />
+	<string id="aom_gondor_tol_vet_crossbowman_name" text="{=aom_gondor_tol_vet_crossbowman_name}[Gondor] Tolfalas Veteran Crossbowman" />
+	<string id="aom_gundabad_archer_name" text="{=aom_gundabad_archer_name}[Gundabad] Archer" />
+	<string id="aom_gundabad_berserker_name" text="{=aom_gundabad_berserker_name}[Gundabad] Pale Uruk Bone Breaker" />
+	<string id="aom_gundabad_bolgs_ironfang_name" text="{=aom_gundabad_bolgs_ironfang_name}[Gundabad] Bolg's Ironfang" />
+	<string id="aom_gundabad_brute_name" text="{=aom_gundabad_brute_name}[Gundabad] Pale Uruk Ravager" />
+	<string id="aom_gundabad_chosen_of_tharzog_name" text="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Pale Uruk Mountain Guard" />
+	<string id="aom_gundabad_despoiler_of_the_vale_name" text="{=aom_gundabad_despoiler_of_the_vale_name}[Gundabad] Despoiler of the Vale" />
+	<string id="aom_gundabad_dread_rider_of_the_tower_name" text="{=aom_gundabad_dread_rider_of_the_tower_name}[Gundabad] Azog's Defiler" />
+	<string id="aom_gundabad_fighter_name" text="{=aom_gundabad_fighter_name}[Gundabad] Pale Uruk Raider" />
+	<string id="aom_gundabad_grunt_name" text="{=aom_gundabad_grunt_name}[Gundabad] Pale Uruk Brawler" />
+	<string id="aom_gundabad_guard_name" text="{=aom_gundabad_guard_name}[Gundabad] Pale Uruk Impaler" />
+	<string id="aom_gundabad_guardian_of_the_tower_name" text="{=aom_gundabad_guardian_of_the_tower_name}[Gundabad] Pale Uruk War-Pike" />
+	<string id="aom_gundabad_hunter_name" text="{=aom_gundabad_hunter_name}[Gundabad] Hunter" />
+	<string id="aom_gundabad_lurker_name" text="{=aom_gundabad_lurker_name}[Gundabad] Lurker" />
+	<string id="aom_gundabad_scout_name" text="{=aom_gundabad_scout_name}[Gundabad] Scout" />
+	<string id="aom_gundabad_sentry_name" text="{=aom_gundabad_sentry_name}[Gundabad] Sentry" />
+	<string id="aom_gundabad_snaga_name" text="{=aom_gundabad_snaga_name}[Gundabad] Pale Uruk Warrior" />
+	<string id="aom_gundabad_spear_warrior_name" text="{=aom_gundabad_spear_warrior_name}[Gundabad] Pale Uruk Spearman" />
+	<string id="aom_gundabad_sword_warrior_name" text="{=aom_gundabad_sword_warrior_name}[Gundabad] Pale Uruk Mauler" />
+	<string id="aom_gundabad_tracker_name" text="{=aom_gundabad_tracker_name}[Gundabad] Pale Uruk Fang Rider" />
+	<string id="aom_gundabad_veteran_berserker_name" text="{=aom_gundabad_veteran_berserker_name}[Gundabad] Pale Uruk Skull Crusher" />
+	<string id="aom_gundabad_veteran_spear_warrior_name" text="{=aom_gundabad_veteran_spear_warrior_name}[Gundabad] Pale Uruk Pike-Reaver" />
+	<string id="aom_gundabad_veteran_sword_warrior_name" text="{=aom_gundabad_veteran_sword_warrior_name}[Gundabad] Pale Uruk Infantry" />
+	<string id="aom_gundabad_warg_tamer_name" text="{=aom_gundabad_warg_tamer_name}[Gundabad] Pale Uruk Wolf Rider" />
+	<string id="aom_harad_archer_name" text="{=aom_harad_archer_name}[Harad] Desert Archer" />
+	<string id="aom_harad_bronzefang_name" text="{=aom_harad_bronzefang_name}[Harad] Bronze Fang" />
+	<string id="aom_harad_camel_lancer_name" text="{=aom_harad_camel_lancer_name}[Harad] Camel Lancer" />
+	<string id="aom_harad_camelrider_name" text="{=aom_harad_camelrider_name}[Harad] Camel Rider" />
+	<string id="aom_harad_camelscout_name" text="{=aom_harad_camelscout_name}[Harad] Camel Scout" />
+	<string id="aom_harad_champion_name" text="{=aom_harad_champion_name}[Harad] Champion" />
+	<string id="aom_harad_fangking_name" text="{=aom_harad_fangking_name}[Harad] Fang of the King" />
+	<string id="aom_harad_footman_name" text="{=aom_harad_footman_name}[Harad] Footman" />
+	<string id="aom_harad_gildedfang_name" text="{=aom_harad_gildedfang_name}[Harad] Warrior of the Gilded Fang" />
+	<string id="aom_harad_horsearcher_name" text="{=aom_harad_horsearcher_name}[Harad] Rider of the Golden Veil" />
+	<string id="aom_harad_levy_name" text="{=aom_harad_levy_name}[Harad] Levy" />
+	<string id="aom_harad_marksman_name" text="{=aom_harad_marksman_name}[Harad] Marksman" />
+	<string id="aom_harad_militia_archer_name" text="{=aom_harad_militia_archer_name}[Harad] Militia Archer" />
+	<string id="aom_harad_militia_name" text="{=aom_harad_militia_name}[Harad] Militia" />
+	<string id="aom_harad_militia_spearman_name" text="{=aom_harad_militia_spearman_name}[Harad] Militia Spearman" />
+	<string id="aom_harad_militia_vet_arch_name" text="{=aom_harad_militia_vet_arch_name}[Harad] Militia Veteran Archer" />
+	<string id="aom_harad_militia_vet_spear_name" text="{=aom_harad_militia_vet_spear_name}[Harad] Militia Veteran Spearman" />
+	<string id="aom_harad_noble_name" text="{=aom_harad_noble_name}[Harad] Youngblood of the Serpent" />
+	<string id="aom_harad_sandblade_name" text="{=aom_harad_sandblade_name}[Harad] Initiate of the Sand Blades" />
+	<string id="aom_harad_serpent_eye_name" text="{=aom_harad_serpent_eye_name}[Harad] Serpent Eyes" />
+	<string id="aom_harad_serpentguard_name" text="{=aom_harad_serpentguard_name}[Harad] Serpent Guard" />
+	<string id="aom_harad_serpenthorsearcher_name" text="{=aom_harad_serpenthorsearcher_name}[Harad] Serpent Archer" />
+	<string id="aom_harad_skirmisher_name" text="{=aom_harad_skirmisher_name}[Harad] Skirmisher" />
+	<string id="aom_harad_spearfighter_name" text="{=aom_harad_spearfighter_name}[Harad] Spear Fighter" />
+	<string id="aom_harad_spearguard_name" text="{=aom_harad_spearguard_name}[Harad] Spear Guard" />
+	<string id="aom_harad_sunlance_name" text="{=aom_harad_sunlance_name}[Harad] Sunlance" />
+	<string id="aom_harad_swordfighter_name" text="{=aom_harad_swordfighter_name}[Harad] Sword Fighter" />
+	<string id="aom_harad_vipereye_name" text="{=aom_harad_vipereye_name}[Harad] Viper" />
+	<string id="aom_harad_warlance_name" text="{=aom_harad_warlance_name}[Harad] Warlance" />
+	<string id="aom_imladris_archer_name" text="{=aom_imladris_archer_name}[Lindon] Mithlond Archer" />
+	<string id="aom_imladris_blademaster_name" text="{=aom_imladris_blademaster_name}[Lindon] Mithlond Blademaster" />
+	<string id="aom_imladris_bowman_name" text="{=aom_imladris_bowman_name}[Lindon] Mithlond Bowman" />
+	<string id="aom_imladris_guardsman_name" text="{=aom_imladris_guardsman_name}[Lindon] Mithlond Guardsman" />
+	<string id="aom_imladris_horse_archer_name" text="{=aom_imladris_horse_archer_name}[Lindon] Mithlond Horse Archer" />
+	<string id="aom_imladris_infantry_name" text="{=aom_imladris_infantry_name}[Lindon] Mithlond Infantry" />
+	<string id="aom_imladris_marchwarden_name" text="{=aom_imladris_marchwarden_name}[Lindon] Mithlond Marchwarden" />
+	<string id="aom_imladris_marksman_name" text="{=aom_imladris_marksman_name}[Lindon] Mithlond Marksman" />
+	<string id="aom_imladris_nobleman_name" text="{=aom_imladris_nobleman_name}[Lindon] Mithlond Nobleman" />
+	<string id="aom_imladris_outrider_name" text="{=aom_imladris_outrider_name}[Lindon] Mithlond Outrider" />
+	<string id="aom_imladris_recruit_name" text="{=aom_imladris_recruit_name}[Lindon] Mithlond Recruit" />
+	<string id="aom_imladris_swordguard_name" text="{=aom_imladris_swordguard_name}[Lindon] Mithlond Swordguard" />
+	<string id="aom_imladris_warden_name" text="{=aom_imladris_warden_name}[Lindon] Mithlond Warden" />
+	<string id="aom_iron_hills_reg_axe_warrior_name" text="{=aom_iron_hills_reg_axe_warrior_name}[Iron Hills] Axe Warrior" />
+	<string id="aom_iron_hills_reg_bowman_name" text="{=aom_iron_hills_reg_bowman_name}[Iron Hills] Bowman" />
+	<string id="aom_iron_hills_reg_company_name" text="{=aom_iron_hills_reg_company_name}[Iron Hills] Company" />
+	<string id="aom_iron_hills_reg_fighter_name" text="{=aom_iron_hills_reg_fighter_name}[Iron Hills] Fighter" />
+	<string id="aom_iron_hills_reg_militia_name" text="{=aom_iron_hills_reg_militia_name}[Iron Hills] Militia" />
+	<string id="aom_iron_hills_reg_recruit_name" text="{=aom_iron_hills_reg_recruit_name}[Iron Hills] Recruit" />
+	<string id="aom_iron_hills_reg_skirmisher_name" text="{=aom_iron_hills_reg_skirmisher_name}[Iron Hills] Skirmisher" />
+	<string id="aom_iron_hills_reg_warrior_name" text="{=aom_iron_hills_reg_warrior_name}[Iron Hills] Warrior" />
+	<string id="aom_ironpass_arbalest_name" text="{=aom_ironpass_arbalest_name}[Ironpass] Arbalest" />
+	<string id="aom_ironpass_axeman_name" text="{=aom_ironpass_axeman_name}[Ironpass] Axeman" />
+	<string id="aom_ironpass_goat_charger_name" text="{=aom_ironpass_goat_charger_name}[Ironpass] Goatback Charger" />
+	<string id="aom_ironpass_infantry_name" text="{=aom_ironpass_infantry_name}[Ironpass] Infantry" />
+	<string id="aom_ironpass_mountain_guard_name" text="{=aom_ironpass_mountain_guard_name}[Ironpass] Mountain Guard" />
+	<string id="aom_ironpass_ram_breaker_name" text="{=aom_ironpass_ram_breaker_name}[Ironpass] Ram-Breaker" />
+	<string id="aom_ironpass_ram_herder_name" text="{=aom_ironpass_ram_herder_name}[Ironpass] Ram Herder" />
+	<string id="aom_ironpass_ram_marshal_name" text="{=aom_ironpass_ram_marshal_name}[Ironpass] Ram Marshal" />
+	<string id="aom_ironpass_ram_rider_name" text="{=aom_ironpass_ram_rider_name}[Ironpass] Ram Rider" />
+	<string id="aom_ironpass_ram_vanguard_name" text="{=aom_ironpass_ram_vanguard_name}[Ironpass] Ram Vanguard" />
+	<string id="aom_ironpass_recruit_name" text="{=aom_ironpass_recruit_name}[Ironpass] Recruit" />
+	<string id="aom_ironpass_sharpshooter_name" text="{=aom_ironpass_sharpshooter_name}[Ironpass] Sharpshooter" />
+	<string id="aom_ironpass_veteran_arbalest_name" text="{=aom_ironpass_veteran_arbalest_name}[Ironpass] Veteran Arbalest" />
+	<string id="aom_ironpass_veteran_axeman_name" text="{=aom_ironpass_veteran_axeman_name}[Ironpass] Veteran Axeman" />
+	<string id="aom_ironpass_warrior_name" text="{=aom_ironpass_warrior_name}[Ironpass] Warrior" />
+	<string id="aom_isen_mil_arch_name" text="{=aom_isen_mil_arch_name}[Isengard] Militia Archer" />
+	<string id="aom_isen_mil_spear_name" text="{=aom_isen_mil_spear_name}[Isengard] Militia Spearman" />
+	<string id="aom_isen_mil_varch_name" text="{=aom_isen_mil_varch_name}[Isengard] Militia Veteran Archer" />
+	<string id="aom_isen_mil_vspear_name" text="{=aom_isen_mil_vspear_name}[Isengard] Militia Veteran Spearman" />
+	<string id="aom_isengard_orc_berserker_name" text="{=aom_isengard_orc_berserker_name}[Isengard] Orc Berserker" />
+	<string id="aom_isengard_orc_brawler_name" text="{=aom_isengard_orc_brawler_name}[Isengard] Orc Brawler" />
+	<string id="aom_isengard_orc_butcher_name" text="{=aom_isengard_orc_butcher_name}[Isengard] Orc Butcher" />
+	<string id="aom_isengard_orc_grunt_name" text="{=aom_isengard_orc_grunt_name}[Isengard] Orc Grunt" />
+	<string id="aom_isengard_orc_marauder_name" text="{=aom_isengard_orc_marauder_name}[Isengard] Orc Marauder" />
+	<string id="aom_isengard_orc_ravager_name" text="{=aom_isengard_orc_ravager_name}[Isengard] Orc Ravager" />
+	<string id="aom_isengard_orc_reaver_name" text="{=aom_isengard_orc_reaver_name}[Isengard] Orc Reaver" />
+	<string id="aom_isengard_orc_slayer_name" text="{=aom_isengard_orc_slayer_name}[Isengard] Orc Slayer" />
+	<string id="aom_isengard_orc_warg_raider_v2_name" text="{=aom_isengard_orc_warg_raider_v2_name}[Isengard] Orc Warg Raider" />
+	<string id="aom_isengard_orc_warg_ravager_v2_name" text="{=aom_isengard_orc_warg_ravager_v2_name}[Isengard] Orc Warg Ravager" />
+	<string id="aom_isengard_orc_warg_rider_v2_name" text="{=aom_isengard_orc_warg_rider_v2_name}[Isengard] Orc Warg Rider" />
+	<string id="aom_isengard_orc_warg_scout_v2_name" text="{=aom_isengard_orc_warg_scout_v2_name}[Isengard] Orc Warg Scout" />
+	<string id="aom_isengard_orc_warrior_name" text="{=aom_isengard_orc_warrior_name}[Isengard] Orc Warrior" />
+	<string id="aom_kharaghul_ashkur_nokor_name" text="{=aom_kharaghul_ashkur_nokor_name}[Rhûn] Kharaghûl Ashkur Nokor" />
+	<string id="aom_kharaghul_horse_archer_name" text="{=aom_kharaghul_horse_archer_name}[Rhûn] Kharaghûl Horse Archer" />
+	<string id="aom_kharaghul_horse_master_name" text="{=aom_kharaghul_horse_master_name}[Rhûn] Kharaghûl Horse Master" />
+	<string id="aom_kharaghul_horse_scout_name" text="{=aom_kharaghul_horse_scout_name}[Rhûn] Kharaghûl Horse Scout" />
+	<string id="aom_kharaghul_karash_keshig_name" text="{=aom_kharaghul_karash_keshig_name}[Rhûn] Kharaghûl Karash Keshig" />
+	<string id="aom_kharaghul_keshig_name" text="{=aom_kharaghul_keshig_name}[Rhûn] Kharaghûl Keshig" />
+	<string id="aom_kharaghul_nokor_name" text="{=aom_kharaghul_nokor_name}[Rhûn] Kharaghûl Nokor" />
+	<string id="aom_kharaghul_raider_name" text="{=aom_kharaghul_raider_name}[Rhûn] Kharaghûl Raider" />
+	<string id="aom_kharaghul_rider_name" text="{=aom_kharaghul_rider_name}[Rhûn] Kharaghûl Rider" />
+	<string id="aom_kharaghul_youth_name" text="{=aom_kharaghul_youth_name}[Rhûn] Kharaghûl Youth" />
+	<string id="aom_lindon_glorfindel_guard_name" text="{=aom_lindon_glorfindel_guard_name}[Lindon] Rochannon Elenath" />
+	<string id="aom_lindon_gondolin_battlemaster_name" text="{=aom_lindon_gondolin_battlemaster_name}[Lindon] Megil-Aran Elenath" />
+	<string id="aom_lindon_high_captain_name" text="{=aom_lindon_high_captain_name}[Lindon] High Captain" />
+	<string id="aom_lindon_knight_golden_flower_name" text="{=aom_lindon_knight_golden_flower_name}[Lindon] Megil Mallenloth" />
+	<string id="aom_lindon_noble_name" text="{=aom_lindon_noble_name}[Lindon] Noble" />
+	<string id="aom_lindon_royal_guard_name" text="{=aom_lindon_royal_guard_name}[Lindon] Royal Guard" />
+	<string id="aom_lindon_royal_knight_name" text="{=aom_lindon_royal_knight_name}[Lindon] Royal Knight" />
+	<string id="aom_lindon_warden_gondolin_name" text="{=aom_lindon_warden_gondolin_name}[Lindon] Aegedhrim Elenath" />
+	<string id="aom_loke_rim_archer_name" text="{=aom_loke_rim_archer_name}[Rhûn] Loke-Rim Archer" />
+	<string id="aom_loke_rim_bowman_name" text="{=aom_loke_rim_bowman_name}[Rhûn] Loke-Rim Bowman" />
+	<string id="aom_loke_rim_cataphract_name" text="{=aom_loke_rim_cataphract_name}[Rhûn] Loke-Rim Kataphract" />
+	<string id="aom_loke_rim_cavalry_name" text="{=aom_loke_rim_cavalry_name}[Rhûn] Loke-Rim Cavalry" />
+	<string id="aom_loke_rim_footman_name" text="{=aom_loke_rim_footman_name}[Rhûn] Loke-Rim Footman" />
+	<string id="aom_loke_rim_gilded_cataphract_name" text="{=aom_loke_rim_gilded_cataphract_name}[Rhûn] Loke-Rim Gilded Kataphract" />
+	<string id="aom_loke_rim_gilded_champion_name" text="{=aom_loke_rim_gilded_champion_name}[Rhûn] Loke-Rim Gilded Champion" />
+	<string id="aom_loke_rim_gilded_marksman_name" text="{=aom_loke_rim_gilded_marksman_name}[Rhûn] Loke-Rim Gilded Marksman" />
+	<string id="aom_loke_rim_gilded_shieldguard_name" text="{=aom_loke_rim_gilded_shieldguard_name}[Rhûn] Loke-Rim Gilded Shieldguard" />
+	<string id="aom_loke_rim_infantry_name" text="{=aom_loke_rim_infantry_name}[Rhûn] Loke-Rim Infantry" />
+	<string id="aom_loke_rim_initiate_name" text="{=aom_loke_rim_initiate_name}[Rhûn] Loke-Rim Initiate" />
+	<string id="aom_loke_rim_maceman_name" text="{=aom_loke_rim_maceman_name}[Rhûn] Loke-Rim Maceman" />
+	<string id="aom_loke_rim_marksman_name" text="{=aom_loke_rim_marksman_name}[Rhûn] Loke-Rim Marksman" />
+	<string id="aom_loke_rim_shieldguard_name" text="{=aom_loke_rim_shieldguard_name}[Rhûn] Loke-Rim Shieldguard" />
+	<string id="aom_merc_dg_orc_scout_name" text="{=aom_merc_dg_orc_scout_name}[Dol Guldur] Hired Orc Scout" />
+	<string id="aom_merc_erebor_oathsworn_name" text="{=aom_merc_erebor_oathsworn_name}[Erebor] Hired Oathsworn" />
+	<string id="aom_merc_goblin_fighter_name" text="{=aom_merc_goblin_fighter_name}[Goblin] Hired Goblin Raider" />
+	<string id="aom_merc_gondor_bel_recruit_name" text="{=aom_merc_gondor_bel_recruit_name}[Gondor] Hired Belfalas Recruit" />
+	<string id="aom_merc_gondor_lam_clansman_name" text="{=aom_merc_gondor_lam_clansman_name}[Gondor] Hired Lamedon Clansman" />
+	<string id="aom_merc_gondor_loss_lumberman_name" text="{=aom_merc_gondor_loss_lumberman_name}[Gondor] Hired Lossarnach Lumberman" />
+	<string id="aom_merc_gundabad_fighter_name" text="{=aom_merc_gundabad_fighter_name}[Gundabad] Hired Pale Uruk Raider" />
+	<string id="aom_merc_gundabad_scout_name" text="{=aom_merc_gundabad_scout_name}[Gundabad] Hired Scout" />
+	<string id="aom_merc_harad_noble_name" text="{=aom_merc_harad_noble_name}[Harad] Hired Youngblood of the Serpent" />
+	<string id="aom_merc_imladris_bowman_name" text="{=aom_merc_imladris_bowman_name}[Lindon] Hired Mithlond Bowman" />
+	<string id="aom_merc_lindon_noble_name" text="{=aom_merc_lindon_noble_name}[Lindon] Hired Noble" />
+	<string id="aom_merc_mirkwood_recruit_name" text="{=aom_merc_mirkwood_recruit_name}[Mirkwood] Hired Silvan Levy" />
+	<string id="aom_merc_mordor_orc_hunter_name" text="{=aom_merc_mordor_orc_hunter_name}[Mordor] Hired Orc Hunter" />
+	<string id="aom_merc_mordor_orc_impaler_name" text="{=aom_merc_mordor_orc_impaler_name}[Mordor] Hired Orc Impaler" />
+	<string id="aom_merc_mordor_uruk_grunt_name" text="{=aom_merc_mordor_uruk_grunt_name}[Mordor] Hired Black Uruk Grunt" />
+	<string id="aom_merc_mordor_warg_tamer_name" text="{=aom_merc_mordor_warg_tamer_name}[Mordor] Hired Nurn Warg Tamer" />
+	<string id="aom_merc_orthanc_chosen_name" text="{=aom_merc_orthanc_chosen_name}[Isengard] Hired Orthanc Chosen" />
+	<string id="aom_merc_rivendell_noble_name" text="{=aom_merc_rivendell_noble_name}[Rivendell] Hired Noble" />
+	<string id="aom_merc_umbar_elite_name" text="{=aom_merc_umbar_elite_name}[Umbar] Hired Adûnaim Recruits" />
+	<string id="aom_merc_urukhai_scout_name" text="{=aom_merc_urukhai_scout_name}[Isengard] Hired Uruk-Hai Scout" />
+	<string id="aom_merc_urukhai_warrior_name" text="{=aom_merc_urukhai_warrior_name}[Isengard] Hired Uruk-Hai Warrior" />
+	<string id="aom_mirkwood_beleglas_name" text="{=aom_mirkwood_beleglas_name}[Mirkwood] Mirkwood Béleglas" />
+	<string id="aom_mirkwood_borderwardens_name" text="{=aom_mirkwood_borderwardens_name}[Mirkwood] Silvan Borderwarden" />
+	<string id="aom_mirkwood_glaivesman_name" text="{=aom_mirkwood_glaivesman_name}[Mirkwood] Glaivesman of Amon" />
+	<string id="aom_mirkwood_guardians_name" text="{=aom_mirkwood_guardians_name}[Mirkwood] Guardians of Felegoth" />
+	<string id="aom_mirkwood_guards_name" text="{=aom_mirkwood_guards_name}[Mirkwood] Greenwood Guards" />
+	<string id="aom_mirkwood_palaceguard_name" text="{=aom_mirkwood_palaceguard_name}[Mirkwood] Palace Guard" />
+	<string id="aom_mirkwood_recruit_name" text="{=aom_mirkwood_recruit_name}[Mirkwood] Silvan Levy" />
+	<string id="aom_mirkwood_rochenlas_name" text="{=aom_mirkwood_rochenlas_name}[Mirkwood] Mirkwood Róchenlas" />
+	<string id="aom_mirkwood_sentinels_name" text="{=aom_mirkwood_sentinels_name}[Mirkwood] Silvan Sentinels" />
+	<string id="aom_mirkwood_swordsman_name" text="{=aom_mirkwood_swordsman_name}[Mirkwood] Greenwood Swordsman" />
+	<string id="aom_mirkwood_thingolheir_name" text="{=aom_mirkwood_thingolheir_name}[Mirkwood] Thingol's Heirs" />
+	<string id="aom_mirkwood_wardens_name" text="{=aom_mirkwood_wardens_name}[Mirkwood] Greenwood Wardens" />
+	<string id="aom_mirkwood_woodsman_name" text="{=aom_mirkwood_woodsman_name}[Mirkwood] Greenwood Woodsman" />
+	<string id="aom_mistymountainorcs_bolgs_ironfang_name" text="{=aom_mistymountainorcs_bolgs_ironfang_name}[Misty Mountains] Bolg's Ironfang" />
+	<string id="aom_mk_militia_archer" text="{=aom_mk_militia_archer}[Mirkwood] Militia Archer" />
+	<string id="aom_mk_militia_spear" text="{=aom_mk_militia_spear}[Mirkwood] Militia Spearman" />
+	<string id="aom_mk_militia_vet_archer" text="{=aom_mk_militia_vet_archer}[Mirkwood] Militia Veteran Archer" />
+	<string id="aom_mk_militia_vet_spear" text="{=aom_mk_militia_vet_spear}[Mirkwood] Militia Veteran Spearman" />
+	<string id="aom_morannon_archer_name" text="{=aom_morannon_archer_name}[Mordor] Morannon Archer" />
+	<string id="aom_morannon_fighter_name" text="{=aom_morannon_fighter_name}[Mordor] Morannon Fighter" />
+	<string id="aom_morannon_heavy_infantry_name" text="{=aom_morannon_heavy_infantry_name}[Mordor] Morannon Heavy Infantry" />
+	<string id="aom_morannon_heavy_spearman_name" text="{=aom_morannon_heavy_spearman_name}[Mordor] Morannon Heavy Spearman" />
+	<string id="aom_morannon_infantry_name" text="{=aom_morannon_infantry_name}[Mordor] Morannon Infantry" />
+	<string id="aom_morannon_recruit_name" text="{=aom_morannon_recruit_name}[Mordor] Morannon Recruit" />
+	<string id="aom_morannon_scout_name" text="{=aom_morannon_scout_name}[Mordor] Morannon Scout" />
+	<string id="aom_morannon_skirmisher_name" text="{=aom_morannon_skirmisher_name}[Mordor] Morannon Skirmisher" />
+	<string id="aom_morannon_spearman_name" text="{=aom_morannon_spearman_name}[Mordor] Morannon Spearman" />
+	<string id="aom_morannon_warrior_name" text="{=aom_morannon_warrior_name}[Mordor] Morannon Warrior" />
+	<string id="aom_mordor_mil_arch" text="{=aom_mordor_mil_arch}Mordor Militia Archer" />
+	<string id="aom_mordor_mil_spear" text="{=aom_mordor_mil_spear}Mordor Militia Spearman" />
+	<string id="aom_mordor_mil_vet_arch" text="{=aom_mordor_mil_vet_arch}Mordor Militia Veteran Archer" />
+	<string id="aom_mordor_mil_vet_spear" text="{=aom_mordor_mil_vet_spear}Mordor Militia Veteran Spearman" />
+	<string id="aom_mordor_num_archer_name" text="{=aom_mordor_num_archer_name}[Mordor] Black Numenorean Archer" />
+	<string id="aom_mordor_num_cavalry_name" text="{=aom_mordor_num_cavalry_name}[Mordor] Black Numenorean Cavalry" />
+	<string id="aom_mordor_num_infantry_name" text="{=aom_mordor_num_infantry_name}[Mordor] Black Numenorean Infantry" />
+	<string id="aom_mordor_num_initiate_name" text="{=aom_mordor_num_initiate_name}[Mordor] Black Numenorean Initiate" />
+	<string id="aom_mordor_num_knight_name" text="{=aom_mordor_num_knight_name}[Mordor] Black Numenorean Knight" />
+	<string id="aom_mordor_num_marksman_name" text="{=aom_mordor_num_marksman_name}[Mordor] Black Numenorean Marksman" />
+	<string id="aom_mordor_num_shadowbow_name" text="{=aom_mordor_num_shadowbow_name}[Mordor] Black Numenorean Temple Shadowbow" />
+	<string id="aom_mordor_num_temple_guard_name" text="{=aom_mordor_num_temple_guard_name}[Mordor] Black Numenorean Temple Guard" />
+	<string id="aom_mordor_num_temple_knight_name" text="{=aom_mordor_num_temple_knight_name}[Mordor] Black Numenorean Temple Knight" />
+	<string id="aom_mordor_num_vet_archer_name" text="{=aom_mordor_num_vet_archer_name}[Mordor] Black Numenorean Veteran Archer" />
+	<string id="aom_mordor_num_vet_cavalry_name" text="{=aom_mordor_num_vet_cavalry_name}[Mordor] Black Numenorean Veteran Cavalry" />
+	<string id="aom_mordor_num_vet_infantry_name" text="{=aom_mordor_num_vet_infantry_name}[Mordor] Black Numenorean Veteran Infantry" />
+	<string id="aom_mordor_num_warden_name" text="{=aom_mordor_num_warden_name}[Mordor] Black Numenorean Warden" />
+	<string id="aom_mordor_orc_archer_name" text="{=aom_mordor_orc_archer_name}[Mordor] Orc Archer" />
+	<string id="aom_mordor_orc_fighter_name" text="{=aom_mordor_orc_fighter_name}[Mordor] Orc Fighter" />
+	<string id="aom_mordor_orc_hunter_name" text="{=aom_mordor_orc_hunter_name}[Mordor] Orc Hunter" />
+	<string id="aom_mordor_orc_impaler_name" text="{=aom_mordor_orc_impaler_name}[Mordor] Orc Impaler" />
+	<string id="aom_mordor_orc_infantry_name" text="{=aom_mordor_orc_infantry_name}[Mordor] Orc Infantry" />
+	<string id="aom_mordor_orc_lackey_name" text="{=aom_mordor_orc_lackey_name}[Mordor] Orc Lackey" />
+	<string id="aom_mordor_orc_reaver_name" text="{=aom_mordor_orc_reaver_name}[Mordor] Orc Reaver" />
+	<string id="aom_mordor_orc_recruit_name" text="{=aom_mordor_orc_recruit_name}[Mordor] Orc Recruit" />
+	<string id="aom_mordor_orc_scout_name" text="{=aom_mordor_orc_scout_name}[Mordor] Orc Scout" />
+	<string id="aom_mordor_orc_warrior_name" text="{=aom_mordor_orc_warrior_name}[Mordor] Orc Warrior" />
+	<string id="aom_mordor_uruk_archer_name" text="{=aom_mordor_uruk_archer_name}[Mordor] Black Uruk Archer" />
+	<string id="aom_mordor_uruk_baraddurguard_name" text="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-Dur Guard" />
+	<string id="aom_mordor_uruk_captain_name" text="{=aom_mordor_uruk_captain_name}[Mordor] Black Uruk Captain" />
+	<string id="aom_mordor_uruk_crossbow_name" text="{=aom_mordor_uruk_crossbow_name}[Mordor] Black Uruk Crossbow" />
+	<string id="aom_mordor_uruk_fighter_name" text="{=aom_mordor_uruk_fighter_name}[Mordor] Black Uruk Fighter" />
+	<string id="aom_mordor_uruk_grunt_name" text="{=aom_mordor_uruk_grunt_name}[Mordor] Black Uruk Grunt" />
+	<string id="aom_mordor_uruk_heavy_archer_name" text="{=aom_mordor_uruk_heavy_archer_name}[Mordor] Black Uruk Heavy Archer" />
+	<string id="aom_mordor_uruk_heavy_crossbow_name" text="{=aom_mordor_uruk_heavy_crossbow_name}[Mordor] Black Uruk Heavy Crossbow" />
+	<string id="aom_mordor_uruk_infantry_name" text="{=aom_mordor_uruk_infantry_name}[Mordor] Black Uruk Infantry" />
+	<string id="aom_mordor_uruk_shieldbearer_name" text="{=aom_mordor_uruk_shieldbearer_name}[Mordor] Black Uruk Shieldbearer" />
+	<string id="aom_mordor_uruk_shieldguard_name" text="{=aom_mordor_uruk_shieldguard_name}[Mordor] Black Uruk Shield Guard" />
+	<string id="aom_mordor_uruk_skirmisher_name" text="{=aom_mordor_uruk_skirmisher_name}[Mordor] Black Uruk Skirmisher" />
+	<string id="aom_mordor_uruk_vanguard_name" text="{=aom_mordor_uruk_vanguard_name}[Mordor] Black Uruk Vanguard" />
+	<string id="aom_mordor_uruk_warrior_name" text="{=aom_mordor_uruk_warrior_name}[Mordor] Black Uruk Warrior" />
+	<string id="aom_mordor_warg_beastmaster_name" text="{=aom_mordor_warg_beastmaster_name}[Mordor] Nurn Beast Master" />
+	<string id="aom_mordor_warg_raider_name" text="{=aom_mordor_warg_raider_name}[Mordor] Nurn Warg Raider" />
+	<string id="aom_mordor_warg_ravager_name" text="{=aom_mordor_warg_ravager_name}[Mordor] Nurn Warg Ravager" />
+	<string id="aom_mordor_warg_reaver_name" text="{=aom_mordor_warg_reaver_name}[Mordor] Nurn Warg Reaver" />
+	<string id="aom_mordor_warg_rider_name" text="{=aom_mordor_warg_rider_name}[Mordor] Nurn Warg Rider" />
+	<string id="aom_mordor_warg_tamer_name" text="{=aom_mordor_warg_tamer_name}[Mordor] Nurn Warg Tamer" />
+	<string id="aom_noldorin_lancer_name" text="{=aom_noldorin_lancer_name}[Lindon] Falathrim Lancer" />
+	<string id="aom_orc_warg_enforcer_name" text="{=aom_orc_warg_enforcer_name}[Isengard] Orc Warg-Rider Enforcer" />
+	<string id="aom_orc_warg_lieutenant_name" text="{=aom_orc_warg_lieutenant_name}[Isengard] Orc Warg-Rider Lieutenant" />
+	<string id="aom_orc_warg_overseer_name" text="{=aom_orc_warg_overseer_name}[Isengard] Orc Warg-Rider Overseer" />
+	<string id="aom_orc_warg_scout_name" text="{=aom_orc_warg_scout_name}[Isengard] Orc Warg-Rider Scout" />
+	<string id="aom_orthanc_bodyguard_name" text="{=aom_orthanc_bodyguard_name}[Isengard] Orthanc Bodyguard" />
+	<string id="aom_orthanc_chosen_name" text="{=aom_orthanc_chosen_name}[Isengard] Orthanc Chosen" />
+	<string id="aom_orthanc_guard_name" text="{=aom_orthanc_guard_name}[Isengard] Orthanc Guard" />
+	<string id="aom_orthanc_warden_name" text="{=aom_orthanc_warden_name}[Isengard] Orthanc Warden" />
+	<string id="aom_rhun_mil_arch_name" text="{=aom_rhun_mil_arch_name}[Rhûn] Militia Archer" />
+	<string id="aom_rhun_mil_spear_name" text="{=aom_rhun_mil_spear_name}[Rhûn] Militia Spearman" />
+	<string id="aom_rhun_mil_varch_name" text="{=aom_rhun_mil_varch_name}[Rhûn] Militia Veteran Archer" />
+	<string id="aom_rhun_mil_vspear_name" text="{=aom_rhun_mil_vspear_name}[Rhûn] Militia Veteran Spearman" />
+	<string id="aom_rider_of_himring_name" text="{=aom_rider_of_himring_name}[Lindon] Rider of Balar" />
+	<string id="aom_rivendell_glorfindel_guard_name" text="{=aom_rivendell_glorfindel_guard_name}[Rivendell] Rochannon Elenath" />
+	<string id="aom_rivendell_gondolin_battlemaster_name" text="{=aom_rivendell_gondolin_battlemaster_name}[Rivendell] Megil-Aran Elenath" />
+	<string id="aom_rivendell_high_captain_name" text="{=aom_rivendell_high_captain_name}[Rivendell] High Captain" />
+	<string id="aom_rivendell_knight_golden_flower_name" text="{=aom_rivendell_knight_golden_flower_name}[Rivendell] Megil Mallenloth" />
+	<string id="aom_rivendell_noble_name" text="{=aom_rivendell_noble_name}[Rivendell] Noble" />
+	<string id="aom_rivendell_royal_guard_name" text="{=aom_rivendell_royal_guard_name}[Rivendell] Royal Guard" />
+	<string id="aom_rivendell_royal_knight_name" text="{=aom_rivendell_royal_knight_name}[Rivendell] Royal Knight" />
+	<string id="aom_rivendell_warden_gondolin_name" text="{=aom_rivendell_warden_gondolin_name}[Rivendell] Aegedhrim Elenath" />
+	<string id="aom_rohan_eastemnet_elite_lancer_name" text="{=aom_rohan_eastemnet_elite_lancer_name}[Rohan] East Emnet Elite Lancer" />
+	<string id="aom_rohan_eastemnet_eorlingas_lancer_name" text="{=aom_rohan_eastemnet_eorlingas_lancer_name}[Rohan] East Emnet Eorlingas Lancer" />
+	<string id="aom_rohan_eastemnet_kings_own_lancer_name" text="{=aom_rohan_eastemnet_kings_own_lancer_name}[Rohan] East Emnet King's Lancer" />
+	<string id="aom_rohan_eastemnet_lance_rider_name" text="{=aom_rohan_eastemnet_lance_rider_name}[Rohan] East Emnet Lance Rider" />
+	<string id="aom_rohan_eastemnet_recruit_name" text="{=aom_rohan_eastemnet_recruit_name}[Rohan] East Emnet Recruit" />
+	<string id="aom_rohan_eastemnet_royal_lancer_name" text="{=aom_rohan_eastemnet_royal_lancer_name}[Rohan] East Emnet Royal Lancer" />
+	<string id="aom_rohan_eastemnet_veteran_lancer_name" text="{=aom_rohan_eastemnet_veteran_lancer_name}[Rohan] East Emnet Veteran Lancer" />
+	<string id="aom_rohan_eastfold_bowman_name" text="{=aom_rohan_eastfold_bowman_name}[Rohan] East-Fold Bowman" />
+	<string id="aom_rohan_eastfold_recruit_name" text="{=aom_rohan_eastfold_recruit_name}[Rohan] Eastfold Freeman" />
+	<string id="aom_rohan_eastfold_skirmisher_name" text="{=aom_rohan_eastfold_skirmisher_name}[Rohan] Eastfold Yeoman Archer" />
+	<string id="aom_rohan_eastfold_veteran_bowman_name" text="{=aom_rohan_eastfold_veteran_bowman_name}[Rohan] Eastfold Veteran Bowman" />
+	<string id="aom_rohan_edoras_golden_hall_elite_rider_name" text="{=aom_rohan_edoras_golden_hall_elite_rider_name}[Rohan] King's Lancer" />
+	<string id="aom_rohan_edoras_golden_hall_eorlingas_rider_name" text="{=aom_rohan_edoras_golden_hall_eorlingas_rider_name}[Rohan] King's Knight" />
+	<string id="aom_rohan_edoras_golden_hall_kings_own_rider_name" text="{=aom_rohan_edoras_golden_hall_kings_own_rider_name}[Rohan] King's Royal Guard" />
+	<string id="aom_rohan_edoras_golden_hall_rider_name" text="{=aom_rohan_edoras_golden_hall_rider_name}[Rohan] King's Rider" />
+	<string id="aom_rohan_edoras_golden_hall_supreme_rider_name" text="{=aom_rohan_edoras_golden_hall_supreme_rider_name}[Rohan] Riders of Rohan" />
+	<string id="aom_rohan_edoras_golden_hall_veteran_rider_name" text="{=aom_rohan_edoras_golden_hall_veteran_rider_name}[Rohan] King's Horseman" />
+	<string id="aom_rohan_edoras_helmingas_swordsman_name" text="{=aom_rohan_edoras_helmingas_swordsman_name}[Rohan] Edoras Helmingas Swordsman" />
+	<string id="aom_rohan_edoras_master_swordsman_name" text="{=aom_rohan_edoras_master_swordsman_name}[Rohan] Edoras Master Swordsman" />
+	<string id="aom_rohan_edoras_meduseld_helmingas_spearman_name" text="{=aom_rohan_edoras_meduseld_helmingas_spearman_name}[Rohan] Meduseld Helmingas Spearman" />
+	<string id="aom_rohan_edoras_meduseld_master_spearman_name" text="{=aom_rohan_edoras_meduseld_master_spearman_name}[Rohan] Meduseld Master Spearman" />
+	<string id="aom_rohan_edoras_meduseld_spearman_name" text="{=aom_rohan_edoras_meduseld_spearman_name}[Rohan] Meduseld Spearman" />
+	<string id="aom_rohan_edoras_meduseld_veteran_spearman_name" text="{=aom_rohan_edoras_meduseld_veteran_spearman_name}[Rohan] Meduseld Veteran Spearman" />
+	<string id="aom_rohan_edoras_militia_name" text="{=aom_rohan_edoras_militia_name}[Rohan] Edoras Militia" />
+	<string id="aom_rohan_edoras_recruit_name" text="{=aom_rohan_edoras_recruit_name}[Rohan] Edoras Recruit" />
+	<string id="aom_rohan_edoras_swordsman_name" text="{=aom_rohan_edoras_swordsman_name}[Rohan] Edoras Swordsman" />
+	<string id="aom_rohan_edoras_veteran_swordsman_name" text="{=aom_rohan_edoras_veteran_swordsman_name}[Rohan] Edoras Veteran Swordsman" />
+	<string id="aom_rohan_militia_archer_name" text="{=aom_rohan_militia_archer_name}[Rohan] Militia Archer" />
+	<string id="aom_rohan_militia_spearman_name" text="{=aom_rohan_militia_spearman_name}[Rohan] Militia Spearman" />
+	<string id="aom_rohan_militia_veteran_archer_name" text="{=aom_rohan_militia_veteran_archer_name}[Rohan] Militia Veteran Archer" />
+	<string id="aom_rohan_militia_veteran_spearman_name" text="{=aom_rohan_militia_veteran_spearman_name}[Rohan] Militia Veteran Spearman" />
+	<string id="aom_rohan_westemnet_elite_rider_name" text="{=aom_rohan_westemnet_elite_rider_name}[Rohan] West Emnet Light Cavalry" />
+	<string id="aom_rohan_westemnet_eorlingas_rider_name" text="{=aom_rohan_westemnet_eorlingas_rider_name}[Rohan] West Emnet Medium Cavalry" />
+	<string id="aom_rohan_westemnet_kings_own_rider_name" text="{=aom_rohan_westemnet_kings_own_rider_name}[Rohan] West Emnet Heavy Shock Cavalry" />
+	<string id="aom_rohan_westemnet_recruit_name" text="{=aom_rohan_westemnet_recruit_name}[Rohan] West Emnet Recruit" />
+	<string id="aom_rohan_westemnet_rider_name" text="{=aom_rohan_westemnet_rider_name}[Rohan] West Emnet Rider" />
+	<string id="aom_rohan_westemnet_royal_rider_name" text="{=aom_rohan_westemnet_royal_rider_name}[Rohan] West Emnet Shock Cavalry" />
+	<string id="aom_rohan_westemnet_veteran_rider_name" text="{=aom_rohan_westemnet_veteran_rider_name}[Rohan] West Emnet Horseman" />
+	<string id="aom_rohan_westfold_2h_axeman_name" text="{=aom_rohan_westfold_2h_axeman_name}[Rohan] Westfold Heavy Axeman" />
+	<string id="aom_rohan_westfold_axeman_name" text="{=aom_rohan_westfold_axeman_name}[Rohan] Westfolders" />
+	<string id="aom_rohan_westfold_helmingas_axeman_name" text="{=aom_rohan_westfold_helmingas_axeman_name}[Rohan] Westfold Helmingas Axeman" />
+	<string id="aom_rohan_westfold_militiaman_name" text="{=aom_rohan_westfold_militiaman_name}[Rohan] Westfold Militiaman" />
+	<string id="aom_rohan_westfold_recruit_name" text="{=aom_rohan_westfold_recruit_name}[Rohan] Westfold Recruit" />
+	<string id="aom_rohan_westfold_veteran_2h_axeman_name" text="{=aom_rohan_westfold_veteran_2h_axeman_name}[Rohan] Westfold Helmingas Heavy Axeman" />
+	<string id="aom_rohan_westfold_veteran_axeman_name" text="{=aom_rohan_westfold_veteran_axeman_name}[Rohan] Westfold Veteran Axeman" />
+	<string id="aom_rohan_westmarches_guardsman_name" text="{=aom_rohan_westmarches_guardsman_name}[Rohan] West-March Guardsman" />
+	<string id="aom_rohan_westmarches_meduseld_spearman_name" text="{=aom_rohan_westmarches_meduseld_spearman_name}[Rohan] West Marches Veteran Spearman" />
+	<string id="aom_rohan_westmarches_recruit_name" text="{=aom_rohan_westmarches_recruit_name}[Rohan] West-March Recruit" />
+	<string id="aom_rohan_westmarches_spearman_name" text="{=aom_rohan_westmarches_spearman_name}[Rohan] West-March Spearman" />
+	<string id="aom_rohan_westmarches_veteran_spearman_name" text="{=aom_rohan_westmarches_veteran_spearman_name}[Rohan] West-March Heavy Spearman" />
+	<string id="aom_rohan_wold_elite_horse_archer_name" text="{=aom_rohan_wold_elite_horse_archer_name}[Rohan] Wold Elite Horse Rider" />
+	<string id="aom_rohan_wold_eorlingas_horse_archer_name" text="{=aom_rohan_wold_eorlingas_horse_archer_name}[Rohan] Wold Eorlingas Horse Archer" />
+	<string id="aom_rohan_wold_horse_archer_name" text="{=aom_rohan_wold_horse_archer_name}[Rohan] Wold Horse Archer" />
+	<string id="aom_rohan_wold_kings_own_horse_archer_name" text="{=aom_rohan_wold_kings_own_horse_archer_name}[Rohan] Éothéod Horse Archer" />
+	<string id="aom_rohan_wold_recruit_name" text="{=aom_rohan_wold_recruit_name}[Rohan] Wold Recruit" />
+	<string id="aom_rohan_wold_scout_name" text="{=aom_rohan_wold_scout_name}[Rohan] Wold Scout" />
+	<string id="aom_rohan_wold_veteran_horse_archer_name" text="{=aom_rohan_wold_veteran_horse_archer_name}[Rohan] Wold Veteran Horse Rider" />
+	<string id="aom_rv_militia_archer" text="{=aom_rv_militia_archer}[Lindon] Militia Archer" />
+	<string id="aom_rv_militia_spear" text="{=aom_rv_militia_spear}[Lindon] Militia Spearman" />
+	<string id="aom_rv_militia_vet_archer" text="{=aom_rv_militia_vet_archer}[Lindon] Militia Veteran Archer" />
+	<string id="aom_rv_militia_vet_spear" text="{=aom_rv_militia_vet_spear}[Lindon] Militia Veteran Spearman" />
+	<string id="aom_sagarun_arbalest_name" text="{=aom_sagarun_arbalest_name}[Rhûn] Sagarûn Arbalest" />
+	<string id="aom_sagarun_crossbowman_name" text="{=aom_sagarun_crossbowman_name}[Rhûn] Sagarûn Crossbowman" />
+	<string id="aom_sagarun_deckhand_name" text="{=aom_sagarun_deckhand_name}[Rhûn] Sagarûn Deckhand" />
+	<string id="aom_sagarun_marine_name" text="{=aom_sagarun_marine_name}[Rhûn] Sagarûn Marine" />
+	<string id="aom_sagarun_naffatun_name" text="{=aom_sagarun_naffatun_name}[Rhûn] Sagarûn Naffatun" />
+	<string id="aom_sagarun_skirmisher_name" text="{=aom_sagarun_skirmisher_name}[Rhûn] Sagarûn Skirmisher" />
+	<string id="aom_sagarun_storm_forged_marine_name" text="{=aom_sagarun_storm_forged_marine_name}[Rhûn] Sagarûn Storm Forged Marine" />
+	<string id="aom_sagarun_storm_helmed_naffatun_name" text="{=aom_sagarun_storm_helmed_naffatun_name}[Rhûn] Sagarûn Storm Helmed Naffatun" />
+	<string id="aom_sagarun_storm_marked_arbalest_name" text="{=aom_sagarun_storm_marked_arbalest_name}[Rhûn] Sagarûn Storm Marked Arbalest" />
+	<string id="aom_sagarun_watchman_name" text="{=aom_sagarun_watchman_name}[Rhûn] Sagarûn Watchman" />
+	<string id="aom_umbar_elite_name" text="{=aom_umbar_elite_name}[Umbar] Adûnaim Recruits" />
+	<string id="aom_umbar_elite_root0000_name" text="{=aom_umbar_elite_root0000_name}[Umbar] Naru n'Aru Royal Guard" />
+	<string id="aom_umbar_elite_root0001_name" text="{=aom_umbar_elite_root0001_name}[Umbar] Naru n'Aru Royal Knights" />
+	<string id="aom_umbar_elite_root000_name" text="{=aom_umbar_elite_root000_name}[Umbar] Abrazanim Nardutarik" />
+	<string id="aom_umbar_elite_root001_name" text="{=aom_umbar_elite_root001_name}[Umbar] Abrazanim Narduzagar" />
+	<string id="aom_umbar_elite_root00_name" text="{=aom_umbar_elite_root00_name}[Umbar] Rozadan Footmen" />
+	<string id="aom_umbar_elite_root010_name" text="{=aom_umbar_elite_root010_name}[Umbar] Adûnaims Faithful" />
+	<string id="aom_umbar_elite_root01_name" text="{=aom_umbar_elite_root01_name}[Umbar] Rozadan Halberdiers" />
+	<string id="aom_umbar_elite_root0_name" text="{=aom_umbar_elite_root0_name}[Umbar] Adûnaim Footmen" />
+	<string id="aom_umbar_elite_root100_name" text="{=aom_umbar_elite_root100_name}[Umbar] Abrazanim Nardubawib" />
+	<string id="aom_umbar_elite_root101_name" text="{=aom_umbar_elite_root101_name}[Umbar] Beruthiel's Rangers" />
+	<string id="aom_umbar_elite_root10_name" text="{=aom_umbar_elite_root10_name}[Umbar] Rozadan Bowmen" />
+	<string id="aom_umbar_elite_root1_name" text="{=aom_umbar_elite_root1_name}[Umbar] Adûnaim Bowmen" />
+	<string id="aom_urukhai_arbalest_name" text="{=aom_urukhai_arbalest_name}[Isengard] Uruk-Hai Arbalest" />
+	<string id="aom_urukhai_archer_name" text="{=aom_urukhai_archer_name}[Isengard] Uruk-Hai Archer" />
+	<string id="aom_urukhai_berserker_name" text="{=aom_urukhai_berserker_name}[Isengard] Uruk-Hai Berserker" />
+	<string id="aom_urukhai_champion_name" text="{=aom_urukhai_champion_name}[Isengard] Uruk-Hai Champion" />
+	<string id="aom_urukhai_crossbowman_name" text="{=aom_urukhai_crossbowman_name}[Isengard] Uruk-Hai Crossbowman" />
+	<string id="aom_urukhai_feller_name" text="{=aom_urukhai_feller_name}[Isengard] Uruk-Hai Feller" />
+	<string id="aom_urukhai_fighter_name" text="{=aom_urukhai_fighter_name}[Isengard] Uruk-Hai Fighter" />
+	<string id="aom_urukhai_infantry_name" text="{=aom_urukhai_infantry_name}[Isengard] Uruk-Hai Infantry" />
+	<string id="aom_urukhai_nazg_hai_name" text="{=aom_urukhai_nazg_hai_name}[Isengard] Uruk-Hai Nazg-hai" />
+	<string id="aom_urukhai_pavise_name" text="{=aom_urukhai_pavise_name}[Isengard] Uruk-Hai Pavise Guard" />
+	<string id="aom_urukhai_pikeman_name" text="{=aom_urukhai_pikeman_name}[Isengard] Uruk-Hai Pikeman" />
+	<string id="aom_urukhai_reaver_name" text="{=aom_urukhai_reaver_name}[Isengard] Uruk-Hai Reaver" />
+	<string id="aom_urukhai_recruit_name" text="{=aom_urukhai_recruit_name}[Isengard] Uruk-Hai Recruit" />
+	<string id="aom_urukhai_scout_name" text="{=aom_urukhai_scout_name}[Isengard] Uruk-Hai Scout" />
+	<string id="aom_urukhai_skirmisher_name" text="{=aom_urukhai_skirmisher_name}[Isengard] Uruk-Hai Skirmisher" />
+	<string id="aom_urukhai_slayer_name" text="{=aom_urukhai_slayer_name}[Isengard] Uruk-Hai Slayer" />
+	<string id="aom_urukhai_spearman_name" text="{=aom_urukhai_spearman_name}[Isengard] Uruk-Hai Spearman" />
+	<string id="aom_urukhai_swordman_name" text="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordman" />
+	<string id="aom_urukhai_tracker_name" text="{=aom_urukhai_tracker_name}[Isengard] Uruk-Hai Tracker" />
+	<string id="aom_urukhai_veterancrossbowman_name" text="{=aom_urukhai_veterancrossbowman_name}[Isengard] Uruk-Hai Veteran Crossbowman" />
+	<string id="aom_urukhai_veteraninfantry_name" text="{=aom_urukhai_veteraninfantry_name}[Isengard] Champions of the White Hand" />
+	<string id="aom_urukhai_veteranpikeman_name" text="{=aom_urukhai_veteranpikeman_name}[Isengard] Uruk-Hai Veteran Pikeman" />
+	<string id="aom_urukhai_veteranspearman_name" text="{=aom_urukhai_veteranspearman_name}[Isengard] Uruk-Hai Veteran Spearman" />
+	<string id="aom_urukhai_warrior_name" text="{=aom_urukhai_warrior_name}[Isengard] Uruk-Hai Warrior" />
+	<string id="aom_wain_darkhan_name" text="{=aom_wain_darkhan_name}[Rhûn] Wain Darkhan" />
+	<string id="aom_wain_footman_name" text="{=aom_wain_footman_name}[Rhûn] Wain Footman" />
+	<string id="aom_wain_glaiveman_name" text="{=aom_wain_glaiveman_name}[Rhûn] Wain Glaiveman" />
+	<string id="aom_wain_iron_glaive_name" text="{=aom_wain_iron_glaive_name}[Rhûn] Wain Iron-Glaive" />
+	<string id="aom_wain_youngblood_name" text="{=aom_wain_youngblood_name}[Rhûn] Wain Youngblood" />
+	<string id="aom_wainrider_cavalry_name" text="{=aom_wainrider_cavalry_name}[Rhûn] Wainrider Cavalry" />
+	<string id="aom_wainrider_horseman_name" text="{=aom_wainrider_horseman_name}[Rhûn] Wainrider Horseman" />
+	<string id="aom_wainrider_khans_chosen_name" text="{=aom_wainrider_khans_chosen_name}[Rhûn] Wainrider Khan's Chosen" />
+	<string id="aom_wainrider_swift_chariot_name" text="{=aom_wainrider_swift_chariot_name}[ARhûn] Wainrider Swift-Chariot" />
+	<string id="aom_wainrider_veteran_archer_name" text="{=aom_wainrider_veteran_archer_name}[Rhûn] Wainrider Veteran Archer" />
+	<string id="aom_wainrider_warlord_chariot_name" text="{=aom_wainrider_warlord_chariot_name}[Rhûn] Wainrider Warlord Chariot" />
+	<string id="aom_wainrider_wind_arrow_sharpshooter_name" text="{=aom_wainrider_wind_arrow_sharpshooter_name}[Rhûn] Wainrider Wind-Arrow Sharpshooter" />
+	<string id="harad_elephant_rider_name" text="{=harad_elephant_rider_name}[Aharad] Elephant Rider" />
+	<string id="harad_mumakil_rider_name" text="{=harad_mumakil_rider_name}[Aharad] Mumakil Rider" />
+	<string id="iron_hills_noble_anvilguard_name" text="{=iron_hills_noble_anvilguard_name}[Iron Hills] Anvilguard" />
+	<string id="iron_hills_noble_gate_warden_name" text="{=iron_hills_noble_gate_warden_name}[Iron Hills] Gate Warden" />
+	<string id="iron_hills_noble_guard_name" text="{=iron_hills_noble_guard_name}[Iron Hills] Guard" />
+	<string id="iron_hills_noble_hammer_guard_name" text="{=iron_hills_noble_hammer_guard_name}[Iron Hills] Hammer-Guard" />
+	<string id="iron_hills_noble_infantry_name" text="{=iron_hills_noble_infantry_name}[Iron Hills] Infantry" />
+	<string id="iron_hills_noble_ironbreaker_name" text="{=iron_hills_noble_ironbreaker_name}[Iron Hills] Ironbreaker" />
+	<string id="iron_hills_noble_name" text="{=iron_hills_noble_name}[Iron Hills] Noble" />
+	<string id="iron_hills_noble_royal_warden_name" text="{=iron_hills_noble_royal_warden_name}[Iron Hills] Royal Warden" />
+	<string id="iron_hills_noble_scout_name" text="{=iron_hills_noble_scout_name}[Iron Hills] Scout" />
+	<string id="iron_hills_noble_sharpshooter_name" text="{=iron_hills_noble_sharpshooter_name}[Iron Hills] Sharpshooter" />
+	<string id="iron_hills_noble_shield_guard_name" text="{=iron_hills_noble_shield_guard_name}[Iron Hills] Shield-Guard" />
+	<string id="iron_hills_noble_swordsman_name" text="{=iron_hills_noble_swordsman_name}[Iron Hills] Swordsman" />
+	<string id="iron_hills_noble_veteran_sharpshooter_name" text="{=iron_hills_noble_veteran_sharpshooter_name}[Iron Hills] Veteran Sharpshooter" />
+	<string id="taom_dunland_raiders_boss_name" text="{=taom_dunland_raiders_boss_name}[Dunland] Blaidd-lûth Warlord" />
+	<string id="taom_erebor_warriors_boss_name" text="{=taom_erebor_warriors_boss_name}Blacklock Chieftain" />
+	<string id="taom_gondor_soldiers_boss_name" text="{=taom_gondor_soldiers_boss_name}[Gondor] Soldier Captain" />
+	<string id="taom_gundabad_raiders_boss_name" text="{=taom_gundabad_raiders_boss_name}[Gundabad] Warlord of the Vale" />
+	<string id="taom_harad_raiders_boss_name" text="{=taom_harad_raiders_boss_name}[Harad] Haradrim Warlord" />
+	<string id="taom_mirkwood_stalkers_boss_name" text="{=taom_mirkwood_stalkers_boss_name}[Mirkwood] Stalker Captain" />
+	<string id="taom_rhun_raiders_boss_name" text="{=taom_rhun_raiders_boss_name}[Rhûn] Kharaghûl Warlord" />
+	<string id="taom_umbar_corsairs_boss_name" text="{=taom_umbar_corsairs_boss_name}[Umbar] Corsair Captain" />
+
+</strings>

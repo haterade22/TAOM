@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="遥か西方、青の山脈（エレド・ルイン）にあるブルー・クレイグのゴブリンの巣窟。リンドンの灰色港のすぐ近くに位置する。ゴブリン村の霧ふり山脈の同族とは別系統の、数え切れぬほどのゴブリンの大群であり、西の岩山に群がって西岸のエルフたちを悩ませている。" />
+    <string id="taom_bluecraig_name" text="ブルー・クレイグのゴブリン" />
+    <string id="taom_bluecraig_ruler_title" text="大ゴブリン" />
+    <string id="taom_bluecraig_short_name" text="ブルー・クレイグ" />
+    <string id="taom_bluecraig_title" text="ブルー・クレイグのゴブリン国" />
+    <string id="taom_dolguldur_desc" text="影と絶望の砦ドル・グルドゥアは、死人使いの暗き意志を告げる不吉な狼煙のごとくそびえ立つ。その深奥に棲むオークや邪悪な者どもは、すべての者の心に恐怖を刻み込む。" />
+    <string id="taom_dolguldur_name" text="ドル・グルドゥア" />
+    <string id="taom_dolguldur_ruler_title" text="恐怖の君主" />
+    <string id="taom_dolguldur_short_name" text="ドル・グルドゥア" />
+    <string id="taom_dolguldur_title" text="ドル・グルドゥアの死人使い" />
+    <string id="taom_erebor_desc" text="はなれ山、エレボールは北方における最大のドワーフ王国である。黄金とミスリルに富み、ドゥリンの血統の住まいでもある。エレボールのドワーフは名高き職人であり、勇猛な戦士でもあって、その広間には祖先の歌が響き渡っている。" />
+    <string id="taom_erebor_name" text="エレボール" />
+    <string id="taom_erebor_ruler_title" text="王" />
+    <string id="taom_erebor_short_name" text="エレボール" />
+    <string id="taom_erebor_title" text="エレボール王国" />
+    <string id="taom_goblin_desc" text="高き峠のゴブリンどもは霧ふり山脈の地下に穿たれた坑道に群がる、かつて大ゴブリンがドワーフや旅人に向けて率いた軍勢の末裔である。数知れず、残忍なる彼らはゴブリン町から溢れ出し、山道を襲う。" />
+    <string id="taom_goblin_name" text="ゴブリン" />
+    <string id="taom_goblin_ruler_title" text="大ゴブリン" />
+    <string id="taom_goblin_short_name" text="ゴブリン" />
+    <string id="taom_goblin_title" text="高き峠のゴブリン国" />
+    <string id="taom_gundabad_desc" text="グンダバド、オークたちの古く不気味な砦は、野蛮と支配の拠点として立つ。戦と混沌のために生み出されたグンダバドのオークどもは、血に染まった旗の下に集う。" />
+    <string id="taom_gundabad_name" text="グンダバド" />
+    <string id="taom_gundabad_ruler_title" text="軍団長" />
+    <string id="taom_gundabad_short_name" text="グンダバド" />
+    <string id="taom_gundabad_title" text="グンダバド" />
+    <string id="taom_isengard_desc" text="白の魔法使いサルマンの砦アイゼンガルドは、力と野望の拠点として立つ。ウルク=ハイは白い手の旗の下に進軍し、その規律と凶暴さに並ぶ者はない。" />
+    <string id="taom_isengard_name" text="アイゼンガルド" />
+    <string id="taom_isengard_ruler_title" text="軍団長" />
+    <string id="taom_isengard_short_name" text="アイゼンガルド" />
+    <string id="taom_isengard_title" text="アイゼンガルド支配領" />
+    <string id="taom_lindon_desc" text="青の山脈の西に広がる緑の地リンドンは、中つ国の岸辺に残る上のエルフ最後の王国である。ミスロンドの灰色港から白い船が西へと船出し、船大工キールダンはエルダールの薄れゆく光を見守り続ける。" />
+    <string id="taom_lindon_name" text="リンドン" />
+    <string id="taom_lindon_ruler_title" text="港の領主" />
+    <string id="taom_lindon_short_name" text="リンドン" />
+    <string id="taom_lindon_title" text="リンドン上級王国" />
+    <string id="taom_lothlorien_desc" text="黄金の森は銀筋川と大河アンドゥインの間に横たわる。ガラドリエルとケレボルンの意志に守られ、エルフの優雅さと抗いの砦として立つ――時に触れられぬ地、木の葉の落ちぬ国である。" />
+    <string id="taom_lothlorien_name" text="ロスローリエン" />
+    <string id="taom_lothlorien_ruler_title" text="奥方" />
+    <string id="taom_lothlorien_short_name" text="ロスローリエン" />
+    <string id="taom_lothlorien_title" text="ロスローリエン王国" />
+    <string id="taom_mirkwood_desc" text="闇の森の森の王国は、長き年月にわたり多くの苦難を耐えてきた。スランドゥイルの統治の下、森のエルフたちは世を避け、余所者を警戒するようになった。だがスランドゥイルの胸の内には、第一紀の古き日々に灯された炎がなお燻っている。" />
+    <string id="taom_mirkwood_name" text="ラスガレン" />
+    <string id="taom_mirkwood_ruler_title" text="アラン" />
+    <string id="taom_mirkwood_short_name" text="闇の森" />
+    <string id="taom_mirkwood_title" text="闇の森王国" />
+    <string id="taom_mistymountainorcs_desc" text="霧ふり山脈のオーク軍は、グラム山からモリアの門に至るまでの高地と深き坑を押さえている。凍てつく峰々で戦のために生み出された彼らは、影の呼び声に応え、山々を我が物と取り戻さんと渇望する。" />
+    <string id="taom_mistymountainorcs_name" text="霧ふり山脈のオーク" />
+    <string id="taom_mistymountainorcs_ruler_title" text="軍団長" />
+    <string id="taom_mistymountainorcs_short_name" text="霧のオーク" />
+    <string id="taom_mistymountainorcs_title" text="霧ふり山脈のオーク軍" />
+    <string id="taom_rivendell_desc" text="霧ふり山脈の裂け目深くに隠されたリヴェンデルは、海の東にある「最後の憩いの家」である。半エルフのエルロンドによって創られ、迫る闇に対する避難所であり、癒しと知識と静かな力の場である。" />
+    <string id="taom_rivendell_name" text="イムラドリス" />
+    <string id="taom_rivendell_ruler_title" text="領主" />
+    <string id="taom_rivendell_short_name" text="イムラドリス" />
+    <string id="taom_rivendell_title" text="イムラドリスの隠れ谷" />
+    <string id="taom_umbar_desc" text="海賊たちの闇の避難港ウンバールは、海上の力と危険な野望に染まった国である。海賊たちは中つ国の海岸を襲い、その快速船で恐怖を広めている。" />
+    <string id="taom_umbar_name" text="ウンバール" />
+    <string id="taom_umbar_ruler_title" text="海賊王" />
+    <string id="taom_umbar_short_name" text="ウンバール" />
+    <string id="taom_umbar_title" text="ウンバールの港" />
+  </strings>
+</base>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="German" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Die Koboldhöhlen von Blue Craig im Blauen Gebirge (Ered Luin) des fernen Westens, dicht bei den Grauen Anfurten von Lindon. Ein eigenes, zahlloses Heer von Koboldvolk – getrennt von ihren Vettern aus dem Nebelgebirge in der Koboldstadt – schwärmt es über die westlichen Felsen und macht den Elben der Westküste zu schaffen." />
+    <string id="taom_bluecraig_name" text="Kobolde von Blue Craig" />
+    <string id="taom_bluecraig_ruler_title" text="Großer Kobold" />
+    <string id="taom_bluecraig_short_name" text="Blue Craig" />
+    <string id="taom_bluecraig_title" text="Koboldreich von Blue Craig" />
+    <string id="taom_dolguldur_desc" text="Dol Guldur, die Festung des Schattens und der Verzweiflung, steht als drohendes Zeichen des dunklen Willens des Totenbeschwörers. Die Orks und üblen Kreaturen, die seine Tiefen bewohnen, jagen allen Furcht ins Herz." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Schreckensherr" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Totenbeschwörung von Dol Guldur" />
+    <string id="taom_erebor_desc" text="Der Einsame Berg, Erebor, ist das größte der Zwergenreiche im Norden. Reich an Gold und Mithril, ist er die Heimat des Geschlechts von Durin. Die Zwerge von Erebor sind berühmte Handwerker und wilde Krieger, und in ihren Hallen hallen die Lieder ihrer Ahnen wider." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="König" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Königreich Erebor" />
+    <string id="taom_goblin_desc" text="Die Orks des Hohen Passes wimmeln in den Tunneln unter dem Nebelgebirge – die Brut jenes Heeres, das der Große Ork einst gegen Zwerge und Wanderer führte. Zahllos und bösartig strömen sie aus Orkstadt, um die Bergstraßen zu überfallen." />
+    <string id="taom_goblin_name" text="Orks" />
+    <string id="taom_goblin_ruler_title" text="Großer Ork" />
+    <string id="taom_goblin_short_name" text="Orks" />
+    <string id="taom_goblin_title" text="Orkreich des Hohen Passes" />
+    <string id="taom_gundabad_desc" text="Gundabad, die alte und unheilvolle Festung der Orks, steht als Bastion der Wildheit und Unterdrückung. Die Orks von Gundabad, für Krieg und Chaos gezüchtet, scharen sich unter blutigen Bannern." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Kriegsherr" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengart, die Festung des weißen Zauberers Saruman, steht als Bastion der Macht und des Ehrgeizes. Die Uruk-hai ziehen unter dem Banner der Weißen Hand aus, unübertroffen in Zucht und Wildheit." />
+    <string id="taom_isengard_name" text="Isengart" />
+    <string id="taom_isengard_ruler_title" text="Kriegsherr" />
+    <string id="taom_isengard_short_name" text="Isengart" />
+    <string id="taom_isengard_title" text="Oberherrschaft von Isengart" />
+    <string id="taom_lindon_desc" text="Lindon, das grüne Land westlich des Blauen Gebirges, ist das letzte Reich der Hochelben an den Küsten Mittelerdes. Von den Grauen Anfurten Mithlonds segeln die weißen Schiffe in den Westen, während Círdan der Schiffbauer über das schwindende Licht der Eldar wacht." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Herr der Anfurten" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Hochkönigreich Lindon" />
+    <string id="taom_lothlorien_desc" text="Der Goldene Wald liegt geborgen zwischen dem Silberlauf und dem mächtigen Anduin. Bewahrt durch den Willen Galadriels und Celeborns, steht er als Bastion elbischer Anmut und Widerstandskraft – ein Land, das die Zeit nicht berührt, wo die Blätter nicht fallen." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Herrin" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Königreich Lóthlórien" />
+    <string id="taom_mirkwood_desc" text="Das Waldlandreich des Düsterwalds hat über die Jahre viel Not erlitten. Unter der Führung Thranduils sind die Waldelben zurückgezogen und misstrauisch gegenüber Fremden geworden. Doch im Herzen Thranduils glimmt noch ein Feuer, entfacht in den alten Tagen des Ersten Zeitalters." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Düsterwald" />
+    <string id="taom_mirkwood_title" text="Reich des Düsterwalds" />
+    <string id="taom_mistymountainorcs_desc" text="Das Orkheer des Nebelgebirges hält die Höhen und tiefen Stollen vom Berge Gram bis zu den Toren Morias. In den kalten Gipfeln für den Krieg gezüchtet, folgen sie dem Ruf des Schattens und dürsten danach, das Gebirge für sich zurückzugewinnen." />
+    <string id="taom_mistymountainorcs_name" text="Orks des Nebelgebirges" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Kriegsherr" />
+    <string id="taom_mistymountainorcs_short_name" text="Nebelorks" />
+    <string id="taom_mistymountainorcs_title" text="Orkheer des Nebelgebirges" />
+    <string id="taom_rivendell_desc" text="Tief in den Schluchten des Nebelgebirges verborgen liegt Bruchtal, das Letzte Heimelige Haus östlich des Meeres. Von Elrond Halbelb gegründet, ist es eine Zuflucht gegen die sich sammelnde Finsternis, ein Ort der Heilung, des Wissens und der stillen Stärke." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Herr" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Zuflucht von Imladris" />
+    <string id="taom_umbar_desc" text="Umbar, der dunkle Hafen der Korsaren, ist ein Reich voller Seemacht und verräterischem Ehrgeiz. Die Korsaren plündern die Küsten Mittelerdes und verbreiten mit ihren schnellen Schiffen Furcht." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Korsarenkönig" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Hafen von Umbar" />
+  </strings>
+</base>

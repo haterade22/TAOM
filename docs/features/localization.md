@@ -95,7 +95,7 @@ Each language dir follows the same 3-file pattern.
 
 ## Tests
 
-`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs` — 15 structural contract tests:
+`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`: structural contract tests (includes per-file existence checks for `taom_troop_name_strings`, `taom_lord_name_strings`, `taom_clan_name_strings`, and `taom_kingdom_name_strings`, added 2026-09-17 alongside the others below):
 
 | Test | What it guards |
 |------|----------------|
@@ -159,6 +159,8 @@ Bannerlord must already support the language natively (it must have an entry in 
 | XSLT-modified action/comment strings | Reuse vanilla hash IDs — vanilla language packs handle them | None needed; vanilla translations still apply |
 | Tolkien proper nouns (Gondor, Aragorn) | Convention — not translated in official LOTR | None — leave as English |
 | Equipment/item names | Owned by LOTRLOME_Armory module | Translate in that module |
+| Custom clan-hero biographies (`characters/heroes.xml` `text=`) | 6/465 keys registered; the file carries no `name=` at all, so hero names come from procedural generation elsewhere | Open, no tracking issue as of 2026-09-17 |
+| Female notable names (22 inline `NPCCharacter` names, no strings row) | Different source file (notable templates), untouched by the troop/lord/clan/kingdom fix below | Tracked by #478 (open) |
 
 ## Performance
 
@@ -166,6 +168,7 @@ No performance impact — translation files are loaded once at startup by the en
 
 ## Changelog
 
+- 2026-09-17: Case B pipeline extension (#572 and the lord/clan/kingdom analogues). `tools/generate_name_localization_strings.py` extracts every `{=KEY}default` name/identity key from `troops/*.xml`, `characters/lords.xml`, `characters/clans.xml`, and `taom_spkingdoms.xml` that had no registered row anywhere in the pipeline, and writes four generated English master files wired into `SubModule.xml`, all 12 `language_data.xml` manifests, the translator's source list, and `LanguageDataXmlTests` (13 to 17 `LanguageFile` entries per language). 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) translated across all 12 languages. Hero biographies and female notable names are related but separate gaps, left open; see "What strings are NOT translatable through this system" above.
 - 2026-05-23 — Added the AI first-draft translation pipeline (`tools/translate_with_claude.py` + `tools/rebuild_translation_files.py`) with a 4-tier fallback chain (overrides → cache → LLM → English) and first-draft coverage across all 11 AI-translated languages.
 - 2026-04-29 — Code-side string localization (#96): wrapped Main Menu / CC Narrative / Career System literals with `{=KEY}default`, extracted `taom_cc_strings.xml` + `taom_career_strings.xml`, scaffolded per-language stubs, and bumped `LanguageDataXmlTests` from 3 to 5 LanguageFile entries.
 - 2026-04-03 — Localization Infrastructure (#65): added the `Languages/` directory structure (37 XML files — English anchor, 12 manifests, 24 stubs), made 1,773 strings translatable with English fallback, and added 15 structural contract tests in `LanguageDataXmlTests.cs`.

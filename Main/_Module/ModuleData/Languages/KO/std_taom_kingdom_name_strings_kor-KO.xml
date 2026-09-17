@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="머나먼 서쪽, 청색산맥(에레드 루인)에 있는 블루 크레이그의 고블린 굴이다. 린돈의 회색항구와 맞닿아 있으며, 안개산맥의 고블린 마을에 사는 사촌들과는 별개인 헤아릴 수 없는 고블린 무리가 서쪽 암벽을 뒤덮고 서쪽 해안의 요정들을 괴롭힌다." />
+    <string id="taom_bluecraig_name" text="블루 크레이그의 고블린" />
+    <string id="taom_bluecraig_ruler_title" text="대고블린" />
+    <string id="taom_bluecraig_short_name" text="블루 크레이그" />
+    <string id="taom_bluecraig_title" text="블루 크레이그 고블린 왕국" />
+    <string id="taom_dolguldur_desc" text="그림자와 절망의 요새 돌 굴두르는 강령술사의 어두운 뜻을 알리는 불길한 봉화처럼 서 있다. 그 깊은 곳에 사는 오르크와 흉악한 존재들은 모든 이의 가슴에 두려움을 심는다." />
+    <string id="taom_dolguldur_name" text="돌 굴두르" />
+    <string id="taom_dolguldur_ruler_title" text="공포의 군주" />
+    <string id="taom_dolguldur_short_name" text="돌 굴두르" />
+    <string id="taom_dolguldur_title" text="돌 굴두르의 강령술" />
+    <string id="taom_erebor_desc" text="외로운산 에레보르는 북방 최대의 난쟁이 왕국이다. 황금과 미스릴이 넘쳐나며 두린 가문의 고향이다. 에레보르의 난쟁이들은 이름난 장인이자 용맹한 전사들로, 그들의 광장에는 조상들의 노래가 울려 퍼진다." />
+    <string id="taom_erebor_name" text="에레보르" />
+    <string id="taom_erebor_ruler_title" text="왕" />
+    <string id="taom_erebor_short_name" text="에레보르" />
+    <string id="taom_erebor_title" text="에레보르 왕국" />
+    <string id="taom_goblin_desc" text="높은 고개의 고블린들은 안개산맥 아래의 굴을 가득 메우고 있으니, 한때 대(大)고블린이 드워프와 나그네를 가리지 않고 이끌고 나섰던 무리의 후손들이다. 수를 헤아릴 수 없고 잔악한 그들은 고블린 마을에서 쏟아져 나와 산길을 약탈한다." />
+    <string id="taom_goblin_name" text="고블린" />
+    <string id="taom_goblin_ruler_title" text="대고블린" />
+    <string id="taom_goblin_short_name" text="고블린" />
+    <string id="taom_goblin_title" text="높은 고개의 고블린 영역" />
+    <string id="taom_gundabad_desc" text="군다바드는 오크들의 고대하고 불길한 요새로, 야만과 지배의 보루로 서 있다. 전쟁과 혼돈을 위해 길러진 군다바드의 오크들은 피 묻은 깃발 아래 모여든다." />
+    <string id="taom_gundabad_name" text="군다바드" />
+    <string id="taom_gundabad_ruler_title" text="전쟁군주" />
+    <string id="taom_gundabad_short_name" text="군다바드" />
+    <string id="taom_gundabad_title" text="군다바드" />
+    <string id="taom_isengard_desc" text="아이센가드는 백색의 마법사 사루만의 요새로, 권력과 야망의 보루로 서 있다. 우루크하이는 하얀 손의 깃발 아래 진군하며, 그 규율과 잔악함은 견줄 자가 없다." />
+    <string id="taom_isengard_name" text="아이센가드" />
+    <string id="taom_isengard_ruler_title" text="전쟁군주" />
+    <string id="taom_isengard_short_name" text="아이센가드" />
+    <string id="taom_isengard_title" text="아이센가드 대군주령" />
+    <string id="taom_lindon_desc" text="청색산맥 서쪽의 푸른 땅 린돈은 가운데땅의 해안에 남은 높은요정들의 마지막 왕국이다. 미슬론드의 회색항구에서 흰 배들이 서쪽으로 떠나가고, 조선공 키르단은 엘다르의 저물어 가는 빛을 지켜본다." />
+    <string id="taom_lindon_name" text="린돈" />
+    <string id="taom_lindon_ruler_title" text="항구의 군주" />
+    <string id="taom_lindon_short_name" text="린돈" />
+    <string id="taom_lindon_title" text="린돈 대왕국" />
+    <string id="taom_lothlorien_desc" text="황금숲은 은물길과 대하 안두인 사이에 자리하고 있다. 갈라드리엘과 켈레보른의 의지로 수호되는 이곳은 요정의 우아함과 저항의 보루로서, 시간이 닿지 않아 잎이 떨어지지 않는 땅이다." />
+    <string id="taom_lothlorien_name" text="로슬로리엔" />
+    <string id="taom_lothlorien_ruler_title" text="귀부인" />
+    <string id="taom_lothlorien_short_name" text="로슬로리엔" />
+    <string id="taom_lothlorien_title" text="로슬로리엔 왕국" />
+    <string id="taom_mirkwood_desc" text="어둠숲의 삼림 왕국은 오랜 세월 많은 고난을 견뎌 왔다. 스란두일의 통치 아래 숲요정들은 은둔하며 이방인을 경계하게 되었다. 그러나 스란두일의 마음속에는 제1시대의 옛날에 불붙은 불길이 아직 남아 있다." />
+    <string id="taom_mirkwood_name" text="라스갈렌" />
+    <string id="taom_mirkwood_ruler_title" text="아란" />
+    <string id="taom_mirkwood_short_name" text="어둠숲" />
+    <string id="taom_mirkwood_title" text="어둠숲 왕국" />
+    <string id="taom_mistymountainorcs_desc" text="안개산맥의 오크 무리는 그람산에서 모리아의 문에 이르는 고지와 깊은 굴을 차지하고 있다. 차가운 봉우리에서 전쟁을 위해 길러진 그들은 암흑의 부름에 응하며 산맥을 제 것으로 되찾기를 갈망한다." />
+    <string id="taom_mistymountainorcs_name" text="안개산맥 오크" />
+    <string id="taom_mistymountainorcs_ruler_title" text="전쟁군주" />
+    <string id="taom_mistymountainorcs_short_name" text="안개 오크" />
+    <string id="taom_mistymountainorcs_title" text="안개산맥의 오크 무리" />
+    <string id="taom_rivendell_desc" text="안개산맥의 깊은 협곡에 숨겨진 리븐델은 바다 동쪽 마지막 안식처다. 반요정 엘론드가 세운 이곳은 몰려드는 어둠에 맞선 피난처이며, 치유와 학문, 조용한 힘의 장소이다." />
+    <string id="taom_rivendell_name" text="임라드리스" />
+    <string id="taom_rivendell_ruler_title" text="군주" />
+    <string id="taom_rivendell_short_name" text="임라드리스" />
+    <string id="taom_rivendell_title" text="임라드리스의 안식처" />
+    <string id="taom_umbar_desc" text="코르세어의 어두운 항구 움바르는 해상 세력과 음험한 야망이 깊이 스며든 나라이다. 코르세어들은 가운데땅의 해안을 습격하며, 빠른 배로 공포를 퍼뜨린다." />
+    <string id="taom_umbar_name" text="움바르" />
+    <string id="taom_umbar_ruler_title" text="코르세어 왕" />
+    <string id="taom_umbar_short_name" text="움바르" />
+    <string id="taom_umbar_title" text="움바르의 항구" />
+  </strings>
+</base>

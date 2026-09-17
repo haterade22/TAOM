@@ -14,8 +14,21 @@ Usage:
 
 import argparse
 import re
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+# Force UTF-8 stdout so printing a non-Latin language tag (简体中文, 한국어, Русский, ...) doesn't
+# crash on Windows' default cp1252 console encoding. Mirrors translate_with_claude.py's header
+# fix for the same failure; reconfigure() in place rather than rebinding sys.stdout, for the same
+# pytest-capture reason documented there.
+for _stream_name in ("stdout", "stderr"):
+    _stream = getattr(sys, _stream_name, None)
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    except (AttributeError, ValueError):
+        pass
+del _stream_name, _stream
 
 TAOM_BASE = Path("Main/_Module/ModuleData")
 LANG_DIR = TAOM_BASE / "Languages"
@@ -53,6 +66,18 @@ SOURCES = [
     (TAOM_BASE / "taom_enlistment_strings.xml",
      "std_taom_enlistment_strings_{locale}.xml",
      "enlistment + field-commission strings"),
+    (TAOM_BASE / "taom_troop_name_strings.xml",
+     "std_taom_troop_name_strings_{locale}.xml",
+     "troop names"),
+    (TAOM_BASE / "taom_lord_name_strings.xml",
+     "std_taom_lord_name_strings_{locale}.xml",
+     "lord names"),
+    (TAOM_BASE / "taom_clan_name_strings.xml",
+     "std_taom_clan_name_strings_{locale}.xml",
+     "clan names"),
+    (TAOM_BASE / "taom_kingdom_name_strings.xml",
+     "std_taom_kingdom_name_strings_{locale}.xml",
+     "kingdom identity strings"),
 ]
 
 # lang_dir -> (locale_suffix, language_tag)

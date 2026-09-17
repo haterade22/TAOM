@@ -297,7 +297,7 @@ Three verbatim pieces. The first is the whole of `project.mbproj`, the second is
 
 1. **`id`** must be the string vanilla uses for that language; the engine finds an existing `LanguageData` by id and extends it (`LanguageData.cs:156-165`). `Deutsch` is what `Native/ModuleData/Languages/DE/language_data.xml` declares. <!-- measured: rg -o 'LanguageData id="[^"]+"' "<game>/Modules/Native/ModuleData/Languages/*/language_data.xml" 2026-09-05 -->
 2. **`xml_path`** is joined to the scanned `ModuleData/Languages` root, not to this file's own folder (`LanguageData.cs:130`), which is why every row starts with `DE/`.
-3. **The row count** is pinned at 13 by `AllLanguageDirs_HaveExactlyThirteenLanguageFiles` (`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs:142`). A 14th file means a new test name, not just a new number.
+3. **The row count** is pinned at 17 by `AllLanguageDirs_HaveExactlySeventeenLanguageFiles` (`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`). An 18th file means a new test name, not just a new number.
 
 ## Recipes
 
@@ -322,7 +322,7 @@ Code: No code changes needed
 1. Create the file under `Main/_Module/ModuleData/`, in the subfolder its neighbours use (`troops/`, `characters/`, `equipmentsets/`), with the root element for its id. Keep the file's encoding and line endings byte-faithful (`tools/README.md:7-27`).
 2. Add one `<XmlNode>` to `Main/_Module/SubModule.xml` inside `<Xmls>`. A new faction or culture goes between the sentinels at lines 348-394 or 395-441 so the generators can find it; anything else goes beside its neighbours. `path` is the file path from `ModuleData/` without `.xml`.
 3. List `Campaign` and `CampaignStoryMode` in `<IncludedGameTypes>`; add `CustomGame` and `EditorGame` if custom battles and the Kit should see the data, as the troop rows do (`Main/_Module/SubModule.xml:183-186`).
-4. If the file carries player-facing text, register the strings too: the [strings-and-localization](strings-and-localization.md) chapter has the `{=KEY}Fallback` rule and the 13-file step.
+4. If the file carries player-facing text, register the strings too: the [strings-and-localization](strings-and-localization.md) chapter has the `{=KEY}Fallback` rule and the 17-file step.
 5. `./build.ps1` to deploy, then a full game restart. A registered file that did not exist when the process started is null in-engine until the restart, and every static gate stays green meanwhile (`Module.cs:1029-1033`).
 
 Check: `python tools/validate_moduledata.py`
@@ -332,12 +332,12 @@ Code: No code changes needed
 ### Add: a new language folder
 
 1. Find the id vanilla uses for the language in `Native/ModuleData/Languages/<DIR>/language_data.xml` (12 of them are listed in `docs/features/localization.md:62-75`).
-2. Create `Main/_Module/ModuleData/Languages/<DIR>/language_data.xml` with `<LanguageData id="<that id>">` and one `<LanguageFile xml_path="<DIR>/std_taom_<file>_<locale>.xml"/>` per source strings file; today that is 13 rows (the DE example above). The `xml_path` is relative to `ModuleData/Languages`, not to the new folder (`LanguageData.cs:130`).
-3. Generate the 13 files. `python tools/generate_translation_template.py` writes English templates (`tools/README.md:292`); `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` fills them (`tools/README.md:324`), and it only knows the codes in its `LANGUAGES` table (`tools/translate_with_claude.py:91`), so a language new to TAOM needs a row there first.
+2. Create `Main/_Module/ModuleData/Languages/<DIR>/language_data.xml` with `<LanguageData id="<that id>">` and one `<LanguageFile xml_path="<DIR>/std_taom_<file>_<locale>.xml"/>` per source strings file; today that is 17 rows (the DE example above). The `xml_path` is relative to `ModuleData/Languages`, not to the new folder (`LanguageData.cs:130`).
+3. Generate the 17 files. `python tools/generate_translation_template.py` writes English templates for the 10 it covers (`tools/README.md:292`; the remaining 7, including the 4 name-strings files, are hand-seeded or covered by `translate_with_claude.py --sync-ids`); `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` fills them (`tools/README.md:324`), and it only knows the codes in its `LANGUAGES` table (`tools/translate_with_claude.py:91`), so a language new to TAOM needs a row there first.
 4. Do not create an English folder. `LoadLanguage` deserializes `<string>` rows only when the language id is not `English` (`LocalizedTextManager.cs:235`); the inline `{=KEY}Fallback` text in the source XML is the English.
 5. `./build.ps1`, full restart, switch the game language.
 
-Check: `./build.ps1 -RunTests` (runs `AllLanguageDirs_HaveExactlyThirteenLanguageFiles` at `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs:142`)
+Check: `./build.ps1 -RunTests` (runs `AllLanguageDirs_HaveExactlySeventeenLanguageFiles` at `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`)
 Takes effect: full game restart
 Code: Code changes required in `tools/translate_with_claude.py` (the `LANGUAGES` table at line 91) when the language is new to the translator; the game needs none
 
@@ -384,7 +384,7 @@ Code: No code changes needed
 - **`GUI/SpriteData/FactionMap/` is not sprites.** Editing those PNGs in the repo changes nothing in game until they are copied to the install, and a baked sprite needs the generator plus a full relaunch (`docs/features/gui-sprite-system.md:59-84, 138`). Sync the bake back with `pwsh tools/sync_sprite_bake.ps1`; a wider install-to-repo copy reverts uncommitted work (`docs/features/gui-sprite-system.md:168-169`).
 - **`ExcludeSourceFilesFromModule=false` deploys 551 MB of `AssetSources` to every dev install** (`Main/TAOM.csproj:13`, `Basic.targets:155`); the packager removes it again (`tools/package_release.py:116-117`).
 - **MCM values live outside the module** (`Main/Features/TaomSettings.cs:15`); a reinstall does not reset them.
-- **`localization-map.md` says 11 language files per language and names an `...ElevenLanguageFiles` test** (`docs/reference/localization-map.md:12, 17`); the shipped count is 13 and the test is `AllLanguageDirs_HaveExactlyThirteenLanguageFiles` (`LanguageDataXmlTests.cs:142`). Trust the test file.
+- **Language-file count, as of 2026-09-17:** 17 `<LanguageFile>` rows per language (13 pre-existing + 4 added by `tools/generate_name_localization_strings.py` for troop/lord/clan/kingdom names), pinned by `AllLanguageDirs_HaveExactlySeventeenLanguageFiles` (`LanguageDataXmlTests.cs`). A prior version of this note (through 2026-09-16) flagged `localization-map.md` as stale at "11"; that doc is now kept in sync, so trust the test file if the two ever drift again.
 
 ## Numbers in this chapter
 

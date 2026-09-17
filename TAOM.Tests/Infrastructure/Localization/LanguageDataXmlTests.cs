@@ -139,15 +139,79 @@ public class LanguageDataXmlTests
     }
 
     [TestMethod]
-    public void AllLanguageDirs_HaveExactlyThirteenLanguageFiles()
+    public void AllLanguageDirs_HaveExactlySeventeenLanguageFiles()
     {
         foreach (var lang in SupportedLanguageDirs)
         {
             var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
             var doc = XDocument.Load(path);
             var count = doc.Descendants("LanguageFile").Count();
-            Assert.AreEqual(13, count,
-                $"Languages/{lang}/language_data.xml should declare exactly 13 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary, wotr, enlistment, keybind, player_switcher)");
+            Assert.AreEqual(17, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 17 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary, wotr, enlistment, keybind, player_switcher, troop_name, lord_name, clan_name, kingdom_name)");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveTroopNameStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_troop_name_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_troop_name_strings reference");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveLordNameStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_lord_name_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_lord_name_strings reference");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveClanNameStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_clan_name_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_clan_name_strings reference");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveKingdomNameStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_kingdom_name_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_kingdom_name_strings reference");
         }
     }
 

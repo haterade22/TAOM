@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Italian" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="I cunicoli dei goblin di Blue Craig, nei Monti Azzurri (Ered Luin) del lontano ovest, a ridosso dei Rifugi Oscuri di Lindon. Una schiera distinta e innumerevole di goblin — separata dai loro cugini dei Monti Nebbiosi di Città dei Goblin — brulica tra le rupi occidentali e tormenta gli Elfi della costa d'occidente." />
+    <string id="taom_bluecraig_name" text="Goblin di Blue Craig" />
+    <string id="taom_bluecraig_ruler_title" text="Gran Goblin" />
+    <string id="taom_bluecraig_short_name" text="Blue Craig" />
+    <string id="taom_bluecraig_title" text="Reame Goblin di Blue Craig" />
+    <string id="taom_dolguldur_desc" text="Dol Guldur, la fortezza dell'ombra e della disperazione, si erge come un faro minaccioso della oscura volontà del Negromante. Gli Orchi e le creature immonde che ne abitano le profondità incutono terrore nel cuore di tutti." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Signore del Terrore" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Negromanzia di Dol Guldur" />
+    <string id="taom_erebor_desc" text="La Montagna Solitaria, Erebor, è il più grande dei regni dei Nani del nord. Ricca d'oro e di mithril, è la dimora della stirpe di Durin. I Nani di Erebor sono artigiani rinomati e guerrieri feroci, e le loro sale echeggiano dei canti dei loro antenati." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="Re" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Regno di Erebor" />
+    <string id="taom_goblin_desc" text="I Goblin dell'Alto Passo infestano le gallerie sotto i Monti Nebbiosi, progenie della schiera che il Grande Goblin guidò un tempo contro nani e viandanti. Innumerevoli e feroci, si riversano da Goblinopoli per razziare le strade di montagna." />
+    <string id="taom_goblin_name" text="Goblin" />
+    <string id="taom_goblin_ruler_title" text="Grande Goblin" />
+    <string id="taom_goblin_short_name" text="Goblin" />
+    <string id="taom_goblin_title" text="Reame Goblin dell'Alto Passo" />
+    <string id="taom_gundabad_desc" text="Gundabad, l'antica e sinistra fortezza degli Orchi, si erge come bastione di ferocia e dominio. Gli Orchi di Gundabad, allevati per la guerra e il caos, si raccolgono sotto vessilli insanguinati." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Signore della Guerra" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengard, la fortezza dello Stregone Bianco Saruman, si erge come bastione di potere e ambizione. Gli Uruk-hai marciano sotto il vessillo della Mano Bianca, insuperati in disciplina e ferocia." />
+    <string id="taom_isengard_name" text="Isengard" />
+    <string id="taom_isengard_ruler_title" text="Signore della Guerra" />
+    <string id="taom_isengard_short_name" text="Isengard" />
+    <string id="taom_isengard_title" text="Signoria di Isengard" />
+    <string id="taom_lindon_desc" text="Lindon, la verde terra a occidente dei Monti Azzurri, è l'ultimo reame degli Alti Elfi sulle coste della Terra di Mezzo. Dai Porti Grigi di Mithlond le navi bianche salpano verso l'Ovest, mentre Círdan il Carpentiere veglia sulla luce declinante degli Eldar." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Signore dei Porti" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Alto Regno di Lindon" />
+    <string id="taom_lothlorien_desc" text="Il Bosco d'Oro si annida tra il Argenteo e il possente Anduin. Custodito dalla volontà di Galadriel e Celeborn, si erge come bastione di grazia e sfida elfica: una terra intoccata dal tempo, dove le foglie non cadono." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Dama" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Regno di Lóthlorien" />
+    <string id="taom_mirkwood_desc" text="Il Reame Boscoso di Bosco Atro ha sopportato molte avversità nel corso degli anni. Sotto la guida di Thranduil, gli Elfi Silvani sono divenuti solitari e diffidenti verso gli estranei. Eppure nel cuore di Thranduil indugia un fuoco acceso negli antichi giorni della Prima Era." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Bosco Atro" />
+    <string id="taom_mirkwood_title" text="Reame di Bosco Atro" />
+    <string id="taom_mistymountainorcs_desc" text="La schiera orchesca dei Monti Nebbiosi occupa le alture e le profonde gallerie dal Monte Gram alle porte di Moria. Allevati per la guerra tra le vette gelide, rispondono al richiamo dell'Ombra e bramano di reclamare i monti per sé." />
+    <string id="taom_mistymountainorcs_name" text="Orchi dei Monti Nebbiosi" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Signore della Guerra" />
+    <string id="taom_mistymountainorcs_short_name" text="Orchi Nebbiosi" />
+    <string id="taom_mistymountainorcs_title" text="Schiera Orchesca dei Monti Nebbiosi" />
+    <string id="taom_rivendell_desc" text="Nascosta nelle profonde gole dei Monti Nebbiosi, Gran Burrone è l'Ultima Casa Accogliente a Est del Mare. Fondata da Elrond Mezzelfo, è un rifugio contro l'oscurità che si addensa, luogo di guarigione, sapienza e quieta forza." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Signore" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Rifugio di Imladris" />
+    <string id="taom_umbar_desc" text="Umbar, l'oscuro porto dei Corsari, è un regno immerso nella potenza marittima e in ambizioni perfide. I Corsari saccheggiano le coste della Terra di Mezzo, diffondendo il terrore con le loro navi veloci." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Re dei Corsari" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Porto di Umbar" />
+  </strings>
+</base>

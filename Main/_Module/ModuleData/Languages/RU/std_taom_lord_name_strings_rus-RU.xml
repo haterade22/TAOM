@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="aom_lord_1_11_1_name" text="Калион" />
+    <string id="aom_lord_1_11_2_name" text="Силвен" />
+    <string id="aom_lord_1_11_3_name" text="Айнараута" />
+    <string id="aom_lord_1_11_4_name" text="Ивриниэль" />
+    <string id="aom_lord_1_11_5_name" text="Нарниэль" />
+    <string id="aom_lord_1_40_2_name" text="Элениэль" />
+    <string id="aom_lord_1_45_4_name" text="Лорет" />
+    <string id="aom_lord_1_45_5_name" text="Белвен" />
+    <string id="aom_lord_1_45_6_name" text="Бритвен" />
+    <string id="aom_lord_1_52_3_name" text="Ивриниэль" />
+    <string id="aom_lord_1_52_4_name" text="Науриэль" />
+    <string id="aom_lord_1_53_1_name" text="Калание́ль" />
+    <string id="aom_lord_1_53_2_name" text="Кириондир" />
+    <string id="aom_lord_1_53_3_name" text="Анкалиму" />
+    <string id="aom_lord_1_59_1_name" text="Рондиэль" />
+    <string id="aom_lord_1_59_2_name" text="Силмадор" />
+    <string id="aom_lord_1_59_3_name" text="Галинвен" />
+    <string id="aom_lord_1_59_4_name" text="Галдирион" />
+    <string id="aom_lord_1_59_name" text="Рондамир" />
+    <string id="aom_lord_1_60_1_name" text="Нимриэль" />
+    <string id="aom_lord_1_60_2_name" text="Орлатиэль" />
+    <string id="aom_lord_1_60_3_name" text="Орлендир" />
+    <string id="aom_lord_1_60_name" text="Элдорион" />
+    <string id="aom_lord_1_71_1_name" text="Ласвен" />
+    <string id="aom_lord_1_9_1_name" text="Эльфир" />
+    <string id="aom_lord_1_9_2_name" text="Эрхирион" />
+    <string id="aom_lord_1_9_3_name" text="Амротос" />
+    <string id="aom_lord_1_9_4_name" text="Лотириэль" />
+    <string id="aom_lord_1_9_5_name" text="Лотвен" />
+    <string id="aom_lord_1_9_6_name" text="Лотериэль" />
+    <string id="aom_lord_4_16_2_name" text="Херубранд Феландинг" />
+    <string id="aom_lord_4_21_1_name" text="Сигеберт Ордлакинг" />
+    <string id="aom_lord_4_21_2_name" text="Эльфхильд Ордлакинг" />
+    <string id="aom_lord_4_21_3_name" text="Ульфеютель Ордлакинг" />
+    <string id="aom_lord_4_21_4_name" text="Эадгифу Ордлакинг" />
+    <string id="aom_lord_4_27_2_name" text="Эльфстан Ателлафинг" />
+    <string id="aom_lord_4_27_3_name" text="Эльфвинн Этеллафинг" />
+    <string id="aom_lord_4_27_4_name" text="Сэвеальд Этеллафинг" />
+    <string id="aom_lord_4_28_3_name" text="Рюнельда" />
+    <string id="aom_lord_4_29_1_name" text="Октреда Эльфвигинг" />
+    <string id="aom_lord_4_29_2_name" text="Эадвеальд Эльфвигинг" />
+    <string id="aom_lord_4_29_name" text="Эадфрит Эльфвигинг" />
+    <string id="aom_lord_4_3_2_name" text="Эовин Эофоринг" />
+    <string id="aom_lord_4_3_3_name" text="Теодвин Эофоринг" />
+    <string id="aom_lord_4_6_2_name" text="Эльфгрим Гримингас" />
+    <string id="aom_lord_6_23_1_name" text="Борлах Хуз" />
+    <string id="aom_lord_6_23_2_name" text="Армага Хуз" />
+    <string id="aom_lord_6_23_3_name" text="Бортанд Хуз" />
+    <string id="aom_lord_6_23_4_name" text="Котота Хуз" />
+    <string id="aom_lord_6_23_5_name" text="Ульфаст Хуз" />
+    <string id="aom_lord_6_23_6_name" text="Ульварт Хуз" />
+    <string id="aom_lord_6_23_7_name" text="Ульдор Хуз" />
+    <string id="aom_lord_6_23_8_name" text="Чинуа Хуз" />
+    <string id="aom_lord_6_23_9_name" text="Герел Хуз" />
+    <string id="aom_lord_6_24_1_name" text="Лорган Адекиг" />
+    <string id="aom_lord_6_24_2_name" text="Гоксун Адекиг" />
+    <string id="aom_lord_6_24_3_name" text="Бёри Адекиг" />
+    <string id="aom_lord_6_24_4_name" text="Хулан Адекиг" />
+    <string id="aom_lord_6_24_5_name" text="Кустиг Адекиг" />
+    <string id="aom_lord_6_24_6_name" text="Юмрук Адекиг" />
+    <string id="aom_lord_6_24_7_name" text="Адаркидай Адекиг" />
+    <string id="aom_lord_6_24_8_name" text="Конша Адекиг" />
+    <string id="aom_lord_6_24_9_name" text="Самга Адекиг" />
+    <string id="aom_lord_6_25_1_name" text="Ганбаатар Цильзерон" />
+    <string id="aom_lord_6_25_2_name" text="Сарнай Цильзерон" />
+    <string id="aom_lord_6_25_3_name" text="Гантульга Цильзерон" />
+    <string id="aom_lord_6_25_4_name" text="Сертач Цильзерон" />
+    <string id="aom_lord_6_25_5_name" text="Хэнбиш Цильзерон" />
+    <string id="aom_lord_6_25_6_name" text="Муунохой Цильзерон" />
+    <string id="aom_lord_6_25_7_name" text="Субэтай Цильзерон" />
+    <string id="aom_lord_6_25_8_name" text="Суна Цильзерон" />
+    <string id="aom_lord_6_25_9_name" text="Цэцэг Цильзерон" />
+    <string id="aom_lord_6_25_name" text="Этакали Цильзерон" />
+    <string id="aom_lord_6_26_1_name" text="Джельме Калкиан" />
+    <string id="aom_lord_6_26_2_name" text="Туя Калкиан" />
+    <string id="aom_lord_6_26_3_name" text="Борогул Калкиан" />
+    <string id="aom_lord_6_26_4_name" text="Есуген Калкиан" />
+    <string id="aom_lord_6_26_5_name" text="Мухали Калкиан" />
+    <string id="aom_lord_6_26_6_name" text="Чилаун Калкиан" />
+    <string id="aom_lord_6_26_7_name" text="Берке Калкиан" />
+    <string id="aom_lord_6_26_8_name" text="Йосма Калкиан" />
+    <string id="aom_lord_6_26_9_name" text="Айгиарн Калкиан" />
+    <string id="aom_lord_6_26_name" text="Леординот Калкиан" />
+    <string id="aom_lord_6_27_1_name" text="Токто Зориан" />
+    <string id="aom_lord_6_27_2_name" text="Алаг Зориан" />
+    <string id="aom_lord_6_27_3_name" text="Аргун Зориан" />
+    <string id="aom_lord_6_27_4_name" text="Алакай Зориан" />
+    <string id="aom_lord_6_27_5_name" text="Байдар Зориан" />
+    <string id="aom_lord_6_27_6_name" text="Кадан Зориан" />
+    <string id="aom_lord_6_27_7_name" text="Орда Зориан" />
+    <string id="aom_lord_6_27_8_name" text="Алтани Зориан" />
+    <string id="aom_lord_6_27_9_name" text="Баялун Зориан" />
+    <string id="aom_lord_6_27_name" text="Нейда Зориан" />
+    <string id="aom_lord_6_28_1_name" text="Сартак Митрунтай" />
+    <string id="aom_lord_6_28_2_name" text="Бёрте Митрунтай" />
+    <string id="aom_lord_6_28_3_name" text="Ногай Митрунтай" />
+    <string id="aom_lord_6_28_4_name" text="Булган Митрунтай" />
+    <string id="aom_lord_6_28_5_name" text="Тамир Митрунтай" />
+    <string id="aom_lord_6_28_6_name" text="Отгон Митрунтай" />
+    <string id="aom_lord_6_28_7_name" text="Темур Митрунтай" />
+    <string id="aom_lord_6_28_8_name" text="Чимэг Митрунтай" />
+    <string id="aom_lord_6_28_9_name" text="Докуз Митрунтай" />
+    <string id="aom_lord_6_28_name" text="Тулрок Митрунтай" />
+    <string id="aom_lord_6_29_1_name" text="Ачик Вазевиан" />
+    <string id="aom_lord_6_29_2_name" text="Энхтуя Вазевиан" />
+    <string id="aom_lord_6_29_3_name" text="Кутлуг Вазевиан" />
+    <string id="aom_lord_6_29_4_name" text="Оюун Вазевиан" />
+    <string id="aom_lord_6_29_5_name" text="Веткар Вазевиан" />
+    <string id="aom_lord_6_29_6_name" text="Аурзан Вазевиан" />
+    <string id="aom_lord_6_29_7_name" text="Хорлуг Вазевиан" />
+    <string id="aom_lord_6_29_8_name" text="Сарангэрэл Вазевиан" />
+    <string id="aom_lord_6_29_9_name" text="Цэлмэг Вазевиан" />
+    <string id="aom_lord_6_29_name" text="Юрзал Вазевиан" />
+    <string id="aom_lord_6_30_1_name" text="Сагост Бозорганит" />
+    <string id="aom_lord_6_30_2_name" text="Удвал Бозорганит" />
+    <string id="aom_lord_6_30_3_name" text="Дуркан Бозорганит" />
+    <string id="aom_lord_6_30_4_name" text="Зая Бозорганит" />
+    <string id="aom_lord_6_30_5_name" text="Маздур Бозорганит" />
+    <string id="aom_lord_6_30_6_name" text="Хетул Бозорганит" />
+    <string id="aom_lord_6_30_7_name" text="Тауркан Бозорганит" />
+    <string id="aom_lord_6_30_8_name" text="Нергуй Бозорганит" />
+    <string id="aom_lord_6_30_9_name" text="Нарангерел Бозорганит" />
+    <string id="aom_lord_6_30_name" text="Руразаур Бозорганит" />
+    <string id="aom_lord_AB1_10_name" text="Хурия" />
+    <string id="aom_lord_AB1_2_name" text="Карун" />
+    <string id="aom_lord_AB1_3_name" text="Лорас" />
+    <string id="aom_lord_AB1_4_name" text="Михрак" />
+    <string id="aom_lord_AB1_5_name" text="Нузар" />
+    <string id="aom_lord_AB1_6_name" text="Охрмуз" />
+    <string id="aom_lord_AB1_7_name" text="Дурия" />
+    <string id="aom_lord_AB1_8_name" text="Фарах" />
+    <string id="aom_lord_AB1_9_name" text="Гулбахар" />
+    <string id="aom_lord_AB2_10_name" text="Наргис" />
+    <string id="aom_lord_AB2_2_name" text="Пирун" />
+    <string id="aom_lord_AB2_3_name" text="Рузбех" />
+    <string id="aom_lord_AB2_4_name" text="Сияк" />
+    <string id="aom_lord_AB2_5_name" text="Тусар" />
+    <string id="aom_lord_AB2_6_name" text="Ардуш" />
+    <string id="aom_lord_AB2_7_name" text="Джахана" />
+    <string id="aom_lord_AB2_8_name" text="Курина" />
+    <string id="aom_lord_AB2_9_name" text="Михри" />
+    <string id="aom_lord_AB3_10_name" text="Турана" />
+    <string id="aom_lord_AB3_2_name" text="Бахмур" />
+    <string id="aom_lord_AB3_3_name" text="Фаррук" />
+    <string id="aom_lord_AB3_4_name" text="Гаршуп" />
+    <string id="aom_lord_AB3_5_name" text="Хуман" />
+    <string id="aom_lord_AB3_6_name" text="Исфанар" />
+    <string id="aom_lord_AB3_7_name" text="Парване" />
+    <string id="aom_lord_AB3_8_name" text="Рушана" />
+    <string id="aom_lord_AB3_9_name" text="Сусан" />
+    <string id="aom_lord_AB4_10_name" text="Абана" />
+    <string id="aom_lord_AB4_2_name" text="Кураш" />
+    <string id="aom_lord_AB4_3_name" text="Маздук" />
+    <string id="aom_lord_AB4_4_name" text="Нарсех" />
+    <string id="aom_lord_AB4_5_name" text="Ородун" />
+    <string id="aom_lord_AB4_6_name" text="Пакур" />
+    <string id="aom_lord_AB4_7_name" text="Вида" />
+    <string id="aom_lord_AB4_8_name" text="Ялда" />
+    <string id="aom_lord_AB4_9_name" text="Зулейха" />
+    <string id="aom_lord_AB5_10_name" text="Фарзане" />
+    <string id="aom_lord_AB5_2_name" text="Рашнур" />
+    <string id="aom_lord_AB5_3_name" text="Шахрум" />
+    <string id="aom_lord_AB5_4_name" text="Тирдун" />
+    <string id="aom_lord_AB5_5_name" text="Вологар" />
+    <string id="aom_lord_AB5_6_name" text="Замусп" />
+    <string id="aom_lord_AB5_7_name" text="Банин" />
+    <string id="aom_lord_AB5_8_name" text="Чахра" />
+    <string id="aom_lord_AB5_9_name" text="Делькаш" />
+    <string id="aom_lord_AB6_10_name" text="Кульсум" />
+    <string id="aom_lord_AB6_2_name" text="Азарун" />
+    <string id="aom_lord_AB6_3_name" text="Борзуй" />
+    <string id="aom_lord_AB6_4_name" text="Дануш" />
+    <string id="aom_lord_AB6_5_name" text="Фарухар" />
+    <string id="aom_lord_AB6_6_name" text="Гударз" />
+    <string id="aom_lord_AB6_7_name" text="Гухара" />
+    <string id="aom_lord_AB6_8_name" text="Хума" />
+    <string id="aom_lord_AB6_9_name" text="Жасмуна" />
+    <string id="aom_lord_AB7_10_name" text="Рушан" />
+    <string id="aom_lord_AB7_2_name" text="Хутан" />
+    <string id="aom_lord_AB7_3_name" text="Кухрам" />
+    <string id="aom_lord_AB7_4_name" text="Махуз" />
+    <string id="aom_lord_AB7_5_name" text="Настур" />
+    <string id="aom_lord_AB7_6_name" text="Пульванд" />
+    <string id="aom_lord_AB7_7_name" text="Мехри" />
+    <string id="aom_lord_AB7_8_name" text="Насрин" />
+    <string id="aom_lord_AB7_9_name" text="Пармида" />
+    <string id="aom_lord_AB8_10_name" text="Яра" />
+    <string id="aom_lord_AB8_2_name" text="Саве" />
+    <string id="aom_lord_AB8_3_name" text="Тумар" />
+    <string id="aom_lord_AB8_4_name" text="Варазун" />
+    <string id="aom_lord_AB8_5_name" text="Зангур" />
+    <string id="aom_lord_AB8_6_name" text="Аспур" />
+    <string id="aom_lord_AB8_7_name" text="Сахара" />
+    <string id="aom_lord_AB8_8_name" text="Туба" />
+    <string id="aom_lord_AB8_9_name" text="Жале" />
+    <string id="aom_lord_BC1_1_name" text="Моргруб" />
+    <string id="aom_lord_BC1_2_name" text="Снагбут" />
+    <string id="aom_lord_BC1_3_name" text="Хракдуш" />
+    <string id="aom_lord_BC1_4_name" text="Болдог" />
+    <string id="aom_lord_BC1_5_name" text="Лугбол" />
+    <string id="aom_lord_BC1_6_name" text="Гризнак" />
+    <string id="aom_lord_BC1_7_name" text="Гнарла" />
+    <string id="aom_lord_BC1_8_name" text="Вугза" />
+    <string id="aom_lord_BC2_1_name" text="Гризнак" />
+    <string id="aom_lord_BC2_2_name" text="Фраку" />
+    <string id="aom_lord_BC2_3_name" text="Мугаш" />
+    <string id="aom_lord_BC2_4_name" text="Гришнак" />
+    <string id="aom_lord_BC2_5_name" text="Музгаш" />
+    <string id="aom_lord_BC2_6_name" text="Лугдуш" />
+    <string id="aom_lord_BC2_7_name" text="Уршза" />
+    <string id="aom_lord_BC2_8_name" text="Лазга" />
+    <string id="aom_lord_BC3_1_name" text="Лугдуш" />
+    <string id="aom_lord_BC3_2_name" text="Радбуг" />
+    <string id="aom_lord_BC3_3_name" text="Горбаг" />
+    <string id="aom_lord_BC3_4_name" text="Шаграт" />
+    <string id="aom_lord_BC3_5_name" text="Уфтак" />
+    <string id="aom_lord_BC3_6_name" text="Лагдуф" />
+    <string id="aom_lord_BC3_7_name" text="Ульга" />
+    <string id="aom_lord_BC3_8_name" text="Бракза" />
+    <string id="aom_lord_BC4_1_name" text="Лагдуф" />
+    <string id="aom_lord_BC4_2_name" text="Оркобал" />
+    <string id="aom_lord_BC4_3_name" text="Язнег" />
+    <string id="aom_lord_BC4_4_name" text="Нарзуг" />
+    <string id="aom_lord_BC4_5_name" text="Грукхаш" />
+    <string id="aom_lord_BC4_6_name" text="Маухур" />
+    <string id="aom_lord_BC4_7_name" text="Хагза" />
+    <string id="aom_lord_BC4_8_name" text="Могра" />
+    <string id="aom_lord_BC5_1_name" text="Маухур" />
+    <string id="aom_lord_BC5_2_name" text="Углук" />
+    <string id="aom_lord_BC5_3_name" text="Бурзум" />
+    <string id="aom_lord_BC5_4_name" text="Трокмау" />
+    <string id="aom_lord_BC5_5_name" text="Скарсник" />
+    <string id="aom_lord_BC5_6_name" text="Гнашрак" />
+    <string id="aom_lord_BC5_7_name" text="Гралза" />
+    <string id="aom_lord_BC5_8_name" text="Шелза" />
+    <string id="aom_lord_D10_1_name" text="Вракмуг" />
+    <string id="aom_lord_D10_2_name" text="Шагтул" />
+    <string id="aom_lord_D10_3_name" text="Гурнак" />
+    <string id="aom_lord_D10_4_name" text="Брозаг" />
+    <string id="aom_lord_D10_5_name" text="Газла" />
+    <string id="aom_lord_D10_6_name" text="Узрина" />
+    <string id="aom_lord_D10_7_name" text="Хлурза" />
+    <string id="aom_lord_D11_1_name" text="Турзог" />
+    <string id="aom_lord_D11_2_name" text="Мокраш" />
+    <string id="aom_lord_D11_3_name" text="Азгурт" />
+    <string id="aom_lord_D11_4_name" text="Хузмог" />
+    <string id="aom_lord_D11_5_name" text="Вулна" />
+    <string id="aom_lord_D11_6_name" text="Дразга" />
+    <string id="aom_lord_D12_1_name" text="Скарвук" />
+    <string id="aom_lord_D12_2_name" text="Лугнар" />
+    <string id="aom_lord_D12_3_name" text="Воргул" />
+    <string id="aom_lord_D12_4_name" text="Нурга" />
+    <string id="aom_lord_D12_5_name" text="Скузла" />
+    <string id="aom_lord_D13_1_name" text="Драмтак" />
+    <string id="aom_lord_D13_2_name" text="Гулбаг" />
+    <string id="aom_lord_D13_3_name" text="Рукмаш" />
+    <string id="aom_lord_D13_4_name" text="Трозгур" />
+    <string id="aom_lord_D13_5_name" text="Булзаг" />
+    <string id="aom_lord_D13_6_name" text="Маргза" />
+    <string id="aom_lord_D13_7_name" text="Гулна" />
+    <string id="aom_lord_D13_8_name" text="Разга" />
+    <string id="aom_lord_D13_9_name" text="Булзна" />
+    <string id="aom_lord_D14_1_name" text="Нургак" />
+    <string id="aom_lord_D14_2_name" text="Слагтум" />
+    <string id="aom_lord_D14_3_name" text="Хрукдан" />
+    <string id="aom_lord_D14_4_name" text="Мазгут" />
+    <string id="aom_lord_D14_5_name" text="Трозга" />
+    <string id="aom_lord_D14_6_name" text="Узгла" />
+    <string id="aom_lord_D14_7_name" text="Лукжа" />
+    <string id="aom_lord_D15_1_name" text="Олгур" />
+    <string id="aom_lord_D15_2_name" text="Гутрак" />
+    <string id="aom_lord_D15_3_name" text="Жагмор" />
+    <string id="aom_lord_D15_4_name" text="Друбнаш" />
+    <string id="aom_lord_D15_5_name" text="Врагна" />
+    <string id="aom_lord_D15_6_name" text="Дурза" />
+    <string id="aom_lord_D1_10_name" text="Нарша" />
+    <string id="aom_lord_D1_2_name" text="Трангул" />
+    <string id="aom_lord_D1_3_name" text="Моргулаш" />
+    <string id="aom_lord_D1_4_name" text="Дразгор" />
+    <string id="aom_lord_D1_5_name" text="Заркаш" />
+    <string id="aom_lord_D1_6_name" text="Горзаг" />
+    <string id="aom_lord_D1_7_name" text="Ултрак" />
+    <string id="aom_lord_D1_8_name" text="Вортак" />
+    <string id="aom_lord_D1_9_name" text="Трулза" />
+    <string id="aom_lord_D2_10_name" text="Дуржа" />
+    <string id="aom_lord_D2_1_name" text="Нарзуг" />
+    <string id="aom_lord_D2_2_name" text="Дуркар" />
+    <string id="aom_lord_D2_3_name" text="Траргол" />
+    <string id="aom_lord_D2_4_name" text="Казраг" />
+    <string id="aom_lord_D2_5_name" text="Зоргрул" />
+    <string id="aom_lord_D2_6_name" text="Морзаг" />
+    <string id="aom_lord_D2_7_name" text="Дружак" />
+    <string id="aom_lord_D2_8_name" text="Граша" />
+    <string id="aom_lord_D2_9_name" text="Кжа" />
+    <string id="aom_lord_D3_10_name" text="Талка" />
+    <string id="aom_lord_D3_1_name" text="Лоргат" />
+    <string id="aom_lord_D3_2_name" text="Нарграш" />
+    <string id="aom_lord_D3_3_name" text="Урзок" />
+    <string id="aom_lord_D3_4_name" text="Ворзул" />
+    <string id="aom_lord_D3_5_name" text="Гралзук" />
+    <string id="aom_lord_D3_6_name" text="Дурморг" />
+    <string id="aom_lord_D3_7_name" text="Торзаг" />
+    <string id="aom_lord_D3_8_name" text="Крозар" />
+    <string id="aom_lord_D3_9_name" text="Заргра" />
+    <string id="aom_lord_D4_10_name" text="Ворзул" />
+    <string id="aom_lord_D4_1_name" text="Урзара" />
+    <string id="aom_lord_D4_2_name" text="Друзния" />
+    <string id="aom_lord_D4_3_name" text="Воргрия" />
+    <string id="aom_lord_D4_4_name" text="Трулзия" />
+    <string id="aom_lord_D4_5_name" text="Зулгора" />
+    <string id="aom_lord_D4_6_name" text="Нарзия" />
+    <string id="aom_lord_D4_7_name" text="Казрия" />
+    <string id="aom_lord_D4_8_name" text="Гралзия" />
+    <string id="aom_lord_D4_9_name" text="Урзок" />
+    <string id="aom_lord_D5_10_name" text="Улзра" />
+    <string id="aom_lord_D5_1_name" text="Троргаш" />
+    <string id="aom_lord_D5_2_name" text="Горваш" />
+    <string id="aom_lord_D5_3_name" text="Нардук" />
+    <string id="aom_lord_D5_4_name" text="Зулгор" />
+    <string id="aom_lord_D5_5_name" text="Дулрук" />
+    <string id="aom_lord_D5_6_name" text="Тругаш" />
+    <string id="aom_lord_D5_7_name" text="Каргул" />
+    <string id="aom_lord_D5_8_name" text="Улзар" />
+    <string id="aom_lord_D5_9_name" text="Моргра" />
+    <string id="aom_lord_D6_10_name" text="Казла" />
+    <string id="aom_lord_D6_1_name" text="Трург" />
+    <string id="aom_lord_D6_2_name" text="Зарлуг" />
+    <string id="aom_lord_D6_3_name" text="Музрак" />
+    <string id="aom_lord_D6_4_name" text="Казния" />
+    <string id="aom_lord_D6_5_name" text="Лурзия" />
+    <string id="aom_lord_D6_6_name" text="Дурла" />
+    <string id="aom_lord_D6_7_name" text="Гралния" />
+    <string id="aom_lord_D6_8_name" text="Талка" />
+    <string id="aom_lord_D6_9_name" text="Ворла" />
+    <string id="aom_lord_D7_10_name" text="Врузга" />
+    <string id="aom_lord_D7_1_name" text="Лугмор" />
+    <string id="aom_lord_D7_2_name" text="Врукаш" />
+    <string id="aom_lord_D7_3_name" text="Друзгул" />
+    <string id="aom_lord_D7_4_name" text="Трогма" />
+    <string id="aom_lord_D7_5_name" text="Бурзгаш" />
+    <string id="aom_lord_D7_6_name" text="Гашнак" />
+    <string id="aom_lord_D7_7_name" text="Мвазга" />
+    <string id="aom_lord_D7_8_name" text="Скурла" />
+    <string id="aom_lord_D7_9_name" text="Гурния" />
+    <string id="aom_lord_D8_1_name" text="Скулгар" />
+    <string id="aom_lord_D8_2_name" text="Морбул" />
+    <string id="aom_lord_D8_3_name" text="Разгар" />
+    <string id="aom_lord_D8_4_name" text="Узгут" />
+    <string id="aom_lord_D8_5_name" text="Маутак" />
+    <string id="aom_lord_D8_6_name" text="Нагза" />
+    <string id="aom_lord_D8_7_name" text="Дурния" />
+    <string id="aom_lord_D8_8_name" text="Лурга" />
+    <string id="aom_lord_D8_9_name" text="Тузга" />
+    <string id="aom_lord_D9_1_name" text="Налтур" />
+    <string id="aom_lord_D9_2_name" text="Гришул" />
+    <string id="aom_lord_D9_3_name" text="Хлакум" />
+    <string id="aom_lord_D9_4_name" text="Зурган" />
+    <string id="aom_lord_D9_5_name" text="Дулмаш" />
+    <string id="aom_lord_D9_6_name" text="Моргза" />
+    <string id="aom_lord_D9_7_name" text="Скальна" />
+    <string id="aom_lord_D9_8_name" text="Бружа" />
+    <string id="aom_lord_E1_11_name" text="Трис" />
+    <string id="aom_lord_E1_1_name" text="Даин II Железностоп" />
+    <string id="aom_lord_E1_2_name" text="Торин Каменный Шлем" />
+    <string id="aom_lord_E1_3_name" text="Диса" />
+    <string id="aom_lord_E1_4_name" text="Наин" />
+    <string id="aom_lord_E1_5_name" text="Дурин" />
+    <string id="aom_lord_E1_6_name" text="Фин" />
+    <string id="aom_lord_E2_11_name" text="Дворин" />
+    <string id="aom_lord_E2_1_name" text="Нат" />
+    <string id="aom_lord_E2_2_name" text="Ириди" />
+    <string id="aom_lord_E2_3_name" text="Руни" />
+    <string id="aom_lord_E2_4_name" text="Ломи" />
+    <string id="aom_lord_E3_11_name" text="Друин" />
+    <string id="aom_lord_E3_1_name" text="Гарьян" />
+    <string id="aom_lord_E3_2_name" text="Тальфи" />
+    <string id="aom_lord_E3_3_name" text="Имак" />
+    <string id="aom_lord_E3_4_name" text="Нили" />
+    <string id="aom_lord_E3_5_name" text="Мэри" />
+    <string id="aom_lord_E4_11_name" text="Орн" />
+    <string id="aom_lord_E4_1_name" text="Нар" />
+    <string id="aom_lord_E4_2_name" text="Тили" />
+    <string id="aom_lord_E4_3_name" text="Нали" />
+    <string id="aom_lord_E4_4_name" text="Тали" />
+    <string id="aom_lord_E5_11_name" text="Телор" />
+    <string id="aom_lord_E5_1_name" text="Горли" />
+    <string id="aom_lord_E5_2_name" text="Гирда" />
+    <string id="aom_lord_E5_3_name" text="Гаин" />
+    <string id="aom_lord_E5_4_name" text="Фрар" />
+    <string id="aom_lord_E5_5_name" text="Фрерин" />
+    <string id="aom_lord_E6_11_name" text="Тран" />
+    <string id="aom_lord_E6_1_name" text="Флои" />
+    <string id="aom_lord_E6_2_name" text="Драли" />
+    <string id="aom_lord_E6_3_name" text="Фласи" />
+    <string id="aom_lord_E6_4_name" text="Идрун" />
+    <string id="aom_lord_E7_11_name" text="Талия" />
+    <string id="aom_lord_E7_1_name" text="Наран" />
+    <string id="aom_lord_EW_10_name" text="Уинилме" />
+    <string id="aom_lord_EW_11_name" text="Эльдакар" />
+    <string id="aom_lord_EW_12_name" text="Мельянна" />
+    <string id="aom_lord_EW_13_name" text="Истион" />
+    <string id="aom_lord_EW_14_1_name" text="Сильмариэль" />
+    <string id="aom_lord_EW_14_2_name" text="Нимэтиль" />
+    <string id="aom_lord_EW_14_3_name" text="Румен" />
+    <string id="aom_lord_EW_14_name" text="Ворондир" />
+    <string id="aom_lord_EW_15_name" text="Морвен" />
+    <string id="aom_lord_EW_16_name" text="Сайнес" />
+    <string id="aom_lord_EW_17_name" text="Эстелиэн" />
+    <string id="aom_lord_EW_18_name" text="Филигод" />
+    <string id="aom_lord_EW_19_name" text="Фаландур" />
+    <string id="aom_lord_EW_1_1_name" text="Кириэль" />
+    <string id="aom_lord_EW_1_2_name" text="Пеламир" />
+    <string id="aom_lord_EW_1_3_name" text="Дорвен" />
+    <string id="aom_lord_EW_1_4_name" text="Сарнион" />
+    <string id="aom_lord_EW_1_name" text="Амандир" />
+    <string id="aom_lord_EW_20_name" text="Балатар" />
+    <string id="aom_lord_EW_21_name" text="Белегорн" />
+    <string id="aom_lord_EW_22_name" text="Нессание" />
+    <string id="aom_lord_EW_23_name" text="Анаратан" />
+    <string id="aom_lord_EW_24_name" text="Белвен" />
+    <string id="aom_lord_EW_25_name" text="Аргелеб" />
+    <string id="aom_lord_EW_26_name" text="Беренор" />
+    <string id="aom_lord_EW_27_name" text="Арниэль" />
+    <string id="aom_lord_EW_28_name" text="Эмельдир" />
+    <string id="aom_lord_EW_2_name" text="Виринар" />
+    <string id="aom_lord_EW_3_name" text="Virinehtar" />
+    <string id="aom_lord_EW_4_name" text="Валандур" />
+    <string id="aom_lord_EW_5_name" text="Валарина" />
+    <string id="aom_lord_EW_6_1_name" text="Фалатвен" />
+    <string id="aom_lord_EW_6_2_name" text="Орвениэль" />
+    <string id="aom_lord_EW_6_3_name" text="Талендир" />
+    <string id="aom_lord_EW_6_name" text="Орондир" />
+    <string id="aom_lord_EW_7_name" text="Дориэн" />
+    <string id="aom_lord_EW_8_name" text="Берегар" />
+    <string id="aom_lord_EW_9_name" text="Тингол" />
+    <string id="aom_lord_G10_10_name" text="Магра" />
+    <string id="aom_lord_G10_1_name" text="Бузгра" />
+    <string id="aom_lord_G10_2_name" text="Хракгар" />
+    <string id="aom_lord_G10_3_name" text="Мольгор" />
+    <string id="aom_lord_G10_4_name" text="Снагдуф" />
+    <string id="aom_lord_G10_5_name" text="Врук" />
+    <string id="aom_lord_G10_6_name" text="Друбог" />
+    <string id="aom_lord_G10_7_name" text="Зогра" />
+    <string id="aom_lord_G10_8_name" text="Лакхза" />
+    <string id="aom_lord_G10_9_name" text="Урзга" />
+    <string id="aom_lord_G1_10_name" text="Турка" />
+    <string id="aom_lord_G1_1_name" text="Азгар" />
+    <string id="aom_lord_G1_2_name" text="Дрозмак" />
+    <string id="aom_lord_G1_3_name" text="Каргот" />
+    <string id="aom_lord_G1_4_name" text="Тразак" />
+    <string id="aom_lord_G1_5_name" text="Улгрим" />
+    <string id="aom_lord_G1_6_name" text="Зоргат" />
+    <string id="aom_lord_G1_7_name" text="Грагор" />
+    <string id="aom_lord_G1_8_name" text="Дурмаш" />
+    <string id="aom_lord_G1_9_name" text="Гралза" />
+    <string id="aom_lord_G2_10_name" text="Воржа" />
+    <string id="aom_lord_G2_1_name" text="Воргот" />
+    <string id="aom_lord_G2_2_name" text="Мугзун" />
+    <string id="aom_lord_G2_3_name" text="Лурзок" />
+    <string id="aom_lord_G2_4_name" text="Зорга" />
+    <string id="aom_lord_G2_5_name" text="Трумак" />
+    <string id="aom_lord_G2_6_name" text="Наргот" />
+    <string id="aom_lord_G2_7_name" text="Борзак" />
+    <string id="aom_lord_G2_8_name" text="Друзнар" />
+    <string id="aom_lord_G2_9_name" text="Зулгара" />
+    <string id="aom_lord_G3_10_name" text="Наргра" />
+    <string id="aom_lord_G3_1_name" text="Краглот" />
+    <string id="aom_lord_G3_2_name" text="Вурзаг" />
+    <string id="aom_lord_G3_3_name" text="Нарлог" />
+    <string id="aom_lord_G3_4_name" text="Талруг" />
+    <string id="aom_lord_G3_5_name" text="Урзул" />
+    <string id="aom_lord_G3_6_name" text="Гралтак" />
+    <string id="aom_lord_G3_7_name" text="Воргрим" />
+    <string id="aom_lord_G3_8_name" text="Мазкор" />
+    <string id="aom_lord_G3_9_name" text="Дурга" />
+    <string id="aom_lord_G4_10_name" text="Музра" />
+    <string id="aom_lord_G4_1_name" text="Болгат" />
+    <string id="aom_lord_G4_2_name" text="Луртак" />
+    <string id="aom_lord_G4_3_name" text="Тругол" />
+    <string id="aom_lord_G4_4_name" text="Нарзук" />
+    <string id="aom_lord_G4_5_name" text="Крузнор" />
+    <string id="aom_lord_G4_6_name" text="Тразгул" />
+    <string id="aom_lord_G4_7_name" text="Дурзак" />
+    <string id="aom_lord_G4_8_name" text="Зулгот" />
+    <string id="aom_lord_G4_9_name" text="Трулза" />
+    <string id="aom_lord_G5_10_name" text="Улзара" />
+    <string id="aom_lord_G5_1_name" text="Ворзак" />
+    <string id="aom_lord_G5_2_name" text="Крогар" />
+    <string id="aom_lord_G5_3_name" text="Трунак" />
+    <string id="aom_lord_G5_4_name" text="Гразар" />
+    <string id="aom_lord_G5_5_name" text="Нарзог" />
+    <string id="aom_lord_G5_6_name" text="Улгрим" />
+    <string id="aom_lord_G5_7_name" text="Вурлак" />
+    <string id="aom_lord_G5_8_name" text="Борзак" />
+    <string id="aom_lord_G5_9_name" text="Кралза" />
+    <string id="aom_lord_G6_10_name" text="Гааз" />
+    <string id="aom_lord_G6_1_name" text="Грок" />
+    <string id="aom_lord_G6_2_name" text="Музгаш" />
+    <string id="aom_lord_G6_3_name" text="Горбаг" />
+    <string id="aom_lord_G6_4_name" text="Шаграт" />
+    <string id="aom_lord_G6_5_name" text="Уфтак" />
+    <string id="aom_lord_G6_6_name" text="Радбуг" />
+    <string id="aom_lord_G6_7_name" text="Горза" />
+    <string id="aom_lord_G6_8_name" text="Мурза" />
+    <string id="aom_lord_G6_9_name" text="Шелка" />
+    <string id="aom_lord_G7_10_name" text="Скарла" />
+    <string id="aom_lord_G7_1_name" text="Маухур" />
+    <string id="aom_lord_G7_2_name" text="Углук" />
+    <string id="aom_lord_G7_3_name" text="Язнег" />
+    <string id="aom_lord_G7_4_name" text="Брогг" />
+    <string id="aom_lord_G7_5_name" text="Дурбуз" />
+    <string id="aom_lord_G7_6_name" text="Хрог" />
+    <string id="aom_lord_G7_7_name" text="Бракка" />
+    <string id="aom_lord_G7_8_name" text="Уздра" />
+    <string id="aom_lord_G7_9_name" text="Лургза" />
+    <string id="aom_lord_G8_10_name" text="Друзга" />
+    <string id="aom_lord_G8_1_name" text="Могдар" />
+    <string id="aom_lord_G8_2_name" text="Скраат" />
+    <string id="aom_lord_G8_3_name" text="Враску" />
+    <string id="aom_lord_G8_4_name" text="Лагдуф" />
+    <string id="aom_lord_G8_5_name" text="Музгур" />
+    <string id="aom_lord_G8_6_name" text="Орбуг" />
+    <string id="aom_lord_G8_7_name" text="Врока" />
+    <string id="aom_lord_G8_8_name" text="Мурга" />
+    <string id="aom_lord_G8_9_name" text="Трога" />
+    <string id="aom_lord_G9_10_name" text="Ушка" />
+    <string id="aom_lord_G9_1_name" text="Зогдуш" />
+    <string id="aom_lord_G9_2_name" text="Караш" />
+    <string id="aom_lord_G9_3_name" text="Душгар" />
+    <string id="aom_lord_G9_4_name" text="Грибнак" />
+    <string id="aom_lord_G9_5_name" text="Рукхаш" />
+    <string id="aom_lord_G9_6_name" text="Тарг" />
+    <string id="aom_lord_G9_7_name" text="Назга" />
+    <string id="aom_lord_G9_8_name" text="Болга" />
+    <string id="aom_lord_G9_9_name" text="Гриша" />
+    <string id="aom_lord_GB1_1_name" text="Музгаш" />
+    <string id="aom_lord_GB1_2_name" text="Лугдуш" />
+    <string id="aom_lord_GB1_3_name" text="Радбуг" />
+    <string id="aom_lord_GB1_4_name" text="Горбаг" />
+    <string id="aom_lord_GB1_5_name" text="Шаграт" />
+    <string id="aom_lord_GB1_6_name" text="Уфтхак" />
+    <string id="aom_lord_GB1_7_name" text="Хагза" />
+    <string id="aom_lord_GB1_8_name" text="Могра" />
+    <string id="aom_lord_GB2_1_name" text="Уфтхак" />
+    <string id="aom_lord_GB2_2_name" text="Лагдуф" />
+    <string id="aom_lord_GB2_3_name" text="Оркобал" />
+    <string id="aom_lord_GB2_4_name" text="Язнег" />
+    <string id="aom_lord_GB2_5_name" text="Нарзуг" />
+    <string id="aom_lord_GB2_6_name" text="Грукхаш" />
+    <string id="aom_lord_GB2_7_name" text="Гралза" />
+    <string id="aom_lord_GB2_8_name" text="Шелза" />
+    <string id="aom_lord_GB3_1_name" text="Грукхаш" />
+    <string id="aom_lord_GB3_2_name" text="Маухур" />
+    <string id="aom_lord_GB3_3_name" text="Углук" />
+    <string id="aom_lord_GB3_4_name" text="Бурзум" />
+    <string id="aom_lord_GB3_5_name" text="Трокмау" />
+    <string id="aom_lord_GB3_6_name" text="Скарсник" />
+    <string id="aom_lord_GB3_7_name" text="Вугза" />
+    <string id="aom_lord_GB3_8_name" text="Скральга" />
+    <string id="aom_lord_GB4_1_name" text="Скарсник" />
+    <string id="aom_lord_GB4_2_name" text="Гнашрак" />
+    <string id="aom_lord_GB4_3_name" text="Врактар" />
+    <string id="aom_lord_GB4_4_name" text="Душгар" />
+    <string id="aom_lord_GB4_5_name" text="Кримпюк" />
+    <string id="aom_lord_GB4_6_name" text="Гашнар" />
+    <string id="aom_lord_GB4_7_name" text="Лазга" />
+    <string id="aom_lord_GB4_8_name" text="Бурза" />
+    <string id="aom_lord_GB5_1_name" text="Гашнар" />
+    <string id="aom_lord_GB5_2_name" text="Моргруб" />
+    <string id="aom_lord_GB5_3_name" text="Снагбут" />
+    <string id="aom_lord_GB5_4_name" text="Хракдуш" />
+    <string id="aom_lord_GB5_5_name" text="Болдог" />
+    <string id="aom_lord_GB5_6_name" text="Лугбол" />
+    <string id="aom_lord_GB5_7_name" text="Бракза" />
+    <string id="aom_lord_GB5_8_name" text="Гнарла" />
+    <string id="aom_lord_I1_10_name" text="Краздра" />
+    <string id="aom_lord_I1_11_name" text="Дитя Углука" />
+    <string id="aom_lord_I1_13_name" text="Угаша" />
+    <string id="aom_lord_I1_14_name" text="Болга" />
+    <string id="aom_lord_I1_15_name" text="Снарла" />
+    <string id="aom_lord_I1_1_name" text="Углук, вождь Изенгарда" />
+    <string id="aom_lord_I1_2_name" text="Зорлаг" />
+    <string id="aom_lord_I1_31_name" text="Вротгар" />
+    <string id="aom_lord_I1_3_name" text="Гурзод, оружейник урук-хай" />
+    <string id="aom_lord_I1_4_name" text="Гриснак, налётчик урук-хай" />
+    <string id="aom_lord_I1_5_name" text="Музгаш, капитан берсерков урук-хай" />
+    <string id="aom_lord_I1_6_name" text="Моргаш, командир разведчиков урук-хай" />
+    <string id="aom_lord_I1_7_name" text="Круклаш, надзиратель урук-хай" />
+    <string id="aom_lord_I1_8_name" text="Душрат, поборник урук-хай" />
+    <string id="aom_lord_I1_9_name" text="Гашнак" />
+    <string id="aom_lord_I2_10_name" text="Радзга" />
+    <string id="aom_lord_I2_11_name" text="Дитя Маухура" />
+    <string id="aom_lord_I2_12_name" text="Лугара" />
+    <string id="aom_lord_I2_1_name" text="Маухур, военачальник урук-хай" />
+    <string id="aom_lord_I2_2_name" text="Лугбурз, старший разведчик урук-хай" />
+    <string id="aom_lord_I2_31_name" text="Гурзод" />
+    <string id="aom_lord_I2_3_name" text="Шарку, командир всадников на варгах" />
+    <string id="aom_lord_I2_4_name" text="Шанк, следопыт урук-хай" />
+    <string id="aom_lord_I2_5_name" text="Урбаш, истребитель урук-хай" />
+    <string id="aom_lord_I2_6_name" text="Уфтак, мародёр урук-хай" />
+    <string id="aom_lord_I2_7_name" text="Грагнор, охотник урук-хай" />
+    <string id="aom_lord_I2_8_name" text="Нарзуг, вожак стаи урук-хай" />
+    <string id="aom_lord_I2_9_name" text="Музгура" />
+    <string id="aom_lord_I3_11_name" text="Дитя Лугдуша" />
+    <string id="aom_lord_I3_1_name" text="Лугдуш" />
+    <string id="aom_lord_I3_21_name" text="Руктар" />
+    <string id="aom_lord_I3_2_name" text="Коргул, лейтенант урук-хай" />
+    <string id="aom_lord_I3_31_name" text="Брузгаш" />
+    <string id="aom_lord_I3_3_name" text="Тарзог, мастер битвы урук-хай" />
+    <string id="aom_lord_I3_4_name" text="Шарлуг" />
+    <string id="aom_lord_I3_5_name" text="Гриша" />
+    <string id="aom_lord_I4_11_name" text="Дитя Лурца" />
+    <string id="aom_lord_I4_1_name" text="Лурц, командир урук-хай" />
+    <string id="aom_lord_I4_21_name" text="Зорзод" />
+    <string id="aom_lord_I4_2_name" text="Заргот, мастер осады урук-хай" />
+    <string id="aom_lord_I4_31_name" text="Другаш" />
+    <string id="aom_lord_I4_3_name" text="Тракгул, надзиратель урук-хай" />
+    <string id="aom_lord_I4_41_name" text="Дургаш" />
+    <string id="aom_lord_I4_4_name" text="Горлаг, мастер горна урук-хай" />
+    <string id="aom_lord_I4_5_name" text="Трака" />
+    <string id="aom_lord_L1_1_name" text="Галадриэль, Владычица Лотлориэна" />
+    <string id="aom_lord_L1_2_name" text="Келеборн, Владыка Лотлориэна" />
+    <string id="aom_lord_L1_3_name" text="Галадион" />
+    <string id="aom_lord_L2_1_name" text="Каурминас" />
+    <string id="aom_lord_L2_2_name" text="Тандирион" />
+    <string id="aom_lord_L2_3_name" text="Барантир" />
+    <string id="aom_lord_L2_4_name" text="Эглоссен" />
+    <string id="aom_lord_L2_5_name" text="Нимлотиэль" />
+    <string id="aom_lord_L3_1_name" text="Малторн" />
+    <string id="aom_lord_L3_2_name" text="Галувир" />
+    <string id="aom_lord_L3_3_name" text="Силиврен" />
+    <string id="aom_lord_LN1_1_name" text="Кирдан" />
+    <string id="aom_lord_LN1_2_name" text="Калемир" />
+    <string id="aom_lord_LN1_3_name" text="Нардир" />
+    <string id="aom_lord_LN1_4_name" text="Лунэдель" />
+    <string id="aom_lord_LN1_5_name" text="Нимвен" />
+    <string id="aom_lord_LN1_6_name" text="Линдис" />
+    <string id="aom_lord_LN2_1_name" text="Аэглир" />
+    <string id="aom_lord_LN2_2_name" text="Келебрин" />
+    <string id="aom_lord_LN2_3_name" text="Эдронил" />
+    <string id="aom_lord_LN2_4_name" text="Нарвен" />
+    <string id="aom_lord_M10_11_name" text="Гульзаг" />
+    <string id="aom_lord_M10_1_name" text="Маухошат" />
+    <string id="aom_lord_M11_11_name" text="Крогаш" />
+    <string id="aom_lord_M11_1_name" text="Маугрук" />
+    <string id="aom_lord_M12_11_name" text="Узбаг" />
+    <string id="aom_lord_M12_1_name" text="Руклаш" />
+    <string id="aom_lord_M13_11_name" text="Гудрак" />
+    <string id="aom_lord_M13_12_name" text="Шелгра" />
+    <string id="aom_lord_M13_13_name" text="Бруга" />
+    <string id="aom_lord_M13_14_name" text="Назгра" />
+    <string id="aom_lord_M13_15_name" text="Ушка" />
+    <string id="aom_lord_M13_1_name" text="Турак" />
+    <string id="aom_lord_M13_2_name" text="Грублат" />
+    <string id="aom_lord_M13_3_name" text="Мазгур" />
+    <string id="aom_lord_M13_4_name" text="Уфтак" />
+    <string id="aom_lord_M13_5_name" text="Лугрод" />
+    <string id="aom_lord_M14_11_name" text="Магзук" />
+    <string id="aom_lord_M14_12_name" text="Вушка" />
+    <string id="aom_lord_M14_13_name" text="Кримпа" />
+    <string id="aom_lord_M14_14_name" text="Лхакра" />
+    <string id="aom_lord_M14_15_name" text="Гриша" />
+    <string id="aom_lord_M14_1_name" text="Узнаш" />
+    <string id="aom_lord_M14_2_name" text="Дурбгул" />
+    <string id="aom_lord_M14_3_name" text="Снаграт" />
+    <string id="aom_lord_M14_4_name" text="Хракмо" />
+    <string id="aom_lord_M14_5_name" text="Горбуз" />
+    <string id="aom_lord_M15_11_name" text="Рузкхан" />
+    <string id="aom_lord_M15_12_name" text="Ягул" />
+    <string id="aom_lord_M15_13_name" text="Скраа" />
+    <string id="aom_lord_M15_14_name" text="Мурга" />
+    <string id="aom_lord_M15_15_name" text="Лозка" />
+    <string id="aom_lord_M15_1_name" text="Дурзан" />
+    <string id="aom_lord_M15_2_name" text="Разхук" />
+    <string id="aom_lord_M15_3_name" text="Музгаш" />
+    <string id="aom_lord_M15_4_name" text="Болграт" />
+    <string id="aom_lord_M15_5_name" text="Трокка" />
+    <string id="aom_lord_M16_11_name" text="Ушгар" />
+    <string id="aom_lord_M16_1_name" text="Гулнак" />
+    <string id="aom_lord_M17_11_name" text="Гултор" />
+    <string id="aom_lord_M17_1_name" text="Тулнар" />
+    <string id="aom_lord_M18_11_name" text="Луртаг" />
+    <string id="aom_lord_M18_1_name" text="Кураг" />
+    <string id="aom_lord_M1_11_name" text="Леголас" />
+    <string id="aom_lord_M1_12_name" text="Каленор" />
+    <string id="aom_lord_M1_1_name" text="Трандуил" />
+    <string id="aom_lord_M1_2_name" text="Лотуиэль" />
+    <string id="aom_lord_M1_3_name" text="Ферен" />
+    <string id="aom_lord_M1_4_name" text="Галион" />
+    <string id="aom_lord_M1_5_name" text="Нимродель" />
+    <string id="aom_lord_M2_1_name" text="Оротерион" />
+    <string id="aom_lord_M2_2_name" text="Айлинель" />
+    <string id="aom_lord_M2_3_name" text="Белег" />
+    <string id="aom_lord_M2_4_name" text="Анайрэ" />
+    <string id="aom_lord_M2_5_name" text="Даэрон" />
+    <string id="aom_lord_M3_1_name" text="Таурион" />
+    <string id="aom_lord_M3_2_name" text="Финдуилас" />
+    <string id="aom_lord_M3_3_name" text="Халдир" />
+    <string id="aom_lord_M3_4_name" text="Арэдель" />
+    <string id="aom_lord_M4_1_name" text="Галенор" />
+    <string id="aom_lord_M4_2_name" text="Амариэ" />
+    <string id="aom_lord_M4_3_name" text="Румил" />
+    <string id="aom_lord_M4_4_name" text="Неллас" />
+    <string id="aom_lord_M4_5_name" text="Орофин" />
+    <string id="aom_lord_M5_1_name" text="Аленон" />
+    <string id="aom_lord_M5_2_name" text="Калатиэль" />
+    <string id="aom_lord_M5_3_name" text="Талион" />
+    <string id="aom_lord_M5_4_name" text="Ариэн" />
+    <string id="aom_lord_M6_1_name" text="Иминьяр" />
+    <string id="aom_lord_M6_2_name" text="Эльберет" />
+    <string id="aom_lord_M6_3_name" text="Дагнир" />
+    <string id="aom_lord_M6_4_name" text="Ариндор" />
+    <string id="aom_lord_M6_5_name" text="Нимриэн" />
+    <string id="aom_lord_MM10_10_name" text="Дурза" />
+    <string id="aom_lord_MM10_1_name" text="Бракгаш" />
+    <string id="aom_lord_MM10_2_name" text="Морзнак" />
+    <string id="aom_lord_MM10_3_name" text="Гашзур" />
+    <string id="aom_lord_MM10_4_name" text="Дружак" />
+    <string id="aom_lord_MM10_5_name" text="Крумбаш" />
+    <string id="aom_lord_MM10_6_name" text="Наргрим" />
+    <string id="aom_lord_MM10_7_name" text="Хрунза" />
+    <string id="aom_lord_MM10_8_name" text="Узга" />
+    <string id="aom_lord_MM10_9_name" text="Гашка" />
+    <string id="aom_lord_MM11_10_name" text="Скарза" />
+    <string id="aom_lord_MM11_1_name" text="Скрунак" />
+    <string id="aom_lord_MM11_2_name" text="Вугар" />
+    <string id="aom_lord_MM11_3_name" text="Лазгар" />
+    <string id="aom_lord_MM11_4_name" text="Хрокмо" />
+    <string id="aom_lord_MM11_5_name" text="Бузгар" />
+    <string id="aom_lord_MM11_6_name" text="Маукрим" />
+    <string id="aom_lord_MM11_7_name" text="Нагза" />
+    <string id="aom_lord_MM11_8_name" text="Врелга" />
+    <string id="aom_lord_MM11_9_name" text="Хроза" />
+    <string id="aom_lord_MM12_10_name" text="Гулза" />
+    <string id="aom_lord_MM12_1_name" text="Трокдуш" />
+    <string id="aom_lord_MM12_2_name" text="Гораш" />
+    <string id="aom_lord_MM12_3_name" text="Маукхаш" />
+    <string id="aom_lord_MM12_4_name" text="Скарнаш" />
+    <string id="aom_lord_MM12_5_name" text="Трогаш" />
+    <string id="aom_lord_MM12_6_name" text="Лугаш" />
+    <string id="aom_lord_MM12_7_name" text="Лазга" />
+    <string id="aom_lord_MM12_8_name" text="Бругза" />
+    <string id="aom_lord_MM12_9_name" text="Нурзга" />
+    <string id="aom_lord_MM13_10_name" text="Крунза" />
+    <string id="aom_lord_MM13_1_name" text="Бурзаш" />
+    <string id="aom_lord_MM13_2_name" text="Хракаш" />
+    <string id="aom_lord_MM13_3_name" text="Узаш" />
+    <string id="aom_lord_MM13_4_name" text="Гришаш" />
+    <string id="aom_lord_MM13_5_name" text="Могаш" />
+    <string id="aom_lord_MM13_6_name" text="Назаш" />
+    <string id="aom_lord_MM13_7_name" text="Разга" />
+    <string id="aom_lord_MM13_8_name" text="Мугза" />
+    <string id="aom_lord_MM13_9_name" text="Дрозга" />
+    <string id="aom_lord_MM14_10_name" text="Хралга" />
+    <string id="aom_lord_MM14_1_name" text="Вракаш" />
+    <string id="aom_lord_MM14_2_name" text="Дурбаш" />
+    <string id="aom_lord_MM14_3_name" text="Критхаш" />
+    <string id="aom_lord_MM14_4_name" text="Лурташ" />
+    <string id="aom_lord_MM14_5_name" text="Уфтхаш" />
+    <string id="aom_lord_MM14_6_name" text="Бракаш" />
+    <string id="aom_lord_MM14_7_name" text="Нашга" />
+    <string id="aom_lord_MM14_8_name" text="Вугза" />
+    <string id="aom_lord_MM14_9_name" text="Снурга" />
+    <string id="aom_lord_MM15_10_name" text="Маукза" />
+    <string id="aom_lord_MM15_1_name" text="Морзаш" />
+    <string id="aom_lord_MM15_2_name" text="Гашаш" />
+    <string id="aom_lord_MM15_3_name" text="Снагаш" />
+    <string id="aom_lord_MM15_4_name" text="Лагдаш" />
+    <string id="aom_lord_MM15_5_name" text="Шагаш" />
+    <string id="aom_lord_MM15_6_name" text="Громаш" />
+    <string id="aom_lord_MM15_7_name" text="Болзга" />
+    <string id="aom_lord_MM15_8_name" text="Уфза" />
+    <string id="aom_lord_MM15_9_name" text="Горза" />
+    <string id="aom_lord_MM1_10_name" text="Трогза" />
+    <string id="aom_lord_MM1_1_name" text="Бурзум" />
+    <string id="aom_lord_MM1_2_name" text="Трокмау" />
+    <string id="aom_lord_MM1_3_name" text="Скарсник" />
+    <string id="aom_lord_MM1_4_name" text="Гнашрак" />
+    <string id="aom_lord_MM1_5_name" text="Врактар" />
+    <string id="aom_lord_MM1_6_name" text="Душгар" />
+    <string id="aom_lord_MM1_7_name" text="Могра" />
+    <string id="aom_lord_MM1_8_name" text="Уршза" />
+    <string id="aom_lord_MM1_9_name" text="Скарнза" />
+    <string id="aom_lord_MM2_10_name" text="Хракза" />
+    <string id="aom_lord_MM2_1_name" text="Душгар" />
+    <string id="aom_lord_MM2_2_name" text="Кримпюк" />
+    <string id="aom_lord_MM2_3_name" text="Гашнар" />
+    <string id="aom_lord_MM2_4_name" text="Моргруб" />
+    <string id="aom_lord_MM2_5_name" text="Снагбут" />
+    <string id="aom_lord_MM2_6_name" text="Хракдуш" />
+    <string id="aom_lord_MM2_7_name" text="Шелза" />
+    <string id="aom_lord_MM2_8_name" text="Улга" />
+    <string id="aom_lord_MM2_9_name" text="Бурзза" />
+    <string id="aom_lord_MM3_10_name" text="Гришза" />
+    <string id="aom_lord_MM3_1_name" text="Хракдуш" />
+    <string id="aom_lord_MM3_2_name" text="Болдог" />
+    <string id="aom_lord_MM3_3_name" text="Лугбол" />
+    <string id="aom_lord_MM3_4_name" text="Гриззнак" />
+    <string id="aom_lord_MM3_5_name" text="Фраку" />
+    <string id="aom_lord_MM3_6_name" text="Мугаш" />
+    <string id="aom_lord_MM3_7_name" text="Скралга" />
+    <string id="aom_lord_MM3_8_name" text="Хагза" />
+    <string id="aom_lord_MM3_9_name" text="Узза" />
+    <string id="aom_lord_MM4_10_name" text="Вракза" />
+    <string id="aom_lord_MM4_1_name" text="Мугаш" />
+    <string id="aom_lord_MM4_2_name" text="Гришнак" />
+    <string id="aom_lord_MM4_3_name" text="Музгаш" />
+    <string id="aom_lord_MM4_4_name" text="Лугдуш" />
+    <string id="aom_lord_MM4_5_name" text="Радбуг" />
+    <string id="aom_lord_MM4_6_name" text="Горбаг" />
+    <string id="aom_lord_MM4_7_name" text="Бурза" />
+    <string id="aom_lord_MM4_8_name" text="Гралза" />
+    <string id="aom_lord_MM4_9_name" text="Назза" />
+    <string id="aom_lord_MM5_10_name" text="Критза" />
+    <string id="aom_lord_MM5_1_name" text="Горбаг" />
+    <string id="aom_lord_MM5_2_name" text="Шаграт" />
+    <string id="aom_lord_MM5_3_name" text="Уфтак" />
+    <string id="aom_lord_MM5_4_name" text="Лагдуф" />
+    <string id="aom_lord_MM5_5_name" text="Оркобал" />
+    <string id="aom_lord_MM5_6_name" text="Язнег" />
+    <string id="aom_lord_MM5_7_name" text="Гнарла" />
+    <string id="aom_lord_MM5_8_name" text="Вугза" />
+    <string id="aom_lord_MM5_9_name" text="Дурбза" />
+    <string id="aom_lord_MM6_10_name" text="Улзга" />
+    <string id="aom_lord_MM6_1_name" text="Гришнак" />
+    <string id="aom_lord_MM6_2_name" text="Углук" />
+    <string id="aom_lord_MM6_3_name" text="Маухур" />
+    <string id="aom_lord_MM6_4_name" text="Грукхаш" />
+    <string id="aom_lord_MM6_5_name" text="Болг" />
+    <string id="aom_lord_MM6_6_name" text="Отрод" />
+    <string id="aom_lord_MM6_7_name" text="Могза" />
+    <string id="aom_lord_MM6_8_name" text="Урга" />
+    <string id="aom_lord_MM6_9_name" text="Шазга" />
+    <string id="aom_lord_MM7_10_name" text="Гралка" />
+    <string id="aom_lord_MM7_1_name" text="Гольфимбул" />
+    <string id="aom_lord_MM7_2_name" text="Гракмо" />
+    <string id="aom_lord_MM7_3_name" text="Скардуш" />
+    <string id="aom_lord_MM7_4_name" text="Трогар" />
+    <string id="aom_lord_MM7_5_name" text="Бурзлуг" />
+    <string id="aom_lord_MM7_6_name" text="Мокраш" />
+    <string id="aom_lord_MM7_7_name" text="Скрельга" />
+    <string id="aom_lord_MM7_8_name" text="Хагра" />
+    <string id="aom_lord_MM7_9_name" text="Бурзга" />
+    <string id="aom_lord_MM8_10_name" text="Сназга" />
+    <string id="aom_lord_MM8_1_name" text="Наглур" />
+    <string id="aom_lord_MM8_2_name" text="Вракдуш" />
+    <string id="aom_lord_MM8_3_name" text="Хрумгаш" />
+    <string id="aom_lord_MM8_4_name" text="Уздур" />
+    <string id="aom_lord_MM8_5_name" text="Горлак" />
+    <string id="aom_lord_MM8_6_name" text="Снаграт" />
+    <string id="aom_lord_MM8_7_name" text="Гнаша" />
+    <string id="aom_lord_MM8_8_name" text="Вугра" />
+    <string id="aom_lord_MM8_9_name" text="Мауза" />
+    <string id="aom_lord_MM9_10_name" text="Барга" />
+    <string id="aom_lord_MM9_1_name" text="Дурбгаш" />
+    <string id="aom_lord_MM9_2_name" text="Мугрим" />
+    <string id="aom_lord_MM9_3_name" text="Критак" />
+    <string id="aom_lord_MM9_4_name" text="Лурцаг" />
+    <string id="aom_lord_MM9_5_name" text="Назнур" />
+    <string id="aom_lord_MM9_6_name" text="Уфгриш" />
+    <string id="aom_lord_MM9_7_name" text="Кримза" />
+    <string id="aom_lord_MM9_8_name" text="Трога" />
+    <string id="aom_lord_MM9_9_name" text="Лугза" />
+    <string id="aom_lord_R1_11_name" text="Аргон" />
+    <string id="aom_lord_R1_1_name" text="Элронд" />
+    <string id="aom_lord_R1_2_name" text="Келебриан" />
+    <string id="aom_lord_R1_3_name" text="Элладан" />
+    <string id="aom_lord_R1_4_name" text="Элрохир" />
+    <string id="aom_lord_R1_5_name" text="Арвен" />
+    <string id="aom_lord_R2_11_name" text="Истильмо" />
+    <string id="aom_lord_R2_1_name" text="Глорфиндел" />
+    <string id="aom_lord_R2_2_name" text="Гилдор" />
+    <string id="aom_lord_R2_3_name" text="Эрестор" />
+    <string id="aom_lord_R2_4_name" text="Линдир" />
+    <string id="aom_lord_R3_1_name" text="Хегермейстер" />
+    <string id="aom_lord_SH1_10_name" text="Манизех" />
+    <string id="aom_lord_SH1_2_name" text="Суладан" />
+    <string id="aom_lord_SH1_3_name" text="Фарзук" />
+    <string id="aom_lord_SH1_4_name" text="Азимур" />
+    <string id="aom_lord_SH1_5_name" text="Бахрам" />
+    <string id="aom_lord_SH1_6_name" text="Хорзан" />
+    <string id="aom_lord_SH1_7_name" text="Банушад" />
+    <string id="aom_lord_SH1_8_name" text="Рошанак" />
+    <string id="aom_lord_SH1_9_name" text="Гордафар" />
+    <string id="aom_lord_SH2_10_name" text="Судабе" />
+    <string id="aom_lord_SH2_2_name" text="Растум" />
+    <string id="aom_lord_SH2_3_name" text="Сохрак" />
+    <string id="aom_lord_SH2_4_name" text="Кавус" />
+    <string id="aom_lord_SH2_5_name" text="Тахмур" />
+    <string id="aom_lord_SH2_6_name" text="Фарамуз" />
+    <string id="aom_lord_SH2_7_name" text="Фарангис" />
+    <string id="aom_lord_SH2_8_name" text="Катаюн" />
+    <string id="aom_lord_SH2_9_name" text="Рудабе" />
+    <string id="aom_lord_SH3_10_name" text="Азаде" />
+    <string id="aom_lord_SH3_2_name" text="Гоштан" />
+    <string id="aom_lord_SH3_3_name" text="Заххук" />
+    <string id="aom_lord_SH3_4_name" text="Мардук" />
+    <string id="aom_lord_SH3_5_name" text="Саргун" />
+    <string id="aom_lord_SH3_6_name" text="Ашур" />
+    <string id="aom_lord_SH3_7_name" text="Тахмине" />
+    <string id="aom_lord_SH3_8_name" text="Синдухт" />
+    <string id="aom_lord_SH3_9_name" text="Ширин" />
+    <string id="aom_lord_SH4_10_name" text="Банура" />
+    <string id="aom_lord_SH4_2_name" text="Набуз" />
+    <string id="aom_lord_SH4_3_name" text="Сеннур" />
+    <string id="aom_lord_SH4_4_name" text="Тигарос" />
+    <string id="aom_lord_SH4_5_name" text="Хаммур" />
+    <string id="aom_lord_SH4_6_name" text="Камбуз" />
+    <string id="aom_lord_SH4_7_name" text="Гульнар" />
+    <string id="aom_lord_SH4_8_name" text="Пурандар" />
+    <string id="aom_lord_SH4_9_name" text="Азарми" />
+    <string id="aom_lord_SH5_10_name" text="Гульрух" />
+    <string id="aom_lord_SH5_2_name" text="Кирун" />
+    <string id="aom_lord_SH5_3_name" text="Ксерук" />
+    <string id="aom_lord_SH5_4_name" text="Дариуш" />
+    <string id="aom_lord_SH5_5_name" text="Бехнум" />
+    <string id="aom_lord_SH5_6_name" text="Фарзад" />
+    <string id="aom_lord_SH5_7_name" text="Деларам" />
+    <string id="aom_lord_SH5_8_name" text="Эстхара" />
+    <string id="aom_lord_SH5_9_name" text="Фаранак" />
+    <string id="aom_lord_SH6_10_name" text="Лалех" />
+    <string id="aom_lord_SH6_2_name" text="Хормуз" />
+    <string id="aom_lord_SH6_3_name" text="Джахун" />
+    <string id="aom_lord_SH6_4_name" text="Касрун" />
+    <string id="aom_lord_SH6_5_name" text="Манучар" />
+    <string id="aom_lord_SH6_6_name" text="Нариман" />
+    <string id="aom_lord_SH6_7_name" text="Хомара" />
+    <string id="aom_lord_SH6_8_name" text="Джария" />
+    <string id="aom_lord_SH6_9_name" text="Кушьяра" />
+    <string id="aom_lord_SH7_10_name" text="Руза" />
+    <string id="aom_lord_SH7_2_name" text="Парвиз" />
+    <string id="aom_lord_SH7_3_name" text="Кобад" />
+    <string id="aom_lord_SH7_4_name" text="Сасан" />
+    <string id="aom_lord_SH7_5_name" text="Шапур" />
+    <string id="aom_lord_SH7_6_name" text="Туранос" />
+    <string id="aom_lord_SH7_7_name" text="Махса" />
+    <string id="aom_lord_SH7_8_name" text="Нахид" />
+    <string id="aom_lord_SH7_9_name" text="Париса" />
+    <string id="aom_lord_SH8_10_name" text="Ясмин" />
+    <string id="aom_lord_SH8_2_name" text="Варуз" />
+    <string id="aom_lord_SH8_3_name" text="Яздар" />
+    <string id="aom_lord_SH8_4_name" text="Залук" />
+    <string id="aom_lord_SH8_5_name" text="Ануш" />
+    <string id="aom_lord_SH8_6_name" text="Биджан" />
+    <string id="aom_lord_SH8_7_name" text="Шахрназ" />
+    <string id="aom_lord_SH8_8_name" text="Тураджа" />
+    <string id="aom_lord_SH8_9_name" text="Вашти" />
+    <string id="aom_lord_SH9_10_name" text="Кира" />
+    <string id="aom_lord_SH9_2_name" text="Эсфанос" />
+    <string id="aom_lord_SH9_3_name" text="Гивар" />
+    <string id="aom_lord_SH9_4_name" text="Хушанг" />
+    <string id="aom_lord_SH9_5_name" text="Ирадж" />
+    <string id="aom_lord_SH9_6_name" text="Джамшуд" />
+    <string id="aom_lord_SH9_7_name" text="Заррин" />
+    <string id="aom_lord_SH9_8_name" text="Анахита" />
+    <string id="aom_lord_SH9_9_name" text="Бахара" />
+    <string id="aom_lord_U1_11_name" text="Лорд Гимилзор" />
+    <string id="aom_lord_U1_12_name" text="Гимилтон" />
+    <string id="aom_lord_U1_13_name" text="Фаразон" />
+    <string id="aom_lord_U1_1_name" text="Ар-Гимилхад" />
+    <string id="aom_lord_U1_2_name" text="Зимрафель" />
+    <string id="aom_lord_U2_1_name" text="Азрафель" />
+    <string id="aom_lord_U3_1_name" text="Белказар" />
+    <string id="aom_lord_U4_1_name" text="Фарахон" />
+    <string id="aom_lord_U5_1_name" text="Инкалдор" />
+    <string id="aom_lord_U6_1_name" text="Зимратор" />
+    <string id="aom_lord_V11_l_1_name" text="Винндрид Деафрингас" />
+    <string id="aom_lord_V11_l_2_name" text="Леотен Деафрингас" />
+    <string id="aom_lord_V11_l_3_name" text="Леобранд Деафрингас" />
+    <string id="aom_lord_V11_l_4_name" text="Леовинн Деафрингас" />
+    <string id="aom_lord_WE8_1_name" text="Дорвен" />
+    <string id="aom_lord_WE8_2_name" text="Эленет" />
+    <string id="aom_lord_WE8_3_name" text="Хирильвен" />
+    <string id="aom_lord_WE8_4_name" text="Талборин" />
+    <string id="aom_lord_WE9_3_name" text="Деруфин" />
+    <string id="aom_lord_WE9_l_1_name" text="Дуилин" />
+    <string id="aom_lord_rohan_10_1_name" text="Эомунд Эофоринг" />
+    <string id="aom_lord_rohan_11_1_name" text="Кадда Тордагинг" />
+    <string id="aom_lord_rohan_13_1_name" text="Вульф Кельмундинг" />
+    <string id="aom_lord_rohan_14_1_name" text="Видмунд Видмундинг" />
+    <string id="aom_lord_rohan_15_1_name" text="Фрода Ордгаринг" />
+    <string id="aom_lord_rohan_16_1_name" text="Эофольда Хунтхельминг" />
+    <string id="aom_lord_rohan_17_1_name" text="Вальдег Брегданинг" />
+    <string id="aom_lord_rohan_21_1_name" text="Халет Халетринг" />
+    <string id="aom_lord_rohan_22_1_name" text="Беовирт Рунгаринг" />
+    <string id="aom_lord_rohan_2_1_name" text="Изенмунд Кердикинг" />
+    <string id="aom_lord_rohan_5_1_name" text="Эадвиг Осцютелинг" />
+    <string id="aom_lord_rohan_9_1_name" text="Дунхере Дунинг" />
+  </strings>
+</base>

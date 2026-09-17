@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Gobliński labirynt Blue Craig w Górach Sinych (Ered Luin) na dalekim zachodzie, w pobliżu Szarej Przystani w Lindonie. Odrębna, niezliczona horda goblińskiego plemienia — oddzielna od swych pobratymców z Goblin Town w Górach Mglistych — roi się na zachodnich urwiskach i nęka elfy zachodniego wybrzeża." />
+    <string id="taom_bluecraig_name" text="Gobliny z Blue Craig" />
+    <string id="taom_bluecraig_ruler_title" text="Wielki Goblin" />
+    <string id="taom_bluecraig_short_name" text="Blue Craig" />
+    <string id="taom_bluecraig_title" text="Gobliński Władztwo Blue Craig" />
+    <string id="taom_dolguldur_desc" text="Dol Guldur, twierdza cienia i rozpaczy, wznosi się jako groźna latarnia mrocznej woli Nekromanty. Orkowie i plugawe istoty zamieszkujące jej czeluście budzą trwogę w każdym sercu." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Pan Grozy" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Nekromancja Dol Guldur" />
+    <string id="taom_erebor_desc" text="Samotna Góra, Erebor, jest największym z krasnoludzkich królestw na północy. Bogata w złoto i mithril, stanowi siedzibę rodu Durina. Krasnoludowie z Ereboru są słynnymi rzemieślnikami i zaciekłymi wojownikami, a ich sale rozbrzmiewają pieśniami przodków." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="Król" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Królestwo Ereboru" />
+    <string id="taom_goblin_desc" text="Gobliny z Wysokiej Przełęczy roją się w tunelach pod Górami Mglistymi — potomstwo zastępów, które Wielki Goblin wiódł kiedyś przeciw krasnoludom i wędrowcom. Niezliczone i okrutne, wylewają się z Goblinowego Grodu, by pustoszyć górskie drogi." />
+    <string id="taom_goblin_name" text="Gobliny" />
+    <string id="taom_goblin_ruler_title" text="Wielki Goblin" />
+    <string id="taom_goblin_short_name" text="Gobliny" />
+    <string id="taom_goblin_title" text="Goblinie Królestwo Wysokiej Przełęczy" />
+    <string id="taom_gundabad_desc" text="Gundabad, starożytna i groźna twierdza orków, stoi jako bastion dzikości i podboju. Orkowie z Gundabadu, zrodzeni do wojny i chaosu, gromadzą się pod skrwawionymi sztandarami." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Wodzowódca" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengard, twierdza Białego Czarodzieja Sarumana, stoi jako bastion potęgi i ambicji. Uruk-hai wyruszają pod sztandarem Białej Dłoni, niezrównani w dyscyplinie i okrucieństwie." />
+    <string id="taom_isengard_name" text="Isengard" />
+    <string id="taom_isengard_ruler_title" text="Wodzowódca" />
+    <string id="taom_isengard_short_name" text="Isengard" />
+    <string id="taom_isengard_title" text="Władztwo Isengardu" />
+    <string id="taom_lindon_desc" text="Lindon, zielona kraina na zachód od Gór Błękitnych, jest ostatnim królestwem Elfów Wysokiego Rodu na brzegach Śródziemia. Z Szarej Przystani w Mithlond białe okręty odpływają na Zachód, a Círdan Szkutnik czuwa nad gasnącym światłem Eldarów." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Pan Przystani" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Najwyższe Królestwo Lindonu" />
+    <string id="taom_lothlorien_desc" text="Złoty Las leży ukryty między Srebrną Żyłą a potężnym Anduiną. Strzeżony wolą Galadrieli i Celeborna, stoi jako bastion elfiej łaski i nieugiętości — kraina nietknięta czasem, gdzie liście nie opadają." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Pani" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Królestwo Lothlórien" />
+    <string id="taom_mirkwood_desc" text="Leśne Królestwo Mrocznej Puszczy zniosło przez lata wiele niedoli. Pod wodzą Thranduila Leśne Elfy stały się skryte i nieufne wobec obcych. Lecz w sercu Thranduila wciąż płonie ogień rozpalony w zamierzchłych dniach Pierwszej Ery." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Mroczna Puszcza" />
+    <string id="taom_mirkwood_title" text="Królestwo Mrocznej Puszczy" />
+    <string id="taom_mistymountainorcs_desc" text="Zastęp orków z Gór Mglistych włada szczytami i głębokimi wyrobiskami od Góry Gram aż po bramy Morii. Zahartowani do wojny w mroźnych szczytach, odpowiadają na wołanie Cienia i pragną odebrać góry dla siebie." />
+    <string id="taom_mistymountainorcs_name" text="Orkowie z Gór Mglistych" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Wodzowódca" />
+    <string id="taom_mistymountainorcs_short_name" text="Mgliste Orki" />
+    <string id="taom_mistymountainorcs_title" text="Zastęp Orków z Gór Mglistych" />
+    <string id="taom_rivendell_desc" text="Ukryte głęboko w rozpadlinach Gór Mglistych Rivendell jest Ostatnim Przytulnym Domem na wschód od Morza. Założone przez Elronda Półelfa, jest schronieniem przed nadciągającą ciemnością, miejscem uzdrowienia, wiedzy i cichej siły." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Pan" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Ostoja Imladris" />
+    <string id="taom_umbar_desc" text="Umbar, mroczna przystań Korsarzy, to królestwo przesiąknięte morską potęgą i zdradliwymi ambicjami. Korsarze pustoszą wybrzeża Śródziemia, szerząc strach na swych chyżych okrętach." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Król Korsarzy" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Przystań Umbaru" />
+  </strings>
+</base>

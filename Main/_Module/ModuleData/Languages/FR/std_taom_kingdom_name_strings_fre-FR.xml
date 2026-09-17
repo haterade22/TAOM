@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="French" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="Les terriers gobelins de Blue Craig, dans les Montagnes Bleues (Ered Luin) du lointain ouest, tout près des Havres Gris de Lindon. Peuple gobelin distinct et innombrable — séparé de leurs cousins des Monts Brumeux de la Ville des Gobelins — ils envahissent les escarpements de l'ouest et tourmentent les Elfes du rivage occidental." />
+    <string id="taom_bluecraig_name" text="Gobelins de Blue Craig" />
+    <string id="taom_bluecraig_ruler_title" text="Grand Gobelin" />
+    <string id="taom_bluecraig_short_name" text="Blue Craig" />
+    <string id="taom_bluecraig_title" text="Royaume gobelin de Blue Craig" />
+    <string id="taom_dolguldur_desc" text="Dol Guldur, la forteresse de l'ombre et du désespoir, se dresse comme un phare menaçant de la volonté ténébreuse du Nécromancien. Les Orques et les créatures immondes qui hantent ses profondeurs sèment la terreur dans tous les cœurs." />
+    <string id="taom_dolguldur_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_ruler_title" text="Seigneur de l'Effroi" />
+    <string id="taom_dolguldur_short_name" text="Dol Guldur" />
+    <string id="taom_dolguldur_title" text="Nécromancie de Dol Guldur" />
+    <string id="taom_erebor_desc" text="La Montagne Solitaire, Erebor, est le plus grand des royaumes nains du Nord. Riche en or et en mithril, elle abrite la lignée de Durin. Les Nains d'Erebor sont des artisans renommés et de farouches guerriers, et leurs salles résonnent des chants de leurs ancêtres." />
+    <string id="taom_erebor_name" text="Erebor" />
+    <string id="taom_erebor_ruler_title" text="Roi" />
+    <string id="taom_erebor_short_name" text="Erebor" />
+    <string id="taom_erebor_title" text="Royaume d'Erebor" />
+    <string id="taom_goblin_desc" text="Les Gobelins du Haut Col grouillent dans les tunnels sous les Monts Brumeux, engeance de l'armée que le Grand Gobelin mena jadis contre les Nains comme contre les voyageurs. Innombrables et cruels, ils déferlent de Gobelinville pour piller les routes de montagne." />
+    <string id="taom_goblin_name" text="Gobelins" />
+    <string id="taom_goblin_ruler_title" text="Grand Gobelin" />
+    <string id="taom_goblin_short_name" text="Gobelins" />
+    <string id="taom_goblin_title" text="Royaume gobelin du Haut Col" />
+    <string id="taom_gundabad_desc" text="Gundabad, l'antique et sinistre forteresse des Orques, se dresse comme un bastion de sauvagerie et de domination. Les Orques de Gundabad, élevés pour la guerre et le chaos, se rassemblent sous des bannières ensanglantées." />
+    <string id="taom_gundabad_name" text="Gundabad" />
+    <string id="taom_gundabad_ruler_title" text="Seigneur de guerre" />
+    <string id="taom_gundabad_short_name" text="Gundabad" />
+    <string id="taom_gundabad_title" text="Gundabad" />
+    <string id="taom_isengard_desc" text="Isengard, la forteresse du Magicien Blanc Saroumane, se dresse comme un bastion de puissance et d'ambition. Les Uruk-hai s'avancent sous la bannière de la Main Blanche, d'une discipline et d'une sauvagerie sans égales." />
+    <string id="taom_isengard_name" text="Isengard" />
+    <string id="taom_isengard_ruler_title" text="Seigneur de guerre" />
+    <string id="taom_isengard_short_name" text="Isengard" />
+    <string id="taom_isengard_title" text="Suzeraineté d'Isengard" />
+    <string id="taom_lindon_desc" text="Le Lindon, la verte contrée à l'ouest des Montagnes Bleues, est le dernier royaume des Hauts Elfes sur les rivages de la Terre du Milieu. Des Havres Gris de Mithlond, les navires blancs cinglent vers l'Ouest, tandis que Círdan le Charpentier veille sur la lumière déclinante des Eldar." />
+    <string id="taom_lindon_name" text="Lindon" />
+    <string id="taom_lindon_ruler_title" text="Seigneur des Havres" />
+    <string id="taom_lindon_short_name" text="Lindon" />
+    <string id="taom_lindon_title" text="Haut Royaume de Lindon" />
+    <string id="taom_lothlorien_desc" text="Le Bois d'Or repose entre la Cours d'Argent et le puissant Anduin. Gardé par la volonté de Galadriel et de Celeborn, il se dresse comme un bastion de grâce et de défi elfiques — une terre que le temps n'a pas touchée, où les feuilles ne tombent pas." />
+    <string id="taom_lothlorien_name" text="Lothlórien" />
+    <string id="taom_lothlorien_ruler_title" text="Dame" />
+    <string id="taom_lothlorien_short_name" text="Lothlórien" />
+    <string id="taom_lothlorien_title" text="Royaume de Lóthlorien" />
+    <string id="taom_mirkwood_desc" text="Le Royaume Sylvestre de la Forêt Noire a connu bien des épreuves au fil des ans. Sous la conduite de Thranduil, les Elfes Sylvains sont devenus reclus et méfiants envers les étrangers. Pourtant, au cœur de Thranduil brûle encore un feu allumé aux jours anciens du Premier Âge." />
+    <string id="taom_mirkwood_name" text="Lasgalen" />
+    <string id="taom_mirkwood_ruler_title" text="Aran" />
+    <string id="taom_mirkwood_short_name" text="Forêt Noire" />
+    <string id="taom_mirkwood_title" text="Royaume de la Forêt Noire" />
+    <string id="taom_mistymountainorcs_desc" text="L'armée orque des Monts Brumeux tient les hauteurs et les profondeurs, du Mont Gram jusqu'aux portes de la Moria. Élevés pour la guerre dans les cimes glacées, ils répondent à l'appel de l'Ombre et brûlent de reprendre les montagnes pour eux-mêmes." />
+    <string id="taom_mistymountainorcs_name" text="Orques des Monts Brumeux" />
+    <string id="taom_mistymountainorcs_ruler_title" text="Seigneur de guerre" />
+    <string id="taom_mistymountainorcs_short_name" text="Orques Brumeux" />
+    <string id="taom_mistymountainorcs_title" text="Armée orque des Monts Brumeux" />
+    <string id="taom_rivendell_desc" text="Cachée au profond des ravines des Monts Brumeux, Fondcombe est la Dernière Maison Simple à l'est de la Mer. Fondée par Elrond le Semi-Elfe, elle est un refuge contre les ténèbres grandissantes, un lieu de guérison, de savoir et de force paisible." />
+    <string id="taom_rivendell_name" text="Imladris" />
+    <string id="taom_rivendell_ruler_title" text="Seigneur" />
+    <string id="taom_rivendell_short_name" text="Imladris" />
+    <string id="taom_rivendell_title" text="Refuge d'Imladris" />
+    <string id="taom_umbar_desc" text="Umbar, le sombre havre des Corsaires, est un royaume imprégné de puissance maritime et d'ambitions perfides. Les Corsaires pillent les côtes de la Terre du Milieu, répandant la terreur avec leurs navires rapides." />
+    <string id="taom_umbar_name" text="Umbar" />
+    <string id="taom_umbar_ruler_title" text="Roi des Corsaires" />
+    <string id="taom_umbar_short_name" text="Umbar" />
+    <string id="taom_umbar_title" text="Havre d'Umbar" />
+  </strings>
+</base>

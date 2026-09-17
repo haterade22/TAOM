@@ -4,6 +4,100 @@
 
 ## 2026-09-17
 
+### feat(localization): troop, lord, clan, and kingdom names join the translation pipeline (#572)
+
+**What.** `tools/generate_name_localization_strings.py` closes the "Case B" gap
+`docs/localization/TRANSLATOR_GUIDE.md` had documented for troop names alone: every
+`{=KEY}default` name key in `troops/*.xml`, `characters/lords.xml`, `characters/clans.xml`, and
+`taom_spkingdoms.xml` that had no row registered anywhere in the translation pipeline. The
+generator excludes whatever is already registered elsewhere (179 lord keys were already carried
+via `taom_xslt_strings.xml`, 25 clan keys via `taom_module_strings.xml`), so re-running it after
+new content is authored only picks up the new keys. 1,999 new keys total: troop 836, lord 988,
+clan 115, kingdom 60 (the original 12 LOTR kingdoms' name/short_name/title/ruler_title/text, all
+of which had zero registered entries before this).
+
+**Wiring.** Four generated English master files at `Main/_Module/ModuleData/`
+(`taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`,
+`taom_kingdom_name_strings.xml`), registered as `GameText` nodes in `SubModule.xml`, added to
+`tools/generate_translation_template.py`'s `SOURCES` and `tools/translate_with_claude.py`'s
+`english_source_files("TAOM")`, and a `<LanguageFile>` entry for each in all 12
+`Languages/<LANG>/language_data.xml` manifests (13 to 17 entries per language).
+`LanguageDataXmlTests.AllLanguageDirs_HaveExactlyThirteenLanguageFiles` renamed to
+`...Seventeen...` and reasserted at 17, plus one new file-existence test per generated category.
+
+**Translated.** All 12 languages via `translate_with_claude.py --module TAOM --apply`
+(`claude-opus-5`), using an API key the user supplied for this session. Most of the ~9,200
+pre-existing entries restored from `tools/translation_cache/` at no cost (the template
+regeneration this required reset all 6 of `generate_translation_template.py`'s pre-existing
+`SOURCES` categories to English first, per that script's documented "ORDERING TRAP" recovery
+path); the 1,999 new keys were genuinely translated, roughly $4 per language.
+
+**Found, not fixed.** Two related gaps surfaced while researching this, neither touched by the
+above: custom clan-hero biographies in `characters/heroes.xml` (`text=` attribute; the file
+carries no `name=` at all, hero names come from procedural generation) sit at 6/465 keys
+registered with no tracking issue; female notable names (22 inline `NPCCharacter` names, no
+strings row) are tracked by #478 (open) and live in a different source file entirely.
+
+**Constraint:** `tools/generate_translation_template.py --apply --all` also crashed on its
+second language (`UnicodeEncodeError` printing a non-Latin language tag to a cp1252 console):
+a pre-existing gap, since it never got the UTF-8 stdout fix `translate_with_claude.py` carries.
+Fixed by copying that same fix over; re-run completed cleanly for all 12 languages.
+
+Not-tested: in-game display of the new troop/lord/clan/kingdom translations (requires a full
+Bannerlord restart per the localization feature doc; not done this session).
+
+### fix(combat): the foot go for the foot, and the wall stands and fights (#608)
+
+The first Custom Battle A/B (Erebor defender v Mordor, 300 v 300, 2026-09-17 07:17) ran clean
+(registration on both sides, routing subscribed, no failed latch, 172 to 183 fps at 661 agents,
+gen 2 collections zero) and showed two things Mike called out as general, not one-offs. The
+dwarf wall still read `Defend:Marching` at 95 s with Mordor's horse on it: the high-ground race
+only races the enemy foot and put no cap on how far the hill is, so a hill 150 m away wins the
+race on paper and the wall spends the opening minute walking, and loses. And the foot turned to
+chase every eored that swung past: vanilla's `BehaviorCharge` and `BehaviorTacticalCharge` run
+at `CachedClosestEnemyFormation` whatever its class (`BehaviorCharge.cs:18`,
+`BehaviorTacticalCharge.cs:62,151`), and so did the TAOM walls and wing, so a passing horse
+formation, usually the nearest thing, became the target of a line that can never catch it,
+sometimes instead of the infantry in front of it.
+
+**Who a foot formation goes for.** `TargetSelection` (pure) fed by `EnemyScan` (one walk over
+every enemy team's formations with their 5 s class flags; exactly one of the four flags is true
+for a formation with units, `FormationQuerySystem.cs:440-445`): the target is the nearest enemy
+foot formation, infantry or archers; horse are a target only when no foot is left; horse are a
+threat only while riding at us (`CavalryThreat.IsInbound`) inside `cavalryMattersMetres`
+(40 m), and the line answers a threat by squaring up where it stands, never by turning; once
+the horse are past the distance the 3 s hold runs out and the line forms back up on its foot
+target. A new `BehaviorFootCharge` (`BehaviorCharge` with that target, braced against horse)
+replaces `BehaviorCharge` and `BehaviorTacticalCharge` in all 22 foot rows of the plans;
+`BehaviorBracedDefend`, `BehaviorBracedAdvance`, `BehaviorEnvelopWing` and
+`BehaviorInfantrySkirmish` pick the same way. The engine's `IsUnderCavalryChargeFromFront` is
+no longer read for the brace: it has no distance and sees one formation.
+
+**Stand and fight.** Two gates before the race is even run (`HighGroundRace.WorthGoing`): the
+navmesh high ground must be inside `highGroundMaxMetres` (60 m), and no enemy formation of any
+class may be inside `holdWhenEnemyWithinMetres` (50 m; horse are not racers, but horse on the
+wall end the march). Both are re-checked once a second while marching. The three distances are
+an `engagement` block in `culture_doctrines.json` (0 to 500 m, a bad or non-finite value
+reverts with a warning), read once into `DoctrineCatalog.Engagement`, handed to every TAOM
+tactic at install and to every TAOM behaviour by the applier, so Mike can retune without a
+build.
+
+**The F6 popup.** `Infantry, Archers: Delegate Command On` printed `ERROR: Text with id
+str_formation_ai_behavior_text doesn't exist! Variation: BehaviorBracedDefend`: the F6 message
+(`MissionOrderVM.OnDelegateCommandToAI`) reads a third string table, and only the tactic popup
+and the sergeant-instruction tables were seeded. Six rows added in the vanilla shape
+(`{TROOP_NAMES_BEGIN}... are holding in a wall.`) and seeded in the twelve languages;
+`DoctrinePopupStringsTests` pins all three tables per TAOM tactic and behaviour type by
+reflection, so a new behaviour cannot ship without its rows.
+
+Tests: `EngagementRulesTests` (foot-first pick, horse only when no foot, the 40 m threat gate
+both sides, NaN, the two high-ground gates), three config tests (absent block, read, out of
+range and NaN revert per field), three plan invariants (no foot row on a vanilla chaser,
+FootCharge only on foot, every engaging plan gives the main infantry a way to close),
+`DoctrinePopupStringsTests`. Also in the first battle's log, unrelated to this feature: one
+`BehaviorTreeMissionLogic.OnAgentShootMissile ran off the main mission thread` tripwire line
+(#592/#595), noted for later.
+
 ### feat(combat): every kingdom's doctrine: seven tactics, five formation behaviours, who routs, how they fight (#608)
 
 **What.** Phase C and D of the culture doctrine, the whole per-culture backlog from the

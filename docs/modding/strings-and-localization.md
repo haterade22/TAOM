@@ -240,15 +240,17 @@ Code: No code changes needed.
 
 ## Numbers in this chapter
 
-Every count below was produced on 2026-09-05 by the command beside it, run from the repo root.
+Counts below were produced on 2026-09-05 by the command beside it, run from the repo root, EXCEPT
+where marked 2026-09-17 (the Case B pipeline extension: `tools/generate_name_localization_strings.py`
+added 4 files registering troop/lord/clan/kingdom names that were previously inline-only).
 
 | Number | Command |
 |---|---|
-| 13 English key-bearing XML files outside `Languages/`, holding 9,134 distinct translation keys | a python ElementTree walk of `Main/_Module/ModuleData`, skipping `Languages/`, keying each `<string>` by its `{=KEY}` prefix or its `id` |
-| Per-file row counts and prefixes in the ownership table (2618, 2050, 1449, 1337, 966, 308, 252, 119, 29, 24, 22, 12, 8) | the same walk, counting rows and prefix groups per file |
-| 15 `<XmlName id="GameText">` rows in `SubModule.xml`; 8 XSLT files at the ModuleData root | `rg -n 'GameText' Main/_Module/SubModule.xml` and `ls Main/_Module/ModuleData/*.xslt` |
-| 12 language directories, 14 files in each (one `language_data.xml` plus 13 `std_taom_*`), and 13 `<LanguageFile>` rows in every `language_data.xml` | `ls -d Main/_Module/ModuleData/Languages/*/` and `grep -c '<LanguageFile' <dir>/language_data.xml` |
-| 836 distinct `{=key}` values across the 16 troop files, 0 of them registered in any strings XML | a python regex scan of `Main/_Module/ModuleData/troops/*.xml` for `\{=([^}]+)\}`, intersected with every `<string id="...">` in the strings XMLs |
+| 17 English key-bearing XML files outside `Languages/` (13 pre-existing + `taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml`), holding 11,173 distinct translation keys (2026-09-17) | a python ElementTree walk of `Main/_Module/ModuleData`, skipping `Languages/`, keying each `<string>` by its `{=KEY}` prefix or its `id` |
+| Per-file row counts and prefixes in the ownership table (2657, 2050, 1446, 1337, 966, 836, 988, 308, 252, 119, 115, 60, 34, 29, 24, 22, 13) (2026-09-17) | the same walk, counting rows and prefix groups per file |
+| 19 `<XmlName id="GameText">` rows in `SubModule.xml` (2026-09-17); 8 XSLT files at the ModuleData root | `rg -n 'GameText' Main/_Module/SubModule.xml` and `ls Main/_Module/ModuleData/*.xslt` |
+| 12 language directories, 18 files in each (one `language_data.xml` plus 17 `std_taom_*`), and 17 `<LanguageFile>` rows in every `language_data.xml` (2026-09-17) | `ls -d Main/_Module/ModuleData/Languages/*/` and `grep -c '<LanguageFile' <dir>/language_data.xml` |
+| 836 distinct `{=key}` values across the 16 troop files, all 836 now registered in `taom_troop_name_strings.xml` and translated in all 12 languages (2026-09-17; was 0 of 836 before) | a python regex scan of `Main/_Module/ModuleData/troops/*.xml` for `\{=([^}]+)\}`, intersected with every `<string id="...">` in the strings XMLs |
 | 1,459 `\r\r\n` and 26 plain `\r\n` in `std_taom_xslt_strings_rus-RU.xml`; 0 and 467 in `std_taom_enlistment_strings_rus-RU.xml` | a python byte count of `b'\r\r\n'` and `b'\r\n'` in each file |
 | 4 override files (`cns`, `ko`, `ru`, `tr`); 12 cache files totalling 18 MB | `ls tools/translation_overrides/` and `du -sh tools/translation_cache` |
 | 988 `<Settlement>` entries in the live `TAOM_Map` settlements file, and 1,227 rows in its Russian `loc_settlements.xml` | `grep -c '<Settlement '` and `grep -o '<string ' \| wc -l` against the two files in the game install |
@@ -260,6 +262,7 @@ Every count below was produced on 2026-09-05 by the command beside it, run from 
 - [docs/features/localization.md](../features/localization.md) for how the engine loads translations and what is not translatable through this system
 - [docs/features/localization-override.md](../features/localization-override.md) for overriding a vanilla string by putting its id in a `{=...}` prefix
 - [docs/features/time-acceleration.md](../features/time-acceleration.md) for the `global_strings.xml` keybinding rule and why the other two registration kinds do not work there
+- [tools/generate_name_localization_strings.py](../../tools/generate_name_localization_strings.py) for how troop/lord/clan/kingdom name keys get extracted into their own registered strings files, excluding whatever is already registered elsewhere
 - [docs/reviews/lessons/localization-ui.md](../reviews/lessons/localization-ui.md) for the accumulated failure modes
 - [.claude/skills/localize/SKILL.md](../../.claude/skills/localize/SKILL.md) for the guided workflow
 - [tools/README.md](../../tools/README.md) for the rest of the pipeline scripts

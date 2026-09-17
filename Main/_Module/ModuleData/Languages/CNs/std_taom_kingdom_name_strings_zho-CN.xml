@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Simplified Chinese" />
+  </tags>
+  <strings>
+    <string id="taom_bluecraig_desc" text="远西蓝色山脉（埃瑞德路因）中蓝崖的半兽人巢穴，紧邻林顿的灰港。这是一支独立而不可计数的半兽人大军——与迷雾山脉半兽人城的同族有别——他们遍布西部的岩崖，扰害西海岸的精灵。" />
+    <string id="taom_bluecraig_name" text="蓝崖的半兽人" />
+    <string id="taom_bluecraig_ruler_title" text="大半兽人" />
+    <string id="taom_bluecraig_short_name" text="蓝崖" />
+    <string id="taom_bluecraig_title" text="蓝崖半兽人之国" />
+    <string id="taom_dolguldur_desc" text="多古尔都，阴影与绝望的堡垒，如同一座险恶的灯塔，昭示着死灵法师的黑暗意志。栖居其深处的半兽人与污秽生物令所有人心生恐惧。" />
+    <string id="taom_dolguldur_name" text="多古尔都" />
+    <string id="taom_dolguldur_ruler_title" text="恐惧之主" />
+    <string id="taom_dolguldur_short_name" text="多古尔都" />
+    <string id="taom_dolguldur_title" text="多古尔都的死灵法术" />
+    <string id="taom_erebor_desc" text="孤山，埃瑞博，是北方最伟大的矮人王国。此地富藏黄金与秘银，乃都林家族的家园。埃瑞博的矮人既是闻名的匠人，也是凶悍的战士，他们的厅堂中回荡着先祖的歌声。" />
+    <string id="taom_erebor_name" text="埃瑞博" />
+    <string id="taom_erebor_ruler_title" text="国王" />
+    <string id="taom_erebor_short_name" text="埃瑞博" />
+    <string id="taom_erebor_title" text="埃瑞博王国" />
+    <string id="taom_goblin_desc" text="高隘口的半兽人挤满了迷雾山脉之下的隧道，他们正是当年大半兽人率领、袭击矮人与旅人的那支大军的后裔。他们数不胜数且凶残暴虐，从半兽人城涌出，劫掠山间道路。" />
+    <string id="taom_goblin_name" text="半兽人" />
+    <string id="taom_goblin_ruler_title" text="大半兽人" />
+    <string id="taom_goblin_short_name" text="半兽人" />
+    <string id="taom_goblin_title" text="高隘口半兽人领地" />
+    <string id="taom_gundabad_desc" text="刚达巴是半兽人古老而阴森的要塞，是野蛮与暴虐的堡垒。刚达巴的半兽人为战争与混乱而生，在浸血的旗帜下集结。" />
+    <string id="taom_gundabad_name" text="刚达巴" />
+    <string id="taom_gundabad_ruler_title" text="军阀" />
+    <string id="taom_gundabad_short_name" text="刚达巴" />
+    <string id="taom_gundabad_title" text="刚达巴" />
+    <string id="taom_isengard_desc" text="艾辛格是白袍巫师萨鲁曼的堡垒，是权势与野心的据点。half半兽人在白掌旗下进军，其纪律与凶残无人能及。" />
+    <string id="taom_isengard_name" text="艾辛格" />
+    <string id="taom_isengard_ruler_title" text="军阀" />
+    <string id="taom_isengard_short_name" text="艾辛格" />
+    <string id="taom_isengard_title" text="艾辛格霸权" />
+    <string id="taom_lindon_desc" text="林顿是蓝色山脉以西的碧绿之地，是中土海岸上高等精灵的最后王国。白色的船只自米斯隆德的灰港驶向西方，造船者奇尔丹守望着埃尔达渐渐消逝的光辉。" />
+    <string id="taom_lindon_name" text="林顿" />
+    <string id="taom_lindon_ruler_title" text="港湾之主" />
+    <string id="taom_lindon_short_name" text="林顿" />
+    <string id="taom_lindon_title" text="林顿至高王国" />
+    <string id="taom_lothlorien_desc" text="黄金森林坐落于银脉河与浩荡的安都因河之间。在凯兰崔尔与凯勒博恩的意志守护下，它是精灵优雅与不屈的堡垒——一片不受时间侵蚀的土地，树叶永不凋落。" />
+    <string id="taom_lothlorien_name" text="罗斯洛立安" />
+    <string id="taom_lothlorien_ruler_title" text="夫人" />
+    <string id="taom_lothlorien_short_name" text="罗斯洛立安" />
+    <string id="taom_lothlorien_title" text="罗斯洛立安王国" />
+    <string id="taom_mirkwood_desc" text="幽暗密林的森林王国多年来历经苦难。在瑟兰迪尔的统领下，木精灵变得孤僻，对陌生人心存警惕。然而在瑟兰迪尔心中，仍燃烧着第一纪元古老岁月点燃的火焰。" />
+    <string id="taom_mirkwood_name" text="拉斯加伦" />
+    <string id="taom_mirkwood_ruler_title" text="阿兰（王）" />
+    <string id="taom_mirkwood_short_name" text="幽暗密林" />
+    <string id="taom_mirkwood_title" text="幽暗密林王国" />
+    <string id="taom_mistymountainorcs_desc" text="迷雾山脉的半兽人大军占据着从格拉姆山到摩瑞亚门前的高地与深坑。他们在严寒的峰峦中为战争而生，响应黑影的召唤，渴望夺回群山为己所有。" />
+    <string id="taom_mistymountainorcs_name" text="迷雾山脉半兽人" />
+    <string id="taom_mistymountainorcs_ruler_title" text="军阀" />
+    <string id="taom_mistymountainorcs_short_name" text="迷雾半兽人" />
+    <string id="taom_mistymountainorcs_title" text="迷雾山脉半兽人大军" />
+    <string id="taom_rivendell_desc" text="瑞文戴尔深藏于迷雾山脉的裂谷之中，是大海以东最后的安居之屋。它由半精灵埃尔隆德所建，是抵御聚集黑暗的庇护所，一处疗愈、传承学识与静默力量之地。" />
+    <string id="taom_rivendell_name" text="伊姆拉缀斯" />
+    <string id="taom_rivendell_ruler_title" text="领主" />
+    <string id="taom_rivendell_short_name" text="伊姆拉缀斯" />
+    <string id="taom_rivendell_title" text="伊姆拉缀斯的庇护所" />
+    <string id="taom_umbar_desc" text="翁巴是海盗们的黑暗港湾，一个充斥着海上霸权与险恶野心的王国。这些海盗劫掠中土世界的海岸，用他们迅捷的战船四处播撒恐惧。" />
+    <string id="taom_umbar_name" text="翁巴" />
+    <string id="taom_umbar_ruler_title" text="海盗王" />
+    <string id="taom_umbar_short_name" text="翁巴" />
+    <string id="taom_umbar_title" text="翁巴港湾" />
+  </strings>
+</base>

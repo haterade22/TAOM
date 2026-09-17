@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="aom_clan_bluecraig_1_name" text="푸른 바위 전사단" />
+    <string id="aom_clan_bluecraig_2_name" text="바위 태생" />
+    <string id="aom_clan_bluecraig_3_name" text="룬 잠행자들" />
+    <string id="aom_clan_bluecraig_4_name" text="에레드 루인 약탈자단" />
+    <string id="aom_clan_bluecraig_5_name" text="어둠돌 부족" />
+    <string id="aom_clan_dolguldur_10_name" text="드루즈굴" />
+    <string id="aom_clan_dolguldur_11_name" text="브룩모그" />
+    <string id="aom_clan_dolguldur_12_name" text="흘라쿠르즈" />
+    <string id="aom_clan_dolguldur_13_name" text="스로즈부즈" />
+    <string id="aom_clan_dolguldur_14_name" text="라즈고르" />
+    <string id="aom_clan_dolguldur_15_name" text="우즈굴" />
+    <string id="aom_clan_dolguldur_1_name" text="히온드루스" />
+    <string id="aom_clan_dolguldur_2_name" text="구르즈락" />
+    <string id="aom_clan_dolguldur_3_name" text="마우그두르" />
+    <string id="aom_clan_dolguldur_4_name" text="두르잔" />
+    <string id="aom_clan_dolguldur_5_name" text="크라즈고스" />
+    <string id="aom_clan_dolguldur_6_name" text="주르박" />
+    <string id="aom_clan_dolguldur_7_name" text="가쉬루즈" />
+    <string id="aom_clan_dolguldur_8_name" text="모르박" />
+    <string id="aom_clan_dolguldur_9_name" text="스쿨가스" />
+    <string id="aom_clan_empire_south_10_name" text="아르키" />
+    <string id="aom_clan_empire_south_11_name" text="이콘" />
+    <string id="aom_clan_empire_south_12_name" text="아케스" />
+    <string id="aom_clan_empire_south_13_name" text="자루니크" />
+    <string id="aom_clan_empire_south_14_name" text="우그라쿠르" />
+    <string id="aom_clan_empire_south_15_name" text="브루가쉬" />
+    <string id="aom_clan_empire_west_10_name" text="히아르술리오나스 가문" />
+    <string id="aom_clan_empire_west_11_name" text="칼라디오나스 가문" />
+    <string id="aom_clan_empire_west_12_name" text="가르비리오나스 가문" />
+    <string id="aom_clan_empire_west_13_name" text="히릴리오나스 가문" />
+    <string id="aom_clan_empire_west_14_name" text="바라니오나스 가문" />
+    <string id="aom_clan_erebor_1_name" text="비트 두린" />
+    <string id="aom_clan_erebor_2_name" text="비트 로니" />
+    <string id="aom_clan_erebor_3_name" text="비트 라르" />
+    <string id="aom_clan_erebor_4_name" text="비트 그로르" />
+    <string id="aom_clan_erebor_5_name" text="비트 고를리" />
+    <string id="aom_clan_erebor_6_name" text="비트 로리" />
+    <string id="aom_clan_erebor_7_name" text="비트 노린" />
+    <string id="aom_clan_goblin_1_name" text="스크리삭" />
+    <string id="aom_clan_goblin_2_name" text="야굴" />
+    <string id="aom_clan_goblin_3_name" text="고르킬" />
+    <string id="aom_clan_goblin_4_name" text="스나가 무리" />
+    <string id="aom_clan_goblin_5_name" text="무그라트" />
+    <string id="aom_clan_gundabad_10_name" text="스록마우" />
+    <string id="aom_clan_gundabad_1_name" text="아쉬모그" />
+    <string id="aom_clan_gundabad_2_name" text="군드루크" />
+    <string id="aom_clan_gundabad_3_name" text="자르바그" />
+    <string id="aom_clan_gundabad_4_name" text="모르주그" />
+    <string id="aom_clan_gundabad_5_name" text="크루가쉬" />
+    <string id="aom_clan_gundabad_6_name" text="그리슈크" />
+    <string id="aom_clan_gundabad_7_name" text="루그두쉬" />
+    <string id="aom_clan_gundabad_8_name" text="마우크림" />
+    <string id="aom_clan_gundabad_9_name" text="스카르자그" />
+    <string id="aom_clan_isengard_10_name" text="잿빛 근위대" />
+    <string id="aom_clan_isengard_11_name" text="돌 파괴자들" />
+    <string id="aom_clan_isengard_1_name" text="하얀 손" />
+    <string id="aom_clan_isengard_2_name" text="붉은 대열" />
+    <string id="aom_clan_isengard_3_name" text="검은 대열" />
+    <string id="aom_clan_isengard_4_name" text="검은 아가리" />
+    <string id="aom_clan_isengard_5_name" text="무쇠 주먹" />
+    <string id="aom_clan_isengard_6_name" text="피의 근위대" />
+    <string id="aom_clan_isengard_7_name" text="그림자 약탈자들" />
+    <string id="aom_clan_isengard_8_name" text="해골 분쇄자들" />
+    <string id="aom_clan_isengard_9_name" text="전쟁 사냥개들" />
+    <string id="aom_clan_khuzait_10_name" text="일노리아" />
+    <string id="aom_clan_khuzait_11_name" text="샤칼리안" />
+    <string id="aom_clan_khuzait_12_name" text="후즈" />
+    <string id="aom_clan_khuzait_13_name" text="아데키그" />
+    <string id="aom_clan_khuzait_14_name" text="킬제론" />
+    <string id="aom_clan_khuzait_15_name" text="칼키안" />
+    <string id="aom_clan_khuzait_16_name" text="조리안" />
+    <string id="aom_clan_khuzait_17_name" text="미스룬타이" />
+    <string id="aom_clan_khuzait_18_name" text="바제비안" />
+    <string id="aom_clan_khuzait_19_name" text="보조르가니스" />
+    <string id="aom_clan_lindon_1_name" text="팔라스림" />
+    <string id="aom_clan_lindon_2_name" text="에딜 미슬론드" />
+    <string id="aom_clan_lothlorien_1_name" text="노스 피나르핀" />
+    <string id="aom_clan_lothlorien_2_name" text="나이스의 수호자들" />
+    <string id="aom_clan_lothlorien_3_name" text="노스 말갈라드" />
+    <string id="aom_clan_mirkwood_1_name" text="노스 라스갈렌" />
+    <string id="aom_clan_mirkwood_2_name" text="노스 오로페르" />
+    <string id="aom_clan_mirkwood_3_name" text="노스 타우리온" />
+    <string id="aom_clan_mirkwood_4_name" text="노스 갈렌그림" />
+    <string id="aom_clan_mirkwood_5_name" text="노스 알렌웨" />
+    <string id="aom_clan_mirkwood_6_name" text="노스 이미녜" />
+    <string id="aom_clan_mistymountainorcs_10_name" text="루그부르즈" />
+    <string id="aom_clan_mistymountainorcs_11_name" text="흐라크두르" />
+    <string id="aom_clan_mistymountainorcs_12_name" text="우즈그나쉬" />
+    <string id="aom_clan_mistymountainorcs_13_name" text="브라크모" />
+    <string id="aom_clan_mistymountainorcs_14_name" text="가슈림" />
+    <string id="aom_clan_mistymountainorcs_15_name" text="모르주크" />
+    <string id="aom_clan_mistymountainorcs_1_name" text="부르즈가쉬" />
+    <string id="aom_clan_mistymountainorcs_2_name" text="크림파쉬" />
+    <string id="aom_clan_mistymountainorcs_3_name" text="두쉬나크" />
+    <string id="aom_clan_mistymountainorcs_4_name" text="모르그림" />
+    <string id="aom_clan_mistymountainorcs_5_name" text="바르그림" />
+    <string id="aom_clan_mistymountainorcs_6_name" text="그로부르즈" />
+    <string id="aom_clan_mistymountainorcs_7_name" text="스카르나크" />
+    <string id="aom_clan_mistymountainorcs_8_name" text="마우가쉬" />
+    <string id="aom_clan_mistymountainorcs_9_name" text="스로그모" />
+    <string id="aom_clan_rivendell_1_name" text="노스 페레델" />
+    <string id="aom_clan_rivendell_2_name" text="노스 글로르핀델" />
+    <string id="aom_clan_rivendell_3_name" text="엘렌놀마레" />
+    <string id="aom_clan_umbar_1_name" text="카시미리오니 가문" />
+    <string id="aom_clan_vlandia_12_name" text="엘프위깅 가문" />
+    <string id="aom_clan_vlandia_13_name" text="켈문딩 가문" />
+    <string id="aom_clan_vlandia_14_name" text="위드문딩 가문" />
+    <string id="aom_clan_vlandia_15_name" text="오르드가링 가문" />
+    <string id="aom_clan_vlandia_16_name" text="훈셀밍 가문" />
+    <string id="aom_clan_vlandia_17_name" text="브레그다닝 가문" />
+    <string id="aom_clan_vlandia_18_name" text="데아프링가스 가문" />
+    <string id="aom_clan_vlandia_19_name" text="마르하드 가문" />
+    <string id="aom_clan_vlandia_20_name" text="모르카르가스 가문" />
+    <string id="aom_clan_vlandia_21_name" text="할레스링 가문" />
+    <string id="aom_clan_vlandia_22_name" text="룬가링 가문" />
+  </strings>
+</base>
