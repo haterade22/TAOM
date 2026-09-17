@@ -30,7 +30,7 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
         return _agentStatService.CalculateDamageAmplification(
             attackerHeroId: GetAttackerHeroId(in attackInformation),
             attackerTroopLeaderHeroId: GetAttackerTroopLeaderHeroId(in attackInformation),
-            hitMask: HitMask(in collisionData),
+            hitMask: HitMask(in attackInformation, in collisionData),
             baseResult: baseResult);
     }
 
@@ -41,14 +41,25 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
             victimHeroId: GetVictimHeroId(in attackInformation),
             victimAgentIndex: GetVictimAgent(in attackInformation)?.Index,
             troopLeaderHeroId: GetVictimTroopLeaderHeroId(in attackInformation),
-            hitMask: HitMask(in collisionData),
+            hitMask: HitMask(in attackInformation, in collisionData),
             baseResult: baseResult);
     }
 
-    // A missile hit is Ranged; everything else (swing/thrust/charge) is treated as Melee. Drives
-    // the attack_type_mask gate on the Damage (attacker) + Resistance (victim) career passives.
-    private static AttackTypeMask HitMask(in AttackCollisionData collisionData)
-        => collisionData.IsMissile ? AttackTypeMask.Ranged : AttackTypeMask.Melee;
+    // A missile hit is Ranged; everything else (swing/thrust/charge) is Melee; the kind (Cut /
+    // Pierce / Blunt) comes from the engine's DamageType (#613), corrected the way vanilla's own
+    // damage math corrects it (MissionCombatMechanicsHelper.GetAttackCollisionResults:200): a
+    // bare-hand hit, a hit off the weapon's attach bone, a kick or bash, fall damage and a horse
+    // charge are Blunt, through a local the engine never writes back into the struct. Drives the
+    // attack_type_mask gate on the Damage (attacker) + Resistance (victim) career passives.
+    private static AttackTypeMask HitMask(in AttackInformation attackInformation, in AttackCollisionData collisionData)
+        => AttackTypeMaskMatch.ForHit(collisionData.IsMissile, collisionData.DamageType, BluntByVanillaRule(in attackInformation, in collisionData));
+
+    private static bool BluntByVanillaRule(in AttackInformation attackInformation, in AttackCollisionData collisionData)
+        => attackInformation.AttackerWeapon.IsEmpty
+        || MissionCombatMechanicsHelper.IsCollisionBoneDifferentThanWeaponAttachBone(in collisionData, attackInformation.WeaponAttachBoneIndex)
+        || collisionData.IsAlternativeAttack
+        || collisionData.IsFallDamage
+        || collisionData.IsHorseCharge;
 
     public override bool DecideAgentShrugOffBlow(Agent victimAgent, in AttackCollisionData collisionData, in Blow blow)
     {

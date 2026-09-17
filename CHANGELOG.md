@@ -4,6 +4,63 @@
 
 ## 2026-09-17
 
+### fix(career): typed resistance masks, javelin ammo, and `taom.career_perks` diagnostics (#613)
+
+**Why.** A wiring audit of every career passive consumer after #611, asking of each write where the
+engine READS it. Three defects. Four "blunt resistance" pips and one "cut resistance" pip authored
+`attack_type_mask="Blunt"` / `"Cut"`, which the `[Flags]` enum did not have, and `ParseEnum` fell
+back to `All` in silence, so they resisted every hit. The Ammo refill gated on `IsAnyAmmo`, which is
+"consumable and not a weapon" (arrows, bolts), so the nine Ammo pips on the three javelineer careers
+("never out of javelins") did nothing. And nothing in a play session showed whether a mission-side
+perk worked at all, which is how #611's phantom lived three months. A fourth finding got its own
+issue: the 49 `StealthBonus` pips ride `GetPartySpottingRatioForMainPartySeeingRange`, whose only
+engine caller decides whether an AI party is visible to the PLAYER, so they have never applied
+(#614, replan pending; Mike: the stealth pips are not correct).
+
+**What.** `AttackTypeMask` gains a damage-kind axis (`Cut`, `Pierce`, `Blunt`, from the engine's
+`AttackCollisionData.DamageType`); a pip matches a hit per axis (`AttackTypeMaskMatch`), so `Blunt`
+means blunt by any delivery, `Melee` keeps meaning any melee kind, `Melee, Blunt` needs both, and
+`All` is unchanged. Mask strings parse by name (comma or pipe separated); an unknown name or a
+digit string warns and leaves the pip inert, and the shipped-XML test refuses a `None` mask. The
+five kind pips are now what they say, and the hit kind follows vanilla's own correction (a bare-hand
+hit, a hit off the weapon's attach bone, a kick or bash, fall damage and a horse charge count as
+Blunt; `MissionCombatMechanicsHelper.GetAttackCollisionResults:200` sets a local it never writes
+back, so a model reading the raw field would miss a trample). The ammo refill moved to the seam
+vanilla's own extra-ammo perks use: `TaomAgentStatCalculateModel.InitializeMissionEquipment`, before
+build, through `MissionEquipment.SetAmountOfSlot(…, addOverflowToMaxAmount: true)`, which raises the
+stack's max with the amount (`CareerAmmoApplier`); the old `OnAgentBuild` refill pushed an amount
+above an unchanged max through the native setter, which the engine caps everywhere else, so a full
+stack may never have taken it since June. And it gates on `IsAnyConsumable`. Diagnostics:
+`taom.career_perks` lists every passive the player holds with its consumer, the effective Damage
+and Resistance magnitude per hit kind, the campaign numbers that carry a Career line, and in a
+battle the player agent's driven properties, the mount's, the consumable slots and the live buff;
+every line also lands in the TAOM debug log as `[CareerPerks]`, beside new runtime lines: agent
+stat application once per distinct set of values, mount application, the ammo refill, per-hit
+amplification and reduction at DEBUG with the hit mask and the terms, and the event-scoped
+campaign passives (renown, upgrade cost, hero healing, smithing) when they apply. The tuning XML
+comments no longer call the Ranged and Cavalry buffs "self" buffs.
+
+Also noted, unchanged: ten keystone choices carry an undescribed Melee `Resistance` passive;
+`ActiveBuffs.ArmorReduction` and `ApplyStealthMode` are dead surface; the `ChargeType` enum's
+non-cooldown values are never fed (abilities are cooldown-only by design).
+
+**Tests.** `AttackTypeMaskTests` (per-axis matrix, hit-mask builder, name-only parsing),
+`CareerPassiveServiceTests` (a Blunt pip by either delivery), `CareerConfigProviderTests` (kind
+masks parse, unknown warns and goes inert), `CareerChoicesIntegrationTests` (no `None` mask ships;
+the five kinded pips pinned by id), `CareerMountBonusBindingTests` (the refill gates on
+`IsAnyConsumable`), `CareerPerkReportTests`, `CareerAgentStatServiceTests` (the log lines and
+their dedupe and the mission-end reset). Owed: `taom.career_perks` in a campaign and in a battle;
+a blunt-resistance career under a mace, a sword and a horse; a javelineer's stack at spawn above
+its printed max.
+
+**Deep review.** Five agents. Two HIGHs inside the fix, both the #611 shape again (the value with
+the right name is not the value the engine uses): the raw `DamageType` read, and the ammo setter
+above the cap; both fixed as above. One MEDIUM: the `[CareerPerks]` dedupe on the singleton service
+never reset, so a second battle would have logged nothing at spawn; `ResetDiagnostics()` from the
+mission behaviour's teardown. Two kindless probe masks added to the report. RCA
+`docs/reviews/rca-career-perks-2026-09-17.md`, lessons in `adapters-taleworlds-api.md` and
+`testing-qa.md`.
+
 ### balance(mounts): the ten creature mounts get speed, maneuver and charge retuned (#615)
 
 **Why.** The mount ledger pulled today put every TAOM creature below the vanilla horses TAOM

@@ -383,6 +383,26 @@ public class CareerPassiveServiceTests
     }
 
     [TestMethod]
+    public void GetMaskedMagnitude_BluntPip_AppliesToBluntHitsOfEitherDeliveryOnly()
+    {
+        // #613: a kind-masked pip matches on the kind axis whatever the delivery, and stays out of
+        // a hit of another kind.
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_blunt", 10);
+        _registry.GetChoice("wb_blunt").Returns(new CareerChoiceDefinition(
+            id: "wb_blunt", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.06f, attackTypeMask: AttackTypeMask.Blunt),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.06f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt), 0.001f);
+        Assert.AreEqual(0.06f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Ranged | AttackTypeMask.Blunt), 0.001f);
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Cut), 0.001f);
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee), 0.001f);
+    }
+
+    [TestMethod]
     public void GetMaskedMagnitude_MeleeAndRangedPips_SumOnlyMatchingDeliveryType()
     {
         _dataService.SetCareer("hero1", "warboss");

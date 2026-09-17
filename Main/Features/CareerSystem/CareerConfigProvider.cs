@@ -258,7 +258,7 @@ public class CareerConfigProvider : ICareerConfigProvider
                     magnitude: ParseFloat(passiveEl, "magnitude", ParseFloat(passiveEl, "value", 0f)),
                     // operation= / is_percentage= were parsed-but-never-read (the consumer chooses
                     // additive vs multiplicative per type); dropped. attack_type_mask IS consumed.
-                    attackTypeMask: ParseEnum<AttackTypeMask>(passiveEl, "attack_type_mask", AttackTypeMask.All));
+                    attackTypeMask: ParseAttackTypeMask(passiveEl, el.Attribute("id")?.Value));
             }
 
             var mutations = new List<MutationDefinition>();
@@ -516,6 +516,20 @@ public class CareerConfigProvider : ICareerConfigProvider
         if (float.IsNaN(result) || float.IsInfinity(result))
             return defaultValue;
         return result;
+    }
+
+    // #613: the consumer branches on this string (Damage / Resistance masks), so an unknown value is
+    // never coerced to the widest reading. Absent keeps All; unparseable warns and lands on None,
+    // which matches no hit, and the shipped-XML gate refuses a None mask.
+    private AttackTypeMask ParseAttackTypeMask(XElement passiveEl, string? choiceId)
+    {
+        var raw = passiveEl.Attribute("attack_type_mask")?.Value;
+        if (raw == null) return AttackTypeMask.All;
+        if (AttackTypeMaskMatch.TryParse(raw, out var mask)) return mask;
+        _logger.LogWarning(
+            $"CareerConfig: choice '{choiceId}' has an unknown attack_type_mask '{raw}' " +
+            "(names: Melee, Ranged, All, Cut, Pierce, Blunt, comma-separated); the pip is inert.");
+        return AttackTypeMask.None;
     }
 
     private static T ParseEnum<T>(XElement el, string attrName, T defaultValue) where T : struct

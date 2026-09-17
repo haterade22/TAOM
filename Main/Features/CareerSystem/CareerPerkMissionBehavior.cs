@@ -25,13 +25,12 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private readonly ICareerAbilityService _abilityService;
     private readonly IAbilityActivationController _activationController;
     private readonly IAbilityEffectExecutor _effectExecutor;
-    private readonly ICareerPassiveService _passives;
+    private readonly ICareerAgentStatService _agentStats;
     private readonly AbilityDamageAttributionReporter _attributionReporter;
     private readonly IModLogger _logger;
 
     private bool _loggedMissionStart;
     private readonly List<MissionAbilityExecutionContext> _activeContexts = new List<MissionAbilityExecutionContext>();
-    private bool _buildFailureLogged;
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -40,7 +39,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         ICareerAbilityService abilityService,
         IAbilityActivationController activationController,
         IAbilityEffectExecutor effectExecutor,
-        ICareerPassiveService passives,
+        ICareerAgentStatService agentStats,
         ICareerConfigProvider config,
         IModLogger logger)
     {
@@ -48,7 +47,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _abilityService = abilityService;
         _activationController = activationController;
         _effectExecutor = effectExecutor;
-        _passives = passives;
+        _agentStats = agentStats;
         _attributionReporter = new AbilityDamageAttributionReporter(config);
         _logger = logger;
     }
@@ -103,42 +102,6 @@ public class CareerPerkMissionBehavior : MissionBehavior
             _activeContexts[i].Tick(currentTime);
             if (_activeContexts[i].IsExpired)
                 _activeContexts.RemoveAt(i);
-        }
-    }
-
-    // Ammo career passive — a hero with the passive spawns with multiplicatively more ammo in
-    // every ranged slot. OnAgentBuild fires once per agent after equipment is built; the
-    // non-hero early-out keeps the per-spawn cost negligible for the 99% of agents.
-    public override void OnAgentBuild(Agent agent, Banner banner)
-    {
-        if (agent == null || !agent.IsHero) return;
-        // Inside Mission.SpawnAgent's unguarded loop over behaviors: an exception here aborts the
-        // spawn for every later behavior (#595). Log once, keep spawning.
-        try
-        {
-            var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
-            if (string.IsNullOrEmpty(heroId)) return;
-
-            var bonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.Ammo);
-            if (bonus <= 0f) return;
-
-            for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
-            {
-                var weapon = agent.Equipment[slot];
-                if (weapon.IsEmpty || !weapon.IsAnyAmmo()) continue;
-
-                int boosted = CareerPassiveMath.BoostAmmo(weapon.ModifiedMaxAmount, weapon.Amount, bonus);
-                if (boosted > weapon.Amount)
-                    agent.SetWeaponAmountInSlot(slot, (short)boosted, enforcePrimaryItem: false);
-            }
-        }
-        catch (Exception ex)
-        {
-            if (!_buildFailureLogged)
-            {
-                _buildFailureLogged = true;
-                _logger.LogError($"[CareerSystem] OnAgentBuild threw {ex.GetType().Name}: {ex.Message}");
-            }
         }
     }
 
@@ -215,6 +178,11 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         try { CareerAbilityBuffTracker.ClearAll(); }
         catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission CareerAbilityBuffTracker.ClearAll() threw — {ex.Message}"); }
+
+        // #613: the [CareerPerks] dedupe lives on the singleton stat service; without this the next
+        // battle's spawn logs nothing when the values match the last one.
+        try { _agentStats.ResetDiagnostics(); }
+        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission ResetDiagnostics() threw: {ex.Message}"); }
 
         _logger?.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;

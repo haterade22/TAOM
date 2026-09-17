@@ -1,6 +1,7 @@
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CombatMechanics.Hooks;
@@ -39,13 +40,14 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     private readonly IMumakilAttackService _mumakil;
     private readonly ICultureAggressionService? _aggression;
     private readonly IChargeDamageService? _chargeDamage;
+    private readonly IModLogger? _logger;
 
     public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil)
-        : this(agentStatService, elephant, spider, mumakil, null, null)
+        : this(agentStatService, elephant, spider, mumakil, null, null, null)
     {
     }
 
-    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil, ICultureAggressionService? aggression, IChargeDamageService? chargeDamage = null)
+    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil, ICultureAggressionService? aggression, IChargeDamageService? chargeDamage = null, IModLogger? logger = null)
     {
         _agentStatService = agentStatService;
         _elephant = elephant;
@@ -53,6 +55,19 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         _mumakil = mumakil;
         _aggression = aggression;
         _chargeDamage = chargeDamage;
+        _logger = logger;
+    }
+
+    // The Ammo passive (#613) rides the seam vanilla's own extra-ammo perks use: before the agent is
+    // built, raising the stack's max with the amount. Heroes only; CareerAmmoApplier has the evidence.
+    public override void InitializeMissionEquipment(Agent agent)
+    {
+        base.InitializeMissionEquipment(agent);
+        if (agent != null && agent.IsHero)
+        {
+            var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
+            CareerAmmoApplier.Apply(agent, heroId, _agentStatService.AmmoBonus(heroId), _logger);
+        }
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)

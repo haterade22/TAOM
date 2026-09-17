@@ -1009,3 +1009,9 @@ The first A/B gave two observations ("they run to the hill", "they chase the hor
 - **Why missed:** the tests proved the rule did what it said; nobody asked what the engine would feed it.
 - **Prevent:** for each rule that answers an observation, write the engine fact it depends on (which list, which query, which speed) beside it, and run the adversarial battle-logic pass (the agent asked to make the AI do something stupid) before the rule ships; the standards, engine-signature, performance and data-flow passes are not asked that question.
 - **Source:** `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md` findings 1, 6, 8, #608.
+
+### A diagnostic's definition of done includes the second run
+The `[CareerPerks]` stat lines dedupe on a singleton service so a spawn logs once per distinct set of values; without a reset at mission end the second battle of a session logged nothing at spawn, which is the re-test loop the feature doc tells the tester to use.
+- **Why missed:** the dedupe was designed against one battle's stream of stat updates; the singleton's lifetime is the process.
+- **Prevent:** every dedupe, latch or "already logged" flag on a `Reuse.Singleton` gets a reset at the session or mission boundary and a test that the second run logs again (`ResetDiagnostics_ClearsTheDedupe_SoTheNextSpawnLogsAgain`).
+- **Source:** `docs/reviews/rca-career-perks-2026-09-17.md` finding 6, #613.

@@ -56,7 +56,11 @@ public static class PassiveEffectConsumers
         PassiveEffectType.Health,              // TaomCharacterStatsModel.MaxHitpoints (flat add)
         PassiveEffectType.PartyMovementSpeed,  // TaomPartySpeedModel
         PassiveEffectType.PartySpottingRange,  // TaomMapVisibilityModel.GetPartySpottingRange
-        PassiveEffectType.StealthBonus,        // TaomMapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange
+        PassiveEffectType.StealthBonus,        // TaomMapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange:
+                                               //   READ BY THE WRONG HOOK (#614). That method is the player spotting
+                                               //   others; the player's party is never its argument, so the 49 pips
+                                               //   are phantoms in practice. Kept here so the shipped-XML gate stays
+                                               //   green until the replan; the fourth instance of the blind spot above.
         PassiveEffectType.PartySize,           // TaomPartySizeModel
         PassiveEffectType.CompanionLimit,      // TaomClanTierModel
         PassiveEffectType.TroopMorale,         // TaomPartyMoraleModel

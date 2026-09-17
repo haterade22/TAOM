@@ -146,7 +146,7 @@ public class CareerPassiveService : ICareerPassiveService
         // entries carry both bits, so they apply to any hit).
         var total = 0f;
         foreach (var entry in byMask)
-            if ((entry.Key & hitMask) != AttackTypeMask.None)
+            if (AttackTypeMaskMatch.Matches(entry.Key, hitMask))
                 total += entry.Value;
         return total;
     }
@@ -168,7 +168,15 @@ public class CareerPassiveService : ICareerPassiveService
         if (string.IsNullOrEmpty(heroStringId)) return;
         var magnitude = GetPassiveMagnitude(heroStringId, type);
         if (magnitude != 0f)
+        {
+            var before = result.ResultNumber;
             result.AddFactor(magnitude, CareerText);
+            // #613: the event-scoped types (a battle end, an upgrade, a daily tick) get a line; the
+            // per-tick ones (speed, morale, wages, range) are read off their ExplainedNumber by
+            // taom.career_perks instead, a line per tick would drown the log.
+            if (Diagnostics.CareerPerkLogPolicy.IsEventScoped(type))
+                _logger.LogInfo($"[CareerPerks] {type} {(magnitude >= 0f ? "+" : "")}{magnitude * 100f:0.#}% for '{heroStringId}': {before:0.##} -> {result.ResultNumber:0.##}");
+        }
     }
 
     public void ApplyFlat(string heroStringId, ref ExplainedNumber result, PassiveEffectType type)

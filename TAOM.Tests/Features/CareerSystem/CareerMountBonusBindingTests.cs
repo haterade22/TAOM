@@ -78,6 +78,38 @@ public class CareerMountBonusBindingTests
         CollectionAssert.IsSubsetOf(new[] { "set_MountSpeed", "set_MountChargeDamage" }, names, "ApplyMountBuff no longer writes both mount properties.");
     }
 
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void AmmoRefill_RidesInitializeMissionEquipment_AndRaisesTheMaxWithTheAmount()
+    {
+        // #613: vanilla's own extra-ammo perks (Deep Quivers, Fletcher, Well Prepared) run in
+        // AgentStatCalculateModel.InitializeMissionEquipment, before the agent is built, through
+        // MissionEquipment.SetAmountOfSlot(slot, amount, addOverflowToMaxAmount: true), which raises
+        // the stack's max with the amount (SandboxAgentStatCalculateModel.cs:209). The engine treats
+        // ModifiedMaxAmount as the cap everywhere else (a pickup merges only up to it, Agent.cs:3496),
+        // so the old refill, Agent.SetWeaponAmountInSlot above an unchanged max after build, could
+        // not be trusted for a full stack. And IsAnyConsumable, not IsAnyAmmo: IsAmmo is "consumable
+        // and not a weapon", so a javelin stack was skipped and nine Ammo pips did nothing.
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var modelType = typeof(TAOM.IoC).Assembly.GetType(CampaignModel, throwOnError: true);
+        var init = AccessTools.Method(modelType, "InitializeMissionEquipment", new[] { typeof(Agent) });
+        Assert.IsNotNull(init, "TaomAgentStatCalculateModel.InitializeMissionEquipment is gone; the ammo passive has no seam.");
+        Assert.IsTrue(Called(init!).Any(m => m.DeclaringType == typeof(CareerAmmoApplier) && m.Name == nameof(CareerAmmoApplier.Apply)),
+            "InitializeMissionEquipment no longer calls CareerAmmoApplier.Apply.");
+
+        var apply = AccessTools.Method(typeof(CareerAmmoApplier), nameof(CareerAmmoApplier.Apply));
+        var names = Called(apply!).Select(m => m.Name).ToList();
+        CollectionAssert.Contains(names, "IsAnyConsumable", "the refill no longer gates on MissionWeapon.IsAnyConsumable.");
+        CollectionAssert.Contains(names, "SetAmountOfSlot", "the refill no longer goes through MissionEquipment.SetAmountOfSlot (which raises the max).");
+        CollectionAssert.DoesNotContain(names, "IsAnyAmmo", "the refill is back on IsAnyAmmo, which skips thrown weapons.");
+        CollectionAssert.DoesNotContain(names, "SetWeaponAmountInSlot", "the refill is back on Agent.SetWeaponAmountInSlot, which leaves the max where it was.");
+
+        var build = AccessTools.DeclaredMethod(typeof(TAOM.Features.CareerSystem.CareerPerkMissionBehavior), "OnAgentBuild");
+        Assert.IsNull(build, "CareerPerkMissionBehavior.OnAgentBuild is back; the ammo refill would apply twice.");
+    }
+
     private static MethodBase[] Called(MethodBase method)
     {
         var il = method.GetMethodBody()?.GetILAsByteArray();
