@@ -119,12 +119,12 @@ directly, and vanilla rein/harness systems (`horse_harness_rein_skel`) work unmo
 | `monster_usage_sets.xml` | upstream-pack `chariot` usage set verbatim |
 | `action_sets.xslt` | `act_chariot_*` → `chariot_rider_*` rows injected into `as_human_warrior` (rider STANDS; same mechanism as the elephant block) + 4 mount actions → `chariot_mount_rider_from_right` |
 | `monster_usage_sets.xslt` | `mount_id="chariot"`: 6 mountings (chariot mount actions + vanilla horse dismounts), 8 falls + 8 strikes (vanilla `act_fall_rider_*`/`act_rider_only_fall_*`) |
-| `LOTRLOME_items/LOTRAOM_horses.xml` | `taom_chariot_a`: mesh `chariot_horse_brown` (a single mesh with BOTH horses, 54 active bones — the per-horse split was reverted, see above); AdditionalMeshes = mane + `chariot_harness_e_rein` + `chariot_ride` (NOT `chariot_ride_alt` — dead texture refs in the upstream pack itself); maneuver 25 / speed 55 / charge 200; `is_merchandise=false` |
+| `LOTRLOME_items/LOTRAOM_horses.xml` | `taom_chariot_a`: mesh `chariot_horse_brown` (a single mesh with BOTH horses, 54 active bones — the per-horse split was reverted, see above); AdditionalMeshes = mane + `chariot_harness_e_rein` + `chariot_ride` (NOT `chariot_ride_alt` — dead texture refs in the upstream pack itself); maneuver 25 / speed 70 / charge 80 (speed 55 / charge 90 until #615, 2026-09-17); `is_merchandise=false` |
 
 ## Configuration
 
 No JSON/MCM config and no C#. Tuning lives in the item (`taom_chariot_a` Horse params: maneuver 25,
-speed 55, charge 200, riding difficulty 120) and the Monster XML.
+speed 70, charge 80 since #615, riding difficulty 120) and the Monster XML.
 
 ## Key Files
 

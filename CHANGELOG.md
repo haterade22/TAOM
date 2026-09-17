@@ -4,6 +4,37 @@
 
 ## 2026-09-17
 
+### balance(mounts): the ten creature mounts get speed, maneuver and charge retuned (#615)
+
+**Why.** The mount ledger pulled today put every TAOM creature below the vanilla horses TAOM
+cavalry actually rides (`charger` 48, `noble_horse_southern` 68): wargs 48 to 50, rams 42, the
+spider 40, the elephant 10, the mumakil 5. The engine's `UpdateHorseStats` makes that
+`0.22 x (speed + 2)` m/s, so a warg ran level with a plain charger and a full three metres a
+second behind the noble horses. Mike set the new numbers.
+
+**What.** Item stats only, in the live Armory's `LOTRLOME_items/LOTRAOM_horses.xml` and the
+same hunk in the `lotraom-assets` v1.5 mirror (byte-identical before and after). No C#.
+
+| id | speed | maneuver | charge | was |
+|---|---|---|---|---|
+| taom_chariot_a | 70 | 25 | 80 | 55 / 25 / 90 |
+| fell_warg | 65 | 80 | 20 | 50 / 72 / 9 |
+| warg_albino | 60 | 75 | 18 | 48 / 70 / 8 |
+| warg_dark | 57 | 73 | 16 | 48 / 70 / 6 |
+| warg_brown | 55 | 70 | 15 | 48 / 70 / 6 |
+| taom_war_ram_a | 55 | 80 | 40 | 42 / 75 / 18 |
+| taom_war_ram_b | 53 | 75 | 40 | 42 / 75 / 18 |
+| spider_mount_a | 65 | 85 | 15 | 40 / 80 / 20 |
+| taom_war_elephant | 30 | 10 | 125 | 10 / 10 / 125 |
+| taom_mumakil | 20 | 5 | 200 | 5 / 5 / 200 |
+
+The chariot at 70 is now the fastest mount in the game. `charge_damage` is the base: #610's
+`IChargeDamageService` still multiplies it by the rider's culture (orc kingdoms 1.2, Erebor 1.0),
+so a warg under an Isengard rider lands at 18. `body_length`, `extra_health` and the rest are
+untouched. `docs/features/spider.md` and `chariot.md` stat lines updated (the spider line had
+been stale since before this change). Nothing pins these values: `audit_mount_parity.py` reads
+Monster attributes, not the item. Owed: a Custom Battle smoke, a warg line beside a charger line.
+
 ### fix(career): the cavalry mount bonuses reach the mount (#611)
 
 **Why.** Found under #610 while establishing which agent the engine reads `MountChargeDamage`
