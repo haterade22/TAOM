@@ -20,39 +20,18 @@ internal static class WallStances
         }
     }
 
-    /// <summary>Reads the engine's 2 s cached charge query and, whatever it says, every enemy
-    /// cavalry formation's velocity against us (<see cref="CavalryThreat"/>, facing-independent);
-    /// stamps the signal time and answers whether the square must be held this tick. The scan is
-    /// O(enemy formations) over cached positions and velocities, once per active tick.</summary>
-    public static bool Braced(Formation formation, ref float lastChargeSignalTime)
+    /// <summary>Stamps the signal time while <paramref name="cavalryThreat"/> (from
+    /// <see cref="EnemyScan.Pick"/>: a horse formation riding at us inside
+    /// <c>CavalryMattersMetres</c>, facing-independent) and answers whether the square must be
+    /// held this tick: the signal plus <see cref="BraceDecision.BraceHoldSeconds"/>, so the wall
+    /// forms back up once the horse are past the distance. The engine's own
+    /// <c>IsUnderCavalryChargeFromFront</c> is not read: it has no distance and one formation.</summary>
+    public static bool Braced(bool cavalryThreat, ref float lastChargeSignalTime)
     {
         var now = Mission.Current.CurrentTime;
-        if (formation.QuerySystem.IsUnderCavalryChargeFromFront || AnyCavalryInbound(formation))
+        if (cavalryThreat)
             lastChargeSignalTime = now;
         return BraceDecision.BracedRecently(now, lastChargeSignalTime);
-    }
-
-    private static bool AnyCavalryInbound(Formation formation)
-    {
-        var team = formation.Team;
-        var ours = formation.CachedAveragePosition;
-        var teams = team.Mission.Teams;
-        for (var t = 0; t < teams.Count; t++)
-        {
-            var other = teams[t];
-            if (other == team || !other.IsEnemyOf(team))
-                continue;
-            var formations = other.FormationsIncludingEmpty;
-            for (var i = 0; i < formations.Count; i++)
-            {
-                var f = formations[i];
-                if (f.CountOfUnits <= 0 || !f.QuerySystem.IsCavalryFormation)
-                    continue;
-                if (CavalryThreat.IsInbound(ours, f.CachedMedianPosition.AsVec2, f.CachedCurrentVelocity))
-                    return true;
-            }
-        }
-        return false;
     }
 
     /// <summary>The formation's own ground as a world position, the way <c>BehaviorDefend</c>

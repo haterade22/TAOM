@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using TAOM.Features.CultureDoctrine.Doctrines;
+using TAOM.Features.CultureDoctrine.Domain;
+using TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -9,8 +11,13 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Tactics;
 /// <summary>
 /// Where a position-holding tactic (the Dwarven wall, the Elven ring) stands, decided the way a
 /// captain would: march to the navmesh high ground only if the foot can get there and form up
-/// before the enemy's foot arrives (<see cref="HighGroundRace"/>, cavalry not a racer), otherwise
-/// form where it stands. While marching the race is re-checked once a second and a lost race
+/// before the enemy's foot arrives (<see cref="HighGroundRace"/>, cavalry not a racer), and only
+/// when no enemy foot is already on us (<see cref="HighGroundRace.WorthGoing"/>,
+/// <see cref="EngagementTunables"/>), otherwise form where it stands. The ground itself is the
+/// best slope toward the enemy INSIDE the cap (<see cref="HighGroundOf"/>): the engine's own
+/// query searches a square scaled to half the distance to the enemy, which at deployment range
+/// names a hill 150 m away and never the knoll 30 m off; horse do not end a march, the wall
+/// squares up against them where it is. While marching the race is re-checked once a second and a lost race
 /// turns into a hold on the spot; once arrived, or once the closest enemy is inside
 /// <c>BehaviorHoldHighGround</c>'s lock radius (<c>max(0.8 * archers' missile range, 30 m)</c>,
 /// `BehaviorHoldHighGround.cs:35-46`), the position is locked for good. One instance per tactic,
@@ -42,7 +49,7 @@ public sealed class HighGroundAnchor
     /// <paramref name="anchor"/> is the formation whose high ground is meant (the archers for a
     /// ring, the infantry for a wall); <paramref name="infantry"/> is the formation that must
     /// get there.</summary>
-    public WorldPosition Resolve(Formation infantry, Formation anchor, Formation? archers, Team team, in RaceTunables race)
+    public WorldPosition Resolve(Formation infantry, Formation anchor, Formation? archers, Team team, in RaceTunables race, in EngagementTunables engagement)
     {
         if (_for != infantry)
         {
@@ -52,12 +59,12 @@ public sealed class HighGroundAnchor
         switch (_state)
         {
             case State.Undecided:
-                Decide(infantry, HighGroundOf(anchor), team, in race);
+                Decide(infantry, HighGroundOf(anchor, in engagement), team, in race, in engagement);
                 break;
             case State.Marching:
                 // Still tracking the high ground while the enemy is far, as BehaviorHoldHighGround does.
                 if (EnemyBeyondLockRadius(infantry, archers))
-                    Decide(infantry, HighGroundOf(anchor), team, in race);
+                    Decide(infantry, HighGroundOf(anchor, in engagement), team, in race, in engagement);
                 break;
         }
         return _position;
@@ -65,7 +72,7 @@ public sealed class HighGroundAnchor
 
     /// <summary>Once a second while marching: true when the race is now lost and the plan must
     /// re-apply with the hold position this returns through <see cref="Resolve"/>.</summary>
-    public bool Tick(Formation infantry, Team team, in RaceTunables race)
+    public bool Tick(Formation infantry, Team team, in RaceTunables race, in EngagementTunables engagement)
     {
         if (_state != State.Marching || _for != infantry)
             return false;
@@ -74,16 +81,16 @@ public sealed class HighGroundAnchor
             _state = State.Arrived;
             return false;
         }
-        if (RaceWinnable(infantry, _position.AsVec2, team, in race))
+        if (Worth(infantry, _position.AsVec2, in engagement) && RaceWinnable(infantry, _position.AsVec2, team, in race))
             return false;
         _state = State.Holding;
         _position = Here(infantry);
         return true;
     }
 
-    private void Decide(Formation infantry, WorldPosition ground, Team team, in RaceTunables race)
+    private void Decide(Formation infantry, WorldPosition ground, Team team, in RaceTunables race, in EngagementTunables engagement)
     {
-        if (RaceWinnable(infantry, ground.AsVec2, team, in race))
+        if (Worth(infantry, ground.AsVec2, in engagement) && RaceWinnable(infantry, ground.AsVec2, team, in race))
         {
             _state = State.Marching;
             _position = ground;
@@ -95,6 +102,10 @@ public sealed class HighGroundAnchor
         }
     }
 
+    // The ground is inside the cap and no enemy foot is on us yet.
+    private static bool Worth(Formation infantry, Vec2 target, in EngagementTunables engagement) =>
+        HighGroundRace.WorthGoing(infantry.CachedAveragePosition.Distance(target), EnemyScan.ClosestFootDistance(infantry), in engagement);
+
     // Every enemy foot and archer formation's time to the target against ours plus form-up.
     private bool RaceWinnable(Formation infantry, Vec2 target, Team team, in RaceTunables race)
     {
@@ -105,7 +116,7 @@ public sealed class HighGroundAnchor
             var other = teams[t];
             if (other == team || !other.IsEnemyOf(team))
                 continue;
-            var formations = other.FormationsIncludingEmpty;
+            var formations = other.FormationsIncludingSpecialAndEmpty;
             for (var i = 0; i < formations.Count; i++)
             {
                 var f = formations[i];
@@ -130,12 +141,19 @@ public sealed class HighGroundAnchor
         return infantry.CachedAveragePosition.DistanceSquared(enemy.Formation.CachedMedianPosition.AsVec2) > radius * radius;
     }
 
-    /// <summary>The navmesh high ground a formation would hold, as a world position.</summary>
-    public static WorldPosition HighGroundOf(Formation formation)
+    /// <summary>The best slope toward the enemy inside the cap, as a world position: the
+    /// engine's own search (<c>Mission.FindPositionWithBiggestSlopeTowardsDirectionInSquare</c>,
+    /// what <c>HighGroundCloseToForeseenBattleGround</c> calls, `FormationQuerySystem.cs:637-643`)
+    /// on a square whose half-side is the cap over root two, so every candidate is inside it.
+    /// With no enemy in view the formation's own ground. Native, called at a phase apply only.</summary>
+    public static WorldPosition HighGroundOf(Formation formation, in EngagementTunables engagement)
     {
-        var position = formation.CachedMedianPosition;
-        position.SetVec2(formation.QuerySystem.HighGroundCloseToForeseenBattleGround);
-        return position;
+        var center = formation.CachedMedianPosition;
+        center.SetVec2(formation.CachedAveragePosition);
+        var reference = formation.QuerySystem.Team.MedianTargetFormationPosition;
+        if (!reference.IsValid)
+            return center;
+        return formation.Team.Mission.FindPositionWithBiggestSlopeTowardsDirectionInSquare(ref center, engagement.HighGroundMaxMetres * 0.7071f, ref reference);
     }
 
     private static WorldPosition Here(Formation formation)

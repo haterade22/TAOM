@@ -37,6 +37,10 @@ public enum BehaviorKind
     InfantrySkirmish,
     CycleCharge,
     EnvelopWing,
+
+    /// <summary>TAOM: a foot charge at the nearest enemy foot formation, braced against
+    /// horse (<c>BehaviorFootCharge</c>). Every foot row's charge.</summary>
+    FootCharge,
 }
 
 /// <summary>The formation slots a tactic assigns. <c>LeftCavalry</c>/<c>RightCavalry</c> exist

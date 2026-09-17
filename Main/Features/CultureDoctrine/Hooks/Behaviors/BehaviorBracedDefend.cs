@@ -10,8 +10,9 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 /// (`BehaviorDefend.cs`) with the anti-cavalry square from <see cref="BraceDecision"/>. Marches
 /// loosely to <see cref="DefensePosition"/> (or holds where it stands), faces the closest enemy,
 /// closes into ShieldWall on arrival (Line without shields, Loose under fire at a distance) and
-/// goes Square while <c>FormationQuerySystem.IsUnderCavalryChargeFromFront</c> reads true or read
-/// true in the last few seconds, holding its ground in the square. Arrangement is re-issued only
+/// goes Square while a horse formation rides at it inside <c>CavalryMattersMetres</c> or did in
+/// the last few seconds (<see cref="EnemyScan"/>), holding its ground in the square. It faces
+/// the nearest enemy FOOT formation (<see cref="TargetSelection"/>), or the horse while braced. Arrangement is re-issued only
 /// on a change of stance: <c>Formation.SetArrangementOrder</c> expires the query cache and
 /// recomputes the arrangement on every real change (`Formation.cs:744-772`). Weight 1, as
 /// <c>BehaviorDefend</c>.
@@ -26,6 +27,7 @@ public sealed class BehaviorBracedDefend : TaomBehaviorBase
     private WallStance _stance = WallStance.Loose;
     private bool _braced;
     private WorldPosition _bracePoint = WorldPosition.Invalid;
+    private Formation? _target;
 
     /// <summary>Set by the tactic before the plan is applied; invalid means "where you stand".</summary>
     public WorldPosition DefensePosition = WorldPosition.Invalid;
@@ -41,7 +43,7 @@ public sealed class BehaviorBracedDefend : TaomBehaviorBase
     protected override void Plan()
     {
         var formation = Formation;
-        var direction = Facing(formation);
+        var direction = Facing(formation, _braced ? formation.CachedClosestEnemyFormation?.Formation : _target != null && _target.CountOfUnits > 0 ? _target : null);
         var target = DefensePosition.IsValid ? DefensePosition : WallStances.Here(formation);
         // A braced wall does not walk in a square: it stands where the charge found it, on the
         // point taken when the brace began (the drifting average would creep the square).
@@ -56,6 +58,7 @@ public sealed class BehaviorBracedDefend : TaomBehaviorBase
         _lastChargeSignal = -1f;
         _braced = false;
         _bracePoint = WorldPosition.Invalid;
+        _target = null;
         _stance = WallStance.Loose;
         Formation.SetArrangementOrder(ArrangementOrder.ArrangementOrderLoose);
         Formation.SetFiringOrder(FiringOrder.FiringOrderFireAtWill);
@@ -67,7 +70,8 @@ public sealed class BehaviorBracedDefend : TaomBehaviorBase
     {
         var formation = Formation;
         var q = formation.QuerySystem;
-        var braced = WallStances.Braced(formation, ref _lastChargeSignal);
+        _target = EnemyScan.Pick(formation, Targets, in Engagement, _braced, out var cavalryThreat);
+        var braced = WallStances.Braced(cavalryThreat, ref _lastChargeSignal);
         if (braced && !_braced)
         {
             // Brace where the wall stands unless it is already at its position, which it keeps.
@@ -79,8 +83,8 @@ public sealed class BehaviorBracedDefend : TaomBehaviorBase
             _bracePoint = WorldPosition.Invalid;
         }
         _braced = braced;
-        var enemy = q.ClosestSignificantlyLargeEnemyFormation;
-        var enemyDistanceSquared = enemy == null ? float.MaxValue : WallStances.DistanceSquaredTo(formation, enemy.Formation.CachedMedianPosition.AsVec2);
+        var enemy = _target;
+        var enemyDistanceSquared = enemy == null ? float.MaxValue : WallStances.DistanceSquaredTo(formation, enemy.CachedMedianPosition.AsVec2);
         var situation = new WallSituation(
             atPosition: WallStances.DistanceSquaredTo(formation, CurrentOrder.GetPosition(formation)) < ArrivedDistanceSquared,
             hasShield: q.HasShield,
@@ -104,14 +108,13 @@ public sealed class BehaviorBracedDefend : TaomBehaviorBase
         DefensePosition = WorldPosition.Invalid;
     }
 
-    // BehaviorDefend's facing rule: toward the closest enemy unless the wall already faces it
-    // within 60 degrees, in which case its own direction, so the line does not twitch.
-    private static Vec2 Facing(Formation formation)
+    // BehaviorDefend's facing rule: toward the enemy unless the wall already faces it within
+    // 60 degrees, in which case its own direction, so the line does not twitch.
+    private static Vec2 Facing(Formation formation, Formation? enemy)
     {
-        var enemy = formation.CachedClosestEnemyFormation;
         if (enemy == null)
             return formation.Direction;
-        var toEnemy = enemy.Formation.CachedMedianPosition.AsVec2 - formation.CachedAveragePosition;
+        var toEnemy = enemy.CachedMedianPosition.AsVec2 - formation.CachedAveragePosition;
         if (!(toEnemy.LengthSquared > 1e-4f))
             return formation.Direction;
         var normalized = toEnemy.Normalized();

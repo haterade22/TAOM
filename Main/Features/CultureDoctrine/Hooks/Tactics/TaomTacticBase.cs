@@ -1,5 +1,7 @@
 using System;
 using TAOM.Features.CultureDoctrine.Doctrines;
+using TAOM.Features.CultureDoctrine.Domain;
+using TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -61,6 +63,11 @@ public abstract class TaomTacticBase : TacticComponent
     public DoctrinePlan Plan => _plan;
     public bool Failed => _failed;
     public string Status => _status;
+
+    /// <summary>The catalog's engagement distances, written once by the installer on the main
+    /// thread in <c>EarlyStart</c> before the team ticks, then read on the team-AI tick and
+    /// handed to every TAOM behaviour this tactic applies.</summary>
+    public EngagementTunables Engagement { get; internal set; } = EngagementTunables.Default;
 
     internal Formation? MainInfantry => _mainInfantry;
     internal Formation? SecondInfantry => _secondInfantry;
@@ -246,7 +253,7 @@ public abstract class TaomTacticBase : TacticComponent
     {
         var lead = _plan.Split == FormationSplit.OneOneOneOne ? _cavalry : _mainInfantry;
         var enemy = lead?.CachedClosestEnemyFormation;
-        if (enemy == null || lead!.AI.ActiveBehavior is BehaviorCharge || lead.AI.ActiveBehavior is BehaviorTacticalCharge)
+        if (enemy == null || lead!.AI.ActiveBehavior is BehaviorCharge || lead.AI.ActiveBehavior is BehaviorTacticalCharge || lead.AI.ActiveBehavior is BehaviorFootCharge)
             return true;
         var seconds = lead.CachedMedianPosition.AsVec2.Distance(enemy.Formation.CachedMedianPosition.AsVec2) / enemy.MovementSpeedMaximum;
         return seconds <= _plan.BattleJoinedSeconds + (_joined ? _plan.BattleJoinedSeconds : 0f);

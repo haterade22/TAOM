@@ -36,11 +36,11 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan ShieldWallDefender = new DoctrinePlan(
         "ShieldWallDefender", FormationSplit.OneOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 5f,
         defend: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.FootCharge, 0.3f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.SkirmishLine, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.TacticalCharge, 0.6f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.FootCharge, 1f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.Skirmish, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()));
 
@@ -50,11 +50,11 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan ShieldWallAttacker = new DoctrinePlan(
         "ShieldWallAttacker", FormationSplit.OneOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 5f,
         defend: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedAdvance, 1f), W(BehaviorKind.TacticalCharge, 0.5f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedAdvance, 1f), W(BehaviorKind.FootCharge, 0.5f)),
             ScreenedArchers(),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedAdvance, 1f), W(BehaviorKind.TacticalCharge, 0.8f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedAdvance, 1f), W(BehaviorKind.FootCharge, 1f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.ScreenedSkirmish, 1f), W(BehaviorKind.Skirmish, 1f)),
             new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.ProtectFlank, 1f), W(BehaviorKind.CavalryScreen, 1f), W(BehaviorKind.Flank, 0.5f)),
             new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.ProtectFlank, 1f), W(BehaviorKind.CavalryScreen, 1f), W(BehaviorKind.Flank, 0.5f)),
@@ -66,13 +66,13 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan TwoLineWall = new DoctrinePlan(
         "TwoLineWall", FormationSplit.TwoOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 5f,
         defend: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),
-            new FormationPlan(FormationRole.SecondInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.TacticalCharge, 0.2f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.FootCharge, 0.3f)),
+            new FormationPlan(FormationRole.SecondInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.FootCharge, 0.2f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.SkirmishLine, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.TacticalCharge, 0.6f)),
-            new FormationPlan(FormationRole.SecondInfantry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.BracedDefend, 0.5f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.BracedDefend, 1f), W(BehaviorKind.FootCharge, 1f)),
+            new FormationPlan(FormationRole.SecondInfantry, W(BehaviorKind.FootCharge, 1f), W(BehaviorKind.BracedDefend, 0.5f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.Skirmish, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()));
 
@@ -85,7 +85,7 @@ public static class DoctrinePlans
         engage: Engaged());
 
     private static PhasePlan Engaged() => new PhasePlan(
-        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Charge, 1.5f), W(BehaviorKind.TacticalCharge, 1f)),
+        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.FootCharge, 1.5f)),
         new FormationPlan(FormationRole.Archers, W(BehaviorKind.Skirmish, 1f), W(BehaviorKind.Charge, 0.3f)),
         new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f)),
         new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f)),
@@ -100,9 +100,9 @@ public static class DoctrinePlans
         engage: Enveloping());
 
     private static PhasePlan Enveloping() => new PhasePlan(
-        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.TacticalCharge, 1f)),
-        new FormationPlan(FormationRole.LeftWing, W(BehaviorKind.EnvelopWing, 1f), W(BehaviorKind.TacticalCharge, 0.5f)),
-        new FormationPlan(FormationRole.RightWing, W(BehaviorKind.EnvelopWing, 1f), W(BehaviorKind.TacticalCharge, 0.5f)),
+        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.FootCharge, 1f)),
+        new FormationPlan(FormationRole.LeftWing, W(BehaviorKind.EnvelopWing, 1f), W(BehaviorKind.FootCharge, 0.5f)),
+        new FormationPlan(FormationRole.RightWing, W(BehaviorKind.EnvelopWing, 1f), W(BehaviorKind.FootCharge, 0.5f)),
         new FormationPlan(FormationRole.Archers, W(BehaviorKind.Skirmish, 1f), W(BehaviorKind.Charge, 0.3f)),
         new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f)),
         new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f)),
@@ -119,7 +119,7 @@ public static class DoctrinePlans
             new FormationPlan(FormationRole.Cavalry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.Vanguard, 1f)),
             HorseArchers()),
         engage: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.TacticalCharge, 1f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.FootCharge, 1f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.ScreenedSkirmish, 1f), W(BehaviorKind.Skirmish, 1f)),
             new FormationPlan(FormationRole.Cavalry, W(BehaviorKind.CycleCharge, 1.2f), W(BehaviorKind.TacticalCharge, 0.8f), W(BehaviorKind.Flank, 0.8f)),
             HorseArchers()));
@@ -130,11 +130,11 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan EoredScreen = new DoctrinePlan(
         "EoredScreen", FormationSplit.OneOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 7f,
         defend: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Defend, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Defend, 1f), W(BehaviorKind.FootCharge, 0.3f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.SkirmishLine, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Defend, 1f), W(BehaviorKind.TacticalCharge, 0.7f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Defend, 1f), W(BehaviorKind.FootCharge, 1f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.Skirmish, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.CycleCharge, 1.2f), W(BehaviorKind.Flank, 0.8f), W(BehaviorKind.ProtectFlank, 0.5f)),
             new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.CycleCharge, 1.2f), W(BehaviorKind.Flank, 0.8f), W(BehaviorKind.ProtectFlank, 0.5f)),
@@ -154,7 +154,7 @@ public static class DoctrinePlans
         volley: ElvenVolley);
 
     private static PhasePlan Ring() => new PhasePlan(
-        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.DefensiveRing, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),
+        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.DefensiveRing, 1f), W(BehaviorKind.FootCharge, 0.3f)),
         new FormationPlan(FormationRole.Archers, W(BehaviorKind.FireFromInfantryCover, 1f), W(BehaviorKind.Skirmish, 0.5f)),
         FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers());
 
@@ -169,7 +169,7 @@ public static class DoctrinePlans
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.SkirmishLine, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.TacticalCharge, 0.7f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.FootCharge, 1f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.ScreenedSkirmish, 1f), W(BehaviorKind.Skirmish, 1f)),
             new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.ProtectFlank, 1f), W(BehaviorKind.CavalryScreen, 1f), W(BehaviorKind.Flank, 0.7f)),
             new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.ProtectFlank, 1f), W(BehaviorKind.CavalryScreen, 1f), W(BehaviorKind.Flank, 0.7f)),
@@ -184,7 +184,7 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan DisciplinedLineDefender = new DoctrinePlan(
         "DisciplinedLineDefender", FormationSplit.OneOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 5f,
         defend: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Defend, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Defend, 1f), W(BehaviorKind.FootCharge, 0.3f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.SkirmishLine, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: DisciplinedEngage());
@@ -194,13 +194,13 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan DisciplinedLineAttacker = new DoctrinePlan(
         "DisciplinedLineAttacker", FormationSplit.OneOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 5f,
         defend: new PhasePlan(
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.CautiousAdvance, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.CautiousAdvance, 1f), W(BehaviorKind.FootCharge, 0.3f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.SkirmishLine, 1f), W(BehaviorKind.ScreenedSkirmish, 1f)),
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: DisciplinedEngage());
 
     private static PhasePlan DisciplinedEngage() => new PhasePlan(
-        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.TacticalCharge, 0.8f), W(BehaviorKind.Defend, 0.5f)),
+        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.FootCharge, 1f), W(BehaviorKind.Defend, 0.5f)),
         new FormationPlan(FormationRole.Archers, W(BehaviorKind.ScreenedSkirmish, 1f), W(BehaviorKind.Skirmish, 1f)),
         new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f), W(BehaviorKind.ProtectFlank, 0.5f)),
         new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f), W(BehaviorKind.ProtectFlank, 0.5f)),
@@ -216,7 +216,7 @@ public static class DoctrinePlans
         engage: Raiding());
 
     private static PhasePlan Raiding() => new PhasePlan(
-        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.InfantrySkirmish, 1f), W(BehaviorKind.TacticalCharge, 0.7f), W(BehaviorKind.Advance, 0.5f)),
+        new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.InfantrySkirmish, 1f), W(BehaviorKind.FootCharge, 0.7f), W(BehaviorKind.Advance, 0.5f)),
         new FormationPlan(FormationRole.Archers, W(BehaviorKind.Skirmish, 1f), W(BehaviorKind.ScreenedSkirmish, 0.5f)),
         new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.Flank, 1f), W(BehaviorKind.TacticalCharge, 0.8f)),
         new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.Flank, 1f), W(BehaviorKind.TacticalCharge, 0.8f)),
@@ -234,7 +234,7 @@ public static class DoctrinePlans
             FlankGuard(FormationRole.LeftCavalry), FlankGuard(FormationRole.RightCavalry), HorseArchers()),
         engage: new PhasePlan(
             new FormationPlan(FormationRole.Vanguard, W(BehaviorKind.TacticalCharge, 1.2f), W(BehaviorKind.Charge, 1f)),
-            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.TacticalCharge, 1f)),
+            new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.Advance, 1f), W(BehaviorKind.FootCharge, 1f)),
             new FormationPlan(FormationRole.Archers, W(BehaviorKind.ScreenedSkirmish, 1f), W(BehaviorKind.Skirmish, 1f)),
             new FormationPlan(FormationRole.LeftCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f)),
             new FormationPlan(FormationRole.RightCavalry, W(BehaviorKind.TacticalCharge, 1f), W(BehaviorKind.Flank, 1f)),

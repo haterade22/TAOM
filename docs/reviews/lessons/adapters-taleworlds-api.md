@@ -500,3 +500,15 @@ To decide which parties count toward the player's ally team, the doctrine used `
 - **Why missed:** "vanilla wrote it" stood in for "vanilla ran it". Each constant was checked against its source line; the two were never checked against each other.
 - **Prevent:** when lifting a machine from a path the engine does not exercise for your case, write the invariant between its constants (here: the floor exceeds the contact threshold) as a test before the first battle, and prefer a derived threshold (half the stop distance) to a second absolute.
 - **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 3, #608.
+
+### `Team.FormationsIncludingEmpty` is eight slots; the engine's own enemy walks use the ten of `FormationsIncludingSpecialAndEmpty`
+`Team.Initialize` builds ten formations (`Team.cs:279-290`): eight regular classes in `FormationsIncludingEmpty` plus General (8) and Bodyguard (9) only in `FormationsIncludingSpecialAndEmpty`. `Formation.CacheClosestEnemyFormation` (`Formation.cs:1496-1519`) and `TeamQuerySystem.MedianTargetFormation` walk the ten; `GeneralsAndCaptainsAssignmentLogic` fills the bodyguard in an ordinary field battle. A TAOM scan of enemy formations on the eight-slot list could not see a lord's mounted escort as a target or a threat.
+- **Why missed:** the tactic base uses the eight-slot list for its OWN formations, as vanilla tactics do, and the name reads as "all of them".
+- **Prevent:** for anything that enumerates ENEMY formations, use the list the engine's own closest-enemy walk uses, and say so in the comment. Own-team splits and snapshots stay on the eight.
+- **Source:** `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md` finding 3 (engine and logic agents), #608.
+
+### A distance rule for a formation carries a time: check it against the form-up the response needs
+"Square up when horse come within X" was cut at 40 m. Horse cover 40 m in 3 to 4 s (`SandboxAgentStatCalculateModel.cs:1266-1271`); a line takes 8 to 12 s to become a square (the feature's own `RaceTunables`); vanilla's charge query fires at ETA < 15 s. The rule was right in shape and wrong by a factor of three, and a 3 s release under the same form-up time let a cycling eored flip the wall every 3.5 s.
+- **Why missed:** the number came from the picture of a charge in the log, not from the time the response takes.
+- **Prevent:** every distance threshold on a formation behaviour is written next to the speed that crosses it and the time the response needs, with the entry and exit at different distances (hysteresis) when the trigger can cycle. Read the engine's own threshold for the same decision first.
+- **Source:** `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md` finding 1 (logic agent), #608.

@@ -60,34 +60,53 @@ public static class BehaviorWeightApplier
                 case BehaviorKind.Retreat: ai.SetBehaviorWeight<BehaviorRetreat>(w); break;
                 case BehaviorKind.Stop: ai.SetBehaviorWeight<BehaviorStop>(w); break;
                 case BehaviorKind.BracedDefend:
-                    Ensure(formation, f => new BehaviorBracedDefend(f));
+                    Ensure(formation, f => new BehaviorBracedDefend(f), owner);
                     ai.SetBehaviorWeight<BehaviorBracedDefend>(w).DefensePosition = PositionFor(plan.Role, owner);
                     break;
                 case BehaviorKind.BracedAdvance:
-                    Ensure(formation, f => new BehaviorBracedAdvance(f));
+                    Ensure(formation, f => new BehaviorBracedAdvance(f), owner);
                     ai.SetBehaviorWeight<BehaviorBracedAdvance>(w);
                     break;
                 case BehaviorKind.InfantrySkirmish:
-                    Ensure(formation, f => new BehaviorInfantrySkirmish(f));
+                    Ensure(formation, f => new BehaviorInfantrySkirmish(f), owner);
                     ai.SetBehaviorWeight<BehaviorInfantrySkirmish>(w);
                     break;
                 case BehaviorKind.CycleCharge:
-                    Ensure(formation, f => new BehaviorCycleCharge(f));
+                    Ensure(formation, f => new BehaviorCycleCharge(f), owner);
                     ai.SetBehaviorWeight<BehaviorCycleCharge>(w);
                     break;
                 case BehaviorKind.EnvelopWing:
-                    Ensure(formation, f => new BehaviorEnvelopWing(f));
+                    Ensure(formation, f => new BehaviorEnvelopWing(f), owner);
                     ai.SetBehaviorWeight<BehaviorEnvelopWing>(w);
+                    break;
+                case BehaviorKind.FootCharge:
+                    Ensure(formation, f => new BehaviorFootCharge(f), owner);
+                    ai.SetBehaviorWeight<BehaviorFootCharge>(w);
+                    DisarmVanillaCharge(ai);
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(plan), weights[i].Kind, "no behaviour type for this kind");
             }
         }
     }
 
-    /// <summary>Adds the TAOM behaviour to the formation once. <c>GetBehavior&lt;T&gt;</c> is a
-    /// linear scan of the formation's list (24 entries plus ours), run once per row per apply.
-    /// A full scene reset (<c>Team.Reset</c>, a Custom Battle restart) rebuilds every
-    /// <c>FormationAI</c> and drops the instance with its stage; the next apply adds a fresh one.</summary>
+    /// <summary><c>SetDefaultBehaviorWeights</c> arms <c>BehaviorCharge</c> at 1 on every apply
+    /// (`TacticComponent.cs:581-587`), and it charges <c>CachedClosestEnemyFormation</c> of any
+    /// class; on a row that carries <c>FootCharge</c> it is the eored chase coming back through
+    /// the default row, so the row disarms it. <c>DoctrineSwitchInvariantTests</c> pins this.</summary>
+    private static void DisarmVanillaCharge(FormationAI ai) => ai.SetBehaviorWeight<BehaviorCharge>(0f);
+
+    /// <summary>Adds the TAOM behaviour to the formation once and hands it the owning tactic's
+    /// engagement distances. <c>GetBehavior&lt;T&gt;</c> is a linear scan of the formation's list
+    /// (24 entries plus ours), run once per row per apply. A full scene reset (<c>Team.Reset</c>,
+    /// a Custom Battle restart) rebuilds every <c>FormationAI</c> and drops the instance with its
+    /// stage; the next apply adds a fresh one.</summary>
+    public static T Ensure<T>(Formation formation, Func<Formation, T> create, TaomTacticBase owner) where T : TaomBehaviorBase
+    {
+        var behavior = Ensure(formation, create);
+        behavior.Engagement = owner.Engagement;
+        return behavior;
+    }
+
     public static T Ensure<T>(Formation formation, Func<Formation, T> create) where T : TaomBehaviorBase
     {
         var existing = formation.AI.GetBehavior<T>();

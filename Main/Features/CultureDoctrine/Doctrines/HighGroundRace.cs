@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Validation;
+using TAOM.Features.CultureDoctrine.Domain;
 
 namespace TAOM.Features.CultureDoctrine.Doctrines;
 
@@ -32,6 +33,22 @@ public readonly struct RaceTunables
 /// </summary>
 public static class HighGroundRace
 {
+    /// <summary>Is the high ground worth a march at all? A point beyond
+    /// <see cref="EngagementTunables.HighGroundMaxMetres"/> is a march the wall loses the
+    /// battle on (the anchor searches inside that cap, so this is a guard), and enemy FOOT
+    /// inside <see cref="EngagementTunables.HoldWhenEnemyWithinMetres"/> means the fight is
+    /// here (the first A/B: a wall still marching at 95 s with the enemy on it). Horse are not
+    /// passed in: a scout eored at 45 m must not end a march, the wall squares up against it
+    /// where it is. Asked before <see cref="Decide"/> and on every re-check; every comparison
+    /// is a positive requirement so a NaN holds, and no known foot (infinity) is decided by
+    /// the cap alone.</summary>
+    public static bool WorthGoing(float highGroundDistance, float closestEnemyFootDistance, in EngagementTunables tunables)
+    {
+        if (!(highGroundDistance <= tunables.HighGroundMaxMetres))
+            return false;
+        return closestEnemyFootDistance > tunables.HoldWhenEnemyWithinMetres;
+    }
+
     /// <summary>Seconds for a formation to cover <paramref name="distance"/> at
     /// <paramref name="speed"/>; infinite when it cannot move.</summary>
     public static float Eta(float distance, float speed)

@@ -38,7 +38,7 @@ public sealed class TaomTacticTwoLineWall : TaomTacticBase
             SecondLinePosition = WorldPosition.Invalid;
             return;
         }
-        var front = _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race);
+        var front = _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race, Engagement);
         DefensePosition = front;
         var toEnemy = Team.QuerySystem.AverageEnemyPosition - front.AsVec2;
         var facing = toEnemy.LengthSquared > 1e-4f ? toEnemy.Normalized() : infantry.Direction;
@@ -50,7 +50,7 @@ public sealed class TaomTacticTwoLineWall : TaomTacticBase
     protected override bool OnPhaseTick(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
+        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race, Engagement);
     }
 }
 
@@ -83,14 +83,14 @@ public sealed class TaomTacticDisciplinedLine : TaomTacticBase
     {
         var infantry = MainInfantry;
         DefensePosition = _defender && infantry != null
-            ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race)
+            ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race, Engagement)
             : WorldPosition.Invalid;
     }
 
     protected override bool OnPhaseTick(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        return phase == TacticPhase.Defend && _defender && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
+        return phase == TacticPhase.Defend && _defender && infantry != null && _anchor.Tick(infantry, Team, Plan.Race, Engagement);
     }
 }
 
@@ -120,13 +120,13 @@ public sealed class TaomTacticEoredScreen : TaomTacticBase
     protected override void BeforeApply(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        DefensePosition = infantry != null ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race) : WorldPosition.Invalid;
+        DefensePosition = infantry != null ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race, Engagement) : WorldPosition.Invalid;
     }
 
     protected override bool OnPhaseTick(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
+        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race, Engagement);
     }
 }
 

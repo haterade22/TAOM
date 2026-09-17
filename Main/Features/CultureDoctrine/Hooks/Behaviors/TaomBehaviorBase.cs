@@ -1,4 +1,6 @@
 using System;
+using TAOM.Features.CultureDoctrine.Doctrines;
+using TAOM.Features.CultureDoctrine.Domain;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.CultureDoctrine.Hooks.Behaviors;
@@ -32,6 +34,19 @@ public abstract class TaomBehaviorBase : BehaviorComponent
 {
     private volatile bool _failed;
     private volatile string _status = "";
+
+    /// <summary>The per-tick target choice of a foot behaviour (<see cref="EnemyScan.Pick"/>);
+    /// one per behaviour, refilled on the behaviour's own tick.</summary>
+    protected readonly TargetSelection Targets = new TargetSelection();
+
+    /// <summary>The engagement distances, written by <c>BehaviorWeightApplier</c> on the
+    /// team-AI tick each time a plan names this behaviour, before the behaviour's first tick on
+    /// that same call (<c>Team.Tick</c> runs <c>TeamAI.Tick</c> to completion, then every
+    /// formation's tick, sequentially, `Team.cs:585-623`); never written from anywhere else.
+    /// Which thread runs that call varies (the async AI thread in play, the main thread for
+    /// the one <c>Team.Tick(0)</c> of deployment), but writer and reader are always the same
+    /// call, so no two threads ever touch one behaviour's state at once.</summary>
+    public EngagementTunables Engagement = EngagementTunables.Default;
 
     protected TaomBehaviorBase(Formation formation)
         : base(formation)
@@ -99,10 +114,12 @@ public abstract class TaomBehaviorBase : BehaviorComponent
             return;
         try
         {
+            // Activate first: it resets the brace, target and stage fields a previous
+            // activation left behind, which the first Plan would otherwise push as an order.
+            Activate();
             Plan();
             Formation.SetMovementOrder(CurrentOrder);
             Formation.SetFacingOrder(CurrentFacingOrder);
-            Activate();
         }
         catch (Exception ex)
         {

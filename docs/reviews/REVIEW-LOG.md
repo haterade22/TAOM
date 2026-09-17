@@ -3234,7 +3234,32 @@ reopened); the re-dispatch prompt should now list the Phase C files. Full suite 
 fixes (count in the commit). Owed: the Custom Battle A/B with the eight new cells, the translator
 run for the twelve popup strings, closing #608.
 
-## Unlinked review artefacts (index)
+## Review 117: Culture doctrines, the engagement slice after the first A/B (#608), 6-agent deep review (2026-09-17)
+
+The first Custom Battle A/B (Erebor v Mordor, 300 v 300) ran clean and showed two things Mike
+called general: the wall marched 95 s to a far hill with the horse on it, and the foot chased
+every passing eored. The slice: a foot-first target rule (`TargetSelection`, `EnemyScan`,
+`BehaviorFootCharge`), a distance-gated cavalry brace, two high-ground gates, an `engagement`
+block, and the F6 popup rows (`str_formation_ai_behavior_text`, a third string table nobody had
+seeded). Mike: "Ensure you conduct a deep review".
+
+**Deep review, six agents (standards, engine fidelity on the installed v1.5.3, performance,
+completeness, data flow, adversarial battle logic on Opus):** standards 0 violations; engine
+21 members verified; performance no allocation; completeness complete. Thirteen findings, all
+fixed before the commit: the brace at 40 m fired three seconds before impact and released in 3 s,
+under the 8 to 12 s a square takes to form (HIGH; default 100 m, release at 1.5x); horse archers
+triggered the square; the scan and the race walked eight formation slots where vanilla walks ten
+(a lord's bodyguard invisible); a horse formation sitting in the melee stopped counting once its
+velocity fell; a lone rider re-formed a wall; a scout passing at 45 m ended a march for the
+battle; the engine's default `BehaviorCharge` stayed armed under every FootCharge row; the 60 m
+cap gated a point the engine picks from a square scaled to the enemy's distance (the slope search
+now runs inside the cap); the first plan after a re-activation ran on stale fields; the
+battle-joined test did not know FootCharge; two double walks; one guard; archers as "nearest
+foot". RCA [rca-culture-doctrine-engagement-2026-09-17.md](rca-culture-doctrine-engagement-2026-09-17.md);
+four lessons appended. Full suite green in an isolated worktree (the shared tree carried
+another session's mid-edit work). Codex: not dispatched. Owed: the second A/B with the new
+cells, the translator run, closing #608.
+
 
 Every file below is a real review artefact that nothing linked to, so the doc graph
 counted it as an orphan and no reader would ever have found it. Indexed here on

@@ -16,6 +16,7 @@ public sealed class BehaviorInfantrySkirmish : TaomBehaviorBase
     private const float PullBackClearance = 10f;
 
     private readonly InfantrySkirmishMachine _machine = new InfantrySkirmishMachine();
+    private Formation? _target;
 
     public BehaviorInfantrySkirmish(Formation formation)
         : base(formation)
@@ -38,7 +39,9 @@ public sealed class BehaviorInfantrySkirmish : TaomBehaviorBase
     protected override void Plan()
     {
         var formation = Formation;
-        var enemy = formation.QuerySystem.ClosestSignificantlyLargeEnemyFormation;
+        // The nearest enemy foot formation (TargetSelection): javelins are for the line that is
+        // coming, not for a passing eored.
+        var enemy = _target != null && _target.CountOfUnits > 0 ? _target : null;
         var position = formation.CachedMedianPosition;
         Vec2 facing;
         if (enemy == null)
@@ -48,16 +51,16 @@ public sealed class BehaviorInfantrySkirmish : TaomBehaviorBase
         }
         else
         {
-            var toEnemy = enemy.Formation.CachedMedianPosition.AsVec2 - formation.CachedAveragePosition;
+            var toEnemy = enemy.CachedMedianPosition.AsVec2 - formation.CachedAveragePosition;
             facing = toEnemy.LengthSquared > 1e-4f ? toEnemy.Normalized() : formation.Direction;
             switch (_machine.Stage)
             {
                 case SkirmishStage.Approaching:
-                    position = enemy.Formation.CachedMedianPosition;
-                    position.SetVec2(enemy.Formation.CachedAveragePosition);
+                    position = enemy.CachedMedianPosition;
+                    position.SetVec2(enemy.CachedAveragePosition);
                     break;
                 case SkirmishStage.PullingBack:
-                    position = enemy.Formation.CachedMedianPosition;
+                    position = enemy.CachedMedianPosition;
                     position.SetVec2(position.AsVec2 - facing * (formation.QuerySystem.MissileRangeAdjusted - formation.Depth * 0.5f - PullBackClearance));
                     break;
                 default:
@@ -87,18 +90,19 @@ public sealed class BehaviorInfantrySkirmish : TaomBehaviorBase
     {
         var formation = Formation;
         var q = formation.QuerySystem;
-        var enemy = q.ClosestSignificantlyLargeEnemyFormation;
+        _target = EnemyScan.Pick(formation, Targets, in Engagement, false, out _);
+        var enemy = _target;
         var distance = float.MaxValue;
         var enemyIsInfantry = false;
         if (enemy != null)
         {
             // BehaviorSkirmish's closing term: where the enemy will be 5 to 10 s from now.
-            var toEnemy = enemy.Formation.CachedMedianPosition.AsVec2 - formation.CachedAveragePosition;
+            var toEnemy = enemy.CachedMedianPosition.AsVec2 - formation.CachedAveragePosition;
             distance = toEnemy.Normalize();
-            var closing = enemy.Formation.CachedCurrentVelocity.DotProduct(toEnemy);
+            var closing = enemy.CachedCurrentVelocity.DotProduct(toEnemy);
             var count = formation.CountOfUnits < 10 ? 10f : formation.CountOfUnits > 60 ? 60f : formation.CountOfUnits;
             distance += (5f + 5f * (count - 10f) * 0.02f) * closing;
-            enemyIsInfantry = enemy.IsInfantryFormation;
+            enemyIsInfantry = enemy.QuerySystem.IsInfantryFormation;
         }
         var reading = new SkirmishReading(
             hasEnemy: enemy != null, distance: distance, maximumRange: q.MaximumMissileRange, rangeAdjusted: q.MissileRangeAdjusted,

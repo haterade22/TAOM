@@ -426,4 +426,45 @@ public class CultureDoctrineConfigProviderTests
         Assert.AreSame(first, second);
         _logger.Received(1).LogInfo(Arg.Is<string>(m => m.Contains("Loaded")));
     }
+
+    [TestMethod]
+    public void GetCatalog_NoEngagementBlock_UsesTheDefaults()
+    {
+        WriteConfig("{ \"enabled\": true, \"doctrines\": { " + ValidDefault + " } }");
+
+        var e = _sut.GetCatalog().Engagement;
+
+        Assert.AreEqual(EngagementTunables.Default.CavalryMattersMetres, e.CavalryMattersMetres);
+        Assert.AreEqual(EngagementTunables.Default.HighGroundMaxMetres, e.HighGroundMaxMetres);
+        Assert.AreEqual(EngagementTunables.Default.HoldWhenEnemyWithinMetres, e.HoldWhenEnemyWithinMetres);
+    }
+
+    [TestMethod]
+    public void GetCatalog_EngagementBlock_IsRead()
+    {
+        WriteConfig("{ \"enabled\": true, \"engagement\": { \"cavalryMattersMetres\": 30, \"highGroundMaxMetres\": 80, \"holdWhenEnemyWithinMetres\": 45 }, \"doctrines\": { " + ValidDefault + " } }");
+
+        var e = _sut.GetCatalog().Engagement;
+
+        Assert.AreEqual(30f, e.CavalryMattersMetres);
+        Assert.AreEqual(80f, e.HighGroundMaxMetres);
+        Assert.AreEqual(45f, e.HoldWhenEnemyWithinMetres);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetCatalog_EngagementOutOfRangeOrNaN_RevertsThatFieldAndWarns()
+    {
+        WriteConfig("{ \"enabled\": true, \"engagement\": { \"cavalryMattersMetres\": 1000, \"highGroundMaxMetres\": NaN, \"holdWhenEnemyWithinMetres\": -1 }, \"doctrines\": { " + ValidDefault + " } }");
+
+        var e = _sut.GetCatalog().Engagement;
+
+        Assert.AreEqual(EngagementTunables.Default.CavalryMattersMetres, e.CavalryMattersMetres);
+        Assert.AreEqual(EngagementTunables.Default.HighGroundMaxMetres, e.HighGroundMaxMetres);
+        Assert.AreEqual(EngagementTunables.Default.HoldWhenEnemyWithinMetres, e.HoldWhenEnemyWithinMetres);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("engagement.cavalryMattersMetres")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("engagement.highGroundMaxMetres")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("engagement.holdWhenEnemyWithinMetres")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("contained invalid values")));
+    }
 }

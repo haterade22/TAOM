@@ -16,8 +16,14 @@ public sealed class DoctrineCatalog
     private readonly Dictionary<string, Doctrine> _byCulture;
 
     public DoctrineCatalog(bool enabled, Doctrine @default, IEnumerable<Doctrine> cultures)
+        : this(enabled, @default, cultures, EngagementTunables.Default)
+    {
+    }
+
+    public DoctrineCatalog(bool enabled, Doctrine @default, IEnumerable<Doctrine> cultures, EngagementTunables engagement)
     {
         Enabled = enabled;
+        Engagement = engagement;
         Default = @default ?? throw new ArgumentNullException(nameof(@default));
         _byCulture = new Dictionary<string, Doctrine>(StringComparer.OrdinalIgnoreCase);
         HasFormationRouting = !Default.Formations.IsEmpty;
@@ -30,6 +36,9 @@ public sealed class DoctrineCatalog
 
     public bool Enabled { get; }
     public Doctrine Default { get; }
+
+    /// <summary>The engagement distances every tactic and foot behaviour is installed with.</summary>
+    public EngagementTunables Engagement { get; }
     public IReadOnlyCollection<string> CultureIds => _byCulture.Keys;
 
     /// <summary>Any doctrine routes a troop into a formation of its own; without one the

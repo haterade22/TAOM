@@ -997,3 +997,15 @@ The `[Doctrine]` status line, the only per-battle record of which tactic each te
 - **Why missed:** the sticky factor was in the test for the vanilla competition and treated as a vanilla concern; two TAOM tactics on one culture were a new shape.
 - **Prevent:** a variant that should win while its gate passes gets an edge above 1.5x (`GatedEdge`), and the ordering test has a TAOM-versus-TAOM section: for each pair on one culture, the intended winner at each canonical army beats the other by the sticky factor, and a closed gate is exactly 0.
 - **Source:** `docs/reviews/rca-culture-doctrine-phase-c-2026-09-17.md` finding 2 (logic agent), #608.
+
+### The rows a plan does not name are still armed: pin the applier's defaults, not only the plan
+`TacticComponent.SetDefaultBehaviorWeights` arms `BehaviorCharge`, `PullBack`, `Stop` and `Reserve` at weight 1 on every apply (`TacticComponent.cs:581-587`), before the plan's rows. `DoctrinePlansTests` proved no foot row named a vanilla chaser; the default `BehaviorCharge` (closest formation of any class) sat under every one of them and would have taken over the moment its weight beat the active TAOM behaviour.
+- **Why missed:** the plan tests read the plan; the applier's reset-then-default sequence is engine code the plan never mentions.
+- **Prevent:** when a TAOM row exists to REPLACE a vanilla behaviour, the applier zeroes the vanilla one in the same case, and an IL test on the applier pins the zero (`BehaviorWeightApplier_FootChargeRow_DisarmsTheEngineDefaultCharge`). A test on the data cannot see a default the engine applies.
+- **Source:** `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md` finding 7 (data-flow and logic agents), #608.
+
+### A rule written from an in-game observation is tested against the engine fact behind it, by an agent asked to break it
+The first A/B gave two observations ("they run to the hill", "they chase the horse") and the first cut answered each with a number that fit the picture: a 60 m cap on a point the engine picks in a square scaled to the enemy's distance, a march ended by "any enemy" inside 50 m, a 40 m brace. Each was pinned by a unit test of its own arithmetic and each was wrong in the battle: the engine's point is 150 m out at deployment range, a scout at 45 m ended the march for good, 40 m is three seconds.
+- **Why missed:** the tests proved the rule did what it said; nobody asked what the engine would feed it.
+- **Prevent:** for each rule that answers an observation, write the engine fact it depends on (which list, which query, which speed) beside it, and run the adversarial battle-logic pass (the agent asked to make the AI do something stupid) before the rule ships; the standards, engine-signature, performance and data-flow passes are not asked that question.
+- **Source:** `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md` findings 1, 6, 8, #608.

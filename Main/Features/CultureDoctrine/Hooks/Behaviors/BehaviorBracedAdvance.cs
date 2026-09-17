@@ -9,10 +9,11 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Behaviors;
 /// A wall on the march that braces against horse: <c>BehaviorAdvance</c>
 /// (`BehaviorAdvance.cs`) with the anti-cavalry square from <see cref="BraceDecision"/>. Walks
 /// in a line at the enemy's main body (its median plus half its depth, as vanilla), closes the
-/// shields inside vanilla's 10 to 80 m band under fire, and goes Square and stands while
-/// <c>IsUnderCavalryChargeFromFront</c> reads true or read true in the last few seconds; vanilla
-/// only stops and re-forms five metres on when the horse is 30 m out. Weight 1, as
-/// <c>BehaviorAdvance</c>.
+/// shields inside vanilla's 10 to 80 m band under fire, and goes Square and stands while a
+/// horse formation rides at it inside <c>CavalryMattersMetres</c> or did in the last few seconds
+/// (<see cref="EnemyScan"/>); vanilla only stops and re-forms five metres on when the horse is
+/// 30 m out. The main body it walks at is the nearest enemy FOOT formation
+/// (<see cref="TargetSelection"/>), never a passing eored. Weight 1, as <c>BehaviorAdvance</c>.
 /// </summary>
 public sealed class BehaviorBracedAdvance : TaomBehaviorBase
 {
@@ -27,6 +28,7 @@ public sealed class BehaviorBracedAdvance : TaomBehaviorBase
     private bool _braced;
     private bool _inShieldBand;
     private WorldPosition _bracePoint = WorldPosition.Invalid;
+    private Formation? _target;
 
     public BehaviorBracedAdvance(Formation formation)
         : base(formation)
@@ -47,14 +49,13 @@ public sealed class BehaviorBracedAdvance : TaomBehaviorBase
             CurrentFacingOrder = FacingOrder.FacingOrderLookAtEnemy;
             return;
         }
-        var target = formation.QuerySystem.ClosestSignificantlyLargeEnemyFormation ?? formation.QuerySystem.Team.MedianTargetFormation;
-        if (target == null)
+        var enemy = _target != null && _target.CountOfUnits > 0 ? _target : formation.QuerySystem.Team.MedianTargetFormation?.Formation;
+        if (enemy == null)
         {
             CurrentOrder = MovementOrder.MovementOrderMove(WallStances.Here(formation));
             CurrentFacingOrder = FacingOrder.FacingOrderLookAtEnemy;
             return;
         }
-        var enemy = target.Formation;
         var position = enemy.CachedMedianPosition;
         position.SetVec2(position.AsVec2 + enemy.Direction * enemy.Depth * 0.5f);
         var toEnemy = position.AsVec2 - formation.CachedAveragePosition;
@@ -70,6 +71,7 @@ public sealed class BehaviorBracedAdvance : TaomBehaviorBase
         _braced = false;
         _bracePoint = WorldPosition.Invalid;
         _inShieldBand = false;
+        _target = null;
         _stance = WallStance.Line;
         Formation.SetArrangementOrder(ArrangementOrder.ArrangementOrderLine);
         Formation.SetFiringOrder(FiringOrder.FiringOrderFireAtWill);
@@ -81,16 +83,17 @@ public sealed class BehaviorBracedAdvance : TaomBehaviorBase
     {
         var formation = Formation;
         var q = formation.QuerySystem;
-        var braced = WallStances.Braced(formation, ref _lastChargeSignal);
+        _target = EnemyScan.Pick(formation, Targets, in Engagement, _braced, out var cavalryThreat);
+        var braced = WallStances.Braced(cavalryThreat, ref _lastChargeSignal);
         if (braced && !_braced)
             _bracePoint = WallStances.Here(formation);
         else if (!braced)
             _bracePoint = WorldPosition.Invalid;
         _braced = braced;
-        var enemy = formation.CachedClosestEnemyFormation;
+        var enemy = _target;
         if (enemy != null)
         {
-            var d2 = WallStances.DistanceSquaredTo(formation, enemy.Formation.CachedMedianPosition.AsVec2);
+            var d2 = WallStances.DistanceSquaredTo(formation, enemy.CachedMedianPosition.AsVec2);
             _inShieldBand = d2 < ShieldBandFarSquared + (_inShieldBand ? ShieldBandFarHysteresisSquared : 0f)
                 && d2 > ShieldBandNearSquared - (_inShieldBand ? ShieldBandNearHysteresisSquared : 0f);
         }

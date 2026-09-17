@@ -60,6 +60,24 @@ public class DoctrineSwitchInvariantTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void BehaviorWeightApplier_FootChargeRow_DisarmsTheEngineDefaultCharge()
+    {
+        RequireGame();
+
+        // TacticComponent.SetDefaultBehaviorWeights arms BehaviorCharge at 1 on every apply
+        // (TacticComponent.cs:581-587), and it charges CachedClosestEnemyFormation of any class.
+        // A FootCharge row must zero it, or the eored chase comes back through the default row.
+        var apply = Body(typeof(BehaviorWeightApplier), nameof(BehaviorWeightApplier.Apply)).Select(i => i.Value as MethodInfo).Where(m => m != null).ToList();
+        var disarm = apply.SingleOrDefault(m => m!.Name == "DisarmVanillaCharge");
+        Assert.IsNotNull(disarm, "Apply no longer calls DisarmVanillaCharge");
+        var body = PatchProcessor.ReadMethodBody(disarm!).ToList();
+        var set = body.Select(i => i.Value as MethodInfo).SingleOrDefault(m => m != null && m.Name == "SetBehaviorWeight" && m.IsGenericMethod && m.GetGenericArguments()[0].Name == "BehaviorCharge");
+        Assert.IsNotNull(set, "DisarmVanillaCharge no longer writes BehaviorCharge's weight");
+        Assert.IsTrue(body.Any(i => i.Key == OpCodes.Ldc_R4 && i.Value is float f && f == 0f), "DisarmVanillaCharge must write 0");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void BehaviorWeightApplier_TargetsOnlyBehavioursTeamAIGeneralRegisters()
     {
         RequireGame();

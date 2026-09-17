@@ -61,26 +61,40 @@ formation, usually the nearest thing, became the target of a line that can never
 sometimes instead of the infantry in front of it.
 
 **Who a foot formation goes for.** `TargetSelection` (pure) fed by `EnemyScan` (one walk over
-every enemy team's formations with their 5 s class flags; exactly one of the four flags is true
-for a formation with units, `FormationQuerySystem.cs:440-445`): the target is the nearest enemy
-foot formation, infantry or archers; horse are a target only when no foot is left; horse are a
-threat only while riding at us (`CavalryThreat.IsInbound`) inside `cavalryMattersMetres`
-(40 m), and the line answers a threat by squaring up where it stands, never by turning; once
-the horse are past the distance the 3 s hold runs out and the line forms back up on its foot
-target. A new `BehaviorFootCharge` (`BehaviorCharge` with that target, braced against horse)
-replaces `BehaviorCharge` and `BehaviorTacticalCharge` in all 22 foot rows of the plans;
-`BehaviorBracedDefend`, `BehaviorBracedAdvance`, `BehaviorEnvelopWing` and
-`BehaviorInfantrySkirmish` pick the same way. The engine's `IsUnderCavalryChargeFromFront` is
-no longer read for the brace: it has no distance and sees one formation.
+every enemy team's ten formation slots, the general's and the bodyguard's included, as vanilla's
+own closest-enemy cache walks them, with their 5 s class flags; exactly one of the four flags is
+true for a formation with units, `FormationQuerySystem.cs:440-445`): the target is the nearest
+enemy infantry, or the nearest archers when no infantry stands within 1.5 times their distance
+(a retreating archer block is a slower eored chase); horse are a target only when no foot is
+left. Horse are a threat only when they are melee cavalry (horse archers wheel at range and
+never charge), a real formation (5 riders and a tenth of ours), and riding at us
+(`CavalryThreat.IsInbound`) or already among us (inside 15 m, velocity or not), inside
+`cavalryMattersMetres` (100 m, about the 8 to 12 s a line needs to become a square at horse
+speed; the review's first cut of 40 m was three seconds). The line answers a threat by squaring
+up where it stands, never by turning, and keeps the square until the horse are beyond 1.5 times
+the distance, so a cycling eored does not flip it. A new `BehaviorFootCharge`
+(`BehaviorCharge` with that target, braced against horse, weighed on vanilla's own infantry
+charge curve so the plan rows keep their meaning) replaces `BehaviorCharge` and
+`BehaviorTacticalCharge` in all 22 foot rows of the plans and zeroes the engine's default
+`BehaviorCharge` row on the way, which `SetDefaultBehaviorWeights` arms at 1 on every apply and
+which charges the closest formation of any class; the Engage rows sit at 1 so the charge can
+win once the walls are close and the target is busy elsewhere. `BehaviorBracedDefend`,
+`BehaviorBracedAdvance`, `BehaviorEnvelopWing` and `BehaviorInfantrySkirmish` pick the same
+way. The engine's `IsUnderCavalryChargeFromFront` is no longer read for the brace: it has no
+distance and sees one formation.
 
-**Stand and fight.** Two gates before the race is even run (`HighGroundRace.WorthGoing`): the
-navmesh high ground must be inside `highGroundMaxMetres` (60 m), and no enemy formation of any
-class may be inside `holdWhenEnemyWithinMetres` (50 m; horse are not racers, but horse on the
-wall end the march). Both are re-checked once a second while marching. The three distances are
-an `engagement` block in `culture_doctrines.json` (0 to 500 m, a bad or non-finite value
-reverts with a warning), read once into `DoctrineCatalog.Engagement`, handed to every TAOM
-tactic at install and to every TAOM behaviour by the applier, so Mike can retune without a
-build.
+**Stand and fight.** The ground is now the best slope toward the enemy INSIDE
+`highGroundMaxMetres` (60 m), from the engine's own search
+(`Mission.FindPositionWithBiggestSlopeTowardsDirectionInSquare`) on a square that fits the
+cap: the engine's `HighGroundCloseToForeseenBattleGround` searches a square scaled to half the
+distance to the enemy, which at deployment range named a hill 150 m away and never the knoll
+30 m off. One gate before the race (`HighGroundRace.WorthGoing`): no enemy foot formation
+inside `holdWhenEnemyWithinMetres` (50 m); horse do not end a march, the wall squares up
+against them where it is. Re-checked once a second while marching; `Holding` is terminal, a
+wall that formed where it stood does not later march off. The three distances are an
+`engagement` block in `culture_doctrines.json` (0 to 500 m, a bad or non-finite value reverts
+with a warning), read once into `DoctrineCatalog.Engagement`, handed to every TAOM tactic at
+install and to every TAOM behaviour by the applier, so Mike can retune without a build.
 
 **The F6 popup.** `Infantry, Archers: Delegate Command On` printed `ERROR: Text with id
 str_formation_ai_behavior_text doesn't exist! Variation: BehaviorBracedDefend`: the F6 message
@@ -90,11 +104,27 @@ and the sergeant-instruction tables were seeded. Six rows added in the vanilla s
 `DoctrinePopupStringsTests` pins all three tables per TAOM tactic and behaviour type by
 reflection, so a new behaviour cannot ship without its rows.
 
-Tests: `EngagementRulesTests` (foot-first pick, horse only when no foot, the 40 m threat gate
-both sides, NaN, the two high-ground gates), three config tests (absent block, read, out of
-range and NaN revert per field), three plan invariants (no foot row on a vanilla chaser,
-FootCharge only on foot, every engaging plan gives the main infantry a way to close),
-`DoctrinePopupStringsTests`. Also in the first battle's log, unrelated to this feature: one
+**Review.** Six agents on the slice before this commit (standards, engine fidelity on the
+installed v1.5.3, performance, completeness, data flow, and an adversarial battle-logic pass).
+Standards, performance (no allocation, microseconds per second) and completeness came back
+clean; the engine pass verified 21 members. Fixed from the logic and engine passes: the scan
+and the race walked the eight regular slots while vanilla walks ten (a lord's bodyguard was
+invisible); the 40 m trigger and 3 s release could flip a wall Square and back every 3.5 s
+against a cycling eored, under the time a square takes to form; horse archers triggered the
+square; a horse formation sitting in the melee stopped counting once its velocity fell; a lone
+rider re-formed a wall; a scout passing at 45 m ended a march for the battle; the engine's
+default `BehaviorCharge` stayed armed on every foot row and would have chased horse the moment
+it took over; the first plan after a re-activation ran on the previous activation's fields;
+the battle-joined test did not recognise FootCharge; the wing scanned twice a tick and the scan
+walked the enemy twice. RCA: `docs/reviews/rca-culture-doctrine-engagement-2026-09-17.md`.
+
+Tests: `EngagementRulesTests` (three target classes and the archers rule, the threat distance
+with its release factor, significance, contact, NaN, the single-walk invariant, the two
+high-ground gates, the charge curve against the sticky factor), three config tests (absent
+block, read, out of range and NaN revert per field), three plan invariants (no foot row on a
+vanilla chaser, FootCharge only on foot, every engaging plan gives the main infantry a way to
+close), an IL pin on the disarmed default charge, `DoctrinePopupStringsTests`. Also in the
+first battle's log, unrelated to this feature: one
 `BehaviorTreeMissionLogic.OnAgentShootMissile ran off the main mission thread` tripwire line
 (#592/#595), noted for later.
 

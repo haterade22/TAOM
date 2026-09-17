@@ -26,7 +26,9 @@ public sealed class BehaviorEnvelopWing : TaomBehaviorBase
 
     public bool IsCharging => _charging;
 
-    protected override float Weigh() => Target() == null ? 0f : 1f;
+    // Weighed on every formation tick, so the cheap engine question (is there any enemy)
+    // rather than the scan; the scan runs on the active tick and the plan.
+    protected override float Weigh() => Formation.CachedClosestEnemyFormation == null ? 0f : 1f;
 
     protected override void Plan()
     {
@@ -38,7 +40,7 @@ public sealed class BehaviorEnvelopWing : TaomBehaviorBase
             CurrentFacingOrder = FacingOrder.FacingOrderLookAtEnemy;
             return;
         }
-        var enemy = target.Formation;
+        var enemy = target;
         if (_charging)
         {
             CurrentOrder = MovementOrder.MovementOrderChargeToTarget(enemy);
@@ -57,6 +59,7 @@ public sealed class BehaviorEnvelopWing : TaomBehaviorBase
     protected override void Activate()
     {
         _charging = false;
+        _target = null;
         Formation.SetArrangementOrder(ArrangementOrder.ArrangementOrderLine);
         Formation.SetFiringOrder(FiringOrder.FiringOrderFireAtWill);
         Formation.SetFormOrder(FormOrder.FormOrderDeep);
@@ -65,13 +68,14 @@ public sealed class BehaviorEnvelopWing : TaomBehaviorBase
 
     protected override void OnActiveTick()
     {
+        _target = EnemyScan.Pick(Formation, Targets, in Engagement, false, out _);
         if (_charging)
             return;
         var formation = Formation;
         var target = Target();
         if (target == null)
             return;
-        var enemyPosition = target.Formation.CachedMedianPosition.AsVec2;
+        var enemyPosition = target.CachedMedianPosition.AsVec2;
         var toPoint = CurrentOrder.GetPosition(formation).Distance(formation.CachedAveragePosition);
         var toEnemy = enemyPosition.Distance(formation.CachedAveragePosition);
         if (EnvelopGeometry.ShouldCharge(toPoint, toEnemy))
@@ -83,6 +87,9 @@ public sealed class BehaviorEnvelopWing : TaomBehaviorBase
 
     private WingSide Side() => Formation.AI.Side == FormationAI.BehaviorSide.Left ? WingSide.Left : WingSide.Right;
 
-    private FormationQuerySystem? Target() =>
-        Formation.QuerySystem.ClosestSignificantlyLargeEnemyFormation ?? Formation.CachedClosestEnemyFormation;
+    // The nearest enemy foot formation (TargetSelection), scanned once per active tick; a wing
+    // never swings round horse, and it does not brace: it is the flank, not the wall.
+    private Formation? _target;
+
+    private Formation? Target() => _target != null && _target.CountOfUnits > 0 ? _target : null;
 }

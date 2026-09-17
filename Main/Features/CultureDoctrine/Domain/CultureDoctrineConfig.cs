@@ -18,7 +18,18 @@ public class CultureDoctrineConfig
 {
     public bool Enabled { get; set; } = true;
 
+    /// <summary>Absent means <see cref="EngagementTunables.Default"/>.</summary>
+    public EngagementConfig? Engagement { get; set; }
+
     public Dictionary<string, DoctrineConfig> Doctrines { get; set; } = new Dictionary<string, DoctrineConfig>();
+}
+
+/// <summary>The distances of <see cref="EngagementTunables"/>, one block for every culture.</summary>
+public class EngagementConfig
+{
+    public float CavalryMattersMetres { get; set; } = EngagementTunables.Default.CavalryMattersMetres;
+    public float HighGroundMaxMetres { get; set; } = EngagementTunables.Default.HighGroundMaxMetres;
+    public float HoldWhenEnemyWithinMetres { get; set; } = EngagementTunables.Default.HoldWhenEnemyWithinMetres;
 }
 
 public class DoctrineConfig

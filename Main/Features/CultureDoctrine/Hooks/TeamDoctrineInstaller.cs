@@ -35,7 +35,10 @@ public static class TeamDoctrineInstaller
         {
             team.AddTacticOption(tactics[i]);
             if (tactics[i] is TaomTacticBase taom)
+            {
+                taom.Engagement = catalog.Engagement;
                 taomTactics.Add(taom);
+            }
         }
         team.ResetTactic();
 

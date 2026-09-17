@@ -78,6 +78,7 @@ public sealed class CultureDoctrineConfigProvider : ICultureDoctrineConfigProvid
             return new DoctrineCatalog(parsed.Enabled, DoctrineCatalog.VanillaDefault(), Array.Empty<Doctrine>());
         }
 
+        var engagement = ValidateEngagement(parsed.Engagement, ref rejected);
         Doctrine? fallback = null;
         var cultures = new List<Doctrine>();
         foreach (var pair in parsed.Doctrines)
@@ -119,7 +120,27 @@ public sealed class CultureDoctrineConfigProvider : ICultureDoctrineConfigProvid
         else
             _logger.LogInfo($"CultureDoctrineConfigProvider: Loaded culture_doctrines.json ({cultures.Count} culture doctrine(s) plus default)");
 
-        return new DoctrineCatalog(parsed.Enabled, fallback, cultures);
+        return new DoctrineCatalog(parsed.Enabled, fallback, cultures, engagement);
+    }
+
+    private EngagementTunables ValidateEngagement(EngagementConfig? engagement, ref bool rejected)
+    {
+        if (engagement == null)
+            return EngagementTunables.Default;
+        var d = EngagementTunables.Default;
+        return new EngagementTunables(
+            Metres("cavalryMattersMetres", engagement.CavalryMattersMetres, d.CavalryMattersMetres, ref rejected),
+            Metres("highGroundMaxMetres", engagement.HighGroundMaxMetres, d.HighGroundMaxMetres, ref rejected),
+            Metres("holdWhenEnemyWithinMetres", engagement.HoldWhenEnemyWithinMetres, d.HoldWhenEnemyWithinMetres, ref rejected));
+    }
+
+    private float Metres(string name, float value, float fallback, ref bool rejected)
+    {
+        if (FiniteFloatValidator.IsFiniteInRange(value, EngagementTunables.MinMetres, EngagementTunables.MaxMetres))
+            return value;
+        _logger.LogWarning($"CultureDoctrineConfigProvider: engagement.{name} = {value} is not a finite value in [{EngagementTunables.MinMetres}, {EngagementTunables.MaxMetres}], reverting to {fallback}");
+        rejected = true;
+        return fallback;
     }
 
     private IReadOnlyList<TacticEntry> ValidateRows(string culture, List<TacticEntryConfig> rows, ref bool rejected)

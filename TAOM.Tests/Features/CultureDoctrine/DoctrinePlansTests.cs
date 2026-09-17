@@ -71,6 +71,45 @@ public class DoctrinePlansTests
                     Assert.IsTrue(Allowed(plan.Split, formation.Role), $"{plan.Name} ({plan.Split}) plans a {formation.Role} its split never fills");
     }
 
+    private static readonly FormationRole[] FootRoles =
+        { FormationRole.MainInfantry, FormationRole.SecondInfantry, FormationRole.LeftWing, FormationRole.RightWing };
+
+    [TestMethod]
+    public void EveryFootRow_ChargesThroughFootCharge_NeverAVanillaChaser()
+    {
+        // BehaviorCharge and BehaviorTacticalCharge run at CachedClosestEnemyFormation, whatever
+        // its class: the foot turned to chase every passing eored in the first A/B (2026-09-17).
+        foreach (var plan in All)
+            foreach (var phase in new[] { plan.Defend, plan.Engage })
+                foreach (var formation in phase.Formations.Where(f => FootRoles.Contains(f.Role)))
+                    foreach (var w in formation.Weights)
+                        Assert.IsFalse(w.Kind == BehaviorKind.Charge || w.Kind == BehaviorKind.TacticalCharge,
+                            $"{plan.Name} {formation.Role} charges through {w.Kind}; foot uses FootCharge");
+    }
+
+    [TestMethod]
+    public void FootCharge_IsPlannedOnlyForFoot()
+    {
+        foreach (var plan in All)
+            foreach (var phase in new[] { plan.Defend, plan.Engage })
+                foreach (var formation in phase.Formations.Where(f => !FootRoles.Contains(f.Role)))
+                    Assert.IsFalse(formation.Weights.Any(w => w.Kind == BehaviorKind.FootCharge), $"{plan.Name} {formation.Role} is not foot");
+    }
+
+    [TestMethod]
+    public void EveryPlanThatEngages_GivesTheMainInfantryAFootCharge()
+    {
+        // Once the plain wall breaks, the foot must still have a way to close on the enemy foot.
+        foreach (var plan in All)
+        {
+            var infantry = plan.Engage.Formations.SingleOrDefault(f => f.Role == FormationRole.MainInfantry);
+            if (infantry == null)
+                continue;
+            Assert.IsTrue(infantry.Weights.Any(w => w.Kind == BehaviorKind.FootCharge || w.Kind == BehaviorKind.BracedAdvance || w.Kind == BehaviorKind.InfantrySkirmish || w.Kind == BehaviorKind.Advance || w.Kind == BehaviorKind.CautiousAdvance),
+                plan.Name + " engages with no way for the foot to close");
+        }
+    }
+
     [TestMethod]
     public void EveryPlan_HasADistinctName()
     {
@@ -112,8 +151,9 @@ public class DoctrinePlansTests
         {
             var infantry = phase.Formations.Single(f => f.Role == FormationRole.MainInfantry);
             Assert.AreEqual(1f, infantry.Weights.Single(w => w.Kind == BehaviorKind.BracedDefend).Weight, "the wall is BracedDefend at the high ground (ShieldWall when HasShield, Square under horse)");
-            Assert.IsTrue(infantry.Weights.Single(w => w.Kind == BehaviorKind.TacticalCharge).Weight < 1f, "the wall counter-charges only when the engine's own weight is high");
-            Assert.IsFalse(infantry.Weights.Any(w => w.Kind == BehaviorKind.Charge), "no mob charge row");
+            var charge = infantry.Weights.Single(w => w.Kind == BehaviorKind.FootCharge).Weight;
+            Assert.IsTrue(phase == plan.Defend ? charge < 1f : charge == 1f, "the wall holds while the enemy comes on and counter-charges (at the enemy foot) only once joined, close, and the target is busy elsewhere");
+            Assert.IsFalse(infantry.Weights.Any(w => w.Kind == BehaviorKind.Charge || w.Kind == BehaviorKind.TacticalCharge), "no vanilla chaser row");
             foreach (var role in new[] { FormationRole.LeftCavalry, FormationRole.RightCavalry })
             {
                 var cavalry = phase.Formations.Single(f => f.Role == role);
@@ -134,7 +174,7 @@ public class DoctrinePlansTests
         var after = plan.Engage.Formations.Single(f => f.Role == FormationRole.MainInfantry);
         Assert.AreEqual(1f, before.Weights.Single(w => w.Kind == BehaviorKind.BracedAdvance).Weight, "BracedAdvance goes ShieldWall under fire when HasShield and Square under horse");
         Assert.IsFalse(before.Weights.Any(w => w.Kind == BehaviorKind.Charge));
-        Assert.IsTrue(after.Weights.Single(w => w.Kind == BehaviorKind.TacticalCharge).Weight > before.Weights.Single(w => w.Kind == BehaviorKind.TacticalCharge).Weight);
+        Assert.IsTrue(after.Weights.Single(w => w.Kind == BehaviorKind.FootCharge).Weight > before.Weights.Single(w => w.Kind == BehaviorKind.FootCharge).Weight);
     }
 
     [TestMethod]
@@ -144,8 +184,7 @@ public class DoctrinePlansTests
 
         Assert.IsTrue(plan.AlwaysEngaged, "no cautious phase: the horde comes on from the first tick");
         var infantry = plan.Engage.Formations.Single(f => f.Role == FormationRole.MainInfantry);
-        Assert.IsTrue(infantry.Weights.Any(w => w.Kind == BehaviorKind.Charge));
-        Assert.IsTrue(infantry.Weights.Any(w => w.Kind == BehaviorKind.TacticalCharge));
+        Assert.IsTrue(infantry.Weights.Single(w => w.Kind == BehaviorKind.FootCharge).Weight > 1f, "the mob's charge outranks every default row");
         Assert.IsFalse(infantry.Weights.Any(w => w.Kind == BehaviorKind.Defend || w.Kind == BehaviorKind.HoldHighGround));
     }
 
@@ -172,7 +211,7 @@ public class DoctrinePlansTests
         var before = plan.Defend.Formations.Single(f => f.Role == FormationRole.SecondInfantry);
         var after = plan.Engage.Formations.Single(f => f.Role == FormationRole.SecondInfantry);
         Assert.AreEqual(1f, before.Weights.Single(w => w.Kind == BehaviorKind.BracedDefend).Weight);
-        Assert.IsTrue(after.Weights.Single(w => w.Kind == BehaviorKind.TacticalCharge).Weight > after.Weights.Single(w => w.Kind == BehaviorKind.BracedDefend).Weight, "the reserve commits once joined");
+        Assert.IsTrue(after.Weights.Single(w => w.Kind == BehaviorKind.FootCharge).Weight > after.Weights.Single(w => w.Kind == BehaviorKind.BracedDefend).Weight, "the reserve commits once joined");
         Assert.AreEqual(1f, plan.Engage.Formations.Single(f => f.Role == FormationRole.MainInfantry).Weights.Single(w => w.Kind == BehaviorKind.BracedDefend).Weight, "the front still holds");
     }
 
@@ -186,7 +225,7 @@ public class DoctrinePlansTests
         foreach (var role in new[] { FormationRole.LeftWing, FormationRole.RightWing })
             Assert.AreEqual(1f, plan.Engage.Formations.Single(f => f.Role == role).Weights.Single(w => w.Kind == BehaviorKind.EnvelopWing).Weight);
         var centre = plan.Engage.Formations.Single(f => f.Role == FormationRole.MainInfantry);
-        Assert.IsTrue(centre.Weights.Any(w => w.Kind == BehaviorKind.Advance) && centre.Weights.Any(w => w.Kind == BehaviorKind.TacticalCharge));
+        Assert.IsTrue(centre.Weights.Any(w => w.Kind == BehaviorKind.Advance) && centre.Weights.Any(w => w.Kind == BehaviorKind.FootCharge));
         Assert.IsFalse(centre.Weights.Any(w => w.Kind == BehaviorKind.Charge), "the centre is a line, not the mob");
     }
 
@@ -225,7 +264,7 @@ public class DoctrinePlansTests
         var after = plan.Engage.Formations.Single(f => f.Role == FormationRole.MainInfantry);
         Assert.AreEqual(1f, before.Weights.Single(w => w.Kind == BehaviorKind.CautiousAdvance).Weight);
         Assert.IsTrue(plan.Defend.Formations.Single(f => f.Role == FormationRole.Archers).Weights.Any(w => w.Kind == BehaviorKind.SkirmishLine));
-        Assert.IsTrue(after.Weights.Any(w => w.Kind == BehaviorKind.Advance) && after.Weights.Any(w => w.Kind == BehaviorKind.TacticalCharge));
+        Assert.IsTrue(after.Weights.Any(w => w.Kind == BehaviorKind.Advance) && after.Weights.Any(w => w.Kind == BehaviorKind.FootCharge));
     }
 
     [TestMethod]
@@ -252,7 +291,7 @@ public class DoctrinePlansTests
         Assert.IsTrue(plan.AlwaysEngaged);
         var infantry = plan.Engage.Formations.Single(f => f.Role == FormationRole.MainInfantry);
         Assert.AreEqual(1f, infantry.Weights.Single(w => w.Kind == BehaviorKind.InfantrySkirmish).Weight);
-        Assert.IsTrue(infantry.Weights.Any(w => w.Kind == BehaviorKind.TacticalCharge), "InfantrySkirmish weighs 0 once spent; something must take the line");
+        Assert.IsTrue(infantry.Weights.Any(w => w.Kind == BehaviorKind.FootCharge), "InfantrySkirmish weighs 0 once spent; something must take the line");
     }
 
     [TestMethod]

@@ -34,14 +34,14 @@ public sealed class TaomTacticShieldWall : TaomTacticBase
     {
         var infantry = MainInfantry;
         DefensePosition = _defender && infantry != null
-            ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race)
+            ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race, Engagement)
             : WorldPosition.Invalid;
     }
 
     protected override bool OnPhaseTick(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        return phase == TacticPhase.Defend && _defender && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
+        return phase == TacticPhase.Defend && _defender && infantry != null && _anchor.Tick(infantry, Team, Plan.Race, Engagement);
     }
 }
 
@@ -99,7 +99,7 @@ public sealed class TaomTacticArcherRing : TaomTacticBase
             return;
         }
         var archers = Archers;
-        var position = _anchor.Resolve(infantry, archers ?? infantry, archers, Team, Plan.Race);
+        var position = _anchor.Resolve(infantry, archers ?? infantry, archers, Team, Plan.Race, Engagement);
         var toEnemy = Team.QuerySystem.AverageEnemyPosition - position.AsVec2;
         var direction = toEnemy.LengthSquared > 1e-4f ? toEnemy.Normalized() : infantry.Direction;
         var width = archers == null ? MinRingWidth : MathF.Max(MinRingWidth, archers.Arrangement.Width);
@@ -109,6 +109,6 @@ public sealed class TaomTacticArcherRing : TaomTacticBase
     protected override bool OnPhaseTick(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
+        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race, Engagement);
     }
 }
