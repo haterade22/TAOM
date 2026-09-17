@@ -14,15 +14,8 @@ namespace TAOM.Features.CultureDoctrine.Hooks.Tactics;
 /// </summary>
 public sealed class TaomTacticShieldWall : TaomTacticBase
 {
-    // BehaviorHoldHighGround's lock radius: it tracks the high ground while the closest enemy is
-    // beyond max(0.8 * the archers' adjusted missile range, 30 m) and holds its last position
-    // after that (`BehaviorHoldHighGround.cs:35-46`). The wall follows the same rule so an Engage
-    // re-apply cannot walk it toward an enemy that is already on top of it.
-    private const float MinLockRadius = 30f;
-
     private readonly bool _defender;
-    private Formation? _lockedFor;
-    private WorldPosition _locked = WorldPosition.Invalid;
+    private readonly HighGroundAnchor _anchor = new HighGroundAnchor();
 
     public TaomTacticShieldWall(Team team, float multiplier)
         : base(team, team.Side == BattleSideEnum.Defender ? DoctrinePlans.ShieldWallDefender : DoctrinePlans.ShieldWallAttacker, multiplier)
@@ -32,32 +25,23 @@ public sealed class TaomTacticShieldWall : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.ShieldWall(in snapshot);
 
-    // The defender's wall stands on the navmesh high ground the main infantry can reach; the
-    // attacker's plan uses BehaviorAdvance, which needs no position.
+    protected override string StatusSuffix => _defender ? ":" + _anchor.Status : "";
+
+    // The defender's wall stands on the navmesh high ground if the foot can get there and form
+    // before the enemy's foot does, otherwise where it stands (HighGroundAnchor); the attacker's
+    // plan uses BehaviorAdvance, which needs no position.
     protected override void BeforeApply(TacticPhase phase)
     {
         var infantry = MainInfantry;
-        if (!_defender || infantry == null)
-        {
-            DefensePosition = WorldPosition.Invalid;
-            return;
-        }
-        if (_lockedFor != infantry || !_locked.IsValid || EnemyBeyondLockRadius(infantry))
-        {
-            _locked = HighGroundOf(infantry);
-            _lockedFor = infantry;
-        }
-        DefensePosition = _locked;
+        DefensePosition = _defender && infantry != null
+            ? _anchor.Resolve(infantry, infantry, Archers, Team, Plan.Race)
+            : WorldPosition.Invalid;
     }
 
-    private bool EnemyBeyondLockRadius(Formation infantry)
+    protected override bool OnPhaseTick(TacticPhase phase)
     {
-        var enemy = infantry.CachedClosestEnemyFormation;
-        if (enemy == null)
-            return true;
-        var archers = Archers;
-        var radius = MathF.Max(archers != null ? archers.QuerySystem.MissileRangeAdjusted * 0.8f : 0f, MinLockRadius);
-        return infantry.CachedAveragePosition.DistanceSquared(enemy.Formation.CachedMedianPosition.AsVec2) > radius * radius;
+        var infantry = MainInfantry;
+        return phase == TacticPhase.Defend && _defender && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
     }
 }
 
@@ -87,6 +71,8 @@ public sealed class TaomTacticArcherRing : TaomTacticBase
     // the archers' square, the width only seeds the runtime TacticalPosition.
     private const float MinRingWidth = 10f;
 
+    private readonly HighGroundAnchor _anchor = new HighGroundAnchor();
+
     public TaomTacticArcherRing(Team team, float multiplier)
         : base(team, DoctrinePlans.ArcherRing, multiplier)
     {
@@ -94,12 +80,16 @@ public sealed class TaomTacticArcherRing : TaomTacticBase
 
     protected override float Weigh(in TeamQuerySnapshot snapshot) => DoctrineWeights.ArcherRing(in snapshot);
 
-    // The ring stands on the high ground nearest the foreseen battleground, facing the enemy.
-    // A runtime TacticalPosition is what BehaviorDefensiveRing reads (position and direction
-    // only); vanilla's TacticDefensiveRing constructs them the same way (`TacticDefensiveRing.cs:180`),
-    // so no scene entity is needed. One allocation per apply. With no main infantry the position
-    // stays null and BehaviorDefensiveRing weighs 0 (its GetAiWeight), so the row is inert, which
-    // is also what the weight function reports (0 without infantry).
+    protected override string StatusSuffix => ":" + _anchor.Status;
+
+    // The ring stands on the high ground nearest the foreseen battleground if the infantry can
+    // ring the archers there before the enemy's foot arrives, otherwise where the infantry
+    // stands (HighGroundAnchor), facing the enemy. A runtime TacticalPosition is what
+    // BehaviorDefensiveRing reads (position and direction only); vanilla's TacticDefensiveRing
+    // constructs them the same way (`TacticDefensiveRing.cs:180`), so no scene entity is needed.
+    // One allocation per apply. With no main infantry the position stays null and
+    // BehaviorDefensiveRing weighs 0 (its GetAiWeight), so the row is inert, which is also what
+    // the weight function reports (0 without infantry).
     protected override void BeforeApply(TacticPhase phase)
     {
         var infantry = MainInfantry;
@@ -108,12 +98,17 @@ public sealed class TaomTacticArcherRing : TaomTacticBase
             RingPosition = null;
             return;
         }
-        var anchor = Archers ?? infantry;
-        var position = HighGroundOf(anchor);
+        var archers = Archers;
+        var position = _anchor.Resolve(infantry, archers ?? infantry, archers, Team, Plan.Race);
         var toEnemy = Team.QuerySystem.AverageEnemyPosition - position.AsVec2;
         var direction = toEnemy.LengthSquared > 1e-4f ? toEnemy.Normalized() : infantry.Direction;
-        var archers = Archers;
         var width = archers == null ? MinRingWidth : MathF.Max(MinRingWidth, archers.Arrangement.Width);
         RingPosition = new TacticalPosition(position, direction, width, 0f, isInsurmountable: true);
+    }
+
+    protected override bool OnPhaseTick(TacticPhase phase)
+    {
+        var infantry = MainInfantry;
+        return phase == TacticPhase.Defend && infantry != null && _anchor.Tick(infantry, Team, Plan.Race);
     }
 }

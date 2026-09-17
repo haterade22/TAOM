@@ -12,6 +12,9 @@ public sealed class TacticPhaseMachine
 {
     private bool _joined;
 
+    /// <summary>The phase last applied, or null before the first apply.</summary>
+    public TacticPhase? Current { get; private set; }
+
     /// <summary>The phase to apply now, or null when nothing changed.</summary>
     public TacticPhase? Step(bool formationsChanged, bool battleJoined, bool reapplyNeeded, bool alwaysEngaged, out bool recountFormations)
     {
@@ -21,8 +24,13 @@ public sealed class TacticPhaseMachine
             return null;
         _joined = joined;
         recountFormations = formationsChanged;
-        return joined ? TacticPhase.Engage : TacticPhase.Defend;
+        Current = joined ? TacticPhase.Engage : TacticPhase.Defend;
+        return Current;
     }
 
-    public void Reset() => _joined = false;
+    public void Reset()
+    {
+        _joined = false;
+        Current = null;
+    }
 }

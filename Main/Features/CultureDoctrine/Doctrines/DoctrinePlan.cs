@@ -100,6 +100,11 @@ public sealed class PhasePlan
 public sealed class DoctrinePlan
 {
     public DoctrinePlan(string name, FormationSplit split, bool alwaysEngaged, float battleJoinedSeconds, PhasePlan defend, PhasePlan engage)
+        : this(name, split, alwaysEngaged, battleJoinedSeconds, defend, engage, DefaultRace)
+    {
+    }
+
+    public DoctrinePlan(string name, FormationSplit split, bool alwaysEngaged, float battleJoinedSeconds, PhasePlan defend, PhasePlan engage, RaceTunables race)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Split = split;
@@ -107,7 +112,12 @@ public sealed class DoctrinePlan
         BattleJoinedSeconds = battleJoinedSeconds;
         Defend = defend ?? throw new ArgumentNullException(nameof(defend));
         Engage = engage ?? throw new ArgumentNullException(nameof(engage));
+        Race = race;
     }
+
+    /// <summary>A line forms in about six seconds plus three per hundred men; three seconds of
+    /// margin against the engine's 10 s speed cache.</summary>
+    public static readonly RaceTunables DefaultRace = new RaceTunables(formUpSeconds: 6f, formUpSecondsPerUnit: 0.03f, marginSeconds: 3f);
 
     public string Name { get; }
     public FormationSplit Split { get; }
@@ -121,4 +131,8 @@ public sealed class DoctrinePlan
 
     public PhasePlan Defend { get; }
     public PhasePlan Engage { get; }
+
+    /// <summary>How the plan's position-holding tactics decide between marching to the high
+    /// ground and forming where they stand (<see cref="HighGroundRace"/>).</summary>
+    public RaceTunables Race { get; }
 }

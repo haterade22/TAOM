@@ -122,14 +122,29 @@ forms a Circle sized around the archers' `BehaviorFireFromInfantryCover` Square,
 
 | Tactic | Cultures | Plan | Weight |
 |---|---|---|---|
-| `TaomTacticShieldWall` | `erebor`, `erebor_warriors` | Defender: infantry `Defend` at the navmesh high ground (`HighGroundCloseToForeseenBattleGround`) with a low `TacticalCharge`; the position is re-read at a phase apply only while the closest enemy is beyond `max(0.8 * archers' missile range, 30 m)`, `BehaviorHoldHighGround`'s own lock rule, so an Engage apply cannot walk the wall into an enemy already on it; cavalry `ProtectFlank` + `CavalryScreen` in both phases, never `Flank`. Attacker: infantry `Advance` with `TacticalCharge` 0.5 then 0.8; cavalry may take a flank once joined | `(Inf + Rng) * 1.2 * advantage / sqrt(RemainingPowerRatio)`, not gated on `IsDefenseApplicable` |
+| `TaomTacticShieldWall` | `erebor`, `erebor_warriors` | Defender: infantry `Defend` at the position the high-ground race picks (below) with a low `TacticalCharge`; cavalry `ProtectFlank` + `CavalryScreen` in both phases, never `Flank`. Attacker: infantry `Advance` with `TacticalCharge` 0.5 then 0.8; cavalry may take a flank once joined | `(Inf + Rng) * 1.2 * advantage / sqrt(RemainingPowerRatio)`, not gated on `IsDefenseApplicable` |
 | `TaomTacticInfantryMass` | `mordor`, `dolguldur`, `gundabad`, `gundabad_raiders`, `mistymountainorcs`, `goblin`, `isengard` | Always engaged: infantry `Charge` 1.5 + `TacticalCharge` 1, archers `Skirmish`, cavalry `TacticalCharge` + `Flank` | `1.5 * Inf * clamp(members / enemies, 0.5, 2) * sqrt(RemainingPowerRatio)` |
 | `TaomTacticCavalryDominance` | `vlandia` (Rohan) | 1/1/1/1 split, 7 s join threshold: cavalry `Advance` + `Vanguard`, then `TacticalCharge` 1.2 + `Flank`; infantry `Advance` behind | vanilla `FrontalCavalryCharge` formula times 1.3 |
-| `TaomTacticArcherRing` | `lindon`, `lothlorien`, `mirkwood`, `mirkwood_stalkers`, `rivendell` (defender only) | infantry `DefensiveRing` on a runtime `TacticalPosition` at the archers' high ground, facing the enemy; archers `FireFromInfantryCover` + `Skirmish` 0.5; cavalry guards the flanks; the ring holds in both phases | vanilla `DefensiveRing` formula (`min(Inf, Rng) * 3 * advantage / sqrt(RemainingPowerRatio)`), 0 for an attacker, when out-shot (`IsDefenseApplicable`), or when the infantry cannot ring the archers' square (`RingGeometry.Fits`, vanilla's radius test) |
+| `TaomTacticArcherRing` | `lindon`, `lothlorien`, `mirkwood`, `mirkwood_stalkers`, `rivendell` (defender only) | infantry `DefensiveRing` on a runtime `TacticalPosition` at the position the high-ground race picks (the archers' high ground, or where the infantry stands), facing the enemy; archers `FireFromInfantryCover` + `Skirmish` 0.5; cavalry guards the flanks; the ring holds in both phases | vanilla `DefensiveRing` formula (`min(Inf, Rng) * 3 * advantage / sqrt(RemainingPowerRatio)`), 0 for an attacker, when out-shot (`IsDefenseApplicable`), or when the infantry cannot ring the archers' square (`RingGeometry.Fits`, vanilla's radius test) |
 
 The runtime `TacticalPosition` is what `BehaviorDefensiveRing` reads (position and direction
 only); vanilla's `TacticDefensiveRing` constructs them the same way (`TacticDefensiveRing.cs:180`),
-so no scene entity is needed. Cultures without a row (Harad, Rhun, Khand, Dale, Umbar, the
+so no scene entity is needed.
+
+**The high-ground race.** Vanilla never asks whether there is time to get to the high ground:
+`TacticDefensiveEngagement` only lowers its weight when it is far and `BehaviorHoldHighGround`
+tracks then locks, so a wall that cannot make it is caught on the march. `HighGroundAnchor`
+(shared by the wall and the ring) decides like a captain: our foot's travel time to the high
+ground at `MovementSpeedMaximum`, plus a form-up allowance (`RaceTunables`: 6 s + 0.03 s per man
+for a line, 10 s + 0.04 s per man for a ring) plus a margin (3 s / 4 s), against the earliest
+arrival of any enemy infantry or archer formation at that spot (cavalry is not a racer: a wall
+that forms late still receives a charge in a wall). Win the race and the formation marches;
+lose it and it forms where it stands (`BehaviorDefend` at its own position). While marching the
+race is re-checked once a second on the tactic's tick and a lost race re-forms on the spot;
+once arrived (within `BehaviorDefend`'s 10 m), or once the closest enemy is inside
+`BehaviorHoldHighGround`'s lock radius (`max(0.8 * archers' missile range, 30 m)`), the position
+is locked. All of it is `HighGroundRace` (pure, `HighGroundRaceTests`) over eight cached engine
+reads; the status line shows the state (`TaomTacticShieldWall:Defend:Marching|Holding|Arrived`). Cultures without a row (Harad, Rhun, Khand, Dale, Umbar, the
 bandits) use `default`, which is exactly vanilla's set at multiplier 1.
 
 **Per-side culture.** `MissionCombatantsLogic.GetAllCombatants()` is public and yields the
@@ -229,7 +244,7 @@ active behaviour and arrangement. Works in Custom Battle.
 
 ```
 [Doctrine] team=1 side=Defender player=no culture=erebor doctrine=erebor troops=300 tacticsSkill=0 registered=[ShieldWall*1.00, Charge*0.30, ...]
-[Doctrine] t=+65s team=1 side=Defender player=no tactic=TaomTacticShieldWall formations=[Infantry:210 BehaviorDefend/ShieldWall, Ranged:60 BehaviorSkirmishLine/Scatter, Cavalry:30 BehaviorProtectFlank/Line] taom=[TaomTacticShieldWall:Defend]
+[Doctrine] t=+65s team=1 side=Defender player=no tactic=TaomTacticShieldWall formations=[Infantry:210 BehaviorDefend/ShieldWall, Ranged:60 BehaviorSkirmishLine/Scatter, Cavalry:30 BehaviorProtectFlank/Line] taom=[TaomTacticShieldWall:Defend:Arrived]
 [Doctrine] off: vanilla tactics stay (status line on)
 [Doctrine] disabled for this mission after <exception>
 [MissionPerf] t=+65s frames=300 fps=60.0 avgMs=16.67 p95Ms=25.50 maxMs=40.3 agents=812 active=640 formations=9 gc0=12 gc1=3 gc2=1
@@ -250,6 +265,7 @@ and weighs 0 from then on; the team falls back to its next tactic.
 | `Main/Features/CultureDoctrine/Hooks/TeamCombatantSelector.cs`, `TeamTacticProbe.cs` | Engine reads at the boundary: combatants per team; current tactic and formation state |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/VanillaTacticWrappers.cs` | The nine weight wrappers |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/TaomTacticBase.cs`, `TaomTactics.cs` | The shared lifecycle and the four TAOM tactics |
+| `Main/Features/CultureDoctrine/Hooks/Tactics/HighGroundAnchor.cs`, `Doctrines/HighGroundRace.cs` | Where a position-holding tactic stands: the race, the re-check, the lock |
 | `Main/Features/CultureDoctrine/Hooks/Tactics/BehaviorWeightApplier.cs`, `TeamQuerySnapshotFactory.cs`, `TacticFactory.cs` | The three engine-type switches |
 | `Main/Features/CultureDoctrine/Doctrines/DoctrinePlan.cs`, `DoctrinePlans.cs`, `DoctrineWeights.cs`, `TacticPhaseMachine.cs` | Pure plans, weights, ring geometry, phase machine |
 | `Main/Features/CultureDoctrine/Cheats/CultureDoctrineCheats.cs` | `taom.tactic_status` |
@@ -268,6 +284,8 @@ and weighs 0 from then on; the team falls back to its next tactic.
   cultures by vanilla id, every culture carries its TAOM tactic on the right side)
 - `DoctrinePlansTests` (no duplicates, roles match the split, the doctrine intent per plan),
   `DoctrineWeightsTests` (zero cases, monotonicity, clamps, NaN and zero-power inputs),
+  `HighGroundRaceTests` (go, hold, earliest enemy decides, margin, form-up by unit count, NaN and
+  zero speeds on either side),
   `ShippedDoctrineOrderingTests` (every shipped TAOM row beats its vanilla neighbours by the
   sticky factor), `TacticPhaseMachineTests`
 - `DoctrineSwitchInvariantTests` (`BindingVerification`): the applier's and the factory's switch
@@ -296,6 +314,11 @@ Per run the log carries the `[Doctrine]` registration line per team, the 5 s sta
 runs in the off arm too; only the registration line is doctrine-on),
 `[MissionPerf]` every 5 s, and `rgl_log` must show no `MBException`, no `ran off the main mission
 thread`, no `ERROR: Text with id` (sergeant popup), no `taom=[...:failed`.
+
+The race adds a check to the Erebor and Lindon cells: at 60 s the `[Doctrine]` status shows
+`Marching` then `Arrived` when the enemy started far, and `Holding` from the first line when the
+scene puts the enemy foot within a minute of the high ground; a wall that shows `Marching` while
+enemy infantry is already in contact is the failure the race exists to prevent.
 
 Pass: over the steady window (30 s after F6 to the first rout) the median average frame ms on vs
 off within 3 percent and p95 within 5 percent at 800 v 800, GC gen 2 not higher; the doctrine
@@ -345,6 +368,25 @@ in `TaomAgentStatCalculateModel.UpdateAgentStats` (`AIAttackOnDecideChance`,
 `AiDefendWithShieldDecisionChanceValue`, `AiChargeHorsebackTargetDistFactor`; runs at spawn, never
 per frame), cultural bravery in `BattleMoraleModel`. Phase E: per-formation culture weights inside
 mixed armies (the `BannerBearerAssignmentMissionLogic.ResolveFormationCultureId` shape).
+
+## Doctrine backlog per culture
+
+Recommendations from the design session, in rough order of value. "Data" means a JSON row change
+on the existing tactics; "tactic" means a new `TaomTactic*` composing vanilla behaviours; "behaviour"
+means a Phase C `BehaviorComponent` because no vanilla behaviour does it.
+
+| Culture | Now | Recommend next |
+|---|---|---|
+| Erebor (Dwarves) | ShieldWall, race | Behaviour: an anti-cavalry brace (`IsUnderCavalryChargeFromFront` is a cached engine query) that switches the wall to `Square` while a charge is inbound and back after; tactic: a two-line wall (front `Defend`, a `Reserve` second line that commits on Engage) once the base supports two infantry slots |
+| Lindon, Rivendell, Lothlorien, Mirkwood (Elves) | ArcherRing (defender), weighted `RangedHarrassmentOffensive` (attacker) | Tactic: an attacker's `ArcherAdvance` (infantry `CautiousAdvance` screen, archers `SkirmishLine` then `Skirmish`, cavalry `CavalryScreen`) so attacking Elves have a doctrine of their own; behaviour: volley control (hold fire until range, then fire at will) through `FiringOrder`; data: Mirkwood biases `DefensiveLine` toward forest `TacticalRegion`s where the scene has them |
+| Rohan (`vlandia`) | CavalryDominance | Behaviour: the cycle charge (line up, charge through, reform, repeat) by driving the existing `ICavalryChargeService` state machine for AI-controlled cavalry, which today serves the player only; tactic: `EoredScreen` for a defender (cavalry `CavalryScreen` + `ProtectFlank`, infantry `Defend`) |
+| Mordor, Dol Guldur, Gundabad, Goblins, Misty Mountains | InfantryMass | Tactic: `Envelop` (a 2/1/2/1 split, two infantry blocks on `Flank` left and right, centre `Advance`; needs a second infantry slot in `TaomTacticBase`); data: Goblins and Misty Mountains higher `HoldChokePoint` on cave and pass scenes |
+| Isengard (Uruk-hai) | InfantryMass | Data first: Uruks are disciplined, give Isengard the attacker `ShieldWall` and keep `InfantryMass` for the Dunlending mobs by moving it to `dunland_raiders`; later a `Pike` behaviour (Loose to ShieldWall only under cavalry) |
+| Dunland (`empire`) | weighted vanilla (high ground, choke points, retreat) | Behaviour: `InfantrySkirmish` for throwing infantry (approach to throwing range, throw, pull back, keyed on `HasThrowingUnitRatio`), then the `HitAndRun` tactic around it; data: forest ambush via `DefensiveLine` on forest regions |
+| Gondor, Dale (`sturgia`) | weighted vanilla | Data: give Dale the `ShieldWall` (its line fights like Erebor's); tactic for Gondor: `DisciplinedLine` (a `FullScaleAttack` with a hold phase: `Defend` until joined, then `Advance`, archers `SkirmishLine` in front then `ScreenedSkirmish`, cavalry held to `ProtectFlank` until Engage) |
+| Rhun (`khuzait`), Khand (`battania`) | default | Data: `CavalryDominance` for Khand; tactic for Rhun: `HorseArcherHarass` (horse archers `MountedSkirmish` weighted up, infantry `Defend`, cavalry `CavalryScreen`, `FrontalCavalryCharge` low) |
+| Harad (`aserai`), Umbar | default | Data: `RangedHarrassmentOffensive` and `CoordinatedRetreat` up; Phase D: the mumakil as a vanguard formation through `GetAgentTroopClass_Override` routing |
+| All | | Data per culture: `CoordinatedRetreat` as the "break discipline" knob (orcs never, Elves early); Phase D: `BattleMoraleModel` bravery and the `AgentDrivenProperties` aggression profile so units feel different in the melee, not only in manoeuvre |
 
 ## How to add a tactic
 

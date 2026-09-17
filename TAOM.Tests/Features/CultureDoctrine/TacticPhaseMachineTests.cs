@@ -104,6 +104,25 @@ public class TacticPhaseMachineTests
     }
 
     [TestMethod]
+    public void Current_TracksTheLastAppliedPhase()
+    {
+        var sut = new TacticPhaseMachine();
+        Assert.IsNull(sut.Current, "nothing applied yet");
+
+        sut.Step(true, false, false, false, out _);
+        Assert.AreEqual(TacticPhase.Defend, sut.Current);
+
+        sut.Step(false, false, false, false, out _);
+        Assert.AreEqual(TacticPhase.Defend, sut.Current, "a no-op tick keeps the phase");
+
+        sut.Step(false, true, false, false, out _);
+        Assert.AreEqual(TacticPhase.Engage, sut.Current);
+
+        sut.Reset();
+        Assert.IsNull(sut.Current);
+    }
+
+    [TestMethod]
     public void Reset_ForgetsTheJoinedFlag()
     {
         var sut = new TacticPhaseMachine();

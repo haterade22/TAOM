@@ -4,6 +4,28 @@
 
 ## 2026-09-16
 
+### feat(combat): the Dwarven wall and the Elven ring race the enemy foot to the high ground (#608)
+
+**What.** A position-holding doctrine tactic no longer marches to the navmesh high ground on
+faith. `HighGroundAnchor` (shared by `TaomTacticShieldWall` and `TaomTacticArcherRing`) decides
+like a captain: our foot's travel time at `MovementSpeedMaximum` plus a form-up allowance (a line
+6 s + 0.03 s per man, a ring 10 s + 0.04 s per man) plus a margin, against the earliest arrival of
+any enemy infantry or archer formation at that spot; cavalry is not a racer, because a wall that
+forms late still receives a charge in a wall. Win and the formation marches; lose and it forms
+where it stands. While marching the race is re-checked once a second on the tactic's own tick
+and a lost race re-forms on the spot; once arrived, or once the closest enemy is inside
+`BehaviorHoldHighGround`'s lock radius, the position is locked. The status line shows the state
+(`TaomTacticShieldWall:Defend:Marching|Holding|Arrived`). Vanilla never asks this question:
+`TacticDefensiveEngagement` only lowers its weight when the high ground is far.
+
+**How.** `HighGroundRace` is pure (distances and speeds in, a verdict out, every comparison a
+positive requirement, NaN on our side holds and NaN on theirs is not a racer) and
+`HighGroundRaceTests` pins it; `TaomTacticBase` gained `OnPhaseTick` (once a second when no phase
+change is due) and `TacticPhaseMachine.Current`; `DoctrinePlan.Race` carries the two tunables.
+Cost: at most eight cached engine reads once a second for one formation, no allocation (the ETA
+list is reused). Full suite 9,546 green, 2 pre-existing skips. `docs/features/culture-doctrine.md`
+also gained a per-culture doctrine backlog.
+
 ### feat(combat): culture doctrines for field-battle AI, Phase A + B (#608)
 
 **What.** Each culture's AI now fights field battles with its own doctrine. A new `MissionLogic`

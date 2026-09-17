@@ -89,7 +89,9 @@ public static class DoctrinePlans
     public static readonly DoctrinePlan ArcherRing = new DoctrinePlan(
         "ArcherRing", FormationSplit.OneOneTwoOne, alwaysEngaged: false, battleJoinedSeconds: 5f,
         defend: Ring(),
-        engage: Ring());
+        engage: Ring(),
+        // A circle around a square settles slower than a line, and two formations must arrive.
+        race: new RaceTunables(formUpSeconds: 10f, formUpSecondsPerUnit: 0.04f, marginSeconds: 4f));
 
     private static PhasePlan Ring() => new PhasePlan(
         new FormationPlan(FormationRole.MainInfantry, W(BehaviorKind.DefensiveRing, 1f), W(BehaviorKind.TacticalCharge, 0.3f)),

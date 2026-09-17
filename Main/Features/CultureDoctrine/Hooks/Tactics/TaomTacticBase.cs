@@ -73,6 +73,13 @@ public abstract class TaomTacticBase : TacticComponent
     {
     }
 
+    /// <summary>Once a second while no phase change is due: return true to re-apply the current
+    /// phase now (a position-holding tactic uses it when its high-ground race is lost).</summary>
+    protected virtual bool OnPhaseTick(TacticPhase phase) => false;
+
+    /// <summary>Appended to the status line after the phase name.</summary>
+    protected virtual string StatusSuffix => "";
+
     protected override float GetTacticWeight()
     {
         if (_failed)
@@ -113,14 +120,22 @@ public abstract class TaomTacticBase : TacticComponent
         var changed = CheckAndSetAvailableFormationsChanged();
         var phase = _machine.Step(changed, joined, IsTacticReapplyNeeded, _plan.AlwaysEngaged, out var recount);
         if (!phase.HasValue)
-            return;
-        _joined = joined;
-        if (recount)
-            ManageFormationCounts();
+        {
+            var current = _machine.Current;
+            if (!current.HasValue || !OnPhaseTick(current.Value))
+                return;
+            phase = current;
+        }
+        else
+        {
+            _joined = joined;
+            if (recount)
+                ManageFormationCounts();
+        }
         BeforeApply(phase.Value);
         Apply(phase.Value == TacticPhase.Engage ? _plan.Engage : _plan.Defend, phase.Value);
         IsTacticReapplyNeeded = false;
-        _status = phase.Value.ToString();
+        _status = phase.Value + StatusSuffix;
     }
 
     protected override void ManageFormationCounts()
@@ -205,14 +220,6 @@ public abstract class TaomTacticBase : TacticComponent
 
     private TeamQuerySnapshot TakeSnapshot() =>
         TeamQuerySnapshotFactory.Take(Team, FormationsIncludingEmpty, CalculateNotEngagingTacticalAdvantage(Team.QuerySystem));
-
-    /// <summary>The navmesh high ground the main infantry would hold, as a world position.</summary>
-    protected WorldPosition HighGroundOf(Formation formation)
-    {
-        var position = formation.CachedMedianPosition;
-        position.SetVec2(formation.QuerySystem.HighGroundCloseToForeseenBattleGround);
-        return position;
-    }
 
     private void Fail(Exception ex)
     {
