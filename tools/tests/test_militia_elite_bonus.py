@@ -73,15 +73,34 @@ class EliteMilitiaBonusTests(unittest.TestCase):
         basic sibling on every skill the sibling has above the floor (a basic skill floored at 0
         hides part of the step, so there only 0 < diff <= bonus is provable)."""
         sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        import re
         import ranged_ladder as rl
         troops = rl.load_ranged_troops()
+        spec = rl.load_spec()
         elite = rb.elite_militia_troop_ids()
+        token_cls = {"bow": "Bow", "xbow": "Crossbow"}
+
+        def ladder_skills(t):
+            # Since #617 a militia archer's Bow or Crossbow is its ranged ladder cell (by tier),
+            # not the flat militia step: the ladder owns the skill of every launcher it hands out.
+            return {token_cls[m.group(1)] for st in t.sets for i in st.values()
+                    for m in [re.match(r"^ladder_.+_(bow|xbow)_t\d+$", i)] if m}
+
         checked = 0
         for vet_id in sorted(elite):
             basic_id = vet_id.replace("_veteran", "")
             self.assertIn(basic_id, troops, vet_id)
             vet, basic = troops[vet_id].skills, troops[basic_id].skills
+            owned = ladder_skills(troops[vet_id]) | ladder_skills(troops[basic_id])
+            for skill in sorted(owned):
+                for t in (troops[vet_id], troops[basic_id]):
+                    if skill in ladder_skills(t):
+                        line = rl.line_of(t, spec)
+                        self.assertEqual(t.skills.get(skill, 0), rl.skill_cell(line, t.tier, spec), f"{t.id} {skill}")
+                self.assertGreaterEqual(vet.get(skill, 0), basic.get(skill, 0), f"{vet_id} {skill}")
             for skill in rb.SKILL_NAMES:
+                if skill in owned:
+                    continue
                 b, v = basic.get(skill, 0), vet.get(skill, 0)
                 if b >= rb.MILITIA_ELITE_BONUS:
                     self.assertEqual(v, b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill}")

@@ -31,6 +31,7 @@ from collections import defaultdict
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import taom_schema as ts  # noqa: E402  build_item_class_registry
 from _gamedir import game_modules as _resolve_game_modules  # noqa: E402
+import ranged_ladder as rl  # noqa: E402  the Bow/Crossbow cell of a ladder troop (#617)
 
 TROOPS_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData', 'troops')
 MODULEDATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData')
@@ -483,6 +484,41 @@ def is_militia(troop_id, troop_name=None):
     return troop_id in militia_troop_ids()
 
 
+_LADDER_SPEC = {}
+
+
+def _ladder_spec():
+    """tools/ranged_ladders.json, validated once. A writer must not quietly fall back to the level
+    curve for archers when the ladder cannot be read, so a broken spec stops the run."""
+    if "spec" not in _LADDER_SPEC:
+        spec = rl.load_spec()
+        problems = rl.validate_spec(spec)
+        if problems:
+            raise RuntimeError("tools/ranged_ladders.json contradicts itself, so no archer's Bow or "
+                               "Crossbow can be computed: " + "; ".join(problems[:4]))
+        _LADDER_SPEC["spec"] = spec
+    return _LADDER_SPEC["spec"]
+
+
+def ladder_skill_override(skills, troop_id, filename_culture, level, weapon_classes):
+    """A ladder troop's Bow or Crossbow is its ranged ladder cell (#617), the value
+    tools/rebalance_ranged_ladders.py writes, so a full rebaseline never undoes the ranking. Only
+    the classes the troop carries, only at a tier its line lists; militia included (the ladder
+    ranks them by tier, not by the level-21 militia baseline)."""
+    if not weapon_classes or skills is None:
+        return skills
+    spec = _ladder_spec()
+    line = rl.line_for(troop_id, filename_culture, spec)
+    if line is None:
+        return skills
+    tier = rl.engine_tier(level)
+    out = dict(skills)
+    for cls in rl.CLASSES:
+        if cls in weapon_classes and tier in rl.tiers_for(line, cls, spec):
+            out[cls] = rl.skill_cell(line, tier, spec)
+    return out
+
+
 def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None):
     """Calculate balanced skills for a troop.
 
@@ -856,6 +892,7 @@ def process_file(filepath, item_classes=None):
         # Calculate new skills
         weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
         new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
+        new_skills = ladder_skill_override(new_skills, troop_id, filename_culture, level, weapon_classes)
         if new_skills is None:
             record.update(status='SKIPPED (no baseline for level/group)', new=None)
             changes.append(record)

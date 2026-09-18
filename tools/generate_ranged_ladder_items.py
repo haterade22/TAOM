@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Author the ranged ladder items: one `ladder_<line>_<bow|xbow>_<band>` per cell of the grid
-in tools/ranged_ladders.json, each a clone of that line's own donor bow with only the id, the
-name and `missile_speed` changed (#582).
+"""Author the ranged ladder items: one `ladder_<line>_<bow|xbow>_t<tier>` per tier each line lists
+in tools/ranged_ladders.json, each a clone of that line's donor bow for the tier's band with the
+id, the name, `missile_speed`, `thrust_damage` and `accuracy` set from the ladder (#582, #617).
 
 WHY
 ---
-An archer's reach is its launcher's missile_speed (tools/ranged_ladder.py). The grid gives
-every (line, band) cell an exact speed, and no existing bow happens to sit on it, so every
-cell is a generated item. Existing bows stay untouched for lords, the player and the shops.
+An archer's reach is its launcher's missile_speed, its hit is almost all the launcher's
+thrust_damage and its spread mostly the launcher's accuracy (tools/ranged_ladder.py). Until #617
+the clones changed only the speed, so every tier of a line carried the donor's damage and
+accuracy. Every cell now carries its own three values; the donor gives only the look. The Armory's
+own bows are restatted separately by tools/restat_ranged_donors.py.
 
 WHAT IT WRITES (live Armory and, when present, the lotraom-assets mirror)
 -------------------------------------------------------------------------
@@ -18,10 +20,10 @@ WHAT IT WRITES (live Armory and, when present, the lotraom-assets mirror)
 
 The loc template is the one shared file touched: the block sits between markers just before
 `</strings>`, and a `.bak-rangedladder` sidecar is taken once. A clone keeps the
-donor's mesh, flags, damage, accuracy, usage and everything else; `is_merchandise` is forced to
+donor's mesh, flags, usage and everything else; `is_merchandise` is forced to
 `false` (130 near-duplicate bows must not flood the town shops; loot still drops them because
 loot is the fallen troop's own kit). The name is `{=<id>}<donor name, its own numeral and
-"- Starting" / "- Horse" suffix stripped> <band numeral I..V>`, so `/localize` picks the keys up.
+"- Starting" / "- Horse" suffix stripped> <tier numeral I..X>`, so `/localize` picks the keys up.
 
 RULES THIS TOOL FOLLOWS (tools/README.md "XML I/O convention")
 ---------------------------------------------------------------
@@ -55,7 +57,7 @@ import generate_starter_kit as gsk  # noqa: E402  read_xml, checked_write, index
 import ranged_ladder as rl  # noqa: E402
 import rebalance_troops as rb  # noqa: E402  DEFAULT_GAME_MODULES
 
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.5" / "LOTRLOME_Armory"
 ITEMS_FILE_NAME = "ranged_ladder.xml"
 EOL = "\r\n"
 LOC_MARKER_START = "<!-- TAOM-RANGED-LADDER:START -->"
@@ -65,7 +67,7 @@ _LOC_BLOCK_RE = re.compile(r"[ \t]*" + re.escape(LOC_MARKER_START) + r".*?" + re
 
 _TAG_RE = re.compile(r"^\{=[^}]*\}")
 _SUFFIX_RE = re.compile(r"\s*-?\s*(?:Starting|Horse|Starter)\s*$", re.I)
-_NUMERAL_RE = re.compile(r"\s+(?:I|II|III|IV|V|VI|VII)\s*$")
+_NUMERAL_RE = re.compile(r"\s+(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\s*$")
 
 
 class GeneratorError(Exception):
@@ -75,25 +77,28 @@ class GeneratorError(Exception):
 # --------------------------------------------------------------------------- #
 # Clones                                                                        #
 # --------------------------------------------------------------------------- #
-def ladder_name(donor_name: str | None, new_id: str, band: str) -> str:
+def ladder_name(donor_name: str | None, new_id: str, tier: int) -> str:
     text = _TAG_RE.sub("", donor_name or new_id).strip()
     for _ in range(3):
         text = _SUFFIX_RE.sub("", text).strip()
         text = _NUMERAL_RE.sub("", text).strip()
-    return "{=%s}%s %s" % (new_id, text, rl.BAND_NUMERAL[band])
+    return "{=%s}%s %s" % (new_id, text, rl.TIER_NUMERAL[int(tier)])
 
 
 def clone_launcher(donor: ET.Element, item: rl.LadderItem) -> ET.Element:
-    """A verbatim copy with the identity, the name, the speed and the shop flag swapped, and
-    the item_usage when the line overrides it (a bow a rider can draw, see rl.usage_for)."""
+    """A verbatim copy with the identity, the name, the three ladder stats and the shop flag
+    swapped, and the item_usage when the line overrides it (a bow a rider can draw, see
+    rl.usage_for)."""
     out = copy.deepcopy(donor)
     out.set("id", item.id)
-    out.set("name", ladder_name(donor.get("name"), item.id, item.band))
+    out.set("name", ladder_name(donor.get("name"), item.id, item.tier))
     out.set("is_merchandise", "false")
     changed = 0
     for weapon in out.iter("Weapon"):
         if weapon.get("weapon_class") == item.cls:
             weapon.set("missile_speed", str(item.speed))
+            weapon.set("thrust_damage", str(item.damage))
+            weapon.set("accuracy", str(item.accuracy))
             if item.usage:
                 weapon.set("item_usage", item.usage)
             changed += 1
@@ -109,8 +114,9 @@ def render_items_file(clones: list[tuple[rl.LadderItem, ET.Element]], folder: st
         f"<!--{eol}"
         f"  TAOM ranged range ladder for the {folder} folder. GENERATED by{eol}"
         f"  tools/generate_ranged_ladder_items.py from tools/ranged_ladders.json (do not hand-edit;{eol}"
-        f"  re-run the generator). Each item is a clone of a line's donor bow with only id, name and{eol}"
-        f"  missile_speed changed, is_merchandise=false. Donors: {donors}{eol}"
+        f"  re-run the generator). Each item is a clone of a line's donor bow with id, name,{eol}"
+        f"  missile_speed, thrust_damage and accuracy set from the ladder, is_merchandise=false.{eol}"
+        f"  Donors: {donors}{eol}"
         f"-->{eol}"
         f"<Items>{eol}"
     )
@@ -232,8 +238,9 @@ def apply_plan(plan, md: Path, write: bool) -> list[str]:
 
 
 def verify_plan(plan, md: Path) -> list[str]:
-    """Drift: a missing file, a missing id, a speed that is not the grid's, or a usage that is
-    not the line's override (a stale long_bow clone spawns on a horse and is never drawn)."""
+    """Drift: a missing file, a missing id, a speed, damage or accuracy that is not the cell's,
+    or a usage that is not the line's override (a stale long_bow clone spawns on a horse and is
+    never drawn)."""
     drift: list[str] = []
     for folder, clones in plan.items():
         path = _items_path(md, folder)
@@ -248,13 +255,19 @@ def verify_plan(plan, md: Path) -> list[str]:
         on_disk = {}
         for node in root.iter("Item"):
             w = node.find("ItemComponent/Weapon")
-            on_disk[node.get("id")] = (w.get("missile_speed"), w.get("item_usage")) if w is not None else (None, None)
+            on_disk[node.get("id")] = dict(w.attrib) if w is not None else None
         for item, _ in clones:
-            got, usage = on_disk.get(item.id, (None, None))
+            got = on_disk.get(item.id)
             if got is None:
                 drift.append(f"{path.name} ({folder}): item {item.id} missing")
-            elif got != str(item.speed):
-                drift.append(f"{path.name} ({folder}): {item.id} missile_speed {got}, grid says {item.speed}")
+                continue
+            wrong = [f"{attr} {got.get(attr)}, the ladder says {want}"
+                     for attr, want in (("missile_speed", item.speed), ("thrust_damage", item.damage),
+                                        ("accuracy", item.accuracy))
+                     if got.get(attr) != str(want)]
+            usage = got.get("item_usage")
+            if wrong:
+                drift.append(f"{path.name} ({folder}): {item.id} " + "; ".join(wrong))
             elif item.usage and usage != item.usage:
                 drift.append(f"{path.name} ({folder}): {item.id} item_usage {usage}, the line says {item.usage}")
     for folder, clones in plan.items():
@@ -353,7 +366,7 @@ def main(argv=None) -> int:
             for d in drift:
                 print(f"  - {d}")
             return 1
-        print(f"OK: all {total} ladder items present with their grid speeds in {len(trees)} tree(s)")
+        print(f"OK: all {total} ladder items present with their speed, damage and accuracy in {len(trees)} tree(s)")
         return 0
 
     for label, md in trees:

@@ -1595,16 +1595,20 @@ class Validator:
                     ))
         return issues
 
-    # -- RANGED_LADDER_INVERSION -------------------------------------------- #
-    # An archer's reach is its launcher's missile_speed and nothing else (tools/ranged_ladder.py
-    # cites the decompile). Two rules, per launcher class: inside a line a lower tier is never
-    # faster than a higher tier; inside a band a better-ranked kingdom line is never slower than
-    # a worse-ranked one. Both come from the grid in tools/ranged_ladders.json, and the same
-    # pure function (ranged_ladder.inversions) drives this gate and the repair tool,
-    # tools/rebalance_ranged_ladders.py, so the two cannot disagree. On 2026-09-12 the 227
-    # ranged troops carried 1,741 inverted pairs (#582). Launcher speeds come from the install,
-    # so the check is skipped, never faked, without it; a missing or self-contradicting spec is
-    # itself a finding, because a gate that quietly checks nothing reads like a clean run.
+    # -- RANGED_LADDER_INVERSION / RANGED_DAMAGE_CEILING ------------------- #
+    # An archer's reach is its launcher's missile_speed, its hit almost all the launcher's
+    # thrust_damage, its spread mostly the launcher's accuracy, and its skill drives the AI's aim
+    # (tools/ranged_ladder.py cites the decompile). Two rules, per launcher class and per stat:
+    # inside a line a lower tier never beats a higher tier; at the same tier a better-ranked
+    # kingdom line is never worse. Both come from the cells in tools/ranged_ladders.json, and the
+    # same pure function (ranged_ladder.inversions) drives this gate and the repair tool,
+    # tools/rebalance_ranged_ladders.py, so the two cannot disagree. On 2026-09-12 the 227 ranged
+    # troops carried 1,741 inverted speed pairs (#582); until #617 every tier of a line carried its
+    # donor's damage and accuracy, so a T2 elf militia archer hit like a lord. A troop at a tier its
+    # line lists no cell for is a finding too (the generator makes no item there), and so is a
+    # launcher a lord or wanderer can carry above the spec's hero_ceiling. Launcher stats come from
+    # the install, so the check is skipped, never faked, without it; a missing or self-contradicting
+    # spec is itself a finding, because a gate that quietly checks nothing reads like a clean run.
     _RANGED_LADDER_EXEMPT: dict = {}   # troop id -> why its launcher is off the ladder on purpose
 
     def _ranged_ladder_inversions(self) -> list:
@@ -1664,25 +1668,43 @@ class Validator:
                          f"({os.path.basename(troop.file)}), so its reach is outside every rule. "
                          "Add the file to a line, or the troop to _RANGED_LADDER_EXEMPT with a reason"),
             ))
+        for troop, cls in rl.unlisted(troops, launchers, spec):
+            line = rl.line_of(troop, spec)
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=self._rel(Path(troop.file)), line=0,
+                entry_id=troop.id,
+                message=(f"{cls}: tier {troop.tier} troop in line \"{line}\", which lists no {cls} cell at "
+                         f"tier {troop.tier} (tiers {rl.tiers_for(line, cls, spec)}), so no ladder item exists "
+                         f"for it. Add the tier to the line's \"tiers\" in {spec_rel}, then regenerate and re-roster"),
+            ))
         for g in rl.summarize(rl.inversions(troops, launchers, spec)):
             w = g.worst
             low = troops[w.low]
             if g.kind == "tier":
-                why = (f'inside line "{g.scope}" a lower tier outranges a higher one: '
-                       f'"{w.low}" (tier {w.low_tier}, missile_speed {w.low_speed}) over '
-                       f'"{w.high}" (tier {w.high_tier}, {w.high_speed})')
+                why = (f'inside line "{g.scope}" a lower tier beats a higher one on {g.stat}: '
+                       f'"{w.low}" (tier {w.low_tier}, {w.low_value}) over '
+                       f'"{w.high}" (tier {w.high_tier}, {w.high_value})')
             else:
-                why = (f'inside band {g.scope} a worse-ranked line outranges a better one: '
-                       f'"{w.low}" ({w.low_line}, rank {rl.rank_of(w.low_line, spec)}, missile_speed '
-                       f'{w.low_speed}) over "{w.high}" ({w.high_line}, rank '
-                       f'{rl.rank_of(w.high_line, spec)}, {w.high_speed})')
+                why = (f'at tier {w.low_tier} a worse-ranked line beats a better one on {g.stat}: '
+                       f'"{w.low}" ({w.low_line}, {g.stat} rank {rl.rank(w.low_line, g.stat, spec)}, '
+                       f'{w.low_value}) over "{w.high}" ({w.high_line}, rank '
+                       f'{rl.rank(w.high_line, g.stat, spec)}, {w.high_value})')
             issues.append(Issue(
                 severity=Severity.WARNING, code=code, file=self._rel(Path(low.file)), line=0,
                 entry_id=w.low,
-                message=(f"{g.cls}: {why}; {g.count} such pair(s) in this scope. Reach is the "
-                         f"launcher's missile_speed; run python tools/rebalance_ranged_ladders.py "
-                         f"(--apply after tools/generate_ranged_ladder_items.py --apply) to put "
-                         f"every roster on its grid cell"),
+                message=(f"{g.cls}: {why}; {g.count} such pair(s) in this scope. Run python "
+                         f"tools/rebalance_ranged_ladders.py (--apply after "
+                         f"tools/generate_ranged_ladder_items.py --apply) to put every roster and "
+                         f"skill on its cell"),
+            ))
+        for rec, cap, carriers in rl.ceiling_breaches(spec, launchers, rl.hero_launchers(self.moduledata, launchers)):
+            issues.append(Issue(
+                severity=Severity.WARNING, code="RANGED_DAMAGE_CEILING", file=spec_rel, line=0,
+                entry_id=rec.id,
+                message=(f"{rec.cls} \"{rec.id}\" hits for {rec.damage}, above the hero_ceiling {cap} in "
+                         f"{spec_rel}, and a hero can carry it ({', '.join(carriers[:4])}"
+                         f"{' ...' if len(carriers) > 4 else ''}). Restat it in the spec's donor_stats and run "
+                         f"python tools/restat_ranged_donors.py --apply"),
             ))
         return issues
 

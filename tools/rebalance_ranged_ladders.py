@@ -1,35 +1,46 @@
 #!/usr/bin/env python3
-"""Ranged range ladders: report every troop's reach against the ladder grid, and rewrite the
-rosters onto it (#582).
+"""Ranged ladders: report every archer's reach, damage, accuracy and skill against the ladder,
+and rewrite the rosters onto it (#582, per-tier and ranked since #617).
 
 READ-ONLY by default. Writes tools/reports/ranged-ladders/{REPORT.md,REPORT.html,ranged-ladders.json}
 and the tracked copy docs/reference/ranged-troops.html (the reports dir is gitignored).
-`--apply` rewrites the launcher slots of Main/_Module/ModuleData/troops/troops_*.xml.
+`--apply` rewrites the launcher slots AND the Bow or Crossbow skill of the ladder troops in
+Main/_Module/ModuleData/troops/troops_*.xml.
 
 WHAT IT MEASURES
 ----------------
-Reach is the launcher's missile_speed (tools/ranged_ladder.py explains why the skill is not).
-The spec, tools/ranged_ladders.json, turns a troop's LINE (its file, or an id prefix inside one,
-in kingdom rank order) and BAND (engine tier: E T0-2, R T3-4, V T5-6, X T7-8, C T9-10) into a
-cell of the grid `speed = band_base[band] + rank_step * (n_lines - rank)`; every cell is an item
-`ladder_<line>_<bow|xbow>_<band>` that tools/generate_ranged_ladder_items.py writes into the
-Armory. This tool moves every bow and crossbow slot of every battle set onto its cell. Ammo is
-never touched, a bow never becomes a crossbow.
+tools/ranged_ladder.py explains the engine: reach is the launcher's missile_speed, damage is
+almost all the launcher's thrust_damage, spread is mostly the launcher's accuracy, and the troop's
+skill adds a little damage and spread and drives the AI's aim and fire rate. The spec,
+tools/ranged_ladders.json, ranks every LINE (a troop file, or an id prefix inside one) on three
+lists and gives every tier the line lists a CELL: an item `ladder_<line>_<bow|xbow>_t<tier>` that
+tools/generate_ranged_ladder_items.py writes into the Armory, plus the skill the troop carries.
+This tool moves every bow and crossbow slot of every battle set onto its cell and sets the skill.
+Ammo is never touched, a bow never becomes a crossbow.
+
+THE SKILL WRITE
+---------------
+Only Bow or Crossbow, only on troops carrying that launcher, through rebalance_troops'
+byte-faithful writer (never a full rebaseline: its dry run changes 77 troops for other reasons).
+The clamp keeps UPGRADE_SKILL_REGRESSION green: a child below its upgrade source on that skill is
+raised to it, never a ladder troop, which would leave its cell and is refused. Militia bindings
+come from the culture files; when they cannot be read the tool refuses rather than guess.
 
 THE REPORT
 ----------
-The grid; the two rules' inversions before and after (same function as the validator's
-RANGED_LADDER_INVERSION); per line, every ranged troop with its launcher, speed and estimated
-reach before and after; troops no line claims. REPORT.html is the same roster as a sortable
-document per kingdom: skills beside the weapon (speed, reach, accuracy, spread, cadence, the
-mounted open-fire distance, bow plus ammo damage, shots), for reading what a troop actually fields.
+The cells; the two rules' inversions before and after, per stat (same function as the
+validator's RANGED_LADDER_INVERSION); per line, every ranged troop with its launcher and skill
+before and after; troops no line claims. REPORT.html is the same roster as a sortable document per
+kingdom: skills beside the weapon (speed, reach, accuracy, spread, cadence, the mounted open-fire
+distance, bow plus ammo damage, shots), for reading what a troop actually fields.
 
 APPLY
 -----
 Refuses while any ladder_* id the edits need is missing from the launcher index: the items are
 generated first, and a roster naming an item the engine cannot find spawns the troop with no
-bow and no error. Writes through fix_upgrade_armour_regressions.write_changes (byte-faithful:
-BOM and line endings kept, re-parsed before writing). Idempotent: a second --apply writes nothing.
+bow and no error. Slots go through fix_upgrade_armour_regressions.write_changes, skills through
+rebalance_troops.apply_skills_via_regex (both byte-faithful, both re-parse before writing).
+Idempotent: a second --apply writes nothing.
 
 USAGE
 -----
@@ -52,7 +63,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fix_upgrade_armour_regressions as fx  # noqa: E402  write_changes
 import ranged_ladder as rl  # noqa: E402
-import rebalance_troops as rb  # noqa: E402  DEFAULT_GAME_MODULES
+import rebalance_troops as rb  # noqa: E402  DEFAULT_GAME_MODULES, apply_skills_via_regex, militia
 
 REPORT_DIR = rl.REPO_ROOT / "tools" / "reports" / "ranged-ladders"
 REPORT_MD = "REPORT.md"
@@ -66,20 +77,18 @@ DOCS_HTML = rl.REPO_ROOT / "docs" / "reference" / "ranged-troops.html"
 # --------------------------------------------------------------------------- #
 def simulated_launchers(spec: dict, launchers: dict) -> dict:
     """The index as it will be once the items exist: every planned cell added (or replaced)
-    with its grid speed and its donor's other stats, so the after-view is computed the same
-    way the validator will compute it on the real files."""
+    with its speed, damage and accuracy, so the after-view is computed the same way the
+    validator will compute it on the real files."""
     out = dict(launchers)
     for item in rl.planned_items(spec):
-        donor = launchers.get(item.donor)
         out[item.id] = rl.Launcher(
-            id=item.id, cls=item.cls, speed=item.speed,
-            accuracy=donor.accuracy if donor else 0, damage=donor.damage if donor else 0,
+            id=item.id, cls=item.cls, speed=item.speed, accuracy=item.accuracy, damage=item.damage,
             name=f"(planned) {item.id}", file="ranged_ladder.xml")
     return out
 
 
-def apply_in_memory(troops: dict, edits: list) -> dict:
-    """A copy of the troops with the edits applied, for the after-view."""
+def apply_in_memory(troops: dict, edits: list, skill_edits: list = ()) -> dict:
+    """A copy of the troops with the slot and skill edits applied, for the after-view."""
     import copy
     out = {tid: copy.deepcopy(t) for tid, t in troops.items()}
     by = defaultdict(dict)
@@ -91,21 +100,26 @@ def apply_in_memory(troops: dict, edits: list) -> dict:
                 new = changes.get((slot, st.get(slot, "")))
                 if new is not None:
                     st[slot] = new
+    for s in skill_edits:
+        out[s.troop].skills[s.skill] = s.new
     return out
 
 
 def build_context(spec: dict, launchers: dict, troops: dict, game_modules, moduledata, ammo: dict | None = None,
-                  barred: set | None = None) -> dict:
+                  barred: set | None = None, militia=frozenset(), exempt=None, sources=None) -> dict:
     edits = rl.planned_edits(troops, launchers, spec, barred)
+    skill_edits = rl.planned_skill_edits(troops, launchers, spec, militia=militia,
+                                         exempt_edges=exempt, sources=sources)
     before = rl.inversions(troops, launchers, spec)
     after_idx = simulated_launchers(spec, launchers)
-    after_troops = apply_in_memory(troops, edits)
+    after_troops = apply_in_memory(troops, edits, skill_edits)
     after = rl.inversions(after_troops, after_idx, spec)
     return {
         "spec": spec, "launchers": launchers, "after_launchers": after_idx,
-        "troops": troops, "after_troops": after_troops, "edits": edits,
+        "troops": troops, "after_troops": after_troops, "edits": edits, "skill_edits": skill_edits,
         "before": before, "after": after,
         "unassigned": rl.unassigned(troops, launchers, spec),
+        "unlisted": rl.unlisted(troops, launchers, spec),
         "mount_conflicts": rl.mount_conflicts(troops, launchers, barred) if barred else [],
         "barred": barred,
         "items": rl.planned_items(spec), "ammo": ammo or {},
@@ -121,21 +135,32 @@ def _launcher_cell(troop, launchers, cls):
     ids = sorted(rl.troop_launchers(troop, launchers).get(cls, ()))
     if not ids:
         return "", None
-    speed = max(launchers[i].speed for i in ids)
+    best = max((launchers[i] for i in ids), key=lambda l: (l.speed, l.damage, l.accuracy))
     label = ", ".join(f"`{i}`" for i in ids)
-    return label, speed
+    return label, best
 
 
 def render_grid(spec: dict) -> str:
-    bands = rl.band_order(spec)
-    lines = ["| # | Line | Class | " + " | ".join(bands) + " |",
-             "|---|---|---|" + "---|" * len(bands)]
+    """One row per line and class: every listed tier's cell as speed / damage / accuracy / skill."""
+    tiers = list(range(0, rl.MAX_TIER + 1))
+    lines = ["Each cell is `speed / damage / accuracy / skill`.", "",
+             "| Line | Ranks (overall, damage, accuracy) | Class | " + " | ".join(f"T{t}" for t in tiers) + " |",
+             "|---|---|---|" + "---|" * len(tiers)]
     for line in spec["lines"]:
+        r = line["ranks"]
         for cls in rl.CLASSES:
-            if cls not in (line.get("donor") or {}):
+            listed = rl.tiers_for(line["id"], cls, spec)
+            if not listed:
                 continue
-            speeds = " | ".join(str(rl.grid_speed(line["id"], b, spec)) for b in bands)
-            lines.append(f"| {rl.rank_of(line['id'], spec)} | {line['id']} | {cls} | {speeds} |")
+            cells = []
+            for t in tiers:
+                if t in listed:
+                    c = rl.cell(line["id"], cls, t, spec)
+                    cells.append(f"{c.speed}/{c.damage}/{c.accuracy}/{rl.skill_cell(line['id'], t, spec)}")
+                else:
+                    cells.append("")
+            lines.append(f"| {line['id']} | {r['overall']}, {r['damage']}, {r['accuracy']} | {cls} | "
+                         + " | ".join(cells) + " |")
     return "\n".join(lines)
 
 
@@ -143,13 +168,17 @@ def render_groups(found: list) -> str:
     groups = rl.summarize(found)
     if not groups:
         return "None."
-    lines = ["| Rule | Class | Scope | Pairs | Worst pair |", "|---|---|---|---|---|"]
+    lines = ["| Rule | Stat | Class | Scope | Pairs | Worst pair |", "|---|---|---|---|---|---|"]
     for g in groups:
         w = g.worst
         lines.append(
-            f"| {g.kind} | {g.cls} | {g.scope} | {g.count} | `{w.low}` (T{w.low_tier}, {w.low_line}, {w.low_speed}) "
-            f"over `{w.high}` (T{w.high_tier}, {w.high_line}, {w.high_speed}) |")
+            f"| {g.kind} | {g.stat} | {g.cls} | {g.scope} | {g.count} | `{w.low}` (T{w.low_tier}, {w.low_line}, "
+            f"{w.low_value}) over `{w.high}` (T{w.high_tier}, {w.high_line}, {w.high_value}) |")
     return "\n".join(lines)
+
+
+def _fmt(rec):
+    return f"{rec.speed} / {rec.damage} / {rec.accuracy}" if rec else ""
 
 
 def render_line_tables(ctx: dict) -> str:
@@ -160,64 +189,70 @@ def render_line_tables(ctx: dict) -> str:
         t = troops[tid]
         if not rl.troop_launchers(t, launchers):
             continue
-        line = rl.line_of(t, spec)
-        by_line[line or "(unassigned)"].append(t)
+        by_line[rl.line_of(t, spec) or "(unassigned)"].append(t)
     out = []
-    order = [ln["id"] for ln in spec["lines"]] + ["(unassigned)"]
-    for line in order:
+    ids = [ln["id"] for ln in spec["lines"]]
+    for line in ids + ["(unassigned)"]:
         rows = sorted(by_line.get(line, []), key=lambda t: (t.tier, t.level, t.id))
         if not rows:
             continue
-        rank = f"rank {rl.rank_of(line, spec)}" if line in [ln["id"] for ln in spec["lines"]] else "no line"
-        out.append(f"\n### {line} ({rank}, {len(rows)} troops)\n")
-        out.append("| T | Band | Troop (lvl) | Group | Skill | Launcher before | Speed | Reach | Launcher after | Speed | Reach |")
-        out.append("|---|---|---|---|---|---|---|---|---|---|---|")
+        if line in ids:
+            r = rl.line_spec(line, spec)["ranks"]
+            label = f"rank {r['overall']}, damage {r['damage']}, accuracy {r['accuracy']}"
+        else:
+            label = "no line"
+        out.append(f"\n### {line} ({label}, {len(rows)} troops)\n")
+        out.append("| T | Troop (lvl) | Group | Skill | Launcher before | Spd / Dmg / Acc | Launcher after | Spd / Dmg / Acc |")
+        out.append("|---|---|---|---|---|---|---|---|")
         for t in rows:
-            band = rl.band_of(t.tier, spec)
             for cls in rl.CLASSES:
-                label, speed = _launcher_cell(t, launchers, cls)
-                if speed is None:
+                label_b, best_b = _launcher_cell(t, launchers, cls)
+                if best_b is None:
                     continue
-                skill = t.skills.get(cls, "")
-                a_label, a_speed = _launcher_cell(after_troops[t.id], after_idx, cls)
-                out.append(
-                    f"| {t.tier} | {band} | `{t.id}` ({t.level}) | {t.group} | {skill} | {label} | {speed} | "
-                    f"{rl.flight_range(speed):.0f} m | {a_label} | {a_speed} | {rl.flight_range(a_speed):.0f} m |")
+                label_a, best_a = _launcher_cell(after_troops[t.id], after_idx, cls)
+                sk_b, sk_a = t.skills.get(cls, 0), after_troops[t.id].skills.get(cls, 0)
+                skill = f"{sk_b}" if sk_a == sk_b else f"{sk_b} to {sk_a}"
+                out.append(f"| {t.tier} | `{t.id}` ({t.level}) | {t.group} | {cls} {skill} | {label_b} | "
+                           f"{_fmt(best_b)} | {label_a} | {_fmt(best_a)} |")
     return "\n".join(out)
 
 
 def render_report(ctx: dict) -> str:
     spec = ctx["spec"]
-    edits = ctx["edits"]
-    touched = len({e.troop for e in edits})
+    edits, skill_edits = ctx["edits"], ctx["skill_edits"]
+    touched = len({e.troop for e in edits} | {s.troop for s in skill_edits})
     ranged = sum(1 for t in ctx["troops"].values() if rl.troop_launchers(t, ctx["launchers"]))
+    clamps = [s for s in skill_edits if s.reason == "clamp"]
     head = [
-        "# Ranged range ladders",
+        "# Ranged ladders",
         "",
         f"Generated {ctx['generated']} by `tools/rebalance_ranged_ladders.py` from `{ctx['moduledata']}` "
         f"and the launchers in `{ctx['game_modules']}`. READ-ONLY output; `--apply` rewrites the rosters.",
         "",
-        "Reach is the launcher's `missile_speed`; the metres are the engine drag model on flat ground "
-        "(relative, the native range function is closed). Rule 1: inside a line a lower tier is never "
-        "faster than a higher tier. Rule 2: inside a band a better-ranked line is never slower than a "
-        "worse-ranked one. `speed = band_base[band] + rank_step * (n_lines - rank)`.",
+        "Rule 1: inside a line a lower tier never beats a higher tier. Rule 2: at the same tier a "
+        "better-ranked line is never worse. Both per launcher class and per stat (speed, damage, "
+        "accuracy, skill); the formulas are in `tools/ranged_ladders.json`. Reach metres are the engine "
+        "drag model on flat ground (relative; the native range function is closed).",
         "",
         "## Summary",
         "",
         f"- Ranged troops: {ranged} of {len(ctx['troops'])} in the troop files; lines: {len(spec['lines'])}; "
         f"planned items: {len(ctx['items'])}.",
-        f"- Pending roster edits: {len(edits)} slots over {touched} troops.",
+        f"- Pending edits: {len(edits)} launcher slots and {len(skill_edits)} skill values "
+        f"({len(clamps)} of them clamps) over {touched} troops.",
+        (f"- Clamped (raised to their upgrade source, not ladder troops): "
+         + ", ".join(f"`{s.troop}` {s.skill} {s.old} to {s.new}" for s in clamps) + ".") if clamps else
+        "- Clamped: none.",
         f"- Inversions before: {len(ctx['before'])} pairs; after the edits: {len(ctx['after'])}.",
         f"- Troops no line claims: {', '.join(t.id for t in ctx['unassigned']) or 'none'}.",
+        f"- Troops at a tier their line lists no cell for: "
+        f"{', '.join(f'{t.id} ({c} T{t.tier})' for t, c in ctx['unlisted']) or 'none'}.",
         (f"- Mounted troops holding a launcher they cannot draw from the saddle (usage requires_no_mount): "
          + (', '.join(f'`{c.troop}` ({c.launcher}, {c.usage})' for c in ctx['mount_conflicts']) or 'none') + '.')
         if ctx.get('barred') is not None else
         "- Mounted-usage check skipped: no item_usage_sets.xml could be read.",
         "",
-        "## The grid",
-        "",
-        f"Bands: {', '.join(f'{b} T{lo}-{hi}' for b, (lo, hi) in sorted(spec['bands'].items(), key=lambda kv: kv[1][0]))}. "
-        f"band_base {spec['band_base']}, rank_step {spec['rank_step']}.",
+        "## The cells",
         "",
         render_grid(spec),
         "",
@@ -231,7 +266,7 @@ def render_report(ctx: dict) -> str:
         "",
         "## Per line",
         "",
-        "Speed and reach before are the MAX over the troop's battle sets; after, every set carries the cell.",
+        "Before is the best launcher over the troop's battle sets; after, every set carries the cell.",
         render_line_tables(ctx),
         "",
     ]
@@ -243,18 +278,20 @@ def build_json(ctx: dict) -> dict:
     return {
         "generated": ctx["generated"],
         "moduledata": ctx["moduledata"], "game_modules": ctx["game_modules"],
-        "knobs": {"bands": spec["bands"], "band_base": spec["band_base"], "rank_step": spec["rank_step"]},
-        "lines": [ln["id"] for ln in spec["lines"]],
-        "grid": {ln["id"]: {cls: {b: rl.grid_speed(ln["id"], b, spec) for b in rl.band_order(spec)}
-                            for cls in rl.CLASSES if cls in (ln.get("donor") or {})}
-                 for ln in spec["lines"]},
+        "stats": spec["stats"],
+        "lines": {ln["id"]: ln["ranks"] for ln in spec["lines"]},
+        "cells": {i.id: {"speed": i.speed, "damage": i.damage, "accuracy": i.accuracy,
+                         "skill": rl.skill_cell(i.line, i.tier, spec)} for i in ctx["items"]},
         "items": [i.__dict__ for i in ctx["items"]],
         "edits_pending": len(ctx["edits"]),
         "edits": [e.__dict__ for e in ctx["edits"]],
+        "skill_edits_pending": len(ctx["skill_edits"]),
+        "skill_edits": [s.__dict__ for s in ctx["skill_edits"]],
         "inversions_before": len(ctx["before"]),
         "inversions_after": len(ctx["after"]),
         "worst_before": [g.worst.__dict__ | {"count": g.count} for g in rl.summarize(ctx["before"])],
         "unassigned": [t.id for t in ctx["unassigned"]],
+        "unlisted": [f"{t.id}:{c}:{t.tier}" for t, c in ctx["unlisted"]],
         "mount_conflicts": [c.__dict__ for c in ctx["mount_conflicts"]],
     }
 
@@ -266,7 +303,7 @@ REPORT_HTML = "REPORT.html"
 
 LINE_LABELS = {
     "mirkwood": "Mirkwood", "rivendell": "Rivendell and Lindon",
-    "gondor_special": "Gondor: Ithil Guard, Ithilien Ranger, Blackroot Vale",
+    "ithilien": "Gondor: Ithil Guard and Ithilien Rangers", "blackroot": "Gondor: Blackroot Vale",
     "mordor_num": "Mordor: Black Numenoreans", "dale": "Dale", "isengard": "Isengard",
     "harad": "Harad", "mordor_uruk": "Mordor: Black Uruks", "rhun_new": "Rhun", "umbar": "Umbar",
     "gondor": "Gondor: the other regions", "goblin": "Goblin-town and Bluecraig", "erebor": "Erebor, Iron Hills, Ironpass",
@@ -447,23 +484,26 @@ def render_html(ctx: dict) -> str:
     all_rows = [r for rs in rows.values() for r in rs]
     speeds = [r["speed"] for r in all_rows]
     reaches = [r["reach"] for r in all_rows]
-    lines = [ln["id"] for ln in spec["lines"]] + (["(unassigned)"] if rows.get("(unassigned)") else [])
-    bands = rl.band_order(spec)
+    line_ids = [ln["id"] for ln in spec["lines"]]
+    lines = line_ids + (["(unassigned)"] if rows.get("(unassigned)") else [])
+
+    def overall(line_id):
+        return rl.rank(line_id, "overall", spec) if line_id in line_ids else None
 
     def grid_cells(line_id):
-        if line_id not in [ln["id"] for ln in spec["lines"]]:
+        if line_id not in line_ids:
             return ""
-        ln = rl.line_spec(line_id, spec)
         out = []
         for cls in rl.CLASSES:
-            if cls in (ln.get("donor") or {}):
-                cells = " ".join(f"{b} <b>{rl.grid_speed(line_id, b, spec)}</b>" for b in bands)
-                out.append(f'<span><span class="chip {"bow" if cls == "Bow" else "xbow"}">{cls}</span> {cells}</span>')
+            for t in rl.tiers_for(line_id, cls, spec):
+                c = rl.cell(line_id, cls, t, spec)
+                out.append(f'<span><span class="chip {"bow" if cls == "Bow" else "xbow"}">T{t}</span> '
+                           f'<b>{c.speed}</b>/<b>{c.damage}</b>/<b>{c.accuracy}</b>/<b>{rl.skill_cell(line_id, t, spec)}</b></span>')
         return "".join(out)
 
     nav = "".join(
-        f'<a href="#kingdom-{_esc(l)}"><b>{i + 1 if l != "(unassigned)" else "?"}</b>{_esc(LINE_LABELS.get(l, l))}</a>'
-        for i, l in enumerate(lines) if rows.get(l))
+        f'<a href="#kingdom-{_esc(l)}"><b>{overall(l) if l != "(unassigned)" else "?"}</b>{_esc(LINE_LABELS.get(l, l))}</a>'
+        for l in lines if rows.get(l))
 
     head_cols = [
         ("Tier", "num"), ("Band", ""), ("Troop", ""), ("Lvl", "num"), ("Group", ""),
@@ -503,7 +543,11 @@ def render_html(ctx: dict) -> str:
                 + f'<td class="id" data-v="{_esc(r["ammo"])}">{_esc(r["ammo"])}</td>'
                 + cell(r["ammo_dmg"], "num") + cell(r["ammo_stack"], "num") + cell(r["total_dmg"], "num")
                 + "</tr>")
-        rank = f"Rank {i + 1} of {len(spec['lines'])}" if l != "(unassigned)" else "No line"
+        if l != "(unassigned)":
+            r = rl.line_spec(l, spec)["ranks"]
+            rank = f"Rank {r['overall']} (damage {r['damage']}, accuracy {r['accuracy']})"
+        else:
+            rank = "No line"
         sections.append(
             f'<section class="kingdom" id="kingdom-{_esc(l)}" data-n="{len(rs)}">'
             f'<header><span class="rank">{rank}</span><h2>{_esc(LINE_LABELS.get(l, l))}</h2>'
@@ -559,8 +603,10 @@ def render_html(ctx: dict) -> str:
         '<label><input type="checkbox" id="f-bow" checked> Bows</label>'
         '<label><input type="checkbox" id="f-xbow" checked> Crossbows</label></div>\n'
         + "\n".join(sections) + "\n"
-        '<p class="foot">Band E is engine tier 0 to 2, R 3 to 4, V 5 to 6, X 7 to 8, C 9 to 10. The row under each kingdom is its '
-        "ladder: the missile speed every band's item carries, from <code>tools/ranged_ladders.json</code>. "
+        '<p class="foot">The row under each kingdom is its ladder, one cell per tier it fields: '
+        "speed / damage / accuracy of the tier's item and the Bow or Crossbow the troop carries, from "
+        "<code>tools/ranged_ladders.json</code>. The band (E tier 0 to 2, R 3 to 4, V 5 to 6, X 7 to 8, C 9 to 10) "
+        "only picks which donor bow the tier's item looks like. "
         "Rain or snow cut bow and crossbow speed by 10% and fog cuts range by 20% in the mission; neither is in these numbers.</p>\n"
         "</main>\n<script>" + _HTML_JS + "</script>\n</body>\n</html>\n"
     )
@@ -607,6 +653,13 @@ def main(argv=None):
         return 2
 
     troops = rl.load_ranged_troops(args.moduledata, failures=failures)
+    retired = rl.retired_ladder_launchers(troops, launchers)
+    if retired:
+        # The generator already replaced these ids; the rosters still name them. Plan them as
+        # launchers so every slot is repointed, never left naming an item that no longer exists.
+        print(f"NOTE: {len(retired)} retired ladder id(s) still named by the rosters will be repointed "
+              f"(first few: {', '.join(sorted(retired)[:4])})")
+        launchers = {**launchers, **retired}
     ammo = rl.index_ammo(rl.default_item_roots(game_modules, args.moduledata), failures=failures)
     barred = rl.mount_barred_usages(game_modules)
     if barred is None:
@@ -615,7 +668,16 @@ def main(argv=None):
         if f not in printed:
             print(f"WARNING: {f}")
     try:
-        ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo, barred)
+        # Fail closed, like rebalance_troops: without the bindings the clamp would treat every
+        # militia promotion as an ordinary edge and raise it.
+        militia = rb.militia_troop_ids(args.moduledata)
+    except RuntimeError as exc:
+        print(f"ERROR: {exc} Nothing was written.")
+        return 2
+    sources = rl.load_upgrade_sources(args.moduledata)
+    try:
+        ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo, barred,
+                            militia=militia, exempt=rb.RESPECIALIZATION_EXEMPT_EDGES, sources=sources)
     except rl.LadderError as exc:
         print(f"ERROR: {exc}")
         return 2
@@ -636,15 +698,15 @@ def main(argv=None):
     print(f"Launchers: {len(launchers)}. Ranged troops: "
           f"{sum(1 for t in troops.values() if rl.troop_launchers(t, launchers))}. "
           f"Inversions: {len(ctx['before'])} before, {len(ctx['after'])} after. "
-          f"Pending edits: {len(ctx['edits'])}. Reports: {args.report_dir}")
+          f"Pending edits: {len(ctx['edits'])} slots, {len(ctx['skill_edits'])} skills. Reports: {args.report_dir}")
     if args.stdout:
         print(md.split("## Per line")[0])
 
     if not args.apply:
         return 0
-    edits = ctx["edits"]
-    if not edits:
-        print("Nothing to apply: every launcher slot already carries its cell.")
+    edits, skill_edits = ctx["edits"], ctx["skill_edits"]
+    if not edits and not skill_edits:
+        print("Nothing to apply: every launcher slot and skill already carries its cell.")
         return 0
     missing = sorted({e.new for e in edits} - set(launchers))
     if missing:
@@ -652,12 +714,31 @@ def main(argv=None):
               f"index; run tools/generate_ranged_ladder_items.py --apply first, then restart the game. "
               f"Nothing was written. First few: {', '.join(missing[:6])}")
         return 2
-    changes = [{"file": e.file, "troop": e.troop, "slot": e.slot, "old": e.old, "new": e.new} for e in edits]
-    written = fx.write_changes(changes)
-    remaining = rl.planned_edits(rl.load_ranged_troops(args.moduledata), launchers, spec, barred)
-    print(f"Applied {len(edits)} slot edits over {len({e.troop for e in edits})} troops in {written} file(s); "
-          f"{len(remaining)} edit(s) still pending.")
-    return 0 if not remaining else 1
+    written = 0
+    if edits:
+        changes = [{"file": e.file, "troop": e.troop, "slot": e.slot, "old": e.old, "new": e.new} for e in edits]
+        written = fx.write_changes(changes)
+    skill_files = write_skills(troops, skill_edits)
+    after = rl.load_ranged_troops(args.moduledata)
+    remaining = rl.planned_edits(after, launchers, spec, barred)
+    remaining_skills = rl.planned_skill_edits(after, launchers, spec, militia=militia,
+                                              exempt_edges=rb.RESPECIALIZATION_EXEMPT_EDGES, sources=sources)
+    print(f"Applied {len(edits)} slot edits in {written} file(s) and {len(skill_edits)} skill values in "
+          f"{skill_files} file(s); {len(remaining)} slot and {len(remaining_skills)} skill edit(s) still pending.")
+    return 0 if not remaining and not remaining_skills else 1
+
+
+def write_skills(troops: dict, skill_edits: list) -> int:
+    """Write the planned Bow / Crossbow values through rebalance_troops' byte-faithful writer. Each
+    troop gets its full declared skill set back with only the planned values replaced, so no other
+    skill moves. Returns the number of files written."""
+    by_file: dict[str, dict] = defaultdict(dict)
+    for s in skill_edits:
+        full = by_file[s.file].setdefault(s.troop, dict(troops[s.troop].skills))
+        full[s.skill] = s.new
+    for path, troop_map in by_file.items():
+        rb.apply_skills_via_regex(path, troop_map)
+    return len(by_file)
 
 
 if __name__ == "__main__":
