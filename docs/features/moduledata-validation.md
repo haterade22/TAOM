@@ -508,6 +508,23 @@ repair is `tools/generate_ranged_ladder_items.py --apply` then
 `tools/rebalance_ranged_ladders.py --apply`, which left 0. Design and grid:
 `docs/features/ranged-ladders.md`.
 
+**Since #617 (2026-09-18) the rules run per stat, not only on speed.** Speed, damage and accuracy of
+the launcher and the troop's own Bow or Crossbow each obey both rules, and rule 2 compares troops at
+the same TIER (the band now only picks a donor mesh) on that stat's own rank list (lines rank overall,
+damage and accuracy separately). A troop at a tier its line lists no cell for is a finding too: the
+generator makes no item there. The first per-stat run found 709 pairs, every one because each tier
+carried its donor's damage and accuracy; the repair left 0.
+
+## Ranged damage ceiling (`RANGED_DAMAGE_CEILING`)
+
+**WARNING.** A bow or crossbow that a Lord, a Wanderer or any `is_hero` character outside `troops/`
+can carry, through its own equipment, the battle `EquipmentSet` rosters it names, or a template
+`lords.xslt` hands a retagged vanilla lord (`ranged_ladder.hero_launchers`, `Equipment` matched in
+either case), whose `thrust_damage` is above `hero_ceiling` in `tools/ranged_ladders.json` (Bow 90,
+Crossbow 105). The Armory's own launchers are what heroes and the shops hand out, and until #617 they
+sat at 97 to 130 with accuracy 100. Repair: the item's row in the spec's `donor_stats`, then
+`python tools/restat_ranged_donors.py --apply`. Skipped, never faked, without the install.
+
 ## Generator retired-item refs (`GENERATOR_RETIRED_ITEM_REF`)
 
 **WARNING.** Every other pass reads the XML that ships. None reads the Python that writes it, so a

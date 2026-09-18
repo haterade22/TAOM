@@ -1451,3 +1451,24 @@ state the compounded charge effect in the plan. `MountSpeed = env x 0.22 x (spee
 conversion (`SandboxAgentStatCalculateModel.UpdateHorseStats`).
 
 **Source:** `docs/reviews/rca-creature-mount-retune-2026-09-17.md` (#615, 2026-09-17).
+
+### A clone that sets one stat inherits every other stat of its donor, at every tier
+
+The #582 ranged ladder generated one item per (kingdom, band) by cloning the kingdom's donor bow and
+setting only `missile_speed`, because that ladder was about reach. Everything else came along: the
+Noldor longbow's 105 damage and accuracy 100 landed on Rivendell's T2 militia, the Iron Hills'
+130-damage crossbow on its T4 recruits, and the ladder ordered reach perfectly while every archer in
+a kingdom hit like its lord (#617, "most archers nearly one-shot"). The gate checked only the stat the
+ladder set, so it stayed green.
+
+**Why missed:** the design was scoped to the question asked (range), and the clone was described as
+"only id, name and speed change" as if that were a property, when it meant every other stat was
+silently the donor's. No check compared the inherited stats to anything.
+
+**Prevent:** when a generator clones a donor, list every gameplay stat the engine reads from the item
+(for a launcher: `missile_speed`, `thrust_damage`, `accuracy`; the damage and spread formulas are in
+`tools/ranged_ladder.py`) and either set each one per cell or assert why the donor's value is right at
+every tier. Gate every stat the clone carries, not only the one the change was about
+(`RANGED_LADDER_INVERSION` now runs per stat).
+
+**Source:** issue #617, `docs/features/ranged-ladders.md` (2026-09-18).

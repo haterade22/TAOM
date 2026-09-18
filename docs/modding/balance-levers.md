@@ -85,6 +85,10 @@ A separate, level-driven term is easy to mistake for a skill effect. `BasicChara
 
 After the baseline and the culture delta, two more passes run: a weapon specialisation shift of `swap_amount = 15` (`tools/rebalance_troops.py:316`) triggered by keywords in the troop's name, and a roster-wide monotonicity clamp that raises a child's skill to its parent's over the whole upgrade graph.
 
+**A ranged troop's Bow or Crossbow is not on this curve.** Since #617 `rebalance_troops.ladder_skill_override` replaces it, for every troop carrying a ladder bow at a tier its line lists, with the ranged ladder's cell (`tools/ranged_ladders.json`, `ranged_ladder.skill_cell`): a per-tier anchor shifted by the kingdom's rank, militia included. The same cell is what `tools/rebalance_ranged_ladders.py --apply` writes, so the two tools agree.
+
+**Ranged damage and accuracy are item data, not skill.** A hit is `(v_hit / v_launch)^2 x (bow thrust_damage + ammo thrust_damage) x (1 + 0.0011 x Bow)`, crossbows without the skill factor, then the Pierce armour formula (`SandboxStrikeMagnitudeModel.CalculateStrikeMagnitudeForMissile`, `ComputeRawDamage`); the spread is `(100 - accuracy) x (1 - 0.0009 x Bow) x 0.001`, crossbows `0.0005 x Crossbow` (`GetWeaponInaccuracy`). So the lever for "archers hit too hard" or "never miss" is the launcher's `thrust_damage` and `accuracy`: the troops' `ladder_*` items from the ladder spec, the Armory's own bows and ammo from its `donor_stats` / `ammo_stats` (`tools/restat_ranged_donors.py`). TAOM overrides no model in that chain. [ranged-ladders.md](../features/ranged-ladders.md).
+
 ## Lever 3: armour numbers
 
 Where they live is [Armour items](items-armor.md). What they buy is two independent things: damage reduction, and price.

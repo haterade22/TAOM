@@ -4,6 +4,41 @@
 
 ## 2026-09-18
 
+### balance(ranged): archers ranked per tier on damage, accuracy, skill and reach (#617)
+
+Most archers nearly or fully one-shot a troop. No TAOM code touches missile damage or accuracy (checked
+against the 1.5.3 decompile); the cause was data. The #582 generator cloned each kingdom's donor bow and
+set only `missile_speed`, so every tier of a line carried the donor's damage and accuracy: Rivendell's T2
+militia held a 105-damage, accuracy-100 Noldor longbow and hit a T5 chest for about 48, where vanilla T2
+bows are 40 to 61 at accuracy 85. Militia archers also carried Bow 120 to 180 against 45 to 70 for
+regular T2s.
+
+- **The model** (`tools/ranged_ladders.json`, approved by the project lead from an editable roster):
+  every tier a kingdom fields is its own item `ladder_<line>_<bow|xbow>_t<tier>` (123, down from 130
+  band items; tiers in a band still share the donor's mesh). Per-tier curves for speed, damage, accuracy
+  and the troop's Bow/Crossbow, shifted by the kingdom's rank on each stat. The Gondor group anchors
+  vanilla's typical culture; Mirkwood sits 24% over it at T1 to T6 (Battania's lead in vanilla) and the
+  gap widens from T7. Ranking: Mirkwood, Rivendell and Lindon, Ithilien, Blackroot Vale, Black
+  Numenoreans, Harad and Dale, Gondor, Rhun, Isengard and Umbar, Erebor and the Black Uruks, the orc
+  hosts and goblins, Rohan, Dunland; Harad 3rd on accuracy, Erebor 2nd on damage. Mirkwood T10: bow 133,
+  accuracy 99, Bow 410, about 90 on a T5 chest. Ithilien and Blackroot Vale are separate lines now.
+- **Rosters**: `rebalance_ranged_ladders.py --apply` moved 227 launcher slots onto their tier item and
+  set 186 Bow/Crossbow values, militia included (two non-ladder children clamped up so
+  `UPGRADE_SKILL_REGRESSION` stays green). 709 inverted pairs to 0. It now also repoints `ladder_*`
+  ids the generator already retired, and refuses when the militia bindings cannot be read.
+- **The Armory's own bows and ammo** (what lords, wanderers and shops hand out): new
+  `tools/restat_ranged_donors.py` applied the spec's `donor_stats` (38 launchers, top 90 bow and 104
+  crossbow, accuracy capped at 98) and `ammo_stats` (27 arrows and bolts capped at vanilla's +4 and +5)
+  to the live Armory and the v1.5 mirror, attribute values only.
+- `rebalance_troops.py` takes a ladder troop's Bow/Crossbow from the same cell, so a full rebaseline
+  never undoes it. `RANGED_LADDER_INVERSION` runs per stat and flags a troop at an unlisted tier; new
+  `RANGED_DAMAGE_CEILING` warns on a hero-reachable launcher above the spec's ceiling.
+  `generate_ranged_ladder_items.py --verify` checks speed, damage and accuracy; its mirror default is v1.5.
+- Tests: `tools/tests/test_ranged_ladder.py` rewritten for the model, new
+  `tools/tests/test_restat_ranged_donors.py`; the tools suite green. Validator: 0 errors, no `RANGED_*`
+  findings.
+- Owed: full game restart, `/armory-audit`, a Custom Battle check; a translator run for the new item names.
+
 ### feat(troll-anim): the Fab cave troll clips play in the Kit and are bound into as_cave_troll_warrior
 
 Yesterday's export folded the troll at every joint in the Kit. Rather than trying import settings, each
