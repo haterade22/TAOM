@@ -142,6 +142,100 @@ regular T2s.
   findings.
 - Owed: full game restart, `/armory-audit`, a Custom Battle check; a translator run for the new item names.
 
+### feat(ram-anim): the war ram head-butt re-authored on the engine horse rig (#618)
+
+The head-butt clip that cost a day on 2026-08-29 was authored on `SK_EB_Goat_A.fbx`'s rig: 39 bones with 7
+`*_nub_notused`, `horseneck1` under `horsetail3`, the armature turned 180 deg, every bone frame off the engine's.
+The troll work settled what the Kit does with such a file, so the same procedure now runs on the ram:
+`tools/blender/horse_skeleton_engine.json` (32 bones, read from `skeletons.tpac`) and the new
+`tools/blender/transfer_clip_to_engine_rig.py`, which builds the engine rig, measures which world turn lays the
+source's bind heads on the engine's (identity here: 28 of 32 bones coincide to the millimetre, the goat's own
+head, neck2 and shoulders sit 6 to 15 cm off), transfers every bone's rest-relative WORLD rotation onto the engine
+rest (mesh-rig frames cancel in world space), bakes the Kit's 180 deg root yaw into the pose, keys frame 0 as
+rest and exports Y/X. Checks: rest-relative deltas match the source to 0.0 deg on all 32 bones at the middle
+frame, frame 0 reads 0.0 deg from the engine rest after re-import, and the clip moves exactly `horseneck1` 30 deg,
+`horse_head` 25 deg, `horseneck2` 9 deg. The export replaced `AssetSources/creature/ram/animations/war_ram_butt.fbx`
+(2026-08-31 file backed up under `E:\LOTRAOMAssets\WarRam\_armory_source_backup_20260918\`), same file name and
+take name so a Kit reimport keeps master `act_war_ram_butt`'s GUID and the `war_ram_butt` clip that points at it
+(Source1 = 1, Source2 = 30 already fit the 31-frame master).
+
+The first Kit import of that export stood the ram on its head, hind legs in the air, and the read-back found a
+fourth Kit fact: a master's bone tracks are stored in FBX NODE order (Blender writes nodes depth-first) and
+never remapped, while the engine reads slot i as bone i of the skeleton's FILE order (every vanilla horse master
+in `animations.tpac` is in it). `human_skeleton`'s file order is a depth-first walk, so the troll never saw it;
+`horse_skeleton` lists the rear legs and tail before the neck, so 16 slots came back scrambled: the neck played
+the tail, the rear legs the neck. TaleWorlds' own goat FBX parents `horseneck1` to `horsetail3` for exactly this
+reason. The tool now exports from a rig whose hierarchy makes the depth-first order equal the file order while
+every node local stays the engine-parent-relative value (re-import check: order equal, locals 0.0 deg at frame
+0); the Model nodes in the FBX binary read in the engine's order. The read-back of that import proved the slot
+fix (all 32 slots on their file-order bone, only neck1, neck2 and head moving) and caught one more rule: the
+master is named after the FBX take, and a reimport keeps its GUID only while the take name matches; a Blender
+`.001` collision on the action made `act_war_ram_butt.001`, a new GUID, an empty skeleton and an orphaned clip.
+Third import, 12:36: the head-butt plays correctly in the Kit (Mike). Feedback applied the same hour: the tool
+gained `--hold-bone horseneck1 --hold-seconds 2.5`, which repeats the frame where the neck is lowest, so the
+head stays down before the recovery (106 frames with the rest frame; that export is the Armory source now,
+reimport owed).
+
+Bound into the game the same afternoon: `act_war_ram_butt` typed `actt_kick` in the Armory's `action_types.xml`,
+three sets `as_war_ram` / `_town_and_village` / `_map` over the vanilla horse sets in `action_sets.xml`, the
+Monster on `as_war_ram`, `WarRamConfig.AttackActionName` moved off `act_horse_kick` (a separate action, not a
+re-pointed kick: the horse usage set fires `act_horse_kick` itself at whatever stands behind the mount), the
+drift guard's message renamed for the unversioned Armory. `WarRamConfigTests` (3, RED then GREEN) pins the
+action name, the four equal profile slots and cooldown > clip. Gates: parity audit 0 gaps (ram sets under
+root `as_horse`), `validate_moduledata.py` exit 0, full suite 9,791 passed / 0 failed. Ledger:
+`docs/reference/lotrlome-war-ram-changes.md` section 5. `bannerlord-skeleton-authoring.md` now carries the
+procedure and re-reads the August dead ends with the four facts (the "load-bearing reparent" was the
+slot-order trick going the wrong way).
+
+Deep review (#618): the XML passed on every check, including the engine side (the explicit `action_set` overrides
+the base monster's; the campaign map calls `GetActionSet(ActionSetCode + "_map")`, which throws on a miss, so
+`as_war_ram_map` is load-bearing). Fixed: seven docs plus `feature-map.md`, `INDEX.md`, the `WarRamConfig` summary
+and the Armory `SubModule.xml` comment still showed the ram on `as_horse`; the transfer tool's second export path
+lacked the take-name assertion, renamed the engine rig to `.001`, hid a bad flag from its error log and assumed a
+root-first skeleton; the wiring tool overwrote its backups and claimed an unmeasured RDC property. The fixed transfer
+tool reproduces the Armory export exactly. The 12:44 hold reimport kept the master GUID; the clip was then rewired
+on disk to Source 1..105 (3.5 s). That re-save is 48 bytes shorter than the Kit's (version word 5 not 6, no
+dependency tail), measured harmless: 68 shipping creature clips are version 5 and 48 have no tail, and all play.
+RCA `docs/reviews/rca-war-ram-headbutt-2026-09-18.md`, two lessons in `build-tooling-workflow.md`.
+
+The rewired clip's RDC entry is current: the Kit re-cooked it at 14:11:55, on its first load after the 14:04
+rewrite.
+
+First Custom Battle (15:16, two battles): the butt fired 1,300 times from 127 rams, each on its 10 s cooldown,
+landing 18 to 28 damage at magnitude 35 with knockdown, but the head was not seen to drop and each butt hit
+everyone within 2 m. Two changes: the clip goes from the Kit's priority 0 (locomotion overrides it at once) to
+vanilla `horse_kick`'s priority 34 and blends 0.2 / 0.4, flags still empty so the legs keep moving; and the
+butt now hits ONE enemy (Mike: "only hit 1 person not AOE"). The shared elephant-like profile gained a
+`SingleTarget` switch, off by default so the elephant and mumakil tramples stay radial; the ram turns it on
+(`WarRamConfig.AttackSingleTarget`), and the attack task then hits only the enemy faced most squarely, nearer on
+a tie (`ElephantLikeVictimSelection`, pure, 7 tests; `WarRamConfigTests` pins the switch; RED then GREEN).
+Not-tested: the second Custom Battle (open the Kit once first so it re-cooks the clip's RDC entry).
+
+### fix(troll-mesh): the LOME troll head binds base_body_olog on every reimport
+
+The Kit reimport of the re-skinned `LOME_troll.fbx` warned "Unable to find material lotr_troll_head" on all six
+head LODs. Not a re-skin regression: the original FBX named that material too, the Kit has never had one by that
+name, and the March import had been reassigned to `base_body_olog` by hand in the Kit, which a reimport resets
+because the Kit binds by the FBX's material name. New `tools/blender/fbx_remap_materials.py` re-exports with the
+re-skin tool's exact settings and remaps the slots, then re-imports both files and compares: 6 slots changed,
+vertex counts and per-group weight sums identical, bone rest matrices within 2e-5. The Armory source now names
+only `base_body_olog`, `lotr_troll_eyes`, `lotr_troll_mouth` (old file kept as `LOME_troll.fbx.bak-matremap`).
+`LOME_troll_armor.fbx` needs four materials the live Armory never had (`lotr_troll_chains`, `_helmet`, `_pants`,
+`_plate_armour`). Their source PNGs turned up in an older Armory copy (`E:\Safee\LOTRLOME_Armory\AssetSources\troll\`,
+2048 each); all 12 are now in the Cave Troll `textures\` folder at d 1024 / n 512 / s 512, resized with the 2026-09-13
+texture script, 2K originals in its backup tree. Mike created the four Kit materials and imported the armor: the
+engine log shows no "Unable to find material" after the last armor import (14:34:39), and the body reimport of
+14:18:57 (the Kit picking up the fixed source by itself) raised no head warning.
+
+Correction to the troll clip entry below and to the docs since yesterday: the "Kit save for the 52 masters'
+RuntimeDataCache entries" was a false target. A census of every creature in the Armory: warg 56 of 56,
+elephant 31 of 31, chariot 3 of 3 and spider 24 of 26 skeletal-animation masters have no entry, every clip has
+one, and all of them animate in game. `tools/check_rdc_entries.py` now recognises a master by its item types
+(SkeletalAnimation, no Metamesh) and counts it apart (`tools/tests/test_check_rdc_entries.py`, 5 tests, RED
+then GREEN); `creature/troll`, `creature/ram` and the Cave Troll folder all print 0. Across the whole creature
+tree two packages predating this work still lack an entry: `elephant/mesh/elephant_harad_armor_01_geo.tpac`
+and `spider/ani_dg_spi_idle_01_geo.tpac`.
+
 ### feat(troll-anim): the Fab cave troll clips play in the Kit and are bound into as_cave_troll_warrior
 
 Yesterday's export folded the troll at every joint in the Kit. Rather than trying import settings, each
