@@ -499,6 +499,37 @@ EOF
 fi
 
 # ---------------------------------------------------------------------------
+head2 "7. check-deep-review: the Stop reminder mutes only after a logged deep-reviewer run"
+# The mute greps a line log-agent.sh writes, and the two hooks share nothing else. Until
+# 2026-09-18 the mute matched lens names the writer never logs, so it never fired. Drive the
+# real writer and the real reader together, both directions: a rename or a format change on
+# either side must fail here instead of silently re-arming or permanently muting the reminder.
+CDR_REPO="$SANDBOX/cdr-repo"
+mkdir -p "$CDR_REPO/.claude/logs" "$CDR_REPO/Main"
+git -C "$CDR_REPO" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$CDR_REPO/Main/Foo.cs"
+cdr_log() {
+    printf '{"agent_type":"%s","agent_id":"t"}' "$1" \
+        | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
+}
+cdr_reminds() {
+    ( cd "$CDR_REPO" && timeout -k 2 10 bash "$REPO/.claude/hooks/check-deep-review.sh" </dev/null 2>&1 >/dev/null ) \
+        | grep -q 'REMINDER: Run /deep-review'
+}
+cdr_log Explore
+if cdr_reminds; then
+    ok "reminds on a dirty .cs when no deep-reviewer run is logged"
+else
+    bad "check-deep-review.sh stayed silent on a dirty .cs with no deep-reviewer run logged"
+fi
+cdr_log deep-reviewer
+if cdr_reminds; then
+    bad "check-deep-review.sh still reminds after log-agent.sh logged a deep-reviewer run: the writer's line format and the mute's pattern no longer agree"
+else
+    ok "a deep-reviewer run logged by log-agent.sh mutes the reminder"
+fi
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then

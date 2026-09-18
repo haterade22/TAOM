@@ -70,7 +70,7 @@ Enabled plugins add their own skills alongside TAOM's and the MCP servers. Where
 
 | Job | TAOM route | Overlapping plugin/server |
 |-----|-----------|---------------------------|
-| Pre-commit C# review | `/deep-review` (+ `/review-codex`) | `code-review` plugin (`/code-review` — kept for `/code-review ultra` cloud review) |
+| Pre-commit C# or XML review | `/deep-review` (+ `/review-codex`) | `code-review` plugin (`/code-review`, kept for `/code-review ultra` cloud review) |
 | GitHub issues/PRs | `gh` CLI (per CLAUDE.md MCP Usage Guide: GitHub MCP when authenticated) | `github` plugin, `github` MCP server |
 | Redundant-code deletion | `/deslop` | `code-simplifier` plugin (`/simplify`) — disabled 2026-08-05 |
 

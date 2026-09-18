@@ -16,18 +16,22 @@ Each test maps to one recurring TAOM bug class the validator must catch:
   - DUPLICATE_NPC_ID       -> same NPCCharacter id defined twice in TAOM
   - MISSING_CIVILIAN_TYPE  -> civilian roster missing equipmentType="Civilian"
 """
+import io
 import json
 import os
 import re
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import taom_schema as ts  # noqa: E402
 import validate_moduledata as vm  # noqa: E402
+import validate_xml_schemas as vx  # noqa: E402
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
 
@@ -2171,6 +2175,109 @@ class MissingCollisionBodyTests(unittest.TestCase):
             issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
         self.assertEqual([i.code for i in issues], [vm.BODY_CODE])
         self.assertIn("NOT verified", issues[0].message)
+
+
+_FACTIONS_XSD = """<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Factions">
+    <xs:complexType><xs:sequence>
+      <xs:element name="Faction" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="id" type="xs:string" use="required"/>
+          <xs:attribute name="initial_home_settlement" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence></xs:complexType>
+  </xs:element>
+</xs:schema>
+"""
+_GOOD_CLANS = """<?xml version="1.0" encoding="utf-8"?>
+<Factions>
+  <Faction id="clan_a" initial_home_settlement="Settlement.town_A1"/>
+</Factions>
+"""
+_REGISTRATION = """<?xml version="1.0" encoding="utf-8"?>
+<Module><Xmls><XmlNode><XmlName id="Factions" path="characters/clans"/></XmlNode></Xmls></Module>
+"""
+
+
+class SchemaInvalidPassTests(unittest.TestCase):
+    """The engine-XSD layer (validate_xml_schemas.py) as a validator pass, so the commit hook
+    gates it: a file the repo module registers that breaks its engine schema is an ERROR at
+    the offending line, a registration that loads nothing is an ERROR against SubModule.xml,
+    and a run that could not check the layer says so once instead of passing silently."""
+
+    def setUp(self):
+        vx._schema.cache_clear()
+        self._tmp = tempfile.TemporaryDirectory()
+        root = Path(self._tmp.name)
+        self.module = root / "Mod"
+        self.schemas = root / "Game" / "XmlSchemas"
+        _write(self.schemas / "Factions.xsd", _FACTIONS_XSD)
+        _write(self.module / "SubModule.xml", _REGISTRATION)
+        self.clans = self.module / "ModuleData" / "characters" / "clans.xml"
+        _write(self.clans, _GOOD_CLANS)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _issues(self, schemas=None):
+        return vm.schema_invalid_issues(self.module, schemas or self.schemas)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_schema_invalid_file_is_an_error_at_its_line(self):
+        _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
+        issues = self._issues()
+        self.assertEqual([(i.code, i.severity, i.file, i.line, i.entry_id) for i in issues],
+                         [(vm.SCHEMA_CODE, ts.Severity.ERROR, "characters/clans.xml", 3, "Factions")])
+        self.assertIn("initial_home_settlement", issues[0].message)
+        self.assertEqual(vm.SCHEMA_CODE, "SCHEMA_INVALID")
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_clean_module_has_no_issues(self):
+        self.assertEqual(self._issues(), [])
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_registration_that_loads_nothing_is_an_error_against_submodule(self):
+        _write(self.module / "SubModule.xml", _REGISTRATION.replace("characters/clans", "typo_clans"))
+        issues = self._issues()
+        self.assertEqual([(i.code, i.severity, i.file) for i in issues],
+                         [(vm.SCHEMA_CODE, ts.Severity.ERROR, "SubModule.xml")])
+        self.assertIn("typo_clans", issues[0].message)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_malformed_submodule_is_an_error_not_a_traceback(self):
+        _write(self.module / "SubModule.xml", "<Module>\n<Xmls>")
+        issues = self._issues()
+        self.assertEqual([(i.code, i.severity, i.file) for i in issues],
+                         [(vm.SCHEMA_CODE, ts.Severity.ERROR, "SubModule.xml")])
+        self.assertIn("not well-formed", issues[0].message)
+
+    def test_absent_schema_folder_is_one_not_verified_warning(self):
+        issues = self._issues(self.schemas.parent / "nowhere")
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.SCHEMA_CODE, ts.Severity.WARNING)])
+        self.assertIn("NOT verified", issues[0].message)
+
+    def test_missing_lxml_is_one_not_verified_warning(self):
+        with mock.patch.object(vx, "HAVE_LXML", False):
+            issues = self._issues()
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.SCHEMA_CODE, ts.Severity.WARNING)])
+        self.assertIn("lxml", issues[0].message)
+        self.assertIn("NOT verified", issues[0].message)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_main_runs_the_pass(self):
+        """A pass main() never calls is a dead gate however well its unit tests pass.
+        The schemas folder is found beside --game-modules, as in a real install."""
+        _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
+        argv = ["validate_moduledata.py", "--moduledata", str(self.module / "ModuleData"),
+                "--game-modules", str(self.schemas.parent / "Modules"), "--code", vm.SCHEMA_CODE]
+        out, err = io.StringIO(), io.StringIO()
+        with mock.patch.object(sys, "argv", argv), redirect_stdout(out), redirect_stderr(err):
+            code = vm.main()
+        self.assertEqual(code, 1, out.getvalue())
+        self.assertIn(vm.SCHEMA_CODE, out.getvalue())
+        self.assertIn("characters/clans.xml:3", out.getvalue())
 
 
 class CommitGateCoverageTests(unittest.TestCase):

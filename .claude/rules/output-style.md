@@ -56,6 +56,8 @@ Governs prose Claude *produces*: commit bodies, CHANGELOG entries, GitHub issue 
 
 If none of those reads well, the sentence wants restructuring rather than different punctuation.
 
+**Not a colon inside YAML frontmatter.** In an unquoted `description:` value, `: ` starts a mapping and the file stops parsing (2026-09-18, `/ship`). Use parentheses or a comma there, then run `bash tools/test_hooks.sh` (section 3b parses every skill and agent frontmatter).
+
 **Hyphens are untouched.** `--RunTests`, `v1.4.8`, `check-freeze.sh`, `kebab-case`, `cross-platform` all stay exactly as they are. The ban covers the two long dashes only.
 
 **Four exemptions**, where stripping a dash would be wrong rather than clean:

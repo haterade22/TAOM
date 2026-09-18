@@ -22,6 +22,7 @@ description: Verified Claude Code load semantics, hook lifecycle, and frontmatte
 |------|--------|-------------|
 | Agent **descriptions** load into the Task tool's tool-definition context for every Task spawn. Agent **bodies** load only when that specific agent is spawned. | docs (skills + Task tool) | Same eager/lazy split as skills. `scan_agents` had the same body-counting bug as `scan_skills` — caught in RCA. |
 | Agent description should be ≤30 words. Loaded into every Task tool spawn. | empirical | Bloated agent descriptions tax every Task call, not just when that agent is used. |
+| Subagent `model:` takes an alias (`sonnet`, `opus`, `haiku`, `fable`), a full model ID, or `inherit`. `effort:` takes `low` / `medium` / `high` / `xhigh` / `max` ("available levels depend on the model"). The model resolves in this order: the per-invocation `model` parameter, then the definition's `model:`, then `CLAUDE_CODE_SUBAGENT_MODEL`, then the main conversation's model. | https://code.claude.com/docs/en/sub-agents (DOC-BACKED, verified 2026-09-18); per-model effort support: https://platform.claude.com/docs/en/build-with-claude/effort | `deep-reviewer` pins `model: fable` + `effort: max` (Fable 5.1 supports all five levels). Passing `model` on an Agent call silently OVERRIDES the definition, so `/deep-review` never passes one. |
 
 ## Hook lifecycle
 
@@ -105,6 +106,6 @@ fire only when spawning parallel agents, not on every turn. The operative one-li
 `Directory.Build.props`) pass `isolation: "worktree"`, and any sub-problem appearing in >=2
 builder briefs gets ONE pinned solution in the shared contracts.**
 
-## Last verified: 2026-08-05
+## Last verified: 2026-09-18
 
 This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here. Authoring-time conventions live in their scoped rules (`hook-authoring.md`, `external-skill-ports.md`); incident write-ups live in `docs/ai-includes/agent-teams.md` + the RCAs.

@@ -330,7 +330,7 @@ dotnet test TAOM.Tests --no-build --filter "<Culture>Culture|<Culture>Settlement
 
 ```bash
 /verify quick           # build + git status
-/deep-review <culture>  # 5 parallel agents: Standards, API Compat, Efficiency, Completeness, Data Flow
+/deep-review <culture>  # XML is code: Completeness, Data Flow, Design, XML Integrity (+ Standards, API Compat, Efficiency if C# changed)
                         # Fix all HIGH findings in-session (per .claude/skills/deep-review)
 /review-codex <culture> # Codex adversarial review — ~10–45 min in background
                         # Auto-resume on notification; verify each finding by reading source

@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Orchestrate the mandatory completion sequence before merging a C# feature — /verify, /deep-review, fix findings, /review-codex, then close the issue and update docs + CHANGELOG.
+description: Orchestrate the mandatory completion sequence before merging a C# or XML feature (/verify, /deep-review, fix findings, /review-codex), then close the issue and update docs + CHANGELOG.
 argument-hint: [feature-name]
 ---
 
@@ -10,14 +10,14 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 
 ## When to invoke
 
-- A C# feature or fix touching **≥2 files or any feature module** is ready to merge.
-- **Skip for** one-line fixes, XML/config/docs-only changes — running 5+ review agents + Codex on those is wasteful and costs money.
+- A C# feature or fix touching **≥2 files or any feature module**, or any XML/XSLT change (repo or live install), is ready to merge.
+- **Skip for** one-line C# fixes and config/docs-only changes; running 6+ review agents plus Codex on those is wasteful and costs money. An XML-only change still gets `/deep-review` (CLAUDE.md Critical Rules: XML is code); Codex on it is the user's call.
 
 ## Phases (do not skip any — each exists because the prior proved insufficient)
 
 ### Phase 1 — Build & internal review
 1. `/verify` — build + tests must pass. If red, stop and fix.
-2. `/deep-review $ARGUMENTS` — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow; C++ checks auto-fire if `.cpp`/`.h` in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`).
+2. `/deep-review $ARGUMENTS`: 6+ parallel senior `deep-reviewer` agents (standards, compat, efficiency, completeness, data-flow, design; C++ checks auto-fire if `.cpp`/`.h` in scope; the XML integrity lens joins whenever XML or XSLT is in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`), then its Step 4 applies every KEEP improvement to the changed code.
 3. Fix all confirmed findings. **HIGH must be fixed in-session** — no silent deferrals (`.claude/skills/deep-review/SKILL.md`).
 
 ### Phase 2 — Codex adversarial review (costs money — explicit go-ahead only)

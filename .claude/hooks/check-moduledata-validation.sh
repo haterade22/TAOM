@@ -103,6 +103,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \
+        --code SCHEMA_INVALID \
         2>/dev/null)
 RC=$?
 

@@ -70,7 +70,9 @@ Before closing out any feature or fix, run this FULL sequence:
 ```
 Phase 1: BUILD & INTERNAL REVIEW
   1. /verify                        — build + tests pass
-  2. /deep-review [feature]         — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow)
+  2. /deep-review [feature]         — 6+ senior agents (standards, compat, efficiency, completeness, data-flow,
+                                      design; XML integrity whenever XML/XSLT is in scope), then applies
+                                      every better way it found to the changed code
   3. Fix all confirmed findings (HIGH must fix in-session)
 
 Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)

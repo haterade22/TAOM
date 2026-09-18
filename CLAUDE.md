@@ -41,7 +41,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
 | **Research First** | Never guess TaleWorlds behavior - check the decompile dump for concepts (v1.5.3, matching installed; its path is per-[machine](docs/reference/development-machines.md)), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs**: the dump can lag after an engine bump, the installed DLLs are always authoritative |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
-| **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.4 incompatibilities, missing tests, data flow gaps |
+| **`/deep-review` Mandatory** | Run before EVERY commit touching C# or XML/XSLT (XML is code, repo or live install): catches adapter violations, engine incompatibilities, missing tests, data flow gaps, broken XML |
 
 ## Working Discipline
 
@@ -77,7 +77,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | Session-start hook prints "GAME VERSION DRIFT", Steam updated Bannerlord, "the game updated", deliberate engine migration | **`/engine-bump`** | None — always, and BEFORE trusting any test run |
 | "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** | None — always. If error mentions a missing/renamed TaleWorlds type, hand off to `/research` first; if `/build-fix` retry budget triggers, hand off to `/investigate`. |
 | "scaffold a feature", "new feature for X", "add a system that does Y" | **`/new-feature`** then offer `/freeze` to scope-lock during implementation | Skip if the user is just sketching aloud — only invoke when they say "do it" |
-| "review this", "is this ready to merge", "before commit" on C# changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) | **Only for C# changes touching ≥2 files OR any feature module.** For one-line fixes, XML/config/docs, skip — running 5+ agents is wasteful. |
+| "review this", "is this ready to merge", "before commit" on C# or XML changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) | **C#: changes touching ≥2 files OR any feature module. XML/XSLT (repo or live install): always, one line included.** Skip only one-line C# fixes, config and docs. |
 | "I need to override DefaultXxxModel", "what's the signature of", "before touching a TaleWorlds class" | **`/research`** before editing | None — always |
 | "create an issue for", "open a bug", "log this crash" | **`/issue`** | None — always |
 | "check XSLT", new `.xslt` edit, "did the transform pass through correctly" | **`/xslt-check`** | None — always |
@@ -128,8 +128,8 @@ full text is already in context every session; the path-scoped ones load when yo
 
 ## Custom Agents
 
-5 custom agents in `.claude/agents/` (taleworlds-researcher, feature-builder, debugger,
-error-detective, refactoring-specialist — descriptions load eagerly; each body carries its own
+6 custom agents in `.claude/agents/` (taleworlds-researcher, feature-builder, debugger,
+error-detective, refactoring-specialist, deep-reviewer; descriptions load eagerly, each body carries its own
 execution model). **Briefing convention, MANDATORY for every non-trivial spawn prompt** (subagents
 do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read
 [docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first",
@@ -146,8 +146,9 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 
 | Task | Model | Why |
 |------|-------|-----|
+| `/deep-review` lenses (`deep-reviewer`) | **Fable, effort max** | Most senior reviewer (Mike, 2026-09-18) |
 | Architecture decisions, complex design | **Opus** | Deepest reasoning for trade-off analysis |
-| Feature implementation, code review | **Sonnet** | Best coding model, fast enough for iteration |
+| Feature implementation | **Sonnet** | Best coding model, fast enough for iteration |
 | Lightweight research, documentation, exploration | **Haiku** | 90% of Sonnet capability at 3x cost savings |
 | Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
 | Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |

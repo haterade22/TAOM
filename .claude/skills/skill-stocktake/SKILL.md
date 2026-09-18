@@ -38,7 +38,7 @@ For each skill/agent under audit, check:
 - [ ] `description:` is single-line YAML, not a multiline block (per `scan.sh extract_description` limitation)
 - [ ] No `triggers:` field (not consumed by current Claude Code; per `harness-facts.md`)
 - [ ] `allowed-tools:` matches what the skill body actually uses (mismatch = either dead permission or undeclared dependency)
-- [ ] `effort:` if present, is one of `low|medium|high|max|inherit`. `effort: low` should NOT be set on skills that do significant inline reasoning (use `inherit` instead) — caught in review #29
+- [ ] `effort:` if present, is one of `low|medium|high|xhigh|max` (the documented values, `.claude/rules/harness-facts.md`; availability depends on the model). `effort: low` should NOT be set on skills that do significant inline reasoning (leave the field unset instead); caught in review #29
 - [ ] `hooks:` if present, command paths resolve (file exists, is executable, in tracked git)
 - [ ] If a `paths:` field is present (rules only), it's intentional — `paths: ["**/*"]` is conditional, not always-load (per `harness-facts.md`)
 

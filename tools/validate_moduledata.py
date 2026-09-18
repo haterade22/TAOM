@@ -37,6 +37,11 @@ Checks (each maps to a recurring TAOM bug class):
                              the #352 / #599 infinite mission load (needs the install;
                              the tpac scan lives in validate_mesh_refs.py)
   MISSING_VISUAL_MESH        same for a mesh / holster_mesh: an invisible item (warning)
+  SCHEMA_INVALID             a file the repo module registers breaks the engine's own XSD
+                             for its id, or a SubModule.xml registration loads nothing. The
+                             engine only logs the former and loads the file anyway (repo
+                             module only; the XSD layer lives in validate_xml_schemas.py;
+                             one warning when lxml or <game>/XmlSchemas is absent)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -47,7 +52,9 @@ Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), else 0.
 import argparse
 import json
 import os
+import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -204,6 +211,67 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
     return issues
 
 
+SCHEMA_CODE = "SCHEMA_INVALID"
+
+
+def schema_invalid_issues(module_dir: Path, game_schemas: Path) -> list:
+    """ERROR per engine-XSD violation in a file the module registers, and per registration
+    that loads nothing; ONE warning when the layer could not be checked.
+
+    Every other pass here reads refs and TAOM's own JSON schemas, never the XSD the
+    engine loads a file with, so a clan with no `initial_home_settlement` passed them all
+    (`clan_umbar_3`, 2026-06-22). The engine validates, but only logs a failure and loads
+    the file anyway. validate_xml_schemas.py owns the engine's file resolution and schema
+    choice; this only turns its report into issues. Scope is the module given (the repo's
+    Main/_Module), like the other schema passes: the live modules are unversioned and
+    their known findings are not this repo's to fix.
+
+    Skipped, never faked: without lxml, the engine's XmlSchemas folder or a SubModule.xml
+    the pass reports that the layer was NOT verified, because silence here would read
+    exactly like a clean run."""
+    import validate_xml_schemas as vx
+    module_dir = Path(module_dir)
+    submodule = module_dir / "SubModule.xml"
+    if not vx.HAVE_LXML:
+        unverified = "lxml is not installed"
+    elif not Path(game_schemas).is_dir():
+        unverified = f"the engine schema folder {game_schemas} was not found"
+    elif not submodule.is_file():
+        unverified = f"there is no {submodule}"
+    else:
+        unverified = None
+    if unverified:
+        return [ts.Issue(
+            severity=ts.Severity.WARNING, code=SCHEMA_CODE, file="", line=0, entry_id="",
+            message=f"{unverified}, so the engine-XSD layer (tools/validate_xml_schemas.py) "
+                    f"was NOT verified this run")]
+    try:
+        report = vx.run([module_dir], Path(game_schemas))
+    except ET.ParseError as exc:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=SCHEMA_CODE, file="SubModule.xml", line=exc.position[0],
+            entry_id="", message=f"SubModule.xml is not well-formed ({exc}); the engine throws on "
+                                 f"it at startup")]
+
+    moduledata = module_dir / "ModuleData"
+    issues = []
+    for rec in report["failed"]:
+        path = Path(rec["file"])
+        rel = path.relative_to(moduledata).as_posix() if moduledata in path.parents else str(path)
+        for error in rec["errors"]:
+            m = re.match(r"L(\d+): (.*)", error, flags=re.S)
+            line, text = (int(m.group(1)), m.group(2)) if m else (0, error)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SCHEMA_CODE, file=rel, line=line, entry_id=rec["id"],
+                message=f"{text} (engine schema {Path(rec['schema']).name}; the engine only logs "
+                        f"this and loads the file anyway). python tools/validate_xml_schemas.py {rel}"))
+    for text in report["missing"]:
+        issues.append(ts.Issue(
+            severity=ts.Severity.ERROR, code=SCHEMA_CODE, file="SubModule.xml", line=0, entry_id="",
+            message=text))
+    return issues
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -264,12 +332,14 @@ def main() -> int:
         print(f"WARNING: {warning}", file=sys.stderr)
 
     issues = validator.run()
+    # The engine's XmlSchemas folder sits beside Modules in the install root.
+    issues += schema_invalid_issues(moduledata.parent, game_modules.parent / "XmlSchemas")
     if game_modules.exists():
         issues += generator_item_ref_issues(registries.items)
-        issues.sort(key=lambda i: i.sort_key())
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
+    issues.sort(key=lambda i: i.sort_key())
 
     if args.code:
         wanted = set(args.code)

@@ -76,6 +76,8 @@ For every field in the upstream skill's frontmatter, verify it appears in **`.cl
 
 `name`, `description`, `allowed-tools`, `hooks`, `argument-hint`, `disable-model-invocation`, `when_to_use`
 
+That was the 2026-04-26 list and it is stale: `harness-facts.md` "Skill load semantics" holds the current one (verified 2026-07-18: it adds `model`, `effort`, `context`, `paths` and more), and its Agent table holds the subagent `model` / `effort` values. Check each upstream field there, not against the list above.
+
 Anything else is either undocumented (drop it) or might be consumed (verify with a doc URL before keeping).
 
 **Specific killshots from prior reviews:**

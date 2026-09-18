@@ -41,6 +41,72 @@ run by script instead and came back clean. Full write-up: `docs/reviews/rca-rang
   `RANGED_*` warning, all three ladder `--verify` runs OK, both `rebalance_troops.py` dry-run modes
   raise no ladder cell. Owed: in-game restart, `/armory-audit`, Custom Battle, one non-English client.
 
+### chore(harness): /deep-review runs senior reviewers, reviews XML as code, adds a design lens, and applies what it finds (#621)
+
+Mike asked for three things: every deep review should ask whether the change could be done in a more
+elegant, effective or efficient way and then do it, the reviewers should be the most senior roles
+available, and XML changes are code and get reviewed with the same care. Before this, three of the
+five lenses ran as `Explore` on haiku (an agent whose own description says it locates code and does
+not review it), no lens asked "is there a better way", the skill ended at a report ("This is a
+READ-ONLY review") and CLAUDE.md told reviewers to skip XML.
+
+- **New agent `.claude/agents/deep-reviewer.md`**: read-only (Read, Grep, Glob, Bash), `model: fable`,
+  `effort: max`. Fable 5.1 is the tier the models overview reserves for demanding reasoning past Opus 5.
+  Every lens runs on it; a per-call `model` would override the definition, so the skill forbids one.
+- **Lenses are files.** Each prompt lives in `.claude/skills/deep-review/lenses/` and the reviewer
+  reads its own, so the skill is about 240 lines (it had grown to about 750 with the prompts inline) and the orchestrator stops
+  pasting about 60 KB of prompts per review. Seven moved verbatim; new ones: `tooling.md` (every script
+  under `tools/` or `.claude/hooks/`, read-only gates included), a harness checklist in the standards
+  lens, an engine-claims mode in the compatibility lens and a harness mode in the data-flow lens.
+- **Agent 6, Design & Elegance**, walks the reuse ladder (engine, existing service, one-line
+  delegation, deletion), then control flow, data structures, introduced duplication and hook choice,
+  and judges each proposal with `simplicity-criterion.md`. Agent 3 tags its findings the same way.
+- **Step 4 applies the KEEP proposals** after every lens has reported: defects first, changed code
+  only (a follow-up carries its issue number or a reason), behaviour-changing proposals asked about in
+  one batch, tests green before and after, no silent skips, one convergence pass that cannot open a
+  new design round. A `.ai` review-only assignment skips it.
+- **XML is reviewed as code.** CLAUDE.md, `/ship` and the Stop hook now include XML/XSLT, one line
+  included. Step 1 sweeps live `TAOM_Map` and Armory files changed since the last review's
+  `agent_type=deep-reviewer` stamp, which git cannot see. **Agent 7, XML & ModuleData Integrity**, runs
+  the gates in the rule's new "Gate per file kind" table, opens the engine Deserialize behind every
+  changed attribute, and checks the load path, the CLAUDE.md Traps rows, byte fidelity and intent.
+- **Launch rule**: per-lens predicates instead of a three-row table, so harness-only and tooling-only
+  changes get lenses too; at most four agents in flight, defect lenses first, because a subagent that
+  hits the usage limit returns nothing (a six-wide review lost three agents that way earlier today).
+- **New `tools/validate_xml_schemas.py`** (47 tests): every engine-loaded file against the engine's
+  own XSD, mirroring `MBObjectManager.GetMergedXmlForManaged`'s file resolution and schema choice. It
+  also runs inside `validate_moduledata.py` as **`SCHEMA_INVALID`**, so the commit hook gates it. The
+  engine does validate on a campaign load (its `rgl_log` shows it), but only prints a failure and loads
+  the file anyway, which is how `clan_umbar_3` shipped with no home settlement. Repo baseline: 97 files,
+  0 failures. The live runs found 7 `TAOM_Map` registrations that load nothing (#619) and 3 `<Horse
+  family_type>` in the Armory's `LOTRAOM_horses.xml` the engine never reads (#620); the feature doc's
+  claim that `family_type` on horses is real is corrected (only `<Armor>`, `Monster` and the
+  conversation-animation manager read it; vanilla puts it on `<Armor>` alone).
+- **The Stop-hook mute works.** `check-deep-review.sh` grepped `agent-audit.log` for lens names that
+  `log-agent.sh` never writes, so it had 0 matches in both log generations and never muted. It now
+  matches `agent_type=deep-reviewer`, and `tools/test_hooks.sh` section 7 drives the real writer and
+  reader together in both directions.
+- **Deep review of this work** (on the new agents, in waves of four, plus an engine-claims pass that
+  read the game's own log): five lenses, every finding fixed or filed. The tool reported PASS on
+  a nonexistent path and on a DOCTYPE the engine loads as nothing, missed three SubModule.xml shapes
+  the engine throws on, an empty folder registration and files from an unscanned module, and died with
+  a traceback without lxml (CI installs none); each is now tested in both directions. The launch table
+  had no row for this very changeset, `/ship` still told sessions to skip XML, the first docstring
+  stated the `foo.xmlbak` glob rule as universal (it holds only on volumes with 8.3 short names; C:
+  yes, E: no, reproduced), and a `/ship` description edit broke its YAML. Found beside it and filed:
+  `MISSING_COLLISION_BODY` has never fired because `validate_moduledata.py` never calls its pass
+  (#622; 0 issues today, so wiring it blocks nothing). RCA:
+  `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`; lessons in `build-tooling-workflow` and
+  `xslt-moduledata`.
+- Updated to match: CLAUDE.md (custom agents, model routing, the Critical Rule and routing gate),
+  `completion-workflow.md`, `new-culture-authoring.md`, `mcp-servers.md`, `agent-operating-manual.md`
+  (the dump is v1.5.3), `INDEX.md`, `doc-lookup.md`, the `moduledata-validation` rule and feature doc,
+  `tools/README.md`, `skill-stocktake` and `external-skill-ports` (current frontmatter values), and a
+  doc-backed `harness-facts.md` row for subagent `model` / `effort` values.
+
+Cost: Fable lists at $10 / $50 per MTok against Opus 5's $5 / $25, and `max` sets no token cap, across
+up to eight lenses per review. Dialling it down is a one-line edit in the agent file.
+
 ### balance(ranged): archers ranked per tier on damage, accuracy, skill and reach (#617)
 
 Most archers nearly or fully one-shot a troop. No TAOM code touches missile damage or accuracy (checked
