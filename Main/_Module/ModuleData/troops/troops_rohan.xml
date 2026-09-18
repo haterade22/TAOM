@@ -36,7 +36,7 @@
                 value="30" />
             <skill
                 id="Bow"
-                value="35" />
+                value="10" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -52,7 +52,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_e" />
+                    id="Item.ladder_rohan_bow_t1" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -110,7 +110,7 @@
                 value="50" />
             <skill
                 id="Bow"
-                value="60" />
+                value="25" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -126,7 +126,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_e" />
+                    id="Item.ladder_rohan_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -193,7 +193,7 @@
                 value="75" />
             <skill
                 id="Bow"
-                value="95" />
+                value="55" />
             <skill
                 id="Crossbow"
                 value="5" />
@@ -209,7 +209,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_r" />
+                    id="Item.ladder_rohan_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -276,7 +276,7 @@
                 value="90" />
             <skill
                 id="Bow"
-                value="140" />
+                value="100" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -292,7 +292,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_r" />
+                    id="Item.ladder_rohan_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -359,7 +359,7 @@
                 value="120" />
             <skill
                 id="Bow"
-                value="190" />
+                value="140" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -375,7 +375,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_v" />
+                    id="Item.ladder_rohan_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -442,7 +442,7 @@
                 value="150" />
             <skill
                 id="Bow"
-                value="240" />
+                value="175" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -458,7 +458,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_v" />
+                    id="Item.ladder_rohan_bow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -525,7 +525,7 @@
                 value="175" />
             <skill
                 id="Bow"
-                value="285" />
+                value="200" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -538,7 +538,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_x" />
+                    id="Item.ladder_rohan_bow_t7" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -1725,7 +1725,7 @@
                 value="30" />
             <skill
                 id="Bow"
-                value="25" />
+                value="10" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -1741,7 +1741,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_e" />
+                    id="Item.ladder_rohan_bow_t1" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -1790,7 +1790,7 @@
                 value="40" />
             <skill
                 id="Bow"
-                value="50" />
+                value="25" />
             <skill
                 id="Crossbow"
                 value="5" />
@@ -1806,7 +1806,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_e" />
+                    id="Item.ladder_rohan_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.range_arrows" />
@@ -1867,7 +1867,7 @@
                 value="55" />
             <skill
                 id="Bow"
-                value="80" />
+                value="55" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -1883,7 +1883,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_r" />
+                    id="Item.ladder_rohan_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_a" />
@@ -1944,7 +1944,7 @@
                 value="80" />
             <skill
                 id="Bow"
-                value="125" />
+                value="100" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -1957,7 +1957,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_rohan_bow_r" />
+                    id="Item.ladder_rohan_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -5896,7 +5896,7 @@
                 value="80" />
             <skill
                 id="Bow"
-                value="125" />
+                value="25" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -5906,14 +5906,14 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_rohan_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_rohan_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
@@ -5921,7 +5921,7 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_rohan_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_d" />
@@ -6032,7 +6032,7 @@
                 value="95" />
             <skill
                 id="Bow"
-                value="140" />
+                value="55" />
             <skill
                 id="Crossbow"
                 value="35" />
@@ -6042,7 +6042,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_rohan_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.vlandia_sword_2_t3" />
                 <equipment slot="Body" id="Item.cts_rohan_armor4" />
@@ -6051,7 +6051,7 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_rohan_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.vlandia_sword_2_t3" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_f" />
@@ -6061,7 +6061,7 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_rohan_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_rohan_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.vlandia_sword_2_t3" />
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />

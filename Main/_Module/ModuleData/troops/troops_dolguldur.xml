@@ -187,7 +187,7 @@
                 value="48" />
             <skill
                 id="Bow"
-                value="50" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -203,7 +203,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -226,7 +226,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -249,7 +249,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -272,7 +272,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -491,7 +491,7 @@
                 value="88" />
             <skill
                 id="Bow"
-                value="125" />
+                value="110" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -507,7 +507,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -536,7 +536,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -565,7 +565,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -594,7 +594,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -623,7 +623,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -652,7 +652,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -945,7 +945,7 @@
                 value="108" />
             <skill
                 id="Bow"
-                value="165" />
+                value="150" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -958,7 +958,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -987,7 +987,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1016,7 +1016,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1576,7 +1576,7 @@
                 value="88" />
             <skill
                 id="Bow"
-                value="125" />
+                value="110" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -1592,7 +1592,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1621,7 +1621,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1650,7 +1650,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1679,7 +1679,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1708,7 +1708,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1770,7 +1770,7 @@
                 value="108" />
             <skill
                 id="Bow"
-                value="165" />
+                value="150" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -1783,7 +1783,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1812,7 +1812,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1841,7 +1841,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1870,7 +1870,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1899,7 +1899,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1928,7 +1928,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1957,7 +1957,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -1986,7 +1986,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -2015,7 +2015,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_v" />
+                    id="Item.ladder_dolguldur_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -2510,7 +2510,7 @@
                 value="148" />
             <skill
                 id="Bow"
-                value="80" />
+                value="110" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -2523,7 +2523,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t4" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a03" />
@@ -2567,7 +2567,7 @@
                 value="148" />
             <skill
                 id="Bow"
-                value="165" />
+                value="150" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -2580,7 +2580,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t5" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a02" />
@@ -2624,7 +2624,7 @@
                 value="148" />
             <skill
                 id="Bow"
-                value="200" />
+                value="185" />
             <skill
                 id="Crossbow"
                 value="35" />
@@ -2637,7 +2637,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t6" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a02" />
@@ -2681,7 +2681,7 @@
                 value="148" />
             <skill
                 id="Bow"
-                value="240" />
+                value="215" />
             <skill
                 id="Crossbow"
                 value="45" />
@@ -2692,7 +2692,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a01" />
@@ -3192,7 +3192,7 @@
             <skill id="OneHanded" value="190" />
             <skill id="TwoHanded" value="180" />
             <skill id="Polearm" value="188" />
-            <skill id="Bow" value="200" />
+            <skill id="Bow" value="185" />
             <skill id="Crossbow" value="35" />
             <skill id="Throwing" value="80" />
         </skills>
@@ -3202,7 +3202,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t6" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3213,7 +3213,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t6" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3224,7 +3224,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t6" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3320,7 +3320,7 @@
             <skill id="OneHanded" value="210" />
             <skill id="TwoHanded" value="180" />
             <skill id="Polearm" value="188" />
-            <skill id="Bow" value="240" />
+            <skill id="Bow" value="215" />
             <skill id="Crossbow" value="45" />
             <skill id="Throwing" value="80" />
         </skills>
@@ -3330,7 +3330,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3341,7 +3341,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
@@ -3352,7 +3352,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3742,7 +3742,7 @@
             <skill id="OneHanded" value="235" />
             <skill id="TwoHanded" value="180" />
             <skill id="Polearm" value="188" />
-            <skill id="Bow" value="275" />
+            <skill id="Bow" value="250" />
             <skill id="Crossbow" value="50" />
             <skill id="Throwing" value="90" />
         </skills>
@@ -3752,7 +3752,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t8" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3763,7 +3763,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t8" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
@@ -3774,7 +3774,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_x" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t8" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3807,14 +3807,14 @@
             <skill id="OneHanded" value="255" />
             <skill id="TwoHanded" value="185" />
             <skill id="Polearm" value="188" />
-            <skill id="Bow" value="295" />
+            <skill id="Bow" value="270" />
             <skill id="Crossbow" value="55" />
             <skill id="Throwing" value="90" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_c" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t9" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3825,7 +3825,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_c" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t9" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
@@ -3836,7 +3836,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_c" />
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t9" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
                 <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
@@ -3989,7 +3989,7 @@
                 value="88" />
             <skill
                 id="Bow"
-                value="125" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -4002,7 +4002,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4022,7 +4022,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4042,7 +4042,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_e" />
+                    id="Item.ladder_dolguldur_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4214,7 +4214,7 @@
                 value="103" />
             <skill
                 id="Bow"
-                value="140" />
+                value="65" />
             <skill
                 id="Crossbow"
                 value="40" />
@@ -4227,7 +4227,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4250,7 +4250,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4273,7 +4273,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4341,7 +4341,7 @@
                 value="88" />
             <skill
                 id="Bow"
-                value="125" />
+                value="110" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -4353,7 +4353,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4382,7 +4382,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4411,7 +4411,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4440,7 +4440,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -4469,7 +4469,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_dolguldur_bow_r" />
+                    id="Item.ladder_dolguldur_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />

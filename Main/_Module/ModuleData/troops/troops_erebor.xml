@@ -134,7 +134,7 @@
                 value="80" />
             <skill
                 id="Bow"
-                value="130" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -147,7 +147,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_e" />
+                    id="Item.ladder_erebor_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -167,7 +167,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_e" />
+                    id="Item.ladder_erebor_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -184,7 +184,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_e" />
+                    id="Item.ladder_erebor_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -364,7 +364,7 @@
                 value="95" />
             <skill
                 id="Bow"
-                value="145" />
+                value="75" />
             <skill
                 id="Crossbow"
                 value="45" />
@@ -377,7 +377,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -400,7 +400,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -423,7 +423,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -627,7 +627,7 @@
             <skill id="OneHanded" value="110" />
             <skill id="TwoHanded" value="105" />
             <skill id="Polearm" value="105" />
-            <skill id="Bow" value="130" />
+            <skill id="Bow" value="120" />
             <skill id="Crossbow" value="30" />
             <skill id="Throwing" value="50" />
         </skills>
@@ -638,7 +638,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -656,7 +656,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t4" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
@@ -666,7 +666,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t4" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
@@ -676,7 +676,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t4" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
@@ -712,13 +712,13 @@
             <skill id="OneHanded" value="150" />
             <skill id="TwoHanded" value="105" />
             <skill id="Polearm" value="100" />
-            <skill id="Bow" value="170" />
+            <skill id="Bow" value="160" />
             <skill id="Crossbow" value="35" />
             <skill id="Throwing" value="60" />
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_c" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
@@ -746,7 +746,7 @@
             <skill id="OneHanded" value="150" />
             <skill id="TwoHanded" value="105" />
             <skill id="Polearm" value="105" />
-            <skill id="Bow" value="170" />
+            <skill id="Bow" value="160" />
             <skill id="Crossbow" value="35" />
             <skill id="Throwing" value="60" />
         </skills>
@@ -754,7 +754,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -772,7 +772,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_e" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
@@ -782,7 +782,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
@@ -792,7 +792,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_erebor_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_d" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_b" />
@@ -1288,7 +1288,7 @@
                 value="105" />
             <skill
                 id="Bow"
-                value="130" />
+                value="120" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -1304,7 +1304,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1327,7 +1327,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1350,7 +1350,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1373,7 +1373,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1553,7 +1553,7 @@
                 value="105" />
             <skill
                 id="Bow"
-                value="170" />
+                value="160" />
             <skill
                 id="Crossbow"
                 value="35" />
@@ -1569,7 +1569,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1598,7 +1598,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1627,7 +1627,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -1656,7 +1656,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -2032,7 +2032,7 @@
                 value="110" />
             <skill
                 id="Bow"
-                value="205" />
+                value="195" />
             <skill
                 id="Crossbow"
                 value="40" />
@@ -2045,7 +2045,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -2074,7 +2074,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -2103,7 +2103,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -2132,7 +2132,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -3852,7 +3852,7 @@
                 value="115" />
             <skill
                 id="Bow"
-                value="130" />
+                value="120" />
             <skill
                 id="Crossbow"
                 value="35" />
@@ -3868,7 +3868,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -3891,7 +3891,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -3911,7 +3911,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -3931,7 +3931,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_r" />
+                    id="Item.ladder_erebor_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -3990,7 +3990,7 @@
                 value="115" />
             <skill
                 id="Bow"
-                value="170" />
+                value="160" />
             <skill
                 id="Crossbow"
                 value="40" />
@@ -4002,7 +4002,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -4028,7 +4028,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_a" />
@@ -4054,7 +4054,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -4080,7 +4080,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_bow_v" />
+                    id="Item.ladder_erebor_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sk_dwarf_erebor_arrow_b" />
@@ -5590,7 +5590,7 @@
                 value="30" />
             <skill
                 id="Crossbow"
-                value="130" />
+                value="120" />
             <skill
                 id="Throwing"
                 value="50" />
@@ -5603,7 +5603,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_r" />
+                    id="Item.ladder_erebor_xbow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5629,7 +5629,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_r" />
+                    id="Item.ladder_erebor_xbow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5655,7 +5655,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_r" />
+                    id="Item.ladder_erebor_xbow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5681,7 +5681,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_r" />
+                    id="Item.ladder_erebor_xbow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5749,7 +5749,7 @@
                 value="35" />
             <skill
                 id="Crossbow"
-                value="170" />
+                value="160" />
             <skill
                 id="Throwing"
                 value="60" />
@@ -5762,7 +5762,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5788,7 +5788,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5814,7 +5814,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5840,7 +5840,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5908,7 +5908,7 @@
                 value="40" />
             <skill
                 id="Crossbow"
-                value="205" />
+                value="195" />
             <skill
                 id="Throwing"
                 value="70" />
@@ -5917,7 +5917,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5943,7 +5943,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5969,7 +5969,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -5995,7 +5995,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -7169,7 +7169,7 @@
                 value="35" />
             <skill
                 id="Crossbow"
-                value="175" />
+                value="120" />
             <skill
                 id="Throwing"
                 value="50" />
@@ -7182,7 +7182,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_r" />
+                    id="Item.ladder_erebor_xbow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -7241,7 +7241,7 @@
                 value="40" />
             <skill
                 id="Crossbow"
-                value="225" />
+                value="160" />
             <skill
                 id="Throwing"
                 value="60" />
@@ -7254,7 +7254,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -7313,7 +7313,7 @@
                 value="45" />
             <skill
                 id="Crossbow"
-                value="275" />
+                value="195" />
             <skill
                 id="Throwing"
                 value="70" />
@@ -7323,7 +7323,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_erebor_xbow_v" />
+                    id="Item.ladder_erebor_xbow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />

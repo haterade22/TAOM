@@ -658,7 +658,7 @@
                 value="107" />
             <skill
                 id="Bow"
-                value="170" />
+                value="160" />
             <skill
                 id="Crossbow"
                 value="35" />
@@ -673,7 +673,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -702,7 +702,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -727,7 +727,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -752,7 +752,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -777,7 +777,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -802,7 +802,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -827,7 +827,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -854,7 +854,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_mordor_uruk_bow_v" />
+                    id="Item.ladder_mordor_uruk_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.barbed_arrows" />
@@ -2216,7 +2216,7 @@
                 value="65" />
             <skill
                 id="Bow"
-                value="125" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -2227,7 +2227,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_mordor_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_a1" />
@@ -2235,7 +2235,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_mordor_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b1" />
@@ -2243,7 +2243,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_mordor_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_axe_a01" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
@@ -2355,7 +2355,7 @@
                 value="80" />
             <skill
                 id="Bow"
-                value="140" />
+                value="65" />
             <skill
                 id="Crossbow"
                 value="40" />
@@ -2366,7 +2366,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t3" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b2" />
@@ -2375,7 +2375,7 @@
                 <equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_c" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t3" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_axe_a02" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b2" />
@@ -2383,7 +2383,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t3" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b2" />
@@ -2667,7 +2667,7 @@
     <skills>
       <skill id="Athletics" value="45" />
       <skill id="OneHanded" value="30" />
-      <skill id="Bow" value="50" />
+      <skill id="Bow" value="35" />
       <skill id="Throwing" value="25" />
       <skill id="Riding" value="0" />
       <skill id="TwoHanded" value="23" />
@@ -2679,7 +2679,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_e" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
         <equipment slot="Item1" id="Item.barbed_arrows" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
         <equipment slot="Head" id="Item.sk_gn_orc_arc_helmet_med_a" />
@@ -2704,7 +2704,7 @@
     <skills>
       <skill id="Athletics" value="80" />
       <skill id="OneHanded" value="70" />
-      <skill id="Bow" value="80" />
+      <skill id="Bow" value="65" />
       <skill id="Throwing" value="35" />
       <skill id="Riding" value="10" />
       <skill id="TwoHanded" value="50" />
@@ -2716,7 +2716,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t3" />
         <equipment slot="Item1" id="Item.barbed_arrows" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
         <equipment slot="Head" id="Item.sk_gn_orc_sct_helmet_med_a" />
@@ -2742,7 +2742,7 @@
     <skills>
       <skill id="Athletics" value="90" />
       <skill id="OneHanded" value="100" />
-      <skill id="Bow" value="125" />
+      <skill id="Bow" value="110" />
       <skill id="Throwing" value="45" />
       <skill id="Riding" value="10" />
       <skill id="TwoHanded" value="70" />
@@ -2752,7 +2752,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t4" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
         <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_med_a" />
@@ -3040,7 +3040,7 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="OneHanded" value="112" />
-      <skill id="Bow" value="130" />
+      <skill id="Bow" value="120" />
       <skill id="Crossbow" value="30" />
       <skill id="Throwing" value="45" />
       <skill id="Riding" value="5" />
@@ -3053,7 +3053,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_uruk_bow_r" />
+        <equipment slot="Item0" id="Item.ladder_mordor_uruk_bow_t4" />
         <equipment slot="Item1" id="Item.barbed_arrows" />
         <equipment slot="Item2" id="Item.sm_uruk_sword_b" />
         <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b2" />
@@ -3080,7 +3080,7 @@
       <skill id="Athletics" value="125" />
       <skill id="OneHanded" value="177" />
       <skill id="TwoHanded" value="118" />
-      <skill id="Bow" value="205" />
+      <skill id="Bow" value="195" />
       <skill id="Throwing" value="65" />
       <skill id="Riding" value="15" />
       <skill id="Polearm" value="107" />
@@ -3089,7 +3089,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_uruk_bow_v" />
+        <equipment slot="Item0" id="Item.ladder_mordor_uruk_bow_t6" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.isengard_berserker_sword_2h" />
         <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_c1" />
@@ -3115,7 +3115,7 @@
     <skills>
       <skill id="Athletics" value="115" />
       <skill id="OneHanded" value="152" />
-      <skill id="Crossbow" value="170" />
+      <skill id="Crossbow" value="160" />
       <skill id="Throwing" value="55" />
       <skill id="Riding" value="5" />
       <skill id="TwoHanded" value="103" />
@@ -3127,7 +3127,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_uruk_xbow_v" />
+        <equipment slot="Item0" id="Item.ladder_mordor_uruk_xbow_t5" />
         <equipment slot="Item1" id="Item.bolt_a" />
         <equipment slot="Item2" id="Item.sm_uruk_sword_c" />
         <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_d1" />
@@ -3153,7 +3153,7 @@
     <skills>
       <skill id="Athletics" value="125" />
       <skill id="OneHanded" value="177" />
-      <skill id="Crossbow" value="205" />
+      <skill id="Crossbow" value="195" />
       <skill id="Throwing" value="65" />
       <skill id="Riding" value="5" />
       <skill id="TwoHanded" value="103" />
@@ -3163,7 +3163,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_uruk_xbow_v" />
+        <equipment slot="Item0" id="Item.ladder_mordor_uruk_xbow_t6" />
         <equipment slot="Item1" id="Item.bolt_b" />
         <equipment slot="Item2" id="Item.sm_uruk_sword_d" />
         <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_d1" />
@@ -3274,7 +3274,7 @@
     <skills>
       <skill id="Athletics" value="45" />
       <skill id="OneHanded" value="35" />
-      <skill id="Bow" value="50" />
+      <skill id="Bow" value="35" />
       <skill id="Throwing" value="25" />
       <skill id="Riding" value="0" />
       <skill id="TwoHanded" value="25" />
@@ -3286,7 +3286,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_e" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
         <equipment slot="Item1" id="Item.barbed_arrows" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
         <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_light_a" />
@@ -3350,7 +3350,7 @@
     <skills>
       <skill id="Athletics" value="80" />
       <skill id="OneHanded" value="70" />
-      <skill id="Bow" value="80" />
+      <skill id="Bow" value="65" />
       <skill id="Throwing" value="35" />
       <skill id="Riding" value="10" />
       <skill id="TwoHanded" value="50" />
@@ -3362,7 +3362,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t3" />
         <equipment slot="Item1" id="Item.barbed_arrows" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
         <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_med_a" />
@@ -3461,7 +3461,7 @@
     <skills>
       <skill id="Athletics" value="90" />
       <skill id="OneHanded" value="100" />
-      <skill id="Bow" value="125" />
+      <skill id="Bow" value="110" />
       <skill id="Throwing" value="45" />
       <skill id="Riding" value="10" />
       <skill id="TwoHanded" value="70" />
@@ -3471,7 +3471,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_r" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t4" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
         <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_med_c" />
@@ -4029,7 +4029,7 @@
       <skill id="OneHanded" value="190" />
       <skill id="TwoHanded" value="150" />
       <skill id="Polearm" value="150" />
-      <skill id="Bow" value="200" />
+      <skill id="Bow" value="225" />
       <skill id="Crossbow" value="40" />
       <skill id="Throwing" value="70" />
     </skills>
@@ -4038,7 +4038,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_v" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t6" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_a" />
         <equipment slot="Head" id="Item.sk_md_num_hood_light_a" />
@@ -4048,7 +4048,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_light_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_v" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t6" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_a" />
         <equipment slot="Head" id="Item.sk_md_num_hood_light_b" />
@@ -4076,7 +4076,7 @@
       <skill id="OneHanded" value="200" />
       <skill id="TwoHanded" value="175" />
       <skill id="Polearm" value="150" />
-      <skill id="Bow" value="240" />
+      <skill id="Bow" value="275" />
       <skill id="Crossbow" value="45" />
       <skill id="Throwing" value="80" />
     </skills>
@@ -4085,7 +4085,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_x" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t7" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_b" />
         <equipment slot="Head" id="Item.sk_md_num_hood_med_a" />
@@ -4095,7 +4095,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_x" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t7" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_b" />
         <equipment slot="Head" id="Item.sk_md_num_hood_med_b" />
@@ -4123,7 +4123,7 @@
       <skill id="OneHanded" value="235" />
       <skill id="TwoHanded" value="200" />
       <skill id="Polearm" value="155" />
-      <skill id="Bow" value="275" />
+      <skill id="Bow" value="310" />
       <skill id="Crossbow" value="50" />
       <skill id="Throwing" value="90" />
     </skills>
@@ -4132,7 +4132,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_x" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t8" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_a" />
@@ -4142,7 +4142,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_x" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t8" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_b" />
@@ -4152,7 +4152,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_x" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t8" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_c" />
@@ -4162,7 +4162,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_x" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t8" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_d" />
@@ -4190,14 +4190,14 @@
       <skill id="OneHanded" value="255" />
       <skill id="TwoHanded" value="220" />
       <skill id="Polearm" value="175" />
-      <skill id="Bow" value="295" />
+      <skill id="Bow" value="330" />
       <skill id="Crossbow" value="55" />
       <skill id="Throwing" value="95" />
     </skills>
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t9" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_a" />
@@ -4207,7 +4207,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t9" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_b" />
@@ -4217,7 +4217,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t9" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_c" />
@@ -4227,7 +4227,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_mordor_num_bow_t9" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_d" />
@@ -4637,7 +4637,7 @@
     <skills>
       <skill id="Athletics" value="45" />
       <skill id="OneHanded" value="30" />
-      <skill id="Bow" value="50" />
+      <skill id="Bow" value="35" />
       <skill id="Throwing" value="25" />
       <skill id="Riding" value="5" />
       <skill id="TwoHanded" value="30" />
@@ -4646,7 +4646,7 @@
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_mordor_bow_e" />
+        <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
         <equipment slot="Item1" id="Item.barbed_arrows" />
         <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
         <equipment slot="Head" id="Item.sk_gn_orc_arc_helmet_med_a" />

@@ -260,7 +260,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_bow_r" />
+                    id="Item.ladder_isengard_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_b" />
@@ -549,7 +549,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_xbow_r" />
+                    id="Item.ladder_isengard_xbow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_b" />
@@ -907,7 +907,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_bow_r" />
+                    id="Item.ladder_isengard_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_b" />
@@ -979,7 +979,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_xbow_r" />
+                    id="Item.ladder_isengard_xbow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_b" />
@@ -1456,7 +1456,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_bow_v" />
+                    id="Item.ladder_isengard_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_a" />
@@ -1528,7 +1528,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_xbow_v" />
+                    id="Item.ladder_isengard_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_a" />
@@ -1660,7 +1660,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_xbow_v" />
+                    id="Item.ladder_isengard_xbow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_a" />
@@ -2576,7 +2576,7 @@
             <skill id="TwoHanded" value="80" />
             <skill id="Polearm" value="85" />
             <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="130" />
+            <skill id="Crossbow" value="55" />
             <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
@@ -2584,7 +2584,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_isengard_xbow_e" />
+                <equipment slot="Item0" id="Item.ladder_isengard_xbow_t2" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a4" />
@@ -2593,7 +2593,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_isengard_xbow_e" />
+                <equipment slot="Item0" id="Item.ladder_isengard_xbow_t2" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a1" />
@@ -2602,7 +2602,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_isengard_xbow_e" />
+                <equipment slot="Item0" id="Item.ladder_isengard_xbow_t2" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a2" />
@@ -2611,7 +2611,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_isengard_xbow_e" />
+                <equipment slot="Item0" id="Item.ladder_isengard_xbow_t2" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_cross_a3" />
@@ -2683,13 +2683,13 @@
             <skill id="TwoHanded" value="95" />
             <skill id="Polearm" value="100" />
             <skill id="Bow" value="55" />
-            <skill id="Crossbow" value="145" />
+            <skill id="Crossbow" value="85" />
             <skill id="Throwing" value="65" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_isengard_xbow_r" />
+                <equipment slot="Item0" id="Item.ladder_isengard_xbow_t3" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
@@ -3724,7 +3724,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_isengard_bow_r" />
+                    id="Item.ladder_isengard_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_b" />

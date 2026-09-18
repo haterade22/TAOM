@@ -468,7 +468,7 @@
             <skill id="OneHanded" value="75" />
             <skill id="TwoHanded" value="67" />
             <skill id="Polearm" value="95" />
-            <skill id="Bow" value="97" />
+            <skill id="Bow" value="95" />
             <skill id="Crossbow" value="37" />
             <skill id="Throwing" value="25" />
         </skills>
@@ -477,7 +477,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
@@ -487,7 +487,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
@@ -515,7 +515,7 @@
             <skill id="OneHanded" value="105" />
             <skill id="TwoHanded" value="77" />
             <skill id="Polearm" value="95" />
-            <skill id="Bow" value="142" />
+            <skill id="Bow" value="140" />
             <skill id="Crossbow" value="42" />
             <skill id="Throwing" value="35" />
         </skills>
@@ -524,7 +524,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t4" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
@@ -535,7 +535,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t4" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
@@ -564,7 +564,7 @@
             <skill id="OneHanded" value="145" />
             <skill id="TwoHanded" value="97" />
             <skill id="Polearm" value="115" />
-            <skill id="Bow" value="182" />
+            <skill id="Bow" value="180" />
             <skill id="Crossbow" value="47" />
             <skill id="Throwing" value="45" />
         </skills>
@@ -573,7 +573,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t5" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a05" />
@@ -584,7 +584,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t5" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a05" />
@@ -613,14 +613,14 @@
             <skill id="OneHanded" value="170" />
             <skill id="TwoHanded" value="112" />
             <skill id="Polearm" value="125" />
-            <skill id="Bow" value="217" />
+            <skill id="Bow" value="215" />
             <skill id="Crossbow" value="52" />
             <skill id="Throwing" value="55" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t6" />
                 <equipment slot="Item1" id="Item.barbed_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
@@ -631,7 +631,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t6" />
                 <equipment slot="Item1" id="Item.barbed_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
@@ -661,7 +661,7 @@
             <skill id="TwoHanded" value="67" />
             <skill id="Polearm" value="95" />
             <skill id="Bow" value="37" />
-            <skill id="Crossbow" value="97" />
+            <skill id="Crossbow" value="95" />
             <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
@@ -669,7 +669,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t3" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.dale_sword_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
@@ -679,7 +679,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t3" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
@@ -708,7 +708,7 @@
             <skill id="TwoHanded" value="77" />
             <skill id="Polearm" value="95" />
             <skill id="Bow" value="42" />
-            <skill id="Crossbow" value="142" />
+            <skill id="Crossbow" value="140" />
             <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets>
@@ -716,7 +716,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t4" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a07" />
@@ -727,7 +727,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t4" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a07" />
@@ -757,7 +757,7 @@
             <skill id="TwoHanded" value="97" />
             <skill id="Polearm" value="115" />
             <skill id="Bow" value="47" />
-            <skill id="Crossbow" value="182" />
+            <skill id="Crossbow" value="180" />
             <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
@@ -765,7 +765,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t5" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
@@ -776,7 +776,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t5" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
@@ -806,13 +806,13 @@
             <skill id="TwoHanded" value="112" />
             <skill id="Polearm" value="125" />
             <skill id="Bow" value="52" />
-            <skill id="Crossbow" value="217" />
+            <skill id="Crossbow" value="215" />
             <skill id="Throwing" value="55" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t6" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a08" />
@@ -823,7 +823,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b04" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_xbow_v" />
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t6" />
                 <equipment slot="Item1" id="Item.bolt_e" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Item3" id="Item.wm_dale_shield_a08" />
@@ -1517,7 +1517,7 @@
             <skill id="OneHanded" value="105" />
             <skill id="TwoHanded" value="77" />
             <skill id="Polearm" value="95" />
-            <skill id="Bow" value="142" />
+            <skill id="Bow" value="40" />
             <skill id="Crossbow" value="42" />
             <skill id="Throwing" value="35" />
         </skills>
@@ -1526,7 +1526,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
@@ -1589,14 +1589,14 @@
             <skill id="OneHanded" value="120" />
             <skill id="TwoHanded" value="92" />
             <skill id="Polearm" value="110" />
-            <skill id="Bow" value="157" />
+            <skill id="Bow" value="95" />
             <skill id="Crossbow" value="57" />
             <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_dale_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />

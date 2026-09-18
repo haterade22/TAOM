@@ -310,7 +310,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -339,7 +339,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -368,7 +368,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -397,7 +397,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -1613,7 +1613,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -1642,7 +1642,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -1671,7 +1671,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -1700,7 +1700,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_r" />
+                    id="Item.ladder_umbar_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.arrow_emp_1_a" />
@@ -1771,7 +1771,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_xbow_v" />
+                    id="Item.ladder_umbar_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -1797,7 +1797,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_xbow_v" />
+                    id="Item.ladder_umbar_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -1823,7 +1823,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_xbow_v" />
+                    id="Item.ladder_umbar_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -1849,7 +1849,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_xbow_v" />
+                    id="Item.ladder_umbar_xbow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_iron_bolt_a" />
@@ -1917,7 +1917,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_v" />
+                    id="Item.ladder_umbar_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_elven_arrow_v4_a" />
@@ -1946,7 +1946,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_v" />
+                    id="Item.ladder_umbar_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_elven_arrow_v4_a" />
@@ -1975,7 +1975,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_v" />
+                    id="Item.ladder_umbar_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_elven_arrow_v4_a" />
@@ -2004,7 +2004,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_umbar_bow_v" />
+                    id="Item.ladder_umbar_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_elven_arrow_v4_a" />
