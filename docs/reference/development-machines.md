@@ -79,6 +79,11 @@ Known gaps on the laptop, both deliberate:
   import fails, so `/security-scan` still runs, minus that one pass.
 - **Blender** is absent, so creature-animation work (`/refine-creature-anim`, the Blender MCP,
   `tools/dump_engine_skeleton.ps1` round trips) has to happen on the desktop.
+- **Unreal Engine** is desktop-only as well: launcher installs `E:\UE_5.7` (5.7.4, since May), `E:\UE_5.4`
+  (5.4.4) and `E:\UE_5.3` (5.3.2, both 2026-09-17), each with the Fab plugin; `E:\UE_5.6` is an empty shell
+  with a stale registry key. The Fab purchases and their UE projects live under `E:\LOTRAOMAssets\`
+  (`Troll_Animation_5_4`), and `E:\Bannerlord_Art\TpacTool_0.4.0` is the TpacTool the tpac tools load.
+  Pipeline: [ue-to-bannerlord-asset-pipeline.md](ue-to-bannerlord-asset-pipeline.md).
 
 ## Writing docs and tools on either machine
 

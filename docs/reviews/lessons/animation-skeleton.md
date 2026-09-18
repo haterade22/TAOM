@@ -421,10 +421,70 @@ Record: [lotrlome-warg-changes.md](../../reference/lotrlome-warg-changes.md) sec
 
 ---
 
+### The Kit stores an FBX's bone locals verbatim and yaws the root 180 degrees; author on the engine's frames
+
+**2026-09-17/18, cave troll clips.** A Fab creature's 52 clips retargeted onto `human_skeleton` looked right in
+Blender and folded the troll at every joint in the Kit. Instead of trying export settings, the compiled
+master was read back with TpacTool and compared bone by bone with the FBX and with the engine rest frames.
+Import 1: every child bone's stored rotation equalled the FBX's local rotation to 0.0 degrees, and the
+FBX rig (TpacTool's `FixBoneForBlender` export) had frames 90 to 180 degrees off the engine's. Import 2,
+on a rig built from the engine's own rest frames: children engine-exact, pelvis 176 degrees off. Import 3,
+with the armature node turned 180 degrees to cancel that: pelvis right, character facing away, because
+the node transform rides in as well (the package carries a `Geometry <file>.fbx` item). Import 4, node at
+identity and the character turned 180 degrees in the keyed pose: correct.
+
+**Addendum (same day, Artem).** The Kit stores the root position track relative to frame 0, and every vanilla
+master opens on a rest frame (run: 0.6 deg from rest, root (0,0,0)) with its clip starting at `Source1 = 1`.
+A clip opening on a posed frame loses its pelvis offset: the hunched troll stood 9 cm too high, legs posed for
+a lower hip, feet skating. The exporter now keys frame 0 as rest (root turned like the clip) and poses from
+frame 1, and the export check asserts frame 0 reads 0 deg. Vanilla walk/run carry one root track (pelvis bob,
+no travel) and no pelvis position track; the UE pack had two (root travel + pelvis), and dropping the root's
+travel reproduces vanilla's layout. The reimport that followed measured two Kit facts: a reimport keeps the
+master's GUID (51 of 52), so GUID-linked clips survive and only `Source2` follows the new Duration; and a package
+the Kit had also given a junk Skeleton item came back with no animation ("assigned skeleton animation not
+found" on the clip). `gen_troll_anim_clips.ps1 -Verify` is the gate after every reimport.
+
+**Rule.** The rig you author on must have the engine's bone frames (`matrix_local` == accumulated
+`RestFrame`, transposed), the armature node stays at identity, and a 180 degree world-Z turn goes into
+the pose. `tools/blender/retarget_mannequin_to_human.py --engine-skeleton` does all three and asserts the
+frames. The two facts are the answer to the war ram's open question in
+`docs/reference/bannerlord-skeleton-authoring.md`: reconstruction + `primary_bone_axis='X'` mangled because
+X re-expresses the frames the reconstruction had made exact.
+
+**Why the Blender preview cannot catch it.** Skinning is roll-independent, rotations are not: a mesh bound
+to wrong frames deforms perfectly. The check that does catch it without the Kit is to re-import the
+exported FBX and measure each bone's local rotation against the engine rest local (the tool reports it):
+vanilla masters sit at 0 to 12 degrees at their bind frame, the folded export averaged 75 with 13 bones
+over 60, the correct one 28 with three (bent thighs, forward head on a horizontal neck, the wrist).
+
+### Re-skinning a mesh: the Kit keeps 4 influences, and three QA setups that measured nothing
+
+**2026-09-18, LOME cave troll set.** The shipping skins had 115 un-normalised and 9 over-4-influence vertices
+on the body and 1,836 un-normalised on the head. The Kit keeps the 4 strongest influences and renormalises,
+so Blender's preview of such a mesh was never what the engine played. `tools/blender/reskin_to_human_skeleton.py`
+transfers TaleWorlds' weights from the vanilla body parts (nearest surface), limits to 4, normalises, smooths
+once, and applies role rules found by measurement: helmet rigid head, body-armour gorget on spine2 (not the
+neck), the head's eye and mouth parts rigid head, bracers kept (already clean). Result at TaleWorlds' bar:
+body shoulder p99 stretch 1.73 (donor 1.52, old 2.40), head neck 1.12 (donor 1.24, old 2.92).
+
+**Three QA setups produced numbers that meant nothing, in order:** (1) a re-imported clip FBX as the QA rig:
+Blender rebuilds that armature's REST from a posed frame, so every bind to it is garbage (the Kit never
+reads FBX rests, which is why the same file plays fine there); build the QA rig from the engine JSON instead.
+(2) The retargeted walk frame as the test pose: too harsh even for TaleWorlds' body (p99 1.70, max 4.2), so it
+cannot separate weights from pose; use single-joint bends with the donor measured alongside. (3) A donor
+left posed while transferring: nearest-surface mapping then swaps left and right calves. Also: FBX-imported
+meshes carry a compensating parent-inverse, so their world matrix is identity and their coordinates are the
+FixBone WORLD space (facing -Y); unparenting keeps that, and only a 180 degree turn puts them on the engine rig.
+
+**Rule.** Judge skinning by edge stretch under standard bends with the donor as the bar, on a rig whose rest
+you built yourself, with everything at rest during the transfer. A metric that reads 1.000 on every mesh is
+a bind that did not evaluate, not a perfect skin.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
 
+- [docs/reference/doc-lookup.md](../../reference/doc-lookup.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
 
@@ -608,3 +668,12 @@ plus the metadata; `tools/tpac_clone_metamesh.py` and its tests carry the refere
 and the Kit's own resave of the clones rewrote the checksums to the same values. The 2026-06-11
 byte-patched clips with copied hashes loaded because their packages already had cache entries from
 the Kit; that precedent says nothing about hash validation either way.
+
+**Addendum, same evening, the cave troll clips.** TpacTool.Lib's `Package.Save` writes a ZERO item
+checksum, and every generated `_anm.tpac` in the Armory carries one (73 warg, 24 spider, 24 chariot,
+31 of 33 elephant) while the ram's 6 Kit-authored clips carry real hashes; all of them have `.rdc`
+entries and all load, so the entry is the load-bearing half and the hash is hygiene.
+`tools/tpac_fix_item_checksums.py` recomputes the field (proven on Kit output first) and
+`tools/check_rdc_entries.py` is the entry gate; 925 `_mtl` packages have no entry and render, so the gate
+checks `_geo` and `_anm` by default. A master the Kit imports without a module save has no entry either:
+the 52 troll masters imported today were as invisible as the hand-built clips beside them.

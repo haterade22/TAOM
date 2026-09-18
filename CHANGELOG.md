@@ -2,7 +2,100 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-18
+
+### feat(troll-anim): the Fab cave troll clips play in the Kit and are bound into as_cave_troll_warrior
+
+Yesterday's export folded the troll at every joint in the Kit. Rather than trying import settings, each
+compiled master was read back with TpacTool and compared bone by bone with the FBX and with the engine's
+own `human_skeleton` rest frames (new `tools/blender/human_skeleton_engine.json`, read from `human.tpac`).
+Two facts, each measured on a separate import: the Kit stores an FBX's bone locals verbatim (27 of 28
+bones at 0.0 degrees), so the rig you author on must carry the engine's bone frames, and the TpacTool
+`FixBoneForBlender` rig does not (90 to 180 degrees off per bone); and the Kit stores the root as
+RotZ(180) times the FBX world pose while also applying the armature node's transform, so the 180 degree
+turn has to live in the keyed pose with the node at identity (a turned node put the pelvis right and the
+character facing away). `retarget_mannequin_to_human.py --engine-skeleton` now builds the target rig from
+the engine dump, asserts every frame to 1e-4, turns the pose, and after each export re-imports the FBX
+and reports each bone's deviation from the engine rest (vanilla 0 to 12 at the bind frame; the folded
+export 75 mean; the good one 28). Mike confirmed the pose and facing in the Kit on the fourth import.
+This also answers the war ram's open question in `bannerlord-skeleton-authoring.md` (status section
+added). Then the bind: new `tools/bind_troll_action_set.py` writes 213 overrides into the live
+`as_cave_troll_warrior` from Native's full `as_human_warrior` code list (forward walks and runs, idles
+with their alternative groups, directional strikes, fall deaths; `_adder` overlays, turns, strafes,
+attacks and arrow/fire deaths inherit human), parity audit OK, snapshot refreshed. Also fixed: sound
+trigger points left on clips whose sound code was cleared (the Kit's 'sound points not valid' warning).
+Owed: a Kit save for the 52 masters' RuntimeDataCache entries, the Custom Battle smoke, deleting the
+Kit's byproduct skeletons `human_skeleton_notused.001`/`.004`, the Fab licence row.
+
+Then the meshes. Mike called the shipping cave troll rig amateur and the numbers agreed: 115 un-normalised
+and 9 over-4-influence vertices on the body, 1,836 un-normalised on the head (the Kit keeps 4 influences,
+so Blender's preview was never what the engine played). New `tools/blender/reskin_to_human_skeleton.py`
+transfers TaleWorlds' own weights from the vanilla body parts onto every LOME troll mesh and LOD, with role
+rules found by measurement (helmet rigid, gorget on the torso, eyes and mouth rigid head, bracers kept). The
+QA that made the rules is edge stretch under six standard bends on a rig built from the engine frames, with
+TaleWorlds' body as the bar: the troll body's shoulder p99 went 2.40 to 1.73 (donor 1.52), the head's neck
+2.92 to 1.12 (donor 1.24). Three false starts are recorded in the tool: a re-imported clip FBX cannot be a QA
+rig (Blender rebuilds its rest from a posed frame), the retargeted walk frame is too harsh a pose to judge
+weights by, and a donor still posed during the transfer swaps left and right. Both files are in the Armory
+sources with the originals and compiled tpacs backed up. The hill troll was measured and left on
+`troll_skeleton` for now: 19.5 cm mean joint offset, proportions 1.3 to 2.3x the human's. Artem (community
+animator) then pointed at skating feet and a missing rest frame: the Kit stores the root position track
+relative to frame 0 and every vanilla master opens on a rest frame, so our posed frame 0 had zeroed the
+troll's hunched pelvis 9 cm too high. The exporter now keys a rest frame 0 (root turned like the clip), the
+check asserts it, all 52 are re-exported into the Armory sources and await a Kit reimport plus a clip
+regeneration (masters one frame longer). His root-motion point checks out against vanilla: one root track,
+pelvis bob only, no travel, which is what dropping the UE root gives. The reimport then showed that the Kit
+keeps a master's GUID across a reimport (51 of 52; clips linked by GUID survive, only `Source2` moves), while
+one package that also carried a junk `human_skeleton_notused.001` Skeleton item came back with no animation and
+"assigned skeleton animation not found" on its clip. `gen_troll_anim_clips.ps1 -Verify` (new, read-only) lists
+STALE / ORPHAN clips and packages without an animation, exit 1 on any.
+
+Docs sweep for all of it: `bannerlord-skeleton-authoring.md` loses its UNRESOLVED verdict (the 2026-08-29 section stays
+as history), the public handbook's creature animation and skeleton pages carry the resolution instead of the
+honest-status caveat, the ARP troll workflow doc warns that its FBX source rig is a mesh rig and that the lumber
+clips would fold, `troll-race.md` marks them superseded and lists every new tool and path, the clip-flags
+reference gains the vanilla human recipes read from `animation_clips.tpac`, CLAUDE.md's two trap rows state the
+Kit facts, `doc-lookup.md` and `INDEX.md` route to the new material, `development-machines.md` records the
+three Unreal installs, and the lessons index count moves to 35.
+
 ## 2026-09-17
+
+### feat(troll-anim): the 52 Fab cave troll clips retargeted onto human_skeleton, Kit-ready
+
+The pack exported clean (52 anims, 4 skeletal meshes, 5 static, 10 textures, 0 failures;
+`export_report.json`), and every clip is now on Bannerlord's `human_skeleton`, staged at
+`E:\LOTRAOMAssets\troll_clips_to_import\fab_cave_troll\` for Mike's Kit import. New
+`tools/blender/retarget_mannequin_to_human.py`, plain bpy rather than Auto-Rig Pro: a world-space
+rotation-delta transfer per mapped bone (Mannequin to the 28-bone human map is in the file), which
+does not care that the Mannequin's bone tails run along UE X and the human's along Y. Three
+decisions came out of the side-by-side renders. Human chain bones are swung onto the troll's rest
+limb directions so the skeleton stands hunched with bent knees; clavicles and pelvis are exempt
+because their direction is skeleton layout, not stance. The reference pose is the bind pose for
+the limbs but frame 1 of the calm idle for spine, neck and head: off the bind pose the human
+stared 40 degrees upward in every clip, and off the idle frame for everything the arms carried a
+bent elbow into the walk (that frame holds the right forearm raised 133 degrees). Root motion
+sits on the UE `root` node, which the importer turns into the armature object, so ignoring the
+object gives in-place clips; the 12 turn clips are also staged with the yaw folded back in
+(`--keep-root-yaw`, `_rootyaw` suffix) because which flavour the turn codes want is an in-game
+question. Export follows the Kit-proven recipe (`primary_bone_axis='Y'`, `_notused` armature,
+take named after the clip, baked); a re-import shows the 28-bone rig, 289 fcurves and the full
+frame span. Not done: Kit compile, `_anm.tpac` metadata, the `as_cave_troll_warrior` overrides and
+the Custom Battle smoke. The six attack clips cannot drive melee. Blender is 5.2.2 now, and
+`Action.fcurves` is gone; the tool reads the layered channelbags.
+
+Same day, after Mike's Kit import: the 52 masters sit in `LOTRLOME_Armory\Assets\creature\troll\animations\`
+and `tools/gen_troll_anim_clips.ps1` authored the 52 `anim_troll_*` clips beside them (names in
+`tools/blender/fab_cave_troll_clip_names.json`). Each clip is a clone of the vanilla human clip of its
+type out of `animation_clips.tpac`, which is where vanilla keeps clips (`animations.tpac` has masters
+only), so flags, priorities, blends and usages are vanilla's; the root motion the retarget dropped
+returns as loop displacement, death displacement and step points measured from the Fab sources
+(`tools/blender/measure_fab_clip_roots.py`). 37 masters had come out of the Kit with no owner skeleton;
+the tool patches the `human_skeleton` GUID in place (16 bytes, `.bak-preskel` backups). New
+`tools/tpac_fix_item_checksums.py` recomputes the xxHash64 item checksum that TpacTool zeroes and the
+patch staled; proven on Kit output before use. And the #616 lesson applied at once: none of the 104
+troll tpacs has a `RuntimeDataCache` entry (every working clip package in the Armory does), so new
+`tools/check_rdc_entries.py` gates that, and the Kit save that cooks the entries comes before any smoke.
+Still owed: that Kit save, the `as_cave_troll_warrior` bindings and the Custom Battle smoke.
 
 ### docs(tools): the Fab cave troll pack, a UE export script for creature packs, and why "Add To Project" listed nothing
 

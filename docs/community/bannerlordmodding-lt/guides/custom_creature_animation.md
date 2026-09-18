@@ -205,17 +205,30 @@ Measured against same-shaped creatures, a creature's animation FBX uses the **sa
 as its own mesh FBX: median differences of 6.79 and 16.83 degrees, which are rest-pose differences,
 not a 90 degree flip.
 
-## An honest status note
+## The export mapping, resolved (2026-09-18)
 
-TAOM's own internal write-up of the export mapping closes with **UNRESOLVED**, as of its last
-revision. The engine-data facts on [the skeleton page](/guides/custom_creature_skeleton/) are read
-straight out of the engine's own assets and are solid. The step from those facts to an export
-setting that reproduces a perfect clip on a **reskinned** rig is still open: the best result so far
-comes from `primary_bone_axis='Y'` off the mesh rig with the neck bone re-parented to match the
-engine, and the residual over-rotation is not fully explained.
+The internal write-up closed with UNRESOLVED for a while. Measuring a Kit-compiled master against its FBX
+settled it, on a vanilla rig (`human_skeleton`) with 52 clips:
 
-Clips authored on bespoke rigs (spider, elephant, warg) work correctly. This caveat is specific to
-authoring new clips onto a **vanilla** rig you did not build.
+1. **The Kit stores an FBX's bone-local transforms verbatim as engine locals.** No axis conversion, no
+   rest-relative delta. So the armature you export from must carry the engine's own bone frames: build it
+   from the engine rest frames (`tail = head + Y column`, `align_roll(Z column)`), which makes the bones
+   draw sideways in Blender because the engine's bone axis is X and Blender draws Y. That is cosmetic.
+   Export with `primary_bone_axis='Y'`, `secondary_bone_axis='X'`; the locals pass through untouched.
+2. **The root bone is stored as `RotZ(180 deg) @ (FBX world pose)`, and the armature node's transform is
+   applied on top.** Leave the node at identity and bake a 180 degree world-Z turn into the keyed pose.
+3. **Frame 0 is the rest frame.** The Kit stores the root position track relative to frame 0, and every
+   vanilla master opens on a rest pose with its clip starting at `Source1 = 1`. Open on a posed frame and
+   the pelvis offset of that pose is lost: a hunched character stands too high and its feet skate. Key
+   rest at frame 0, poses from frame 1. Vanilla locomotion also carries one root track (the pelvis bob,
+   no forward travel); a pack with root-bone travel plus pelvis motion has two, so drop the travel and
+   hand it to the engine as the clip usage's loop displacement instead.
+
+A mesh rig that skins perfectly (skinning is roll-independent) can still have frames 90 to 180 degrees off
+the engine's, and rotations are not roll-independent: that is the whole mechanism behind clips that look
+right in Blender and fold in the Kit. TaleWorlds' TpacTool FBX exports of vanilla skeletons are such mesh
+rigs. Clips authored on bespoke rigs (spider, elephant, warg) never hit this because the Kit imported the
+skeleton from the same rig.
 
 ## Next
 

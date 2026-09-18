@@ -23,6 +23,8 @@ involved, see [How to report a crash](/guides/how_to_report_a_crash/) and
 | Crash when the creature jumps, especially off terrain | [Incomplete jump table](#crash-when-the-creature-jumps) |
 | Rider spawns with **no mount**, no crash | [The skeleton was dropped from the mesh tpac](#the-rider-spawns-with-no-mount) |
 | Creature slides along the ground, legs frozen | [An action resolved to `act_none` on channel 0](#the-creature-slides-with-its-legs-frozen) |
+| Limbs animate correctly but the body floats or the feet skate | Frame 0 of the master is a posed frame, not rest; the root track is zeroed against it ([animation page](/guides/custom_creature_animation/), point 3) |
+| "Assigned skeleton animation not found" on a clip after you reimported its FBX | A reimport keeps the animation's GUID, so the clip normally survives; this package came back as Skeleton + Geometry with no animation (the Kit had created a junk `<armature>.001` skeleton from the same FBX on the first import). Delete that skeleton, import the FBX again as an animation, re-author the clip |
 | Creature invisible in battle, fine in a UI preview | [Materials lost on FBX re-import](#invisible-in-the-world-fine-in-a-preview) |
 | All colour variants render the same colour | Materials lost on FBX re-import (same cause) |
 | Rider floats at his own feet | `rider_sit_bone` name does not match, so it resolved to -1 |

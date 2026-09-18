@@ -107,7 +107,7 @@ Both are Monster naming mistakes, and both are invisible until a settlement scen
 
 ### Add a race
 
-1. Author the skin meshes and, if the proportions differ from human, the skeleton. Read [bannerlord-skeleton-authoring](../reference/bannerlord-skeleton-authoring.md) first: a clip authored on a mesh rig looks perfect in Blender and twisted in game.
+1. Author the skin meshes and, if the proportions differ from human, the skeleton; for clips on `human_skeleton` use `tools/blender/retarget_mannequin_to_human.py --engine-skeleton` (2026-09-18). Read [bannerlord-skeleton-authoring](../reference/bannerlord-skeleton-authoring.md) first: a clip authored on a mesh rig looks perfect in Blender and twisted in game.
 2. **Append** a `<race id="<race>">` block at the END of `LOTRLOME_Armory/ModuleData/skins.xml`, ten `<skin>` children, copying the closest existing race. Inserting anywhere else renumbers every race below it.
 3. Add five `<Monster>` entries to `LOTRLOME_Armory/ModuleData/monsters.xml`: `<race>`, `<race>_child`, `<race>_settlement`, `<race>_settlement_slow`, `<race>_settlement_fast`. Spell every one of them exactly, then read them back.
 4. Action sets in `LOTRLOME_Armory/ModuleData/action_sets.xml`. Cheapest correct form is `base_set="as_human_warrior"`, which inherits everything. A **standalone** set (its own `skeleton=`, no `base_set`) must be brought to full Native parity or the engine crashes the first time it asks for an action the set lacks, for example a unit walking into water.

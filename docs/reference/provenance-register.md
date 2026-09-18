@@ -84,6 +84,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
+| Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | Fab Standard License, tier and creator to be copied from the product page | data-port | `tools/oneoff/ue_export_cave_troll.py`; export staging `E:\LOTRAOMAssets\_export\cave_troll_lightweight\` (outside the repo); nothing ships yet | pending-license |
 
 <!-- provenance-register-end -->
 
@@ -436,6 +437,18 @@ naming thirteen files that do. TOR_Core is a separate source, referenced for eng
 6. Add a detail section if the row needs more than the table can hold.
 7. For a brand new adoption, run `/adopt-external` first. Its security and license pass is the front
    door; this register is where its answer gets written down.
+
+### Cave Troll Lightweight (Fab)
+
+Bought on Fab (Epic) on 2026-09-17 as a source of troll animation clips, skeletal mesh and textures
+for the `cave_troll` race. Fab sells under its Standard License in Personal and Professional tiers;
+which tier was bought, and the creator's published name, are on the product page in My Library and
+have not been copied here yet, hence `pending-license`. Nothing derived from the pack ships today:
+`tools/oneoff/ue_export_cave_troll.py` exports it out of a UE 5.4 project into a staging folder
+outside the repo, and anything that later reaches `LOTRLOME_Armory` (a retargeted clip, a converted
+mesh) is `data-port` under that licence. The same acquisition path was used in July 2026 for the
+Fab Medieval Tent Collection and the ElvenForestCity kit (both in `TAOM_Map/AssetSources/Scenes/`),
+which have no row yet; adding them is open work, not something this row covers.
 
 ### Khuzdul vocabulary (J.R.R. Tolkien)
 

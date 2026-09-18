@@ -98,7 +98,10 @@ collapses to a point. That bug survived a while because the only check being run
 
     The convention the engine **stores** rest frames in and the Blender export setting that
     reproduces a clip the Kit reads correctly are two different questions, and knowing the first
-    does not answer the second. Export with `primary_bone_axis='Y'`, `secondary_bone_axis='X'`.
+    does not answer the second. Export with `primary_bone_axis='Y'`, `secondary_bone_axis='X'`,
+    FROM an armature whose bone frames equal the engine's (build it from the engine rest frames), and
+    bake a 180 degree world-Z turn into the pose. The Kit stores FBX bone locals verbatim and turns the
+    root 180 degrees; both were measured on a Kit-compiled master (see the animation page, 2026-09-18).
 
 ## Bone limits
 

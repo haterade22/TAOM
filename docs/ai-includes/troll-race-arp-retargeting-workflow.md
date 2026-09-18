@@ -16,6 +16,18 @@ hand-authored quadrupeds; a humanoid race reuses the human library via retargeti
 > human clip library) is **ENABLED + SHIPPING today** as the working troll — see
 > [troll-race.md](../features/troll-race.md). The bespoke-skeleton set here is the quality refinement.
 
+> **2026-09-18 update, read before authoring anything on `human_skeleton`:** the source rig this document
+> uses, `human_skeleton_with_male_body.fbx` (TpacTool, `FixBoneForBlender`), is a MESH rig in the sense of
+> [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md): its bone frames sit 90
+> to 180 degrees off the engine's, and the Kit stores FBX bone locals verbatim, so a clip authored on it
+> looks right in Blender and folds in the Kit (measured on the Fab cave troll, 2026-09-17). That applies to
+> the `troll_walk_lumber` / `troll_run_lumber` clips below (never Kit-proven) and to anything rebuilt with
+> `rebuild_anim_from_json.py` and exported straight back. The proven path for the human skeleton is
+> `tools/blender/retarget_mannequin_to_human.py --engine-skeleton` (rig built from the engine frames, pose
+> turned 180 degrees about Z, armature node identity, a REST frame at frame 0 because the Kit zeroes the root
+> track against it); it took 52 Fab clips into the Kit correctly. The ARP
+> steps below stay valid for retargeting ONTO an ARP rig; use the FBX rig for its body meshes only.
+
 ## Hard boundaries (what is NOT scriptable / autonomous)
 
 | Step | Why it's a hand-off |
@@ -64,7 +76,7 @@ movement — pick by how different the motion must be:
 - **`human_skeleton` race + clip override (LIGHTWEIGHT — what `cave_troll` uses).** A clip authored on
   `human_skeleton` plays DIRECTLY (the race already runs on that skeleton), so you **skip B + C entirely —
   no ARP retarget, no skeleton export**: rebuild the gait on `human_skeleton` (step A) → restyle → standard
-  `bpy.ops.export_scene.fbx` (armature-only, Y/X axes, baked) → Kit-compile → override only the specific
+  `bpy.ops.export_scene.fbx` (armature-only, Y/X axes, baked, FROM A RIG WITH THE ENGINE FRAMES, see the 2026-09-18 note) → Kit-compile → override only the specific
   `act_*` codes you changed in `as_<race>_warrior`. Used for the troll lumbering walk/run (`troll_walk_lumber`
   / `troll_run_lumber`, sway ×1.4). The rest of the human set keeps playing via `base_set`.
 - **Bespoke OWN-skeleton + full retargeted set (HEAVY — PARKED for the troll).** A separate skeleton whose
@@ -75,6 +87,16 @@ movement — pick by how different the motion must be:
 > **Asset gate:** authored animation FBXs are exported to a NON-Armory staging folder
 > (`E:\LOTRAOMAssets\troll_clips_to_import\`); the user imports them into LOTRLOME_Armory + Kit-compiles
 > themselves (see memory `feedback-keep-new-anims-out-of-armory`). Never write new FBXs into the Armory.
+
+> **Source clips from a bought pack (2026-09-17):** the Fab "Cave Troll Lightweight" pack is a second
+> clip source beside the human library. `tools/oneoff/ue_export_cave_troll.py` exports its
+> AnimSequences, skeletal mesh and textures out of the UE 5.4 project into
+> `E:\LOTRAOMAssets\_export\cave_troll_lightweight\` (staging, per the asset gate above); those FBX
+> were then retargeted onto `human_skeleton` by `tools/blender/retarget_mannequin_to_human.py` (plain bpy,
+> no ARP: a world-space delta transfer needs none of the ARP workarounds above; step B stays the tool
+> for the human-to-ARP-rig direction). All 52 are staged under `troll_clips_to_import\fab_cave_troll\`.
+> Acquisition, export and retarget gotchas: [`ue-to-bannerlord-asset-pipeline.md`](../reference/ue-to-bannerlord-asset-pipeline.md)
+> § Fab acquisition and skeletal export. Licence row: `docs/reference/provenance-register.md`.
 
 ## The pipeline
 
@@ -214,6 +236,12 @@ T-pose — extend the set as needed; the loop above is mechanical per clip. (`tr
   `E:\LOTRAOMAssets\troll_anim_WORK_20260613.blend` (`troll_rig_01.blend` untouched).
 
 ## Reusable assets
+
+- `tools/blender/retarget_mannequin_to_human.py` (2026-09-17/18): UE4-Mannequin clips onto `human_skeleton`,
+  engine-frame target rig, pose-baked root yaw, per-export engine check; `tools/blender/human_skeleton_engine.json`.
+- `tools/gen_troll_anim_clips.ps1` + `tools/blender/fab_cave_troll_clip_names.json`: `_anm.tpac` clips from
+  vanilla templates; `tools/bind_troll_action_set.py`: the `as_cave_troll_warrior` overrides.
+- `tools/blender/reskin_to_human_skeleton.py`: re-weight a human_skeleton mesh from the vanilla body.
 - `tools/blender/arp_retarget.py` — retarget driver (import source, build+correct map, bake, save .bmap).
 - `tools/blender/bannerlord_human_to_troll.bmap` — the saved bone map.
 - `E:\LOTRAOMAssets\Auto-Rig Pro v3.78.10\auto_rig_pro.zip` — installable ARP package.
@@ -233,5 +261,6 @@ clips). 6. Author `as_troll_warrior` + the race data ([troll-race.md](../feature
 
 - [docs/ai-includes/creature-animation-blender-mcp-workflow.md](./creature-animation-blender-mcp-workflow.md)
 - [docs/features/troll-race.md](../features/troll-race.md)
+- [docs/reference/ue-to-bannerlord-asset-pipeline.md](../reference/ue-to-bannerlord-asset-pipeline.md)
 
 <!-- backlinks-end -->

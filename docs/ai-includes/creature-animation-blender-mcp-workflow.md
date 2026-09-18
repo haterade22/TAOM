@@ -91,6 +91,12 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
    `reverse_action` (walk_backwards), `freeze_toward_rest` (walk→idle).
 6. **`export_clip_fbx`** → armature-only, `primary_bone_axis=Y, forward=-Y, up=Z`, no leaf bones, baked,
    take = scene name; armature renamed `<skel>_notused`. Round-trip verify by re-import.
+   **Caveat (2026-09-18):** this exports frames 1..N with frame 0 absent, and the Kit stores the root position
+   track relative to the master's frame 0; vanilla masters open on a REST frame and start their clips at
+   `Source1 = 1`. The creature clips got away with it because their first frames sit near rest; a clip that
+   opens on a lowered or shifted pelvis floats or skates. `retarget_mannequin_to_human.py` keys rest at
+   frame 0; port that here before authoring a clip whose first frame is far from rest
+   ([bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md), fact 3).
 7. **Hand off** → Kit-compile each FBX **with `quad_movement` + step points** (movement clips only),
    bind in the action set, in-game Custom-Battle test.
 8. **POST-DEPLOY GATE (mandatory, every tpac/FBX swap):** after replacing the deployed tpacs and

@@ -38,6 +38,27 @@
 
 (Full enum: `E:/Decompiled_Bannerlord/MountAndBlade/.../AnimFlags.cs` — 60+ flags incl. IK, camera, particle, sound.)
 
+## Vanilla HUMAN recipes, read from `Native/AssetPackages/animation_clips.tpac` (2026-09-17)
+
+Vanilla keeps its clips in `animation_clips.tpac` (6,177 `AnimationClip` items); `animations.tpac` holds only the
+`SkeletalAnimation` masters. These are the exact fields of the human clips `tools/gen_troll_anim_clips.ps1` clones
+for a humanoid race on `human_skeleton` (`Source1 = 1` because frame 0 of a master is its rest frame, `Source2 =
+master Duration - 1`, hands 3/3 on weapon-agnostic clips):
+
+| Vanilla clip | Priority | Flags | Usages | Blend in/out | Notes |
+|---|---|---|---|---|---|
+| `walk_forward_unarmed` | 0 | `make_walk_sound` | `BipMovIkUsage` (LoopDisplacement 1.8) | 0.3 / 0 | step points (0.4, 0.898) |
+| `run_forward_unarmed` | 0 | `make_walk_sound` | `BipMovIkUsage` | 0.3 / 0 | hands 4/4 |
+| `turn_unarmed` | 0 | none | `BipMovIkUsage` | 0.3 / 0 | one clip for both directions, no root rotation flag |
+| `troop_stand_unarmed_1` | 1 | `allow_head_movement` | none | 0.5 / 0 | SoundCode soldier foley, Facial `female_custom` |
+| `strike_chest_front` | 80 | `client_prediction`, `restart`, `enable_hand_blend_ik`, `enforce_root_rotation`, `update_bounding_volume` | none | 0.1 / 0.1 | `CombatParameterId = strike_front/back/left/right` |
+| `death_fall_front` | 95 | `make_bodyfall_sound`, `client_prediction`, `keep`, `disable_hand_ik`, `lock_movement`, `enforce_all`, `enforce_root_rotation`, `disable_foot_ik`, `update_bounding_volume`, `align_with_ground`, `displace_position`, `reset_camera_height` | `BlendUsage` (0.2, 0.5) + `DisplacementUsage` ((0, 1.5, 0), 0.6) | 0.3 / 0 | step point 0.15 |
+| `taunt_afraid` / `cheer_1` | 64 | `lock_movement` (+`cyclic` on cheer) | none | 0.3 / 0.3 | Voice/Facial/Sound codes are human-specific |
+
+Two gotchas: a `StepPoints` entry on a clip with no `SoundCode` is a sound trigger with no sound (the Kit warns
+"Sound points and/or sound id not valid"), so clear them together; and vanilla has no standalone melee attack
+clip at all (melee is engine pose-blend), so an attack clip for a race can only ever play from script.
+
 ## Per-clip-type recipe
 
 **CONFIRMED** from the elephant clips in the Kit (2026-06-06 screenshots):

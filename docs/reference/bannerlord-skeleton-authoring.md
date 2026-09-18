@@ -55,9 +55,10 @@ horseneck2 -> horse_head   offset +0.4958    horseneck2 length 0.496
 **Do NOT conclude from this that you should export with `primary_bone_axis='X'`.** That inference is
 natural, was made here, and was tested: it produced the worst result of the whole session. The
 convention the engine STORES its rest frames in is not the same question as which Blender export
-setting reproduces a clip the Kit reads correctly. See "Dead ends" below. As of 2026-08-29 the
-best in-game result still comes from `primary_bone_axis='Y'` off the mesh rig, and the residual
-error is unexplained.
+setting reproduces a clip the Kit reads correctly. See "Dead ends" below. **Resolved 2026-09-18** (status
+section below): the Kit stores an FBX's bone locals verbatim, so the rig you export from must carry the
+engine's frames; `primary_bone_axis='Y'` / `secondary_bone_axis='X'` then passes them through untouched,
+and the root needs a 180 degree world-Z turn baked into the pose.
 
 ## Rest-frame maths
 
@@ -73,7 +74,10 @@ Matrix(((m[0], m[3], m[6], m[9]),
 
 Accumulate down the hierarchy (`world = parent_world @ local`), then build each Blender bone with
 `head = world.translation`, `tail = head + world_X * length`, and `eb.align_roll(world_Z)`.
-`tools/blender/` has no reusable copy of this yet; the war-ram build script is the reference.
+The reusable copy is `build_engine_rig()` in `tools/blender/retarget_mannequin_to_human.py`: tail = head +
+engine Y column, `align_roll(engine Z column)`, and an assertion that every `matrix_local` equals the
+engine world rest to 1e-4. `tools/blender/human_skeleton_engine.json` is the human dump (from
+`human.tpac`; `dump_engine_skeleton.ps1` reads `skeletons.tpac`, which does not hold the human).
 
 **Rotation sign is per-rig and must be measured, never assumed.** On `SK_EB_Goat_A.fbx` a positive
 world-X rotation lowers the head, because that FBX's armature matrix flips Y. On a rig reconstructed
@@ -92,6 +96,8 @@ bake_anim_step=1.0, bake_anim_simplify_factor=0.0
 ```
 
 Name the armature object **and** its data `<skeleton>_notused` (warg, spider and elephant all do).
+Export from `frame_start = 0`, with frame 0 keyed as the rest pose (see fact 3 above); the shipped creature
+exports (`harness.export_clip_fbx`) start at frame 1 on a posed frame and were never checked for this.
 
 What the shipped animation FBX agree on, and what they do not:
 
@@ -109,8 +115,14 @@ either way.
 
 ## Diagnosing a clip that looks right in Blender and wrong in game
 
-Do these in order. Each is cheap and rules out a whole class.
+Do these in order. Each is cheap and rules out a whole class. Step 0, which solved the human case in one
+afternoon after the ram had cost a day: **read the Kit's compiled master back** (TpacTool.Lib, as
+`tools/read_anim_keyframes_tpac.ps1` does) and compare each bone's stored rotation with the FBX's local
+and with the engine rest local. The three numbers tell you whether the Kit changed anything (it does not,
+for children), whether your rig's frames were the engine's, and what the root got.
 
+0. **Feet float or skate while the limbs move right?** Check frame 0 of the master: it must be the rest
+   pose, because the root position track is stored relative to it (fact 3 in the 2026-09-18 status).
 1. **Render a FRONT view.** A yaw is nearly invisible in a side view, and every render in the war-ram
    session's first several hours was a side view. Also print the bone direction and assert `|x| ~ 0`;
    note that a bone's HEAD position cannot detect a rotation about its own origin, so position checks
@@ -147,7 +159,46 @@ Each of these was measured, believed, and turned out not to be the cause:
   the warg, the spider or the elephant.** They are single-creature mounts with BT-driven attacks,
   which is the same shape as a war ram; the chariot is not.
 
-## Status as of 2026-08-29: UNRESOLVED
+## Status as of 2026-09-18: RESOLVED for an engine-native skeleton (human_skeleton), measured
+
+The cave troll clips (Fab pack retargeted onto `human_skeleton`, `docs/reference/ue-to-bannerlord-asset-pipeline.md`
+"The retarget stage") went through three Kit imports, each read back with TpacTool and compared bone by
+bone against the FBX and the engine rest frames. Two facts came out, and together they turn the rule at
+the top of this document into a procedure:
+
+1. **The Kit stores an FBX's bone-local transforms verbatim as engine locals.** 27 of 28 bones at 0.0
+   degrees difference between the compiled master and the FBX, on every import. There is no axis
+   conversion and no rest-relative delta. So the FBX's bone frames must BE the engine's bone frames:
+   build the Blender armature so that each bone's `matrix_local` (armature space) equals the engine's
+   accumulated `RestFrame` (transposed, offset in the last column), which means `tail = head + Y column`
+   and `align_roll(Z column)`. The bones then draw sideways in Blender and in the Kit's skeleton view,
+   because the engine's bone axis is X and Blender draws Y; that is cosmetic. Export with
+   `primary_bone_axis='Y'`, `secondary_bone_axis='X'` (identity bone correction) and the locals go
+   through untouched. `tools/blender/retarget_mannequin_to_human.py --engine-skeleton` does this and
+   asserts the frames to 1e-4; `tools/blender/human_skeleton_engine.json` is the dump.
+2. **The root bone is stored as `RotZ(180 deg) @ (FBX world pose)`, and the armature node's transform is
+   applied too.** Identity node: pelvis came back 180 degrees off. Node turned 180 degrees to cancel it:
+   pelvis right in the master, but the character faced away in the Kit (the node transform also rides in
+   through the package's `Geometry <file>.fbx` item). Fix that survives: keep the node at identity and
+   turn the whole character 180 degrees about world Z in the keyed pose (`--root-yaw-mode pose`, the
+   default). Children are unaffected either way.
+3. **Frame 0 is the REST frame, and the Kit stores the root position track relative to it.** Every vanilla
+   master opens on a rest frame (`anim_run_forward_unarmed` frame 0: 0.6 degrees from rest, root (0,0,0))
+   and its clip starts at `Source1 = 1`. A clip that opens on a posed frame has its root track zeroed at
+   that pose: the hunched troll stood 9 cm too high, legs posed for a lower hip, feet skating (Artem,
+   2026-09-18). Key frame 0 as rest (root turned like the clip, children identity), export from frame 0,
+   and set the clip's `Source1 = 1`. Vanilla walk/run masters also carry ONE root track (pelvis bob, no
+   forward travel) and no pelvis position track; a UE pack has two (root travel plus pelvis), so drop the
+   root's travel and keep the pelvis, and give the engine the travel as `BipMovIkUsage.LoopDisplacement`.
+
+This is the class the ram left open above: "reconstruction from skeletons.tpac + export X" mangled because
+`primary_bone_axis='X'` re-expresses the frames the reconstruction had just made exact. The candidate for
+the ram is therefore reconstruction + Y/X export + the pose yaw, untested there as of this writing.
+The TpacTool `FixBoneForBlender` rig (`human_skeleton_with_male_body.fbx`) is a MESH rig in the sense of
+the rule at the top: its frames differ from the engine's by 90 to 180 degrees per bone and produced the
+folded troll of 2026-09-17. Use it for its body meshes only.
+
+## Status as of 2026-08-29: UNRESOLVED (historical; superseded by the 2026-09-18 section above)
 
 Ranked by how close each got in the Kit's model viewer:
 
@@ -167,8 +218,9 @@ rotations produced identical in-game results, so the storage form of the rotatio
 The residual over-rotation is the expected signature of the remaining problem: with the correct
 parent, the engine composes the clip's local rotations against ITS `horsespine3` orientation, which
 differs from the mesh rig's. That is exactly the roll error a rig reconstructed from the engine data
-removes, which is why `wr_f_engine_y` / `wr_g_engine_z` (reconstruction, untested export axes) are
-the current candidates.
+removes. The human case then showed which candidate is right: reconstruction from the engine frames,
+exported with Y/X, with the 180 degree turn baked into the pose (`wr_f_engine_y` plus the yaw). The ram
+itself has not been re-run through that path.
 
 **Do not treat anything in the "What the engine data says" section as suspect.** Those numbers are
 read straight out of the engine's own asset and are the only ground truth this session produced. It
@@ -187,6 +239,11 @@ is the step from those facts to a working export that remains open.
 
 ## Referenced by
 
+- [docs/ai-includes/troll-race-arp-retargeting-workflow.md](../ai-includes/troll-race-arp-retargeting-workflow.md)
+- [docs/features/troll-race.md](../features/troll-race.md)
+- [docs/INDEX.md](../INDEX.md)
 - [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
+- [docs/reference/ue-to-bannerlord-asset-pipeline.md](./ue-to-bannerlord-asset-pipeline.md)
 
 <!-- backlinks-end -->
