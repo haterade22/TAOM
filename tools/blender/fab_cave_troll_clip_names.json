@@ -1,0 +1,64 @@
+{
+  "_comment": "CLIP names for the Fab Cave Troll set: Fab FBX stem (lowercased) -> Bannerlord animation CLIP name (anim_troll_<what>). The SkeletalAnimation masters keep their imported troll_<stem minus cave_troll_> names; this table names the clips authored on top of them (Mike, 2026-09-17). free_* = calm stance, danger_* = combat stance, Light_* = the light-attack set.",
+
+  "cave_troll_free_idle_0": "anim_troll_idle1",
+  "cave_troll_danger_idle_0": "anim_troll_combat_idle1",
+  "cave_troll_light_danger_idle_0": "anim_troll_combat_idle2",
+
+  "cave_troll_free_to_danger_0": "anim_troll_idle_to_combat",
+  "cave_troll_danger_idle_to_free_idle_0": "anim_troll_combat_to_idle1",
+  "cave_troll_danger_idle_free_idle_0": "anim_troll_combat_to_idle2",
+
+  "cave_troll_free_walk_0": "anim_troll_walk1",
+  "cave_troll_danger_walk_0": "anim_troll_combat_walk1",
+  "cave_troll_danger_run_0": "anim_troll_run1",
+
+  "cave_troll_free_idle_to_walk_0": "anim_troll_idle_to_walk",
+  "cave_troll_free_walk_to_idle_0": "anim_troll_walk_to_idle",
+  "cave_troll_danger_idle_to_walk_0": "anim_troll_combat_idle_to_walk",
+  "cave_troll_danger_walk_to_idle_0": "anim_troll_combat_walk_to_idle",
+  "cave_troll_danger_idle_to_run_0": "anim_troll_idle_to_run",
+  "cave_troll_danger_run_to_idle_0": "anim_troll_run_to_idle",
+  "cave_troll_danger_walk_to_run_0": "anim_troll_walk_to_run",
+  "cave_troll_danger_run_to_idle_heavy_attack_0": "anim_troll_run_to_heavy_attack",
+
+  "cave_troll_free_turn_left_90": "anim_troll_turn_left_90",
+  "cave_troll_free_turn_left_180": "anim_troll_turn_left_180",
+  "cave_troll_free_turn_right_90": "anim_troll_turn_right_90",
+  "cave_troll_free_turn_right_180": "anim_troll_turn_right_180",
+  "cave_troll_danger_turn_left_90": "anim_troll_combat_turn_left_90",
+  "cave_troll_danger_turn_left_180": "anim_troll_combat_turn_left_180",
+  "cave_troll_danger_turn_right_90": "anim_troll_combat_turn_right_90",
+  "cave_troll_danger_turn_right_180": "anim_troll_combat_turn_right_180",
+  "cave_troll_free_walk_turn_left_90": "anim_troll_walk_turn_left_90",
+  "cave_troll_free_walk_turn_right_90": "anim_troll_walk_turn_right_90",
+  "cave_troll_danger_walk_turn_left_90": "anim_troll_combat_walk_turn_left_90",
+  "cave_troll_danger_walk_turn_right_90": "anim_troll_combat_walk_turn_right_90",
+
+  "cave_troll_free_idle_hit_front_0": "anim_troll_hit_front1",
+  "cave_troll_free_idle_hit_back_0": "anim_troll_hit_back1",
+  "cave_troll_free_idle_hit_left_0": "anim_troll_hit_left1",
+  "cave_troll_free_idle_hit_right_0": "anim_troll_hit_right1",
+  "cave_troll_danger_idle_hit_front_0": "anim_troll_combat_hit_front1",
+  "cave_troll_danger_idle_hit_back_0": "anim_troll_combat_hit_back1",
+  "cave_troll_danger_idle_hit_left_0": "anim_troll_combat_hit_left1",
+  "cave_troll_danger_idle_hit_right_0": "anim_troll_combat_hit_right1",
+
+  "cave_troll_danger_idle_death_0": "anim_troll_death1",
+  "cave_troll_danger_idle_death_1": "anim_troll_death2",
+  "cave_troll_danger_idle_death_2": "anim_troll_death3",
+
+  "cave_troll_danger_attack_0": "anim_troll_attack1",
+  "cave_troll_danger_attack_1": "anim_troll_attack2",
+  "cave_troll_danger_attack_2": "anim_troll_attack3",
+  "cave_troll_light_danger_attack_0": "anim_troll_light_attack1",
+  "cave_troll_light_danger_attack_1": "anim_troll_light_attack2",
+  "cave_troll_light_danger_attack_2": "anim_troll_light_attack3",
+
+  "cave_troll_free_interactive_0": "anim_troll_interactive1",
+  "cave_troll_free_interactive_1": "anim_troll_interactive2",
+  "cave_troll_free_interactive_2": "anim_troll_interactive3",
+  "cave_troll_danger_interactive_0": "anim_troll_combat_interactive1",
+  "cave_troll_danger_interactive_1": "anim_troll_combat_interactive2",
+  "cave_troll_danger_interactive_2": "anim_troll_combat_interactive3"
+}

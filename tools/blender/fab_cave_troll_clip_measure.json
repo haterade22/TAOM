@@ -1,0 +1,1217 @@
+{
+ "cave_troll_light_danger_attack_0": {
+  "frames": 72,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.268
+  ],
+  "plants_r": [
+   0.465,
+   0.662
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.059,
+   0.956,
+   1.059
+  ]
+ },
+ "cave_troll_light_danger_attack_1": {
+  "frames": 82,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.42
+  ],
+  "plants_r": [
+   0.0,
+   0.222,
+   0.432,
+   0.494,
+   0.963
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.073,
+   0.981,
+   1.073
+  ]
+ },
+ "cave_troll_light_danger_attack_2": {
+  "frames": 87,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.221
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.051,
+   0.924,
+   1.051
+  ]
+ },
+ "cave_troll_light_danger_idle_0": {
+  "frames": 137,
+  "travel_xyz_troll_m": [
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.05,
+   1.049,
+   1.05
+  ]
+ },
+ "cave_troll_danger_attack_2": {
+  "frames": 87,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.221
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.051,
+   0.924,
+   1.051
+  ]
+ },
+ "cave_troll_danger_idle_0": {
+  "frames": 137,
+  "travel_xyz_troll_m": [
+   -0.0,
+   -0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.05,
+   1.049,
+   1.05
+  ]
+ },
+ "cave_troll_danger_idle_free_idle_0": {
+  "frames": 52,
+  "travel_xyz_troll_m": [
+   0.025,
+   -0.29,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.29,
+  "travel_forward_human_m": 0.225,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.843
+  ],
+  "plants_r": [
+   0.0,
+   0.588
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.049,
+   0.958,
+   1.094
+  ]
+ },
+ "cave_troll_danger_idle_hit_back_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.039,
+   0.986,
+   1.039
+  ]
+ },
+ "cave_troll_danger_idle_hit_front_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   -0.0,
+   -0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.042,
+   1.042,
+   1.042
+  ]
+ },
+ "cave_troll_danger_idle_hit_left_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.05,
+   1.033,
+   1.05
+  ]
+ },
+ "cave_troll_danger_idle_hit_right_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.058,
+   1.056,
+   1.058
+  ]
+ },
+ "cave_troll_danger_idle_to_free_idle_0": {
+  "frames": 52,
+  "travel_xyz_troll_m": [
+   0.025,
+   -0.29,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.29,
+  "travel_forward_human_m": 0.225,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.843
+  ],
+  "plants_r": [
+   0.0,
+   0.588
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.049,
+   0.958,
+   1.094
+  ]
+ },
+ "cave_troll_danger_idle_to_run_0": {
+  "frames": 52,
+  "travel_xyz_troll_m": [
+   0.0,
+   -4.007,
+   0.0
+  ],
+  "travel_forward_troll_m": 4.007,
+  "travel_forward_human_m": 3.105,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.686
+  ],
+  "plants_r": [
+   0.902
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.081,
+   0.944,
+   1.06
+  ]
+ },
+ "cave_troll_danger_idle_to_walk_0": {
+  "frames": 52,
+  "travel_xyz_troll_m": [
+   -0.246,
+   -1.249,
+   0.0
+  ],
+  "travel_forward_troll_m": 1.249,
+  "travel_forward_human_m": 0.968,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0,
+   0.333
+  ],
+  "plants_r": [
+   0.0,
+   0.804
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.064,
+   1.04,
+   1.171
+  ]
+ },
+ "cave_troll_danger_interactive_0": {
+  "frames": 122,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.05,
+   0.996,
+   1.05
+  ]
+ },
+ "cave_troll_danger_interactive_1": {
+  "frames": 72,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.062,
+   0.829,
+   1.062
+  ]
+ },
+ "cave_troll_danger_interactive_2": {
+  "frames": 52,
+  "travel_xyz_troll_m": [
+   -0.0,
+   -0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0,
+   0.49
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.057,
+   0.855,
+   1.057
+  ]
+ },
+ "cave_troll_danger_run_0": {
+  "frames": 34,
+  "travel_xyz_troll_m": [
+   0.0,
+   -3.881,
+   0.0
+  ],
+  "travel_forward_troll_m": 3.881,
+  "travel_forward_human_m": 3.007,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.242
+  ],
+  "plants_r": [
+   0.0,
+   0.788
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.118,
+   0.98,
+   1.118
+  ]
+ },
+ "cave_troll_danger_run_to_idle_0": {
+  "frames": 87,
+  "travel_xyz_troll_m": [
+   -0.0,
+   -4.508,
+   -0.0
+  ],
+  "travel_forward_troll_m": 4.508,
+  "travel_forward_human_m": 3.493,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.174,
+   0.384,
+   0.442
+  ],
+  "plants_r": [
+   0.0,
+   0.302,
+   0.384,
+   0.442,
+   0.791
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.109,
+   0.959,
+   1.085
+  ]
+ },
+ "cave_troll_danger_run_to_idle_heavy_attack_0": {
+  "frames": 92,
+  "travel_xyz_troll_m": [
+   -0.025,
+   -5.676,
+   0.0
+  ],
+  "travel_forward_troll_m": 5.676,
+  "travel_forward_human_m": 4.397,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.56
+  ],
+  "plants_r": [
+   0.0,
+   0.297,
+   0.56,
+   0.857,
+   0.912
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.1,
+   0.917,
+   1.076
+  ]
+ },
+ "cave_troll_danger_turn_left_180": {
+  "frames": 67,
+  "travel_xyz_troll_m": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": -180.0,
+  "plants_l": [
+   0.0,
+   0.288,
+   0.742
+  ],
+  "plants_r": [
+   0.0,
+   0.545,
+   0.848
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.018,
+   0.988,
+   1.018
+  ]
+ },
+ "cave_troll_danger_turn_left_90": {
+  "frames": 42,
+  "travel_xyz_troll_m": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 90.0,
+  "plants_l": [
+   0.0,
+   0.488
+  ],
+  "plants_r": [
+   0.0,
+   0.829
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.018,
+   0.958,
+   1.018
+  ]
+ },
+ "cave_troll_danger_turn_right_180": {
+  "frames": 67,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 180.0,
+  "plants_l": [
+   0.0,
+   0.545,
+   0.894
+  ],
+  "plants_r": [
+   0.0,
+   0.318,
+   0.773
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.018,
+   0.988,
+   1.018
+  ]
+ },
+ "cave_troll_danger_turn_right_90": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": -90.0,
+  "plants_l": [
+   0.0,
+   0.891
+  ],
+  "plants_r": [
+   0.0,
+   0.478
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.018,
+   0.989,
+   1.018
+  ]
+ },
+ "cave_troll_danger_walk_0": {
+  "frames": 44,
+  "travel_xyz_troll_m": [
+   -0.0,
+   -1.77,
+   0.0
+  ],
+  "travel_forward_troll_m": 1.77,
+  "travel_forward_human_m": 1.371,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.465
+  ],
+  "plants_r": [
+   0.0,
+   0.721
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.164,
+   1.054,
+   1.164
+  ]
+ },
+ "cave_troll_danger_walk_to_idle_0": {
+  "frames": 62,
+  "travel_xyz_troll_m": [
+   0.02,
+   -1.426,
+   -0.0
+  ],
+  "travel_forward_troll_m": 1.426,
+  "travel_forward_human_m": 1.105,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.475,
+   0.656,
+   0.754
+  ],
+  "plants_r": [
+   0.0,
+   0.213,
+   0.59,
+   0.918
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.158,
+   0.982,
+   1.051
+  ]
+ },
+ "cave_troll_danger_walk_to_run_0": {
+  "frames": 34,
+  "travel_xyz_troll_m": [
+   -0.027,
+   -2.599,
+   -0.0
+  ],
+  "travel_forward_troll_m": 2.599,
+  "travel_forward_human_m": 2.014,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.333
+  ],
+  "plants_r": [
+   0.0,
+   0.879
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.162,
+   0.949,
+   0.994
+  ]
+ },
+ "cave_troll_danger_walk_turn_left_90": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   1.423,
+   -0.974,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.974,
+  "travel_forward_human_m": 0.754,
+  "yaw_deg": 90.0,
+  "plants_l": [
+   0.261
+  ],
+  "plants_r": [
+   0.0,
+   0.674,
+   0.826
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.125,
+   0.942,
+   1.125
+  ]
+ },
+ "cave_troll_danger_walk_turn_right_90": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   -1.423,
+   -0.974,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.974,
+  "travel_forward_human_m": 0.754,
+  "yaw_deg": -90.0,
+  "plants_l": [
+   0.283
+  ],
+  "plants_r": [
+   0.0,
+   0.587,
+   0.739
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.125,
+   0.899,
+   1.125
+  ]
+ },
+ "cave_troll_free_idle_0": {
+  "frames": 162,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.141,
+   1.138,
+   1.141
+  ]
+ },
+ "cave_troll_free_idle_hit_back_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0,
+   0.571
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.141,
+   1.087,
+   1.141
+  ]
+ },
+ "cave_troll_free_idle_hit_front_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.141,
+   1.141,
+   1.141
+  ]
+ },
+ "cave_troll_free_idle_hit_left_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.141,
+   1.124,
+   1.141
+  ]
+ },
+ "cave_troll_free_idle_hit_right_0": {
+  "frames": 22,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0,
+   0.857
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.141,
+   1.139,
+   1.141
+  ]
+ },
+ "cave_troll_free_idle_to_walk_0": {
+  "frames": 57,
+  "travel_xyz_troll_m": [
+   0.017,
+   -1.709,
+   0.1
+  ],
+  "travel_forward_troll_m": 1.709,
+  "travel_forward_human_m": 1.324,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.607
+  ],
+  "plants_r": [
+   0.982
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.141,
+   1.079,
+   1.181
+  ]
+ },
+ "cave_troll_free_interactive_0": {
+  "frames": 162,
+  "travel_xyz_troll_m": [
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.116,
+   1.055,
+   1.116
+  ]
+ },
+ "cave_troll_free_interactive_1": {
+  "frames": 147,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0,
+   0.74
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.116,
+   1.028,
+   1.116
+  ]
+ },
+ "cave_troll_free_interactive_2": {
+  "frames": 162,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.115,
+   1.078,
+   1.115
+  ]
+ },
+ "cave_troll_free_to_danger_0": {
+  "frames": 82,
+  "travel_xyz_troll_m": [
+   -0.009,
+   0.163,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.163,
+  "travel_forward_human_m": -0.126,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0,
+   0.457,
+   0.84
+  ],
+  "plants_r": [
+   0.0,
+   0.654
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.008,
+   0.933,
+   1.018
+  ]
+ },
+ "cave_troll_free_turn_left_180": {
+  "frames": 67,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": -180.0,
+  "plants_l": [
+   0.0,
+   0.758
+  ],
+  "plants_r": [
+   0.197,
+   0.53
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.023,
+   1.006,
+   1.023
+  ]
+ },
+ "cave_troll_free_turn_left_90": {
+  "frames": 42,
+  "travel_xyz_troll_m": [
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 90.0,
+  "plants_l": [
+   0.0,
+   0.39
+  ],
+  "plants_r": [
+   0.0,
+   0.707,
+   0.829
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.023,
+   0.94,
+   1.023
+  ]
+ },
+ "cave_troll_free_turn_right_180": {
+  "frames": 67,
+  "travel_xyz_troll_m": [
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "travel_forward_troll_m": 0.0,
+  "travel_forward_human_m": 0.0,
+  "yaw_deg": 180.0,
+  "plants_l": [
+   0.0,
+   0.53,
+   0.803,
+   0.909
+  ],
+  "plants_r": [
+   0.0,
+   0.288,
+   0.788
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.023,
+   0.995,
+   1.023
+  ]
+ },
+ "cave_troll_free_turn_right_90": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   -0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": -90.0,
+  "plants_l": [
+   0.0,
+   0.826
+  ],
+  "plants_r": [
+   0.0,
+   0.478
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.023,
+   0.993,
+   1.023
+  ]
+ },
+ "cave_troll_free_walk_0": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   -0.0,
+   -1.984,
+   0.0
+  ],
+  "travel_forward_troll_m": 1.984,
+  "travel_forward_human_m": 1.537,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.283
+  ],
+  "plants_r": [
+   0.0,
+   0.978
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.181,
+   1.037,
+   1.181
+  ]
+ },
+ "cave_troll_free_walk_to_idle_0": {
+  "frames": 62,
+  "travel_xyz_troll_m": [
+   0.02,
+   -1.426,
+   -0.051
+  ],
+  "travel_forward_troll_m": 1.426,
+  "travel_forward_human_m": 1.105,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.77
+  ],
+  "plants_r": [
+   0.0,
+   0.623
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.181,
+   1.035,
+   1.063
+  ]
+ },
+ "cave_troll_free_walk_turn_left_90": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   1.423,
+   -0.974,
+   -0.0
+  ],
+  "travel_forward_troll_m": 0.974,
+  "travel_forward_human_m": 0.754,
+  "yaw_deg": 90.0,
+  "plants_l": [
+   0.261
+  ],
+  "plants_r": [
+   0.0,
+   0.826
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.181,
+   1.015,
+   1.181
+  ]
+ },
+ "cave_troll_free_walk_turn_right_90": {
+  "frames": 47,
+  "travel_xyz_troll_m": [
+   -1.423,
+   -0.974,
+   -0.0
+  ],
+  "travel_forward_troll_m": 0.974,
+  "travel_forward_human_m": 0.754,
+  "yaw_deg": -90.0,
+  "plants_l": [
+   0.283
+  ],
+  "plants_r": [
+   0.0,
+   0.739
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.181,
+   0.971,
+   1.181
+  ]
+ },
+ "cave_troll_danger_attack_0": {
+  "frames": 72,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.268
+  ],
+  "plants_r": [
+   0.465,
+   0.662
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.059,
+   0.956,
+   1.059
+  ]
+ },
+ "cave_troll_danger_attack_1": {
+  "frames": 82,
+  "travel_xyz_troll_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.0,
+  "travel_forward_human_m": -0.0,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.42
+  ],
+  "plants_r": [
+   0.0,
+   0.222,
+   0.432,
+   0.494,
+   0.963
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.073,
+   0.981,
+   1.073
+  ]
+ },
+ "cave_troll_danger_idle_death_0": {
+  "frames": 58,
+  "travel_xyz_troll_m": [
+   -0.0,
+   0.787,
+   -0.0
+  ],
+  "travel_forward_troll_m": -0.787,
+  "travel_forward_human_m": -0.61,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.0
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.07,
+   0.321,
+   0.333
+  ]
+ },
+ "cave_troll_danger_idle_death_1": {
+  "frames": 117,
+  "travel_xyz_troll_m": [
+   0.257,
+   -1.489,
+   -0.0
+  ],
+  "travel_forward_troll_m": 1.489,
+  "travel_forward_human_m": 1.154,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.181
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.04,
+   0.428,
+   0.433
+  ]
+ },
+ "cave_troll_danger_idle_death_2": {
+  "frames": 63,
+  "travel_xyz_troll_m": [
+   0.257,
+   -1.489,
+   0.0
+  ],
+  "travel_forward_troll_m": 1.489,
+  "travel_forward_human_m": 1.154,
+  "yaw_deg": 0.0,
+  "plants_l": [
+   0.419
+  ],
+  "plants_r": [
+   0.0
+  ],
+  "pelvis_z_troll_first_min_last": [
+   1.047,
+   0.439,
+   0.44
+  ]
+ }
+}
