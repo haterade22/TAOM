@@ -401,7 +401,7 @@ MILITIA_BINDING_FILES = ('taom_spcultures.xml', 'spcultures.xslt')
 # hypothetical reserve_melee_militia_troop) from being read as a militia binding.
 # Group 1 is the `elite_` marker (empty for a basic slot), group 2 the troop id.
 MILITIA_BINDING_RE = re.compile(
-    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop"?\s*(?:=\s*"|>)\s*'
+    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop["\']?\s*(?:=\s*["\']|>)\s*'
     r'NPCCharacter\.([A-Za-z0-9_]+)')
 # The elite (veteran) militia stand this much above the basic militia on every skill. Both
 # take the level-21 baseline whatever their level (militia are siege and village defenders by
@@ -500,23 +500,36 @@ def _ladder_spec():
     return _LADDER_SPEC["spec"]
 
 
-def ladder_skill_override(skills, troop_id, filename_culture, level, weapon_classes):
-    """A ladder troop's Bow or Crossbow is its ranged ladder cell (#617), the value
-    tools/rebalance_ranged_ladders.py writes, so a full rebaseline never undoes the ranking. Only
-    the classes the troop carries, only at a tier its line lists; militia included (the ladder
-    ranks them by tier, not by the level-21 militia baseline)."""
-    if not weapon_classes or skills is None:
-        return skills
+def battle_weapon_classes(npc_elem, item_classes):
+    """troop_weapon_classes over the BATTLE rosters only, the way ranged_ladder reads a troop:
+    a civilian set never cross-draws with a battle set, so a bow there is not a launcher the
+    troop fights with and must not earn a ladder cell."""
+    classes = set()
+    for es in list(npc_elem.iter('EquipmentRoster')) + list(npc_elem.iter('EquipmentSet')):
+        if es.get('civilian') == 'true' or es.get('equipmentType') == 'Civilian':
+            continue
+        for eq in es.findall('equipment'):
+            if (eq.get('slot') or '').startswith('Item'):
+                skill = item_classes.get((eq.get('id') or '').replace('Item.', '', 1))
+                if skill:
+                    classes.add(skill)
+    return classes
+
+
+def ladder_cells(troop_id, filename_culture, level, battle_classes):
+    """{Bow|Crossbow: cell} for a ladder troop (#617): the value tools/rebalance_ranged_ladders.py
+    writes, so a full rebaseline never undoes the ranking. Only the classes the troop carries in
+    battle, only at a tier its line lists; militia included (the ladder ranks them by tier, not
+    by the level-21 militia baseline). The clamp refuses to raise a value named here."""
+    if not battle_classes:
+        return {}
     spec = _ladder_spec()
     line = rl.line_for(troop_id, filename_culture, spec)
     if line is None:
-        return skills
+        return {}
     tier = rl.engine_tier(level)
-    out = dict(skills)
-    for cls in rl.CLASSES:
-        if cls in weapon_classes and tier in rl.tiers_for(line, cls, spec):
-            out[cls] = rl.skill_cell(line, tier, spec)
-    return out
+    return {cls: rl.skill_cell(line, tier, spec) for cls in rl.CLASSES
+            if cls in battle_classes and tier in rl.tiers_for(line, cls, spec)}
 
 
 def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None):
@@ -807,6 +820,17 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
                     base[child][skill] = base[parent][skill]
     raised = sum(1 for tid, vals in base.items() for s in SKILL_NAMES
                  if vals[s] > pre_clamp[tid][s])
+    # A ladder troop's Bow or Crossbow is its cell; lifting it off the cell writes a value the
+    # ladder tool and the RANGED_LADDER_INVERSION gate both call wrong, and the next ladder run
+    # would put it back (#617 review). ranged_ladder.planned_skill_edits refuses the same edge.
+    lifted = [f"{c['id']} {s} {pre_clamp[c['id']][s]} -> {base[c['id']][s]}"
+              for c in all_changes for s in (c.get('ladder') or {})
+              if base[c['id']][s] > pre_clamp[c['id']][s]]
+    if lifted:
+        raise RuntimeError(
+            "The clamp would raise a ranged ladder troop off its cell (an upgrade source carries "
+            "more Bow/Crossbow than the troop's tier cell): " + "; ".join(lifted[:8]) +
+            ". Rank or tier the lines in tools/ranged_ladders.json so the cell is at least the source's.")
 
     # Report against the FINAL values, not the raw curve. A clamped troop sits above the curve on
     # purpose and forever, so scoring it against the curve would print it as CHANGED on every run
@@ -892,7 +916,10 @@ def process_file(filepath, item_classes=None):
         # Calculate new skills
         weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
         new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
-        new_skills = ladder_skill_override(new_skills, troop_id, filename_culture, level, weapon_classes)
+        if new_skills is not None and item_classes:
+            cells = ladder_cells(troop_id, filename_culture, level, battle_weapon_classes(npc, item_classes))
+            new_skills = dict(new_skills, **cells)
+            record['ladder'] = cells
         if new_skills is None:
             record.update(status='SKIPPED (no baseline for level/group)', new=None)
             changes.append(record)

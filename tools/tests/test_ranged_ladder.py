@@ -631,6 +631,35 @@ class PlanTests(unittest.TestCase):
             rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager})
         self.assertIn("UPGRADE_SKILL_REGRESSION", str(ctx.exception))
 
+    def test_skill_clamp_mirrors_the_gate_on_a_templated_side_and_refuses_a_templated_ladder_troop(self):
+        # Review 2026-09-18: a skill_template makes the inline <skills> unreachable (the engine
+        # reads the template), so UPGRADE_SKILL_REGRESSION refuses to judge such an edge. The
+        # ladder clamp judged it on the dead inline values and could refuse a run the gate passes.
+        villager = _troop("villager_man", "", 6, [], upgrades=["man_b"], skills={"Bow": 120})
+        villager.templated = True
+        troops = {"man_b": _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={"Bow": 90})}
+        edits = rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager})
+        self.assertEqual(edits, [])          # already on its T5 cell (90): no LadderError off the dead 120
+        # A ladder troop whose own skills come from a template cannot take its cell at all.
+        troops["man_b"].templated = True
+        with self.assertRaises(rl.LadderError) as ctx:
+            rl.planned_skill_edits(troops, _launchers(), _spec())
+        self.assertIn("skill_template", str(ctx.exception))
+
+    def test_loader_marks_a_skill_template(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp) / "ModuleData"
+            (md / "troops").mkdir(parents=True)
+            (md / "characters").mkdir(parents=True)
+            (md / "troops" / "troops_man.xml").write_bytes(
+                f"<NPCCharacters>{_npc_xml('man_archer', 21, [{'Item0': 'man_bow'}])}\n</NPCCharacters>".encode())
+            (md / "characters" / "npcs_man.xml").write_bytes(
+                ("<NPCCharacters>" + _npc_xml("villager_man", 6, [], upgrades=("man_archer",)).replace(
+                    '<NPCCharacter id="villager_man"', '<NPCCharacter id="villager_man" skill_template="SkillSet.x"')
+                 + "</NPCCharacters>").encode())
+            self.assertFalse(rl.load_ranged_troops(md)["man_archer"].templated)
+            self.assertTrue(rl.load_upgrade_sources(md)["villager_man"].templated)
+
     def test_skill_clamp_skips_militia_pairs_and_exempt_edges(self):
         troops = {
             "man_a": _troop("man_a", "man", 21, [{"Item0": "man_bow"}], upgrades=["man_f"], skills={"Bow": 70}),
@@ -692,6 +721,38 @@ class RebalanceTroopsAgreementTests(unittest.TestCase):
         self.assertEqual(rl.skill_cell("rohan", 4, spec), 100)                   # 130 + 10 * (7 - 10)
         self.assertNotEqual(recs["rohan_test_foot"]["new"]["Bow"], 100)         # no launcher: the level curve
 
+    def test_a_launcher_in_a_civilian_roster_is_not_a_ladder_cell(self):
+        # Review 2026-09-18: the ladder tool reads battle sets only, so a bow in a civilian roster
+        # handed the troop a cell only rebalance_troops would write; the two tools then disagreed.
+        import rebalance_troops as rbt
+        spec = rl.load_spec()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "troops_rohan.xml"
+            body = _npc_xml("rohan_test_foot", 21, [{"Item0": "sword"},
+                                                     {"_civilian": True, "Item0": "ladder_rohan_bow_t4"}], "vlandia")
+            path.write_bytes(f"<NPCCharacters>{body}\n</NPCCharacters>".encode())
+            rec, = rbt.process_file(str(path), item_classes={"ladder_rohan_bow_t4": "Bow", "sword": "OneHanded"})
+        self.assertNotIn("Bow", rec.get("ladder", {}))
+        self.assertNotEqual(rec["new"]["Bow"], rl.skill_cell("rohan", 4, spec))
+
+    def test_the_clamp_refuses_to_raise_a_ladder_cell(self):
+        # A ladder troop's Bow is its cell; a clamp that lifts it to a parent's higher Bow would
+        # write a value the ladder tool and the RANGED_LADDER_INVERSION gate both call wrong.
+        import rebalance_troops as rbt
+        low = {s: 10 for s in rbt.SKILL_NAMES}
+        high = {s: 50 for s in rbt.SKILL_NAMES}
+        parent = {"id": "p", "file": "troops_test.xml", "old": dict(high), "new": dict(high), "upgrades": ["c"]}
+        child = {"id": "c", "file": "troops_test.xml", "old": dict(low), "new": dict(low), "upgrades": [],
+                 "ladder": {"Bow": 10}}
+        with self.assertRaises(RuntimeError) as ctx:
+            rbt.clamp_upgrade_monotonicity([parent, child])
+        self.assertIn("c", str(ctx.exception))
+        on_cell = dict(low, Crossbow=50)                                     # a crossbow cell the parent does not beat
+        child.update(old=dict(on_cell), new=dict(on_cell), ladder={"Crossbow": 50})
+        rbt.clamp_upgrade_monotonicity([parent, child])                      # so the clamp may lift Bow
+        self.assertEqual(child["final"]["Crossbow"], 50)
+        self.assertEqual(child["final"]["Bow"], 50)
+
 
 # --------------------------------------------------------------------------- #
 # Heroes                                                                        #
@@ -720,6 +781,23 @@ class HeroTests(unittest.TestCase):
         self.assertEqual(heroes, {"elf_bow": ["lord_a"], "man_xbow": ["lord_b"], "heavy_bow": ["lords.xslt"]})
         breaches = rl.ceiling_breaches(_spec(), _launchers(), heroes)
         self.assertEqual([(r.id, cap) for r, cap, _who in breaches], [("heavy_bow", 90)])
+
+    def test_hero_launchers_counts_the_player_start_and_career_rosters(self):
+        # Review 2026-09-18: those rosters go onto the player (a hero) at runtime and no
+        # NPCCharacter names them, so a strong bow placed there escaped the ceiling.
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp)
+            (md / "equipmentsets").mkdir()
+            (md / "equipmentsets" / "player.xml").write_bytes(b"""<EquipmentRosters>
+  <EquipmentRoster id="player_char_creation_man_hunter_m"><EquipmentSet><Equipment slot="Item0" id="Item.heavy_bow"/></EquipmentSet></EquipmentRoster>
+  <EquipmentRoster id="player_career_man_archer_f"><EquipmentSet><Equipment slot="Item1" id="Item.elf_bow"/></EquipmentSet></EquipmentRoster>
+  <EquipmentRoster id="player_char_creation_man_civ" equipmentType="Civilian"><EquipmentSet><Equipment slot="Item0" id="Item.man_bow"/></EquipmentSet></EquipmentRoster>
+  <EquipmentRoster id="player_career_man_bard_m"><EquipmentSet equipmentType="Civilian"><Equipment slot="Item0" id="Item.man_bow"/></EquipmentSet></EquipmentRoster>
+  <EquipmentRoster id="other_kit"><EquipmentSet><Equipment slot="Item0" id="Item.man_xbow"/></EquipmentSet></EquipmentRoster>
+</EquipmentRosters>""")
+            heroes = rl.hero_launchers(md, _launchers())
+        self.assertEqual(heroes, {"heavy_bow": ["player_char_creation_man_hunter_m"],
+                                  "elf_bow": ["player_career_man_archer_f"]})
 
 
 # --------------------------------------------------------------------------- #

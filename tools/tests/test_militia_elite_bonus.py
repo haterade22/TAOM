@@ -45,6 +45,16 @@ class EliteMilitiaBindingTests(unittest.TestCase):
         self.assertEqual(rb.militia_troop_ids(self.md), {"x_mil", "x_arc", "x_mil_vet", "x_arc_vet", "y_mil", "y_mil_vet"})
         self.assertEqual(rb.elite_militia_troop_ids(self.md), {"x_mil_vet", "x_arc_vet", "y_mil_vet"})
 
+    def test_a_single_quoted_binding_is_read_like_the_validator_reads_it(self):
+        # Review 2026-09-18: taom_schema's militia reader takes either quote and this one took
+        # only double quotes, so the two could disagree on who is militia.
+        with open(os.path.join(self.md, "taom_spcultures.xml"), "a", encoding="utf-8") as f:
+            f.write("<Culture id='z' ranged_elite_militia_troop='NPCCharacter.z_arc_vet' />\n")
+        rb._militia_ids_cache.clear()
+        rb._elite_militia_ids_cache.clear()
+        self.assertIn("z_arc_vet", rb.militia_troop_ids(self.md))
+        self.assertIn("z_arc_vet", rb.elite_militia_troop_ids(self.md))
+
 
 class EliteMilitiaBonusTests(unittest.TestCase):
     """Against the real bindings: Gondor binds gondor_militia_archer and gondor_militia_veteran_archer."""

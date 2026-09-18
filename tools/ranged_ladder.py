@@ -133,6 +133,7 @@ class RangedTroop:
     skills: dict = field(default_factory=dict)
     name: str = ""     # display name, localisation tag stripped
     mounted: bool = False  # HorseArcher/Cavalry group, or a Horse slot in any battle set
+    templated: bool = False  # skill_template=: the engine reads the template, never the inline skills
 
 
 @dataclass(frozen=True)
@@ -685,7 +686,8 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) 
                 id=tid, file=str(path), culture=culture, level=level, tier=engine_tier(level),
                 group=npc.get("default_group", "") or "", sets=sets,
                 upgrades=_upgrades(npc), skills=_skills(npc), name=display_name(npc.get("name")),
-                mounted=horse or (npc.get("default_group", "") in ("HorseArcher", "Cavalry")))
+                mounted=horse or (npc.get("default_group", "") in ("HorseArcher", "Cavalry")),
+                templated=bool(npc.get("skill_template")))
     return troops
 
 
@@ -705,7 +707,8 @@ def load_upgrade_sources(moduledata=MODULEDATA_DIR) -> dict[str, RangedTroop]:
                 level = int(npc.get("level", "0") or 0)
                 out[npc.get("id")] = RangedTroop(
                     id=npc.get("id"), file=str(path), culture="", level=level, tier=engine_tier(level),
-                    group=npc.get("default_group", "") or "", sets=[], upgrades=ups, skills=_skills(npc))
+                    group=npc.get("default_group", "") or "", sets=[], upgrades=ups, skills=_skills(npc),
+                    templated=bool(npc.get("skill_template")))
     return out
 
 
@@ -949,7 +952,10 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
     is raised to it (clamp only ever raises), except that a LADDER troop is never raised off its
     cell, which is an error. Militia-to-militia edges are flat by design and skipped, as are the
     `exempt_edges` {(source, target): {skills}} (rebalance_troops.RESPECIALIZATION_EXEMPT_EDGES).
-    `sources` are read-only upgrade sources outside the troop files (the villagers)."""
+    `sources` are read-only upgrade sources outside the troop files (the villagers). An edge with
+    a skill_template on either side is skipped, as UPGRADE_SKILL_REGRESSION skips it: the inline
+    values are not what the engine reads. A ladder troop with a skill_template is an error, since
+    its cell could never reach the game."""
     exempt_edges = exempt_edges or {}
     new: dict[tuple[str, str], int] = {}
     cells: set[tuple[str, str]] = set()
@@ -960,6 +966,10 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
             continue
         for cls in troop_launchers(t, launchers):
             if t.tier in tiers_for(line, cls, spec):
+                if t.templated:
+                    raise LadderError(
+                        f"{tid} is a {line} {cls} troop at tier {t.tier} but declares a skill_template, "
+                        f"so the engine never reads the {cls} cell written into its <skills>; drop the template")
                 new[(tid, cls)] = skill_cell(line, t.tier, spec)
                 cells.add((tid, cls))
     everyone = dict(sources or {})
@@ -979,6 +989,8 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
             src = everyone[src_id]
             for tgt_id in src.upgrades:
                 if tgt_id not in troops or (src_id in militia and tgt_id in militia):
+                    continue
+                if src.templated or troops[tgt_id].templated:
                     continue
                 for cls in CLASSES:
                     if cls in exempt_edges.get((src_id, tgt_id), ()):
@@ -1006,14 +1018,16 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
 # Heroes: what a lord or wanderer can carry                                     #
 # --------------------------------------------------------------------------- #
 _STRIP_REF_RE = re.compile(r"^(?:Item|EquipmentRoster)\.")
+PLAYER_ROSTER_PREFIXES = ("player_char_creation_", "player_career_")
 
 
 def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
     """{launcher id: [character ids]} for every hero-class character (a Lord, a Wanderer or any
     is_hero NPCCharacter outside troops/) that can carry the launcher: its own equipment, the
-    battle EquipmentRosters it names by EquipmentSet id, and the templates lords.xslt hands to
-    the vanilla lords it retags ("lords.xslt" as the character). The `Equipment` tag is matched
-    in either case: the equipment-set files use `<Equipment>`, the characters `<equipment>`."""
+    battle EquipmentRosters it names by EquipmentSet id, the templates lords.xslt hands to the
+    vanilla lords it retags ("lords.xslt" as the character), and the player's start and career
+    rosters (the roster id as the character). Civilian sets are skipped. The `Equipment` tag is
+    matched in either case: the equipment-set files use `<Equipment>`, the characters `<equipment>`."""
     import xml.etree.ElementTree as ET
     md = Path(moduledata)
 
@@ -1021,8 +1035,18 @@ def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
         return {_STRIP_REF_RE.sub("", e.get("id") or "") for e in elem.iter()
                 if e.tag.lower() == "equipment" and (e.get("slot") or "").startswith("Item")}
 
+    def battle_ids(roster):
+        # Civilian is marked on the roster or on an inner set; neither is carried into battle.
+        if _is_civilian(roster):
+            return set()
+        inner = roster.findall("EquipmentSet")
+        if not inner:
+            return ids_in(roster)
+        return set().union(*(ids_in(s) for s in inner if not _is_civilian(s)))
+
     rosters: dict[str, set] = {}
     docs = []
+    out: dict[str, set] = {}
     for path in sorted(md.rglob("*.xml")):
         try:
             root = ET.parse(path).getroot()
@@ -1031,8 +1055,12 @@ def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
         docs.append((path, root))
         for r in root.iter("EquipmentRoster"):
             if r.get("id"):
-                rosters[r.get("id")] = ids_in(r)
-    out: dict[str, set] = {}
+                rosters[r.get("id")] = battle_ids(r)
+                # The player's start and career kits go onto a hero at runtime and no
+                # NPCCharacter names them (CareerStartingEquipmentService builds the id).
+                if r.get("id").startswith(PLAYER_ROSTER_PREFIXES):
+                    for iid in rosters[r.get("id")] & set(launchers):
+                        out.setdefault(iid, set()).add(r.get("id"))
     for path, root in docs:
         if path.parent.name == "troops":
             continue

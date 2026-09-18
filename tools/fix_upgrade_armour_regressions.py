@@ -469,7 +469,9 @@ def write_changes(changes):
         if c['new'] is None:
             continue
         by_file[c['file']][c['troop']][(c['slot'], c['old'])] = c['new']
-    written = 0
+    # Every file is rewritten and parsed before any is written: a bad file late in the batch must
+    # not leave the earlier ones half-applied (#617 review).
+    pending = []
     for fp, per_troop in by_file.items():
         with open(fp, 'rb') as fh:
             raw = fh.read()
@@ -497,10 +499,11 @@ def write_changes(changes):
         out = text.replace('\n', newline).encode('utf-8')
         if bom:
             out = codecs.BOM_UTF8 + out
+        pending.append((fp, out))
+    for fp, out in pending:
         with open(fp, 'wb') as fh:
             fh.write(out)
-        written += 1
-    return written
+    return len(pending)
 
 
 # =============================================================================

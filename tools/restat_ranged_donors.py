@@ -46,6 +46,7 @@ LAUNCHER_CLASSES = ("Bow", "Crossbow")
 AMMO_CLASSES = ("Arrow", "Bolt")
 _WEAPON_TAG_RE = re.compile(r"<Weapon\b[^>]*>", re.S)
 _CLASS_RE = re.compile(r'\bweapon_class="([^"]*)"')
+_COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 
 
 class RestatError(Exception):
@@ -70,14 +71,22 @@ def targets(spec: dict) -> dict[str, tuple[tuple[str, ...], dict[str, int]]]:
     return out
 
 
-def _item_span(text: str, iid: str) -> list[tuple[int, int]]:
-    """(start, end) of every <Item> element whose id attribute is exactly iid."""
+def _masked(text: str) -> str:
+    """The text with every comment blanked to spaces, newlines kept, so it has the same length and
+    offsets as the original. Spans are found here and edits applied to the original; nothing is
+    ever restored from this copy. A retired item kept as a comment is neither a definition nor a
+    target."""
+    return _COMMENT_RE.sub(lambda m: re.sub(r"[^\r\n]", " ", m.group(0)), text)
+
+
+def _item_span(masked: str, iid: str) -> list[tuple[int, int]]:
+    """(start, end) of every <Item> element whose id attribute is exactly iid, in comment-masked text."""
     spans = []
-    for m in re.finditer(r'<Item\b[^>]*?\bid="' + re.escape(iid) + r'"[^>]*?(/?)>', text, re.S):
+    for m in re.finditer(r'<Item\b[^>]*?\bid="' + re.escape(iid) + r'"[^>]*?(/?)>', masked, re.S):
         if m.group(1) == "/":
             spans.append((m.start(), m.end()))
             continue
-        close = text.find("</Item>", m.end())
+        close = masked.find("</Item>", m.end())
         if close == -1:
             raise RestatError(f"item {iid} has no closing </Item>")
         spans.append((m.start(), close + len("</Item>")))
@@ -94,9 +103,12 @@ def locate(md: Path, ids) -> dict[str, list[Path]]:
     where: dict[str, list[Path]] = {i: [] for i in ids}
     for path in _files(md):
         text = path.read_bytes().decode("utf-8")
+        masked = None
         for iid in ids:
-            if f'id="{iid}"' in text and _item_span(text, iid):
-                where[iid].append(path)
+            if f'id="{iid}"' in text:
+                masked = masked if masked is not None else _masked(text)
+                if _item_span(masked, iid):
+                    where[iid].append(path)
     return where
 
 
@@ -105,40 +117,33 @@ def vanilla_ids(game_modules: Path, ids) -> set[str]:
     items = game_modules / "SandBoxCore" / "ModuleData" / "items"
     for path in sorted(items.glob("*.xml")) if items.exists() else []:
         text = path.read_bytes().decode("utf-8", errors="replace")
+        masked = None
         for iid in ids:
-            if f'id="{iid}"' in text and _item_span(text, iid):
-                found.add(iid)
+            if f'id="{iid}"' in text:
+                masked = masked if masked is not None else _masked(text)
+                if _item_span(masked, iid):
+                    found.add(iid)
     return found
-
-
-def current(text: str, iid: str, classes) -> list[dict[str, str]]:
-    """The attributes of every <Weapon> of a listed class inside the item."""
-    (start, end), = _item_span(text, iid)
-    out = []
-    for m in _WEAPON_TAG_RE.finditer(text, start, end):
-        cls = _CLASS_RE.search(m.group(0))
-        if cls and cls.group(1) in classes:
-            out.append(dict(re.findall(r'\b([A-Za-z_]+)="([^"]*)"', m.group(0))))
-    return out
 
 
 def rewrite(text: str, iid: str, classes, attrs: dict[str, int]) -> tuple[str, list[str]]:
     """The text with the attributes set inside every matching <Weapon> tag of the item, and a
-    change log. Only the digits of existing attributes move; a missing attribute is an error."""
-    spans = _item_span(text, iid)
+    change log. Only the digits of existing attributes move; a missing attribute is an error.
+    Tags are found in the comment-masked copy and edited in the original at the same offsets."""
+    masked = _masked(text)
+    spans = _item_span(masked, iid)
     if len(spans) != 1:
         raise RestatError(f"{iid} is defined {len(spans)} times in one file")
     start, end = spans[0]
-    block = text[start:end]
     log: list[str] = []
     hits = 0
-
-    def fix(m):
-        nonlocal hits
-        tag = m.group(0)
+    pieces: list[str] = []
+    pos = start
+    for m in _WEAPON_TAG_RE.finditer(masked, start, end):
+        tag = text[m.start():m.end()]
         cls = _CLASS_RE.search(tag)
         if not cls or cls.group(1) not in classes:
-            return tag
+            continue
         hits += 1
         for attr, value in attrs.items():
             am = re.search(r'\b' + attr + r'="([^"]*)"', tag)
@@ -147,12 +152,11 @@ def rewrite(text: str, iid: str, classes, attrs: dict[str, int]) -> tuple[str, l
             if am.group(1) != str(value):
                 log.append(f"{attr} {am.group(1)} -> {value}")
                 tag = tag[:am.start(1)] + str(value) + tag[am.end(1):]
-        return tag
-
-    block = _WEAPON_TAG_RE.sub(fix, block)
+        pieces += [text[pos:m.start()], tag]
+        pos = m.end()
     if not hits:
         raise RestatError(f"{iid} has no <Weapon weapon_class> among {', '.join(classes)}")
-    return text[:start] + block + text[end:], log
+    return text[:start] + "".join(pieces) + text[pos:], log
 
 
 def plan(md: Path, want: dict) -> tuple[dict[Path, str], list[str], list[str]]:

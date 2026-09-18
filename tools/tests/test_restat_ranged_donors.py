@@ -150,6 +150,22 @@ class RestatTests(unittest.TestCase):
         self._spec({}, {"elf_bow": 4})          # a bow listed as ammo has no Arrow/Bolt weapon
         self.assertEqual(self._run("--apply"), 2)
 
+    def test_an_id_inside_a_comment_is_neither_a_definition_nor_edited(self):
+        # A retired item kept as a comment must not count as a second definition (which aborted
+        # the whole run) and must never be the thing edited (a false "Wrote" on dead text).
+        commented = WEAPONS.replace(
+            "<Items>\n",
+            "<Items>\n    <!-- retired:\n    <Item id=\"elf_bow\" Type=\"Bow\"><ItemComponent><Weapon weapon_class=\"Bow\" "
+            "accuracy=\"55\" thrust_damage=\"55\" /></ItemComponent></Item>\n    -->\n", 1)
+        self.weapons.write_bytes(commented.encode())
+        self.assertEqual(self._run("--apply"), 0)
+        text = self.weapons.read_bytes().decode()
+        self.assertIn('accuracy="55" thrust_damage="55"', text)               # the comment is untouched
+        self.assertIn('thrust_damage="90"', text)                              # the live item is restatted
+        self.weapons.write_bytes(WEAPONS.replace(
+            "    <Item\n        id=\"elf_arrow\"", "    <!-- <Item id=\"elf_arrow\"> -->\n    <Item\n        id=\"elf_arrow_x\"").encode())
+        self.assertEqual(self._run("--apply"), 2)                              # only a commented copy: unknown
+
     def test_missing_mirror_is_a_warning(self):
         self.assertEqual(self._run("--apply", "--asset-repo", str(self.mirror / "nope")), 0)
         self.assertIn(b'thrust_damage="90"', self.weapons.read_bytes())
