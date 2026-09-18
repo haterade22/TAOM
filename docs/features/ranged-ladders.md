@@ -114,7 +114,14 @@ flags are the donor's; a vanilla donor keeps its vanilla `culture=` (harmless wh
 Names are `{=<id>}<donor name, its own numeral and "- Starting" / "- Horse" suffix stripped>
 <tier numeral I..X>`, registered as English rows in the Armory's `Languages/loc_<folder>.xml`
 between `<!-- TAOM-RANGED-LADDER:START/END -->` markers so `translate_with_claude.py --module Armory
---sync-ids` can seed the other eleven languages.
+--sync-ids` can seed the twelve translated languages. That flag only ADDS ids a language lacks and never
+removes one, so when #617 retired the band ids every language kept 130 dead rows and had none of the
+123 new ones (non-English players saw English bow names). `sync_ranged_ladder_translations.py` closes
+that: a tier item's translated base is the translated base of the retired band item of the same line,
+class and band (the donor is chosen by band), so it copies that base, appends the tier numeral, and
+replaces the retired rows in place, keeping the files' doubled-CR line endings. No machine
+translation; a row it cannot derive stops the run. Applied 2026-09-18 to 156 files per tree;
+`--verify` exits 1 on any language holding a retired row or missing a current one.
 
 **A rider cannot draw a `long_bow`.** Native's `long_bow` usage set is `base_set="bow"` plus
 `requires_no_mount` and `requires_no_shield`; a mounted AI archer holding one never fires. The spec
@@ -132,9 +139,16 @@ caps the Armory's arrows at +4 and its bolts at +5, vanilla's ceilings (27 items
 Mirkwood arrows from +5, the Isengard and Iron Hills bolts from +8). `restat_ranged_donors.py` edits
 only those attribute values inside the matching `<Weapon>` tag, in the live Armory and the v1.5
 mirror, and refuses an id that vanilla defines, that the Armory defines twice, or that it does not
-define. `hero_ceiling` (Bow 90, Crossbow 105) backs `RANGED_DAMAGE_CEILING`: a launcher any Lord,
-Wanderer or `is_hero` character can carry (its own equipment, its battle `EquipmentSet` rosters, or a
-template `lords.xslt` hands to a retagged vanilla lord) above the ceiling is a finding.
+define. It finds items in a comment-masked copy of the text (same length, so offsets carry over)
+and edits the original, so a retired item kept as a comment is neither a second definition nor the
+thing edited. `hero_ceiling` (Bow 90, Crossbow 105) backs `RANGED_DAMAGE_CEILING`: a launcher any
+Lord, Wanderer or `is_hero` character can carry (its own equipment, its battle `EquipmentSet` rosters,
+or a template `lords.xslt` hands to a retagged vanilla lord) above the ceiling is a finding, and so is
+one in a `player_char_creation_*` or `player_career_*` roster. No `NPCCharacter` names those; the
+game applies them to the player at runtime, the blind spot `.claude/rules/moduledata-validation.md`
+describes for `MOUNTED_DWARF`. Civilian sets are skipped whether the roster or an inner
+`<EquipmentSet>` carries the flag. Today the player rosters hold 158 launcher slots, all `starter_*`
+twins at 40 to 45 damage.
 
 ### Rosters and skills
 
@@ -153,10 +167,19 @@ that value replaced). Ammo slots are never touched and a class never changes. Tw
   `RESPECIALIZATION_EXEMPT_EDGES` are skipped. The tool refuses to run when the militia bindings
   cannot be read (`rebalance_troops.militia_troop_ids` fails closed).
 
+- **Templated characters.** A `skill_template` makes the inline `<skills>` block unreachable (the
+  engine reads the template), so an upgrade edge with a templated side is skipped, as
+  `UPGRADE_SKILL_REGRESSION` skips it, and a ladder troop that declares one is refused: its cell could
+  never reach the game. No troop file carries one today; the villager sources in
+  `characters/npcs_*.xml` do.
+
 `rebalance_troops.py` takes a ladder troop's Bow or Crossbow from the same `skill_cell`
-(`ladder_skill_override`), so a later full rebaseline never undoes the ranking. A full rebaseline is
-still not part of this pass: its dry run on 2026-09-18 changed 77 troops for reasons unrelated to
-archery.
+(`ladder_cells`), so a later full rebaseline never undoes the ranking. It reads the classes from the
+battle rosters only (`battle_weapon_classes`), as the ladder does: `imladris_recruit` carries
+`highelf_longbowd` in a civilian roster and must not earn a cell for it. Its monotonicity clamp then
+refuses to raise a ladder cell (a `RuntimeError` naming the troop), the same edge
+`planned_skill_edits` refuses. A full rebaseline is still not part of this pass: its dry run on
+2026-09-18 changed 77 troops for reasons unrelated to archery, and it raises no ladder cell.
 
 First #617 run: 709 inverted pairs to 0; 227 slot edits and 186 skill values (2 clamps:
 `sagarun_marine` and `sagarun_storm_forged_marine` Bow 160 to 170, under the Rhun T5 skirmisher) over
@@ -176,7 +199,8 @@ tools/ranged_ladder.py     cell, skill_cell, rank, tiers_for, ladder_id, line_of
         +--> tools/restat_ranged_donors.py           LOTRAOM_weapons.xml attribute values
         |                                             (both: live Armory + lotraom-assets v1.5 mirror)
         +--> tools/rebalance_ranged_ladders.py       reports; --apply: troops/troops_*.xml slots + skills
-        +--> tools/rebalance_troops.py               ladder_skill_override (the same skill cell)
+        +--> tools/sync_ranged_ladder_translations.py  the 12 languages' loc files (both trees)
+        +--> tools/rebalance_troops.py               ladder_cells (the same skill cell; the clamp keeps it)
         +--> tools/taom_schema.py                    RANGED_LADDER_INVERSION, RANGED_MOUNT_USAGE,
                                                       RANGED_DAMAGE_CEILING (warnings)
 ```
@@ -253,10 +277,11 @@ one; `donor_stats` / `ammo_stats` / `hero_ceiling` values that are not positive 
 | `tools/generate_ranged_ladder_items.py` | Items and English loc rows into the live Armory and the v1.5 mirror (`--apply`, `--verify` on speed, damage, accuracy and usage, `--revert`) |
 | `tools/restat_ranged_donors.py` | `donor_stats` / `ammo_stats` into the Armory's own items (`--apply`, `--verify`) |
 | `tools/rebalance_ranged_ladders.py` | Report to `tools/reports/ranged-ladders/` (md, html, json); `--apply` rewrites the launcher slots and the ranged skill |
-| `tools/rebalance_troops.py` | `ladder_skill_override`: the ladder troops' Bow or Crossbow in a full rebaseline |
+| `tools/sync_ranged_ladder_translations.py` | The translated names move from retired ids to current ones in the 12 translated languages (`--apply`, `--verify`) |
+| `tools/rebalance_troops.py` | `ladder_cells` + `battle_weapon_classes`: the ladder troops' Bow or Crossbow in a full rebaseline; the clamp refuses to lift a cell |
 | `docs/reference/ranged-troops.html` | The tracked HTML, every ranged troop per kingdom; regenerated by the roster tool, never hand-edited |
 | `tools/taom_schema.py` | `Validator._ranged_ladder_inversions` (emits `RANGED_LADDER_INVERSION`, `RANGED_MOUNT_USAGE`, `RANGED_DAMAGE_CEILING`), `_RANGED_LADDER_EXEMPT` |
-| `tools/tests/test_ranged_ladder.py`, `tools/tests/test_restat_ranged_donors.py` | Synthetic-data tests over all of the above plus the shipped spec |
+| `tools/tests/test_ranged_ladder.py`, `tools/tests/test_restat_ranged_donors.py`, `tools/tests/test_sync_ranged_ladder_translations.py` | Synthetic-data tests over all of the above plus the shipped spec |
 | `Main/_Module/ModuleData/troops/troops_*.xml` | The 227 rosters, edited through the tools only |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/ranged_ladder.xml` | 13 generated item files (unversioned; `--verify` is the reversion gate) |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml` | The restatted donors and ammo (unversioned; `restat_ranged_donors.py --verify`) |
@@ -271,12 +296,18 @@ better damage rank below a worse one at any tier, 123 items, the donor table und
 the rules per stat (tier, same-tier rank, different tiers never compared, the worst set judged, ties,
 classes); unassigned and unlisted troops; planned items, slot edits (retired ids repointed, unlisted
 tier refused, mounted refusal, class refusal) and skill edits (cells, the clamp raising a non-ladder
-child, refusing a ladder one, militia and exempt edges skipped); `rebalance_troops` agreeing with the
-cell; hero launchers from inline kit, rosters and `lords.xslt`, and the ceiling; the roster tool end to
+child, refusing a ladder one, militia and exempt edges skipped, templated edges skipped and a
+templated ladder troop refused); `rebalance_troops` agreeing with the cell, ignoring a civilian-roster
+bow, its clamp refusing to lift a cell, and single-quoted militia bindings; hero launchers from inline
+kit, rosters, `lords.xslt` and the player start and career rosters, and the ceiling; the roster tool end to
 end (dry run, BOM + CRLF kept, skills written and inserted, retired ids repointed, idempotent, militia
 bindings unreadable refused); the generator end to end (both trees, per-stat drift, loc rows,
 revert); the restat tool (dry run, only the listed attributes change, BOM + CRLF kept on the mirror,
-idempotent, drift, unknown, vanilla, duplicate and attribute-less ids refused); the validator gates.
+idempotent, drift, unknown, vanilla, duplicate and attribute-less ids refused, an id inside a comment
+ignored); the translation sync (dry run, rows replaced in place with doubled CR kept, the split Gondor
+lines, idempotent, an underivable row refused); the validator gates.
+`tools/tests/test_fix_upgrade_armour_regressions.py` pins that the shared slot writer parses every
+file before writing any.
 
 ## How to change the ranking or the curves
 
@@ -291,8 +322,10 @@ idempotent, drift, unknown, vanilla, duplicate and attribute-less ids refused); 
    `python tools/validate_moduledata.py`.
 6. Restart Bannerlord fully (item XML loads at process launch) and check a troop from each end of the
    ladder in a Custom Battle.
-7. `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply` per language
-   for new item names (needs `ANTHROPIC_API_KEY`).
+7. When item ids changed: `python tools/sync_ranged_ladder_translations.py --apply`, then `--verify`
+   (it carries the existing translations across). Only for a name it cannot derive, run
+   `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply` per language
+   (needs `ANTHROPIC_API_KEY`), then the sync tool again to drop the retired rows.
 
 ## Performance
 
@@ -310,6 +343,11 @@ character files for hero kit.
   tier its own item (`_t<tier>`, 123 cells); ranks per stat; Ithilien and Blackroot Vale split; the
   Armory's own bows and ammo restatted (`restat_ranged_donors.py`); `RANGED_DAMAGE_CEILING`; the
   roster tool writes skills and repoints retired ids. 709 inverted pairs to 0.
+- 2026-09-18: deep-review follow-ups (#617). Translations carried to the tier ids
+  (`sync_ranged_ladder_translations.py`); comments masked in the restat tool; the slot writer parses
+  all files before writing; `rebalance_troops` reads battle rosters only and its clamp refuses to lift a
+  ladder cell; templated characters mirrored from the gate; player start and career rosters under the
+  hero ceiling. `docs/reviews/rca-ranged-rebalance-2026-09-18.md`.
 
 ## GitHub Issue
 

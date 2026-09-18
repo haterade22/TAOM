@@ -168,14 +168,14 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
       <skill id="OneHanded" value="270" />
       <skill id="TwoHanded" value="175" />
       <skill id="Polearm" value="175" />
-      <skill id="Bow" value="320" />
+      <skill id="Bow" value="380" />
       <skill id="Crossbow" value="65" />
       <skill id="Throwing" value="70" />
     </skills>
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -186,7 +186,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -197,7 +197,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -208,7 +208,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -219,7 +219,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_b" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -230,7 +230,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -241,7 +241,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v1_d" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_d" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />
@@ -252,7 +252,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.ladder_gondor_special_bow_c" />
+        <equipment slot="Item0" id="Item.ladder_ithilien_bow_t10" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a01" />

@@ -1472,3 +1472,26 @@ every tier. Gate every stat the clone carries, not only the one the change was a
 (`RANGED_LADDER_INVERSION` now runs per stat).
 
 **Source:** issue #617, `docs/features/ranged-ladders.md` (2026-09-18).
+
+### Two writers of one value need one definition of every input they classify on
+
+#617 made the ranged skill a second writer's value: `rebalance_ranged_ladders.py` writes a ladder
+troop's Bow or Crossbow, and `rebalance_troops.py` must agree in a full rebaseline, with
+`UPGRADE_SKILL_REGRESSION` in `taom_schema.py` judging both. The deep review found four inputs each
+tool classified its own way: "carries a bow" (one read civilian rosters, where `imladris_recruit`
+holds `highelf_longbowd`), "is militia" (one regex took single quotes, one did not), "are these the
+skills the engine reads" (the gate skipped `skill_template` characters, both writers did not), and
+"may the clamp raise this" (the ladder refused to lift a cell, the rebaseline clamp would have). All
+four agreed on the shipped data by coincidence.
+
+**Why missed:** the new writer was built against the gate's definitions and the old writer's were
+assumed to match; nobody diffed the three implementations of each predicate.
+
+**Prevent:** when a second tool starts writing a value another tool or gate already touches, list
+every predicate each one uses to decide who gets what (which sets count, who is exempt, which skills
+are real, which values are fixed) and make them one function or one shared test. A constraint one
+writer enforces (a cell the clamp may not lift) must be enforced by the other, not left as a value
+it happens to write.
+
+**Source:** issue #617 deep review, `docs/reviews/rca-ranged-rebalance-2026-09-18.md` items 4 to 7
+(2026-09-18).

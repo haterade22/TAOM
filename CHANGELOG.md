@@ -4,6 +4,43 @@
 
 ## 2026-09-18
 
+### fix(ranged): #617 deep review: translated names follow the tier ids, the writers share one set of rules
+
+A six-agent deep review of the #617 ranged rebalance found one live defect and several latent ones.
+Three agents hit the session limit; their checks (troop XML diff, weapons restat, engine claims) were
+run by script instead and came back clean. Full write-up: `docs/reviews/rca-ranged-rebalance-2026-09-18.md`.
+
+- **Translations (HIGH, live).** `translate_with_claude.py --sync-ids` only adds ids, so all 12
+  translated languages kept the 130 retired band rows and had none of the 123 tier ids: non-English
+  players saw English bow names and `check_external_loc_coverage.py` failed at +132 to +137 per
+  language. New `tools/sync_ranged_ladder_translations.py` carries each translated name across (a tier
+  item's donor is picked by band, so its translated base is the retired band row's), appends the tier
+  numeral, and replaces the rows in place with the files' doubled-CR endings; no machine translation.
+  Applied to 156 files in the live Armory and 156 in the v1.5 mirror; `--verify` OK. The gate's
+  remaining +12 to +14 per language are other features' items.
+- **`restat_ranged_donors.py`** finds items in a comment-masked copy of the text, so a retired item
+  kept as a comment no longer aborts the run or gets edited in place of the live one. Dead `current()`
+  removed.
+- **`fix_upgrade_armour_regressions.write_changes`** (the slot writer the ladder tool uses) parses
+  every file before writing any, so one bad file no longer leaves the others half-applied.
+- **`rebalance_troops.py`**: a ladder troop's Bow/Crossbow comes from its battle rosters only
+  (`battle_weapon_classes`, `ladder_cells`; `imladris_recruit` carries a bow only in a civilian set);
+  the monotonicity clamp refuses to lift a ladder cell, as `ranged_ladder.planned_skill_edits` already
+  did; the militia binding reader takes single quotes like the validator's.
+- **`ranged_ladder.py`**: `skill_template` characters are skipped on upgrade edges, as
+  `UPGRADE_SKILL_REGRESSION` skips them, and a templated ladder troop is refused;
+  `RANGED_DAMAGE_CEILING` now covers the `player_char_creation_*` / `player_career_*` rosters (158
+  launcher slots, all `starter_*` at 40 to 45, no breach) and skips civilian inner sets.
+- **Docs**: the `troops.md` worked example and the crafting chapter's `highelf_longbowa` example
+  showed pre-#617 ids and stats; both now match the files. Feature doc, two lessons
+  (localization-ui, data-content-cultures).
+- **Not changed**: the `difficulty="100"` on two tier-2 clones (a ladder item never reaches a player:
+  `NotMerchandise` is skipped by casualty loot, hideout loot and tournament prizes); scanning the live
+  Armory and TAOM_Map for heroes (neither defines one).
+- Verification: tools suite green, C# suite 9,791 passed / 0 failed, validator 0 errors and no
+  `RANGED_*` warning, all three ladder `--verify` runs OK, both `rebalance_troops.py` dry-run modes
+  raise no ladder cell. Owed: in-game restart, `/armory-audit`, Custom Battle, one non-English client.
+
 ### balance(ranged): archers ranked per tier on damage, accuracy, skill and reach (#617)
 
 Most archers nearly or fully one-shot a troop. No TAOM code touches missile damage or accuracy (checked
