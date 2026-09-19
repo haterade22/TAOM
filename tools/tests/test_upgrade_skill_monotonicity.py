@@ -148,26 +148,24 @@ class ValidatorGateTests(unittest.TestCase):
                          "militia -> militia is flat by design; militia -> a line troop is not")
 
 
-class SkillTemplateShadowingTests(ValidatorGateTests):
-    """A resolvable skill_template makes the inline <skills> block unreachable.
+class SkillTemplateEdgeTests(ValidatorGateTests):
+    """A templated character's base skills live in a SkillSet these files do not hold.
 
-    BasicCharacterObject.Deserialize only calls DefaultCharacterSkills.Init when the template
-    reference came back null (v1.4.8, BasicCharacterObject.cs:337-358), so a character declaring
-    both is asserting two different skill sets and the engine silently takes the template. 44
-    militia shipped that way for months, wearing vanilla Calradian values while every TAOM tool
-    read and rewrote the authored ones (#523).
+    Whether its inline rows agree with that SkillSet is SKILL_TEMPLATE_MISMATCH's question
+    (validate_moduledata.skill_template_mismatch_issues, #626), not the upgrade index's: on
+    v1.4.8 the loader discarded the inline block whenever a template was named (44 militia shipped
+    wearing vanilla values that way, #523); since v1.5.2 it lays the rows over a copy of the
+    template, so only a DIFFERENT row changes anything.
     """
 
-    def test_declaring_both_a_template_and_inline_skills_is_an_error(self):
+    def test_the_upgrade_index_leaves_template_parity_to_its_own_pass(self):
         troop = (
             '  <NPCCharacter id="t" level="11" default_group="Infantry" culture="Culture.x"\n'
             '      skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">\n'
             '    <skills>\n      <skill id="OneHanded" value="60" />\n    </skills>\n'
             '    <upgrade_targets></upgrade_targets>\n  </NPCCharacter>\n')
         self._write(troop)
-        issues = self._run()
-        self.assertEqual(1, len(issues))
-        self.assertEqual("SKILL_TEMPLATE_SHADOWS_SKILLS", issues[0].code)
+        self.assertEqual([], self._run())
 
     def test_a_template_with_an_empty_block_is_fine(self):
         troop = (
@@ -178,8 +176,9 @@ class SkillTemplateShadowingTests(ValidatorGateTests):
         self.assertEqual([], self._run())
 
     def test_a_templated_edge_is_not_judged_for_regression(self):
-        """Its real skills live in a SkillSet outside these files, so comparing the inline block
-        would compare the wrong numbers. The shadowing check owns that case instead."""
+        """Its base skills live in a SkillSet outside these files, so the inline block alone
+        is not the character. No troop or villager edge has a templated side (2026-09-19), so the
+        edge is skipped rather than resolved (#626)."""
         self._write(
             '  <NPCCharacter id="p" level="1" default_group="Infantry" culture="Culture.x"\n'
             '      skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">\n'

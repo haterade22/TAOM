@@ -25,7 +25,7 @@ Three facts have to be held together, because any two of them alone give the wro
 | `Assets/` | The loose `.tpac` tree the engine actually loads. 38 top-level folders, 4,364 tpac files. | yes |
 | `AssetSources/` | The FBX and PNG sources the Modding Kit imports from. 39 folders, 693 FBX, 2,746 PNG. Excluded from release packaging. | no |
 | `ModuleSounds/` | The `.wav` banks `module_sounds.xml` names, paths relative to this folder. | no |
-| `Prefabs/` | 8 prefab XML files (the howdah agents, the wolf target, two menu cameras). Auto-loaded, registered nowhere. | no |
+| `Prefabs/` | 9 prefab XML files (the ADOD_Beasts howdah agents, the wolf target, two menu cameras, and TAOM's war elephant `taom_howdah_platform.xml`, #627). Auto-loaded, registered nowhere. | no |
 | `SceneObj/`, `SceneEditData/` | 9 and 8 scene folders: the main-menu and cinematic scenes the Armory ships. | no |
 | `Shaders/D3D11/` | `shader_compile_report.log` and `shader_mapping.bin`, both editor output. | no |
 | `RuntimeDataCache/` | Engine-generated cache. Machine state, not authored content; `package_release.py` drops it unless you pass `--keep-rdc`. | no |
@@ -421,7 +421,7 @@ All measured 2026-09-05 against the installed `Modules/LOTRLOME_Armory/` and the
 | 38 `Assets/` folders; 4,364 tpac = 2,573 `_tex` + 932 `_mtl` + 663 `_geo` + 196 `_anm`; 129 warg animation clips | `ls -1 Assets \| wc -l; find Assets -name '*.tpac' \| wc -l` and once per suffix |
 | 39 `AssetSources/` folders, 693 FBX, 2,746 PNG | `ls -1 AssetSources \| wc -l; find AssetSources -iname '*.fbx' \| wc -l; find AssetSources -iname '*.png' \| wc -l` |
 | 23 files at `Languages/` root, 12 language folders of 23 files each | `ls -1 ModuleData/Languages/*.xml \| wc -l; for d in BR CNs ... TR; do ls -1 ModuleData/Languages/$d \| wc -l; done` |
-| 8 prefabs, 9 `SceneObj` folders, 8 `SceneEditData` folders | `ls -1 Prefabs \| wc -l; ls -1 SceneObj \| wc -l; ls -1 SceneEditData \| wc -l` |
+| 9 prefabs (8 before TAOM's howdah platform arrived 2026-09-18), 9 `SceneObj` folders, 8 `SceneEditData` folders | `ls -1 Prefabs \| wc -l; ls -1 SceneObj \| wc -l; ls -1 SceneEditData \| wc -l` |
 | 13 `.bak-*` sidecars module-wide | `find "<game>/Modules/LOTRLOME_Armory" -name '*.bak*' \| wc -l` |
 | 4,843 lines in the mesh catalogue | `wc -l < docs/reference/armory-catalogue/catalogue.tsv` |
 | 24 `<Culture>` ids in TAOM, 8 with no Armory folder | Python `ElementTree` `iter('Culture')` over `Main/_Module/ModuleData/taom_spcultures.xml` |

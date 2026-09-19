@@ -21,6 +21,9 @@ internal class TaomHowdahStandingPoint : StandingPoint
     public Agent elephantAgent;
     public Agent elephantRider;
 
+    /// <summary>Set by TaomHowdahMachine.PropagateRefsToSeats, e.g. "[Howdah#2] seat0" (#627).</summary>
+    public string LogTag = "[Howdah]";
+
     private IModLogger _logger;
     private bool _firstTickLogged;
     private int _teleportCount;
@@ -36,7 +39,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         LockUserFrames = false;
         LockUserPositions = false;
         _logger = IoC.Resolve<IModLogger>();
-        _logger?.LogInfo($"[Howdah] Seat OnInit — entity={GameEntity.Name}");
+        _logger?.LogInfo($"{LogTag} Seat OnInit — entity={GameEntity.Name}");
     }
 
     public override TickRequirement GetTickRequirement()
@@ -49,7 +52,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
     {
         if (MovingAgent != null) return;
         _logger?.LogInfo(
-            $"[Howdah] OnUse: agent={userAgent?.Name} hasRanged={userAgent?.HasRangedWeapon(false)} " +
+            $"{LogTag} OnUse: agent={userAgent?.Name} hasRanged={userAgent?.HasRangedWeapon(false)} " +
             $"seatGlobalPos={GameEntity.GlobalPosition} formation={userAgent?.Formation?.FormationIndex}");
         LockUserPositions = true;
         LockUserFrames = true;
@@ -63,14 +66,14 @@ internal class TaomHowdahStandingPoint : StandingPoint
         _previousFormation = userAgent.Formation;
         userAgent.Formation = null;
         userAgent.SetWatchState(Agent.WatchState.Alarmed);
-        _logger?.LogInfo($"[Howdah] OnUse complete: agent seated (formation cleared, watch=Alarmed)");
+        _logger?.LogInfo($"{LogTag} OnUse complete: agent seated (formation cleared, watch=Alarmed)");
     }
 
     public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
     {
         // Fires if the engine removes the agent from this seat outside our ReleaseAgent path.
         _logger?.LogWarning(
-            $"[Howdah] OnUseStopped (UNEXPECTED): agent={userAgent?.Name} isSuccessful={isSuccessful} " +
+            $"{LogTag} OnUseStopped (UNEXPECTED): agent={userAgent?.Name} isSuccessful={isSuccessful} " +
             $"prefIndex={preferenceIndex} ticks={_teleportCount}");
         base.OnUseStopped(userAgent, isSuccessful, preferenceIndex);
     }
@@ -91,7 +94,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         if (!MovingAgent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(MovingAgent) || missionEnded)
         {
             _logger?.LogInfo(
-                $"[Howdah] Releasing {MovingAgent.Name}: isActive={MovingAgent.IsActive()} " +
+                $"{LogTag} Releasing {MovingAgent.Name}: isActive={MovingAgent.IsActive()} " +
                 $"missionEnded={missionEnded} after {_teleportCount} ticks");
             ReleaseAgent();
             return;
@@ -116,7 +119,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         {
             _firstTickLogged = true;
             _logger?.LogInfo(
-                $"[Howdah] OnTick FIRST FIRE — agent={MovingAgent.Name} " +
+                $"{LogTag} OnTick FIRST FIRE — agent={MovingAgent.Name} " +
                 $"seatPos={GameEntity.GlobalPosition} agentPos={MovingAgent.Position} " +
                 $"elephantFeet={(AgentSlotIdentity.IsCurrentOccupant(elephantAgent) ? elephantAgent.Position.z : float.NaN):F1} " +
                 $"isActive={MovingAgent.IsActive()} hasRanged={MovingAgent.HasRangedWeapon(false)} " +
@@ -126,7 +129,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         if (_teleportCount % 120 == 1)
         {
             _logger?.LogInfo(
-                $"[Howdah] Tick#{_teleportCount} agent={MovingAgent.Name} " +
+                $"{LogTag} Tick#{_teleportCount} agent={MovingAgent.Name} " +
                 $"agentPos={MovingAgent.Position} seatPos={GameEntity.GlobalPosition} " +
                 $"action={MovingAgent.GetCurrentAction(0).GetName()}");
         }
@@ -134,7 +137,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
 
     public override void OnEndMission()
     {
-        _logger?.LogInfo($"[Howdah] OnEndMission fired — agent={MovingAgent?.Name ?? "null"} total ticks={_teleportCount}");
+        _logger?.LogInfo($"{LogTag} OnEndMission fired — agent={MovingAgent?.Name ?? "null"} total ticks={_teleportCount}");
         ReleaseAgent();
         base.OnEndMission();
     }
@@ -161,7 +164,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
             if (_previousFormation != null)
                 agent.Formation = _previousFormation;
         }
-        _logger?.LogInfo($"[Howdah] Released agent {agent.Name} from seat after {_teleportCount} ticks");
+        _logger?.LogInfo($"{LogTag} Released agent {agent.Name} from seat after {_teleportCount} ticks");
         RemoveMovingAgent(agent);
     }
 }

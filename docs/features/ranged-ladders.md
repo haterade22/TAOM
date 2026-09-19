@@ -228,7 +228,8 @@ that value replaced). Ammo slots are never touched and a class never changes. Tw
   still takes its cell, because the inline row wins. No troop file carries one today. The 22
   `characters/npcs_*.xml` files do, with no inline rows; all 1,164 templated lords in
   `characters/lords.xml` carry 18 inline rows each, which 1.4.8 ignored and 1.5.3 applies over the
-  template. Whether that retuned the lords at the engine bump is #626's question, not the ladder's.
+  template. They equal their templates (`sync_lord_inline_skills.py`, gated by
+  `SKILL_TEMPLATE_MISMATCH` since #626), so the bump changed no lord.
 - **Cells nothing defines.** A roster naming a CURRENT tier id that no item file defines (the generator
   never ran, or an Armory reinstall removed the items) stops the run, report mode included: planned as
   a retired placeholder it would have passed the item check and read clean.

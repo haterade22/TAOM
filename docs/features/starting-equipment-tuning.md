@@ -2,12 +2,14 @@
 
 ## Overview
 
-Character-creation starting gear is deliberately weak and deliberately cheap. Every item a player-start
-roster hands out is a `starter_<donor>` twin of a real item: same meshes, same crafting pieces, stats floored
-to a per-class anchor, never above the donor, not merchandise, and (for crafted weapons) an explicit low
-price. Troops keep the real items. This doc records how the engine computes damage and price (the parts
-that decide the design), how the kit is structured, the two tools that author and wire it, and what a change
-to any of it has to prove before it is done.
+Character-creation starting gear is deliberately weak and deliberately cheap. The culture-default rosters
+hand out `starter_<donor>` twins of real items: same meshes, same crafting pieces, stats floored to a
+per-class anchor, never above the donor, not merchandise, and (for crafted weapons) an explicit low price.
+The career rosters, and the vanilla override built from them, hand out the real items each culture's
+lowest troops carry (#629), so a career never starts better equipped than the troops it recruits. This doc
+records how the engine computes damage and price (the parts that decide the design), how the kit is
+structured, the two tools that author and wire it, and what a change to any of it has to prove before it
+is done.
 
 ## Why this exists
 
@@ -18,6 +20,13 @@ damage factor 4.18 against a one-handed-sword median of 3.8 across TAOM and vani
 Harad (5.31) and Rohan (5.01) starters sat near the top of the whole game, career bows ran 83 to 99 damage
 against vanilla's hunting bow at 40, and the elven starter shield carried 600 HP against 220 for a
 battered kite. Both problems have the same fix: hand the player a twin with its own numbers.
+
+A week later (#629) an audit found the twins had two faults of their own in the career layer. A twin keeps
+its donor's meshes, so 33 of 40 careers still rendered vanilla gear through twins of vanilla donors (the
+battered kite shield, bodkin arrows, the Footman's Spatha, the hunting and recurve bows, the raider spear).
+And once the #617 ranged ladder lowered low-tier troop bows to 33 to 43 damage, the 40 to 45 starter bows,
+the 9-point starter legs and the 220 HP starter shields sat above some cultures' regular troop gear. The
+career kits now take the culture's lowest troop gear directly, with no twins.
 
 ## The engine facts the design rests on (1.4.8 dump)
 
@@ -72,19 +81,42 @@ Two stacked rosters build the player's kit at CC finalize (`Main/Features/Charac
    parents' rosters, which share the id prefix and are not the player's kit.
 2. **Career override**: `player_career_{culture}_{ranged|cavalry|infantry}_{m|f}` in
    `taom_career_starting_equipment.xml`, 78 rosters, applied via `Equipment.FillFrom`: a complete 12-slot
-   replacement of the battle set, so Head, Cape and Gloves are empty for a careered player by design.
+   replacement of the battle set (`Equipment.cs:184-194` copies every slot), so Head, Cape and Gloves are
+   empty for a careered player by design. Real troop items, not twins (#629); see "Career kits" below.
 3. **Vanilla override**: `taom_player_start_vanilla_override.xml`, 70 rosters with the same ids as vanilla
    SandBox's for vlandia (Rohan), empire (Dunland), sturgia (Dale), aserai (Harad), khuzait (Rhun) and
    battania (Khand), each roster carrying `_replaceWhileMerging="true"`. Before it those six started in
-   Calradian gear. Each is the mapped culture's career kit by title (hunter, skirmisher and bard take the
-   ranged kit; guard and infantry the infantry kit; retainer the cavalry kit with its mount) plus a civilian
-   set of sword, body and legs. Khand borrows Rhun's kit until it has one (#571).
+   Calradian gear. Each is the mapped culture's career kit by title, copied as the career file names it
+   (hunter, skirmisher and bard take the ranged kit; guard and infantry the infantry kit; retainer the
+   cavalry kit with its mount), plus a civilian set of the kit's one-handed weapon, body and legs. Khand
+   borrows Rhun's kit until it has one (#571).
+
+### Career kits: the lowest troop's gear (#629)
+
+Each weapon and armour slot of a career roster names the item that culture's lowest troops carry:
+
+1. the lowest-level item of the slot's class (bow, arrows, one-handed sword or axe, polearm, shield, body,
+   leg) that a non-hero troop of the culture carries in a battle set (`troops/troops_*.xml`, inline
+   `EquipmentRoster`s; the standalone sets the troop files reference are all civilian templates), preferring
+   a non-vanilla item whose carrier is level 21 or below;
+2. Mordor, Gundabad and Dol Guldur troops carry only vanilla arrows, so their ranged careers borrow
+   Isengard's `wm_isengard_arrow_a01`;
+3. otherwise the lowest troop's own item, even when vanilla.
+
+Tie-break: most-carried, then id. Dunland's one-handed slot takes its own `dunland_caerdh_axe_1h_a`,
+because no non-vanilla Dunland sword exists. The level cap keeps a Rhun tier-7 bow (first carried at L36)
+out of a starting kit. The full per-culture table is in issue #629. Vanilla left by rule 3: arrows for the
+six cultures of Men, the Rohan, Dunland and Rhun bows, and Harad's sword, lance and shield (Harad troops
+carry no culture weapons). The consequence is deliberate: these kits equal the lowest regular gear, which
+is stronger than the old twins (Gondor body 23 against 5 to 9) and sells at its real price, and a culture's
+three archetypes share their body and leg armour.
 
 ### The starter items
 
 Named `starter_<donor_id>` (a trailing `_starter` on the donor is stripped first, so
-`gondor_steel_bow_starter` becomes `starter_gondor_steel_bow`), one per donor, 127 today across the two
-TAOM roster files: 39 crafted weapons, 38 plain weapons (bows, arrows, shields), 50 armour. They live in
+`gondor_steel_bow_starter` becomes `starter_gondor_steel_bow`), one per donor, 127 on disk today: 39
+crafted weapons, 38 plain weapons (bows, arrows, shields), 50 armour. 18 of them only the pre-#629 career
+kits named; the generator retains those (see Tools) because saves started since #569 hold them. They live in
 `LOTRLOME_items/<folder>/starter_kit.xml` in the live `LOTRLOME_Armory` module and the `lotraom-assets`
 mirror, keyed by the donor's `culture=` (vanilla cultures map to their TAOM folder, an item with no
 culture falls back to the folder its own file lives in, then to `mercenary`; every target must be a folder
@@ -118,26 +150,30 @@ folder's `starter_armors.xml`, anchors Ranged 5, Cavalry 7, Infantry 9, from `ge
 
 | Tool | Purpose |
 |---|---|
-| `tools/generate_starter_kit.py` | Author the twins. Reads both TAOM roster files, indexes the Armory plus vanilla item and piece files, floors per class, writes the per-folder item files and the three marker blocks in the live Armory and the mirror. Dry run by default; `--apply`; `--verify` (exit 1 on any missing item, piece or registration: the reversion gate for the unversioned install); `--revert`; `--crafted-value` (0 lets the engine price crafted twins). Prints per clone the ratio, the class percentile and the resulting weapon tier. Aborts on a donor with no definition, a class with no anchor, a blade registered nowhere, a folder the Armory does not register. |
-| `tools/wire_starter_kit_rosters.py` | Point the rosters at the twins: in-place `id=` substitution over the 256 + 78 player rosters (both sets, Horse and HorseHarness untouched), then write the vanilla override from the rewired career kit. Shares the id rule and the roster filter with the generator. |
+| `tools/generate_starter_kit.py` | Author the twins. Reads the culture-default roster file (not the career file since #629, whose troop items it would otherwise twin) and retains every twin already on disk whose donor still resolves, so a twin no roster names any more is kept rather than refused by the shrink guard. Indexes the Armory plus vanilla item and piece files, floors per class, writes the per-folder item files and the three marker blocks in the live Armory and the mirror. Dry run by default; `--apply`; `--verify` (exit 1 on any missing item, piece or registration: the reversion gate for the unversioned install); `--revert`; `--crafted-value` (0 lets the engine price crafted twins). Prints per clone the ratio, the class percentile and the resulting weapon tier. Aborts on a donor with no definition, a class with no anchor, a blade registered nowhere, a folder the Armory does not register. |
+| `tools/wire_starter_kit_rosters.py` | Point the culture-default rosters at the twins: in-place `id=` substitution over the 256 rosters of `REWIRE_FILES` (both sets, Horse and HorseHarness untouched; the career file is excluded since #629), then write the vanilla override from the career kit exactly as the career file names it. Shares the id rule and the roster filter with the generator. Re-run it after any career roster change. |
 | `tools/generate_starter_armor.py`, `tools/wire_career_starter_armor.py` | The older career-layer armour pass (see above). |
 
-Re-run the generator whenever a player roster gains a new donor, then the wiring tool. `--verify` after any
+Re-run the generator whenever a culture-default roster gains a new donor, then the wiring tool. `--verify` after any
 Armory refresh: a reinstall wipes `starter_kit.xml` and the marker blocks, and `validate_moduledata.py` then
 reports every player roster slot as `BROKEN_ITEM_REF`, which is the backstop.
 
 ## Gates
 
 - `python tools/validate_moduledata.py`: every `starter_` reference resolves (0 errors).
-- `python tools/audit_polearm_shield_parity.py`: a starter spear beside a shield resolves one-handed. Its
-  `KNOWN_FAILURES` are keyed on the starter ids for the eight Mordor player rosters.
+- `python tools/audit_polearm_shield_parity.py`: a spear beside a shield resolves one-handed. Its
+  `KNOWN_FAILURES` hold the eight Mordor player rosters under #526: four culture-default rosters on
+  `starter_wm_mordor_set1_polearm_a01`, four career rosters on `wm_mordor_set1_polearm_a02` (the lowest
+  Mordor troop polearm, which resolves two-handed the same way).
 - `python tools/check_external_xslt.py`: both modified stylesheets compile.
 - `python tools/generate_starter_kit.py --verify` on both Armory copies.
 - Python: `tools/tests/test_generate_starter_kit.py` (38) and `test_wire_starter_kit_rosters.py` (10).
 - C#: `TAOM.Tests/Features/CharacterCreation/StarterKitCoverageTests.cs` pins that every weapon and armour
-  slot in all three player roster files is a `starter_` item (no allowlist), that both sets are rewired,
-  that the childhood, education, show and parent rosters are not, that every vanilla-mapped title has an
-  override roster, and that every override roster carries the replace attribute.
+  slot in the culture-default file is a `starter_` item (no allowlist), that every career and override slot
+  names an item a non-hero troop of its culture carries in a battle set (Khand through Rhun; Isengard's
+  arrows allowed for the three orc cultures), that both culture-default sets are rewired, that the
+  childhood, education, show and parent rosters are not, that every vanilla-mapped title has an override
+  roster, and that every override roster carries the replace attribute.
   `PlayerStartCoverageTests` reads the override file too and no longer excludes the six.
 
 ## Verifying in-game (MANDATORY, validators cannot catch this)
@@ -154,9 +190,10 @@ After any `--apply`:
 2. Start four **new campaigns**: a career culture with a career picked (Gondor), a careerless culture
    (Lothlorien or Goblin, the culture-default layer is the final kit), Rohan (proves the override replaced
    vanilla's roster rather than appending to it), and one cavalry pick (mount plus starter body and legs).
-3. In each, open the inventory: every weapon and armour slot shows a `... (Starter)` item, the numbers match
-   the anchors, meshes render (no bare legs or hands), the smithing designer offers no starter blade, and a
-   town merchant stocks none.
+3. In each, open the inventory. A careerless TAOM-culture start shows a `... (Starter)` item in every
+   weapon and armour slot with the anchor numbers; a career start (and a Rohan careerless start, which
+   reads the override) shows the career kit's troop items from issue #629. Meshes render (no bare legs or
+   hands), the smithing designer offers no starter blade, and a town merchant stocks no starter item.
 
 Keep backups on a non-`.xml` extension (`.bak-starterkit`): the glob is `*.xml`, so a `*.xml` backup left in
 an item folder loads as a duplicate item id.
@@ -165,7 +202,16 @@ an item folder loads as a duplicate item id.
 
 - About 127 new `{=starter_*}` item names use inline English defaults, plus the 180 older
   `{=starter_*}` armour names: none harvested into the 12-language pipeline (`/localize`).
-- Horse and HorseHarness are untouched; the career layer still hands a vanilla `saddle_horse` to cavalry.
+- Horse and HorseHarness are untouched; the career layer still hands a vanilla `saddle_horse` (and on seven
+  of them `light_harness`) to cavalry. The Armory has no riding horse of its own: every Armory `Horse` is a
+  creature (wargs, rams, spiders, mumakil, elephant, chariot).
+- The careerless culture-default kits of Umbar, Khand, Shaghana and Abanissa still hand out vanilla weapons,
+  Lothlorien and Lindon a vanilla sumpter horse and harness, and Goblin, Misty Mountains and Blue Craig
+  vanilla arrows (out of #629's scope).
+- `generate_starter_kit.py --verify` reports one drift line that predates #629: since the 1.5.3 bump vanilla
+  `battered_kite_shield` carries `culture="Culture.empire"`, so the generator now plans its twin into
+  `dunland` while it sits in `mercenary` (it still loads from there). An `--apply` would need `--allow-shrink`
+  to move it; decide the folder before the next generator run.
 - shaghana and abanissa ship 16 culture-default rosters each but offer no youth-menu title, so the
   coverage test cannot reach them (#570). Khand has no kit of its own (#571).
 - Vanilla also ships `mercenary` (and, for battania, `kern`) player rosters for the six overridden
@@ -185,8 +231,8 @@ an item folder loads as a duplicate item id.
 | File | Role |
 |---|---|
 | `Main/_Module/ModuleData/equipmentsets/taom_char_creation_equipment.xml` | Culture-default rosters (in repo) |
-| `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml` | Career-override rosters (in repo) |
-| `Main/_Module/ModuleData/equipmentsets/taom_player_start_vanilla_override.xml` | The six vanilla-mapped cultures' rosters, generated (in repo, registered in `SubModule.xml`) |
+| `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml` | Career rosters: the culture's lowest troop gear (in repo) |
+| `Main/_Module/ModuleData/equipmentsets/taom_player_start_vanilla_override.xml` | The six vanilla-mapped cultures' rosters, generated from the career kit (in repo, registered in `SubModule.xml`) |
 | `LOTRLOME_Armory/.../LOTRLOME_items/<folder>/starter_kit.xml` | Starter item defs, generated (live install and `E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory`) |
 | `LOTRLOME_Armory/.../LOTRLOME_crafting_pieces.xml`, `weapon_descriptions.xslt`, `crafting_templates.xslt` | Starter blades and their registrations, in marker blocks |
 | `LOTRLOME_Armory/.../LOTRLOME_items/<culture>/starter_armors.xml` | The older career-layer starter armour |
@@ -204,6 +250,10 @@ an item folder loads as a duplicate item id.
   vanilla-mapped cultures get TAOM override rosters, and the invariant is pinned by
   `StarterKitCoverageTests`. On the way, the 238 references the 2026-09-01 Gondor sword rebuild broke were
   repointed from Erkam's assets-repo fix (#568).
+- 2026-09-19 (#629): the vanilla audit. 33 of 40 careers rendered vanilla gear through twins of vanilla
+  donors, and the twin floors sat above some cultures' regular troop gear after #617. The 78 career rosters
+  now name the culture's lowest troop gear, the override follows, the wiring tool no longer rewires the
+  career file, and the generator no longer reads it but retains its 18 old twins.
 
 ## Related docs
 

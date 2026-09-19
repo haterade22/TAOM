@@ -131,7 +131,7 @@ nothing in the changed code, and no finding touched the shipped troop or item da
 |---|---|---|---|---|---|
 | F1 | Tooling | MED (latent) | `rebalance_troops.undefined_ladder_ids`, written in this round, matched ladder refs with a regex pinned to `id="..."`, so a single-quoted `id='Item.ladder_...'`, the same reference to the engine, read as absent. No troop file uses single quotes today. | Repeat offender: the militia regexes drifted on quote style until #617's first review, and the prefix-matcher lesson in `xslt-moduledata.md` covers the attribute half of the same class. I copied the regex idiom beside it. | Read with ElementTree (any quote, comments dropped, every element's `id`). A single-quoted row joined `test_a_ladder_id_no_file_defines_stops_a_rebaseline`. Lesson extended: xslt-moduledata. |
 | F2 | Data flow | MED | `analyze_troop_balance.py` judged 179 of the 227 ladder archers against the level-curve Bow or Crossbow, so its report listed the ranked values as deltas to fix. | #617 gave the skill a second writer (`ladder_cells`) and taught `rebalance_troops` about it; the read-only report imports `calculate_skills` and nobody listed it as a consumer. Finding 4's family. | `analyze()` merges `rb.ladder_cells` as `process_file` does. Test `test_the_balance_report_references_the_ladder_cell` (125 against 100 without it). |
-| F3 | Engine | MED | Three sentences this round wrote as corrections were wrong: the arrow's `missile_speed` "feeds its tier and price" (`DefaultItemValueModel.CalculateAmmoTier` reads damage and stack size only); `lords.xml` has "empty inline blocks" (all 1,164 templated lords carry 18 inline rows); "a troop-versus-troop arrow is pure engine" (the career `TroopDamage` / `TroopResistance` passives and the Infantry ally buff reach troop hits). | Finding 15 replaced old wording with new facts, and I wrote them without reading `CalculateAmmoTier`, counting the lords' rows or re-reading `TaomAgentApplyDamageModel`. The same shape as the first RCA's fabricated "why missed": a correction is a new claim, and it got less checking than the claim it replaced. | Rewritten from the decompile and a count in the tool docstring, the feature doc and `balance-levers.md`. The lords' 18 rows go to #626: 1.5.3 applies them over the template, 1.4.8 ignored them. Lesson: misc. |
+| F3 | Engine | MED | Three sentences this round wrote as corrections were wrong: the arrow's `missile_speed` "feeds its tier and price" (`DefaultItemValueModel.CalculateAmmoTier` reads damage and stack size only); `lords.xml` has "empty inline blocks" (all 1,164 templated lords carry 18 inline rows); "a troop-versus-troop arrow is pure engine" (the career `TroopDamage` / `TroopResistance` passives and the Infantry ally buff reach troop hits). | Finding 15 replaced old wording with new facts, and I wrote them without reading `CalculateAmmoTier`, counting the lords' rows or re-reading `TaomAgentApplyDamageModel`. The same shape as the first RCA's fabricated "why missed": a correction is a new claim, and it got less checking than the claim it replaced. | Rewritten from the decompile and a count in the tool docstring, the feature doc and `balance-levers.md`. The lords' 18 rows went to #626: 1.5.3 applies them over the template, 1.4.8 ignored them (they equal their templates; see "#626 follow-through"). Lesson: misc. |
 | F4 | Engine | LOW | Gaps: the 27 ladder crossbows roll vanilla's `crossbow` modifier group (legendary +4 damage and +15 speed, down to cracked -10 and -6), which the docs never quoted; a Custom Battle rolls no modifier and gives both classes one spread formula, so the owed smoke "a crossbow line against a bow line" cannot show the accuracy rule; campaign movement and unsteady penalties favour crossbows further. | Not asked. | In the feature doc; the smoke step now asks for a campaign battle. |
 | F5 | Tooling | LOW | The sync tool read the translator cache after the loc files were planned, outside its refusal path: a corrupt or non-object cache was a traceback, and a mistyped `--cache-dir` planned a fresh cache folder with exit 0. | The cache joined a tool written around loc files. | Read inside the refusal path; a missing folder or unreadable cache exits 2 with nothing written. Test `test_a_cache_the_tool_cannot_read_is_refused`. |
 | F6 | Tooling | LOW | The generator still wrote `.bak-rangedladder` sidecars into the mirror, which this round had stopped for the restat and sync tools. | The rule was fixed per tool, not per convention; the third writer was not grepped. | Sidecars in the live tree only (apply and revert); the generator test asserts none in the mirror. |
@@ -155,6 +155,29 @@ keeps ids no loc file has; the validator filters `--code` after running every pa
 `--verify` OK in both trees; the roster tool 0 pending edits, 0 inversions; the validator exit 0, no
 error, no `RANGED_*` finding.
 
+## #626 follow-through (2026-09-19)
+
+Mike: "ensure the templates match those skills that are inline". Measured first: they already do.
+`tools/sync_lord_inline_skills.py` checks 1,528 inline blocks beside a template across ModuleData and
+`lords.xslt` and finds 0 differing values: the 1,113 lords on TAOM SkillSets and the 51 on SandBox's
+`spc_*` rookie sets alike (NavalDLC's copies of those ids add only three naval skills, and TAOM marks
+NavalDLC incompatible). No troop or villager upgrade edge has a templated side.
+
+**A second instance of F3 in this same review.** The F3 row, the feature doc and my comment on #626
+said nothing had checked whether the 1.5.x bump retuned the lords. The sync tool had: it re-synced 64
+lords in `lords.xml` and 19 in `lords.xslt` at v2.0.28 (`331032a1`), and
+`LordInlineSkillParityTests` gated the rule. A `grep -l skill_template tools/*.py` would have shown
+it. Corrected on #626 and in the feature doc; the misc lesson written for F3 covers it.
+
+What #626 changed: the validator's `SKILL_TEMPLATE_SHADOWS_SKILLS` (refuse any character declaring
+both, the 1.4.8 rule) became `SKILL_TEMPLATE_MISMATCH` (both may be declared; every inline row must
+equal its template), over every XML and XSLT file of the repo module, with detection shared with the sync tool
+(`find_drift`, commented-out characters skipped) and the commit hook's `--code` line swapped. The C#
+`SkillTemplate_NeverShadowsAnInlineSkillsBlock` went, since `LordInlineSkillParityTests` already
+enforces the same rule everywhere. Not built: template resolution in the upgrade-edge checks, which
+would judge 0 edges today. The deep review of that change (seven lenses, 2026-09-19) is written up in
+`docs/reviews/rca-skill-template-parity-2026-09-19.md`.
+
 ## Lessons codified
 
 - `docs/reviews/lessons/testing-qa.md`: a guard must run on the real data before synthetic
@@ -172,8 +195,8 @@ error, no `RANGED_*` finding.
 ## Open follow-ups
 
 - Field Commission swap to the donor (C#, #625).
-- `SKILL_TEMPLATE_SHADOWS_SKILLS` and the upgrade-edge skip on the 1.5.3 merge rule (#626), and
-  whether the 1,164 lords' 18 inline skill rows, applied since the 1.5.x bump, retuned them.
+- ~~`SKILL_TEMPLATE_SHADOWS_SKILLS` on the 1.5.3 merge rule (#626)~~: done 2026-09-19, see the
+  follow-through above; the lords were not retuned.
 - Push the mirror when Mike chooses (3 commits, #609's included).
 - The doubled "Numenorean" donor names; the #602 / #616 translator runs that turn the loc gate green.
 - The tooling and design follow-ups listed above; `check_handbook_attributes.py` comparing values

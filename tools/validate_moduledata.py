@@ -37,6 +37,11 @@ Checks (each maps to a recurring TAOM bug class):
                              the #352 / #599 infinite mission load (needs the install;
                              the tpac scan lives in validate_mesh_refs.py)
   MISSING_VISUAL_MESH        same for a mesh / holster_mesh: an invisible item (warning)
+  SKILL_TEMPLATE_MISMATCH    an inline <skills> row beside a skill_template that differs from
+                             the SkillSet, or a template with rows naming no SkillSet. Since
+                             1.5.2 the row wins in game while the SkillSet and every tool
+                             say otherwise (#626; needs the install; detection lives in
+                             sync_lord_inline_skills.py, which also repairs it)
   SCHEMA_INVALID             a file the repo module registers breaks the engine's own XSD
                              for its id, or a SubModule.xml registration loads nothing. The
                              engine only logs the former and loads the file anyway (repo
@@ -223,6 +228,72 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
     return issues
 
 
+TEMPLATE_CODE = "SKILL_TEMPLATE_MISMATCH"
+
+
+def skill_template_mismatch_issues(game_dir: Path, moduledata: Path) -> list:
+    """ERROR per character whose inline <skills> rows differ from its skill_template (#626).
+
+    Since v1.5.2 BasicCharacterObject.Deserialize copies the template into a fresh
+    MBCharacterSkills and lays the inline rows over it, so a differing row silently changes the
+    character while every tool that reads the SkillSet sees the template's number (64 lords in
+    characters/lords.xml and 19 in lords.xslt had drifted when the bump landed, 331032a1). v1.4.8
+    discarded the inline block whenever a skill_template attribute was present, which is what the
+    old SKILL_TEMPLATE_SHADOWS_SKILLS enforced by refusing any character that declared both. The
+    rule now: both may be declared, and they must agree; the SkillSet is the source of truth. A
+    template with inline rows that names no SkillSet is an error too (the engine creates an empty
+    placeholder, so the rows are the character's only skills).
+
+    Detection is tools/sync_lord_inline_skills.py's sync_file in report mode (vanilla SkillSets
+    first, then TAOM's, merged the way MBObjectManager merges a duplicate id; comments blanked),
+    over every XML and XSLT file in the repo module's ModuleData, so the fixer and the gate cannot
+    disagree. Finding no templated character at all is an error, as LordInlineSkillParityTests
+    asserts. Callers skip it without the install: the spc_* rookie templates live in SandBox. The
+    MCP's validate_moduledata runs the Validator only and never reaches this pass (#623)."""
+    import sync_lord_inline_skills as sl
+
+    def issue(file, line, entry_id, message):
+        return ts.Issue(severity=ts.Severity.ERROR, code=TEMPLATE_CODE, file=file, line=line,
+                        entry_id=entry_id, message=message)
+
+    sets = sl.load_skill_sets(str(game_dir), str(moduledata))
+    if not sets:
+        return [issue("", 0, "", f"found no SkillSet definitions under {game_dir} or {moduledata}, "
+                                 f"so no template was compared; a gate that compared nothing is not a pass")]
+    issues = []
+    checked = 0
+    for path in sl.data_files(str(moduledata)):
+        rel = Path(path).relative_to(moduledata).as_posix()
+        try:
+            scan = sl.sync_file(path, sets)
+        except UnicodeDecodeError as exc:
+            issues.append(issue(rel, 0, "", f"not valid UTF-8 ({exc.reason} at byte {exc.start}), so its "
+                                            f"characters were NOT checked against their skill_template"))
+            continue
+        checked += scan.checked
+        by_char: dict = {}
+        for d in scan.drifts:
+            by_char.setdefault((d.char_id, d.line), []).append(d.describe())
+        for (char_id, line), drifts in by_char.items():
+            issues.append(issue(rel, line, char_id,
+                                f"inline <skills> rows disagree with the skill_template: {'; '.join(drifts)}. "
+                                f"The engine (1.5.2+) applies the inline value over the template, so the "
+                                f"character plays with it while the SkillSet and every tool reading it say "
+                                f"otherwise. The SkillSet is the source of truth: python "
+                                f"tools/sync_lord_inline_skills.py --apply"))
+        for char_id, line, template in scan.unresolved:
+            issues.append(issue(rel, line, char_id,
+                                f'skill_template="{template}" names no SkillSet in the install or the repo, '
+                                f"so the engine creates an empty placeholder and the inline rows are the "
+                                f"character's only skills. Fix the id or add the SkillSet; the sync tool "
+                                f"leaves this case alone"))
+    if not checked:
+        issues.append(issue("", 0, "", f"no templated character with inline <skills> rows was found under "
+                                       f"{moduledata}, so nothing was compared; a gate that compared nothing "
+                                       f"is not a pass"))
+    return issues
+
+
 SCHEMA_CODE = "SCHEMA_INVALID"
 
 
@@ -351,11 +422,15 @@ def main() -> int:
         # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
         # commit hook's --code line for it blocked nothing.
         issues += missing_collision_body_issues(game_modules, moduledata)
+        # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
+        issues += skill_template_mismatch_issues(game_modules.parent, moduledata)
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
         print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
               f"         live install's tpacs.", file=sys.stderr)
+        print(f"WARNING: {TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
+              f"         in the install.", file=sys.stderr)
     issues.sort(key=lambda i: i.sort_key())
 
     if args.code:

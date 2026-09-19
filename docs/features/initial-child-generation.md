@@ -101,9 +101,12 @@ Add the clan id or culture id to the `excluded_clans` or `excluded_cultures` arr
 }
 ```
 
-Changes take effect on the next new game. Existing saves are not affected (the behavior only runs at new-game creation).
+An edit needs a full restart of Bannerlord: the provider is `Reuse.Singleton` and caches the parsed file for the life of the process, so starting a new campaign in the same session reuses the old list. After the restart it takes effect on the next new game. Existing saves are not affected (the behavior only runs at new-game creation).
+
+**Every orc culture must be excluded.** The shipped list is `mordor`, `isengard`, `gundabad`, `dolguldur`, `goblin`, `mistymountainorcs`, `bluecraig`. The last three were missing until #628, so every goblin, Misty Mountain and Blue Craig clan started the game topped up with children. `ShippedFertilityConfigTests` (in `TAOM.Tests/Features/RaceAge/`) treats any culture whose default race in `cultures.json` is orc-kin as an orc culture, so a new orc kingdom listed there fails that test until it is added here; a culture never offered at character creation is absent from `cultures.json` and escapes the check. The same test class also fails on an excluded id that names no culture (a typo excludes nothing).
 
 ## Changelog
+- 2026-09-19: `goblin`, `mistymountainorcs` and `bluecraig` added to `excluded_cultures` (#628).
 - 2026-05-13 — Config validation hardening (#126): NaN/Infinity/range guards on `FemaleRatio` and `ChildCountMultiplier`, `SelectTemplate` returns null for zero-adult clans instead of throwing, and a `MinAge > MaxAge` ordering swap.
 
 ## GitHub Issue

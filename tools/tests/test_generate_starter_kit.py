@@ -622,6 +622,29 @@ class TestRerunAfterWiring(unittest.TestCase):
             self.assertIn("starter_wm_gondor_sword_a01_blade", gk.read_xml(md / "weapon_descriptions.xslt")[0]
                           .split("TwoHandedSwordAlt")[1])
 
+    def test_default_rosters_exclude_the_career_file(self):
+        # #629: the career rosters name real troop items; cloning those would make new twins
+        self.assertEqual([p.name for p in gk.DEFAULT_ROSTERS], ["taom_char_creation_equipment.xml"])
+
+    def test_twin_no_roster_names_any_more_is_retained(self):
+        # #629: the career rosters stopped naming their twins. Saves started since #569 hold
+        # those ids, so the twins stay planned instead of tripping the shrink guard.
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            before = _plan_in(tmp)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(before, md, write=True)
+            career = ROSTERS[ROSTERS.index('    <EquipmentRoster id="player_career_'):ROSTERS.index("</EquipmentRosters>")]
+            (tmp / "rosters.xml").write_text(ROSTERS.replace(career, ""), encoding="utf-8")
+            sources = gk.Sources(rosters=[tmp / "rosters.xml"], armory=tmp / "LOTRLOME_Armory", vanilla_item_files=[],
+                                 native_pieces=None, native_descriptions=tmp / "native_wd.xml",
+                                 native_templates=tmp / "native_ct.xml")
+            after = gk.build_plan(sources)
+            gk.apply_plan(after, md, write=True)   # must not raise the shrink error
+        self.assertEqual(sorted(c.new_id for c in after.clones), sorted(c.new_id for c in before.clones))
+        self.assertIn("starter_wm_gondor_bow", [c.new_id for c in after.clones])
+        self.assertIn("starter_gondor_steel_bow", [c.new_id for c in after.clones])
+
     def test_unparsable_item_file_is_reported_not_silently_skipped(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)

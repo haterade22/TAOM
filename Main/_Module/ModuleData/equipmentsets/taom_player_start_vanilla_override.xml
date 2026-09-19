@@ -10,1020 +10,1021 @@
   (1.4.8, lines 799-875) then drops every vanilla attribute and child before adding ours,
   which is the only shape that replaces rather than appends (EquipmentSet has no unique
   key in EquipmentRosters.xsd). Battle set = the mapped culture's career kit by title
-  (hunter/skirmisher/bard ranged, guard/infantry infantry, retainer cavalry); civilian
-  set = its sword, body and legs. Khand borrows Rhun's kit until it has its own (#571).
+  (hunter/skirmisher/bard ranged, guard/infantry infantry, retainer cavalry), which is the
+  gear the culture's lowest troops carry (#629); civilian set = its one-handed weapon,
+  body and legs. Khand borrows Rhun's kit until it has its own (#571).
 -->
 <EquipmentRosters>
 
     <!-- vlandia -->
     <EquipmentRoster id="player_char_creation_vlandia_retainer_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_spear_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_retainer_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_spear_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_guard_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_guard_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_skirmisher_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t1" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_skirmisher_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t1" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_hunter_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t1" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_hunter_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t1" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_infantry_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_infantry_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_bard_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t1" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_bard_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t1" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_rohan_ws_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <!-- empire -->
     <EquipmentRoster id="player_char_creation_empire_retainer_m" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_dunland_caerdh_spear_a" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_c" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_retainer_f" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_dunland_caerdh_spear_a" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_c" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_guard_m" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_dunland_caerdh_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_c" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_guard_f" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_dunland_caerdh_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_c" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_skirmisher_m" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dunland_bow_t2" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_skirmisher_f" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dunland_bow_t2" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_hunter_m" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dunland_bow_t2" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_hunter_f" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dunland_bow_t2" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_infantry_m" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_dunland_caerdh_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_c" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_infantry_f" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_dunland_caerdh_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_c" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_bard_m" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dunland_bow_t2" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_empire_bard_f" culture="Culture.empire" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dunland_bow_t2" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Body" id="Item.dunland_wulf_scalemail_light_b" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <!-- sturgia -->
     <EquipmentRoster id="player_char_creation_sturgia_guard_m" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_northern_spear_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_guard_f" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_northern_spear_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_skirmisher_m" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_skirmisher_f" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_hunter_m" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_hunter_f" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_infantry_m" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_northern_spear_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_infantry_f" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_northern_spear_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_bard_m" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_sturgia_bard_f" culture="Culture.sturgia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_hunting_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <!-- aserai -->
     <EquipmentRoster id="player_char_creation_aserai_retainer_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_spear_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_retainer_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_spear_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_guard_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
+            <Equipment slot="Item2" id="Item.aserai_lance_1_t5" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_guard_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
+            <Equipment slot="Item2" id="Item.aserai_lance_1_t5" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_hunter_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_hunter_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_infantry_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
+            <Equipment slot="Item2" id="Item.aserai_lance_1_t5" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_infantry_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_spear_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
+            <Equipment slot="Item2" id="Item.aserai_lance_1_t5" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_skirmisher_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_skirmisher_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_bard_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_bard_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_wm_harad_bow_a01" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_wm_harad_sword_a01" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
+            <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+            <Equipment slot="Body" id="Item.haradrim_torso" />
+            <Equipment slot="Leg" id="Item.haradrim_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <!-- battania (borrows khuzait) -->
     <EquipmentRoster id="player_char_creation_battania_retainer_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_retainer_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_guard_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_guard_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_hunter_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_hunter_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_infantry_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_infantry_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_bard_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_bard_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_skirmisher_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_skirmisher_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <!-- khuzait -->
     <EquipmentRoster id="player_char_creation_khuzait_retainer_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_retainer_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_guard_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_guard_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_skirmisher_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_skirmisher_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_hunter_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_hunter_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_infantry_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_infantry_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Item1" id="Item.starter_battered_kite_shield" />
-            <Equipment slot="Item2" id="Item.starter_sm_rh_loke_spear_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_bard_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_bard_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.starter_composite_bow" />
-            <Equipment slot="Item1" id="Item.starter_bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
         <EquipmentSet equipmentType="Civilian">
-            <Equipment slot="Item0" id="Item.starter_empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
+            <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
 

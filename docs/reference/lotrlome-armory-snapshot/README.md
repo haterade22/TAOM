@@ -23,6 +23,7 @@ Any future Steam-Workshop or manual update of `LOTRLOME_Armory` will overwrite o
 | `monster_usage_sets.xml` | The `spider` / `elephant` / `chariot` / `warg` usage sets. **Added 2026-08-28** for the same reason. | ~81 KB |
 | `monster_usage_sets.xslt` | Rider-side `mount_id` injections into vanilla's `human` usage set: 22 warg rows across mountings, strikes and falls, plus the elephant and chariot rows. **Added 2026-08-28.** | ~13 KB |
 | `project.mbproj` | The native-side registration manifest. **Added 2026-08-28** because the warg's three new `<file>` rows live only here. | ~3.6 KB |
+| `Prefabs/taom_howdah_platform.xml` | The war elephant's howdah platform (renamed from `taom_howdah_agent.xml` 2026-09-19, #627, so a stale copy of the old name in an installed TAOM module can never compete): a floor fitted to the elite howdah's deck, four `bo_barrier` rails and four crew frames, every body `moveable`. `ElephantMissionBehavior` instantiates it by name. **Added 2026-09-18**, when it moved here from the TAOM module; the Armory loads `Prefabs/` with no SubModule row. The live copy lives at `LOTRLOME_Armory/Prefabs/`, not `ModuleData/`, and `HowdahPrefabTests` fails if it differs from this one. | ~10 KB |
 | `weapon_descriptions.xslt` | The Armory's additive override of Native's `<AvailablePieces>` lists: which crafting pieces each `WeaponDescription` accepts, and therefore which usages a crafted weapon resolves to. **Carries the one-handed-polearm registration** for the Dale spears and the Black Numenorean lance (see APPLIED EDIT below). | ~79 KB |
 
 > The first three are race-defining XML and are auto-loaded from every module root. `weapon_descriptions.xslt` is neither — it is here because it now carries an applied edit, and unlike the other three the live copy is already CRLF, so live and snapshot are byte-identical rather than differing by line ending.
@@ -37,6 +38,9 @@ cp "docs/reference/lotrlome-armory-snapshot/action_sets.xml" \
 ```
 
 Same for `monsters.xml` and `skins.xml` if needed. Then delete the compressed shader-cache sacks (see `feedback_shader_cache_invisible_cc.md` memory) and re-launch — Bannerlord will re-cook shaders and the action-set edits will take effect.
+
+The howdah prefab restores to `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml`, not `ModuleData/`, and must never go
+back into `Main/_Module/Prefabs/` (`HowdahPrefabTests` fails if it does). It needs no shader-cache step.
 
 ## Loading status — DO NOT REGISTER
 
@@ -364,7 +368,11 @@ A dev machine with a Modding Kit `Assets/` directory loads the **loose** tree; a
 
 ## Snapshot date
 
-2026-08-20: `weapon_descriptions.xslt` **patched in place (LIVE)** with nine `<AvailablePiece>`
+2026-09-19: `Prefabs/taom_howdah_platform.xml` **added** (LIVE + this snapshot, byte-identical, LF, pinned
+by `.gitattributes`). TAOM's war elephant howdah platform, rebuilt on the siege-tower pattern and moved here from the
+TAOM module on 2026-09-18, then renamed from `taom_howdah_agent` (#627). `HowdahPrefabTests` compares the bytes, so a
+Kit re-save of the live file shows up as a failing test that names the newer copy. Nothing else touched.
+Previous: 2026-08-20: `weapon_descriptions.xslt` **patched in place (LIVE)** with nine `<AvailablePiece>`
 entries under `OneHandedPolearm`, inside `<!-- TAOM-1H-POLEARM:START/END -->` markers: the four Dale
 spears' blades and handles (added 2026-08-10) plus the Black Numenorean lance's (added 2026-08-20,
 replacing the Dale-only `TAOM-DALE-1H` marker). See the APPLIED EDIT section above. Unlike the other

@@ -365,8 +365,8 @@ are optional and every shipped culture has them anyway.
   hand it straight to that assert. `MBEquipmentRoster.cs:44-54`, `BasicCharacterObject.cs:372-378`.
 - **`FillFrom` copies all twelve slots, including the empty ones.** A slot your roster omits
   overwrites the target's slot with nothing; it does not inherit. `Equipment.cs:184-194`.
-  [career-system.md](../features/career-system.md) states the opposite at line 354 and is wrong;
-  the header of `tools/wire_career_starter_armor.py` states it correctly.
+  [career-system.md](../features/career-system.md) agrees since #629 corrected its add-a-culture
+  recipe, the last place it still called `FillFrom` a slot-by-slot merge.
 - **A character's first battle set is not the first one in the file.** Every character's sets are
   re-sorted at the end of deserialization so battle sets come before civilian and stealth ones.
   `MBEquipmentRoster.cs:138-141`, called from `BasicCharacterObject.cs:526`.

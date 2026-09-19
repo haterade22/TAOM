@@ -159,7 +159,7 @@ in `rebalance_troops.py`, `taom_schema.py` and `TroopUpgradeSkillMonotonicityTes
 agree: without the entry in the writer's own clamp, the run floors the value and the clamp puts it
 straight back, and the pass reads as having done nothing.
 
-### `skill_template` beats an inline `<skills>` block outright
+### On 1.4.8 `skill_template` beat an inline `<skills>` block outright
 
 `BasicCharacterObject.Deserialize` (v1.4.8, `BasicCharacterObject.cs:337-358`) resolves
 `skill_template` first and only calls `DefaultCharacterSkills.Init(childNode)` when that reference
@@ -181,13 +181,18 @@ rewriting the dead half on every balance pass and `analyze_troop_balance.py` had
 the troop's real skills. 17 prison guards in `characters/npcs_*.xml` had the same shape (#523).
 
 The templates are gone from `troops/` and from those prison guards, so the authored values now apply.
-A character declaring both is an error in two places: `SKILL_TEMPLATE_SHADOWS_SKILLS` in
-`taom_schema.py` and `SkillTemplate_NeverShadowsAnInlineSkillsBlock` in the C# suite. **A troop with
-an empty `<skills>` block and a template is the legitimate shape** and is left alone; both gates skip
-templated characters when judging an upgrade edge, because their real skills live in a SkillSet these
-files cannot see. Both gates rest on the 1.4.8 loader, which ignored the inline rows whenever the
-template resolved; on the installed 1.5.3 the inline rows override the template's values, so a
-character declaring both no longer carries dead data (#626).
+That was the 1.4.8 loader, which ignored the inline rows whenever a template was named (a dangling id
+still returned an empty placeholder). Since 1.5.2
+the engine copies the template and lays the inline rows over it, so a listed row wins. The rule that
+holds on both (#626, 2026-09-19): a character may declare both, and every inline value must equal its
+template's. `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (the commit hook runs it) and
+`TAOM.Tests/Core/LordInlineSkillParityTests.cs` enforce it over every ModuleData file and `lords.xslt`;
+`python tools/sync_lord_inline_skills.py --apply` repairs a drift, the SkillSet being the source of
+truth. It replaced `SKILL_TEMPLATE_SHADOWS_SKILLS` and `SkillTemplate_NeverShadowsAnInlineSkillsBlock`,
+which refused any character declaring both. **A troop with an empty `<skills>` block and a template is
+the legitimate shape** and is left alone; both upgrade gates skip templated characters when judging an
+edge, because their base skills live in a SkillSet these files cannot see (no troop or villager edge
+has a templated side today).
 
 ### The graph spans two directories
 
@@ -248,9 +253,9 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 |------|---------|
 | `tools/rebalance_troops.py` | Writes skills onto the curve. `GROUP_BASELINES` + `CULTURAL_MODS` + `SKIP_TROOP_IDS` + `detect_culture` + `militia_troop_ids` + `clamp_upgrade_monotonicity` + `insert_missing_skill_entries`. `--dry-run` / `--apply`. |
 | `tools/analyze_troop_balance.py` | Read-only overview generator. Imports the curve from `rebalance_troops.py`; emits HTML/MD/JSON. `--outlier-threshold N` / `--stdout`. Never writes troop XML. |
-| `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` and `SKILL_TEMPLATE_SHADOWS_SKILLS` (both ERROR), the `validate_moduledata.py` half of the gate. |
-| `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` | 4 tests: no skill drops, all 8 skills declared, no template shadowing, militia exemption pinned by identity. Fails rather than going inconclusive when it cannot find ModuleData, since a data gate that cannot read its data has checked nothing. |
-| `tools/tests/test_upgrade_skill_monotonicity.py` | 25 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, and `SKILL_TEMPLATE_SHADOWS_SKILLS`. |
+| `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` (ERROR), the `validate_moduledata.py` half of the gate. Template parity is `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (#626). |
+| `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` | 3 tests: no skill drops, all 8 skills declared, militia exemption pinned by identity (template parity is `TAOM.Tests/Core/LordInlineSkillParityTests.cs` since #626). Fails rather than going inconclusive when it cannot find ModuleData, since a data gate that cannot read its data has checked nothing. |
+| `tools/tests/test_upgrade_skill_monotonicity.py` | 25 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, and that the upgrade index leaves templates to `SKILL_TEMPLATE_MISMATCH` (`tools/tests/test_skill_template_mismatch.py`). |
 | `tools/fix_upgrade_armour_regressions.py` | The armour clamp (#541): family step-up, parent fallback, slot append, hero-kit demotion. `tools/tests/test_fix_upgrade_armour_regressions.py` covers it on synthetic data. |
 | `UPGRADE_ARMOUR_REGRESSION` in `tools/taom_schema.py` | The armour gate (WARNING), fed by `Registries.item_armour`; tests in `tools/tests/test_validate_moduledata.py`. |
 | `Main/_Module/ModuleData/troops/troops_*.xml` (×16) | The troop definitions (the data under management). |

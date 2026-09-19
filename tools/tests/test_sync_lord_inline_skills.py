@@ -60,22 +60,24 @@ class SyncFileTests(unittest.TestCase):
         inner = '            <skill id="OneHanded" value="18" />\n            <skill id="Riding" value="20" />'
         self.write(doc(npc("lord_x", "SkillSet.spc_matriarch_skills_rookie", inner)))
 
-        checked, changed, report = sync.sync_file(self.path, SETS, apply=True)
+        scan = sync.sync_file(self.path, SETS, apply=True)
 
-        self.assertEqual((checked, changed), (1, 2))
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 2))
         text = self.read_bytes().decode("utf-8")
         self.assertIn('<skill id="OneHanded" value="80" />', text)
         self.assertIn('<skill id="Riding" value="100" />', text)
-        self.assertTrue(any("lord_x: OneHanded 18 -> 80" in line for line in report), report)
+        first = scan.drifts[0]
+        self.assertEqual((first.char_id, first.skill, first.inline, first.expected), ("lord_x", "OneHanded", "18", 80))
+        self.assertEqual(first.describe(), "OneHanded 18 -> 80 (spc_matriarch_skills_rookie)")
 
     def test_report_mode_never_writes(self):
         inner = '            <skill id="OneHanded" value="18" />'
         original = doc(npc("lord_x", "SkillSet.spc_matriarch_skills_rookie", inner))
         self.write(original)
 
-        checked, changed, _ = sync.sync_file(self.path, SETS, apply=False)
+        scan = sync.sync_file(self.path, SETS)                     # report mode is the default
 
-        self.assertEqual((checked, changed), (1, 1))
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 1))
         self.assertEqual(self.read_bytes().decode("utf-8"), original)
 
     def test_bom_and_crlf_survive_a_rewrite(self):
@@ -94,9 +96,9 @@ class SyncFileTests(unittest.TestCase):
         inner = '            <skill id="Bow" value="120" />\n            <skill id="Crossbow" value="55" />'
         self.write(doc(npc("lord_x", "SkillSet.taom_test_set", inner)))
 
-        _, changed, _ = sync.sync_file(self.path, SETS, apply=True)
+        scan = sync.sync_file(self.path, SETS, apply=True)
 
-        self.assertEqual(changed, 1)
+        self.assertEqual(len(scan.drifts), 1)
         text = self.read_bytes().decode("utf-8")
         self.assertIn('<skill id="Bow" value="120" />', text)
         self.assertIn('<skill id="Crossbow" value="0" />', text)
@@ -106,10 +108,10 @@ class SyncFileTests(unittest.TestCase):
         original = doc(npc("lord_x", "SkillSet.does_not_exist", inner))
         self.write(original)
 
-        checked, changed, report = sync.sync_file(self.path, SETS, apply=True)
+        scan = sync.sync_file(self.path, SETS, apply=True)
 
-        self.assertEqual((checked, changed), (1, 0))
-        self.assertTrue(any("resolves to no SkillSet" in line for line in report), report)
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 0))
+        self.assertEqual([(c, t) for c, _, t in scan.unresolved], [("lord_x", "SkillSet.does_not_exist")])
         self.assertEqual(self.read_bytes().decode("utf-8"), original)
 
     def test_inline_only_and_empty_blocks_are_not_touched(self):
@@ -118,9 +120,9 @@ class SyncFileTests(unittest.TestCase):
         original = doc(inline_only + "\n" + empty)
         self.write(original)
 
-        checked, changed, _ = sync.sync_file(self.path, SETS, apply=True)
+        scan = sync.sync_file(self.path, SETS, apply=True)
 
-        self.assertEqual((checked, changed), (0, 0))
+        self.assertEqual((scan.checked, len(scan.drifts)), (0, 0))
         self.assertEqual(self.read_bytes().decode("utf-8"), original)
 
     def test_second_apply_changes_nothing(self):
@@ -129,10 +131,56 @@ class SyncFileTests(unittest.TestCase):
         sync.sync_file(self.path, SETS, apply=True)
         after_first = self.read_bytes()
 
-        checked, changed, _ = sync.sync_file(self.path, SETS, apply=True)
+        scan = sync.sync_file(self.path, SETS, apply=True)
 
-        self.assertEqual((checked, changed), (1, 0))
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 0))
         self.assertEqual(self.read_bytes(), after_first)
+
+    # Comments (#626 review): the engine never loads text inside <!-- -->, so neither may the tool.
+    def test_a_comment_naming_npccharacter_does_not_swallow_the_next_character(self):
+        inner = '            <skill id="OneHanded" value="18" />'
+        self.write(doc('    <!-- see <NPCCharacter id="ref"> below -->\n' + npc("lord_x", "SkillSet.spc_matriarch_skills_rookie", inner)))
+
+        scan = sync.sync_file(self.path, SETS, apply=True)
+
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 1))
+        text = self.read_bytes().decode("utf-8")
+        self.assertIn('<skill id="OneHanded" value="80" />', text)
+        self.assertIn('<!-- see <NPCCharacter id="ref"> below -->', text)
+
+    def test_a_commented_out_skills_block_is_neither_judged_nor_rewritten(self):
+        character = (
+            '    <NPCCharacter id="lord_x" skill_template="SkillSet.spc_matriarch_skills_rookie">\n'
+            '        <!-- <skills><skill id="OneHanded" value="1" /></skills> -->\n'
+            '        <skills>\n            <skill id="OneHanded" value="5" />\n        </skills>\n'
+            '    </NPCCharacter>')
+        self.write(doc(character))
+
+        scan = sync.sync_file(self.path, SETS, apply=True)
+
+        self.assertEqual([(d.skill, d.inline) for d in scan.drifts], [("OneHanded", "5")])
+        text = self.read_bytes().decode("utf-8")
+        self.assertIn('<!-- <skills><skill id="OneHanded" value="1" /></skills> -->', text)
+        self.assertIn('<skill id="OneHanded" value="80" />', text)
+
+    def test_a_commented_out_row_is_not_drift(self):
+        inner = '            <skill id="OneHanded" value="80" />\n            <!-- <skill id="Riding" value="1" /> -->'
+        original = doc(npc("lord_x", "SkillSet.spc_matriarch_skills_rookie", inner))
+        self.write(original)
+
+        scan = sync.sync_file(self.path, SETS, apply=True)
+
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 0))
+        self.assertEqual(self.read_bytes().decode("utf-8"), original)
+
+    def test_each_finding_carries_its_own_characters_line(self):
+        inner = '            <skill id="OneHanded" value="18" />'
+        self.write(doc(npc("lord_a", "SkillSet.spc_matriarch_skills_rookie", inner) + "\n"
+                       + npc("lord_b", "SkillSet.spc_matriarch_skills_rookie", inner)))
+
+        scan = sync.sync_file(self.path, SETS)
+
+        self.assertEqual([(d.char_id, d.line) for d in scan.drifts], [("lord_a", 3), ("lord_b", 10)])
 
 
 class XsltTemplateTests(unittest.TestCase):
@@ -166,16 +214,16 @@ class XsltTemplateTests(unittest.TestCase):
         with open(path, "wb") as f:
             f.write(BOM + self.XSLT.encode("utf-8"))
 
-        checked, changed, report = sync.sync_file(path, SETS, apply=True)
+        scan = sync.sync_file(path, SETS, apply=True)
 
-        self.assertEqual((checked, changed), (1, 1))
+        self.assertEqual((scan.checked, len(scan.drifts)), (1, 1))
         raw = open(path, "rb").read()
         self.assertTrue(raw.startswith(BOM))
         text = raw[3:].decode("utf-8")
         self.assertEqual(text.count('<skill id="Bow" value="120" />'), 1, text)
         self.assertEqual(text.count('<skill id="Bow" value="90" />'), 1, "the template without skill_template must keep its value")
         self.assertNotIn("\n", text.replace("\r\n", ""), "CRLF endings must survive")
-        self.assertTrue(any(line.startswith("lord_1_15: Bow 90 -> 120") for line in report), report)
+        self.assertEqual([(d.char_id, d.describe()) for d in scan.drifts], [("lord_1_15", "Bow 90 -> 120 (taom_test_set)")])
 
 
 class LoadSkillSetsMergeTests(unittest.TestCase):
@@ -205,6 +253,14 @@ class LoadSkillSetsMergeTests(unittest.TestCase):
         sets = sync.load_skill_sets_from([earlier, later])
 
         self.assertEqual(sets["shared"], {"OneHanded": 20})
+
+    def test_a_commented_out_row_is_not_loaded(self):
+        # Vanilla SandBox and SandBoxCore carry commented-out rows inside SkillSet bodies; the
+        # engine reads none of them (#626 review).
+        path = self.write("a_skill_sets.xml", '<SkillSets><SkillSet id="s"><skill id="OneHanded" value="10" />'
+                                             '<!--<skill id="Shield" value="60" />--></SkillSet></SkillSets>')
+
+        self.assertEqual(sync.load_skill_sets_from([path])["s"], {"OneHanded": 10})
 
     def test_vanilla_files_come_before_the_repo_files(self):
         files = sync.skill_set_files(os.path.join(self.dir, "no-such-install"))

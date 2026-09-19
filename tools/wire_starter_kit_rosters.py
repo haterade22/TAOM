@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Point the player-start rosters at the `starter_` twins, and override the six vanilla-mapped
-cultures' starts with TAOM rosters.
+"""Point the culture-default player-start rosters at the `starter_` twins, and override the six
+vanilla-mapped cultures' starts with TAOM rosters.
 
 TWO STEPS
 ---------
 1. Rewire `taom_char_creation_equipment.xml` (the 256 `player_char_creation_{culture}_{title}_{m|f}`
-   rosters, battle AND civilian sets) and `taom_career_starting_equipment.xml` (the 78
-   `player_career_*` rosters): every Item0-3 / Body / Leg / Cape / Head / Gloves id becomes
-   `Item.starter_<donor>` (a trailing `_starter` on the donor is stripped first). Horse and
+   rosters, battle AND civilian sets): every Item0-3 / Body / Leg / Cape / Head / Gloves id becomes
+   `Item.starter_<donor>` (a trailing `_starter` on the donor is stripped first). The career file
+   is NOT rewired (#629): its 78 `player_career_*` rosters name the gear each culture's lowest
+   troops carry, and `REWIRE_FILES` pins that. Horse and
    HorseHarness are left alone. The substitution is attribute-in-place, because the culture
    file puts every attribute on its own line and a re-emitted set would rewrite thousands of
    lines the change did not ask for. The id rule and the roster filter are imported from
@@ -17,10 +18,10 @@ TWO STEPS
    and khuzait have no TAOM culture-default rosters, so their careerless start read vanilla's
    `SandBox/ModuleData/sandbox_equipment_sets.xml` and handed a Rohan player a Calradian sword
    in a hemp tunic. The override carries a roster with the same id as vanilla's for every
-   title the culture's youth menu offers, built from the mapped culture's (rewired) career
-   kit by title: hunter/skirmisher/bard take the ranged kit, guard/infantry the infantry kit,
-   retainer the cavalry kit with its mount. Khand (battania) borrows Rhun's (khuzait) kit
-   until it has its own (#571). The civilian set is the kit's sword, body and legs.
+   title the culture's youth menu offers, built from the mapped culture's career kit (copied
+   as the career file names it) by title: hunter/skirmisher/bard take the ranged kit,
+   guard/infantry the infantry kit, retainer the cavalry kit with its mount. Khand (battania) borrows Rhun's (khuzait) kit
+   until it has its own (#571). The civilian set is the kit's one-handed weapon, body and legs.
 
    The roster element carries `_replaceWhileMerging="true"`. MBObjectManager.MergeElements
    (1.4.8, lines 799-875) merges a later module's same-id element INTO the earlier one, and
@@ -57,6 +58,9 @@ CC_FILE = MODULEDATA / "equipmentsets" / "taom_char_creation_equipment.xml"
 CAREER_FILE = MODULEDATA / "equipmentsets" / "taom_career_starting_equipment.xml"
 OVERRIDE_FILE = MODULEDATA / "equipmentsets" / "taom_player_start_vanilla_override.xml"
 MENUS_DIR = MODULEDATA / "charactercreation"
+# The files step 1 rewires. Not the career file: since #629 its rosters name the culture's lowest
+# troop items, and a rewire would point them at starter_ twins that do not exist.
+REWIRE_FILES = (CC_FILE,)
 
 VANILLA_CULTURES = ("vlandia", "empire", "sturgia", "aserai", "battania", "khuzait")
 BORROW = {"battania": "khuzait"}   # Khand has no kit of its own (#571)
@@ -65,7 +69,7 @@ TITLE_TO_ARCHETYPE = {
     "guard": "infantry", "infantry": "infantry", "mercenary": "infantry",
     "retainer": "cavalry",
 }
-# where each career archetype keeps its one-handed sword (taom_career_starting_equipment.xml header)
+# where each career archetype keeps its one-handed weapon (taom_career_starting_equipment.xml header)
 SWORD_SLOT = {"ranged": "Item2", "cavalry": "Item2", "infantry": "Item0"}
 
 ROSTER_RE = re.compile(r"<EquipmentRoster\b([^>]*)>(.*?)</EquipmentRoster>", re.S)
@@ -166,8 +170,9 @@ def build_vanilla_override(career_text: str, titles_by_culture, borrow: dict[str
         "  (1.4.8, lines 799-875) then drops every vanilla attribute and child before adding ours,",
         "  which is the only shape that replaces rather than appends (EquipmentSet has no unique",
         "  key in EquipmentRosters.xsd). Battle set = the mapped culture's career kit by title",
-        "  (hunter/skirmisher/bard ranged, guard/infantry infantry, retainer cavalry); civilian",
-        "  set = its sword, body and legs. Khand borrows Rhun's kit until it has its own (#571).",
+        "  (hunter/skirmisher/bard ranged, guard/infantry infantry, retainer cavalry), which is the",
+        "  gear the culture's lowest troops carry (#629); civilian set = its one-handed weapon,",
+        "  body and legs. Khand borrows Rhun's kit until it has its own (#571).",
         "-->",
         "<EquipmentRosters>",
     ]
@@ -209,6 +214,11 @@ def build_vanilla_override(career_text: str, titles_by_culture, borrow: dict[str
     return eol.join(lines) + eol
 
 
+def override_from_career_file(career_path: Path, titles_by_culture) -> str:
+    """The override built from the career kit exactly as the career file names it (#629)."""
+    return build_vanilla_override(gk.read_xml(career_path)[0], titles_by_culture, BORROW)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write (default: dry run)")
@@ -216,7 +226,7 @@ def main() -> int:
     args = ap.parse_args()
 
     rc = 0
-    for path in (CC_FILE, CAREER_FILE):
+    for path in REWIRE_FILES:
         text, had_bom = gk.read_xml(path)
         new_text, changed, rosters = rewire_text(text)
         left = leftovers(new_text)
@@ -231,11 +241,9 @@ def main() -> int:
             print(f"   wrote {path}")
 
     if not args.skip_override:
-        career_text = gk.read_xml(CAREER_FILE)[0]
-        career_text = rewire_text(career_text)[0]   # the override must see the rewired kit
         try:
             titles = titles_from_menus(MENUS_DIR)
-            override = build_vanilla_override(career_text, titles, BORROW)
+            override = override_from_career_file(CAREER_FILE, titles)
         except WireError as exc:
             print("ERROR:", exc)
             return 2

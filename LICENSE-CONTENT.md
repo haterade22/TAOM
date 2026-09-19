@@ -64,7 +64,7 @@ XML"), which left files claimed by two clauses at once. It is now split by path.
 | `Main/_Module/ModuleSounds/**` | **Third-party audio** (436 files). Not TAOM's to license. Redistributed as part of a non-commercial fan project |
 | `Main/_Module/GUI/Fonts/**` | **Third-party fonts** (Aniron, Minion Pro, Ringbearer). Not TAOM's to license |
 | `Main/_Module/AssetPackages/**` | **Commissioned art, redistributed as delivered.** The four Yotthani meshes (`fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring`). Cleared for TAOM's use; not TAOM's to sublicense onward |
-| `Main/_Module/Prefabs/taom_howdah_agent.xml` | **Purchased asset** (ADOD_Beasts). Cleared for TAOM's use; not TAOM's to sublicense onward |
+| `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (ships in `LOTRLOME_Armory/Prefabs`, not in the TAOM module, since 2026-09-18; renamed from `taom_howdah_agent` 2026-09-19) | **Purchased asset** (ADOD_Beasts), reworked by TAOM 2026-09-18. Cleared for TAOM's use; not TAOM's to sublicense onward |
 | `Main/_Module/bin/**`, `Dependencies/**/*.dll` | Third-party binaries under their own licenses |
 
 Redistributed binaries: [THIRD-PARTY-LICENSES.txt](Main/_Module/THIRD-PARTY-LICENSES.txt).

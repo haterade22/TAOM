@@ -4,6 +4,126 @@
 
 ## 2026-09-19
 
+### data(starting-gear): v2.0.30 - career kits take each culture's lowest troop gear (#629)
+
+An audit of the 40 careers found 33 starting with vanilla gear. A `starter_` twin keeps its donor's meshes,
+so twins of vanilla donors still rendered Calradian: the battered kite shield (18 culture/archetype pairs),
+bodkin arrows (10), the Footman's Spatha (12, and in the Dunland, Rhûn and Dale civilian sets), the hunting
+bow (5), the recurve bow and the raider spear. It also found the #569 floors sitting above some cultures'
+regular troop gear once #617 lowered low-tier troop bows: starter bows 40 to 45 against troop bows 33 to 43,
+starter legs 9 against recruit boots 5 to 8, starter shields 220 HP against 195 in Harad and Rhûn.
+
+- **Career kits are now the culture's lowest troop gear**, real items, no new twins. Per slot: the
+  lowest-level item of that class a non-hero troop of the culture carries in a battle set, preferring a
+  non-vanilla one whose carrier is level 21 or below; Mordor, Gundabad and Dol Guldur borrow Isengard's
+  arrows; otherwise the lowest troop's own item. Dunland's one-handed slot is its own axe. 390 ids across
+  the 78 rosters; the full table is in #629.
+- **The vanilla override follows** (Rohan, Dunland, Dale, Harad, Rhûn, Khand careerless starts), which also
+  removes the vanilla civilian Spatha. `wire_starter_kit_rosters.py` no longer rewires the career file and
+  copies its kit into the override as named.
+- **`generate_starter_kit.py`** no longer reads the career file and retains every on-disk twin whose donor
+  still resolves, so the 18 twins only the old career kits used stay defined for saves started since #569.
+- Kept vanilla, because the culture's own troops carry nothing else: arrows for the six cultures of Men, the
+  Rohan, Dunland and Rhûn bows, Harad's sword, lance and shield. Mounts untouched (the Armory has no riding
+  horse). The kits are stronger than the old twins (Gondor body 23 against 5 to 9) and sell at real prices;
+  they equal the lowest regular gear and never exceed it.
+- The polearm-shield ratchet re-keys the four Mordor career rosters to `wm_mordor_set1_polearm_a02`, which
+  resolves two-handed beside a shield exactly as the old twin did (#526). `generate_starter_kit.py --verify`
+  still reports one older drift line: vanilla 1.5.3 tagged `battered_kite_shield` with the empire culture,
+  so its twin now plans into `dunland` while it loads from `mercenary`.
+
+Tests: `StarterKitCoverageTests` narrows the `starter_` invariant to the culture-default file and adds
+`EveryCareerAndOverrideRosterItem_IsCarriedByATroopOfItsCulture` (failed on the old kit, 17/17 green now);
+two new tests each in `test_wire_starter_kit_rosters.py` and `test_generate_starter_kit.py`.
+
+### fix(race-age): v2.0.30 - orcs and goblins overbreed (#628)
+
+Orc and goblin clans filled to the population ceiling and stayed there. Seven causes, all fixed:
+
+1. **Start-of-campaign children.** `configs/initial_child_generation.json` excluded `mordor`, `isengard`,
+   `gundabad` and `dolguldur` but not the three orc cultures added later, so every `goblin`,
+   `mistymountainorcs` and `bluecraig` clan started the game topped up to `ceil(adults/2)` children. All
+   three are now excluded. Blue Craig was not in the original report; it surfaced when the new test derived
+   the orc cultures from `cultures.json` (default race `goblin`, 40 goblin lords).
+2. **Modifiers of 2.0 to 3.0.** orc, goblin, uruk, pale_uruk, dg_uruk 2.0 to 1.3; uruk_hai 2.5 to 1.5;
+   berserker 3.0 to 1.5.
+3. **The race bonus beat the clan brake.** `TaomPregnancyModel.ComputeBaseChance` multiplied `fertilityMod`
+   after the population factor, so an orc clan (x2) at 1.5x its cap still bred at vanilla's unbraked rate. A
+   bonus above 1.0 now applies only while the clan is at or under its cap (`aliveLords <= 4 + 4*tier`); past
+   it the modifier is clamped to 1. A penalty (elf 0.15, dwarf 0.6, troll 0.1) applies everywhere.
+4. **The per-child `n²` slowdown was halved by the x2;** the lower modifiers restore most of it.
+5. **Orc and berserker fertile to 50;** now 45.
+6. **Player marriages.** The player's marriage skips the brake, as in vanilla, and it no longer takes the
+   race bonus either: an orc player couple breeds at the human rate.
+7. **Humans fertile to 195;** now 60. The window-scaled decline had kept a human mother near peak for over a
+   century. The 200-year lifespan is unchanged.
+
+Tests: 6 new `ComputeBaseChance` cases (brake ordering, the exact one-lord-past-cap edge, at-cap boundary,
+penalty kept, player clamp) and `ShippedFertilityConfigTests` (7 tests), which loads the shipped JSON
+through the real providers and pins the ceilings (no race above 1.5x, orc-kin fertile to 45, humans to 60),
+a warning-free load, every orc-kin race present, "every culture whose default race is orc-kin is excluded
+from start-of-campaign children", and every excluded id naming a real culture. In the RED run, 7 of the
+first 11 failed on the old code and 4 were boundary pins that pass either way; the edge case and the
+excluded-id guard were added during review, after the fix.
+Deep review (6 lenses, no CRITICAL or HIGH): the cap test now reads `aliveLords <= clanCap` directly instead
+of through the derived population factor; the shipped-config test reads `cultures.json` with the production
+`CultureCreationDataProvider` instead of a regex that dropped reordered entries; stale doc lines fixed. RCA:
+`docs/reviews/rca-race-fertility-2026-09-19.md`.
+Docs: `race-age-system.md` (its values table was stale against the file and is refreshed, plus reload
+scope), `initial-child-generation.md` (restart scope), `configs-balance.md`.
+
+Save-compat: none; no persisted state. Children already born or generated stay. The new rates apply from the
+next daily tick; the start-of-campaign exclusion reaches new campaigns only.
+Not-tested: in game. Owed: a new campaign with goblin and Misty Mountain clans checked on day one, then about
+five years fast-forwarded to compare orc and human clan child counts.
+
+### feat(elephant): v2.0.30 - howdah platform rebuilt, moved to the Armory, diagnostics logging (#627)
+
+**The prefab.** `taom_howdah_platform.xml` (was `taom_howdah_agent.xml`) is the functional layer fitted to the elite
+howdah mesh (`sk_hd_elep_armor_howdah_elite_a`), built the way the vanilla siege tower and the War Sails ships build a
+moving platform: every physics body flagged `moveable` (none was); the floor on its own child, scaled to the measured
+deck (1.4 x 1.6 m, top at 3.15 m, 0.8 m behind the elephant's origin, 0.33 m above the elephant's body capsule); four
+`bo_barrier` rails scaled (width, 1, 1.1), flagged `barrier` and standing on the floor's edges, replacing the ADOD_Beasts
+cage whose 20x scale fell on the plane's zero-thickness axis (1 m walls, solid to arrows); four crew frames tagged
+`taom_howdah_crew`, facing outward and keeping the seat script so today's code runs. The machine's three empty
+pilot/ammo/wait tag rows are gone (native `HasTag("")` is unverified; the defaults match no child), and so are the 20
+seat rows that restated engine defaults (only `AutoSheathWeapons="false"` stays). Two claims were corrected: no item
+binds the elite mesh yet (the trigger is still `sk_elephant_armor_a`, the plain armour), and four 0.37 m crew capsules
+do not fit the 1.4 m deck clear (side by side 0.70 m apart, 0.74 m needed; three fit). Mike kept four until the first
+crew test.
+
+**Moved and renamed.** It moved from `Main/_Module/Prefabs/` to `LOTRLOME_Armory/Prefabs`, beside the elephant's
+Monster, meshes and clips (the Armory loads that folder with no SubModule row), and was renamed because TAOM installs
+from v2.0.22 to v2.0.30 keep the old `taom_howdah_agent` in `Modules/TAOM/Prefabs`: two prefabs of one name have no
+defined winner. `ElephantConfig.HowdahPrefabName` is the one name the C# instantiates and the tests pin. The repo keeps a
+byte-identical snapshot at `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`, pinned LF in
+`.gitattributes`; the deployed `Modules/TAOM/Prefabs` copy was deleted by hand (the deploy never removes files). Players
+get it at Mike's next editor package of the Armory, which must ship with the TAOM build that asks for the new name
+(`release-process.md`).
+
+**Diagnostics** (Mike: "comprehensive logging so we can quickly identify the issues in the process"), behind a new MCM
+toggle, Battle Tactics/Howdah Diagnostics, on by default while the platform is tested. Every line carries a
+per-mission `[Howdah#n]` tag (agent indices recycle, so not an index). A line per elephant rider saying why it did or
+did not get a howdah; at mission start a prefab probe (`GameEntity.PrefabExists`, a WARN whatever the toggle when no
+module loads the prefab) and a config banner; on the first live tick a layout dump (children, tags, body flags,
+positions, the elephant capsule as loaded, the floor's clearance over it, a WARN when negative or when no seats loaded);
+a status line every 5 s per howdah with the elephant's real against locomotion velocity (`GetAverageRealGlobalVelocity`
+against `AverageVelocity`; the gap is the slide signal, since `Agent.Velocity` is only the locomotion velocity
+rotated), platform drift, floor clearance, placement path, seats taken and the elephant's action; one-shot lines for
+each bone-tracking fallback; a summary at mission end. `HowdahDiagnosticsReporter` does the engine reads, so the
+machine gains three calls; the arithmetic is in the pure `HowdahDiagnostics`, `HowdahSampleClock` and
+`HowdahRunStats`, NaN-gated. `docs/features/elephant.md` "Reading the howdah log" maps each line to what it tells you.
+
+**Tests and review.** 39 howdah tests, all written RED first: `HowdahPrefabTests` (15: moveable bodies, the floor and
+rails on the measured deck, the scripts, `visible_only_when_editing`, the root name against the constant, no TAOM copy,
+no other module declaring the name, the live copy byte-equal to the snapshot), `HowdahDiagnosticsTests` (13),
+`HowdahSampleClockTests` (5), `HowdahRunStatsTests` (4), `HowdahDiagnosticsSettingsProviderTests` (2). The settings
+split is re-pinned (240 in `TaomSettings`, 255 in all), and `coop-interop.md`'s stale "59 excluded" is now the counted
+66. Deep review: seven lenses, two at a time; no CRITICAL, one HIGH (the stale same-name prefab in installs, fixed by
+the rename). RCA `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`. Crew spawn and bone tracking stay disabled; next
+is research doc step 1 (re-enable one slide source) with the status line as the measurement, and the in-game smoke in
+`elephant.md`'s open items.
+
 ### fix(ranged): v2.0.30 - #617 second review: crossbows out-hit and out-aim their kingdom's bows
 
 A second eight-lens deep review of #617 (shipped in v2.0.30), an audit of the first review's
@@ -217,6 +337,37 @@ run by script instead and came back clean. Full write-up: `docs/reviews/rca-rang
   `RANGED_*` warning, all three ladder `--verify` runs OK, both `rebalance_troops.py` dry-run modes
   raise no ladder cell. Owed: in-game restart, `/armory-audit`, Custom Battle, one non-English client.
 
+### fix(tools): MISSING_COLLISION_BODY fires; TAOM_Map's dead registrations removed (#622, #619)
+
+- **#622: the collision-body gate never ran.** `validate_moduledata.py` defined
+  `missing_collision_body_issues` but `main()` never called it, so `MISSING_COLLISION_BODY`, the
+  commit-time guard for the #352 infinite load, never fired and the hook's `--code` line for it
+  blocked nothing from 2026-09-15 to 2026-09-18. `main()` now runs it beside the generator pass and
+  says `SKIPPED` without an install. A test drives `main()`, and a structural test in
+  `CommitGateCoverageTests` fails if any `*_issues` pass is not called from `main()` (it fails on
+  the pre-fix validator). Live install: 0 missing bodies. The pass adds about 3 s: the validator
+  went from about 5.9 s to about 9 s, inside the hook's 45 s bound.
+- **The pass cannot stall or mislead the hook.** When a pack fails to parse it now byte-scans only
+  that pack for bodies; scanning all 4,611 (22.6 GiB) took 110-119 s, past the hook's bound, in the
+  exact #599 case. A scan that raises becomes one `MISSING_COLLISION_BODY` ERROR saying the bodies
+  were NOT verified and why, instead of a traceback.
+- **A partial install crashed the validator.** With a Modules folder missing the Armory or
+  `TAOM_Map`, `main()` hit `AttributeError` printing the "extra ref root NOT FOUND" warning.
+  `Validator.missing_ref_roots` now holds Paths like `extra_ref_roots` beside it; tested.
+- **#619: seven dead registrations removed from the live `TAOM_Map/SubModule.xml`** (`items`,
+  `spcultures`, `spnpccharacters`, `partyTemplates`, `spkingdoms`, `spclans`, `spworkshops`). In the
+  live install none had a file, folder or stylesheet (its 16 Kit stub files went missing on
+  2026-09-15), so each loaded nothing; every one of those ids is still registered by SandBoxCore or
+  SandBox, so no merged document changes. Byte-faithful edit (CRLF kept), backup at
+  `E:\taom-live-backups\2026-09-18\TAOM_Map\SubModule.xml`; Mike confirmed the live install loads
+  fine. `tools/tests/test_validate_xml_schemas.py` pins the live registrations to `Settlements`
+  alone, so a resync from the mirror (which still ships all eight over empty stubs, and which Mike
+  chose to leave as it is) fails it; #619 stays open for that half.
+- Stale claims corrected: the validator docstring, `/armory-audit` and `armory-ref-audit.md` said
+  the MCP tool and `/verify` run this pass; they do not (#623, with the hook's crash exit code and
+  the remaining scan-cost items). `armory-ref-audit.md`'s "4.8 s" was measured with the pass never
+  running. Lessons in `testing-qa`; RCA `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`.
+
 ### chore(harness): /deep-review runs senior reviewers, reviews XML as code, adds a design lens, and applies what it finds (#621)
 
 Mike asked for three things: every deep review should ask whether the change could be done in a more
@@ -277,37 +428,6 @@ READ-ONLY review") and CLAUDE.md told reviewers to skip XML.
 - Updated to match: CLAUDE.md (custom agents, model routing, the Critical Rule and routing gate),
   `completion-workflow.md`, `new-culture-authoring.md`, `mcp-servers.md`, `agent-operating-manual.md`
   (the dump is v1.5.3), `INDEX.md`, `doc-lookup.md`, the `moduledata-validation` rule and feature doc,
-### fix(tools): MISSING_COLLISION_BODY fires; TAOM_Map's dead registrations removed (#622, #619)
-
-- **#622: the collision-body gate never ran.** `validate_moduledata.py` defined
-  `missing_collision_body_issues` but `main()` never called it, so `MISSING_COLLISION_BODY`, the
-  commit-time guard for the #352 infinite load, never fired and the hook's `--code` line for it
-  blocked nothing from 2026-09-15 to 2026-09-18. `main()` now runs it beside the generator pass and
-  says `SKIPPED` without an install. A test drives `main()`, and a structural test in
-  `CommitGateCoverageTests` fails if any `*_issues` pass is not called from `main()` (it fails on
-  the pre-fix validator). Live install: 0 missing bodies. The pass adds about 3 s: the validator
-  went from about 5.9 s to about 9 s, inside the hook's 45 s bound.
-- **The pass cannot stall or mislead the hook.** When a pack fails to parse it now byte-scans only
-  that pack for bodies; scanning all 4,611 (22.6 GiB) took 110-119 s, past the hook's bound, in the
-  exact #599 case. A scan that raises becomes one `MISSING_COLLISION_BODY` ERROR saying the bodies
-  were NOT verified and why, instead of a traceback.
-- **A partial install crashed the validator.** With a Modules folder missing the Armory or
-  `TAOM_Map`, `main()` hit `AttributeError` printing the "extra ref root NOT FOUND" warning.
-  `Validator.missing_ref_roots` now holds Paths like `extra_ref_roots` beside it; tested.
-- **#619: seven dead registrations removed from the live `TAOM_Map/SubModule.xml`** (`items`,
-  `spcultures`, `spnpccharacters`, `partyTemplates`, `spkingdoms`, `spclans`, `spworkshops`). In the
-  live install none had a file, folder or stylesheet (its 16 Kit stub files went missing on
-  2026-09-15), so each loaded nothing; every one of those ids is still registered by SandBoxCore or
-  SandBox, so no merged document changes. Byte-faithful edit (CRLF kept), backup at
-  `E:\taom-live-backups\2026-09-18\TAOM_Map\SubModule.xml`; Mike confirmed the live install loads
-  fine. `tools/tests/test_validate_xml_schemas.py` pins the live registrations to `Settlements`
-  alone, so a resync from the mirror (which still ships all eight over empty stubs, and which Mike
-  chose to leave as it is) fails it; #619 stays open for that half.
-- Stale claims corrected: the validator docstring, `/armory-audit` and `armory-ref-audit.md` said
-  the MCP tool and `/verify` run this pass; they do not (#623, with the hook's crash exit code and
-  the remaining scan-cost items). `armory-ref-audit.md`'s "4.8 s" was measured with the pass never
-  running. Lessons in `testing-qa`; RCA `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`.
-
   `tools/README.md`, `skill-stocktake` and `external-skill-ports` (current frontmatter values), and a
   doc-backed `harness-facts.md` row for subagent `model` / `effort` values.
 

@@ -27,7 +27,6 @@ Main/_Module/                      978 MB in total
   GUI/                             1,319 files, 178 MB
   ModuleData/                      367 files, 32 MB
   ModuleSounds/                    436 files, 167 MB
-  Prefabs/                         1 file
   bin/                             7 files, 17 MB (2 of them git-tracked)
 ```
 
@@ -47,7 +46,7 @@ Main/_Module/                      978 MB in total
 | `AssetSources/` | 86 raw art files (PSD and PNG), 551 MB | Nobody at runtime. `tools/package_release.py:116-117` excludes the whole folder from a release; the dev build still deploys it (`Main/TAOM.csproj:13`) |
 | `AssetPackages/` | 4 cooked packs: `fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring` <!-- measured: ls Main/_Module/AssetPackages 2026-09-05 --> | Players; the runtime form in a release (`docs/reference/bannerlord-engine-and-toolchain.md:267`) |
 | `ModuleSounds/` | 342 `.wav`, 93 `.mp3`, 1 `.ogg` under `LOTR/` and `Native/` <!-- measured: find Main/_Module/ModuleSounds -type f \| sed 's/.*\.//' \| sort \| uniq -c 2026-09-05 --> | `ModuleData/module_sounds.xml` names each file with a `path=` relative to this folder, for example `path="LOTR/Elves/Alert/elf_horn.wav"` (`Main/_Module/ModuleData/module_sounds.xml:5`) |
-| `Prefabs/` | `taom_howdah_agent.xml`, 8,647 bytes <!-- measured: wc -c Main/_Module/Prefabs/taom_howdah_agent.xml 2026-09-05 --> | The scene system, with no manifest row |
+| `Prefabs/` | None since 2026-09-18 <!-- measured: ls Main/_Module 2026-09-18 --> | The one prefab it held, the elephant's howdah, moved to `LOTRLOME_Armory/Prefabs` beside the Monster, meshes and clips it belongs with, and was renamed `taom_howdah_platform.xml` (2026-09-19, #627); the repo keeps a snapshot at `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` |
 
 Three folders exist only in the install copy, never in the repo <!-- measured: ls "<game>/Modules/TAOM"; ls "<game>/Modules/TAOM/RuntimeDataCache" \| wc -l; du -sm "<game>/Modules/TAOM/RuntimeDataCache" 2026-09-05 -->:
 
@@ -405,7 +404,7 @@ All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modu
 | 169 files under `Languages/`, 12 folders, 14 files each, 13 `<LanguageFile>` rows each | `find Main/_Module/ModuleData/Languages -type f \| wc -l; for d in Main/_Module/ModuleData/Languages/*/; do ls $d \| wc -l; rg -c '<LanguageFile' $d/language_data.xml; done` |
 | 8 `.xslt` files, all without an `.xml` sibling | `for x in Main/_Module/ModuleData/*.xslt; do test -f "${x%.xslt}.xml" \|\| echo xslt-only; done` |
 | `GUI/`: 11, 6, 51, 227, 1,023 per subfolder; 428,445-byte manifest; 563/369/78/9/3 PNGs per sprite category; 226 FactionMap PNGs | `for d in Main/_Module/GUI/*/; do find "$d" -type f \| wc -l; done; wc -c Main/_Module/GUI/TAOMSpriteData.xml; for d in Main/_Module/GUI/SpriteParts/*/; do find "$d" -name '*.png' \| wc -l; done; find Main/_Module/GUI/SpriteData/FactionMap -type f \| wc -l` |
-| 4 `AssetPackages` tpac; 342 wav, 93 mp3, 1 ogg; 8,647-byte prefab | `ls Main/_Module/AssetPackages; find Main/_Module/ModuleSounds -type f \| sed 's/.*\.//' \| sort \| uniq -c; wc -c Main/_Module/Prefabs/taom_howdah_agent.xml` |
+| 4 `AssetPackages` tpac; 342 wav, 93 mp3, 1 ogg; no `Prefabs/` folder | `ls Main/_Module/AssetPackages; find Main/_Module/ModuleSounds -type f \| sed 's/.*\.//' \| sort \| uniq -c; ls Main/_Module` |
 | 1,023,041 and 51,752 bytes for the two unregistered settlement files; 2,589 bytes `global_strings.xml` | `wc -c Main/_Module/ModuleData/settlements.xml Main/_Module/ModuleData/custom_settlements.xml Main/_Module/ModuleData/global_strings.xml` |
 | 9 sidecars, 1 tracked | `find Main/_Module/ModuleData -name '*.bak*' \| wc -l; git ls-files Main/_Module/ModuleData \| grep -c bak` |
 | 371 install-side `ModuleData` files, 4 extras | `find "<game>/Modules/TAOM/ModuleData" -type f \| wc -l; diff <(cd Main/_Module/ModuleData && find . -type f \| sort) <(cd "<game>/Modules/TAOM/ModuleData" && find . -type f \| sort)` |

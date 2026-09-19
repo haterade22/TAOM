@@ -224,8 +224,8 @@ def render_culture(culture, recs, catalog):
     H.append(f'<h1>Lords — {_e(culture)}</h1>')
     H.append('<div class="sub"><a href="index.html">← index</a> &nbsp;|&nbsp; '
              '<a href="perks.html">perk reference</a>. Skills resolved from each lord\'s '
-             '<code>skill_template</code> → SkillSet (authoritative — the engine ignores the inline '
-             '&lt;skills&gt; block). ★ = legendary, ·jr = rookie/junior. Total colored by magnitude; '
+             '<code>skill_template</code> → SkillSet (authoritative; since 1.5.2 the engine lays the inline '
+             '&lt;skills&gt; rows over it, and SKILL_TEMPLATE_MISMATCH keeps the two equal). ★ = legendary, ·jr = rookie/junior. Total colored by magnitude; '
              'click a lord to jump to every perk their skills unlock.</div>')
 
     avg = round(sum(r['total'] for r in recs) / len(recs)) if recs else 0
@@ -278,7 +278,7 @@ def render_index(by_culture, all_recs):
     H.append('<h1>Lord Balance &amp; Perk Review</h1>')
     H.append('<div class="sub">Per-culture lord stats + every perk each lord\'s skills unlock. '
              'Authoritative skills from <code>skill_template</code> → <code>taom_lord_skill_sets.xml</code> '
-             '(the engine ignores the inline &lt;skills&gt; block). '
+             '(since 1.5.2 the engine lays the inline &lt;skills&gt; rows over it; SKILL_TEMPLATE_MISMATCH keeps them equal). '
              '<a href="perks.html">Full perk reference →</a></div>')
 
     total = len(all_recs)
@@ -313,7 +313,7 @@ def render_index(by_culture, all_recs):
     if mism:
         ex = ', '.join(f'<code>{_e(r["id"])}</code>' for r in mism[:25])
         H.append(f'<div class="callout"><b>{len(mism)} lords whose inline &lt;skills&gt; ≠ their SkillSet</b> '
-                 f'(documentation is stale — engine uses the SkillSet): {ex}{" …" if len(mism) > 25 else ""}</div>')
+                 f'(the inline value wins in game since 1.5.2; run tools/sync_lord_inline_skills.py --apply): {ex}{" …" if len(mism) > 25 else ""}</div>')
     H.append('</div></body></html>')
     return '\n'.join(H)
 

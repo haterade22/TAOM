@@ -28,7 +28,10 @@ public class ElephantMissionBehavior : MissionLogic
 {
     private readonly IElephantAttackService _service;
     private readonly IModLogger _logger;
+    private readonly IHowdahDiagnosticsSettingsProvider _howdahDiagnostics;
     private readonly HashSet<string> _loggedErrors = new();
+    // Per-mission howdah serial for the [Howdah#n] log tag (#627); agent indices recycle, so the tag is not an index.
+    private int _howdahSerial;
     // Attach/prune bookkeeping (shadow list, dedup, late-attach counting) — shared tracker,
     // see CreatureTreeTracker for the discipline notes.
     private readonly CreatureTreeTracker _tracker;
@@ -39,6 +42,7 @@ public class ElephantMissionBehavior : MissionLogic
     {
         _service = IoC.Resolve<IElephantAttackService>();
         _logger = IoC.Resolve<IModLogger>();
+        _howdahDiagnostics = IoC.Resolve<IHowdahDiagnosticsSettingsProvider>();
         _tracker = new CreatureTreeTracker("ElephantTree", "[Elephant]",
             a => _service.IsCreatureMonster(a.Monster?.StringId), _logger);
     }
@@ -63,17 +67,35 @@ public class ElephantMissionBehavior : MissionLogic
         if (agent == null || !agent.IsHuman || agent.MountAgent == null) return;
         if (!_service.IsCreatureMonster(agent.MountAgent.Monster?.StringId)) return;
 
+        // Diagnostics (#627): one line per elephant rider saying why it did or did not get a howdah. Only elephant
+        // riders get this far, a handful per battle, so no dedupe is needed.
+        bool diagnostics = _howdahDiagnostics?.IsEnabled == true;
         try
         {
             var character = agent.Character;
-            if (character?.Equipment == null) return;
+            if (character?.Equipment == null)
+            {
+                if (diagnostics)
+                    _logger.LogInfo($"[Howdah] rider {agent.Name} on elephant index {agent.MountAgent.Index}: no equipment, no howdah");
+                return;
+            }
             var harness = character.Equipment[EquipmentIndex.HorseHarness];
-            if (harness.Item?.StringId != ElephantConfig.HarnessStringId) return;
+            string harnessId = harness.Item?.StringId;
+            if (harnessId != ElephantConfig.HarnessStringId)
+            {
+                if (diagnostics)
+                    _logger.LogInfo(
+                        $"[Howdah] rider {agent.Name} on elephant index {agent.MountAgent.Index} wears harness " +
+                        $"'{harnessId ?? "none"}': no howdah (the trigger is {ElephantConfig.HarnessStringId})");
+                return;
+            }
 
-            GameEntity howdah = GameEntity.Instantiate(Mission.Current.Scene, "taom_howdah_agent", true);
+            GameEntity howdah = GameEntity.Instantiate(Mission.Current.Scene, ElephantConfig.HowdahPrefabName, true);
             if (howdah == null)
             {
-                _logger.LogError("[Elephant] Howdah: prefab 'taom_howdah_agent' not found in Prefabs folder.");
+                _logger.LogError(
+                    $"[Elephant] Howdah: prefab '{ElephantConfig.HowdahPrefabName}' not found in any module's Prefabs folder " +
+                    "(it ships in LOTRLOME_Armory/Prefabs; an Armory reinstall or an old package drops it).");
                 return;
             }
             howdah.SetVisibilityExcludeParents(true);
@@ -83,6 +105,7 @@ public class ElephantMissionBehavior : MissionLogic
                 _logger.LogError("[Elephant] Howdah: TaomHowdahMachine script not found on instantiated prefab.");
                 return;
             }
+            machine.LogTag = $"[Howdah#{++_howdahSerial}]";
             machine.elephantAgent = agent.MountAgent;
             machine.elephantRider = agent;
             // Position the howdah at the elephant's back BEFORE spawning crew so that
@@ -103,7 +126,9 @@ public class ElephantMissionBehavior : MissionLogic
                 }
             }
 
-            _logger.LogInfo($"[Elephant] Howdah instantiated for rider={agent.Name}");
+            _logger.LogInfo(
+                $"[Elephant] Howdah instantiated for rider={agent.Name} as {machine.LogTag}: prefab={ElephantConfig.HowdahPrefabName} " +
+                $"elephant={agent.MountAgent.Name} (index {agent.MountAgent.Index}) harness={harnessId} side={agent.Team?.Side}");
             // DEFERRED (2026-06-10): crew spawn is a CONFIRMED slide source and is disabled for now.
             // The 4 force-spawned archers, teleported onto the elephant each tick, overlap its collision capsule
             // and the physics solver shoves the elephant ("slide"). Confirmed by the isolation ladder: Build B
@@ -210,6 +235,24 @@ public class ElephantMissionBehavior : MissionLogic
                 $"{ElephantConfig.SideAttackRightActionName}. Attacks will not animate correctly.");
 
         _logger.LogInfo("[Elephant] Initialized");
+        LogHowdahConfig();
+    }
+
+    // Once per mission (#627). A missing prefab is logged whatever the toggle says: it means no elephant in this
+    // install can get a howdah (an Armory reinstall or an Armory package older than the TAOM build drops it).
+    private void LogHowdahConfig()
+    {
+        bool prefabLoaded = GameEntity.PrefabExists(ElephantConfig.HowdahPrefabName);
+        if (!prefabLoaded)
+            _logger.LogWarning(
+                $"[Howdah] prefab '{ElephantConfig.HowdahPrefabName}' is not loaded from any module's Prefabs folder: no elephant " +
+                "will get a howdah. It ships in LOTRLOME_Armory/Prefabs.");
+        if (_howdahDiagnostics?.IsEnabled != true) return;
+        _logger.LogInfo(
+            $"[Howdah] config: prefab={ElephantConfig.HowdahPrefabName} loaded={prefabLoaded} triggerHarness={ElephantConfig.HarnessStringId} " +
+            $"heightAboveGround={HowdahDiagnostics.Format(ElephantConfig.HowdahHeightAboveGround, 2)} " +
+            $"boneTracking={TaomHowdahMachine.BoneTrackingEnabled} crewSpawn=disabled " +
+            $"statusEvery={HowdahDiagnostics.Format(ElephantConfig.HowdahStatusPeriodSeconds, 0)}s");
     }
 
     public override void OnMissionTick(float dt)
@@ -244,6 +287,7 @@ public class ElephantMissionBehavior : MissionLogic
         _tracker.Clear();
         // Clear error dedup so a fresh mission can re-log genuinely new occurrences (spider/mumakil parity).
         _loggedErrors.Clear();
+        _howdahSerial = 0;
         base.OnRemoveBehavior();
     }
 }

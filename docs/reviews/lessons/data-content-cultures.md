@@ -848,7 +848,7 @@ shipped inside a commit titled "fix upgrade regressions".
 - **Source:** #522, caught during self-review by diffing troop-by-troop against `HEAD` rather than
   trusting the tool's own change counter.
 
-### skill_template makes a character's inline <skills> block unreachable, and every TAOM tool read the dead half
+### On 1.4.8 skill_template makes a character's inline <skills> block unreachable, and every TAOM tool read the dead half
 `BasicCharacterObject.Deserialize` (v1.4.8, `BasicCharacterObject.cs:337-358`) resolves
 `skill_template` first and only calls `DefaultCharacterSkills.Init(childNode)` when that reference
 came back **null**. So a character declaring both is asserting two different skill sets and the
@@ -861,8 +861,10 @@ of them, and 17 prison guards had the same shape.
   doc documents it as live behaviour, and the schema has no rule that the two fields conflict. An
   earlier exploration did notice the pairing and recorded it as "vestigial `skill_template`
   attributes... worth confirming which wins". It wins.
-- **Prevent:** `SKILL_TEMPLATE_SHADOWS_SKILLS` now errors on any character declaring both, in the
-  validator and in `TroopUpgradeSkillMonotonicityTests`. Generalisation: when two fields can both
+- **Prevent:** `SKILL_TEMPLATE_SHADOWS_SKILLS` errored on any character declaring both, in the
+  validator and in `TroopUpgradeSkillMonotonicityTests` (the 1.4.8 rule). Since #626 (1.5.2+ lays the
+  rows over the template) the gate is `SKILL_TEMPLATE_MISMATCH`: both may be declared, and every row
+  must equal the template's (`LordInlineSkillParityTests` in the C# suite). Generalisation: when two fields can both
   supply the same value, find the engine's precedence rule and gate the contradiction, because a
   silent winner means every tool downstream can be reading the loser. "Vestigial" is a hypothesis,
   not a finding.

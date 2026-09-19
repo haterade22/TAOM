@@ -34,7 +34,8 @@ The `LOTR` appearing in some directory names is thematic, not a source.
 
 **Two directories that look like they belong above and do not:**
 `Main/_Module/AssetPackages/` (four commissioned Yotthani meshes, redistributed as delivered) and
-`Main/_Module/Prefabs/taom_howdah_agent.xml` (a purchased ADOD_Beasts asset). Both are cleared for
+`docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (a purchased ADOD_Beasts asset, reworked 2026-09-18; it ships in
+`LOTRLOME_Armory/Prefabs` and the repo keeps this snapshot of it). Both are cleared for
 TAOM's use and neither is TAOM's to sublicense onward. Their rows are in
 [provenance-register.md](provenance-register.md).
 

@@ -54,15 +54,12 @@ XML_HEADER = '<?xml version="1.0" encoding="utf-8"?>' + NL + "<NPCCharacters>" +
 XML_FOOTER = "</NPCCharacters>" + NL
 
 
-def _troop(troop_id, level, upgrades=(), omit_level=False, skill_template=None):
+def _troop(troop_id, level, upgrades=(), omit_level=False):
     targets = NL.join(
         '      <upgrade_target id="NPCCharacter.{0}" />'.format(u) for u in upgrades)
     level_attr = "" if omit_level else ' level="{0}"'.format(level)
-    template_attr = ("" if skill_template is None
-                     else NL + '      skill_template="NPCCharacter.{0}"'.format(skill_template))
     return NL.join([
-        '  <NPCCharacter id="{0}"{1} default_group="Infantry"'.format(troop_id, level_attr)
-        + template_attr,
+        '  <NPCCharacter id="{0}"{1} default_group="Infantry"'.format(troop_id, level_attr),
         '      name="{{=x_{0}}}{0}" occupation="Soldier" culture="Culture.gondor">'.format(troop_id),
         "    <skills>",
         '      <skill id="Athletics" value="50" />',
@@ -315,20 +312,21 @@ class SharedIndexTests(unittest.TestCase):
         self.root = tempfile.mkdtemp(prefix="taom_shared_index_")
         os.makedirs(os.path.join(self.root, "troops"))
         os.makedirs(os.path.join(self.root, "characters"))
-        # A troop declaring BOTH a skill_template and inline skills is what triggers
-        # SKILL_TEMPLATE_SHADOWS_SKILLS, which is emitted from inside the shared index.
+        # Troops with no level empty the index, which is what triggers UPGRADE_INDEX_EMPTY, the
+        # one issue emitted from inside the shared index (SKILL_TEMPLATE_SHADOWS_SKILLS was the
+        # other until #626 moved template parity to its own pass).
         _write_troops(
             self.root,
-            _troop("shadowed", 11, ["t2"], skill_template="some_template") + _troop("t2", 16))
+            _troop("a", 11, ["t2"], omit_level=True) + _troop("t2", 16, omit_level=True))
 
     def tearDown(self):
         shutil.rmtree(self.root, ignore_errors=True)
 
-    def test_shadow_issue_is_emitted_exactly_once_across_both_checks(self):
+    def test_index_issue_is_emitted_exactly_once_across_both_checks(self):
         v = _validator(self.root)
         codes = [i.code for i in v._upgrade_skill_regressions() + v._upgrade_tier_collapse()]
         self.assertEqual(
-            1, codes.count("SKILL_TEMPLATE_SHADOWS_SKILLS"),
+            1, codes.count("UPGRADE_INDEX_EMPTY"),
             "the shared index emits this from one place; both checks reading it must not "
             "duplicate or drop it. Got: {0}".format(codes))
 
@@ -339,7 +337,7 @@ class SharedIndexTests(unittest.TestCase):
         first = [i.code for i in v._upgrade_skill_regressions()]
         second = [i.code for i in v._upgrade_skill_regressions()]
         self.assertEqual(first, second)
-        self.assertEqual(1, first.count("SKILL_TEMPLATE_SHADOWS_SKILLS"))
+        self.assertEqual(1, first.count("UPGRADE_INDEX_EMPTY"))
 
 
 class EmptyIndexGuardTests(unittest.TestCase):

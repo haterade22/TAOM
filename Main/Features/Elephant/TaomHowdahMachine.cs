@@ -20,15 +20,22 @@ namespace TAOM.Features.Elephant;
 /// them to child TaomHowdahStandingPoint instances once set.
 ///
 /// Vanilla detachment assigns nearby troops automatically because GetDetachmentWeightAux returns 1.
+///
+/// Diagnostics (#627): <see cref="LogTag"/> ("[Howdah#n]", set at bind) prefixes every line, and a
+/// <see cref="HowdahDiagnosticsReporter"/> writes the layout, status and summary lines behind the MCM toggle.
 /// </summary>
 public class TaomHowdahMachine : UsableMachine
 {
     public Agent elephantAgent;
     public Agent elephantRider;
 
+    /// <summary>Per-mission howdah serial for the log, e.g. "[Howdah#2]". Agent indices recycle, so not an index.</summary>
+    public string LogTag = "[Howdah]";
+
     private bool _seatsInitialized;
     private bool _firstMachineTickLogged;
     private IModLogger _logger;
+    private HowdahDiagnosticsReporter _reporter;
 
     public override TextObject GetActionTextForStandingPoint(UsableMissionObject usableGameObject)
         => new TextObject("Enter");
@@ -43,7 +50,8 @@ public class TaomHowdahMachine : UsableMachine
     {
         base.OnInit();
         _logger = IoC.Resolve<IModLogger>();
-        _logger?.LogInfo($"[Howdah] Machine OnInit — entity={GameEntity.Name} standingPoints={StandingPoints.Count}");
+        _reporter = new HowdahDiagnosticsReporter(_logger, IoC.Resolve<IHowdahDiagnosticsSettingsProvider>());
+        _logger?.LogInfo($"{LogTag} Machine OnInit — entity={GameEntity.Name} standingPoints={StandingPoints.Count}");
         PropagateRefsToSeats();
     }
 
@@ -63,7 +71,7 @@ public class TaomHowdahMachine : UsableMachine
             foreach (StandingPoint sp in StandingPoints)
                 if (sp is TaomHowdahStandingPoint s && s.MovingAgent != null) seated++;
             _logger?.LogInfo(
-                $"[Howdah] Machine OnTick FIRST FIRE — elephant={elephantAgent?.Name ?? "null"} " +
+                $"{LogTag} Machine OnTick FIRST FIRE — elephant={elephantAgent?.Name ?? "null"} " +
                 $"seatsInitialized={_seatsInitialized} seatedAgents={seated}/{StandingPoints.Count}");
         }
 
@@ -82,7 +90,7 @@ public class TaomHowdahMachine : UsableMachine
         // elephant is no longer alive and the occupant of its own slot.
         if (!elephantAgent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(elephantAgent))
         {
-            _logger?.LogInfo($"[Howdah] Elephant '{elephantAgent.Name}' gone: releasing seats and clearing refs");
+            _logger?.LogInfo($"{LogTag} Elephant '{elephantAgent.Name}' gone: releasing seats and clearing refs");
             // Release first: a dead elephant that still owns its slot hands the seats the corpse
             // position to drop to, and ReleaseAgent itself rejects a recycled handle.
             ReleaseAllSeats();
@@ -91,12 +99,14 @@ public class TaomHowdahMachine : UsableMachine
             elephantRider = null;
             return;
         }
+        _reporter?.BeforeReposition(dt, GameEntity, _lastAnchor, _hasAnchor);
         RepositionToElephant();
+        _reporter?.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement);
 
         if (elephantRider?.MountAgent == null)
         {
             if (elephantRider != null)
-                _logger?.LogInfo("[Howdah] Rider dismounted — clearing seat refs");
+                _logger?.LogInfo($"{LogTag} Rider dismounted — clearing seat refs");
             elephantRider = null;
         }
     }
@@ -120,7 +130,7 @@ public class TaomHowdahMachine : UsableMachine
         {
             if (sp is TaomHowdahStandingPoint seat && seat.MovingAgent != null)
             {
-                _logger?.LogInfo($"[Howdah] MissionEnded — force-releasing {seat.MovingAgent.Name} from seat (machine tick)");
+                _logger?.LogInfo($"{LogTag} MissionEnded — force-releasing {seat.MovingAgent.Name} from seat (machine tick)");
                 seat.ForceRelease();
             }
         }
@@ -131,7 +141,8 @@ public class TaomHowdahMachine : UsableMachine
 
     public override void OnEndMission()
     {
-        _logger?.LogInfo("[Howdah] Machine OnEndMission fired — releasing seats then clearing refs");
+        _logger?.LogInfo($"{LogTag} Machine OnEndMission fired — releasing seats then clearing refs");
+        _reporter?.LogSummary(LogTag, StandingPoints.Count);
         // Release all seated agents first so TeleportToPosition lands them on the navmesh
         // before the end-battle sequencer tries to move them to exit positions.
         ReleaseAllSeats();
@@ -142,21 +153,25 @@ public class TaomHowdahMachine : UsableMachine
 
     private void PropagateRefsToSeats()
     {
+        // Nothing to hand the seats before the bind or after the elephant is gone (ClearSeatRefs has nulled them);
+        // without this, the per-seat tag string below would allocate every frame for the rest of the mission.
+        if (elephantAgent == null) return;
         bool wasInitialized = _seatsInitialized;
         int propagated = 0;
-        foreach (StandingPoint sp in StandingPoints)
+        for (int i = 0; i < StandingPoints.Count; i++)
         {
-            if (sp is TaomHowdahStandingPoint seat && seat.elephantAgent == null)
+            if (StandingPoints[i] is TaomHowdahStandingPoint seat && seat.elephantAgent == null)
             {
                 seat.elephantAgent = elephantAgent;
                 seat.elephantRider = elephantRider;
+                seat.LogTag = $"{LogTag} seat{i}";
                 propagated++;
             }
         }
         _seatsInitialized = elephantAgent != null;
         if (_seatsInitialized && !wasInitialized)
             _logger?.LogInfo(
-                $"[Howdah] Seat refs propagated — elephant={elephantAgent?.Name} " +
+                $"{LogTag} Seat refs propagated — elephant={elephantAgent?.Name} " +
                 $"totalSeats={StandingPoints.Count} propagated={propagated}");
     }
 
@@ -167,13 +182,22 @@ public class TaomHowdahMachine : UsableMachine
     private bool _liveTicking;
     private bool _boneResolved;
     private bool _loggedBoneError;
+    private bool _loggedNoSkeleton;
+    private bool _loggedBoneOutOfRange;
     private sbyte _anchorBoneIndex = -1;
+
+    // Where the last RepositionToElephant put the root, and by which path: the diagnostics compare the next frame's
+    // position against it, and the status line names the path.
+    private Vec3 _lastAnchor;
+    private bool _hasAnchor;
+    private string _placement = "none";
 
     // DEFERRED (2026-06-10): spine bone-tracking is a CONFIRMED slide source — the howdah's bo_ floor tracked to the
     // spine bone sits inside the elephant's collision capsule and the physics solver shoves the elephant. Disabled
     // until the floor-collision fix; flip true (with that fix) to re-enable. static readonly (NOT const) so the
-    // _liveTicking read in the RepositionToElephant gate is never constant-folded away.
-    private static readonly bool BoneTrackingEnabled = false;
+    // _liveTicking read in the RepositionToElephant gate is never constant-folded away. Internal so the diagnostics
+    // config banner can report it.
+    internal static readonly bool BoneTrackingEnabled = false;
 
     internal void RepositionToElephant()
     {
@@ -187,8 +211,13 @@ public class TaomHowdahMachine : UsableMachine
         // false) so the _liveTicking load-safety — bone APIs only once the mission is live; the OnAgentBuild-time
         // call has it false and takes the fixed-offset path — and the bone path are both preserved.
         // See docs/features/elephant.md → "Slide root-cause isolation".
-        if (_liveTicking && BoneTrackingEnabled && TryRepositionToBone()) return;
+        if (_liveTicking && BoneTrackingEnabled && TryRepositionToBone())
+        {
+            _placement = "bone";
+            return;
+        }
         RepositionToFixedOffset();
+        _placement = "fixed-offset";
     }
 
     // Mirrors the safe, index-based, bounds-checked, null-guarded bone idiom in
@@ -199,7 +228,15 @@ public class TaomHowdahMachine : UsableMachine
         {
             var visuals = elephantAgent?.AgentVisuals;
             Skeleton skel = visuals?.GetSkeleton();
-            if (skel == null) return false;
+            if (skel == null)
+            {
+                if (!_loggedNoSkeleton)
+                {
+                    _loggedNoSkeleton = true;
+                    _logger?.LogInfo($"{LogTag} Bone tracking: elephant has no skeleton yet; using the fixed offset until it does");
+                }
+                return false;
+            }
 
             int boneCount = skel.GetBoneCount();
             if (!_boneResolved)
@@ -207,13 +244,24 @@ public class TaomHowdahMachine : UsableMachine
                 _boneResolved = true;
                 _anchorBoneIndex = ResolveBoneIndex(skel, AnchorBoneName, boneCount);
                 _logger?.LogInfo(
-                    $"[Howdah] Resolved bone '{AnchorBoneName}' -> index {_anchorBoneIndex} (boneCount={boneCount})");
+                    $"{LogTag} Resolved bone '{AnchorBoneName}' -> index {_anchorBoneIndex} (boneCount={boneCount})");
             }
-            if (_anchorBoneIndex < 0 || _anchorBoneIndex >= boneCount) return false;
+            if (_anchorBoneIndex < 0 || _anchorBoneIndex >= boneCount)
+            {
+                if (!_loggedBoneOutOfRange)
+                {
+                    _loggedBoneOutOfRange = true;
+                    _logger?.LogWarning(
+                        $"{LogTag} Bone tracking: '{AnchorBoneName}' index {_anchorBoneIndex} is not in 0..{boneCount - 1}; using the fixed offset");
+                }
+                return false;
+            }
 
             MatrixFrame boneLocal = skel.GetBoneEntitialFrameWithIndex(_anchorBoneIndex);
             MatrixFrame world = visuals.GetGlobalFrame().TransformToParent(in boneLocal);
             GameEntity.SetFrame(ref world);
+            _lastAnchor = world.origin;
+            _hasAnchor = true;
             return true;
         }
         catch (Exception ex)
@@ -221,7 +269,7 @@ public class TaomHowdahMachine : UsableMachine
             if (!_loggedBoneError)
             {
                 _loggedBoneError = true;
-                _logger?.LogError($"[Howdah] Bone reposition failed ({ex.GetType().Name}: {ex.Message}); using fixed offset");
+                _logger?.LogError($"{LogTag} Bone reposition failed ({ex.GetType().Name}: {ex.Message}); using fixed offset");
             }
             return false;
         }
@@ -248,5 +296,7 @@ public class TaomHowdahMachine : UsableMachine
         MatrixFrame next = elephantAgent.Frame;
         next.origin = anchor;
         GameEntity.SetFrame(ref next);
+        _lastAnchor = anchor;
+        _hasAnchor = true;
     }
 }

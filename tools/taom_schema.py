@@ -1108,8 +1108,8 @@ class Validator:
         return bound
 
     # The two upgrade-edge checks below read the same files and the same attributes, so the
-    # parse happens once. Memoised because SKILL_TEMPLATE_SHADOWS_SKILLS is emitted from inside
-    # it, and parsing twice would report every shadowed troop twice.
+    # parse happens once. Memoised because UPGRADE_INDEX_EMPTY is emitted from inside it, and
+    # parsing twice would report it twice.
     def _upgrade_troop_index(self):
         cached = getattr(self, "_upgrade_index_cache", None)
         if cached is not None:
@@ -1136,23 +1136,10 @@ class Validator:
                 upgrades = [t.split(".")[-1] for t in self._UPGRADE_TARGET_RE.findall(body)]
                 line = _lineno(text, m.start())
 
-                # A resolvable skill_template makes the inline <skills> block UNREACHABLE:
-                # BasicCharacterObject.Deserialize only calls DefaultCharacterSkills.Init when the
-                # template reference came back null (v1.4.8, BasicCharacterObject.cs:337-358). So
-                # a character carrying both is asserting two different skill sets and the engine
-                # silently takes the template. 44 militia shipped that way, wearing vanilla
-                # Calradian values while every TAOM tool reported the authored ones (#523).
+                # Whether a templated character's inline rows agree with its SkillSet is
+                # SKILL_TEMPLATE_MISMATCH's question (validate_moduledata.py, #626), which resolves
+                # the template; here the flag only keeps the edge checks off numbers they cannot see.
                 tmpl = self._SKILL_TEMPLATE_RE.search(attrs)
-                if tmpl and skills:
-                    issues.append(Issue(
-                        severity=Severity.ERROR, code="SKILL_TEMPLATE_SHADOWS_SKILLS",
-                        file=rel, line=line, entry_id=idm.group(1),
-                        message=(
-                            f'declares {len(skills)} inline <skill> values AND '
-                            f'skill_template="{tmpl.group(1)}". The engine reads the template and '
-                            f"discards the inline block entirely, so the authored values never "
-                            f"reach the game. Drop one of the two"),
-                    ))
 
                 lvlm = self._LEVEL_ATTR_RE.search(attrs)
                 # Battle sets as {slot: item id}, for the armour ladder. Civilian sets never
@@ -1319,9 +1306,9 @@ class Validator:
                     continue  # BROKEN_TROOP_REF already owns an unresolvable target.
                 if source_id in militia and target_id in militia:
                     continue
-                # A templated character's real skills live outside this file, so comparing its
-                # empty inline block would silently pass. SKILL_TEMPLATE_SHADOWS_SKILLS owns the
-                # case where both are declared; here we simply refuse to judge the edge.
+                # A templated character's base skills live in a SkillSet outside these files, so
+                # its inline block alone is not the character. No troop or villager edge has a
+                # templated side (2026-09-19, #626), so the edge is skipped rather than resolved.
                 if source["templated"] or target["templated"]:
                     continue
                 exempt = self._RESPECIALIZATION_EXEMPT_EDGES.get(

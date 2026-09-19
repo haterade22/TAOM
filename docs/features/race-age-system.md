@@ -10,7 +10,7 @@ Vanilla Bannerlord treats every character identically — all heroes die around 
 
 - **Elves** are immortal — Elrond has lived thousands of years
 - **Dwarves** live 250+ years — Dwalin was 340 at death
-- **Men** live 60-85 years (Numenoreans longer, but that's a future enhancement)
+- **Men** (`human`) live up to 200 years in the shipped config, fertile 18-60 (Numenoreans longer, but that's a future enhancement)
 - **Orcs** are short-lived (~60 years) but breed rapidly
 - **Nazgul** are undead and cannot die of age
 
@@ -56,7 +56,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 |-------|------|-------------|
 | `maxAge` | int | Maximum lifespan. Heroes die when they exceed this. |
 | `becomeOld` | int | Age when visual aging effects apply |
-| `comesOfAge` | int | Minimum age to be considered an adult |
+| `comesOfAge` | int | Start of the race's fertile window. It does not move the engine's adult age: `AgeModel.HeroComesOfAge` stays 18 (`TaomAgeModel` does not override it), and the pregnancy tick gates on that first, so a value below 18 has no effect |
 | `middleAge` | int | Middle adulthood threshold |
 | `fertilityEnd` | int | Age when fertility drops to zero |
 | `fertilityMod` | float | Multiplier on vanilla pregnancy chance (1.0 = normal) |
@@ -64,23 +64,27 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 
 ### Current Race Values
 
-| Race | Max Age | Comes of Age | Fertility Mod | Notes |
-|------|---------|-------------|---------------|-------|
-| human | 85 | 18 | 1.0x | Standard baseline |
-| dwarf | 250 | 30 | 0.6x | Long-lived, low fertility |
-| orc | 60 | 12 | 2.0x | Short-lived, high fertility |
-| uruk_hai | 50 | 8 | 2.5x | Even shorter, highest fertility |
-| uruk | 55 | 10 | 2.0x | Standard Uruk variant |
-| pale_uruk | 55 | 10 | 2.0x | Pale Uruk variant |
-| dg_uruk | 55 | 10 | 2.0x | Dol Guldur Uruk variant |
-| berserker | 40 | 6 | 3.0x | Very short-lived |
-| goblin | 50 | 10 | 2.0x | Similar to orcs |
-| cave_troll | 500 | 20 | 0.1x | Very long-lived, rare breeding |
-| hill_troll | 500 | 20 | 0.1x | Same as cave troll |
-| elf | 10000 | 18 | 0.15x | Effectively immortal (maxAge 10000), very rare children |
-| nazghul | 10000 | 18 | 0.0x | Immortal flag, no children |
-| saruman | 10000 | 18 | 0.0x | Immortal flag, no children |
-| sauron | 10000 | 18 | 0.0x | Immortal flag, no children — lord_1_17's dedicated race (verbatim elf clone, adult min_scale 1.40, NPC-only; #321) |
+Read from `race_age_config.json` on 2026-09-19 (#628). Every race comes of age at 18.
+
+| Race | Max Age | Fertile | Fertility Mod | Notes |
+|------|---------|---------|---------------|-------|
+| human | 200 | 18-60 | 1.0x | Baseline. Lifespan 200, but fertile only to 60 (#628; was 195) |
+| dwarf | 250 | 18-220 | 0.6x | Long-lived, low fertility |
+| orc | 60 | 18-45 | 1.3x | Short-lived, mildly higher fertility (#628; was 2.0x to 50) |
+| uruk_hai | 80 | 18-40 | 1.5x | Highest orc-kin rate (#628; was 2.5x) |
+| uruk | 85 | 18-45 | 1.3x | Standard Uruk variant (#628; was 2.0x) |
+| pale_uruk | 85 | 18-45 | 1.3x | Pale Uruk variant (#628; was 2.0x) |
+| dg_uruk | 85 | 18-45 | 1.3x | Dol Guldur Uruk variant (#628; was 2.0x) |
+| berserker | 80 | 18-45 | 1.5x | (#628; was 3.0x to 50) |
+| goblin | 50 | 18-40 | 1.3x | Similar to orcs (#628; was 2.0x) |
+| cave_troll | 500 | 18-200 | 0.1x | Very long-lived, rare breeding |
+| hill_troll | 500 | 18-200 | 0.1x | Same as cave troll |
+| elf | 10000 | 18-300 | 0.15x | Effectively immortal (maxAge 10000), very rare children |
+| nazghul | 10000 | none | 0.0x | Immortal flag, no children |
+| saruman | 10000 | none | 0.0x | Immortal flag, no children |
+| sauron | 10000 | none | 0.0x | Immortal flag, no children; lord_1_17's dedicated race (verbatim elf clone, adult min_scale 1.40, NPC-only; #321) |
+
+`ShippedFertilityConfigTests` pins the ceilings: no race above 1.5x, orc-kin fertile no later than 45, humans no later than 60.
 
 **Elf vs Nazgul immortality:** Elves use `maxAge: 10000` without the `immortal` flag — they effectively never die of age, but can still have rare children (`fertilityMod: 0.15`, `fertilityEnd: 300`). Nazgul/Saruman use `"immortal": true` which additionally blocks all fertility. Any race not in the config falls back to human defaults.
 
@@ -117,6 +121,8 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 
 - `TAOM.Tests/Features/RaceAge/RaceAgeServiceTests.cs` — 18 tests covering all lookups, fallback, immortality, death threshold
 - `TAOM.Tests/Features/RaceAge/RaceAgeConfigProviderTests.cs` — 4 tests for JSON loading, missing file, invalid JSON, immortal flag
+- `TAOM.Tests/Features/RaceAge/TaomPregnancyModelTests.cs`: `ComputeBaseChance` branches, including the #628 brake ordering and player clamp
+- `TAOM.Tests/Features/RaceAge/ShippedFertilityConfigTests.cs`: loads the shipped `race_age_config.json` and `initial_child_generation.json` through the real providers and pins the #628 ceilings, the orc-culture exclusions, and that every excluded id is a real culture
 
 ## How to Add a New Race
 
@@ -128,7 +134,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 
 ## How Pregnancy Works
 
-`TaomPregnancyModel` **reimplements** `GetDailyChanceOfPregnancyForHero(Hero hero)` rather than calling `base`. This is necessary because the vanilla `DefaultPregnancyModel` hardcodes fertility age bounds to 18-45 in a private `IsHeroAgeSuitableForPregnancy` method — calling `base` would return 0 for any hero over age 45, defeating race-specific fertility windows (e.g., Dwarves with `fertilityEnd: 120`).
+`TaomPregnancyModel` **reimplements** `GetDailyChanceOfPregnancyForHero(Hero hero)` rather than calling `base`. This is necessary because the vanilla `DefaultPregnancyModel` hardcodes fertility age bounds to 18-45 in a private `IsHeroAgeSuitableForPregnancy` method — calling `base` would return 0 for any hero over age 45, defeating race-specific fertility windows (e.g., Dwarves with `fertilityEnd: 220`).
 
 ### Calculation Steps
 
@@ -138,7 +144,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 3. If hero's age is outside race-specific `[comesOfAge, fertilityEnd]` window → return 0
 4. Calculate age-decline factor: the fertility curve spans the full racial window, declining linearly from peak (1.2) at `comesOfAge` to floor (0.12) at `fertilityEnd`
 5. Apply vanilla clan population cap (based on clan tier) and children penalty (quadratic decay)
-6. Multiply by race-specific `fertilityMod`
+6. Multiply by race-specific `fertilityMod`, **but a bonus (above 1.0) only while the clan is at or under its cap.** Once `aliveLords` passes `cap = 4 + 4*clanTier` (population factor below 1), and for any marriage involving the player (which skips the cap, as in vanilla), the modifier is clamped to at most 1.0. A penalty below 1.0 (elf, dwarf, troll) always applies. Before #628 the bonus multiplied after the brake, so an orc clan at 1.5x its cap still bred at vanilla's unbraked rate and orc clans sat at the `2*cap` ceiling.
 7. Apply Charm.Virile perk bonus (checked on both hero and spouse)
 
 ### Age-Decline Formula
@@ -148,20 +154,26 @@ declineRate = 1.08 / (fertilityEnd - comesOfAge)
 ageFactor = 1.2 - (heroAge - comesOfAge) * declineRate
 ```
 
-This preserves the vanilla curve shape but stretches or compresses it to fit each race's fertility window. A Dwarf at age 60 (early in their 30-120 window) has roughly the same relative fertility as a Human at age 25 (early in their 18-45 window).
+This preserves the vanilla curve shape but stretches or compresses it to fit each race's fertility window. A Dwarf at age 60 (early in their 18-220 window) has roughly the same relative fertility as a Human at age 25 (early in their 18-60 window).
 
 ### Effective Fertility Rates
 
+Peak daily chance is for a first child at `comesOfAge`, in an NPC clan at or under its cap: `1.2 * 0.12 * fertilityMod`.
+
 | Race | Window | Peak Daily Chance | Modifier | Notes |
 |------|--------|-------------------|----------|-------|
-| human | 18-45 | ~14.4% | 1.0x | Vanilla baseline |
-| dwarf | 30-120 | ~14.4% | 0.6x | Same peak, 60% rate, much wider window |
-| orc | 12-50 | ~14.4% | 2.0x | 2x rate, compensates for shorter lifespan |
-| uruk_hai | 8-40 | ~14.4% | 2.5x | Highest rate, shortest window |
-| elf | 18-300 | ~14.4% | 0.15x | Very rare children, extremely wide window |
-| nazghul | — | 0% | 0.0x | Immortal flag blocks fertility entirely |
+| human | 18-60 | 14.4% | 1.0x | Vanilla peak; window 42 years against vanilla's 27 |
+| dwarf | 18-220 | 8.6% | 0.6x | Much wider window |
+| orc, uruk, goblin | 18-45 (goblin 40) | 18.7% | 1.3x | Bonus only at or under the clan cap |
+| uruk_hai, berserker | 18-40 / 18-45 | 21.6% | 1.5x | Bonus only at or under the clan cap |
+| elf | 18-300 | 2.2% | 0.15x | Very rare children, extremely wide window |
+| nazghul | none | 0% | 0.0x | Immortal flag blocks fertility entirely |
 
-This means Orc women have 2x the daily pregnancy chance of human women, while Dwarven women have 0.6x and Nazgul have 0x.
+So an orc woman in an NPC clan at or under its cap has 1.3x a human woman's daily chance; past the cap, or married to the player, she has the human rate. Dwarven women have 0.6x and Nazgul 0x everywhere.
+
+**Start-of-campaign children:** `InitialChildGenerationService` tops every major-faction clan up to `ceil(adults/2)` children on day one, except the cultures in `configs/initial_child_generation.json` `excluded_cultures`. Every orc culture is excluded: `mordor`, `isengard`, `gundabad`, `dolguldur`, and since #628 `goblin`, `mistymountainorcs` and `bluecraig`. `ShippedFertilityConfigTests` derives the orc cultures from `cultures.json` (default race orc-kin), so a new orc kingdom listed there fails the test until it is excluded. A culture never offered at character creation is absent from `cultures.json` and escapes the check. The same tests fail on an `excluded_cultures` id that names no culture, since a typo there excludes nothing.
+
+**Reload scope:** `race_age_config.json` and `initial_child_generation.json` are read once per process (both providers are `Reuse.Singleton`), so an edit needs a full restart of Bannerlord; a new campaign or a save load does not re-read them. After a restart the pregnancy values apply from the next daily tick, on existing saves too; the exclusion list reaches new campaigns only.
 
 ## Offspring Equipment
 
@@ -195,6 +207,7 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-09-19: Orcs and goblins overbred (#628). The race bonus now applies only while a clan is under its population cap and never to a player marriage; orc-kin modifiers cut from 2.0 to 3.0 down to 1.3 to 1.5; orc and berserker fertile to 45 (was 50); humans fertile to 60 (was 195); `goblin`, `mistymountainorcs` and `bluecraig` excluded from start-of-campaign children like the other orc cultures. The values table above was also stale against the file and is refreshed.
 - 2026-07-27 — Two fixes found while cutting debug-log volume. **Deaths are announced only once they happen:** `IHeroAgeAdapter.KillByOldAge` now returns `bool` (re-reading `IsAlive` after the action) and `RaceAgeBehavior` kills before it logs. `KillCharacterAction.ApplyInternal` marks-and-defers when the victim is in a `MapEvent`/`SiegeEvent`, refuses the player character, and no-ops when the life/death cycle is disabled — all without changing `HeroState` — so the previous log-then-kill order announced deaths that had not occurred, and re-announced them on the next daily tick (16 duplicates in one session). **Immortals keep their authored fertility window:** `RaceAgeConfigProvider` no longer reads `"fertilityEnd": 0` on an immortal race as an inverted range and overwrites it with 18/45. That value is the deliberate "cannot reproduce" sentinel for `nazghul` / `saruman` / `sauron`; the overwrite was masked by `TaomPregnancyModel`'s `IsImmortal` short-circuit but visible through the public `IRaceAgeService.GetFertilityEndAge`, and it warned three times on every session start.
 - 2026-06-23 — Restored the `DeliverOffSpring_RaceAssert_Patch` transpiler (`Patch13_RaceAge`) to suppress the harmless `mother.Race == father.Race` SilentAssert on cross-race births (#283).
 - 2026-05-13 — RaceAge hardening: `_raceIdCache` reset on session launch, validate-before-lookup in `GetEntry`, semantic validation in `RaceAgeConfigProvider.LoadConfig`; extracted `TaomPregnancyModel.ComputeBaseChance` pure helper (#179) and fixed its `heroAge` int-truncation regression to use float `Hero.Age`.

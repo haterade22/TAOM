@@ -64,11 +64,13 @@ case "$COMMAND" in
         ;;
 esac
 
-# Only run when the commit touches ModuleData XML (the validator's scope).
+# Only run when the commit touches ModuleData XML or XSLT (the validator's scope). XSLT joined
+# with #626: lords.xslt carries 364 of the templated lords SKILL_TEMPLATE_MISMATCH judges, and a
+# commit staging only it used to run no validator at all.
 HAS_MD=0
 while IFS= read -r f; do
     case "$f" in
-        Main/_Module/ModuleData/*.xml) HAS_MD=1; break ;;
+        Main/_Module/ModuleData/*.xml|Main/_Module/ModuleData/*.xslt) HAS_MD=1; break ;;
     esac
 done <<< "$STAGED"
 [[ $HAS_MD -eq 0 ]] && { echo '{}'; exit 0; }
@@ -90,7 +92,8 @@ PY="$PYBIN"
 # keeps the overrun inside the hook, where it can still speak.
 #
 # The validator runs in ~9s (measured 2026-09-18; the MISSING_COLLISION_BODY pass wired in by
-# #622 adds ~3s of tpac TOC scan), down from 27s: 16.5s of that original figure was one
+# #622 adds ~3s of tpac TOC scan; 8.2s warm on 2026-09-19 with #626's SKILL_TEMPLATE_MISMATCH,
+# which costs ~0.2s; up to ~20s on a cold file cache), down from 27s: 16.5s of that original figure was one
 # quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
 # file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
 # left deliberately generous. Headroom costs nothing unless the work overruns, and being
@@ -100,7 +103,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \
         --code BROKEN_BODY_PROPERTY_REF --code LANDLESS_CULTURE --code MOUNTED_DWARF \
         --code SETTLEMENT_ECONOMY_FLOOR --code UPGRADE_SKILL_REGRESSION \
-        --code SKILL_TEMPLATE_SHADOWS_SKILLS --code UPGRADE_TIER_COLLAPSE --code UPGRADE_INDEX_EMPTY \
+        --code SKILL_TEMPLATE_MISMATCH --code UPGRADE_TIER_COLLAPSE --code UPGRADE_INDEX_EMPTY \
         --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \

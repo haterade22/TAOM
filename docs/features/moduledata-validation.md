@@ -764,6 +764,16 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-09-19: `SKILL_TEMPLATE_MISMATCH` replaces `SKILL_TEMPLATE_SHADOWS_SKILLS` (#626). The old code, emitted
+  from the Validator's upgrade index over `troops/` and `characters/npcs_*.xml`, refused any character that
+  declared both a `skill_template` and inline `<skills>` rows, on the 1.4.8 rule. Since 1.5.2 the engine lays the
+  rows over the template, so the new pass in `validate_moduledata.py` errors only on a row that differs from the
+  SkillSet (or a template with rows that names no SkillSet), over every XML and XSLT file of the repo module,
+  lords included, and on a run that finds no templated character at all. Detection is
+  `sync_lord_inline_skills.py`'s own, so the fixer and the gate agree. The hook's `--code` line follows
+  (`CommitGateCoverageTests` pins the pair) and its trigger now includes ModuleData `*.xslt`. 0 findings on the
+  live install (1,528 blocks); the pass costs about 0.2 s. Like the other passes `main()` adds, the MCP's
+  `validate_moduledata` does not run it (#623).
 - 2026-09-18: `SCHEMA_INVALID` added (#621): the engine-XSD layer from `tools/validate_xml_schemas.py`, run on the
   repo module so the commit hook gates it (the hook's `--code` list carries it; `CommitGateCoverageTests` pins the
   pair). Found in the same review: `missing_collision_body_issues` is defined but `main()` never calls it, so

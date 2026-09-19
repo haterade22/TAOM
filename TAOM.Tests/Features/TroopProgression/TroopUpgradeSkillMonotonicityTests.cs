@@ -224,9 +224,9 @@ public class TroopUpgradeSkillMonotonicityTests
                 // exempt; a militia that feeds a real line is checked like anything else.
                 if (militia.Contains(source.Id) && militia.Contains(target.Id)) continue;
 
-                // A templated character's real skills live in a SkillSet outside these files, so
-                // its inline block is not what the engine reads. SkillTemplate_NeverShadows...
-                // owns that case; judging the edge here would compare the wrong numbers.
+                // A templated character's base skills live in a SkillSet outside these files, so its
+                // inline block alone is not the character. Template parity is
+                // LordInlineSkillParityTests' question (#626); no edge has a templated side today.
                 if (source.Templated || target.Templated) continue;
 
                 HashSet<string> exempt;
@@ -270,33 +270,6 @@ public class TroopUpgradeSkillMonotonicityTests
         Assert.AreEqual(0, missing.Count,
             "A partial skills block reads as 0 for every skill it omits, which turns an upgrade " +
             "into a silent stat wipe." + Environment.NewLine + string.Join(Environment.NewLine, missing));
-    }
-
-    /// <summary>
-    /// A resolvable <c>skill_template</c> makes the inline <c>&lt;skills&gt;</c> block unreachable:
-    /// <c>BasicCharacterObject.Deserialize</c> only calls <c>DefaultCharacterSkills.Init</c> when
-    /// the template reference came back null (v1.4.8, BasicCharacterObject.cs:337-358). A character
-    /// carrying both declares two different skill sets and the engine silently takes the template.
-    /// 44 militia shipped that way, wearing vanilla Calradian values while every TAOM tool reported
-    /// the authored ones (#523).
-    /// </summary>
-    [TestMethod]
-    public void SkillTemplate_NeverShadowsAnInlineSkillsBlock()
-    {
-        var moduleData = ResolveModuleData();
-
-        var conflicted = ParseTroops(moduleData).Values
-            .Where(t => t.Templated && t.Skills.Count > 0)
-            .OrderBy(t => t.Id, StringComparer.Ordinal)
-            .Select(t => t.File + ": " + t.Id + " declares " + t.Skills.Count +
-                         " inline skills that the engine discards in favour of its skill_template")
-            .ToList();
-
-        Assert.AreEqual(0, conflicted.Count,
-            "These characters declare inline skills AND a skill_template. The engine reads the " +
-            "template and throws the inline block away, so the authored values never reach the " +
-            "game. Drop one of the two." + Environment.NewLine +
-            string.Join(Environment.NewLine, conflicted));
     }
 
     [TestMethod]

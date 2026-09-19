@@ -9,7 +9,8 @@ set, rewiring a mount, re-prefixing an id that already starts with `starter_`, a
 rewriting formatting the file did not ask for. The vanilla-six override is generated from
 the career rosters, so its traps are: a roster without the replace attribute (the engine
 would APPEND a second battle set instead of replacing), a borrowed culture pointing at the
-wrong kit, and a civilian set that hands the player a bow.
+wrong kit, and a civilian set that hands the player a bow. Since #629 the career rosters
+name real troop items, so the last trap is rewiring them into starter_ twins that do not exist.
 """
 import os
 import sys
@@ -217,10 +218,43 @@ class TestVanillaOverride(unittest.TestCase):
         with self.assertRaises(wk.WireError):
             wk.build_vanilla_override(CAREER, {"vlandia": ["guard"]}, {}, eol="\n")
 
-    def test_every_id_in_the_override_is_a_starter_or_mount(self):
+    def test_override_copies_career_ids_verbatim(self):
+        career_ids = {e.get("id") for e in ET.fromstring(CAREER.encode("utf-8")).iter("Equipment")}
         for e in self.root.iter("Equipment"):
-            iid = e.get("id").replace("Item.", "")
-            self.assertTrue(iid.startswith("starter_") or e.get("slot") in ("Horse", "HorseHarness"), iid)
+            self.assertIn(e.get("id"), career_ids)
+
+
+# Since #629 the career rosters name the culture's lowest troop items, not starter_ twins.
+CAREER_TROOP = CAREER.replace("starter_composite_bow", "ladder_rhun_new_bow_t2") \
+                     .replace("starter_empire_sword_1_t2", "sm_rh_loke_1h_sword_a") \
+                     .replace("starter_ranged_khuzait_body_a", "sk_rh_loke_tunic_a")
+
+
+class TestCareerKitIsNotRewired(unittest.TestCase):
+    """#629: career kits are real troop items. The rewire pass must never turn them into
+    starter_ ids (no such twins exist), and the override must copy them as they are."""
+
+    def test_rewire_files_exclude_the_career_rosters(self):
+        self.assertEqual(wk.REWIRE_FILES, (wk.CC_FILE,))
+        self.assertNotIn(wk.CAREER_FILE, wk.REWIRE_FILES)
+
+    def test_override_from_career_file_keeps_troop_items(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "career.xml"
+            path.write_bytes(CAREER_TROOP.encode("utf-8"))
+            text = wk.override_from_career_file(path, TITLES)
+        root = ET.fromstring(text.encode("utf-8"))
+        r = next(r for r in root.iter("EquipmentRoster") if r.get("id") == "player_char_creation_battania_hunter_m")
+        battle, civ = r.findall("EquipmentSet")
+        rows = {e.get("slot"): e.get("id") for e in battle.findall("Equipment")}
+        self.assertEqual(rows["Item0"], "Item.ladder_rhun_new_bow_t2")
+        self.assertEqual(rows["Body"], "Item.sk_rh_loke_tunic_a")
+        civ_rows = {e.get("slot"): e.get("id") for e in civ.findall("Equipment")}
+        self.assertEqual(civ_rows["Item0"], "Item.sm_rh_loke_1h_sword_a")
+        self.assertNotIn("Item.starter_ladder_", text)
+        self.assertNotIn("Item.starter_sm_rh_loke", text)
 
 
 if __name__ == "__main__":

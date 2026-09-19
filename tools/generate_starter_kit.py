@@ -71,9 +71,11 @@ DEFAULT_MODULES = Path(DEFAULT_GAME) / "Modules"
 DEFAULT_ARMORY = DEFAULT_MODULES / "LOTRLOME_Armory"
 DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
 DEFAULT_MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
+# Not the career file: since #629 its rosters name the gear each culture's lowest troops carry,
+# and cloning those would author twins nobody asked for. Its old twins are kept by
+# `retained_donors`.
 DEFAULT_ROSTERS = [
     DEFAULT_MODULEDATA / "equipmentsets" / "taom_char_creation_equipment.xml",
-    DEFAULT_MODULEDATA / "equipmentsets" / "taom_career_starting_equipment.xml",
 ]
 
 MARKER_START = "<!-- TAOM-STARTER-KIT:START -->"
@@ -781,6 +783,24 @@ def expected_roster_gaps(menus_dir: Path, present: set[str]) -> list[str]:
     return gaps
 
 
+def retained_donors(items_root: Path, items: dict, planned: "OrderedDict[str, set[str]]") -> list[str]:
+    """Donors of the twins already on disk that no roster names any more, in file order.
+
+    Saves started since #569 hold those ids, and keeping them defined means a save never
+    depends on how the engine loads an item it no longer defines. The career rosters stopped
+    naming theirs in #629. A twin whose donor no longer resolves is NOT retained, so
+    `_refuse_shrink` still stops the run that genuinely cannot see its donors."""
+    out: list[str] = []
+    if not items_root.exists():
+        return out
+    for path in sorted(items_root.glob(f"*/{ITEMS_FILE_NAME}")):
+        for starter in sorted(_starter_ids_in(read_xml(path)[0])):
+            donor = resolve_donor(starter, items)
+            if donor and donor not in planned and donor not in out:
+                out.append(donor)
+    return out
+
+
 def build_plan(sources: Sources) -> Plan:
     armory_md = Path(sources.armory) / "ModuleData"
     roots = [ET.parse(p).getroot() for p in sources.rosters]
@@ -791,6 +811,8 @@ def build_plan(sources: Sources) -> Plan:
     items = index_items(_armory_item_files(armory_md) + [Path(p) for p in sources.vanilla_item_files],
                         items_root, failures=notes)
     donors = collect_donors(roots, items)
+    for donor_id in retained_donors(items_root, items, donors):
+        donors[donor_id] = set()
     pieces = index_pieces([armory_md / PIECES_FILE, sources.native_pieces])
     submodule = Path(sources.armory) / "SubModule.xml"
     registered = registered_item_folders(submodule.read_text(encoding="utf-8-sig")) if submodule.exists() else set()

@@ -181,7 +181,7 @@ The per-mechanic booleans (`enabled`, `crushThrough.skillBasedEnabled`, `chargeK
 | `races.<name>.fertilityMod` | float | yes | reverts to 1.0 with a warning if not finite | Multiplier on vanilla pregnancy chance | `RaceAgeConfigProvider.cs:64` |
 | `races.<name>.immortal` | bool | no | `false` | Never dies of age and has zero fertility | `race-age-system.md:63` |
 
-The shipped file holds **15 race entries**. <!-- measured: python json key count over races in race_age_config.json 2026-09-05 --> Do not copy the "Current Race Values" table in [race-age-system](../features/race-age-system.md): it is stale against the file. The shipped `human` row is `maxAge` 200, `becomeOld` 170, `middleAge` 100, `fertilityEnd` 195, and **every one of the 15 races ships `comesOfAge` 18**, where the doc lists 85 for human maxAge and per-race coming-of-age values from 6 to 30. Read the file. <!-- measured: python json dump of races in race_age_config.json compared against docs/features/race-age-system.md L67-85 2026-09-05 -->
+The shipped file holds **15 race entries**. <!-- measured: python json key count over races in race_age_config.json 2026-09-05 --> The "Current Race Values" table in [race-age-system](../features/race-age-system.md) was refreshed from the file on 2026-09-19 (#628); if the two disagree, the file wins. The shipped `human` row is `maxAge` 200, `becomeOld` 170, `middleAge` 100, `fertilityEnd` 60, and **every one of the 15 races ships `comesOfAge` 18**. No race may ship a `fertilityMod` above 1.5, and a bonus above 1.0 applies only while a clan is under its population cap (`ShippedFertilityConfigTests`). <!-- measured: python json dump of races in race_age_config.json 2026-09-19 -->
 
 ### initial_child_generation.json
 
@@ -193,7 +193,7 @@ The shipped file holds **15 race entries**. <!-- measured: python json key count
 | `defaults.max_age` | int | no | 17 | Oldest generated child | `initial-child-generation.md:53` |
 | `defaults.female_ratio` | double | no | 0.49 | Chance a child is female. Must be finite in `[0, 1]` | `InitialChildGenerationConfigProvider.cs:132` |
 | `defaults.child_count_multiplier` | double | no | 1.0 | Scales the calculated child count. Must be finite and at least 0 | `InitialChildGenerationConfigProvider.cs:146` |
-| `excluded_cultures` | string[] | no | empty | Culture ids skipped entirely. Ships with `mordor`, `isengard`, `gundabad`, `dolguldur` | file contents |
+| `excluded_cultures` | string[] | no | empty | Culture ids skipped entirely. Ships with `mordor`, `isengard`, `gundabad`, `dolguldur`, `goblin`, `mistymountainorcs`, `bluecraig` (every orc culture; #628) | file contents |
 | `excluded_clans` | string[] | no | empty | Clan ids skipped entirely | `initial-child-generation.md:57` |
 | `culture_overrides` | array | no | empty | Per-culture override of any default; needs `culture_id` | `initial-child-generation.md:58` |
 | `clan_overrides` | array | no | empty | Per-clan override; also accepts `fixed_child_count`, which bypasses the calculation | `initial-child-generation.md:59` |

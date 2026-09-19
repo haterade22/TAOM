@@ -69,6 +69,8 @@ public static class CoopSettingsRelevance
         // The doctrine status line and the [MissionPerf] heartbeat; EnableCultureDoctrine itself
         // changes which tactics an AI team can pick and stays relevant.
         "CultureDoctrineDebug", "EnableMissionPerfHeartbeat",
+        // The war elephant howdah's [Howdah] diagnostics lines (#627); gates logging, never the platform.
+        "EnableHowdahDiagnostics",
     };
 
     /// <summary>

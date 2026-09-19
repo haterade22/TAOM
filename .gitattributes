@@ -22,3 +22,7 @@
 
 # A generated, tracked page: the generator writes LF and the file must diff clean on every machine.
 docs/reference/ranged-troops.html text eol=lf
+
+# The howdah prefab snapshot must stay byte-identical to the live LOTRLOME_Armory copy (LF);
+# HowdahPrefabTests compares the bytes, so a CRLF checkout would fail it (#627).
+docs/reference/lotrlome-armory-snapshot/Prefabs/*.xml text eol=lf

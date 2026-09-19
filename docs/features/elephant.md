@@ -101,7 +101,9 @@
 >    snapping the agent to navmesh and clearing all elevated scripted position state.
 >
 > **ADOD_Beasts XML analysis** — studied all 3 ADOD_Beasts howdah variants (`adod_howdah_1_agent.xml`, `howdah_object.xml`,
-> `adod_howdah_4_agents.xml`) 2026-06-09. Key findings vs our `taom_howdah_agent.xml`:
+> `adod_howdah_4_agents.xml`) 2026-06-09. Key findings vs our `taom_howdah_agent.xml`
+> (**superseded 2026-09-18/19:** the prefab was rebuilt with rails and moved to the Armory as `taom_howdah_platform.xml`,
+> and its seats always carried `TranslateUser="true"`; the lines below describe the June state, see #627):
 > - Every ADOD_Beasts variant uses `TranslateUser="true"` on seats (base class positions agents via physics-level frame
 >   translation each tick). Our prefab uses `TranslateUser="false"` with our custom `SetScriptedPosition`/`SetTargetZ`.
 > - Every ADOD_Beasts variant includes 4 `_barrier_04x04m` child entities with `missile_only` body flags — physical walls
@@ -203,6 +205,10 @@ per-tick random roll / fixed ~20 damage.
 | [`Main/Features/Elephant/ElephantBehaviorTree.cs`](../../Main/Features/Elephant/ElephantBehaviorTree.cs) + the SHARED [`Main/Features/ElephantLike/BehaviorTreeElements/`](../../Main/Features/ElephantLike/BehaviorTreeElements/) | Per-agent behavior tree (warg pattern), built from the shared elephant-like nodes since 2026-07-01 (#305): `ElephantLikeEngageDecorator` (facing+range gate → `ShouldEngage`; writes `TargetBearing`), `ElephantLikeAttackOffCooldownDecorator` ×2 (→ `IsOffCooldown`), `ElephantLikeAttackTaskBase` → `ElephantLikeTrampleTask`/`ElephantLikeSideAttackTask` (→ `ComputeInflictedDamage`) — all parameterized by [`ElephantCombat.Profile`](../../Main/Features/Elephant/ElephantCombat.cs) (an `ElephantLikeCombatProfile`: ranges + eager-resolved `ActionIndexCache`s + Index-compare gate + lazy service resolver). Reuses the shared `HasRiderDecorator`/`IsAiControlledDecorator`/`HasNoRiderDecorator`. |
 | [`…/CareerSystem/Models/TaomAgentStatCalculateModel.cs`](../../Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs) | EDITED — the shared `AgentStatCalculateModel` slot now also carries the **mount-lock**: `CanAgentRideMount`→false for the elephant + `MountDifficulty=999` (both via the injected `IElephantAttackService`, applied with ternaries per gamemodels.md rule 4). |
 | `ElephantIoC.cs`, `IoC.cs`, `SubModule.cs` | Service registered (Singleton); `ElephantMissionBehavior` added to the mission list; the stat-model ctor takes the elephant service. (No new registration for the BT — it attaches inside the mission behavior; nodes lazy-resolve the service via `ElephantCombat.Profile.ResolveService`.) |
+| [`Main/Features/Elephant/TaomHowdahMachine.cs`](../../Main/Features/Elephant/TaomHowdahMachine.cs) + [`TaomHowdahStandingPoint.cs`](../../Main/Features/Elephant/TaomHowdahStandingPoint.cs) | The howdah platform's machine (re-frames the prefab onto the elephant every tick, fixed offset or spine bone) and its seats. Both carry a `[Howdah#n]` log tag. |
+| [`Main/Features/Elephant/HowdahDiagnosticsReporter.cs`](../../Main/Features/Elephant/HowdahDiagnosticsReporter.cs) + `HowdahDiagnostics.cs`, `HowdahSampleClock.cs`, `HowdahRunStats.cs`, `HowdahDiagnosticsSettingsProvider.cs` | The howdah diagnostics log (#627): the reporter reads the engine on sample frames; the rest is pure and unit-tested. Gated by MCM `EnableHowdahDiagnostics`. See "Reading the howdah log". |
+| `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (snapshot: [`docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`](../../docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml)) | The howdah platform prefab: floor, four rails, four crew frames, every body moveable. |
+| [`TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs`](../../TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs) + `HowdahDiagnosticsTests.cs`, `HowdahSampleClockTests.cs`, `HowdahRunStatsTests.cs`, `HowdahDiagnosticsSettingsProviderTests.cs` | The prefab's structure, name and location, live-copy parity; the diagnostics arithmetic; the toggle default. |
 | [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 24 tests (IsCreatureMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×10 — both kinds × min/max/midpoint/blocking boundaries + NaN/out-of-range roll clamps). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
 
 **1.4.5 adaptations vs ADOD_Beasts's 1.2.12 decompile:** `ActionIndexCache.GetName()` (not `.Name`); the 2-arg
@@ -842,19 +848,79 @@ different complaints:
 - [ ] **Fix the fixed-offset fallback (`RepositionToFixedOffset`)** — it places the howdah at the elephant's *legs*,
       not its back (surfaced during the slide ladder when bone-tracking was off). Harmless now (no crew), but it is
       the build-time + bone-failure safety path and must position correctly before crew are re-enabled.
-- [ ] **Add physical barrier entities to `taom_howdah_agent.xml`** — all ADOD_Beasts howdah variants include 4 `_barrier_04x04m`
-      entities with `missile_only` body flag to physically wall archers inside the basket. Without them archers can be
-      pushed/walk off the howdah. Match `adod_howdah_4_agents.xml` barrier layout.
-- [ ] **Evaluate `TranslateUser = true`** — all ADOD_Beasts howdah seats use `TranslateUser="true"` (physics-level frame
-      translation by the base `StandingPoint.OnTick`). Our seats use `TranslateUser="false"` + custom `SetScriptedPosition`
-      + `SetTargetZ`. If Z-snap issues persist with our approach, switching to ADOD_Beasts's pattern requires: (1) `TranslateUser="true"`
-      on seat entities in `taom_howdah_agent.xml`, (2) calling `base.OnTick(dt)` at the end of `TaomHowdahStandingPoint.OnTick`.
+      **Likely resolved by the 2026-09-18 rebuild (#627):** the root sits at feet + 3.2 m and the floor child is fitted
+      0.8 m behind it at 3.15 m, the measured elite deck. The layout dump's `floorOrigin` and `floorClearance` confirm it
+      in the smoke below.
+- [x] **Rails on the howdah prefab** (2026-09-18, now `taom_howdah_platform.xml`): the prefab was rebuilt on the siege-tower and ship pattern
+      (`elephant/howdah-ship-research-2026-09-18.md`): four `bo_barrier` rails scaled (width, 1, 1.1) and flagged
+      `barrier` + `moveable`, a floor fitted to the elite howdah's deck, every body `moveable`, four crew frames tagged
+      `taom_howdah_crew`. Pinned by `HowdahPrefabTests`. The ADOD_Beasts cage it replaced scaled `bo_barrier`'s
+      zero-thickness axis, so its walls were 1 m tall, not 20 m.
+- [x] **`TranslateUser`**: superseded (2026-09-18). The seats already carry `TranslateUser="true"` (the item above
+      said false, which was stale), and the ship model replaces seats with crew frames held by a detachment
+      (`elephant/howdah-ship-research-2026-09-18.md`, step 3). The row is honoured but redundant: a script
+      `<variable>` does set a readonly field, and `StandingPoint.TranslateUser` already defaults to true, so the rebuilt
+      prefab keeps only `AutoSheathWeapons="false"` on its seats (2026-09-19).
+- [ ] **Howdah smoke after the move and rename (#627).** Restart the game (and the Kit), then:
+      1. `rgl_log` shows `Loading xml file: $BASE/Modules/LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml.` and no
+         `Modules/TAOM/Prefabs` line.
+      2. The TAOM log (`Logs/taom_debug_<timestamp>.log`) shows `[Howdah] config: ... loaded=True` at mission start.
+      3. Custom Battle with a harad elephant rider (`sk_elephant_armor_a`): `[Elephant] Howdah instantiated for rider=`
+         naming `[Howdah#1]`, then a `layout summary` with `seats=4`, `moveable=5` and a positive `floorClearance`
+         (about 0.35 at the floor origin), then a `status` line every 5 s. No `not found`, no `layout:` WARN.
+      4. Research doc step 1: turn on one slide source and watch `carriedV` in the status lines while the elephant
+         walks and turns; a slide shows as `realV` well above `legsV`.
+- [ ] **Package the Armory in the same release** as the TAOM build that asks for `taom_howdah_platform` (#627): players
+      get the Armory only from Mike's editor package, and a TAOM build without it logs `not found` and spawns no
+      platform.
+- [ ] **Mike's editor fit (offered 2026-09-19).** Fit the platform on the elephant in the Kit, then copy the live file
+      over the snapshot and re-derive `HowdahPrefabTests`' constants from it. Open the Kit with TAOM loaded so the
+      two script classes resolve, and expect the Kit to rewrite the file (the header comment included).
+- [ ] **Crew count** (Mike, 2026-09-19): four 0.37 m capsules do not fit the 1.4 m deck clear (side by side 0.70 m
+      apart, 0.74 m needed); three do. Four stay until the first crew test settles it.
+- [ ] **Review follow-ups (#627, pre-existing code, no separate issue):** split the howdah spawn path out of
+      `ElephantMissionBehavior` (293 lines) and the bone path out of `TaomHowdahMachine` (302), both over ADR-002's
+      150; fold the seat's 120-tick line into the machine status line when crew return; delete the unread
+      `ElephantConfig.HowdahHeightAboveRider`; promote the scratch physics-shape dumper into `tools/`. Detail:
+      `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`.
+- [ ] **Bind the elite howdah mesh to an item**: no `HorseHarness` binds `sk_hd_elep_armor_howdah_elite_a` yet, so the
+      trigger is still the plain `sk_elephant_armor_a` and the platform sits over a back with no howdah on it.
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 
 - **GitHub issue: #278** tracks the War Elephant feature.
 - The per-agent behavior tree attaches inside `ElephantMissionBehavior` via **`BTRegister`** (no new IoC registration — nodes resolve the service lazily through `ElephantCombat.Profile`).
-- The howdah prefab's repo path is **`Main/_Module/Prefabs/taom_howdah_agent.xml`** (the `taom_howdah_agent.xml` referenced throughout this doc).
+- The howdah prefab (the `taom_howdah_agent.xml` referenced in the older sections of this doc) lives in
+  **`LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml`**, beside the elephant's Monster, meshes and clips. It moved there
+  from `Main/_Module/Prefabs/` on 2026-09-18 and was renamed on 2026-09-19 (#627): TAOM installs from v2.0.22 to
+  v2.0.30 keep a `taom_howdah_agent` in `Modules/TAOM/Prefabs`, and two prefabs of one name have no defined winner.
+  The Armory loads its `Prefabs/` folder with no SubModule row; `ElephantMissionBehavior` instantiates
+  `ElephantConfig.HowdahPrefabName`. The repo copy is the snapshot `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`
+  (LF, pinned in `.gitattributes`); `HowdahPrefabTests` fails if the live copy differs from it (naming the newer copy),
+  if the TAOM module (repo or deployed) carries it, or if any other installed module declares the same name. The
+  build's deploy is additive, so the old `Modules/TAOM/Prefabs` copy was deleted by hand.
+
+## Reading the howdah log (#627)
+
+The howdah writes to the TAOM log, `Logs/taom_debug_<timestamp>.log` in the game's user folder (30 files kept, INFO
+flushed as it is written, so a crash keeps the last lines). A slide or a missing howdah is not a crash, so no crash
+bundle is written: ask for that log file. MCM `Battle Tactics/Howdah Diagnostics` (on by default while the platform is
+tested) gates the lines marked (toggle); the rest always log.
+
+| Grep | When | What it tells you |
+|---|---|---|
+| `[Howdah] prefab '...' is not loaded` | mission start, WARN, always | no module ships `taom_howdah_platform`: the Armory package is old or missing |
+| `[Howdah] config:` | mission start (toggle) | prefab loaded or not, trigger harness, height, bone tracking and crew spawn state |
+| `[Howdah] rider ... no howdah` | each elephant rider that builds (toggle) | the harness it wore, against the trigger |
+| `[Elephant] Howdah instantiated for rider=... as [Howdah#n]` | each howdah, always | the serial every later line carries, the elephant's name and index, the harness, the side |
+| `[Howdah#n] layout child[i]` / `layout summary` | first live tick (toggle) | what the engine actually loaded: children, tags, body flags (`Moveable`), positions, seats, the elephant capsule and the floor's clearance over it |
+| `[Howdah#n] layout:` WARN | first live tick | no seats loaded, no floor child (an old prefab under the new name?), or the floor inside the capsule |
+| `[Howdah#n] status` | every 5 s (toggle) | `realV` (how the elephant actually moved) against `legsV` (what its legs produced); `carriedV` is the gap, the slide signal. `drift` (the entity moved between frames by something other than the machine), `floorClearance`, `path` (fixed-offset or bone), seats taken, the elephant's action |
+| `[Howdah#n] Bone tracking:` | once, when bone tracking falls back | no skeleton yet, or the anchor bone index out of range |
+| `[Howdah#n] summary` | mission end (toggle) | live ticks (0 = never ticked with a live elephant), samples, minimum clearance, maximum drift and carried speed |
+
+The engine reads happen in `HowdahDiagnosticsReporter`; the arithmetic (clearance, drift, NaN handling, the 5 s clock,
+the summary extremes) is in `HowdahDiagnostics`, `HowdahSampleClock` and `HowdahRunStats`, unit-tested.
 
 ---
 

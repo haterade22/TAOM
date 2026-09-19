@@ -15,7 +15,8 @@ lord's authoritative skills and the full set of perks those skills unlock. Neith
   healing, garrison/party effects). Raw skill numbers are meaningless without the perks they translate to.
 - **The authoritative skills are not the obvious ones:** the engine assigns lord skills from
   `skill_template="SkillSet.X"` → `taom_lord_skill_sets.xml`. The inline `<skills>` block in
-  `lords.xml`/`lords.xslt` is **documentation only** — the engine ignores it. A correct review must resolve via
+  `lords.xml`/`lords.xslt` mirrors it: through v1.4.8 the engine ignored the block, and since v1.5.2 it lays
+  the rows over the template, so `SKILL_TEMPLATE_MISMATCH` keeps them equal (#626). A correct review resolves via
   the SkillSet.
 - **Goal:** a per-culture "where every lord stands" snapshot (stats + unlocked perks) to inform a future lord
   rebalance, the way the troop overview preceded the troop rebaseline.
@@ -43,7 +44,7 @@ from `bannerlord_perks.json`, and resolves authoritative skills from `taom_lord_
 
 - **Resolve skills:** each lord's `skill_template` → SkillSet (18 skills). Falls back to the inline `<skills>` if
   the SkillSet isn't found (a vanilla `spc_*` template or a missing set) and **flags** it; also flags
-  inline-vs-SkillSet **mismatches** (stale documentation).
+  inline-vs-SkillSet **mismatches** (drift; since 1.5.2 the inline value wins in game).
 - **Per culture, one HTML** (`<culture>.html`): a **flat table, one row per lord** — name, age, archetype,
   legendary/rookie tag, the 18 skills, combat/non-combat subtotals, and the total (colored by magnitude). Each
   lord links to its profile's **unlocked-perk** block: every perk every skill unlocks, grouped by skill, both
@@ -93,7 +94,9 @@ is actually run (a separate later pass).
 - **93 lords reference a SkillSet not in `taom_lord_skill_sets.xml`** — mostly vanilla `spc_*_rookie` templates
   (young lords whose template was never swapped to a TAOM SkillSet, so they get vanilla skills). A real gap to review.
 - **149 lords whose inline `<skills>` ≠ their SkillSet** — stale documentation (harmless to the engine, which uses
-  the SkillSet, but the inline blocks are misleading).
+  the SkillSet, but the inline blocks are misleading). [2026-09-19: not harmless on 1.5.2+, where the inline
+  value wins; `sync_lord_inline_skills.py` re-synced every block (0 drift today) and `SKILL_TEMPLATE_MISMATCH`
+  gates it, #626.]
 
 ## Changelog
 

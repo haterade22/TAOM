@@ -99,7 +99,7 @@ uses differently from a line troop.
 |---|---|---|
 | `is_hero="true"` | Half of a matched pair. In the campaign the flag itself is overridden: `CharacterObject.IsHero` returns `_heroObject != null`, and only `Hero.SetCharacterObject` ever fills that. So the flag without a `<Hero>` row does not make a hero. | `BasicCharacterObject.cs:334`, `CharacterObject.cs:294` |
 | `occupation="Lord"` | Parsed with `Enum.Parse`, so a misspelling throws and the rest of the file stops loading. All 1184 TAOM lord entries use `Lord`. | `CharacterObject.cs:539-542` |
-| `skill_template` | Points at a shared `SkillSet`. If it resolves, the inline `<skills>` child is ignored outright. This is the trap that produced TAOM's SkillSet rewrite. See [Skill sets](skill-sets.md). | `BasicCharacterObject.cs:337`, `:355` |
+| `skill_template` | Points at a shared `SkillSet`. Through v1.4.8 an inline `<skills>` child beside it was ignored outright (the trap that produced TAOM's SkillSet rewrite); since v1.5.2 the rows are laid over a copy of the set, so TAOM keeps them equal to it (`SKILL_TEMPLATE_MISMATCH`, #626). See [Skill sets](skill-sets.md). | `BasicCharacterObject.cs:337`, `:353-364` |
 | `is_female` | Read here, then copied onto the `Hero` once. It travels as a unit with `<beard_tags>` and the `<BodyProperties key>`; flipping the attribute alone leaves a bearded woman. | `BasicCharacterObject.cs:479` |
 | `race` | Skeleton, meshes and hit points. Absent means index 0, the human convention. 525 of 1184 TAOM lords leave it off. | `BasicCharacterObject.cs:324` |
 | `age` | The starting age. Overridden at runtime by the hero's own age once the campaign is running. | `BasicCharacterObject.cs:485` |
@@ -258,8 +258,9 @@ The three attributes to change first:
 
 Note what the example shows about `skill_template`: `lord_E1_1` has both
 `skill_template="SkillSet.taom_dwarf_king_skills"` and an inline `<skills>` block. The inline block
-is dead. The engine reads the template and the guard at `BasicCharacterObject.cs:355` skips the
-child. Editing those 18 numbers changes nothing in game.
+mirrors the SkillSet. Through v1.4.8 the guard at `BasicCharacterObject.cs:355` skipped it; since
+v1.5.2 the engine lays those 18 rows over the template, so editing one changes the lord, and
+`SKILL_TEMPLATE_MISMATCH` rejects the edit until the SkillSet says the same (#626).
 
 ## Recipes: Add / Modify / Delete
 
@@ -393,9 +394,10 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
   with no dot at all throws `MBInvalidReferenceException`. `Kingdom.` resolves to a real object that
   the `as Clan` cast turns into null, which then crashes. `MBObjectManager.cs:1517-1535`,
   `Hero.cs:1834-1835`.
-- **An inline `<skills>` block on a lord is dead whenever `skill_template` resolves.** This is the
-  bug that motivated TAOM's SkillSet system, and it is visible in the worked example above: Dáin has
-  both, and only the template counts. `BasicCharacterObject.cs:337`, `:355`;
+- **An inline `<skills>` block beside a `skill_template` must equal the SkillSet.** Through v1.4.8 it
+  was dead (the bug that motivated TAOM's SkillSet system, visible in the worked example above: Dáin
+  has both); since v1.5.2 its rows win over the template, so a differing row changes the lord.
+  `SKILL_TEMPLATE_MISMATCH` gates it (#626). `BasicCharacterObject.cs:337`, `:353-364`;
   [lord skills authoring](../ai-includes/lord-skills-authoring.md).
 - **A vanilla id carries its sex until you change three things.** `is_female`, `<beard_tags>` and the
   `<BodyProperties key>` travel as one unit. Flipping the attribute alone gives a bearded woman;

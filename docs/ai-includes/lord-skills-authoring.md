@@ -148,7 +148,7 @@ python tools/apply_culture_skills_traits.py --all-cultures --apply
 The script:
 - Regenerates `taom_lord_skill_sets.xml` from scratch (35 archetypes + every canonical with `skills=`)
 - Walks every NPCCharacter in lords.xml + lords.xslt with `culture="Culture.<id>"`
-- For each adult (age ≥14 unless canonical override): swaps the `skill_template` attribute to the matching TAOM SkillSet, populates the `<skills>` and `<Traits>` blocks (documentation only — engine ignores `<skills>`)
+- For each adult (age ≥14 unless canonical override): swaps the `skill_template` attribute to the matching TAOM SkillSet, populates the `<skills>` and `<Traits>` blocks (the `<skills>` rows mirror the SkillSet exactly: since v1.5.2 the engine lays them over the template, and `SKILL_TEMPLATE_MISMATCH` rejects any that differ, #626)
 
 Dry-run first if uncertain — omit `--apply` and confirm the touched counts look right.
 
@@ -495,7 +495,7 @@ Real failure modes from past sessions. Read these before you ship.
 |---|---|---|
 | `re.sub` with `r'\1'` followed by a digit-starting string silently corrupts output (parses as `\10` backref) — corrupted 24 BodyProperties lines in one apply | `feedback_re_sub_backref_followed_by_digit.md` | Use lambda: `pattern.sub(lambda m: m.group(1) + new + m.group(2), text)` or `\g<N>` |
 | Renaming an NPC and forgetting `settlements.xml` lore-text references — "Lady Vanyalos" shipped in town_EW7 flavor text after the rename | `feedback_rename_grep_all_moduledata.md` | After any rename, `grep -rn "OLD_NAME" Main/_Module/ModuleData/` — audit every hit, not just `characters/` |
-| **Explicit `<skills>` block on hero NPCs is ignored by the engine** — only `skill_template` matters; this is the bug that led to the SkillSet rewrite | NEW: `feedback_skill_template_overrides_explicit_skills.md` | Always swap `skill_template` to a TAOM SkillSet, never hand-edit `<skills>` blocks for heroes |
+| **An explicit `<skills>` block on a hero must equal its SkillSet.** Through v1.4.8 the engine ignored it beside a `skill_template` (the bug that led to the SkillSet rewrite); since v1.5.2 it lays the rows over the template, so a hand-edited row wins | `SKILL_TEMPLATE_MISMATCH`, `LordInlineSkillParityTests` (#626) | Swap `skill_template` to a TAOM SkillSet and let the generator write both; never hand-edit `<skills>` alone; `sync_lord_inline_skills.py --apply` repairs drift |
 | Same-ID NPCs in both `lords.xslt` (vanilla transform) and `characters/lords.xml` (TAOM additions) → last-loaded wins, which is `lords.xml` per SubModule.xml load order | `harness-facts.md` | If a fix isn't taking effect, check whether lords.xml has the same ID and edit there instead of (or in addition to) lords.xslt |
 | Children (age <14) skipped by the script — appropriate for toddlers, but breaks for Nazgûl with placeholder ages 9/11 | Script's `process_file` | Canonical entries auto-bypass the age skip. Always add Nazgûl / immortals to `CULTURES[*]['canonical']` even if just `dict(archetype='nazgul')` |
 | `0Harmony.dll` lock when Bannerlord is running → `./build.ps1` fails | `.claude/rules/environment-failures.md` | Close Bannerlord OR skip the build — XML data changes don't need it. Use the Python XML parse smoke test instead |

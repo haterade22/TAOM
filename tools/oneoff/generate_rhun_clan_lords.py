@@ -83,8 +83,8 @@ FEMALE_FACE_KEYS = [
 ]
 BODY_JITTER = [(0.5, 0.5), (0.6, 0.55), (0.45, 0.6), (0.7, 0.5), (0.4, 0.45), (0.55, 0.65)]
 
-# Easterling SkillSets (engine reads `skill_template`; the inline <skills> below
-# mirror these values verbatim, as documentation, matching existing lords).
+# Easterling SkillSets. The inline <skills> below mirror these values verbatim: since v1.5.2 the
+# engine lays them over `skill_template`, and SKILL_TEMPLATE_MISMATCH requires them equal (#626).
 SKILLS = {
     "taom_easterling_lord_skills": [
         ("OneHanded", 230), ("TwoHanded", 170), ("Polearm", 235), ("Bow", 260),

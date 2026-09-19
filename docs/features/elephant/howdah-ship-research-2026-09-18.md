@@ -34,7 +34,8 @@ problem, and it is geometry: the elephant's body capsule now tops out at 2.7 m a
 
 ## What is wrong with TAOM's howdah today (measured)
 
-From `Main/_Module/Prefabs/taom_howdah_agent.xml` (identical to the installed copy) and the C#:
+From the prefab as it stood before the rebuild (then `Main/_Module/Prefabs/taom_howdah_agent.xml`, identical to the
+installed copy) and the C#:
 
 1. **No physics body is `moveable`**, yet the entity is re-framed every tick (floor lines 23-27, walls 150-154).
    Every vanilla moving platform flags every body `moveable`: the siege tower's root, deck, ramp and rails, and the
@@ -44,7 +45,8 @@ From `Main/_Module/Prefabs/taom_howdah_agent.xml` (identical to the installed co
 2. **The walls are 1 m tall, not 20 m.** `bo_barrier` is a zero-thickness 1 x 1 m plane; the prefab scales its zero
    dimension by 20, which does nothing. Vanilla scales it (width, 1, height).
 3. **The walls carry no `barrier` or `ai_limiter` flag**, so they are solid to everything, the crew's own arrows
-   included (read from the flag names; the missile mask is UNVERIFIED).
+   included (`barrier`, 0x200, is in `BodyFlags.CommonCollisionExcludeFlagsForMissile` and not in the agent mask, so a
+   `barrier` rail holds agents and lets arrows through; verified on the installed 1.5.3 DLL, 2026-09-19).
 4. **The seats sit inside the floor slab**: seat frames at z 0.273, slab top at z 0.32.
 5. **Archers are teleported to the seat every tick** (`TaomHowdahStandingPoint.OnTick`, `TeleportToPosition`), their
    formation is set to null, and seats are released from the LATE `OnEndMission` hook plus a poll. Both 2026-06-09
@@ -58,11 +60,20 @@ and has a pass/fail test in one Custom Battle, so a failure points at its cause.
 
 ### Step 1: make the platform a proper moving body (prefab only, no C#)
 
-Add `moveable` to the floor and wall bodies; rebuild the walls as `bo_barrier` scaled (width, 1, ~1.2) flagged
-`barrier|moveable` so agents are held and arrows pass; lift the seats above the slab. Then re-enable ONE deferred
-slide source at a time (bone tracking first: it put the floor at the spine). **Pass:** the elephant walks and turns
-without sliding with that source on. This settles the slide mechanism for the price of an XML edit. If it passes,
-bone tracking (the visually correct placement) comes back.
+**Prefab DONE 2026-09-18** (now `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml`, renamed 2026-09-19, with a repo
+snapshot under `docs/reference/lotrlome-armory-snapshot/Prefabs/`, pinned by `TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs`; #627):
+every body `moveable`; the floor moved off the root onto a child, scaled to the elite deck (1.4 x 1.6 m, top at
+3.15 m, 0.12 m thick, 0.8 m behind the origin); four `bo_barrier` rails (width, 1, 1.1) flagged `barrier` +
+`moveable`; four crew frames tagged `taom_howdah_crew` on the floor, one per quarter, still carrying the seat script
+so today's code works. Because every child sits around the deck centre, the fixed-offset placement now lines the
+platform up with the visual howdah at rest; bone tracking would follow the walk. **Still to do in this step:**
+re-enable one slide source (C#) and test. When crew come back, `ElephantMissionBehavior.TrySpawnHowdahCrew` must
+spawn at the frame's position, not above the elephant's origin (its comment still describes the old floor).
+
+Re-enable ONE deferred slide source at a time (bone tracking first: it put the floor at the spine). **Pass:** the
+elephant walks and turns without sliding with that source on. The howdah status line measures it: `carriedV`, the
+gap between the elephant's real and locomotion velocity, is the slide (`elephant.md` "Reading the howdah log"). If it
+passes, bone tracking (the visually correct placement) comes back.
 
 ### Step 2: release the crew the way the engine expects (small C#)
 
@@ -94,6 +105,34 @@ DLC's). Four archers per elephant, as ADOD_Beasts ships.
 
 **Fallback.** If Step 3's deck will not follow the elephant, keep today's seat model with Steps 1 and 2 applied:
 moveable bodies, immediate release, formation kept. That already answers the two failures the feature was parked for.
+
+## Which howdah mesh: the elite one (measured 2026-09-18)
+
+The Armory ships three howdah meshes, none bound to an item yet (the only elephant harness item is
+`sk_elephant_armor_a`): `sk_hd_elep_armor_howdah_med_a`, `_heavy_a` and `_elite_a` in
+`Assets/creature/elephant/mesh/SK_Elephant_Armor_Variations_geo.tpac`. Measured from
+`AssetSources/.../SK_Elephant_Armor_Variations.fbx` (rest pose; engine = Blender (-x, -y, z)):
+
+| | Floor | Rim ledge | Crenel tops | Interior | Notes |
+|---|---|---|---|---|---|
+| `howdah_elite_a` | 3.15 m | 3.9 to 4.0 m (0.8 m above the floor) | 4.2 m (1.05 m) | about 1.4 m across x 1.6 m along, one flat plank floor with nothing inside but corner posts; centred about 0.8 m behind the elephant's origin | heavy plus extra head armour |
+| `howdah_heavy_a` | same deck as elite | | | | |
+| `howdah_med_a` | about 3.1 m | | | a narrow basket, about 0.9 m wide | two archers in a line at most |
+
+The floor is the flat band at 3.15 m found only on the howdah mesh; the 2.95 to 3.05 m surfaces are the saddle blanket
+the plain armour shares. `ElephantConfig.HowdahHeightAboveGround` (3.2 m) is within 5 cm of it. The fixed-offset
+placement puts the platform at the elephant's origin, about 0.8 m ahead of the real floor.
+
+**Consequences.** Work with the elite howdah; the heavy one shares its deck, so one working deck serves both. The
+howdah is skinned to the elephant's spine and head bones (it moves with the walk), so the invisible deck must follow
+the spine bone, which makes Step 1 (the `moveable` flags) the prerequisite for bone tracking. A human agent's body
+capsule has radius 0.37 m (`Native/ModuleData/monsters.xml`), so four archers, one per quarter of the floor (0.35 m
+across and 0.4 m along from its centre), do not fit clear: side by side they are 0.70 m apart where two capsules need
+0.74 m, and each presses its side rail by about 2 cm (they clear the ends by 3 cm). Three fit clear. Mike kept four
+until the first crew test settles the count (2026-09-19, #627). The deck navmesh is one rectangle of that size at 3.15 m (a top
+view in the Kit, 2026-09-18, confirmed the flat, unobstructed floor and its 1.12 : 1 proportions). Rim and crenels at
+waist and chest height suit shooting over. The howdah needs its own `HorseHarness` item (family_type 10), and the crew
+spawn keys off that item, as ADOD_Beasts keyed crews off its armour tier.
 
 ## What this does not settle
 

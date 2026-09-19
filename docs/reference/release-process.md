@@ -82,6 +82,11 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 7. `git tag -a vX.Y.Z -m "…"` then `git push origin <release branch> vX.Y.Z`.
 
+**The Armory ships in the same release when the TAOM build needs a file it did not have.** Players get
+`LOTRLOME_Armory` only from the editor package Mike builds into `E:\LOTRAOM_Releases\<channel>\Modules\`. Since #627
+the TAOM build instantiates `taom_howdah_platform` from `LOTRLOME_Armory/Prefabs`; a TAOM build released without an Armory
+package carrying it logs `not found` and spawns no howdah platform.
+
 **Step 7 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition

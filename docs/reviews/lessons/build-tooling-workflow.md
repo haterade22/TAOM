@@ -2171,3 +2171,9 @@ synthetic package failed on their first run; the scratch prototype had used a lo
   `tools/tpac_clone_metamesh.py`'s `parse` and `serialize` round-trip a real package byte for byte, and the new tool
   moved onto them the same day instead of carrying another tpac parser in `tools/`.
 - **Source:** `tools/skeleton_hit_capsules.py`, `tools/tests/test_skeleton_hit_capsules.py` (2026-09-18).
+
+### Moving a file out of a module does not remove it from installs: rename what a stale copy would still answer to (#627, 2026-09-19)
+The howdah prefab moved from `Main/_Module/Prefabs/` to `LOTRLOME_Armory/Prefabs` under the same name. The repo and the dev install were cleaned, but every release from v2.0.22 to v2.0.30 had shipped `Modules/TAOM/Prefabs/taom_howdah_agent.xml`, an in-place update keeps it, and the release channel folder is itself updated in place. Players would load two prefabs of one name, and which one the engine instantiates is native and undefined.
+- **Why missed:** "the deploy never deletes" was already a lesson (above), but it was read as a dev-machine fact. The move checked the dev install and not the installs players already have.
+- **Prevent:** when a file leaves a module and something is looked up by its name (a prefab, a string id, an XML id), rename the identifier so a stale copy is dead data, and pin the name the code asks for in a test. Deletion steps in the packager cannot reach installs already in players' hands.
+- **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627.

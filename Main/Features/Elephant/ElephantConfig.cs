@@ -15,6 +15,20 @@ public static class ElephantConfig
     /// <summary>HorseHarness item StringId that triggers howdah instantiation (sk_elephant_armor_a in LOTRLOME_Armory).</summary>
     public const string HarnessStringId = "sk_elephant_armor_a";
 
+    /// <summary>Root game_entity name of the howdah platform prefab in LOTRLOME_Armory/Prefabs (#627). Renamed from
+    /// taom_howdah_agent 2026-09-19: TAOM installs from v2.0.22 to v2.0.30 keep a copy under that name in
+    /// Modules/TAOM/Prefabs, and two prefabs of one name have no defined winner. HowdahPrefabTests pins the prefab to it.</summary>
+    public const string HowdahPrefabName = "taom_howdah_platform";
+
+    /// <summary>Name of the platform's floor child, which the diagnostics log measures against the elephant capsule.</summary>
+    public const string HowdahFloorEntityName = "howdah_floor";
+
+    /// <summary>Tag on the platform's crew frames: where crew stand (research doc step 3 spawns at them).</summary>
+    public const string HowdahCrewTag = "taom_howdah_crew";
+
+    /// <summary>Seconds between howdah status lines in the diagnostics log, per howdah.</summary>
+    public const float HowdahStatusPeriodSeconds = 5f;
+
     /// <summary>Z offset above the mahout rider's root position for howdah entity placement.
     /// Tunable — start at 0.8f; increase if the seat appears below the elephant's back surface.</summary>
     public const float HowdahHeightAboveRider = 0.8f;

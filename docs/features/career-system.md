@@ -337,9 +337,13 @@ After the culture-default starting roster is applied at `OnCharacterCreationFina
 
 | Archetype | Weapons | Armor |
 |-----------|---------|-------|
-| **Ranged** | bow + arrows + sword | light (low armor, very low weight) |
-| **Cavalry** | spear + shield + sword + horse + harness | medium (chainmail) |
-| **Infantry** | 1H + shield + (2H or spear — culture-decides) | heavy (plate-tier weight) |
+| **Ranged** | bow + arrows + one-handed sidearm | the culture's lowest troop body + legs |
+| **Cavalry** | polearm + shield + sidearm + horse + harness | the same |
+| **Infantry** | one-handed weapon + shield + polearm (Dol Guldur: two-handed axe) | the same |
+
+Since #629 every weapon and armour item is gear the culture's lowest troops carry, so a career never starts
+better equipped than the troops it recruits, and a culture's three archetypes share their armour. The pick
+rule is in [starting-equipment-tuning.md](starting-equipment-tuning.md) "Career kits".
 
 **Single source of truth:** [`CareerSystemIoC.GetCareerArchetypeMap()`](../../Main/Features/CareerSystem/CareerSystemIoC.cs) maps each careerId to a `CareerArchetype`. The same dictionary is consumed by the ability executor registry (Infantry/Ranged/Cavalry executors) and by [`ICareerArchetypeService`](../../Main/Features/CareerSystem/ICareerArchetypeService.cs). Cached in a static field — one allocation per app lifetime.
 
@@ -358,18 +362,20 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
 
 ### How to add a new culture's career rosters
 
-1. Create starter armor items in LOTRLOME_Armory at `LOTRLOME_items/<culture>/starter_armors.xml`: 6 items (3 archetypes x 2 slots, body and leg; the kit is chest, legs and weapons by design). `tools/generate_starter_armor.py` does this from the culture's own chest and boots (add the culture to its `CULTURES` table), at the anchors Ranged 5, Cavalry 7, Infantry 9, naming them `starter_{archetype}_{culture}_{slot}_a`; Gondor's [`starter_armors.xml`](file:///E:/Steam/steamapps/common/Mount%20%26%20Blade%20II%20Bannerlord/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor/starter_armors.xml) is the hand-tuned template. The weapons the roster names are then cloned by `tools/generate_starter_kit.py` and the roster repointed by `tools/wire_starter_kit_rosters.py` ([starting-equipment-tuning.md](starting-equipment-tuning.md)); a real item left in a player roster fails `StarterKitCoverageTests`.
-2. **Required cover attributes** — LOTRLOME armor items render their mesh only when the `Armor` element declares it covers the slot:
-   - Head items: `hair_cover_type="..."` + `beard_cover_type="..."` (cloth → `type1`/`type2`, plate → `type1`/`all`)
-   - Body items: `covers_body="true"` (required) plus optionally `covers_legs="true"` for long robes / `covers_hands="true"` for full gauntlets that extend past the arm
-   - **Leg items: `covers_legs="true"` is REQUIRED** — without it the leg mesh does not render, the player appears with bare legs even though the item is equipped
-   - **Glove items: `covers_hands="true"` is REQUIRED** — same failure mode for hands
-   - Cape items: no cover attribute needed
-   - Source-of-truth: cross-check against any existing LOTRLOME `{leg,arm}_armors.xml` entries — every leg item has `covers_legs="true"` and every glove item has `covers_hands="true"`. Don't omit these on duplicates.
-3. **Path encoding trap** — the LOTRLOME_Armory path on Windows contains `&` (`Mount & Blade II Bannerlord`). The Write tool has been observed entity-encoding `&` → `&amp;` and silently writing to a phantom directory. After authoring, `ls` the real path to confirm. See `feedback_write_tool_ampersand_path_encoding.md`.
-4. Append 6 rosters to [`taom_career_starting_equipment.xml`](../../Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml) — one per (archetype, gender). Reference existing low-tier culture weapons + the new starter armor. **Don't forget the explicit Horse/HorseHarness clears for ranged + infantry** — `Equipment.FillFrom` is a slot-by-slot merge and will leave culture-default horses in place if you don't override.
-5. Verify the archetype for each career in [`CareerSystemIoC.GetCareerArchetypeMap()`](../../Main/Features/CareerSystem/CareerSystemIoC.cs) — adjust if needed.
-6. No code change required — `ICareerStartingEquipmentService` looks up by string-id at runtime.
+1. Pick every weapon and armour slot by the rule in [starting-equipment-tuning.md](starting-equipment-tuning.md)
+   "Career kits": the lowest item of that class a non-hero troop of the culture carries in a battle set,
+   preferring non-vanilla (carrier level 21 or below). No new items: the culture's troops already carry
+   them, cover attributes and all. `StarterKitCoverageTests` fails on an item no troop of the culture carries.
+2. Append 6 rosters to [`taom_career_starting_equipment.xml`](../../Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml),
+   one per (archetype, gender), each with `culture="Culture.<id>"`: `Item0`-`Item2`, `Body`, `Leg`, and for
+   cavalry `Horse` + `HorseHarness` (a dwarf culture only a war ram, and never a Horse without a harness).
+   `Equipment.FillFrom` replaces the whole battle set, so ranged and infantry rosters simply omit the mount.
+3. If the culture is one of the six vanilla-mapped ones, re-run `python tools/wire_starter_kit_rosters.py --apply`
+   so its careerless override follows the new kit.
+4. Verify the archetype for each career in [`CareerSystemIoC.GetCareerArchetypeMap()`](../../Main/Features/CareerSystem/CareerSystemIoC.cs) and adjust if needed.
+5. Run `StarterKitCoverageTests`, `python tools/audit_polearm_shield_parity.py` (a spear beside a shield must
+   resolve one-handed) and `python tools/validate_moduledata.py`.
+6. No code change required: `ICareerStartingEquipmentService` looks up by string-id at runtime.
 
 ## Key Files
 
@@ -396,7 +402,7 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
 | `Main/Features/CareerSystem/CareerArchetypeService.cs` | careerId → archetype lookup; backed by static map in `CareerSystemIoC` |
 | `Main/Features/CharacterCreation/CareerStartingEquipmentService.cs` | Applies archetype roster at end of CC over the culture default |
 | `Main/Features/CharacterCreation/CareerEquipmentRosterIds.cs` | Roster ID builder: `player_career_{culture}_{archetype}_{f\|m}` |
-| `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml` | Per-(culture, archetype, gender) rosters; Gondor only as of 2026-05-19 |
+| `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml` | Per-(culture, archetype, gender) rosters: 78 across 13 cultures, each culture's lowest troop gear (#629) |
 
 ## Dependencies
 

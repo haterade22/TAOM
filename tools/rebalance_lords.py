@@ -13,6 +13,14 @@ Usage:
     python rebalance_lords.py --apply            # Write to lords.xslt
     python rebalance_lords.py --export-csv       # Export full inventory to CSV
     python rebalance_lords.py --skills-only      # Only rebalance skills, skip traits
+
+Do not use --apply for skills on the 1.5.x line (#626). It writes each lord's inline <skills> from
+the curve above and never touches a SkillSet. Through v1.4.8 those rows were dead beside a
+skill_template; since v1.5.2 the engine lays them over the template, so they would change the lord,
+and validate_moduledata.py's SKILL_TEMPLATE_MISMATCH blocks the commit (the repair,
+sync_lord_inline_skills.py --apply, would put the SkillSet's numbers back). Retune lord skills in
+the SkillSets through apply_culture_skills_traits.py (/lord-skills). The report modes and the
+helpers other tools import (CULTURE_MAP, calculate_skills, detect_archetype, the parsers) stand.
 """
 
 import re
