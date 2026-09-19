@@ -51,9 +51,6 @@ internal class TaomHowdahStandingPoint : StandingPoint
     public override void OnUse(Agent userAgent, sbyte agentBoneIndex)
     {
         if (MovingAgent != null) return;
-        _logger?.LogInfo(
-            $"{LogTag} OnUse: agent={userAgent?.Name} hasRanged={userAgent?.HasRangedWeapon(false)} " +
-            $"seatGlobalPos={GameEntity.GlobalPosition} formation={userAgent?.Formation?.FormationIndex}");
         LockUserPositions = true;
         LockUserFrames = true;
         AddMovingAgent(userAgent);
@@ -66,7 +63,6 @@ internal class TaomHowdahStandingPoint : StandingPoint
         _previousFormation = userAgent.Formation;
         userAgent.Formation = null;
         userAgent.SetWatchState(Agent.WatchState.Alarmed);
-        _logger?.LogInfo($"{LogTag} OnUse complete: agent seated (formation cleared, watch=Alarmed)");
     }
 
     public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
@@ -126,13 +122,9 @@ internal class TaomHowdahStandingPoint : StandingPoint
                 $"action={MovingAgent.GetCurrentAction(0).GetName()}");
         }
 
-        if (_teleportCount % 120 == 1)
-        {
-            _logger?.LogInfo(
-                $"{LogTag} Tick#{_teleportCount} agent={MovingAgent.Name} " +
-                $"agentPos={MovingAgent.Position} seatPos={GameEntity.GlobalPosition} " +
-                $"action={MovingAgent.GetCurrentAction(0).GetName()}");
-        }
+        // No periodic line here (#627, delta review): _teleportCount counts FRAMES, so at 200 to 290 fps four seats
+        // wrote 400 to 580 lines a minute per elephant, each a durable flush. The machine's 5 s status line carries the
+        // crew instead (HowdahDiagnosticsReporter), behind the diagnostics toggle.
     }
 
     public override void OnEndMission()

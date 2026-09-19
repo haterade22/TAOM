@@ -80,3 +80,82 @@ change done is "who reads this, and what do they read?"
 - `TrySpawnHowdahCrew` (disabled) still spawns above the elephant's origin; it must spawn at the crew frames.
 - The physics-shape bounds behind the floor and rail constants come from a scratch dumper; promoting it into `tools/`
   would let anyone reproduce them.
+---
+
+# Addendum: the crew and the visible howdah (delta review, same day)
+
+**Scope.** After the first in-game run of the rebuilt platform Mike saw nobody in the howdah and decided two things:
+turn crew spawn back on (parked since 2026-06-10 as a slide source) and bind the elite howdah mesh to an item so the
+howdah is visible. That work, and everything the review of it changed: `HowdahCrewSpawner`, `HowdahCrewAgentOrigin`,
+`HowdahHarness`, `ElephantConfig.HowdahHarnessStringId`, `ElephantMissionBehavior`, the live Armory item
+`sk_elephant_armor_howdah_elite` with its 13 name rows, the Harad elephant rider's harness, and the tests and docs.
+Seven lenses again, two at a time. **No CRITICAL; one HIGH, fixed.** The last two lenses (Efficiency, Design) ran on
+Opus 5 by Mike's decision because the account hit its Fable limit; every other lens ran on Fable at max effort. Final
+run: 9,874 passed, 2 skipped; deployed. The first review's work is committed in `83bdad85`, and most of this delta in `925db38d`, both multi-session
+commits made while the review ran; the fixes this review produced are the uncommitted remainder.
+
+## Findings
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| D1 | HIGH | All four crew archers were built with the mahout's own origin, so the first crew casualty went through `PartyGroupAgentOrigin.SetKilled`: the Harad elephant rider left the party roster while still riding, the crew's hits paid him XP, and the supplier's `NumRemovedTroops` moved, which `MissionBattleSideSpawnContext` reads as a lost unit (a side could be declared beaten while its elephant fought) | data flow / engine | The line was June's, re-enabled by deleting a comment. A parked path came back as a toggle flip and was reviewed as one. The June port also deviated from its own reference, which built a fresh origin per crewman | `HowdahCrewAgentOrigin`: casualty and score calls do nothing, scoreboard combatant, colours and command forward to the mahout's, per-seat seed. 11 tests. Lesson in `adapters-taleworlds-api.md` |
+| D2 | HIGH (found before the smoke, so no cost) | The crew were resolved with `MBObjectManager.GetObject<CharacterObject>`. `GetObject<T>` matches only the exact type when T is sealed, `CharacterObject` is sealed, and Custom Battle registers troops as `BasicCharacterObject`: the lookup returns null there, so the crew would never have spawned in the mode the smoke runs in | engine | The call came from June's campaign-only code, and nothing had exercised it in Custom Battle since | `GetObject<BasicCharacterObject>` (resolves in both modes) plus `HowdahCrewLookupBanTests`, an IL ban that fails if any howdah code asks for the sealed type again |
+| D3 | MED | The seat's periodic log line counts FRAMES (`_teleportCount % 120`), so with crew aboard it wrote 405 to 580 lines a minute per elephant at the 202 to 290 fps measured in Mike's own run, each a synchronous flush, all four seats bursting on one frame | efficiency | The line had been dormant since June because no seat ever had an occupant; re-enabling crew woke it | Deleted; the machine's 5 s status line now carries each seated archer's action and its distance from its frame, behind the diagnostics toggle |
+| D4 | MED | `ElephantMissionBehavior` grew to 350 lines (ADR-002 ceiling 150), the crew code inline in a `MissionLogic` | standards | The crew work was added where the old code sat | Crew half extracted to `HowdahCrewSpawner`; the behaviour is 238 lines, below the 293 it had at HEAD |
+| D5 | MED | The harness gate read `Character.Equipment`, the troop's default roster, not the roster the engine rolled for this agent | data flow | The rider has one roster, so both reads agreed and nothing failed | Reads `agent.SpawnEquipment`, which the engine sets before `OnAgentBuild` and builds the mount from. Lesson in `adapters-taleworlds-api.md` |
+| D6 | LOW | The crew got none of what `Mission.SpawnTroop` gives a battle troop: no banner, default clothing colours (which TAOM's colour persistence also skipped), no `NoHorses`, no `WieldInitialWeapons` (archers could stand empty-handed) | engine | The builder was written from what the spawn needed to work, not from what vanilla does | All four added. Lesson in `adapters-taleworlds-api.md` |
+| D7 | LOW | The mahout-origin guard sat inside the per-seat loop, after a spawn line had already been logged, and returned rather than continued | standards | Added where it was first needed | Hoisted into the queued spawn's guard chain |
+| D8 | LOW | 22 INFO lines per crewed elephant in one drain tick, over half duplicating the layout dump's seat inventory | efficiency | Carried over verbatim from the June method | One pass over the seats; a line only for a skipped seat; the spawn stamp before `SpawnAgent` kept as the crash localiser |
+| D9 | LOW | Crew were built into the mahout's formation (Cavalry), where vanilla picks by troop class; a released archer rejoined the cavalry | design | The capture dated from June, when the rider was a horse archer | `Mission.GetAgentTroopClass` picks it, as vanilla does |
+| D10 | LOW | Stale statements: the prefab header and two elephant.md spots said no item binds the elite mesh; comments said the crew keep a HorseArcher formation (the rider has been Cavalry since 2026-06-29); the machine's class doc claimed detachment fills the seats although `GetDetachmentWeightAux` returns 0; the research doc still asked for a fix that had landed | standards / completeness | Each was true when written and nobody re-read it against the code | All corrected |
+| D11 | LOW | The Turkish item name used the archaic "hevdec" | XML | Hand-written translation | `[Harad] Fil Mahfesi` |
+| D12 | LOW | `HowdahCrewAgentOrigin.GetTraitsMask` would throw on the null troop the tests pass | standards | The null seam existed only for tests and was untested itself | Returns `TroopTraitsMask.None` for a null troop, with a test |
+| D13 | LOW | Record gaps: no REVIEW-LOG entries, no RCA addendum, CHANGELOG naming deleted code and quoting a half-stated gate failure, `feature-map.md` still saying crew are disabled | completeness | The review's own paperwork lagged the code by a few hours | This addendum, two REVIEW-LOG entries, the CHANGELOG and map corrected |
+
+## Root-cause pattern
+
+**Parked code came back as a flag, and was reviewed as a flag.** D1, D2, D3, D8 and D9 are all the same shape: the
+crew path was written in June, disabled in June, and left to rot while the world moved (the rider changed formation,
+the platform was rebuilt, the smoke moved to Custom Battle). Nothing in the diff of "re-enable crew" showed any of
+them, because the defects were in the lines that did not change. The preventive rule is in
+`build-tooling-workflow.md`: when a parked path returns, review it as new code, trace it end to end against today's
+data and engine, and compare it with the reference it was ported from.
+
+**Second pattern, smaller: a spawn outside the supplier inherits none of the supplier's contract.** D1 and D6 are the
+two halves of that: the origin the engine books casualties against, and the builder calls vanilla makes for every
+troop. Both are now lessons in `adapters-taleworlds-api.md`.
+
+## Corrections to the first review's follow-ups
+
+- "TrySpawnHowdahCrew still spawns above the elephant's origin": done, the crew spawn on their frames.
+- "Split the howdah spawn path out of ElephantMissionBehavior": the crew half is out (238 lines); `TryInstantiateHowdah`
+  and `TaomHowdahMachine` (302) remain.
+- "Fold the seat's 120-tick line into the machine status line, when crew return": done (D3), its trigger having arrived.
+- `ElephantConfig.HowdahHeightAboveRider` is still unread.
+
+## Which lens caught what
+
+Data flow: D1, D5, and the catalogue drift. XML: D10 (prefab header), D11, and the mirror gap. Engine: D6, and the
+verification that the per-seat seed reaches each archer's face. Standards: D4, D7, D12, and the comment corrections.
+Completeness: D13, the release pairing for the item, and the scoreboard and merit notes now in the feature doc.
+Efficiency: D3, D8, and the agent-budget fact (a crewed elephant occupies six agent slots where the engine reserves
+two). Design: D2, D9, and the confirmation that the queue, the origin wrapper and the seat model are the right shapes.
+
+## Not applied
+
+- Collapse the two harness triggers into one and drop the crewless platform for the plain armour (Design P3): Mike
+  chose to keep the plain armour working when he approved the item, and the item stays in the Armory for saves that
+  hold one as loot.
+- Release the crew from `UsableMachine.OnMissionEnded` instead of the two per-tick polls (Design P6): research doc
+  step 2, FOLLOW-UP, and the crew smoke is what should settle it.
+- A reinforcement headroom guard before spawning four crew (Efficiency F3): the engine's agent cap is native and
+  unverified; the A/B with `CrewSpawnEnabled` is the measurement to take first.
+- `TaomCombatMechanicsModel.VictimPartyId` reading `BattleCombatant as PartyBase` so refuge reduction reaches the crew:
+  another feature's file, FOLLOW-UP, recorded in `elephant.md`.
+
+## Owed in game
+
+The crew smoke in `docs/features/elephant.md`: four archers on a visible howdah, `crew force-spawned: 4 archer(s)`,
+`seated=4/4` with their actions in the status line, `carriedV` while the elephants move and turn, one archer killed
+without the party losing an Elephant Rider or the battle ending early, and the battle finishing so the `summary` line
+prints. Then the Armory mirror commit, and Mike's editor package of the Armory in the same release as this build.

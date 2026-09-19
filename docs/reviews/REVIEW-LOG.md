@@ -3502,3 +3502,34 @@ produced them) in the same commit that creates them.
 - [rca-map-event-observer-2026-09-06.md](rca-map-event-observer-2026-09-06.md): RCA, the #551 / #552 changeset deep review (5 agents; 1 HIGH defect in the fix itself, a singleton latch anchor surviving into another campaign, plus a fabricated engine method name in three shipped docs) (2026-09-06)
 - [rca-dwarf-voices-2026-09-06.md](rca-dwarf-voices-2026-09-06.md): RCA, dwarf battle voices firing every 2-4 seconds (#548) deep review (6 agents; 4 demonstrated false PASSes in the gate written to prevent recurrence, the last found during the follow-up doc sweep, plus 2 unverified claims that reached code comments) (2026-09-06)
 - [rca-settlement-food-2026-09-06.md](rca-settlement-food-2026-09-06.md): RCA, settlement food hinterland production term (#546) deep review (5 agents, 1 HIGH fixed, 1 LOW fixed, 1 MEDIUM rejected on evidence; the HIGH was instance six of the NaN-gate class and added a fourth named category to the rule) (2026-09-06)
+## Review 123: the howdah platform rebuilt, moved to the Armory and instrumented (#627), 7-lens deep review (2026-09-19)
+
+Mike asked for the war elephant's howdah platform to be remade on the vanilla siege tower and War Sails ship pattern
+for the elite howdah mesh, then to live in `LOTRLOME_Armory` rather than the TAOM module, then for comprehensive
+logging so a howdah problem can be triaged from the log alone. Seven lenses on `deep-reviewer`, two at a time (five
+died on the session limit and were rerun), plus a convergence pass on the fixes. No CRITICAL; one HIGH: every release
+from v2.0.22 to v2.0.30 left a same-named prefab in players' `Modules/TAOM/Prefabs`, and which of two same-named
+prefabs the engine instantiates is native and undefined. Fixed by renaming to `taom_howdah_platform` behind one
+constant the C# and the tests share. Six MED (a byte-compare test that a CRLF checkout would break, the elite mesh
+claimed as bound when no item bound it, "four 0.37 m capsules just fit" when they do not, tests that pinned the diff
+rather than what the consumers read, a per-frame string allocation after an elephant dies) and seven LOW. Mike decided
+the rename, four crew frames for now, one issue, and an MCM toggle on by default. RCA
+[rca-howdah-prefab-review-2026-09-19.md](rca-howdah-prefab-review-2026-09-19.md); four lessons. Codex: not dispatched.
+Landed in the combined commit `83bdad85`. Owed: the in-game smoke on #627.
+
+## Review 124: howdah crew back on and the elite howdah made visible (#627 delta), 7-lens deep review (2026-09-19)
+
+The first in-game run showed the platform working and nobody in it, so Mike turned crew spawn back on (parked since
+2026-06-10 as a slide source) and had the elite howdah mesh bound to a new Armory harness the Harad elephant rider
+wears. Seven lenses again, two at a time; the last two (Efficiency, Design) ran on Opus 5 by Mike's decision after the
+account hit its Fable limit. Two HIGH, both fixed before any in-game run: the crew were built with the mahout's own
+origin, so the first crew casualty removed the elephant rider from the party roster and moved the supplier's removed
+count (a side could read as beaten while its elephant fought), and the crew were resolved as the sealed
+`CharacterObject`, which Custom Battle does not register, so they would never have spawned in the mode the smoke runs
+in. Three MED (the seat's frame-paced log line writing 400 to 580 lines a minute per elephant once crew existed, the
+entry point at 350 lines, the harness gate reading the troop's default roster instead of the rolled one) and eight
+LOW, including vanilla spawn parity the crew never had (banner, colours, no horses, weapons wielded). New:
+`HowdahCrewSpawner`, `HowdahCrewAgentOrigin`, `HowdahHarness`, 22 tests including an IL ban on the sealed lookup. RCA
+addendum in the same file; three lessons. Codex: not dispatched. The crew and harness work landed in the
+multi-session commit `925db38d`; the review's own fixes were still uncommitted when this was written. Owed: the crew
+smoke on #627, the Armory mirror commit, and Mike's editor package of the Armory in the same release.

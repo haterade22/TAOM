@@ -19,7 +19,8 @@ namespace TAOM.Features.Elephant;
 /// immediately after GameEntity.Instantiate returns — OnInit fires with nulls and OnTick propagates
 /// them to child TaomHowdahStandingPoint instances once set.
 ///
-/// Vanilla detachment assigns nearby troops automatically because GetDetachmentWeightAux returns 1.
+/// Vanilla detachment never assigns anyone here: GetDetachmentWeightAux returns 0. The seats are filled by
+/// HowdahCrewSpawner, which spawns the crew straight onto them.
 ///
 /// Diagnostics (#627): <see cref="LogTag"/> ("[Howdah#n]", set at bind) prefixes every line, and a
 /// <see cref="HowdahDiagnosticsReporter"/> writes the layout, status and summary lines behind the MCM toggle.

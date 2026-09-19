@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -37,8 +36,8 @@ internal sealed class HowdahCrewSpawner
     }
 
     /// <summary>Queue a crew for this howdah; it spawns on the next <see cref="Drain"/>.</summary>
-    public void Queue(TaomHowdahMachine machine, Agent mahout, Formation? crewFormation) =>
-        _queue.Enqueue(() => SpawnQueued(machine, mahout, crewFormation));
+    public void Queue(TaomHowdahMachine machine, Agent mahout) =>
+        _queue.Enqueue(() => SpawnQueued(machine, mahout));
 
     /// <summary>From OnMissionTick, outside the engine's SpawnAgent loop.</summary>
     public void Drain()
@@ -55,7 +54,7 @@ internal sealed class HowdahCrewSpawner
 
     // The elephant and the mahout were live when the spawn was queued a tick ago; a recycled or dead handle must not
     // get a crew, and the crew's origins report to the mahout's, so it must have one.
-    private void SpawnQueued(TaomHowdahMachine machine, Agent mahout, Formation? crewFormation)
+    private void SpawnQueued(TaomHowdahMachine machine, Agent mahout)
     {
         try
         {
@@ -79,7 +78,7 @@ internal sealed class HowdahCrewSpawner
                 _logger.LogWarning($"{machine.LogTag} crew not spawned: the mahout has no origin to report to");
                 return;
             }
-            Spawn(machine, mahout, crewFormation);
+            Spawn(machine, mahout, mission);
         }
         catch (Exception ex)
         {
@@ -90,28 +89,33 @@ internal sealed class HowdahCrewSpawner
 
     // Vanilla UsableMachine detachment cannot path to a moving target: archers walk toward the last-known seat
     // position but the elephant moves away. So the crew are spawned straight onto their seats.
-    private void Spawn(TaomHowdahMachine machine, Agent mahout, Formation? crewFormation)
+    private void Spawn(TaomHowdahMachine machine, Agent mahout, Mission mission)
     {
-        var crewChar = MBObjectManager.Instance.GetObject<CharacterObject>(ElephantConfig.HowdahCrewCharacterId);
+        // BasicCharacterObject, never the sealed CharacterObject (#627, delta review P1): GetObject<T> takes an
+        // exact-type path for a sealed T, and Custom Battle registers NPCCharacter as BasicCharacterObject while the
+        // campaign registers CharacterObject. Asking for the sealed type finds nothing in Custom Battle, which is the
+        // mode the howdah smoke runs in; the base type resolves in both. HowdahCrewLookupBanTests pins it.
+        var crewChar = MBObjectManager.Instance.GetObject<BasicCharacterObject>(ElephantConfig.HowdahCrewCharacterId);
         if (crewChar == null)
         {
             _logger.LogError($"{machine.LogTag} crew character '{ElephantConfig.HowdahCrewCharacterId}' not found.");
             return;
         }
 
-        int seatIndex = 0;
-        _logger.LogInfo($"{machine.LogTag} crew spawn: {machine.StandingPoints.Count} total StandingPoint(s) in prefab");
-        foreach (StandingPoint sp in machine.StandingPoints)
-        {
-            _logger.LogInfo($"{machine.LogTag}   StandingPoint[{seatIndex}]: type={sp.GetType().Name} disabled={sp.IsDisabled} occupied={sp.MovingAgent != null}");
-            seatIndex++;
-        }
+        // The formation vanilla would give this troop (Mission.GetAgentTroopClass honours other mods' override and
+        // the siege-dismount rule), not the mahout's: harad_archer is Ranged, the rider is Cavalry, so a released
+        // archer rejoins the archers. The seat nulls the formation while seated either way.
+        Formation crewFormation = mahout.Team.GetFormation(mission.GetAgentTroopClass(mahout.Team.Side, crewChar));
 
+        // One pass: the layout dump already lists every seat, so only a SKIPPED seat is worth a line here.
         int spawned = 0;
         foreach (StandingPoint sp in machine.StandingPoints)
         {
             if (!(sp is TaomHowdahStandingPoint seat) || seat.IsDisabled || seat.MovingAgent != null)
+            {
+                _logger.LogInfo($"{machine.LogTag}   seat skipped: type={sp.GetType().Name} disabled={sp.IsDisabled} occupied={sp.MovingAgent != null}");
                 continue;
+            }
 
             // Spawn on the seat's own crew frame: it stands on the floor top (3.15 m, 0.8 m behind the elephant's
             // origin) and faces outward. A 5 cm lift keeps the feet off the floor body on the first frame; the seat's
@@ -134,8 +138,8 @@ internal sealed class HowdahCrewSpawner
                 .ClothingColor2(mahout.ClothingColor2)
                 .TroopOrigin(new HowdahCrewAgentOrigin(mahout.Origin, crewChar, mahout.Origin.Seed + 1 + spawned));
 
-            // Build the crew into the mahout's pre-reassignment formation (Cavalry since 2026-06-29). The seat's OnUse
-            // clears it while they are seated and restores it on release; TeleportToPosition holds their position.
+            // The seat's OnUse clears the formation while they are seated and restores it on release, so this is the
+            // formation a released archer rejoins.
             if (crewFormation != null)
                 buildData = buildData.Formation(crewFormation);
 
@@ -146,7 +150,6 @@ internal sealed class HowdahCrewSpawner
                 continue;
             }
 
-            _logger.LogInfo($"{machine.LogTag}   Crew #{spawned} agent built: name={crewAgent.Name} isActive={crewAgent.IsActive()} hasRanged={crewAgent.HasRangedWeapon(false)}");
             // Managed-only seating: OnUse registers the agent in our seat (AddMovingAgent + lock flags)
             // WITHOUT triggering native AIUseGameObjectEnable. UseGameObject would cause the native
             // pathfinder to continuously route agents toward the elevated seat (unreachable via navmesh),
@@ -155,6 +158,10 @@ internal sealed class HowdahCrewSpawner
             // Vanilla wields every battle troop's initial weapons at spawn (Mission.SpawnTroop); without it the
             // archer may stand with nothing in hand.
             crewAgent.WieldInitialWeapons();
+            // One line for the whole seating, after the seat and the weapons are set (the seat itself logs nothing here).
+            _logger.LogInfo(
+                $"{machine.LogTag}   crew #{spawned} seated: {crewAgent.Name} isActive={crewAgent.IsActive()} " +
+                $"hasRanged={crewAgent.HasRangedWeapon(false)} action={crewAgent.GetCurrentAction(0).GetName()}");
             spawned++;
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -125,15 +126,24 @@ internal sealed class HowdahDiagnosticsReporter
         _stats.RecordSample(clearance, drift, carried);
 
         int seated = 0;
+        var crew = new StringBuilder();
         for (int i = 0; i < seats.Count; i++)
-            if (seats[i].MovingAgent != null) seated++;
+        {
+            Agent rider = seats[i].MovingAgent;
+            if (rider == null) continue;
+            seated++;
+            Vec3 seatPos = seats[i].GameEntity.GlobalPosition;
+            Vec3 riderPos = rider.Position;
+            float gap = HowdahDiagnostics.Distance(riderPos.x, riderPos.y, riderPos.z, seatPos.x, seatPos.y, seatPos.z);
+            crew.Append($" seat{i}={rider.GetCurrentAction(0).GetName()}@{HowdahDiagnostics.Format(gap, 2)}m");
+        }
 
         _logger.LogInfo(
             $"{tag} status t={HowdahDiagnostics.Format(Mission.Current?.CurrentTime ?? float.NaN, 1)} elephant={Format(elephant.Position)} " +
             $"realV={HowdahDiagnostics.Format(real.Length, 2)} legsV={HowdahDiagnostics.Format(legs.Length, 2)} carriedV={HowdahDiagnostics.Format(carried, 2)} " +
             $"moveV={HowdahDiagnostics.Format(elephant.MovementVelocity.Length, 2)} drift={HowdahDiagnostics.Format(drift, 3)} " +
             $"floorClearance={HowdahDiagnostics.Format(clearance, 3)} path={placement} seated={seated}/{seats.Count} " +
-            $"action={elephant.GetCurrentAction(0).GetName()}");
+            $"action={elephant.GetCurrentAction(0).GetName()}{crew}");
     }
 
     private static float CapsuleTop(Agent elephant)

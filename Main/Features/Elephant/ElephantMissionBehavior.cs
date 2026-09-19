@@ -118,17 +118,17 @@ public class ElephantMissionBehavior : MissionLogic
             // seat GlobalPositions are valid world coordinates, not world origin (0,0,0).
             machine.RepositionToElephant();
 
-            // Capture the mahout's current formation for crew BEFORE moving mahout to Cavalry, so the elephant
-            // charges instead of circling at skirmish range. The rider's default group has been Cavalry since
-            // 2026-06-29 (troops_harad.xml), so today this is the Cavalry formation and the move below is a no-op.
-            Formation? crewFormation = agent.Formation;
+            // Move the mahout to Cavalry so the elephant charges instead of circling at skirmish range. The rider's
+            // default group has been Cavalry since 2026-06-29 (troops_harad.xml), so today this is a no-op; the crew
+            // take the formation vanilla would give an archer (HowdahCrewSpawner), not the mahout's.
+            Formation? previousFormation = agent.Formation;
             if (agent.Team != null)
             {
                 var cavalryFormation = agent.Team.GetFormation(FormationClass.Cavalry);
                 if (cavalryFormation != null && agent.Formation != cavalryFormation)
                 {
                     agent.Formation = cavalryFormation;
-                    _logger.LogInfo($"[Elephant] Mahout reassigned to Cavalry formation (was {crewFormation?.FormationIndex})");
+                    _logger.LogInfo($"[Elephant] Mahout reassigned to Cavalry formation (was {previousFormation?.FormationIndex})");
                 }
             }
 
@@ -139,7 +139,7 @@ public class ElephantMissionBehavior : MissionLogic
             // loop over behaviors (#595). HowdahCrewSpawner queues it for the next OnMissionTick.
             if (HowdahCrewSpawner.CrewSpawnEnabled && HowdahHarness.CarriesCrew(harnessId))
             {
-                _crew.Queue(machine, agent, crewFormation);
+                _crew.Queue(machine, agent);
                 if (diagnostics)
                     _logger.LogInfo($"{machine.LogTag} crew queued for the next mission tick");
             }
