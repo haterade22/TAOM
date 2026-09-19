@@ -1495,3 +1495,10 @@ it happens to write.
 
 **Source:** issue #617 deep review, `docs/reviews/rca-ranged-rebalance-2026-09-18.md` items 4 to 7
 (2026-09-18).
+
+**The second review found the next one:** the protection list. `rebalance_troops.SKIP_TROOP_IDS`
+guarded the Iron Hills noble crossbow hand-tune (#366), and #617's roster tool, a new writer of the
+same skill, never read it: it flattened the three troops to the ladder cells while the list and two
+feature docs still claimed the hand-tune. A second writer inherits the first writer's exemptions and
+hand-tunes; list them with the predicates and decide each one (Mike kept the ladder here).
+`docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` finding 4.

@@ -28,7 +28,7 @@ final_skill = BASELINE[group][level][skill] + CULTURAL_MODS[culture].get(skill, 
 
 - **`GROUP_BASELINES`** — Infantry / Ranged / Cavalry / HorseArcher tables keyed by the 11 tier levels `{1,6,11,16,21,26,31,36,41,46,51}`. Troops at off-grid levels (e.g. L7, L13) are skipped (no reference).
 - **`CULTURAL_MODS`**: per-culture skill deltas applied on top of baseline (the faction's identity). Keyed by the **filename culture** (`troops_<culture>.xml`), with two special cases in `detect_culture`: `iron_hills_*` ids (which live in the erebor file) → `iron_hills`, and `rhun_new` (the Rhûn file) → `rhun`. **Every culture file must have an entry.** Lindon had none until 2026-08-30, so the formula ran against it with a zero modifier: the first `--apply` after that gap opened would have stripped the high-elf tuning off all 30 Lindon troops (27 of the 30 have a Rivendell twin carrying identical skill values). A missing key does not error, it silently rebaselines a whole faction to the bare curve.
-- **`SKIP_TROOP_IDS`**: troops excluded from the formula entirely (genuine non-humanoid creatures + hand-tuned bespoke mounts + the hand-tuned Iron Hills noble crossbow line). They still take part in the monotonicity clamp, which only ever raises, so a skip protects a hand-tune without letting it read backwards in the tree.
+- **`SKIP_TROOP_IDS`**: troops excluded from the formula entirely (genuine non-humanoid creatures + hand-tuned bespoke mounts). The Iron Hills noble crossbow line left it on 2026-09-18 (#617, below). They still take part in the monotonicity clamp, which only ever raises, so a skip protects a hand-tune without letting it read backwards in the tree.
 - **Militia** take the level-21 baseline whatever their real level; the elite slots (`*_elite_militia_troop`, the veteran spearman and veteran archer) add `MILITIA_ELITE_BONUS` (15) on every skill, since 2026-09-13, because a level-11 militia archer and a level-16 veteran militia archer had been the same eight numbers. Militia are identified by the ids a culture **binds** to a militia slot in `taom_spcultures.xml` / `spcultures.xslt`, never by name. See "Militia are a binding, not a name" below.
 
 ### Equipment-driven weapon specialization (#340/#341, 2026-07-13)
@@ -63,9 +63,11 @@ The 34 Mordor/Morannon partial-skill-block troops are **resolved** (2026-08-30, 
 
 **Hand-tuned, protected via `SKIP_TROOP_IDS`** (these no longer appear as residuals because the tool skips them outright): `iron_hills_noble_scout` / `_sharpshooter` / `_veteran_sharpshooter`, Crossbow 175 / 225 / 275 as of 2026-07-30. The formula derives Crossbow from level and `CULTURAL_MODS['iron_hills']` alone, which gave the noble line exactly the regular `ironpass_*` line's values (130 / 170 / 205) — no edge in the only skill the branch specialises in. If the noble/regular split is ever expressed as a modifier rather than a hand-tune, remove these three ids and let the formula own them again.
 
+**Superseded 2026-09-18 (#617).** The three ids are out of `SKIP_TROOP_IDS`. The ranged ladder put the noble line on the Erebor crossbow cells, Crossbow 120 / 160 / 195 (the same as `ironpass_*`), and Mike kept the ranking over the hand-tune: the line's edge is its crossbows, the hardest-hitting in the game at T4 to T6, and Crossbow skill adds no damage on 1.5.3 (it tightens spread, speeds the reload and sharpens the AI's aim). A full rebaseline now gives them their ladder cell and leaves them as they are on disk. [ranged-ladders.md](ranged-ladders.md).
+
 **Deferred (#343):** 108 troops carrying only 1H weapons with Polearm strictly top (+46 exact ties) need a 3-way redistribution decision, not a mechanical pair swap.
 
-`tools/analyze_troop_balance.py` **imports these tables verbatim** — it never re-derives the curve, so the "ideal" and the "writer" can never disagree. It compares each troop's actual skills to `calculate_skills(...)` and reports the delta.
+`tools/analyze_troop_balance.py` **imports these tables verbatim**: it never re-derives the curve, so the "ideal" and the "writer" can never disagree. It compares each troop's actual skills to `calculate_skills(...)` and reports the delta; a ranged ladder troop's Bow or Crossbow reference is its ladder cell (`rebalance_troops.ladder_cells`), the value the writer sets (#617).
 
 ### Component diagram
 
@@ -183,7 +185,9 @@ A character declaring both is an error in two places: `SKILL_TEMPLATE_SHADOWS_SK
 `taom_schema.py` and `SkillTemplate_NeverShadowsAnInlineSkillsBlock` in the C# suite. **A troop with
 an empty `<skills>` block and a template is the legitimate shape** and is left alone; both gates skip
 templated characters when judging an upgrade edge, because their real skills live in a SkillSet these
-files cannot see.
+files cannot see. Both gates rest on the 1.4.8 loader, which ignored the inline rows whenever the
+template resolved; on the installed 1.5.3 the inline rows override the template's values, so a
+character declaring both no longer carries dead data (#626).
 
 ### The graph spans two directories
 

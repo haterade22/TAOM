@@ -24,6 +24,12 @@ authority, companion-limit awareness) on top. Issue #376.
 A promoted companion can also be sent back to the ranks (#540): the hero is removed and one soldier of
 the troop they came from rejoins the party. See "Dismissing a promoted companion" below.
 
+**Open: #625.** `HeroCommissionAdapter` fills the companion from the troop's first battle set, so a
+commissioned archer keeps its generated `ladder_*` bow or crossbow as hero equipment, and twelve of
+those cells hit above the spec's `hero_ceiling` (Bow 90, Crossbow 105). Mike's decision (2026-09-18):
+swap a ladder launcher for its line's donor at commission.
+[ranged-ladders.md](ranged-ladders.md) lists the cells.
+
 ## Why This Exists
 
 - **Vanilla behavior:** troops never individually distinguish themselves — a soldier who racks up

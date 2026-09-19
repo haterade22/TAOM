@@ -281,7 +281,11 @@ as a run with nothing to do.
 
 **`--sync-ids` does not close this.** `sync_missing_ids` (`:711-754`) computes
 `missing = [sid for sid in src_map if sid not in tgt_map]`, so it appends only the keys a
-per-language file lacks entirely. A key that is present but stale is not missing.
+per-language file lacks entirely. A key that is present but stale is not missing. For the same
+reason it never removes a key: when a generator RENAMES its ids, every language keeps the dead rows,
+gets none of the new ones, and the cache stays keyed on the old ids. Carry the translations and the
+cache across by construction instead (`tools/sync_ranged_ladder_translations.py` does it for the
+ranged ladder, #617).
 
 **`rebuild_translation_files.py` does not close it either.** Its `resolve` (`:124-129`) does visit
 every key in the English source, but it resolves override, then cache, then English fallback, and

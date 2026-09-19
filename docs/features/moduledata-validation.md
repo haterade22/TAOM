@@ -495,10 +495,12 @@ repair is a roster, item or curve decision, not a script; the options are in
 `missile_speed` and nothing else (`Mission.cs:4943` launches at the bow's speed,
 `SandboxAgentStatCalculateModel.cs:978` pins `MissileSpeedMultiplier` at 1 for bows; Bow skill feeds
 accuracy, cadence and AI error). Two rules, per launcher class: inside a LINE (a `troops_<culture>.xml`
-file, or an id prefix inside one, in the kingdom rank order of `tools/ranged_ladders.json`) a lower
-tier is never faster than a higher tier; inside a BAND (engine tier E T0-2, R T3-4, V T5-6, X T7-8,
-C T9-10) a better-ranked line is never slower than a worse-ranked one. Both are one grid,
-`speed = band_base[band] + rank_step * (n_lines - rank)`, and the validator, the report and the
+file, or an id prefix inside one, ranked in `tools/ranged_ladders.json`) a lower tier never beats a
+higher tier; at the same TIER a better-ranked line never loses to a worse-ranked one. (#582 judged
+the second rule inside a BAND of tiers, E T0-2 to C T9-10, on speed alone, from a
+`band_base[band]` grid; #617 made it per tier and per stat, below.) The cells come from per-tier
+curves in the spec, speed being `tier_base[t] + rank_step * (worst overall rank - overall rank)`
+(the others are in `docs/features/ranged-ladders.md`), and the validator, the report and the
 roster tool all call the pure `ranged_ladder.inversions`, so they cannot disagree. Speeds are
 `Registries.launchers` (every Bow and Crossbow `<Item>` over the same item roots as the armour
 index), so without the install the check is skipped, never faked. A spec that cannot be read or
@@ -522,10 +524,16 @@ carried its donor's damage and accuracy; the repair left 0.
 **WARNING.** A bow or crossbow that a Lord, a Wanderer or any `is_hero` character outside `troops/`
 can carry, through its own equipment, the battle `EquipmentSet` rosters it names, or a template
 `lords.xslt` hands a retagged vanilla lord (`ranged_ladder.hero_launchers`, `Equipment` matched in
-either case), whose `thrust_damage` is above `hero_ceiling` in `tools/ranged_ladders.json` (Bow 90,
-Crossbow 105). The Armory's own launchers are what heroes and the shops hand out, and until #617 they
-sat at 97 to 130 with accuracy 100. Repair: the item's row in the spec's `donor_stats`, then
-`python tools/restat_ranged_donors.py --apply`. Skipped, never faked, without the install.
+either case), or that a roster the game applies to the player at runtime hands out
+(`player_char_creation_*`, `player_career_*` and the enlistment quartermaster's `enlist_*`, which no
+`NPCCharacter` names), whose `thrust_damage` is above `hero_ceiling` in `tools/ranged_ladders.json`
+(Bow 90, Crossbow 105). Civilian sets are skipped, whether the roster or an inner `<EquipmentSet>`
+carries the flag. The Armory's own launchers are what heroes and the shops hand out: before #617 its
+38 ran 62 to 130 damage at accuracy 70 to 100, and nine that a hero or the player could carry hit 92
+to 112 (measured 2026-09-18 against the pre-restat file). One path the sweep cannot see: Field
+Commission (`HeroCommissionAdapter`) copies a troop's first battle set onto the new companion in C#.
+Repair: the item's row in the spec's `donor_stats`, then `python tools/restat_ranged_donors.py
+--apply`. Skipped, never faked, without the install.
 
 ## Generator retired-item refs (`GENERATOR_RETIRED_ITEM_REF`)
 

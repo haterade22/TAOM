@@ -2,6 +2,63 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-19
+
+### fix(ranged): v2.0.30 - #617 second review: crossbows out-hit and out-aim their kingdom's bows
+
+A second eight-lens deep review of #617 (shipped in v2.0.30), an audit of the first review's
+write-up, and then a deep review of the fixes themselves. The shipped data came back clean again;
+the tools, the records and three design questions did not. Write-up:
+`docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` (REVIEW-LOG Reviews 119 and 120).
+
+- **Crossbows (Mike's decision).** Inside a kingdom a crossbow now out-hits and out-aims every bow at
+  the same tier, for its slower reload: `crossbow_bonus` 3 to 9 (every crossbow has at least 42% less
+  spread than its kingdom's best bow) and the crossbow damage curve at T7 to T10 107 / 126 / 134 / 142
+  (Gondor's crossbowmen now out-hit the Ithilien and Blackroot rangers). The 27 crossbow items were
+  regenerated in the live Armory and the mirror; a shipped-spec test pins the rule. Twelve cells now
+  hit above the hero ceiling (Gondor's T7 and T8 and Rhun's T7 crossbows joined the nine), reachable
+  only through Field Commission (#625).
+- **Iron Hills nobles.** #617 had flattened their #366 Crossbow hand-tune to the Erebor cells while
+  `SKIP_TROOP_IDS` still claimed it. Mike kept the ranking: the ids left the skip list and the docs
+  record the reversal.
+- **HIGH:** the roster tool merged retired-id placeholders before its "item must exist" guard, so a
+  current cell no file defined passed: `--apply` could point troops at it with exit 0, and an Armory
+  reinstall read clean. It now refuses.
+- **Translator cache:** `tools/translation_cache/*.json` still held the 130 retired ids, so a
+  `rebuild_translation_files.py` recovery would have written English over every carried name. The
+  sync tool now moves the cache with the rows (`--verify` checks both) and refuses an unreadable
+  cache or a missing `--cache-dir`; it also backs up live files, refuses an unparseable ladder row,
+  and validates the spec, as the restat tool now does too.
+- **`skill_template`:** the first review's refusal of a templated ladder troop rested on the 1.4.8
+  rule; on the installed 1.5.3 an inline row overrides the template. Refusal removed, text corrected;
+  the validator gate is #626, which now also asks whether the 1,164 lords' 18 inline skill rows,
+  applied since the 1.5.x bump, retuned them.
+- **Field Commission** copies a troop's ladder bow onto the new companion: Mike chose to swap it for
+  the line's donor, #625. The enlistment quartermaster's `enlist_*` rosters joined the ceiling sweep;
+  `rebalance_troops` refuses a rebaseline while the rosters name an undefined ladder id, now read as
+  XML (a single-quoted reference had read as absent).
+- **The balance report** (`analyze_troop_balance.py`) judged 179 of the 227 ladder archers against
+  the level-curve Bow or Crossbow; it now references their cell, as the writer does.
+- **One definition each:** the militia regex is one object shared by the writer and the gate; one
+  `battle_sets` iterator decides which sets count for the ladder and the level curve (it moves three
+  troops' classes, not their skills); one ladder-id regex; the mirror path and the tier numeral regex
+  are shared; the both-tables check lives in the shared spec validator; the generator no longer
+  writes sidecars into the mirror; dead `band_order` / `troop_speed` gone; `hero_launchers` skips
+  files that cannot hold a roster (361 to 163 ms).
+- **Records:** the first RCA carried one fabricated "why missed" (both militia regexes were born in
+  one commit) and five smaller errors, each corrected in place; the fix review caught three more
+  sentences written as corrections without a check (the arrow's `missile_speed`, the lords' inline
+  rows, "pure engine"), rewritten from the decompile and a count. The CLAUDE.md trap row is back under
+  400 characters; the rule rows, the validation, ranged-ladder, troop-skill and field-commission docs,
+  the troops rule, the localization map and the translator guide updated; three lessons new, three
+  extended.
+- Tools suite 1,773 passed; the generator, restat and sync `--verify` OK in both trees; the roster
+  tool 0 pending edits; the validator no error and no `RANGED_*` finding.
+- Still owed: pushing the mirror (#609's and #617's commits; not chosen this session), #625, #626,
+  the #602 / #616 translator runs that turn `check_external_loc_coverage.py` green, and the in-game
+  checks (restart, `/armory-audit`, a Custom Battle, a campaign battle with a crossbow line against a
+  bow line of one kingdom, since Custom Battle cannot show the accuracy rule, one non-English client).
+
 ## 2026-09-18
 
 ### data(creatures): v2.0.30 - chariot and spider hit capsules fitted to the mesh

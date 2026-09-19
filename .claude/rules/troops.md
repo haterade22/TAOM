@@ -190,7 +190,9 @@ This is a TAOM-wide convention as of Dale (May 2026). Apply when authoring new c
 
 Names don't imply tier. Codex Review #227 caught Dale's `lowland_yew_bow` placed at T5 while `lowland_longbow` at T6, but vanilla stats: yew = higher difficulty / damage / speed than longbow. The T5 archer could roll a stronger bow than its T6 upgrade.
 
-Before committing tier-ordered weapons (bows, crossbows, polearms, swords), grep vanilla stats:
+**Bows and crossbows are no longer picked by hand.** Since #582 / #617 a troop's launcher is the generated `ladder_<line>_<bow|xbow>_t<tier>` for its line and engine tier, and its Bow or Crossbow skill is that cell's (`tools/ranged_ladders.json`). Give a new archer any bow of the right class, then run `python tools/rebalance_ranged_ladders.py --apply`; a tier its line lists no cell for is a `RANGED_LADDER_INVERSION` finding, and the line needs that tier added to the spec. `docs/features/ranged-ladders.md`.
+
+Before committing tier-ordered weapons (polearms, swords and other melee), grep vanilla stats:
 
 ```bash
 grep -A20 'id="<weapon_id>"' "<game>/Modules/SandBoxCore/ModuleData/items/weapons.xml" \

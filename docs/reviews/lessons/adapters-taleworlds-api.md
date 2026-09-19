@@ -546,3 +546,9 @@ pages, the creature authoring guide and a CLAUDE.md trap row before an engine re
   (`MBMath.IsBetween`, `MathF.Clamp`, a hand-written `<`/`<=`) and quote the operator. Treat a band quoted in a
   lesson as a claim to re-check, not a fact, when it decides a design.
 - **Source:** `docs/reviews/rca-creature-collision-review-2026-09-18.md` finding 3; `TaleWorlds.Library.MBMath.cs`.
+
+### An engine rule cited with a version is a claim about that version; re-read it on the installed DLLs before building on it (#617, 2026-09-18)
+`taom_schema.py`'s `SKILL_TEMPLATE_SHADOWS_SKILLS` says a `skill_template` makes the inline `<skills>` block unreachable, citing "v1.4.8, BasicCharacterObject.cs:337-358". True on 1.4.8 (`if (mBCharacterSkills == null)` around the inline read). On the installed 1.5.3, `Deserialize` copies the template into a fresh `MBCharacterSkills` and then applies the inline rows, so an inline row overrides. #617's first review built a refusal on the old rule; the second review's engine lens caught it.
+- **Why missed:** the rule came from a validator comment, not a decompile, and the engine bumps to 1.5.x re-verified signatures, not the behaviour claims the validator and the tools state.
+- **Prevent:** when a rule you are about to rely on names an engine version, and it is not the installed one, open the installed body (`pwsh tools/taom-src.ps1 path <Type>`) before building on it. When the behaviour moved, say both versions in the text (the patreon branch still ships 1.4.8).
+- **Source:** `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` finding 3; `TaleWorlds.Core.BasicCharacterObject.Deserialize`.

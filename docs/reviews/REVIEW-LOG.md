@@ -3284,6 +3284,35 @@ on read (the warg term does not saturate; its cap is 20 m/s). RCA
 [rca-creature-mount-retune-2026-09-17.md](rca-creature-mount-retune-2026-09-17.md); one lesson
 appended. Codex: not dispatched. Owed: Custom Battle smoke, push, mirror commit, closing #615.
 
+## Review 119: per-tier ranked ranged rebalance (#617), 6-agent deep review of tools, troop XML and live Armory writes (2026-09-18)
+
+Mike asked for a deep review of #617 "even for the xml portion": commits `b37fc22d`, `697cbdb6`,
+`c3592f62`, the generated `ranged_ladder.xml` items, the restat of the Armory's own bows and ammo,
+and the `lotraom-assets` mirror commit `391f69b7`. Three agents finished and three hit the session
+limit; their checks ran by script afterwards. 13 findings: one HIGH (every translated language
+still carried the 130 retired band rows and none of the 123 tier ids, so non-English players saw
+English bow names), then comment-blind restat search, a partial multi-file write, two writers with
+two invariants, and records. One refuted, one dropped. Fixed in `8465cc98` and `8800aa4c`. RCA
+[rca-ranged-rebalance-2026-09-18.md](rca-ranged-rebalance-2026-09-18.md), corrected in place by
+Review 120.
+
+## Review 120: #617 second review and an audit of Review 119's write-up, then a review of the fixes (2026-09-18 to 09-19)
+
+Eight lenses in waves of four on the shipped #617, XML as critically as the Python; the shipped
+data came back clean again. 17 findings: one HIGH (the roster tool could point troops at a cell no
+file defines, exit 0), the translator cache still keyed on the retired ids, a `skill_template` fix
+resting on the 1.4.8 loader, the Iron Hills hand-tune flattened under a stale skip list, and Field
+Commission handing ladder bows above the hero ceiling to companions (#625). The audit found one
+fabricated "why missed" in Review 119's RCA. Mike's decisions: crossbows out-hit and out-aim their
+kingdom's bows at the same tier, the Iron Hills ranking kept, the Field Commission swap, templates
+corrected in #617 only (#626). The fixes were then reviewed by the same eight lenses (three MED:
+a quote-pinned guard, the balance report judging 179 ladder archers by the curve, and three wrong
+sentences in the round's own corrections); all fixed, five design proposals applied. RCA
+[rca-ranged-rebalance-second-review-2026-09-18.md](rca-ranged-rebalance-second-review-2026-09-18.md);
+three lessons new, three extended. Codex: not dispatched. Owed: push the mirror, #625, #626, a restart,
+`/armory-audit`, a Custom Battle, a campaign battle crossbow line against bow line, one non-English
+client.
+
 
 Every file below is a real review artefact that nothing linked to, so the doc graph
 counted it as an orphan and no reader would ever have found it. Indexed here on

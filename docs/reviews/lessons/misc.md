@@ -110,3 +110,20 @@ a VBR clip can measure SHORT, the unsafe direction for a length gate) and a doc 
   not worth stating: cut it, or attribute it as unverified. Comments that justify a design choice
   are load-bearing precisely because the next reader will not re-derive them.
 - **Source:** docs/reviews/rca-dwarf-voices-2026-09-06.md (2026-09-06 deep review)
+
+### A correction is a new claim: measure it before you write it (#617, 2026-09-19)
+Fixing a wrong sentence means writing a new one, and the new one carries every risk the old one did.
+The #617 second review found the docs calling the arrow's `missile_speed` dead and replaced that with
+"it feeds the arrow's tier and price"; `DefaultItemValueModel.CalculateAmmoTier` reads damage and
+stack size only. The same round wrote that `characters/lords.xml` carries "empty inline blocks" (all
+1,164 templated lords carry 18 rows) and that a troop-versus-troop arrow is "pure engine" (the career
+`TroopDamage` passive multiplies troop hits). The first RCA of the same feature carried a fabricated
+"why missed" written the same way.
+- **Why missed:** a correction feels like the end of a check rather than the start of one. The
+  reviewer found the old sentence wrong with evidence, then wrote its replacement from memory in the
+  same edit, and nobody re-read the replacement against the source.
+- **Prevent:** before writing the replacement for a sentence a review proved wrong, run the one read
+  or count that proves the new sentence, as you did for the old one. When the fix itself goes to
+  review, point the engine and data lenses at every sentence the fix changed, not only the code.
+- **Source:** `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` "The fix-diff review",
+  F3; first-RCA audit item 6.
